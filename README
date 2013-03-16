@@ -1,32 +1,20 @@
-	Es	query
-	H	XML
-	K	constants
-	N	names
-	Rb	language
-	Th	HTTP
-	W	forms
-	Y	lambda
-
- filesystem content to RDF (and HTML). HTTP daemon. few deps (JSON/Hash with RDF-schema keys), domain-specific triplizers normalize messages (mailbox, maildir, RSS, atom, tweets) to SIOC. resources indexable in filesystem triplestore. HTML UI for common formats, and lightweight faceted-filtering & visualization tools
-
- git clone git://repo.or.cz/element.git            http://repo.or.cz/w/element.git
-           git://gitorious.org/element/element.git http://gitorious.org/element
-           git://rubyforge.org/element.git         http://element.rubyforge.org
-
  install
- ruby/install rsyncs to ruby lib dir. may prefer to symlink when hacking 
+ ruby/install
 
  dep
  apt-get install thin ruby-nokogiri ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools
  gem install rroonga
 
- shell tools
- mv sh/[eE] /usr/local/bin  (can be renamed)
- echo source /src/element/sh/rc >> ~/.shrc
-
  daemon
  RACK_ENV=production E daemon -s thin -p 80
  servable domains in http://domain dir relative to pwd. copy/symlink {css,js} for default UI 
 
+ shell tools
+ mv sh/[eE] /usr/local/bin  (can be renamed)
+ echo source /src/element/sh/rc >> ~/.shrc
+
  author
  <carmen@whats-your.name>
+
+git@gitorious.org:element/www.git   https://gitorious.org/element/www      
+git://repo.or.cz/www.git            http://repo.or.cz/w/www.git
