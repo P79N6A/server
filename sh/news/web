@@ -1,0 +1,3 @@
+#!/bin/sh
+e /s/web.tw tw web.cracklog.com
+e 'http://api.flickr.com/services/feeds/photos_public.gne?id=16315439@N05&lang=en-us&format=atom' getFeed web.cracklog.com

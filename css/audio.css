@@ -1,0 +1,11 @@
+body{margin:0;font-family:sans-serif;cursor: pointer;background-color:#ddd}
+a{text-decoration:none}
+.entry:visited {background-color:white;color:black}
+.entry {background-color:black;color:white}
+#player {float: left;width:100%}
+.directory{font-weight:bold}
+#jump {float:left;font-size:3.33em;padding:0 .2em 0 .2em;background-color:#0f0;color:black}
+#rand {float:left;font-size:3.33em;padding:0 .3em 0 .2em;background-color:#33f;color:#fff}
+td.key {text-align:right;white-space: nowrap}
+.frag {font-weight:bold;color:#00f;background-color:#fff}
+.abbr {font-size:.9em}

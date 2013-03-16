@@ -1,0 +1,7 @@
+body {background-color:#010;color:white; font-family: sans-serif}
+a {background-color:#1f1;color:#000;text-decoration:none}
+td.key {text-align:right}
+td.key .frag {font-weight:bold;background-color:#1c1;color:#fff;padding-left:.2em;border-radius:.38em 0 0 .38em}
+td.key .abbr {color:#eee;font-size:.92em}
+td.val {border-style:dotted;border-width:0 0 .1em 0;border-color:#8f3}
+article {padding-left:8em}

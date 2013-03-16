@@ -1,0 +1,4 @@
+.hist {height:2.8em}
+.histLabel {z-index:1;padding:0;color:#003;position:relative;left:-1.25em}
+.histLegend {height:1.73em;background-color:#33c3ff}
+.histLegendPt {padding:0;border-style:dotted;border-width:0 0 0 0.2em;border-color:#8033ff;vertical-align:bottom;font-size:0.8em}

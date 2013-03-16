@@ -1,0 +1,21 @@
+body {margin:0;background-color:#000;color:#fff;font-family:sans-serif}
+a.child {text-align:center;font-weight:bold;padding:0 .5em 0 .5em;font-size:1.23em;white-space:nowrap;}
+iframe {width:100%;border:0;min-height:80em}
+.abbr{display:none}
+table {width:100%; border-spacing:0;}
+td {text-align:right;white-space:nowrap}
+td.label a {background-color:#0df;color:#000;font-weight:bold;font-size:1.2em}
+
+td[property='uri'] a {background-color:#ff3;color:#000}
+td[property='uri'] .frag {background-color:white;color:#000;font-weight:bold;}
+
+tr:nth-child(odd)  td:nth-child(odd) {background: #000}
+tr:nth-child(odd)  td:nth-child(even){background: #111}
+tr:nth-child(even) td:nth-child(odd) {background: #222}
+tr:nth-child(even) td:nth-child(even){background: #333}
+
+a {text-decoration:none;background-color:#fff;color:#000}
+a.du {float:right}
+
+.dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
+.mode {font-size:2em;font-weight:bold;float:right;margin:.4em .4em 0 0}

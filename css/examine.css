@@ -1,0 +1,7 @@
+table {border-spacing:0}
+.facet {cursor:pointer;background-color:#000;color:#f0a;max-height:18em;max-width:11em;overflow:scroll;white-space:nowrap}
+.f {
+font-weight:bold;
+background-color:white;
+color:black;
+}

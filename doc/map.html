@@ -1,0 +1,24 @@
+<html><head><title>mapping property-names</title>
+<style>
+a {color:#66f;text-decoration:none}
+a:visited{color:#36f}
+p {padding:.4em;max-width:78ex}
+img,p {margin:auto}
+img {display:block}
+</style></head>
+<body><p>
+starting with a seemingly simple task - make a HTML calendar of holidays. my first instinct is find some RDF file with the holidays already in them...<p><b>inurl:holidays.ttl filetype:ttl</b></p><p> in google returned nothing, changing <b>ttl</b> to <b>rdf</b> revealed 5 documents, none of them a list of holidays. finally trying <p><b>"april fools day" filetype:rdf christmas</b></p><p> is closer, one document with holiday names but no dates, and another with a selection of dates in 2009<p> <b>holidays csv</b> easily turned up the <a href=http://www.bluesock.com/bank_holidays_csv.php>goods</a><p> as nice of an idea as <a href=http://dannyayers.com/2010/12/14/Slow-Data,-Decentralization-and-Semantic-Web-Architecture>RDF</a> lovingly crafted may be, crude data scraped or converted remains the norm. agreement on schemas and property-names seems even more remote, from <a href=http://en.wikipedia.org/wiki/Cyc>Cyc</a>, <a href=http://en.wikipedia.org/wiki/Schema.org>Schema.org</a>, <a href=http://www.freebase.com/>Freebase</a>, <a href=http://www.w3.org/wiki/VocabularyMarket>RDF Vocabulary Markets</a>, <a href=http://microformats.org/>Microformats</a> to bare words as JSON or XML keys linking no schema at all<p>
+<span style="font-size:2.3em;font-weight:bold">map</span> those property-names to something useful<p>
+<span style="font-size:1.2em;font-weight:bold">view=map</span><p><a href=http://gitorious.org/element/element/blobs/master/ruby/W/examine/normal.rb><img src=map.png></a><p>crucial selections from <a href=http://sioc-project.org/>SIOC</a> and <a href=http://dublincore.org/>Dublin Core</a> are available. 
+<p>
+submitting creates a query string like</p>
+<p style=" white-space: nowrap;font-weight:bold">filter=map&amp;Date=http://purl.org/dc/terms/date&amp;Holiday=http://purl.org/dc/terms/date</p><p>
+possible to construct by hand, if you are a 'power user'. adding <b>view=year</b> now has clean input for an existing view which expects DC terms
+<p><a href=http://gitorious.org/element/element/blobs/master/ruby/W/cal.rb><img src=cal.png></a>
+<p>a <b>merge</b> of multiple documents - esoteric data-massagers might try <a href=http://code.google.com/p/google-refine/>Refine</a>. felt somewhat lost by the 1:1 mapping of 'Project' with input file and no obvious merge features, but <a href=http://groups.google.com/group/google-refine/browse_thread/thread/147be52418119277>there is a way</a> by writing custom scripts<p>
+
+<p>two enthusiast groups are curating data on shortwave broadcasts. <a href=http://ndxc.org/aoki/>AOKI</a> and <a href=http://www.eibispace.de/>EIBI</a>. after extracting csv files, pull both into the <a href=http://lists.w3.org/Archives/Public/public-rdf-ruby/2011Mar/0021.html>request model</a> with a glob-pattern matching both in the URL, invoke the <a href=http://lists.w3.org/Archives/Public/public-semweb-ui/2011Feb/0001.html>'examine'</a> view, tell it to generate facet-filters for STATION and LANGUAGE, and normalize the field-names in the <a href=http://repo.or.cz/w/element.git/blob/HEAD:/ruby/W/examine/sw>query-string</a> invocation
+<p><a href=http://blog.whats-your.name/public/31m.html><img src=sw.png></a>
+
+</body>
+</html>

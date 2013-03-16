@@ -1,0 +1,60 @@
+<div id="body" style="max-width:88ex;margin:auto">
+<h2>managing inbox sources</h2><p><img style="border-width:0" src="sioctimeline.png" alt="" /></p>
+<h3>Feeds</h3>
+
+<p>i <a href="http://scripting.com/">believe</a> RSS|Atom given its ubiquity as
+a fossilized format like email is useful input to a SIOC agent</p>
+<p>a Class E is just a single (<a href="http://gitorious.org/element/element/blobs/master/ruby/N.rb#line21">immutable</a>)
+field, URI. element/W/feeds imports feed functions for its method namespace</p>
+<p>eg &quot;given a URI, what are the feeds linked in it&quot;:</p>
+<p><strong>irb&gt; E('http://thechangelog.com/').feeds</strong></p>
+
+<p>or in bash:</p>
+<p><strong>$ e http://thechangelog.com/ feeds</strong><br />
+http://thechangelog.com/rss</p>
+<p>to store a list of feeds, convenience functions using a fs-based
+triplestore:</p>
+<p><strong>irb&gt; E.feeds</strong></p>
+<p>or sh:</p>
+<p><strong>$ E feeds</strong></p>
+<p>lowercase e corresponds to instance methods and uppercase E, Class
+methods..</p>
+
+<p><strong>irb&gt; E('http://thechangelog.com/').feeds[0].addFeed</strong></p>
+<p><strong>$ e rdf:type expand</strong><br />
+http://www.w3.org/1999/02/22-rdf-syntax-ns#type</p>
+<p><strong>$ e `e rdf:type expand` pIndex</strong><br />
+/index/&lt;&gt;/http://www.w3.org/1999/02/22-rdf-syntax-ns#type</p>
+<p><strong>e `e rdf:type expand` poIndex `e rss:channel expand` | xargs -i find
+.{} | tail -n 1</strong><br />
+./index/&lt;&gt;/http://www.w3.org/1999/02/22-rdf-syntax-ns#type/&lt;&gt;/http://purl.org/rss/1.0/channel/&lt;&gt;/http:/www.reddit.com/r/programming/new/.rss</p>
+
+<p>as a proponent of <a href="http://teddziuba.com/2010/10/taco-bell-programming.html">this ethos</a> it
+should be clear there are numerous ways to manage sources using ruby, bash, or
+even mkdir -p</p>
+<p>perhaps youd like to curate a text file, and <strong>cat name | xargs -i e
+{} getFeed</strong><br />
+maybe one for daily, one for hourly, one for weekly, cron..</p>
+<h3>email</h3>
+a <a href="http://repo.or.cz/w/element.git/blob/2ec724f696a0cf0e243d0eb6d2231c8f2b9f56ec:/ruby/W/mail.rb#l2">
+procmalrc</a> creates the paths - the idea being no dir gets too huge, and any
+FS-db property/value range results are subsorted by date, for free. if you want
+a different scheme you'd change the <a href="http://repo.or.cz/w/element.git/blob/2ec724f696a0cf0e243d0eb6d2231c8f2b9f56ec:/ruby/W/mail.rb#l47">
+
+strftime</a> to match<br />
+.<br />
+whether <a href="http://www.postfix.org/">MTA</a>, <a href="http://www.fetchmail.info/">fetchmail</a>, <a href="http://pyropus.ca/software/getmail/">getmail</a> or <a href="http://github.com/jgoerzen/offlineimap">offlineimap</a>is a matter of
+preference.<br />
+
+<br />
+im well aware one reason people choose to use webmail is the access-anywhere
+nature. theres at least three ways to achieve this<br />
+<ul>
+<li>imap/pop server (which has its own webmail, and leaving copies so each
+workstation/access-point can eventually synch its own full copy).</li>
+<li>filesystem, distribute on <a href="http://en.wikipedia.org/wiki/Ceph">Ceph</a>, <a href="http://openafs.org/">AFS</a>, <a href="http://wiki.archlinux.org/index.php/Nfs">NFS</a>, <a href="http://en.wikipedia.org/wiki/Rsync">Rsync</a>, <a href="http://www.linuxtutorialblog.com/post/ssh-and-scp-howto-tips-tricks">scp</a>
+
+and <a href="http://www.dropbox.com/">dropbox</a></li>
+<li>HTTP. my phone is my cloud server, since its always on and runs <a href="https://elektranox.org/website/debian_on_n900.html">debian, the universal
+OS</a></li>
+</ul>

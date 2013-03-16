@@ -1,0 +1,10 @@
+#!/bin/sh
+e /s/radio.tw tw r.cracklog.com
+e http://www.reddit.com/r/rfelectronics+shortwave+RTLSDR+amateurradio/new/.rss?sort=new getFeedReddit r.cracklog.com
+e 'http://www.hfunderground.com/board/index.php?type=rss;action=.xml' getFeed r.cracklog.com
+e 'http://kimelli.nfshost.com/index.php?atom=1&section=Home' getFeed r.cracklog.com
+e 'http://mt-shortwave.blogspot.com/feeds/posts/default' getFeed r.cracklog.com
+e http://shortwavedxer.blogspot.com/feeds/posts/default getFeed r.cracklog.com
+e http://shortwavedx.blogspot.com/feeds/posts/default getFeed r.cracklog.com
+e http://members7.boardhost.com/PirateRadio/rss getFeed r.cracklog.com
+e 'http://www.achimbrueckner.de/freeradio/php/wordpress/?feed=rss2' getFeed r.cracklog.com

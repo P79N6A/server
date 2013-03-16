@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+exit 0 if ARGV.empty?
+require 'element/W'
+puts (E ARGV[0]).send *ARGV[1..-1].map{|a|a.path? ? a.E : a}

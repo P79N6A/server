@@ -1,0 +1,15 @@
+.gtitle {
+position:absolute;
+font-size:1em;
+border-radius: 0 .7em .6em 0;
+padding-right:.22em;
+}
+.gtitle > a {color: white;}
+.gtitle:hover{z-index:2}
+a.label{
+font-size:.7em;
+background-color:white;color:black;
+}
+.tg{width:100%;height:25em;position:relative;clear:both;background-color:#404040}
+.tg > svg {width:100%;height:100%;position:absolute}
+line.arc{stroke-width: .1em}

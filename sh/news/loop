@@ -1,0 +1,6 @@
+#!/bin/sh
+while true; do
+date
+./s/boston
+sleep 2520
+done

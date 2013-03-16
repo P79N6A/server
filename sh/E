@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+exit 0 if ARGV.empty?
+require 'element/W'
+puts E.send *ARGV

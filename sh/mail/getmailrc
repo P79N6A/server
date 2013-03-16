@@ -1,0 +1,3 @@
+[destination]
+type = MDA_external
+path = /usr/bin/procmail

@@ -1,0 +1,7 @@
+#!/bin/sh
+while true; do
+date
+./s/boston.rb
+./s/radio
+sleep 42000
+done

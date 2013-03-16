@@ -1,0 +1,3 @@
+D=$HOME/.mail/`date +%Y/%m/%d`
+MKDIR=`test -d $D || mkdir -p $D`
+DEFAULT=$D

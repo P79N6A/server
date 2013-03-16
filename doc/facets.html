@@ -1,0 +1,182 @@
+<html><head><title>facets</title></head><body>
+<link rel="stylesheet" href="../css/doc.css" type="text/css" /> 
+<h2>facets</h2>
+<pre id="body" style="white-space:pre-wrap;max-width:88ex;margin:auto"> 
+<a name="start1" accesskey="j" id="start1"></a>;; This buffer is for notes
+ 
+_babel
+Java exceptions, server down, and currently this
+{
+	&quot;items&quot; : [
+		{
+			&quot;TDATE&quot; :         &quot;0:00:00&quot;,
+			&quot;MOD&quot; :           &quot;D&quot;,
+			&quot;STATION&quot; :       [
+				&quot;EWTN (WEWN)&quot;,
+				&quot;WEWN&quot;,
+				&quot;WEWN EWTN Catholic R.&quot;,
+				&quot;Radio Free Asia&quot;,
+				&quot;CNR1 Jammer&quot;,
+				&quot;IBB&quot;,
+				&quot;R.FARDA&quot;,
+				&quot;Radio Farda&quot;
+			],
+ 
+(wong as theres only STATION per row, suppose its open source and i could install a Babel locally and try to figure it out)
+ 
+_google-refine
+latest snapshot, unreported parse errors, visible as entire lines or even the rest of the document appearing in single facet fieldnames.. 
+ 
+wrote a TSV parser that works on the xls2txt(<a href="http://wizard.ae.krakow.pl/%7Ejb/xls2txt/">http://wizard.ae.krakow.pl/%7Ejb/xls2txt/</a>) output of a XLS file from hfskeds(<a href="http://www.hfskeds.com/skeds/">http://www.hfskeds.com/skeds/</a>)
+ 
+ def csv
+    open(node).readlines.map{|l|l.chomp.split(/,/)}.do{|t|
+      t[0].do{|x|
+        t[1..-1].each_with_index{|r,ow|r.each_with_index{|v,i|
+            yield '#r'+ow.to_s,x[i],v
+          }}}}
+  end
+ 
+this is turned into an inmemory RDF/JSON graph, 
+ 
+  # fromStream :: Graph -&gt; tripleSource -&gt; Graph
+  def fromStream m,*i
+    send(*i) do |s,p,o|
+      m[s] ||= {'uri'=&gt;s}
+      m[s][p] ||= []
+      m[s][p].push o
+    end; m
+  end
+ 
+and finalyl to Exhibit JSON via 
+ 
+ fn Render+'application/json+exhibit',-&gt;d,e{
+  fields=e.q['f'].do{|f|f.split /,/}
+  {items: d.values.map{|r|
+      r.keys.-(['uri']).map{|k|
+        f=k.frag.do{|f|(f.gsub /\W/,'').downcase} # alphanumeric id restriction 
+        if !fields || (fields.member? f)
+          r[f]=r[k][0].to_s # rename fieldnames, unwrap value
+          r.delete k unless f==k # cleanup unless id same as before
+        else
+          r.delete k
+        end}
+      r[:label]=r.delete 'uri' # requires label only
+      r
+    }}.to_json}
+ 
+ 
+the reason we massage the fieldnames is elucidated in this message
+ 
+<a href="http://www.mail-archive.com/general&#64;simile.mit.edu/msg01052.html">http://www.mail-archive.com/general&#64;simile.mit.edu/msg01052.html</a> 
+ 
+all of this is integrated into <a href="http://gitorious.org/element">http://gitorious.org/element</a> , drop a .tsv file in a directory ,add ?view=exhibit to querystring , get an exhibit
+ 
+ 
+brought me to the next problem, browser freezing up for 90 seconds as Exhibit did something - DOM generation and facet statistics i guess
+ 
+so i forget exactly what happened next but was already using dynamic stylesheets in a mail app (each replied-to line wrapped in class=quote , and span.quote {display:none} added to document to hide. it was pretty obvious this would be faster than document.getElementsByClassName('quote').forEach(function(){this.hide})
+ 
+decided to take same approach to faceted filtering in browser, i have no idea if my choices r the fastest but they work and will probably do further experiments (eg, situating common facet values as innermost or outermost ala the SPARQL trick of using the smallest pattern first)
+ 
+changing qs view=exhibit -&gt; view=e
+ 
+if a= isnt specified (comma-seperated list of predicate URIs) you are presented with a list, like:
+ 
+<a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">http://www.w3.org/1999/02/22-rdf-syntax-ns#type</a> 
+<a href="http://rdfs.org/sioc/ns#addressed_to">http://rdfs.org/sioc/ns#addressed_to</a> 
+<a href="http://rdfs.org/sioc/ns#has_creator">http://rdfs.org/sioc/ns#has_creator</a> 
+<a href="http://purl.org/rss/1.0/category">http://purl.org/rss/1.0/category</a> 
+[Go]
+ 
+click the ones you want, [Go]
+ 
+at which point, left side is filled with facet-selector panes
+ 
+custom views are selected with ev=board
+ 
+a convention of view/board/base
+                view/board/item
+ 
+where base is handed a function that it calls to put the items wrapped in special divs that the CSS will use to filter
+ 
+a music player, /item draws a single playlist row:
+ 
+<a href="http://blog.whats-your.name/public/smiths.png">http://blog.whats-your.name/public/smiths.png</a> 
+ 
+figuring out result set is only half the battle for browser, excessive use of floats, relative sizes and so on become noticeable in huge data sets
+ 
+hfskeds is 30K rows, 22 cols or .66 million triples. roughly the upper bounds of what i'd want to use, on a Netbook. takes about 5 seconds to load a doc and 0.8 second to redraw after filter change
+ 
+can squeeze out faster redraw
+&lt;pre&gt;, fixed-heights/widths, absolute positioning
+ 
+shortwave schedules were main dataset so lets get into some of those
+ 
+<a href="http://blog.whats-your.name/public/25m.html">http://blog.whats-your.name/public/25m.html</a> 
+ 
+#!/bin/sh
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=2200&amp;minP=kc/s&amp;maxP=kc/s&amp;max=2500">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=2200&amp;minP=kc/s&amp;maxP=kc/s&amp;max=2500</a>' &gt; 120m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=3100&amp;minP=kc/s&amp;maxP=kc/s&amp;max=3450">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=3100&amp;minP=kc/s&amp;maxP=kc/s&amp;max=3450</a>' &gt; 90m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=3890&amp;minP=kc/s&amp;maxP=kc/s&amp;max=4000">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=3890&amp;minP=kc/s&amp;maxP=kc/s&amp;max=4000</a>' &gt; 75m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=4740&amp;minP=kc/s&amp;maxP=kc/s&amp;max=5125">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=4740&amp;minP=kc/s&amp;maxP=kc/s&amp;max=5125</a>' &gt; 60m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=5800&amp;minP=kc/s&amp;maxP=kc/s&amp;max=6300">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=5800&amp;minP=kc/s&amp;maxP=kc/s&amp;max=6300</a>' &gt; 49m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=7200&amp;minP=kc/s&amp;maxP=kc/s&amp;max=7600">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=7200&amp;minP=kc/s&amp;maxP=kc/s&amp;max=7600</a>' &gt; 40m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=9400&amp;minP=kc/s&amp;maxP=kc/s&amp;max=9999">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=9400&amp;minP=kc/s&amp;maxP=kc/s&amp;max=9999</a>' &gt; 31m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=11500&amp;minP=kc/s&amp;maxP=kc/s&amp;max=12160">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=11500&amp;minP=kc/s&amp;maxP=kc/s&amp;max=12160</a>' &gt; 25m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=13500&amp;minP=kc/s&amp;maxP=kc/s&amp;max=13900">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=13500&amp;minP=kc/s&amp;maxP=kc/s&amp;max=13900</a>' &gt; 22m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=15100&amp;minP=kc/s&amp;maxP=kc/s&amp;max=15900">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=15100&amp;minP=kc/s&amp;maxP=kc/s&amp;max=15900</a>' &gt; 19m.html
+curl '<a href="http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=17500&amp;minP=kc/s&amp;maxP=kc/s&amp;max=17900">http://m/a.tsv?view=e&amp;ev=sw&amp;a=LANGUAGE,STATION&amp;min=17500&amp;minP=kc/s&amp;maxP=kc/s&amp;max=17900</a>' &gt; 16m.html
+ 
+created a HTML file for each band and uploaded to webserver..
+ 
+as you can see a default filter exists, maxP, minP (matchP too) which is handy for common uses
+ 
+custom filters to be activated via QS (comma-seperated list) can be written, eg exerpt
+ 
+sort of a natural-language one, realizing any time an int &lt; 2400 in email is probably referring to a time, and &gt;2400 to frequency (minus a few false positives for phone numbers, years)
+ 
+           m[u]={'uri' =&gt; u,
+             'big'=&gt;l.scan(/\b[A-Z][A-Z][A-Z]+\b/),
+             Content=&gt;l}
+           l.scan(/\d{4,}/){|d| d=d.to_i
+             if (d &gt; 2400) &amp;&amp; (d &lt; 30000)
+               m[u]['kc/s']=[d]
+             elsif
+               m[u]['BTIM']=[d];m[u]['ETIM']=[d+30]
+             end}
+           m.delete u unless m[u].has_keys ['BTIM','kc/s']
+           )}
+  
+filter mutates the request-time JSON model however sees fit, adding new properties and so on..
+ 
+<a href="http://blog.whats-your.name/public/GlenDoes31.html">http://blog.whats-your.name/public/GlenDoes31.html</a> 
+ 
+i did a few more of these, Eibi L and H: <a href="http://blog.whats-your.name/public/eibiL.html">http://blog.whats-your.name/public/eibiL.html</a> (this is the largest one up now, data-wise)
+ 
+<a href="http://blog.whats-your.name/public/bbc.html">http://blog.whats-your.name/public/bbc.html</a> BBC
+ 
+onto some other examples
+ 
+/t is a lifestream (<a href="http://www.cs.yale.edu/homes/freeman/dissertation/etf.pdf">http://www.cs.yale.edu/homes/freeman/dissertation/etf.pdf</a>) serving a time-range of resource (with options for start/end direction (Ascending/descending) and count) here filtered by source
+ 
+<a href="http://i574.photobucket.com/albums/ss187/ix9/hyper/2011-01-16-203039_1366x768_scrot.png">http://i574.photobucket.com/albums/ss187/ix9/hyper/2011-01-16-203039_1366x768_scrot.png</a> 
+ 
+ always add a sioc:addressed_to and sioc:creator to triple-izers for this usage
+ 
+ 
+/search  examine shows us top poster is Cory Doctorow (no surprise there)
+ 
+<a href="http://i574.photobucket.com/albums/ss187/ix9/hyper/to.png">http://i574.photobucket.com/albums/ss187/ix9/hyper/to.png</a> 
+ 
+i imported all boingboing posts for this one, thats discussed @ <a href="http://blog.whats-your.name/public/bb.html">http://blog.whats-your.name/public/bb.html</a> 
+ 
+a couple possibilities
+ 
+hash URIs for filters. i will wait for Exhibit 3.0 to come up with their convention and use that. or just soemthing like facet=val,val2&amp;facet2=val3,val4
+ 
+visible set - jQuery has a :visible meta-selector, which i have not tried to see how fast it is. would be useful if you want to reserialize a document deleting all invisible (filtered) elements.. probably we should make noise about adding right to css as it likely has feature already eg Ctrl-F only searches visible els
+ 
+&quot;just publish RDFa&quot; would be cool, some JS that introspects a DOM and adds the appropriate facet wrappers
+</pre> 
+</body></html>

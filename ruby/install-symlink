@@ -1,0 +1,2 @@
+#!/bin/sh
+ln -s "$(dirname "$(readlink -f "$0")")" `ruby -e 'puts RbConfig::CONFIG["sitelibdir"]'`/element

@@ -1,0 +1,16 @@
+#!/bin/sh
+e /s/east.tw tw east.cracklog.com
+e http://www.reddit.com/r/vietnam+japan+korea+china+malaysia+cambodia+laos/new/.rss?sort=new getFeedReddit east.cracklog.com
+e http://beijingcream.com/feed/ getFeed east.cracklog.com
+e http://feeds.feedburner.com/DanweiRss10 getFeed east.cracklog.com
+e http://feeds.feedburner.com/tealeafnation getFeed east.cracklog.com
+e http://japandailypress.com/feed getFeed east.cracklog.com
+e http://www.haohaoreport.com/feed getFeed east.cracklog.com
+e http://feeds.feedburner.com/TheMarmotsHole getFeed east.cracklog.com
+e http://www.monster-island.net/feeds/posts/default getFeed east.cracklog.com
+e http://bicoastalbitchin.com/feed/ getFeed east.cracklog.com
+e http://feeds2.feedburner.com/channelAPA getFeed east.cracklog.com
+e http://feeds.rocketnews24.com/rocketnews24/en getFeed east.cracklog.com
+e http://offbeatchina.tumblr.com/rss getFeed east.cracklog.com
+e http://offbeatchina.com/feed getFeed east.cracklog.com
+e http://feeds.feedburner.com/Nknewsorg getFeed east.cracklog.com

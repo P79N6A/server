@@ -1,0 +1,2 @@
+#!/bin/sh
+rsync -av "`dirname "$0"`"/ `ruby -e 'puts RbConfig::CONFIG["sitelibdir"]'`/element

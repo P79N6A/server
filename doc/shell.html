@@ -1,0 +1,129 @@
+<html><head><title>element shell integration</title></head><body>
+<link rel="stylesheet" href="../css/doc.css" type="text/css" /> 
+<h2>shell integration</h2>
+<pre id="body"> 
+<a name="start13" accesskey="j" id="start13"></a>sh PATH namespace, two symbols, to be named at your discretion. i use e and E
+ 
+e maps to instance methods
+E maps to class methods
+ 
+URI-named functions can be called via :y method on e (could curry an alias)
+ 
+irb
+ E::F['day']
+=&gt; #&lt;Proc:0x88a3c68&#64;/usr/lib/ruby/site_ruby/1.9.1/element/W/cal.rb:3 (lambda)&gt;
+ E::F['day'].call
+=&gt; &quot;2011/03/02&quot;
+ 
+ '/m/2011/03/02'.E.c[0..3]
+=&gt; [/m/2011/03/02/msg.CDsB, /m/2011/03/02/msg.DDsB, /m/2011/03/02/msg.EDsB, /m/2011/03/02/msg.FDsB]
+ 
+ 
+sh
+11 local e day y
+2011/03/02
+ 
+11 local e &quot;/m/2011/03/02/*&quot; glob | head -n 3
+/m/2011/03/02/msg.CDsB
+/m/2011/03/02/msg.DDsB
+/m/2011/03/02/msg.EDsB
+ 
+11 ix e /.mail/2011/03/02/msg.EDsB r | tail -n 12
+Didn't you ever have this weird feeling of meeting a fellow musician
+who's on Linux too, when you suddenly realize you talk about tools,
+setups, bloody kernels and suchlike and somehow actual music is never
+mentioned? It's a trap :)
+ 
+Alexandre Prokoudine
+<a href="http://libregraphicsworld.org">http://libregraphicsworld.org</a> 
+ 
+in cron, on my phone i have this little script
+ 
+#!/bin/sh
+cd
+getmail
+rsync -avz .mail f:
+rsync -avz .mail s:
+cd web
+e /m ml
+E feeds
+ 
+it grabs my mail, and since ~/.getmail/getmailrc contains
+ 
+[destination]
+type = MDA_external
+path = /usr/bin/procmail
+ 
+ its sent along thru
+ 
+cat ~/.procmailrc
+D=$HOME/.mail/`date +%Y/%m/%d`
+MKDIR=`test -d $D || mkdir -p $D`
+DEFAULT=$D
+ 
+added to a dir named via date, matching our strftime(3) above
+ 
+it tries syncing the new files to both my netbook and a wireless router if theyre in range( about 350 mb a year  of messages with all the MLs im on)
+ 
+next it cd's to webserver root, runs a command which brings up ruby to keyword and create sioc indexes in a filesystem t-store
+ 
+E feeds is described at <a href="http://blog.whats-your.name/post/2010/10/25/aint-no-winer">http://blog.whats-your.name/post/2010/10/25/aint-no-winer</a> 
+ 
+supposing i decided to rm -rf a netbook, install a new OS or whatever,  reindex all the messages in irb:
+E['/m/20*/*/{01..31}/*'].glob.map &amp;:indexMail
+ 
+/m is a totally arbitrary path i symlinked ~/.mail into server root
+ 
+supposing i want today's dir 
+ 
+11 ix e /m day
+/m/2011/03/02/*
+ 
+or from a web agent
+ 
+11 ~ curl -I <a href="http://f/m?y=day">http://f/m?y=day</a> 
+HTTP/1.1 303 See Other
+Location: /m/2011/03/02/*?
+ 
+i'd add something like view=threads to the querystring
+ 
+a webserver has to be running for that to work!
+ 
+11 ix E daemon
+[2011-03-02 15:37:12] INFO  WEBrick 1.3.1
+[2011-03-02 15:37:12] INFO  ruby 1.9.2 (2011-02-18) [i686-linux]
+[2011-03-02 15:37:12] INFO  WEBrick::HTTPServer#start: pid=7759 port=9292
+ 
+yeah, webrick is really ancient, we can do better
+ 
+11 ix E daemon -s thin -p 80
+&gt;&gt; Thin web server (v1.2.7 codename No Hup)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:80, CTRL+C to stop
+ 
+options are in
+rackup --help
+ 
+didnt want config.ru files littering my disks which is why hooked this up, but you can in sh:
+echo run E &gt; config.ru
+ 
+then they will work
+ 
+thin -r element/Th --threaded --no-epoll -p 80 start -R config.ru
+ 
+we can generate serializations from commandline. the one below invokes RDF.rb 
+ 
+11 local e /m/2011/03/02/msg.EDsB serialize text/ntriples
+&lt;/m/2011/03/02/msg.EDsB&gt; &lt;fs:size&gt; &quot;5598&quot;^^&lt;<a href="http://www.w3.org/2001/XMLSchema#integer">http://www.w3.org/2001/XMLSchema#integer</a>&gt; .
+&lt;/m/2011/03/02/msg.EDsB&gt; &lt;fs:mtime&gt; &quot;00:51:22GMT&quot;^^&lt;<a href="http://www.w3.org/2001/XMLSchema#time">http://www.w3.org/2001/XMLSchema#time</a>&gt; .
+&lt;AANLkTika7ucGCniwoYNZv3FA_S6s6461oBYwiqVi_YoN@mail.gmail.com&gt; &lt;<a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">http://www.w3.org/1999/02/22-rdf-syntax-ns#type</a>&gt; &lt;<a href="http://rdfs.org/sioc/types#MailMessage">http://rdfs.org/sioc/types#MailMessage</a>&gt; .
+&lt;AANLkTika7ucGCniwoYNZv3FA_S6s6461oBYwiqVi_YoN@mail.gmail.com&gt; &lt;<a href="http://rdfs.org/sioc/ns#content">http://rdfs.org/sioc/ns#content</a>&gt; &quot;On 3/2/11, S C Rigler wrote:\n\n&amp;gt;&amp;gt;&amp;gt; I was thinking the same thing until I started having flashbacks to the\n&amp;gt;&amp;gt;&amp;gt; days\n&amp;gt;&amp;gt;&amp;gt; of the browser wars when every web site said \&quot;Made for Netscape\&quot;.\n&amp;gt;&amp;gt;\n&amp;gt;&amp;gt; \&quot;Made for\&quot; is something different than \&quot;made with\&quot; ;)\n&amp;gt;\n&amp;gt; I know...the only one that came to mind was \&quot;Made with FrontPage\&quot;...\n&amp;gt;\n&amp;gt; Maybe somebody could invest the time and money into a \&quot;Linux Only\&quot; record\n&amp;gt; label.\n\nA flashback for that one is \&quot;For programmers by programmers\&quot; :)\n\nPeople have been hearing about \&quot;Linux on desktop\&quot; since forever. This\nis simply not interesting. The best OS is the one you don't notice.\nJust don't mention Linux at all, give a little more accent on content\nrather than tools and it might get you further than you expect.\n\nDidn't you ever have this weird feeling of meeting a fellow musician\nwho's on
+ 
+to be redirected to a file served by a webserver to tabulator or so..
+ 
+that's the general concept anyways
+ 
+<a href="http://gitorious.org/element/element/blobs/master/sh/E">http://gitorious.org/element/element/blobs/master/sh/E</a> 
+<a href="http://gitorious.org/element/element/blobs/master/sh/e">http://gitorious.org/element/element/blobs/master/sh/e</a> 
+</pre> 
+</body></html>
