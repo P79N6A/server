@@ -16,7 +16,7 @@ class E
        a[r]}]}
 
   fn 'view/ls',->i,e{
-    [(H.css '/css/ls'),(Fn 'view/th',i,e),(Fn 'view/tab',i,e),
+    [(H.css '/css/ls'),(Fn 'view/tab',i,e),(Fn 'view/find',i,e),
      {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du}]}
 
   fn 'req/guessFiles',->e,r{ g = {}
