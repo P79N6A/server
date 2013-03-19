@@ -32,6 +32,9 @@ class E
       # images
       elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8
         [302, {Location: e.uri+'?graph=ls&view=th'},[]]
+      # irc
+      elsif b.grep(/\.log$/).size / s > 0.8
+        [302, {Location: e.uri+'?set=ls&view=chat'},[]]
       # default
       else
         [302, {Location: e.uri+'?graph=ls&view=dir'},[]]
