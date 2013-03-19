@@ -20,19 +20,23 @@ class E
      {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du}]}
 
   fn 'req/guessFiles',->e,r{ g = {}
-    Fn 'graph/ls', e, nil, g # list
+    Fn 'graph/ls', e, nil, g
     g.values.map{|e|e.E.base}.do{|b|
-       s = b.size.to_f
-       if b.grep(/^msg\./).size / s > 0.42 # emails
-         [302, {Location: e.uri+'?set=ls&view=threads'},[]]
-       elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > 0.8 # audio files
-         [302, {Location: e.uri+'?graph=ls&view=audioplayer'},[]]
-       elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8 # images
-         [302, {Location: e.uri+'?graph=ls&view=th'},[]]
-       else
-         [302, {Location: e.uri+'?graph=ls&view=dir'},[]]
-       end}}
-
+      s = b.size.to_f
+      # email
+      if b.grep(/^msg\./).size / s > 0.42
+        [302, {Location: e.uri+'?set=ls&view=threads'},[]]
+      # audio
+      elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > 0.8
+        [302, {Location: e.uri+'?graph=ls&view=audioplayer'},[]]
+      # images
+      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8
+        [302, {Location: e.uri+'?graph=ls&view=th'},[]]
+      # default
+      else
+        [302, {Location: e.uri+'?graph=ls&view=dir'},[]]
+      end}}
+  
   # path-history breadcrumbs in iframe parents
   fn 'view/inode/directory',->i,e{
     [H.css('/css/ls'),(H.js '/js/ls'),(H.js '/js/mu'),
