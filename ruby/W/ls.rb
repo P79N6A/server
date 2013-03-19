@@ -2,14 +2,13 @@ watch __FILE__
 class E
   
   fn 'set/ls',->d,e,m{d.c}
-  fn 'graph/ls',->d,e,m{
-    d.c.map{|c| c.fromStream m,:tripleSourceNode,false }}
+  fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m,:tripleSourceNode,false}}
 
   fn 'view/dir',->i,e{
     a = -> i { e = i.E
       [' ', e.uri.match(/(gif|jpe?g|png)$/i) ?
        {_: :a, href: e.uri, c: {_: :img, src: i.uri+'?64x64'}} : e.html]}
-    [(H.css '/css/ls'),
+    [(H.css '/css/ls'),{_: :a, href: e['REQUEST_PATH']+'?graph=ls&view=ls', c: 'ls', class: :mode},
      i.map{|u,r| r['fs:child'] ?
        {class: :dir, style: "background-color: #{E.c}",
          c: [{_: :b, c: r.E.html},
@@ -21,8 +20,7 @@ class E
      {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du}]}
 
   fn 'view/guess',->i,e{
-    [{_: :a, href: e['REQUEST_PATH']+'?graph=ls&view=ls', c: 'ls', class: :mode},
-     i.values.map{|e| e.E.base}.do{|b|
+    [i.values.map{|e| e.E.base}.do{|b|
        s = b.size.to_f
        if b.grep(/^msg\./).size / s > 0.42
          Fn 'view/threads',i,e
