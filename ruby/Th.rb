@@ -1,13 +1,7 @@
 require 'element/W'
-%w{
-GET
-HEAD
-POST
-PATCH
-uid
-404
-500
+%w{GET HEAD POST PATCH uid 404 500
 }.map{|i|require 'element/Th/' + i }
+require 'rack'
 
 class String
   # parse querystring
@@ -113,8 +107,9 @@ class E
         response }
     end
 
-  def E.daemon *a; ARGV.shift; require 'rack'
-    Rack::Server.start Rack::Server.new.options.update({app: E}) end
+  def E.daemon *a; ARGV.shift
+    Rack::Server.start Rack::Server.new.options.update({app: E})
+  end
 
   E['http:/*/*.rb'].glob.map{|s| puts "site config #{s}"
     require s.d}
