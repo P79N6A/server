@@ -42,6 +42,7 @@ class E
     pdf: 'application/pdf',
     png: 'image/png',
     rb:  'application/ruby',
+    ru:  'application/ruby',
     rdf: 'application/rdf+xml',
     rtf: 'text/rtf',
     ssv: 'text/semicolon-separated-values',

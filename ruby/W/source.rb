@@ -1,18 +1,6 @@
 class E
-
-  fn '/source/GET',->e,r{b=__FILE__.length-20
-    e.GET_graph ->e,q,g{
-      q.update({'view'=>'tree','treev'=>'title'})
-      F.map{|k,p|
-        p.class == Proc &&
-        (t=p.source_location
-         a=t[0][b..-1]
-         l=t[1].to_s
-         u=a+'#'+a+l
-         g[k]={Title => k.frag,'uri' => u}
-         g[a+'#'+l]={Title => k,'uri' => u}
-         )}}}
-
+  
+  # show available querystring aliases
   fn '/qs/GET',->e,r{H([H.css('/css/404'),F['?'].html]).hR}
 
   def code

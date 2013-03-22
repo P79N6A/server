@@ -15,6 +15,8 @@ require 'element/W'
     http://bartlettevents.org/blog?format=rss
     http://www.tpdnews411.com/feeds/posts/default
     http://bostonrestaurants.blogspot.com/feeds/posts/default
+    http://feeds.feedburner.com/BigRedShiny
+    http://www.scidorchester.org/blog/feed
     http://api.flickr.com/services/feeds/photos_public.gne?id=93374791@N08&lang=en-us&format=atom
     http://www.wx1box.org/rss.xml
     }.map{|f|f.E.getFeed ARGV[0]}

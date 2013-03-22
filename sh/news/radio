@@ -1,6 +1,7 @@
 #!/bin/sh
 e http://www.reddit.com/r/rfelectronics+shortwave+RTLSDR+amateurradio/new/.rss?sort=new getFeedReddit $1
 e 'http://www.hfunderground.com/board/index.php?type=rss;action=.xml' getFeed $1
+e http://shortwaveamerica.blogspot.com/feeds/posts/default getFeed $1
 e 'http://kimelli.nfshost.com/index.php?atom=1&section=Home' getFeed $1
 e 'http://mt-shortwave.blogspot.com/feeds/posts/default' getFeed $1
 e http://shortwavedxer.blogspot.com/feeds/posts/default getFeed $1
