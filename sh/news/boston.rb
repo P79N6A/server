@@ -12,9 +12,11 @@ require 'element/W'
     http://cityofbostonarchives.tumblr.com/rss
     http://misterching.tumblr.com/rss
     http://www.bpdnews.com/feed/atom/
+    http://feeds.boston.com/boston/yourtown/dorchester/rss
     http://bartlettevents.org/blog?format=rss
     http://www.tpdnews411.com/feeds/posts/default
     http://bostonrestaurants.blogspot.com/feeds/posts/default
+    http://www.dotnews.com/rss.xml
     http://feeds.feedburner.com/BigRedShiny
     http://www.scidorchester.org/blog/feed
     http://api.flickr.com/services/feeds/photos_public.gne?id=93374791@N08&lang=en-us&format=atom
