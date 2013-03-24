@@ -19,6 +19,7 @@ class E
     send? ? # agent already has this version?
     b.().do{|b| # continue
       h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # populate response header
+      m.match(/^(audio|image|video)/) && h.update({'Cache-Control' => 'no-transform'}) # media files are compressed
       b.class == E ? (r = Rack::File.new nil # use Rack file server
                       r.instance_variable_set '@path',b.d # at path
                      (r.serving @r).do{|s,m,b|[s,m.update(h),b]}) : # Rack file-handler
