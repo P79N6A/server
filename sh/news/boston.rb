@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 require 'element/W'
+ARGV[0].do{|h|
+  puts "updating #{h}"
 %w{ http://www.universalhub.com/node/feed/atom
     http://api.flickr.com/services/feeds/photos_public.gne?id=48232993@N00&lang=en-us&format=atom
     http://api.flickr.com/services/feeds/photos_public.gne?id=17702948@N06&lang=en-us&format=atom
@@ -21,4 +23,4 @@ require 'element/W'
     http://www.scidorchester.org/blog/feed
     http://api.flickr.com/services/feeds/photos_public.gne?id=93374791@N08&lang=en-us&format=atom
     http://www.wx1box.org/rss.xml
-    }.map{|f|f.E.getFeed ARGV[0]}
+    }.map{|f|f.E.getFeed ARGV[0]} } || (puts "hostname needed")

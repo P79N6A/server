@@ -71,12 +71,13 @@ class E
 
   # addJSON :: tripleSource -> JSON exists || create
   def addJSON i,g,p=[]
-    fromStream({},i).map{|u,r|
-      (E u).do{|e|
-        e.em.e ||
-        (p.map{|p|r[p].do{|o|e.index p,o[0]}}
-         e.em.w({u => r},true)
-         e.roonga g
+    fromStream({},i).map{|u,r| # stream -> graph
+      (E u).do{|e| # resource
+        e.em.e || # exists?
+        (puts " a #{e}" # add
+         p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
+         e.em.w({u => r},true) # write
+         e.roonga g # index content
          )}}
     self
   end

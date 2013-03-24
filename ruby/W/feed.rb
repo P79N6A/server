@@ -67,6 +67,7 @@ class E
 
 # tripleStream
   def feedRaw &f
+    puts "+f #{uri}"
     read.extend(FeedParse).parse &f
   end
 
