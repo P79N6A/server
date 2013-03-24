@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # http://prefix.cc/popular/all.file.txt
@@ -6,9 +6,9 @@ class E
   
   def E.cacheSchemas
     
-    '/css/i/prefix.cc.txt'.E.read.      # prefix names
-      split("\n").grep(/^[^#]/).map{|c| # uncommented lines
-      c.split(/\t/).do{|f| Hash['uri',   f[1], # parse prefix table
+    'http://localhost/css/i/prefix.cc.txt'.E. # prefix names
+      read.split("\n").grep(/^[^#]/).map{|c|  # uncommented lines
+      c.split(/\t/).do{|f| Hash['uri', f[1],  # parse prefix table
                                 'prefix',f[0]]}}.
       map{|b| puts "c #{b.uri}"
               b.E.cacheTurtle.           # cache schema locally
@@ -19,7 +19,7 @@ class E
              s.indexFrag 'schema'      # index documents
              s.readlink.linkDefined)}  # link slash-URIs to defining docs
     c = {}
-    '/css/i/predicates.2010'.E.read.each_line{|e| # read predicates file
+    '/predicates.2010'.E.read.each_line{|e| # read predicates file
       e.match(/(\d+)[^<]+<([^>]+)>/).             # parse occurrence count
       do{|r|n = r[1].to_i; c[r[2]] = n}}          # into hash-table        
       s.map{|r|m = {}; r.graph.map{|u,_|          # each predicate in schema
