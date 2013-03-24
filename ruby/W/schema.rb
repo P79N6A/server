@@ -1,31 +1,23 @@
 watch __FILE__
 class E
-
-  # http://prefix.cc/popular/all.file.txt
-  # http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
   
-  def E.cacheSchemas
-    
+  def E.cacheSchemas; c = {}    
     'http://localhost/css/i/prefix.cc.txt'.E. # prefix names
       read.split("\n").grep(/^[^#]/).map{|c|  # uncommented lines
       c.split(/\t/).do{|f| Hash['uri', f[1],  # parse prefix table
-                                'prefix',f[0]]}}.
-      map{|b| puts "c #{b.uri}"
-              b.E.cacheTurtle.           # cache schema locally
+                              'prefix',f[0]]}}.
+      map{|b| b.E.cacheTurtle.           # cache schema locally
               ln "/prefix/"+b['prefix']} # prefix shortcut
-    
-    s = E['/prefix/*'].glob            # schema docs
-    s.map{|s|s.size < 2e5 && ( puts "p #{s.uri}"
-             s.indexFrag 'schema'      # index documents
-             s.readlink.linkDefined)}  # link slash-URIs to defining docs
-    c = {}
-    '/predicates.2010'.E.read.each_line{|e| # read predicates file
+    s = E['/prefix/*'].glob      # docs
+    s.map{|s| s.size < 2e5 &&    # each schema
+      (s.indexFrag 'schema'      # index document
+       s.readlink.linkDefined)}  # link slash-URIs to defining doc
+    '/predicates.2010'.E.read.each_line{|e| # usage data http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
       e.match(/(\d+)[^<]+<([^>]+)>/).             # parse occurrence count
       do{|r|n = r[1].to_i; c[r[2]] = n}}          # into hash-table        
       s.map{|r|m = {}; r.graph.map{|u,_|          # each predicate in schema
-          c[u] && (puts "f #{c[u]} #{u}"
-          m[u]={'uri' => u,'/frequency' => c[u]})}# annotate with frequency
-        r.appendNT m unless m.empty?}             # store back to NTriple file
+       c[u] && m[u]={'uri'=>u,'/frequency'=>c[u]}}# annotate with frequency
+        r.appendNT m unless m.empty?}             # store in NTriples file
     end
     
     fn '/schema/GET',->e,r{
@@ -62,13 +54,11 @@ class E
                r[RDFs+'comment'][0].do{|l|{_: :span,class: :comment, c: l}}]}}])}
 
     def linkDefined
-      puts "l #{uri}"
       cacheGraph.do{|m|
         m.map{|u,r|
           r[RDFs+'isDefinedBy'].do{|d|
             prop = (u[-1]=='/' ? u[0..-2] : u).E
-            prop.dirname.dir
-            puts "d #{prop.dirname} #{prop}"
+            prop.dirname.dir;  puts "d #{prop.dirname} #{prop}"
             ln prop }}}
     end
 
