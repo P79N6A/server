@@ -2,7 +2,11 @@ watch __FILE__
 class E
   
   def E.cacheSchemas; c = {}    
-    'http://localhost/css/i/prefix.cc.txt'.E. # prefix names
+    '/predicates.2010'.E.read.each_line{|e| # usage data http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
+      e.match(/(\d+)[^<]+<([^>]+)>/).       # occurrence count
+      do{|r| c[r[2]] = r[1].to_i }}         # to hash-table        
+
+    'http://localhost/css/i/prefix.cc.txt'.E. # schema list
       read.split("\n").grep(/^[^#]/).map{|c|  # uncommented lines
       c.split(/\t/).do{|f| Hash['uri', f[1],  # parse prefix table
                               'prefix',f[0]]}}.
@@ -12,9 +16,6 @@ class E
     s.map{|s| s.size < 2e5 &&    # each schema
       (s.indexFrag 'schema'      # index document
        s.readlink.linkDefined)}  # link slash-URIs to defining doc
-    '/predicates.2010'.E.read.each_line{|e| # usage data http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
-      e.match(/(\d+)[^<]+<([^>]+)>/).             # parse occurrence count
-      do{|r| c[r[2]] = r[1].to_i }}               # into hash-table        
       s.map{|r|m = {}; r.graph.map{|u,_|          # each predicate in schema
        c[u] && m[u]={'uri'=>u,'/frequency'=>c[u]}}# annotate with frequency
         r.appendNT m unless m.empty?}             # store in NTriples file
