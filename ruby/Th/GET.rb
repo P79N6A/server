@@ -47,7 +47,7 @@ class E
      ).do{|y|y.(self,@r)} ||
     as('index.html').do{|i| # HTML indexes
       i.e && # exists?
-      ((uri[-1]=='/') ? i.GET_file : # inside dir?
+      ((uri[-1]=='/') ? i.env(@r).GET_file : # inside dir?
        [301, {Location: uri.t}] # redirect to dir 
        )} ||
     (resources (F['graph/'+@r.q['graph']].do{|y| m = {}
