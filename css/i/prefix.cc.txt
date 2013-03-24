@@ -122,7 +122,6 @@ po	http://purl.org/ontology/po/
 akts	http://www.aktors.org/ontology/support#
 uniprot	http://purl.uniprot.org/core/
 rsa	http://www.w3.org/ns/auth/rsa#
-granatum	http://chem.deri.ie/granatum/
 sioct	http://rdfs.org/sioc/types#
 ov	http://open.vocab.org/terms/
 daml	http://www.daml.org/2001/03/daml+oil#
