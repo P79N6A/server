@@ -14,7 +14,7 @@ class E
        s.readlink.linkDefined)}  # link slash-URIs to defining doc
     '/predicates.2010'.E.read.each_line{|e| # usage data http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
       e.match(/(\d+)[^<]+<([^>]+)>/).             # parse occurrence count
-      do{|r|n = r[1].to_i; c[r[2]] = n}}          # into hash-table        
+      do{|r| c[r[2]] = r[1].to_i }}               # into hash-table        
       s.map{|r|m = {}; r.graph.map{|u,_|          # each predicate in schema
        c[u] && m[u]={'uri'=>u,'/frequency'=>c[u]}}# annotate with frequency
         r.appendNT m unless m.empty?}             # store in NTriples file
