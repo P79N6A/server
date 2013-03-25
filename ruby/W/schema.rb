@@ -2,10 +2,12 @@ watch __FILE__
 class E
   
   def E.cacheSchemas; c = {}    
+    puts "parsing gromgull's data"
     '/predicates.2010'.E.read.each_line{|e| # usage data http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
+      print "%d%% " % (c.size / 953.0) if c.size % 10000 == 0 # info
       e.match(/(\d+)[^<]+<([^>]+)>/).       # occurrence count
-      do{|r| c[r[2]] = r[1].to_i }}         # to hash-table        
-
+      do{|r| c[r[2]] = r[1].to_i }}         # to hash-table
+      puts "\n#{c.size} properties"
     'http://localhost/css/i/prefix.cc.txt'.E. # schema list
       read.split("\n").grep(/^[^#]/).map{|c|  # uncommented lines
       c.split(/\t/).do{|f| Hash['uri', f[1],  # parse prefix table
