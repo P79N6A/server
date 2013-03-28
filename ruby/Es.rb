@@ -16,7 +16,7 @@ class E
   def randomLeaf
     c.empty? && self || c.r.randomLeaf
   end
-  fn 'graph/r',->d,e,m{(1..e['c'].do{|c|c.to_i}||8).map{|_|d.randomLeaf}.map{|r|r.cacheGraph m};m}
+  fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
 
   def lev; require 'text/levenshtein'
     b = base
