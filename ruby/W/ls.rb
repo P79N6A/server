@@ -7,7 +7,7 @@ class E
   fn 'view/dir',->i,e{
     a = -> i { e = i.E
       [' ', e.uri.match(/(gif|jpe?g|png)$/i) ?
-       {_: :a, href: e.uri, c: {_: :img, src: i.uri+'?64x64'}} : e.html]}
+       {_: :a, href: e.uri, c: {_: :img, src: i.uri+'?128x128'}} : e.html]}
     [(H.css '/css/ls'),{_: :a, href: e['REQUEST_PATH']+'?graph=ls&view=ls', c: 'ls', class: :mode},
      i.map{|u,r| r['fs:child'] ?
        {class: :dir, style: "background-color: #{E.c}",
