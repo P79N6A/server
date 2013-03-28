@@ -1,12 +1,12 @@
 span.nick {min-width:15ex;text-align:right;display:inline-block}
 span.nick span {color:#000}
 a.date {color:#000;background-color:#888;font-size:.8em;}
-.tw {color:#fff;display:inline;white-space:pre-wrap;font-family:monospace}
+.tw {color:#fff;display:inline;white-space:pre-wrap;font-family:monospace;padding:.05em}
 .tw div,p {display:inline}
 .tw .title {color:#000;background-color:#eee}
 .tw .titleMail {color:#fff;background-color:#0000ba}
 .tw a {color:#fff}
-img.a {height:1em}
+img.a {height:1em;border-width:0}
 .tw img {max-width:100%}
 a {text-decoration:none}
 a:hover {background-color:#f70;color:#000}
