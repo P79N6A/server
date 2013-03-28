@@ -11,4 +11,4 @@ img.a {height:1em}
 a {text-decoration:none}
 a.line {}
 a[rel] {color:#fff}
-body {background: url('/i?y=randomLeaf');font-family:sans-serif}
+body {background-image: url('/i?y=randomLeaf');background-size: cover; font-family:sans-serif}
