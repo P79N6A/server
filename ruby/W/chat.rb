@@ -43,8 +43,9 @@ class E
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
             c: [{_: :img, class: :a, src: r[Atom+"/link/image"][0].uri},
                 {_: :span, c: r[Creator][0].do{|c|c.respond_to?(:uri) ? c.uri.split(/@/)[0] : c.match(/[^\(]+/)}||'#'}]}},' ',
-        {_: :span, :class => :tw, style: 'background-color:#'+(rand 48).do{|l|'%02x%02x%02x' % [l,l,l]}, 
-       c: [r[Atom+'/link/media'].do{|a|a.map{|a|{_: :a, href: r.url, c: {_: :img, src: a.uri}}}},
+        {_: :span, :class => :tw, 
+       c: [r[Atom+'/link/media'].do{|a|
+             a.map{|a|{_: :a, href: r.url, c: {_: :img, src: a.uri}}}},
            ((r[Title].to_s==r[Content].to_s || r.uri.match(/twitter/)) && '' ||
             {_: :a, href: r.url, c: r[Title],:class => r[:mail] ? :titleMail : :title}),
            r[:mail] ? (r[Content].map{|c|c.lines.to_a.grep(/^[^&@_]+$/)[0..21]}) : r[Content],

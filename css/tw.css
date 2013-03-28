@@ -1,7 +1,7 @@
 span.nick {min-width:15ex;text-align:right;display:inline-block}
 span.nick span {color:#000}
 a.date {color:#000;background-color:#888;font-size:.8em;}
-.tw {color:#fff;display:inline;white-space:pre-wrap;font-family:monospace;padding:.05em}
+.tw {color:#fff;background-color:#000;display:inline;white-space:pre-wrap;font-family:monospace;padding:0em}
 .tw div,p {display:inline}
 .tw .title {color:#000;background-color:#eee}
 .tw .titleMail {color:#fff;background-color:#0000ba}
