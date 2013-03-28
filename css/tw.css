@@ -9,6 +9,7 @@ a.date {color:#000;background-color:#888;font-size:.8em;}
 img.a {height:1em}
 .tw img {max-width:100%}
 a {text-decoration:none}
+a:hover {background-color:#f70;color:#000}
 a.line {}
 a[rel] {color:#fff}
 body {font-family:sans-serif}
