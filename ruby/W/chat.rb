@@ -53,7 +53,7 @@ class E
      "<br>\n"] if r.uri}
   
   fn 'view/chat/base',->d,e,c{
-    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "span.nick span, a {background-color: #{E.c}}\n"}),
+    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body, span.nick span, a {background-color: #{E.c}}\n"}),
      {:class => :ch, c: c.()},
      (H.once e,'chat.tail',{id: :b})]}
 
