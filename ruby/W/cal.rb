@@ -19,7 +19,8 @@ class E
   fn 'cal/month',->{Time.now.strftime '%Y/%m'}
 
   %w{day month}.map{|i|
-  fn 'req/'+i,->e,r{[303,{'Location'=>e.send(i).uri+r.q.except('y').qs},[]]}}
+  fn 'req/'+i,->e,r{[303,{'Location'=>e.send(i).uri+r.q.except('y').qs},[]]}
+  fn 'req/'+i+'dir',->e,r{[303,{'Location'=>e.send(i).uri[0..-2]},[]]}}
 
     def day; as (Fn'cal/day') + '/*' end
   def month; as (Fn'cal/month') + '/*/*' end
