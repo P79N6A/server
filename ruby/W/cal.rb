@@ -25,11 +25,6 @@ class E
     def day; as (Fn'cal/day') + '/*' end
   def month; as (Fn'cal/month') + '/*/*' end
 
-  fn 'filter/daydir',->o,m{
-    puts "filtahh"
-    puts o['uri']
-  }
-
   fn 'graph/cal',->d,e,m{
     DateTime.parse(e['s']||'2011-03-03').
      upto(e['f'].do{|f|DateTime.parse f} || DateTime.now).
