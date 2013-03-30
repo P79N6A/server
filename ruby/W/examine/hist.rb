@@ -4,20 +4,19 @@ class E
   # histogram
   # ?view=h&a=dc:date
   fn 'view/h',->d,e{
-    a=e.q['a'].do{|e|e.expand}
+    a=e.q['a'].do{|e|e.expand} # a :  attribute to chart
     !a && 'attribute required' || (
-    n=e.q['bins']&&e.q['bins'].to_f.max(999.0).min(2)||42.0
-    v=F['view/'+(e&&e.q['v']||'tab')]
-    (Fn 'u/hist',d,a,n).do{|h|
-      [H.css('/css/hist'),
-       H.js('/js/hist'),
-       (Fn 'view/hist',h),
+    n=e.q['bins']&&e.q['bins'].to_f.max(999.0).min(2)||42.0 # n :  number of bins
+    v=F['view/'+(e&&e.q['v']||'tab')] # v :  child view 
+    (Fn 'u/hist',d,a,n).do{|h| # construct histogram bins
+      [H.css('/css/hist'),H.js('/js/hist'),(Fn 'view/hist',h),
        h.map{|b,r|{style: 'display:none',
            :class => 's'+b.to_s.sub(/\./,'_'),
            c: v.(r,e)}}]})}
 
   # hist :: Graph, property, numBins  -> {bin -> Graph}
-  fn 'u/hist',->m,p,nb=32.0{h={};bw=0;max=0;min=0
+  fn 'u/hist',->m,p,nb=32.0{
+    h={}; bw=0; max=0; min=0
     m.map{|u,r|
       r[p]
     }.flatten.do{|v|
@@ -26,8 +25,9 @@ class E
     m.map{|u,r|
       r[p].do{|v|v.each{|v|
           b=(v.to_time.to_f/bw).floor*bw # bin selector
-          h[b]||={};h[b][u]=r}}} # append
-    h}
+          h[b] ||= {} 
+          h[b][u]=r}}} # append
+    h} # histogram
 
   # histTable :: hist -> htmlTable
   fn 'view/hist',->h{
