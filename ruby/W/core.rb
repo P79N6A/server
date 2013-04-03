@@ -13,7 +13,6 @@ class Hash
   end
 end
 
-
 class E
 
   class << self
@@ -31,6 +30,7 @@ class E
     end; m
   end
 
+  # tripleStream transformer stack
   fn 'graph/|',->e,_,m{e.fromStream m, *_['|'].split(/,/)}
 
   def E.graphFromStream s
@@ -42,19 +42,8 @@ class E
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
   end
 
-  fn 'graph/_',->d,_,m{m[d.uri]={}} # graph stub
-  # used eg for Exhibit view, it requests graph later but we don't want 404!
-
-  # resource :: tripleSource -> jsonResource
-  def resource i,*a
-    r={}
-    send(i,*a) do |s,p,o|
-      r['uri'] ||= s
-      r[p] ||= []
-      r[p].push o
-    end
-    r
-  end
+  # some views request graph later (JS)
+  fn 'graph/_',->d,_,m{ m[d.uri] = {} } # placeholder
 
   # in :: tripleSource -> vfs
   def in i,*a
@@ -92,7 +81,7 @@ class E
    [ :tripleSourceNode, # filesystem data
      :tripleSourceMIME, # domain-specific metadata
    ].each{|i| fromStream g,i}  # tripleStream -> Graph
-    g.merge! ((em.r true)||{}) # JSON graph-storage
+    g.merge! ((em.r true)||{}) # JSON graph -> Graph
     g
   end
   
@@ -103,6 +92,7 @@ class E
         send *s,&b }}
   end
 
+  # JSON graph-storage
   def em
     @em ||= ((path[-1]=='/' ? path[0..-2] : path)+'.e').E    
   end
@@ -110,14 +100,10 @@ class E
   # cacheGraph :: Graph -> Graph
   def cacheGraph g={}
     s = readlink.dirname.prepend('/E/resource/').a "/#{base}.json"
-    s.e && (!e || s.m > m) && g.merge!(s.r(true)) ||
+    s.e && (!e || s.m > m) && g.merge!(s.r(true)) || # exists and up-to-date
       (i = graph
        s.w i, true
        g.merge! i)
-  end
-  
-  def q g={}
-    F['graph/'+@r.q['graph']].do{|y|y.(self,@r.q,g)} || (cacheGraph g)
   end
 
   def graphFrag g={};@r[:graph]||={}
