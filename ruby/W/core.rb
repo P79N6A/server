@@ -45,7 +45,7 @@ class E
   fn 'graph/_',->d,_,m{m[d.uri]={}} # graph stub
   # used eg for Exhibit view, it requests graph later but we don't want 404!
 
-  # resource :: tripleSource -> jsonRes
+  # resource :: tripleSource -> jsonResource
   def resource i,*a
     r={}
     send(i,*a) do |s,p,o|
@@ -89,11 +89,10 @@ class E
 
   # graph :: Graph -> Graph
   def graph g={}
-   [ :tripleSourceNode,
-     :tripleSourceMIME,
-   ].each{|i|
-      fromStream g,i}
-    g.merge! ((em.r true)||{})
+   [ :tripleSourceNode, # filesystem data
+     :tripleSourceMIME, # domain-specific metadata
+   ].each{|i| fromStream g,i}  # tripleStream -> Graph
+    g.merge! ((em.r true)||{}) # JSON graph-storage
     g
   end
   

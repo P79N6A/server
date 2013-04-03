@@ -5,6 +5,8 @@ class E
     Fn 'head' + (v != 'page' && '/' + v), d, e}
 
   fn 'view/page',->d,e{
+    # use daydirs if no pagination hints provided
+    !d.has_any_key(%w{next prev}) && (puts :nopate)
     # page links
     c={style: 'width:100%;display:block;clear:both',
       c: [d['prev'].do{|p| d.delete('prev') # prev
