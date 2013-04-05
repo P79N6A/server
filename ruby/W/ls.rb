@@ -25,16 +25,16 @@ class E
       s = b.size.to_f
       # email
       if b.grep(/^msg\./).size / s > 0.42
-        [302, {Location: e.uri+'?set=ls&view=threads'},[]]
+        [302, {Location: e.uri+'?set=ls&view=page&v=threads'},[]]
       # audio
       elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > 0.8
-        [302, {Location: e.uri+'?graph=ls&view=audioplayer'},[]]
+        [302, {Location: e.uri+'?graph=ls&view=page&v=audioplayer'},[]]
       # images
       elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8
-        [302, {Location: e.uri+'?graph=ls&view=th'},[]]
+        [302, {Location: e.uri+'?graph=ls&view=page&v=th'},[]]
       # irc
       elsif b.grep(/\.log$/).size / s > 0.8
-        [302, {Location: e.uri+'?set=ls&view=chat'},[]]
+        [302, {Location: e.uri+'?set=ls&view=page&v=chat'},[]]
       # default
       else
         [302, {Location: e.uri+'?graph=ls&view=dir'},[]]
