@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class String; def is_binary_data?; true; end; end
 module TMail
   class Mail
@@ -35,37 +35,18 @@ module TMail
 end
 class E
   F["?"]||={};F["?"].update({
-'thread'=>{'graph'=>'thread','sort' => 'dc:date','reverse' => nil,'view' => 'mail'},
-'ann'=>{'view'=>'threads','match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/,'matchP' => 'dc:title'}})
-
-  def indexMbox
-    p = (base==bare ? (a '.') : (dirname.as bare)).dir
-    (TMail::UNIXMbox.new node,nil,true).each_port{|x|
-      FileUtils.mv x.filename, p.node
-      (p.as File.basename x.filename).indexMail}; self
-  rescue
-    nil
-  end
-
-  def indexMail g
-    i=(m=resource :mail).E; return if !i || i.e # get identifier from Message-ID
-    puts "+ix #{i}"
-    ln i # link message file to Message-ID path
-#    (m[Creator]||[]).map{|o|self.index Creator,o} # index sender
-#    (m[To]||[]).map{|o|self.index To,o} # index recipient
-#    (m[Date]||[]).map{|o|i.index Date,o} # index date
-    (m[SIOC+'reply_of']||[]).map{|o|i.index SIOC+'reply_of',o} # index reply-graph
-    i.roonga g # index date and contents
-    self
-  rescue Exception => e
-    puts [:indexMail,uri,e].join(' ')
-  end
-  def ml g; day.mlGlob g end
-  def mlGlob g; glob.map{|m|m.indexMail g} end
+   'thread'=>{'graph'=>'thread','sort' => 'dc:date','reverse' => nil,'view' => 'mail'},
+   'ann'=>{'view'=>'threads','match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/,'matchP' => 'dc:title'}})
 
   def mail; require 'tmail'
-    (TMail::Mail.load node).do{|m|
-      id = m.message_id; return unless id; id=id[1..-2]
+    (TMail::Mail.load node).do{|m| # parse
+      id = m.message_id; return unless id # parse successful?
+      id = id[1..-2] # Message-ID -> URI
+       e = id.E # Message resource
+      if !e.e # Message-ID locatable?
+        ln e  # symlink to resource
+        puts "mail #{uri} -> #{e}" # location
+      end
       yield id,Type,E[SIOCt+'MailMessage']
       yield id,Date,m.date.iso8601 if m.date
       yield id,Content,m.decentBody

@@ -1,6 +1,0 @@
-#!/bin/sh
-# ln -s $HOME/.mail web/http://localhost/m
-getmail
-cd $HOME/web 
-e http://localhost/m ml localhost
-rsync -avz $HOME/.mail x:

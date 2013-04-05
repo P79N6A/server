@@ -15,6 +15,7 @@ ARGV[0].do{|h|
     http://feeds.feedburner.com/JamaicaPlainGazette
     http://misterching.tumblr.com/rss
     http://www.bpdnews.com/feed/atom/
+    http://www.neponset.org/feed/
     http://feeds.boston.com/boston/yourtown/dorchester/rss
     http://bartlettevents.org/blog?format=rss
     http://www.tpdnews411.com/feeds/posts/default
