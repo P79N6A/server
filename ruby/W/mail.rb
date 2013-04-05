@@ -39,17 +39,20 @@ class E
    'ann'=>{'view'=>'threads','match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/,'matchP' => 'dc:title'}})
 
   def mail; require 'tmail'
+    i = -> i {E i[1..-2]} # Message-ID -> E
     (TMail::Mail.load node).do{|m| # parse
-      id = m.message_id; return unless id # parse successful?
-      id = id[1..-2] # Message-ID -> URI
-       e = id.E # Message resource
-      if !e.e # Message-ID locatable?
-        ln e  # symlink to resource
+      d = m.message_id; return unless d # parse successful?
+      e = i[d]                     # Message resource
+      if !e.e                      # Message-ID locatable?
+        ln e                       # link to resource
         puts "mail #{uri} -> #{e}" # location
+        %w{in_reply_to references}.map{|p| # message arcs
+          m.send(p).do{|o|
+            o.map{|o| e.index SIOC+'reply_of', i[o] }}}
       end
-      yield id,Type,E[SIOCt+'MailMessage']
-      yield id,Date,m.date.iso8601 if m.date
-      yield id,Content,m.decentBody
+      yield e.uri, Type,    E[SIOCt+'MailMessage']
+      yield e.uri, Date,    m.date.iso8601    if m.date
+      yield e.uri, Content, m.decentBody
         [[:subject,Title],
               [:to,To,true],
               [:cc,To,true],
@@ -61,10 +64,10 @@ class E
      [:in_reply_to,SIOC+'reply_of',true,true],
       [:references,SIOC+'reply_of',true,true],
         ].each{|a|m.send(a[0]).do{|o|
-        o&&[*o].map{|o|
-            yield id,a[1],(a[2] ? E(a[3] ? o[1..-2] : o) : o.to_utf8) unless o.match(/\A[, \n]*\Z/)}}}}
-  rescue Exception => e
-    puts [:tmail,uri,e].join(' ')
+          [*o].map{|o|
+            yield e.uri,a[1],(a[2] ? (a[3] ? i[o] : o.E) : o.to_utf8) unless o.match(/\A[, \n]*\Z/)}}}}
+#  rescue Exception => e
+#    puts [:mail,uri,e].join(' ')
   end
 
   fn 'graph/thread',->d,_,m{d.walk SIOC+'reply_of',m}
