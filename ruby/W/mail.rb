@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class String; def is_binary_data?; true; end; end
 module TMail
   class Mail
@@ -39,14 +39,12 @@ class E
    'ann'=>{'view'=>'threads','match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/,'matchP' => 'dc:title'}})
 
   def mail; require 'tmail'
-    i = -> i {E i[1..-2]}               # Message-ID -> E
-    (TMail::Mail.load node).do{|m|      # parse
-      d = m.message_id; return unless d # parse successful?
-      e = i[d]                          # Message resource
-      e.e || (                          # Message-ID locatable?
-        ln e                            # link to resource
-        puts "mail #{uri} -> #{e}"      # location
-        %w{in_reply_to references}.map{|p| # message arcs
+    i = -> i {E i[1..-2]}                 # Message-ID -> E
+    (TMail::Mail.load node).do{|m|        # parse
+      d = m.message_id; return unless d   # parse successful?
+      e = i[d]                            # Message resource
+      e.e || ( ln e                       # Message-ID locatable?
+       %w{in_reply_to references}.map{|p| # message arcs
           m.send(p).do{|o|
             o.map{|o| e.index SIOC+'reply_of', i[o] }}})
       yield e.uri, Type,    E[SIOCt+'MailMessage']
