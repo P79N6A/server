@@ -45,7 +45,7 @@ class E
       e = i[d]                            # Message resource
       e.e || ( ln e                       # Message-ID locatable?
        %w{in_reply_to references}.map{|p| # message arcs
-          m.send(p).do{|o|
+          m.send(p).do{|o|                # index connections (fs)
             o.map{|o| e.index SIOC+'reply_of', i[o] }}})
       yield e.uri, Type,    E[SIOCt+'MailMessage']
       yield e.uri, Date,    m.date.iso8601    if m.date
