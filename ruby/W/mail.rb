@@ -68,6 +68,7 @@ class E
 
   fn 'graph/thread',->d,_,m{d.walk SIOC+'reply_of',m}
 
+  # an overview of messages in a resource set
   fn 'view/threads',->d,env{g={}
     d.map{|_,m|
       m[To].map{|t|
@@ -94,27 +95,23 @@ class E
 
   fn 'view/mail',->d,e{
     [(H.once e,'mail.js',(H.css '/css/mail'),(H.js '/js/mail'),(H.once e,:mu,(H.js '/js/mu')),
-       {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}),
-     d.values.map{|m|
-       [{_: :a, name: m.uri},
-        m.class == Hash && (m.has_key? E::SIOC+'content') &&
+       {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}), # collapse/expand quoted text
+     d.values.map{|m| # each message
+       [{_: :a, name: m.uri}, # fragment identifier for this message
+        m.class == Hash && (m.has_key? E::SIOC+'content') && # content to show?
        {:class => :mail,
-         c: [(m.url.href "&#x268b;"),
-            [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
-               m[a[1]].do{|m| m.map{|f|
-               f.respond_to?(:uri) &&
+         c: [(m.url.href "&#x268b;"), # permalink
+            [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a| # to / from links
+               m[a[1]].do{|m| m.map{|f| f.respond_to?(:uri) &&
                    {_: :a, href: f.url+'?,='+a[0]+'&view=page&v=threads', c: f.uri+' '}}}},
-             (m['/mail/reply_to']||m[Creator]).do{|r|
-               r[0] && r[0].respond_to?(:uri) &&
-               {_: :a, c: '&#8844;', title: :reply,
-                 href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
+             (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) && # mailto URI with reply metadata
+               {_: :a, c: '&#8844;', title: :reply, href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
             {_: :span, c: ["<pre>",
-                           m[Content].map{|b|i=0
-                             b.class==String &&
-                             b.gsub(/^(&gt;|\s)*\n/,"\n").
-                             gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>').
-                             lines.to_a.map{|l|
-                               f=m.uri+':'+(i+=1).to_s # line fragment
+                           m[Content].map{|b| i = 0
+                             b.class==String && # attach CSS class to quoted content
+                             b.gsub(/^(&gt;|\s)*\n/,"\n").gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>').
+                             lines.to_a.map{|l| # each line
+                               f=m.uri+':'+(i+=1).to_s # line fragment identifier
                                [{_: :a, id: f},l.chomp,(l.size>48&&{_: :a, class: :line, href: '#'+f,c: '↵'}),"\n"]
                              }},
                            "</pre>"]},
