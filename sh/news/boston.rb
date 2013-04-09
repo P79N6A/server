@@ -26,5 +26,6 @@ ARGV[0].do{|h|
     http://feeds.feedburner.com/BigRedShiny
     http://www.scidorchester.org/blog/feed
     http://api.flickr.com/services/feeds/photos_public.gne?id=93374791@N08&lang=en-us&format=atom
+    http://api.flickr.com/services/feeds/photos_public.gne?id=36054681@N04&lang=en-us&format=atom
     http://www.wx1box.org/rss.xml
     }.map{|f|f.E.getFeed ARGV[0]} } || (puts "hostname needed")
