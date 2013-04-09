@@ -10,6 +10,8 @@ ARGV[0].do{|h|
     http://bostonbiker.org/feed/
     http://allston.tumblr.com/rss
     http://boston.eater.com/atom.xml
+    http://abnewsflash.com/?feed=rss2
+    http://allston02134.blogspot.com/atom.xml
     http://fuckyeahmassachusetts.tumblr.com/rss
     http://cityofbostonarchives.tumblr.com/rss
     http://feeds.feedburner.com/JamaicaPlainGazette
