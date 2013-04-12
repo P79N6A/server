@@ -6,7 +6,7 @@ class E
 
   fn 'view/page',->d,e{
     # use daydirs if no pagination hints provided
-    !d.has_any_key(%w{next prev}) && e['REQUEST_URI'].match(/^.[0-9]{4}\/[0-9]{2}\/[0-9]{2}/).do{|m|
+    !d.has_any_key(%w{next prev}) && e['REQUEST_URI'].match(/\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}/).do{|m|
       
       puts "daydir for #{m}"
     }
