@@ -18,6 +18,7 @@ ARGV[0].do{|h|
     http://www.bpdnews.com/feed/atom/
     http://www.neponset.org/feed/
     http://feeds.boston.com/boston/yourtown/dorchester/rss
+    http://www.bankerandtradesman.com/feeds/main.php
     http://bartlettevents.org/blog?format=rss
     http://www.tpdnews411.com/feeds/posts/default
     http://bostonrestaurants.blogspot.com/feeds/posts/default
