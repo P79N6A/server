@@ -1,20 +1,27 @@
 #watch __FILE__
 class E
-  
+
+  # directory -> resourceSet
   fn 'set/ls',->d,e,m{d.c}
+
+  # filesystem metadata of each directory entry
   fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m,:tripleSourceNode,false}}
 
+  # minimal view :: 
   fn 'view/dir',->i,e{
+    # item renderer lambda
     a = -> i { e = i.E
       [' ', e.uri.match(/(gif|jpe?g|png)$/i) ?
        {_: :a, href: e.uri, c: {_: :img, src: i.uri+'?128x128'}} : e.html]}
+    # link to full view
     [(H.css '/css/ls'),{_: :a, href: e['REQUEST_PATH']+'?graph=ls&view=ls', c: 'ls', class: :mode},
-     i.map{|u,r| r['fs:child'] ?
-       {class: :dir, style: "background-color: #{E.c}",
-         c: [{_: :b, c: r.E.html},
-             r['fs:child'].map{|c|a[c]}]} :
-       a[r]}]}
+     i.map{|u,r| r['fs:child'] ? # directory?
+       {class: :dir, style: "background-color: #{E.c}", # dir wrapper
+         c: [{_: :b, c: r.E.html},                      # link to this dir
+             r['fs:child'].map{|c|a[c]}]} :             # children
+       a[r]}]}                                          # item
 
+  # tabular rendering
   fn 'view/ls',->i,e{
     [(H.css '/css/ls'),(Fn 'view/tab',i,e),(Fn 'view/find',i,e),
      {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du}]}
