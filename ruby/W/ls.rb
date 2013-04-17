@@ -17,9 +17,10 @@ class E
     [(H.css '/css/ls'),{_: :a, href: e['REQUEST_PATH']+'?graph=ls&view=ls', c: 'ls', class: :mode},
      i.map{|u,r| r['fs:child'] ? # directory?
        {class: :dir, style: "background-color: #{E.c}", # dir wrapper
-         c: [{_: :b, c: r.E.html},                      # link to this dir
+         c: [{_: :b, c: r.E.html},                      # dir
              r['fs:child'].map{|c|a[c]}]} :             # children
        a[r]}]}                                          # item
+  F['view/inode/directory']=F['view/dir']
 
   # tabular rendering
   fn 'view/ls',->i,e{
@@ -46,15 +47,5 @@ class E
       else
         [302, {Location: e.uri+'?graph=ls&view=dir'},[]]
       end}}
-  
-  # path-history breadcrumbs in iframe parents
-  fn 'view/inode/directory',->i,e{
-    [H.css('/css/ls'),(H.js '/js/ls'),(H.js '/js/mu'),
-     i.values.map{|u|
-       u['fs:child'].do{|c| o = E.c # color 
-         d = c.select{|c|c.E.d?} # child directories        
-         [{style: "background-color:#{E.c}",c: d.sort_by(&:uri).map{|c|
-            [{_: :a,href: c.uri,target: o.tail,class: :child,style: "opacity:#{rand(40)/100.0+0.6};background-color: #{o}",c: c.E.base},' ']}},
-          H.once(e,'child',{_: :iframe,name: o.tail, seamless: "",scrolling: :no,src: u.uri+'?y=guessFiles'})]}}]}
-    
+     
 end
