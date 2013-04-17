@@ -17,7 +17,7 @@ class E
     [(H.css '/css/ls'),{_: :a, href: e['REQUEST_PATH']+'?graph=ls&view=ls', c: 'ls', class: :mode},
      i.map{|u,r| r['fs:child'] ? # directory?
        {class: :dir, style: "background-color: #{E.c}", # dir wrapper
-         c: [{_: :b, c: r.E.html},                      # dir
+         c: [{_: :a, href: r.uri+'?y=guessFiles', c: r.uri}, # dir
              r['fs:child'].map{|c|a[c]}]} :             # children
        a[r]}]}                                          # item
   F['view/inode/directory']=F['view/dir']
