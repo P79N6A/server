@@ -15,6 +15,7 @@ ARGV[0].do{|h|
     http://fuckyeahmassachusetts.tumblr.com/rss
     http://cityofbostonarchives.tumblr.com/rss
     http://feeds.feedburner.com/JamaicaPlainGazette
+    http://ds4si.org/blog/atom.xml
     http://www.bpdnews.com/feed/atom/
     http://www.neponset.org/feed/
     http://feeds.boston.com/boston/yourtown/dorchester/rss
