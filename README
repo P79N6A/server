@@ -1,20 +1,18 @@
- install
+ INSTALL  (choose one)
  ruby/install
-
- dep
+ ruby/install-symlink 
+ 
+ optional tools
  apt-get install thin ruby-nokogiri ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools
- gem install rroonga
+ cp sh/[eE] ~/bin    (can rename)
+ cat sh/rc >> ~/.bashrc
 
- daemon
+ DAEMON
+ mkdir http://domain && cp -a {css,js} http://domain
  RACK_ENV=production E daemon -s thin -p 80
- servable domains in http://domain dir relative to pwd. copy/symlink {css,js} for default UI 
 
- shell tools
- mv sh/[eE] /usr/local/bin  (can be renamed)
- echo source /src/element/sh/rc >> ~/.shrc
-
- author
  <carmen@whats-your.name>
 
-git@gitorious.org:element/www.git   https://gitorious.org/element/www      
+git@gitorious.org:element/www.git   https://gitorious.org/element/www
+git://github.com/infodaemon/www.git https://github.com/infodaemon/www
 git://repo.or.cz/www.git            http://repo.or.cz/w/www.git
