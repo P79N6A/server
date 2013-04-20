@@ -16,9 +16,9 @@ ARGV[0].do{|h|
     http://feeds.feedburner.com/JamaicaPlainGazette
     http://ds4si.org/blog/atom.xml
     http://www.bpdnews.com/feed/atom/
+    http://www.unionparkpress.com/feed/
     http://www.neponset.org/feed/
     http://feeds.boston.com/boston/yourtown/dorchester/rss
-    http://www.bankerandtradesman.com/feeds/main.php
     http://bartlettevents.org/blog?format=rss
     http://www.tpdnews411.com/feeds/posts/default
     http://bostonrestaurants.blogspot.com/feeds/posts/default
