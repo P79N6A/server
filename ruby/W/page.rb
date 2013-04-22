@@ -6,11 +6,9 @@ class E
 
   fn 'view/page',->d,e{
     # use daydirs if no pagination hints provided
-    !d.has_any_key(%w{next prev}) && e['REQUEST_URI'].match(/\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})/).do{|m|
-      t=::Date.parse("#{m[1]}-#{m[2]}-#{m[3]}")
-      puts "daydir for #{t}"
-      puts "daydir for #{t-1}"
-    }
+    !d.has_any_key(%w{next prev}) && e['REQUEST_URI'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})/).do{|m| t=::Date.parse("#{m[2]}-#{m[3]}-#{m[4]}")
+      d['prev']={'uri' => 'prev','url' => m[1]+(t-1).strftime('/%Y/%m/%d')}
+      d['next']={'uri' => 'next','url' => m[1]+(t+1).strftime('/%Y/%m/%d')}}
     # page links
     c={style: 'width:100%;display:block;clear:both',
       c: [d['prev'].do{|p| d.delete('prev') # prev
