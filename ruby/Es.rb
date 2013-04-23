@@ -121,6 +121,7 @@ class Pathname
 
   def take s=1000,v=:desc,o=nil # count, direction, offset
     i = to_s.size # comparison offset-index
+    o=o.gsub(/\/+/,'/') if o # offset
     l = false     # in-range indicator
     r=[]          # result set
     v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v] # asc/desc operator lookup
@@ -132,10 +133,10 @@ class Pathname
            g.(c)             # include children
          else
            a.(n)             # add resource
-           l = true unless l # iterator in range (stop checking if we are)
+           l = true unless l # iterator in range
         end)}}
     g.(c) # start 
-    r     # results
+    r     # result set
   end
 
 end
