@@ -8,18 +8,14 @@ class E
   fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m,:tripleSourceNode,false}}
 
   fn 'set/subtree',->d,r,m{
-    r['c'].do{|c| # subtree
-      ((E '/').take (c.to_i+1).max(88), # size
-       r['d'].do{|d|d.to_sym}||:desc, # direction
-       d.uri).do{|s| # cursor begin
-        desc,asc=r['d'].do{|d|
-                      d=~/^a/} && # ascending
-                 [s[0], s.pop] ||
-                 [s.pop, s[0]]
-        m['prev'] = {'uri' => 'prev', 'url' => desc.url,'d' => 'desc'}
-        m['next'] = {'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
-        s }}}
-
+    c = (r['c'].do{|c|c.to_i + 1} || 3).max(100) # grab an extra for start of next-page
+    orient = r['d'].do{|d|d.to_sym} || :desc # direction
+    ('/'.E.take c, orient, d.uri).do{|s|
+      desc, asc = r['d'].do{|d| d=~/^a/} &&
+      [s[0], s.pop] || [s.pop, s[0]]
+      m['prev'] = {'uri' => 'prev', 'url' => desc.url,'d' => 'desc'}
+      m['next'] = {'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
+      s }}
 
   # minimal view :: 
   fn 'view/dir',->i,e{
