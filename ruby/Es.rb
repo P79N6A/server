@@ -124,15 +124,15 @@ class Pathname
     l = false     # in-range indicator
     r=[]          # result set
     v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v] # asc/desc operator lookup
-    a=->n{s=s-1; r.push n}                        # add to result-set, decrement count
-    g=->b{b.sort_by(&:to_s).send(v).each{|n|      # each child-element
+    a=->n{ s = s - 1; r.push n }                  # add to result-set, decrement count
+    g=->b{ b.sort_by(&:to_s).send(v).each{|n|     # each child-element
         return if 0 >= s                          # stop if count reaches 0
         (l || !o || n.to_s[i..i+o.size-1].send(m,o[0..(n.to_s.size - i - 1)])) && # in range?
         (if !(c=n.c).empty?  # has children?
            g.(c)             # include children
          else
            a.(n)             # add resource
-           l = true unless l # iterator in range
+           l = true unless l # iterator in range (stop checking if we are)
         end)}}
     g.(c) # start 
     r     # results
