@@ -6,6 +6,7 @@ ARGV[0].do{|h|
     http://api.flickr.com/services/feeds/photos_public.gne?id=48232993@N00&lang=en-us&format=atom
     http://api.flickr.com/services/feeds/photos_public.gne?id=17702948@N06&lang=en-us&format=atom
     http://api.flickr.com/services/feeds/photos_public.gne?id=66169386@N04&lang=en-us&format=atom
+    http://feeds.boston.com/boston/business/technology/innoeco/index
     http://bostonbiker.org/feed/
     http://allston.tumblr.com/rss
     http://boston.eater.com/atom.xml

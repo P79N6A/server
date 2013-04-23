@@ -51,19 +51,9 @@ class E
 
   # resPath :: env -> [E]
   def resPath r,m
-    g = glob
-    g.push self if g.empty? && (e || em.e)
-    r['c'].do{|c| # tree
-      ((E '/').take (c.to_i+1).max(88), # size
-       r['d'].do{|d|d.to_sym}||:desc, # direction
-       g[0].uri.tail).do{|s| # cursor begin
-        desc,asc=r['d'].do{|d|d=~/^a/}&&
-                 [s[0], s.pop] ||
-                 [s.pop, s[0]]
-        m['prev']={'uri' => 'prev', 'url' => desc.url,'d' => 'desc'}
-        m['next']={'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
-        g.concat s }} if g.size==1
-    g.concat docs
+    g = glob                 # glob
+    g.push self if e || em.e # path if exists
+    g.concat docs            # other formats
   end
 
   # resourceSet :: env -> {uri => E}
@@ -81,6 +71,7 @@ class E
   end
 
   # recursive bidirectional monomorphic traverse
+  # construct graph by recursively following a named arc (mail references, set membership, etc)
   def walk p,m={},v={}
     m.merge! memoGraph
     v[uri]=true
@@ -130,17 +121,22 @@ class Pathname
 
   Infinity = 1.0/0
   def take s=Infinity,v=:desc,o=nil# count, direction, offset
-    i=to_s.size;l=false;r=[];v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v]
-    a=->n{s=s-1;r.push n}
+    i = to_s.size #
+    l = false # is element a leaf?
+    r=[] # result set
+    v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v] # asc/desc operator lookup
+    a=->n{s=s-1; r.push n} # add to result-set, decrement count
     g=->b{b.sort_by(&:to_s).send(v).each{|n|
         return if 0 >= s
         (l || !o || n.to_s[i..i+o.size-1].send(m,o[0..(n.to_s.size - i - 1)])) && # range
         (if !(c=n.c).empty?
-          g.(c) # children
-        else
-          a.(n); l=true unless l #leaf
+           g.(c) # children
+         else
+           a.(n) # add resource
+           l=true unless l #leaf
         end)}}
-    g.(c); r
+    g.(c) # start 
+    r # results
   end
 
 end

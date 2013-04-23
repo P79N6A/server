@@ -1,11 +1,25 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # directory -> resourceSet
   fn 'set/ls',->d,e,m{d.c}
 
-  # filesystem metadata of each directory entry
+  # filesystem metadata only
   fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m,:tripleSourceNode,false}}
+
+  fn 'set/subtree',->d,r,m{
+    r['c'].do{|c| # subtree
+      ((E '/').take (c.to_i+1).max(88), # size
+       r['d'].do{|d|d.to_sym}||:desc, # direction
+       d.uri).do{|s| # cursor begin
+        desc,asc=r['d'].do{|d|
+                      d=~/^a/} && # ascending
+                 [s[0], s.pop] ||
+                 [s.pop, s[0]]
+        m['prev'] = {'uri' => 'prev', 'url' => desc.url,'d' => 'desc'}
+        m['next'] = {'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
+        s }}}
+
 
   # minimal view :: 
   fn 'view/dir',->i,e{
