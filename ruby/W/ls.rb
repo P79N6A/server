@@ -8,11 +8,11 @@ class E
   fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m,:tripleSourceNode,false}}
 
   fn 'set/subtree',->d,r,m{
-    c = (r['c'].do{|c|c.to_i + 1} || 3).max(100) # grab an extra for start of next-page
-    orient = r['d'].do{|d|d.to_sym} || :desc # direction
-    ('/'.E.take c, orient, d.uri).do{|s|
-      desc, asc = r['d'].do{|d| d=~/^a/} &&
-      [s[0], s.pop] || [s.pop, s[0]]
+    c =(r['c'].do{|c|c.to_i + 1} || 3).max(100) # one extra for start of next-page
+    o = r['d'] =~ /^a/ ? :asc : :desc           # direction
+    ('/'.E.take c, o, d.uri).do{|s|             # take subtree
+      desc, asc = o == :desc ?                  # orient pagination hints
+      [s.pop, s[0]] : [s[0], s.pop]
       m['prev'] = {'uri' => 'prev', 'url' => desc.url,'d' => 'desc'}
       m['next'] = {'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
       s }}
