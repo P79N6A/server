@@ -103,7 +103,7 @@ class E
          c: [(m.url.href "&#x268b;"), # permalink
             [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a| # to / from links
                m[a[1]].do{|m| m.map{|f| f.respond_to?(:uri) &&
-                   {_: :a, href: f.url+'?,='+a[0]+'&view=page&v=threads', c: f.uri+' '}}}},
+                   {_: :a, href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads', c: f.uri+' '}}}},
              (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) && # mailto URI with reply metadata
                {_: :a, c: '&#8844;', title: :reply, href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
             {_: :span, c: ["<pre>",

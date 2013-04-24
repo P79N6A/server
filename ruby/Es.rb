@@ -30,9 +30,8 @@ class E
     (glob '*').concat lev
   end
 
-  # resPO :: env -> [E]
-  def resPO r,m
-    (r[','].expand.E.rangePO self,
+  fn 'set/index',->d,r,m{
+    (r['p'].expand.E.rangePO self,
      (r['c']&&
       r['c'].to_i.max(808)+1 || 88),
      (r['d']&&
@@ -46,32 +45,23 @@ class E
                [a,b]||[b,a] 
       m['prev']={'uri' => 'prev','url' => url,'d' => 'desc','b' => desc.uri} if desc
       m['next']={'uri' => 'next','url' => url,'d' => 'asc','b' => asc.uri} if asc
-      s }
-  end
+      s }}
 
-  # resPath :: env -> [E]
-  def resPath r,m
-    g = glob                 # glob
-    g.push self if e || em.e # path if exists
-    g.concat docs            # other formats
-  end
-
-  # resourceSet :: env -> {uri => E}
   def resourceSet r={},m={}
    (if s=F['set/'+r['set']]
        s[self,r,m]
-     elsif r[',']
-       resPO r,m
      elsif path?
-       resPath r,m
+      g = glob                         # glob
+      g.push self if e || em.e         # path if exists
+      g.concat c if d? && uri[-1]=='/' # children if trailing-slash
+      g.concat docs                    # other formats
      else
        [self]
     end).map{|u| m[u.uri] ||= u}
     m
   end
 
-  # recursive bidirectional monomorphic traverse
-  # construct graph by recursively following a named arc (mail references, set membership, etc)
+  # construct graph recursively following a named arc (mail references, set membership, etc)
   def walk p,m={},v={}
     m.merge! memoGraph
     v[uri]=true
