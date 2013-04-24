@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   # directory -> resourceSet
@@ -19,17 +19,15 @@ class E
 
   # minimal view :: 
   fn 'view/dir',->i,e{
-    # item renderer lambda
     a = -> i { e = i.E
-      [' ', e.uri.match(/(gif|jpe?g|png)$/i) ?
-       {_: :a, href: e.uri, c: {_: :img, src: i.uri+'?233x233'}} : e.html]}
-    # link to full view
-    [(H.css '/css/ls'),{_: :a, href: e['REQUEST_PATH']+'?graph=ls&view=ls', c: 'ls', class: :mode},
+      e.uri.match(/(gif|jpe?g|png)$/i) ?
+      {_: :a, href: e.uri, c: {_: :img, src: i.uri+'?233x233'}} : [e.html,' ']}
+    [(H.css '/css/ls'),
      i.map{|u,r| r['fs:child'] ? # directory?
        {class: :dir, style: "background-color: #{E.c}", # dir wrapper
-         c: [{_: :a, href: r.uri+'?y=guessFiles', c: r.uri}, # dir
-             r['fs:child'].map{|c|a[c]}]} :             # children
-       a[r]}]}                                          # item
+         c: [{_: :a, href: r.uri, c: r.uri}, # dir
+             r['fs:child'].map{|c|a[c]}]} :  # children
+       a[r]}]}                               # item
   F['view/inode/directory']=F['view/dir']
 
   # tabular rendering
