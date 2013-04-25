@@ -69,8 +69,12 @@ class E
 
   fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
 
-  fn 'view',->d,e{
+  fn 'view',->d,e{( Fn 'view/divine/set',r,e )||
     d.values.map{|r|Fn 'view/divine/item',r,e}}
+
+  fn 'view/divine/set',->r,e{
+
+  }
 
   fn 'view/divine/item',->r,e{
     r.class==Hash &&

@@ -19,6 +19,7 @@ ARGV[0].do{|h|
     http://www.bpdnews.com/feed/atom/
     http://www.unionparkpress.com/feed/
     http://www.neponset.org/feed/
+    http://walkingbostonian.blogspot.com/feeds/posts/default
     http://feeds.boston.com/boston/yourtown/dorchester/rss
     http://bartlettevents.org/blog?format=rss
     http://www.tpdnews411.com/feeds/posts/default
