@@ -75,29 +75,20 @@ class E
   fn 'view/divine/set',->d,e{
     d.values.map{|e|e.E.base}.do{|b|
       s = b.size.to_f
-      # email
-      if b.grep(/^msg\./).size / s > 0.42
-        [302, {Location: e.uri+'?set=ls&view=page&v=threads'},[]]
-      # audio
-      elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > 0.8
-        [302, {Location: e.uri+'?graph=ls&view=page&v=audioplayer'},[]]
-      # images
-      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8
-        [302, {Location: e.uri+'?graph=ls&view=page&v=th'},[]]
-      # irc
+      if b.grep(/^msg\./).size / s > 0.42 # email
+        Fn 'view/threads',d,e
+      elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > 0.8 # audio
+        Fn 'view/audioplayer',d,e
+      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8 # images
+        Fn 'view/th',d,e
       elsif b.grep(/\.log$/).size / s > 0.8
-        [302, {Location: e.uri+'?set=ls&view=page&v=chat'},[]]
+        Fn 'view/chat',d,e
       else
         false
       end}}
 
   fn 'view/divine/item',->r,e{
-    r.class==Hash &&
-    r[Type] &&
-    r[Type][0] &&
-    r[Type][0].respond_to?(:uri) &&
-    (t = r[Type][0].uri
-     !t.empty? && 
+    r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) && (t = r[Type][0].uri; !t.empty? && # a typed resource?
      (F['view/'+t] ||
       F['view/'+t.split(/\//)[-2]]).do{|f|
        f.({r.uri => r},e)}) ||
