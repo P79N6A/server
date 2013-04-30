@@ -75,14 +75,15 @@ class E
   fn 'view/divine/set',->d,e{
     d.values.map{|e|e.E.base}.do{|b|
       s = b.size.to_f
-      if b.grep(/^msg\./).size / s > 0.42 # email
+      t = 0.42 # threshold
+      if b.grep(/^msg\./).size / s > t # email
         Fn 'view/threads',d,e
-      elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > 0.8 # audio
-        Fn 'view/audioplayer',d,e
-      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8 # images
-        Fn 'view/th',d,e
-      elsif b.grep(/\.log$/).size / s > 0.8
-        Fn 'view/chat',d,e
+      elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > t # audio
+        Fn 'view/audioplayer', d,e
+      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t # images
+        Fn 'view/th', d,e
+      elsif b.grep(/\.log$/).size / s > t
+        Fn 'view/chat', d,e
       else
         false
       end}}
