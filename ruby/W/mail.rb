@@ -91,7 +91,7 @@ class E
         {_: :td, class: :group, property: To, c: {_: :a, :class => :to, style: 'background-color:'+c,
           c: e[0] && e[0].split(/@/)[0], href: e[0] && e[0].E.url+'?,=sioc:addressed_to&view=page&v=threads'}},
         '</tr>']},'</table>',
-     {_: :a, :class => :show, c: :content,href: env['REQUEST_PATH']+env.q.except('v').update({'view' => :page}).qs}]}
+     {_: :a, :class => :show, c: :content,href: env['REQUEST_PATH']+env.q.except('v').update({'view' => 'mail'}).qs}]}
 
   fn 'view/mail',->d,e{
     [(H.once e,'mail.js',(H.css '/css/mail'),(H.js '/js/mail'),(H.once e,:mu,(H.js '/js/mu')),
