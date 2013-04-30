@@ -76,17 +76,16 @@ class E
     d.values.map{|e|e.E.base}.do{|b|
       s = b.size.to_f
       t = 0.42 # threshold
-      if b.grep(/^msg\./).size / s > t # email
-        Fn 'view/threads',d,e
-      elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > t # audio
-        Fn 'view/audioplayer', d,e
-      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t # images
-        Fn 'view/th', d,e
-      elsif b.grep(/\.log$/).size / s > t
-        Fn 'view/chat', d,e
-      else
-        false
-      end}}
+   if b.grep(/^msg\./).size / s > t # email
+      Fn 'view/threads',d,e
+elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > t # audio
+      Fn 'view/audioplayer', d,e
+elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t # images
+      Fn 'view/th', d,e
+elsif b.grep(/\.log$/).size / s > t
+      Fn 'view/chat', d,e
+ else false
+   end}}
 
   fn 'view/divine/item',->r,e{
     r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) && (t = r[Type][0].uri; !t.empty? && # a typed resource?

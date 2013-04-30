@@ -25,7 +25,7 @@ class E
     [(H.css '/css/ls'),
      i.map{|u,r| r['fs:child'] ? # directory?
        {class: :dir, style: "background-color: #{E.c}", # dir wrapper
-         c: [{_: :a, href: r.uri.t, c: r.uri}, # dir
+         c: [{_: :a, href: r.uri.t+'?view=page', c: r.uri}, # dir
              r['fs:child'].map{|c|a[c]}]} :  # children
        a[r]}]}                               # item
   F['view/inode/directory']=F['view/dir']
