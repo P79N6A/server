@@ -69,12 +69,27 @@ class E
 
   fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
 
-  fn 'view',->d,e{( Fn 'view/divine/set',r,e )||
+  fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
     d.values.map{|r|Fn 'view/divine/item',r,e}}
 
-  fn 'view/divine/set',->r,e{
-
-  }
+  fn 'view/divine/set',->d,e{
+    d.values.map{|e|e.E.base}.do{|b|
+      s = b.size.to_f
+      # email
+      if b.grep(/^msg\./).size / s > 0.42
+        [302, {Location: e.uri+'?set=ls&view=page&v=threads'},[]]
+      # audio
+      elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > 0.8
+        [302, {Location: e.uri+'?graph=ls&view=page&v=audioplayer'},[]]
+      # images
+      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > 0.8
+        [302, {Location: e.uri+'?graph=ls&view=page&v=th'},[]]
+      # irc
+      elsif b.grep(/\.log$/).size / s > 0.8
+        [302, {Location: e.uri+'?set=ls&view=page&v=chat'},[]]
+      else
+        false
+      end}}
 
   fn 'view/divine/item',->r,e{
     r.class==Hash &&
