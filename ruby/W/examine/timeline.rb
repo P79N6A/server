@@ -26,12 +26,11 @@ class E
           link: r.url,
         }}}.compact}.to_json}
 
-  # view bootstrap
-  fn 'head/timeline',->d,e{
+  fn 'head/simile-timeline',->d,e{
   ['<script>var t="'+e['REQUEST_PATH']+e.q.except('view','?').merge({format: 'application/timeline'}).qs+'"</script>',
    (H.js '/js/timeline'),
    (H.js 'http://api.simile-widgets.org/timeline/2.3.1/timeline-api')]}
 
-  fn 'view/timeline',->d,e{'<div id="tl" class="timeline-default" style="height: 300px;"></div>'}
+  fn 'view/simile-timeline',->d,e{'<div id="tl" class="timeline-default" style="height: 300px;"></div>'}
 
 end
