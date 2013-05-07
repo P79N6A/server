@@ -1,5 +1,5 @@
 #watch __FILE__
-%w{crossfilter exhibit hist normal protovis scale sw time timeline}.each{|e|require 'element/W/examine/'+e}
+%w{exhibit hist normal protovis sw time timeline}.each{|e|require 'element/W/examine/'+e}
 class E
 
   fn 'view/examine',->a,m,e{
@@ -52,7 +52,7 @@ class E
         ->m,e,r{r.()}).(m,e,resources)]}
 
   fn 'view/examine/selectFacets',->m,e{
-    [(H.js '/js/examine.sf'),(H.js '/js/mu'),
+    [(H.js '/js/examine.selectFacet'),(H.js '/js/mu'),
      E.graphProperties(m).map{|e|[{class: 'facet', c: e},' ']},
      {_: 'button', c: 'Go'}]}
 
