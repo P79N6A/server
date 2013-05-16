@@ -30,9 +30,8 @@ class E
     (glob '*').concat lev
   end
 
-  # resPO :: env -> [E]
-  def resPO r,m
-    (r[','].expand.E.rangePO self,
+  fn 'set/index',->d,r,m{
+    (r['p'].expand.E.rangePO self,
      (r['c']&&
       r['c'].to_i.max(808)+1 || 88),
      (r['d']&&
@@ -46,41 +45,23 @@ class E
                [a,b]||[b,a] 
       m['prev']={'uri' => 'prev','url' => url,'d' => 'desc','b' => desc.uri} if desc
       m['next']={'uri' => 'next','url' => url,'d' => 'asc','b' => asc.uri} if asc
-      s }
-  end
+      s }}
 
-  # resPath :: env -> [E]
-  def resPath r,m
-    g = glob
-    g.push self if g.empty? && (e || em.e)
-    r['c'].do{|c| # tree
-      ((E '/').take (c.to_i+1).max(88), # size
-       r['d'].do{|d|d.to_sym}||:desc, # direction
-       g[0].uri.tail).do{|s| # cursor begin
-        desc,asc=r['d'].do{|d|d=~/^a/}&&
-                 [s[0], s.pop] ||
-                 [s.pop, s[0]]
-        m['prev']={'uri' => 'prev', 'url' => desc.url,'d' => 'desc'}
-        m['next']={'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
-        g.concat s }} if g.size==1
-    g.concat docs
-  end
-
-  # resourceSet :: env -> {uri => E}
   def resourceSet r={},m={}
    (if s=F['set/'+r['set']]
        s[self,r,m]
-     elsif r[',']
-       resPO r,m
      elsif path?
-       resPath r,m
+      g = glob                         # glob
+      g.push self if e || em.e         # path if exists
+      g.concat c if d? && uri[-1]=='/' # children if trailing-slash
+      g.concat docs                    # other formats
      else
        [self]
     end).map{|u| m[u.uri] ||= u}
     m
   end
 
-  # recursive bidirectional monomorphic traverse
+  # construct graph recursively following a named arc (mail references, set membership, etc)
   def walk p,m={},v={}
     m.merge! memoGraph
     v[uri]=true
@@ -128,19 +109,24 @@ end
 
 class Pathname
 
-  Infinity = 1.0/0
-  def take s=Infinity,v=:desc,o=nil# count, direction, offset
-    i=to_s.size;l=false;r=[];v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v]
-    a=->n{s=s-1;r.push n}
-    g=->b{b.sort_by(&:to_s).send(v).each{|n|
-        return if 0 >= s
-        (l || !o || n.to_s[i..i+o.size-1].send(m,o[0..(n.to_s.size - i - 1)])) && # range
-        (if !(c=n.c).empty?
-          g.(c) # children
-        else
-          a.(n); l=true unless l #leaf
+  def take s=1000,v=:desc,o=nil # count, direction, offset
+    i = to_s.size # comparison offset-index
+    o=o.gsub(/\/+/,'/') if o # offset
+    l = false     # in-range indicator
+    r=[]          # result set
+    v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v] # asc/desc operator lookup
+    a=->n{ s = s - 1; r.push n }                  # add to result-set, decrement count
+    g=->b{ b.sort_by(&:to_s).send(v).each{|n|     # each child-element
+        return if 0 >= s                          # stop if count reaches 0
+        (l || !o || n.to_s[i..i+o.size-1].send(m,o[0..(n.to_s.size - i - 1)])) && # in range?
+        (if !(c=n.c).empty?  # has children?
+           g.(c)             # include children
+         else
+           a.(n)             # add resource
+           l = true unless l # iterator in range
         end)}}
-    g.(c); r
+    g.(c) # start 
+    r     # result set
   end
 
 end

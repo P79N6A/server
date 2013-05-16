@@ -69,16 +69,26 @@ class E
 
   fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
 
-  fn 'view',->d,e{
+  fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
     d.values.map{|r|Fn 'view/divine/item',r,e}}
 
+  fn 'view/divine/set',->d,e{
+    d.values.map{|e|e.E.base}.do{|b|
+      s = b.size.to_f
+      t = 0.42 # threshold
+   if b.grep(/^msg\./).size / s > t # email
+      Fn 'view/threads',d,e
+elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > t # audio
+      Fn 'view/audioplayer', d,e
+elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t # images
+      Fn 'view/th', d,e
+elsif b.grep(/\.log$/).size / s > t
+      Fn 'view/chat', d,e
+ else false
+   end}}
+
   fn 'view/divine/item',->r,e{
-    r.class==Hash &&
-    r[Type] &&
-    r[Type][0] &&
-    r[Type][0].respond_to?(:uri) &&
-    (t = r[Type][0].uri
-     !t.empty? && 
+    r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) && (t = r[Type][0].uri; !t.empty? && # a typed resource?
      (F['view/'+t] ||
       F['view/'+t.split(/\//)[-2]]).do{|f|
        f.({r.uri => r},e)}) ||

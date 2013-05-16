@@ -1,22 +1,24 @@
-
 var e = function(){
-    qa('.facet > table').click(function(e){
-	var f=e.target.parentNode
-	var a=f.parentNode.parentNode.parentNode
+    qa('.facet span.name').click(function(e){
 
-	if(f.attr('f')){
-	    f.removeAttribute('f'); f.style.backgroundColor=''
-	} else {
-	    f.attr('f','on'); f.style.backgroundColor='#0f0'}
+	// predicate-object tuple
+	var f = e.target
+	// predicate
+	var a = f.parentNode.parentNode
+	var facet = a.attr('facet')
 
-	var facet=a.attr('title')
-	var s=[' ']
-	q('style.'+facet).remove()
-	var on = a.querySelectorAll('tr[f=on]')
+	// visual selection status
+	if(f.attr('on')){f.removeAttribute('on'); f.style.backgroundColor=''
+	            } else { f.attr('on','true'); f.style.backgroundColor='#0f0'}
+
+	// construct selection rules
+	var s = [], on = a.querySelectorAll('.name[on=true]')
 	if(on.length > 0) {
 	    s.push('.'+facet+'{display:none}')
 	    on.map(function(){s.push('.'+facet+'.'+this.attr('title')+'{display:inline}')})}
-	q('body').append(el('style').attr('class',facet).txt(s.join('\n')))
-})
-};
+
+	// create selected-facet stylesheet
+	q('style.'+facet).remove()
+	q('body').append(el('style').attr('class',facet).txt(s.join('\n')))})};
+
 document.addEventListener("DOMContentLoaded", e, false);

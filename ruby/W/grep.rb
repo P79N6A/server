@@ -2,7 +2,7 @@
 class E
 
   fn 'set/grep',->e,q,m{
-    `grep -rl#{q.has_key?('i') && 'i'} -m 9 #{q['q'].sh} #{e.sh}`.lines.map{|p|p[Blen+1..-1].unpath}
+    `grep -rl#{q.has_key?('i') && 'i'} #{q['q'].sh} #{e.sh}`.lines.map{|p|p[Blen+1..-1].unpath}
   }
 
   fn 'view/grep',->d,e{

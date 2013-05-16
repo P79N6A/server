@@ -1,5 +1,5 @@
-#watch __FILE__
-%w{crossfilter exhibit hist normal protovis scale sw time timeline}.each{|e|require 'element/W/examine/'+e}
+watch __FILE__
+%w{exhibit hist normal protovis sw time timeline}.each{|e|require 'element/W/examine/'+e}
 class E
 
   fn 'view/examine',->a,m,e{
@@ -30,30 +30,27 @@ class E
           [f.map{|o|'<div class="'+o+'">'}, # facet wrapper
            view.(r,e), # resource
            (0..f.size-1).map{|c|'</div>'}]}}}
-    
-    inc=false
-#    inc=true
-    [(H.css'/css/examine',inc),(H.js'/js/examine',inc),(H.js'/js/mu',inc),
+
+    [(H.css'/css/examine'),(H.js'/js/examine'),(H.js'/js/mu'),
 
      a.map{|b,_|{_: :style, class: n.(b)}},
 
      # facet sidebar
-     {style: 'position:fixed;z-index:8;top:33px;left:0',c: a.map{|f,_|
-           [{class: :f, c: f.label},
-        {class: :facet, title: n.(f),
-          c: {_: :table,
-               c: _.sort_by{|k,v|v}.reverse.map{|k,v|
-                k.respond_to?(:label) &&
-                 {_: :tr, title: n.(k.to_s),
-                   c: [{_: :td, c: v},
-                       {_: :td, c: k.label}]}}}}]}},
-
-       (F['view/'+e.q['ev']+'/base']||
-        ->m,e,r{r.()}).(m,e,resources)]}
-
+     {class: :sidebar, c: a.map{|f,v|
+         {class: :facet, title: f, facet: n.(f),
+           c: [f.label,
+               v.sort_by{|k,v|v}.reverse.map{|k,v|
+                 k.respond_to?(:label) &&
+                 {f: n.(k.to_s),
+                   c: [{class: :count, c: v},
+                       {_: :span, class: :name, c: k.label}]}}]}}},
+     
+     (F['view/'+e.q['ev']+'/base']||
+      ->m,e,r{r.()}).(m,e,resources)]}
+  
   fn 'view/examine/selectFacets',->m,e{
-    [(H.js '/js/examine.sf'),(H.js '/js/mu'),
-     E.graphProperties(m).map{|e|[{class: 'facet', c: e},' ']},
+    [(H.js '/js/examine.selectFacet'),(H.js '/js/mu'),(H.css '/css/examine'),
+     E.graphProperties(m).map{|e|[{c: e},' ']},
      {_: 'button', c: 'Go'}]}
 
   fn 'view/e',->m,e{

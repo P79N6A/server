@@ -18,4 +18,5 @@ a {text-decoration:none;background-color:#fff;color:#000}
 a.du {float:right}
 
 .dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
+.dir a:first-child {font-weight: bold;font-size:2em}
 .mode {font-size:2em;font-weight:bold;float:right;margin:.4em .4em 0 0}

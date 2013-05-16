@@ -7,7 +7,7 @@ class E
     a=e.q['a'].do{|e|e.expand} # a :  attribute to chart
     !a && 'attribute required' || (
     n=e.q['bins']&&e.q['bins'].to_f.max(999.0).min(2)||42.0 # n :  number of bins
-    v=F['view/'+(e&&e.q['v']||'tab')] # v :  child view 
+    v=F['view/'+(e&&e.q['hv']||'tab')] # hv : bin template 
     (Fn 'u/hist',d,a,n).do{|h| # construct histogram bins
       [H.css('/css/hist'),H.js('/js/hist'),(Fn 'view/hist',h),
        h.map{|b,r|{style: 'display:none',
