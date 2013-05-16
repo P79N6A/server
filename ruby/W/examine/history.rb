@@ -7,7 +7,7 @@ class E
                  'view'=>'page',
                     'v'=>'tg',
                   'arc'=>'referer',
-                    'l'=>'uri'}})
+                'label'=>'uri'}})
 
   def mozHistory
     c = @r.q['c'].match(/[0-9]+/) ? @r.q['c'] : '18'

@@ -1,4 +1,3 @@
-require 'element/W/examine/history'
 watch __FILE__
 class E
 
