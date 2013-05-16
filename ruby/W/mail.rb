@@ -93,6 +93,7 @@ class E
         '</tr>']},'</table>',
      {_: :a, :class => :show, c: :content,href: env['REQUEST_PATH']+env.q.except('v').update({'view' => 'mail'}).qs}]}
 
+  # show a set of messages
   fn 'view/mail',->d,e{
     [(H.once e,'mail.js',(H.css '/css/mail'),(H.js '/js/mail'),(H.once e,:mu,(H.js '/js/mu')),
        {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}), # collapse/expand quoted text
