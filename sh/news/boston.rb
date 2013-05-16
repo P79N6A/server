@@ -12,6 +12,7 @@ ARGV[0].do{|h|
     http://boston.eater.com/atom.xml
     http://fuckyeahmassachusetts.tumblr.com/rss
     http://cityofbostonarchives.tumblr.com/rss
+    http://www.fenwaynews.org/feed/
     http://feeds.feedburner.com/JamaicaPlainGazette
     http://misterching.tumblr.com/rss
     http://www.bpdnews.com/feed/atom/
