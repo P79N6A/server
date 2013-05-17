@@ -50,7 +50,7 @@ class E
          {_: :a, class: :band,
            style: "background-color:##{band % 2 == 0 ? 'fff' : 'cecece'}",
            c: '<span style="font-size:1.4em">'+meters.to_s+'</span>m',
-           href: b+'m.html'}}},
+           href: meters.to_s+'m.html'}}},
        {id: :scales, c: %w{800 1200 1600}.map{|b|{_: :span,class: :scale, c: b}}},
        {id: :spectrum, style: 'height:800px;position:absolute', c:
          [{id: 't'},{class: 'loc'},{id: 'clock'},c.(),

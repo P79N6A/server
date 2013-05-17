@@ -14,6 +14,7 @@ ARGV[0].do{|h|
     http://allston02134.blogspot.com/atom.xml
     http://fuckyeahmassachusetts.tumblr.com/rss
     http://cityofbostonarchives.tumblr.com/rss
+    http://www.fenwaynews.org/feed/
     http://feeds.feedburner.com/JamaicaPlainGazette
     http://ds4si.org/blog/atom.xml
     http://www.bpdnews.com/feed/atom/
