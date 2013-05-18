@@ -33,5 +33,6 @@ ARGV[0].do{|h|
     http://diegophotographed.tumblr.com/rss
     http://api.flickr.com/services/feeds/photos_public.gne?id=93374791@N08&lang=en-us&format=atom
     http://api.flickr.com/services/feeds/photos_public.gne?id=36054681@N04&lang=en-us&format=atom
+    http://api.flickr.com/services/feeds/photos_public.gne?id=32245491@N08&lang=en-us&format=rss_200
     http://www.wx1box.org/rss.xml
     }.map{|f|f.E.getFeed ARGV[0]} } || (puts "hostname needed")
