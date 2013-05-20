@@ -72,6 +72,7 @@ class E
   fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
     d.values.map{|r|Fn 'view/divine/item',r,e}}
 
+  # select view - filesystem hints
   fn 'view/divine/set',->d,e{
     d.values.map{|e|e.E.base}.do{|b|
       s = b.size.to_f
@@ -87,12 +88,16 @@ elsif b.grep(/\.log$/).size / s > t
  else false
    end}}
 
+  # select view - RDF typeclass hints
   fn 'view/divine/item',->r,e{
     r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) && (t = r[Type][0].uri; !t.empty? && # a typed resource?
      (F['view/'+t] ||
       F['view/'+t.split(/\//)[-2]]).do{|f|
        f.({r.uri => r},e)}) ||
     r.html }
+
+  # show all views in the system
+  fn 'view/select',->d,e{F.keys.grep(/^view\/(?!application)/).map{|v|[{_: :a, href: e['REQUEST_PATH']+e.q.merge({'view' => v[5..-1]}).qs,c: v},'<br>']}}
 
   fn 'view/multi',->d,e{e.q['views'].split(',').map{|v|Fn'view/'+v,d,e}}
 
