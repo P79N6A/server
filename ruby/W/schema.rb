@@ -9,13 +9,13 @@ class E
 
          'http://localhost/css/i/prefix.cc.txt'.E. # schema list
          read.split("\n").grep(/^[^#]/).map{|c|    # prefix table
-           s = c.split(/\t/)[1].E                  # document
-           s.cacheTurtle                           # cache data
-           s.size < 1e6 &&                         # skip enormous docs - likely not schema
-           (s.indexFrag 'schema'                   # index document
-            s.readlink.linkDefined                 # link slash-URIs to defining doc
+           r = c.split(/\t/)[1].E                  # resource
+           t = r.cacheTurtle                       # cache data
+           t.size < 1e6 &&                         # skip enormous docs - likely not schema
+           (t.indexFrag 'schema'                   # index document
+            t.readlink.linkDefined                 # link slash-URIs to defining doc
             m = {}                                 # model for frequency data
-            s.graph.map{|u,_|                                    # each predicate in schema
+            t.graph.map{|u,_|                                    # each predicate in schema
              count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
             r.appendNT m unless m.empty? # store frequency data on fs in ntriples
             )}) ||
