@@ -1,21 +1,20 @@
 #watch __FILE__
 class E
   
-  def E.cacheSchemas; count = {}
+  def E.cacheSchemas
     '/predicates.2010'.E.do{|u| u.e &&   # does data exist?
-      (u.read.each_line{|e|              # read usage data
-         e.match(/(\d+)[^<]+<([^>]+)>/). # occurrence count
-         do{|r| count[r[2]] = r[1].to_i}}#  table
-
+      (count = {} # occurrence counts
+       u.read.each_line{|e|              # read usage data
+         e.match(/(\d+)[^<]+<([^>]+)>/).do{|r| count[r[2]] = r[1].to_i}} # parse
          'http://localhost/css/i/prefix.cc.txt'.E. # schema list
-         read.split("\n").grep(/^[^#]/).map{|c|    # prefix table
-           r = c.split(/\t/)[1].E                  # resource
-           t = r.cacheTurtle                       # cache data
-           t.size < 1e6 &&                         # skip enormous docs - likely not schema
-           (t.indexFrag 'schema'                   # index document
-            t.readlink.linkDefined                 # link slash-URIs to defining doc
+         read.split("\n").grep(/^[^#]/).map{|t|    # prefix table
+           r = t.split(/\t/)[1].E                  # resource
+           d = r.cacheTurtle                       # cache data
+           d.size < 1e6 &&                         # skip enormous docs - likely not schema
+           (d.indexFrag 'schema'                   # index document
+            d.readlink.linkDefined                 # link slash-URIs to defining doc
             m = {}                                 # model for frequency data
-            t.graph.map{|u,_|                                    # each predicate in schema
+            d.graph.map{|u,_|                                    # each predicate in schema
              count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
             r.appendNT m unless m.empty? # store frequency data on fs in ntriples
             )}) ||
