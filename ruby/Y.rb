@@ -4,6 +4,7 @@ def watch f
 
 class E
   F={}
+  Data={}
   Watch={}
   def self.dev; Watch.each{|f,ts|if ts < File.mtime(f); load f end} end
   def y *a; F[uri].(*a) end

@@ -1,5 +1,5 @@
 require 'element/H'
-#watch __FILE__
+watch __FILE__
 class Array
   def html table=true
     if table && !find{|e|e.class != Hash} # monomorphic [Hash]
@@ -88,7 +88,7 @@ elsif b.grep(/\.log$/).size / s > t
  else false
    end}}
 
-  # select view - RDF typeclass hints
+  Data['view/divine/item'] = "use RDF typeclass hints to choose view for a resource"
   fn 'view/divine/item',->r,e{
     r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) && (t = r[Type][0].uri; !t.empty? && # a typed resource?
      (F['view/'+t] ||
@@ -96,9 +96,14 @@ elsif b.grep(/\.log$/).size / s > t
        f.({r.uri => r},e)}) ||
     r.html }
 
-  # show all views in the system
-  fn 'view/select',->d,e{F.keys.grep(/^view\/(?!application)/).map{|v|[{_: :a, href: e['REQUEST_PATH']+e.q.merge({'view' => v[5..-1]}).qs,c: v},'<br>']}}
+  Data['view/select'] = "show a menu of all views available"
+  fn 'view/select',->d,e{
+    [{_: :style, c: 'a {min-width:22em;text-align:right}'},
+    F.keys.grep(/^view\/(?!application)/).map{|v|
+      [{_: :a, href: e['REQUEST_PATH']+e.q.merge({'view' => v[5..-1]}).qs,c: v},'<br>']}]}
+   F['view/?'] = F['view/select']
 
+  F['doc/view/multi'] = "display multiple comma-separated <b>views</b>"
   fn 'view/multi',->d,e{e.q['views'].split(',').map{|v|Fn'view/'+v,d,e}}
 
   def raw
