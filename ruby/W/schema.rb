@@ -2,18 +2,20 @@
 class E
   
   def E.cacheSchemas
+    source = E['http://prefix.cc/popular/all.file.txt']
+    mirror = E['http://localhost/css/i/prefix.cc.txt']
     '/predicates.2010'.E.do{|u| u.e &&   # does data exist?
       (count = {} # occurrence counts
        u.read.each_line{|e|              # read usage data
          e.match(/(\d+)[^<]+<([^>]+)>/).do{|r| count[r[2]] = r[1].to_i}} # parse
-         'http://localhost/css/i/prefix.cc.txt'.E. # schema list
-         read.split("\n").grep(/^[^#]/).map{|t|    # prefix table
-           r = t.split(/\t/)[1].E                  # resource
-           d = r.cacheTurtle                       # cache data
-           d.size < 1e6 &&                         # skip enormous docs - likely not schema
-           (d.indexFrag 'schema'                   # index document
-            d.readlink.linkDefined                 # link slash-URIs to defining doc
-            m = {}                                 # model for frequency data
+         (mirror.e ? mirror : source).          # schemas
+         read.split("\n").grep(/^[^#]/).map{|t| # prefix table
+           r = t.split(/\t/)[1].E               # resource
+           d = r.cacheTurtle                    # cache data
+           d.size < 1e6 &&                      # skip enormous docs - likely not schema
+           (d.indexFrag 'schema'                # index document
+            d.linkDefined                       # link slash-URIs to defining doc
+            m = {}                                               # model for frequency data
             d.graph.map{|u,_|                                    # each predicate in schema
              count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
             r.appendNT m unless m.empty? # store frequency data on fs in ntriples
@@ -58,7 +60,7 @@ class E
     cacheGraph.do{|m|
       m.map{|u,r|
         r[RDFs+'isDefinedBy'].do{|d|
-          prop = (u[-1]=='/' ? u[0..-2] : u).E
+          prop = u.E.docBase.a '.' + ext
           prop.dirname.dir
           ln prop }}}
   end
