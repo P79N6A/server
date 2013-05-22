@@ -6,6 +6,7 @@ e http://feeds.feedburner.com/DanweiRss10 getFeed $1
 e http://feeds.feedburner.com/tealeafnation getFeed $1
 e http://japandailypress.com/feed getFeed $1
 e http://www.haohaoreport.com/feed getFeed $1
+e http://www.thenanfang.com/blog/feed/ getFeed $1
 e http://feeds.feedburner.com/TheMarmotsHole getFeed $1
 e http://www.monster-island.net/feeds/posts/default getFeed $1
 e http://bicoastalbitchin.com/feed/ getFeed $1
@@ -14,3 +15,4 @@ e http://feeds.rocketnews24.com/rocketnews24/en getFeed $1
 e http://offbeatchina.tumblr.com/rss getFeed $1
 e http://offbeatchina.com/feed getFeed $1
 e http://feeds.feedburner.com/Nknewsorg getFeed $1
+#e getFeed $1
