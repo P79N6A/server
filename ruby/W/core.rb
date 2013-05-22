@@ -106,11 +106,15 @@ class E
        g.merge! i)
   end
 
-  def graphFrag g={};@r[:graph]||={}
-    docs.map{|d|
-      (@r[:graph][d.uri] ||= d.cacheGraph).do{|m|
-        m[uri].do{|r|
-          g.merge!({uri => r})}}}
+  def graphFrag g={}
+    @r[:graph] ||= {}
+    docs.map{|d| (@r[:graph][d.uri] ||= d.cacheGraph).do{|m| # construct graph of parent-document(s)
+        m[uri].do{|r| # lookup fragment
+          g[uri] ||= {'uri' => uri}
+          r.map{|p,o|
+            g[uri][p] ||= []
+            g[uri][p].push o
+          }}}}
     g end
 
   # memoGraph :: Graph
