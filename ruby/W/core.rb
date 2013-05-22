@@ -63,7 +63,7 @@ class E
     fromStream({},i).map{|u,r| # stream -> graph
       (E u).do{|e| # resource
         e.em.e || # exists?
-        (puts " a #{e}" # add
+        (puts "a #{e}" # add
          p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
          e.em.w({u => r},true) # write
          e.roonga g # index content

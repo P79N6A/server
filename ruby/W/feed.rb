@@ -52,7 +52,6 @@ class E
   def feed &f 
     dateNorm :feedSIOCize,:feedRaw,&f
   rescue Exception => x
-#    puts uri,x.message
   end
 
   def feedReddit &f
@@ -67,7 +66,6 @@ class E
 
 # tripleStream
   def feedRaw &f
-    puts "+f #{uri}"
     read.extend(FeedParse).parse &f
   end
 

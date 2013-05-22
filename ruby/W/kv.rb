@@ -86,7 +86,6 @@ class E
 
   def index p,o
     ix E(p),(o.class == E ? o : E(p).li(o)),nil
-   # puts [:index,self,p,o].join ' '
   end
 
   def ix p,o,a

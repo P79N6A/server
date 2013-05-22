@@ -22,7 +22,7 @@ class E
   end
 
   def tw g
-    no.readlines.shuffle.each_slice(24){|s|puts E['http://search.twitter.com/search.atom?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].getFeed g}
+    no.readlines.shuffle.each_slice(24){|s|E['http://search.twitter.com/search.atom?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].getFeed g}
   end
 
   fn 'head/chat',->d,e{

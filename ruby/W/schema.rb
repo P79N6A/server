@@ -12,7 +12,7 @@ class E
          read.split("\n").grep(/^[^#]/).map{|t| # prefix table
            r = t.split(/\t/)[1].E               # resource
            d = r.cacheTurtle                    # cache data
-           d.size < 1e6 &&                      # skip enormous docs - likely not schema
+           d.size < 1e6 && !r.docBase.a('.nt').e && # skip enormous docs - likely not schemae
            (d.indexFrag 'schema'                # index document
             d.linkDefined                       # link slash-URIs to defining doc
             m = {}                                               # model for frequency data
@@ -20,7 +20,7 @@ class E
              count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
             r.appendNT m unless m.empty? # store frequency data on fs in ntriples
             )}) ||
-       puts("curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010")} # download
+      "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010"} # download
   end
   
   fn '/schema/GET',->e,r{

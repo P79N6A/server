@@ -83,8 +83,6 @@ class E
       t.no.dirname.dir # ensure containing dir exists
       FileUtils.symlink no, t.no # create link
     end
-  rescue Exception => e
-    puts "ln -s #{no} #{t.no} :: #{e}"
   end
 
   # touch node

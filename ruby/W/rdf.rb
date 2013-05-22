@@ -12,14 +12,12 @@ class E
     RDF::Writer.for(f).buffer{|w|
       d.values.each{|r|
         r.triples{|s,p,o|
-#          puts [s,p,o].join(' ')
           w << RDF::Statement.new(RDF::URI(s),
                                   RDF::URI(p),
                                   (o.class==Hash||o.class==E) ?
                                   RDF::URI(o.uri) :
                                   RDF::Literal(o))}}}
   rescue Exception => e
-    puts e
   end
   
   # tripleSource
@@ -32,7 +30,6 @@ class E
          o.to_s.E : o.value.do{|v|v.class==String ? v.to_utf8 : v})
       }}; self
   rescue Exception => e
-    puts e,uri,d
   end
 
   def cacheTurtle; docBase.a('.ttl').do{|t| t.e || t.w(`rapper -o turtle #{uri}`) ; t } end
