@@ -15,7 +15,7 @@ pre {white-space: pre-wrap}
 div.mail{background-color:black;color:white;max-width:100ex;margin:auto}
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
 .title {width:100%;text-align:right;color:#888;font-size:0.9em;margin-bottom:.23em}
-.q {background-color:#bf0;color:black}
+.q {background-color:#fff;color:#000}
 .sender:hover {color:#eef}
 .sender:visited {color:white}
 form {display:inline;background-color:white;color:black}
