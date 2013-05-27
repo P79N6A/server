@@ -33,7 +33,7 @@ class E
   fn 'set/index',->d,r,m{
     (r['p'].expand.E.rangePO d,
      (r['c']&&
-      r['c'].to_i.max(808)+1 || 88),
+      r['c'].to_i.max(808)+1 || 22),
      (r['d']&&
       r['d'].match(/^(a|de)sc$/) &&
       r['d'].to_sym ||

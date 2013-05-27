@@ -1,5 +1,5 @@
 require 'element/H'
-watch __FILE__
+#watch __FILE__
 class Array
   def html table=true
     if table && !find{|e|e.class != Hash} # monomorphic [Hash]
