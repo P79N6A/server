@@ -1,6 +1,6 @@
 class E
 
-  # a simple key/value RDF store on a vfs
+  # a simple key/value RDF store on a fs
 
   # accessor
   # E[W3+'People/Berners-Lee/card'][CC+'license']
@@ -113,7 +113,7 @@ class E
   end
 
   def pIndex
-    E('/index').s self
+    '/index'.E.s self
   end
 
   def poIndex o

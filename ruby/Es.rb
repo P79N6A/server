@@ -31,7 +31,7 @@ class E
   end
 
   fn 'set/index',->d,r,m{
-    (r['p'].expand.E.rangePO self,
+    (r['p'].expand.E.rangePO d,
      (r['c']&&
       r['c'].to_i.max(808)+1 || 88),
      (r['d']&&
@@ -43,8 +43,8 @@ class E
       desc,asc=r['d']&&
                r['d']=='asc'&&
                [a,b]||[b,a] 
-      m['prev']={'uri' => 'prev','url' => url,'d' => 'desc','b' => desc.uri} if desc
-      m['next']={'uri' => 'next','url' => url,'d' => 'asc','b' => asc.uri} if asc
+      m['prev']={'uri' => 'prev','url' => d.url,'d' => 'desc','b' => desc.uri} if desc
+      m['next']={'uri' => 'next','url' => d.url,'d' => 'asc','b' => asc.uri} if asc
       s }}
 
   def resourceSet r={},m={}
