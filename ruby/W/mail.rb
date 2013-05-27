@@ -46,7 +46,9 @@ class E
       e.e || ( ln e                       # Message-ID locatable?
        %w{in_reply_to references}.map{|p| # message arcs
           m.send(p).do{|o|                # index connections (fs)
-            o.map{|o| e.index SIOC+'reply_of', i[o] }}})
+            o.map{|o| e.index SIOC+'reply_of', i[o] }}}
+                   self.index Creator, m.from[0].E # index author
+               )
       yield e.uri, Type,    E[SIOCt+'MailMessage']
       yield e.uri, Date,    m.date.iso8601    if m.date
       yield e.uri, Content, m.decentBody
