@@ -25,6 +25,13 @@ var e = function(){
 
 	// create selected-facet stylesheet
 	q('style.'+p) && q('style.'+p).remove()
-	q('body').append(el('style').attr('class',p).txt(s.join('\n')))})};
+	q('body').append(el('style').attr('class',p).txt(s.join('\n')))})
+/*
+    
+     qa('.facet span.name').click(function(e){
+
+     })
+*/
+};
 
 document.addEventListener("DOMContentLoaded", e, false);
