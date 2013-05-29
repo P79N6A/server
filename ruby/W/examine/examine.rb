@@ -41,7 +41,7 @@ class E
            c: [f.label,
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  k.respond_to?(:label) &&
-                 {f: n.(k.to_s),
+                 {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
                        {_: :span, class: :name, c: k.label}]}}]}}},
      

@@ -11,22 +11,22 @@ var e = function(){
 	var p = pn.attr('facet')
 	var po = pon.attr('facet')
 
-	console.log('facets',pon.innerHTML)
+
+	console.log('facets',p,po)
 
 	// visual selection status
 	if(pon.attr('on')){pon.removeAttribute('on'); pon.style.backgroundColor=''
 	           } else {pon.attr('on','true'); pon.style.backgroundColor='#fff'}
 
 	// construct selection rules
-	var s = [], on = p.querySelectorAll('.name[on=true]')
+	var s = [], on = pn.querySelectorAll('.name[on=true]')
 	if(on.length > 0) {
-	    s.push('.'+f+'{display:none}')
+	    s.push('.'+p+'{display:none}') // lower specificity for predicate class
 	    on.map(function(){
-		console.log('on',this)
-		s.push('.'+f+'.'+this.attr('title')+'{display:inline}')})} // higher specificity for matches
+		s.push('.'+p+'.'+po+'{display:inline}')})} // higher specificity for p+o selections
 
 	// create selected-facet stylesheet
-	q('style.'+f) && q('style.'+f).remove()
-	q('body').append(el('style').attr('class',f).txt(s.join('\n')))})};
+	q('style.'+p) && q('style.'+p).remove()
+	q('body').append(el('style').attr('class',p).txt(s.join('\n')))})};
 
 document.addEventListener("DOMContentLoaded", e, false);
