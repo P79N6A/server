@@ -12,14 +12,12 @@ var e = function(){
 	var po = pon.attr('facet')
 
 
-	console.log('facets',p,po)
-
 	// visual selection status
 	if(pon.attr('on')){pon.removeAttribute('on'); pon.style.backgroundColor=''
 	           } else {pon.attr('on','true'); pon.style.backgroundColor='#fff'}
 
 	// construct selection rules
-	var s = [], on = pn.querySelectorAll('.name[on=true]')
+	var s = [], on = pn.querySelectorAll('[on=true]')
 	if(on.length > 0) {
 	    s.push('.'+p+'{display:none}') // lower specificity for predicate class
 	    on.map(function(){
