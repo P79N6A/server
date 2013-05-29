@@ -21,7 +21,7 @@ var e = function(){
 	if(on.length > 0) {
 	    s.push('.'+p+'{display:none}') // lower specificity for predicate class
 	    on.map(function(){
-		s.push('.'+p+'.'+po+'{display:inline}')})} // higher specificity for p+o selections
+		s.push('.'+p+'.'+this.attr('facet')+'{display:inline}')})} // higher specificity for p+o selections
 
 	// create selected-facet stylesheet
 	q('style.'+p) && q('style.'+p).remove()
