@@ -14,7 +14,7 @@ class E
 
     # facet identifiers
     i={};         c=-1
-    n=->o{
+    n=->o{ 
       i[o]||='f'+(c+=1).to_s}
 
     view=F['view/'+ (e.q['ev'] || 'divine') + '/item']
@@ -35,14 +35,14 @@ class E
 
      a.map{|b,_|{_: :style, class: n.(b)}},
 
-     # facet sidebar
+     # facet selection
      {class: :sidebar, c: a.map{|f,v|
-         {class: :facet, title: f, facet: n.(f),
+         {class: :facet, title: f, facet: n.(f), # predicate
            c: [f.label,
-               v.sort_by{|k,v|v}.reverse.map{|k,v|
+               v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  k.respond_to?(:label) &&
                  {f: n.(k.to_s),
-                   c: [{class: :count, c: v},
+                   c: [{_: :span, class: :count, c: v},
                        {_: :span, class: :name, c: k.label}]}}]}}},
      
      (F['view/'+e.q['ev']+'/base']||

@@ -3,7 +3,7 @@
  ruby/install-symlink 
  
  optional tools
- apt-get install thin ruby-nokogiri ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools
+ apt-get install thin ruby-nokogiri ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
  cp sh/[eE] ~/bin    (can rename)
  cat sh/rc >> ~/.bashrc
 
