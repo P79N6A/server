@@ -106,14 +106,16 @@ class E
        g.merge! i)
   end
 
+  # return only exact identifier matches rather than entire containing doc 
   def graphFrag g={}
     @r[:graph] ||= {}
-    docs.map{|d| (@r[:graph][d.uri] ||= d.cacheGraph).do{|m| # construct graph of parent-document(s)
+    docs.map{|d| (@r[:graph][d.uri] ||= d.cacheGraph).do{|m| # construct/memoize graph of parent-document(s)
         m[uri].do{|r| # lookup fragment
+          # merge into model
           g[uri] ||= {'uri' => uri}
-          r.map{|p,o|
+          r.map{|p,o| 
             g[uri][p] ||= []
-            g[uri][p].push o
+            g[uri][p].concat o unless p == 'uri'
           }}}}
     g end
 
