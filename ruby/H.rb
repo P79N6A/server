@@ -7,7 +7,7 @@ def H _
                        '>'=>'%3E',
                        '<'=>'%3C'})+"'"}.join+'>'+
       (_[:c] ? (H _[:c]) : '')+
-      '</'+(_[:_]||:div).to_s+'>'
+      (_[:_] == :link ? '' : ('</'+(_[:_]||:div).to_s+'>'))
   when Array then
     _.map{|n|H n}.join
   else

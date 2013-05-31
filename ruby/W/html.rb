@@ -36,7 +36,7 @@ end
 
 class Hash
   def html
-    H([{_: :a, name: uri},
+    H([{_: :a, id: uri},
        {_: :table, c: 
         map{|k,v|
           {_: :tr, property: k, c:
@@ -55,7 +55,7 @@ class E
   end
 
   fn 'abbrURI',->u{
-    u.to_s.sub(/(.*?)([^#\/]+)$/,'<span class=abbr>\1</span><span class=frag>\2</span>')}
+    u.to_s.sub(/(.*?)([^#\/]+)$/,'<span class="abbr">\1</span><span class="frag">\2</span>')}
 
   fn 'head',->d,e{
     [{_: :title, c: d.attr(Title) || e.uri},
@@ -123,7 +123,7 @@ elsif b.grep(/\.log$/).size / s > t
     v = F['view/'+v] || F['view']
 
     H(e.q.has_key?('un') ? v.(d,e) :
-      ['<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">',
+      ['<!DOCTYPE html>',
        {_: :html,
          c: [{_: :head,
                c: ['<meta charset="utf-8" />',
