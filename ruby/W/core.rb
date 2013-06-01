@@ -45,7 +45,7 @@ class E
   # some views request graph later (JS)
   fn 'graph/_',->d,_,m{ m[d.uri] = {} } # placeholder
 
-  # in :: tripleSource -> vfs
+  # in :: tripleSource -> vfs 
   def in i,*a
     send(i,*a){|s,p,o|E(s)[p,o]}
   end
@@ -109,14 +109,16 @@ class E
   # return only exact identifier matches rather than entire containing doc 
   def graphFrag g={}
     @r[:graph] ||= {}
-    docs.map{|d| (@r[:graph][d.uri] ||= d.cacheGraph).do{|m| # construct/memoize graph of parent-document(s)
+    puts "docs #{docs}"
+    docs.map{|d|
+      (@r[:graph][d.uri] ||= d.cacheGraph).do{|m| # construct/memoize graph of parent-document(s)
         m[uri].do{|r| # lookup fragment
           # merge into model
           g[uri] ||= {'uri' => uri}
-          r.map{|p,o| 
-            g[uri][p] ||= []
-            g[uri][p].concat o unless p == 'uri'
-          }}}}
+          r.map{|p,o| p == 'uri' ||
+            (g[uri][p] ||= []
+             g[uri][p].concat o
+             )}}}}
     g end
 
   # memoGraph :: Graph
