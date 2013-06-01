@@ -28,6 +28,7 @@ ARGV[0].do{|h|
     http://www.tpdnews411.com/feeds/posts/default
     http://bostonrestaurants.blogspot.com/feeds/posts/default
     http://www.dotnews.com/rss.xml
+    http://www.bostonredevelopmentauthoritynews.org/feed/
     http://feeds.feedburner.com/BigRedShiny
     http://www.scidorchester.org/blog/feed
     http://diegophotographed.tumblr.com/rss

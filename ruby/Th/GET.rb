@@ -66,7 +66,7 @@ class E
         c = E '/E/graph/'+s.dive     # cachedGraph resource
         c.e && m.merge!(c.r(true))|| # cachedGraph -> graph
         (m.values.map{|r|            # Set -> graph
-           puts "doc #{r.uri}"
+           puts "doc #{r.uri}" if @r.q['debug']
            r.env(@r).send (@r.q['m']||:cacheGraph),m} # uri -> resource
          c.w m,true))                      # graph -> cachedGraph
         E.filter @r.q, m            # env -> graph -> graph

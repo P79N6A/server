@@ -75,15 +75,6 @@ class E
   def to_h
     {'uri'=>uri}
   end
-
-  # graph :: Graph -> Graph
-  def graph g={}
-   [ :tripleSourceNode, # filesystem data
-     :tripleSourceMIME, # domain-specific metadata
-   ].each{|i| fromStream g,i}  # tripleStream -> Graph
-    g.merge! ((em.r true)||{}) # JSON graph -> Graph
-    g
-  end
   
   def tripleSourceMIME &b;mime.do{|mime|
     yield uri,E::Type,(E mime)
@@ -106,10 +97,21 @@ class E
        g.merge! i)
   end
 
+
+  # graph :: Graph -> Graph
+  def graph g={}
+   [ :tripleSourceNode, # filesystem data
+     :tripleSourceMIME, # domain-specific metadata
+   ].each{|i| fromStream g,i}  # tripleStream -> Graph
+    g.merge! ((em.r true)||{}) # JSON graph -> Graph
+    g
+  end
+
+
   # return only exact identifier matches rather than entire containing doc 
   def graphFrag g={}
     @r[:graph] ||= {}
-    puts "docs #{docs}"
+    puts "docs #{docs}" if @r.q['debug']
     docs.map{|d|
       (@r[:graph][d.uri] ||= d.cacheGraph).do{|m| # construct/memoize graph of parent-document(s)
         m[uri].do{|r| # lookup fragment
