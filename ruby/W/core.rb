@@ -108,7 +108,7 @@ class E
   end
 
 
-  # return only exact identifier matches rather than entire containing doc 
+  # only exact identifier matches 
   def graphFrag g={}
     @r[:graph] ||= {}
     puts "docs #{docs}" if @r.q['debug']

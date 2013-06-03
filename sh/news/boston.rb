@@ -21,6 +21,7 @@ ARGV[0].do{|h|
     http://www.unionparkpress.com/feed/
     http://www.neponset.org/feed/
     http://www.futureboston.com/discover/feed/
+    http://bostoncyclistsunion.org/feed/
     http://blog.livablestreets.info/?feed=atom
     http://walkingbostonian.blogspot.com/feeds/posts/default
     http://feeds.boston.com/boston/yourtown/dorchester/rss
