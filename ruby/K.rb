@@ -74,6 +74,7 @@ class E
     'message/rfc822'=>[:mail],
     'text/ansi'=>[:ansi],
     'text/comma-separated-values'=>[:csv,/,/],
+    'text/html'=>[:rdf, :rdfa],
     'text/log'=>[:log],
     'text/nfo'=>[:hyper,'cp437'],
     'text/ntriples'=>[:rdf, :ntriples],
