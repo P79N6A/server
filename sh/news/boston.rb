@@ -23,6 +23,7 @@ ARGV[0].do{|h|
     http://www.futureboston.com/discover/feed/
     http://bostoncyclistsunion.org/feed/
     http://blog.livablestreets.info/?feed=atom
+    http://ifnluvbos.blogspot.com/feeds/posts/default
     http://walkingbostonian.blogspot.com/feeds/posts/default
     http://feeds.boston.com/boston/yourtown/dorchester/rss
     http://bartlettevents.org/blog?format=rss
