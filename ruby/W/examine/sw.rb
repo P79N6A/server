@@ -12,12 +12,12 @@ class E
                   'sw' => {
                     'view' => 'e',
                     'ev'=>'sw',
-                    'a'=>'STATION',
+                    'a'=>'Lng:49',
                     'minP' => 'FREQ',
                     'maxP' => 'FREQ',
                     'filter' => 'map',
                     'kHz:75' => 'FREQ',
-                    'TIME(UTC):93' => 'UTC',
+                    'Time(UTC):93' => 'UTC',
                     'Station:201' => 'STATION',
                   }
                 })
