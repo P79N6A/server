@@ -11,10 +11,12 @@ ARGV[0].do{|h|
     http://allston.tumblr.com/rss
     http://boston.eater.com/atom.xml
     http://abnewsflash.com/?feed=rss2
+    http://sampan.org/feed/atom/
     http://allston02134.blogspot.com/atom.xml
     http://fuckyeahmassachusetts.tumblr.com/rss
     http://cityofbostonarchives.tumblr.com/rss
     http://www.fenwaynews.org/feed/
+    http://commonboston.org/feed/
     http://feeds.feedburner.com/JamaicaPlainGazette
     http://ds4si.org/blog/atom.xml
     http://www.bpdnews.com/feed/atom/
@@ -24,6 +26,7 @@ ARGV[0].do{|h|
     http://bostoncyclistsunion.org/feed/
     http://blog.livablestreets.info/?feed=atom
     http://ifnluvbos.blogspot.com/feeds/posts/default
+    http://dotrat.com/feed/
     http://walkingbostonian.blogspot.com/feeds/posts/default
     http://feeds.boston.com/boston/yourtown/dorchester/rss
     http://bartlettevents.org/blog?format=rss
