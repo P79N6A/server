@@ -23,7 +23,7 @@ class E
   end
   
   # add
-  def roonga graph="global", m = memoGraph
+  def roonga graph="global", m = graph
     g = E.groonga           # groonga
     r = g[uri] || g.add(uri)# roonga entry
        r.uri = uri

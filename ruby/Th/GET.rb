@@ -58,20 +58,19 @@ class E
   def resources m
     m.empty? ? (Fn 'req/'+HTTP+'404',self,@r) : # empty set -> 404
     (s=m.sort.map{|u,r|[u,r.respond_to?(:m)&&r.m]}.h # Set identifier
-     @r['ETag']=[s,@r.q,@r.format].h # response identifier
+     @r['ETag']=[s,@r.q,@r.format].h # response identifier ((uri,mtime),querystring,format)
      maybeSend @r.format,->{ # does agent have resource ?
+                               puts "response #{@r['ETag']}"
        r=E'/E/req/'+@r['ETag'].dive  # cachedResponse resource
        r.e && r ||                   # cachedResponse -> response
        (F['graph/'+@r.q['graph']]||(# were we supplied a graph?
         c = E '/E/graph/'+s.dive     # cachedGraph resource
         c.e && m.merge!(c.r(true))|| # cachedGraph -> graph
-        (m.values.map{|r|            # Set -> graph
-           puts "doc #{r.uri}" if @r.q['debug']
-           r.env(@r).send (@r.q['m']||:cacheGraph),m} # uri -> resource
-         c.w m,true))                      # graph -> cachedGraph
-        E.filter @r.q, m            # env -> graph -> graph
-        v=render @r.format, m, @r          # graph -> response
-        r.w v; [v])})                   # response -> cachedResponse
+        (m.values.map{|r|r.env(@r).graphFromFile m}  # Set -> graph
+         c.w m,true))        # graph -> cache
+        E.filter @r.q, m       # env -> graph -> graph
+        v=render @r.format, m, @r # graph -> response
+        r.w v; [v])})          # response -> cache
   end
 
 end

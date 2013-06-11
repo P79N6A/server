@@ -14,7 +14,7 @@ class E
   #  
   def [] p,o=nil, v=nil
     unless o
-      (s p).lp
+      (s p).listPredicates
     else
       edit E(p),(o.class == E ? o : E(p).li(o)),v
     end

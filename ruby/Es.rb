@@ -58,6 +58,7 @@ class E
      else
        [self]
     end).map{|u| m[u.uri] ||= u}
+    puts "set #{m.keys.join ' '}"
     m
   end
 
@@ -65,9 +66,15 @@ class E
   def walk p,m={},v={}
     m.merge! memoGraphFile
     v[uri]=true
-    ((attr p)||[]).concat(((E p).po self)||[]).map{|r|
+    ((walkPred p)||[]).concat(((E p).po self)||[]).map{|r|
       r.E.walk p,m,v if !v[r.uri]}
     m
+  end
+  def walkPred p
+    memoGraphFile.do{|m|
+      m.map{|u,r|
+        r[p].do{|o|return o}}}
+    nil
   end
 
   fn 'filter/p',->e,m{

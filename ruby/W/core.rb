@@ -4,7 +4,7 @@ class Hash
   def graph g
     g.merge!({uri=>self})
   end
-  %w{cacheGraphFile graphFile q}.map{|m|alias_method m,:graph}
+  %w{cacheGraphFile graphFromFile q}.map{|m|alias_method m,:graph}
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
   # triples :: tripleSource
   def triples; uri.do{|s|
@@ -91,6 +91,10 @@ class E
       (i = graphFromFile
        s.w i, true
        g.merge! i)
+  end
+
+  def memoGraphFile
+    @graphFile ||= cacheGraphFile
   end
 
   # graph :: URI -> Graph -> Graph
