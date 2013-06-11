@@ -1,9 +1,8 @@
 class E
-#watch __FILE__
-  def json
+
+  def triplrJSON
     yield uri, '/application/json', (JSON.parse read) if e
   end
-  graphFromStream :json
 
   fn 'view/application/json',->m,e{
     m.map{|u,j|

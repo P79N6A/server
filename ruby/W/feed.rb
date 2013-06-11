@@ -45,18 +45,18 @@ class E
   Feed = (E RSS+'channel')
 
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
-  def getFeed g; addJSON :feed,g end
-  def getFeedReddit g; addJSON :feedReddit,g end
+  def getFeed g; addJSON :triplrFeed,g end
+  def getFeedReddit g; addJSON :triplrFeedReddit,g end
 
-# tripleStream
-  def feed &f 
-    dateNorm :feedSIOCize,:feedRaw,&f
+  # tripleStream
+  def triplrFeed &f 
+    dateNorm :triplrFeedSIOCize,:triplrFeedRaw,&f
   rescue Exception => x
   end
 
-  def feedReddit &f
+  def triplrFeedReddit &f
     require 'nokogiri'
-    feed {|s,p,o|
+    triplrFeed {|s,p,o|
      p == Content ?
       Nokogiri::HTML.parse(o).do{|o|
         o.css('.md').do{|o|yield s,p,o}
@@ -64,13 +64,13 @@ class E
       } : (yield s,p,o)}
   end
 
-# tripleStream
-  def feedRaw &f
+  # tripleStream
+  def triplrFeedRaw &f
     read.extend(FeedParse).parse &f
   end
 
-# tripleStream -> tripleStream
-  def feedSIOCize *f
+  # tripleStream -> tripleStream
+  def triplrFeedSIOCize *f
     send(*f){|s,p,o|
       yield s,
       { Purl+'dc/elements/1.1/creator' => Creator,

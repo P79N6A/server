@@ -66,19 +66,15 @@ class E
 
   fn 'view/title/item',->r,e{{_: :a,href: r.E.url,c:r[e.q['title']||Title],class: :title}}
 
-  def ansi
+  def triplrANSI
     yield uri, Content, `cat #{sh} | aha`
   end
 
-  def rtf
+  def triplrRTF
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs
   end
 
-  def lines
-    yield uri,'lineCount',wc
-  end
-
-  def word
+  def triplrWord
     yield uri, Content, `which antiword && antiword #{sh}`.hrefs
   end
 

@@ -38,7 +38,8 @@ class E
    'thread'=>{'graph'=>'thread','sort' => 'dc:date','reverse' => nil,'view' => 'mail'},
    'ann'=>{'view'=>'threads','match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/,'matchP' => 'dc:title'}})
 
-  def mail; require 'tmail'
+  def triplrMail
+    require 'tmail'
     i = -> i {E i[1..-2]}                 # Message-ID -> E
     (TMail::Mail.load node).do{|m|        # parse
       d = m.message_id; return unless d   # parse successful?

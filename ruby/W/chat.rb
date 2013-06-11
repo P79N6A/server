@@ -1,7 +1,7 @@
 #watch __FILE__
 class E
 
-  def log &f
+  def triplrLog &f
     i=-1
     day = dirname.uri.split('/')[-3..-1].join('-')
     doc = uri.sub '#','%23'

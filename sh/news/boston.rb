@@ -22,6 +22,7 @@ ARGV[0].do{|h|
     http://www.bpdnews.com/feed/atom/
     http://www.bostoncolumn.com/feed/
     http://www.unionparkpress.com/feed/
+    http://backbaysun.com/feed/
     http://www.neponset.org/feed/
     http://www.futureboston.com/discover/feed/
     http://bostoncyclistsunion.org/feed/

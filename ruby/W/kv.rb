@@ -41,8 +41,8 @@ class E
     touch if e
   end
 
-  # fs :: vfs -> tripleSource
-  def fs
+  # vfs -> tripleSource
+  def triplrFsStore
     listPredicates.map{|p|
       self[p].map{|o|
         yield uri, p.uri, o }}

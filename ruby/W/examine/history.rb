@@ -3,13 +3,13 @@ class E
   F["?"]||={}
   F["?"].update({'taft'=>{
                 'graph'=>'|',
-                    '|'=>'mozHistory',
+                    '|'=>'triplrMozHist',
                  'view'=>'page',
                     'v'=>'tg',
                   'arc'=>'referer',
                 'label'=>'uri'}})
 
-  def mozHistory
+  def triplrMozHist
     c = @r.q['c'].match(/[0-9]+/) ? @r.q['c'] : '18'
     q = @r.q['match'].do{|m|m.match(/[a-zA-Z\-_\.\/]+/) && "and p.url like '#{@r.q.has_key?('full')?'':'%'}#{m}%'"}
     t = @r.q['t'].do{|t| "and h.visit_date < #{Time.parse(t).to_f*1e6}"}

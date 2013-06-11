@@ -3,7 +3,7 @@ class E
   # show available querystring aliases
   fn '/qs/GET',->e,r{H([H.css('/css/404'),F['?'].html]).hR}
 
-  def code
+  def triplrSourceCode
     n = @r.has_key?('n') && "--line-number-ref=#{uri.sh}"
     yield uri,Content,
     `source-highlight -f html -o STDOUT -i #{sh} #{n}`
@@ -18,7 +18,7 @@ class E
     .map{|l|
     m = 'application/'+l
     MIME[l.to_sym] ||= m
-     MIMEsource[m] ||= [:code]
+     MIMEsource[m] ||= [:triplrSourceCode]
     fn 'view/'+m, F['view/code']}
 
 end

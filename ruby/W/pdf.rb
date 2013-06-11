@@ -8,9 +8,9 @@ class E
                     'view'=>'tab'
                   }})
 
-  def pdf &f
+  def triplrPDF &f
     yield uri,Content,`pdftotext #{sh}; cat #{docBase.a('.txt').sh}`
-    dateNorm :shellData,'pdfinfo', &f
+    dateNorm :triplrStdOut,'pdfinfo', &f
   end
 
 end

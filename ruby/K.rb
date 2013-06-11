@@ -24,7 +24,6 @@ class E
     jpg: 'image/jpeg',
     js:  'application/javascript',
     json:  'application/json',
-    jsonp:  'application/jsonp',
     log: 'text/log',
     markdown: 'application/markdown',
     m4a: 'audio/mp4',
@@ -57,31 +56,29 @@ class E
 
   # MIMEtype -> tripleSource
   MIMEsource={
-    'application/atom+xml' => [:feed],
-    'application/excel' => [:excel],
-    'application/markdown' => [:markdown],
-    'application/org' => [:org],
+    'application/atom+xml' => [:triplrFeed],
+    'application/markdown' => [:triplrMarkdown],
+    'application/org' => [:triplrOrg],
     'application/rdf+xml'=>[:rdf,:rdfxml],
-    'application/json' => [:json],
-    'application/jsonp' => [:jsonp],
-    'application/pdf'=>[:pdf],
-    'application/textile' => [:textile],
-    'application/word'=>[:word],
-    'audio/mp4'=>[:shellData,'faad -i','audio/'],
-    'audio/mpeg'=>[:shellData,'id3info','audio/mp3/',/\((.*?)\)$/],
-    'audio'=>[:shellData,'sndfile-info','audio/'],
-    'image'=>[:shellData,'exiftool','exif/'],
-    'message/rfc822'=>[:mail],
-    'text/ansi'=>[:ansi],
-    'text/comma-separated-values'=>[:csv,/,/],
+    'application/json' => [:triplrJSON],
+    'application/pdf'=>[:triplrPDF],
+    'application/textile' => [:triplrTextile],
+    'application/word'=>[:triplrWord],
+    'audio/mp4'=>[:triplrStdOut,'faad -i','audio/'],
+    'audio/mpeg'=>[:triplrStdOut,'id3info','audio/mp3/',/\((.*?)\)$/],
+    'audio'=>[:triplrStdOut,'sndfile-info','audio/'],
+    'image'=>[:triplrStdOut,'exiftool','exif/'],
+    'message/rfc822'=>[:triplrMail],
+    'text/ansi'=>[:triplrANSI],
+    'text/comma-separated-values'=>[:triplrCSV,/,/],
     'text/html'=>[:rdf, :rdfa],
-    'text/log'=>[:log],
-    'text/nfo'=>[:hyper,'cp437'],
+    'text/log'=>[:triplrLog],
+    'text/nfo'=>[:triplrHref,'cp437'],
     'text/ntriples'=>[:rdf, :ntriples],
-    'text/plain'=>[:hyper],
-    'text/rtf'=>[:rtf],
-    'text/semicolon-separated-values'=>[:csv,/;/],
-    'text/tab-separated-values'=>[:csv,/\t/],
+    'text/plain'=>[:triplrHref],
+    'text/rtf'=>[:triplrRTF],
+    'text/semicolon-separated-values'=>[:triplrCSV,/;/],
+    'text/tab-separated-values'=>[:triplrCSV,/\t/],
     'text/turtle'=>[:rdf,:turtle],
   }
 
@@ -90,7 +87,6 @@ class E
     'application/markdown' => true,
     'application/c' => true,
     'application/ruby' => true,
-    'application/jsonp' => true,
     'application/haskell' => true,
     'application/org' => true,
     'application/textile' => true,
@@ -99,7 +95,7 @@ class E
     'text/ansi'=>true,
     'text/log'=>true,
     'text/nfo'=>true,
-#    'text/plain'=>true, #
+#    'text/plain'=>true,
     'text/rtf'=>true,
   }
 
@@ -162,7 +158,7 @@ class E
   end
 
   # util, prefix -> tripleSource
-  def shellData e,f='',g=nil,a=sh;g||=/^\s*(.*?)\s*$/
+  def triplrStdOut e,f='',g=nil,a=sh;g||=/^\s*(.*?)\s*$/
     `#{e} #{a}|grep :`.each_line{|i|i=i.split /:/
     yield uri,
      (f+(i[0].match(g)||[nil,i[0]])[1].gsub(/\s/,'_')),

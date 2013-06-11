@@ -106,14 +106,13 @@ elsif b.grep(/\.log$/).size / s > t
   F['doc/view/multi'] = "display multiple comma-separated <b>views</b>"
   fn 'view/multi',->d,e{e.q['views'].split(',').map{|v|Fn'view/'+v,d,e}}
 
-  def raw
+  def triplrBlob
     glob.select(&:f).do{|f|f.map{|r|
         yield r.uri,Type,E('blob')
         yield r.uri,Content,r.r}} end
+  graphFromStream :triplrBlob
 
-  graphFromStream :raw
-
-  def hyper e=nil
+  def triplrHref e=nil
     yield uri,Content,read.do{|r|e ? r.force_encoding(e).to_utf8 : r}.hrefs
   end
 
