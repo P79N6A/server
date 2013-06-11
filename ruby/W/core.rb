@@ -45,20 +45,7 @@ class E
   # placeholder to circumvent empty-graph 404
   fn 'graph/_',->d,_,m{ m[d.uri] = {} }
 
-  # in :: tripleSource -> vfs 
-  def in i,*a
-    send(i,*a){|s,p,o|E(s)[p,o]}
-  end
-
-  # add :: tripleSource -> vfs exists || create
-  def add i,*a
-    e={}
-    send(i,*a) do |s,p,o|; r=E(s)
-      (e[s].nil? ? e[s]=r.e : e[s]) || r[p,o]
-    end
-  end
-
-  # addJSON :: tripleSource -> JSON exists || create
+  # addJSON :: tripleStream -> JSON graph (fs)
   def addJSON i,g,p=[]
     fromStream({},i).map{|u,r| # stream -> graph
       (E u).do{|e| # resource
@@ -87,6 +74,15 @@ class E
     ((path[-1]=='/' ? path[0..-2] : path)+'.e').E    
   end
 
+  # graphFromFile :: URI -> Graph -> Graph
+  # graph contained in explicitly-referenced file
+  def graphFromFile g={}
+   [ :tripleSourceNode, # filesystem data
+     :tripleSourceMIME].# format-specific tripleStream
+      each{|i| fromStream g,i } # tripleStream -> Graph
+    g
+  end
+
   # cacheGraphFile :: Graph -> Graph
   def cacheGraphFile g={}
     # native JSON-parse is usually faster than pure-Ruby RDF-parsers and non-RDF triple-discoverers
@@ -97,50 +93,17 @@ class E
        g.merge! i)
   end
 
-  # cacheGraph :: Graph -> Graph
-  def cacheGraph g={}
-#   @r[:graph] ||= {} # doc->graph memoize 
-   s = dirname.prepend('/E/graph/').a "/#{base}.json" # name
-    s.e && (!e || s.m > m) && g.merge!(s.r(true)) || # exists and up-to-date
-      (i = graph
-       s.w i, true
-       g.merge! i)
-  end
-
-
-  # graphFromFile :: URI -> Graph -> Graph
-  # graph contained in explicitly-referenced file
-  def graphFromFile g={}
-   [ :tripleSourceNode, # filesystem data
-     :tripleSourceMIME].# format-specific tripleStream
-      each{|i| fromStream g,i } # tripleStream -> Graph
-    g
-  end
-
   # graph :: URI -> Graph -> Graph
+  # graph in all potential docs + native-JSON
   def graph g={}
     g.merge! ((jsonGraph.r true)||{}) # JSON source
     docs.map{|d| d.graphFromFile g }  # tripleStream sources
     g
   end
 
-  # memoGraph :: Graph
-  def memoGraph
-    @graph ||= cacheGraph
-  end
-
-  # memoGraphFile :: Graph
-  def memoGraphFile
-    @graphFile ||= cacheGraphFile
-  end
-
   # render :: MIME, Graph, env -> String
   def render mime,  d,e
    E[Render+mime].y d,e
-  end
-
-  def serialize mime
-    E[Render+mime].y graph
   end
 
 end
