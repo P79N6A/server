@@ -61,7 +61,7 @@ class E
 
   def literalBlob o
     u = literalBlobURI o
-    w o, !o.class==String unless u.f
+    u.w o,!o.class==String unless u.f
   end
 
   # index :: predicateURI, object 

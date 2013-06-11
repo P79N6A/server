@@ -74,10 +74,6 @@ class E
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs
   end
 
-  def wc
-    `wc -l #{sh}`.split(/\t/)[0].to_i
-  end
-
   def lines
     yield uri,'lineCount',wc
   end
