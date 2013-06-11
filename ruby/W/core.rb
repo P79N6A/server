@@ -4,7 +4,7 @@ class Hash
   def graph g
     g.merge!({uri=>self})
   end
-  %w{cacheGraph graphFrag q}.map{|m|alias_method m,:graph}
+  %w{cacheGraphFile graphFile q}.map{|m|alias_method m,:graph}
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
   # triples :: tripleSource
   def triples; uri.do{|s|
@@ -42,8 +42,8 @@ class E
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
   end
 
-  # some views request graph later (JS)
-  fn 'graph/_',->d,_,m{ m[d.uri] = {} } # placeholder
+  # placeholder to circumvent empty-graph 404
+  fn 'graph/_',->d,_,m{ m[d.uri] = {} }
 
   # in :: tripleSource -> vfs 
   def in i,*a
@@ -62,10 +62,10 @@ class E
   def addJSON i,g,p=[]
     fromStream({},i).map{|u,r| # stream -> graph
       (E u).do{|e| # resource
-        e.em.e || # exists?
-        (puts "a #{e}" # add
+        e.jsonGraph.e || # exists?
+        (puts "a #{e}"
          p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
-         e.em.w({u => r},true) # write
+         e.jsonGraph.w({u => r},true) # write
          e.roonga g # index content
          )}}
     self
@@ -83,14 +83,23 @@ class E
         send *s,&b }}
   end
 
-  # JSON graph-storage
-  def em
-    @em ||= ((path[-1]=='/' ? path[0..-2] : path)+'.e').E    
+  def jsonGraph
+    ((path[-1]=='/' ? path[0..-2] : path)+'.e').E    
+  end
+
+  # cacheGraphFile :: Graph -> Graph
+  def cacheGraphFile g={}
+    # native JSON-parse is usually faster than pure-Ruby RDF-parsers and non-RDF triple-discoverers
+    s = readlink.dirname.prepend('/E/graphF/').a "/#{base}.json" # name
+    s.e && (!e || s.m > m) && g.merge!(s.r(true)) || # exists and up-to-date
+      (i = graphFromFile
+       s.w i, true
+       g.merge! i)
   end
 
   # cacheGraph :: Graph -> Graph
   def cacheGraph g={}
-    s = readlink.dirname.prepend('/E/resource/').a "/#{base}.json"
+    s = dirname.prepend('/E/graph/').a "/#{base}.json" # name
     s.e && (!e || s.m > m) && g.merge!(s.r(true)) || # exists and up-to-date
       (i = graph
        s.w i, true
@@ -98,22 +107,22 @@ class E
   end
 
 
-  # graph :: Graph -> Graph
-  def graph g={}
+  # graphFromFile :: URI -> Graph -> Graph
+  # graph contained in explicitly-referenced file
+  def graphFromFile g={}
    [ :tripleSourceNode, # filesystem data
-     :tripleSourceMIME, # domain-specific metadata
-   ].each{|i| fromStream g,i}  # tripleStream -> Graph
-    g.merge! ((em.r true)||{}) # JSON graph -> Graph
+     :tripleSourceMIME].# format-specific tripleStream
+      each{|i| fromStream g,i } # tripleStream -> Graph
     g
   end
 
 
-  # only exact identifier matches 
-  def graphFrag g={}
-    @r[:graph] ||= {}
-    puts "docs #{docs}" if @r.q['debug']
+  # graph :: URI -> Graph -> Graph
+  def graph g={}
+    @r[:graph] ||= {} # doc->graph memoize
+    puts "docs #{docs}" #if @r.q['debug']
     docs.map{|d|
-      (@r[:graph][d.uri] ||= d.cacheGraph).do{|m| # construct/memoize graph of parent-document(s)
+      (@r[:graph][d.uri] ||= d.cacheGraphFile).do{|m| # construct graph from document(s)
         m[uri].do{|r| # lookup fragment
           # merge into model
           g[uri] ||= {'uri' => uri}
@@ -121,11 +130,18 @@ class E
             (g[uri][p] ||= []
              g[uri][p].concat o
              )}}}}
-    g end
+    g.merge! ((em.r true)||{}) # JSON graph storage
+    g # Graph
+  end
 
   # memoGraph :: Graph
   def memoGraph
     @graph ||= cacheGraph
+  end
+
+  # memoGraphFile :: Graph
+  def memoGraphFile
+    @graphFile ||= cacheGraphFile
   end
 
   # render :: MIME, Graph, env -> String

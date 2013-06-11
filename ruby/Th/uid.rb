@@ -15,7 +15,7 @@ class E
     r.q['name'].do{|n|
       n.size < 88 &&
       (u=r.uid
-       u.dp Name
+       u.deletePredicate Name
        u[Name] = n )}
     e.GET_resource}
 

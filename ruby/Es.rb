@@ -52,7 +52,7 @@ class E
        s[self,r,m]
      elsif path?
       g = glob                         # glob
-      g.push self if e || em.e         # path if exists
+      g.push self if e || jsonGraph.e  # path if exists
       g.concat c if d? && uri[-1]=='/' # children if trailing-slash
       g.concat docs                    # other formats
      else
@@ -63,7 +63,7 @@ class E
 
   # construct graph recursively following a named arc (mail references, set membership, etc)
   def walk p,m={},v={}
-    m.merge! memoGraph
+    m.merge! memoGraphFile
     v[uri]=true
     ((attr p)||[]).concat(((E p).po self)||[]).map{|r|
       r.E.walk p,m,v if !v[r.uri]}

@@ -119,20 +119,19 @@ class E
   end
 
   # literal -> URI
-  def li o
-    return liB o unless o.class == String
-    return liU o if (Literal[uri] || o.size<=88) && !o.match(/\//)
+  def literal o
+    return literalBlob o unless o.class == String
+    return literalURI o if (Literal[uri] || o.size<=88) && !o.match(/\//)
     return E o if o.match %r{\A[a-z]+://[^\s]+\Z}
-    liB o
+    literalBlob o
   end
 
-  # short literals URI
-  def liU o
+  # pathname for short literals
+  def literalURI o
     E "/u/"+(Literal[uri] && o.gsub(/[\.:\-T+]/,'/'))+'/'+o
   end
 
-  # blob URI
-  def liBU o
+  def literalBlobURI o
     if o.class == String
       E "/blob/"+o.h.dive
     else

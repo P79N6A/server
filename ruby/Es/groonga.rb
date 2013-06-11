@@ -26,15 +26,15 @@ class E
   def roonga graph="global", m = memoGraph
     g = E.groonga           # groonga
     r = g[uri] || g.add(uri)# roonga entry
-    r.uri = uri          # uri
-    r.graph = graph.to_s # graph
-    r.content = m.text   # contents
-    r.time = m.values[0][E::Date][0].to_time
+       r.uri = uri
+     r.graph = graph.to_s
+   r.content = m.text
+      r.time = m.values[0][E::Date][0].to_time
     self
   end
 
   def indexFrag c
-    graph.map{|u,m|
+    graphFromFile.map{|u,m|
       u.E.do{|e| e.roonga c, {u => m} }}
   end
   

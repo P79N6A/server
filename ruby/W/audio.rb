@@ -9,7 +9,7 @@ class E
   def videoNodes;take.select &:videoNode end;def videoNode;true if ext.match /(avi|flv|mkv|mpg|mp4|wmv)/i end
 
   fn 'graph/audio',->d,e,m{d.audioNodes.map{|a|m[a.uri]=a}}
-  fn 'graph/video',->d,e,m{d.videoNodes.map{|a|a.cacheGraph m}}
+  fn 'graph/video',->d,e,m{d.videoNodes.map{|a|a.cacheGraphFile m}}
 
   fn 'graph/audioFind',->e,q,m{
     t=q['day'] && q['day'].match(/^\d+$/) && '-ctime -'+q['day']

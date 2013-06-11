@@ -16,7 +16,7 @@ class E
            (d.indexFrag 'schema'                # index document
             d.linkDefined                       # link slash-URIs to defining doc
             m = {}                                               # model for frequency data
-            d.graph.map{|u,_|                                    # each predicate in schema
+            d.graphFromFile.map{|u,_|                             # each predicate in schema
              count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
             r.appendNT m unless m.empty? # store frequency data on fs in ntriples
             )}) ||
@@ -26,7 +26,7 @@ class E
   fn '/schema/GET',->e,r{
     [303,
      {'Location'=>'/search' + {
-         graph: :schema, m: :graphFrag, view: :search, sort: :score, reverse: :true, v: :schema, c: 1e4
+         graph: :schema, view: :search, sort: :score, reverse: :true, v: :schema, c: 1e4
        }.qs},[]]}
   
   fn 'u/schema/weight',->d,e{
@@ -57,7 +57,7 @@ class E
              r[RDFs+'comment'][0].do{|l|{_: :span,class: :comment, c: l}}]}}])}
 
   def linkDefined
-    cacheGraph.do{|m|
+    cacheGraphFile.do{|m|
       m.map{|u,r|
         r[RDFs+'isDefinedBy'].do{|d|
           prop = u.E.docBase.a '.' + ext

@@ -25,7 +25,6 @@ class E
   def parent
     E Pathname.new(uri).parent
   end
-  fn 'graph/parent',->d,e,m{d.parent.cacheGraph m}
 
   def siblings
     parent.c
@@ -85,15 +84,13 @@ class E
     end
   end
 
-  # touch node
   def touch
     FileUtils.touch no
     self
   end
     
-  # delete node
-  def de
-    no.de if e
+  def deleteNode
+    no.deleteNode if e
     self
   end
 
@@ -129,14 +126,8 @@ class E
     self
   end
 
-  # write file if doesn't already exist
-  def wi d,j=false
-    w d,j unless f
-    self
-  end
-
   def writeFile c
-    File.open(d,'w'){|f|f<< c}
+    File.open(d,'w'){|f|f << c}
   end
 
   def readFile
@@ -172,9 +163,9 @@ class Pathname
       []
   end
   
-  def de
+  def deleteNode
     FileUtils.send file? ? :rm : :rmdir,self
-    parent.de if parent.c.empty?
+    parent.deleteNode if parent.c.empty?
   end
 
 end
