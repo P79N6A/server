@@ -60,13 +60,14 @@ class E
     (s=m.sort.map{|u,r|[u,r.respond_to?(:m)&&r.m]}.h # Set identifier
      @r['ETag']=[s,@r.q,@r.format].h # response identifier ((uri,mtime),querystring,format)
      maybeSend @r.format,->{ # does agent have resource ?
-                               puts "response #{@r['ETag']}"
-       r=E'/E/req/'+@r['ETag'].dive  # cachedResponse resource
+       r=E'/E/req/'+@r['ETag'].dive  # cachedResponse
        r.e && r ||                   # cachedResponse -> response
-       (F['graph/'+@r.q['graph']]||(# were we supplied a graph?
-        c = E '/E/graph/'+s.dive     # cachedGraph resource
+       (F['graph/'+@r.q['graph']]||( # custom graph
+        c = E '/E/graph/'+s.dive     # cachedGraph
+         print c, ' '
         c.e && m.merge!(c.r(true))|| # cachedGraph -> graph
-        (m.values.map{|r|r.env(@r).graphFromFile m}  # Set -> graph
+        (m.values.map{|r| puts "res #{r}"
+           r.env(@r).graphFromFile m}  # Set -> graph
          c.w m,true))        # graph -> cache
         E.filter @r.q, m       # env -> graph -> graph
         v=render @r.format, m, @r # graph -> response
