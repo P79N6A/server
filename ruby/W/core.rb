@@ -99,7 +99,8 @@ class E
 
   # cacheGraph :: Graph -> Graph
   def cacheGraph g={}
-    s = dirname.prepend('/E/graph/').a "/#{base}.json" # name
+#   @r[:graph] ||= {} # doc->graph memoize 
+   s = dirname.prepend('/E/graph/').a "/#{base}.json" # name
     s.e && (!e || s.m > m) && g.merge!(s.r(true)) || # exists and up-to-date
       (i = graph
        s.w i, true
@@ -116,22 +117,11 @@ class E
     g
   end
 
-
   # graph :: URI -> Graph -> Graph
   def graph g={}
-    @r[:graph] ||= {} # doc->graph memoize
-    puts "docs #{docs}" #if @r.q['debug']
-    docs.map{|d|
-      (@r[:graph][d.uri] ||= d.cacheGraphFile).do{|m| # construct graph from document(s)
-        m[uri].do{|r| # lookup fragment
-          # merge into model
-          g[uri] ||= {'uri' => uri}
-          r.map{|p,o| p == 'uri' ||
-            (g[uri][p] ||= []
-             g[uri][p].concat o
-             )}}}}
-    g.merge! ((em.r true)||{}) # JSON graph storage
-    g # Graph
+    g.merge! ((jsonGraph.r true)||{}) # JSON source
+    docs.map{|d| d.graphFromFile g }  # tripleStream sources
+    g
   end
 
   # memoGraph :: Graph
