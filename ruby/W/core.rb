@@ -24,7 +24,7 @@ class E
   # fromStream :: Graph -> tripleSource -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
-      m[s] ||= {'uri'=>s}
+      m[s] = {'uri' => s} unless m[s].class == Hash 
       m[s][p] ||= []
       m[s][p].push o
     end; m

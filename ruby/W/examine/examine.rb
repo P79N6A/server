@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 %w{exhibit hist history normal protovis sw time timeline}.each{|e|require 'element/W/examine/'+e}
 class E
 

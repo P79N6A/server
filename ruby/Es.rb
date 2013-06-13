@@ -58,7 +58,6 @@ class E
      else
        [self]
     end).map{|u| m[u.uri] ||= u}
-    puts "set #{m.keys.join ' '}"
     m
   end
 
