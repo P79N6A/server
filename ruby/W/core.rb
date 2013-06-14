@@ -80,10 +80,10 @@ class E
   end
 
   # graph :: URI -> Graph -> Graph
-  # graph in all potential docs + native-JSON
+  # graph in all related doc-files + native-JSON (.e) format
   def graph g={}
-    g.merge! ((jsonGraph.r true)||{}) # JSON source
-    docs.map{|d| d.graphFromFile g }  # tripleStream sources
+    g.merge! ((jsonGraph.r true)||{}) # JSON -> graph
+    docs.map{|d| d.graphFromFile g }  # doc tripleStream -> graph
     g
   end
 

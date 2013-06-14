@@ -42,7 +42,7 @@ class E
   end
 
   def docs
-    docBase.glob ".{html,n3,nt,owl,rdf,ttl}"
+    (e ? [self] : []).concat docBase.glob ".{html,n3,nt,owl,rdf,ttl}"
   end
 
   def dirname

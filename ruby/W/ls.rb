@@ -1,7 +1,6 @@
 #watch __FILE__
 class E
 
-  # directory -> resourceSet
   fn 'set/ls',->d,e,m{d.c}
 
   # filesystem metadata only
