@@ -4,6 +4,24 @@ class E
     yield uri, '/application/json', (JSON.parse read) if e
   end
 
+
+  # addJSON :: tripleStream -> JSON graph (fs)
+  def addJSON i,g,p=[]
+    fromStream({},i).map{|u,r| # stream -> graph
+      (E u).do{|e| # resource
+        e.jsonGraph.e || # exists?
+        (puts "a #{e}"
+         p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
+         e.jsonGraph.w({u => r},true) # write
+         e.roonga g # index content
+         )}}
+    self
+  end
+
+  def jsonGraph
+    ((path[-1]=='/' ? path[0..-2] : path)+'.e').E    
+  end
+
   fn 'view/application/json',->m,e{
     m.map{|u,j|
       e.q['sel'].do{|s|

@@ -45,19 +45,6 @@ class E
   # placeholder to circumvent empty-graph 404
   fn 'graph/_',->d,_,m{ m[d.uri] = {} }
 
-  # addJSON :: tripleStream -> JSON graph (fs)
-  def addJSON i,g,p=[]
-    fromStream({},i).map{|u,r| # stream -> graph
-      (E u).do{|e| # resource
-        e.jsonGraph.e || # exists?
-        (puts "a #{e}"
-         p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
-         e.jsonGraph.w({u => r},true) # write
-         e.roonga g # index content
-         )}}
-    self
-  end
-
   # to_h :: -> Hash
   def to_h
     {'uri'=>uri}
@@ -68,10 +55,6 @@ class E
       (MIMEsource[mime]||
        MIMEsource[mime.split(/\//)[0]]).do{|s|
         send *s,&b }}
-  end
-
-  def jsonGraph
-    ((path[-1]=='/' ? path[0..-2] : path)+'.e').E    
   end
 
   # graphFromFile :: URI -> Graph -> Graph
