@@ -54,6 +54,22 @@ class E
                   m } || (resourceSet @r.q))) # resource handler
   end
 
+
+  def resourceSet r={},m={}
+   (if s=F['set/'+r['set']]
+       s[self,r,m]
+     elsif path?
+      g = 
+      g.push self if e || jsonGraph.e  # path if exists
+      g.concat c if d? && uri[-1]=='/' # children if trailing-slash
+      g.concat docs                    # other formats
+     else
+       [self]
+    end).map{|u| m[u.uri] ||= u}
+    m
+  end
+
+
   # resourceSet -> response
   def resources m
     m.empty? ? (Fn 'req/'+HTTP+'404',self,@r) : # empty set -> 404
@@ -62,7 +78,7 @@ class E
      maybeSend @r.format,->{ # does agent have resource ?
        r=E'/E/req/'+@r['ETag'].dive  # cached response
        r.e && r ||                   # cached response -> response
-       (F['graph/'+@r.q['graph']]||( # custom graph
+       (F['graph/'+@r.q['graph']]||( # custom graph, or:
         c = E '/E/graph/'+s.dive     # cached graph
         c.e && m.merge!(c.r(true))|| # cached graph -> graph
         (m.values.map{|r|r.env(@r).graphFromFile m} # Set -> graph

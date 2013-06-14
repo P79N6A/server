@@ -47,20 +47,6 @@ class E
       m['next']={'uri' => 'next','url' => d.url,'d' => 'asc','b' => asc.uri} if asc
       s }}
 
-  def resourceSet r={},m={}
-   (if s=F['set/'+r['set']]
-       s[self,r,m]
-     elsif path?
-      g = glob                         # glob
-      g.push self if e || jsonGraph.e  # path if exists
-      g.concat c if d? && uri[-1]=='/' # children if trailing-slash
-      g.concat docs                    # other formats
-     else
-       [self]
-    end).map{|u| m[u.uri] ||= u}
-    m
-  end
-
   # construct graph recursively following a named arc (mail references, set membership, etc)
   def walk p,m={},v={}
     m.merge! memoGraphFile

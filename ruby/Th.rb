@@ -73,7 +73,7 @@ class Hash
   def qs
    '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end
-  def env r # thread environment through to child resources
+  def env r # thread environment through to children
     @r = r
     self
   end
