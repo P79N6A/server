@@ -1,6 +1,6 @@
 class E
 
-  # CSV -> tripleSource
+  # CSV -> tripleStream
   def triplrCSV d
     d = @r.q['delim']||d
     open(node).readlines.map{|l|l.chomp.split(d) rescue []}.do{|t|

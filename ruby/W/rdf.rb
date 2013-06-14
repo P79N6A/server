@@ -19,8 +19,7 @@ class E
                                   RDF::Literal(o))}}}
   rescue Exception => e
   end
-  
-  # tripleSource
+
   def rdf t=nil; E.requireRDF
     (t == :rdfa ? RDF::RDFa : RDF)::Reader.
       open(e ? readlink.d : uri, :format => t){|r|

@@ -54,7 +54,7 @@ class E
     xlsx: 'application/excel',
   }
 
-  # MIMEtype -> tripleSource
+  # MIMEtype -> triplrFn
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
     'application/markdown' => [:triplrMarkdown],
@@ -157,7 +157,7 @@ class E
                end)
   end
 
-  # util, prefix -> tripleSource
+  # util, prefix -> tripleStream
   def triplrStdOut e,f='',g=nil,a=sh;g||=/^\s*(.*?)\s*$/
     `#{e} #{a}|grep :`.each_line{|i|i=i.split /:/
     yield uri,

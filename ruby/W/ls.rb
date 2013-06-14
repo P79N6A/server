@@ -5,7 +5,7 @@ class E
   fn 'set/ls',->d,e,m{d.c}
 
   # filesystem metadata only
-  fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m,:tripleSourceNode,false}}
+  fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m, :triplrInode, false}}
 
   fn 'set/subtree',->d,r,m{
     c =(r['c'].do{|c|c.to_i + 1} || 3).max(100) # one extra for start of next-page

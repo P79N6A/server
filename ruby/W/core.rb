@@ -6,7 +6,7 @@ class Hash
   end
   %w{cacheGraphFile graphFromFile q}.map{|m|alias_method m,:graph}
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
-  # triples :: tripleSource
+  # Hash -> tripleStream
   def triples; uri.do{|s|
       map{|p,o|
         o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}}
@@ -21,7 +21,7 @@ class E
     end
   end
 
-  # fromStream :: Graph -> tripleSource -> Graph
+  # fromStream :: Graph -> tripleStream -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -63,7 +63,7 @@ class E
     {'uri'=>uri}
   end
   
-  def tripleSourceMIME &b;mime.do{|mime|
+  def triplrMIMEdispatch &b;mime.do{|mime|
     yield uri,E::Type,(E mime)
       (MIMEsource[mime]||
        MIMEsource[mime.split(/\//)[0]]).do{|s|
@@ -77,15 +77,14 @@ class E
   # graphFromFile :: URI -> Graph -> Graph
   # graph contained in explicitly-referenced file
   def graphFromFile g={}
-   [ :tripleSourceNode, # filesystem data
-     :tripleSourceMIME].# format-specific tripleStream
+   [ :triplrInode,        # filesystem data
+     :triplrMIMEdispatch].# format-specific tripleStream
       each{|i| fromStream g,i } # tripleStream -> Graph
     g
   end
 
   # cacheGraphFile :: Graph -> Graph
   def cacheGraphFile g={}
-    # native JSON-parse is usually faster than pure-Ruby RDF-parsers and non-RDF triple-discoverers
     s = readlink.dirname.prepend('/E/graphF/').a "/#{base}.json" # name
     s.e && (!e || s.m > m) && g.merge!(s.r(true)) || # exists and up-to-date
       (i = graphFromFile

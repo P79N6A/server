@@ -11,7 +11,7 @@ class E
   fn 'graph/find',->e,q,m{
     (Fn 'set/find', e,q,m).do{|f|
       if f.size < 256
-        f.map{|r|r.fromStream m,:tripleSourceNode,false}
+        f.map{|r|r.fromStream m,:triplrInode,false}
       else
         f.map{|r|m[r.uri]=r}
       end}}

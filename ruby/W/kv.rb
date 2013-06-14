@@ -41,7 +41,6 @@ class E
     touch if e
   end
 
-  # vfs -> tripleSource
   def triplrFsStore
     listPredicates.map{|p|
       self[p].map{|o|

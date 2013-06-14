@@ -60,7 +60,7 @@ class E
     no.stat.mtime if e
   end
 
-  def tripleSourceNode r=true
+  def triplrInode r=true
     e && (d? && (yield uri,'fs:parent',parent
              r && c.map{|c|yield uri,'fs:child',c})
       node.stat.do{|s|[:size,:ftype,:mtime].map{|p|
