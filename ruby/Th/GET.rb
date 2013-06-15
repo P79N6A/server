@@ -54,17 +54,15 @@ class E
 
   # resource set -> response
   def resources m={}
-    g = F['graph/'+@r.q['graph']] # specialized graph
-    s = F['set/'+@r.q['set']]        # specialized set
-    if g # custom graph
+    if g = F['graph/'+@r.q['graph']] # custom graph
       g[self,@r.q,m]
     else
-      (if s # custom set
+      (if s = F['set/'+@r.q['set']] # custom set
          s[self,@r.q,m]
        else # default set
          docs.concat (d? && uri[-1]=='/') ? c : []
        end).map{|u| m[u.uri] ||= u} # populate set
-    end # at least a graph skeleton should exist here
+    end # at least a graph skeleton should exist, else 404
     m.empty? ? (Fn 'req/'+HTTP+'404',self,@r) : # empty set -> 404
     (s=m.sort.map{|u,r|[u,r.respond_to?(:m)&&r.m]}.h # Set identifier
      @r['ETag']=[s,@r.q,@r.format].h # response identifier ((uri,mtime),querystring,format)
