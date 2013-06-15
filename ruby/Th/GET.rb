@@ -40,45 +40,38 @@ class E
    (thumb? ? thumb : self).GET_file
   end
 
-  def GET_resource # custom handler for 
+  def GET_resource                 # for 
     (F['req/'+@r.q['y']] ||           # all URIs 
      F[@r['REQUEST_PATH'].t+('GET')]||# all hostnames, specific path
      F[uri.t+('GET')]                 # specific URI
-     ).do{|y|y.(self,@r)} ||
+     ).do{|y|y.(self,@r)} ||# custom handler
     as('index.html').do{|i| # HTML indexes
       i.e && # exists?
       ((uri[-1]=='/') ? i.env(@r).GET_file : # inside dir?
        [301, {Location: uri.t}]  )} ||  # redirect to dir
-    (resources (F['graph/'+@r.q['graph']].do{|y| m = {}
-                  y.(self,@r.q,m)  # custom graph (model)
-                  m } || (resourceSet @r.q))) # resource handler
+    resources # resource handler
   end
 
-
-  def resourceSet r={},m={}
-   (if s=F['set/'+r['set']]
-       s[self,r,m]
-     elsif path?
-      g = 
-      g.push self if e || jsonGraph.e  # path if exists
-      g.concat c if d? && uri[-1]=='/' # children if trailing-slash
-      g.concat docs                    # other formats
-     else
-       [self]
-    end).map{|u| m[u.uri] ||= u}
-    m
-  end
-
-
-  # resourceSet -> response
-  def resources m
+  # resource set -> response
+  def resources m={}
+    g = F['graph/'+@r.q['graph']] # specialized graph
+    s = F['set/'+@r.q['set']]        # specialized set
+    if g # custom graph
+      g[self,@r.q,m]
+    else
+      (if s # custom set
+         s[self,@r.q,m]
+       else # default set
+         docs.concat (d? && uri[-1]=='/') ? c : []
+       end).map{|u| m[u.uri] ||= u} # populate set
+    end # at least a graph skeleton should exist here
     m.empty? ? (Fn 'req/'+HTTP+'404',self,@r) : # empty set -> 404
     (s=m.sort.map{|u,r|[u,r.respond_to?(:m)&&r.m]}.h # Set identifier
      @r['ETag']=[s,@r.q,@r.format].h # response identifier ((uri,mtime),querystring,format)
      maybeSend @r.format,->{ # does agent have resource ?
        r=E'/E/req/'+@r['ETag'].dive  # cached response
        r.e && r ||                   # cached response -> response
-       (F['graph/'+@r.q['graph']]||( # custom graph, or:
+       (g ||( # custom graph, or:
         c = E '/E/graph/'+s.dive     # cached graph
         c.e && m.merge!(c.r(true))|| # cached graph -> graph
         (m.values.map{|r|r.env(@r).graphFromFile m} # Set -> graph
