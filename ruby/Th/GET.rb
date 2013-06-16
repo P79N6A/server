@@ -53,16 +53,14 @@ class E
   end
 
   # resources -> HTTP response
-  def resources m=nil
-    
-    m.class == Hash || # graph passed as argument
+  def resources m={}
+    m.empty? &&
     (g = F['graph/'+@r.q['graph']]) && # graph generator function
      g[self,@r.q,m] ||
       ((s = F['set/'+@r.q['set']]) && # set generator function
        s[self,@r.q,m] || docs).map{|u| m[u.uri] ||= u } # set to skeletal graph
 
     return Fn 'req/'+HTTP+'404',self,@r if m.empty? # empty graph 404
-
     s = m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h # set fingerprint
     @r['ETag'] ||= [s,@r.q,@r.format].h # response fingerprint
     maybeSend @r.format,-> { # does agent need entity ?

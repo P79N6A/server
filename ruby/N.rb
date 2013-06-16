@@ -203,7 +203,7 @@ class String
       r ? (File.basename self) : ('/'+self).E
 
     elsif match /^E\/..\/..\// # encoded URI
-      Base64.urlsafe_decode64(self[8..-1].match('[^.]+').to_s).E
+      Base64.urlsafe_decode64(self[8..-1].match('[^.]+')[0]).E
 
     else # path
       ('/'+self).E
