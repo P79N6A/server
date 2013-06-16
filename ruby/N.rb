@@ -40,7 +40,7 @@ class E
   end
 
   def docs
-    [self].
+    (e ? [self] : []). # directly-referenced
       concat(docBase.glob ".{e,html,n3,nt,owl,rdf,ttl}"). # docs
       concat((d? && uri[-1]=='/') ? c : []) # trailing slash -> children
   end
@@ -130,7 +130,7 @@ class E
   def literalURI o
     E "/u/"+(Literal[uri] && o.gsub(/[\.:\-T+]/,'/'))+'/'+o
   end
-
+ 
   def literalBlobURI o
     if o.class == String
       E "/blob/"+o.h.dive

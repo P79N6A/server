@@ -1,6 +1,8 @@
 class E
 
-  fn 'req/'+HTTP+'404',->e,r{
+  E404 = 'req/' + HTTP + '404'
+
+  fn E404,->e,r{
     r[Type]=[(E HTTP+'404')]; r[Title]=e.uri; r['QUERY']=r.q; r['ACCEPT']=r.accept; r['near']=e.near; r.q.delete 'view'
     %w{CHARSET LANGUAGE ENCODING}.map{|a|r['ACCEPT_'+a]=r.accept_'_'+a}
     [404,{'Content-Type'=> r.format},[e.render(r.format,{e.uri => r},r)]]}

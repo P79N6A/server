@@ -84,7 +84,7 @@ class E
   end
 
   # render :: MIME, Graph, env -> String
-  def render mime,  d,e
+  def render mime, d, e
    E[Render+mime].y d,e
   end
 

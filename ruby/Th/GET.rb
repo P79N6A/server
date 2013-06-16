@@ -55,14 +55,18 @@ class E
   # resources -> HTTP response
   def resources m={}
     m.empty? &&
-    (g = F['graph/'+@r.q['graph']]) && # graph generator function
+    (g = F['graph/'+@r.q['graph']]) && # graph generator fn
      g[self,@r.q,m] ||
-      ((s = F['set/'+@r.q['set']]) && # set generator function
+      ((s = F['set/'+@r.q['set']]) && # set generator fn
        s[self,@r.q,m] || docs).map{|u| m[u.uri] ||= u } # set to skeletal graph
 
-    return Fn 'req/'+HTTP+'404',self,@r if m.empty? # empty graph 404
-    s = m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h # set fingerprint
-    @r['ETag'] ||= [s,@r.q,@r.format].h # response fingerprint
+    return F[E404][self,@r] if m.empty? # empty graph 404
+
+    # set fingerprint
+    s = m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h
+    # response fingerprint
+    @r['ETag'] ||= [s,@r.q,@r.format].h
+
     maybeSend @r.format,-> { # does agent need entity ?
       r = E'/E/req/'+@r['ETag'].dive  # cached response
       r.e && r ||                 # use cached response
