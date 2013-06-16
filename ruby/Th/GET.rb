@@ -52,31 +52,30 @@ class E
     resources # resource handler
   end
 
-  # resource set -> response
-  def resources m={}
-    if g = F['graph/'+@r.q['graph']] # custom graph
-      g[self,@r.q,m]
-    else
-      (if s = F['set/'+@r.q['set']] # custom set
-         s[self,@r.q,m]
-       else # default set
-         docs.concat (d? && uri[-1]=='/') ? c : []
-       end).map{|u| m[u.uri] ||= u} # populate set
-    end # at least a graph skeleton should exist, else 404
-    m.empty? ? (Fn 'req/'+HTTP+'404',self,@r) : # empty set -> 404
-    (s=m.sort.map{|u,r|[u,r.respond_to?(:m)&&r.m]}.h # Set identifier
-     @r['ETag']=[s,@r.q,@r.format].h # response identifier ((uri,mtime),querystring,format)
-     maybeSend @r.format,->{ # does agent have resource ?
-       r=E'/E/req/'+@r['ETag'].dive  # cached response
-       r.e && r ||                   # cached response -> response
-       (g ||( # custom graph, or:
-        c = E '/E/graph/'+s.dive     # cached graph
+  # resources -> HTTP response
+  def resources m=nil
+    
+    m.class == Hash || # graph passed as argument
+    (g = F['graph/'+@r.q['graph']]) && # graph generator function
+     g[self,@r.q,m] ||
+      ((s = F['set/'+@r.q['set']]) && # set generator function
+       s[self,@r.q,m] || docs).map{|u| m[u.uri] ||= u } # set to skeletal graph
+
+    return Fn 'req/'+HTTP+'404',self,@r if m.empty? # empty graph 404
+
+    s = m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h # set fingerprint
+    @r['ETag'] ||= [s,@r.q,@r.format].h # response fingerprint
+    maybeSend @r.format,-> { # does agent need entity ?
+      r = E'/E/req/'+@r['ETag'].dive  # cached response
+      r.e && r ||                 # use cached response
+      (g || # skip default graph expansion
+       (c = E '/E/graph/'+s.dive     # cached graph
         c.e && m.merge!(c.r(true))|| # cached graph -> graph
         (m.values.map{|r|r.env(@r).graphFromFile m} # Set -> graph
          c.w m,true))        # graph -> cache
-        E.filter @r.q, m       # env -> graph -> graph
-        v=render @r.format, m, @r # graph -> response
-        r.w v; [v])})          # response -> cache
+       E.filter @r.q, m       # env -> graph -> graph
+       v=render @r.format, m, @r # graph -> response
+       r.w v; [v])}          # response -> cache
   end
 
 end

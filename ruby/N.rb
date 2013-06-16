@@ -24,10 +24,8 @@ class E
   end
 
   def docBase
-    readlink.
-      uri.
-      split(/#/)[0].
-      E.
+    readlink.uri.
+      split(/#/)[0].E.
       do{|d|d.dirname.as d.bare}
   end
 
@@ -42,7 +40,9 @@ class E
   end
 
   def docs
-    (e ? [self] : []).concat docBase.glob ".{html,n3,nt,owl,rdf,ttl}"
+    [self].
+      concat(docBase.glob ".{html,n3,nt,owl,rdf,ttl}"). # docs
+      concat((d? && uri[-1]=='/') ? c : []) # trailing slash -> children
   end
 
   def dirname

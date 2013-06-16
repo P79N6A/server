@@ -32,11 +32,6 @@ class E
       r.time = m.values[0][E::Date][0].to_time
     self
   end
-
-  def indexFrag c
-    graphFromFile.map{|u,m|
-      u.E.do{|e| e.roonga c, {u => m} }}
-  end
   
   # remove
   def unroonga
