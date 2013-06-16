@@ -9,17 +9,14 @@ class E
   def addJSON i,g,p=[]
     fromStream({},i).map{|u,r| # stream -> graph
       (E u).do{|e| # resource
-        e.jsonGraph.e || # exists?
+        j = e.docBase.a '.e'
+        j.e || # exists?
         (puts "a #{e}"
          p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
-         e.jsonGraph.w({u => r},true) # write
+         j.w({u => r},true) # write
          e.roonga g # index content
          )}}
     self
-  end
-
-  def jsonGraph
-    ((path[-1]=='/' ? path[0..-2] : path)+'.e').E    
   end
 
   fn 'view/application/json',->m,e{

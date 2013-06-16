@@ -57,10 +57,9 @@ class E
         send *s,&b }}
   end
 
-  # graphFromFile :: URI -> Graph -> Graph
-  # graph contained in explicitly-referenced file
   def graphFromFile g={}
-   [ :triplrInode,        # filesystem data
+    g.merge! r(true) if ext=='e' # native JSON -> graph
+    [:triplrInode,        # filesystem data
      :triplrMIMEdispatch].# format-specific tripleStream
       each{|i| fromStream g,i } # tripleStream -> Graph
     g
@@ -79,11 +78,8 @@ class E
     @graphFile ||= cacheGraphFile
   end
 
-  # graph :: URI -> Graph -> Graph
-  # graph in all related doc-files + native-JSON (.e) format
   def graph g={}
-    g.merge! ((jsonGraph.r true)||{}) # JSON -> graph
-    docs.map{|d| d.graphFromFile g }  # doc tripleStream -> graph
+    docs.map{|d|d.graphFromFile g}  # tripleStream -> graph
     g
   end
 

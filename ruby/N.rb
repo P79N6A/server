@@ -41,7 +41,7 @@ class E
 
   def docs
     [self].
-      concat(docBase.glob ".{html,n3,nt,owl,rdf,ttl}"). # docs
+      concat(docBase.glob ".{e,html,n3,nt,owl,rdf,ttl}"). # docs
       concat((d? && uri[-1]=='/') ? c : []) # trailing slash -> children
   end
 
@@ -49,7 +49,7 @@ class E
     no.dirname.E
   end
   
-  # generate URL for non-URL identifier
+  # generate URL for non-URL identifier (mail ID, Tag URI..)
   def url
     path? ? uri : Prefix + (CGI.escape uri)
    end
