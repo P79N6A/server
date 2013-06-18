@@ -11,9 +11,11 @@ class E
       (E u).do{|e| # resource
         j = e.docBase.a '.e'
         j.e || # exists?
-        (puts "a #{e}"
-         p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
-         j.w({u => r},true) # write
+        (p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
+         j.w({u => r},true) # write doc
+         puts "a #{e}"
+         # opaque URI docs locatable directly or as siblings of hashed base/graph URI
+         e.a('.e').do{|u|j.ln u unless j.uri == u.uri }
          e.roonga g # index content
          )}}
     self
