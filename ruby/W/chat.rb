@@ -18,11 +18,12 @@ class E
       yield s,'hasNum','true' if m[3].match(/\d/)
     } rescue nil
     yield doc,Date,day
-    lines &f
   end
 
   def tw g
-    no.readlines.shuffle.each_slice(24){|s|E['http://search.twitter.com/search.atom?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].getFeed g}
+    no.readlines.shuffle.each_slice(24){|s|
+      puts E['https://twitter.com/search?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join]
+    }
   end
 
   fn 'head/chat',->d,e{
