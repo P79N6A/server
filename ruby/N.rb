@@ -26,13 +26,19 @@ class E
   def docBase
     readlink.uri.
       split(/#/)[0].E.
-      do{|d|d.dirname.as d.bare}
+      do{|d|
+        d.dirname.as d.bare}
   end
 
   def docBaseURI
-    u=URI uri; s=u.scheme
-    p=u.path; p = '/' if p.empty?
-    ((s ?s+'://':'') + u.host + File.dirname(p).t + File.basename(p)[0..-(File.extname(p).size+1)]).E
+    u = URI uri
+    s = u.scheme
+    p = u.path
+    p = '/' if p.empty?
+    ((s ? s + '://' : '') + # scheme
+     u.host +               # host
+     File.dirname(p).t +    # path
+     File.basename(p)[0..-(File.extname(p).size+1)]).E # doc
   end
 
   def frag
