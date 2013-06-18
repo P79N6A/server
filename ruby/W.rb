@@ -1,7 +1,6 @@
 %w{
 core
 vfs
-archive
 audio
 cal
 chat

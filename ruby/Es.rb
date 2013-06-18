@@ -19,17 +19,6 @@ class E
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
 
-  def lev; require 'text/levenshtein'
-    b = base
-    (siblings-[nil]).map{|s|[s,(Text::Levenshtein.distance b,s.base)]}.select{|d|d[1]<5}.sort_by{|d|d[1]}.map &:head
-    rescue LoadError
-    []
-  end
-
-  def near
-    (glob '*').concat lev
-  end
-
   fn 'set/index',->d,r,m{
     (r['p'].expand.E.rangePO d,
      (r['c']&&
@@ -51,11 +40,11 @@ class E
   def walk p,m={},v={}
     m.merge! memoGraphFile
     v[uri]=true
-    ((walkPred p)||[]).concat(((E p).po self)||[]).map{|r|
+    ((walkP p)||[]).concat(((E p).po self)||[]).map{|r|
       r.E.walk p,m,v if !v[r.uri]}
     m
   end
-  def walkPred p
+  def walkP p
     memoGraphFile.do{|m|
       m.map{|u,r|
         r[p].do{|o|return o}}}

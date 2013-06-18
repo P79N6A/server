@@ -3,9 +3,14 @@ class E
   E404 = 'req/' + HTTP + '404'
 
   fn E404,->e,r{
-    r[Type]=[(E HTTP+'404')]; r[Title]=e.uri; r['QUERY']=r.q; r['ACCEPT']=r.accept; r['near']=e.near; r.q.delete 'view'
-    %w{CHARSET LANGUAGE ENCODING}.map{|a|r['ACCEPT_'+a]=r.accept_'_'+a}
-    [404,{'Content-Type'=> 'text/html'},[H([H.css('/css/404'),r.html])]]}
+    r[Type]=[(E HTTP+'404')]
+    r[Title]=e.uri
+    r['QUERY']=r.q
+    r['ACCEPT']=r.accept
+    %w{CHARSET LANGUAGE ENCODING}.map{|a|
+      r['ACCEPT_'+a] = r.accept_ '_' + a }
+ 
+   [404,{'Content-Type'=> 'text/html'},[H([H.css('/css/404'),r.html])]]}
 
   fn '/css/404.css/GET',->e,r{
     [200,{'Content-Type'=>'text/css'},
