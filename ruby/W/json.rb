@@ -15,7 +15,7 @@ class E
          j.w({u => r},true) # write doc
          puts "a #{e}"
          # opaque URI docs locatable directly or as siblings of hashed base/graph URI
-         e.a('.e').do{|u|j.ln u unless ((j.uri == u.uri) || u.e)  }
+         e.a('.e').do{|u| (j.ln u) unless ((j.uri == u.uri) || u.e)  }
          e.roonga g # index content
          )}}
     self
