@@ -44,7 +44,7 @@ end
 class E
   Feed = (E RSS+'channel')
 
-  def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
+  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
   def getFeed g; addJSON :triplrFeed,g end
   def getFeedReddit g; addJSON :triplrFeedReddit,g end
 
