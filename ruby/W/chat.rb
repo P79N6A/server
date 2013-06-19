@@ -32,6 +32,9 @@ class E
       yield s, Type, E[SIOCt+'MicroblogPost']
       yield s, Content, t.css('.tweet-text')[0].inner_html
       yield s, Creator, E(base+'/'+t.css('.username b')[0].inner_text)
+      yield s, SIOC+'name',t.css('.fullname')[0].inner_text
+      yield s, Atom+"/link/image", E(t.css('.avatar')[0].attr('src'))
+      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
     }
   end
 
@@ -52,7 +55,7 @@ class E
      {_: :a, :class => :date, href: r.url, c: r[Date][0].match(/T([0-9:]{5})/)[1]},
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
             c: [{_: :img, class: :a, src: r[Atom+"/link/image"][0].uri},
-                {_: :span, c: r[Creator][0].do{|c|c.respond_to?(:uri) ? c.uri.split(/@/)[0] : c.match(/[^\(]+/)}||'#'}]}},' ',
+                {_: :span, c: r[SIOC+'name']||r[Creator]||'#'}]}},' ',
         {_: :span, :class => :tw, 
        c: [r[Atom+'/link/media'].do{|a|
              a.map{|a|{_: :a, href: r.url, c: {_: :img, src: a.uri}}}},
