@@ -29,7 +29,7 @@ class E
     nokogiri.css('div.tweet').map{|t|
       s = 'http://twitter.com'+t.css('a.details').attr('href')
       yield s, Type, E[SIOCt+'MicroblogPost']
-      yield s, Content, 'asd'
+      yield s, Content, t.css('p.tweet-text')[0].inner_html
     }
   end
 

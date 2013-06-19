@@ -53,19 +53,19 @@ class E
   end
 
   # resources -> HTTP response
-  def resources m={}
+  def resources m={} ; q = @r.q
     m.empty? &&
-    (g = F['graph/'+@r.q['graph']]) && # graph generator fn
-     g[self,@r.q,m] ||
-      ((s = F['set/'+@r.q['set']]) && # set generator fn
-       s[self,@r.q,m] || docs).map{|u| m[u.uri] ||= u } # set to skeletal graph
+    (g = F['graph/'+q['graph']]) && # graph generator fn
+     g[self, q, m] ||
+      ((s = F['set/'+q['set']]) && # set generator fn
+       s[self,q,m]||docs).map{|u| m[u.uri] ||= u } # set to skeletal graph
 
     return F[E404][self,@r] if m.empty? # empty graph 404
 
     # set fingerprint
-    s = m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h
+    s = q.has_key?('nocache') ? rand : m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h
     # response fingerprint
-    @r['ETag'] ||= [s,@r.q,@r.format].h
+    @r['ETag'] ||= [s, q, @r.format].h
 
     maybeSend @r.format,-> { # does agent need entity ?
       r = E'/E/req/'+@r['ETag'].dive  # cached response
@@ -75,7 +75,7 @@ class E
         c.e && m.merge!(c.r(true))|| # cached graph -> graph
         (m.values.map{|r|r.env(@r).graphFromFile m} # Set -> graph
          c.w m,true))        # graph -> cache
-       E.filter @r.q, m       # env -> graph -> graph
+       E.filter q, m         # env -> graph -> graph
        v=render @r.format, m, @r # graph -> response
        r.w v; [v])}          # response -> cache
   end
