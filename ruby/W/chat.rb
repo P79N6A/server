@@ -21,11 +21,12 @@ class E
   end
 
   def tw g='m'
-    no.readlines.shuffle.each_slice(24){|s|
+    no.readlines.shuffle.each_slice(22){|s|
       E['https://twitter.com/search?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addJSON :triplrTwitter, g}
   end
 
   def triplrTwitter
+	puts uri
     base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('a.details').attr('href')
