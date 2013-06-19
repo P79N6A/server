@@ -26,10 +26,12 @@ class E
     }
   end
   def triplrTwitter
+    base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|
-      s = 'http://twitter.com'+t.css('a.details').attr('href')
+      s = base + t.css('a.details').attr('href')
       yield s, Type, E[SIOCt+'MicroblogPost']
-      yield s, Content, t.css('p.tweet-text')[0].inner_html
+      yield s, Content, t.css('.tweet-text')[0].inner_html
+      yield s, Creator, E(base+'/'+t.css('.username b')[0].inner_text)
     }
   end
 
