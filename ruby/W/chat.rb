@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def triplrLog &f
@@ -20,9 +20,16 @@ class E
     yield doc,Date,day
   end
 
-  def tw g
+  def tw g='m'
     no.readlines.shuffle.each_slice(24){|s|
       puts E['https://twitter.com/search?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join]
+    }
+  end
+  def triplrTwitter
+    nokogiri.css('div.tweet').map{|t|
+      s = 'http://twitter.com'+t.css('a.details').attr('href')
+      yield s, Type, E[SIOCt+'MicroblogPost']
+      yield s, Content, 'asd'
     }
   end
 
