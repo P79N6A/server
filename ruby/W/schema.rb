@@ -2,26 +2,29 @@
 class E
   
   def E.cacheSchemas
+    # gromgull's BTC statistics
+    data = '/predicates.2010'.E
+    return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.E
+    # prefix -> schema mappings
     source = E['http://prefix.cc/popular/all.file.txt']
     mirror = E['http://localhost/css/i/prefix.cc.txt']
-    count = {} # occurrence counts URI -> int
+    schemae = mirror.e ? mirror : source
 
-    '/predicates.2010'.E.do{|u|
-      u.e &&   # does data exist?
-      (u.read.each_line{|e|              # read usage data
-         e.match(/(\d+)[^<]+<([^>]+)>/).do{|r| count[r[2]] = r[1].to_i}} # parse
-         (mirror.e ? mirror : source).          # schemas
-         read.split("\n").grep(/^[^#]/).map{|t| # prefix table
-           r = t.split(/\t/)[1].E               # resource
-           d = r.cacheTurtle                    # cache data
-           d.size < 1e6 && !r.docBase.a('.nt').e && # skip enormous docs - likely not schemae
-           (d.indexSchemaDoc                # index document
-            m = {} # model for frequency data
-            d.graphFromFile.map{|u,_|                             # each predicate in schema
-             count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
-            r.appendNT m unless m.empty? # store frequency data on fs in ntriples
-            )}) ||
-      "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010"} # download
+    # occurrence counts URI -> int
+    count = {}
+    data.read.each_line{|e|
+      e.match(/(\d+)[^<]+<([^>]+)>/).do{|r| count[r[2]] = r[1].to_i}}
+
+    schemae.read.split("\n").grep(/^[^#]/).map{|t| # prefix table
+      r = t.split(/\t/)[1].E               # resource
+      d = r.cacheTurtle                    # cache data
+      d.size < 1e6 && !r.docBase.a('.nt').e && # skip enormous docs - likely not schemae
+      (d.indexSchemaDoc                # index document
+       m = {} # model for frequency data
+       d.graphFromFile.map{|u,_|                             # each predicate in schema
+         count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
+       r.appendNT m unless m.empty? # store frequency data on fs in ntriples
+       )}
   end
 
   def schemaLinkDefined
