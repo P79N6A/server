@@ -168,4 +168,8 @@ class E
     nil
   end
 
+  def == u
+      to_s == u.to_s
+  end
+
 end
