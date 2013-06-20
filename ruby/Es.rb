@@ -38,14 +38,14 @@ class E
 
   # construct graph recursively following a named arc (mail references, set membership, etc)
   def walk p,m={},v={}
-    m.merge! memoGraphFile
+    m.merge! graphFromFile
     v[uri]=true
     ((walkP p)||[]).concat(((E p).po self)||[]).map{|r|
       r.E.walk p,m,v if !v[r.uri]}
     m
   end
   def walkP p
-    memoGraphFile.do{|m|
+    graphFromFile.do{|m|
       m.map{|u,r|
         r[p].do{|o|return o}}}
     nil

@@ -2,14 +2,14 @@
 class E
 
   F["?"]||={}; F["?"].update({'af'=>{'graph' => 'audioFind','view' => 'audioplayer'},
-                               'a'=>{'graph' => 'audio','view' => 'audioplayer'},
-                               'v'=>{'graph' => 'video','view' => 'audioplayer','video'=>true}})
+                               'a'=>{'set' => 'audio','view' => 'audioplayer'},
+                               'v'=>{'set' => 'video','view' => 'audioplayer','video'=>true}})
 
   def audioNodes;take.select &:audioNode end;def audioNode;true if ext.match /(aif|wav|flac|mp3|m4a|aac|ogg)/i end
   def videoNodes;take.select &:videoNode end;def videoNode;true if ext.match /(avi|flv|mkv|mpg|mp4|wmv)/i end
 
-  fn 'graph/audio',->d,e,m{d.audioNodes.map{|a|m[a.uri]=a}}
-  fn 'graph/video',->d,e,m{d.videoNodes.map{|a|a.cacheGraphFile m}}
+  fn 'set/audio',->d,e,m{d.audioNodes}
+  fn 'set/video',->d,e,m{d.videoNodes}
 
   fn 'graph/audioFind',->e,q,m{
     t=q['day'] && q['day'].match(/^\d+$/) && '-ctime -'+q['day']

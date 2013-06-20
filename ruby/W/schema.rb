@@ -4,24 +4,36 @@ class E
   def E.cacheSchemas
     source = E['http://prefix.cc/popular/all.file.txt']
     mirror = E['http://localhost/css/i/prefix.cc.txt']
-    '/predicates.2010'.E.do{|u| u.e &&   # does data exist?
-      (count = {} # occurrence counts
-       u.read.each_line{|e|              # read usage data
+    count = {} # occurrence counts URI -> int
+
+    '/predicates.2010'.E.do{|u|
+      u.e &&   # does data exist?
+      (u.read.each_line{|e|              # read usage data
          e.match(/(\d+)[^<]+<([^>]+)>/).do{|r| count[r[2]] = r[1].to_i}} # parse
          (mirror.e ? mirror : source).          # schemas
          read.split("\n").grep(/^[^#]/).map{|t| # prefix table
            r = t.split(/\t/)[1].E               # resource
            d = r.cacheTurtle                    # cache data
            d.size < 1e6 && !r.docBase.a('.nt').e && # skip enormous docs - likely not schemae
-           (d.indexFrag 'schema'                # index document
-            d.linkDefined                       # link slash-URIs to defining doc
-            m = {}                                               # model for frequency data
+           (d.indexSchemaDoc                # index document
+            m = {} # model for frequency data
             d.graphFromFile.map{|u,_|                             # each predicate in schema
              count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
             r.appendNT m unless m.empty? # store frequency data on fs in ntriples
             )}) ||
       "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010"} # download
   end
+
+  def schemaLinkDefined
+    graphFromFile.do{|m|
+      m.map{|u,r|
+        
+        r[RDFs+'isDefinedBy'].do{|d|
+          prop = u.E.docBase.a '.' + ext
+          prop.dirname.dir
+          ln prop }}}
+  end
+
   
   fn '/schema/GET',->e,r{
     [303,
@@ -56,13 +68,5 @@ class E
              {_: :a, class: :uri, href: r.uri, c: r.uri[7..-1]},'<br>',
              r[RDFs+'comment'][0].do{|l|{_: :span,class: :comment, c: l}}]}}])}
 
-  def linkDefined
-    cacheGraphFile.do{|m|
-      m.map{|u,r|
-        r[RDFs+'isDefinedBy'].do{|d|
-          prop = u.E.docBase.a '.' + ext
-          prop.dirname.dir
-          ln prop }}}
-  end
 
 end

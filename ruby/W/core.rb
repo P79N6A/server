@@ -4,7 +4,7 @@ class Hash
   def graph g
     g.merge!({uri=>self})
   end
-  %w{cacheGraphFile graphFromFile q}.map{|m|alias_method m,:graph}
+  %w{graphFromFile q}.map{|m|alias_method m,:graph}
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
   # Hash -> tripleStream
   def triples; uri.do{|s|
@@ -63,19 +63,6 @@ class E
      :triplrMIMEdispatch].# format-specific tripleStream
       each{|i| fromStream g,i } # tripleStream -> Graph
     g
-  end
-
-  # cacheGraphFile :: Graph -> Graph
-  def cacheGraphFile g={}
-    s = readlink.dirname.prepend('/E/graphF/').a "/#{base}.json" # name
-    s.e && (!e || s.m > m) && g.merge!(s.r(true)) || # exists and up-to-date
-      (i = graphFromFile
-       s.w i, true
-       g.merge! i)
-  end
-
-  def memoGraphFile
-    @graphFile ||= cacheGraphFile
   end
 
   def graph g={}
