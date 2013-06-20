@@ -51,6 +51,11 @@ class E
     nil
   end
 
+  # Graph -> [Predicate]
+  def E.graphProperties g
+    g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+  end
+
   fn 'filter/p',->e,m{
     a=Hash[*e['p'].split(/,/).map(&:expand).map{|p|[p,true]}.flatten]
     m.values.map{|r|

@@ -25,6 +25,7 @@ pdf
 rdf
 schema
 search
+shell
 source
 table
 text

@@ -15,12 +15,6 @@ end
 
 class E
 
-  class << self
-    def console; ARGV.clear; require 'irb'
-      IRB.start
-    end
-  end
-
   # fromStream :: Graph -> tripleStream -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
@@ -35,11 +29,6 @@ class E
 
   def E.graphFromStream s
     fn 'graph/'+s.to_s,->e,_,m{e.fromStream m, s}    
-  end
-
-  # Graph -> [Predicate]
-  def E.graphProperties g
-    g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
   end
 
   # placeholder to circumvent empty-graph 404
