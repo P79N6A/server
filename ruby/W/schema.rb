@@ -1,9 +1,16 @@
 #watch __FILE__
 class E
   
-  def E.schemaStatistics
+  # build schema-cache system
+  def E.schemaCache
+    docs = E.schemaDocs
+    stat = E.schemaStatistics
+    E.schemaCacheDocs docs
+    E.schemaIndexDocs docs, stat
+  end
 
-    # gromgull's BTC statistics
+  # gromgull's BTC statistics
+  def E.schemaStatistics
     data = '/predicates.2010'.E
     return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.E
     # occurrence count :: URI -> int
@@ -14,9 +21,8 @@ class E
     usage
   end
   
+  # prefix -> schema mapping
   def E.schemaDocs
-
-    # prefix -> schema mapping
     source = E['http://prefix.cc/popular/all.file.txt']
     mirror = E['http://localhost/css/i/prefix.cc.txt']
     schemae = (mirror.e ? mirror : source).
@@ -26,26 +32,27 @@ class E
     
   end
 
-  def E.schemaCacheDocs schemae
-    # cache schema docs
-    schemae.read.split("\n"). # each doc
-      grep(/^[^#]/). # except commented entries
-      map{|t|
-      r = t.split(/\t/)[1].E # URI
-      d = r.cacheTurtle      # fetch data
-      d.size < 1e6 && !r.docBase.a('.nt').e && # skip enormous docs - likely not schemae
-      (d.indexSchemaDoc                # index document
-       m = {} # model for frequency data
-       d.graphFromFile.map{|u,_|                             # each predicate in schema
-         count[u] && m[u]={'uri'=>u,'/frequency'=>count[u]}} # annotate with frequency
-       r.appendNT m unless m.empty? # store frequency data on fs in ntriples
-       )}
+  # cache schema docs
+  def E.schemaCacheDocs s
+    s.map &:cacheTurtle # fetch docs
   end
 
-  def schemaLinkDefined
-    graphFromFile.do{|m|
+  # index schema docs
+  def E.schemaIndexDocs s, count
+    s.map{|s|
+      next if s.docBase.a('.nt').e # skip already-indexed docs
+      puts "schema #{s}"
+      s.roonga # index in Groonga
+      m = {}   # statistics graph 
+      s.graph.map{|u,_| # each resource in doc
+          count[u] && # stats exist?
+          m[u] = {'uri'=>u, '/frequency' => count[u]}}} # add to graph
+      r.appendNT m unless m.empty? # store on fs in ntriples
+  end
+
+  def linkSlashURI
+    graph.do{|m|
       m.map{|u,r|
-        
         r[RDFs+'isDefinedBy'].do{|d|
           prop = u.E.docBase.a '.' + ext
           prop.dirname.dir
