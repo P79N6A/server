@@ -506,7 +506,6 @@ units	http://eulersharp.sourceforge.net/2003/03swap/unitsExtension#
 genab	http://eulersharp.sourceforge.net/2003/03swap/genomeAbnormality#
 linkedmdb	http://data.linkedmdb.org/sparql/
 prissma	http://ns.inria.fr/prissma/v1#
-ps	https://w3id.org/payswarm#
 ceo	http://www.ebusiness-unibw.org/ontologies/consumerelectronics/v1#
 agent	http://eulersharp.sourceforge.net/2003/03swap/agent#
 sport	http://www.bbc.co.uk/ontologies/sport/
@@ -638,7 +637,6 @@ fingal	http://vocab.deri.ie/fingal#
 s3db	http://www.s3db.org/core#
 telix	http://purl.org/telix#
 iao	http://purl.obolibrary.org/obo/iao.owl#
-sec	https://w3id.org/security#
 ms	http://purl.org/obo/owl/MS#
 uta	http://uptheasset.org/ontology#
 eprints	http://eprints.org/ontology/
@@ -1115,7 +1113,6 @@ rov	http://www.w3.org/ns/regorg#
 #wknl	???
 #epx	???
 #dbpo	???
-#https	???
 #frdf	???
 #homepage	???
 #capital	???
