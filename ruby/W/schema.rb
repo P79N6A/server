@@ -45,6 +45,7 @@ class E
       s.roonga # index in Groonga
       m = {}   # statistics graph 
       s.graph.map{|u,_| # each resource in doc
+        puts "u #{u}"
           count[u] && # stats exist?
           m[u] = {'uri'=>u, '/frequency' => count[u]}}} # add to graph
       r.appendNT m unless m.empty? # store on fs in ntriples
