@@ -21,7 +21,9 @@ class E
   def glob p=""
     (Pathname.glob d + p).map &:E
   end
-
+  fn 'set/glob',->d,e,m{d.glob}
+  fn 'graph/glob',->d,e,m{d.glob.map{|c|c.fromStream m, :triplrInode, false}}
+  
   def parent
     E Pathname.new(uri).parent
   end
