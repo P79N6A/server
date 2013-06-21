@@ -1,23 +1,38 @@
 #watch __FILE__
 class E
   
-  def E.cacheSchemas
+  def E.schemaStatistics
+
     # gromgull's BTC statistics
     data = '/predicates.2010'.E
     return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.E
-    # prefix -> schema mappings
+    # occurrence count :: URI -> int
+    usage = {}
+    data.read.each_line{|e|
+      e.match(/(\d+)[^<]+<([^>]+)>/).do{|r|
+        usage[r[2]] = r[1].to_i }}
+    usage
+  end
+  
+  def E.schemaDocs
+
+    # prefix -> schema mapping
     source = E['http://prefix.cc/popular/all.file.txt']
     mirror = E['http://localhost/css/i/prefix.cc.txt']
-    schemae = mirror.e ? mirror : source
+    schemae = (mirror.e ? mirror : source).
+      read.split("\n").          # each doc
+      grep(/^[^#]/).             # skip commented
+      map{|t|t.split(/\t/)[1].E} # URI field
+    
+  end
 
-    # occurrence counts URI -> int
-    count = {}
-    data.read.each_line{|e|
-      e.match(/(\d+)[^<]+<([^>]+)>/).do{|r| count[r[2]] = r[1].to_i}}
-
-    schemae.read.split("\n").grep(/^[^#]/).map{|t| # prefix table
-      r = t.split(/\t/)[1].E               # resource
-      d = r.cacheTurtle                    # cache data
+  def E.schemaCacheDocs schemae
+    # cache schema docs
+    schemae.read.split("\n"). # each doc
+      grep(/^[^#]/). # except commented entries
+      map{|t|
+      r = t.split(/\t/)[1].E # URI
+      d = r.cacheTurtle      # fetch data
       d.size < 1e6 && !r.docBase.a('.nt').e && # skip enormous docs - likely not schemae
       (d.indexSchemaDoc                # index document
        m = {} # model for frequency data
