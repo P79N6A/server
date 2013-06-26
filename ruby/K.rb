@@ -59,7 +59,7 @@ class E
     'application/atom+xml' => [:triplrFeed],
     'application/markdown' => [:triplrMarkdown],
     'application/org' => [:triplrOrg],
-    'application/rdf+xml'=>[:rdf,:rdfxml],
+    'application/rdf+xml'=>[:triplrRDFformats,:rdfxml],
     'application/json' => [:triplrJSON],
     'application/pdf'=>[:triplrPDF],
     'application/textile' => [:triplrTextile],
@@ -71,15 +71,15 @@ class E
     'message/rfc822'=>[:triplrMail],
     'text/ansi'=>[:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
-    'text/html'=>[:rdf, :rdfa],
+    'text/html'=>[:triplrRDFformats, :rdfa],
     'text/log'=>[:triplrLog],
     'text/nfo'=>[:triplrHref,'cp437'],
-    'text/ntriples'=>[:rdf, :ntriples],
+    'text/ntriples'=>[:triplrRDFformats, :ntriples],
     'text/plain'=>[:triplrHref],
     'text/rtf'=>[:triplrRTF],
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
-    'text/turtle'=>[:rdf,:turtle],
+    'text/turtle'=>[:triplrRDFformats,:turtle],
   }
 
   MIMEcook={
