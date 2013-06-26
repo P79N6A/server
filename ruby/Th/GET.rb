@@ -5,7 +5,7 @@ class E
     a=@r.accept.values.flatten                         # if a file exists
     send(f ? (if (@r.q.has_any_key(['format','graph','view']) || # request a specific view
                  (MIMEcook[mime] && !@r.q.has_key?('raw')) ||    # some MIMEs have a default view
-                 !(a.empty?||a.member?(mime)||a.member?('*/*'))) # view if MIME not accepted
+                 !(a.empty?||a.member?(mime)||a.member?('*/*'))) # render acceptable view if file MIME not accepted
                  :GET_resource # invoke resource handler
               else
                 :GET_img # continue to file handler
@@ -63,7 +63,9 @@ class E
     return F[E404][self,@r] if m.empty? # empty graph 404
 
     # set fingerprint
-    s = q.has_key?('nocache') ? rand : m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h
+    s = (q.has_key?('nocache') ? rand.to_s :
+                                 m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}
+         ).h
     # response fingerprint
     @r['ETag'] ||= [s, q, @r.format].h
 
