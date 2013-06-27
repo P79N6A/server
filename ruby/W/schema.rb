@@ -39,15 +39,17 @@ class E
   def E.schemaIndexDocs
     c = E.schemaStatistics
     E.schemaDocs.map{|s|
-      next if (s.docBase.a('.nt').e || # skip already-indexed docs
+      e = s.docBase.a('.e') # JSON storage
+      next if (e.e || # skip already-indexed docs
                s.docBase.a('.ttl').do{|d|d.e && d.size > 64000})
-      puts s
-      s.roonga "schema" # index in Groonga
-      m = {}   # statistics graph 
-      s.graph.map{|u,_| # each resource in doc
-          c[u] && # stats exist?
+      g = s.graph       ; puts s
+      e.w g, true       # store JSON
+      s.roonga "schema" # index in rroonga
+      m = {}            # statistics graph 
+      g.map{|u,_|       # each resource
+          c[u] &&       # do stats exist?
           m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
-      s.appendNT m unless m.empty? } # store on fs in ntriples
+      s.appendNT m unless m.empty? } # store N-triples
   end
 
   def linkSlashURI
