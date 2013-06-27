@@ -38,16 +38,16 @@ class E
   # index schema docs
   def E.schemaIndexDocs
     c = E.schemaStatistics
-    E.schemaDocs.map{|s|
+    E.schemaDocs.map{|s| # each schema
       e = s.docBase.a('.e')   #   JSON storage
       t = s.docBase.a('.ttl') # turtle storage
-      next if (e.e || # skip already-indexed docs
-               t.do{|d|d.e && d.size > 64000})
-      g = s.graph       ; puts s
-      e.w g, true       # store JSON
-      t.deleteNode      # remove Turtle 
+      next if (e.e ||                          # skip already-indexed docs
+               t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
+      g = s.graph       # schema graph
+      t.deleteNode      # convert Turtle 
+      e.w g, true       #  to JSON
       s.roonga "schema" # index in rroonga
-      m = {}            # statistics graph 
+      m = {}   ; puts s # statistics graph 
       g.map{|u,_|       # each resource
           c[u] &&       # do stats exist?
           m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
