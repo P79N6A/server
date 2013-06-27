@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   # build schema-cache
@@ -39,12 +39,12 @@ class E
   def E.schemaIndexDocs
     c = E.schemaStatistics
     E.schemaDocs.map{|s|
-      next if s.docBase.a('.nt').e # skip already-indexed docs
-      puts "schema #{s}"
+      next if (s.docBase.a('.nt').e || # skip already-indexed docs
+               s.docBase.a('.ttl').do{|d|d.e && d.size > 64000})
+      puts s
       s.roonga "schema" # index in Groonga
       m = {}   # statistics graph 
       s.graph.map{|u,_| # each resource in doc
-        puts "u #{u}"
           c[u] && # stats exist?
           m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
       s.appendNT m unless m.empty? } # store on fs in ntriples
@@ -59,11 +59,10 @@ class E
           ln prop }}}
   end
 
-  
   fn '/schema/GET',->e,r{
     [303,
      {'Location'=>'/search' + {
-         context: :schema, view: :search, sort: :score, reverse: :true, v: :schema, c: 1e4
+         context: :schema, view: :search, sort: :score, reverse: :true, v: :schema, c: 1000
        }.qs},[]]}
   
   fn 'u/schema/weight',->d,e{

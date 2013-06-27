@@ -19,11 +19,11 @@ class E
     b.().do{|b| # continue
       h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # populate response header
       m.match(/^(audio|image|video)/) && h.update({'Cache-Control' => 'no-transform'}) # media files are compressed
-      b.class == E ? (r = Rack::File.new nil # use Rack file server
-                      r.instance_variable_set '@path',b.d # at path
+      b.class == E ? (r = Rack::File.new nil                        # create Rack file-handler
+                      r.instance_variable_set '@path',b.d           # set path
                      (r.serving @r).do{|s,m,b|[s,m.update(h),b]}) : # Rack file-handler
       [200, h, b]} : # normal response
-      [304,{},[]] # unmodified
+      [304,{},[]]    # not modified
   end
 
   def send?
