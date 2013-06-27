@@ -1,12 +1,10 @@
 #watch __FILE__
 class E
   
-  # build schema-cache system
+  # build schema-cache
   def E.schemaCache
-    docs = E.schemaDocs
-    stat = E.schemaStatistics
-    E.schemaCacheDocs docs
-    E.schemaIndexDocs docs, stat
+    E.schemaCacheDocs
+    E.schemaIndexDocs
   end
 
   # gromgull's BTC statistics
@@ -33,21 +31,22 @@ class E
   end
 
   # cache schema docs
-  def E.schemaCacheDocs s
-    s.map &:cacheTurtle # fetch docs
+  def E.schemaCacheDocs
+    E.schemaDocs.map &:cacheTurtle # fetch docs
   end
 
   # index schema docs
-  def E.schemaIndexDocs s, count
-    s.map{|s|
+  def E.schemaIndexDocs
+    c = E.schemaStatistics
+    E.schemaDocs.map{|s|
       next if s.docBase.a('.nt').e # skip already-indexed docs
       puts "schema #{s}"
       s.roonga # index in Groonga
       m = {}   # statistics graph 
       s.graph.map{|u,_| # each resource in doc
         puts "u #{u}"
-          count[u] && # stats exist?
-          m[u] = {'uri'=>u, '/frequency' => count[u]}} # add to graph
+          c[u] && # stats exist?
+          m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
       s.appendNT m unless m.empty? } # store on fs in ntriples
   end
 
