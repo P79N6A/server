@@ -1,8 +1,4 @@
-.r {
-border-radius:0.8em 0 0 .34em;
-max-width:80ex;
-margin:.2em;
-}
+.r {margin-bottom:.2em}
 .label {
 border-radius:.33em;
 font-weight:bold;
@@ -10,16 +6,10 @@ color: black;
 background-color:#fafafa;
 border-radius:.4em 0 .4em 0;
 }
-.label:hover {color:#0f0;background-color:#ff0;}
-.comment {
-}
 .uri {
-font-size:.8em;
+font-size:1.08em;
 border-radius:0 .29em .29em .29em;
 color:#04f;
 background-color:#fff;
 }
-.uri:hover {color:yellow;background-color:orange;}
-a {
-text-decoration:none;
-}
+a {text-decoration:none;}

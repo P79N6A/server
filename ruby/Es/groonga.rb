@@ -56,7 +56,7 @@ class E
     m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down # prev set
     m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up # next set
     r.map{|r|r['.uri'].do{|r|r.E.docs.map{|d|m[d.uri] = d.env e}}} # populate resourceSet
-    puts "roonga #{e['q']} -> #{m.keys.join ' '}"
+#    puts "roonga #{e['q']} -> #{m.keys.join ' '}"
     m # model
   end
 
