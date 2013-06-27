@@ -43,7 +43,7 @@ class E
     ga = E.groonga     # engine
     e = n.q            # query string
     q = e['q']         # search
-    g = e["graph"] || n['HTTP_HOST']    # graph
+    g = e["context"] || n['HTTP_HOST'] # graph
     start = e['start'].do{|c|c.to_i}||0 # offset
     c = e['c'].do{|c|c.to_i.max(333).min(0)}||8 # count
     r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # match expression if exists

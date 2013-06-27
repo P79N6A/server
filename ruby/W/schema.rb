@@ -41,7 +41,7 @@ class E
     E.schemaDocs.map{|s|
       next if s.docBase.a('.nt').e # skip already-indexed docs
       puts "schema #{s}"
-      s.roonga # index in Groonga
+      s.roonga "schema" # index in Groonga
       m = {}   # statistics graph 
       s.graph.map{|u,_| # each resource in doc
         puts "u #{u}"
@@ -63,7 +63,7 @@ class E
   fn '/schema/GET',->e,r{
     [303,
      {'Location'=>'/search' + {
-         graph: :schema, view: :search, sort: :score, reverse: :true, v: :schema, c: 1e4
+         context: :schema, view: :search, sort: :score, reverse: :true, v: :schema, c: 1e4
        }.qs},[]]}
   
   fn 'u/schema/weight',->d,e{

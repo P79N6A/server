@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 class E
 
   def GET
@@ -44,20 +43,20 @@ class E
     (F['req/'+@r.q['y']] ||           # all URIs 
      F[@r['REQUEST_PATH'].t+('GET')]||# all hostnames, specific path
      F[uri.t+('GET')]                 # specific URI
-     ).do{|y|y.(self,@r)} ||# custom handler
-    as('index.html').do{|i| # HTML indexes
-      i.e && # exists?
-      ((uri[-1]=='/') ? i.env(@r).GET_file : # inside dir?
-       [301, {Location: uri.t}]  )} ||  # redirect to dir
-    resources # resource handler
+     ).do{|y|y.(self,@r)} ||       # custom handler
+    as('index.html').do{|i|        # HTML index
+      i.e &&                       #  exists?
+      ((uri[-1]=='/') ? i.env(@r).GET_file : # are we inside dir?
+       [301, {Location: uri.t}]  )} ||       # rebase to index dir
+    resources                      # default resource handler
   end
 
   # resources -> HTTP response
   def resources m={} ; q = @r.q
     m.empty? &&
-    (g = F['graph/'+q['graph']]) && # graph generator fn
+    (g = F['graph/'+q['graph']]) &&                # graph generator
      g[self, q, m] ||
-      ((s = F['set/'+q['set']]) && # set generator fn
+      ((s = F['set/'+q['set']]) &&                 # set generator
        s[self,q,m]||docs).map{|u| m[u.uri] ||= u } # set to skeletal graph
 
     return F[E404][self,@r] if m.empty? # empty graph 404
