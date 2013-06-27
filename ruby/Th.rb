@@ -2,6 +2,7 @@ require 'element/W'
 %w{GET HEAD POST PATCH uid 404 500
 }.map{|i|require 'element/Th/' + i }
 require 'rack'
+#require 'ruby-prof'
 
 class String
   # parse querystring
@@ -94,9 +95,11 @@ class E
       u.index(Prefix)==0 ? u[Prefix.size..-1] : # non-local or non-HTTP URI
                    'http://' + e['SERVER_NAME'] + u.gsub('+','%2B')) # URI
     }.E.env(e).jail.do{|r| # valid path?
+#      RubyProf.start
       r.send e.fn                 # continue
     } || [403,{},'invalid path']).# reject
       do{|response|        # inspect response
+#        RubyProf::FlatPrinter.new(RubyProf.stop).print(STDOUT) 
         puts [e.fn,        # method
               response[0], # response code
               ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,# URL
