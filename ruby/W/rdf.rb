@@ -27,8 +27,9 @@ class E
       r.each_triple{|s,p,o|
 #        puts [s.class,s, p.class,p, o.class,o].join(' ')
         yield s.to_s, p.to_s,
-        ((o.class==RDF::Node || o.class==RDF::URI) ?
-         o.to_s.E : o.value.do{|v|v.class==String ? v.to_utf8 : v})
+        ((o.class==RDF::Node || o.class==RDF::URI) ? o.to_s.E :
+                                                     o.value.do{|v|
+                                                       v.class == String ? v.to_utf8 : v})
       }}; self
   rescue Exception => e
   end
