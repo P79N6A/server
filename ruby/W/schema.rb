@@ -39,11 +39,13 @@ class E
   def E.schemaIndexDocs
     c = E.schemaStatistics
     E.schemaDocs.map{|s|
-      e = s.docBase.a('.e') # JSON storage
+      e = s.docBase.a('.e')   #   JSON storage
+      t = s.docBase.a('.ttl') # turtle storage
       next if (e.e || # skip already-indexed docs
-               s.docBase.a('.ttl').do{|d|d.e && d.size > 64000})
+               t.do{|d|d.e && d.size > 64000})
       g = s.graph       ; puts s
       e.w g, true       # store JSON
+      t.deleteNode      # remove Turtle 
       s.roonga "schema" # index in rroonga
       m = {}            # statistics graph 
       g.map{|u,_|       # each resource
