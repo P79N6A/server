@@ -6,7 +6,6 @@ class E
   S        = '<>'
 
   # frequently-used URIs
-  Render='render/'
   Purl='http://purl.org/'
   DC=Purl+'dc/terms/'
   SIOC ='http://rdfs.org/sioc/ns#'
@@ -21,11 +20,7 @@ class E
   Type=W3+"1999/02/22-rdf-syntax-ns#type"
   RDFs=W3+'2000/01/rdf-schema#'
   Label=RDFs+'label'
-  XSD =W3+'2001/XMLSchema#'
   HTTP=W3+'2011/http#'
-  IANA='http://www.iana.org/assignments/'
-  Mime=IANA+'media-types/'
-  Charset=IANA+'charsets/'
   FOAF="http://xmlns.com/foaf/0.1/"
 
   # file-name extension -> MIME type
@@ -105,6 +100,7 @@ class E
   }
 
   # MIME type -> formatted content
+     Render='render/'
   fn Render+'application/ld+json',->d,_=nil{E.renderRDF d, :jsonld}
   fn Render+'application/rdf+xml',->d,_=nil{E.renderRDF d, :rdfxml}
   fn Render+'text/ntriples',->d,_=nil{E.renderRDF d, :ntriples}
