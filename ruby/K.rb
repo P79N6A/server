@@ -126,12 +126,10 @@ class E
 
   # short -> full URI
   Abbrev={
-    "atom" => Atom,
     "dc" => DC,
     "foaf" => FOAF,
     "rdf" => W3+"1999/02/22-rdf-syntax-ns#",
     "rdfs" => RDFs,
-    "rss" => RSS,
     "sioc" => SIOC,
     "t" => 'http://www.daml.org/2003/01/periodictable/PeriodicTable#',
   }

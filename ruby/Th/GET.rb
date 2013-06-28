@@ -54,12 +54,11 @@ class E
   # resources -> HTTP response
   def resources m={} ; q = @r.q
     m.empty? &&
-    (g = F['graph/'+q['graph']]) &&                # graph generator
-     g[self, q, m] ||
-      ((s = F['set/'+q['set']]) &&                 # set generator
-       s[self,q,m]||docs).map{|u| m[u.uri] ||= u } # set to skeletal graph
+      (g = F['graph/'+q['graph']]) && g[self, q, m] # custom graph
+      ((s = F['set/'+q['set']]) &&                  # custom document set
+       s[self,q,m]||docs).map{|u| m[u.uri] ||= u }  # expand set to skeletal graph
 
-    return F[E404][self,@r] if m.empty? # empty graph 404
+    return F[E404][self,@r] if m.empty? # 404
 
     # set fingerprint
     s = (q.has_key?('nocache') ? rand.to_s :
