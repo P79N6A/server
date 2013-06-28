@@ -32,21 +32,23 @@ class E
 
   # cache schema docs
   def E.schemaCacheDocs
-    E.schemaDocs.map &:cacheTurtle # fetch docs
+    E.schemaDocs.map{|d|
+      d.docBase.a('.ttl').do{|t| t.e || t.w(`rapper -o turtle #{uri}`)}}
   end
 
   # index schema docs
   def E.schemaIndexDocs
     c = E.schemaStatistics
     E.schemaDocs.map{|s| # each schema
-      e = s.docBase.a('.e')   #   JSON storage
-      t = s.docBase.a('.ttl') # turtle storage
+      e = s.docBase.a('.e')   #   JSON storage (resource)
+      t = s.docBase.a('.ttl') # turtle storage (rapper output)
+     nt = s.docBase.a('.nt')  # ntripl storage (statistics)
       next if (e.e ||                          # skip already-indexed docs
                t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
       g = s.graph       # schema graph
       t.deleteNode      # convert Turtle 
       e.w g, true       #  to JSON
-      s.roonga "schema" # index in rroonga
+      s.roonga "schema" # INDEX in rroonga
       m = {}   ; puts s # statistics graph 
       g.map{|u,_|       # each resource
           c[u] &&       # do stats exist?

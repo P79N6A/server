@@ -33,12 +33,5 @@ class E
       }}; self
   rescue Exception => e
   end
-  
-  def cacheTurtle; docBase.a('.ttl').do{|t| t.e || t.w(`rapper -o turtle #{uri}`) ; t } end
-
-  def appendNT g
-    docBase.a('.nt').no.open('a').do{|n|
-      n.write E.renderRDF g
-      n.flush } end
 
 end
