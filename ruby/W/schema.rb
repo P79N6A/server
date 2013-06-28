@@ -40,20 +40,21 @@ class E
   def E.schemaIndexDocs
     c = E.schemaStatistics
     E.schemaDocs.map{|s| # each schema
-      e = s.docBase.a('.e')   #   JSON storage (resource)
-      t = s.docBase.a('.ttl') # turtle storage (rapper output)
-     nt = s.docBase.a('.nt')  # ntripl storage (statistics)
-      next if (e.e ||                          # skip already-indexed docs
+      e = s.docBase.a('.e')   #   JSON,   resource
+      t = s.docBase.a('.ttl') # turtle,   rapper fetch
+     nt = s.docBase.a('.nt')  # ntriples, statistical annotations
+      next if (nt.e ||                         # skip already-processed docs
                t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
       g = s.graph       # schema graph
       t.deleteNode      # convert Turtle 
-      e.w g, true       #  to JSON
-      s.roonga "schema" # INDEX in rroonga
+      e.w g, true       #  to JSON (for faster loading)
+      s.roonga "schema" # index in rroonga
       m = {}   ; puts s # statistics graph 
       g.map{|u,_|       # each resource
           c[u] &&       # do stats exist?
           m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
-      s.appendNT m unless m.empty? } # store N-triples
+      nt.w E.renderRDF g unless m.empty?  # store N-triples
+    }
   end
 
   def linkSlashURI
