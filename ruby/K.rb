@@ -5,7 +5,33 @@ class E
   Prefix   = '/@'
   S        = '<>'
 
-  #extension -> MIMEtype
+  # frequently-used URIs
+  Render='render/'
+  Purl='http://purl.org/'
+  DC=Purl+'dc/terms/'
+  SIOC ='http://rdfs.org/sioc/ns#'
+  SIOCt='http://rdfs.org/sioc/types#'
+  To=SIOC+'addressed_to'
+  Date    =DC+'date'
+  Modified=DC+'modified'
+  Creator =SIOC+'has_creator'
+  Title   =DC+'title'
+  RSS=Purl+'rss/1.0/'
+  RSSm=RSS+'modules/'
+  Content=SIOC+'content'
+  W3='http://www.w3.org/'
+  Type=W3+"1999/02/22-rdf-syntax-ns#type"
+  RDFs=W3+'2000/01/rdf-schema#'
+  Label=RDFs+'label'
+  XSD =W3+'2001/XMLSchema#'
+  Atom=W3+'2005/Atom'
+  HTTP=W3+'2011/http#'
+  IANA='http://www.iana.org/assignments/'
+  Mime=IANA+'media-types/'
+  Charset=IANA+'charsets/'
+  FOAF="http://xmlns.com/foaf/0.1/"
+
+  # file-name extension -> MIME type
   MIME={
     aif: 'audio/aif',
     ans: 'text/ansi',
@@ -36,7 +62,6 @@ class E
     nfo: 'text/nfo',
     nt:  'text/ntriples',
     ntriples:  'text/ntriples',
-#    org: 'application/org',
     owl: 'application/rdf+xml',
     pdf: 'application/pdf',
     png: 'image/png',
@@ -54,7 +79,7 @@ class E
     xlsx: 'application/excel',
   }
 
-  # MIMEtype -> triplrFn
+  # MIME type -> triplrFn
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
     'application/markdown' => [:triplrMarkdown],
@@ -82,6 +107,14 @@ class E
     'text/turtle'=>[:triplrRDFformats,:turtle],
   }
 
+  # MIME type -> data format
+  fn Render+'application/ld+json',->d,_=nil{E.renderRDF d, :jsonld}
+  fn Render+'application/rdf+xml',->d,_=nil{E.renderRDF d, :rdfxml}
+  fn Render+'text/ntriples',->d,_=nil{E.renderRDF d, :ntriples}
+  fn Render+'text/rdf+n3',  ->d,_=nil{E.renderRDF d, :n3}
+  fn Render+'text/turtle',  ->d,_=nil{E.renderRDF d, :turtle}
+
+  # render view even if requested file exists
   MIMEcook={
     'application/atom+xml' => true,
     'application/markdown' => true,
@@ -95,36 +128,10 @@ class E
     'text/ansi'=>true,
     'text/log'=>true,
     'text/nfo'=>true,
-#    'text/plain'=>true,
     'text/rtf'=>true,
   }
 
-# URI
-  Render='render/'
-  Purl='http://purl.org/'
-  DC=Purl+'dc/terms/'
-  SIOC ='http://rdfs.org/sioc/ns#'
-  SIOCt='http://rdfs.org/sioc/types#'
-  To=SIOC+'addressed_to'
-  Date    =DC+'date'
-  Modified=DC+'modified'
-  Creator =SIOC+'has_creator'
-  Title   =DC+'title'
-  RSS=Purl+'rss/1.0/'
-  RSSm=RSS+'modules/'
-  Content=SIOC+'content'
-  W3='http://www.w3.org/'
-  Type=W3+"1999/02/22-rdf-syntax-ns#type"
-  RDFs=W3+'2000/01/rdf-schema#'
-  Label=RDFs+'label'
-  XSD =W3+'2001/XMLSchema#'
-  Atom=W3+'2005/Atom'
-  HTTP=W3+'2011/http#'
-  IANA='http://www.iana.org/assignments/'
-  Mime=IANA+'media-types/'
-  Charset=IANA+'charsets/'
-  FOAF="http://xmlns.com/foaf/0.1/"
-  
+  # URIs we shorten - full list at http://prefix.cc
   Abbrev={
     "atom" => Atom,
     "dc" => DC,
@@ -136,7 +143,7 @@ class E
     "t" => 'http://www.daml.org/2003/01/periodictable/PeriodicTable#',
   }
   
-  # literal->URI hints
+  # expose these literals in a path-name 
   Literal={}
    [Purl+'dc/elements/1.1/date',
     Date,

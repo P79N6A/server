@@ -1,11 +1,5 @@
 class E
 
-  fn Render+'application/ld+json',->d,_=nil{E.renderRDF d, :jsonld}
-  fn Render+'application/rdf+xml',->d,_=nil{E.renderRDF d, :rdfxml}
-  fn Render+'text/ntriples',->d,_=nil{E.renderRDF d, :ntriples}
-  fn Render+'text/rdf+n3',  ->d,_=nil{E.renderRDF d, :n3}
-  fn Render+'text/turtle',  ->d,_=nil{E.renderRDF d, :turtle}
-
   def self.requireRDF; %w{n3 rdfa rdfxml turtle}.map{|r|require 'rdf/'+r}; require 'json/ld' end
 
   def self.renderRDF d,f=:ntriples; E.requireRDF

@@ -1,4 +1,4 @@
-%w{K Rb N Y Es}.map &->_{require 'element/'+_}
+%w{Y K Rb N Es}.map &->_{require 'element/'+_}
 
 class Hash
   def graph g
