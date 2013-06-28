@@ -16,15 +16,12 @@ class E
   Modified=DC+'modified'
   Creator =SIOC+'has_creator'
   Title   =DC+'title'
-  RSS=Purl+'rss/1.0/'
-  RSSm=RSS+'modules/'
   Content=SIOC+'content'
   W3='http://www.w3.org/'
   Type=W3+"1999/02/22-rdf-syntax-ns#type"
   RDFs=W3+'2000/01/rdf-schema#'
   Label=RDFs+'label'
   XSD =W3+'2001/XMLSchema#'
-  Atom=W3+'2005/Atom'
   HTTP=W3+'2011/http#'
   IANA='http://www.iana.org/assignments/'
   Mime=IANA+'media-types/'
@@ -107,14 +104,14 @@ class E
     'text/turtle'=>[:triplrRDFformats,:turtle],
   }
 
-  # MIME type -> data format
+  # MIME type -> formatted content
   fn Render+'application/ld+json',->d,_=nil{E.renderRDF d, :jsonld}
   fn Render+'application/rdf+xml',->d,_=nil{E.renderRDF d, :rdfxml}
   fn Render+'text/ntriples',->d,_=nil{E.renderRDF d, :ntriples}
   fn Render+'text/rdf+n3',  ->d,_=nil{E.renderRDF d, :n3}
   fn Render+'text/turtle',  ->d,_=nil{E.renderRDF d, :turtle}
 
-  # render view even if requested file exists
+  # render a view even if requested file exists
   MIMEcook={
     'application/atom+xml' => true,
     'application/markdown' => true,
@@ -131,7 +128,7 @@ class E
     'text/rtf'=>true,
   }
 
-  # URIs we shorten - full list at http://prefix.cc
+  # short -> full URI
   Abbrev={
     "atom" => Atom,
     "dc" => DC,
@@ -143,7 +140,7 @@ class E
     "t" => 'http://www.daml.org/2003/01/periodictable/PeriodicTable#',
   }
   
-  # expose these literals in a path-name 
+  # expose these literals as a path-name 
   Literal={}
    [Purl+'dc/elements/1.1/date',
     Date,

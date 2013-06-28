@@ -42,6 +42,10 @@ module FeedParse
 end
 
 class E
+
+  Atom = W3+'2005/Atom'
+   RSS = Purl+'rss/1.0/'
+  RSSm = RSS+'modules/'
   Feed = (E RSS+'channel')
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
