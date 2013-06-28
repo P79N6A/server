@@ -9,24 +9,29 @@ class E
                   Groonga["E"] )
   end
 
-  # schema
+  # load or create groonga db at URI
   def groonga
-    return Groonga::Database.open d if e # exists?
-    dirname.dir # create containing path
-    Groonga::Database.create(:path => d) # create
-    Groonga::Schema.define{|s|
+    return Groonga::Database.open d if e # open db
+    dirname.dir                          # create containing dir
+    Groonga::Database.create(:path => d) # create db
+    Groonga::Schema.define{|s|           # create schema
       s.create_table("E",:type => :hash,:key_type => "ShortText"){|t|
-        t.short_text "uri" ; t.short_text "graph" ; t.text "content" ; t.time "time" }
-
-      s.create_table("Bigram",:type => :patricia_trie,:key_normalize => true,:default_tokenizer => "TokenBigram"){|t|
-        %w{graph content}.map{|c|t.index("E."+c)}}}
+        t.short_text "uri"
+        t.short_text "graph"
+        t.text "content"
+        t.time "time" }
+      s.create_table("Bigram",
+                     :type => :patricia_trie,
+                     :key_normalize => true,
+                     :default_tokenizer => "TokenBigram"){|t|
+                                  %w{graph content}.map{|c| t.index("E." + c) }}}
   end
   
-  # add
+  # index
   def roonga graph="global", m = self.graph
-    g = E.groonga           # groonga
-    r = g[uri] || g.add(uri)# roonga entry
-       r.uri = uri
+    g = E.groonga            # db
+    r = g[uri] || g.add(uri) # create or load entry
+       r.uri = uri           # update data
      r.graph = graph.to_s
    r.content = m.text
       r.time = m.values[0][E::Date][0].to_time

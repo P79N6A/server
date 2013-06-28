@@ -53,17 +53,18 @@ class E
 
   # resources -> HTTP response
   def resources m={} ; q = @r.q
-    m.empty? &&
-      (g = F['graph/'+q['graph']]) && g[self, q, m] # custom graph
-      ((s = F['set/'+q['set']]) &&                  # custom document set
-       s[self,q,m]||docs).map{|u| m[u.uri] ||= u }  # expand set to skeletal graph
+
+    F['graph/'+q['graph']][self, q, m] # custom graph
+      F['set/' + q['set']][self, q, m].# custom document set
+       map{|u|m[u.uri] ||= u} # set to skeletal graph
 
     return F[E404][self,@r] if m.empty? # 404
 
-    # set fingerprint
+    # document set fingerprint
     s = (q.has_key?('nocache') ? rand.to_s :
                                  m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}
          ).h
+    
     # response fingerprint
     @r['ETag'] ||= [s, q, @r.format].h
 
