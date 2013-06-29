@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
 #  http://groonga.org/ http://ranguba.org/
@@ -86,6 +86,7 @@ class E
     # containing documents
     r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
 
+    # no 404 on 0 results - searchbox view
     m['/s']={'uri'=>'/s'} if m.empty?
 
     m # result set
