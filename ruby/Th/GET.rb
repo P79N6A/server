@@ -76,7 +76,7 @@ class E
     return F[E404][self,@r] if m.empty?
 
     # request-graph identifier
-    s = (q.has_key?('nocache') ? rand.to_s :  # an identifier not in cache 
+    s = (q.has_key?('nocache') ? rand.to_s :  # random identifier
          m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # each modification time
 
     # response identifier
@@ -92,35 +92,31 @@ class E
         r    # cached response
       else
         
-        unless g # graph already generated
+        # cached graph identifier
+        c = E '/E/graph/' + s.dive
 
-          # cached graph identifier
-          c = E '/E/graph/' + s.dive
+        if c.e # cached graph exists
+          m.merge! c.r true # read cache
+        else
+          # construct response graph
+          m.values.map{|r|
+            r.env(@r).graphFromFile m}
 
-          if c.e # cached graph exists
-            m.merge! c.r true # read cache
-          else
-            # construct response graph
-            m.values.map{|r|
-              r.env(@r).graphFromFile m}
-
-            # cache response graph
-            c.w m,true
-          end
-
-          # response graph sorting/filtering
-          E.filter q, m
-
-          # construct response body
-          v = render @r.format, m, @r
-
-          # cache response body
-          r.w v
-
-          # response body
-          [v]
-
+          # cache response graph
+          c.w m,true
         end
+
+        # response graph sorting/filtering
+        E.filter q, m
+
+        # construct response body
+        v = render @r.format, m, @r
+
+        # cache response body
+        r.w v
+
+        # response body
+        [v]
       end }
   end
   

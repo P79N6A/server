@@ -79,14 +79,14 @@ class E
 
     # search-result identifiers
     r = r.map{|r| r['.uri'].E }
-    puts " uris #{r.join ' '}"
+
+    # fragment identifiers
+    m['frag'] = {'uri' => 'frag', 'res' => r}
 
     # containing documents
     r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
 
     m['/s']={'uri'=>'/s'} if m.empty?
-
-    puts "docs #{m.keys.join ' '}"
 
     m # result set
   }
