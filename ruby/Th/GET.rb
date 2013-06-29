@@ -48,7 +48,7 @@ class E
       i.e &&                       #  exists?
       ((uri[-1]=='/') ? i.env(@r).GET_file : # are we inside dir?
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
-    response                       # default resource handler
+    response
   end
 
   # graph constructor
@@ -75,15 +75,12 @@ class E
     # empty graph -> 404
     return F[E404][self,@r] if m.empty?
 
-    # document set fingerprint
+    # request-graph identifier
     s = (q.has_key?('nocache') ? rand.to_s :  # an identifier not in cache 
          m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # each modification time
 
-    # response fingerprint
+    # response identifier
     @r['ETag'] ||= [s, q, @r.format].h
-
-    puts "ETag #{@r['ETag']}"
-    puts "docs #{m.keys}"
 
     # check if client has response
     maybeSend @r.format, ->{
