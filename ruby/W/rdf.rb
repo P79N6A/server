@@ -10,6 +10,8 @@ class E
                                   (o.class==Hash||o.class==E) ?
                                     RDF::URI(o.uri) :
                                     RDF::Literal(o))}}}
+  rescue Exception => e
+    puts e
   end
 
   def triplrRDFformats t=nil
@@ -22,6 +24,8 @@ class E
                                                      o.value.do{|v|
                                                        v.class == String ? v.to_utf8 : v})}}
     self
+  rescue Exception => e
+    puts e
   end
 
 end

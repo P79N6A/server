@@ -63,6 +63,7 @@ class E
     # number of results
     c = e['c'].do{|c|c.to_i.max(1000).min(0)} || 8
 
+    # exec expression
     r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
             ga.select{|r| r['graph'] == g} # ordered set (index date-range)
 

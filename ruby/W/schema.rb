@@ -3,7 +3,10 @@ class E
   
   # build schema-cache
   def E.schemaCache
+    # download RDF from schema URIs to local cache 
     E.schemaCacheDocs
+
+    # index docs and annotate with usage data
     E.schemaIndexDocs
   end
 
@@ -33,7 +36,7 @@ class E
   # cache schema docs
   def E.schemaCacheDocs
     E.schemaDocs.map{|d|
-      d.docBase.a('.ttl').do{|t| t.e || t.w(`rapper -o turtle #{uri}`)}}
+      d.docBase.a('.ttl').do{|t| t.e || t.w(`rapper -o turtle #{d}`)}}
   end
 
   # index schema docs
