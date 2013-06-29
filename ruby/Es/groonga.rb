@@ -56,12 +56,12 @@ class E
 
     down = r.size > start+c # further results traversible?
     up   = !(start<=0)
-
+# E.groonga.select{|r|(r['graph'] == 'schema') & r['content'].match("latitude")}.map{|r|r['.uri']}
     r=r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c) # sort
     m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down # prev set
     m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up # next set
     r.map{|r|r['.uri'].do{|r|r.E.docs.map{|d|m[d.uri] = d.env e}}} # populate resourceSet
-#    puts "roonga #{e['q']} -> #{m.keys.join ' '}"
+    puts "roonga #{e['q']} -> #{m.keys.join ' '}"
     m # model
   end
 

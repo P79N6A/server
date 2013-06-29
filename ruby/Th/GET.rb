@@ -48,37 +48,83 @@ class E
       i.e &&                       #  exists?
       ((uri[-1]=='/') ? i.env(@r).GET_file : # are we inside dir?
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
-    resources                      # default resource handler
+    response                       # default resource handler
   end
 
-  # resources -> HTTP response
-  def resources m={} ; q = @r.q
+  # graph constructor
+  fn 'graph/',->e,q,m{
+    F['set/' + q['set']][e, q, m]. # doc set
+    map{|u|m[u.uri] ||= u}}
 
-    F['graph/'+q['graph']][self, q, m] # custom graph
-      F['set/' + q['set']][self, q, m].# custom document set
-       map{|u|m[u.uri] ||= u} # set to skeletal graph
+  # document set constructor
+  fn 'set/',->d,e,m{d.docs}
+  
+  # construct HTTP response
+  def response
 
-    return F[E404][self,@r] if m.empty? # 404
+    # request arguments
+    q = @r.q       # query-string
+    g = q['graph'] # graph-generation function selector
+
+    # request graph 
+    m = {}
+
+    # add resources to request graph 
+    F['graph/' + g][self,q,m]
+
+    # empty graph -> 404
+    return F[E404][self,@r] if m.empty?
 
     # document set fingerprint
-    s = (q.has_key?('nocache') ? rand.to_s :
-                                 m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}
-         ).h
-    
+    s = (q.has_key?('nocache') ? rand.to_s :  # an identifier not in cache 
+         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # each modification time
+
     # response fingerprint
     @r['ETag'] ||= [s, q, @r.format].h
 
-    maybeSend @r.format,-> { # does agent need entity ?
-      r = E'/E/req/'+@r['ETag'].dive  # cached response
-      r.e && r ||                 # use cached response
-      (g || # skip default graph expansion
-       (c = E '/E/graph/'+s.dive     # cached graph
-        c.e && m.merge!(c.r(true))|| # cached graph -> graph
-        (m.values.map{|r|r.env(@r).graphFromFile m} # Set -> graph
-         c.w m,true))        # graph -> cache
-       E.filter q, m         # env -> graph -> graph
-       v=render @r.format, m, @r # graph -> response
-       r.w v; [v])}          # response -> cache
-  end
+    puts "ETag #{@r['ETag']}"
+    puts "docs #{m.keys}"
 
+    # check if client has response
+    maybeSend @r.format, ->{
+      
+      # cached response identifier
+      r = E'/E/req/' + @r['ETag'].dive
+      
+      if r.e # response already generated
+        r    # cached response
+      else
+        
+        unless g # graph already generated
+
+          # cached graph identifier
+          c = E '/E/graph/' + s.dive
+
+          if c.e # cached graph exists
+            m.merge! c.r true # read cache
+          else
+            # construct response graph
+            m.values.map{|r|
+              r.env(@r).graphFromFile m}
+
+            # cache response graph
+            c.w m,true
+          end
+
+          # response graph sorting/filtering
+          E.filter q, m
+
+          # construct response body
+          v = render @r.format, m, @r
+
+          # cache response body
+          r.w v
+
+          # response body
+          [v]
+
+        end
+      end }
+  end
+  
 end
