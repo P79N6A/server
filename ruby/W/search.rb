@@ -1,9 +1,4 @@
 class E
-
-  fn '/search/GET',->e,r{ E.groonga
-    r.q.empty? ? [303,{'Location' => '/search?view=search&v=grep'},[]] :
-    (e.resources (E.roonga r).do{|s|
-       s.empty? ? {'search' => E('/search')} : s})}
   
   fn 'head/search',->d,e{[{_: :title, c: e.q['q']},(Fn 'head.formats',e)]}
 

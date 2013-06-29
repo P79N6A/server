@@ -44,26 +44,46 @@ class E
   end
 
   # query
-  def E.roonga n, m={} # model
-    ga = E.groonga     # engine
-    e = n.q            # query string
-    q = e['q']         # search
-    g = e["context"] || n['HTTP_HOST'] # graph
-    start = e['start'].do{|c|c.to_i}||0 # offset
-    c = e['c'].do{|c|c.to_i.max(333).min(0)}||8 # count
-    r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # match expression if exists
-            ga.select{|r| r['graph'] == g} # an ordered set
+  fn 'set/roonga',->d,e,m{
 
-    down = r.size > start+c # further results traversible?
+    # load db
+    ga = E.groonga
+
+    # search expression
+    q = e['q']
+
+    # context
+    g = e["context"] || n['HTTP_HOST']
+
+    # offset
+    start = e['start'].do{|c|c.to_i} || 0
+
+    # number of results
+    c = e['c'].do{|c|c.to_i.max(1000).min(0)} || 8
+
+    r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
+            ga.select{|r| r['graph'] == g} # ordered set (index date-range)
+
+    # are further results traversible?
+    down = r.size > start+c
     up   = !(start<=0)
+    
 # E.groonga.select{|r|(r['graph'] == 'schema') & r['content'].match("latitude")}.map{|r|r['.uri']}
-    r=r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c) # sort
-    m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down # prev set
-    m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up # next set
-    r.map{|r|r['.uri'].do{|r|r.E.docs.map{|d|m[d.uri] = d.env e}}} # populate resourceSet
-    puts "roonga #{e['q']} -> #{m.keys.join ' '}"
-    m # model
-  end
 
+    # sort results
+    r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
 
+    # pagination resources
+    m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down
+    m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up
+
+    # find containing documents
+    r.map{|r|r['.uri'].do{|r|r.E.docs}}.flatten.uniq.map{|r| m[r.uri] = r.env e}
+
+    puts " docs #{m.keys.join ' '}"
+    puts " uris #{m.keys.join ' '}"
+
+    m # result set
+  }
+  
 end

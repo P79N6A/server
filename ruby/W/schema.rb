@@ -69,7 +69,7 @@ class E
   fn '/schema/GET',->e,r{
     [303,
      {'Location'=>'/search' + {
-         context: :schema, view: :search, sort: :score, reverse: :true, v: :schema, c: 1000
+         context: :schema, view: :search, filter: :frag, sort: :score, reverse: :true, v: :schema, c: 1000
        }.qs},[]]}
   
   fn 'u/schema/weight',->d,e{
