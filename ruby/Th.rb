@@ -97,7 +97,7 @@ class E
     }.E.env(e).jail.do{|r| # valid path?
 #      RubyProf.start
       r.send e.fn                 # continue
-    } || [403,{},'invalid path']).# reject
+    } || [403,{},['invalid path']]).# reject
       do{|response|        # inspect response
 #        RubyProf::FlatPrinter.new(RubyProf.stop).print(STDOUT) 
         puts [e.fn,        # method

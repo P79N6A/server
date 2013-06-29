@@ -68,8 +68,8 @@ class E
 
   fn '/schema/GET',->e,r{
     [303,
-     {'Location'=>'/search' + {
-         context: :schema, view: :search, filter: :frag, sort: :score, reverse: :true, v: :schema, c: 1000
+     {'Location'=>'/' + {
+         graph: :roonga, context: :schema, view: :search, filter: :frag, sort: :score, reverse: :true, v: :schema, c: 1000
        }.qs},[]]}
   
   fn 'u/schema/weight',->d,e{
@@ -98,6 +98,5 @@ class E
           c:[r[RDFs+'label'][0].do{|l|{_: :a, href: r.uri,class: :label,c: l}},
              {_: :a, class: :uri, href: r.uri, c: r.uri[7..-1]},'<br>',
              r[RDFs+'comment'][0].do{|l|{_: :span,class: :comment, c: l}}]}}])}
-
 
 end

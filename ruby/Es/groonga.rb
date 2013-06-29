@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
 #  http://groonga.org/ http://ranguba.org/
@@ -29,12 +29,14 @@ class E
   
   # index
   def roonga graph="global", m = self.graph
-    g = E.groonga            # db
-    r = g[uri] || g.add(uri) # create or load entry
-       r.uri = uri           # update data
-     r.graph = graph.to_s
-   r.content = m.text
-      r.time = m.values[0][E::Date][0].to_time
+    g = E.groonga          # db
+    m.map{|u,i|
+      r = g[u] || g.add(u) # create or load entry
+      r.uri = u            # update data
+      r.graph = graph.to_s
+      r.content = i.text
+      r.time = i[E::Date][0].to_time
+    }
     self
   end
   
@@ -44,7 +46,7 @@ class E
   end
 
   # query
-  fn 'set/roonga',->d,e,m{
+  fn 'graph/roonga',->d,e,m{
 
     # load db
     ga = E.groonga
@@ -67,8 +69,6 @@ class E
     # are further results traversible?
     down = r.size > start+c
     up   = !(start<=0)
-    
-# E.groonga.select{|r|(r['graph'] == 'schema') & r['content'].match("latitude")}.map{|r|r['.uri']}
 
     # sort results
     r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
@@ -77,11 +77,16 @@ class E
     m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down
     m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up
 
-    # find containing documents
-    r.map{|r|r['.uri'].do{|r|r.E.docs}}.flatten.uniq.map{|r| m[r.uri] = r.env e}
+    # search-result identifiers
+    r = r.map{|r| r['.uri'].E }
+    puts " uris #{r.join ' '}"
 
-    puts " docs #{m.keys.join ' '}"
-    puts " uris #{m.keys.join ' '}"
+    # containing documents
+    r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
+
+    m['/s']={'uri'=>'/s'} if m.empty?
+
+    puts "docs #{m.keys.join ' '}"
 
     m # result set
   }
