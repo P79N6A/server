@@ -64,11 +64,9 @@ class E
 
   fn 'filter/frag',->e,m{
     f = m['frag']['res']
-puts f
     m.keys.map{|u|
       m.delete u unless f.member? u
-    }
-  }
+    }}
 
   fn 'filter/basic',->o,m{
     d=m.values
