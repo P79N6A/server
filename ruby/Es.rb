@@ -36,21 +36,6 @@ class E
       m['next']={'uri' => 'next','url' => d.url,'d' => 'asc','b' => asc.uri} if asc
       s }}
 
-  # construct graph recursively following a named arc (mail references, set membership, etc)
-  def walk p,m={},v={}
-    m.merge! graphFromFile
-    v[uri]=true
-    ((walkP p)||[]).concat(((E p).po self)||[]).map{|r|
-      r.E.walk p,m,v if !v[r.uri]}
-    m
-  end
-  def walkP p
-    graphFromFile.do{|m|
-      m.map{|u,r|
-        r[p].do{|o|return o}}}
-    nil
-  end
-
   # Graph -> [Predicate]
   def E.graphProperties g
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq

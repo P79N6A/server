@@ -71,6 +71,23 @@ class E
 
   fn 'graph/thread',->d,_,m{d.walk SIOC+'reply_of',m}
 
+  # construct graph recursively following a named arc (mail references, set membership, etc)
+  def walk p,m={},v={}
+    m.merge! graphFromFile
+    v[uri]=true
+    ((walkP p)||[]).concat(((E p).po self)||[]).map{|r|
+      r.E.walk p,m,v if !v[r.uri]}
+    m
+  end
+  def walkP p
+    graphFromFile.do{|m|
+      m.map{|u,r|
+        r[p].do{|o|return o}}}
+    nil
+  end
+
+
+
   # an overview of messages in a resource set
   fn 'view/threads',->d,env{g={}
     d.map{|_,m|
