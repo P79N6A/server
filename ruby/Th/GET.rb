@@ -74,8 +74,12 @@ class E
 
     # empty graph -> 404
     return F[E404][self,@r] if m.empty?
-    puts "docs #{m.keys.join ' '}"
-    puts "resources #{m['frag']['res']}" if m['frag']
+
+    # inspect request-graph
+    if q['v'] || q['verbose']
+      puts "docs #{m.keys.join ' '}"
+      puts "resources #{m['frag']['res']}" if m['frag']
+    end
 
     # request-graph identifier
     s = (q.has_key?('nocache') ? rand.to_s :  # random identifier
