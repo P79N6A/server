@@ -84,10 +84,11 @@ class E
 
   F['?'] ||= {}
 
-  def env r
-    r['uri']=uri
-    @r = r
-    self end
+  def env r=nil
+    r ? (r['uri']=uri
+         @r = r
+         self) : @r
+  end
 
   def E.call e; dev; e.extend Th # check for changed source code
    (e['REQUEST_PATH'].force_encoding('UTF-8').do{|u| # path

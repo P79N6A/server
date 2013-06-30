@@ -55,7 +55,7 @@ class E
     q = e['q']
 
     # context
-    g = e["context"] || n['HTTP_HOST']
+    g = e["context"] || d.env['HTTP_HOST']
 
     # offset
     start = e['start'].do{|c|c.to_i} || 0
