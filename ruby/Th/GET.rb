@@ -76,7 +76,7 @@ class E
     return F[E404][self,@r] if m.empty?
 
     # inspect request-graph
-    if q['v'] || q['verbose']
+    if q.has_key? 'debug'
       puts "docs #{m.keys.join ' '}"
       puts "resources #{m['frag']['res']}" if m['frag']
     end
