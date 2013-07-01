@@ -16,7 +16,7 @@ class E
     unless o
       (s p).listPredicates
     else
-      edit E(p),(o.class == E ? o : E(p).li(o)),v
+      edit E(p),(o.class == E ? o : E(p).literal(o)),v
     end
   end
 
