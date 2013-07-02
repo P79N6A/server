@@ -14,12 +14,10 @@ class E
 
   # accumulate a graph recursively along set-membership arc
   def walk p,m={}
-    puts "walk #{uri}"
     graph m # accumulative graph
     o = []  # resources to visit 
     o.concat m[uri][p]     # outgoing arc targets
     o.concat (E p).po self # incoming arc sources
-    puts :out,m[uri][p],:in,(E p).po(self)
     o.map{|r|              # walk
       r.E.walk p,m unless m[r.uri]}
     m

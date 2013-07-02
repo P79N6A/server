@@ -1,27 +1,27 @@
 class E
 
-  B        = `pwd`.chomp
-  Blen     = B.size
+  FSbase   = `pwd`.chomp
+  BaseLen  = FSbase.size.succ
   Prefix   = '/@'
   S        = '<>'
 
   # frequently-used URIs
-  Purl='http://purl.org/'
-  DC=Purl+'dc/terms/'
-  SIOC ='http://rdfs.org/sioc/ns#'
-  SIOCt='http://rdfs.org/sioc/types#'
-  To=SIOC+'addressed_to'
-  Date    =DC+'date'
-  Modified=DC+'modified'
-  Creator =SIOC+'has_creator'
-  Title   =DC+'title'
-  Content=SIOC+'content'
-  W3='http://www.w3.org/'
-  Type=W3+"1999/02/22-rdf-syntax-ns#type"
-  RDFs=W3+'2000/01/rdf-schema#'
-  Label=RDFs+'label'
-  HTTP=W3+'2011/http#'
-  FOAF="http://xmlns.com/foaf/0.1/"
+  W3    = 'http://www.w3.org/'
+  Purl  = 'http://purl.org/'
+  FOAF  = "http://xmlns.com/foaf/0.1/"
+  SIOC  = 'http://rdfs.org/sioc/ns#'
+  SIOCt = 'http://rdfs.org/sioc/types#'
+  DC       = Purl + 'dc/terms/'
+  Date     = DC   + 'date'
+  Modified = DC   + 'modified'
+  Title    = DC   + 'title'
+  To       = SIOC + 'addressed_to'
+  Creator  = SIOC + 'has_creator'
+  Content  = SIOC + 'content'
+  Type     = W3   + "1999/02/22-rdf-syntax-ns#type"
+  RDFs     = W3   + '2000/01/rdf-schema#'
+  HTTP     = W3   + '2011/http#'
+  Label    = RDFs + 'label'
 
   # file-name extension -> MIME type
   MIME={

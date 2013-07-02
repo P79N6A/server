@@ -6,7 +6,7 @@ class E
     s=q['size'] && q['size'].match(/^\d+$/) && '-size +'+q['size']+'M'
     r=q['q'] && '-iregex ' + ('.*'+q['q']+'.*').sh
     `find #{e.sh} #{t} #{s} #{r} | head -n 1024`.lines.map{|p|
-      p[Blen+1..-1].unpath}}
+      p[BaseLen..-1].unpath}}
   
   fn 'graph/find',->e,q,m{
     (Fn 'set/find', e,q,m).do{|f|

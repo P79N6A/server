@@ -13,5 +13,5 @@ end
 # URI named functions
 def Fn a,*g; E::F[a].(*g) end
 def fn u,y
-#  E::F[u.to_s] && puts("ww #{u} redefined")
+#  E::F[u.to_s] && puts("#{u} redefined")
   E::F[u.to_s] = y end

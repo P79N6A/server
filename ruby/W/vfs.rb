@@ -7,7 +7,7 @@ class E
   end
 
   def node
-    Pathname.new B + path
+    Pathname.new FSbase + path
   end
   alias_method :no, :node
 
@@ -27,7 +27,7 @@ class E
   end
 
   def jail
-    no.expand_path.to_s.index(E::B)==0 && @r['PATH_INFO'] !~ /\.\./ && self
+    no.expand_path.to_s.index(E::FSbase)==0 && @r['PATH_INFO'] !~ /\.\./ && self
   end
 
   def c
@@ -149,7 +149,7 @@ class Pathname
 
   # path -> E
   def E
-    (to_s.force_encoding('UTF-8')[E::Blen+1..-1]||'').unpath false
+    (to_s.force_encoding('UTF-8')[E::BaseLen..-1]||'').unpath false
   end
 
   def c
