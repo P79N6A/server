@@ -26,7 +26,6 @@ class E
   end
 
   def triplrTwitter
-	puts uri
     base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('a.details').attr('href')

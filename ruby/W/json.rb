@@ -20,7 +20,7 @@ class E
          )}}
     self
     rescue Exception => e
-    puts e
+    puts :addJSON,e
   end
 
   fn 'view/application/json',->m,e{
