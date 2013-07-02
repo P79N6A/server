@@ -209,7 +209,7 @@ class String
       r ? (File.basename self) : ('/'+self).E
 
     elsif match /^E\/..\/..\// # !fs-compatible URI
-      self[8..-1].match(/(.*?)(\.[a-z]+$)/).do{|c|
+      self[8..-1].match(/([^.]+)(.*)/).do{|c|
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
     else # path
