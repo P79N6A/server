@@ -71,18 +71,6 @@ class E
 
   fn 'graph/thread',->d,_,m{d.walk SIOC+'reply_of',m}
 
-  # construct graph recursively following a named arc (mail references, set membership, etc)
-  def walk p,m={}
-    puts "walk #{uri} in #{docs}"
-    graph m # accumulative graph
-    o = []  # resources to visit 
-    o.concat m[uri][p]     # outgoing arc targets
-    o.concat (E p).po self # incoming arc sources
-    o.map{|r|              # walk
-      r.E.walk p,m unless m[r.uri]}
-    m
-  end
-
   # an overview of messages in a resource set
   fn 'view/threads',->d,env{g={}
     d.map{|_,m|

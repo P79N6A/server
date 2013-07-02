@@ -1,11 +1,5 @@
 %w{date digest/sha1 fileutils json open-uri pathname}.each{|r|require(r)}
 
-class NilClass
-  def unpath
-    E ""
-  end
-end
-
 class E
 
   def d

@@ -12,6 +12,19 @@ class E
     no.take(*a).map &:E
   end
 
+  # accumulate a graph recursively along set-membership arc
+  def walk p,m={}
+    puts "walk #{uri} in #{docs.join ' '}"
+    graph m # accumulative graph
+    o = []  # resources to visit 
+    o.concat m[uri][p]     # outgoing arc targets
+    o.concat (E p).po self # incoming arc sources
+    o.map{|r|              # walk
+      puts "found #{r}"
+      r.E.walk p,m unless m[r.uri]}
+    m
+  end
+
   # random leaf
   def randomLeaf
     c.empty? && self || c.r.randomLeaf
