@@ -1,9 +1,8 @@
 class E
 
   FSbase   = `pwd`.chomp
-  BaseLen  = FSbase.size.succ
-  Prefix   = '/@'
-  S        = '<>'
+  Prefix   = '/@' # resolver for non-local and non-HTTP URIs
+  S        = '<>' # path separator
 
   # frequently-used URIs
   W3    = 'http://www.w3.org/'
