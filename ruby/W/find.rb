@@ -5,8 +5,7 @@ class E
     t=q['day'] && q['day'].match(/^\d+$/) && '-ctime -'+q['day']
     s=q['size'] && q['size'].match(/^\d+$/) && '-size +'+q['size']+'M'
     r=q['q'] && '-iregex ' + ('.*'+q['q']+'.*').sh
-    `find #{e.sh} #{t} #{s} #{r} | head -n 1024`.lines.map{|p|
-      p[BaseLen..-1].unpath}}
+    `find #{e.sh} #{t} #{s} #{r} | head -n 1024`.lines.map &:pathToURI}
   
   fn 'graph/find',->e,q,m{
     (Fn 'set/find', e,q,m).do{|f|

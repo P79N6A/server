@@ -12,8 +12,8 @@ class E
   fn 'graph/du',->e,_,m{
     `du -a #{e.sh}`.lines.to_a[0..-2].map{|p|
       begin
-        s,p=p.split /\t/ # size, path
-        p=p[BaseLen..-1].unpath # path -> URI
+        s,p = p.split /\t/ # size, path
+        p = p.pathToURI    # path -> URI
         m[p.uri]={'uri'=>p.uri,'fs:size'=>s.to_i}
       rescue
         nil

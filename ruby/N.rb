@@ -178,23 +178,33 @@ end
 
 class String
   def dive
-    self[0..1]+'/'+self[2..3]+'/'+self[4..-1]
+    self[0..1]+'/'+
+    self[2..3]+'/'+
+    self[4..-1]
   end
 
+  # expand qname-style identifier to URI
   Expand={}
   def expand
-    (Expand.has_key? self) ? Expand[self] : (Expand[self] =
+    # memoize lookups
+   (Expand.has_key? self) ?
+    Expand[self] :
+   (Expand[self] =
      match(/([^:]+):([^\/].*)/).do{|e|
        (E::Abbrev[e[1]]||e[1]+':')+e[2]} || 
-     self)
+     self )
   end
 
   def sh
     Shellwords.escape self
   end
 
+  def pathToURI          r = true
+    self[E::BaseLen..-1].unpath r
+  end
+
   # string -> E || literal
-  def unpath r=true
+  def unpath r=true # dereference literal? 
 
     if m=(match /^([a-z]+:)\/+(.*)/) # URL
       (m[1]+'//'+m[2]).E

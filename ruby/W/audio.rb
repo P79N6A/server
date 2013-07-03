@@ -15,7 +15,7 @@ class E
     t=q['day'] && q['day'].match(/^\d+$/) && '-ctime -'+q['day']
     s=q['size'] && q['size'].match(/^\d+$/) && '-size +'+q['size']+'M'
     r=(q['find'] ? '.*'+q['find'].gsub(/[^a-zA-Z0-9\.\ ]+/,'.*') : '') + '.*.\(aif\|flac\|m4a\|mp3\|aac\|ogg\|wav\)'
-    `find #{e.sh} #{t} #{s} -iregex "#{r}"`.lines.map{|p|p[BaseLen..-1].unpath.do{|a|m[a.uri]=a}}}
+    `find #{e.sh} #{t} #{s} -iregex "#{r}"`.lines.map{|p|p.pathToURI.do{|a|m[a.uri]=a}}}
 
   fn 'view/audioplayer/item',->m,e{
     {_: :a,class: :entry, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'),

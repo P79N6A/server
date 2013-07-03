@@ -149,7 +149,7 @@ class Pathname
 
   # path -> E
   def E
-    (to_s.force_encoding('UTF-8')[E::BaseLen..-1]||'').unpath false
+    to_s.force_encoding('UTF-8').pathToURI false
   end
 
   def c
