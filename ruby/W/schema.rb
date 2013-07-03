@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   # build schema-cache
@@ -96,10 +96,12 @@ class E
       d.map{|u,r|
         v = r['score'] * scale
         f = '%02x' % v # score to greyscale value
-        {class: :r, title: 'hits ' + r['/frequency'][0].to_s  + 'score %.3f'%r['score'],
+        {class: :r, title: 'hits ' + r['/frequency'][0].to_s + ' score %.3f'%r['score'],
           style: 'color:#'+(v > 128 ? '000' : 'fff')+';background-color:#'+f+f+f,
-          c:[r[RDFs+'label'][0].do{|l|{_: :a, href: r.uri,class: :label,c: l}},
+          c:[r[RDFs+'label'][0].do{|l|
+               {_: :a, href: r.uri,class: :label,c: l}},
              {_: :a, class: :uri, href: r.uri, c: r.uri[7..-1]},'<br>',
-             r[RDFs+'comment'][0].do{|l|{_: :span,class: :comment, c: l}}]}}])}
+             r[RDFs+'comment'][0].do{|l|
+               {_: :span,class: :comment, c: l}}]}}])}
 
 end
