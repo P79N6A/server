@@ -199,9 +199,10 @@ class String
     Shellwords.escape self
   end
 
-  BaseLen  = FSbase.size.succ
+  BaseLen  = E::FSbase.size.succ
+
   def pathToURI          r = true
-    self[E::BaseLen..-1].unpath r
+    self[BaseLen..-1].unpath r
   end
 
   # string -> E || literal
