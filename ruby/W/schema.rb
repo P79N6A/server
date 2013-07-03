@@ -70,10 +70,11 @@ class E
   end
 
   fn '/schema/GET',->e,r{
-    [303,
-     {'Location'=>'/' + {
-         graph: :roonga, context: :schema, view: :search, filter: :frag, sort: :score, reverse: :true, v: :schema, c: 1000
-       }.qs},[]]}
+    r.q.merge!({
+                 'graph'=>'roonga','context'=>'schema','view'=>'search','filter'=>'frag','sort'=>'score','reverse'=>'true','v'=>'schema','c'=>1000
+               })
+    e.response
+  }
   
   fn 'u/schema/weight',->d,e{
     q = e.q['q']
