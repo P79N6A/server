@@ -31,7 +31,7 @@ class E
 
   # tabular rendering
   fn 'view/ls',->i,e{
-    [(H.css '/css/ls'),(Fn 'view/tab',i,e),(Fn 'view/find',i,e),
+    [(H.css '/css/ls'),{class: :ls, c: (Fn 'view/tab',i,e)},(Fn 'view/find',i,e),
      {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du}]}
      
 end

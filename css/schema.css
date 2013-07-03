@@ -1,6 +1,12 @@
-.r {margin-bottom:.2em}
+.r {
+margin:.2em;
+border-style:dashed;
+border-color:#6a6;
+border-width:0.18em;
+}
 .label {
 font-size:1.3em;
+float:right;
 font-weight:bold;
 color: black;
 background-color:#fafafa;
@@ -13,3 +19,15 @@ color:#04f;
 background-color:#fff;
 }
 a {text-decoration:none;}
+body{ background-color:#021;}
+.abbr{
+    font-size:1.5em;
+    background-color:#0a0;
+    color:#000;
+}
+.frag {
+    font-size:1.7em;
+    font-weight:bold;
+    background-color:#26f;
+    color:#000;
+}

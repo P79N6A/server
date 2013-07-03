@@ -2,9 +2,9 @@ body,iframe {margin:0;font-family:sans-serif;background-color:#000;color:#fff}
 a.child {text-align:center;font-weight:bold;padding:0 .5em 0 .5em;font-size:1.23em;white-space:nowrap;}
 iframe {width:100%;border:0;min-height:80em}
 .abbr{display:none}
-table {width:100%; border-spacing:0;}
-td {text-align:right;white-space:nowrap}
-td.label a {background-color:#0df;color:#000;font-weight:bold;font-size:1.2em}
+.ls table {width:100%; border-spacing:0;}
+.ls td {text-align:right;white-space:nowrap}
+.ls td.label a {background-color:#0df;color:#000;font-weight:bold;font-size:1.2em}
 
 td[property='uri'] a {background-color:#ff3;color:#000}
 td[property='uri'] .frag {background-color:white;color:#000;font-weight:bold;}

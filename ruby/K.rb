@@ -111,6 +111,7 @@ class E
     'application/atom+xml' => true,
     'application/markdown' => true,
     'application/c' => true,
+    'application/json+rdf' => true,
     'application/ruby' => true,
     'application/haskell' => true,
     'application/org' => true,
