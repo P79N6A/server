@@ -98,10 +98,12 @@ class E
         f = '%02x' % v # score to greyscale value
         {class: :r, title: 'hits ' + r['/frequency'][0].to_s + ' score %.3f'%r['score'],
           style: 'color:#'+(v > 128 ? '000' : 'fff')+';background-color:#'+f+f+f,
-          c:[u.E.html,'<br>',
-             r[RDFs+'label'][0].do{|l|
-               {_: :a, href: r.uri,class: :label,c: l}},
+          c:[u.E.html,
+             r[RDFs+'label'][0].do{|l|{_: :a, href: r.uri,class: :label,c: l}},
+             '<br>',
              r[RDFs+'comment'][0].do{|l|
-               {_: :span,class: :comment, c: l}}]}}])}
+               {_: :span,class: :comment, c: l}},' ',
+             {_: :a, href: '/@'+u.sub('#','%23')+'?view=tab&filter=p&p=dc:description,rdfs:comment,rdfs:label,rdfs:subPropertyOf,uri', c: '&gt;&gt;'}
+            ]}}])}
 
 end
