@@ -9,14 +9,16 @@ class E
 
   fn 'view/search',->d,e{
     [H.css('/css/search'),H.js('/js/search'),
-     (Fn 'view/search/form',e.q),'<br><br>',
+     (Fn 'view/search/form',e.q,e),'<br><br>',
      (Fn 'view/page',d,e)]}
 
-  fn 'view/search/form',-> q=nil { q||={}
+  fn 'view/search/form',-> q=nil,e { q||={}
     {:class => :form,
-      c: {_: :form, action: '/search',
-        c: [{_: :input, name: :q, value: q['q']},
-            q.update(q['view'] ? {} : {'view' => 'search'}).except('q','start').map{|a,s|
+      c: {_: :form, action: e['REQUEST_PATH'],
+        c: [{_: :input, name: :q, value: q['q']}, # search box
+            q.update(q['view'] ? {} : {'view' => 'search'}). # show searchbox above results unless other view specified
+            except('q','start','uri'). # new query & offset for this search
+            map{|a,s|
               {_: :input, name:  a, value: s, :type => :hidden}}]}}}
 
 end

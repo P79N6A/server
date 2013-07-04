@@ -82,9 +82,9 @@ class E
       (s=0
        u=k.downcase
        d[k]['/frequency'][0].to_i.do{|f|f > 0 && (s=s + (Math.log f))}
-       s=s+(u.label.match(q.downcase) && 12 || 
+       s=s+(u.label.match(q.downcase) && 6 || 
             q.camelToke.map(&:downcase).map{|c|
-              u.match(c) && 6 || 0}.sum)
+              u.match(c) && 3 || 0}.sum)
        d[k]['score'] = s )}}
   
   fn 'view/schema',->d,e{
