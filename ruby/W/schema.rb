@@ -58,8 +58,14 @@ class E
         g.map{|u,_|       # each resource
           c[u] &&       # do stats exist?
           m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
-        nt.w E.renderRDF m unless m.empty?  # store N-triples
+        nt.w E.renderRDF m # store N-triples
       end
+    }
+  end
+  
+  def E.schemaUnindexDocs
+    E.schemaDocs.map{|s|
+      s.docBase.a('.nt').deleteNode
     }
   end
 
