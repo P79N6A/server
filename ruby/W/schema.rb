@@ -113,7 +113,7 @@ class E
       d.map{|u,r|
         v = r['score'] * scale
         f = '%02x' % v # score to greyscale value
-        {class: :r, title: 'hits ' + r['/frequency'][0].to_s + ' score %.3f'%r['score'],
+        {class: :resource, title: 'hits ' + r['/frequency'][0].to_s + ' score %.3f'%r['score'],
           style: 'color:#'+(v > 128 ? '000' : 'fff')+';background-color:#'+f+f+f,
           c:[u.E.html,
              r[RDFs+'label'][0].do{|l|{_: :a, href: r.uri,class: :label,c: l}},
