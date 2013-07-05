@@ -104,23 +104,35 @@ class E
        d[k]['score'] = s )}}
   
   fn 'view/schema',->d,e{
+    # score resources on popularity, URL friendliness 
     Fn 'u/schema/weight',d,e
-    d=d.select{|u,r|r['score'] && r['score'].respond_to?(:>)}.
-    sort_by{|u,r|r['score']}.reverse
+    # sort updated response-graph based on score
+    d = d.select{|u,r|
+      r['score'] && r['score'].respond_to?(:>)
+    }.sort_by{|u,r| r['score'] }.reverse
+
     d.size > 0 &&
-    (scale = 255 / d[0][1]['score'].do{|s|s > 0 && s || 1}
-     [(H.css '/css/schema'),
+    (# fit values to CSS range
+     scale = 255 / d[0][1]['score'].do{|s|s > 0 && s || 1}
+     [(H.css '/css/schema'),'<table>',
       d.map{|u,r|
+        # score -> normalized score
         v = r['score'] * scale
-        f = '%02x' % v # score to greyscale value
+        # score -> greyscale value
+        f = '%02x' % v
+        # greyscale val -> full CSS
+        style = 'color:#'+(v > 128 ? '000' : 'fff')+';background-color:#'+f+f+f
+
         {class: :resource, title: 'hits ' + r['/frequency'][0].to_s + ' score %.3f'%r['score'],
-          style: 'color:#'+(v > 128 ? '000' : 'fff')+';background-color:#'+f+f+f,
+          style: style,
           c:[u.E.html,
              r[RDFs+'label'][0].do{|l|{_: :a, href: r.uri,class: :label,c: l}},
              '<br>',
              r[RDFs+'comment'][0].do{|l|
                {_: :span,class: :comment, c: l}},' ',
              {_: :a, href: '/@'+u.sub('#','%23')+'?view=tab&filter=p&p=dc:description,rdfs:comment,rdfs:label,rdfs:subPropertyOf,uri',
-               c: '&gt;&gt;'}]}}])}
+               c: '&gt;&gt;'}]}},
+      '</table>'
+     ])}
 
 end
