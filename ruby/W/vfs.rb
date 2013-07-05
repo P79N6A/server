@@ -67,8 +67,6 @@ class E
   def dir
     e || FileUtils.mkdir_p(d)
     self
-#  rescue
-#    self
   end
 
   # create link
@@ -118,7 +116,8 @@ class E
     dirname.dir
     writeFile (s ? [o].to_json : o)
     self
-  rescue
+  rescue Exception => e
+    puts e
     self
   end
 
