@@ -46,20 +46,25 @@ class E
       e = s.docBase.a('.e')   #   JSON,   resource
       t = s.docBase.a('.ttl') # turtle,   rapper fetch
      nt = s.docBase.a('.nt')  # ntriples, statistical annotations
-      next if (nt.e ||                         # skip already-processed docs
-               t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
-      g = s.graph       # schema graph
-      t.deleteNode      # convert Turtle 
-      e.w g, true       #  to JSON (for faster loading)
-      s.roonga "schema" # index in rroonga
-      m = {}   ; puts s # statistics graph 
-      g.map{|u,_|       # each resource
+      if (nt.e ||                         # skip already-processed docs
+          t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
+        puts "already indexed #{s}"
+      else
+        g = s.graph       # schema graph
+        t.deleteNode      # convert Turtle 
+        e.w g, true       #  to JSON (for faster loading)
+        s.roonga "schema" # index in rroonga
+        m = {}   ; puts s # statistics graph 
+        g.map{|u,_|       # each resource
           c[u] &&       # do stats exist?
           m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
-      nt.w E.renderRDF m unless m.empty?  # store N-triples
+        nt.w E.renderRDF m unless m.empty?  # store N-triples
+      end
     }
   end
 
+  # make slash-URIs resolvable
+  # E.schemaDocs.map &:schemaLinkSlashURIs
   def schemaLinkSlashURIs
     graph.do{|m|
       m.map{|u,r|
@@ -71,7 +76,12 @@ class E
 
   fn '/schema/GET',->e,r{
     r.q.merge!({
-                 'graph'=>'roonga','context'=>'schema','view'=>'search','filter'=>'frag','sort'=>'score','reverse'=>'true','v'=>'schema','c'=>1000
+                 'graph'=>'roonga',
+                 'context'=>'schema',
+                 'view'=>'search',
+                 'filter'=>'frag',
+                 'v'=>'schema',
+                 'c'=>(r.q.has_key?('q') ? 1000 : 0)
                })
     e.response
   }
@@ -104,7 +114,7 @@ class E
              '<br>',
              r[RDFs+'comment'][0].do{|l|
                {_: :span,class: :comment, c: l}},' ',
-             {_: :a, href: '/@'+u.sub('#','%23')+'?view=tab&filter=p&p=dc:description,rdfs:comment,rdfs:label,rdfs:subPropertyOf,uri', c: '&gt;&gt;'}
-            ]}}])}
+             {_: :a, href: '/@'+u.sub('#','%23')+'?view=tab&filter=p&p=dc:description,rdfs:comment,rdfs:label,rdfs:subPropertyOf,uri',
+               c: '&gt;&gt;'}]}}])}
 
 end
