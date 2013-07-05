@@ -122,17 +122,21 @@ class E
         f = '%02x' % v
         # greyscale val -> full CSS
         style = 'color:#'+(v > 128 ? '000' : 'fff')+';background-color:#'+f+f+f
+        # stats on stats
+        title = r['/frequency'][0].to_s + ' | %.3f'%r['score']
 
-        {class: :resource, title: 'hits ' + r['/frequency'][0].to_s + ' score %.3f'%r['score'],
-          style: style,
-          c:[u.E.html,
-             r[RDFs+'label'][0].do{|l|{_: :a, href: r.uri,class: :label,c: l}},
-             '<br>',
-             r[RDFs+'comment'][0].do{|l|
-               {_: :span,class: :comment, c: l}},' ',
-             {_: :a, href: '/@'+u.sub('#','%23')+'?view=tab&filter=p&p=dc:description,rdfs:comment,rdfs:label,rdfs:subPropertyOf,uri',
-               c: '&gt;&gt;'}]}},
-      '</table>'
-     ])}
+        [{_: :tr, class: :overview, style: style, title: title,
+           c: [{_: :td, class: :identity,
+                 c: u.E.html},
+               {_: :td, class: :label,
+                 c: [{_: :span, class: :stats, c: title},
+                     r[RDFs+'label'][0].do{|l|
+                       {_: :a, href: r.uri,class: :label,c: l}}]}]},
+         {_: :tr, class: :details, style: style, title: title,
+           c: {_: :td, colspan: 2, class: :describe,
+             c: [r[RDFs+'comment'][0].do{|l|
+                   {_: :span,class: :comment, c: l}},' ',
+                 {_: :a, href: '/@'+u.sub('#','%23')+'?view=tab&filter=p&p=dc:description,rdfs:comment,rdfs:label,rdfs:subPropertyOf,uri',
+                   c: '&gt;&gt;'}]}}]},'</table>'])}
 
 end
