@@ -116,9 +116,6 @@ class E
     dirname.dir
     writeFile (s ? [o].to_json : o)
     self
-  rescue Exception => e
-    puts e
-    self
   end
 
   def writeFile c
