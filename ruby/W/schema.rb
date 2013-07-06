@@ -72,12 +72,19 @@ class E
   # make slash-URIs resolvable
   # E.schemaDocs.map &:schemaLinkSlashURIs
   def schemaLinkSlashURIs
-    graph.do{|m|
-      m.map{|u,r|
-        r[RDFs+'isDefinedBy'].do{|d|
-          prop = u.E.docBase.a '.' + ext
-          prop.dirname.dir
-          ln prop }}}
+    doc = docBase.a('.e') # document
+    return if !doc.e      # cache populated?
+    puts "scanning #{uri}"
+    graph.do{|m|                     # build graph
+      m.map{|u,r|                    # iterate through URIs
+        r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
+          t = u.E.docBase.a '.e'     # symlink location
+          t.dirname.dir              # container dir of symlink
+          doc.ln t unless t.e        # make link
+          puts "#{t} -> #{doc}"
+        }}}
+    rescue Exception => e
+    puts e
   end
 
   fn '/schema/GET',->e,r{

@@ -59,7 +59,8 @@ class E
     }}
 
   fn 'filter/frag',->e,m{
-    f = m['frag']['res']
+    f = m['frag']['res'].push e.uri
+    puts "filtering model to #{f.join ' '}"
     m.keys.map{|u|
       m.delete u unless f.member? u
     }}
