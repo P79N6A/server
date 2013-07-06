@@ -14,8 +14,6 @@ geo	http://www.w3.org/2003/01/geo/wgs84_pos#
 sioc	http://rdfs.org/sioc/ns#
 cyc	http://sw.opencyc.org/concept/
 gr	http://purl.org/goodrelations/v1#
-akt	http://www.aktors.org/ontology/portal#
-dbpedia	http://dbpedia.org/resource/
 xsd	http://www.w3.org/2001/XMLSchema#
 dcterms	http://purl.org/dc/terms/
 dbpprop	http://dbpedia.org/property/
@@ -71,7 +69,6 @@ ad	http://schemas.talis.com/2005/address/schema#
 days	http://ontologi.es/days#
 biblio	http://purl.org/net/biblio#
 dir	http://schemas.talis.com/2005/dir/schema#
-osag	http://www.ordnancesurvey.co.uk/ontology/AdministrativeGeography/v2.0/AdministrativeGeography.rdf#
 xfn	http://vocab.sindice.com/xfn#
 log	http://www.w3.org/2000/10/swap/log#
 sd	http://www.w3.org/ns/sparql-service-description#
@@ -132,7 +129,6 @@ pmlj	http://inference-web.org/2.0/pml-justification.owl#
 usgov	http://www.rdfabout.com/rdf/schema/usgovt/
 politico	http://www.rdfabout.com/rdf/schema/politico/
 taxo	http://purl.org/rss/1.0/modules/taxonomy/
-wn	http://xmlns.com/wordnet/1.6/
 oauth	http://demiblog.org/vocab/oauth#
 scovo	http://purl.org/NET/scovo#
 wdrs	http://www.w3.org/2007/05/powder-s#
@@ -213,7 +209,6 @@ nrl	http://www.semanticdesktop.org/ontologies/2007/08/15/nrl#
 dailymed	http://www4.wiwiss.fu-berlin.de/dailymed/resource/dailymed/
 hard	http://www.w3.org/2007/uwa/context/hardware.owl#
 contact	http://www.w3.org/2000/10/swap/pim/contact#
-ibis	http://purl.org/ibis#
 ne	http://umbel.org/umbel/ne/
 es	http://eulersharp.sourceforge.net/2003/03swap/log-rules#
 myspo	http://purl.org/ontology/myspace#
@@ -239,7 +234,6 @@ wnschema	http://www.cogsci.princeton.edu/~wn/schema/
 osgb	http://data.ordnancesurvey.co.uk/id/
 formats	http://www.w3.org/ns/formats/
 test	http://test2.example.com/
-prj	http://purl.org/stuff/project/
 wv	http://vocab.org/waiver/terms/
 acl	http://www.w3.org/ns/auth/acl#
 exif	http://www.w3.org/2003/12/exif/ns#
@@ -380,7 +374,6 @@ lark1	http://users.utcluj.ro/~raluca/ontology/Ontology1279614123500.owl#
 wlp	http://weblab-project.org/core/model/property/processing/
 anca	http://users.utcluj.ro/~raluca/rdf_ontologies_ralu/ralu_modified_ontology_pizzas2_0#
 tarot	http://data.totl.net/tarot/card/
-ct	http://data.linkedct.org/resource/linkedct/
 geoes	http://geo.linkeddata.es/ontology/
 ist	http://purl.org/ontology/is/types/
 aifb	http://www.aifb.kit.edu/id/
@@ -423,7 +416,6 @@ dgfoaf	http://west.uni-koblenz.de/ontologies/2010/07/dgfoaf.owl#
 gridworks	http://purl.org/net/opmv/types/gridworks#
 conv	http://purl.org/twc/vocab/conversion/
 pgterms	http://www.gutenberg.org/2009/pgterms/
-derecho	http://purl.org/derecho#
 ao	http://purl.org/ontology/ao/core#
 languages	http://eulersharp.sourceforge.net/2003/03swap/languages#
 yoda	http://purl.org/NET/yoda#
@@ -433,7 +425,6 @@ core	http://vivoweb.org/ontology/core#
 posh	http://poshrdf.org/ns/posh/
 countries	http://eulersharp.sourceforge.net/2003/03swap/countries#
 nt	http://ns.inria.fr/nicetag/2010/09/09/voc#
-linkedct	http://data.linkedct.org/vocab/
 com	http://purl.org/commerce#
 eg	http://eulergui.sourceforge.net/engine.owl#
 session	http://redfoot.net/2005/session#
@@ -446,7 +437,6 @@ drug	http://www.agfa.com/w3c/2009/drugTherapy#
 healthcare	http://www.agfa.com/w3c/2009/healthCare#
 rnews	http://iptc.org/std/rNews/2011-10-07#
 httph	http://www.w3.org/2007/ont/httph#
-wordnet	http://purl.org/vocabularies/princeton/wordnet/schema#
 tripfs2	http://purl.org/tripfs/2010/06#
 protons	http://proton.semanticweb.org/2005/04/protons#
 rail	http://ontologi.es/rail/vocab#
@@ -515,7 +505,6 @@ hospital	http://www.agfa.com/w3c/2009/hospital#
 address	http://schemas.talis.com/2005/address/schema#
 lgdo	http://linkedgeodata.org/ontology/
 prvr	http://purl.org/ontology/prv/rules#
-opwn	http://www.ontologyportal.org/WordNet.owl#
 theatre	http://purl.org/theatre#
 umbelrc	http://umbel.org/umbel/rc/
 xds	http://www.w3.org/2001/XMLSchema#
@@ -566,7 +555,6 @@ ccom	http://purl.org/ontology/cco/mappings#
 atomowl	http://bblfish.net/work/atom-owl/2006-06-06/#
 lib	http://schemas.talis.com/2005/library/schema#
 olia	http://purl.org/olia/olia.owl#
-eco	http://www.ebusiness-unibw.org/ontologies/eclass/5.1.4/#
 cpv	http://purl.org/weso/cpv/
 skip	http://skipforward.net/skipforward/resource/
 out	http://ontologies.hypios.com/out#
