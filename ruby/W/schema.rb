@@ -21,10 +21,12 @@ class E
 
   # cache schema docs
   def schemaCacheDoc
-    t = docBase.a('.ttl')          # turtle doc 
-    (print "c " ; return) if t.e   # already cached?
-    puts "\nraptor #{uri}"
-    t.w(`rapper -o turtle #{uri}`) # write turtle
+    t = docBase.a('.ttl')       # turtle doc 
+    if t.e || docBase.a('.e').e # already cached?
+      print "c "
+    else
+      t.w(`rapper -o turtle #{uri}`) # write turtle
+    end
   end
 
   def schemaUncacheDoc
