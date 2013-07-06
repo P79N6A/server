@@ -1,46 +1,38 @@
 watch __FILE__
 class E
   
-  # build schema-cache
+  # install schema-cache
   def E.schemaCache
     E.schemaCacheDocs
     E.schemaIndexDocs
     E.schemaLinkSlashURIs
   end
+  # uninstall schema cache
   def E.schemaUncache
+    E.schemaUncacheDocs
     E.schemaUnindexDocs
     E.schemaUnlinkSlashURIs
   end
 
-  # gromgull's BTC statistics
-  def E.schemaStatistics
-    data = '/predicates.2010'.E
-    return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.E
-    # occurrence count :: URI -> int
-    usage = {}
-    data.read.each_line{|e|
-      e.match(/(\d+)[^<]+<([^>]+)>/).do{|r|
-        usage[r[2]] = r[1].to_i }}
-    usage
-  end
-  
-  # prefix -> schema mapping
-  def E.schemaDocs
-    source = E['http://prefix.cc/popular/all.file.txt']
-    mirror = E['http://localhost/css/i/prefix.cc.txt']
-    schemae = (mirror.e ? mirror : source).
-      read.split("\n").          # each doc
-      grep(/^[^#]/).             # skip commented
-      map{|t|t.split(/\t/)[1].E} # URI field
-    
-  end
-
   # cache schema docs
   def E.schemaCacheDocs
-    E.schemaDocs.map{|d|
-      d.docBase.a('.ttl').do{|t| t.e || t.w(`rapper -o turtle #{d}`)}}
+    E.schemaDocs.map &:schemaCacheDoc
+  end
+  def schemaCacheDoc
+    t = docBase.a('.ttl')       # turtle file 
+    return if t.e               # already cached?
+    t.w(`rapper -o turtle #{d}`) # write turtle
   end
 
+  # uncache schema docs
+  def E.schemaUncacheDocs
+    E.schemaDocs.map &:schemaUncacheDoc
+  end
+  def schemaUncacheDoc
+    docBase.a('.e').deleteNode   # remove JSON
+    docBase.a('.ttl').deleteNode # remove Turtle
+  end
+  
   # index schema docs
   def E.schemaIndexDocs
     c = E.schemaStatistics
@@ -51,23 +43,24 @@ class E
       if (nt.e ||                         # skip already-processed docs
           t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
       else
-        g = s.graph       # schema graph
-        t.deleteNode      # convert Turtle 
-        e.w g,true if !e.e#  to JSON (for faster loading)
-        s.roonga "schema" # index in rroonga
-        m = {}   ; puts s # statistics graph 
-        g.map{|u,_|       # each resource
-          c[u] &&       # do stats exist?
+        g = s.graph        # schema graph
+        t.deleteNode       # convert Turtle 
+        e.w g,true if !e.e #  to JSON (for faster loading)
+        s.roonga "schema"  # index in rroonga
+        m = {}   ; puts s  # statistics graph 
+        g.map{|u,_|        # each resource
+          c[u] &&          # do stats exist?
           m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
         nt.w E.renderRDF m # store N-triples
       end
     }
   end
-  
+  # un-index schema docs
   def E.schemaUnindexDocs
-    E.schemaDocs.map{|s|
-      s.docBase.a('.nt').deleteNode
-    }
+    E.schemaDocs.map &:schemaUnindexDoc
+  end
+  def schemaUnindexDoc
+    docBase.a('.nt').deleteNode
   end
 
   # make slash-URIs resolvable
@@ -97,8 +90,35 @@ class E
     rescue Exception => e
     puts e
   end
+  # unlink slash-URIs
   def E.schemaUnlinkSlashURIs
-    E.schemaDocs.map{|s| s.schemaLinkSlashURIs :undo}
+    E.schemaDocs.map &:schemaUnlinkSlashURIs
+  end
+  def schemaUnlinkSlashURIs
+    schemaLinkSlashURIs :undo
+  end
+
+  # parse gromgull's BTC statistics
+  def E.schemaStatistics
+    data = '/predicates.2010'.E
+    return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.E
+    # occurrence count :: URI -> int
+    usage = {}
+    data.read.each_line{|e|
+      e.match(/(\d+)[^<]+<([^>]+)>/).do{|r|
+        usage[r[2]] = r[1].to_i }}
+    usage
+  end
+  
+  # parse schema URIs
+  def E.schemaDocs
+    source = E['http://prefix.cc/popular/all.file.txt']
+    mirror = E['http://localhost/css/i/prefix.cc.txt']
+    schemae = (mirror.e ? mirror : source).
+      read.split("\n").          # each doc
+      grep(/^[^#]/).             # skip commented
+      map{|t|t.split(/\t/)[1].E} # URI field
+    
   end
 
   fn '/schema/GET',->e,r{
