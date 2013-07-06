@@ -52,7 +52,7 @@ class E
       else
         g = s.graph       # schema graph
         t.deleteNode      # convert Turtle 
-        e.w g, true       #  to JSON (for faster loading)
+        e.w g,true if !e.e#  to JSON (for faster loading)
         s.roonga "schema" # index in rroonga
         m = {}   ; puts s # statistics graph 
         g.map{|u,_|       # each resource
