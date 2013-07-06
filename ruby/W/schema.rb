@@ -21,55 +21,51 @@ class E
 
   # cache schema docs
   def schemaCacheDoc
-    t = docBase.a('.ttl')       # turtle doc 
-    if t.e || docBase.a('.e').e # already cached?
+    if ttl.e || ef.e # already cached?
       print "c "
     else
-      t.w(`rapper -o turtle #{uri}`) # write turtle
+      ttl.w(`rapper -o turtle #{uri}`) # write turtle
     end
   end
 
   def schemaUncacheDoc
-    docBase.a('.e').deleteNode   # remove JSON
-    docBase.a('.ttl').deleteNode # remove Turtle
+    ef.deleteNode  # remove JSON
+    ttl.deleteNode # remove Turtle
   end
   
   # index schema docs
   def schemaIndexDoc
     c = E.schemaStatistics
-    e = docBase.a('.e')   #   JSON,   resource
-    t = docBase.a('.ttl') # turtle,   rapper fetch
-    nt = docBase.a('.nt')  # ntriples, statistical annotations
-    if (nt.e ||                         # skip already-processed docs
-        t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
+    if (nt.e ||                           # skip already-processed docs
+        ttl.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
       print "e "
     else
-      g = graph          # schema graph
-      t.deleteNode       # convert Turtle 
-      e.w g,true if !e.e #  to JSON (for faster loading)
-      roonga "schema"    # index in rroonga
-      m={}; puts "\n"+uri# statistics graph 
-      g.map{|u,_|        # each resource
-        c[u] &&          # do stats exist?
+      g = graph           # schema graph
+      ttl.deleteNode      # convert Turtle 
+      ef.w g,true if !ef.e# to JSON (for faster loading)
+      roonga "schema"     # index in rroonga
+      m={}; puts "\n"+uri # statistics graph 
+      g.map{|u,_|         # each resource
+        c[u] &&           # do stats exist?
         m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
-      nt.w E.renderRDF m # store N-triples
-      schemaLinkSlashURIs# link "Slash-URI" resources to definer
+      nt.w E.renderRDF m  # store N-triples
+      schemaLinkSlashURIs # link "Slash-URI" resources to definer
     end
   end
 
   def schemaUnindexDoc
-    docBase.a('.nt').deleteNode
+    unroonga
+    nt.deleteNode
   end
 
   # make slash-URIs resolvable
   def schemaLinkSlashURIs undo=false
-    doc = docBase.a('.e') # document
-    return if !doc.e      # cache populated?
+    return if !ef.e      # cache populated?
     graph.do{|m|                     # build graph
       m.map{|u,r|                    # iterate through URIs
         r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
-          t = u.E.docBase.a '.e'     # symlink location
-          t.dirname.dir              # container dir of symlink
+          t = u.E.ef     # symlink location
+          t.dirname.dir  # container dir of symlink
           if undo
             if t.e
               t.deleteNode # remove link
@@ -77,8 +73,8 @@ class E
             end
           else
             unless t.e
-              doc.ln t      # add link
-              puts "#{t} -> #{doc}"
+              ef.ln t      # add link
+              puts "#{t} -> #{ef}"
             end
           end
         }}}
