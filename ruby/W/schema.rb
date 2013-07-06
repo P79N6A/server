@@ -12,7 +12,6 @@ class E
   def schemaCache
     schemaCacheDoc
     schemaIndexDoc
-    schemaLinkSlashURIs
   end
   def schemaUncache
     schemaUncacheDoc
@@ -22,8 +21,9 @@ class E
 
   # cache schema docs
   def schemaCacheDoc
-    t = docBase.a('.ttl')       # turtle file 
-    return if t.e               # already cached?
+    t = docBase.a('.ttl')          # turtle doc 
+    (print "c " ; return) if t.e   # already cached?
+    puts "\nraptor #{uri}"
     t.w(`rapper -o turtle #{uri}`) # write turtle
   end
 
@@ -40,16 +40,18 @@ class E
     nt = docBase.a('.nt')  # ntriples, statistical annotations
     if (nt.e ||                         # skip already-processed docs
         t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
+      print "e "
     else
       g = graph          # schema graph
       t.deleteNode       # convert Turtle 
       e.w g,true if !e.e #  to JSON (for faster loading)
       roonga "schema"    # index in rroonga
-      m = {}  ; puts uri # statistics graph 
+      m={}; puts "\n"+uri# statistics graph 
       g.map{|u,_|        # each resource
         c[u] &&          # do stats exist?
         m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
       nt.w E.renderRDF m # store N-triples
+      schemaLinkSlashURIs# link "Slash-URI" resources to definer
     end
   end
 
