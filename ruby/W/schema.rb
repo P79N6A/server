@@ -90,7 +90,7 @@ class E
   def E.schemaStatistics
     @gromgull ||=
       (data = '/predicates.2010'.E
-    return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.e
+    (puts "curl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.2010"; exit) unless data.e
     # occurrence count :: URI -> int
     usage = {}
     data.read.each_line{|e|
