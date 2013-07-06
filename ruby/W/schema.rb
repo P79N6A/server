@@ -3,39 +3,36 @@ class E
   
   # install schema-cache
   def E.schemaCache
-    E.schemaCacheDocs
-    E.schemaIndexDocs
-    E.schemaLinkSlashURIs
+    E.schemaDocs.map &:schemaCache
   end
-  # uninstall schema cache
   def E.schemaUncache
-    E.schemaUncacheDocs
-    E.schemaUnindexDocs
-    E.schemaUnlinkSlashURIs
+    E.schemaDocs.map &:schemaUncache
+  end
+
+  def schemaCache
+    schemaCacheDoc
+    schemaIndexDoc
+    schemaLinkSlashURIs
+  end
+  def schemaUncache
+    schemaUncacheDoc
+    schemaUnindexDoc
+    schemaUnlinkSlashURIs
   end
 
   # cache schema docs
-  def E.schemaCacheDocs
-    E.schemaDocs.map &:schemaCacheDoc
-  end
   def schemaCacheDoc
     t = docBase.a('.ttl')       # turtle file 
     return if t.e               # already cached?
     t.w(`rapper -o turtle #{d}`) # write turtle
   end
-  # uncache schema docs
-  def E.schemaUncacheDocs
-    E.schemaDocs.map &:schemaUncacheDoc
-  end
+
   def schemaUncacheDoc
     docBase.a('.e').deleteNode   # remove JSON
     docBase.a('.ttl').deleteNode # remove Turtle
   end
   
   # index schema docs
-  def E.schemaIndexDocs
-    E.schemaDocs.map &:schemaIndexDoc
-  end
   def schemaIndexDoc
     c = E.schemaStatistics
     e = docBase.a('.e')   #   JSON,   resource
@@ -55,18 +52,12 @@ class E
       nt.w E.renderRDF m # store N-triples
     end
   end
-  # un-index schema docs
-  def E.schemaUnindexDocs
-    E.schemaDocs.map &:schemaUnindexDoc
-  end
+
   def schemaUnindexDoc
     docBase.a('.nt').deleteNode
   end
 
   # make slash-URIs resolvable
-  def E.schemaLinkSlashURIs
-    E.schemaDocs.map &:schemaLinkSlashURIs
-  end
   def schemaLinkSlashURIs undo=false
     doc = docBase.a('.e') # document
     return if !doc.e      # cache populated?
@@ -90,10 +81,7 @@ class E
     rescue Exception => e
     puts e
   end
-  # unlink slash-URIs
-  def E.schemaUnlinkSlashURIs
-    E.schemaDocs.map &:schemaUnlinkSlashURIs
-  end
+
   def schemaUnlinkSlashURIs
     schemaLinkSlashURIs :undo
   end
