@@ -9,8 +9,8 @@ class E
   def addJSON i,g,p=[]
     fromStream({},i).map{|u,r| # stream -> graph
       (E u).do{|e| # resource
-        j = e.docBase.a '.e'
-        j.e || # exists?
+        j = e.ef   # inode
+        j.e ||     # exists?
         (p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
          j.w({u => r},true) # write doc
          puts "a #{e}"
