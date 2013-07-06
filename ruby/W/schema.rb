@@ -69,7 +69,9 @@ class E
   end
 
   # make slash-URIs resolvable
-  # E.schemaDocs.map &:schemaLinkSlashURIs
+  def E.schemaLinkSlashURIs
+    E.schemaDocs.map &:schemaLinkSlashURIs
+  end
   def schemaLinkSlashURIs
     doc = docBase.a('.e') # document
     return if !doc.e      # cache populated?
