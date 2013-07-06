@@ -143,7 +143,7 @@ class E
            c: {_: :td, colspan: 2, class: :describe,
              c: [r[RDFs+'comment'][0].do{|l|
                    {_: :span,class: :comment, c: l}},' ',
-                 {_: :a, href: '/@'+u.sub('#','%23')+'?view=tab&filter=p&p=dc:description,rdfs:comment,rdfs:label,rdfs:subPropertyOf,uri',
+                 {_: :a, href: '/@'+u.sub('#','%23')+'?filter=frag',
                    c: '&gt;&gt;'}]}}]},'</table>'])}
 
 end

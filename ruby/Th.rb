@@ -85,8 +85,7 @@ class E
   F['?'] ||= {}
 
   def env r=nil
-    r ? (r['uri']=uri
-         @r = r
+    r ? (@r = r
          self) : @r
   end
 

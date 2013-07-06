@@ -113,7 +113,7 @@ class E
         end
 
         # response graph sorting/filtering
-        E.filter q, m, @r
+        E.filter q, m, self
 
         # construct response body
         v = render @r.format, m, @r
