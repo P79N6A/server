@@ -3,11 +3,13 @@ class E
   
   # build schema-cache
   def E.schemaCache
-    # download RDF from schema URIs to local cache 
     E.schemaCacheDocs
-
-    # index docs and annotate with usage data
     E.schemaIndexDocs
+    E.schemaLinkSlashURIs
+  end
+  def E.schemaUncache
+    E.schemaUnindexDocs
+    E.schemaUnlinkSlashURIs
   end
 
   # gromgull's BTC statistics
@@ -72,22 +74,31 @@ class E
   def E.schemaLinkSlashURIs
     E.schemaDocs.map &:schemaLinkSlashURIs
   end
-  def schemaLinkSlashURIs
+  def schemaLinkSlashURIs undo=false
     doc = docBase.a('.e') # document
     return if !doc.e      # cache populated?
-    puts "scanning #{uri}"
     graph.do{|m|                     # build graph
       m.map{|u,r|                    # iterate through URIs
         r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
           t = u.E.docBase.a '.e'     # symlink location
           t.dirname.dir              # container dir of symlink
-          unless t.e 
-            doc.ln t        # make link
-            puts "#{t} -> #{doc}"
+          if undo
+            if t.e
+              t.deleteNode # remove link
+              puts "-#{t}"
+            end
+          else
+            unless t.e
+              doc.ln t      # add link
+              puts "#{t} -> #{doc}"
+            end
           end
         }}}
     rescue Exception => e
     puts e
+  end
+  def E.schemaUnlinkSlashURIs
+    E.schemaDocs.map{|s| s.schemaLinkSlashURIs :undo}
   end
 
   fn '/schema/GET',->e,r{
