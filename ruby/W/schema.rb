@@ -45,7 +45,7 @@ class E
       t.deleteNode       # convert Turtle 
       e.w g,true if !e.e #  to JSON (for faster loading)
       roonga "schema"    # index in rroonga
-      m = {}  ; puts uri # statistics graph 
+      m = {};puts '+'+uri# statistics graph 
       g.map{|u,_|        # each resource
         c[u] &&          # do stats exist?
         m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
@@ -90,7 +90,7 @@ class E
   def E.schemaStatistics
     @gromgull ||=
       (data = '/predicates.2010'.E
-    return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.E
+    return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.e
     # occurrence count :: URI -> int
     usage = {}
     data.read.each_line{|e|
