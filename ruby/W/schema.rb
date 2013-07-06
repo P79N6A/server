@@ -24,7 +24,7 @@ class E
   def schemaCacheDoc
     t = docBase.a('.ttl')       # turtle file 
     return if t.e               # already cached?
-    t.w(`rapper -o turtle #{d}`) # write turtle
+    t.w(`rapper -o turtle #{uri}`) # write turtle
   end
 
   def schemaUncacheDoc
@@ -45,7 +45,7 @@ class E
       t.deleteNode       # convert Turtle 
       e.w g,true if !e.e #  to JSON (for faster loading)
       roonga "schema"    # index in rroonga
-      m = {};puts '+'+uri# statistics graph 
+      m = {}  ; puts uri # statistics graph 
       g.map{|u,_|        # each resource
         c[u] &&          # do stats exist?
         m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
