@@ -14,6 +14,7 @@ border-width:0 0 0.2em 0;
 padding-left:20%;
 }
 td.identity {
+    white-space: nowrap;
     width:0%;
     max-width:60ex;
     text-align:right;

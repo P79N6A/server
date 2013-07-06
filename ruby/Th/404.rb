@@ -11,6 +11,7 @@ class E
       r['ACCEPT_'+a] = r.accept_ '_' + a }
  
    [404,{'Content-Type'=> 'text/html'},[H([H.css('/css/404'),r.html])]]}
+  F['req/404']=F[E404]
 
   fn '/css/404.css/GET',->e,r{
     [200,{'Content-Type'=>'text/css'},

@@ -91,7 +91,7 @@ width:#{(e-b) * 4.0}px;
     i=F['view/sw/item']
     Fn 'view/sw/base',d,e,->{d.map{|u,r|i.(r,e)}}}
 
-  fn 'filter/gh',->o,m{
+  fn 'filter/gh',->o,m,_{
     m.values.map{|r|
       r[Content].do{|c| 
         c.join.lines.each_with_index{|l,i|

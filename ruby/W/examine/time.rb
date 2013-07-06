@@ -1,7 +1,7 @@
 #watch __FILE__
 class E
 
-  fn 'filter/tg',->e,m{
+  fn 'filter/tg',->e,m,_{
     m.values.group_by{|r|[*r[e['group']]][0]}.map{|g,v|
       p=nil
       v.sort_by{|r|[*r[e['x']||Date]][0].to_time}.map{|r|

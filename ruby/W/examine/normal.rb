@@ -1,6 +1,6 @@
 #watch __FILE__
 class E
-  fn 'filter/map',->o,m{
+  fn 'filter/map',->o,m,_{
     o.except('filter','graph','view').map{|p,n|
      p=p.expand
      n=n.expand

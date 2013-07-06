@@ -52,20 +52,21 @@ class E
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
   end
 
-  fn 'filter/p',->e,m{
+  fn 'filter/p',->e,m,_{
     a=Hash[*e['p'].split(/,/).map(&:expand).map{|p|[p,true]}.flatten]
     m.values.map{|r|
       r.delete_if{|p,o|!a[p]}
     }}
 
-  fn 'filter/frag',->e,m{
-    f = m['frag']['res'].push e.uri
+  fn 'filter/frag',->e,m,r{
+    puts "filter #{r.uri}"
+    f = [e.uri].concat m['frag']['res']
     puts "filtering model to #{f.join ' '}"
     m.keys.map{|u|
       m.delete u unless f.member? u
     }}
 
-  fn 'filter/basic',->o,m{
+  fn 'filter/basic',->o,m,_{
     d=m.values
     o['match'] && (p=o['matchP'].expand
                    d=d.select{|r|r[p].do{|p|(p.class==Array ? p[0] : p).to_s.match o['match']}})
@@ -88,9 +89,9 @@ class E
     o.has_key?('reverse') && d.reverse!
     m.clear;d.map{|r|m[r['uri']]=r}}
   
-  def self.filter o,m
-    o['filter'].do{|f|f.split(/,/).map{|f|Fn 'filter/'+f,o,m}}
-    Fn'filter/basic',o,m if o.has_any_key ['reverse','sort','max','min','match']
+  def self.filter o,m,r
+    o['filter'].do{|f|f.split(/,/).map{|f|Fn 'filter/'+f,o,m,r}}
+    Fn'filter/basic',o,m,r if o.has_any_key ['reverse','sort','max','min','match']
     m
   end
 
