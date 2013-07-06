@@ -48,7 +48,6 @@ class E
      nt = s.docBase.a('.nt')  # ntriples, statistical annotations
       if (nt.e ||                         # skip already-processed docs
           t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
-        puts "already indexed #{s}"
       else
         g = s.graph       # schema graph
         t.deleteNode      # convert Turtle 
@@ -80,8 +79,10 @@ class E
         r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
           t = u.E.docBase.a '.e'     # symlink location
           t.dirname.dir              # container dir of symlink
-          doc.ln t unless t.e        # make link
-          puts "#{t} -> #{doc}"
+          unless t.e 
+            doc.ln t        # make link
+            puts "#{t} -> #{doc}"
+          end
         }}}
     rescue Exception => e
     puts e
