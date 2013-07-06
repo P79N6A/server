@@ -23,7 +23,6 @@ class E
     return if t.e               # already cached?
     t.w(`rapper -o turtle #{d}`) # write turtle
   end
-
   # uncache schema docs
   def E.schemaUncacheDocs
     E.schemaDocs.map &:schemaUncacheDoc
@@ -35,25 +34,26 @@ class E
   
   # index schema docs
   def E.schemaIndexDocs
+    E.schemaDocs.map &:schemaIndexDoc
+  end
+  def schemaIndexDoc
     c = E.schemaStatistics
-    E.schemaDocs.map{|s| # each schema
-      e = s.docBase.a('.e')   #   JSON,   resource
-      t = s.docBase.a('.ttl') # turtle,   rapper fetch
-     nt = s.docBase.a('.nt')  # ntriples, statistical annotations
-      if (nt.e ||                         # skip already-processed docs
-          t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
-      else
-        g = s.graph        # schema graph
-        t.deleteNode       # convert Turtle 
-        e.w g,true if !e.e #  to JSON (for faster loading)
-        s.roonga "schema"  # index in rroonga
-        m = {}   ; puts s  # statistics graph 
-        g.map{|u,_|        # each resource
-          c[u] &&          # do stats exist?
-          m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
-        nt.w E.renderRDF m # store N-triples
-      end
-    }
+    e = docBase.a('.e')   #   JSON,   resource
+    t = docBase.a('.ttl') # turtle,   rapper fetch
+    nt = docBase.a('.nt')  # ntriples, statistical annotations
+    if (nt.e ||                         # skip already-processed docs
+        t.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
+    else
+      g = graph          # schema graph
+      t.deleteNode       # convert Turtle 
+      e.w g,true if !e.e #  to JSON (for faster loading)
+      roonga "schema"    # index in rroonga
+      m = {}  ; puts uri # statistics graph 
+      g.map{|u,_|        # each resource
+        c[u] &&          # do stats exist?
+        m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
+      nt.w E.renderRDF m # store N-triples
+    end
   end
   # un-index schema docs
   def E.schemaUnindexDocs
@@ -100,25 +100,26 @@ class E
 
   # parse gromgull's BTC statistics
   def E.schemaStatistics
-    data = '/predicates.2010'.E
+    @gromgull ||=
+      (data = '/predicates.2010'.E
     return "curl http://gromgull.net/2010/09/btc2010data/predicates.2010.gz | zcat > predicates.2010" unless data.E
     # occurrence count :: URI -> int
     usage = {}
     data.read.each_line{|e|
       e.match(/(\d+)[^<]+<([^>]+)>/).do{|r|
         usage[r[2]] = r[1].to_i }}
-    usage
+    usage)
   end
   
   # parse schema URIs
   def E.schemaDocs
-    source = E['http://prefix.cc/popular/all.file.txt']
-    mirror = E['http://localhost/css/i/prefix.cc.txt']
-    schemae = (mirror.e ? mirror : source).
-      read.split("\n").          # each doc
-      grep(/^[^#]/).             # skip commented
-      map{|t|t.split(/\t/)[1].E} # URI field
-    
+    @docs ||=
+      (source = E['http://prefix.cc/popular/all.file.txt']
+       mirror = E['http://localhost/css/i/prefix.cc.txt']
+       schemae = (mirror.e ? mirror : source).
+       read.split("\n").           # each doc
+       grep(/^[^#]/).              # skip commented
+       map{|t|t.split(/\t/)[1].E}) # URI field
   end
 
   fn '/schema/GET',->e,r{
