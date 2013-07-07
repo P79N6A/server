@@ -30,6 +30,10 @@ class E
         d.dirname.as d.bare}
   end
 
+    def ef;  @ef ||= docBase.a('.e') end
+    def nt;  @nt ||= docBase.a('.nt') end
+   def ttl; @ttl ||= docBase.a('.ttl') end
+
   def docBaseURI
     u = URI uri
     s = u.scheme
