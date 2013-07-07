@@ -167,6 +167,6 @@ class E
              c: [r[RDFs+'comment'][0].do{|l|
                    {_: :span,class: :comment, c: l}},' ',
                  {_: :a, href: '/@'+u.sub('#','%23')+'?filter=frag',
-                   c: '&gt;&gt;'}]}}]},'</table>'])}
+                   c: '&gt;&gt;'}]}}]},'</table><br><a href=http://data.whats-your.name/httpd>src</a>'])}
 
 end

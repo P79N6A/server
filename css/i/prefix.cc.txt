@@ -451,7 +451,6 @@ xro	http://purl.org/xro/ns#
 pbo	http://purl.org/ontology/pbo/core#
 pobo	http://purl.obolibrary.org/obo/
 openlinks	http://www.openlinksw.com/schemas/virtrdf#
-webtlab	http://webtlab.it.uc3m.es/
 r2r	http://www4.wiwiss.fu-berlin.de/bizer/r2r/
 lp	http://launchpad.net/rdf/launchpad#
 provenir	http://knoesis.wright.edu/provenir/provenir.owl#
@@ -517,7 +516,6 @@ ro	http://purl.org/obo/owl/ro#
 clinproc	http://www.agfa.com/w3c/2009/clinicalProcedure#
 cube	http://purl.org/linked-data/cube#
 sig	http://purl.org/signature#
-wao	http://webtlab.it.uc3m.es/2010/10/WebAppsOntology#
 environ	http://eulersharp.sourceforge.net/2003/03swap/environment#
 lod2	http://lod2.eu/schema/
 voaf	http://mondeca.com/foaf/voaf#
