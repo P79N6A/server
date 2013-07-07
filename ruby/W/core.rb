@@ -5,11 +5,22 @@ class Hash
     g.merge!({uri=>self})
   end
   %w{graphFromFile q}.map{|m|alias_method m,:graph}
+  def mergeGraph g
+    g.values.each do |r|
+      r.triples do |s,p,o|
+        self[s] = {'uri' => s} unless self[s].class == Hash 
+        self[s][p] ||= []
+        self[s][p].push o
+      end
+    end
+    self
+  end
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
   # Hash -> tripleStream
-  def triples; uri.do{|s|
-      map{|p,o|
-        o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}}
+  def triples
+    s = uri
+    map{|p,o|
+      o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}
   end
 end
 
@@ -47,7 +58,7 @@ class E
   end
 
   def graphFromFile g={}
-    g.merge! r(true) if ext=='e' # native JSON -> graph
+    g.mergeGraph r(true) if ext=='e' # JSON -> graph
     [:triplrInode,        # filesystem data
      :triplrMIMEdispatch].# format-specific tripleStream
       each{|i| fromStream g,i } # tripleStream -> Graph
