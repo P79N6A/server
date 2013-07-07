@@ -84,6 +84,7 @@ class E
   end
     
   def deleteNode
+    puts "-node #{d}" if e
     no.deleteNode if e
     self
   end

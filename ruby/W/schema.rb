@@ -14,9 +14,9 @@ class E
     schemaIndexDoc
   end
   def schemaUncache
-    schemaUncacheDoc
     schemaUnindexDoc
     schemaUnlinkSlashURIs
+    schemaUncacheDoc
   end
 
   # cache schema docs
@@ -44,7 +44,7 @@ class E
       ttl.deleteNode      # convert Turtle 
       ef.w g,true if !ef.e# to JSON (for faster loading)
       roonga "schema"     # index in rroonga
-      m={}; puts "\n"+uri # statistics graph 
+      m={};      puts uri # statistics graph 
       g.map{|u,_|         # each resource
         c[u] &&           # do stats exist?
         m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
