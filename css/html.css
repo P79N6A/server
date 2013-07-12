@@ -1,0 +1,27 @@
+body {
+    background-color:#010;
+    color:white;
+    font-family: sans-serif;
+}
+a {
+    background-color:#000;
+    color:#00f0ff;
+    text-decoration:none;
+    border-style:dotted;
+    border-width:.1em;
+    border-color:#00f0ff;
+}
+td.key {text-align:right}
+td.key .frag {
+    font-weight:bold;
+    background-color:#ff0;
+    color:#000;
+    padding-left:.2em;
+    border-radius:.38em 0 0 .38em;
+}
+td.key .abbr {color:#eee}
+td.val {
+    border-style:dotted;
+    border-width:0 0 .1em 0;
+    border-color:#f0f;
+}

@@ -90,11 +90,12 @@ elsif b.grep(/\.log$/).size / s > t
 
   Data['view/divine/item'] = "use RDF typeclass hints to choose view for a resource"
   fn 'view/divine/item',->r,e{
-    r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) && (t = r[Type][0].uri; !t.empty? && # a typed resource?
+    r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) &&
+    (t = r[Type][0].uri; !t.empty? && # a RDF type
      (F['view/'+t] ||
       F['view/'+t.split(/\//)[-2]]).do{|f|
        f.({r.uri => r},e)}) ||
-    r.html }
+    [r.html,H.once(e,'css',H.css('/css/html'))] }
 
   Data['view/select'] = "show a menu of all views available"
   fn 'view/select',->d,e{
