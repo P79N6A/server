@@ -36,12 +36,11 @@ end
 
 class Hash
   def html
-    H([{_: :a, id: uri},
-       {_: :table, c: 
+    H({_: :table, c: 
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,c: (Fn 'abbrURI',k), class: :key},
-             {_: :td,c: v.html, class: :val}].cr}}.cr}].cr)
+             {_: :td,c: v.html, class: :val}].cr}}.cr})
   end
 end
 
