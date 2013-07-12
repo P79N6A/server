@@ -104,6 +104,6 @@ class Object
   def to_time
     time? ? self : Time.parse(self)
   rescue
-    Time.now
+    nil
   end
 end
