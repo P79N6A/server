@@ -3,13 +3,14 @@ class E
 
 #  http://groonga.org/ http://ranguba.org/
 
+  # default DB
   def E.groonga
     @groonga ||= (require 'groonga'
                   E['/E/groonga'].groonga
                   Groonga["E"] )
   end
 
-  # load or create groonga db at URI
+  # load or create groongaDB at URI
   def groonga
     return Groonga::Database.open d if e # open db
     dirname.dir                          # create containing dir
@@ -27,7 +28,7 @@ class E
                                   %w{graph content}.map{|c| t.index("E." + c) }}}
   end
   
-  # index
+  # index resource 
   def roonga graph="global", m = self.graph
     g = E.groonga          # db
     m.map{|u,i|
@@ -48,7 +49,7 @@ class E
   # query
   fn 'graph/roonga',->d,e,m{
 
-    # load db
+    # db
     ga = E.groonga
 
     # search expression
