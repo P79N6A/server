@@ -11,6 +11,12 @@ a {
     border-width:.1em;
     border-color:#00f0ff;
 }
+table {
+    background-color:#888;
+    border-radius:1.2em;
+    padding:.1em;
+    margin-bottom:1em;
+}
 td.key {
     vertical-align:top;
     text-align:right;
@@ -31,4 +37,5 @@ td.val {
     border-style:dotted;
     border-width:0 0 .1em 0;
     border-color:#f0f;
+    background-color:black;
 }
