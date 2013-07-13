@@ -10,7 +10,7 @@ class Hash
       r.triples do |s,p,o|
         self[s] = {'uri' => s} unless self[s].class == Hash 
         self[s][p] ||= []
-        self[s][p].push o
+        self[s][p].push o unless self[s][p].member? o
       end
     end
     self
@@ -31,7 +31,7 @@ class E
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
       m[s][p] ||= []
-      m[s][p].push o
+      m[s][p].push o unless m[s][p].member? o
     end; m
   end
 

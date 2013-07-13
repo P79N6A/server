@@ -15,7 +15,8 @@ table {
     float:left;
     background-color:#888;
     border-radius:1.2em;
-    padding:.19em;
+    padding:.18em;
+    margin:.1em;
 }
 td.key {
     vertical-align:top;

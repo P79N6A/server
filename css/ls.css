@@ -1,22 +1,22 @@
-body,iframe {margin:0;font-family:sans-serif;background-color:#000;color:#fff}
-a.child {text-align:center;font-weight:bold;padding:0 .5em 0 .5em;font-size:1.23em;white-space:nowrap;}
-iframe {width:100%;border:0;min-height:80em}
-.abbr{display:none}
-.ls table {width:100%; border-spacing:0;}
+body,iframe {
+    font-family:sans-serif;
+    background-color:#000;
+    color:#fff;
+}
+
+.ls .abbr{display:none}
+
 .ls td {text-align:right;white-space:nowrap}
 .ls td.label a {background-color:#0df;color:#000;font-weight:bold;font-size:1.2em}
 
-td[property='uri'] a {background-color:#ff3;color:#000}
-td[property='uri'] .frag {background-color:white;color:#000;font-weight:bold;}
+.ls td[property='uri'] a {background-color:#ff3;color:#000}
+.ls td[property='uri'] .frag {background-color:white;color:#000;font-weight:bold;}
 
-tr:nth-child(odd)  td:nth-child(odd) {background: #000}
-tr:nth-child(odd)  td:nth-child(even){background: #111}
-tr:nth-child(even) td:nth-child(odd) {background: #222}
-tr:nth-child(even) td:nth-child(even){background: #333}
-
-a {text-decoration:none;background-color:#fff;color:#000}
-a.du {float:right}
+.ls tr:nth-child(odd)  td:nth-child(odd) {background: #000}
+.ls tr:nth-child(odd)  td:nth-child(even){background: #111}
+.ls tr:nth-child(even) td:nth-child(odd) {background: #222}
+.ls tr:nth-child(even) td:nth-child(even){background: #333}
 
 .dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
 .dir a:first-child {font-weight: bold;font-size:2em}
-.mode {font-size:2em;font-weight:bold;float:right;margin:.4em .4em 0 0}
+.dir a {background-color:#000 }
