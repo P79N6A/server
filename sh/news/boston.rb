@@ -29,6 +29,7 @@ ARGV[0].do{|h|
     http://blog.livablestreets.info/?feed=atom
     http://ifnluvbos.blogspot.com/feeds/posts/default
     http://dotrat.com/feed/
+    http://dotcommcoop.wordpress.com/feed/
     http://walkingbostonian.blogspot.com/feeds/posts/default
     http://feeds.boston.com/boston/yourtown/dorchester/rss
     http://bartlettevents.org/blog?format=rss

@@ -12,10 +12,10 @@ a {
     border-color:#00f0ff;
 }
 table {
+    float:left;
     background-color:#888;
     border-radius:1.2em;
     padding:.19em;
-    margin-bottom:1em;
 }
 td.key {
     vertical-align:top;
@@ -36,6 +36,6 @@ td.key .frag {
 td.val {
     border-style:dotted;
     border-width:0 0 .1em 0;
-    border-color:#f0f;
+    border-color:#808080;
     background-color:black;
 }

@@ -5,7 +5,7 @@ class Array
     if table && !find{|e|e.class != Hash} # monomorphic [Hash]
       Fn 'table',self
     else
-      map(&:html).join ', '
+      map(&:html).join
     end
   end
 end
