@@ -66,6 +66,14 @@ class E
 
   fn 'view/title/item',->r,e{{_: :a,href: r.E.url,c:r[e.q['title']||Title],class: :title}}
 
+  def triplrUriList
+    open(d).readlines.map{|l|
+      l = l.chomp
+      yield uri, '/link', l
+      yield   l, '/link', uri
+    }
+  end
+
   def triplrANSI
     yield uri, Content, `cat #{sh} | aha`
   end
