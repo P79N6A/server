@@ -21,7 +21,7 @@ if ARGV[1]
   puts "\n\n"
 
   r.map{|c|
-    puts c unless c[0] == 200
+    puts c.join(' ') unless c[0] == 200
   }
 
 else
