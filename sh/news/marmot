@@ -15,4 +15,5 @@ e http://feeds.rocketnews24.com/rocketnews24/en getFeed $1
 e http://offbeatchina.tumblr.com/rss getFeed $1
 e http://offbeatchina.com/feed getFeed $1
 e http://feeds.feedburner.com/Nknewsorg getFeed $1
+e http://www.88-bar.com/feed/ getFeed $1
 #e getFeed $1
