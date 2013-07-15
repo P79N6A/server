@@ -40,8 +40,8 @@ class E
   end
 
   def GET_resource                 # for 
-    (F['req/'+@r.q['y']] ||           # all URIs 
-     F[@r['REQUEST_PATH'].t+('GET')]||# all hostnames, specific path
+    (F['req/'+@r.q['y']] ||           # any URI 
+     F[@r['REQUEST_PATH'].t+('GET')]||# specific path
      F[uri.t+('GET')]                 # specific URI
      ).do{|y|y.(self,@r)} ||       # custom handler
     as('index.html').do{|i|        # HTML index
