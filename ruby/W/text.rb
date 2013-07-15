@@ -66,6 +66,7 @@ class E
 
   fn 'view/title/item',->r,e{{_: :a,href: r.E.url,c:r[e.q['title']||Title],class: :title}}
 
+  # linebreak-delimited list of URIs
   def triplrUriList
     open(d).readlines.map{|l|
       l = l.chomp
@@ -74,6 +75,11 @@ class E
     }
   end
 
+  # list of uris in a .u doc
+  def uris
+    graph.keys.map &:E
+  end
+  
   def triplrANSI
     yield uri, Content, `cat #{sh} | aha`
   end

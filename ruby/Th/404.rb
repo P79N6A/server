@@ -22,4 +22,18 @@ td.key .frag {font-weight:bold;background-color:#ff0048;color:#000;padding-left:
 td.key .abbr {color:#eee;font-size:.92em}
 td.val {border-style:dotted;border-width:0 0 .1em 0;border-color:#ff00c6}"]]}
 
+  def checkURIs
+    r = uris.map{|u|
+      r = `curl -Is "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i
+      c = [r,u] # add to list
+      puts c.join ' ' 
+      c # status, uri tuple
+    }
+    puts "\n\n"
+    r.map{|c|
+      # show anomalies
+      puts c.join(' ') unless c[0] == 200
+    }
+  end
+
 end
