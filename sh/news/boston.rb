@@ -7,4 +7,4 @@ unless h = ARGV[0]
 end
 
 '/s/boston.u'.E.uris.tail.
-      .map{|u|u.getFeed h}
+  map{|u|u.getFeed h}

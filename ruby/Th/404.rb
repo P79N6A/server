@@ -23,9 +23,9 @@ td.key .abbr {color:#eee;font-size:.92em}
 td.val {border-style:dotted;border-width:0 0 .1em 0;border-color:#ff00c6}"]]}
 
   def checkURIs
-    r = uris.map{|u|
-      r = `curl -Is "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i
-      c = [r,u] # add to list
+    r = uris.select{|u|u.to_s.match /^http/}.map{|u|
+      c = [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u] # HEAD
+     #c = [`curl -s -o /dev/null -w %{http_code} "#{u}"`.chomp.to_i,u] # GET
       puts c.join ' ' 
       c # status, uri tuple
     }
