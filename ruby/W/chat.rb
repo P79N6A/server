@@ -34,11 +34,11 @@ class E
       yield s, SIOC+'name',t.css('.fullname')[0].inner_text
       yield s, Atom+"/link/image", E(t.css('.avatar')[0].attr('src'))
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
-      c = t.css('.tweet-text')[0]
-      c.css('a').map{|a|
+      content = t.css('.tweet-text')[0]
+      content.css('a').map{|a|
         u = a.attr 'href'
         a.set_attribute('href',base + u) if u.match /^\//}
-      yield s, Content, c.inner_html
+      yield s, Content, content.inner_html
     }
   end
 
