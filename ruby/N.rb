@@ -77,30 +77,26 @@ class E
     uri.expand.E
   end
 
-  # cons URIs
+  # concatenate URIs with separator
   # s :: E -> E
   def s b
     u.a E(b).path
   end
 
-  # prepend on URI
-  # prepend :: String -> E
-  def prepend s
+  def prependURI s
     (s + uri).E
   end
 
-  # append on URI
-  # a :: String -> E
-  def a s
+  def appendURI s
     (uri + s).E
   end
-  alias_method :+, :a
+  alias_method :a, :appendURI
+  alias_method :+, :appendURI
 
-  # append on URI - after slash
-  # as :: String -> E
-  def as s
-    E uri.t+s
+  def appendSlashURI s
+    E uri.t + s
   end
+  alias_method :as, :appendSlashURI
 
   # path? :: E -> Bool
   def path?

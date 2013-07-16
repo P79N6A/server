@@ -30,16 +30,17 @@ class E
     no.expand_path.to_s.index(E::FSbase)==0 && @r['PATH_INFO'] !~ /\.\./ && self
   end
 
-  def c
+  def children
     no.c.map &:E
   end
-  alias_method :children, :c
+  alias_method :c, :children
 
 
   # node exists?
-  def e
+  def exist?
     no.exist?
   end
+  alias_method :e, :exist?
 
   # directory?
   def d?
@@ -47,14 +48,16 @@ class E
   end
 
   # file?
-  def f
+  def file?
     no.file?
   end
+  alias_method :f, :file?
 
   # modification time
-  def m
+  def mtime
     no.stat.mtime if e
   end
+  alias_method :m, :mtime
 
   def triplrInode r=true
     e && (d? && (yield uri,'fs:parent',parent
