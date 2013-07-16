@@ -1,18 +1,5 @@
 class E
 
-  # time-range endpoint
-  fn '/t/GET',->e,r{ m={}; r=r.q
-    (E Date).pIndex.subtree(
-     (r['c']&&r['c'].to_i.max(256)+1 || 8),                     # size
-     (r['d']&&r['d'].match(/^(a|de)sc$/)&&r['d'].to_sym||:desc),# direction
-     (r['t']&&'/u/'+r['t'].gsub(/\D+/,'/'))                     # offset
-     ).do{|t|
-         a,b=t[0],t.size>1&&t.pop; desc,asc=r['d']&&r['d']=='asc'&&[a,b]||[b,a] 
-         m['prev']={'uri' => 'prev','url' => '/t', 'd' => 'desc','t' => desc.base} if desc
-         m['next']={'uri' => 'next','url' => '/t', 'd' => 'asc', 't' => asc.base}  if asc
-      t.map{|t| t.subtree.map(&:ro).map{|r| m[r.uri]=r }}}
-     e.resources m}
-
  ## SIMILE Timeline 
 
   # JSON format
