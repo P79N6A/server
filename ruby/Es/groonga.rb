@@ -44,8 +44,7 @@ class E
   # remove
   def unroonga
     g = E.groonga
-    graph.keys.map{|u|
-                  g[u].delete }
+    graph.keys.push(uri).map{|u|g[u].delete}
   end
 
   # query
