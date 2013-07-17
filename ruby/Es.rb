@@ -60,7 +60,6 @@ class E
 
   fn 'filter/frag',->e,m,r{
     f = [r.uri].concat m['frag']['res']
-#    puts "filtering model to #{f.join ' '}"
     m.keys.map{|u|
       m.delete u unless f.member? u
     }}
