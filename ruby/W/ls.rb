@@ -16,17 +16,33 @@ class E
       m['next'] = {'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
       s }}
 
-  # minimal view :: 
+  # basic directory view 
   fn 'view/dir',->i,e{
+
+    # localize URL
+    h = 'http://' + e['HTTP_HOST'] + '/'
+    l = -> u {
+      if u.index(h) == 0
+        u # already a local link
+      else
+        # generate local link
+        Prefix + u
+      end}
+
+    # item thumbnail / link
     a = -> i { e = i.E
-      e.uri.match(/(gif|jpe?g|png)$/i) ?
-      {_: :a, href: e.uri, c: {_: :img, src: i.uri+'?233x233'}} : [e.html,' ']}
+      {_: :a, href: l[e.uri],
+        c: e.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?233x233'} :
+        e.uri.sub(/^http:../,' ')
+      }}
+
     [(H.css '/css/ls'),
      i.map{|u,r| r['fs:child'] ? # directory?
        {class: :dir, style: "background-color: #{E.c}", # dir wrapper
-         c: [{_: :a, href: r.uri+'?graph=ls&view=ls', c: r.uri}, # dir
+         c: [{_: :a, href: l[r.uri]+'?graph=ls&view=ls', c: r.uri}, # dir link
              r['fs:child'].map{|c|a[c]}]} :  # children
        a[r]}]}                               # item
+
   F['view/inode/directory']=F['view/dir']
 
   # tabular rendering
