@@ -17,11 +17,12 @@ class E
   def maybeSend m,b
     send? ? # agent already has this version?
     b.().do{|b| # continue
-      h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # populate response header
-      m.match(/^(audio|image|video)/) && h.update({'Cache-Control' => 'no-transform'}) # media files are compressed
-      b.class == E ? (r = Rack::File.new nil                        # create Rack file-handler
-                      r.instance_variable_set '@path',b.d           # set path
-                     (r.serving @r).do{|s,m,b|[s,m.update(h),b]}) : # Rack file-handler
+      h = {'Content-Type'=> m, 'ETag'=> @r['ETag'], Server: Version} # populate response header
+      m.match(/^(audio|image|video)/) && # media MIME-type?
+      h.update({'Cache-Control' => 'no-transform'}) # no further compression
+      b.class == E ? (r = Rack::File.new nil                         # create Rack file-handler
+                      r.instance_variable_set '@path',b.d            # set file path
+                     (r.serving @r).do{|s,m,b|[s,m.update(h),b]}) :  # run Rack file-handler, add response headers
       [200, h, b]} : # normal response
       [304,{},[]]    # not modified
   end

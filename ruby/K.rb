@@ -161,4 +161,6 @@ class E
       to_s == u.to_s
   end
 
+  Version = 'http://web.whats-your.name/www/'
+
 end
