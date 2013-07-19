@@ -17,7 +17,7 @@ class E
   def maybeSend m,b
     send? ? # agent already has this version?
     b.().do{|b| # continue
-      h = {'Content-Type'=> m, 'ETag'=> @r['ETag'], Server: Version} # populate response header
+      h = {'Content-Type'=> m, 'ETag'=> @r['ETag'], 'Server'=> Version} # populate response header
       m.match(/^(audio|image|video)/) && # media MIME-type?
       h.update({'Cache-Control' => 'no-transform'}) # no further compression
       b.class == E ? (r = Rack::File.new nil                         # create Rack file-handler
