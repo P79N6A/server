@@ -103,7 +103,6 @@ class E
         puts [e.fn,        # method
               response[0], # response code
               ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,# URL
-              response[1], # header
               e['HTTP_USER_AGENT'],
               e['HTTP_REFERER'],
              ].join ' '
