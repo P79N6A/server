@@ -31,10 +31,10 @@ class E
 
     # item thumbnail / link
     a = -> i { e = i.E
-      [' ',{_: :a, href: l[e.uri],
+      {_: :a, href: l[e.uri],
         c: e.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?233x233'} :
         e.uri.sub(/.*\//,'')
-      }]}
+      }}
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r| r['fs:child'] ? # directory?
