@@ -31,12 +31,12 @@ class E
 
     # item thumbnail / link
     a = -> i { e = i.E
-      {_: :a, href: l[e.uri],
+      [' ',{_: :a, href: l[e.uri],
         c: e.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?233x233'} :
-        e.uri.sub(/^http:../,' ')
-      }}
+        e.uri.sub(/.*\//,'')
+      }]}
 
-    [(H.css '/css/ls'),
+    [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r| r['fs:child'] ? # directory?
        {class: :dir, style: "background-color: #{E.c}", # dir wrapper
          c: [{_: :a, href: l[r.uri]+'?graph=ls&view=ls', c: r.uri}, # dir link
