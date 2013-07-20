@@ -20,23 +20,6 @@ class E
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
 
-  fn 'set/index',->d,r,m{
-    (r['p'].expand.E.rangePO d,
-     (r['c']&&
-      r['c'].to_i.max(808)+1 || 22),
-     (r['d']&&
-      r['d'].match(/^(a|de)sc$/) &&
-      r['d'].to_sym ||
-      :desc),
-     ('/'+r['b']).gsub(/\/+/,'/')).do{|s|
-      a,b=s[0],s.size>1 && s.pop
-      desc,asc=r['d']&&
-               r['d']=='asc'&&
-               [a,b]||[b,a] 
-      m['prev']={'uri' => 'prev','url' => d.url,'d' => 'desc','b' => desc.uri} if desc
-      m['next']={'uri' => 'next','url' => d.url,'d' => 'asc','b' => asc.uri} if asc
-      s }}
-
   # Graph -> [Predicate]
   def E.graphProperties g
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
