@@ -2,16 +2,6 @@
 
 class E
 
-  # E -> [node]
-  def subtree *a
-    u.take *a
-  end
-
-  # E -> [E]
-  def take *a
-    no.take(*a).map &:E
-  end
-
   # accumulate a graph recursively along set-membership arc
   def walk p,m={}
     graph m # accumulative graph
@@ -55,14 +45,12 @@ class E
   fn 'filter/p',->e,m,_{
     a=Hash[*e['p'].split(/,/).map(&:expand).map{|p|[p,true]}.flatten]
     m.values.map{|r|
-      r.delete_if{|p,o|!a[p]}
-    }}
+      r.delete_if{|p,o|!a[p]}}}
 
   fn 'filter/frag',->e,m,r{
     f = [r.uri].concat m['frag']['res']
     m.keys.map{|u|
-      m.delete u unless f.member? u
-    }}
+      m.delete u unless f.member? u}}
 
   fn 'filter/basic',->o,m,_{
     d=m.values
@@ -91,30 +79,6 @@ class E
     o['filter'].do{|f|f.split(/,/).map{|f|Fn 'filter/'+f,o,m,r}}
     Fn'filter/basic',o,m,r if o.has_any_key ['reverse','sort','max','min','match']
     m
-  end
-
-end
-
-class Pathname
-
-  def take s=1000,v=:desc,o=nil # count, direction, offset
-    i = to_s.size # comparison offset-index
-    o=o.gsub(/\/+/,'/') if o # offset
-    l = false     # in-range indicator
-    r=[]          # result set
-    v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v] # asc/desc operator lookup
-    a=->n{ s = s - 1; r.push n }                  # add to result-set, decrement count
-    g=->b{ b.sort_by(&:to_s).send(v).each{|n|     # each child-element
-        return if 0 >= s                          # stop if count reaches 0
-        (l || !o || n.to_s[i..i+o.size-1].send(m,o[0..(n.to_s.size - i - 1)])) && # in range?
-        (if !(c=n.c).empty?  # has children?
-           g.(c)             # include children
-         else
-           a.(n)             # add resource
-           l = true unless l # iterator in range
-        end)}}
-    g.(c) # start 
-    r     # result set
   end
 
 end
