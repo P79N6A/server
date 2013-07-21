@@ -41,17 +41,25 @@ class E
   F['view/tab']=F['view/table']
 
   fn 'table',->es,q=nil{
-    ks={}; es.map{|e|e.respond_to?(:keys)&&e.keys.map{|k|ks[k]=true}}
-    keys = ks.keys - ['uri']; keys.empty? ? (es.html false) :
-    H({_: :table,:class =>:tab,c: [{_: :tr, c: [{_: :td}, *keys.map{|k| {_: :td, class: :label,
-    c: q ? {_: :a, href: q['REQUEST_PATH']+q.q.except('reverse').merge({sort: k}).merge(q.q.member?('reverse') ? {} : {'reverse'=>true}).qs,c: (Fn 'abbrURI',k)} : k}}]},
+    ks = {}
+    es.map{|e|e.respond_to?(:keys) && e.keys.map{|k|ks[k]=true}}
+    keys = ks.keys - ['uri']
+    keys.empty? ? (es.html false) :
+    H({_: :table,:class => :tab,
+        c: [{_: :tr,
+              c: [{_: :td},
+                  *keys.map{|k|
+                    {_: :td, class: :label,
+                      c: q ? {_: :a,
+                        href: q['REQUEST_PATH']+q.q.except('reverse').merge({sort: k}).merge(q.q.member?('reverse') ? {} : {'reverse'=>true}).qs,
+                        c: (Fn 'abbrURI',k)} : k}}]},
             *es.map{|e|
-              {_: :tr, about: e.uri,c:
+              {_: :tr, about: e.uri, c:
                 [{_: :td, property: :uri,
                    c: e['uri'].do{|e|e.E.html}},
                  *keys.map{|k|
                    {_: :td, property: k, c: e[k].do{|v|
-                       (v.class==Array ? v : [v]).map &:html}}}]}}]})}
+                       (v.class==Array ? v : [v]).map(&:html).join ' '}}}]}}]})}
 
   fn 'table/elements',->d{ m={}
     g='t:group'.expand

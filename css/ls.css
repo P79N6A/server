@@ -3,10 +3,12 @@ body,iframe {
     background-color:#000;
     color:#fff;
 }
+a {text-decoration: none;background-color:#222;color:#8fc}
 
 .ls .abbr{display:none}
-
-.ls td {text-align:right;white-space:nowrap}
+.ls tr {border-style:solid;border-color:pink;border-width:.1em}
+.ls td {text-align:right}
+.ls a {float: right}
 .ls td.label a {background-color:#0df;color:#000;font-weight:bold;font-size:1.2em}
 
 .ls td[property='uri'] a {background-color:#ff3;color:#000}
@@ -19,4 +21,4 @@ body,iframe {
 
 .dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
 .dir a:first-child {font-weight: bold;font-size:2em}
-.dir a {background-color:#000;color:white;text-decoration:none;float:left;margin-right:.07em}
+.dir a {background-color:#000;color:white;float:left;margin-right:.07em}
