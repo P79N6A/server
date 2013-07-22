@@ -130,36 +130,36 @@ class E
 
              # mailto URI with embedded reply metadata
              (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
-               {_: :a, c: '&#8844;', title: :reply, href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
+               {_: :a, title: :reply, c: '&#8844;',
+                 href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
 
              # content
-            {_: :span,
-               c: ["<pre>",
-                   m[Content].map{|b|
-                     # line-number
-                     i = 0
+            {_: :pre,
+               c: m[Content].map{|b|
+                 # line-number
+                 i = 0
 
-                     # attach CSS class to quoted content
-                     b.class==String &&
-                     b.gsub(/^(&gt;|\s)*\n/,"\n").gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>').
+                 # attach CSS class to quoted content
+                 b.class==String &&
+                 b.gsub(/^(&gt;|\s)*\n/,"\n").gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>').
 
-                     # each line
-                     lines.to_a.map{|l|
+                 # each line
+                 lines.to_a.map{|l|
 
-                       # fragment identifier
-                       f = m.uri+':'+(i+=1).to_s
-                       [{_: :a, id: f},
+                   # fragment identifier
+                   f = m.uri+':'+(i+=1).to_s
+                   [{_: :a, id: f},
 
-                        # line
-                        l.chomp,
-                        
-                        # link to line
-                        (l.size>48&&{_: :a, class: :line, href: '#'+f,c: '↵'}),
+                    # line
+                    l.chomp,
 
-                        # linebreak
-                        "\n"
+                    # link to line
+                    (l.size>48&&{_: :a, class: :line, href: '#'+f,c: '↵'}),
 
-                ]}},"</pre>"]},
+                    # linebreak
+                    "\n"
+
+                   ]}}},
 
              # title
              m[Title].do{|t|{:class => :title,c: t}}]}]}]}
