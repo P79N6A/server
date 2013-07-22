@@ -1,15 +1,17 @@
-body,iframe {
+body{
     font-family:sans-serif;
-    background-color:#000;
+    background-color:#30b;
     color:#fff; }
-a {text-decoration: none;}
-table {border-spacing:0;}
+a {text-decoration: none; border-radius:0 .2em .2em 0}
+table {border-spacing:0;float:left;}
 .ls .abbr{display:none}
 .ls a {
     float: right;
     background-color:#05f;
-    margin:.1em;
-    color:#fff }
+    margin-left:.13em;
+    color:#fff;
+    font-weight:normal;
+}
 .ls td.label a {
     border-radius:.4em .4em 0 0;
     padding: .18em 0 0 0;
@@ -18,13 +20,15 @@ table {border-spacing:0;}
     font-weight:bold;
     font-size:1.23em }
 .ls td {
+    padding:0;
+    font-weight:bold;
     text-align:right;
     vertical-align:top;
     border-style:dotted;
-    border-color:#098;
+    border-color:#696969;
     border-width:0 0 .1em 0 }
-.ls tr:nth-child(odd) {background: #181844}
-.ls tr:nth-child(even) {background: #002}
+.ls tr:nth-child(odd) {background: #023}
+.ls tr:nth-child(even) {background: #000}
 form input {background-color:#444;color:#fff;border-width:0}
 .dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
 .dir a:first-child {font-weight: bold;font-size:2em}
