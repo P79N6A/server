@@ -98,29 +98,75 @@ class E
 
   # show a set of messages
   fn 'view/mail',->d,e{
-    [(H.once e,'mail.js',(H.css '/css/mail'),(H.js '/js/mail'),(H.once e,:mu,(H.js '/js/mu')),
-       {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}), # collapse/expand quoted text
-     d.values.map{|m| # each message
-       [{_: :a, name: m.uri}, # fragment identifier for this message
-        m.class == Hash && (m.has_key? E::SIOC+'content') && # content to show?
-       {:class => :mail,
-         c: [(m.url.href "&#x268b;"), # permalink
-            [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a| # to / from links
-               m[a[1]].do{|m| m.map{|f| f.respond_to?(:uri) &&
-                   {_: :a, href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads', c: f.uri+' '}}}},
-             (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) && # mailto URI with reply metadata
-               {_: :a, c: '&#8844;', title: :reply, href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
-            {_: :span, c: ["<pre>",
-                           m[Content].map{|b| i = 0
-                             b.class==String && # attach CSS class to quoted content
-                             b.gsub(/^(&gt;|\s)*\n/,"\n").gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>').
-                             lines.to_a.map{|l| # each line
-                               f=m.uri+':'+(i+=1).to_s # line fragment identifier
-                               [{_: :a, id: f},l.chomp,(l.size>48&&{_: :a, class: :line, href: '#'+f,c: '↵'}),"\n"]
-                             }},
-                           "</pre>"]},
-             m[Title].do{|t|{:class => :title,c: t}}]}]}]}
 
-  ['message/rfc822',SIOCt+'MailMessage'].map{|m|F['view/'+m]=F['view/mail']}
+    # JS/CSS dependencies
+    [(H.once e,'mail.js',
+      (H.css '/css/mail'),
+      (H.js '/js/mail'),
+      (H.once e,:mu,(H.js '/js/mu')),
+
+      # collapse/expand quoted content
+      {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}),
+
+     # each message
+     d.values.map{|m|
+
+       # fragment identifier
+       [{_: :a, name: m.uri},
+
+        # content available?
+        m.class == Hash && (m.has_key? E::SIOC+'content') &&
+
+       {:class => :mail,
+
+         c: [# link to self
+             (m.url.href "&#x268b;"),
+
+             # To:, From: index search links
+           [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
+               m[a[1]].do{|m|
+                 m.map{|f| f.respond_to?(:uri) &&
+                   {_: :a, href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads', c: f.uri+' '}}}},
+
+             # mailto URI with embedded reply metadata
+             (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
+               {_: :a, c: '&#8844;', title: :reply, href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
+
+             # content
+            {_: :span,
+               c: ["<pre>",
+                   m[Content].map{|b|
+                     # line-number
+                     i = 0
+
+                     # attach CSS class to quoted content
+                     b.class==String &&
+                     b.gsub(/^(&gt;|\s)*\n/,"\n").gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>').
+
+                     # each line
+                     lines.to_a.map{|l|
+
+                       # fragment identifier
+                       f = m.uri+':'+(i+=1).to_s
+                       [{_: :a, id: f},
+
+                        # line
+                        l.chomp,
+                        
+                        # link to line
+                        (l.size>48&&{_: :a, class: :line, href: '#'+f,c: '↵'}),
+
+                        # linebreak
+                        "\n"
+
+                ]}},"</pre>"]},
+
+             # title
+             m[Title].do{|t|{:class => :title,c: t}}]}]}]}
+  
+  # default view for these MIME and SIOC types
+  ['message/rfc822',
+   SIOCt + 'MailMessage'].
+           map{|m| F['view/'+m] = F['view/mail'] }
 
 end
