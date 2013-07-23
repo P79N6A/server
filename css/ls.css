@@ -1,7 +1,7 @@
 body{
     font-family:sans-serif;
     background-color:#30b;
-    color:#fff; }
+    color:#000; }
 a {text-decoration: none; border-radius:0 .2em .2em 0}
 table {border-spacing:0;float:left;}
 .ls .abbr{display:none}
@@ -20,15 +20,15 @@ table {border-spacing:0;float:left;}
     font-weight:bold;
     font-size:1.23em }
 .ls td {
-    padding:0;
+    padding:0 0 0 1em;
     font-weight:bold;
     text-align:right;
     vertical-align:top;
     border-style:dotted;
     border-color:#696969;
     border-width:0 0 .1em 0 }
-.ls tr:nth-child(odd) {background: #023}
-.ls tr:nth-child(even) {background: #000}
+.ls tr:nth-child(odd) {background: #eee}
+.ls tr:nth-child(even) {background: #fff}
 form input {background-color:#444;color:#fff;border-width:0}
 .dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
 .dir a:first-child {font-weight: bold;font-size:2em}
