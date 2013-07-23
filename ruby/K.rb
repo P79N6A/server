@@ -117,6 +117,7 @@ class E
     'application/ruby' => true,
     'application/haskell' => true,
     'application/org' => true,
+    'application/php' => true,
     'application/textile' => true,
     'application/word' => true,
     'message/rfc822'=> true,
