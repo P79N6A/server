@@ -48,6 +48,7 @@ class E
        %w{in_reply_to references}.map{|p| # message arcs
           m.send(p).do{|o|                # index connections (fs)
             o.map{|o| e.index SIOC+'reply_of', i[o] }}}
+               e.ln '/' + m.date.iso8601[0..12].gsub(/[^\d]/,'/') + '/' + e.uri # date/hour index
                    self.index Creator, m.from[0].E # index From
                    self.index      To, m.to[0].E   # index To
                )
@@ -127,7 +128,7 @@ class E
            [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
                m[a[1]].do{|m|
                  m.map{|f| f.respond_to?(:uri) &&
-                   {_: :a, href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads&c=72', c: f.uri+' '}}}},
+                   {_: :a, href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads&c=48', c: f.uri+' '}}}},
 
              # mailto URI with embedded reply metadata
              (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&

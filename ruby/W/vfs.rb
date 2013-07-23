@@ -77,6 +77,7 @@ class E
     t = E(t) # cast bare URI/string to resource
     if !t.e  # destination exists?
       t.no.dirname.dir # ensure containing dir exists
+#      puts [:ln,uri].join ' '
       FileUtils.symlink no, t.no # create link
     end
   end
