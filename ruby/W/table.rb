@@ -51,7 +51,7 @@ class E
               c: keys.map{|k|
                 {_: :td, class: :label,
                   c: q ? {_: :a,
-                    href: q['REQUEST_PATH']+q.q.except('reverse').merge({sort: k}).merge(q.q.member?('reverse') ? {} : {'reverse'=>true}).qs,
+                    href: q['REQUEST_PATH']+q.q.except('reverse').merge({'sort'=>k}).merge(q.q.member?('reverse') ? {} : {'reverse'=>true}).qs,
                     c: (Fn 'abbrURI',k)} : k}}},
             *es.map{|e|
               {_: :tr, about: e.uri, c:
