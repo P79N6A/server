@@ -70,20 +70,18 @@ class E
 
   fn Render+'text/plain',->d,_=nil{
     d.map{|u,r|
-      [":: ",u,"\n",
-       r.map{|k,v|
-         f = k.split(/[\/#]/)[-1]
-         s = f.size
-         [" "*(16-s).min(1),f," ",
-          [*v].map{|v|
-            v.respond_to?(:uri) ? v.uri :
-            v.to_s.
-            gsub(/<\/*(p|div)[^>]*>/,"\n").
-            gsub(/<a.*?href="*([^'">\s]+)[^>]*>/,'\1 ').
-            gsub(/<[^>]+>/,'').
-            gsub(/\n+/,"\n")}.
-          intersperse(' '),
-          "\n"]},"\n"]}.join}
+      [u,"\n", # URI
+       r.map{|k,v| # each resource
+         p = k.split(/[\/#]/)[-1]       # predicate
+         [" "*(16-p.size).min(1),p," ", # align objects 
+          [*v].map{|v|                  # each object
+            v.respond_to?(:uri) ? v.uri : # object-URI
+            v.to_s.                       # object-content
+            gsub(/<\/*(br|p|div)[^>]*>/,"\n").           # add linebreaks 
+            gsub(/<a.*?href="*([^'">\s]+)[^>]*>/,'\1 '). # unwrap links
+            gsub(/<[^>]+>/,'').                          # remove HTML
+            gsub(/\n+/,"\n")}.                           # collapse empty space
+          intersperse(' '),"\n"]},"\n"]}.join}           # collate
 
   fn Render+'text/uri',->d,_=nil{d.keys.join "\n"}
 
