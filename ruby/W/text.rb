@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
-
-class Array
-  def text
-    map(&:text).join ' '
-  end
-end
+watch __FILE__
 
 class String
-  def text
-    self
-  end
   def hrefs i=false
     (partition /(https?:\/\/(\([^)]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       p[0].gsub('<','&lt;').gsub('>','&gt;')+
@@ -27,23 +19,7 @@ class String
   end
 end
 
-class Hash
-  def text
-    [map{|u,v|[u.to_s.camelToke,"\n",v.text,"\n"]},
-     uri.do{|u|u.E.text},"\n"].join ' '
-  end
-end
-
-class Object
-  alias_method :text, :to_s
-end
-
 class E
-  def camelToke; uri.camelToke end
-
-  def text
-    [uri, camelToke].text
-  end
 
   fn 'view/c',->d,e{d.values.map{|v|v[Content]}}
   fn 'view/mono',->d,e{['<pre>',*(Fn 'view/c',d,e),'</pre>']}
@@ -92,7 +68,23 @@ class E
     yield uri, Content, `which antiword && antiword #{sh}`.hrefs
   end
 
-  fn Render+'text/plain',->d,_=nil{d.text}
+  fn Render+'text/plain',->d,_=nil{
+    d.map{|u,r|
+      [":: ",u,"\n",
+       r.map{|k,v|
+         f = k.split(/[\/#]/)[-1]
+         s = f.size
+         [" "*(16-s).min(1),f," ",
+          [*v].map{|v|
+            v.respond_to?(:uri) ? v.uri :
+            v.to_s.
+            gsub(/<\/*(p|div)[^>]*>/,"\n").
+            gsub(/<a.*?href="*([^'">\s]+)[^>]*>/,'\1 ').
+            gsub(/<[^>]+>/,'').
+            gsub(/\n+/,"\n")}.
+          intersperse(' '),
+          "\n"]},"\n"]}.join}
+
   fn Render+'text/uri',->d,_=nil{d.keys.join "\n"}
 
 end

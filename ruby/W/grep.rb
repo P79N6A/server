@@ -14,7 +14,7 @@ class E
        b = rand(16777216)                                 # random color
        f = b > 8388608 ? :black : :white                  # keep text contrasty
        ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},# CSS
-     d.map{|u,r| l = r.text.gsub(/<[^>]*>/,'').lines      # plaintextify
+     d.map{|u,r| l = r.to_s.gsub(/<[^>]*>/,'').lines      # plaintextify
        g = l.grep p                                       # sequential match first
        g = l.grep a if g.empty?                           # OR match second
        !g.empty? &&                                       # find anything?

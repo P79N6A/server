@@ -35,7 +35,7 @@ class E
       r = g[u] || g.add(u) # create or load entry
       r.uri = u            # update data
       r.graph = graph.to_s
-      r.content = i.text
+      r.content = i.to_s
       r.time = i[E::Date][0].to_time
     }
     self
