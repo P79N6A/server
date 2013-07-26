@@ -23,8 +23,7 @@ class E
       h.update({'Cache-Control' => 'no-transform'}) # no further compression
       b.class == E ? (Nginx ?
                       [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] :
-                      (puts "rack::file"
-                       r = Rack::File.new nil                       # create Rack file-handler
+                      (r = Rack::File.new nil                       # create Rack file-handler
                        r.instance_variable_set '@path',b.d          # set path
                        r.serving(@r).do{|s,m,b|[s,m.update(h),b]})):# run Rack file-handler, add response headers
       [200, h, b]} : # normal response
