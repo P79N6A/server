@@ -14,15 +14,19 @@ class E
     Fn 'backtrace',x,@r
   end
 
+  Nginx = ENV['nginx']
   def maybeSend m,b
     send? ? # agent already has this version?
     b.().do{|b| # continue
       h = {'Content-Type'=> m, 'ETag'=> @r['ETag'], 'Server'=> Version} # populate response header
       m.match(/^(audio|image|video)/) && # media MIME-type?
       h.update({'Cache-Control' => 'no-transform'}) # no further compression
-      b.class == E ? (r = Rack::File.new nil                         # create Rack file-handler
-                      r.instance_variable_set '@path',b.d            # set file path
-                     (r.serving @r).do{|s,m,b|[s,m.update(h),b]}) :  # run Rack file-handler, add response headers
+      b.class == E ? (Nginx ?
+                      [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] :
+                      (puts "rack::file"
+                       r = Rack::File.new nil                       # create Rack file-handler
+                       r.instance_variable_set '@path',b.d          # set path
+                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})):# run Rack file-handler, add response headers
       [200, h, b]} : # normal response
       [304,{},[]]    # not modified
   end
@@ -116,14 +120,8 @@ class E
         # response graph sorting/filtering
         E.filter q, m, self
 
-        # construct response body
-        v = render @r.format, m, @r
-
-        # cache response body
-        r.w v
-
         # response body
-        [v]
+        r.w render @r.format, m, @r
       end }
   end
   

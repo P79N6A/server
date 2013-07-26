@@ -118,6 +118,7 @@ class E
 
   # write file - make sure dir exists & serialize JSON if requested
   def w o,s=false
+#    puts "write #{uri} #{s}"
     dirname.dir
     writeFile (s ? [o].to_json : o)
     self
