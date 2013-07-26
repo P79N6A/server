@@ -15,15 +15,16 @@ class E
                Date,
                Time.parse(o).utc.iso8601] :[s,p,o])} end
 
-    fn 'cal/day',->{Time.now.strftime '%Y/%m/%d'}
-  fn 'cal/month',->{Time.now.strftime '%Y/%m'}
+    fn 'cal/day',->{Time.now.strftime '%Y/%m/%d/'}
+  fn 'cal/month',->{Time.now.strftime '%Y/%m/'}
 
+  # y=day forwards to current day's directory
   %w{day month}.map{|i|
-  fn 'req/'+i,->e,r{[303,{'Location'=>e.send(i).uri+r.q.except('y').qs},[]]}
-  fn 'req/'+i+'dir',->e,r{[303,{'Location'=>e.send(i).uri[0..-2]},[]]}}
-
-    def day; as (Fn'cal/day') + '/*' end
-  def month; as (Fn'cal/month') + '/*/*' end
+    fn 'req/'+i,->e,r{
+      [303,{'Location'=>e.send(i).uri+r.q.except('y').qs},[]]}}
+    
+    def day; as Fn 'cal/day' end
+  def month; as Fn 'cal/month' end
 
   fn 'graph/cal',->d,e,m{
     DateTime.parse(e['s']||'2011-03-03').
