@@ -22,7 +22,7 @@ end
 class E
 
   fn 'view/c',->d,e{d.values.map{|v|v[Content]}}
-  fn 'view/mono',->d,e{['<pre>',*(Fn 'view/c',d,e),'</pre>']}
+  fn 'view/mono',->d,e{['<pre style="float:right;padding:.5em;color:#000;background-color:#fff">',*(Fn 'view/c',d,e),'</pre>']}
   F['view/blob']=F['view/mono']
   F['view/text/plain']=F['view/mono']
   F['view/text/rtf']=F['view/mono']
