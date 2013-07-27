@@ -4,9 +4,10 @@ class E
 
   fn E404,->e,r{
     r[Type]=[(E HTTP+'404')]
-    r[Title]=e.uri
+    r['URI']=e.uri
     r['QUERY']=r.q
     r['ACCEPT']=r.accept
+    r['SERVER_SOFTWARE']=Version
     %w{CHARSET LANGUAGE ENCODING}.map{|a|
       r['ACCEPT_'+a] = r.accept_ '_' + a }
  
