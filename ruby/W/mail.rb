@@ -44,7 +44,8 @@ class E
     (TMail::Mail.load node).do{|m|        # parse
       d = m.message_id; return unless d   # parse successful?
       e = i[d]                            # Message resource
-      e.e || ( ln e                       # Message-ID locatable?
+      e.e || (                            # Message-ID locatable?
+              ln e
        %w{in_reply_to references}.map{|p| # message arcs
           m.send(p).do{|o|                # index connections (fs)
             o.map{|o| e.index SIOC+'reply_of', i[o] }}}
