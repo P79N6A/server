@@ -1,10 +1,10 @@
 class E
 
   def GET
-    a=@r.accept.values.flatten                         # if a file exists
-    send(f ? (if (@r.q.has_any_key(['format','graph','view']) || # request a specific view
-                 (MIMEcook[mime] && !@r.q.has_key?('raw')) ||    # some MIMEs have a default view
-                 !(a.empty?||a.member?(mime)||a.member?('*/*'))) # render acceptable view if file MIME not accepted
+    a = @r.accept.values.flatten # acceptable MIME types
+    send(f ? (if (@r.q.has_any_key(['format','graph','view']) || # user-specified view
+                 (MIMEcook[mime] && !@r.q.has_key?('raw')) ||    # view for MIME-type
+                 !(a.empty?||a.member?(mime)||a.member?('*/*'))) # file MIME not accepted
                  :GET_resource # invoke resource handler
               else
                 :GET_img # continue to file handler
@@ -18,7 +18,7 @@ class E
   def maybeSend m,b
     send? ? # agent already has this version?
     b.().do{|b| # continue
-      h = {'Content-Type'=> m, 'ETag'=> @r['ETag'], 'Server'=> Version} # populate response header
+      h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # populate response header
       m.match(/^(audio|image|video)/) && # media MIME-type?
       h.update({'Cache-Control' => 'no-transform'}) # no further compression
       b.class == E ? (Nginx ?

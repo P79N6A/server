@@ -16,12 +16,12 @@ class E
 
   fn '/css/404.css/GET',->e,r{
     [200,{'Content-Type'=>'text/css'},
-["body {background-color:#010;color:white; font-family: sans-serif}
-a {background-color:#1f1;color:#000;text-decoration:none}
+["body {background-color:#000;color:#fff; font-family: sans-serif}
+a {font-size:1.05em;background-color:#1ef;color:#000;text-decoration:none;padding:.1em}
 td.key {text-align:right}
 td.key .frag {font-weight:bold;background-color:#ff0048;color:#000;padding-left:.2em;border-radius:.38em 0 0 .38em}
 td.key .abbr {color:#eee;font-size:.92em}
-td.val {border-style:dotted;border-width:0 0 .1em 0;border-color:#ff00c6}"]]}
+td.val {border-style:dotted;border-width:0 0 .1em 0;border-color:#ff00c6;}"]]}
 
   def checkURIs
     r = uris.select{|u|u.to_s.match /^http/}.map{|u|

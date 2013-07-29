@@ -14,6 +14,7 @@ class E
   Date     = DC   + 'date'
   Modified = DC   + 'modified'
   Title    = DC   + 'title'
+  Name     = FOAF + 'name'
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
