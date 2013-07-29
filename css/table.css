@@ -1,3 +1,37 @@
-#properties .n {text-decoration:none;padding:.1em;font-weight:bold;margin:0;background-color:#b2f7ff;color:#000}
-#showP {padding:.3em;font-weight:bold;font-size:1.3em;background-color:#dfd;color:#0f0}
-#hideP {padding:.3em;font-weight:bold;font-size:1.3em;background-color:#fdd;color:#f00}
+td {
+     border-style:dotted;
+     border-width:0 .22em .11em 0;
+     border-color:#3cf;
+     vertical-align:bottom;
+     text-align:right;
+     }
+
+[property="uri"] {white-space:nowrap
+                     }
+
+#properties .n {
+                 text-decoration:none;
+                 padding:.1em;
+                 font-weight:bold;
+                 margin:0;
+                 background-color:#b2f7ff;
+                 color:#000
+                 }
+
+#showP {
+         padding:.3em;
+         font-weight:bold;
+         font-size:1.3em;
+         background-color:#dfd;
+         color:#0f0
+         }
+
+#hideP {
+         padding:.3em;
+         font-weight:bold;
+         font-size:1.3em;
+         background-color:#fdd;
+         color:#f00
+         }
+
+a{ text-decoration:none; }
