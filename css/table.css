@@ -1,5 +1,8 @@
 table { }
 
+td.label a { background-color:#0f0;
+             color:#fff;}
+
 td {
      border-style:dotted;
      border-width:0 .22em .12em 0;
@@ -42,4 +45,7 @@ td {
          color:#f00;
          }
 
-a{ text-decoration:none; }
+a { text-decoration:none;
+    background-color:cyan;
+    color:black;
+ }
