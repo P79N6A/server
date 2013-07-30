@@ -21,12 +21,18 @@ end
 
 class E
 
-  fn 'view/c',->d,e{d.values.map{|v|v[Content]}}
-  fn 'view/mono',->d,e{['<pre style="float:right;padding:.5em;margin:.5em;color:#000;background-color:#fff">',*(Fn 'view/c',d,e),'</pre>']}
-  F['view/blob']=F['view/mono']
-  F['view/text/plain']=F['view/mono']
-  F['view/text/rtf']=F['view/mono']
-  F['view/application/word']=F['view/mono']
+  fn 'view/monospace',->d,e{
+    [(H.once e,'text',(H.css '/css/text')),
+     d.values.map{|v|
+      v[Content].do{|c|
+        {class: :text,
+           c: [{_: :a, href: v.url, c: v.label, style: "background-color:" + E.c},
+               {_: :pre,  c: c    }]}}}]}
+
+  F['view/application/word']= F['view/monospace']
+  F['view/blob']            = F['view/monospace']
+  F['view/text/plain']      = F['view/monospace']
+  F['view/text/rtf']        = F['view/monospace']
 
   fn 'view/text/nfo',->r,_{r.values.map{|r|{_: :pre,
       style: 'background-color:#000;padding:2em;color:#fff;float:left;font-family: "Courier New", "DejaVu Sans Mono", monospace; font-size: 13px; line-height: 13px',

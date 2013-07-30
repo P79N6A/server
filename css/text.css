@@ -1,0 +1,16 @@
+
+.text { float: right }
+
+.text > a { text-decoration: none;
+            padding: .1em;
+            color: #fff;
+            }
+
+pre { padding:.5em;
+      margin:0 .8em .8em 0;
+      color:#000;
+      background-color:#fff;
+      border-style:dotted;
+      border-width:.13em;
+      border-color:#ddd;
+      }

@@ -236,10 +236,13 @@ class String
   def path?
     (match /^(\.|\/|https?:\/)/) && true || false
   end
+
   def frag
     split(/#/).pop()
   end
+
   def label
-    frag.gsub('_',' ')
+    split(/[\/#]/)[-1]
   end
+
 end
