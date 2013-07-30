@@ -51,7 +51,7 @@ class E
   end
 
   fn 'abbrURI',->u{
-    u.to_s.sub(/(?<scheme>[a-z]+:..)?(?<abbr>.*?)(?<frag>[^#\/]+)$/,
+    u.to_s.sub(/(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)$/,
                '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>')
   }
 
