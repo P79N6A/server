@@ -24,8 +24,8 @@ table {border-spacing:0;float:left;}
     border-style:dotted;
     border-color:#696969;
     border-width:0 0 .1em 0 }
-.ls tr:nth-child(odd) {background: #eee}
-.ls tr:nth-child(even) {background: #fff}
+.ls tr:nth-child(odd) {background: #eee;color:#000}
+.ls tr:nth-child(even) {background: #fff;color:#000}
 form input {background-color:#444;color:#fff;border-width:0}
 .dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
 .dir a:first-child {font-weight: bold;font-size:2em}
