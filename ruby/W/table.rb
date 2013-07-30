@@ -45,7 +45,7 @@ class E
     es.map{|e|e.respond_to?(:keys) &&
               e.keys.map{|k|ks[k]=true}}
     keys = ks.keys
-    keys.empty? ? (es.html false) :
+    keys.empty? ? es.html :
     H({_: :table,:class => :tab,
         c: [{_: :tr,
               c: keys.map{|k|
