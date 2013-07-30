@@ -12,9 +12,9 @@ a {
 table {
     float:left;
     background-color:#d8d8d8;
-    border-radius:1em .4em .4em 1em;
+    border-radius:.62em .38em .38em .62em;
     padding:.18em;
-    margin:.1em;
+    margin:.18em;
 }
 .scheme { display: none; }
 td.key {text-align:right}

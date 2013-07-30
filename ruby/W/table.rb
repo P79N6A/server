@@ -49,7 +49,7 @@ class E
     H({_: :table,:class => :tab,
         c: [{_: :tr,
               c: keys.map{|k|
-                {_: :td, class: :label,
+                {_: :td, class: :label, property: k,
                   c: q ? {_: :a,
                     href: q['REQUEST_PATH']+q.q.except('reverse').merge({'sort'=>k}).merge(q.q.member?('reverse') ? {} : {'reverse'=>true}).qs,
                     c: (Fn 'abbrURI',k)} : k}}},
