@@ -21,6 +21,8 @@ class E
   Type     = W3   + "1999/02/22-rdf-syntax-ns#type"
   RDFs     = W3   + '2000/01/rdf-schema#'
   HTTP     = W3   + '2011/http#'
+  Posix    = W3   + 'ns/posix/'
+  Stat     = Posix + 'stat#'
   Label    = RDFs + 'label'
 
   # file-name extension -> MIME type
@@ -135,7 +137,7 @@ class E
     "rdf" => W3+"1999/02/22-rdf-syntax-ns#",
     "rdfs" => RDFs,
     "sioc" => SIOC,
-    "t" => 'http://www.daml.org/2003/01/periodictable/PeriodicTable#',
+    "stat" => Stat,
   }
   
   # expose these literals as a path-name 

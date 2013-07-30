@@ -1,7 +1,4 @@
-body{
-    font-family:sans-serif;
-    background-color:#30b;
-    color:#000; }
+body{font-family:sans-serif;}
 a {text-decoration: none; border-radius:0 .2em .2em 0}
 table {border-spacing:0;float:left;}
 .ls .abbr{display:none}

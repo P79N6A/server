@@ -63,7 +63,7 @@ class E
     e && (d? && (yield uri,'fs:parent',parent
              r && c.map{|c|yield uri,'fs:child',c})
       node.stat.do{|s|[:size,:ftype,:mtime].map{|p|
-          yield uri,'fs:'+p.to_s,(s.send p)}})
+          yield uri,Stat+p.to_s,(s.send p)}})
   end
   
   # create node

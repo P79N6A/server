@@ -1,11 +1,9 @@
 body {
-    background-color:#010;
-    color:white;
     font-family: sans-serif;
 }
 a {
-    background-color:#1f1;
-    color:#000;
+    background-color:#115DFF;
+    color:#fff;
     text-decoration:none;
     border-style:dotted;
     border-width:.1em;
@@ -13,16 +11,16 @@ a {
 }
 table {
     float:left;
-    background-color:#888;
-    border-radius:1.2em;
+    background-color:#d8d8d8;
+    border-radius:1em .4em .4em 1em;
     padding:.18em;
     margin:.1em;
 }
 .scheme { display: none; }
 td.key {text-align:right}
-td.key .frag {font-weight:bold;background-color:#1c1;color:#fff;padding-left:.2em;border-radius:.38em 0 0 .38em}
-td.key .abbr {color:#eee;font-size:.92em}
-td.val {background-color:black;border-style:dotted;border-width:0 0 .1em 0;border-color:#8f3}
+td.key .frag {font-weight:bold;background-color:#fff;color:#0cf;padding-left:.2em;border-radius:.38em 0 0 .38em}
+td.key .abbr {color:#888;font-size:.92em}
+td.val {background-color:#fff;color:#000;border-style:dotted;border-width:0 0 .1em 0;border-color:#8f3}
 article {
     border-radius:1.2em;
     border-style:dotted;

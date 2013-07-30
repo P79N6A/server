@@ -14,7 +14,7 @@ class E
       begin
         s,p = p.split /\t/ # size, path
         p = p.pathToURI    # path -> URI
-        m[p.uri]={'uri'=>p.uri,'fs:size'=>s.to_i}
+        m[p.uri]={'uri'=>p.uri,'size'=>s.to_i}
       rescue
         nil
       end
@@ -29,7 +29,7 @@ class E
       s[0..-2].map{|s| # each path segment
         p[s] = {} if !p[s] || p[s].class != Hash # create branch
         p = p[s]}      # advance pointer down tree
-      p[s[-1]]||=r['fs:size']} # append size to leaf
+      p[s[-1]]||=r['size']} # append size to leaf
     m}
 
 end

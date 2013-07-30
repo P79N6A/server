@@ -3,7 +3,7 @@ class E
   F["?"]||={}
   F["?"].update({'pdf'=>
                   {'filter'=>'p',
-                    'p'=>'uri,Author,Title,Producer,dc:date,fs:size',
+                    'p'=>'uri,Author,Title,Producer,dc:date,stat:size',
                     'sort'=>'Producer',
                     'view'=>'tab'
                   }})
