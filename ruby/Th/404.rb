@@ -10,13 +10,13 @@ class E
     # response graph
     g = {u => {}}
     # add request data to response graph
-    r.map{|k,v| g[u][k] = v }
+    r.map{|k,v| g[u][k] = [v] }
     g[u][Type] = [E[HTTP+'404']]
     g[u]['uri'] = e.uri
-    g[u]['QUERY'] = r.q
-    g[u]['ACCEPT']= r.accept
-    g[u]['SERVER_SOFTWARE']=Version.E
-    %w{CHARSET LANGUAGE ENCODING}.map{|a| g[u]['ACCEPT_'+a] = r.accept_ '_' + a }
+    g[u]['QUERY'] = [r.q]
+    g[u]['ACCEPT']= [r.accept]
+    g[u]['SERVER_SOFTWARE']=[Version.E]
+    %w{CHARSET LANGUAGE ENCODING}.map{|a|g[u]['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
     # output
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
 

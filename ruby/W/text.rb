@@ -75,12 +75,12 @@ class E
   end
 
   fn Render+'text/plain',->d,_=nil{
-    d.map{|u,r|
-      [u,"\n", # URI
-       r.map{|k,v| # each resource
+    d.map{|u,r|# each resource
+      [u,"\n", # subject URI
+       r.map{|k,v| # each predicate
          p = k.split(/[\/#]/)[-1]       # predicate
          [" "*(16-p.size).min(1),p," ", # align objects 
-          [*v].map{|v|                  # each object
+          v.map{|v|                     # each object
             v.respond_to?(:uri) ? v.uri : # object-URI
             v.to_s.                       # object-content
             gsub(/<\/*(br|p|div)[^>]*>/,"\n").           # add linebreaks 
