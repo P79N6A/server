@@ -33,7 +33,7 @@ class E
              r['fs:child'].map{|c|a[c]}]} :  # children
        a[r]}]}                               # item
 
-  F['view/inode/directory']=F['view/dir']
+  F['view/'+MIMEtype+'inode/directory']=F['view/dir']
 
   # tabular rendering
   fn 'view/ls',->i,e{

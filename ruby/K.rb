@@ -10,6 +10,7 @@ class E
   FOAF  = "http://xmlns.com/foaf/0.1/"
   SIOC  = 'http://rdfs.org/sioc/ns#'
   SIOCt = 'http://rdfs.org/sioc/types#'
+  MIMEtype = 'http://www.iana.org/assignments/media-types/'
   DC       = Purl + 'dc/terms/'
   Date     = DC   + 'date'
   Modified = DC   + 'modified'

@@ -34,9 +34,10 @@ class E
     i.map{|u,i| u.match(/(gif|jpg|png|tiff)$/i) &&
       {_: :a, href: i.url+'?view=img',
         c: {_: :img, src: i.url+'?'+s+'x'+s}}}}
-  F['view/image/gif']=F['view/th']
- F['view/image/jpeg']=F['view/th']
-  F['view/image/png']=F['view/th']
+
+  F['view/'+MIMEtype+'image/gif'] = F['view/th']
+  F['view/'+MIMEtype+'image/jpeg']= F['view/th']
+  F['view/'+MIMEtype+'image/png'] = F['view/th']
 
   fn 'view/imgs',->m,e{ require 'nokogiri'
     h=e.q['h'].do{|h|h.match(/^[0-9]+$/).do{|_|'height:'+h+'px'}}

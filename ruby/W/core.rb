@@ -51,7 +51,7 @@ class E
   end
   
   def triplrMIMEdispatch &b;mime.do{|mime|
-    yield uri,E::Type,(E mime)
+    yield uri,E::Type,(E MIMEtype+mime)
       (MIMEsource[mime]||
        MIMEsource[mime.split(/\//)[0]]).do{|s|
         send *s,&b }}

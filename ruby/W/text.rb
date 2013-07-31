@@ -29,19 +29,18 @@ class E
            c: [{_: :a, href: v.url+'?view', c: v.label, style: "background-color:" + E.c},
                {_: :pre,  c: c }]}}}]}
 
-  F['view/application/word']= F['view/monospace']
-  F['view/blob']            = F['view/monospace']
-  F['view/text/plain']      = F['view/monospace']
-  F['view/text/rtf']        = F['view/monospace']
+  F['view/'+MIMEtype+'application/word']= F['view/monospace']
+  F['view/'+MIMEtype+'blob']            = F['view/monospace']
+  F['view/'+MIMEtype+'text/plain']      = F['view/monospace']
+  F['view/'+MIMEtype+'text/rtf']        = F['view/monospace']
 
-  fn 'view/text/nfo',->r,_{r.values.map{|r|{_: :pre,
+  fn 'view/'+MIMEtype+'text/nfo',->r,_{r.values.map{|r|{_: :pre,
       style: 'background-color:#000;padding:2em;color:#fff;float:left;font-family: "Courier New", "DejaVu Sans Mono", monospace; font-size: 13px; line-height: 13px',
         c: [{_: :a, 
               style: 'color:#0f0;font-size:1.1em;font-weight:bold', 
               c: r.E.bare, 
               href: r.uri+'?view=txt'},
             '<br>',r[Content]]}}}
-  F['view/txt']=F['view/text/nfo']
 
   fn 'view/title',->d,e{i=F['view/title/item']
     d.map{|u,r|[i.(r,e),' ']}}

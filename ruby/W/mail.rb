@@ -168,8 +168,8 @@ class E
              m[Title].do{|t|{:class => :title,c: t}}]}]}]}
   
   # default view for these MIME and SIOC types
-  ['message/rfc822',
-   SIOCt + 'MailMessage'].
+  [MIMEtype+'message/rfc822',
+   SIOCt+'MailMessage'].
            map{|m| F['view/'+m] = F['view/mail'] }
 
 end
