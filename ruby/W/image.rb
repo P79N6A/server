@@ -26,7 +26,7 @@ class E
             style:'float:left;max-width:61.8%',
             src: i.url}},
         i.html]},
-     (H.css '/css/404')
+     (H.css '/css/img')
     ]}
   
   fn 'view/th',->i,e{
