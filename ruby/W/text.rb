@@ -27,7 +27,7 @@ class E
       v[Content].do{|c|
         {class: :text,
            c: [{_: :a, href: v.url+'?view', c: v.label, style: "background-color:" + E.c},
-               {_: :pre,  c: c    }]}}}]}
+               {_: :pre,  c: c }]}}}]}
 
   F['view/application/word']= F['view/monospace']
   F['view/blob']            = F['view/monospace']
