@@ -79,6 +79,7 @@ class E
       [u,"\n", # subject URI
        r.map{|k,v| # each predicate
          p = k.split(/[\/#]/)[-1]       # predicate
+         k == uri ||                    # already displayed
          [" "*(16-p.size).min(1),p," ", # align objects 
           v.map{|v|                     # each object
             v.respond_to?(:uri) ? v.uri : # object-URI
