@@ -88,7 +88,7 @@ class E
     'audio/mp4'=>[:triplrStdOut,'faad -i','audio/'],
     'audio/mpeg'=>[:triplrStdOut,'id3info','audio/mp3/',/\((.*?)\)$/],
     'audio'=>[:triplrStdOut,'sndfile-info','audio/'],
-    'image'=>[:triplrStdOut,'exiftool','exif/'],
+    'image'=>[:triplrStdOut,'exiftool','http://www.w3.org/2003/12/exif/ns#'],
     'message/rfc822'=>[:triplrMail],
     'text/ansi'=>[:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
