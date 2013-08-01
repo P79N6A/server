@@ -21,7 +21,8 @@ class E
       h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # response header
       m.match(/^(audio|image|video)/) &&            # media MIME-type?
       h.update({'Cache-Control' => 'no-transform'}) # no further compression
-      lH && h.update({'Link' => '<' + @r['REQUEST_PATH']+@r.q.except('format').merge({format: 'text/n3'}).qs + '>; rel=meta'}) # Link Header
+      lH && h.update({'Link' => '<' + (URI.escape uri) + '?format=text/n3>; rel=meta'}) # Link Header - full URI variant
+#     lH && h.update({'Link' => '<' + @r['REQUEST_PATH']+@r.q.except('format').merge({format: 'text/n3'}).qs + '>; rel=meta'}) # Link Header
       b.class == E ? (Nginx ?                                                     # nginx env-var set?
                       [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
                       (r = Rack::File.new nil                       # create Rack file-handler
