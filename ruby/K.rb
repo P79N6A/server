@@ -25,6 +25,8 @@ class E
   Posix    = W3   + 'ns/posix/'
   Stat     = Posix + 'stat#'
   Label    = RDFs + 'label'
+  EXIF     = 'http://www.w3.org/2003/12/exif/ns#'
+  Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
 
   # file-name extension -> MIME type
   MIME={
@@ -79,29 +81,29 @@ class E
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
     'application/markdown' => [:triplrMarkdown],
-    'application/org' => [:triplrOrg],
-    'application/rdf+xml'=>[:triplrRDFformats,:rdfxml],
-    'application/json' => [:triplrJSON],
-    'application/pdf'=>[:triplrPDF],
-    'application/textile' => [:triplrTextile],
-    'application/uri' => [:triplrUriList],
-    'application/word'=>[:triplrWord],
-    'audio/mp4'=>[:triplrStdOut,'faad -i','audio/'],
-    'audio/mpeg'=>[:triplrStdOut,'id3info','audio/mp3/',/\((.*?)\)$/],
-    'audio'=>[:triplrStdOut,'sndfile-info','audio/'],
-    'image'=>[:triplrStdOut,'exiftool','http://www.w3.org/2003/12/exif/ns#'],
-    'message/rfc822'=>[:triplrMail],
-    'text/ansi'=>[:triplrANSI],
+    'application/org'      => [:triplrOrg],
+    'application/rdf+xml'  => [:triplrRDFformats,:rdfxml],
+    'application/json'     => [:triplrJSON],
+    'application/pdf'      => [:triplrPDF],
+    'application/textile'  => [:triplrTextile],
+    'application/uri'      => [:triplrUriList],
+    'application/word'     => [:triplrWord],
+    'audio/mp4'            => [:triplrStdOut,'faad -i',Audio],
+    'audio/mpeg'           => [:triplrStdOut,'id3info',Audio,/\((.*?)\)$/],
+    'audio'                => [:triplrStdOut,'sndfile-info',Audio],
+    'image'                => [:triplrStdOut,'exiftool',EXIF],
+    'message/rfc822'       => [:triplrMail],
+    'text/ansi'            => [:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
-    'text/html'=>[:triplrRDFformats, :rdfa],
-    'text/log'=>[:triplrLog],
-    'text/nfo'=>[:triplrHref,'cp437'],
-    'text/ntriples'=>[:triplrRDFformats, :ntriples],
-    'text/plain'=>[:triplrHref],
-    'text/rtf'=>[:triplrRTF],
+    'text/html'            => [:triplrRDFformats, :rdfa],
+    'text/log'             => [:triplrLog],
+    'text/nfo'             => [:triplrHref,'cp437'],
+    'text/ntriples'        => [:triplrRDFformats, :ntriples],
+    'text/plain'           => [:triplrHref],
+    'text/rtf'             => [:triplrRTF],
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
-    'text/turtle'=>[:triplrRDFformats,:turtle],
+    'text/turtle'          => [:triplrRDFformats,:turtle],
   }
 
   # MIME type -> formatted content
