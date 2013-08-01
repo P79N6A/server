@@ -11,7 +11,7 @@ class E
               end) :
          :GET_resource)
   rescue Exception => x
-    $stderr.puts 500,x
+    $stderr.puts 500,x.message,x.backtrace
     Fn 'backtrace',x,@r
   end
 
