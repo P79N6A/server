@@ -5,19 +5,20 @@ class E
 
   # 404 response function
   fn E404,->e,r{
-    # response URI
-    u = e.uri
-    # response graph
-    g = {u => {}}
+    u = e.uri     # response URI
+    g = {u => {}} # response graph
+    s = g[u]      # resource pointer
     # add request data to response graph
-    r.map{|k,v| g[u][k] = [v] }
-    g[u][Type] = [E[HTTP+'404']]
-    g[u]['uri'] = e.uri
-    g[u]['QUERY'] = [r.q]
-    g[u]['ACCEPT']= [r.accept]
-    g[u]['SERVER_SOFTWARE']=[Version.E]
-    %w{CHARSET LANGUAGE ENCODING}.map{|a|g[u]['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
+    r.map{|k,v| s[k] = [v] }
+    s[Type] = [E[HTTP+'404']]
+    s['uri'] = u
+    s['QUERY'] = [r.q]
+    s['ACCEPT']= [r.accept]
+    s['SERVER_SOFTWARE']=[Version.E]
+    s['http://buzzword.org.uk/rdf/personal-link-types#edit']=[E[u+'?view=edit&graph=_']]
+    %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
     # output
+    r.q.delete 'view' # use 404 view if HTML
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
 
   # qs y=404 to force a 404 response
