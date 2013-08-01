@@ -63,7 +63,7 @@ class E
   fn 'head.formats',->e{
     F.keys.grep(/^render/).map{|f|
       f = f[7..-1]
-      {_: :link, rel: :alternate, type: f, href:'http://' + e['SERVER_NAME'] + e['REQUEST_PATH'] + e.q.merge({'format' => f}).qs}}.cr}
+      {_: :link, rel: :meta, type: f, href:'http://' + e['SERVER_NAME'] + e['REQUEST_PATH'] + e.q.merge({'format' => f}).qs}}.cr}
 
   fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
 

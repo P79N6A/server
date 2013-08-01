@@ -15,18 +15,19 @@ class E
   end
 
   Nginx = ENV['nginx']
-  def maybeSend m,b
+  def maybeSend m,b,lH=false
     send? ? # agent already has this version?
     b.().do{|b| # continue
-      h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # populate response header
-      m.match(/^(audio|image|video)/) && # media MIME-type?
+      h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # response header
+      m.match(/^(audio|image|video)/) &&            # media MIME-type?
       h.update({'Cache-Control' => 'no-transform'}) # no further compression
-      b.class == E ? (Nginx ?
-                      [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] :
+      lH && h.update({'Link' => '<' + @r['REQUEST_PATH']+@r.q.except('format').merge({format: 'text/n3'}).qs + '>; rel=meta'}) # Link Header
+      b.class == E ? (Nginx ?                                                     # nginx env-var set?
+                      [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
                       (r = Rack::File.new nil                       # create Rack file-handler
                        r.instance_variable_set '@path',b.d          # set path
-                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})):# run Rack file-handler, add response headers
-      [200, h, b]} : # normal response
+                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})):# Rack file-handler
+      [200, h, b]} : # response triple
       [304,{},[]]    # not modified
   end
 
@@ -36,7 +37,7 @@ class E
 
   def GET_file
     @r['ETag'] = [m,size].h
-    maybeSend mime,->{self}
+    maybeSend mime,->{self},:link
   end
 
   def GET_img

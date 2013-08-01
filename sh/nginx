@@ -15,5 +15,6 @@ server {
   location /fs/ {
     internal;
     alias /var/www/;
+    add_header Link $upstream_http_link;
   }
 }
