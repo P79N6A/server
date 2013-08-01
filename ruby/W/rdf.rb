@@ -11,7 +11,7 @@ class E
                                     RDF::URI(o.uri) :
                                     RDF::Literal(o))}}}
   rescue Exception => e
-    puts [:RDF,uri,e].join ' '
+    puts [:RDF,d.keys[0..8],f,e].join ' '
   end
 
   def triplrRDFformats t=nil
