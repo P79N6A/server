@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class String; def is_binary_data?; true; end; end
 module TMail
   class Mail
@@ -139,7 +139,8 @@ class E
              # content
             {_: :pre,
                c: m[Content].map{|b|
-                 # line-number
+
+                 # line count
                  i = 0
 
                  b.class==String && b.
