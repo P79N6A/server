@@ -134,7 +134,7 @@ class E
              # mailto URI with embedded reply metadata
              (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
                {_: :a, title: :reply, c: 'r',
-                 href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
+                 href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},'<br clear=all>',
 
              # content
             {_: :pre,
@@ -142,9 +142,9 @@ class E
                  # line-number
                  i = 0
 
-                 # attach CSS class to quoted content
-                 b.class==String &&
-                 b.gsub(/^(&gt;|\s)*\n/,"\n").gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>').
+                 b.class==String && b.
+                 gsub(/^(&gt;|\s)*\n/,""). # empty lines, change "" to "\n" to show
+                 gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>'). # markup quoted content
 
                  # each line
                  lines.to_a.map{|l|

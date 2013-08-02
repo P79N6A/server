@@ -2,12 +2,13 @@ body {background-color:#222;font-family:sans-serif}
 #showQuote {position:fixed;right:1.25em;top:0.1em;padding:.2em;color:#aaa;background-color:white;font-size:1.4em;border-style:dotted;border-width:0.1em;border-color:#ccc}
 a{background-color:#09f;color:#fff;text-decoration:none;padding-left:.2em;border-radius:.38em .1em .1em .38em;margin:0 .8em 0 -.7em;}
 a.thread, a.sender, a.to {border-radius:0}
-a[rel=untyped] { background-color:#0f3;color:#000 }
+a[rel=untyped] { background-color:#8F0;color:#000 }
 a[rel=permalink] { padding:0 .9em 0 0}
-a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;border-style:dotted;border-width:.1em;border-color:#aaa }
+a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;border-style:dotted;border-width:.1em;border-color:#aaa; white-space:nowrap; float:right }
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;border-style:dotted;border-width:.1em;border-color:#aaa }
 a[title="reply"] { padding:0 .3em 0 .3em}
-a.line {color: #555;background-color:#000;font-size:.8em} 
+span.empty { background-color:orange;margin-bottom:1.5em }
+a.line {color: #555;background-color:#000;font-size:.8em}
 .g {float:left;margin-left:0.2em;background-color:#eee;color:#050}
 .to {font-size:0.8em;color:black;padding:0;margin:0}
 td.group {vertical-align:top;text-align:left}
@@ -17,7 +18,7 @@ td.subject {max-width:88ex;vertical-align:top;text-align:right}
 .thread:hover {background-color:#f04}
 .thread:visited {background-color:#888;color:#f8f8f8}
 pre {white-space: pre-wrap}
-div.mail{background-color:black;color:white;max-width:100ex;margin:auto}
+div.mail{background-color:black;color:white;max-width:120ex;margin:auto}
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
 .title {width:100%;text-align:right;color:#888;font-size:0.9em;margin-bottom:.23em}
 .q {background-color:#fff;color:#000}
