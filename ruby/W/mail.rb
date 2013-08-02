@@ -123,7 +123,7 @@ class E
        {:class => :mail,
 
          c: [# link to self
-             (m.url.href "&#x268b;"),
+             {_: :a, href: m.url, rel: :permalink, c: ' '},
 
              # To:, From: index search links
            [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
