@@ -143,14 +143,14 @@ class E
                  # line count
                  i = 0
 
-                 b.class==String && b.
-                 gsub(/^(&gt;|\s)*\n/,""). # empty lines, change "" to "\n" to show
-                 gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>'). # markup quoted content
+                 b.class==String && b.                                                        # access content
+                 gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").                                           # erase empty quoted lines
+                 gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>'). # markup quoted lines
 
                  # each line
                  lines.to_a.map{|l|
 
-                   # fragment identifier
+                   # line identify
                    f = m.uri+':'+(i+=1).to_s
                    [{_: :a, id: f},
 
@@ -158,7 +158,8 @@ class E
                     l.chomp,
 
                     # link to line
-                    (l.size>48&&{_: :a, class: :line, href: '#'+f,c: '↵'}),
+                    (l.size > 64 &&
+                     {_: :a, class: :line, href: '#'+f,c: '↵'}),
 
                     # linebreak
                     "\n"
