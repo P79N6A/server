@@ -129,11 +129,11 @@ class E
            [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
                m[a[1]].do{|m|
                  m.map{|f| f.respond_to?(:uri) &&
-                   {_: :a, href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads&c=48', c: f.uri+' '}}}},
+                   {_: :a, property: a[0], href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads&c=48', c: f.uri}}}},
 
              # mailto URI with embedded reply metadata
              (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
-               {_: :a, title: :reply, c: '&#8844;',
+               {_: :a, title: :reply, c: 'r',
                  href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
 
              # content

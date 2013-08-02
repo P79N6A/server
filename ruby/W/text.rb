@@ -5,7 +5,7 @@ class String
   def hrefs i=false
     (partition /(https?:\/\/(\([^)]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       p[0].gsub('<','&lt;').gsub('>','&gt;')+
-      (p[1].empty?&&''||'<a href='+p[1]+'>'+p[1].do{|p|
+      (p[1].empty?&&''||'<a rel=untyped href='+p[1]+'>'+p[1].do{|p|
          i && p.match(/(gif|jpg|png|tiff)$/i) &&
          "<img src=#{p}>" || p
        }+'</a>')+
