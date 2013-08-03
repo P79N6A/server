@@ -128,8 +128,7 @@ class E
                 # only show if changed from previous
                 title != t[0] && (
                  title = t[0] # update title
-                 c = E.c      # color
-                 [{:class => :title, c: t, _: :a, href: m.url, style: "border-color:#{c};color: #{c}"},
+                 [{:class => :title, c: '███'+t.html, _: :a, href: m.url, style: "color: #{E.c}"},
                   '<br clear=all>'])},
 
               # link to self
