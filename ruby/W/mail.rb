@@ -129,7 +129,7 @@ class E
                 title != t[0] && (
                  title = t[0] # update title
                  c = E.c      # color
-                 [{:class => :title, c: t, _: :a, href: m.url, style: "border-color:#{c};background-color: #{c}"},
+                 [{:class => :title, c: t, _: :a, href: m.url, style: "border-color:#{c};color: #{c}"},
                   '<br clear=all>'])},
 
               # link to self
@@ -153,25 +153,35 @@ class E
                   # line count
                   i = 0
 
-                  b.class==String && b.                                                        # access content
-                  gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").                                           # erase empty quoted lines
-                  gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/,"<span class=q>\\1</span>\n"). # markup quoted lines
+                  # HTML message content
+                  b.class==String && b.              
+
+                  # erase empty quoted lines
+                  gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").
 
                   # each line
                   lines.to_a.map{|l|
 
-                    # line identify
+                    # line identifier
                     f = m.uri + ':' + (i+=1).to_s
-                    [{_: :a, id: f},
+                    
+                    # wrapper
+                    {_: :span, 
+                      
+                      # is line quoted?
+                      class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c:
 
-                     # line
-                     l.chomp,
+                      # id
+                      [{_: :a, id: f},
 
-                     # link to line
-                     (l.size > 64 &&
-                      {_: :a, class: :line, href: '#'+f,c: '↵'}),
-                     
-                     "\n" ]}}}]}]}]} # collate
+                       # line
+                       l.chomp,
+
+                       # link
+                       (l.size > 64 &&
+                        {_: :a, class: :line, href: '#'+f,c: '↵'}),
+
+                     "\n" ]}}}}]}]}]} # collate
   
   # default view for these MIME and SIOC types
   [MIMEtype+'message/rfc822',
