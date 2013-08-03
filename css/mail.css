@@ -3,7 +3,7 @@ body {background-color:#222;font-family:sans-serif}
 a{background-color:#09f;color:#fff;text-decoration:none;padding-left:.2em;border-radius:.38em .1em .1em .38em;margin:.08em}
 a.thread, a.sender, a.to {border-radius:0}
 a[id] { margin-right: .5em }
-a[rel=untyped] { background-color:#8F0;color:#000 }
+a[rel=untyped] { background-color:#000;color:#8f0;border-color:#8f0;padding:.05em;border-style:dotted;border-width:.1em; }
 a[rel=permalink] { padding:0 .9em 0 0}
 a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;}
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;}
@@ -22,7 +22,7 @@ td.subject {max-width:88ex;vertical-align:top;text-align:right}
 pre {white-space: pre-wrap}
 div.mail{background-color:black;color:white;max-width:120ex;margin:auto}
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
-.title {width:100%;text-align:right;color:#888;font-size:0.9em;margin-bottom:.23em}
+.title {font-weight:bold;font-size:.88em;color:#000;float:left;background-color:#000;border-style:dotted;padding:0 .3em 0 .3em;border-radius:.3em;border-width: 0 0 .1em 0;margin:0 0 .3em -.4em}
 .q {background-color:#fff;color:#000}
 .sender:hover {color:#eef}
 .sender:visited {color:white}

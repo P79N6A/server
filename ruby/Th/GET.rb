@@ -90,7 +90,7 @@ class E
 
     # request-graph identifier
     s = (q.has_key?('nocache') ? rand.to_s :  # random identifier
-         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # each modification time
+         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # canonicalized set signature
 
     # response identifier
     @r['ETag'] ||= [s, q, @r.format].h

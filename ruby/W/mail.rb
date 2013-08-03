@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class String; def is_binary_data?; true; end; end
 module TMail
   class Mail
@@ -101,6 +101,7 @@ class E
 
   # show a set of messages
   fn 'view/mail',->d,e{
+    title = nil
 
     # JS/CSS dependencies
     [(H.once e,'mail.js',
@@ -119,56 +120,62 @@ class E
 
         # content available?
         m.class == Hash && (m.has_key? E::SIOC+'content') &&
+        
+        {:class => :mail,
+          
+          c: [# title
+              m[Title].do{|t|
+                # only show if changed from previous
+                title != t[0] && (
+                 title = t[0] # update title
+                 c = E.c      # color
+                 [{:class => :title, c: t, _: :a, href: m.url, style: "border-color:#{c};background-color: #{c}"},
+                  '<br clear=all>'])},
 
-       {:class => :mail,
+              # link to self
+              {_: :a, href: m.url, rel: :permalink, c: ' '},
+              
+              # To:, From: index search links
+              [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
+                m[a[1]].do{|m|
+                  m.map{|f| f.respond_to?(:uri) &&
+                    {_: :a, property: a[0], href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads&c=48', c: f.uri}}}},
 
-         c: [# link to self
-             {_: :a, href: m.url, rel: :permalink, c: ' '},
+              # mailto URI with embedded reply metadata
+              (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
+                {_: :a, title: :reply, c: 'r',
+                  href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},'<br clear=all>',
 
-             # To:, From: index search links
-           [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
-               m[a[1]].do{|m|
-                 m.map{|f| f.respond_to?(:uri) &&
-                   {_: :a, property: a[0], href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads&c=48', c: f.uri}}}},
+              # content
+              {_: :pre,
+                c: m[Content].map{|b|
 
-             # mailto URI with embedded reply metadata
-             (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
-               {_: :a, title: :reply, c: 'r',
-                 href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},'<br clear=all>',
+                  # line count
+                  i = 0
 
-             # content
-            {_: :pre,
-               c: m[Content].map{|b|
+                  b.class==String && b.                                                        # access content
+                  gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").                                           # erase empty quoted lines
+                  gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/,"<span class=q>\\1</span>\n"). # markup quoted lines
 
-                 # line count
-                 i = 0
+                  # each line
+                  lines.to_a.map{|l|
 
-                 b.class==String && b.                                                        # access content
-                 gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").                                           # erase empty quoted lines
-                 gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/,"<span class=q>\\1</span>\n"). # markup quoted lines
+                    # line identify
+                    f = m.uri + ':' + (i+=1).to_s
+                    [{_: :a, id: f},
 
-                 # each line
-                 lines.to_a.map{|l|
+                     # line
+                     l.chomp,
 
-                   # line identify
-                   f = m.uri + ':' + (i+=1).to_s
-                   [{_: :a, id: f},
-
-                    # line
-                    l.chomp,
-
-                    # link to line
-                    (l.size > 64 &&
-                     {_: :a, class: :line, href: '#'+f,c: '↵'}),
-                   
-                    "\n" ]}}}, # carriage return
-
-             # title
-             m[Title].do{|t|{:class => :title,c: t}}]}]}]}
+                     # link to line
+                     (l.size > 64 &&
+                      {_: :a, class: :line, href: '#'+f,c: '↵'}),
+                     
+                     "\n" ]}}}]}]}]} # collate
   
   # default view for these MIME and SIOC types
   [MIMEtype+'message/rfc822',
    SIOCt+'MailMessage'].
-           map{|m| F['view/'+m] = F['view/mail'] }
+    map{|m| F['view/'+m] = F['view/mail'] }
 
 end
