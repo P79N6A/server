@@ -145,13 +145,13 @@ class E
 
                  b.class==String && b.                                                        # access content
                  gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").                                           # erase empty quoted lines
-                 gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*\n)/,'<span class=q>\1</span>'). # markup quoted lines
+                 gsub(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/,"<span class=q>\\1</span>\n"). # markup quoted lines
 
                  # each line
                  lines.to_a.map{|l|
 
                    # line identify
-                   f = m.uri+':'+(i+=1).to_s
+                   f = m.uri + ':' + (i+=1).to_s
                    [{_: :a, id: f},
 
                     # line
@@ -160,11 +160,8 @@ class E
                     # link to line
                     (l.size > 64 &&
                      {_: :a, class: :line, href: '#'+f,c: '↵'}),
-
-                    # linebreak
-                    "\n"
-
-                   ]}}},
+                   
+                    "\n" ]}}}, # carriage return
 
              # title
              m[Title].do{|t|{:class => :title,c: t}}]}]}]}
