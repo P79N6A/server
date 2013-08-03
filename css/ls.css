@@ -28,5 +28,6 @@ table {border-spacing:0;float:left;}
 .ls tr:nth-child(even) {background: #fff;color:#000}
 form input {background-color:#444;color:#fff;border-width:0}
 .dir {max-width:40em;float:left;border-radius:0 1em 1em 1em;padding:.3em;margin:.3em}
-.dir a:first-child {font-weight: bold;font-size:2em}
+.dir div:first-child a{font-weight: bold;font-size:2em;margin-right:.016em}
 .dir a {background-color:#000;color:white;float:left;margin-right:.07em}
+.dir a:hover { background-color:#fff;color:#000 }

@@ -29,7 +29,8 @@ class E
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r| r['fs:child'] ? # directory?
        {class: :dir, style: "background-color: #{E.c}", # dir wrapper
-         c: [{_: :a, href: l[r.uri]+'?graph=ls&view=ls', c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')}, # dir link
+         c: [{c: [{_: :a, href: l[r.uri]+'?graph=ls&view=ls', c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')}, # link to ls
+                  {_: :a, href: l[r.uri].t, c: '/'}]},
              r['fs:child'].map{|c|a[c]}]} :  # children
        a[r]}]}                               # item
 
