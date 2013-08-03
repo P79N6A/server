@@ -133,7 +133,7 @@ class E
                   '<br clear=all>'])},
 
               # link to self
-              {_: :a, href: m.url, rel: :permalink, c: ' '},
+              {_: :a, href: m.url, rel: :permalink, title: :link, c: ' '},
               
               # To:, From: index search links
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
