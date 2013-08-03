@@ -10,7 +10,7 @@ class E
   fn 'view/dir',->i,e{
 
     # localize URL
-    h = 'http://' + e['HTTP_HOST'] + '/'
+    h = 'http://' + e['SERVER_NAME'] + '/'
     l = -> u {
       if u.index(h) == 0
         u # already a local link
