@@ -15,7 +15,6 @@ class E
     Fn 'backtrace',x,@r
   end
 
-  Nginx = ENV['nginx']
   def maybeSend m,b,lH=false
     send? ? # agent already has this version?
     b.().do{|b| # continue
@@ -24,11 +23,14 @@ class E
       h.update({'Cache-Control' => 'no-transform'}) # no further compression
       h.update({'MS-Author-Via' => 'DAV, SPARQL'})  # authoring
       lH && h.update({'Link' => '<' + (URI.escape uri) + '?format=text/n3>; rel=meta'}) # Link Header - full URI variant
-      b.class == E ? (Nginx ?                                                     # nginx env-var set?
+      b.class == E ? (Nginx ?                                                     # nginx env-var
                       [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
-                      (r = Rack::File.new nil                       # create Rack file-handler
-                       r.instance_variable_set '@path',b.d          # set path
-                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})):# Rack file-handler
+                      Apache ?                                              # Apache env-var
+                      [200,h.update({'X-Sendfile' => b.d}),[]] : # Apache file-handler
+                      (r = Rack::File.new nil                      # create Rack file-handler
+                       r.instance_variable_set '@path',b.d         # set path
+                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]}) # Rack file-handler
+                      ) :
       [200, h, b]} : # response triple
       [304,{},[]]    # not modified
   end

@@ -169,6 +169,8 @@ class E
       to_s == u.to_s
   end
 
+  Nginx = ENV['nginx']
+  Apache = ENV['apache']
   Version = 'http://web.whats-your.name/www/'
 
 end

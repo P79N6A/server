@@ -1,3 +1,4 @@
 alias e.daemon='RACK_ENV=production E daemon -s thin -p 80'
 alias e.thin='thin --threaded start -p 80'
+alias e.apache='apache=y thin --threaded start'
 alias e.nginx='nginx=y thin --threaded start'
