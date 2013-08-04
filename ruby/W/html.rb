@@ -21,7 +21,7 @@ class String
     '<a href="'+self+'">'+(name||(Fn 'abbrURI',self))+'</a>'
   end
   def html
-    if match /^(https?:\/\/)[\S]+$/
+    if match /\A(https?:\/\/)[\S]+\Z/
       href
     else
       self
