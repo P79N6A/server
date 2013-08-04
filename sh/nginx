@@ -16,5 +16,6 @@ server {
     internal;
     alias /var/www/;
     add_header Link $upstream_http_link;
+    add_header MS-Author-Via $upstream_http_ms_author_via;
   }
 }
