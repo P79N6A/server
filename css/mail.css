@@ -22,7 +22,7 @@ td.subject {max-width:88ex;vertical-align:top;text-align:right}
 pre {white-space: pre-wrap}
 div.mail{background-color:black;color:white;max-width:120ex;margin:auto}
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
-.title {font-weight:bold;font-size:.88em;float:left;background-color:#000;background-color:#000;margin:0 0 .4em -2em}
+.title {font-weight:bold;font-size:.88em;float:right;background-color:#000;background-color:#000;margin:0 0 .4em 0}
 .q {background-color:#fff;color:#000}
 .sender:hover {color:#eef}
 .sender:visited {color:white}
