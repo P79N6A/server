@@ -171,11 +171,11 @@ class E
                elsif Rack::Mime::MIME_TYPES[t = '.' + x.to_s]
                  Rack::Mime::MIME_TYPES[t]
                # procmail uses a prefix not an extension
-               elsif base.index('msg.')==0
+               elsif f.base.index('msg.')==0
                  "message/rfc822"
                # ask FILE(1)
-               elsif e
-                 `file --mime-type -b #{sh}`.chomp
+               elsif f.e
+                 `file --mime-type -b #{f.sh}`.chomp
                # default
                else
                  "application/octet-stream"
