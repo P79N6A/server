@@ -62,6 +62,7 @@ class E
     owl: 'application/rdf+xml',
     pdf: 'application/pdf',
     png: 'image/png',
+    py:  'application/python',
     rb:  'application/ruby',
     ru:  'application/ruby',
     rdf: 'application/rdf+xml',
@@ -125,6 +126,7 @@ class E
     'application/haskell' => true,
     'application/org' => true,
     'application/php' => true,
+    'application/python' => true,
     'application/textile' => true,
     'application/word' => true,
     'message/rfc822'=> true,
@@ -153,15 +155,30 @@ class E
    ].map{|f|Literal[f]=true}
 
   def mime
-    @mime ||= (f = readlink
+    @mime ||= (# dereference symlink
+               f = readlink
+
+               # filename extension
+               x = f.ext.downcase.to_sym
+
+               # directory?
                if f.d?
                  "inode/directory"
-               elsif MIME[x = f.ext.downcase.to_sym]
+               # local MIME-types table
+               elsif MIME[x]
                  MIME[x]
+               # Rack MIME-types table
+               elsif Rack::Mime::MIME_TYPES[t = '.' + x.to_s]
+                 Rack::Mime::MIME_TYPES[t]
+               # procmail uses a prefix not an extension
                elsif base.index('msg.')==0
                  "message/rfc822"
+               # ask FILE(1)
+               elsif e
+                 `file --mime-type -b #{sh}`.chomp
+               # default
                else
-                 e && `file --mime-type -L -b #{sh}`.chomp
+                 "application/octet-stream"
                end)
   end
 
