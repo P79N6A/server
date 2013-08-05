@@ -13,4 +13,5 @@ pre { padding:.5em;
       border-style:dotted;
       border-width:.13em;
       border-color:#ddd;
+      white-space: pre-wrap;
       }
