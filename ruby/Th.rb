@@ -109,6 +109,8 @@ class E
         response }
     end
 
+  # run without a config.ru file
+  # RACK_ENV=production E daemon -s thin -p 80
   def E.daemon *a; ARGV.shift
     Rack::Server.start Rack::Server.new.options.update({app: E})
   end
