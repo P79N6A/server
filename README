@@ -1,18 +1,22 @@
- INSTALL  (choose one)
+ INSTALL    one of:
  ruby/install
- ruby/install-symlink 
- 
-or run in place: cd ruby && ln -s . element
-RUBYLIB=ruby e.thin
+ ruby/install-symlink
+ export RUBYLIB=ruby
 
- optional tools
+ OS
  apt-get install thin ruby-nokogiri ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
- cp sh/[eE] ~/bin    (can rename)
- cat sh/rc >> ~/.bashrc
+ source sh/rc
+
+ SITES
+ mkdir -p http://hostname && cp -a {css,js} http://hostname
+
+ RACK
+ cp ruby/config.ru .
 
  DAEMON
- mkdir http://domain && cp -a {css,js} http://domain
- RACK_ENV=production E daemon -s thin -p 80
+ e.thin    (standalone)
+ e.apache  (see sh/.htaccess)
+ e.nginx   (see sh/nginx)
 
 git@gitorious.org:element/www.git   https://gitorious.org/element/www
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
