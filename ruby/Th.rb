@@ -115,6 +115,10 @@ class E
     Rack::Server.start Rack::Server.new.options.update({app: E})
   end
 
+=begin
+ site-specific customizations
+=end
+
   E['http:/*/*.rb'].glob.map{|s| puts "site config #{s}"
     require s.d}
 
