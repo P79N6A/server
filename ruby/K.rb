@@ -155,14 +155,14 @@ class E
    ].map{|f|Literal[f]=true}
 
   def mime
-    @mime ||= (# dereference symlink
+    @mime ||= (# dereferenced symlink
                f = readlink
 
                # filename extension
                x = f.ext.downcase.to_sym
 
                # directory?
-               if f.d?
+               if d?
                  "inode/directory"
                # local MIME-types table
                elsif MIME[x]
