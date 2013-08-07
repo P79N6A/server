@@ -14,7 +14,7 @@ class E
     s['uri'] = u
     s['QUERY'] = [r.q]
     s['ACCEPT']= [r.accept]
-    s['SERVER_SOFTWARE']=[Version.E]
+    s['SERVER_SOFTWARE']=[('//'+r['SERVER_NAME']).E]
     s['http://buzzword.org.uk/rdf/personal-link-types#edit']=[E[u+'?view=edit&graph=_']]
     %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
     # output
