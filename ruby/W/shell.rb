@@ -19,7 +19,7 @@ class E
       i = i.split /:/
 
     yield uri, # subject
-     (f+(i[0].match(g)||[nil,i[0]])[1].gsub(/\s/,'_')), # predicate
+     (f+(i[0].match(g)||[nil,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # predicate
       i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v} # object
     }
     nil
