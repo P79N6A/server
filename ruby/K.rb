@@ -35,6 +35,7 @@ class E
     atom: 'application/atom+xml',
     avi: 'video/avi',
     e: 'application/json+rdf',
+    coffee: 'text/plain',
     css: 'text/css',
     csv: 'text/comma-separated-values',
     doc: 'application/word',
