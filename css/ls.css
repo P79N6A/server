@@ -10,7 +10,6 @@ table {border-spacing:0;float:left;}
     font-weight:normal;
 }
 .ls td.label a {
-    border-radius:.4em .4em 0 0;
     padding: .18em 0 0 0;
     background-color:#f00;
     color:#fff;
