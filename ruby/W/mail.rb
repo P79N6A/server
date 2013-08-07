@@ -121,16 +121,13 @@ class E
      # each message
      d.values.map{|m|
 
-       # fragment identifier
-       [{_: :a, name: m.uri},
-
-        # content available?
-        m.class == Hash && (m.has_key? E::SIOC+'content') &&
+       # content available?
+       [m.class == Hash && (m.has_key? E::SIOC+'content') &&
         
         {:class => :mail,
           
           c: [# link to self
-              {_: :a, href: m.url, rel: :permalink, title: :link, c: ' '},
+              {_: :a, name: m.uri, href: m.url, rel: :permalink, title: :link, c: ' '},
               
               # To:, From: index search links
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
