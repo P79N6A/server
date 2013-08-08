@@ -2,7 +2,6 @@ require 'element/W'
 %w{GET HEAD POST PATCH uid 404 500
 }.map{|i|require 'element/Th/' + i }
 require 'rack'
-#require 'ruby-prof'
 
 class String
   # parse querystring
@@ -89,20 +88,20 @@ class E
          self) : @r
   end
 
-  def E.call e; dev; e.extend Th # check for changed source code
-   (e['REQUEST_PATH'].force_encoding('UTF-8').do{|u| # path
-      CGI.unescape(
-      u.index(Prefix)==0 ? u[Prefix.size..-1] : # non-local or non-HTTP URI
-   'http://' + (e['HTTP_X_FORWARDED_HOST'] || e['SERVER_NAME']) + u.gsub('+','%2B')) # URI
-    }.E.env(e).jail.do{|r| # valid path?
-#      RubyProf.start
-      r.send e.fn                 # continue
-    } || [403,{},['invalid path']]).# reject
+  def E.call e
+    dev         # check for changed source code
+    e.extend Th # request-related utility functions
+    host = e['HTTP_X_FORWARDED_HOST'] || e['SERVER_NAME']    # hostname
+   (e['REQUEST_PATH'].force_encoding('UTF-8').do{|u|         # path
+      CGI.unescape(u.index(Prefix)==0 ? u[Prefix.size..-1] : # non-local or non-HTTP URI
+      'http://' + host + u.gsub('+','%2B'))                  # HTTP URI
+    }.E.env(e).jail.do{|r|           # valid path?
+      r.send e.fn                    # continue
+    } || [403,{},['invalid path']]). # reject
       do{|response|        # inspect response
-#        RubyProf::FlatPrinter.new(RubyProf.stop).print(STDOUT) 
         puts [e.fn,        # method
               response[0], # response code
-              ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,# URL
+              ['http://', host, e['REQUEST_URI']].join,# URL
               e['HTTP_USER_AGENT'],
               e['HTTP_REFERER'],
              ].join ' '
