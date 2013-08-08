@@ -93,7 +93,7 @@ class E
    (e['REQUEST_PATH'].force_encoding('UTF-8').do{|u| # path
       CGI.unescape(
       u.index(Prefix)==0 ? u[Prefix.size..-1] : # non-local or non-HTTP URI
-                   'http://' + e['SERVER_NAME'] + u.gsub('+','%2B')) # URI
+   'http://' + (e['HTTP_X_FORWARDED_HOST'] || e['SERVER_NAME']) + u.gsub('+','%2B')) # URI
     }.E.env(e).jail.do{|r| # valid path?
 #      RubyProf.start
       r.send e.fn                 # continue
