@@ -60,8 +60,8 @@ class E
   alias_method :m, :mtime
 
   def triplrInode r=true
-    e && (d? && (yield uri,'fs:parent',parent
-             r && c.map{|c|yield uri,'fs:child',c})
+    e && (d? && (yield uri, Posix + 'dir#parent', parent
+                 r && c.map{|c| yield uri, Posix + 'dir#child', c})
       node.stat.do{|s|[:size,:ftype,:mtime].map{|p|
           yield uri,Stat+p.to_s,(s.send p)}})
   end
