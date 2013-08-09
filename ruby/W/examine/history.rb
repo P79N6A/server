@@ -1,13 +1,4 @@
 class E
- 
-  F["?"]||={}
-  F["?"].update({'taft'=>{
-                'graph'=>'|',
-                    '|'=>'triplrMozHist',
-                 'view'=>'page',
-                    'v'=>'tg',
-                  'arc'=>'referer',
-                'label'=>'uri'}})
 
   def triplrMozHist
     c = @r.q['c'].match(/[0-9]+/) ? @r.q['c'] : '18'
