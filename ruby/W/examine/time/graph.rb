@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   F["?"]||={}
@@ -7,15 +7,13 @@ class E
                     '|'=>'triplrMozHist',
                  'view'=>'page',
                     'v'=>'timegraph',
-                  'arc'=>'referer',
-                'label'=>'uri'}})
+                  'arc'=>'referer'}})
 
   # massage data for timegraph
   fn 'filter/timegraph',->e,m,_{
 
     x = e['x'] || Date # x prop
     y = e['y']         # y property
-    g = {}             # groups
 
     # 2D values
     vX = m.map{|_,r|r[x]}.flatten.compact.map(&:to_time).map &:to_f
@@ -31,8 +29,8 @@ class E
 
     # annotate resources with positioning data
     m.map{|u,r|
-      r['left'] = [*r[x]][0].do{|v|(v.to_time.to_f-minX)*scaleX} || 0
-      r['top'] = y.do{|y|[*r[y]][0].do{|v|(maxY - v.to_f)*scaleY} || 0} || rand(100)}
+      r['x'] = [*r[x]][0].do{|v|(v.to_time.to_f-minX)*scaleX} || 0
+      r['y'] = y.do{|y|[*r[y]][0].do{|v|(maxY - v.to_f)*scaleY} || 0} || rand(100)}
   }
 
   # a linked-timeline view
@@ -43,24 +41,35 @@ class E
   
   # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
+    e[:graph] = d
     [H.css('/css/timegraph'),
      {class: :tg, c: {_: :svg, c: c.()}}]}
 
   # timegraph entry
-  fn 'view/timegraph/item',->r,x{ r[x.q['x']||Date] &&
-    (t = r['top'].to_s+'%'
-     l = r['left'].to_s+'%'
-     [r[x.q['arc'].expand||'/prev'].map{|e|
-        x[:graph][e.uri].do{|e|
-          {_: :line, class: :arc, stroke: r['group'][:c], style: "stroke-width:.3em",
-                       y1: e['top'].to_s+'%', x1: e['left'].to_s+'%',
-                       y2: t, x2: l}}},
-        {_: :circle, onclick: "document.location.href=\"#{r.url}\"", fill: r['group'][:c],r: '.42em', cy: t, cx: l},
-        x.q['label'].do{|a|
-          l = r['left'] > 96 ? '96%' : l
-          {_: :text,fill: 'yellow', y: t, x: l,
-            c: a.split(/,/).map{|a|
-              {_: :tspan,x:l,dy: "1em",
-                c: CGI.escapeHTML([*r[a.expand]][0].do{|l|(l.respond_to?(:uri) ? l.uri : l.to_s[0..64]).sub(/^http.../,'')})}}}}])}
+  fn 'view/timegraph/item',->r,x{
+    # skip resources w/o x-axis field
+    if r[x.q['x'] || Date]
 
+      t = r['x'].to_s+'%'
+      l = r['y'].to_s+'%'
+
+      [ # item
+        {_: :circle, onclick: "document.location.href=\"#{r.url}\"", fill: '#ff0',r: '.42em', cy: t, cx: l},
+
+        # label
+        x.q['label'].do{|a|
+          {_: :text,fill: 'yellow', y: t, x: l,
+            c: {_: :tspan,x: l,dy: "1em",
+                c: CGI.escapeHTML([*r[a.expand]][0].do{|l|(l.respond_to?(:uri) ? l.uri : l.to_s[0..64]).sub(/^http.../,'')})}}},
+
+       # arc(s)
+       r[x.q['arc'].expand].map{|e|
+         # target resource
+         x[:graph][e.uri].do{|e|
+           # arc path
+           {_: :line, class: :arc, stroke: '#0ff', style: "stroke-width:.3em",
+             y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
+             y2: t, x2: l}}}]
+    end }
+  
 end
