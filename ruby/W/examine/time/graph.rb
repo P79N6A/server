@@ -23,13 +23,13 @@ class E
     maxY = vY.max
     minY = vY.min
 
-    # scaling-ratio to normalize values
+    # scaling-ratio to normalize values to %
     scaleX = 100/((maxX-minX).do{|v|v==0 ? 100 : v}||100)
     scaleY = 100/((maxY-minY).do{|v|v==0 ? 100 : v}||100)
 
     # annotate resources with positioning data
     m.map{|u,r|
-      r['x'] = [*r[x]][0].do{|v|(v.to_time.to_f-minX)*scaleX} || 0
+      r['x'] = [*r[x]][0].do{|v|(maxX - v.to_time.to_f)*scaleX} || 0
       r['y'] = y.do{|y|[*r[y]][0].do{|v|(maxY - v.to_f)*scaleY} || 0} || rand(100)}
   }
 
@@ -42,8 +42,7 @@ class E
   # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
     e[:graph] = d
-    [H.css('/css/timegraph'),
-     {class: :tg, c: {_: :svg, c: c.()}}]}
+    [H.css('/css/timegraph'),{class: :timegraph, _: :svg, c: c.()}]}
 
   # timegraph entry
   fn 'view/timegraph/item',->r,x{
@@ -67,7 +66,7 @@ class E
          # target resource
          x[:graph][e.uri].do{|e|
            # arc path
-           {_: :line, class: :arc, stroke: '#0ff', style: "stroke-width:.3em",
+           {_: :line, class: :arc, stroke: '#0ff', style: "stroke-width:.1em",
              y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
              y2: t, x2: l}}}]
     end }
