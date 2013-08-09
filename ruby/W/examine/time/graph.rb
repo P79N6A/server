@@ -13,23 +13,27 @@ class E
   # massage data for timegraph
   fn 'filter/timegraph',->e,m,_{
 
-    # group resources on shared predicate/object tuples
-    m.values.group_by{|r|
-      [*r[e['group']]][0]}.
+    x = e['x'] || Date # x prop
+    y = e['y']         # y property
+    g = {}             # groups
 
-    map{|g,v| # within each group
+    # 2D values
+    vX = m.map{|_,r|r[x]}.flatten.compact.map(&:to_time).map &:to_f
+    vY = m.map{|_,r|r[y]}.flatten.compact.map &:to_f
+    maxX = vX.max
+    minX = vX.min
+    maxY = vY.max
+    minY = vY.min
 
-      p = nil # previous in time-series
+    # scaling-ratio to normalize values
+    scaleX = 100/((maxX-minX).do{|v|v==0 ? 100 : v}||100)
+    scaleY = 100/((maxY-minY).do{|v|v==0 ? 100 : v}||100)
 
-      # sort by specified x-axis or Date
-      v.sort_by{|r|
-        [*r[e['x'] || Date]][0].to_time}.
-
-      # link time-series entries 
-      map{|r|
-        r['/prev'] = [p]
-        p = r } 
-    }}
+    # annotate resources with positioning data
+    m.map{|u,r|
+      r['left'] = [*r[x]][0].do{|v|(v.to_time.to_f-minX)*scaleX} || 0
+      r['top'] = y.do{|y|[*r[y]][0].do{|v|(maxY - v.to_f)*scaleY} || 0} || rand(100)}
+  }
 
   # a linked-timeline view
   fn 'view/timegraph',->d,e{
@@ -37,51 +41,12 @@ class E
    i=F['view/timegraph/item']
     Fn 'view/timegraph/base',d,e,->{d.map{|u,r|i.(r,e)}}}
   
+  # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
-    e[:graph] ||= d      # graph
-    g = {}               # groups
-    a = e.q['x'] || Date # x-axis
+    [H.css('/css/timegraph'),
+     {class: :tg, c: {_: :svg, c: c.()}}]}
 
-    # values
-    v = d.map{|_,r|r[a]}.flatten.compact.map(&:to_time).map &:to_f
-    o = d.map{|_,r|r[e.q['y']]}.flatten.compact.map &:to_f
-    max = v.max
-    min = v.min
-    omax = o.max
-    omin = o.min
-
-    # scaling-ratio to normalize values
-    scale = 100/((max - min).do{|v|v==0 ? 100 : v}||100)
-   oscale = 100/((omax-omin).do{|v|v==0 ? 100 : v}||100)
-
-    # add CSS to model
-    d.map{|_,r| r[a] &&
-      # group-identifier
-      (t = e.q['group'].do{|g|
-         [*r[g.expand]][0]} ||                      # custom predicate
-       [*r[Title]][0].sub(/^[rR][eE][^A-Za-z]./,'') # default
-
-       # x position
-       r['left']=[*r[a]][0].do{|v|(v.to_time.to_f-min)*scale}||0
-
-       # y position
-       r['top']=e.q['y'].do{|a|[*r[a]][0].do{|v|(omax - v.to_f)*oscale}||0}|| rand(100)
-
-       # group
-       r['group'] = (g[t] ||= # memoize for other members
-                 {c: '#%06x' % rand(16777216), a: r.url,
-                   t: r['top'], l: r['left']}))}
-
-    # output
-
-    [H.css('/css/time'),
-     {class: :tg, c: [{_: :svg, c: c.()},
-
-      # group labels
-       g.map{|t,g|
-         {c: {_: :a, c: t, href: g[:a]}, class: :gtitle,
-           style: "background-color: #{g[:c]}; top:#{g[:t]/4.0}em; left:#{g[:l]}%"}}]}]}
-
+  # timegraph entry
   fn 'view/timegraph/item',->r,x{ r[x.q['x']||Date] &&
     (t = r['top'].to_s+'%'
      l = r['left'].to_s+'%'
