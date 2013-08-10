@@ -44,7 +44,7 @@ class E
     e[:graph] = d
     e[:group] = {}
     e[:color] = E.c
-    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div style="float: right">']}
+    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div style="float: right; margin:8%">']}
 
   # timegraph entry
   fn 'view/timegraph/item',->r,x{

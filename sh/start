@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /var/www/cracklog.com
+RUBYLIB=/home/ix/www/ruby/ GEM_HOME=/home/ix apache=y su -c "thin --threaded start" ix
