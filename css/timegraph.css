@@ -1,3 +1,8 @@
 body { background-color:#000 }
-svg.timegraph {width:32em;height:250em;float:left}
+.timegraph  {width: 26em; height: 98em; position: fixed; top: 0; left: 0}
+.timegraph > svg { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1 }
+.timegraph > div { position: absolute; z-index: 2 }
+.timegraph a.link { margin:0 }
+.timegraph a.label { font-size:.9em; background-color: #000; color: #0f0; border-width:.1em; border-color: #0f3; border-style: dotted; white-space: nowrap }
+.timegraph a.label:hover { color: #000; background-color: #fff }
 line.arc{stroke-width: .1em}

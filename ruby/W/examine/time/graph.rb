@@ -42,33 +42,28 @@ class E
   # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
     e[:graph] = d
-    [H.css('/css/timegraph'),{class: :timegraph, _: :svg, c: c.()}]}
+    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div style="float: right">']}
 
   # timegraph entry
   fn 'view/timegraph/item',->r,x{
     # skip resources w/o x-axis field
     if r[x.q['x'] || Date]
 
-      t = r['x'].to_s+'%'
-      l = r['y'].to_s+'%'
-
-      [ # item
-        {_: :circle, onclick: "document.location.href=\"#{r.url}\"", fill: '#ff0',r: '.42em', cy: t, cx: l},
-
-        # label
-        x.q['label'].do{|a|
-          {_: :text,fill: 'yellow', y: t, x: l,
-            c: {_: :tspan,x: l,dy: "1em",
-                c: CGI.escapeHTML([*r[a.expand]][0].do{|l|(l.respond_to?(:uri) ? l.uri : l.to_s[0..64]).sub(/^http.../,'')})}}},
+      [{style: "top: #{r['x']}%; left: #{r['y']}%",
+         c: [
+             {_: :a, href: r.url, c: '#', class: :link},
+             {_: :a, href: '#'+r.uri, c: r[x.q['label'].expand], class: :label },
+            ]},
 
        # arc(s)
-       r[x.q['arc'].expand].map{|e|
-         # target resource
-         x[:graph][e.uri].do{|e|
-           # arc path
-           {_: :line, class: :arc, stroke: '#0ff', style: "stroke-width:.1em",
-             y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
-             y2: t, x2: l}}}]
+       {_: :svg, c:
+         r[x.q['arc'].expand].map{|e|
+           # target resource
+           x[:graph][e.uri].do{|e|
+             # arc path
+             {_: :line, class: :arc, stroke: '#0ff',
+               y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
+               y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}]
     end }
   
 end

@@ -3,10 +3,23 @@
 
 class E
 
-  # querystring aliases
-  F["?"] ||= {}; F["?"].update({
-   'thread'=>{'graph'=>'thread','sort' => 'dc:date','reverse' => nil,'view' => 'mail'},
-      'ann'=>{'view'=>'threads','match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/,'matchP' => 'dc:title'}})
+  # qs aliases
+  F["?"] ||= {}
+  F["?"].
+    update({'thread'=>
+             {'graph'=>'thread',
+               'sort' => 'dc:date',
+               'reverse' => nil,
+               'view' => 'multi',
+               'views' => 'timegraph,mail',
+               'filter' => 'timegraph',
+               'arc' => '/parent',
+               'label' => 'sioc:name'},
+             'ann'=>
+             {'view'=>'threads',
+               'matchP' => 'dc:title',
+               'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/,
+             }})
 
   def triplrMail; require 'tmail'
 
