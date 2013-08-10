@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   F["?"]||={}
@@ -50,10 +50,8 @@ class E
     if r[x.q['x'] || Date]
 
       [{style: "top: #{r['x']}%; left: #{r['y']}%",
-         c: [
-             {_: :a, href: r.url, c: '#', class: :link},
-             {_: :a, href: '#'+r.uri, c: r[x.q['label'].expand], class: :label },
-            ]},
+         c: [{_: :a, href: r.url, c: '#', class: :link},
+             {_: :a, title: r[Date], href: '#'+r.uri, c: r[x.q['label'].expand], class: :label }]},
 
        # arc(s)
        {_: :svg, c:

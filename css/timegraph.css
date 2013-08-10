@@ -4,5 +4,5 @@ body { background-color:#000 }
 .timegraph > div { position: absolute; z-index: 2 }
 .timegraph a.link { margin:0 }
 .timegraph a.label { font-size:.9em; background-color: #000; color: #0f0; border-width:.1em; border-color: #0f3; border-style: dotted; white-space: nowrap }
-.timegraph a.label:hover { color: #000; background-color: #fff }
+.timegraph a.label:hover { color: #000; background-color: #fff; }
 line.arc{stroke-width: .1em}
