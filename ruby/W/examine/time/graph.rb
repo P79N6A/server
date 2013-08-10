@@ -49,10 +49,11 @@ class E
     # skip resources w/o x-axis field
     if r[x.q['x'] || Date]
 
-      [{style: "top: #{r['x']}%; left: #{r['y']}%",
+      [{style: "top: #{r['x']}%; left: 0", class: :date, c: r[Date][0]},
+       {style: "top: #{r['x']}%; left: #{r['y']}%",
          c: [{_: :a, href: r.url, c: '#', class: :link},
              {_: :a, title: r[Date], href: '#'+r.uri, c: r[x.q['label'].expand], class: :label }]},
-
+       
        # arc(s)
        {_: :svg, c:
          r[x.q['arc'].expand].map{|e|
