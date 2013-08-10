@@ -42,6 +42,8 @@ class E
   # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
     e[:graph] = d
+    e[:group] = {}
+    e[:color] = E.c
     [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div style="float: right">']}
 
   # timegraph entry
@@ -49,10 +51,19 @@ class E
     # skip resources w/o x-axis field
     if r[x.q['x'] || Date]
 
+      label = r[x.q['label'].expand]
+      lc = x[:group][label] ||= E.c
+
       [{style: "top: #{r['x']}%; left: 0", class: :date, c: r[Date][0]},
        {style: "top: #{r['x']}%; left: #{r['y']}%",
          c: [{_: :a, href: r.url, c: '#', class: :link},
-             {_: :a, title: r[Date], href: '#'+r.uri, c: r[x.q['label'].expand], class: :label }]},
+             {_: :a,
+               title: r[Date][0],
+               href: '#'+r.uri,
+               class: :label,
+               style: "color: #{lc}; border-color: #{lc}",
+               c: label,
+             }]},
        
        # arc(s)
        {_: :svg, c:
@@ -60,7 +71,7 @@ class E
            # target resource
            x[:graph][e.uri].do{|e|
              # arc path
-             {_: :line, class: :arc, stroke: '#0ff',
+             {_: :line, class: :arc, stroke: x[:color], 'stroke-dasharray'=>"2,2",
                y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
                y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}]
     end }
