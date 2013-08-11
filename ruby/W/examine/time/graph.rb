@@ -43,10 +43,12 @@ class E
   
   # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
+    Fn 'filter/timegraph', e.q, d, nil unless e.q['timegraph']
+
     e[:graph] = d
     e[:group] = {}
     e[:color] = E.c
-    #unless e.q['timegraph']
+
     [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div class=timegraphRes>']}
 
   # timegraph entry
@@ -54,7 +56,9 @@ class E
     # skip resources w/o x-axis field
     if r[x.q['x'] || Date]
 
-      label = r[x.q['label'].expand || Creator][0].to_s
+      labelP = x.q['label'].expand || Creator
+      label = (r[labelP][0]).do{|l|
+               l.respond_to?(:uri) ? l.uri : l.to_s}
       lc = x[:group][label] ||= E.c
 
       [{style: "top: #{r['x']}%; left: 0", class: :date, c: r[Date][0]},
