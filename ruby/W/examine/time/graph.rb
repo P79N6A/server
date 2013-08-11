@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   F["?"]||={}
@@ -11,6 +11,8 @@ class E
 
   # massage data for timegraph
   fn 'filter/timegraph',->e,m,_{
+
+    e['timegraph'] ||= true
 
     x = e['x'] || Date # x prop
     y = e['y']         # y property
@@ -44,14 +46,15 @@ class E
     e[:graph] = d
     e[:group] = {}
     e[:color] = E.c
-    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div style="float: right; margin:8%">']}
+    #unless e.q['timegraph']
+    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div style="float: right; margin-left: 20%; margin-right:4%">']}
 
   # timegraph entry
   fn 'view/timegraph/item',->r,x{
     # skip resources w/o x-axis field
     if r[x.q['x'] || Date]
 
-      label = r[x.q['label'].expand]
+      label = r[x.q['label'].expand || Creator][0].to_s
       lc = x[:group][label] ||= E.c
 
       [{style: "top: #{r['x']}%; left: 0", class: :date, c: r[Date][0]},
