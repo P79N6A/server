@@ -3,6 +3,8 @@ a{background-color:#09f;color:#fff;text-decoration:none;padding-left:.2em;border
 a.thread, a.sender, a.to {border-radius:0}
 a[id] { margin-right: .5em; border-radius:0;background-color:##458F00}
 a[rel=untyped] { background-color:#000;color:#8f0;border-color:#8f0;padding:.05em;border-style:dotted;border-width:.1em;white-space:nowrap;}
+a[rel=untyped]:hover {  background-color:#0df;color:#000;border-color:#0ff; }
+a[rel=untyped]:visited {  background-color:#8f0;color:#000; }
 a[rel=permalink] { padding:0 .9em 0 0}
 a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;}
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;}
