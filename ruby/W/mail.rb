@@ -125,7 +125,7 @@ class E
       (H.once e,:mu,(H.js '/js/mu')),
 
       # up to set-overview
-      {_: :a, id: :up, href: '', c: '&uarr;'},
+      {_: :a, id: :up, href: e['REQUEST_PATH'] + e.q.merge({'view' => 'page', 'v' => 'threads'}).qs, c: '&uarr;'},
 
       # collapse/expand quoted content
       {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}),
