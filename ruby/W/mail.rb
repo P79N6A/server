@@ -68,9 +68,13 @@ class E
       m[To].map{|t|
         g[t.uri]||=0
         g[t.uri]=g[t.uri].succ}}
-    
+
     # CSS
-    [(H.css '/css/mail'),'<table>',
+    [(H.css '/css/mail'),
+
+     ([{_: :a, c: env.q['p']},' :: ',{_: :a, c: env['uri']}] if env.q['set']=='index'),
+
+     '<table>',
 
      # subgroup by title
      d.values.group_by{|r|[*r[Title]][0].sub(/^[rR][eE][^A-Za-z]./,'')}.
