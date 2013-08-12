@@ -1,3 +1,5 @@
+#up { font-size:2em;background-color:#333;color:#777;padding:  0 1.4em 0 1.4em }
+#up:hover {background-color:#aaf;color:#fff }
 #showQuote {position:fixed;right:1.25em;top:0.1em;padding:.2em;color:#aaa;background-color:white;font-size:1.4em;border-style:dotted;border-width:0.1em;border-color:#ccc}
 a{background-color:#09f;color:#fff;text-decoration:none;padding-left:.2em;border-radius:.38em .1em .1em .38em;margin:.08em}
 a.thread, a.sender, a.to {border-radius:0}

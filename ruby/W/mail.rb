@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 class E
 
@@ -11,7 +11,6 @@ class E
                'reverse' => nil,
                'view' => 'multi',
                'views' => 'timegraph,mail',
-               'filter' => 'timegraph',
                'arc' => '/parent',
                'label' => 'sioc:name'},
       'ann' =>{'view'=>'threads',
@@ -125,6 +124,9 @@ class E
       (H.js '/js/mail'),
       (H.once e,:mu,(H.js '/js/mu')),
 
+      # up to set-overview
+      {_: :a, id: :up, href: '', c: '&uarr;'},
+
       # collapse/expand quoted content
       {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}),
 
@@ -143,7 +145,7 @@ class E
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
                 m[a[1]].do{|m|
                   m.map{|f| f.respond_to?(:uri) &&
-                    {_: :a, property: a[0], href: f.url+'?set=index&p='+a[0]+'&view=page&v=threads&c=48', c: f.uri}}}},
+                    {_: :a, property: a[0], href: f.url+'?set=index&p='+a[0]+'&view=page&views=timegraph,mail&v=multi&c=8', c: f.uri}}}},
 
               # mailto URI with embedded reply metadata
               (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
