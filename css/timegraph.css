@@ -6,5 +6,4 @@ body { background-color:#000 }
 .timegraph a.link { margin:0 }
 .timegraph a.label { font-size: .9em; background-color: #000; color: #0f0; border-width:.1em; border-color: #0f3; border-style: dotted; white-space: nowrap }
 .timegraph a.label:hover { background-color: #1ef; }
-.timegraphRes { float: right; margin-left: 20%; margin-right:8% }
 line.arc{stroke-width: .1em}

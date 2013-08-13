@@ -49,7 +49,7 @@ class E
     e[:group] = {}
     e[:color] = E.c
 
-    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}, '<div class=timegraphRes>']}
+    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}]}
 
   # timegraph entry
   fn 'view/timegraph/item',->r,x{

@@ -1,5 +1,7 @@
-#up {  background-color:#003;
-            color:#448; }
+#up { background-color:#000;
+      color:#09f;
+      margin-left:18%;
+      }
 #down { background-color:#ccc;
             color:#fff;
         margin-left:1.61em;}
@@ -28,7 +30,7 @@ td.subject {max-width:88ex;vertical-align:top;text-align:right}
 .thread:hover {background-color:#f04}
 .thread:visited {background-color:#888;color:#f8f8f8}
 pre {white-space: pre-wrap}
-div.mail{background-color:black;color:white;max-width:120ex;margin:auto}
+div.mail{background-color:black;color:white;max-width:120ex;margin-left:20%;margin-right:4%}
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
 .title {font-weight:bold;font-size:.88em;float:right;background-color:#fff;color:#000;margin:0 0 1.4em 0}
 .q {background-color:#fff;color:#000}
