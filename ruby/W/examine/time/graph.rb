@@ -68,7 +68,7 @@ class E
                title: r[Date][0],
                href: '#'+r.uri,
                class: :label,
-               style: "color: #{lc}; border-color: #{lc}",
+               style: "background-color: #{lc}",
                c: label,
              }]},
        
