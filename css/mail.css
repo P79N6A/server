@@ -1,5 +1,11 @@
-#up { font-size:2em;background-color:#003;color:#448;padding:  0 1.4em 0 1.4em }
-#up:hover {background-color:#aaf }
+#up {  background-color:#003;
+            color:#448; }
+#down { background-color:#ccc;
+            color:#fff;
+        margin-left:1.61em;}
+#up,#down { font-size:2em;
+            padding:  0 1.4em 0 1.4em }
+#up:hover,#down:hover {background-color:#aaf }
 #showQuote {position:fixed;right:1.25em;top:0.1em;padding:.2em;color:#aaa;background-color:white;font-size:1.4em;border-style:dotted;border-width:0.1em;border-color:#ccc}
 a{background-color:#09f;color:#fff;text-decoration:none;padding-left:.2em;border-radius:.38em .1em .1em .38em;margin:.08em}
 a.thread, a.sender, a.to {border-radius:0}
@@ -18,7 +24,6 @@ a.line {color: #555;background-color:#000;font-size:.8em}
 .to {font-size:0.8em;color:black;padding:0;margin:0}
 td.group {vertical-align:top;text-align:left}
 td.subject {max-width:88ex;vertical-align:top;text-align:right}
-.show {color:#46f;font-size:2em;}
 .thread {background-color:#000;color:#fff;border-width:0 0 0.2em 0;border-style:solid;margin:0;padding:0}
 .thread:hover {background-color:#f04}
 .thread:visited {background-color:#888;color:#f8f8f8}

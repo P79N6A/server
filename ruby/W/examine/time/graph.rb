@@ -43,7 +43,7 @@ class E
   
   # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
-    Fn 'filter/timegraph', e.q, d, nil unless e.q['timegraph']
+    Fn 'filter/timegraph', e.q, d, nil unless e.q['timegraph']==true
 
     e[:graph] = d
     e[:group] = {}

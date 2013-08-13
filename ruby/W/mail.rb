@@ -115,7 +115,7 @@ class E
         '</tr>']},'</table>',
 
      # link to show full content of entire message-set
-     {_: :a, :class => :show, c: :content,href: env['REQUEST_PATH']+env.q.except('v').update({'view' => 'mail'}).qs}]}
+     {_: :a, id: :down, c: '&darr;',href: env['REQUEST_PATH']+env.q.merge({'view'=>'page','views'=>'timegraph,mail','v'=>'multi'}).qs}]}
 
 
   # show a set of messages
