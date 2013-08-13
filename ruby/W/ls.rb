@@ -38,7 +38,12 @@ class E
 
   # tabular rendering
   fn 'view/ls',->i,e{
-    [(H.css '/css/ls'),{class: :ls, c: (Fn 'view/tab',i,e)},(Fn 'view/find',i,e),
-     {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du, rel: :nofollow}]}
+    [(H.css '/css/ls'),
+     {_: :a, class: :up, href: E(e['uri']).parent.url+'?graph=ls&view=ls', c: '&uarr;'},
+     {class: :ls,
+       c: (Fn 'view/tab',i,e)},
+     {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du, rel: :nofollow},
+     (Fn 'view/find',i,e),
+    ]}
 
 end

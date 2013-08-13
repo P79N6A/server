@@ -72,7 +72,10 @@ class E
     # CSS
     [(H.css '/css/mail'),
 
-     ([{_: :a, c: env.q['p']},' :: ',{_: :a, c: env['uri']}] if env.q['set']=='index'),
+     ([{_: :a, c: env.q['p']},
+       ' :: ',
+       {_: :a, href: '', c: env['uri']}
+      ] if env.q['set']=='index'),
 
      '<table>',
 

@@ -1,6 +1,16 @@
 body{font-family:sans-serif;}
 a {text-decoration: none; border-radius:0 .2em .2em 0}
 table {border-spacing:0;float:left;}
+.up { font-size: 2em;
+      font-weight: bold;
+      padding:  0 1.4em 0 1.4em;
+      background-color:#0f3;
+      color: #fff;
+      }
+.du { color: #fff;
+      background-color:#05f;
+      padding:.1em;
+      }
 .ls .abbr{display:none}
 .ls a {
     float: right;
