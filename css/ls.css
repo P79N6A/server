@@ -7,9 +7,17 @@ table {border-spacing:0;float:left;}
       background-color:#0f3;
       color: #fff;
       }
+.down { font-size: 2em;
+      font-weight: bold;
+      padding:  0 1.4em 0 1.4em;
+      background-color:#eee;
+      color: #fff;
+      }
+.down:hover { background-color: black;
+              color: white }
 .du { color: #fff;
       background-color:#05f;
-      padding:.1em;
+      padding:.1em .1em .1em .6em;
       }
 .ls .abbr{display:none}
 .ls a {
