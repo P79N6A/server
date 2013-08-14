@@ -21,4 +21,12 @@ class E
             map{|a,s|
               {_: :input, name:  a, value: s, :type => :hidden}}]}}}
 
+  # construct p/o index-traversal links
+  fn 'view/linkPO',->d,e{
+    [d.map{|u,r|
+      {_: :a, href: r.url+'?set=indexPO&p='+e['uri']+'&view=page&views=timegraph,mail&v=multi&c=8', c: u+"\n<br>"}
+    },
+     '<style>a {background-color: #0ff;color:#000;font-size:1.3em;border-radius:.62em;padding:.2em}</style>'
+    ]}
+
 end

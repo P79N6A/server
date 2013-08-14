@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 
 class E
 
@@ -72,10 +72,10 @@ class E
     # CSS
     [(H.css '/css/mail'),
 
-     ([{_: :a, c: env.q['p']},
-       ' :: ',
-       {_: :a, href: E[env['uri']].url+'?set=index&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
-      ] if env.q['set']=='index'),
+     ([{_: :a, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p']},
+       {_: :a, href: '/m?y=day', c: ' :: '},
+       {_: :a, href: E[env['uri']].url+'?set=indexPO&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
+      ] if env.q['set']=='indexPO'),
 
      '<table>',
 
@@ -152,7 +152,7 @@ class E
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
                 m[a[1]].do{|m|
                   m.map{|f| f.respond_to?(:uri) &&
-                    {_: :a, property: a[0], href: f.url+'?set=index&p='+a[0]+'&view=page&views=timegraph,mail&v=multi&c=8', c: f.uri}}}},
+                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=page&views=timegraph,mail&v=multi&c=8', c: f.uri}}}},
 
               # mailto URI with embedded reply metadata
               (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&

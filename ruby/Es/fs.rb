@@ -79,7 +79,7 @@ class E
 
   # range query - predicate
   def rangeP n=8,d=:desc,s=nil,o=nil
-#    puts "rangeP #{uri} count #{n} dir #{d} cursor #{s}"
+    puts "rangeP #{uri} count #{n} dir #{d} cursor #{s}"
     pIndex.subtree(n,d,s).map &:ro
   end
 
