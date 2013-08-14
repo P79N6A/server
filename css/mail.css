@@ -28,7 +28,7 @@ td.group {vertical-align:top;text-align:left}
 td.subject {max-width:88ex;vertical-align:top;text-align:right}
 .thread {background-color:#000;color:#fff;border-width:0 0 0.2em 0;border-style:solid;margin:0;padding:0}
 .thread:hover {background-color:#f04}
-.thread:visited {background-color:#888;color:#f8f8f8}
+.thread:visited {background-color:#05f;color:#4ff}
 pre {white-space: pre-wrap}
 div.mail{background-color:black;color:white;max-width:120ex;margin-left:24%;margin-right:4%}
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}

@@ -74,7 +74,7 @@ class E
 
      ([{_: :a, c: env.q['p']},
        ' :: ',
-       {_: :a, href: '', c: env['uri']}
+       {_: :a, href: E[env['uri']].url+'?set=index&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
       ] if env.q['set']=='index'),
 
      '<table>',
@@ -132,7 +132,7 @@ class E
       (H.once e,:mu,(H.js '/js/mu')),
 
       # up to set-overview
-      {_: :a, id: :up, href: e['REQUEST_PATH'] + e.q.merge({'view' => 'page', 'v' => 'threads'}).qs, c: '&uarr;'},
+      ({_: :a, id: :up, href: e['REQUEST_PATH'] + e.q.merge({'view' => 'page', 'v' => 'threads'}).qs, c: '&uarr;'} if d.keys.size > 2),
 
       # collapse/expand quoted content
       {id: :showQuote, c: :quote, show: :true},{_: :style, id: :quote}),
