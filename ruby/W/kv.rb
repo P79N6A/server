@@ -63,49 +63,4 @@ class E
     u.w o,!o.class==String unless u.f
   end
 
-  # index :: predicateURI, object 
-  def index p,o
-    indexEdit E(p),                         # predicate -> resource
-      (o.class == E ? o : E(p).literal(o)), # object -> resource
-       nil
-  end
-
-  def indexEdit p,o,a
-    return if @noIndex
-    # add/remove properties of index-resource
-    p.pIndex.noIndex[o,self,a]
-  end
-
-  # stop auto-index of statements on this resource
-  # (index is a normal resource )
-  def noIndex
-    @noIndex = 1
-    self
-  end
-
-  # range query on predicate index
-  def rangeP n=8,d=:desc,s=nil
-    pIndex.subtree(n,d,s).map &:ro
-  end
-
-  # range query on predicate-object index
-  def rangePO o,n=8,d=:desc,s=nil
-    poIndex(o).subtree(n,d,s).map &:ro
-  end
-
-  # subjects matching a predicate-object pair
-  def po o
-    pIndex[o.class == E ? o : literal(o)]
-  end
-
-  # predicate index
-  def pIndex
-    '/index'.E.s self
-  end
-
-  # predicate-object index
-  def poIndex o
-    pIndex.s o
-  end
-
 end
