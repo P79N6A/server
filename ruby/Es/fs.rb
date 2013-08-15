@@ -125,7 +125,7 @@ class Pathname
       
       # sort nodes in asc or desc order
       nodes.sort_by(&:to_s).send(v).each{|n|
-
+        ns = n.to_s
         # have we got enough nodes?
         return if 0 >= count
 
@@ -135,7 +135,8 @@ class Pathname
          # no offset specified
          !offset ||
          # offset satisfies in-range operator
-         n.to_s.send(m,offset)) && (
+         (sz = [ns,offset].map(&:size).min
+          ns[0..sz-1].send(m,offset[0..sz-1]))) && (
          if !(c = n.c).empty? # has children?
            visit.(c)          # visit children
          else
