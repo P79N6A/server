@@ -99,10 +99,8 @@ class E
     }.E.env(e).jail.do{|r|           # valid path?
       e['uri']=r.uri; r.send e.fn    # update URI and continue
     } || [403,{},['invalid path']]). # reject
-      do{|response| puts             # inspect
-        [e.fn, response[0],
-        ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,
-         e['HTTP_USER_AGENT'],e['HTTP_REFERER']].join ' '
+      do{|response| puts [           # inspect
+        e.fn, response[0],['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,e['HTTP_USER_AGENT'],e['HTTP_REFERER']].join ' '
         response }
     end
 

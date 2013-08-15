@@ -24,9 +24,9 @@ class E
   # construct p/o index-traversal links
   fn 'view/linkPO',->d,e{
     [d.map{|u,r|
-      {_: :a, href: r.url+'?set=indexPO&p='+e['uri']+'&view=page&views=timegraph,mail&v=multi&c=8', c: u+"\n<br>"}
+      {_: :a, href: r.url+'?set=indexPO&p='+e['uri']+'&view=page&views=timegraph,mail&v=multi&c=8', c: u}
     },
-     '<style>a {background-color: #0ff;color:#000;font-size:1.3em;border-radius:.62em;padding:.2em}</style>'
+     '<style>a {background-color: #000;border-style:dotted;border-width:.1em;border-color:#fff;display:block;color:#fff;font-size:1.3em;border-radius:.62em;padding:.2em;margin-bottom:.5em}</style>'
     ]}
 
 end

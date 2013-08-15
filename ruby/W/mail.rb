@@ -107,13 +107,13 @@ class E
             ['<br>', t[1].map{|s|
 
                # author name and RDFa
-               [{_: :a, property: Creator, href: s.url, :class => 'sender', style: 'background-color:'+c,
+               [{_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
                   c: s[SIOC+'name'][0].split(/\W/,2)[0]},' ']}]),'<br>']},'</td>',
 
         # recipient group, Mailing List
         {_: :td, class: :group, property: To,
           c: {_: :a, :class => :to, style: 'background-color:'+c, c: e[0] && e[0].split(/@/)[0],
-            href: e[0] && e[0].E.url+'?,=sioc:addressed_to&view=page&v=threads'}},
+            href: e[0] && e[0].E.url+'?set=indexPO&p=sioc:addressed_to&view=page&v=threads'}},
 
         '</tr>']},'</table>',
 

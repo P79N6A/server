@@ -58,6 +58,7 @@ class E
       # insert pointers in response-graph
       m['prev']={'uri' => 'prev','url' => d.url,'d' => 'desc','b' => desc.uri} if desc
       m['next']={'uri' => 'next','url' => d.url,'d' => 'asc', 'b' => asc.uri}  if asc
+      puts s.class,s.map{|s| s.class}, s
       s }}
   F['set/indexPO']=F['set/index']
   fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
@@ -85,7 +86,7 @@ class E
 
   # range query - predicate-object
   def rangePO n=8,d=:desc,s=nil,o
-#    puts "rangePO #{uri} #{o} count #{n} dir #{d} cursor #{s}"
+    puts "rangePO #{uri} #{o} count #{n} dir #{d} cursor #{s}"
     poIndex(o).subtree(n,d,s).map &:ro
   end
 

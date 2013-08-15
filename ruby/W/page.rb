@@ -25,6 +25,6 @@ class E
 
     [(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')), # n/p key shortcuts
      c,(H (F['view/'+e.q['v']]||F['view']).(d,e)),      # content
-     c]} # show links at top and bottom ends
+     '<br clear=all>',c]}
   
 end

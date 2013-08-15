@@ -117,7 +117,7 @@ class E
 
   # E (_ _ o) -> E o
   def ro
-    uri.split(/#{E::S}\//)[-1].unpath
+    uri.split(/#{E::S}\//)[-1].unpath false
   end
 
   def sh
