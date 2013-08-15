@@ -48,7 +48,7 @@ class E
       r['d'].to_sym ||
       :desc),
      # offset
-     ('/'+r['b']).gsub(/\/+/,'/'),
+     r['offset'],
      # object
      (d if f == :rangePO)
      ).do{|s|
@@ -56,9 +56,8 @@ class E
       a,b = s[0], s.size > 1 && s.pop
       desc,asc = r['d'] && r['d']=='asc' && [a,b]||[b,a]
       # insert pointers in response-graph
-      m['prev']={'uri' => 'prev','url' => d.url,'d' => 'desc','b' => desc.uri} if desc
-      m['next']={'uri' => 'next','url' => d.url,'d' => 'asc', 'b' => asc.uri}  if asc
-      puts s.class,s.map{|s| s.class}, s
+      m['prev']={'uri' => 'prev','url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
+      m['next']={'uri' => 'next','url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc
       s }}
   F['set/indexPO']=F['set/index']
   fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
@@ -105,24 +104,50 @@ end
 
 class Pathname
 
-  def take s=1000,v=:desc,o=nil # count, direction, offset
-    i = to_s.size # comparison offset-index
-    o=o.gsub(/\/+/,'/') if o # offset
-    l = false     # in-range indicator
-    r=[]          # result set
-    v,m={asc: [:id,:>=], desc: [:reverse,:<=]}[v] # asc/desc operator lookup
-    a=->n{ s = s - 1; r.push n }                  # add to result-set, decrement count
-    g=->b{ b.sort_by(&:to_s).send(v).each{|n|     # each child-element
-        return if 0 >= s                          # stop if count reaches 0
-        (l || !o || n.to_s[i..i+o.size-1].send(m,o[0..(n.to_s.size - i - 1)])) && # in range?
-        (if !(c=n.c).empty?  # has children?
-           g.(c)             # include children
+  # take N els from fs tree in sorted, depth-first order
+  def take count=1000, direction=:desc, offset=nil
+
+    # construct offset-path
+    offset = to_s + offset.gsub(/\/+/,'/').E.path if offset
+
+    # in-range indicator
+    ok = false
+
+    # result set
+    set=[]
+
+    # asc/desc operators
+    v,m={asc:      [:id,:>=],
+        desc: [:reverse,:<=]}[direction]
+
+    # visitation function
+    visit=->nodes{
+      
+      # sort nodes in asc or desc order
+      nodes.sort_by(&:to_s).send(v).each{|n|
+
+        # have we got enough nodes?
+        return if 0 >= count
+
+        # continue if
+        (# already in-range
+         ok ||
+         # no offset specified
+         !offset ||
+         # offset satisfies in-range operator
+         n.to_s.send(m,offset)) && (
+         if !(c = n.c).empty? # has children?
+           visit.(c)          # visit children
          else
-           a.(n)             # add resource
-           l = true unless l # iterator in range
-        end)}}
-    g.(c) # start 
-    r     # result set
+           count = count - 1 # decrement wanted-nodes count
+           set.push n        # add node to result-set
+           ok = true         # iterator is now within range
+        end )}}
+
+    visit.(c) # start 
+
+    # result set
+    set
   end
 
 end
