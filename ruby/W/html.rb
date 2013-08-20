@@ -67,8 +67,12 @@ class E
 
   fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
 
+  # domain-specific view
   fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
     d.values.map{|r|Fn 'view/divine/item',r,e}}
+
+  # no domain-specific view
+  fn 'view/basic',->d,e{[H.css('/css/html'),d.values.map(&:html)]}
 
   # select view - filesystem hints
   fn 'view/divine/set',->d,e{

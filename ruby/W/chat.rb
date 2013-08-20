@@ -76,5 +76,6 @@ class E
      (H.once e,'chat.tail',{id: :b})]}
 
   F['view/'+SIOCt+'InstantMessage']=F['view/chat']
+  F['view/'+SIOCt+'MicroblogPost']=F['view/chat']
 
 end
