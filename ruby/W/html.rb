@@ -37,7 +37,15 @@ class Hash
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,c: (Fn 'abbrURI',k), class: :key},
-             {_: :td,c: v.html, class: :val}].cr}}.cr})
+             {_: :td,
+               c: (case k
+                   when E::Content
+                     {_: :pre, c: v}
+                   when 'uri'
+                     {_: :a, href: v.E.url, c: v}
+                   else
+                     v.html
+                   end), class: :val}].cr}}.cr})
   end
 end
 
@@ -72,7 +80,7 @@ class E
     d.values.map{|r|Fn 'view/divine/item',r,e}}
 
   # no domain-specific view
-  fn 'view/basic',->d,e{[H.css('/css/html'),d.values.map(&:html)]}
+  fn 'view/base',->d,e{[H.css('/css/html'),d.values.map(&:html)]}
 
   # select view - filesystem hints
   fn 'view/divine/set',->d,e{
