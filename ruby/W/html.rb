@@ -33,7 +33,7 @@ end
 
 class Hash
   def html
-    H({_: :table, c: 
+    H({_: :table, class: :html, c: 
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,c: (Fn 'abbrURI',k), class: :key},
