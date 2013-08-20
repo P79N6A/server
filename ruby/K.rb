@@ -40,6 +40,7 @@ class E
     csv: 'text/comma-separated-values',
     doc: 'application/word',
     flv: 'video/flv',
+    for: 'application/fortran',
     gif: 'image/gif',
     hs: 'application/haskell',
     html: 'text/html',

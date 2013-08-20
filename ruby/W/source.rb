@@ -6,7 +6,7 @@ class E
   def triplrSourceCode
     n = @r.has_key?('n') && "--line-number-ref=#{uri.sh}"
     yield uri,Content,
-    `source-highlight -f html -o STDOUT -i #{sh} #{n}`
+    `source-highlight -f html -o STDOUT -i #{sh} -s #{mime.split(/\//)[-1]} #{n}`
   end
 
   fn 'view/code',->d,e{[{_: :style, c: 'body{background-color:white;color:black}'},
