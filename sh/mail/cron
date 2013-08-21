@@ -1,0 +1,3 @@
+#!/bin/sh
+su -c getmail user
+#rsync -avz /home/user/.mail r:/home/user
