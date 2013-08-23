@@ -42,7 +42,8 @@ class Hash
                    when E::Content
                      {_: :pre, style: "white-space: pre-wrap", c: v}
                    when 'uri'
-                     {_: :a, href: v.E.url, c: v}
+                     u = v.E
+                     {_: :a, id: u, href: u.url, c: v}
                    else
                      v.html
                    end), class: :val}].cr}}.cr})
