@@ -6,6 +6,7 @@ class E
     RDF::Writer.for(f).buffer{|w|
       d.values.each{|r|
         r.triples{|s,p,o|
+#          puts :s,s,:p,p,:o,o.class,o
           w << RDF::Statement.new(RDF::URI(s),RDF::URI(p),
                                   (o.class==Hash||o.class==E) ?
                                     RDF::URI(o.uri) :
