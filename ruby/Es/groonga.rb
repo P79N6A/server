@@ -39,6 +39,8 @@ class E
       r.time = i[E::Date][0].to_time
     }
     self
+  rescue Exception => x
+    $stderr.puts x,x.message
   end
   
   # remove
