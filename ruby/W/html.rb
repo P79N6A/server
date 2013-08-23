@@ -40,7 +40,7 @@ class Hash
              {_: :td,
                c: (case k
                    when E::Content
-                     {_: :pre, c: v}
+                     {_: :pre, style: "white-space: pre-wrap", c: v}
                    when 'uri'
                      {_: :a, href: v.E.url, c: v}
                    else
