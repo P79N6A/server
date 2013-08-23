@@ -2,7 +2,8 @@
 class E
 
 #  http://groonga.org/ http://ranguba.org/
-
+#  https://github.com/groonga/groonga
+#  https://github.com/ranguba/rroonga
   # default DB
   def E.groonga
     @groonga ||= (require 'groonga'
