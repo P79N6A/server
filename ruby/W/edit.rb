@@ -1,8 +1,8 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   fn 'view/edit',->d,env{
-    "YUASkkkH"
+    {_: :form, name: :editor, c: 'edit'}
   }
 
 end
