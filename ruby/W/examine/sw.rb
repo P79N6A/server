@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 #curl http://eibispace.de/dx/sked-b11.csv > s.ssv
 #wget http://www1.m2.mediacat.ne.jp/binews/bib11.zip http://hfcc.org/data/b11/b11allx2.zip
@@ -10,7 +10,7 @@ class E
   F["?"]||={}
   F["?"].update({
                   'sw' => {
-                    'view' => 'e',
+                    'view' => 'examine',
                     'ev'=>'sw',
                     'a'=>'Lng:49',
                     'minP' => 'FREQ',
@@ -98,8 +98,8 @@ width:#{(e-b) * 4.0}px;
           l.match(/^[^<]+$/) &&
           (u=r.uri+'#'+i.to_s
            m[u]={'uri' => u,
-             'big'=>l.scan(/\b[A-Z][A-Z][A-Z]+\b/),
-             Content=>l}
+             'big'=>[l.scan(/\b[A-Z][A-Z][A-Z]+\b/)],
+             Content=>[l]}
            l.scan(/\d{4,}/){|d| d=d.to_i
              if (d > 2400) && (d < 30000)
                m[u]['FREQ']=[d]
