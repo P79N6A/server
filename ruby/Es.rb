@@ -1,4 +1,4 @@
-%w{fs groonga redis}.map{|e|require 'element/Es/'+e}
+%w{fs groonga redis}.map{|e|require_relative 'Es/'+e}
 
 class E
 

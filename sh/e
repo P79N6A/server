@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
 exit 0 if ARGV.empty?
-require 'element/Th'
-puts (E ARGV[0]).send *ARGV[1..-1].map{|a|a.path? ? a.E : a}
+require 'infodaemon'
+puts (E ARGV[0]).send *ARGV[1..-1].map{|a|
+  # URI/path arguments are resources
+  a.path? ? a.E : a}

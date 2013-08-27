@@ -1,6 +1,4 @@
-require 'element/W'
-%w{GET HEAD POST PATCH uid 404 500
-}.map{|i|require 'element/Th/' + i }
+%w{GET HEAD POST PATCH uid 404 500}.map{|i|require_relative 'Th/' + i}
 require 'rack'
 
 class String

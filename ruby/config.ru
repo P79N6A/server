@@ -1,3 +1,3 @@
-require 'element/Th'
+require 'infodaemon'
 use Rack::Deflater
 run E

@@ -1,2 +1,25 @@
-#!/bin/sh
-rsync -av "`dirname "$0"`"/ `ruby -e 'puts RbConfig::CONFIG["sitelibdir"]'`/element
+#!/usr/bin/env ruby
+name = 'infodaemon'
+
+ src = File.expand_path File.dirname __FILE__
+file = src + '/' + name + '.rb'
+ lib = RbConfig::CONFIG["sitelibdir"]
+dest = lib + '/' + name
+
+puts " source file #{file}"
+puts "        path #{src}"
+puts "install path #{dest}"
+
+case File.basename $0
+when 'install'
+puts `rsync -av "#{src}/" #{dest}`
+            `cp "#{file}" #{dest}.rb`
+
+when 'install-symlink'
+  `ln -s "#{file}" #{dest}.rb`
+  `ln -s  "#{src}" #{dest}`
+
+when 'uninstall'
+  `rm -r #{dest} #{dest}.rb`
+
+end

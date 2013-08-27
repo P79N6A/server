@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'element/W'
+require 'infodaemon'
 
 unless h = ARGV[0]
   puts "missing hostname arg"

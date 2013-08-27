@@ -31,4 +31,4 @@ table
 text
 tree
 wiki
-}.each{|r|require 'element/W/'+r}
+}.each{|r|require_relative 'W/'+r}

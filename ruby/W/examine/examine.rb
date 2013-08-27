@@ -1,5 +1,5 @@
 #watch __FILE__
-%w{exhibit hist history normal protovis sw time/graph time/line}.each{|e|require 'element/W/examine/'+e}
+%w{exhibit hist history normal protovis sw time/graph time/line}.each{|e|require_relative e}
 class E
 
   fn 'view/examine',->a,m,e{

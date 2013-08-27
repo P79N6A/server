@@ -1,4 +1,4 @@
- INSTALL    one of:
+ INSTALL       (any)
  ruby/install
  ruby/install-symlink
  export RUBYLIB=ruby
@@ -14,9 +14,9 @@
  cp ruby/config.ru .
 
  DAEMON
- e.thin    (standalone)
- e.apache  (see sh/.htaccess)
- e.nginx   (see sh/nginx)
+ i.thin    (standalone)
+ i.apache  (see sh/.htaccess)
+ i.nginx   (see sh/nginx)
 
 git@gitorious.org:element/www.git   https://gitorious.org/element/www
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
