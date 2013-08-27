@@ -1,5 +1,4 @@
-alias i.apache='apache=y thin --threaded start'
-alias i.daemon='RACK_ENV=production E daemon -s thin -p 80'
+alias infod='thin --threaded start -p 80'
 alias i.local='thin --threaded start -p 80 -a 127.0.0.1'
+alias i.apache='apache=y thin --threaded start'
 alias i.nginx='nginx=y thin --threaded start'
-alias i.thin='thin --threaded start -p 80'

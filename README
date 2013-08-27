@@ -14,7 +14,7 @@
  cp ruby/config.ru .
 
  DAEMON
- i.thin    (standalone)
+ infod     (standalone)
  i.apache  (see sh/.htaccess)
  i.nginx   (see sh/nginx)
 
