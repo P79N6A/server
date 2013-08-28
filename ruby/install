@@ -6,12 +6,9 @@ file = src + '/' + name + '.rb'
  lib = RbConfig::CONFIG["sitelibdir"]
 dest = lib + '/' + name
 
-puts " source file #{file}"
-puts "        path #{src}"
-puts "install path #{dest}"
-
-case File.basename $0
+case ARGV[0] || File.basename $0
 when 'install'
+puts " source file #{file}\n        path #{src}\n     install #{dest}"
 puts `rsync -av "#{src}/" #{dest}`
             `cp "#{file}" #{dest}.rb`
 

@@ -1,7 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "infod"
   s.version = "0.0.1"
-  s.authors = ["Carmen D Rocco"]
   s.date = "2013-09-01"
   s.description = "a webserver"
   s.email = "_@whats-your.name"
