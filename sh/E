@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 exit 0 if ARGV.empty?
-require 'infodaemon'
+require 'infod'
 puts E.send *ARGV

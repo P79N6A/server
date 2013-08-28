@@ -1,6 +1,6 @@
- INSTALL       (any)
+ INSTALL     (choose)
  ruby/install
- ruby/install-symlink
+ ruby/install symlink
  export RUBYLIB=ruby
 
  OS

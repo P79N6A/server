@@ -1,3 +1,3 @@
-require 'infodaemon'
+require 'infod'
 use Rack::Deflater
 run E
