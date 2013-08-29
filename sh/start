@@ -1,4 +1,0 @@
-#!/bin/sh
-cd /var/www/cracklog.com
-# git clone of www in ix's homedir not installed in system-path
-RUBYLIB=/home/ix/www/ruby/ GEM_HOME=/home/ix apache=y su -c "thin --threaded start" ix

@@ -1,0 +1,15 @@
+#!/bin/sh
+case "$1" in
+"apache")
+	apache=y thin --threaded start
+	;;
+"local")
+	thin --threaded start -p 80 -a 127.0.0.1
+	;;
+"nginx")
+	nginx=y thin --threaded start
+	;;
+*)
+	thin --threaded start -p 80
+	;;
+esac

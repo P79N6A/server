@@ -1,4 +1,0 @@
-#!/usr/bin/env ruby
-exit 0 if ARGV.empty?
-require 'infod'
-puts E.send *ARGV
