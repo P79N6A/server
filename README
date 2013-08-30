@@ -4,19 +4,16 @@
  export RUBYLIB=ruby
 
  OS
- apt-get install thin ruby-nokogiri ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
- source sh/rc
+ apt-get install thin ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
 
- SITES
+ CONFIG
  mkdir -p http://hostname && cp -a {css,js} http://hostname
-
- RACK
  cp ruby/config.ru .
 
- DAEMON
- infod     (standalone)
- i.apache  (see sh/.htaccess)
- i.nginx   (see sh/nginx)
+ DAEMON        notes
+ infod         standalone
+   ''  apache  sh/.htaccess
+   ''  nginx   sh/nginx
 
 git@gitorious.org:element/www.git   https://gitorious.org/element/www
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
