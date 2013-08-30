@@ -1,16 +1,9 @@
 #!/usr/bin/env ruby
-require 'pathname'
 method = ARGV[0] || File.basename($0)
 
 srcDir = File.expand_path File.dirname __FILE__
-srcFile = srcDir+'/table.rb'
-
-name = (Pathname srcDir).children.find{|c|c.symlink? && c.readlink.to_s == '.'}
- (puts "name missing"; exit) unless name
-name = File.basename name
-dest = RbConfig::CONFIG["sitelibdir"]+'/'+name
-
-print "src  ",srcDir,"\ndest ",dest, "\n"
+srcFile = srcDir + '/infod.rb'
+dest = RbConfig::CONFIG["sitelibdir"] + '/infod'
 
 case method
 when 'install'             ;puts \

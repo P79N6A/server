@@ -41,6 +41,7 @@ class E
     doc: 'application/word',
     flv: 'video/flv',
     for: 'application/fortran',
+    gemspec: 'application/ruby',
     gif: 'image/gif',
     hs: 'application/haskell',
     html: 'text/html',
@@ -169,6 +170,7 @@ class E
                  "inode/directory"
                # local MIME-types table
                elsif MIME[x]
+#                 puts "found mime for #{x} -> #{MIME[x]}"
                  MIME[x]
                # Rack MIME-types table
                elsif Rack::Mime::MIME_TYPES[t = '.' + x.to_s]

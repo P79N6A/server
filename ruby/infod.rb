@@ -1,8 +1,6 @@
 
 # the table of elements
 
-name = (File.basename __FILE__).sub(/\.rb$/,'')
-
 # Es search
 # H  HTML
 # K  constants
@@ -12,4 +10,4 @@ name = (File.basename __FILE__).sub(/\.rb$/,'')
 # W  forms and formats
 # Y  lambdas
 
-%w{Y K Rb N W Th H Es}.map{|e| require name + '/' + e}
+%w{Y K Rb N W Th H Es}.map{|e| require 'infod/' + e}
