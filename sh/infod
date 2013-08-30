@@ -1,15 +1,17 @@
 #!/bin/sh
+daemon='thin --threaded start'
+
 case "$1" in
 "apache")
-	apache=y thin --threaded start
+	apache=y $daemon
 	;;
 "local")
-	thin --threaded start -p 80 -a 127.0.0.1
+	$daemon -p 80 -a 127.0.0.1
 	;;
 "nginx")
-	nginx=y thin --threaded start
+	nginx=y $daemon
 	;;
 *)
-	thin --threaded start -p 80
+	$daemon -p 80
 	;;
 esac
