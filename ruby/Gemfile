@@ -2,6 +2,7 @@ source "https://rubygems.org/"
 
 gem 'json-ld'
 gem 'linkeddata'
+gem 'markdown'
 gem 'rack'
 gem 'rdf-rdfa'
 gem 'rroonga'
