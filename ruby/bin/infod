@@ -1,17 +1,25 @@
-#!/bin/sh
-daemon='thin --threaded start'
+#!/usr/bin/env ruby
 
-case "$1" in
-apache)
-	apache=y $daemon
-	;;
-lo|local)
-	$daemon -p 80 -a 127.0.0.1
-	;;
-nginx)
-	nginx=y $daemon
-	;;
-*)
-	$daemon -p 80
-	;;
-esac
+case ARGV[0]
+
+when 'apache'
+  ENV['apache']='y'
+  ARGV.shift
+
+when /^(lo|local)$/
+  ARGV.push *%w{-p 80 -a 127.0.0.1}
+  ARGV.shift
+
+when 'nginx'
+  ENV['nginx']='y'
+  ARGV.shift
+
+else
+  ARGV.push *%w{-p 80}
+
+end
+ARGV.push *%w{--threaded start}
+
+%w{infod thin}.map{|l| require l}
+
+Thin::Runner.new(ARGV).run!
