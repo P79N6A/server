@@ -6,7 +6,7 @@ srcFile = srcDir + '/infod.rb'
 dest = RbConfig::CONFIG["sitelibdir"] + '/infod'
 
 case method
-when 'install'             ;puts \
+when 'install'             ; puts \
   `rsync -av "#{srcDir}/" #{dest}`
   `cp        "#{srcFile}" #{dest}.rb`
   

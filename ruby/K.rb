@@ -123,14 +123,9 @@ class E
   MIMEcook={
     'application/atom+xml' => true,
     'application/markdown' => true,
-    'application/c' => true,
     'application/json' => true,
     'application/json+rdf' => true,
-    'application/ruby' => true,
-    'application/haskell' => true,
     'application/org' => true,
-    'application/php' => true,
-    'application/python' => true,
     'application/textile' => true,
     'application/word' => true,
     'message/rfc822'=> true,
@@ -139,6 +134,10 @@ class E
     'text/nfo'=>true,
     'text/rtf'=>true,
   }
+  %w{c ruby haskell php python}.map{|t|
+    %w{application/ text/x-}.map{|m|
+      MIMEcook[m+t] = true
+  }}
 
   # short -> full URI
   Abbrev={
