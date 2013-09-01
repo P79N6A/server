@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 
 #curl http://eibispace.de/dx/sked-b11.csv > s.ssv
 #wget http://www1.m2.mediacat.ne.jp/binews/bib11.zip http://hfcc.org/data/b11/b11allx2.zip

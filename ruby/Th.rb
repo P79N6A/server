@@ -102,13 +102,7 @@ class E
         response }
     end
 
-  # to run sans config.ru file
-  # RACK_ENV=production E daemon -s thin -p 80
-  def E.daemon *a; ARGV.shift
-    Rack::Server.start Rack::Server.new.options.update({app: E})
-  end
-
-  # site-specific code
+  # load site-specific code-base
 
   E['http:/*/*.rb'].glob.map{|s| puts "site config #{s}"
     require s.d}
