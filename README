@@ -15,7 +15,8 @@
  infod         standalone
    ''  apache  sh/.htaccess
    ''  nginx   sh/nginx
+ infod lo -d   listen only on localhost and go to background
 
-git@gitorious.org:element/www.git   https://gitorious.org/element/www
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
+git@gitorious.org:element/www.git   https://gitorious.org/element/www
 git://repo.or.cz/www.git            http://repo.or.cz/w/www.git
