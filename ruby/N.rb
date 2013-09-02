@@ -19,21 +19,22 @@ class E
 
   def bare
     base.sub(/\.#{ext}$/,'')
-    rescue
+  rescue
     base
   end
-
+  
+  def ef;  @ef ||= docBase.a('.e') end
+  def nt;  @nt ||= docBase.a('.nt') end
+  def ttl; @ttl ||= docBase.a('.ttl') end
+  
+  # base URI for document
+  # /concept <> /concept.ttl
   def docBase
-    readlink.uri.
-      split(/#/)[0].E.
-      do{|d|
-        d.dirname.as d.bare}
+    uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare }
   end
-
-    def ef;  @ef ||= docBase.a('.e') end
-    def nt;  @nt ||= docBase.a('.nt') end
-   def ttl; @ttl ||= docBase.a('.ttl') end
-
+  
+  # usually same as above,
+  # fails on exotic/non-conforming URIs
   def docBaseURI
     u = URI uri
     s = u.scheme
