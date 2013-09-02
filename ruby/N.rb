@@ -30,7 +30,7 @@ class E
   # base URI for document
   # /concept <> /concept.ttl
   def docBase
-    uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare }
+    readlink.uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare }
   end
   
   # usually same as above,
