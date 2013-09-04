@@ -1,9 +1,12 @@
 
 class Hash
+
   def graph g
     g.merge!({uri=>self})
   end
+
   %w{graphFromFile q}.map{|m|alias_method m,:graph}
+
   def mergeGraph g
     g.values.each do |r|
       r.triples do |s,p,o|
@@ -14,7 +17,9 @@ class Hash
     end
     self
   end
+
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
+
   # Hash -> tripleStream
   def triples
     s = uri
@@ -34,7 +39,8 @@ class E
     end; m
   end
 
-  # tripleStream transformer stack
+  # tripleStream emitter/transformer stack
+  #
   fn 'graph/|',->e,_,m{e.fromStream m, *_['|'].split(/,/)}
 
   def E.graphFromStream s

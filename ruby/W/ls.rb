@@ -3,7 +3,10 @@ class E
 
   fn 'set/ls',->d,e,m{d.c}
 
-  # filesystem metadata only
+  # filesystem "meta" data
+  fn 'graph/fs',->d,e,m{d.fromStream m, :triplrInode, false}
+
+  # ls :: filesystem meta-data
   fn 'graph/ls',->d,e,m{d.c.map{|c|c.fromStream m, :triplrInode, false}}
 
   # basic directory view 
