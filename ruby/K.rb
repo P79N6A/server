@@ -58,7 +58,7 @@ class E
     mp3: 'audio/mpeg',
     mp4: 'video/mp4',
     mpg: 'video/mpg',
-    n3: 'text/rdf+n3',
+    n3: 'text/n3',
     nfo: 'text/nfo',
     nt:  'text/ntriples',
     ntriples:  'text/ntriples',
