@@ -2,54 +2,69 @@ watch __FILE__
 class E
 
   # histogram
-  # ?view=h&a=dc:date
-  fn 'view/h',->d,e{
-    a=e.q['a'].do{|e|e.expand} # a :  attribute to chart
-    !a && 'attribute required' || (
-    n=e.q['bins']&&e.q['bins'].to_f.max(999.0).min(2)||42.0 # n :  number of bins
-    v=F['view/'+(e&&e.q['hv']||'tab')] # hv : bin template 
-    (Fn 'u/hist',d,a,n).do{|h| # construct histogram bins
-      [H.css('/css/hist'),H.js('/js/hist'),(Fn 'view/hist',h),
-       h.map{|b,r|{style: 'display:none',
-           :class => 's'+b.to_s.sub(/\./,'_'),
-           c: v.(r,e)}}]})}
+  fn 'view/histogram',->d,e{
 
-  # hist :: Graph, property, numBins  -> {bin -> Graph}
-  fn 'u/hist',->m,p,nb=32.0{
-    h={}; bw=0; max=0; min=0
+    # a :: attribute to chart
+    a = e.q['a'].do{|e|e.expand}
+
+    !a && 'attribute required' ||
+    (# bins :: number of buckets
+     n = e.q['bins'] && e.q['bins'].to_f.max(999.0).min(1) || 64.0
+
+     # hv :: bin template 
+     v = F['view/'+(e&&e.q['hv']||'tab')]
+
+     # construct histogram bins
+     (Fn 'view/histogram/bins',d,a,n).do{|h|
+
+       [H.css('/css/hist'),H.js('/js/hist'),(Fn 'view/histogram/content',h),
+        h.map{|b,r|{style: 'display:none', class: 's'+b.to_s.sub(/\./,'_'),
+            c: v.(r,e)}}]})}
+
+  F['view/h']=F['view/histogram']
+
+  # Graph, property, numBins  -> {bin -> Graph}
+  fn 'view/histogram/bins',->m,p,nb{
+    h = {}
+    bw = 0
+    min = 0
+    max = 0
     m.map{|u,r|
+      # attribute accessor
       r[p]
     }.flatten.do{|v|
-      v=v.compact.map{|v|v.to_time.to_f}# values
-      bw = (v.max - v.min) / nb.min(1)} # bin width 
-    m.map{|u,r|
-      r[p].do{|v|v.each{|v|
-          b=(v.to_time.to_f/bw).floor*bw # bin selector
-          h[b] ||= {} 
-          h[b][u]=r}}} # append
-    h} # histogram
+      # values
+      v = v.compact.map{|v|v.to_time.to_f}
+      max = v.max
+      min = v.min
+      # bin-width
+      bw = (max - min) / nb}
 
-  # histTable :: hist -> htmlTable
-  fn 'view/hist',->h{
+    # construct bins
+    (0..nb-1).map{|b|h[b] = {}}
+
+    # each resource
+    m.map{|u,r|
+      # binnable properties
+      r[p].do{|v|
+        v.each{|v|
+          # bin selector
+          b = ((v.to_time.to_f - min) / bw).floor
+
+          # append to bin
+          h[b][u] = r }}}
+
+    # histogram model
+    h }
+
+  fn 'view/histogram/content',->h{
     scale = 255 / h.map{|b,r|r.keys.size}.max.to_f
-    b=h.keys.sort
-    span=(b.size / 8).min 1
-    i=-1
-    '<table cellspacing=0 style="width:100%;max-width:100%"><tr class=histLegend>'+
-    H(b.select{|b|
-        i = i + 1
-        i % span == 0
-      }.map{|b|
-        {_: :td,
-          :class => :histLegendPt,
-          colspan: span,
-          c: {_: :span, :class => :histLabel, c: b > 1 ? b.to_i : b}}})+
-    '</tr><tr class=hist>'+
-    H(b.map{|b|{_: :td, title:b.to_s.sub(/\./,'_'),style: 'background-color:#'+
-          ('%02x' % (255-(h[b].do{|p|
-                            p.keys.size * scale
-                          }||0))).do{|x|
-            'ff'+x+x}}})+
-    '</tr></table>'}
+    b = h.keys.sort
+    ['<table cellspacing=0 style="width:100%;max-width:100%"><tr class=hist>',
+     b.map{|b|
+       {_: :td, style: 'background-color:#'+
+         ('%02x' % (255 - h[b].keys.size * scale)).do{|x|
+           'ff'+x+x}}},
+     '</tr></table>']}
 
 end
