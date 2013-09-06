@@ -17,8 +17,9 @@ class E
      # construct histogram bins
      (Fn 'view/histogram/bins',d,a,n).do{|h|
 
-       [H.css('/css/hist'),H.js('/js/hist'),(Fn 'view/histogram/content',h),
-        h.map{|b,r|{style: 'display:none', class: 's'+b.to_s.sub(/\./,'_'),
+       [H.css('/css/hist'),%w{mu hist}.map{|s|H.js('/js/'+s)},
+        (Fn 'view/histogram/render',h),
+        h.map{|b,r|{ class: 'histBin b'+b.to_s,
             c: v.(r,e)}}]})}
 
   F['view/h']=F['view/histogram']
@@ -45,6 +46,7 @@ class E
 
     # each resource
     m.map{|u,r|
+
       # binnable properties
       r[p].do{|v|
         v.each{|v|
@@ -57,14 +59,12 @@ class E
     # histogram model
     h }
 
-  fn 'view/histogram/content',->h{
+  fn 'view/histogram/render',->h{
     scale = 255 / h.map{|b,r|r.keys.size}.max.to_f
     b = h.keys.sort
-    ['<table cellspacing=0 style="width:100%;max-width:100%"><tr class=hist>',
+    ['<table class=histogram><tr>',
      b.map{|b|
-       {_: :td, style: 'background-color:#'+
-         ('%02x' % (255 - h[b].keys.size * scale)).do{|x|
-           'ff'+x+x}}},
+       {_: :td, class: 'b'+b.to_s, style: 'background-color:#'+('%02x' % (255-h[b].keys.size*scale)).do{|x|'ff'+x+x}}},
      '</tr></table>']}
 
 end
