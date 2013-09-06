@@ -1,8 +1,13 @@
 table.histogram {
     width:100%;
     max-width:100%;
+    top:0;
     border-spacing:0;
+    position:fixed;
 }
+
+.h3 {
+    padding-top: 4em}
 
 table.histogram tr {
     height:5em;

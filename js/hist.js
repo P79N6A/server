@@ -1,6 +1,8 @@
 var histogram = function(){
     var showBin =  function(e){
-	q('.histBin.'+e.target.attr('class')).scrollIntoView()
+	var b = e.target.attr('class')
+	q('.histBin.' + b).scrollIntoView()
+//	console.log(q('.histBin.' + b))
     }
 
     var bins = document.querySelectorAll('table.histogram td');

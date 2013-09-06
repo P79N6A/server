@@ -15,12 +15,15 @@ class E
      v = F['view/'+(e&&e.q['hv']||'tab')]
 
      # construct histogram bins
-     (Fn 'view/histogram/bins',d,a,n).do{|h|
+     (Fn 'view/histogram/bins',d,a,n).do{|h,m|
 
        [H.css('/css/hist'),%w{mu hist}.map{|s|H.js('/js/'+s)},
         (Fn 'view/histogram/render',h),
-        h.map{|b,r|{ class: 'histBin b'+b.to_s,
-            c: v.(r,e)}}]})}
+        h.map{|b,r|
+          left = m[:min] + m[:bw] * b
+          { class: 'histBin b'+b.to_s,
+            c: [{_: :h3, c: left.to_s + ' &rarr; ' + (left + m[:bw]).to_s },
+                v.(r,e)]}}]})}
 
   F['view/h']=F['view/histogram']
 
@@ -57,7 +60,7 @@ class E
           h[b][u] = r }}}
 
     # histogram model
-    h }
+    [h, {min: min, max: max, bw: bw}] }
 
   fn 'view/histogram/render',->h{
     scale = 255 / h.map{|b,r|r.keys.size}.max.to_f
