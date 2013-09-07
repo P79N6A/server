@@ -20,10 +20,13 @@ class E
        [H.css('/css/hist'),%w{mu hist}.map{|s|H.js('/js/'+s)},
         (Fn 'view/histogram/render',h),
         h.map{|b,r|
-          left = m[:min] + m[:bw] * b
-          { class: 'histBin b'+b.to_s,
-            c: [{_: :h3, c: left.to_s + ' &rarr; ' + (left + m[:bw]).to_s },
-                v.(r,e)]}}]})}
+          r.empty? ? ' ' :
+          (x = m[:min] + m[:bw] * b
+           # wrap bin
+           { class: 'histBin b'+b.to_s,
+             c: [# label bin
+                 {_: :h3, c: x.to_s + ' &rarr; ' + (x + m[:bw]).to_s },
+                 v.(r,e)]})}]})}
 
   F['view/h']=F['view/histogram']
 
