@@ -6,9 +6,6 @@ table.histogram {
     position:fixed;
 }
 
-.h3 {
-    padding-top: 4em}
-
 table.histogram tr {
     height:5em;
 }
@@ -17,4 +14,15 @@ table.histogram td {
     border-style:dotted;
     border-width: 0 0 0 .1em;
     border-color: #ddd;
+}
+
+.h3 {
+    padding-top: 4em}
+
+.histBin {
+    margin:1em;
+    padding:.5em;
+    border-style:dotted;
+    border-width:.1em;
+    border-color:#aaa;
 }

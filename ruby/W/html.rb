@@ -80,7 +80,9 @@ class E
     d.values.map{|r|Fn 'view/divine/item',r,e}}
 
   # no domain-specific view
-  fn 'view/base',->d,e{[H.css('/css/html'),d.values.map(&:html)]}
+  fn 'view/base',->d,e{
+    [H.once(e,'base',H.css('/css/html')),
+     d.values.map(&:html)]}
 
   # select view - filesystem hints
   fn 'view/divine/set',->d,e{
