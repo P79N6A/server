@@ -16,13 +16,18 @@ table.histogram td {
     border-color: #ddd;
 }
 
-.h3 {
-    padding-top: 4em}
+h3 {
+    margin:0;
+    padding:0;
+}
 
 .histBin {
     margin:1em;
-    padding:.5em;
+    padding: 0 .8em .8em .8em;
     border-style:dotted;
     border-width:.1em;
     border-color:#aaa;
+    border-radius:0 .4em .4em .4em;
 }
+
+.histBin table.html {float: none}
