@@ -2,7 +2,9 @@ var histogram = function(){
     var showBin =  function(e){
 	var b = e.target.attr('class')
 	var s = document.querySelector('.histBin.' + b)
-         if (s) {s.scrollIntoView()}
+         if (s){ s.scrollIntoView()
+		 if (window.scrollByLines)
+	             window.scrollByLines(-5)}
 	var s = document.querySelector('.histogram style')
 	 if (s) {s.remove() }
 	document.querySelector('.histogram').append(el('style').txt('.histBin.'+b+'{background-color:#0f0;color:#000}'))
