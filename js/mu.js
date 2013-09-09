@@ -1,11 +1,6 @@
 N = NodeList.prototype;
 E = Element.prototype;
 
-GET=function(u,f){var r=new XMLHttpRequest();r.open('GET',u,true);r.onreadystatechange=function(){if(r.readyState==4){if(r.status==200)f(r)}};r.send(null)};
-var el = function(e){return document.createElement(e)};
-var q  = function(s){return document.querySelector(s)};
-var qa = function(s){return document.querySelectorAll(s)};
-
 N.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a);return this}
 N.array = function(){
     var r=[]
@@ -54,3 +49,11 @@ E.clone = function(){
 	     this[f[1]]=a;
 	     return this
 	      } else {return this[f[1]]}}});
+
+GET=function(u,f){
+    var r=new XMLHttpRequest();
+    r.open('GET',u,true);
+    r.onreadystatechange=function(){if(r.readyState==4){if(r.status==200)f(r)}};r.send(null)};
+
+var el = function(e){return document.createElement(e)};
+
