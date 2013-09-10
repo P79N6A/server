@@ -9,3 +9,5 @@
     border-color: #aaa;
     border-width: .1em;
 }
+
+span.scheme { display: none; }

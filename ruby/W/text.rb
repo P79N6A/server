@@ -50,7 +50,7 @@ class E
 
   fn 'view/title/item',->r,e{
     {_: :a, class: :title, href: r.E.url,
-      c: r[Title] || r.uri}}
+      c: r[Title] || (Fn 'abbrURI', r.uri)}}
 
   # linebreak-delimited list of URIs
   def triplrUriList
