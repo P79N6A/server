@@ -42,10 +42,15 @@ class E
               href: r.uri+'?view=txt'},
             '<br>',r[Content]]}}}
 
-  fn 'view/title',->d,e{i=F['view/title/item']
-    d.map{|u,r|[i.(r,e),' ']}}
+  fn 'view/title',->d,e{
+    i = F['view/title/item']
+    [d.map{|u,r|[i.(r,e),' ']},
+     (H.once e,'title',(H.css '/css/title'))
+    ]}
 
-  fn 'view/title/item',->r,e{{_: :a,href: r.E.url,c:r[e.q['title']||Title],class: :title}}
+  fn 'view/title/item',->r,e{
+    {_: :a, class: :title, href: r.E.url,
+      c: r[Title] || r.uri}}
 
   # linebreak-delimited list of URIs
   def triplrUriList
@@ -60,7 +65,7 @@ class E
   def uris
     graph.keys.map &:E
   end
-  
+
   def triplrANSI
     yield uri, Content, `cat #{sh} | aha`
   end

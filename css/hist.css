@@ -27,7 +27,7 @@ h3 {
     border-style:dotted;
     border-width:.1em;
     border-color:#aaa;
-    border-radius:0 .4em .4em .4em;
+    border-radius:0 .8em .8em .8em;
 }
 
 .histBin table.html {float: none}
