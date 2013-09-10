@@ -25,3 +25,5 @@ class E
     yield 'prev','url',@r['REQUEST_PATH'] # base URI doesn't change as it's SQLite file
   end
 end
+
+#  http://m/moz/places.sqlite?graph=|&|=triplrMozHist&view=h&hv=title&a=dc:date&bins=96&c=960
