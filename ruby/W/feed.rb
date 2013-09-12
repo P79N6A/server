@@ -109,8 +109,9 @@ class E
                      d[Title].do{|t|{_: :title, c: t}},
                      d[Creator].do{|c|{_: :author, c: c[0]}},
                      {_: :content, type: :xhtml,
-                       c: {xmlns:"http://www.w3.org/1999/xhtml", c: d[Content]}}
-                    ].intersperse("\n")}
-             }.intersperse("\n")]}])}
+                       c: {xmlns:"http://www.w3.org/1999/xhtml",
+                         c: d[Content]}}].cr
+               }}.cr
+            ]}])}
 
 end

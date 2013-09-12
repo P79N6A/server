@@ -9,6 +9,8 @@ class E
   # util, prefix -> tripleStream
   def triplrStdOut e,f='/',g=nil,a=sh
 
+    puts "triplr-stdout #{uri} #{e} #{f}"
+
     # leading/trailing whitespace expression
     g ||= /^\s*(.*?)\s*$/
 

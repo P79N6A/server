@@ -95,7 +95,7 @@ class E
     'audio/mp4'            => [:triplrStdOut,'faad -i',Audio],
     'audio/mpeg'           => [:triplrStdOut,'id3info',Audio,/\((.*?)\)$/],
     'audio'                => [:triplrStdOut,'sndfile-info',Audio],
-    'image'                => [:triplrStdOut,'exiftool',EXIF],
+#    'image'                => [:triplrImage],
     'message/rfc822'       => [:triplrMail],
     'text/ansi'            => [:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
