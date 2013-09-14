@@ -6,7 +6,7 @@ class E
      g.map{|u,r|
        {class: :resource,
          id: u,
-         c: [{class: :uri, c: u}]}}]}
+         c: [{_: :a, class: :uri, c: u, href: r.url}]}}]}
 
   fn 'view/editor',->g,env{
      {_: :form, name: :editor, c: 'edit'}

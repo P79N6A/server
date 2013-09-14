@@ -1,16 +1,18 @@
 #up { background-color:#000;
       color:#09f;
       margin-left:21.5%;
-      }
-#down { background-color:#ccc;
-            color:#fff;
-        margin-left:1.61em;}
-#up,#down { font-size:2em;
-            padding:  0 1.4em 0 1.4em }
-#up:hover,#down:hover {background-color:#aaf }
+      font-size:2em;
+      padding:  0 1.4em 0 1.4em }
+#up:hover {background-color:#aaf }
 #showQuote {position:fixed;right:1.25em;top:0.1em;padding:.2em;color:#aaa;background-color:white;font-size:1.4em;border-style:dotted;border-width:0.1em;border-color:#ccc}
+
+div.mail{background-color:black;color:white;max-width:120ex;margin-left:24%;margin-right:4%}
+pre {white-space: pre-wrap}
+
+.q {background-color:#fff;color:#000}
+.title {font-weight:bold;font-size:.88em;float:right;background-color:#fff;color:#000;margin:0 0 1.4em 0}
+
 a{background-color:#09f;color:#fff;text-decoration:none;padding-left:.2em;border-radius:.38em .1em .1em .38em;margin:.08em}
-a.thread, a.sender, a.to {border-radius:0}
 a[id] { margin-right: .5em; border-radius:0;background-color:#458F00}
 a[rel=untyped] { background-color:#000;color:#8f0;border-color:#8f0;padding:.05em;border-style:dotted;border-width:.1em;white-space:nowrap;}
 a[rel=untyped]:hover {  background-color:#0df;color:#000;border-color:#0ff; }
@@ -20,23 +22,4 @@ a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;}
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;}
 a[property="sioc:addressed_to"],a[property="sioc:has_creator"] { border-style:dotted;border-width:.1em;border-color:#aaa; white-space:nowrap;float:left }
 a[title="reply"] { padding:0 .3em 0 .3em}
-span.empty { background-color:orange;margin-bottom:1.5em }
 a.line {color: #555;background-color:#000;font-size:.8em}
-.g {float:left;margin-left:0.2em;background-color:#eee;color:#050}
-.to {font-size:0.8em;color:black;padding:0;margin:0}
-td.group {vertical-align:top;text-align:left}
-td.subject {max-width:88ex;vertical-align:top;text-align:right}
-.thread {background-color:#000;color:#fff;border-width:0 0 0.2em 0;border-style:solid;margin:0;padding:0}
-.thread:hover {background-color:#f04}
-.thread:visited {background-color:#05f;color:#4ff}
-pre {white-space: pre-wrap}
-div.mail{background-color:black;color:white;max-width:120ex;margin-left:24%;margin-right:4%}
-.sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
-.title {font-weight:bold;font-size:.88em;float:right;background-color:#fff;color:#000;margin:0 0 1.4em 0}
-.q {background-color:#fff;color:#000}
-.sender:hover {color:#eef}
-.sender:visited {color:white}
-form {display:inline;background-color:white;color:black}
-div.form {display:inline}
-input {margin-top:0.1em;width:10em;font-size:2em;border-style:solid;border-color:white}
-input:hover {border-color:#0f0;border-style:dotted}

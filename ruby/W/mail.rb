@@ -70,7 +70,7 @@ class E
         g[t.uri]=g[t.uri].succ}}
 
     # CSS
-    [(H.css '/css/mail'),
+    [(H.css '/css/mail.threads'),
 
      ([{_: :a, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p']},
        {_: :a, href: '/m?y=day', c: ' :: '},

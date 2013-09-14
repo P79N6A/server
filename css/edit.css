@@ -1,13 +1,15 @@
 .resource {
     margin:1em;
-    padding: 0 .8em .8em .8em;
+    padding: 0 .8em .8em 0;
     border-style:dotted;
     border-width:.1em;
     border-color:#aaa;
     border-radius:0 .8em .8em 0;
 }
 
-.resource .uri {
+.resource a.uri {
     color:#000;
     background-color:#fff;
+    border-radius:0 0 .4em 0;
+    padding: .04em;
 }
