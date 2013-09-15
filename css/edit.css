@@ -16,7 +16,7 @@
     background-color: #888;
 }
 
-.PROPERTY {
+.property {
     background-color:#000;
     color:#fff;
 }
@@ -24,14 +24,22 @@
 .property > a.uri {
     float: left;
     width: 30%;
+    font-weight:bold;
+    background-color: #fff;
+    color: #0cf;
+}
+
+a.uri {
+    font-family: sans-serif;
+    text-decoration: none;
 }
 
 .property > .edit {
     float: right;
     background-color: #4f4;
-    color: #8ff;
-    border-radius:.62em;
-    display:none;
+    color: #4a4;
+    border-radius:.62em 0 0 .62em;
+/*    display:none; */
 }
 
 pre {white-space: pre-wrap}
