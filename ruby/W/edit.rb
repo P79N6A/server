@@ -7,8 +7,16 @@ class E
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: s.url},
              s.map{|p,o|
-              {property: p, c: p}
-             }]}}]}
+              {property: p,
+                 c: (case p
+                     when 'uri'
+#                       uri
+                     when Content
+                       {_: :pre, c: o}
+                     else
+                       o.html
+                     end
+                     )}}]}}]}
 
   fn 'view/edit/html',->g,env{
      {_: :form, name: :editor, c: 'edit'}
