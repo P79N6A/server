@@ -12,8 +12,18 @@
     padding: .04em;
 }
 
+.property:hover {
+    background-color: #888;
+}
+
+.PROPERTY {
+    background-color:#000;
+    color:#fff;
+}
+
 .property > a.uri {
     float: left;
+    width: 30%;
 }
 
 .property > .edit {
@@ -21,6 +31,7 @@
     background-color: #4f4;
     color: #8ff;
     border-radius:.62em;
+    display:none;
 }
 
 pre {white-space: pre-wrap}
