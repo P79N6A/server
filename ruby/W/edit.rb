@@ -8,7 +8,8 @@ class E
          c: [{_: :a, class: :uri, id: uri, c: uri, href: s.url},
              s.map{|p,o|
               {class: :property,
-                 c: [p,' ',
+                 c: [{_: :a, class: :uri, c: p, href: p},
+                     {_: :span, class: :edit, c: :edit},
                      (case p
                       when 'uri'
                         #                       uri
