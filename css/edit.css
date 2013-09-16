@@ -5,6 +5,11 @@
     border-color:#aaa;
 }
 
+a.uri {
+    font-family: sans-serif;
+    text-decoration: none;
+}
+
 .resource > a.uri {
     color:#000;
     background-color:#fff;
@@ -12,13 +17,13 @@
     padding: .04em;
 }
 
-.property:hover {
-    background-color: #888;
-}
-
 .property {
     background-color:#000;
     color:#fff;
+}
+
+.property:hover {
+    background-color: #888;
 }
 
 .property > a.uri {
@@ -27,11 +32,6 @@
     font-weight:bold;
     background-color: #fff;
     color: #0cf;
-}
-
-a.uri {
-    font-family: sans-serif;
-    text-decoration: none;
 }
 
 .property > .edit {
