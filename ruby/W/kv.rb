@@ -16,7 +16,7 @@ class E
     unless o
       (s p).listPredicates
     else
-      edit E(p),(o.class == E ? o : E(p).literal(o)),v
+      editFs E(p),(o.class == E ? o : E(p).literal(o)),v
     end
   end
 
@@ -24,14 +24,14 @@ class E
     self[p,o]
   end
 
-  def edit p,o,v=nil
+  def editFs p,o,newVal=nil
     d=(s p).s o # object
-    if v # edit
-      if d.e
+    if newVal # edit
+      if d.e  # oldVal?
         d.deleteNode # remove
         indexEdit p,o,'' # unindex
       end
-      self[p,v] unless v.empty? # add
+      self[p,newVal] unless newVal.empty? # add
     else
       unless d.e
         indexEdit p,o,nil # index add
