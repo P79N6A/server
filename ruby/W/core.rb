@@ -54,7 +54,7 @@ class E
   def to_h
     {'uri'=>uri}
   end
-  
+
   def triplrMIMEdispatch &b;mime.do{|mime|
     yield uri,E::Type,(E MIMEtype+mime)
       (MIMEsource[mime]||
