@@ -158,32 +158,32 @@ class E
    ].map{|f|Literal[f]=true}
 
   def mime
-    @mime ||= (# dereferenced symlink
-               f = readlink
+    @mime ||=
+      (# dereferenced symlink
+       f = readlink
 
-               # filename extension
-               x = f.ext.downcase.to_sym
+       # filename extension
+       x = f.ext.downcase.to_sym
 
-               # directory?
-               if d?
-                 "inode/directory"
-               # local MIME-types table
-               elsif MIME[x]
-#                 puts "found mime for #{x} -> #{MIME[x]}"
-                 MIME[x]
-               # Rack MIME-types table
-               elsif Rack::Mime::MIME_TYPES[t = '.' + x.to_s]
-                 Rack::Mime::MIME_TYPES[t]
-               # procmail uses a prefix not an extension
-               elsif f.base.index('msg.')==0
-                 "message/rfc822"
-               # ask FILE(1)
-               elsif f.e
-                 `file --mime-type -b #{f.sh}`.chomp
-               # default
-               else
-                 "application/octet-stream"
-               end)
+       # directory?
+       if d?
+         "inode/directory"
+         # local MIME-types table
+       elsif MIME[x]
+         MIME[x]
+         # Rack MIME-types table
+       elsif Rack::Mime::MIME_TYPES[t = '.' + x.to_s]
+         Rack::Mime::MIME_TYPES[t]
+         # procmail uses a prefix not an extension
+       elsif f.base.index('msg.')==0
+         "message/rfc822"
+         # ask FILE(1)
+       elsif f.e
+         `file --mime-type -b #{f.sh}`.chomp
+         # default
+       else
+         "application/octet-stream"
+       end)
   end
 
   def == u

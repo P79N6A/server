@@ -1,16 +1,15 @@
 watch __FILE__
 class E
 
-  # editable graph residing in FS triplestore
+  # the editable graph on FS triplestore
   fn 'graph/editable',->resource,env,graph{
     # stub graph so request reaches edit-view even if resource is empty
     Fn 'graph/_',resource,env,graph
     # current resource state
-    resource.fromStream graph, :triplrFsStore
-    puts :editable,resource,graph
-  }
+    resource.fromStream graph, :triplrFsStore}
 
   fn 'view/edit',->g,e{
+    puts "edit #{g.keys}"
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s|
        {class: :resource,

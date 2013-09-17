@@ -54,7 +54,7 @@ class E
   # property list
   # E -> [E]
   def listPredicates
-    s = u.to_s.size+1
+    s = u.to_s.size
     subtree.map{|n|n.uri[s..-1].unpath}
    end
 
