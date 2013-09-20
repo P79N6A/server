@@ -17,6 +17,14 @@ a.uri {
     padding: .04em;
 }
 
+.addField {
+    background-color: #8d8;
+    color: #fff;
+    padding:.1em;
+    border-radius: .5em .2em .2em .5em;
+    margin-left: .8em;
+}
+
 .property {
     background-color:#000;
     color:#fff;

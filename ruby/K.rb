@@ -181,7 +181,7 @@ class E
          # ask FILE(1)
        elsif f.e
          `file --mime-type -b #{f.sh}`.chomp
-         # default
+         # unknown
        else
          "application/octet-stream"
        end)
