@@ -8,31 +8,28 @@ class E
     # current resource state
     resource.fromStream graph, :triplrFsStore}
 
-  fn 'view/edit',->g,e{
-    puts "edit #{g.keys}"
+  fn 'view/editor/html',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
-     g.map{|uri,s| uri &&
+     g.map{|uri,s| uri && s &&
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: s.url},
              s.map{|p,o|
               {class: :property,
-                 c: [{_: :a, class: :uri, c: p, href: p},
-                     {_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&view=edit/form&p=uri,'+CGI.escape(p)},
+                 c: [{_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&view=editor/html/form&p=uri,'+CGI.escape(p)},
                      (case p
                       when 'uri'
+                        {_: :a, class: :uri, c: p, href: p},
                       when Content
                         {_: :pre, c: o}
                       else
                         o.html
-                      end
-                      )]}}]}}]}
+                      end)]}}]}}]}
 
-  fn 'view/edit/form',->g,env{
-     {_: :form,
-      name: :editor,
+  fn 'view/editor/html/form',->g,env{
+     {_: :form, name: :editor,
       c: g.map{|uri,s|
-        s.map{|p,os|
-          os.map{|o|
+        s[p].map{|oArray|
+          oArray.map{|o|
             ['<br>',p,'<br>',
              {_: :input, name: p, value: o}]}}}}}
 

@@ -64,6 +64,7 @@ class E
     ntriples:  'text/ntriples',
     owl: 'application/rdf+xml',
     pdf: 'application/pdf',
+    pl:  'application/perl',
     png: 'image/png',
     py:  'application/python',
     rb:  'application/ruby',

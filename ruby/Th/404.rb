@@ -14,7 +14,7 @@ class E
     s['uri'] = u
     s['QUERY'] = [r.q]
     s['ACCEPT']= [r.accept]
-    s['http://buzzword.org.uk/rdf/personal-link-types#edit']=[E[u+'?view=edit&graph=editable']]
+    s['http://buzzword.org.uk/rdf/personal-link-types#edit']=[E[u+'?view=editor/html&graph=editable']]
     %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
     # output
     r.q.delete 'view'
