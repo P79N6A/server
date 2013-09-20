@@ -5,7 +5,7 @@ class E
   fn 'graph/editable',->resource,env,graph{
     # minimum graph so request reaches edit-view even if resource is empty
     Fn 'graph/_',resource,env,graph
-    # current resource state
+    # current editable graph
     resource.fromStream graph, :triplrFsStore}
 
   fn 'view/editor/html',->g,e{
@@ -27,8 +27,22 @@ class E
                         o.html
                       end)]}}]})}]}
 
+  # paramaterize field-edit view w/ a property URI
   fn 'view/editor/html/addField',->g,env{
-    'add field'
+    [# display core properties
+     [Date,Title,Creator,Content,Label].map{|p|
+       {_: :a, href: p, c: p.label+' '}
+     },
+     # input area
+     {_: :form, action: env['REQUEST_PATH'], method: :GET,
+       c: [{_: :input, type: :url, pattern: '^http.*$', size: 53},
+           {_: :input, type: :hidden, name: :view, value: 'editor/html/form'},
+           {_: :input, type: :hidden, name: :filter, value: :p},
+           {_: :input, type: :hidden, name: :graph, value: :editable},
+           {_: :input, type: :submit, value: 'add property'},
+          ]},'<br>',
+     # schema search-engine (optimize and move to localhost w/ 1 JSON file in git?)
+     {_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}]
   }
 
   fn 'view/editor/html/form',->g,env{
