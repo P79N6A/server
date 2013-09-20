@@ -35,7 +35,7 @@ class E
      },
      # input area
      {_: :form, action: env['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, pattern: '^http.*$', size: 53},
+       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
            {_: :input, type: :hidden, name: :view, value: 'editor/html/form'},
            {_: :input, type: :hidden, name: :filter, value: :p},
            {_: :input, type: :hidden, name: :graph, value: :editable},
