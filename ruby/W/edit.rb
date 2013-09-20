@@ -18,7 +18,7 @@ class E
                  c: [{_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&view=editor/html/form&p=uri,'+CGI.escape(p)},
                      (case p
                       when 'uri'
-                        {_: :a, class: :uri, c: p, href: p},
+                        {_: :a, class: :uri, c: p, href: p}
                       when Content
                         {_: :pre, c: o}
                       else

@@ -135,7 +135,7 @@ class E
     'text/nfo'=>true,
     'text/rtf'=>true,
   }
-  %w{c ruby haskell php python}.map{|t|
+  %w{c ruby haskell perl php python}.map{|t|
     %w{application/ text/x-}.map{|m|
       MIMEcook[m+t] = true
   }}
