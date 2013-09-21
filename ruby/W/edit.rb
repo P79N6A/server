@@ -29,28 +29,33 @@ class E
 
   # paramaterize field-edit view w/ property URI
   fn 'view/editor/html/addField',->g,env{
-    [# display core properties
+    [# display crucial properties
      [Date,Title,Creator,Content,Label].map{|p|
        {_: :a, href: p, c: p.label+' '}},
-     # input area
+     # URI input
      {_: :form, action: env['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
-           {_: :input, type: :hidden, name: :view, value: 'editor/html/form'},
-           {_: :input, type: :hidden, name: :filter, value: :p},
-           {_: :input, type: :hidden, name: :graph, value: :editable},
+           # arguments to edit view
+           {filter: :p,
+            graph: :editable,
+            view: 'editor/html/form'}.map{|n,v|
+           {_: :input, type: :hidden, name: n, value: v}},
            {_: :input, type: :submit, value: 'add property'},
-          ]},'<br>',
+          ]},
      # schema search-engine (optimize and move to localhost w/ 1 JSON file in git?)
      {_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}]}
 
+  # edit (s p _) in HTML forms
   fn 'view/editor/html/form',->g,env{
-    [{_: :h4, c: 's ' + env['uri']},
-     {_: :h4, c: 'p ' + env.q['p']},
-     {_: :form, name: :editor,
-       c: g.map{|uri,s|
-         s[p].map{|oArray|
-           oArray.map{|o|
-             ['<br>',p,'<br>',
-              {_: :input, name: p, value: o}]}}}}]}
+    s = env['uri']
+    p = env.q['p']
+    {class: :resource, id: s,
+      c: [s,' ',p,
+          {_: :form, name: :editor,
+            c: g.map{|uri,s|
+              s[p].map{|oArray|
+                oArray.map{|o|
+                  ['<br>',p,'<br>',
+                   {_: :input, name: p, value: o}]}}}}]}}
 
 end

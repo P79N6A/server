@@ -7,9 +7,8 @@ class E
 
 =end
   
-  # disallow custom-query crawling on all sites
-  fn '/robots.txt/GET',->e,r{
-    [200,{'Content-Type'=>'text/plain'},["User-agent: *\nDisallow: /*?*\n"]]}
+  # queries for robots
+  # fn '/robots.txt/GET',->e,r{[200,{'Content-Type'=>'text/plain'},["User-agent: *\nDisallow: /*?*\n"]]}
   
   # schema search forward from site root
   fn 'http://data.whats-your.name/GET',->e,r{
