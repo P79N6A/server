@@ -1,17 +1,22 @@
 class E
+=begin
+   a simple key/value RDF store on the vfs
 
-  # a simple key/value RDF store on a fs
+  get
+   E['http://www.kanzaki.com/ns/music#EnglishHorn'][RDFs+'comment']
+   -> ["A double-reed woodwind instrument, larger member of the oboe family."]
+  
+  set
+   (E'lement')['level']='trace'
+  
+  update
+   E('lement')['level','trace','abundant']
+  
+  delete
+   E('lement')['level','abundant','']
+  
+=end
 
-  # *get*
-  # (E'http://www.kanzaki.com/ns/music#EnglishHorn')[RDFs+'comment']
-  # -> ["A double-reed woodwind instrument, larger member of the oboe family."]
-  #
-  # *set*
-  # (E'lement')['level']='trace'
-  #
-  # *update*
-  # (E'lement')['level','trace','abundant']
-  #  
   def [] p,o=nil, v=nil
     unless o
       (s p).listPredicates

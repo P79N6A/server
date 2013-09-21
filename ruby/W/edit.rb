@@ -36,8 +36,7 @@ class E
      {_: :form, action: env['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
            # arguments to edit view
-           {filter: :p,
-            graph: :editable,
+           {filter: :p, graph: :editable,
             view: 'editor/html/form'}.map{|n,v|
            {_: :input, type: :hidden, name: n, value: v}},
            {_: :input, type: :submit, value: 'add property'},
@@ -45,10 +44,13 @@ class E
      # schema search-engine (optimize and move to localhost w/ 1 JSON file in git?)
      {_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}]}
 
-  # edit (s p _) in HTML forms
+  # edit fields in HTML forms
   fn 'view/editor/html/form',->g,env{
+    # subject / resource URI
     s = env['uri']
+    # predicate / property URI
     p = env.q['p']
+
     {class: :resource, id: s,
       c: [s,' ',p,
           {_: :form, name: :editor,
