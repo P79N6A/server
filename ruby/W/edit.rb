@@ -8,6 +8,7 @@ class E
     # current editable graph
     resource.fromStream graph, :triplrFsStore}
 
+  # show resource w/ links into edit-view
   fn 'view/editor/html',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s| uri && s &&
@@ -27,37 +28,39 @@ class E
                         o.html
                       end)]}}]})}]}
 
-  # paramaterize field-edit view w/ property URI
-  fn 'view/editor/html/addField',->g,env{
-    [# display crucial properties
-     [Date,Title,Creator,Content,Label].map{|p|
-       {_: :a, href: p, c: p.label+' '}},
-     # URI input
-     {_: :form, action: env['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
-           # arguments to edit view
-           {filter: :p, graph: :editable,
-            view: 'editor/html/form'}.map{|n,v|
-           {_: :input, type: :hidden, name: n, value: v}},
-           {_: :input, type: :submit, value: 'add property'},
-          ]},
-     # schema search-engine (optimize and move to localhost w/ 1 JSON file in git?)
-     {_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}]}
-
-  # edit fields in HTML forms
+  # HTML-form based editor
   fn 'view/editor/html/form',->g,env{
-    # subject / resource URI
+    # subject/resource URI
     s = env['uri']
-    # predicate / property URI
+    # predicate/property URI
     p = env.q['p']
-
     {class: :resource, id: s,
-      c: [s,' ',p,
+      c: [s,' &rarr; ',p,' &rarr; ',
           {_: :form, name: :editor,
             c: g.map{|uri,s|
               s[p].map{|oArray|
                 oArray.map{|o|
+                  # triple URI
                   ['<br>',p,'<br>',
                    {_: :input, name: p, value: o}]}}}}]}}
+
+  # select a property to add/edit
+  fn 'view/editor/html/addField',->g,env{
+    [# convenience ubiquitous properties
+     [Date,Title,Creator,Content,Label].map{|p|
+       {_: :a, href: p, c: p.label+' '}},
+     # URI-constrained input
+     {_: :form, action: env['REQUEST_PATH'], method: :GET,
+       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
+           # edit view arguments
+           {filter: :p, graph: :editable,
+            view: 'editor/html/form'}.map{|n,v|
+           {_: :input, type: :hidden, name: n, value: v}},
+           # submit
+           {_: :input, type: :submit, value: 'add property'},
+          ]},
+     # schema search-engine
+     #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
+    ]}
 
 end
