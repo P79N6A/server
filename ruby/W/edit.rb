@@ -41,9 +41,9 @@ class E
       ['<br><br>',
        (case p
         when Content
-          {_: :textarea, name: p, c: o}
+          {_: :textarea, name: p, c: o, rows: 24, cols: 80}
         else
-          {_: input, name: p, value: o}
+          {_: :input, name: p, value: o}
         end
         )]}
 
@@ -52,7 +52,9 @@ class E
           g.map{|uri,s|
             s[p].map{|o|
               triple[s,p,o]}},
-          triple[s,p,'']]}}
+          triple[s,p,''],' ',
+          {_: :input, type: :submit, value: 'save'}
+         ]}}
 
   # select/mint a property to edit
   fn 'view/editor/html/editP',->g,env{
