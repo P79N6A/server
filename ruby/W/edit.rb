@@ -15,10 +15,10 @@ class E
        (url = uri.E.url
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
-             {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editor/html/addField&nocache'},
+             {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editor/html/editP&nocache'},
              s.map{|p,o|
               {class: :property,
-                 c: [{_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&nocache&view=editor/html/form&p=uri,'+CGI.escape(p)},
+                 c: [{_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&nocache&view=editor/html/editPO&p=uri,'+CGI.escape(p)},
                      (case p
                       when 'uri'
                         {_: :a, class: :uri, c: p, href: p}
@@ -29,7 +29,7 @@ class E
                       end)]}}]})}]}
 
   # HTML-form based editor
-  fn 'view/editor/html/form',->g,env{
+  fn 'view/editor/html/editPO',->g,env{
     # subject/resource URI
     s = env['uri']
     # predicate/property URI
@@ -44,8 +44,8 @@ class E
                   ['<br>',p,'<br>',
                    {_: :input, name: p, value: o}]}}}}]}}
 
-  # select a property to add/edit
-  fn 'view/editor/html/addField',->g,env{
+  # select/mint a property to edit
+  fn 'view/editor/html/editP',->g,env{
     [# convenience ubiquitous properties
      [Date,Title,Creator,Content,Label].map{|p|
        {_: :a, href: p, c: p.label+' '}},
@@ -54,10 +54,10 @@ class E
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
            # edit view arguments
            {filter: :p, graph: :editable,
-            view: 'editor/html/form'}.map{|n,v|
+            view: 'editor/html/editPO'}.map{|n,v|
            {_: :input, type: :hidden, name: n, value: v}},
            # submit
-           {_: :input, type: :submit, value: 'add property'},
+           {_: :input, type: :submit, value: 'property'},
           ]},
      # schema search-engine
      #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
