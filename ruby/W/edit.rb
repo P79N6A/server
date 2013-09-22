@@ -33,16 +33,26 @@ class E
     # subject/resource URI
     s = env['uri']
     # predicate/property URI
-    p = env.q['p']
-    {class: :resource, id: s,
-      c: [s,' &rarr; ',p,' &rarr; ',
-          {_: :form, name: :editor,
-            c: g.map{|uri,s|
-              s[p].map{|oArray|
-                oArray.map{|o|
-                  # triple URI
-                  ['<br>',p,'<br>',
-                   {_: :input, name: p, value: o}]}}}}]}}
+    p = env.q['p'].expand
+
+    puts "Editing s #{s} p #{p}"
+
+    triple = ->s,p,o{
+      ['<br><br>',
+       (case p
+        when Content
+          {_: :textarea, name: p, c: o}
+        else
+          {_: input, name: p, value: o}
+        end
+        )]}
+
+    {_: :form, name: :editor,
+      c: [s,' &rarr; ',p,
+          g.map{|uri,s|
+            s[p].map{|o|
+              triple[s,p,o]}},
+          triple[s,p,'']]}}
 
   # select/mint a property to edit
   fn 'view/editor/html/editP',->g,env{
