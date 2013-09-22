@@ -78,11 +78,11 @@ class E
     uri.expand.E
   end
 
-  def consURI b
+  def concatURI b
     u.a E(b).path
   end
 
-  alias_method :s, :consURI
+  alias_method :s, :concatURI
 
   def prependURI s
     (s + uri).E

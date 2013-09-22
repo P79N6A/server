@@ -8,8 +8,8 @@ class E
     # current editable graph
     resource.fromStream graph, :triplrFsStore}
 
-  # show resource w/ links into edit-view
-  fn 'view/editor/html',->g,e{
+  # show resource w/ links into editor view
+  fn 'view/edit',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s| uri && s &&
        (url = uri.E.url
@@ -29,11 +29,11 @@ class E
                       end)]}}]})}]}
 
   # HTML-form based editor
-  fn 'view/editor/html/editPO',->g,env{
+  fn 'view/editor/html/editPO',->g,e{
     # subject/resource URI
-    s = env['uri']
+    s = e['uri']
     # predicate/property URI
-    p = env.q['p'].expand
+    p = e.q['p'].expand
 
     puts "Editing s #{s} p #{p}"
 
@@ -53,7 +53,8 @@ class E
             s[p].map{|o|
               triple[s,p,o]}},
           triple[s,p,''],' ',
-          {_: :input, type: :submit, value: 'save'}
+          {_: :input, type: :submit, value: 'save'},
+          {_: :a, c: ' cancel', href: e['REQUEST_PATH']+'?view=edit&graph=editable&nocache'}
          ]}}
 
   # select/mint a property to edit
@@ -65,7 +66,7 @@ class E
      {_: :form, action: env['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
            # edit view arguments
-           {filter: :p, graph: :editable,
+           {filter: :p, graph: :editable, nocache: :true,
             view: 'editor/html/editPO'}.map{|n,v|
            {_: :input, type: :hidden, name: n, value: v}},
            # submit
