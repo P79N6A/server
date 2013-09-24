@@ -28,7 +28,26 @@ class E
                         o.html
                       end)]}}]})}]}
 
-  # editor - HTML forms
+  # select or mint a property to edit
+  fn 'view/editP',->g,env{
+    [# convenience ubiquitous properties
+     [Date,Title,Creator,Content,Label].map{|p|
+       {_: :a, href: p, c: p.label+' '}},
+     # URI-constrained input
+     {_: :form, action: env['REQUEST_PATH'], method: :GET,
+       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
+           # edit view arguments
+           {filter: :p, graph: :editable,
+             nocache: :true, view: :editPO}.map{|n,v|
+           {_: :input, type: :hidden, name: n, value: v}},
+           # submit
+           {_: :input, type: :submit, value: 'property'},
+          ]},
+     # schema search-engine
+     #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
+    ]}
+
+  # editor a specific property (all triple 'objects' in [s p _])
   fn 'view/editPO',->g,e{
     # subject/resource URI
     s = e['uri']
@@ -37,6 +56,8 @@ class E
 
     puts "Editing s #{s} p #{p}"
 
+    # each triple has an identifier
+    # render a single triple's field
     triple = ->s,p,o{
       ['<br><br>',
        (case p
@@ -56,24 +77,5 @@ class E
           {_: :input, type: :submit, value: 'save'},
           {_: :a, c: ' cancel', href: e['REQUEST_PATH']+'?view=edit&graph=editable&nocache'}
          ]}}
-
-  # select/mint a property to edit
-  fn 'view/editP',->g,env{
-    [# convenience ubiquitous properties
-     [Date,Title,Creator,Content,Label].map{|p|
-       {_: :a, href: p, c: p.label+' '}},
-     # URI-constrained input
-     {_: :form, action: env['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
-           # edit view arguments
-           {filter: :p, graph: :editable,
-             nocache: :true, view: :editPO}.map{|n,v|
-           {_: :input, type: :hidden, name: n, value: v}},
-           # submit
-           {_: :input, type: :submit, value: 'property'},
-          ]},
-     # schema search-engine
-     #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
-    ]}
 
 end
