@@ -8,17 +8,17 @@ class E
     # current editable graph
     resource.fromStream graph, :triplrFsStore}
 
-  # show resource w/ links into editor view
+  # show resource w/ links into editor
   fn 'view/edit',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s| uri && s &&
        (url = uri.E.url
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
-             {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editor/html/editP&nocache'},
+             {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editP&nocache'},
              s.map{|p,o|
               {class: :property,
-                 c: [{_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&nocache&view=editor/html/editPO&p=uri,'+CGI.escape(p)},
+                 c: [{_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&nocache&view=editPO&p=uri,'+CGI.escape(p)},
                      (case p
                       when 'uri'
                         {_: :a, class: :uri, c: p, href: p}
@@ -28,8 +28,8 @@ class E
                         o.html
                       end)]}}]})}]}
 
-  # HTML-form based editor
-  fn 'view/editor/html/editPO',->g,e{
+  # editor - HTML forms
+  fn 'view/editPO',->g,e{
     # subject/resource URI
     s = e['uri']
     # predicate/property URI
@@ -58,7 +58,7 @@ class E
          ]}}
 
   # select/mint a property to edit
-  fn 'view/editor/html/editP',->g,env{
+  fn 'view/editP',->g,env{
     [# convenience ubiquitous properties
      [Date,Title,Creator,Content,Label].map{|p|
        {_: :a, href: p, c: p.label+' '}},
@@ -66,8 +66,8 @@ class E
      {_: :form, action: env['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
            # edit view arguments
-           {filter: :p, graph: :editable, nocache: :true,
-            view: 'editor/html/editPO'}.map{|n,v|
+           {filter: :p, graph: :editable,
+             nocache: :true, view: :editPO}.map{|n,v|
            {_: :input, type: :hidden, name: n, value: v}},
            # submit
            {_: :input, type: :submit, value: 'property'},
