@@ -30,7 +30,9 @@ class E
 
   # select or mint a property to edit
   fn 'view/editP',->g,env{
-    [# convenience ubiquitous properties
+    [(H.once e, 'edit', (H.css '/css/edit')),
+
+     # convenience ubiquitous properties
      [Date,Title,Creator,Content,Label].map{|p|
        {_: :a, href: p, c: p.label+' '}},
      # URI-constrained input
@@ -72,7 +74,8 @@ class E
         )]}
 
     {_: :form, name: :editor,
-      c: [s,' &rarr; ',p,
+      c: [(H.once e, 'edit', (H.css '/css/edit')),
+          s,' &rarr; ',p,
           g.map{|uri,s|
             s[p].map{|o|
               triple[s,p,o]}},
