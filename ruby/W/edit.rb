@@ -1,7 +1,7 @@
 watch __FILE__
 class E
 
-  # the editable graph on FS triplestore
+  # editable graph on FS triplestore
   fn 'graph/editable',->resource,env,graph{
     # minimum graph so request reaches edit-view even if resource is empty
     Fn 'graph/_',resource,env,graph
@@ -56,15 +56,18 @@ class E
 
     puts "Editing s #{s} p #{p}"
 
-    # each triple has an identifier
-    # render a single triple's field
+    # triple to input area
     triple = ->s,p,o{
-      ['<br><br>',
+
+      # triple identifier
+      i = (s.E.concatURI p).concatURI o
+
+      ['<br><span class=tripleURI>',CGI.escapeHTML(i.to_s),'</span><br>',
        (case p
         when Content
-          {_: :textarea, name: p, c: o, rows: 24, cols: 80}
+          {_: :textarea, name: i, c: o, rows: 24, cols: 80}
         else
-          {_: :input, name: p, value: o}
+          {_: :input, name: i, value: o}
         end
         )]}
 

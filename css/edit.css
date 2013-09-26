@@ -5,6 +5,11 @@
     border-color:#aaa;
 }
 
+.tripleURI {
+    background-color: #ccc;
+    color: #222;
+}
+
 a.uri {
     font-family: sans-serif;
     text-decoration: none;
