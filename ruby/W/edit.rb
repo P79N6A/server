@@ -29,14 +29,14 @@ class E
                       end)]}}]})}]}
 
   # select or mint a property to edit
-  fn 'view/editP',->g,env{
+  fn 'view/editP',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
 
      # convenience ubiquitous properties
      [Date,Title,Creator,Content,Label].map{|p|
        {_: :a, href: p, c: p.label+' '}},
      # URI-constrained input
-     {_: :form, action: env['REQUEST_PATH'], method: :GET,
+     {_: :form, action: e['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
            # edit view arguments
            {filter: :p, graph: :editable,
@@ -49,7 +49,7 @@ class E
      #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
     ]}
 
-  # editor a specific property (all triple 'objects' in [s p _])
+  # edit all triple 'objects' in [s p _])
   fn 'view/editPO',->g,e{
     # subject/resource URI
     s = e['uri']

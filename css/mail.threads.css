@@ -25,7 +25,13 @@ td.group {vertical-align:top;
 	  text-align:left}
 td.subject {max-width:78em;vertical-align:top;text-align:right}
 
-.thread {background-color:#000;color:#fff;border-width:0 0 0.2em 0;border-style:solid;margin:0;padding:0}
+.thread {
+    background-color:#000;
+    color:#fff;
+    border-width:0 0 0.2em 0;
+    border-style:dotted;
+    margin:0;
+    padding:0}
 .thread:hover {background-color:#f04}
 .thread:visited {background-color:#05f;color:#4ff}
 

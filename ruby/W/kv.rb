@@ -30,20 +30,22 @@ class E
   end
 
   def editFs p,o,newVal=nil
-    d=(s p).s o # object
-    if newVal # edit
-      if d.e  # oldVal?
-        d.deleteNode # remove
+
+    # triple
+    t = concatURI(p).concatURI(o)
+
+    if newVal # update
+      if t.e  # oldVal?
+        t.deleteNode # remove triple
         indexEdit p,o,'' # unindex
       end
-      self[p,newVal] unless newVal.empty? # add
+      self[p,newVal] unless newVal.empty? # add triple
     else
-      unless d.e
-        indexEdit p,o,nil # index add
-        d.dir # create
+      unless t.e
+        indexEdit p,o,nil # index triple
+        t.dir # add triple
       end
     end
-    touch if e
   end
 
   def triplrFsStore
