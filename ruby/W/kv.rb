@@ -17,16 +17,21 @@ class E
   
 =end
 
-  def [] p,o=nil, v=nil
-    unless o
-      (s p).listPredicates
-    else
-      editFs E(p),(o.class == E ? o : E(p).literal(o)),v
-    end
-  end
 
   def []= p,o
     self[p,o]
+  end
+
+  def [] p,o=nil, v=nil
+    if o
+      # cast bare URI to resource
+      p = E p
+      # cast literals to URI
+      o = p.literal o unless o.class == E
+      editFs p,o,v
+    else
+      concatURI(p).listPredicates
+    end
   end
 
   def editFs p,o,newVal=nil

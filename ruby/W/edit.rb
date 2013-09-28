@@ -3,7 +3,7 @@ class E
 
   # editable graph on FS triplestore
   fn 'graph/editable',->resource,env,graph{
-    # minimum graph so request reaches edit-view even if resource is empty
+    # minimum graph
     Fn 'graph/_',resource,env,graph
     # current editable graph
     resource.fromStream graph, :triplrFsStore}
@@ -32,16 +32,21 @@ class E
   fn 'view/editP',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
 
-     # convenience ubiquitous properties
+     # core properties
      [Date,Title,Creator,Content,Label].map{|p|
        {_: :a, href: p, c: p.label+' '}},
-     # URI-constrained input
+
+     # URI-typed input
      {_: :form, action: e['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
-           # edit view arguments
-           {filter: :p, graph: :editable,
-             nocache: :true, view: :editPO}.map{|n,v|
+
+           # editor arguments
+           { filter: :p,
+              graph: :editable,
+            nocache: :true,
+               view: :editPO}.map{|n,v|
            {_: :input, type: :hidden, name: n, value: v}},
+
            # submit
            {_: :input, type: :submit, value: 'property'},
           ]},
@@ -51,18 +56,18 @@ class E
 
   # edit all triple 'objects' in [s p _])
   fn 'view/editPO',->g,e{
-    # subject/resource URI
+
+    # subject URI
     s = e['uri']
-    # predicate/property URI
+
+    # predicate URI
     p = e.q['p'].expand
 
-    puts "Editing s #{s} p #{p}"
-
-    # triple to input area
+    # single-triple
     triple = ->s,p,o{
 
       # triple identifier
-      i = (s.E.concatURI p).concatURI o
+      i = (s.E.concatURI p).concatURI E(p).literal o
 
       ['<br><span class=tripleURI>',CGI.escapeHTML(i.to_s),'</span><br>',
        (case p
@@ -73,7 +78,7 @@ class E
         end
         )]}
 
-    {_: :form, name: :editor,
+    {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
       c: [(H.once e, 'edit', (H.css '/css/edit')),
           s,' &rarr; ',p,
           g.map{|uri,s|

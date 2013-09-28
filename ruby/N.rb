@@ -82,8 +82,6 @@ class E
     u.a E(b).path
   end
 
-  alias_method :s, :concatURI
-
   def prependURI s
     (s + uri).E
   end
@@ -129,8 +127,13 @@ class E
 
   # literal -> URI
   def literal o
+    # already a URI
+    return self if o.class == E
+    # blob if not String
     return literalBlob o unless o.class == String
+    # whitelisted-predicate URI-format
     return literalURI o if (Literal[uri] || o.size<=88) && !o.match(/\//)
+    # string is a URI
     return E o if o.match %r{\A[a-z]+://[^\s]+\Z}
     literalBlob o
   end

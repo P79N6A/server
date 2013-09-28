@@ -1,3 +1,4 @@
+watch __FILE__
 class E
   def POST
     as('POST').y(self,@r) || basicPOST
@@ -6,7 +7,7 @@ class E
   end
 
   def basicPOST
-    
+    puts "post"
   end
 
   # mint URI to POSTs here
