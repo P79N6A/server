@@ -64,12 +64,12 @@ class E
 
   # predicate index
   def pIndex
-    '/index'.E.s self
+    '/index'.E.concatURI self
   end
 
   # predicate-object index
   def poIndex o
-    pIndex.s o
+    pIndex.concatURI o
   end
  
   # predicate-object index lookup
