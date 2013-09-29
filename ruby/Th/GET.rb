@@ -53,11 +53,10 @@ class E
      F[@r['REQUEST_PATH'].t+('GET')]||# specific path
      F[uri.t+('GET')]                 # specific URI
      ).do{|y|y.(self,@r)} ||       # custom handler
-    as('index.html').do{|i|        # HTML index
-      i.e &&                       #  exists?
-      ((uri[-1]=='/') ? i.env(@r).GET_file : # are we inside dir?
+    as('index.html').do{|i| i.e && # HTML index
+      ((uri[-1]=='/') ? i.env(@r).GET_file : # index in dir
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
-    response
+    response # resource handler
   end
 
   # graph constructor

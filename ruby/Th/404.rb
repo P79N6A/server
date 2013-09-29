@@ -8,16 +8,19 @@ class E
     u = e.uri     # response URI
     g = {u => {}} # response graph
     s = g[u]      # resource pointer
+
     # request environment vars to response graph
     r.map{|k,v| s[k] = [v] }
     s[Type] = [E[HTTP+'404']]
     s['uri'] = u
     s['QUERY'] = [r.q]
     s['ACCEPT']= [r.accept]
-    s['http://buzzword.org.uk/rdf/personal-link-types#edit']=[E[u+'?view=edit&graph=editable&nocache']]
     %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
-    # output
+
+    s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable&nocache']]
     r.q.delete 'view'
+
+    # output
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
 
   F['req/404'] = F[E404]

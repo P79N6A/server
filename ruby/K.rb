@@ -1,10 +1,10 @@
 class E
 
   FSbase   = `pwd`.chomp
-  Prefix   = '/@' # resolver for non-local and non-HTTP URIs
-  S        = '<>' # path separator
+  Prefix   = '/@' # prefix for non-local and non-HTTP URIs
+  S        = '<>' # tree-root basename
 
-  # frequently-used URIs
+  # URIs
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"
@@ -27,6 +27,7 @@ class E
   Label    = RDFs + 'label'
   EXIF     = 'http://www.w3.org/2003/12/exif/ns#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
+  Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
 
   # file-name extension -> MIME type
   MIME={
