@@ -54,7 +54,7 @@ class E
      #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
     ]}
 
-  # edit all triple 'objects' in [s p _])
+  # edit all triples in (s p _)
   fn 'view/editPO',->g,e{
 
     # subject URI
