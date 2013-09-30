@@ -215,7 +215,6 @@ class String
   def unpath r=true # dereference literal? 
 
     if m=(match /^\/([a-z]+:)\/+(.*)/) # URL
-      puts "HTTP URI #{m[1]}//#{m[2]}"
       (m[1]+'//'+m[2]).E
 
     elsif match /^\/blob/ # string
@@ -232,6 +231,7 @@ class String
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
     else # path
+      puts "Path #{self}"
       self.E
     end
   end

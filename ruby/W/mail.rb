@@ -117,8 +117,9 @@ class E
 
         '</tr>']},'</table>',
 
-     # link to show full content of entire message-set
-     {_: :a, id: :down, c: '&darr;',href: env['REQUEST_PATH']+env.q.merge({'view'=>'page','views'=>'timegraph,mail','v'=>'multi'}).qs}]}
+     # link to unabbreviated content of message-set
+     {_: :a, id: :down, c: '&darr;',
+       href: env['REQUEST_PATH'] + env.q.merge({'view'=>'page','views'=>'timegraph,mail','v'=>'multi','sort'=>'dc:date','reverse'=>true}).qs}]}
 
 
   # show a set of messages
