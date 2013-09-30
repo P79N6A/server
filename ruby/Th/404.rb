@@ -1,9 +1,7 @@
 class E
 
-  # 404 response URI
   E404 = 'req/'+HTTP+'404'
 
-  # 404 response function
   fn E404,->e,r{
     u = e.uri     # response URI
     g = {u => {}} # response graph
@@ -17,13 +15,12 @@ class E
     s['ACCEPT']= [r.accept]
     %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
 
+    # link to editable resource
     s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable&nocache']]
     r.q.delete 'view'
 
     # output
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
-
-  F['req/404'] = F[E404]
 
   fn 'view/'+HTTP+'404',->d,e{
     [H.css('/css/404'),{_: :h1, c: '404'},d.html]}

@@ -51,11 +51,12 @@ module Th
   end
 
   def conneg
-    # choose a preferred content-type
+    # format in querystring
     return q['format'] if q['format'] && E::F[E::Render+q['format']]
+    # format in Accept header
     accept.sort.reverse.map{|p|p[1].map{|mime|
-        return mime if E::F[E::Render+mime]
-      }}
+     return mime if E::F[E::Render+mime]}}
+    # default
     'text/html'
   end
 

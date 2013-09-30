@@ -118,7 +118,7 @@ class E
 
   # E (_ _ o) -> E o
   def ro
-    uri.split(/#{E::S}\//)[-1].unpath false
+    uri.split(/#{E::S}/)[-1].unpath false
   end
 
   def sh
@@ -205,7 +205,7 @@ class String
     Shellwords.escape self
   end
 
-  BaseLen  = E::FSbase.size.succ
+  BaseLen  = E::FSbase.size
 
   def pathToURI          r = true
     self[BaseLen..-1].unpath r
@@ -214,24 +214,24 @@ class String
   # string -> E || literal
   def unpath r=true # dereference literal? 
 
-    if m=(match /^([a-z]+:)\/+(.*)/) # URL
+    if m=(match /^\/([a-z]+:)\/+(.*)/) # URL
       (m[1]+'//'+m[2]).E
 
-    elsif match /^blob/ # string
-      r ? ('/'+self).E.r : ('/'+self).E
+    elsif match /^\/blob/ # string
+      r ? self.E.r : self.E
 
-    elsif match /^json/ # JSON
-      r ? (('/'+self).E.r true) : ('/'+self).E
+    elsif match /^\/json/ # JSON
+      r ? self.E.r(true) : self.E
 
-    elsif match /^u\// # trie
-      r ? (File.basename self) : ('/'+self).E
+    elsif match /^\/u\// # trie
+      r ? (File.basename self) : self.E
 
-    elsif match /^E\/..\/..\// # !fs-compatible URI
-      self[8..-1].match(/([^.]+)(.*)/).do{|c|
+    elsif match /^\/E\/..\/..\// # opaque URI
+      self[9..-1].match(/([^.]+)(.*)/).do{|c|
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
     else # path
-      ('/'+self).E
+      self.E
     end
   end
   

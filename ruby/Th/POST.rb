@@ -2,8 +2,10 @@ watch __FILE__
 class E
 
   def POST
-    puts @r.keys
-    
+    r = Rack::Request.new @r
+    r.params.map{|k,v|
+      puts CGI.unescape(k).split(S).map &:unpath
+    }
     [200]
   rescue Exception => x
     Fn 'backtrace',x,@r
