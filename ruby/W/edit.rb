@@ -56,14 +56,14 @@ class E
 
   # edit all triples in (s p _)
   fn 'view/editPO',->g,e{
-puts e.q['view']
+
     # subject URI
     s = e['uri']
 
     # predicate URI
     p = e.q['p'].expand
 
-    # single-triple
+    # triple -> input
     triple = ->s,p,o{
 
       # triple identifier
