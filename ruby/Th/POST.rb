@@ -6,7 +6,7 @@ class E
     p = nil
     r.params.map{|k,v|
       s,p,o = (CGI.unescape k).split(S).map &:unpath; p = p.uri[0..-2].E
-      puts "s #{s} p #{p} o #{o.class} #{o} v #{v.class} #{v}"
+      puts "POST  s #{s} p #{p} o #{o.class} #{o} v #{v.class} #{v}"
       s[p] = v
     }
     @r.q.update({
