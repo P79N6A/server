@@ -9,12 +9,10 @@ class E
                     'v'=>'timegraph',
                   'arc'=>'referer'}})
 
-  # massage data for timegraph
+  # analyze graph for timegraph
   fn 'filter/timegraph',->e,m,_{
 
-    e['timegraph'] ||= true
-
-    x = e['x'] || Date # x prop
+    x = e['x'] || Date # x property
     y = e['y']         # y property
 
     # 2D values
@@ -36,14 +34,14 @@ class E
   }
 
   # a linked-timeline view
-  fn 'view/timegraph',->d,e{
-    # use standard structure for examine faceted-filtering
-   i=F['view/timegraph/item']
-    Fn 'view/timegraph/base',d,e,->{d.map{|u,r|i.(r,e)}}}
+  fn 'view/timegraph',->g,e{
+   i = F['view/timegraph/item']
+      Fn 'view/timegraph/base',g,e,->{
+      g.map{|u,r|i.(r,e)}}}
   
   # timegraph container-element
   fn 'view/timegraph/base',->d,e,c{
-    Fn 'filter/timegraph', e.q, d, nil unless e.q['timegraph']==true
+    Fn 'filter/timegraph', e.q,d,nil
 
     e[:graph] = d
     e[:group] = {}
@@ -53,7 +51,8 @@ class E
 
   # timegraph entry
   fn 'view/timegraph/item',->r,x{
-    # skip resources w/o x-axis field
+
+    # on resources w x-axis field
     if r[x.q['x'] || Date]
 
       labelP = x.q['label'].expand || Creator

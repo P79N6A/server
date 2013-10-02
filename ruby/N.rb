@@ -231,7 +231,6 @@ class String
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
     else # path
-      puts "Path #{self}"
       self.E
     end
   end
