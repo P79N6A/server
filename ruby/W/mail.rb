@@ -200,7 +200,7 @@ class E
                 # only show if changed from previous
                 title != t[0] && (
                  title = t[0] # update title
-                 [{:class => :title, c: t.html, _: :a, href: m.url+'??=thread#'+m.uri, style: "color: #{E.c}"},
+                 [{:class => :title, c: t.html, _: :a, href: m.url+'??=thread#'+m.uri},
                   '<br clear=all>'])}]}]}]}
   
   # set a default view for MIME and SIOC types
