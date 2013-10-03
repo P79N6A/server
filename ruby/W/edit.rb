@@ -66,7 +66,7 @@ class E
 
       # triple identifier
       i = (s.E.concatURI p).concatURI E(p).literal o
-      puts "edit  s #{s} #{s.class} p #{p} #{p.class} o #{o.class} #{E(p).literal o}"
+      puts "edit  s #{s} #{s.class} p #{p} #{p.class} o #{o.class} #{o} #{E(p).literal o}"
 
       ['<br><span class=tripleURI>',CGI.escapeHTML(i.to_s),'</span><br>',
        (case p
@@ -81,7 +81,7 @@ class E
       c: [(H.once e, 'edit', (H.css '/css/edit')),
           # existing entries
           g.map{|s,r|
-            r[p].map{|o|
+            r[p].map{|o| puts "tr s #{s} p #{p} o #{o}"
               triple[s,p,o]}},
           # new entry
           triple[e['uri'],p,''],' ',

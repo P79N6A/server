@@ -35,8 +35,8 @@ class E
 
   # a linked-timeline view
   fn 'view/timegraph',->g,e{
-   i = F['view/timegraph/item']
-      Fn 'view/timegraph/base',g,e,->{
+    i = F['view/timegraph/item']
+    Fn 'view/timegraph/base',g,e,->{
       g.map{|u,r|i.(r,e)}}}
   
   # timegraph container-element

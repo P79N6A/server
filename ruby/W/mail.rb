@@ -25,15 +25,13 @@ class E
       d = m.message_id; return unless d   # parse successful?
       e = i[d]                            # Message resource
       e.e || (                            # Message-ID locatable?
-
-       # index previously unseen mail
        ln e                               # create message-id path 
-       %w{in_reply_to references}.map{|p| # reference arcs
-        m.send(p).do{|o| o.map{|o|        # lookup references
-         e.index SIOC+'reply_of', i[o]}}} # index references
-       e.ln '/' + m.date.iso8601[0..12].gsub(/[^\d]/,'/') + '/' + e.uri # date/hour index tree
+       # index previously unseen mail
        self.index Creator, m.from[0].E    # index From
-       self.index      To, m.to[0].E )    # index To
+       self.index      To, m.to[0].E      # index To
+       %w{in_reply_to references}.map{|p| # reference arcs
+        m.send(p).map{|o|                 # lookup references
+         e.index SIOC+'reply_of', i[o]}}) # index references
 
       # yield triples
       yield e.uri, Type,    E[SIOCt+'MailMessage']
@@ -119,7 +117,7 @@ class E
 
      # link to unabbreviated content of message-set
      {_: :a, id: :down, c: '&darr;',
-       href: env['REQUEST_PATH'] + env.q.merge({'view'=>'page','views'=>'timegraph,mail','v'=>'multi','sort'=>'dc:date','reverse'=>true}).qs}]}
+       href: env['REQUEST_PATH'] + env.q.merge({'view'=>'page','views'=>'timegraph,mail','arc'=>'/parent','v'=>'multi','sort'=>'dc:date','reverse'=>true}).qs}]}
 
 
   # show a set of messages
@@ -153,7 +151,7 @@ class E
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
                 m[a[1]].do{|m|
                   m.map{|f| f.respond_to?(:uri) &&
-                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=page&views=timegraph,mail&v=multi&c=8', c: f.uri}}}},
+                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=page&views=timegraph,mail&arc=/parent&v=multi&c=8', c: f.uri}}}},
 
               # mailto URI with embedded reply metadata
               (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
