@@ -1,9 +1,9 @@
 #watch __FILE__
 
-#curl http://eibispace.de/dx/sked-b11.csv > s.ssv
-#wget http://www1.m2.mediacat.ne.jp/binews/bib11.zip http://hfcc.org/data/b11/b11allx2.zip
-#unzip bia11.zip ;unzip b11allx2.zip
-#xlsx2csv 
+# databases of HF frequencies
+# curl http://eibispace.de/dx/sked-b11.csv > s.ssv
+# wget http://www1.m2.mediacat.ne.jp/binews/bib11.zip http://hfcc.org/data/b11/b11allx2.zip
+# unzip *zip
 
 class E
 
@@ -42,8 +42,7 @@ class E
     e[:clr]={}
     e[:fmax]=d.map{|_,r|r['FREQ'][0].to_f}.flatten.max||30000.0
     e[:scale]=100/(e[:fmax] - (d.map{|_,r|r['FREQ'][0].to_f}.flatten.min||0))
-    [(H.css '/css/sw'),(H.js '/js/sw'),
-#    [(H.css '/css/sw',true),(H.js '/js/sw',true),
+    [(H.css '/css/sw'),(H.js '/js/mu'),(H.js '/js/sw'),
      {id: :bands,
        c: bands.map{|meters,bounds|
          band += 1
@@ -66,9 +65,10 @@ class E
   fn 'view/sw/item',->r,x{
     min=->t{t='%04d' % (t.class==String && t.empty? ? 0 : t)
       t[0..1].to_i*60+t[2..3].to_i}
-    u=r['UTC'][0].match(/(\d+)-(\d+)/)    
-    b=u[1].to_i; e=u[2].to_i
-    f=r['FREQ'][0].to_f
+    u = r['UTC'][0].to_s.match(/(\d+)-?(\d+)?/)
+    b = u[1].to_i.max 2359
+    e = (u[2] ? u[2].to_i : b + 30).max 2359
+    f = r['FREQ'][0].to_f
     fi = f.to_i
     n = fi / 100
     x[:clr][n] ||= '#%06x' % rand(16777216)
@@ -104,7 +104,7 @@ width:#{(e-b) * 4.0}px;
              if (d > 2400) && (d < 30000)
                m[u]['FREQ']=[d]
              elsif
-               m[u]['UTC']=["#{d}-#{d+30}"]
+               m[u]['UTC']=[d]
              end}
            m.delete u unless m[u].has_keys ['UTC','FREQ']
            )}

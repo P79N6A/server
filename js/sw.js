@@ -1,5 +1,5 @@
 var sw = function(){
-    var l=q('.loc')
+    var l = q('.loc')
     var loc = function(e){
 	if(e.target.hasAttribute('f')){
 	    var f=e.target.getAttribute('f')
@@ -39,4 +39,5 @@ var sw = function(){
     clock.click(function(){t.scrollIntoView()})
     c(true);t.scrollIntoView()
 };
+
 document.addEventListener("DOMContentLoaded", sw, false);

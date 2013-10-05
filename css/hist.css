@@ -11,9 +11,7 @@ table.histogram tr {
 }
 
 table.histogram td {
-    border-style:dotted;
-    border-width: 0 0 0 .1em;
-    border-color: #ddd;
+    border-width: 0;
 }
 
 h3 {
