@@ -1,11 +1,10 @@
 class E
 
-  # util, prefix -> tripleStream
+  # util, URI prefix, cleaner -> tripleStream
   def triplrStdOut e,f='/',g=nil,a=sh
 
     puts "triplr-stdout #{uri} #{e} #{f}"
 
-    # leading/trailing whitespace expression
     g ||= /^\s*(.*?)\s*$/
 
     # exec command
@@ -15,7 +14,8 @@ class E
       i = i.split /:/
 
     yield uri, # subject
-     (f+(i[0].match(g)||[nil,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # predicate
+    (f + (i[0].match(g)||[0,i[0]])[1]. # custom identifier-cleaning regex
+     gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # predicate
       i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v} # object
     }
     nil
