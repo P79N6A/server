@@ -9,7 +9,7 @@ class E
 
     !a && 'attribute required' ||
     (# bins :: number of buckets
-     n = e.q['bins'] && e.q['bins'].to_f.max(999.0).min(1) || 64.0
+     n = e.q['bins'].do{|b| b.to_f.max(999.0).min(1)} || 64.0
 
      # hv :: bin template 
      v = F['view/'+(e&&e.q['hv']||'tab')]
@@ -36,10 +36,7 @@ class E
 
   # Graph, property, numBins  -> {bin -> Graph}
   fn 'view/histogram/bins',->m,p,nb{
-    h = {}
-    bw = 0
-    min = 0
-    max = 0
+    h = {}; bw = 0; min = 0; max = 0
     m.map{|u,r|
       # attribute accessor
       r[p]
@@ -48,8 +45,8 @@ class E
       v = v.compact.map{|v|v.to_time.to_f}
       max = v.max
       min = v.min
-      # bin-width
-      bw = (max - min) / nb
+      width = (max-min).do{|w| w.zero? ? 1 : w}
+      bw = width / nb
       puts :val, v.join(' '),:bw,bw,:max,max,:min,min
     }
 
