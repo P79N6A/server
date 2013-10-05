@@ -1,11 +1,5 @@
 class E
 
-  class << self
-    def console; ARGV.clear; require 'irb'
-      IRB.start
-    end
-  end
-
   # util, prefix -> tripleStream
   def triplrStdOut e,f='/',g=nil,a=sh
 

@@ -1,20 +1,31 @@
 #!/usr/bin/env ruby
-method = ARGV[0] || File.basename($0)
+ method = ARGV[0] || File.basename($0)
 
-srcDir = File.expand_path File.dirname __FILE__
+srcDir  = File.expand_path File.dirname __FILE__
 srcFile = srcDir + '/infod.rb'
-dest = RbConfig::CONFIG["sitelibdir"] + '/infod'
+
+dest    = RbConfig::CONFIG["sitelibdir"] + '/infod'
+destBin = "/usr/local/bin/infod"
 
 case method
+
 when 'install'             ; puts \
   `rsync -av "#{srcDir}/" #{dest}`
   `cp        "#{srcFile}" #{dest}.rb`
   
 when 'symlink'
-  `ln -s "#{srcFile}" #{dest}.rb`
-  `ln -s  "#{srcDir}" #{dest}`
+  if File.exist? dest
+    puts "#{dest} already exists"
+  else
+    `ln -s #{srcDir}/bin/infod #{destBin}`
+    `ln -s "#{srcFile}" #{dest}.rb`
+    `ln -s  "#{srcDir}" #{dest}`
+  end
 
 when 'uninstall'
-  `rm -r #{dest} #{dest}.rb`
+  `rm -r #{dest} #{dest}.rb #{destBin}`
+
+else
+  puts "usage\n install, symlink or uninstall"
 
 end

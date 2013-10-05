@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # histogram
@@ -49,7 +49,9 @@ class E
       max = v.max
       min = v.min
       # bin-width
-      bw = (max - min) / nb}
+      bw = (max - min) / nb
+      puts :val, v.join(' '),:bw,bw,:max,max,:min,min
+    }
 
     # construct bins
     (0..nb-1).map{|b|h[b] = {}}
