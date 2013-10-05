@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   # histogram
@@ -18,7 +18,7 @@ class E
      (Fn 'view/histogram/bins',d,a,n).do{|h,m|
 
        [H.css('/css/hist'),%w{mu hist}.map{|s|H.js('/js/'+s)},
-        (Fn 'view/histogram/render',h),
+        (Fn 'view/histogram/render',h),{style: "width: 100%; height: 5em"},
         h.map{|b,r|
           # skip empty bins
           r.empty? ? ' ' :
@@ -42,13 +42,12 @@ class E
       r[p]
     }.flatten.do{|v|
       # values
-      v = v.compact.map{|v|v.to_time.to_f}
+      v = v.compact.map{|v|
+       ( p == Date ? v.to_time : v ).to_f}
       max = v.max
       min = v.min
       width = (max-min).do{|w| w.zero? ? 1 : w}
-      bw = width / nb
-      puts :val, v.join(' '),:bw,bw,:max,max,:min,min
-    }
+      bw = width / nb }
 
     # construct bins
     (0..nb-1).map{|b|h[b] = {}}
@@ -60,7 +59,7 @@ class E
       r[p].do{|v|
         v.each{|v|
           # bin selector
-          b = ((v.to_time.to_f - min) / bw).floor
+          b = (((p == Date ? v.to_time : v).to_f - min) / bw).floor
 
           # append to bin
           h[b][u] = r }}}
