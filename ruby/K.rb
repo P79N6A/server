@@ -135,6 +135,12 @@ class E
     'text/log'=>true,
     'text/nfo'=>true,
     'text/rtf'=>true,
+    'text/x-c'=>true,
+    'text/x-c++'=>true,
+    'text/x-fortran'=>true,
+    'text/x-makefile'=>true,
+    'text/x-pascal'=>true,
+#    ''=>true,
   }
   %w{c ruby haskell perl php python}.map{|t|
     %w{application/ text/x-}.map{|m|
