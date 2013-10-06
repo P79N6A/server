@@ -33,7 +33,7 @@ class E
     readlink.uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare }
   end
   
-  # usually same as above,
+  # usually same as above, but strict
   # fails on exotic/non-conforming URIs
   def docBaseURI
     u = URI uri
@@ -63,8 +63,12 @@ class E
   # generate URL for non-URL identifier (mail ID, Tag URI..)
   def url
     path? ? uri : Prefix + (CGI.escape uri)
-   end
+  end
   
+  def localURL
+    
+  end
+
   # URI extension :: E -> string
   def ext
     File.extname(uri).tail||''

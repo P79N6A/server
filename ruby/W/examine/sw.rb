@@ -101,10 +101,10 @@ width:#{(e-b) * 4.0}px;
              'big'=>[l.scan(/\b[A-Z][A-Z][A-Z]+\b/)],
              Content=>[l]}
            l.scan(/\d{4,}/){|d| d=d.to_i
-             if (d > 2400) && (d < 30000)
-               m[u]['FREQ']=[d]
-             elsif
+             if d < 2400
                m[u]['UTC']=[d]
+             elsif d < 30000
+               m[u]['FREQ']=[d]
              end}
            m.delete u unless m[u].has_keys ['UTC','FREQ']
            )}
