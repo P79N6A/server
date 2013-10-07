@@ -191,7 +191,7 @@ class E
 
                        # link
                        (l.size > 64 &&
-                        {_: :a, class: :line, href: '#'+f,c: '↵'}),
+                        {_: :a, class: :line, href: '#'+f,c: '&#160;'}),
 
                      "\n" ]}}}}, # collate lines
 

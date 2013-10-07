@@ -25,7 +25,7 @@ var sw = function(){
     q('body').on('mouseover',loc).click(loc)
     var clock = q('#clock'), t=q('#t')
     var c = function(u){
-	var a=new Date()
+	var a = new Date()
 	var h = a.getUTCHours()
 	var m = a.getUTCMinutes()
 	var s = a.getUTCSeconds()

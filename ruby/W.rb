@@ -15,10 +15,12 @@ find
 grep
 html
 image
+info
 json
 kv
 ls
 mail
+man
 page
 post
 pdf
