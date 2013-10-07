@@ -6,7 +6,7 @@
 
  EXTRAS
  bundle install  (in ruby/ pull in optional RDF libs)
- apt-get install ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
+ apt-get install ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight man2html thin
 
  CONFIG
  mkdir -p http://hostname && cp -a {css,js} http://hostname

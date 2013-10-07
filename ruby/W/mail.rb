@@ -243,5 +243,4 @@ module TMail
   end
 end
 
-# TMail calls this nonexistent method on strings
 class String; def is_binary_data?; true; end; end
