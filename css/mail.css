@@ -31,7 +31,6 @@ a[rel=untyped] {
     padding:.05em;
     border-style:dotted;
     border-width:.1em;
-    white-space:nowrap;
 }
 a[rel=untyped]:hover {  background-color:#0df;color:#000;border-color:#0ff; }
 a[rel=untyped]:visited {  background-color:#8f0;color:#000; }
