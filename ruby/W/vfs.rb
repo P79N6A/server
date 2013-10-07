@@ -27,7 +27,7 @@ class E
   end
 
   def jail
-    no.expand_path.to_s.index(E::FSbase)==0 && @r['PATH_INFO'] !~ /\.\./ && self
+    no.expand_path.to_s.index(E::FSbase)==0 && self
   end
 
   def children

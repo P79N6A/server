@@ -1,11 +1,16 @@
 body {
     background-color:#fff;
+    color: #000;
     font-family: sans-serif;    
 }
 
 table {
     background-color:#000;
     color:#fff;
+}
+
+div {
+    display: inline;
 }
 
 a {
@@ -15,27 +20,33 @@ a {
     text-decoration:none;
     padding:.1em;
     }
-td.key {
-    text-align:right;    
-    background-color: #000
 
+td.key {
+    text-align:right;
 }
 
-td.key span {
+td.key a {
+    background-color: #000;
+}
 
-    color:#000;
-    height: 100%;
+td.key div {
+    white-space:nowrap;
 }
 
 td.key .frag {
     font-weight:bold;
     background-color:#f8f8f8;
     color:#000;
+    height: 100%;
 }
 
 td.key .abbr {
-    color:#eee;
+    color:#000;
     font-size:.92em;
+}
+
+td.key .abbr:hover {
+    color:#fff;
 }
 
 td.val {

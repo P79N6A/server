@@ -1,16 +1,17 @@
+watch __FILE__
 class E
 
   E404 = 'req/'+HTTP+'404'
 
   fn E404,->e,r{
-    u = e.uri     # response URI
-    g = {u => {}} # response graph
-    s = g[u]      # resource pointer
+   id = e.uri     # response URI
+    g = {id=>{}}  # response graph
+    s = g[id]     # resource pointer
 
-    # request environment vars to response graph
-    r.map{|k,v| s[k] = [v] }
+    # link request-environment fields
+    r.map{|k,v| 
+      s[k.sub(/^HTTP_/,W3+'2011/http-headers#').gsub('_','-').downcase] = k == 'uri' ? v : [v] }
     s[Type] = [E[HTTP+'404']]
-    s['uri'] = u
     s['QUERY'] = [r.q]
     s['ACCEPT']= [r.accept]
     %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
@@ -21,9 +22,11 @@ class E
 
     # output
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
-
+  
   fn 'view/'+HTTP+'404',->d,e{
-    [H.css('/css/404'),{_: :h1, c: '404'},d.html]}
+    [H.css('/css/404'),
+     d.html
+    ]}
 
   # 404.css fallback
   fn '/css/404.css/GET',->e,r{

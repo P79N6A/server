@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class Array
   def html table=true
@@ -35,7 +35,7 @@ class Hash
     H({_: :table, class: :html, c: 
         map{|k,v|
           {_: :tr, property: k, c:
-            [{_: :td,c: (Fn 'abbrURI',k), class: :key},
+            [{_: :td,c: {_: :a, name: k, href: k, c: (Fn 'abbrURI',k)}, class: :key},
              {_: :td,
                c: (case k
                    when E::Content
@@ -60,7 +60,7 @@ class E
 
   fn 'abbrURI',->u{
     u.to_s.sub(/(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]*)$/,
-               '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>')
+               '<div class="abbr"><div class="scheme">\k<scheme></div>\k<abbr></div><div class="frag">\k<frag></div>')
   }
 
   fn 'head',->d,e{
@@ -75,7 +75,7 @@ class E
 
   fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
 
-  # domain-specific view
+  # type-specific view
   fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
     d.values.map{|r|Fn 'view/divine/item',r,e}}
 
@@ -101,8 +101,11 @@ elsif b.grep(/\.log$/).size / s > t
    end}}
 
   fn 'view/divine/item',->r,e{
-    r.class==Hash && r[Type] && r[Type][0] && r[Type][0].respond_to?(:uri) &&
-    (t = r[Type][0].uri; !t.empty? && # a RDF type
+    r.class == Hash &&
+    r[Type] &&
+    r[Type][0] &&
+    r[Type][0].respond_to?(:uri) &&
+    (t = r[Type][0].uri # RDF type
      (F['view/'+t] ||
       F['view/'+t.split(/\//)[-2]]).do{|f|
        f.({r.uri => r},e)}) ||
@@ -131,7 +134,6 @@ elsif b.grep(/\.log$/).size / s > t
     v = e.q['view'].to_s
     h = F['head/'+v] || F['head'] 
     v = F['view/'+v] || F['view']
-
     H(e.q.has_key?('un') ? v.(d,e) :
       ['<!DOCTYPE html>',
        {_: :html,
