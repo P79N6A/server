@@ -1,15 +1,17 @@
 class E
 
   def GET
-    a = @r.accept.values.flatten # acceptable MIME types
-    send(f ? (if (@r.q.has_any_key(['format','graph','view']) || # user-specified view
-                 (MIMEcook[mime] && !@r.q.has_key?('raw')) ||    # view for MIME-type
-                 !(a.empty?||a.member?(mime)||a.member?('*/*'))) # file MIME not accepted
-                 :GET_resource # invoke resource handler
-              else
-                :GET_img # continue to file handler
-              end) :
-         :GET_resource)
+    a = @r.accept.values.flatten
+    view = @r.q.has_any_key %w{format view}
+    processFile = MIMEcook[mime] && !@r.q.has_key?('raw')
+    accept = a.empty? || (a.member? mime) || (a.member? '*/*')
+    file = [self,
+            (E (URI uri).path)].find{|f| f.f }
+    file ? (if view || processFile || !accept
+              self.GET_resource
+            else
+              file.GET_img
+            end) : self.GET_resource
   rescue Exception => x
     $stderr.puts 500,x.message,x.backtrace
     Fn 'backtrace',x,@r
@@ -65,7 +67,9 @@ class E
     map{|u|m[u.uri] ||= u}}
 
   # document set constructor
-  fn 'set/',->d,e,m{d.docs}
+  fn 'set/',->d,e,m{
+    path = E URI(d.uri).path
+    d.docs.concat path.docs}
   
   # construct HTTP response
   def response
