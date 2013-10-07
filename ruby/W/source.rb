@@ -1,7 +1,7 @@
 class E
   
-  # show available querystring aliases
-  fn '/qs/GET',->e,r{H([H.css('/css/404'),F['?'].html]).hR}
+  # show querystring mappings
+  fn '/qs/GET',->e,r{F['?'].html.hR}
 
   def triplrSourceCode
     # MIME                   strip x-
