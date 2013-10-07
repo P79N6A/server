@@ -8,15 +8,16 @@ a {
 }
 table.html {
     float:left;
-    background-color:#d8d8d8;
+    background-color:#ddd;
     border-radius:.62em .38em .38em .62em;
     padding:.18em;
     margin:.18em;
 }
 .scheme { display: none; }
+td {vertical-align:bottom}
 td.key {text-align:right}
 td.key .frag {font-weight:bold;background-color:#fff;color:#0cf;padding-left:.2em;border-radius:.38em 0 0 .38em}
-td.key .abbr {color:#888;font-size:.92em}
+td.key .abbr {display: none}
 td.val {background-color:#fff;color:#000;border-style:dotted;border-width:0 0 .1em 0;border-color:#8f3}
 article {
     border-radius:1.2em;
