@@ -64,8 +64,8 @@ class E
   def url
     path? ? uri : Prefix + (CGI.escape uri)
   end
-  
-  def localURL
+
+  def localURL h
     
   end
 

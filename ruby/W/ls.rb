@@ -19,7 +19,7 @@ class E
         Prefix + u
       end}
 
-    # item thumbnail / link
+    # item link + preview
     a = -> i { e = i.E
       {_: :a, href: l[e.uri],
         c: e.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?233x233'} :

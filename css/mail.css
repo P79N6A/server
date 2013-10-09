@@ -38,6 +38,7 @@ a[rel=untyped] {
     border-style:dotted;
     border-width:.1em;
 }
+a[rel=untyped]:hover {background-color: #fff}
 a[rel=permalink] { padding:0 .9em 0 0}
 a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;}
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;}
