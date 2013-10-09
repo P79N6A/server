@@ -1,3 +1,4 @@
+watch __FILE__
 class E
 
   def GET
@@ -55,11 +56,11 @@ class E
    (thumb? ? thumb : self).GET_file
   end
 
-  def GET_resource                 # for 
-    (F['req/'+@r.q['y']] ||           # any URI 
-     F[@r['REQUEST_PATH'].t+('GET')]||# specific path
-     F[uri.t+('GET')]                 # specific URI
-     ).do{|y|y.(self,@r)} ||       # custom handler
+  def GET_resource
+    handleReq  = F[ 'req/' + @r.q['y'] ]
+    handlePath = F[@r['REQUEST_PATH'].t+('GET')]
+    handleURI  = F[ uri.t + ('GET') ]
+    (handleReq||handlePath||handleURI).do{|y|y[self,@r]} ||
     as('index.html').do{|i| i.e && # HTML index
       ((uri[-1]=='/') ? i.env(@r).GET_file : # index in dir
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
@@ -69,14 +70,17 @@ class E
   # graph constructor
   fn 'graph/',->e,q,m{
     F['set/' + q['set']][e, q, m]. # doc set
-    map{|u|m[u.uri] ||= u}}
+    map{|u|m[u.uri] ||= u}} # resource thunks, response will expand if necessary
 
-  # document set constructor
+  # document-set constructor
   fn 'set/',->d,e,m{
-    path = E URI(d.uri).path
-    d.docs.concat path.docs}
+    s = []
+    s.concat d.docs
+#    s.concat (E (URI d.uri).path).docs # path on all sites
+#    puts "set #{s}"
+    s }
   
-  # construct HTTP response
+  # default HTTP response
   def response
 
     # request arguments
