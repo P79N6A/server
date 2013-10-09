@@ -38,8 +38,15 @@ class E
 
   # tabular rendering
   fn 'view/ls',->i,e{
+    dir = e['uri'].E
+    up = (if dir.pathSegment == '/'
+            '/'
+          else
+            dir.parent.url+'?graph=ls&view=ls'
+          end)
+
     [(H.css '/css/ls'),
-     {_: :a, class: :up, href: E(e['uri']).parent.url+'?graph=ls&view=ls', c: '&uarr;'},
+     {_: :a, class: :up, href: up, c: '&uarr;'},
      {class: :ls,
        c: (Fn 'view/tab',i,e)},
      {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du, rel: :nofollow},

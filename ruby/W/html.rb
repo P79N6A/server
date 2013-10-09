@@ -69,7 +69,7 @@ class E
      (Fn 'head.icon')].cr}
 
   fn 'head.formats',->e{
-    formats = %w{text/n3 application/json}
+    formats = %w{application/json text/n3}
 #   formats = F.keys.grep(/^render/).map{|f|f[7..-1]} # all
     formats.map{|f|
       {_: :link, rel: :meta, type: f,

@@ -69,6 +69,10 @@ class E
     
   end
 
+  def pathSegment
+    uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/)[2]
+  end
+
   # URI extension :: E -> string
   def ext
     File.extname(uri).tail||''
