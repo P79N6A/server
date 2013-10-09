@@ -23,7 +23,13 @@ pre {white-space: pre-wrap}
 .q {background-color:#fff;color:#000}
 .title {font-weight:bold;font-size:.88em;float:right;background-color:#fff;color:#000;margin:0 0 1.4em 0}
 
-a{background-color:#09f;color:#fff;text-decoration:none;padding-left:.2em;border-radius:.38em .1em .1em .38em;margin:.08em}
+a {
+    color:#fff;
+    text-decoration:none;
+    padding-left:.2em;
+    border-radius:.38em .1em .1em .38em;
+    margin:.08em
+}
 a[id] { margin-right: .5em;background-color: #888}
 a[rel=untyped] {
     color:#000;
@@ -32,8 +38,6 @@ a[rel=untyped] {
     border-style:dotted;
     border-width:.1em;
 }
-a[rel=untyped]:hover {  background-color:#0df;color:#000;border-color:#0ff; }
-a[rel=untyped]:visited {  background-color:#8f0;color:#000; }
 a[rel=permalink] { padding:0 .9em 0 0}
 a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;}
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;}

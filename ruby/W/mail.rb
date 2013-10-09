@@ -126,7 +126,7 @@ class E
 
     # JS/CSS dependencies
     [(H.once e,'mail.js',
-      (H.css '/css/mail'),
+      (H.css '/css/mail'), {_: :style, c: "a {background-color: #{E.cs}}"},
       (H.js '/js/mail'),
       (H.once e,:mu,(H.js '/js/mu')),
 
