@@ -7,7 +7,7 @@ class E
     processFile = MIMEcook[mime] && !@r.q.has_key?('raw')
   accept = a.empty? || (a.member? mime) || (a.member? '*/*')
     file = [self, # specific domain + path
-#            (E (URI uri).path) # specific path, all domains
+            pathSegment # specific path, all domains
            ].find{|f| f.f }
     if file
       if view || processFile || !accept
@@ -73,11 +73,11 @@ class E
     map{|u|m[u.uri] ||= u}} # resource thunks, response will expand if necessary
 
   # document-set constructor
-  fn 'set/',->d,e,m{
+  fn 'set/',->e,q,_{
     s = []
-    s.concat d.docs
-#    s.concat (E (URI d.uri).path).docs # path on all sites
-#    puts "set #{s}"
+    s.concat e.docs
+    s.concat e.pathSegment.docs # path on all domains
+    puts "set #{s}" if q.has_key? 'debug'
     s }
   
   # default HTTP response

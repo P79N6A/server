@@ -70,7 +70,7 @@ class E
   end
 
   def pathSegment
-    uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/)[2]
+    uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/)[2].do{|p| p.E } || self
   end
 
   # URI extension :: E -> string

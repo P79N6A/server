@@ -39,7 +39,7 @@ class E
   # tabular rendering
   fn 'view/ls',->i,e{
     dir = e['uri'].E
-    up = (if dir.pathSegment == '/'
+    up = (if dir.pathSegment.uri == '/'
             '/'
           else
             dir.parent.url+'?graph=ls&view=ls'
