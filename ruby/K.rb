@@ -129,6 +129,7 @@ class E
     'application/json+rdf' => true,
     'application/org' => true,
     'application/textile' => true,
+    'application/uri' => true,
     'application/word' => true,
     'message/rfc822'=> true,
     'text/ansi'=>true,
@@ -200,6 +201,5 @@ class E
 
   Nginx = ENV['nginx']
   Apache = ENV['apache']
-  Version = 'http://web.whats-your.name/www/'
 
 end
