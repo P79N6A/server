@@ -22,6 +22,7 @@ class E
   Type     = W3   + "1999/02/22-rdf-syntax-ns#type"
   RDFs     = W3   + '2000/01/rdf-schema#'
   HTTP     = W3   + '2011/http#'
+  Header   = W3   + '2011/http-headers#'
   Posix    = W3   + 'ns/posix/'
   Stat     = Posix + 'stat#'
   Label    = RDFs + 'label'
