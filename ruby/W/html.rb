@@ -32,6 +32,14 @@ class String
   end
 end
 
+class Fixnum
+  def html; to_s end
+end
+
+class Float
+  def html; to_s end
+end
+
 class Hash
   def html
     H({_: :table, class: :html, c: 
