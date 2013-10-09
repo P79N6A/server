@@ -8,7 +8,9 @@ end
 
 class Object
   def html *a
-    to_s.gsub('<','&lt;').gsub('>','&gt;')
+    name = self.class
+    href = name == EventMachine::DefaultDeferrable ? "http://eventmachine.rubyforge.org/EventMachine/DefaultDeferrable.html" : "http://www.ruby-doc.org/core/#{name}.html"
+    "<a href=#{href}><b>#{name}</b></a>"
   end
 end
 
@@ -20,7 +22,7 @@ class String
     '<a href="'+self+'">'+(name||(Fn 'abbrURI',self))+'</a>'
   end
   def html
-    if match /\A(https?:\/\/)[\S]+\Z/
+    if match /\A(\/|http)[\S]+\Z/
       href
     else
       self
