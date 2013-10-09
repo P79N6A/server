@@ -9,4 +9,4 @@ e http://www.cqdx.ru/ham/feed/ getFeed $1
 e http://shortwavedx.blogspot.com/feeds/posts/default getFeed $1
 e http://members7.boardhost.com/PirateRadio/rss getFeed $1
 e 'http://www.achimbrueckner.de/freeradio/php/wordpress/?feed=rss2' getFeed $1
-e /s/radio.tw tw $1
+e /sh/news/radio.tw tw $1

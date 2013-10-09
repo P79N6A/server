@@ -1,17 +1,22 @@
 class E
 
   def GET
-    a = @r.accept.values.flatten
+       a = @r.accept.values.flatten
     view = @r.q.has_any_key %w{format view}
     processFile = MIMEcook[mime] && !@r.q.has_key?('raw')
-    accept = a.empty? || (a.member? mime) || (a.member? '*/*')
-    file = [self,
-            (E (URI uri).path)].find{|f| f.f }
-    file ? (if view || processFile || !accept
-              self.GET_resource
-            else
-              file.GET_img
-            end) : self.GET_resource
+  accept = a.empty? || (a.member? mime) || (a.member? '*/*')
+    file = [self, # specific domain + path
+#            (E (URI uri).path) # specific path, all domains
+           ].find{|f| f.f }
+    if file
+      if view || processFile || !accept
+        self.GET_resource
+      else
+        file.GET_img
+      end
+    else
+      self.GET_resource
+    end
   rescue Exception => x
     $stderr.puts 500,x.message,x.backtrace
     Fn 'backtrace',x,@r

@@ -1,2 +1,2 @@
 #!/bin/sh
-e /s/web.tw tw $1
+e /sh/news/web.tw tw $1

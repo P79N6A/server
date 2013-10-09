@@ -1,6 +1,6 @@
 #!/bin/sh
 while true; do
 date
-./s/boston.rb b.whats-your.name
+sh/news/boston.rb b.whats-your.name
 sleep 42000
 done

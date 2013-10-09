@@ -6,5 +6,5 @@ unless h = ARGV[0]
   exit  
 end
 
-'/s/boston.u'.E.uris.tail.
+'/sh/news/boston.u'.E.uris.tail.
   map{|u|u.getFeed h}

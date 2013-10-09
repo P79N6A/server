@@ -19,7 +19,7 @@ class E
     # link to editable resource
     s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable&nocache']]
     # output
-
+    r.q.delete 'view'
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
   
   fn 'view/'+HTTP+'404',->d,e{

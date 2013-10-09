@@ -1,5 +1,5 @@
 #!/bin/sh
-e /s/marmot.tw tw $1
+e /sh/news/marmot.tw tw $1
 e http://www.reddit.com/r/vietnam+japan+korea+china+malaysia+cambodia+laos/new/.rss?sort=new getFeedReddit $1
 e http://beijingcream.com/feed/ getFeed $1
 e http://feeds.feedburner.com/DanweiRss10 getFeed $1
