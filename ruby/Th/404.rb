@@ -8,12 +8,13 @@ class E
     g = {id=>{}}  # response graph
     s = g[id]     # resource pointer
 
-    # link request-environment fields
+    # link request-environment data
     r.map{|k,v| 
       s[k.sub(/^HTTP_/,Header).gsub('_','-').downcase] = k == 'uri' ? v : [v] }
-    s[Type] = [E[HTTP+'404']]
-    s['/qs'] = [r.q]
-    s['ACCEPT']= [r.accept]
+    s[Type] = [E[HTTP+'Response']]
+    s[HTTP+'statusCodeValue']=[404]
+    s['query'] = [r.q]
+    s['ACCEPT'] = [r.accept]
     s['request-method'] = [H[{_: :a, c: s['request-method'][0], style: 'font-weight: bold',
                                href: 'http://www.w3.org/Protocols/HTTP/Methods/'+s['request-method'][0]+'.html'}]]
     s['server-protocol'] = [E['http://www.w3.org/Protocols/rfc2616/rfc2616.html']]
@@ -23,11 +24,11 @@ class E
 
     # link to editable resource
     s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable&nocache']]
-    # output
-    r.q.delete 'view'
+
+    r.q['view'] = '404'
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
   
-  fn 'view/'+HTTP+'404',->d,e{
+  fn 'view/404',->d,e{
     [H.css('/css/404'),d.html]}
 
 end

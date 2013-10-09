@@ -47,6 +47,8 @@ td.key .frag {
     height: 100%;
 }
 
+td.key .scheme {display: none}
+
 td.val {
     border-style:dotted;
     border-width:0 0 .1em 0;
