@@ -60,13 +60,23 @@ class E
     no.dirname.E
   end
   
-  # generate URL for non-URL identifier (mail ID, Tag URI..)
+  # local URL from unlocatable identifier (mail MSGID, etc)
   def url
     path? ? uri : Prefix + (CGI.escape uri)
   end
 
-  def localURL h
-    
+  # local URL even if locatable-identifier
+  def localURL e
+    if uri.index('/') == 0
+      puts :path
+      uri
+    elsif uri.index('http://'+e['SERVER_NAME']) == 0
+      puts "local HTTP"
+      pathSegment.uri
+    else
+      puts "nonlo"
+      Prefix + (CGI.escape uri)
+    end
   end
 
   def pathSegment

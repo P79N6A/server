@@ -9,30 +9,25 @@ class E
   # basic directory view 
   fn 'view/dir',->i,e{
 
-    # localize URL
-    h = 'http://' + e['SERVER_NAME'] + '/'
-    l = -> u {
-      if u.index(h) == 0
-        u # already a local link
-      else
-        # generate local link
-        Prefix + u
-      end}
-
     # item link + preview
-    a = -> i { e = i.E
-      {_: :a, href: l[e.uri],
-        c: e.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?233x233'} :
-        e.uri.sub(/.*\//,'')
-      }}
+    a = -> i { i = i.E
+      {_: :a, href: i.localURL(e),
+        c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?233x233'} : i.uri.sub(/.*\//,'')}}
 
     [(H.once e, 'dir', (H.css '/css/ls')),
-     i.map{|u,r| r[Posix+'dir#child'] ? # directory?
-       {class: :dir, style: "background-color: #{E.cs}", # dir wrapper
-         c: [{c: [{_: :a, href: l[r.uri]+'?graph=ls&view=ls', c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')}, # link to ls
-                  {_: :a, href: l[r.uri].t, c: '/'}]},
-             r[Posix+'dir#child'].map{|c|a[c]}]} :  # children
-       a[r]}]}                               # item
+     i.map{|u,r|
+       # directory?
+       if r[Posix+'dir#child']
+         url = r.E.localURL e
+         {class: :dir, style: "background-color: #{E.cs}", # dir wrapper
+           c: [{c: [{_: :a, href: url+'?graph=ls&view=ls', # link to ls
+                      c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')},
+                    {_: :a, href: url.t, c: '/'}]},
+               r[Posix+'dir#child'].map{|c|a[c]}]}   # children
+       else
+         a[r]
+       end
+     }]}
 
   F['view/'+MIMEtype+'inode/directory']=F['view/dir']
 
