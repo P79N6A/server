@@ -14,7 +14,7 @@ class E
   fn 'view/edit',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s| uri && s &&
-       (url = uri.E.url
+       (url = uri.E.localURL e
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
              {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editP&nocache'},
