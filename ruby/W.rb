@@ -4,6 +4,7 @@ vfs
 audio
 cal
 chat
+code
 color
 css
 csv
@@ -28,7 +29,6 @@ rdf
 schema
 search
 shell
-source
 table
 text
 tree

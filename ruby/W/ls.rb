@@ -28,7 +28,7 @@ class E
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r| r[Posix+'dir#child'] ? # directory?
-       {class: :dir, style: "background-color: #{E.c}", # dir wrapper
+       {class: :dir, style: "background-color: #{E.cs}", # dir wrapper
          c: [{c: [{_: :a, href: l[r.uri]+'?graph=ls&view=ls', c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')}, # link to ls
                   {_: :a, href: l[r.uri].t, c: '/'}]},
              r[Posix+'dir#child'].map{|c|a[c]}]} :  # children

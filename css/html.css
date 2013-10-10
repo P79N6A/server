@@ -8,7 +8,7 @@ a {
 }
 table.html {
     float:left;
-    background-color:#ddd;
+    background-color:#d8d8d8;
     border-radius:.62em .38em .38em .62em;
     padding:.18em;
     margin:.18em;
@@ -16,11 +16,13 @@ table.html {
 .scheme { display: none; }
 td {vertical-align:bottom}
 td.key {text-align:right}
-td.key .frag {font-weight:bold;background-color:#fff;color:#0cf;padding-left:.2em;border-radius:.38em 0 0 .38em}
-td.val .frag {display: inline; background-color: #333; border-radius: 0 .4em .4em 0; padding-right: .15em }
-td.val .abbr {display: inline; background-color: #000; }
 td.key .abbr {display: none}
-td.val {background-color:#fff;color:#000;border-style:dotted;border-width:0 0 .1em 0;border-color:#8f3}
+td.key .frag {font-weight:bold;background-color:#fff;color:#0cf;padding-left:.2em;border-radius:.38em 0 0 .38em}
+
+td.val {background-color:#fff;color:#000;border-style:dotted;border-width:0 0 .1em 0; border-color:#8f3; padding-left: .18em}
+td.val .frag {display: inline; background-color: #0038e0; color: #fff; border-radius: 0 .4em .4em 0; padding-right: .15em }
+td.val .abbr {display: inline; }
+
 article {
     border-radius:1.2em;
     border-style:dotted;
