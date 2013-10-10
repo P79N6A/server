@@ -67,14 +67,14 @@ class E
 
   # local URL even if locatable-identifier
   def localURL e
+    # path
     if uri.index('/') == 0
-      puts :path
       uri
+    # host match
     elsif uri.index('http://'+e['SERVER_NAME']) == 0
-      puts "local HTTP"
       pathSegment.uri
+    # non-local
     else
-      puts "nonlo"
       Prefix + (CGI.escape uri)
     end
   end

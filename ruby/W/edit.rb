@@ -20,7 +20,8 @@ class E
              {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editP&nocache'},
              s.map{|p,o|
               {class: :property,
-                 c: [{_: :a, class: :edit, c: :edit, href: e['REQUEST_PATH']+'?graph=editable&filter=p&nocache&view=editPO&p=uri,'+CGI.escape(p)},
+                 c: [{_: :a, class: :edit, c: :edit,
+                       href: e['REQUEST_PATH']+'?graph=editable&filter=p&nocache&view=editPO&p=uri,'+CGI.escape(p)},
                      (case p
                       when 'uri'
                         {_: :a, class: :uri, c: p, href: p}
@@ -67,8 +68,7 @@ class E
       # triple identifier
       i = (s.E.concatURI p).concatURI E(p).literal o
 
-      ['<br><span class=tripleURI>',CGI.escapeHTML(i.to_s),'</span><br>',
-       (case p
+      [(case p
         when Content
           {_: :textarea, name: i, c: o, rows: 24, cols: 80}
         else
@@ -78,6 +78,7 @@ class E
 
     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
       c: [(H.once e, 'edit', (H.css '/css/edit')),
+          {_: :h2, c: p},
           # existing entries
           g.map{|s,r| r[p].map{|o|
               triple[s,p,o]}},
