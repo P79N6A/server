@@ -148,7 +148,7 @@ class Pathname
 
   # path -> E
   def E
-    to_s.force_encoding('UTF-8').pathToURI
+    to_s.force_encoding('UTF-8').unpathURI
   end
 
   def c

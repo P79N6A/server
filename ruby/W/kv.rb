@@ -36,7 +36,7 @@ class E
   end
 
   def editFs p,o,newVal=nil
-
+puts "edit #{p} #{o} #{newVal}"
     # triple
     t = concatURI(p).concatURI(o)
 

@@ -23,7 +23,7 @@ class E
       unless oU.uri == vU.uri
         puts "#{o} -> v"
         # edit triple
-        s[p] = vq
+        s[p,o,v]
       end
 
       # snapshot current resource state

@@ -134,7 +134,7 @@ class E
     @u ||= E (f ? dirname + '/.' + File.basename(path) : path.t + E::S)
   end
 
-  # E (_ _ o) -> E o
+  # (_ _ o) -> E o
   def ro
     uri.split(/#{E::S}/)[-1].unpath
   end
@@ -244,7 +244,7 @@ class String
       self.E.r
 
     elsif match /^\/json/ # JSON
-      self.E.r(true)
+      self.E.r true
 
     elsif match /^\/u\// # trie
       File.basename self
