@@ -77,7 +77,6 @@ class E
     t = E(t) # cast bare URI/string to resource
     if !t.e  # destination exists?
       t.no.dirname.dir # ensure containing dir exists
-#      puts [:ln,uri].join ' '
       FileUtils.symlink no, t.no # create link
     end
   end
@@ -88,7 +87,6 @@ class E
   end
     
   def deleteNode
-    puts "-node #{d}" if e
     no.deleteNode if e
     self
   end
@@ -118,7 +116,6 @@ class E
 
   # write file - make sure dir exists & serialize JSON if requested
   def w o,s=false
-#    puts "write #{uri} #{s}"
     dirname.dir
     writeFile (s ? [o].to_json : o)
     self
@@ -151,7 +148,7 @@ class Pathname
 
   # path -> E
   def E
-    to_s.force_encoding('UTF-8').pathToURI false
+    to_s.force_encoding('UTF-8').pathToURI
   end
 
   def c

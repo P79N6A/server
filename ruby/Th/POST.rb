@@ -10,19 +10,19 @@ class E
       sP,pP,oP = (CGI.unescape k).split S
 
       # original triple
-      s,p,o = [sP,pP,oP].map{|c|c.unpath true}
+      s,p,o = [sP,pP,oP].map &:unpath
       p = p.uri[0..-2].E if p.uri[-1] == '/'
 
       # object-delta URI
-      vP = E.literal v
-      
-      puts "s #{sP} > #{s} "
-      puts "p #{pP} > #{p} "
-      puts "object  #{oP} #{o}"
-      puts "objectN #{vP} #{v}"
+      vU = E.literal v
+      oU = oP.E
 
-      puts "objects #{o == v || "dont" } match"
-      puts "objIDs #{oP == vP || "dont" } match"
+      puts "s #{s} p #{p} #{o}"
+      puts "object  #{oU} #{o}"
+      puts "objectN #{vU} #{v}"
+
+      puts "objects #{o == v ? "MATCH" : "dont match" }"
+      puts "objIDs #{oU.uri == vU.uri ? "MATCH" : "dont match" }"
 
       # edit triple
       s[p] = v

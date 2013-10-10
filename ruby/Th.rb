@@ -103,7 +103,7 @@ class E
         response }
     end
 
-  # load site-specific code-base
+  # load site-install
 
   E['http://*/*.rb'].glob.map{|s| puts "loading #{s}"
     require s.d}

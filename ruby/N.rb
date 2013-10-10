@@ -136,7 +136,7 @@ class E
 
   # E (_ _ o) -> E o
   def ro
-    uri.split(/#{E::S}/)[-1].unpath false
+    uri.split(/#{E::S}/)[-1].unpath
   end
 
   def sh
@@ -234,24 +234,24 @@ class String
 
   BaseLen  = E::FSbase.size
 
-  def pathToURI          r = true
-    self[BaseLen..-1].unpath r
+  def pathToURI
+    self[BaseLen..-1].unpath
   end
 
   # string -> E || literal
-  def unpath r=true # dereference literal? 
+  def unpath
 
     if m=(match /^\/([a-z]+:)\/+(.*)/) # URL
       (m[1]+'//'+m[2]).E
 
     elsif match /^\/blob/ # string
-      r ? self.E.r : self.E
+      self.E.r
 
     elsif match /^\/json/ # JSON
-      r ? self.E.r(true) : self.E
+      self.E.r(true)
 
     elsif match /^\/u\// # trie
-      r ? (File.basename self) : self.E
+      File.basename self
 
     elsif match /^\/E\/..\/..\// # opaque URI
       self[9..-1].match(/([^.]+)(.*)/).do{|c|

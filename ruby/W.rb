@@ -1,6 +1,5 @@
 %w{
 core
-vfs
 audio
 cal
 chat
@@ -13,6 +12,7 @@ edit
 examine/examine
 feed
 find
+fs
 grep
 html
 image

@@ -7,6 +7,7 @@ class E
     Fn 'graph/_',resource,env,graph
     # graph state
     resource.fromStream graph, :triplrFsStore
+    puts graph
   }
 
   # show resource w/ links into editor
@@ -63,6 +64,8 @@ class E
 
     # triple -> input
     triple = ->s,p,o{
+
+      puts "#{s} #{p} #{o}"
 
       # triple identifier
       i = (s.E.concatURI p).concatURI E(p).literal o
