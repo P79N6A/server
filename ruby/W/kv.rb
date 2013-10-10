@@ -66,8 +66,7 @@ class E
   # property list
   # E -> [E]
   def listPredicates
-    s = u.to_s.size
-    subtree.map{|n|n.uri[s..-1].unpath}
+    subtree.map &:ro
    end
 
   def literalBlob o

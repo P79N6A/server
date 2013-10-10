@@ -9,7 +9,7 @@
  apt-get install ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight man2html thin
 
  CONFIG
- mkdir -p http://hostname && cp -a {css,js} http://hostname
+ mkdir -p http://hostname
 
  DAEMON        notes
  infod         standalone

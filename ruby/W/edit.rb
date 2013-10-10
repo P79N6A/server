@@ -6,7 +6,9 @@ class E
     # graph skeleton [anti 404]
     Fn 'graph/_',resource,env,graph
     # graph state
-    resource.fromStream graph, :triplrFsStore}
+    resource.fromStream graph, :triplrFsStore
+    puts "editable #{graph}"
+  }
 
   # show resource w/ links into editor
   fn 'view/edit',->g,e{
@@ -56,7 +58,7 @@ class E
 
   # edit all triples in (s p _)
   fn 'view/editPO',->g,e{
-    puts "graph",g
+
     p = e.q['p'].expand
 
     # triple -> input
@@ -64,7 +66,6 @@ class E
 
       # triple identifier
       i = (s.E.concatURI p).concatURI E(p).literal o
-      puts "edit  s #{s} #{s.class} p #{p} #{p.class} o #{o.class} #{o} #{E(p).literal o}"
 
       ['<br><span class=tripleURI>',CGI.escapeHTML(i.to_s),'</span><br>',
        (case p
@@ -78,8 +79,7 @@ class E
     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
       c: [(H.once e, 'edit', (H.css '/css/edit')),
           # existing entries
-          g.map{|s,r|
-            r[p].map{|o| puts "tr s #{s} p #{p} o #{o}"
+          g.map{|s,r| r[p].map{|o|
               triple[s,p,o]}},
           # new entry
           triple[e['uri'],p,''],' ',

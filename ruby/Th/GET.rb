@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def GET
@@ -92,7 +92,7 @@ class E
 
     # add resources to request graph 
     F['graph/' + g][self,q,m]
-
+    puts "graph #{m}"
     # empty graph -> 404
     return F[E404][self,@r] if m.empty?
 
@@ -123,6 +123,7 @@ class E
         c = E '/E/graph/' + s.dive
 
         if c.e # cached graph exists
+          puts "reading cached-graph #{c}"
           m.merge! c.r true # read cache
         else
           # construct response graph
