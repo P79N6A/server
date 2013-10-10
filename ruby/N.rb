@@ -144,16 +144,25 @@ class E
   end
 
   # literal -> URI
+  # optional "self" argument as Predicate URI for domain-specific Object URIs
+  def E.literal o; E['/'].literal o end
   def literal o
+
     # already a URI
     return self if o.class == E
-    # blob if not String
+
+    # blob for non-strings
     return literalBlob o unless o.class == String
-    # whitelisted-predicate URI-format
+
+    # whitelisted-predicate URIs to paths
     return literalURI o if (Literal[uri] || o.size<=88) && !o.match(/\//)
-    # string is a URI
+
+    # string matches URI format
     return E o if o.match %r{\A[a-z]+://[^\s]+\Z}
+
+    # blob
     literalBlob o
+
   end
 
   # pathname for short literals

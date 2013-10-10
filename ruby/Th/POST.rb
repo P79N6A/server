@@ -8,17 +8,25 @@ class E
 
       # path-ized Triple components
       sP,pP,oP = (CGI.unescape k).split S
+
       # original triple
       s,p,o = [sP,pP,oP].map{|c|c.unpath true}
       p = p.uri[0..-2].E if p.uri[-1] == '/'
+
+      # object field delta
+      vP = E.literal v
       
       puts "s.#{s} p.#{p} :"
       puts "object  #{oP} #{o}"
-      puts "objectV #{v}"
+      puts "objectN #{vP} #{v}"
+
+      puts "objects #{o == v || "dont" } match"
+      puts "objIDs  #{oP == vP || "dont" } match"
 
       # edit triple
       s[p] = v
 
+      # snapshot current resource state
       
     }
 
