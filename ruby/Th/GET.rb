@@ -92,7 +92,7 @@ class E
 
     # add resources to request graph 
     F['graph/' + g][self,q,m]
-    puts "graph #{m}"
+
     # empty graph -> 404
     return F[E404][self,@r] if m.empty?
 
@@ -104,7 +104,7 @@ class E
 
     # request-graph identifier
     s = (q.has_key?('nocache') ? rand.to_s :  # random identifier
-         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # canonicalized set signature
+         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # graph signature
 
     # response identifier
     @r['ETag'] ||= [s, q, @r.format].h
@@ -122,14 +122,12 @@ class E
         # cached graph identifier
         c = E '/E/graph/' + s.dive
 
-        if c.e # cached graph exists
-          puts "reading cached-graph #{c}"
-          m.merge! c.r true # read cache
+        if c.e # graph already generated
+          m.merge! c.r true # cached graph
         else
-          # construct response graph
+          # expand response graph thunks
           m.values.map{|r|
-            r.env(@r).graphFromFile m}
-
+            r.env(@r).graphFromFile m if r.class == E }
           # cache response graph
           c.w m,true
         end
@@ -137,7 +135,7 @@ class E
         # response graph sorting/filtering
         E.filter q, m, self
 
-        # response body
+        # cache response
         r.w render @r.format, m, @r
       end }
   end

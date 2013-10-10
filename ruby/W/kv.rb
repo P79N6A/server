@@ -1,6 +1,6 @@
 class E
 =begin
-   a simple key/value RDF store on the vfs
+   a simple key/value RDF store on the filesystem
 
   get
    E['http://www.kanzaki.com/ns/music#EnglishHorn'][RDFs+'comment']
@@ -10,7 +10,7 @@ class E
    (E'lement')['level']='trace'
   
   update
-   E('lement')['level','trace','abundant']
+   E['lement']['level','trace','abundant']
   
   delete
    E('lement')['level','abundant','']

@@ -105,7 +105,7 @@ class E
 
   # load site-specific code-base
 
-  E['http:/*/*.rb'].glob.map{|s| puts "site config #{s}"
+  E['http://*/*.rb'].glob.map{|s| puts "loading #{s}"
     require s.d}
 
 end

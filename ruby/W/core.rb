@@ -5,8 +5,6 @@ class Hash
     g.merge!({uri=>self})
   end
 
-  %w{graphFromFile q}.map{|m|alias_method m,:graph}
-
   def mergeGraph g
     g.values.each do |r|
       r.triples do |s,p,o|
@@ -20,12 +18,13 @@ class Hash
 
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
 
-  # Hash -> tripleStream
+  # self -> tripleStream
   def triples
     s = uri
     map{|p,o|
       o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}
   end
+
 end
 
 class E
@@ -39,15 +38,14 @@ class E
     end; m
   end
 
-  # tripleStream emitter/transformer stack
-  #
+  # tripleStream pipeline
   fn 'graph/|',->e,_,m{e.fromStream m, *_['|'].split(/,/)}
 
   def E.graphFromStream s
     fn 'graph/'+s.to_s,->e,_,m{e.fromStream m, s}    
   end
 
-  # placeholder to circumvent empty-graph 404
+  # graph thunk
   fn 'graph/_',->d,_,m{ m[d.uri] = {} }
 
   # to_h :: -> Hash
@@ -63,6 +61,7 @@ class E
   end
 
   def graphFromFile g={}
+    puts "graph from file #{uri}"
     g.mergeGraph r(true) if ext=='e' # JSON -> graph
     [:triplrInode,        # filesystem data
      :triplrMIMEdispatch].# format-specific tripleStream

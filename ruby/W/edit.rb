@@ -7,7 +7,6 @@ class E
     Fn 'graph/_',resource,env,graph
     # graph state
     resource.fromStream graph, :triplrFsStore
-    puts "editable #{graph}"
   }
 
   # show resource w/ links into editor
@@ -57,7 +56,7 @@ class E
      #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
     ]}
 
-  # edit all triples in (s p _)
+  # edit triples
   fn 'view/editPO',->g,e{
 
     p = e.q['p'].expand
@@ -81,7 +80,7 @@ class E
           {_: :h2, c: p},
           # existing entries
           g.map{|s,r| r[p].map{|o|
-              triple[s,p,o]}},
+              triple[s,p,o]}.cr},
           # new entry
           triple[e['uri'],p,''],' ',
           {_: :input, type: :submit, value: 'save'},
