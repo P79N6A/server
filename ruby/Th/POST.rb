@@ -13,15 +13,16 @@ class E
       s,p,o = [sP,pP,oP].map{|c|c.unpath true}
       p = p.uri[0..-2].E if p.uri[-1] == '/'
 
-      # object field delta
+      # object-delta URI
       vP = E.literal v
       
-      puts "s.#{s} p.#{p} :"
+      puts "s #{sP} > #{s} "
+      puts "p #{pP} > #{p} "
       puts "object  #{oP} #{o}"
       puts "objectN #{vP} #{v}"
 
       puts "objects #{o == v || "dont" } match"
-      puts "objIDs  #{oP == vP || "dont" } match"
+      puts "objIDs #{oP == vP || "dont" } match"
 
       # edit triple
       s[p] = v

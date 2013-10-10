@@ -144,7 +144,7 @@ class E
   end
 
   # literal -> URI
-  # optional "self" argument as Predicate URI for domain-specific Object URIs
+  # optional "self" argument of Predicate for domain-specific ObjectURI hinting
   def E.literal o; E['/'].literal o end
   def literal o
 

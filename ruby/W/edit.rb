@@ -3,12 +3,10 @@ class E
 
   # editable graph on FS triplestore
   fn 'graph/editable',->resource,env,graph{
-    # graph skeleton
+    # graph skeleton [anti 404]
     Fn 'graph/_',resource,env,graph
-    # editable graph
-    resource.fromStream graph, :triplrFsStore
-    puts graph
-  }
+    # graph state
+    resource.fromStream graph, :triplrFsStore}
 
   # show resource w/ links into editor
   fn 'view/edit',->g,e{
