@@ -2,7 +2,7 @@
 class E
 
   fn 'set/grep',->e,q,m{
-    `grep -rl#{q.has_key?('i') && 'i'} #{q['q'].sh} #{e.sh}`.lines.map &:pathToURI
+    `grep -rl#{q.has_key?('i') && 'i'} #{q['q'].sh} #{e.sh}`.lines.map &:unpathURI
   }
 
   fn 'view/grep',->d,e{

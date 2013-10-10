@@ -4,28 +4,27 @@ class E
   def POST
     r = Rack::Request.new @r
     p = nil
+    # each triple
     r.params.map{|k,v|
 
-      # path-ized Triple components
+      # path-format triple
       sP,pP,oP = (CGI.unescape k).split S
 
       # original triple
       s,p,o = [sP,pP,oP].map &:unpath
+
       p = p.uri[0..-2].E if p.uri[-1] == '/'
 
-      # object-delta URI
+      # object-delta URIs
       vU = E.literal v
       oU = oP.E
 
-      puts "s #{s} p #{p} #{o}"
-      puts "object  #{oU} #{o}"
-      puts "objectN #{vU} #{v}"
-
-      puts "objects #{o == v ? "MATCH" : "dont match" }"
-      puts "objIDs #{oU.uri == vU.uri ? "MATCH" : "dont match" }"
-
-      # edit triple
-      s[p] = v
+      # change detected
+      unless oU.uri == vU.uri
+        puts "#{o} -> v"
+        # edit triple
+        s[p] = vq
+      end
 
       # snapshot current resource state
       
