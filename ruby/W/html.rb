@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class Array
   def html table=true
@@ -9,7 +9,7 @@ end
 class Object
   def html *a
     name = self.class
-    href = name == EventMachine::DefaultDeferrable ? "http://eventmachine.rubyforge.org/EventMachine/DefaultDeferrable.html" : "http://www.ruby-doc.org/core/#{name}.html"
+    href = "http://www.ruby-doc.org/core/#{name}.html"
     "<a href=#{href}><b>#{name}</b></a>"
   end
 end
@@ -33,11 +33,19 @@ class String
 end
 
 class Fixnum
-  def html; to_s end
+  def html; H({_: :input, type: :number, value: to_s}) end
 end
 
 class Float
-  def html; to_s end
+  def html; H({_: :input, type: :number, value: to_s}) end
+end
+
+class TrueClass
+  def html; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
+end
+
+class FalseClass
+  def html; H({_: :input, type: :checkbox, title: :False}) end
 end
 
 class Hash

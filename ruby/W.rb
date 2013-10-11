@@ -26,6 +26,5 @@ search
 table
 text
 time
-tree
 wiki
 }.each{|r|require_relative 'W/'+r}
