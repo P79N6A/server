@@ -37,7 +37,7 @@ class E
       r.uri = u            # update data
       r.graph = graph.to_s
       r.content = i.to_s
-      r.time = i[E::Date][0].to_time
+      r.time = i[E::Date].do{|t|t[0].to_time}
     }
     self
   rescue Exception => x
