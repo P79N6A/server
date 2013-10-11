@@ -70,4 +70,12 @@ table {
     background-color:#000;
     color:#fff }
 
-form input {background-color:#444;color:#fff;border-width:0}
+input {
+    background-color:#fff;
+    color:#000;
+    border-width:0;
+    padding:0;
+    margin:0;
+    width: 8em;
+    text-align: right;
+}
