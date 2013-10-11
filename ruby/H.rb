@@ -17,10 +17,7 @@ end
 
 class H
 
-  def initialize h; @h = h end
-  def H.[] h; H.new h end
-
-  def html; H @h end
+  def H.[] h; H h end
 
   def H.js a,inline=false
     p=a+'.js'

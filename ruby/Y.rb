@@ -31,6 +31,6 @@ end
 
 # define named-lambda
 def fn u,y
-  E::F[u.to_s] && puts("w #{u} redefined")
+  E::F[u.to_s] && puts("#{u} redefined")
   E::F[u.to_s] = y
 end
