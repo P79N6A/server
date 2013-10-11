@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 module FeedParse
   def html; CGI.unescapeHTML self end
   def cdata; sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'end

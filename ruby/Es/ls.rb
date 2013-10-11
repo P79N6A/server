@@ -46,9 +46,7 @@ class E
      {_: :a, class: :up, href: up, c: '&uarr;'},
      {class: :ls,
        c: (Fn 'view/tab',i,e)},
-     {_: :a, class: :du, href: e['REQUEST_PATH'].t+'??=du', c: :du, rel: :nofollow},
      (Fn 'view/find',i,e),'<br clear=all>',
-     {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'},
-    ]}
+     {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
 
 end
