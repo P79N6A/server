@@ -1,10 +1,12 @@
 #watch __FILE__
 class E
 
-  fn 'set/ls',->d,e,m{d.c}
+  fn 'set/ls',->d,e,m{d.c.concat d.pathSegment.c}
 
-  fn 'graph/fs',->d,e,m{             d.fromStream m, :triplrInode, false }
-  fn 'graph/ls',->d,e,m{ d.c.map{|c| c.fromStream m, :triplrInode, false }}
+  fn 'graph/fs',->d,e,m{ d.fromStream m, :triplrInode, false }
+  fn 'graph/ls',->d,e,m{ 
+    (F['set/ls'][d,e,m]).map{|c|
+      c.fromStream m, :triplrInode, false }}
 
   # basic directory view 
   fn 'view/dir',->i,e{

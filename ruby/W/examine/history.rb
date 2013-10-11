@@ -1,6 +1,13 @@
 #watch __FILE__
 class E
 
+  F["?"]||={}
+  F["?"].update({'taft'=>{
+                'graph'=>'|',
+                    '|'=>'triplrMozHist',
+                 'view'=>'page',
+                    'v'=>'timegraph',
+                  'arc'=>'referer'}})
 
   def triplrMozHist
     c = @r.q['c'].match(/[0-9]+/) ? @r.q['c'] : '18'

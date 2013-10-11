@@ -13,7 +13,7 @@ class E
       if view || processFile || !accept
         self.GET_resource
       else
-        file.GET_img
+        file.env(@r).GET_img
       end
     else
       self.GET_resource

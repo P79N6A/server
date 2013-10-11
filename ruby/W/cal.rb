@@ -97,14 +97,3 @@ class E
     ]}}
 
 end
-
-class Object
-  def time?
-    (self.class == Time) || (self.class == DateTime)
-  end
-  def to_time
-    time? ? self : Time.parse(self)
-  rescue
-    nil
-  end
-end
