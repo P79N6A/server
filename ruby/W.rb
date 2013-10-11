@@ -11,15 +11,10 @@ du
 edit
 examine/examine
 feed
-find
-fs
-grep
 html
 image
 info
 json
-kv
-ls
 mail
 man
 page
@@ -28,7 +23,6 @@ pdf
 rdf
 schema
 search
-shell
 table
 text
 time

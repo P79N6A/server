@@ -1,9 +1,5 @@
 #watch __FILE__
 
-class DateTime
-  def html; H({_: :time, datetime: iso8601, c: to_s}) end
-end
-
 class Time
   def html; H({_: :time, datetime: iso8601, c: to_s}) end
 end
