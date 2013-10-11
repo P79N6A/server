@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 module FeedParse
   def html; CGI.unescapeHTML self end
   def cdata; sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'end
@@ -20,16 +20,16 @@ module FeedParse
     #items
     scan(%r{<(rss:|atom:)?(item|entry)([\s][^>]*)?>(.*?)</\1?\2>}mi){|m|
 
-      #URI
-      u = m[2] && (u=m[2].match /about=["']?([^'">\s]+)/) && u[1] ||
-          m[3] && (((u=m[3].match /<(gu)?id[^>]*>([^<]+)/) || (u=m[3].match /<(link)>([^<]+)/)) && u[2])
-      yield u,E::Type,(E::SIOC+'Post').E
+      # find identifier
+      u = m[2] && (u = m[2].match /about=["']?([^'">\s]+)/) && u[1] ||
+          m[3] && (((u = m[3].match /<(gu)?id[^>]*>([^<]+)/) || (u = m[3].match /<(link)>([^<]+)/)) && u[2])
+
+      yield u,E::Type,(E::SIOC+'Post').E     ;#puts "post #{u}"
 
       #links
       m[3].scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
-        yield(u,                                                                       # s
-              E::Atom+'/link/'+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), # p
-              e[1].match(/(href|url|src)=['"]?([^'">\s]+)/)[2].E)}                     # o
+        e[1].match(/(href|url|src)=['"]?([^'">\s]+)/).do{|url|
+          yield(u,E::Atom+'/link/'+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].E)}}
 
       #elements
       m[3].scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
