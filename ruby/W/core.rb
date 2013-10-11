@@ -61,7 +61,6 @@ class E
   end
 
   def graphFromFile g={}
-    puts "graph from file #{uri}"
     g.mergeGraph r(true) if ext=='e' # JSON -> graph
     [:triplrInode,        # filesystem data
      :triplrMIMEdispatch].# format-specific tripleStream

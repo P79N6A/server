@@ -64,8 +64,8 @@ end
 
 class NilClass
   def do; nil end
+  def method_missing f,*a; puts "nil##{f} #{caller[0]}" end
   def to_ary; [] end
   def to_s; "" end
-  alias_method :to_str,:to_s
-  def method_missing *a; nil; end
+  %w{html to_str}.map{|m|alias_method m,:to_s}
 end
