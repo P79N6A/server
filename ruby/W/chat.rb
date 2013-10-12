@@ -58,7 +58,7 @@ class E
     [{_: :a, id: line},
      {_: :a, :class => :date, href: r.url, c: r[Date][0].match(/T([0-9:]{5})/)[1]},
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
-            c: [{_: :img, class: :a, src: r[Atom+"/link/image"][0].uri},
+            c: [r[Atom+"/link/image"].do{|p| {_: :img, class: :a, src: p[0].uri}},
                 {_: :span, c: r[SIOC+'name']||r[Creator]||'#'}]}},' ',
         {_: :span, :class => :tw, 
        c: [r[Atom+'/link/media'].do{|a|

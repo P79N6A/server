@@ -54,3 +54,11 @@ td.val {
     border-width:0 0 .1em 0;
     border-color:#999;
 }
+
+input {
+    background-color:#000;
+    color:#fff;
+    border-width:0;
+    padding:0;
+    margin:0;
+}
