@@ -1,4 +1,4 @@
-%w{find fs fs.index grep groonga kv ls redis shell sqlite}.map{|e|require_relative 'Es/'+e}
+%w{find fs fs.index grep groonga kv ls mime shell}.map{|e|require_relative 'Es/'+e}
 
 class E
 

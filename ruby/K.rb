@@ -158,30 +158,6 @@ class E
     Modified,
    ].map{|f|Literal[f]=true}
 
-  def mime
-    @mime ||=
-      (t = ext.downcase.to_sym
-
-       if d?
-         "inode/directory"
-
-       elsif MIME[t]
-         MIME[t]
-
-       elsif Rack::Mime::MIME_TYPES[t='.'+t.to_s]
-         Rack::Mime::MIME_TYPES[t]
-
-       elsif base.index('msg.')==0
-         "message/rfc822"
-
-       elsif e
-         `file --mime-type -b #{sh}`.chomp
-
-       else
-         "application/octet-stream"
-       end)
-  end
-
   def == u
       to_s == u.to_s
   end

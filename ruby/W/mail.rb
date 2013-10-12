@@ -1,8 +1,6 @@
 #watch __FILE__
-
 class E
 
-  # qs alias section
   F["?"] ||= {}
   F["?"].update({
    'thread' =>{'graph'=>'thread',
