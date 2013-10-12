@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   F["?"] ||= {}
@@ -60,9 +60,9 @@ class E
     # occurrence-count statistics
     g = {}
     d.map{|_,m|
-      m[To].map{|t|
-        g[t.uri]||=0
-        g[t.uri]=g[t.uri].succ}}
+      m[To].do{|to|to.map{|t|
+          g[t.uri]||=0
+          g[t.uri]=g[t.uri].succ}}}
 
     # CSS
     [(H.css '/css/mail.threads'),
@@ -75,7 +75,8 @@ class E
      '<table>',
 
      # subgroup by title
-     d.values.group_by{|r|[*r[Title]][0].sub(/^[rR][eE][^A-Za-z]./,'')}.
+     d.values.group_by{|r|
+       [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}.
 
      # group by recipient
      group_by{|r,k|
@@ -103,7 +104,8 @@ class E
 
                # author name and RDFa
                [{_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
-                  c: s[SIOC+'name'][0].split(/\W/,2)[0]},' ']}]),'<br>']},'</td>',
+                  c: s[SIOC+'name'].do{|n|n[0].split(/\W/,2)[0]}
+                },' ']}]),'<br>']},'</td>',
 
         # recipient group, Mailing List
         {_: :td, class: :group, property: To,
