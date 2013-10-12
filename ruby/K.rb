@@ -169,15 +169,15 @@ class E
 
   def mime
     @mime ||=
-      (ext = ext.downcase.to_sym
- 
+      (t = ext.downcase.to_sym
+
        if d?
          "inode/directory"
 
-       elsif MIME[ext]
-         MIME[ext]
+       elsif MIME[t]
+         MIME[t]
 
-       elsif Rack::Mime::MIME_TYPES[t='.'+ext.to_s]
+       elsif Rack::Mime::MIME_TYPES[t='.'+t.to_s]
          Rack::Mime::MIME_TYPES[t]
 
        elsif base.index('msg.')==0
