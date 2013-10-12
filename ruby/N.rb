@@ -25,16 +25,14 @@ class E
   
   def ef;  @ef ||= docBase.a('.e') end
   def nt;  @nt ||= docBase.a('.nt') end
-  def ttl; @ttl ||= docBase.a('.ttl') end
-  
-  # base URI for document
-  # /concept <> /concept.ttl
+  def ttl; @ttl||= docBase.a('.ttl') end
+
   def docBase
-    readlink.uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare }
+    E[uri.split(/#/)[0]].do{|d|
+      d.dirname.as d.bare }
   end
   
-  # usually same as above, but strict
-  # fails on exotic/non-conforming URIs
+  # same as above, but w/ URI errors
   def docBaseURI
     u = URI uri
     s = u.scheme

@@ -1,3 +1,4 @@
+#watch __FILE__
 class E
 
   FSbase   = `pwd`.chomp
@@ -168,28 +169,23 @@ class E
 
   def mime
     @mime ||=
-      (# dereferenced symlink
-       f = readlink
-
-       # filename extension
-       x = f.ext.downcase.to_sym
-
-       # directory?
+      (ext = ext.downcase.to_sym
+ 
        if d?
          "inode/directory"
-         # local MIME-types table
-       elsif MIME[x]
-         MIME[x]
-         # Rack MIME-types table
-       elsif Rack::Mime::MIME_TYPES[t = '.' + x.to_s]
+
+       elsif MIME[ext]
+         MIME[ext]
+
+       elsif Rack::Mime::MIME_TYPES[t='.'+ext.to_s]
          Rack::Mime::MIME_TYPES[t]
-         # procmail uses a prefix not an extension
-       elsif f.base.index('msg.')==0
+
+       elsif base.index('msg.')==0
          "message/rfc822"
-         # ask FILE(1)
-       elsif f.e
-         `file --mime-type -b #{f.sh}`.chomp
-         # unknown
+
+       elsif e
+         `file --mime-type -b #{sh}`.chomp
+
        else
          "application/octet-stream"
        end)

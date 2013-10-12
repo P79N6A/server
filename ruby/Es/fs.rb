@@ -129,10 +129,6 @@ class E
     File.open(d).read
   end
 
-  def readlink
-    no.symlink? ? no.readlink.E : self
-  end
-
 end
 
 class Pathname
