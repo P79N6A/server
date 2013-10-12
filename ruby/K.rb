@@ -1,7 +1,7 @@
 watch __FILE__
 class E
 
-  FSbase   = `pwd`.chomp
+  FSbase   = `pwd`.chomp ;  BaseLen = FSbase.size
   Prefix   = '/@' # prefix for non-local and non-HTTP URIs
   S        = '<>' # tree-root basename
 
@@ -113,16 +113,7 @@ class E
     'text/turtle'          => [:triplrRDFformats,:turtle],
   }
 
-  # MIME type -> formatted content
-     Render='render/'
-  fn Render+'application/ld+json',->d,_=nil{E.renderRDF d, :jsonld}
-  fn Render+'application/rdf+xml',->d,_=nil{E.renderRDF d, :rdfxml}
-  fn Render+'text/ntriples',->d,_=nil{E.renderRDF d, :ntriples}
-  fn Render+'text/turtle',  ->d,_=nil{E.renderRDF d, :turtle}
-  fn Render+'text/rdf+n3',  ->d,_=nil{E.renderRDF d, :n3}
-  fn Render+'text/n3',      ->d,_=nil{E.renderRDF d, :n3}
-
-  # render a view even if requested file exists
+  # prefer a view even if requested file exists
   MIMEcook={
     'application/atom+xml' => true,
     'application/markdown' => true,
@@ -194,6 +185,8 @@ class E
   def == u
       to_s == u.to_s
   end
+
+  Render = 'render/'
 
   Nginx = ENV['nginx']
   Apache = ENV['apache']

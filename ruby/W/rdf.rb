@@ -15,6 +15,13 @@ class E
     puts [:RDF,d.keys[0..8],f,e].join ' '
   end
 
+  fn Render+'application/ld+json',->d,_=nil{E.renderRDF d, :jsonld}
+  fn Render+'application/rdf+xml',->d,_=nil{E.renderRDF d, :rdfxml}
+  fn Render+'text/ntriples',->d,_=nil{E.renderRDF d, :ntriples}
+  fn Render+'text/turtle',  ->d,_=nil{E.renderRDF d, :turtle}
+  fn Render+'text/rdf+n3',  ->d,_=nil{E.renderRDF d, :n3}
+  fn Render+'text/n3',      ->d,_=nil{E.renderRDF d, :n3}
+
   def triplrRDFformats t=nil
     E.requireRDF
     (t == :rdfa ? RDF::RDFa : RDF)::Reader.

@@ -56,7 +56,9 @@ class E
   end
 
   def dirname
-    no.dirname.E
+    n = node.dirname
+    n = '/' if !n || n.to_s.size <= BaseLen
+    n.E
   end
   
   # local URL from unlocatable identifier (mail MSGID, etc)
@@ -231,16 +233,13 @@ class String
     Shellwords.escape self
   end
 
-  BaseLen  = E::FSbase.size
-
-  # path -> E
+  # full FS path -> URI
   def unpathURI
-    (self[BaseLen..-1]||'').do{|p|
-      p.match(/^\/([a-z]+:)\/+(.*)/).do{|m|m[1]+'//'+m[2]} || p
-    }.E
+    self[E::BaseLen..-1].do{|p|
+      (p.match(/^\/([a-z]+:)\/+(.*)/).do{|m|m[1]+'//'+m[2]}||p).E}
   end
 
-  # path -> (E || literal)
+  # path -> URI || literal
   def unpath
 
     if m=(match /^\/([a-z]+:)\/+(.*)/) # URL
