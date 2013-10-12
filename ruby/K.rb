@@ -135,6 +135,7 @@ class E
     'text/x-fortran'=>true,
     'text/x-makefile'=>true,
     'text/x-pascal'=>true,
+    'text/x-ruby'=>true,
 #    ''=>true,
   }
   %w{c ruby haskell perl php python}.map{|t|

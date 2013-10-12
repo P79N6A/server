@@ -69,7 +69,7 @@ class E
   
   def triplrSymlink
     t = node.realpath
-    target = t.to_s.index(FSbase)==0 ? t.E : ' '+t.to_s
+    target = t.to_s.index(FSbase)==0 ? t.E : t.to_s
     yield uri, '/linkTarget', target
 
   end

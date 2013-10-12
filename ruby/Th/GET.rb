@@ -1,16 +1,17 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def GET
        a = @r.accept.values.flatten
     view = @r.q.has_any_key %w{format view}
-    processFile = MIMEcook[mime] && !@r.q.has_key?('raw')
+    cook = MIMEcook[mime] && !@r.q.has_key?('raw')
   accept = a.empty? || (a.member? mime) || (a.member? '*/*')
     file = [self, # specific domain + path
             pathSegment # specific path, all domains
            ].find{|f| f.f }
+
     if file
-      if view || processFile || !accept
+      if view || cook || !accept
         self.GET_resource
       else
         file.env(@r).GET_img
@@ -18,6 +19,7 @@ class E
     else
       self.GET_resource
     end
+
   rescue Exception => x
     $stderr.puts 500,x.message,x.backtrace
     Fn 'backtrace',x,@r
@@ -82,7 +84,7 @@ class E
   
   # default HTTP response
   def response
-
+    puts "Response #{uri}" 
     # request arguments
     q = @r.q       # query-string
     g = q['graph'] # graph-generation function selector
