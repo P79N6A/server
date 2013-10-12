@@ -29,3 +29,9 @@ article {
     border-width:.1em;
     border-color:#00f0ff;
 }
+
+input {
+    background-color:#fff;
+    color:#000;
+    border-width:0;
+}

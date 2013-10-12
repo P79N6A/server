@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class Time
   def html; H({_: :time, datetime: iso8601, c: to_s}) end
@@ -39,10 +39,11 @@ class E
     # on resources w x-axis field
     if r[x.q['x'] || Date]
 
-      labelP = x.q['label'].expand || Creator
+      labelP = x.q['label'].do{|l|l.expand} || Creator
       label = (r[labelP][0]).do{|l|
                l.respond_to?(:uri) ? l.uri : l.to_s}
       lc = x[:group][label] ||= E.c
+      arc = x.q['arc'].do{|a| a.expand }
 
       [{style: "top: #{r['x']}%; left: 0", class: :date, c: r[Date][0]},
        {style: "top: #{r['x']}%; left: #{r['y']}%",
@@ -57,13 +58,13 @@ class E
        
        # arc(s)
        {_: :svg, c:
-         r[x.q['arc'].expand].map{|e|
-           # target resource
-           x[:graph][e.uri].do{|e|
-             # arc path
-             {_: :line, class: :arc, stroke: x[:color], 'stroke-dasharray'=>"2,2",
-               y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
-               y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}]
+         r[arc].do{|a|a.map{|e|
+             # target resource
+             x[:graph][e.uri].do{|e|
+               # arc path
+               {_: :line, class: :arc, stroke: x[:color], 'stroke-dasharray'=>"2,2",
+                 y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
+                 y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}}]
     end }
 
   fn 'filter/timegraph',->e,m,_{
@@ -74,10 +75,10 @@ class E
     # 2D values
     vX = m.map{|_,r|r[x]}.flatten.compact.map(&:to_time).map &:to_f
     vY = m.map{|_,r|r[y]}.flatten.compact.map &:to_f
-    maxX = vX.max
-    minX = vX.min
-    maxY = vY.max
-    minY = vY.min
+    maxX = vX.max || 0
+    minX = vX.min || 0
+    maxY = vY.max || 0
+    minY = vY.min || 0
 
     # scaling-ratio to normalize values to %
     scaleX = 100/((maxX-minX).do{|v|v==0 ? 100 : v}||100)

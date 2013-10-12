@@ -1,8 +1,12 @@
 #watch __FILE__
 class E
   
-  fn 'head/page',->d,e{ v = e.q['v']
-    Fn 'head' + (v != 'page' && '/' + v), d, e}
+  fn 'head/page',->d,e{
+    v = e.q['v']
+    unless v == 'page'
+      h = F['head/'+v] || F['head'] 
+      h[d,e]
+    end}
 
   fn 'view/page',->d,e{
     # try daydirs if no pagination data provided

@@ -154,12 +154,12 @@ elsif b.grep(/\.log$/).size / s > t
     v = e.q['view'].to_s
     h = F['head/'+v] || F['head'] 
     v = F['view/'+v] || F['view']
-    H(e.q.has_key?('un') ? v.(d,e) :
+    H(e.q.has_key?('un') ? v[d,e] :
       ['<!DOCTYPE html>',
        {_: :html,
          c: [{_: :head,
                c: ['<meta charset="utf-8" />',
-                   h.(d,e)]},
-             {_: :body, c: v.(d,e)}].cr}].cr)}
+                   h[d,e]]},
+             {_: :body, c: v[d,e]}].cr}].cr)}
 
 end
