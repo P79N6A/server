@@ -233,7 +233,14 @@ class String
 
   BaseLen  = E::FSbase.size
 
-  # path -> E || literal
+  # path -> E
+  def unpathURI
+    (self[BaseLen..-1]||'').do{|p|
+      p.match(/^\/([a-z]+:)\/+(.*)/).do{|m|m[1]+'//'+m[2]} || p
+    }.E
+  end
+
+  # path -> (E || literal)
   def unpath
 
     if m=(match /^\/([a-z]+:)\/+(.*)/) # URL
@@ -255,17 +262,6 @@ class String
     else # path
       self.E
     end
-  end
-
-  # path -> E
-  def unpathURI
-    # system prefix
-    self[BaseLen..-1].do{|p|
-      if m=(p.match /^\/([a-z]+:)\/+(.*)/)
-        (m[1]+'//'+m[2]).E
-      else
-        p.E
-      end}
   end
   
   def E
