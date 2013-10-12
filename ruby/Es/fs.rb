@@ -1,3 +1,5 @@
+watch __FILE__
+
 %w{date digest/sha1 fileutils json open-uri pathname}.each{|r|require(r)}
 
 class E
@@ -59,11 +61,17 @@ class E
   end
   alias_method :m, :mtime
 
-  def triplrInode r=true
+  def triplrInode children=true
     e && (d? && (yield uri, Posix + 'dir#parent', parent
-                 r && c.map{|c| yield uri, Posix + 'dir#child', c})
-      node.stat.do{|s|[:size,:ftype,:mtime].map{|p|
-          yield uri,Stat+p.to_s,(s.send p)}})
+                 children && c.map{|c| yield uri, Posix + 'dir#child', c})
+          node.stat.do{|s|[:size,:ftype,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}})
+  end
+  
+  def triplrSymlink
+    t = node.realpath
+    target = t.to_s.index(FSbase)==0 ? t.E : ' '+t.to_s
+    yield uri, '/linkTarget', target
+
   end
   
   # create node
