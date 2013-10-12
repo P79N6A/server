@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   FSbase   = `pwd`.chomp ;  BaseLen = FSbase.size
@@ -123,6 +123,7 @@ class E
     'application/textile' => true,
     'application/uri' => true,
     'application/word' => true,
+    'inode/symlink' => true,
     'message/rfc822'=> true,
     'text/ansi'=>true,
     'text/log'=>true,

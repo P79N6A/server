@@ -6,11 +6,11 @@ class E
     @mime ||=
       (t = ext.downcase.to_sym
 
-       if d?
-         "inode/directory"
-
-       elsif node.symlink?
+       if node.symlink?
          "inode/symlink"
+
+       elsif d?
+         "inode/directory"
 
        elsif MIME[t]
          MIME[t]
