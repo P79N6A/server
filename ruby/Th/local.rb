@@ -1,18 +1,14 @@
 class E
-=begin
- this code is not loaded by default
+# customize
+puts "local.rb"  
 
- server looks in hostname-root paths for *.rb files, reporting found code:
- site config http://data.whats-your.name/data.rb 
-
-=end
-  
-  # queries for robots
-  # fn '/robots.txt/GET',->e,r{[200,{'Content-Type'=>'text/plain'},["User-agent: *\nDisallow: /*?*\n"]]}
-  
-  # schema search forward from site root
-  fn 'http://data.whats-your.name/GET',->e,r{
-    [302,{'Location'=>'/schema'},[]]}  
+  # for robots
+  fn '/robots.txt/GET',->e,r{
+  [200,{'Content-Type'=>'text/plain'},
+["User-agent: *
+  Disallow: /E
+  Disallow: /.git
+"]]}
   
   # webize PS(1)
   fn '/ps/GET',->e,r{

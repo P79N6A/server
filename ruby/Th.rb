@@ -103,9 +103,4 @@ class E
         response }
     end
 
-  # load site-install
-
-  E['http://*/*.rb'].glob.map{|s| puts "loading #{s}"
-    require s.d}
-
 end

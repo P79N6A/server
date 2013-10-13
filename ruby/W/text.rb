@@ -56,12 +56,11 @@ class E
   def triplrUriList
     open(d).readlines.map{|l|
       l = l.chomp
-      yield uri, '/link', l
-      yield   l, '/link', uri
+      yield uri, '/rel', l
+      yield   l, '/rev', uri
     }
   end
 
-  # list of uris in a .u doc
   def uris
     graph.keys.map &:E
   end
