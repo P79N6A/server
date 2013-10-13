@@ -1,6 +1,6 @@
+watch __FILE__
 class E
-
-  # K.rb for MIME mappings
+  # K.rb - MIME mappings
 
   def mime
     @mime ||=
@@ -27,6 +27,14 @@ class E
        else
          "application/octet-stream"
        end)
+  end
+
+  # MIME-type of dereferenced path
+  def mimeP
+    puts "mimeP #{uri}"
+    o = node.realpath.E
+    puts "location #{o.uri}" unless o.uri == uri
+    o.mime
   end
 
 end
