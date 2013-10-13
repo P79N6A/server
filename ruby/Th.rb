@@ -1,5 +1,5 @@
 require 'rack'
-%w{GET HEAD POST PATCH uid 404 500}.map{|i|require_relative 'Th/' + i}
+%w{GET HEAD POST PATCH uid util 404 500}.map{|i|require_relative 'Th/' + i}
 
 class E
 
@@ -8,7 +8,7 @@ class E
     e.extend Th # enable request-related utility functions
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h } # hostname
    (e['REQUEST_PATH'].force_encoding('UTF-8').do{|u|         # path
-      CGI.unescape(u.index(Prefix)==0 ? u[Prefix.size..-1] : # non-local or non-HTTP URI
+      CGI.unescape(u.index(Prefix)==0 ? u[Prefix.size..-1] : # non-local|non-HTTP URI
       'http://' + e['SERVER_NAME'] + u.gsub('+','%2B'))      # HTTP URI
     }.E.env(e).jail.do{|r|           # valid path?
       e['uri']=r.uri; r.send e.fn    # update URI and continue
