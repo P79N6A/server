@@ -118,7 +118,6 @@ class E
   MIMEcook={
     'application/atom+xml' => true,
     'application/markdown' => true,
-    'application/json' => true,
     'application/json+rdf' => true,
     'application/org' => true,
     'application/textile' => true,
@@ -129,21 +128,13 @@ class E
     'text/ansi'=>true,
     'text/log'=>true,
     'text/nfo'=>true,
-    'text/rtf'=>true,
-    'text/x-c'=>true,
-    'text/x-c++'=>true,
-    'text/x-fortran'=>true,
-    'text/x-makefile'=>true,
-    'text/x-pascal'=>true,
-    'text/x-ruby'=>true,
-#    ''=>true,
-  }
-  %w{c ruby haskell perl php python}.map{|t|
+    'text/rtf'=>true}
+
+  %w{c c++ fortran haskell makefile pascal perl php python ruby}.map{|t|
     %w{application/ text/x-}.map{|m|
       MIMEcook[m+t] = true
   }}
 
-  # short -> full URI
   Abbrev={
     "dc" => DC,
     "foaf" => FOAF,
@@ -153,7 +144,7 @@ class E
     "stat" => Stat,
   }
   
-  # expose these literals as a path-name 
+  # literal to pathname types
   Literal={}
    [Purl+'dc/elements/1.1/date',
     Date,
@@ -164,8 +155,6 @@ class E
   def == u
       to_s == u.to_s
   end
-
-  Render = 'render/'
 
   Nginx = ENV['nginx']
   Apache = ENV['apache']

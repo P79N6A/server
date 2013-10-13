@@ -1,5 +1,4 @@
 %w{
-core
 audio
 cal
 chat

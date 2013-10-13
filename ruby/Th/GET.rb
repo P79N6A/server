@@ -84,7 +84,7 @@ class E
   
   # default HTTP response
   def response
-    puts "Response #{uri}" 
+
     # request arguments
     q = @r.q       # query-string
     g = q['graph'] # graph-generation function selector

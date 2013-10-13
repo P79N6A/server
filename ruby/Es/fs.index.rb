@@ -1,18 +1,18 @@
 class E
 
-  # POSIX-filesystem index for triples
+  # POSIX-fs backed index of triples
   # 
 
   # index a triple 
   def index p,o
-    # normalize predicate typeclass (accept URI string or resources) 
+    # normalize predicate types (accept URI string or resources) 
     indexEdit E(p),
     # literal -> URI conversion
       (o.class == E ? o : E(p).literal(o)),
        nil
   end
 
-  # index a triple - no input-cleanup
+  # index a triple - no input-casting
   def indexEdit p,o,a
     return if @noIndex
     p.pIndex.noIndex[o,self,a]
@@ -20,6 +20,17 @@ class E
   def noIndex
     @noIndex = 1
     self
+  end
+
+  # accumulate a graph recursively along set-membership arc
+  def walk p,m={}
+    graph m # accumulative graph
+    o = []  # resources to visit 
+    o.concat m[uri][p]     # outgoing arc targets
+    o.concat (E p).po self # incoming arc sources
+    o.map{|r|              # walk
+      r.E.walk p,m unless m[r.uri]}
+    m
   end
 
   # subtree traverse
