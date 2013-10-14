@@ -17,7 +17,10 @@ class E
   end
 
   # call URI-named function
-  def y *a; F[uri][*a] end
+  def y *a
+    puts "call #{uri}"
+    F[uri][*a]
+  end
 
 end
 

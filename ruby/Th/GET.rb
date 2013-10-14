@@ -4,8 +4,8 @@ class E
   def GET
        a = @r.accept.values.flatten
     view = @r.q.has_any_key %w{format view}
-    cook = MIMEcook[mime] && !@r.q.has_key?('raw')
-  accept = a.empty? || (a.member? mime) || (a.member? '*/*')
+    cook = MIMEcook[mimeP] && !@r.q.has_key?('raw')
+  accept = a.empty? || (a.member? mimeP) || (a.member? '*/*')
     file = [self, # specific domain + path
             pathSegment # specific path, all domains
            ].find{|f| f.f }
@@ -51,7 +51,7 @@ class E
 
   def GET_file
     @r['ETag'] = [m,size].h
-    maybeSend mime,->{self},:link
+    maybeSend mimeP,->{self},:link
   end
 
   def GET_img

@@ -19,10 +19,11 @@ class E
   # graph placeholder
   fn 'graph/_',->d,_,m{ m[d.uri] = {} }
 
-  def triplrMIMEdispatch &b;mime.do{|mime|
-    yield uri,E::Type,(E MIMEtype+mime)
-      (MIMEsource[mime]||
-       MIMEsource[mime.split(/\//)[0]]).do{|s|
+  def triplrMIMEdispatch &b
+    mimeP.do{|mime|
+      yield uri,E::Type,(E MIMEtype+mimeP)
+      (MIMEsource[mimeP]||
+       MIMEsource[mimeP.split(/\//)[0]]).do{|s|
         send *s,&b }}
   end
 

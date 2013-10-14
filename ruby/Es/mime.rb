@@ -32,7 +32,7 @@ class E
   # MIME-type of dereferenced path
   def mimeP
     puts "mimeP #{uri}"
-    o = node.realpath.E
+    o = node.symlink? ? node.readlink.E : self
     puts "location #{o.uri}" unless o.uri == uri
     o.mime
   end
