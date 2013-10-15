@@ -19,7 +19,6 @@ unless ARGV[-1].match /(start|stop|restart|config|install)/
 end
 
 %w{infod thin}.map{|l| require l}
-require '/E/local.rb'.E.d
 
 module Rack
   module Adapter

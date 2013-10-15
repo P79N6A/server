@@ -185,9 +185,12 @@ class E
     to_s <=> c.to_s
   end
 
-  # example: E('wiggly').to_s -> "wiggly"
-  def to_s # string
+  def to_s
     uri
+  end
+
+  def to_h
+   {'uri' => uri}
   end
 
 end

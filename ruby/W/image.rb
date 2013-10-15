@@ -12,7 +12,7 @@ class E
   end
 
   def thumb?
-    mime.match(/^(image|video)/) && # is file an image?
+   mimeP.match(/^(image|video)/) && # is file an image?
    @r.qs.match(/^[0-9]{0,3}x[0-9]{0,3}$/) && # valid dimensions?
     base.match(/^[^.]/) # skip "invisible" images
   end
@@ -23,7 +23,7 @@ class E
          [s.ino,s.mtime]},
        @r.qs].h.dive+'.png'].do{|n| n.e ||
       (n.dirname.dir
-       mime.match(/^video/) &&
+       mimeP.match(/^video/) &&
        `ffmpegthumbnailer -s #{@r.qs.match(/[0-9]+/).to_s} -i #{sh} -o #{n.sh}` ||
        `gm convert #{sh} -thumbnail "#{@r.qs}" #{n.sh}`)
       n.env @r }

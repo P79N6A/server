@@ -1,21 +1,19 @@
 watch __FILE__
 class E
 
-  def GET
+  def GET            #; puts "GET #{uri}" 
+    f = [self,       # path & domain
+         pathSegment # path, all domains
+        ].find{|f| f.f }
+
+    if f #file            ; puts "file #{file}"
        a = @r.accept.values.flatten
     view = @r.q.has_any_key %w{format view}
-    cook = MIMEcook[mimeP] && !@r.q.has_key?('raw')
-  accept = a.empty? || (a.member? mimeP) || (a.member? '*/*')
-    file = [self, # specific domain + path
-            pathSegment # specific path, all domains
-           ].find{|f| f.f }
+    cook = MIMEcook[f.mimeP] && !@r.q.has_key?('raw')
+  accept = a.empty? || (a.member? f.mimeP) || (a.member? '*/*')
 
-    if file
-      if view || cook || !accept
-        self.GET_resource
-      else
-        file.env(@r).GET_img
-      end
+ (view || cook || !accept) ? self.GET_resource : f.env(@r).GET_img
+
     else
       self.GET_resource
     end

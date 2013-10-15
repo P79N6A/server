@@ -31,4 +31,17 @@ class E
   fn 'view/404',->d,e{
     [H.css('/css/404'),d.html]}
 
+
+  # check response-codes for a list of URIs (linebreak-separated *.u files)
+  def checkURIs
+    r = uris.select{|u|u.to_s.match /^http/}.map{|u|
+      c = [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u] # HEAD
+      puts c.join ' ' 
+      c } # status, uri tuple
+    puts "\n\n"
+    r.map{|c|
+      # show anomalies
+      puts c.join(' ') unless c[0] == 200 }
+  end
+
 end
