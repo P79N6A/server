@@ -18,7 +18,7 @@ class E
 
   # call URI-named function
   def y *a
-    puts "call #{uri}"
+#    puts "call #{uri}"
     F[uri][*a]
   end
 
@@ -26,7 +26,7 @@ end
 
 # URI-named function
 def Fn a,*g
-  puts "missing fn #{a}" unless E::F[a]
+#  puts "missing fn #{a}" unless E::F[a]
   E::F[a][*g]
 end
 

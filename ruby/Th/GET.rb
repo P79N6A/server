@@ -1,12 +1,12 @@
 watch __FILE__
 class E
 
-  def GET            #; puts "GET #{uri}" 
+  def GET
     f = [self,       # path & domain
          pathSegment # path, all domains
         ].find{|f| f.f }
 
-    if f #file            ; puts "file #{file}"
+    if f
        a = @r.accept.values.flatten
     view = @r.q.has_any_key %w{format view}
     cook = MIMEcook[f.mimeP] && !@r.q.has_key?('raw')

@@ -1,13 +1,8 @@
 class E
 
   # util, URI prefix, cleaner -> tripleStream
-  def triplrStdOut e,f='/',g=nil,a=sh
+  def triplrStdOut e,f='/',g=/^\s*(.*?)\s*$/,a=sh
 
-    puts "triplr-stdout #{uri} #{e} #{f}"
-
-    g ||= /^\s*(.*?)\s*$/
-
-    # exec command
     `#{e} #{a}|grep :`.each_line{|i|
 
       # key/val separator

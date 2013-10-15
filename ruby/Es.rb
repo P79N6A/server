@@ -2,7 +2,7 @@
 filter
 find
 fs
-fs.index
+fsIndex
 grep
 groonga
 in

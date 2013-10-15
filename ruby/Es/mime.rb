@@ -32,8 +32,7 @@ class E
   # MIME-type of recursively-dereferenced path
   def mimeP
     @mime ||=
-      (puts "mimeP #{uri} #{node} #{caller[0]}"
-       p = node.realpath
+      (p = node.realpath
        t = ((File.extname p).tail||'').downcase.to_sym
 
        unless p.exist?
@@ -53,7 +52,7 @@ class E
            "message/rfc822"
 
          else
-           `file --mime-type -b #{Shellwords.escape p}`.chomp
+           `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
          end
        end )
   end

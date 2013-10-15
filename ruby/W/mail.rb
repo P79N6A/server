@@ -27,8 +27,8 @@ class E
        self.index Creator, m.from[0].E    # index From
        self.index      To, m.to[0].E      # index To
        %w{in_reply_to references}.map{|p| # reference arcs
-        m.send(p).map{|o|                 # lookup references
-         e.index SIOC+'reply_of', i[o]}}) # index references
+        m.send(p).do{|os| os.map{|o|      # lookup references
+         e.index SIOC+'reply_of', i[o]}}}) # index references
 
       # yield triples
       yield e.uri, Type,    E[SIOCt+'MailMessage']
@@ -48,8 +48,8 @@ class E
             yield e.uri,a[1],                        # skip empty String values 
             (a[2] ? (a[3] ? i[o] : o.E) : o.to_utf8) unless o.match(/\A[, \n]*\Z/)}}}}
 
-  rescue Exception => e
-    puts [:mail,uri,e].join(' ')
+#  rescue Exception => e
+#    puts [:mail,uri,e].join(' ')
   end
 
   fn 'graph/thread',->d,_,m{d.walk SIOC+'reply_of',m}
