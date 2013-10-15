@@ -25,7 +25,8 @@ class E
        ln e                               # create message-id path 
        # index previously unseen mail
        self.index Creator, m.from[0].E    # index From
-       self.index      To, m.to[0].E      # index To
+       m.to.do{|t|self.index To, t[0].E}  # index To
+
        %w{in_reply_to references}.map{|p| # reference arcs
         m.send(p).do{|os| os.map{|o|      # lookup references
          e.index SIOC+'reply_of', i[o]}}}) # index references

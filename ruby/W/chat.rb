@@ -62,7 +62,7 @@ class E
                 {_: :span, c: r[SIOC+'name']||r[Creator]||'#'}]}},' ',
         {_: :span, :class => :tw, 
        c: [r[Atom+'/link/media'].do{|a|
-             a.map{|a|{_: :a, href: r.url, c: {_: :img, src: a.uri}}}},
+             a.compact.map{|a|{_: :a, href: r.url, c: {_: :img, src: a.uri}}}},
            ((r[Title].to_s==r[Content].to_s || r.uri.match(/twitter/)) && '' ||
             {_: :a, href: r.url, c: r[Title],:class => r[:mail] ? :titleMail : :title}),
            r[:mail] ? (r[Content].map{|c|c.lines.to_a.grep(/^[^&@_]+$/)[0..21]}) : r[Content],
