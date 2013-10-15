@@ -43,8 +43,8 @@ class E
       # values
       v = v.compact.map{|v|
        ( p == Date ? v.to_time : v ).to_f}
-      max = v.max
-      min = v.min
+      max = v.max || 0
+      min = v.min || 0
       width = (max-min).do{|w| w.zero? ? 1 : w}
       bw = width / nb }
 
@@ -71,7 +71,8 @@ class E
     b = h.keys.sort
     ['<table class=histogram><tr>',
      b.map{|b|
-       {_: :td, class: 'b'+b.to_s, style: 'background-color:#'+('%02x' % (255-h[b].keys.size*scale)).do{|x|'ff'+x+x}}},
+       {_: :td, class: 'b'+b.to_s,
+         style: 'background-color:#'+('%02x' % (255-h[b].keys.size*scale)).do{|x|'ff'+x+x}}},
      '</tr></table>']}
 
 end

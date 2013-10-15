@@ -10,4 +10,5 @@
     border-width: .1em;
 }
 
-span.scheme { display: none; }
+.scheme { display: none; }
+.abbr,.frag {display: inline}
