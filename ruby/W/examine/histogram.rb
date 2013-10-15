@@ -1,7 +1,6 @@
 #watch __FILE__
 class E
 
-  # histogram
   fn 'view/histogram',->d,e{
 
     # a :: attribute to chart

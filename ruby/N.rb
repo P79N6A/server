@@ -99,7 +99,11 @@ class E
   end
 
   def concatURI b
-    u.a E(b).path
+    if b
+      u.a E(b).path
+    else
+      self
+    end
   end
 
   def prependURI s

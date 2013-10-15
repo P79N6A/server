@@ -1,5 +1,5 @@
 #watch __FILE__
-%w{exhibit hist history normal protovis sw}.each{|e|require_relative e}
+%w{exhibit histogram history normal protovis sw}.each{|e|require_relative e}
 class E
 
   fn 'view/examine',->a,m,e{

@@ -1,10 +1,10 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   fn 'set/ls',->d,e,m{d.c.concat d.pathSegment.c}
 
   fn 'graph/fs',->d,e,m{ d.fromStream m, :triplrInode, false }
-  fn 'graph/ls',->d,e,m{ 
+  fn 'graph/ls',->d,e,m{
     (F['set/ls'][d,e,m]).map{|c|
       c.fromStream m, :triplrInode, false }}
 

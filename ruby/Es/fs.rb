@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 
 %w{date digest/sha1 fileutils json open-uri pathname}.each{|r|require(r)}
 
