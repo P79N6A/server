@@ -66,7 +66,7 @@ class E
           g[t.uri]=g[t.uri].succ}}}
 
     # CSS
-    [(H.css '/css/mail.threads'),
+    [(H.css '/css/mail.threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
 
      ([{_: :a, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p']},
        {_: :a, href: '/m?y=day', c: ' :: '},

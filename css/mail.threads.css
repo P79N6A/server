@@ -1,4 +1,3 @@
-
 a {
     font-family:sans-serif;    
     text-decoration:none}
@@ -32,8 +31,11 @@ td.subject {max-width:78em;vertical-align:top;text-align:right}
     border-style:dotted;
     margin:0;
     padding:0}
-.thread:hover {background-color:#f04}
-.thread:visited {background-color:#05f;color:#4ff}
+.thread:hover, .thread:hover:visited {background-color:#f04}
+.thread:visited {
+    background-color:#fff;
+    color:#000;
+}
 
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
 .sender:hover {color:#eef}
