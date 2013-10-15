@@ -110,6 +110,13 @@ class E
     no.take(*a).map &:E
   end
 
+  # random leaf
+  def randomLeaf
+    c.empty? && self || c.r.randomLeaf
+  end
+  fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
+  fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
+
 end
 
 
