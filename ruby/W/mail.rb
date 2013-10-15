@@ -48,8 +48,8 @@ class E
             yield e.uri,a[1],                        # skip empty String values 
             (a[2] ? (a[3] ? i[o] : o.E) : o.to_utf8) unless o.match(/\A[, \n]*\Z/)}}}}
 
-#  rescue Exception => e
-#    puts [:mail,uri,e].join(' ')
+  rescue Exception => e
+    puts [:mail,uri,e].join(' ')
   end
 
   fn 'graph/thread',->d,_,m{d.walk SIOC+'reply_of',m}
