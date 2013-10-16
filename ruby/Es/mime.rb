@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # MIME-type, no link-following
@@ -32,13 +32,13 @@ class E
   # MIME-type of recursively-dereferenced path
   def mimeP
     @mime ||=
-      (p = node.realpath
-       t = ((File.extname p).tail||'').downcase.to_sym
+      (p = realpath
 
-       unless p.exist?
+       unless p
          nil
        else
-       
+         t = ((File.extname p).tail || '').downcase.to_sym
+
          if p.directory?
            "inode/directory"
 
