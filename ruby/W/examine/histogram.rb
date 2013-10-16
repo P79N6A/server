@@ -6,7 +6,7 @@ class E
     # a :: attribute to chart
     a = e.q['a'].do{|e|e.expand}
 
-    !a && 'attribute required' ||
+    !a && '<b>a</b>ttribute required' ||
     (# bins :: number of buckets
      n = e.q['bins'].do{|b| b.to_f.max(999.0).min(1)} || 64.0
 
@@ -67,12 +67,13 @@ class E
     [h, {min: min, max: max, bw: bw}] }
 
   fn 'view/histogram/render',->h{
-    scale = 255 / h.map{|b,r|r.keys.size}.max.to_f
-    b = h.keys.sort
+    scale = 255 / h.map{|b,r|r.keys.size}.max.do{|m|m.zero? ? 1 : m}.to_f
+    bins = h.keys.sort
     ['<table class=histogram><tr>',
-     b.map{|b|
-       {_: :td, class: 'b'+b.to_s,
-         style: 'background-color:#'+('%02x' % (255-h[b].keys.size*scale)).do{|x|'ff'+x+x}}},
+     bins.map{|b|
+       mag = h[b].keys.size
+       {_: :td, class: 'b' + b.to_s,
+         style: 'background-color:#'+('%02x' % (255-mag*scale)).do{|x|'ff'+x+x}}},
      '</tr></table>']}
 
 end
