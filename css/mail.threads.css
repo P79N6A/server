@@ -40,3 +40,13 @@ td.subject {max-width:78em;vertical-align:top;text-align:right}
 .sender {font-size:.8em;color:#111;padding:0;margin:0 -.1em 0 -.23em}
 .sender:hover {color:#eef}
 .sender:visited {color:white}
+
+.narrowP {border-radius: .4em 0 0 .4em}
+.narrowPO {border-radius: 0 .4em .4em 0}
+.narrowP, .narrowPO, .current {
+    padding: 0 .5em 0 .5em;
+    background-color: white;
+    color: #000;
+    border-color: #aaa;
+    border-style:dotted;
+    border-width:.1em}
