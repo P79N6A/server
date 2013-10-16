@@ -1,3 +1,4 @@
+watch __FILE__
 class E
 
   # POSIX-fs backed index of triples
@@ -22,15 +23,18 @@ class E
     self
   end
 
-  # accumulate a graph recursively along set-membership arc
-  def walk p,m={}
-    graph m # accumulative graph
-    o = []  # resources to visit 
-    o.concat m[uri][p]     # outgoing arc targets
-    o.concat (E p).po self # incoming arc sources
-    o.map{|r|              # walk
-      r.E.walk p,m unless m[r.uri]}
-    m
+  # reachable graph along named predicate
+  def walk p, g={}, v={}                             #; puts "walk "+uri
+    graph g       # cumulative graph
+    v[uri] = true # visited mark
+
+    rel = g[uri].do{|s|s[p]} ||[]
+    rev = (p.E.po self) ||[]
+
+    rel.concat(rev).map{|r|
+      v[r.uri] || (r.E.walk p,g,v)}
+
+    g
   end
 
   # subtree traverse
