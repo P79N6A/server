@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 class String
   def hrefs i=false
@@ -38,9 +38,8 @@ class E
       style: 'background-color:#000;padding:2em;color:#fff;float:left;font-family: "Courier New", "DejaVu Sans Mono", monospace; font-size: 13px; line-height: 13px',
         c: [{_: :a, 
               style: 'color:#0f0;font-size:1.1em;font-weight:bold', 
-              c: r.E.bare, 
-              href: r.uri+'?view=txt'},
-            '<br>',r[Content]]}}}
+              href: r.url, c: r.uri},'<br>',
+            r[Content]]}}}
 
   fn 'view/title',->d,e{
     i = F['view/title/item']
@@ -92,6 +91,9 @@ class E
             gsub(/<[^>]+>/,'').                          # remove HTML
             gsub(/\n+/,"\n")}.                           # collapse empty space
           intersperse(' '),"\n"]},"\n"]}.join}           # collate
+
+  F['view/text/plain']=->d,e{
+    {_: :pre, c: F[Render+'text/plain'][d,e]}}
 
   fn Render+'text/uri',->d,_=nil{d.keys.join "\n"}
 

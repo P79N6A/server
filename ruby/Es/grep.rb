@@ -6,11 +6,11 @@ class E
   }
 
   fn 'view/grep',->d,e{
-    # words supplied in query
     w = e.q['q']
     unless w
       F['view/search'][d,e]
     else
+      # words supplied in query
       w = w.scan(/[\w]+/).map(&:downcase).uniq
 
       # word index
@@ -29,6 +29,7 @@ class E
            b = rand(16777216)
            # keep text contrasty
            f = b > 8388608 ? :black : :white
+
            # word CSS
            ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
 
