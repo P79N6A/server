@@ -36,7 +36,7 @@ class E
        # each resource
        d.map{|u,r|
          # model to text/plain
-         l = r.to_s.gsub(/<[^>]*>/,'').lines
+         l = H[F['view/text/plain'][{u => r},e]].gsub(/<[^>]*>/,'').lines
 
          # try sequential match
          g = l.grep p
