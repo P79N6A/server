@@ -2,7 +2,7 @@
 %w{exhibit histogram history normal protovis sw}.each{|e|require_relative e}
 class E
 
-  fn 'view/examine',->a,m,e{
+  fn 'view/examine/main',->a,m,e{
     a=Hash[(a.split ',').map{|a|[a,{}]}] # facets
 
     # facet stats
@@ -53,7 +53,9 @@ class E
      E.graphProperties(m).map{|e|[{c: e},' ']},
      {_: 'button', c: 'Go'}]}
 
-  fn 'view/e',->m,e{
-    e.q['a'].do{|a|Fn 'view/examine',a,m,e} || 
+  fn 'view/examine',->m,e{
+    e.q['a'].do{|a|Fn 'view/examine/main',a,m,e} || 
                   (Fn 'view/examine/selectFacets',m,e)}
+  F['view/e']=F['view/examine']
+
 end
