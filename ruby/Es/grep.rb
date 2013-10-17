@@ -24,6 +24,7 @@ class E
       p = /#{w.join '.*'}/i
 
       [H.css('/css/search'),
+       F['view/search/form'][e.q,e],
        {_: :style, c: c.values.map{|i|
            # word color
            b = rand(16777216)
@@ -36,7 +37,7 @@ class E
        # each resource
        d.map{|u,r|
          # model to text/plain
-         l = H[F['view/text/plain'][{u => r},e]].gsub(/<[^>]*>/,'').lines
+         l = F[Render+'text/plain'][{u => r},e].gsub(/<[^>]*>/,'').lines
 
          # try sequential match
          g = l.grep p
