@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   # POSIX-fs backed index of triples

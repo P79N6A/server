@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   fn 'set/grep',->e,q,m{
@@ -7,46 +7,51 @@ class E
 
   fn 'view/grep',->d,e{
     # words supplied in query
-    w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq
+    w = e.q['q']
+    unless w
+      F['view/search'][d,e]
+    else
+      w = w.scan(/[\w]+/).map(&:downcase).uniq
 
-    # word index
-    c={}
-    w.each_with_index{|w,i|
-      c[w] = i }
+      # word index
+      c={}
+      w.each_with_index{|w,i|
+        c[w] = i }
 
-    # OR pattern
-    a = /(#{w.join '|'})/i
-    # sequential pattern
-    p = /#{w.join '.*'}/i
+      # OR pattern
+      a = /(#{w.join '|'})/i
+      # sequential pattern
+      p = /#{w.join '.*'}/i
 
-    [H.css('/css/search'),
-     {_: :style, c: c.values.map{|i|
-         # word color
-         b = rand(16777216)
-         # keep text contrasty
-         f = b > 8388608 ? :black : :white
-         # word CSS
-       ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
+      [H.css('/css/search'),
+       {_: :style, c: c.values.map{|i|
+           # word color
+           b = rand(16777216)
+           # keep text contrasty
+           f = b > 8388608 ? :black : :white
+           # word CSS
+           ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
 
-     # each resource
-     d.map{|u,r|
-       # model to text/plain
-       l = r.to_s.gsub(/<[^>]*>/,'').lines
+       # each resource
+       d.map{|u,r|
+         # model to text/plain
+         l = r.to_s.gsub(/<[^>]*>/,'').lines
 
-       # try sequential match
-       g = l.grep p
-       # try OR match
-       g = l.grep a if g.empty?                           
+         # try sequential match
+         g = l.grep p
+         # try OR match
+         g = l.grep a if g.empty?                           
 
-       # match?
-       !g.empty? &&                                       
-       [# link to resource
-        r.E.do{|e|{_: :a, href: e.url, c: e}}, '<br>',
-        # show 3 matches per resource
-        [g[-1*(g.size.max 3)..-1].map{|l|   
-           # exerpt
-           l[0..404].gsub(a){|g|
-             H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
-         },"<br>"]]}]}
+         # match?
+         !g.empty? &&                                       
+         [# link to resource
+          r.E.do{|e|{_: :a, href: e.url, c: e}}, '<br>',
+          # show 3 matches per resource
+          [g[-1*(g.size.max 3)..-1].map{|l|   
+             # exerpt
+             l[0..404].gsub(a){|g|
+               H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
+           },"<br>"]]}]
+    end }
 
 end
