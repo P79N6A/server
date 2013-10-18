@@ -1,7 +1,7 @@
 
 # the table of elements
 
-# Es search
+# Es infrastructure
 # H  HTML
 # K  constants
 # N  naming

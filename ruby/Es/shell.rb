@@ -3,9 +3,11 @@ class E
   # util, URI prefix, cleaner -> tripleStream
   def triplrStdOut e,f='/',g=/^\s*(.*?)\s*$/,a=sh
 
+     id = basename
+
     `#{e} #{a}|grep :`.each_line{|i|
 
-      # key/val separator
+      # split keys from vals
       i = i.split /:/
 
     yield uri, # subject

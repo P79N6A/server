@@ -5,15 +5,18 @@ class E
     # exiftool is very comprehensive but can be slow so this triplr not invoked by default. options:
     #
     # add triplrImage in K.rb (and use fast hw or unchanging resourceSets (per-day/group dirs))
-    # write an .e (RDF+JSON) file alongside basename by calling :exif on parent dir
-    # enable via query-string (automatic in thumbnail link to full)
+    # write an .e (RDF+JSON) file alongside basename by calling .exif on containing dir
+    # enable triplr via query-string (automatic in thumbnail link to full)
     #  graph=|&|=triplrImage
     triplrStdOut 'exiftool', EXIF, &f
   end
 
   def exif
     take.map{|i|
-      i.ef.w i.fromStream({},:triplrImage)}
+      if i.uri.match /(jpg|gif|png)$/i
+        i.ef.w i.fromStream({},:triplrImage) 
+        puts "EXIF #{i} #{i.ef.size}"
+      end}
   end
 
   def thumb?
@@ -41,8 +44,7 @@ class E
             style:'float:left;max-width:61.8%',
             src: i.url}},
         i.html]},
-     (H.css '/css/img')
-    ]}
+     (H.css '/css/img')]}
   
   fn 'view/th',->i,e{
     s=e.q['s']||'233'

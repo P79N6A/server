@@ -10,7 +10,9 @@ class E
   end
 
   # tripleStream pipeline
-  fn 'graph/|',->e,_,m{e.fromStream m, *_['|'].split(/,/)}
+  fn 'graph/|',->e,_,m{
+    [e,e.pathSegment].map{|e|
+      e.fromStream m, *_['|'].split(/,/)}}
 
   def E.graphFromStream s
     fn 'graph/'+s.to_s,->e,_,m{e.fromStream m, s}    

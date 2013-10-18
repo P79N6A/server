@@ -13,16 +13,18 @@ class E
                       attr_reader :uri
   def initialize uri; @uri = uri.to_s end
   
-  def base
+  def basename
     File.basename path
   end
+  alias_method :base, :basename
 
-  def bare
-    base.sub(/\.#{ext}$/,'')
+  def barename
+    basename.sub(/\.#{ext}$/,'')
   rescue
-    base
+    basename
   end
-  
+  alias_method :bare, :barename
+
   def ef;  @ef ||= docBase.a('.e') end
   def nt;  @nt ||= docBase.a('.nt') end
   def ttl; @ttl||= docBase.a('.ttl') end
