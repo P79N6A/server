@@ -4,11 +4,16 @@ class E
   def triplrImage &f
     # exiftool is very comprehensive but can be slow so this triplr not invoked by default. options:
     #
-    # un-comment triplrImage in K.rb (and use fast hw or unchanging resourceSets (per-day/group dirs))
-    # write an .e (RDF+JSON) alongside image basename using triplr's output (very fast - TODO add one-liner)
+    # add triplrImage in K.rb (and use fast hw or unchanging resourceSets (per-day/group dirs))
+    # write an .e (RDF+JSON) file alongside basename by calling :exif on parent dir
     # enable via query-string (automatic in thumbnail link to full)
     #  graph=|&|=triplrImage
     triplrStdOut 'exiftool', EXIF, &f
+  end
+
+  def exif
+    take.map{|i|
+      i.ef.w i.fromStream({},:triplrImage)}
   end
 
   def thumb?
