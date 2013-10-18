@@ -118,21 +118,20 @@ class E
     (open uri).read
   end
 
-  # read file - check if it exists & parse JSON if requested
+  # wrapped readFile - check if exists & maybe parse JSON
   def r p=false
     if f
-      (p ? JSON.parse(readFile)[0] : readFile)
+      p ? (JSON.parse readFile) : readFile
     else
-    p ? {} : nil
+      puts "tried to open #{d}"
+      nil
     end
-  rescue
-    p ? {} : nil
   end
 
   # write file - make sure dir exists & serialize JSON if requested
   def w o,s=false
     dirname.dir
-    writeFile (s ? [o].to_json : o)
+    writeFile (s ? o.to_json : o)
     self
   end
 

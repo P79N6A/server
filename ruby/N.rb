@@ -180,9 +180,9 @@ class E
  
   def literalBlobURI o
     if o.class == String
-      E "/blob/"+o.h.dive
+      E "/E/blob/"+o.h.dive
     else
-      E "/json/"+[o].to_json.h.dive
+      E "/E/json/"+[o].to_json.h.dive
     end
   end
 
@@ -255,10 +255,10 @@ class String
     if m=(match /^\/([a-z]+:)\/+(.*)/) # URL
       (m[1]+'//'+m[2]).E
 
-    elsif match /^\/blob/ # string
+    elsif match /^\/E\/blob/ # string
       self.E.r
 
-    elsif match /^\/json/ # JSON
+    elsif match /^\/E\/json/ # JSON
       self.E.r true
 
     elsif match /^\/u\// # trie

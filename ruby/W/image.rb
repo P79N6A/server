@@ -12,10 +12,10 @@ class E
   end
 
   def exif
-    take.map{|i|
-      if i.uri.match /(jpg|gif|png)$/i
-        i.ef.w i.fromStream({},:triplrImage) 
-        puts "EXIF #{i} #{i.ef.size}"
+    take.map{|g|
+      if g.uri.match /(jpg|gif|png)$/i
+        g.ef.w g.fromStream({},:triplrImage), true
+        puts "EXIFtool #{g} #{g.ef.size}bytes"
       end}
   end
 
