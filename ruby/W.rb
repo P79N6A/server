@@ -10,6 +10,7 @@ du
 edit
 examine/examine
 feed
+histogram
 html
 image
 info
