@@ -26,7 +26,7 @@ class E
   end
 
   def thumb
-    E['/E/images/'+
+    E['/E/image/'+
       [no.stat.do{|s|
          [s.ino,s.mtime]},
        @r.qs].h.dive+'.png'].do{|n| n.e ||
