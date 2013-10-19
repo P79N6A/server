@@ -2,11 +2,13 @@ watch __FILE__
 class E
 
   fn 'set/grep',->e,q,m{
-    `grep -rl#{q.has_key?('i') && 'i'} #{q['q'].sh} #{e.sh}`.lines.map &:unpathURI
+    [e,e.pathSegment].map{|e|
+      `grep -rl#{q.has_key?('i') && 'i'} #{q['q'].sh} #{e.sh}`}.map{|r|r.lines.to_a.map &:unpathURI}.flatten
   }
 
   fn 'view/grep',->d,e{
     w = e.q['q']
+    e.q['set']='grep'
     unless w
       F['view/search'][d,e]
     else
