@@ -125,24 +125,26 @@ class E
 
   alias_method :as, :appendSlashURI
 
-  # path? :: E -> Bool
   def path?
     uri.path?
   end
 
-  # path :: E -> String
+  # URI to fs-compatible path
   def path
+    # memoize
     @path ||=
-      path? ? (uri.match(/^\//) ? 
-               uri : '/'+uri) :
-      '/E/'+uri.h.dive[0..5]+(Base64.urlsafe_encode64 uri)
+      (
+       path? ? (uri.match(/^\//) ? 
+                uri : '/'+uri) :
+       '/E/'+uri.h.dive[0..5]+(Base64.urlsafe_encode64 uri)
+       )
   end
 
   def u
     @u ||= E (f ? dirname + '/.' + File.basename(path) : path.t + E::S)
   end
 
-  # (_ _ o) -> E o
+  # (_ _ o) -> o
   def ro
     uri.split(/#{E::S}/)[-1].unpath
   end
@@ -184,6 +186,11 @@ class E
     else
       E "/E/json/"+[o].to_json.h.dive
     end
+  end
+
+  def literalBlob o
+    u = literalBlobURI o
+    u.w o, !o.class == String unless u.f
   end
 
   # spaceship

@@ -66,7 +66,7 @@ class E
     start = e['start'].do{|c|c.to_i} || 0
 
     # number of results
-    c = e['c'].do{|c|c.to_i.max(1000).min(0)} || 8
+    c = e['c'].do{|c|c.to_i.max(10000).min(0)} || 8
 
     # exec expression
     r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists

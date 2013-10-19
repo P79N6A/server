@@ -69,9 +69,4 @@ class E
     subtree.map &:ro
    end
 
-  def literalBlob o
-    u = literalBlobURI o
-    u.w o,!o.class==String unless u.f
-  end
-
 end
