@@ -47,23 +47,15 @@ class E
 
   # subtree traverse index on p+o cursor
   fn 'set/index',->d,r,m,f=:rangePO{
-    (# predicate
-     (f == :rangeP ? d : r['p']).E.
-     # query
-     send f,
-     # count
-     (r['c']&&
-      r['c'].to_i.max(808)+1 || 22),
-     # direction
-     (r['d']&&
-      r['d'].match(/^(a|de)sc$/) &&
-      r['d'].to_sym ||
-      :desc),
-     # offset
-     r['offset'],
-     # object
-     (d if f == :rangePO)
-     ).do{|s|
+    top = (f == :rangeP ? d : r['p']).E
+    count = r['c'] &&
+            r['c'].to_i.max(1000)+1 || 22
+    dir = r['d'] &&
+          r['d'].match(/^(a|de)sc$/) &&
+          r['d'].to_sym ||
+          :desc
+    puts "set/index #{top} #{count} #{dir} #{d}"
+    (top.send f, count, dir, r['offset'],(d if f == :rangePO)).do{|s|
       # pagination pointers
       a,b = s[0], s.size > 1 && s.pop
       desc,asc = r['d'] && r['d']=='asc' && [a,b]||[b,a]
@@ -82,7 +74,7 @@ class E
 
   # predicate-object index
   def poIndex o
-    pIndex.concatURI o
+    pIndex.appendURI o
   end
  
   # predicate-object index lookup

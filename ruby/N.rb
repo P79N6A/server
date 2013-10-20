@@ -121,27 +121,26 @@ class E
     end
   end
 
-  def prependURI s
+  def prependURI u
     _ = dup
-    _.uri = s + uri
+    _.uri = u.to_s + uri
     _
   end
 
-  def appendURI s
+  def appendURI u
     _ = dup
-    _.uri = uri + s
+    _.uri = uri + u.to_s
+    _
+  end
+
+  def appendSlashURI u
+    _ = dup
+    _.uri = uri.t + u.to_s
     _
   end
 
   alias_method :a, :appendURI
   alias_method :+, :appendURI
-
-  def appendSlashURI s
-    _ = dup
-    _.uri = uri.t + s
-    _
-  end
-
   alias_method :as, :appendSlashURI
 
   def path?
@@ -167,6 +166,7 @@ class E
            '/' + uri
          end
        else
+         # set @opaque to store in git-style (09/FF) hex-paths 
          if uri.match(/\//) || @opaque
            '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
          else
@@ -180,9 +180,10 @@ class E
   end
 
   # (_ _ o) -> o
-  def ro
+  def innerPath
     uri.split(/#{E::S}/)[-1].unpath
   end
+  alias_method :ro, :innerPath
 
   def sh
     d.force_encoding('UTF-8').sh
@@ -297,7 +298,7 @@ class String
   # path -> URI || literal
   def unpath
 
-    # URL
+    # URI with scheme
     if m = (match /^\/([a-z]+:)\/+(.*)/)
       (m[1] + '//' + m[2]).E
 
@@ -323,6 +324,7 @@ class String
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
 
+    # plain path
     else
       self.E
     end

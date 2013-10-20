@@ -37,7 +37,7 @@ class E
 
   def editFs p, o, newVal=nil
     # triple
-    t = concatURI(p).concatURI(o)
+    t = appendSlashURI(p).concatURI(o)
     if newVal # update
       if t.e  # oldVal?
         t.deleteNode # remove triple
