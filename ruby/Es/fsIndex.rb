@@ -6,14 +6,11 @@ class E
 
   # index a triple 
   def index p,o
-    # normalize predicate types (accept URI string or resources) 
-    indexEdit E(p),
-    # literal -> URI conversion
-      (o.class == E ? o : E(p).literal(o)),
-       nil
+    puts "index #{@opaque} #{uri} #{p} #{o}"
+    indexEdit E(p), (o.class == E ? o : E(p).literal(o)), nil
   end
 
-  # index a triple - no input-casting
+  # index a triple - no input type-normalization
   def indexEdit p,o,a
     return if @noIndex
     p.pIndex.noIndex[o,self,a]

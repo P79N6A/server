@@ -2,16 +2,26 @@
 
 def E e
   return e if e.class == E
-  return e unless e
+  return nil unless e
   E.new e
 end
 
 class E
-  def E.[] u; E u end
-  def E e=uri; super e end
 
-                      attr_reader :uri
-  def initialize uri; @uri = uri.to_s end
+  def E.[] u; E u end
+
+  def E uri=nil
+    if uri
+      E.new uri
+    else
+      self
+    end
+  end
+  
+  attr_reader :uri
+  def initialize uri
+    @uri = uri.to_s
+  end
   
   def basename
     File.basename path
@@ -102,7 +112,7 @@ class E
 
   def concatURI b
     if b
-      u.a E(b).path
+      u.a b.E.path
     else
       self
     end
@@ -129,8 +139,17 @@ class E
     uri.path?
   end
 
+  def opaque
+    @opaque = true
+    self
+  end
+
+  def opaque?
+    @opaque
+  end
+
   # URI to fs-path
-  def path opaque = true
+  def path
     @path ||=
       (if path?
          if uri.match /^\//
@@ -139,7 +158,7 @@ class E
            '/' + uri
          end
        else
-         if uri.match(/\//) || opaque
+         if uri.match(/\//) || @opaque
            '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
          else
            '/u/' + uri

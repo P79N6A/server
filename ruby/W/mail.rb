@@ -29,7 +29,7 @@ class E
 
        %w{in_reply_to references}.map{|p| # reference arcs
         m.send(p).do{|os| os.map{|o|      # lookup references
-         e.index 'sioc:reply_of', i[o]}}}) # index references
+        e.index E['sioc:reply_of'].opaque,i[o]}}}) # index ref
 
       # yield triples
       yield e.uri, Type,    E[SIOCt+'MailMessage']

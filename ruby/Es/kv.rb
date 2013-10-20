@@ -25,9 +25,9 @@ class E
 
   def [] p,o=nil, v=nil
     if o
-      # cast bare URI to resource
-      p = E p
-      # cast literals to URI
+      # bare predicateURI to resource
+      p = p.E
+      # literal to literalURI
       o = p.literal o unless o.class == E
       editFs p,o,v
     else
@@ -35,10 +35,10 @@ class E
     end
   end
 
-  def editFs p, o, newVal=nil;        puts "edit #{uri} #{p} #{o} #{newVal}"
+  def editFs p, o, newVal=nil;        puts "edit #{p.opaque?} #{uri} #{p} #{o} #{newVal}"
     # triple
     t = concatURI(p).concatURI(o)
-
+    puts "t #{opaque?} p #{p.opaque?} #{t}"
     if newVal # update
       if t.e  # oldVal?
         t.deleteNode # remove triple
