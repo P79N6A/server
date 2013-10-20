@@ -25,7 +25,12 @@ class E
   def uri= u
     @uri = u
   end
-  
+  def setURI u
+    _ = dup
+    _.uri = u
+    _
+  end
+
   def basename
     File.basename path
   end
@@ -71,9 +76,9 @@ class E
   end
 
   def dirname
-    n = node.dirname
-    n = '/' if !n || n.to_s.size <= BaseLen
-    n.E
+    n = node.dirname.to_s
+    n = '/' if !n || n.size <= BaseLen
+    setURI n
   end
   
   # local URL from unlocatable identifier (mail MSGID, etc)
@@ -122,21 +127,15 @@ class E
   end
 
   def prependURI u
-    _ = dup
-    _.uri = u.to_s + uri
-    _
+    setURI u.to_s + uri
   end
 
   def appendURI u
-    _ = dup
-    _.uri = uri + u.to_s
-    _
+    setURI uri + u.to_s
   end
 
   def appendSlashURI u
-    _ = dup
-    _.uri = uri.t + u.to_s
-    _
+    setURI uri.t + u.to_s
   end
 
   alias_method :a, :appendURI
@@ -166,7 +165,7 @@ class E
            '/' + uri
          end
        else
-         # set @opaque to store in git-style (09/FF) hex-paths 
+         # set @opaque for git-style (09/FF) hex-paths 
          if uri.match(/\//) || @opaque
            '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
          else

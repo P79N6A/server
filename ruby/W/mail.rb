@@ -24,7 +24,7 @@ class E
       d = m.message_id; return unless d   # parse successful?
       e = i[d]                            # Message resource
       e.e || (                            # Message-ID locatable?
-       ln e                               # create message-id path 
+       ln e.opaque                        # create message-id path 
        # index previously unseen mail
        self.index 'sioc:has_creator', m.from[0].E    # index From
        m.to.do{|t|self.index 'sioc:addressed_to', t[0].E}  # index To

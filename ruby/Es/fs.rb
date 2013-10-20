@@ -89,10 +89,10 @@ class E
 
   # create link
   def ln t
-    t = E(t) # cast bare URI/string to resource
+    t = t.E # cast bare URI/string to resource
     if !t.e  # destination exists?
-      puts "link #{uri} :: #{no} | #{t} :: #{t.no}"
-      t.no.dirname.dir # ensure containing dir exists
+#      puts "link #{t} > #{uri} | #{t.opaque?} #{t.no} > #{no}"
+      t.no.dirname.dir # create containing dir
       FileUtils.symlink no, t.no # create link
     end
   end
@@ -131,6 +131,7 @@ class E
 
   # write file - make sure dir exists & serialize JSON if requested
   def w o,s=false
+    puts "w #{uri} > #{d}"
     dirname.dir
     writeFile (s ? o.to_json : o)
     self
@@ -149,6 +150,7 @@ end
 class Pathname
   
   def dir
+    puts "mkpath #{self}" unless exist?
     mkpath unless exist? 
   end
 
