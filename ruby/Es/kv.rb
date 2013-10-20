@@ -24,23 +24,20 @@ class E
   end
 
   def [] p,o=nil, v=nil
-      puts "[] #{uri} #{opaque?} #{p} #{p.opaque?}"
     if o
       # bare predicateURI to resource
       p = p.E
       # literal to literalURI
       o = p.literal o unless o.class == E
-      puts "[] #{uri} #{opaque?} #{p} #{p.opaque?}"
       editFs p,o,v
     else
       concatURI(p).listPredicates
     end
   end
 
-  def editFs p, o, newVal=nil;        puts "edit #{p.opaque?} #{uri} #{p} #{o} #{newVal}"
+  def editFs p, o, newVal=nil
     # triple
     t = concatURI(p).concatURI(o)
-    puts "t #{opaque?} p #{p.opaque?} #{t}"
     if newVal # update
       if t.e  # oldVal?
         t.deleteNode # remove triple
