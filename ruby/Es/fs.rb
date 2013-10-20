@@ -30,10 +30,6 @@ class E
     parent.c
   end
 
-  def jail
-    no.expand_path.to_s.index(E::FSbase)==0 && self
-  end
-
   def children
     no.c.map &:E
   end

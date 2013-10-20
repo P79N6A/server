@@ -8,16 +8,25 @@ class E
   def E.call e
     dev         # check for changed source code
     e.extend Th # enable request-related utility functions
-    e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h } # hostname
-   (e['REQUEST_PATH'].force_encoding('UTF-8').do{|u|         # path
-      CGI.unescape(u.index(Prefix)==0 ? u[Prefix.size..-1] : # non-local|non-HTTP URI
-      'http://' + e['SERVER_NAME'] + u.gsub('+','%2B'))      # HTTP URI
-    }.E.env(e).jail.do{|r|           # valid path?
-      e['uri']=r.uri; r.send e.fn    # update URI and continue
-    } || [403,{},['invalid path']]). # reject
-      do{|response| puts [           # inspect
-        e.fn, response[0],['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,e['HTTP_USER_AGENT'],e['HTTP_REFERER']].join ' '
-        response }
+    e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
+
+    e['REQUEST_PATH'].force_encoding('UTF-8').do{|p|
+      CGI.unescape(
+      if (p.index Prefix) == 0 # non-local | non-HTTP URI
+        p[Prefix.size..-1]
+      else
+        'http://'+e['SERVER_NAME']+p.gsub('+','%2B')
+      end
+    )}.E.env(e).do{|r|
+      if (r.node.expand_path.to_s.index E::FSbase) == 0
+        e['uri'] = r.uri
+        r.send e.fn 
+      else
+        [403,{},['Forbidden']]
+      end
+    }.do{|r| puts [# inspect response
+        e.fn, r[0],['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,e['HTTP_USER_AGENT'],e['HTTP_REFERER']].join ' '
+        r }
     end
 
 end
