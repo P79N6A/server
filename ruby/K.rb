@@ -2,8 +2,7 @@
 class E
 
   FSbase   = `pwd`.chomp ;  BaseLen = FSbase.size
-  Prefix   = '/@' # prefix for non-local and non-HTTP URIs
-  S        = '<>' # tree-root basename
+  S        = '._' # data directory
 
   # URIs
   W3    = 'http://www.w3.org/'

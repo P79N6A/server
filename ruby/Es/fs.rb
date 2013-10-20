@@ -91,6 +91,7 @@ class E
   def ln t
     t = E(t) # cast bare URI/string to resource
     if !t.e  # destination exists?
+      puts "link #{uri} :: #{no} | #{t} :: #{t.no}"
       t.no.dirname.dir # ensure containing dir exists
       FileUtils.symlink no, t.no # create link
     end
@@ -163,7 +164,7 @@ class Pathname
 
   def c
     return [] unless directory?
-    children.delete_if{|n| n.basename.to_s.match /^(\.+|#{E::S})$/}
+    children.delete_if{|n| n.basename.to_s.match /^\.+$/}
     rescue
       []
   end

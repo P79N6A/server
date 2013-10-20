@@ -74,12 +74,13 @@ class E
       m['prev']={'uri' => 'prev','url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
       m['next']={'uri' => 'next','url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc
       s }}
-  F['set/indexPO']=F['set/index']
+
   fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
+  F['set/indexPO'] = F['set/index']
 
   # predicate index
   def pIndex
-    '/index'.E.concatURI self
+    '/index/'.E.appendURI uri
   end
 
   # predicate-object index

@@ -129,15 +129,22 @@ class E
     uri.path?
   end
 
-  # URI to fs-compatible path
-  def path
-    # memoize
+  # URI to fs-path
+  def path opaque = true
     @path ||=
-      (
-       path? ? (uri.match(/^\//) ? 
-                uri : '/'+uri) :
-       '/E/'+uri.h.dive[0..5]+(Base64.urlsafe_encode64 uri)
-       )
+      (if path?
+         if uri.match /^\//
+           uri
+         else
+           '/' + uri
+         end
+       else
+         if uri.match(/\//) || opaque
+           '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
+         else
+           '/u/' + uri
+         end
+       end)
   end
 
   def u
@@ -153,9 +160,12 @@ class E
     d.force_encoding('UTF-8').sh
   end
 
-  # literal -> URI
-  # optional "self" argument of Predicate for domain-specific ObjectURI hinting
-  def E.literal o; E['/'].literal o end
+  # literals to URIs
+
+  def E.literal o
+    E['/'].literal o
+  end
+
   def literal o
 
     # already a URI
@@ -177,7 +187,7 @@ class E
 
   # pathname for short literals
   def literalURI o
-    E "/u/"+(Literal[uri] && o.gsub(/[\.:\-T+]/,'/'))+'/'+o
+    E "/_/"+(Literal[uri] && o.gsub(/[\.:\-T+]/,'/'))+'/'+o
   end
  
   def literalBlobURI o
@@ -257,25 +267,35 @@ class String
   end
 
   # path -> URI || literal
-  def unpath
+  def unpath                                      ;puts "unpath #{self}"
 
-    if m=(match /^\/([a-z]+:)\/+(.*)/) # URL
-      (m[1]+'//'+m[2]).E
+    # URL
+    if m = (match /^\/([a-z]+:)\/+(.*)/)
+      (m[1] + '//' + m[2]).E
 
-    elsif match /^\/E\/blob/ # string
+    # String literal
+    elsif match /^\/E\/blob/
       self.E.r
 
-    elsif match /^\/E\/json/ # JSON
+    # JSON literal
+    elsif match /^\/E\/json/
       self.E.r true
 
-    elsif match /^\/u\// # trie
+    # String literal in basename
+    elsif match /^\/u\//
       File.basename self
 
-    elsif match /^\/E\/..\/..\// # opaque URI
+    # URI in basename
+    elsif match /^\/_\//
+     (File.basename self).E
+
+    # opaque URI
+    elsif match /^\/E\/..\//
       self[9..-1].match(/([^.]+)(.*)/).do{|c|
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
-    else # path
+
+    else
       self.E
     end
   end

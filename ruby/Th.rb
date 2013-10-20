@@ -3,6 +3,8 @@ require 'rack'
 
 class E
 
+  Prefix   = '/@'
+
   def E.call e
     dev         # check for changed source code
     e.extend Th # enable request-related utility functions
