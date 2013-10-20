@@ -164,7 +164,7 @@ class Pathname
 
   def c
     return [] unless directory?
-    children.delete_if{|n| n.basename.to_s.match /^\.+$/}
+    children.delete_if{|n| n.basename.to_s.match /^\./}
     rescue
       []
   end

@@ -202,7 +202,7 @@ class E
     # blob for non-strings
     return literalBlob o unless o.class == String
 
-    # whitelisted-predicate URIs to paths
+    # whitelisted predicateURIs to paths
     return literalURI o if (Literal[uri] || o.size<=88) && !o.match(/\//)
 
     # string matches URI format
@@ -215,7 +215,7 @@ class E
 
   # pathname for short literals
   def literalURI o
-    E "/_/"+(Literal[uri] && o.gsub(/[\.:\-T+]/,'/'))+'/'+o
+    E "/l/"+(Literal[uri] && o.gsub(/[\.:\-T+]/,'/'))+'/'+o
   end
  
   def literalBlobURI o
@@ -295,7 +295,7 @@ class String
   end
 
   # path -> URI || literal
-  def unpath                                      ;puts "unpath #{self}"
+  def unpath
 
     # URL
     if m = (match /^\/([a-z]+:)\/+(.*)/)
@@ -310,11 +310,11 @@ class String
       self.E.r true
 
     # String literal in basename
-    elsif match /^\/u\//
+    elsif match /^\/l\//
       File.basename self
 
     # URI in basename
-    elsif match /^\/_\//
+    elsif match /^\/u\//
      (File.basename self).E
 
     # opaque URI
