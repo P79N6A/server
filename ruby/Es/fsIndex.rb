@@ -48,7 +48,7 @@ class E
   # subtree traverse index on p+o cursor
   fn 'set/index',->d,r,m,f=:rangePO{
     (# predicate
-     (f == :rangeP ? d : r['p']).expand.E.
+     (f == :rangeP ? d : r['p']).E.
      # query
      send f,
      # count
@@ -92,13 +92,11 @@ class E
 
   # range query - predicate
   def rangeP n=8,d=:desc,s=nil,o=nil
-    puts "rangeP #{uri} count #{n} dir #{d} cursor #{s}"
     pIndex.subtree(n,d,s).map &:ro
   end
 
   # range query - predicate-object
   def rangePO n=8,d=:desc,s=nil,o
-    puts "rangePO #{uri} #{o} count #{n} dir #{d} cursor #{s}"
     poIndex(o).subtree(n,d,s).map &:ro
   end
 
