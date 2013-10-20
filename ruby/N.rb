@@ -22,6 +22,9 @@ class E
   def initialize uri
     @uri = uri.to_s
   end
+  def uri= u
+    @uri = u
+  end
   
   def basename
     File.basename path
@@ -119,21 +122,24 @@ class E
   end
 
   def prependURI s
-    @uri = s + @uri
-    self
+    _ = dup
+    _.uri = s + uri
+    _
   end
 
   def appendURI s
-    @uri = @uri + s
-    self
+    _ = dup
+    _.uri = uri + s
+    _
   end
 
   alias_method :a, :appendURI
   alias_method :+, :appendURI
 
   def appendSlashURI s
-    @uri = @uri.t + s
-    self
+    _ = dup
+    _.uri = uri.t + s
+    _
   end
 
   alias_method :as, :appendSlashURI

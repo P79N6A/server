@@ -24,12 +24,13 @@ class E
   end
 
   def [] p,o=nil, v=nil
+      puts "[] #{uri} #{opaque?} #{p} #{p.opaque?}"
     if o
       # bare predicateURI to resource
       p = p.E
       # literal to literalURI
       o = p.literal o unless o.class == E
-    puts "[] #{uri} #{opaque?} #{p} #{p.opaque?}"
+      puts "[] #{uri} #{opaque?} #{p} #{p.opaque?}"
       editFs p,o,v
     else
       concatURI(p).listPredicates

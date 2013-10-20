@@ -13,6 +13,7 @@ class E
   # index a triple - no input type-normalization
   def indexEdit p,o,a
     return if @noIndex
+    puts "ie #{p.opaque?}"
     p.pIndex.noIndex[o,self,a]
   end
   def noIndex
@@ -77,7 +78,7 @@ class E
 
   # predicate index
   def pIndex
-    '/index/'.E.appendURI uri
+    prependURI '/index/'
   end
 
   # predicate-object index
