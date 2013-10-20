@@ -14,6 +14,8 @@ class E
                'matchP' => 'dc:title',
                'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/}})
 
+  # E['/m/2013/10/18/'].c[4].graph
+
   def triplrMail; require 'tmail'
 
     # read message

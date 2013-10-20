@@ -6,8 +6,8 @@ class E
 
   # index a triple 
   def index p,o
-    puts "index #{@opaque} #{uri} #{p} #{o}"
-    indexEdit E(p), (o.class == E ? o : E(p).literal(o)), nil
+    p = p.E
+    indexEdit p, (o.class == E ? o : p.literal(o)), nil
   end
 
   # index a triple - no input type-normalization

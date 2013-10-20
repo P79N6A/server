@@ -40,7 +40,7 @@ class E
   def ttl; @ttl||= docBase.a('.ttl') end
 
   def docBase
-    E[uri.split(/#/)[0]].do{|d|
+    uri.split(/#/)[0].E.do{|d|
       d.dirname.as d.bare }
   end
   
@@ -119,18 +119,21 @@ class E
   end
 
   def prependURI s
-    (s + uri).E
+    @uri = s + @uri
+    self
   end
 
   def appendURI s
-    (uri + s).E
+    @uri = @uri + s
+    self
   end
 
   alias_method :a, :appendURI
   alias_method :+, :appendURI
 
   def appendSlashURI s
-    E uri.t + s
+    @uri = @uri.t + s
+    self
   end
 
   alias_method :as, :appendSlashURI
