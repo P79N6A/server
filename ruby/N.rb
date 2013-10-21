@@ -1,34 +1,25 @@
 %w{base64 cgi shellwords}.each{|r|require(r)}
 
 def E e
-  return e if e.class == E
-  return nil unless e
   E.new e
 end
 
 class E
 
-  def E.[] u; E u end
+  def E.[] u; u.E end
 
-  def E uri=nil
-    if uri
-      E.new uri
+  def E arg=nil
+    if arg
+      E.new arg
     else
       self
     end
   end
   
   attr_reader :uri
+
   def initialize uri
     @uri = uri.to_s
-  end
-  def uri= u
-    @uri = u
-  end
-  def setURI u
-    _ = dup
-    _.uri = u
-    _
   end
 
   def basename
@@ -76,9 +67,9 @@ class E
   end
 
   def dirname
-    n = node.dirname.to_s
-    n = '/' if !n || n.size <= BaseLen
-    setURI n
+    n = node.dirname
+    n = '/' if n.to_s.size <= BaseLen
+    n.E
   end
   
   # local URL from unlocatable identifier (mail MSGID, etc)
@@ -127,15 +118,15 @@ class E
   end
 
   def prependURI u
-    setURI u.to_s + uri
+    E u.to_s + uri
   end
 
   def appendURI u
-    setURI uri + u.to_s
+    E uri + u.to_s
   end
 
   def appendSlashURI u
-    setURI uri.t + u.to_s
+    E uri.t + u.to_s
   end
 
   alias_method :a, :appendURI
@@ -146,16 +137,7 @@ class E
     uri.path?
   end
 
-  def opaque
-    @opaque = true
-    self
-  end
-
-  def opaque?
-    @opaque
-  end
-
-  # URI to fs-path
+  # URI -> path
   def path
     @path ||=
       (if path?
@@ -165,12 +147,7 @@ class E
            '/' + uri
          end
        else
-         # set @opaque for git-style (09/FF) hex-paths 
-         if uri.match(/\//) || @opaque
-           '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
-         else
-           '/u/' + uri
-         end
+         '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
        end)
   end
 
@@ -301,11 +278,11 @@ class String
     if m = (match /^\/([a-z]+:)\/+(.*)/)
       (m[1] + '//' + m[2]).E
 
-    # String literal
+    # String literal in store
     elsif match /^\/E\/blob/
       self.E.r
 
-    # JSON literal
+    # JSON literal in store
     elsif match /^\/E\/json/
       self.E.r true
 
@@ -313,20 +290,17 @@ class String
     elsif match /^\/l\//
       File.basename self
 
-    # URI in basename
-    elsif match /^\/u\//
-     (File.basename self).E
-
-    # opaque URI
+    # URI (opaque)
     elsif match /^\/E\/..\//
       self[9..-1].match(/([^.]+)(.*)/).do{|c|
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
 
-    # plain path
+    # path
     else
       self.E
     end
+
   end
   
   def E

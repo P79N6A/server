@@ -31,31 +31,31 @@ class E
   end
 
   def children
-    no.c.map &:E
+    node.c.map &:E
   end
   alias_method :c, :children
 
 
   # node exists?
   def exist?
-    no.exist?
+    node.exist?
   end
   alias_method :e, :exist?
 
   # directory?
   def d?
-    no.directory?
+    node.directory?
   end
 
   # file?
   def file?
-    no.file?
+    node.file?
   end
   alias_method :f, :file?
 
   # modification time
   def mtime
-    no.stat.mtime if e
+    node.stat.mtime if e
   end
   alias_method :m, :mtime
 
@@ -77,8 +77,8 @@ class E
     nil
   end
 
-  # create node
-  def dir
+  def mk
+    puts "E#mk #{d} #{e ? 'exists' : ''} #{caller[0]}"
     e || FileUtils.mkdir_p(d)
     self
   end
@@ -86,25 +86,25 @@ class E
   # create link
   def ln t
     t = t.E # cast bare URI/string to resource
-    if !t.e  # destination exists?
-#      puts "link #{t} > #{uri} | #{t.opaque?} #{t.no} > #{no}"
-      t.no.dirname.dir # create containing dir
-      FileUtils.symlink no, t.no # create link
+    if !t.e # destination exist?
+      puts "link #{t} > #{uri} | #{t.no} > #{no}"
+      t.dirname.mk
+      FileUtils.symlink node, t.node
     end
   end
 
   def touch
-    FileUtils.touch no
+    FileUtils.touch node
     self
   end
     
   def deleteNode
-    no.deleteNode if e
+    node.deleteNode if e
     self
   end
 
   def size
-    no.size
+    node.size
   end
 
   def read
@@ -115,7 +115,6 @@ class E
     (open uri).read
   end
 
-  # wrapped readFile - check if exists & maybe parse JSON
   def r p=false
     if f
       p ? (JSON.parse readFile) : readFile
@@ -125,10 +124,10 @@ class E
     end
   end
 
-  # write file - make sure dir exists & serialize JSON if requested
   def w o,s=false
+    puts "dirname #{dirname} #{dirname.d}"
+    dirname.mk
     puts "w #{uri} > #{d}"
-    dirname.dir
     writeFile (s ? o.to_json : o)
     self
   end
@@ -144,18 +143,7 @@ class E
 end
 
 class Pathname
-  
-  def dir
-    puts "mkpath #{self}" unless exist?
-    mkpath unless exist? 
-  end
 
-  # append to path
-  def a s
-    Pathname.new to_s+s
-  end
-
-  # path -> E
   def E
     to_s.force_encoding('UTF-8').unpathURI
   end
@@ -168,7 +156,7 @@ class Pathname
   end
   
   def deleteNode
-    FileUtils.send file? ? :rm : :rmdir,self
+    FileUtils.send file? ? :rm : :rmdir, self
     parent.deleteNode if parent.c.empty?
   end
 

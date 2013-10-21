@@ -47,7 +47,7 @@ class E
     else
       unless t.e
         indexEdit p,o,nil # index triple
-        t.dir # add triple
+        t.mk              # make triple
       end
     end
   end

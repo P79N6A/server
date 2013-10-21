@@ -24,14 +24,14 @@ class E
       d = m.message_id; return unless d   # parse successful?
       e = i[d]                            # Message resource
       e.e || (                            # Message-ID locatable?
-       ln e.opaque                        # create message-id path 
+       ln e                               # create message-id path 
        # index previously unseen mail
-       self.index 'sioc:has_creator', m.from[0].E    # index From
-       m.to.do{|t|self.index 'sioc:addressed_to', t[0].E}  # index To
+       self.index 'sioc:has_creator', m.from[0].E       # index From
+       m.to.do{|t|self.index 'sioc:addressed_to', t[0].E} # index To
 
-       %w{in_reply_to references}.map{|p| # reference arcs
-        m.send(p).do{|os| os.map{|o|      # lookup references
-        e.index E['sioc:reply_of'],i[o].opaque}}}) # index ref
+       %w{in_reply_to references}.map{|p|
+        m.send(p).do{|os| os.map{|o|
+         e.index E['sioc:reply_of'], i[o]}}}) # index references
 
       # yield triples
       yield e.uri, Type,    E[SIOCt+'MailMessage']

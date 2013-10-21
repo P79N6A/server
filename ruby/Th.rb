@@ -18,7 +18,7 @@ class E
         'http://'+e['SERVER_NAME']+p.gsub('+','%2B')
       end
     )}.E.env(e).do{|r|
-      if (r.node.expand_path.to_s.index E::FSbase) == 0
+      if (r.node.expand_path.to_s.index FSbase) == 0
         e['uri'] = r.uri
         r.send e.fn 
       else

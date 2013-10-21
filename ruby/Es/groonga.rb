@@ -14,7 +14,7 @@ class E
   # load or create groongaDB at URI
   def groonga
     return Groonga::Database.open d if e # open db
-    dirname.dir                          # create containing dir
+    dirname.mk                           # create containing dir
     Groonga::Database.create(:path => d) # create db
     Groonga::Schema.define{|s|           # create schema
       s.create_table("E",:type => :hash,:key_type => "ShortText"){|t|

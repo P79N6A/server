@@ -65,7 +65,7 @@ class E
       m.map{|u,r|                    # iterate through URIs
         r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
           t = u.E.ef     # symlink location
-          t.dirname.dir  # container dir of symlink
+          t.dirname.mk   # parent dir
           if undo
             if t.e
               t.deleteNode # remove link

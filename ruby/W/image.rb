@@ -30,7 +30,7 @@ class E
       [no.stat.do{|s|
          [s.ino,s.mtime]},
        @r.qs].h.dive+'.png'].do{|n| n.e ||
-      (n.dirname.dir
+      (n.dirname.mk
        mimeP.match(/^video/) &&
        `ffmpegthumbnailer -s #{@r.qs.match(/[0-9]+/).to_s} -i #{sh} -o #{n.sh}` ||
        `gm convert #{sh} -thumbnail "#{@r.qs}" #{n.sh}`)
