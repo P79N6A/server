@@ -109,14 +109,6 @@ class E
     uri.expand.E
   end
 
-  def concatURI b
-    if b
-      u.a b.E.path
-    else
-      self
-    end
-  end
-
   def prependURI u
     E u.to_s + uri
   end
@@ -127,6 +119,10 @@ class E
 
   def appendSlashURI u
     E uri.t + u.to_s
+  end
+
+  def concatURI b
+    u.appendURI b.E.path
   end
 
   alias_method :a, :appendURI

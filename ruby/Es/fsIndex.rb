@@ -47,7 +47,7 @@ class E
 
   # subtree traverse index on p+o cursor
   fn 'set/index',->d,r,m,f=:rangePO{
-    top = (f == :rangeP ? d : r['p']).E
+    top = (f == :rangeP ? d : r['p']).expand.E
     count = r['c'] &&
             r['c'].to_i.max(1000)+1 || 22
     dir = r['d'] &&
@@ -74,7 +74,8 @@ class E
 
   # predicate-object index
   def poIndex o
-    pIndex.appendURI o
+    puts "poi #{uri} #{o.class} #{o} #{pIndex.concatURI o}"
+    pIndex.concatURI o
   end
  
   # predicate-object index lookup
