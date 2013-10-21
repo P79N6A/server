@@ -78,7 +78,6 @@ class E
   end
 
   def mk
-    puts "E#mk #{d} #{e ? 'exists' : ''} #{caller[0]}"
     e || FileUtils.mkdir_p(d)
     self
   end
@@ -87,7 +86,7 @@ class E
   def ln t
     t = t.E # cast bare URI/string to resource
     if !t.e # destination exist?
-      puts "link #{t} > #{uri} | #{t.no} > #{no}"
+      puts "ln #{t} > #{uri} | #{t.no} > #{no}"
       t.dirname.mk
       FileUtils.symlink node, t.node
     end
@@ -125,9 +124,7 @@ class E
   end
 
   def w o,s=false
-    puts "dirname #{dirname} #{dirname.d}"
     dirname.mk
-    puts "w #{uri} > #{d}"
     writeFile (s ? o.to_json : o)
     self
   end
