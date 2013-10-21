@@ -15,8 +15,8 @@ div {
 
 a {
     font-size:1.05em;
-    background-color:#0f0;
-    color:#000;
+    background-color:#035;
+    color:#fff;
     text-decoration:none;
     padding:.1em;
     }
@@ -32,8 +32,8 @@ td.key .abbr:hover {
 
 
 td.key a {
-    background-color: #000;
-    color: #aaa;
+    background-color: #009;
+    color: #bff;
 }
 
 td.key div {
