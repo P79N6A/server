@@ -1,4 +1,3 @@
-watch __FILE__
 class E
 
   fn '/css/500.css/GET',->e,r{
@@ -13,15 +12,13 @@ td.space {background-color:#ddd}
 td.message {background-color:#009;color:#fff}
 td.path {text-align:right}
 td.index {text-align:right;border-color:#000;border-width:0 0 .1em 0;border-style:dotted;background-color:#ddd;color:#000}
-td.context {border-color:#ddd;border-width:0 0 .1em 0;border-style:dotted;padding:.15em;}
-"]]}
+td.context {border-color:#ddd;border-width:0 0 .1em 0;border-style:dotted;padding:.15em}"]]}
 
-  fn 'backtrace',->x,r{
+  fn '500',->x,r{
   [500,{'Content-Type'=>'text/html'},
    [H[{_: :html,
         c: [{_: :head,
-              c: [{_: :title, c: 500},
-                  (H.css '/css/500')]},
+              c: [{_: :title, c: 500},(H.css '/css/500')]},
             {_: :body,
               c: [{_: :h1, c: 500},
                   {_: :table,

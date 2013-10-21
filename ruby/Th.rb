@@ -27,6 +27,9 @@ class E
     }.do{|r| puts [# inspect response
         e.fn, r[0],['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,e['HTTP_USER_AGENT'],e['HTTP_REFERER']].join ' '
         r }
-    end
+  rescue Exception => x
+    $stderr.puts 500,x.message,x.backtrace
+    F['500'][x,@r]
+  end
 
 end

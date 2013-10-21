@@ -17,10 +17,6 @@ class E
     else
       self.GET_resource
     end
-
-  rescue Exception => x
-    $stderr.puts 500,x.message,x.backtrace
-    Fn 'backtrace',x,@r
   end
 
   def maybeSend m,b,lH=false

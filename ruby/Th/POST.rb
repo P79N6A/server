@@ -36,8 +36,6 @@ class E
                   'p' => p.uri,
                   'nocache' => 'true'})
     self.GET
-  rescue Exception => x
-    Fn 'backtrace',x,@r
   end
 
 end
