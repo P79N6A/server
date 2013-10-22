@@ -67,7 +67,7 @@ class E
             ga.select{|r| r['graph'] == g} # ordered set (index date-range)
 
     # offset, size
-    start = e['start'].do{|c| c.to_i.max (r.size - 1) } || 0
+    start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0
     c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8
 
     # are further results traversible?
