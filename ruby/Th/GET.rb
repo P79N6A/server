@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def GET
@@ -92,15 +92,16 @@ class E
     # empty graph -> 404
     return F[E404][self,@r] if m.empty?
 
+    # request-graph identifier
+    s = (q.has_key?('nocache') ? rand.to_s :  # random identifier
+         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # graph signature
+
     # inspect request-graph
     if q.has_key? 'debug'
       puts "docs #{m.keys.join ' '}"
       puts "resources #{m['frag']['res']}" if m['frag']
+      puts "graph ID #{s}"
     end
-
-    # request-graph identifier
-    s = (q.has_key?('nocache') ? rand.to_s :  # random identifier
-         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # graph signature
 
     # response identifier
     @r['ETag'] ||= [s, q, @r.format].h
