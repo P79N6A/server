@@ -14,7 +14,7 @@ td.path {text-align:right}
 td.index {text-align:right;border-color:#000;border-width:0 0 .1em 0;border-style:dotted;background-color:#ddd;color:#000}
 td.context {border-color:#ddd;border-width:0 0 .1em 0;border-style:dotted;padding:.15em}"]]}
 
-  fn '500',->x,r{
+  fn 'E500',->x,r{
   [500,{'Content-Type'=>'text/html'},
    [H[{_: :html,
         c: [{_: :head,

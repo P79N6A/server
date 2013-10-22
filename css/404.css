@@ -1,10 +1,4 @@
 body {
-    background-color:#fff;
-    color: #000;
-    font-family: sans-serif;    
-}
-
-table {
     background-color:#000;
     color:#fff;
 }
@@ -15,8 +9,8 @@ div {
 
 a {
     font-size:1.05em;
-    background-color:#035;
-    color:#fff;
+    background-color:#004f69;
+    color:#efe;
     text-decoration:none;
     padding:.1em;
     }
@@ -52,7 +46,7 @@ td.key .scheme {display: none}
 td.val {
     border-style:dotted;
     border-width:0 0 .1em 0;
-    border-color:#999;
+    border-color:#444;
 }
 
 input {
