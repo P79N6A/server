@@ -41,9 +41,9 @@ td.subject {max-width:78em;vertical-align:top;text-align:right}
 .sender:hover {color:#eef}
 .sender:visited {color:white}
 
-.narrowP {border-radius: .4em 0 0 .4em}
-.narrowPO {border-radius: 0 .4em .4em 0}
-.narrowP, .narrowPO, .current {
+.rangeP {border-radius: .4em 0 0 .4em}
+.rangePO {border-radius: 0 .4em .4em 0}
+.rangeP, .rangePO, .current {
     padding: 0 .5em 0 .5em;
     background-color: white;
     color: #000;

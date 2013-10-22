@@ -32,9 +32,10 @@ class E
     # CSS
     [(H.css '/css/mail.threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
 
-     ([{_: :a, class: :narrowP, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p']},'&nbsp;',
+     # predicate tafting
+     ([{_: :a, class: :rangeP, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p']},'&nbsp;',
        {_: :a, class: :current, href: '/m?y=day', c: ' '},'&nbsp;',
-       {_: :a, class: :narrowPO, href: E[env['uri']].url+'?set=indexPO&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
+       {_: :a, class: :rangePO, href: E[env['uri']].url+'?set=indexPO&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
       ] if env.q['set']=='indexPO'),
 
      '<table>',
