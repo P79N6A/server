@@ -145,9 +145,10 @@ elsif b.grep(/\.log$/).size / s > t
         yield r.uri,Content,r.r}} end
   graphFromStream :triplrBlob
 
-  def triplrHref e=nil
-    yield uri,Content,read.do{|r|e ? r.force_encoding(e).to_utf8 : r}.hrefs
+  def triplrHref enc=nil
+    yield uri,Content,(e && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
   end
+  graphFromStream :triplrHref
 
   fn Render+'text/html',->d,e{
     v = e.q['view'].to_s

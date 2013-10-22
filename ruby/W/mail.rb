@@ -96,7 +96,7 @@ class E
       ({_: :a, id: :up, href: e['REQUEST_PATH'] + e.q.merge({'view' => 'page', 'v' => 'threads'}).qs, c: '&uarr;'} if d.keys.size > 2),
 
       # collapse/expand quoted content
-      {id: :showQuote, c: :quoted, show: :true},{_: :style, id: :quote}),
+      {id: :showQuote, c: :quotes, show: :true},{_: :style, id: :quote}),'<br>',
 
      # each message
      d.values.map{|m|
@@ -107,7 +107,7 @@ class E
         {:class => :mail,
           
           c: [# link to self
-              {_: :a, name: m.uri, href: m.url, rel: :permalink, title: :link, c: ' '},
+              {_: :a, name: m.uri, href: m.url+'?graph=triplrHref', rel: :permalink, title: :raw, c: ' '},
               
               # To:, From: index search links
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|

@@ -2,14 +2,18 @@
 class E
 
   def triplrImage &f
-    # exiftool is very comprehensive but can be slow so this triplr not invoked by default. options:
-    #
-    # add triplrImage in K.rb (and use fast hw or unchanging resourceSets (per-day/group dirs))
-    # write an .e (RDF+JSON) file alongside basename by calling .exif on containing dir
-    # enable triplr via query-string (automatic in thumbnail link to full)
-    #  graph=|&|=triplrImage
+=begin
+ exiftool is very comprehensive but can be slow so is not used by default
+    
+ * add triplrImage in K.rb (and use fast hw or unchanging resourceSets (per-day/group dirs))
+ * export EXIF to RDF
+     sh$ e / exif     irb> '/'.E.exif
+ * enable triplr via query-string (automatic in thumbnail link to full)
+     graph=triplrImage
+=end
     triplrStdOut 'exiftool', EXIF, &f
   end
+  graphFromStream :triplrImage
 
   def exif
     take.map{|g|
@@ -49,7 +53,7 @@ class E
   fn 'view/th',->i,e{
     s=e.q['s']||'233'
     i.map{|u,i| u.match(/(gif|jpg|png|tiff)$/i) &&
-      {_: :a, href: i.url+'?graph=|&|=triplrImage&view=img',
+      {_: :a, href: i.url+'?graph=triplrImage&view=img',
         c: {_: :img, src: i.url+'?'+s+'x'+s}}}}
 
   F['view/'+MIMEtype+'image/gif'] = F['view/th']
