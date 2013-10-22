@@ -62,15 +62,13 @@ class E
     # context
     g = e["context"] || d.env['SERVER_NAME']
 
-    # offset
-    start = e['start'].do{|c|c.to_i} || 0
-
-    # number of results
-    c = e['c'].do{|c|c.to_i.max(10000).min(0)} || 8
-
     # exec expression
     r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
             ga.select{|r| r['graph'] == g} # ordered set (index date-range)
+
+    # offset, size
+    start = e['start'].do{|c| c.to_i.max r.size } || 0
+    c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8
 
     # are further results traversible?
     down = r.size > start+c
