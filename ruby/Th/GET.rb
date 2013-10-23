@@ -111,11 +111,11 @@ class E
     return F[E404][self,@r] if m.empty?
 
     # inspect request
-    if q.has_key? 'debug'
+    #if q.has_key? 'debug'
       puts "docs #{m.keys.join ' '}"
       puts "resources #{m['frag']['res']}" if m['frag']
       puts "graph ID #{graph}"
-    end
+    #end
 
     # response identifier
     @r['ETag'] ||= [graph, q, @r.format].h
@@ -136,7 +136,7 @@ class E
           m.merge! c.r true # cached graph
         else
           # build graph
-          F['graph/' + g][self,q,m]
+          F['graph/' + g].do{|f| f[self,q,m]}
 
           # cache graph
           c.w m,true
