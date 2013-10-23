@@ -63,20 +63,23 @@ class E
     response # resource handler
   end
 
-  fn 'graphID/',->e,q,m{
+  fn 'graphID/',->e,q,g{
 
-    set = F['set/' + q['set']][e, q, m]
+    set = F['set/' + q['set']][e,q,g]
 
-    # resource URIs, #graph will expand
-    set.map{|u| m[u.uri] ||= u }
+    # resource URIs to graph thunks
+    set.map{|u| g[u.uri] ||= u }
 
     # graph fingerprint
     if q.has_key?('nocache') # random identifier
       rand.to_s.h
     else
-      set.sort.map{|u,r|
-        [u, r.respond_to?(:m) && r.m]}.h
+      F['graphIDkeys'][g]
     end}
+
+  fn 'graphIDkeys',->g{
+    g.sort.map{|u,r|
+      [u, r.respond_to?(:m) && r.m]}.h}
 
   fn 'graph/',->e,q,m{
     m.values.map{|r|
@@ -98,16 +101,16 @@ class E
     q = @r.q       # query-string
     g = q['graph'] # graph-generation function selector
 
-    # request graph 
+    # response graph
     m = {}
 
-    # identify request graph 
+    # identify requested graph 
     graph = F['graphID/'+g].do{|i|i[self,q,m]} || rand.to_s
 
     # empty graph -> 404
     return F[E404][self,@r] if m.empty?
 
-    # inspect request-graph
+    # inspect request
     if q.has_key? 'debug'
       puts "docs #{m.keys.join ' '}"
       puts "resources #{m['frag']['res']}" if m['frag']
@@ -127,7 +130,7 @@ class E
       else
         
         # cached graph
-        c = E '/E/graph/' + @r['graphID'].dive
+        c = E '/E/graph/' + graph.dive
 
         if c.e # graph already generated
           m.merge! c.r true # cached graph
