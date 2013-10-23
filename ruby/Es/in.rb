@@ -21,6 +21,34 @@ class E
   # graph placeholder
   fn 'graph/_',->d,_,m{ m[d.uri] = {} }
 
+
+  fn 'graphID/',->e,q,g{
+    puts "graphID #{e.uri}"
+    set = F['set/' + q['set']][e,q,g]
+
+    # resource URIs to graph
+    set.map{|u| g[u.uri] ||= u }
+
+    F['graphID'][g]}
+
+  fn 'graphID',->g{
+    g.sort.map{|u,r|
+      [u, r.respond_to?(:m) && r.m]}.h}
+
+  fn 'graph/',->e,q,m{
+    puts "graph #{e.uri} #{m.keys}"
+    m.values.map{|r|
+      # expand resource-pointers to graph
+      (r.env e.env).graphFromFile m if r.class == E }}
+
+  # document-set constructor
+  fn 'set/',->e,q,_{
+    s = []
+    s.concat e.docs
+    s.concat e.pathSegment.docs # path on all domains
+    puts "set #{s}" if q.has_key? 'debug'
+    s }
+
   def triplrMIMEdispatch &b
     mimeP.do{|mime|
       yield uri,E::Type,(E MIMEtype+mimeP)

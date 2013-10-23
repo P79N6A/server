@@ -62,77 +62,42 @@ class E
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
     response # resource handler
   end
-
-  fn 'graphID/',->e,q,g{
-    puts "graphID #{e.uri}"
-    set = F['set/' + q['set']][e,q,g]
-
-    # resource URIs to graph
-    set.map{|u| g[u.uri] ||= u }
-
-    F['graphID'][g]}
-
-  fn 'graphID',->g{
-    g.sort.map{|u,r|
-      [u, r.respond_to?(:m) && r.m]}.h}
-
-  fn 'graph/',->e,q,m{
-    puts "graph #{e.uri} #{m.keys}"
-    m.values.map{|r|
-      # expand resource-pointers to graph
-      (r.env e.env).graphFromFile m if r.class == E }}
-
-  # document-set constructor
-  fn 'set/',->e,q,_{
-    s = []
-    s.concat e.docs
-    s.concat e.pathSegment.docs # path on all domains
-    puts "set #{s}" if q.has_key? 'debug'
-    s }
   
   # HTTP response
   def response
 
-    # request arguments
     q = @r.q       # query-string
-    g = q['graph'] # graph-generation function selector
+    g = q['graph'] # graph-function selector
 
-    # response graph
+    # empty response graph
     m = {}
 
-    # identify requested graph 
+    # identify request graph 
     graph = F['graphID/'+g].do{|i|i[self,q,m]}
     graph = rand.to_s.h if q.has_key? 'nocache'
 
-    # inspect request
-    #if q.has_key? 'debug'
-      puts "docs #{m.keys.join ' '}"
-      puts "resources #{m['frag']['res']}" if m['frag']
-      puts "graphID #{graph}"
-    #end
-
-    # empty graph -> 404
     return F[E404][self,@r] if m.empty?
 
-    # response identifier
+    puts "docs #{m.keys.join ' '}\nresources #{m['frag']['res']}\ngraphID #{graph}" #if q.has_key? 'debug'
+
+    # identify response
     @r['ETag'] ||= [graph, q, @r.format].h
 
     maybeSend @r.format, ->{
       
-      # cached response
+      # response
       r = E'/E/req/' + @r['ETag'].dive
-      
-      if r.e # response already generated
+      if r.e # response exists
         r    # cached response
       else
         
-        # cached graph
+        # graph
         c = E '/E/graph/' + graph.dive
-
-        if c.e # graph already generated
+        if c.e              # graph exists
           m.merge! c.r true # cached graph
+          puts "graph HIT"
         else
-          puts "build"
+          puts "graph MISS"
           # build graph
           (F['graph/' +g] || F['graph/']).do{|f| f[self,q,m]}
 
@@ -140,10 +105,10 @@ class E
           c.w m,true
         end
 
-        # response graph sorting/filtering
+        # graph sort/filter
         E.filter q, m, self
 
-        # cache response
+        # cache response > return
         r.w render @r.format, m, @r
       end }
   end
