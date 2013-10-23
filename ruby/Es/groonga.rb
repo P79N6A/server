@@ -48,9 +48,8 @@ class E
     # no 404 on 0 results - searchbox view
     m['/s']={'uri'=>'/s'} if m.empty?
 
-    F['graphIDkeys'][m]
-  }
-  
+    F['graphID'][m]}
+
   def E.groonga
     @groonga ||= (require 'groonga'
                   E['/E/groonga'].groonga

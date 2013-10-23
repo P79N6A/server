@@ -67,21 +67,17 @@ class E
     puts "graphID #{e.uri}"
     set = F['set/' + q['set']][e,q,g]
 
-    # resource URIs to graph thunks
+    # resource URIs to graph
     set.map{|u| g[u.uri] ||= u }
 
-    # graph fingerprint
-    if q.has_key?('nocache') # random identifier
-      rand.to_s.h
-    else
-      F['graphIDkeys'][g]
-    end}
+    F['graphID'][g]}
 
-  fn 'graphIDkeys',->g{
+  fn 'graphID',->g{
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
   fn 'graph/',->e,q,m{
+    puts "graph #{e.uri} #{m.keys}"
     m.values.map{|r|
       # expand resource-pointers to graph
       (r.env e.env).graphFromFile m if r.class == E }}
@@ -106,12 +102,13 @@ class E
 
     # identify requested graph 
     graph = F['graphID/'+g].do{|i|i[self,q,m]}
+    graph = rand.to_s.h if q.has_key? 'nocache'
 
     # inspect request
     #if q.has_key? 'debug'
       puts "docs #{m.keys.join ' '}"
       puts "resources #{m['frag']['res']}" if m['frag']
-      puts "graph ID #{graph}"
+      puts "graphID #{graph}"
     #end
 
     # empty graph -> 404
@@ -135,8 +132,9 @@ class E
         if c.e # graph already generated
           m.merge! c.r true # cached graph
         else
+          puts "build"
           # build graph
-          F['graph/' + g].do{|f| f[self,q,m]}
+          (F['graph/' +g] || F['graph/']).do{|f| f[self,q,m]}
 
           # cache graph
           c.w m,true
