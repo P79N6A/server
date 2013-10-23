@@ -63,10 +63,25 @@ class E
     response # resource handler
   end
 
-  # graph constructor
+  fn 'graphID/',->e,q,m{
+
+    set = F['set/' + q['set']][e, q, m]
+
+    # resource URIs, #graph will expand
+    set.map{|u| m[u.uri] ||= u }
+
+    # graph fingerprint
+    if q.has_key?('nocache') # random identifier
+      rand.to_s.h
+    else
+      set.sort.map{|u,r|
+        [u, r.respond_to?(:m) && r.m]}.h
+    end}
+
   fn 'graph/',->e,q,m{
-    F['set/' + q['set']][e, q, m]. # doc set
-    map{|u|m[u.uri] ||= u}} # resource thunks, response will expand if necessary
+    m.values.map{|r|
+      # expand resource-pointers to graph
+      (r.env e.env).graphFromFile m if r.class == E }}
 
   # document-set constructor
   fn 'set/',->e,q,_{
@@ -76,7 +91,7 @@ class E
     puts "set #{s}" if q.has_key? 'debug'
     s }
   
-  # default HTTP response
+  # HTTP response
   def response
 
     # request arguments
@@ -86,46 +101,41 @@ class E
     # request graph 
     m = {}
 
-    # add resources to request graph 
-    F['graph/' + g][self,q,m]
+    # identify request graph 
+    graph = F['graphID/'+g].do{|i|i[self,q,m]} || rand.to_s
 
     # empty graph -> 404
     return F[E404][self,@r] if m.empty?
-
-    # request-graph identifier
-    s = (q.has_key?('nocache') ? rand.to_s :  # random identifier
-         m.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}).h # graph signature
 
     # inspect request-graph
     if q.has_key? 'debug'
       puts "docs #{m.keys.join ' '}"
       puts "resources #{m['frag']['res']}" if m['frag']
-      puts "graph ID #{s}"
+      puts "graph ID #{graph}"
     end
 
     # response identifier
-    @r['ETag'] ||= [s, q, @r.format].h
+    @r['ETag'] ||= [graph, q, @r.format].h
 
-    # check if client has response
     maybeSend @r.format, ->{
       
-      # cached response identifier
+      # cached response
       r = E'/E/req/' + @r['ETag'].dive
       
       if r.e # response already generated
         r    # cached response
       else
         
-        # cached graph identifier
-        c = E '/E/graph/' + s.dive
+        # cached graph
+        c = E '/E/graph/' + @r['graphID'].dive
 
         if c.e # graph already generated
           m.merge! c.r true # cached graph
         else
-          # expand response graph thunks
-          m.values.map{|r|
-            r.env(@r).graphFromFile m if r.class == E }
-          # cache response graph
+          # build graph
+          F['graph/' + g][self,q,m]
+
+          # cache graph
           c.w m,true
         end
 
