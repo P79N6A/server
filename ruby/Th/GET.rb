@@ -78,7 +78,7 @@ class E
 
     return F[E404][self,@r] if m.empty?
 
-    puts "docs #{m.keys.join ' '}\nresources #{m['frag']['res']}\ngraphID #{graph}" #if q.has_key? 'debug'
+    puts "#{m.keys.join ' '}\ngraphID #{graph}" #if q.has_key? 'debug'
 
     # identify response
     @r['ETag'] ||= [graph, q, @r.format].h
