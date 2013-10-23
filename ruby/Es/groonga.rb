@@ -1,10 +1,56 @@
-#watch __FILE__
+watch __FILE__
 class E
 
 #  http://groonga.org/ http://ranguba.org/
 #  https://github.com/groonga/groonga
 #  https://github.com/ranguba/rroonga
-  # default DB
+
+  # query
+  fn 'graphID/roonga',->d,e,m{
+    puts "groonga"
+
+    ga = E.groonga
+
+    # search expression
+    q = e['q']
+
+    # context
+    g = e["context"] || d.env['SERVER_NAME']
+
+    # exec expression
+    r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
+            ga.select{|r| r['graph'] == g} # ordered set (index date-range)
+
+    # offset, size
+    start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0
+    c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8
+
+    # are further results traversible?
+    down = r.size > start+c
+    up   = !(start<=0)
+
+    # sort results
+    r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
+
+    # pagination resources
+    m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down
+    m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up
+
+    # search-result identifiers
+    r = r.map{|r| r['.uri'].E }
+
+    # fragment identifiers
+    m['frag'] = {'uri' => 'frag', 'res' => r}
+
+    # containing documents
+    r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
+
+    # no 404 on 0 results - searchbox view
+    m['/s']={'uri'=>'/s'} if m.empty?
+
+    F['graphIDkeys'][m]
+  }
+  
   def E.groonga
     @groonga ||= (require 'groonga'
                   E['/E/groonga'].groonga
@@ -50,50 +96,4 @@ class E
     graph.keys.push(uri).map{|u|g[u].delete}
   end
 
-  # query
-  fn 'graph/roonga',->d,e,m{
-
-    # db
-    ga = E.groonga
-
-    # search expression
-    q = e['q']
-
-    # context
-    g = e["context"] || d.env['SERVER_NAME']
-
-    # exec expression
-    r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
-            ga.select{|r| r['graph'] == g} # ordered set (index date-range)
-
-    # offset, size
-    start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0
-    c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8
-
-    # are further results traversible?
-    down = r.size > start+c
-    up   = !(start<=0)
-
-    # sort results
-    r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
-
-    # pagination resources
-    m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down
-    m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up
-
-    # search-result identifiers
-    r = r.map{|r| r['.uri'].E }
-
-    # fragment identifiers
-    m['frag'] = {'uri' => 'frag', 'res' => r}
-
-    # containing documents
-    r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
-
-    # no 404 on 0 results - searchbox view
-    m['/s']={'uri'=>'/s'} if m.empty?
-
-    m # result set
-  }
-  
 end

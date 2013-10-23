@@ -64,7 +64,7 @@ class E
   end
 
   fn 'graphID/',->e,q,g{
-
+    puts "graphID #{e.uri}"
     set = F['set/' + q['set']][e,q,g]
 
     # resource URIs to graph thunks
@@ -105,10 +105,7 @@ class E
     m = {}
 
     # identify requested graph 
-    graph = F['graphID/'+g].do{|i|i[self,q,m]} || rand.to_s
-
-    # empty graph -> 404
-    return F[E404][self,@r] if m.empty?
+    graph = F['graphID/'+g].do{|i|i[self,q,m]}
 
     # inspect request
     #if q.has_key? 'debug'
@@ -116,6 +113,9 @@ class E
       puts "resources #{m['frag']['res']}" if m['frag']
       puts "graph ID #{graph}"
     #end
+
+    # empty graph -> 404
+    return F[E404][self,@r] if m.empty?
 
     # response identifier
     @r['ETag'] ||= [graph, q, @r.format].h
