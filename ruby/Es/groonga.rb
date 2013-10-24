@@ -6,7 +6,7 @@ class E
 #  https://github.com/ranguba/rroonga
 
   # query
-  fn 'graphID/roonga',->d,e,m{
+  fn 'protograph/roonga',->d,e,m{
     puts "groonga"
 
     ga = E.groonga

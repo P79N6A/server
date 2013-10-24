@@ -72,16 +72,17 @@ class E
     # empty response graph
     m = {}
 
-    # identify request graph 
-    graph = F['graphID/'+g].do{|i|i[self,q,m]}
-    graph = rand.to_s.h if q.has_key? 'nocache'
+    # identify graph
+    graphID = F['protograph/'+g].do{|i|i[self,q,m]}
+    puts "graph #{graphID ? graphID : 'NOGRAPH'}"
+    graphID = rand.to_s.h if !graphID || (q.has_key? 'nocache')
 
     return F[E404][self,@r] if m.empty?
 
-    puts "#{m.keys.join ' '}\ngraphID #{graph}" #if q.has_key? 'debug'
+    puts "#{m.keys.join ' '}\ngraphID #{graphID}" #if q.has_key? 'debug'
 
     # identify response
-    @r['ETag'] ||= [graph, q, @r.format].h
+    @r['ETag'] ||= [graphID, q, @r.format].h
 
     maybeSend @r.format, ->{
       
@@ -92,7 +93,7 @@ class E
       else
         
         # graph
-        c = E '/E/graph/' + graph.dive
+        c = E '/E/graph/' + graphID.dive
         if c.e              # graph exists
           m.merge! c.r true # cached graph
           puts "graph HIT"

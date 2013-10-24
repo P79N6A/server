@@ -17,9 +17,9 @@ class E
 
   alias_method :triplrMail, :triplrTmail
 
-  fn 'graphID/thread',->d,_,g{
+  fn 'protograph/thread',->d,_,g{
     d.walk SIOC+'reply_of',g
-    F['graphIDkeys'][g]}
+    F['graphID'][g]}
 
   # overview of all messages in set
   fn 'view/threads',->d,env{

@@ -1,6 +1,6 @@
 class E
 
-  # fromStream :: Graph -> tripleStream -> Graph
+  # Graph -> tripleStream -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -9,47 +9,52 @@ class E
     end; m
   end
 
-  # tripleStream pipeline
+  # tripleStream pipeline into graph
   fn 'graph/|',->e,_,m{
     [e,e.pathSegment].map{|e|
       e.fromStream m, *_['|'].split(/,/)}}
 
+  # placeholder graph (not empty)
+  fn 'protograph/_',->d,_,m{
+    m[d.uri] = {}
+  }
+
   def E.graphFromStream s
-    fn 'graph/'+s.to_s,->e,_,m{e.fromStream m, s}    
+    fn 'graph/'+s.to_s,->e,_,m{e.fromStream m, s}
   end
 
-  # trivial non-404 graph
-  fn 'graph/_',->d,_,m{ m[d.uri] = {} }
-
-  # base graph identifier - filesystem-backed
-  # @set option if you just want a different set of docs but all the normal caching/graph-expansion
-  fn 'graphID/',->e,q,g{                puts "graphID #{e.uri}"
-    set = F['set/'+q['set']][e,q,g]
-    # populate resource-thunks
+  fn 'protograph/',->e,q,g{
+    set = F['set/'+q['set']][e,q,g]           ; puts "set #{set}"
     set.map{|u|g[u.uri] ||= u }
-    F['graphID'][g]}
+    # identify
+    [F['graphID'][g],
+     F['triplr'][e,q]].h}
 
-  # identifier from graph skeleton
+  # graph identifier - for filesystem-based resultsets
   fn 'graphID',->g{
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
-  # base graph-expansion
   fn 'graph/',->e,q,m{
-    puts "graph #{e.uri} #{m.keys}"
+    triplr = F['triplr'][e,q]
+    puts "graph #{triplr} #{e.uri} #{m.keys}"
     m.values.map{|r|
-      # expand resource-pointers to graph
-      (r.env e.env).graphFromFile m if r.class == E }}
+      (r.env e.env).graphFromFile m, triplr if r.class == E }}
+
+  fn 'triplr',->e,q{
+    t = q['triplr']
+    t && e.respond_to?(t) && t ||
+    :triplrMIME 
+  }
 
   # document-set
   fn 'set/',->e,q,_{
     s = []
     s.concat e.docs
-    s.concat e.pathSegment.docs # path on all domains
-    puts "set #{s}" if q.has_key? 'debug'
+    s.concat e.pathSegment.docs
     s }
 
-  def triplrMIMEdispatch &b
+  def triplrMIME &b
     mimeP.do{|mime|
       yield uri,E::Type,(E MIMEtype+mimeP)
       (MIMEsource[mimeP]||
@@ -57,7 +62,7 @@ class E
         send *s,&b }}
   end
 
-  def graphFromFile g={}, triplr=:triplrMIMEdispatch
+  def graphFromFile g={}, triplr=:triplrMIME
     puts "triplr #{triplr}"
     g.mergeGraph r(true) if ext=='e' # JSON -> graph
     [:triplrInode,        # filesystem data
