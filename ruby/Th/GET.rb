@@ -78,7 +78,7 @@ class E
     return F[E404][self,@r] if m.empty?
 
     # identify response
-    @r['ETag'] ||= [graphID, q, @r.format].h
+    @r['ETag'] ||= [graphID, q, @r.format, Watch].h
 
     maybeSend @r.format, ->{
       
@@ -102,7 +102,7 @@ class E
         # graph sort/filter
         E.filter q, m, self
 
-        # cache response > return
+        # cache response
         r.w render @r.format, m, @r
       end }
   end
