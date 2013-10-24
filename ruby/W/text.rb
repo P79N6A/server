@@ -25,9 +25,10 @@ class E
     [(H.once e,'text',(H.css '/css/text')),
      d.values.map{|v|
       v[Content].do{|c|
+         b = E.cs
         {class: :text,
-           c: [{_: :a, href: v.url+'?view', c: v.label, style: "background-color:" + E.c},
-               {_: :pre,  c: c }]}}}]}
+           c: [{_: :a, href: v.url+'?view', c: v.label, style: "background-color:" + b},
+               {_: :pre,  c: c, style: "border-color:" + b}]}}}]}
 
   F['view/'+MIMEtype+'application/word']= F['view/monospace']
   F['view/'+MIMEtype+'blob']            = F['view/monospace']

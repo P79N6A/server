@@ -1,17 +1,19 @@
 
 .text { float: right }
 
-.text > a { text-decoration: none;
+.text > a {color: #fff}
+
+pre > a { text-decoration: none;
             padding: .1em;
-            color: #fff;
+            color: #000;
+	    background-color:#0f0;
             }
 
-pre { padding:.0em;
-      margin:.1em;
-      color:#000;
-      background-color:#fff;
+pre { padding:.5em;
+      margin:0 .1em .1em .1em;
+      color:#fff;
+      background-color:#000;
       border-style:dotted;
       border-width:.13em;
-      border-color:#ddd;
       white-space: pre-wrap;
       }
