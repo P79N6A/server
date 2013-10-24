@@ -6,7 +6,7 @@ class String
     (partition /(https?:\/\/(\([^)]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       p[0].gsub('<','&lt;').gsub('>','&gt;')+
       (p[1].empty?&&''||'<a rel=untyped href='+p[1]+'>'+p[1].do{|p|
-         i && p.match(/(gif|jpg|png|tiff)$/i) &&
+         i && p.match(/(gif|jpe?g|png|tiff)$/i) &&
          "<img src=#{p}>" || p
        }+'</a>')+
       (p[2].empty?&&''||p[2].hrefs)
