@@ -1,19 +1,11 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   def triplrImage &f
-=begin
- exiftool is very comprehensive but can be slow so is not used by default
-    
- * add triplrImage in K.rb (and use fast hw or unchanging resourceSets (per-day/group dirs))
- * export EXIF to RDF
-    sh$ e / exif     irb> '/'.E.exif
- * enable triplr via query-string (automatic in thumbnail link to full)
-    triplr=triplrImage
-=end
     triplrStdOut 'exiftool', EXIF, &f
   end
-
+  
+  # export EXIF to RDF in JSON (recursive)
   def exif
     take.map{|g|
       if g.uri.match /(jpe?g|gif|png)$/i

@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 require_relative 'mailTmail'
 class E
 
