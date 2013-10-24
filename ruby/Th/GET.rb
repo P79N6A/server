@@ -73,13 +73,9 @@ class E
     m = {}
 
     # identify graph
-    graphID = F['protograph/'+g].do{|i|i[self,q,m]}
-    puts "graph #{graphID ? graphID : 'NOGRAPH'}"
-    graphID = rand.to_s.h if !graphID || (q.has_key? 'nocache')
+    graphID = (F['protograph/' + g] || F['protograph/']).do{|p|p[self,q,m]}
 
     return F[E404][self,@r] if m.empty?
-
-    puts "#{m.keys.join ' '}\ngraphID #{graphID}" #if q.has_key? 'debug'
 
     # identify response
     @r['ETag'] ||= [graphID, q, @r.format].h
@@ -94,14 +90,11 @@ class E
         
         # graph
         c = E '/E/graph/' + graphID.dive
-        if c.e              # graph exists
-          m.merge! c.r true # cached graph
-          puts "graph HIT"
+        if c.e # graph exists
+          m.merge! c.r true
         else
-          puts "graph MISS"
           # build graph
-          (F['graph/' +g] || F['graph/']).do{|f| f[self,q,m]}
-
+          (F['graph/' + g] || F['graph/']).do{|f| f[self,q,m]}
           # cache graph
           c.w m,true
         end

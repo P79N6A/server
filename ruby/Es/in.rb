@@ -24,11 +24,10 @@ class E
   end
 
   fn 'protograph/',->e,q,g{
-    set = F['set/'+q['set']][e,q,g]           ; puts "set #{set}"
-    set.map{|u|g[u.uri] ||= u }
+    set = F['set/'+q['set']][e,q,g]
+    set.map{|u| g[u.uri] ||= u }
     # identify
-    [F['graphID'][g],
-     F['triplr'][e,q]].h}
+    [F['graphID'][g], F['triplr'][e,q]].h}
 
   # graph identifier - for filesystem-based resultsets
   fn 'graphID',->g{
@@ -37,7 +36,6 @@ class E
 
   fn 'graph/',->e,q,m{
     triplr = F['triplr'][e,q]
-    puts "graph #{triplr} #{e.uri} #{m.keys}"
     m.values.map{|r|
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
 
@@ -63,7 +61,6 @@ class E
   end
 
   def graphFromFile g={}, triplr=:triplrMIME
-    puts "triplr #{triplr}"
     g.mergeGraph r(true) if ext=='e' # JSON -> graph
     [:triplrInode,        # filesystem data
      triplr].# format-specific tripleStream emitter
