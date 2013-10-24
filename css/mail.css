@@ -23,7 +23,7 @@ pre {white-space: pre-wrap}
 
 .q {background-color:#fff;color:#000}
 .title {font-weight:bold;font-size:.88em;float:right;background-color:#fff;color:#000;margin:0 0 1.4em 0}
-.timestamp {color:#888;float: right;top:0;}
+.timestamp {color:#888;float: right; margin-right:.24em}
 a {
     color:#fff;
     text-decoration:none;
