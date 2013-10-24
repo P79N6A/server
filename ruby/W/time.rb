@@ -29,7 +29,7 @@ class E
 
     e[:graph] = d
     e[:group] = {}
-    e[:color] = E.c
+    e[:color] = E.cs
 
     [H.css('/css/timegraph'),{class: :timegraph, c: c.()}]}
 
