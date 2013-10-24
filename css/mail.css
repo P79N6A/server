@@ -12,6 +12,7 @@ body {
 #showQuote {float:right;padding:.2em;color:#aaa;background-color:white;font-size:1.4em;border-style:dotted;border-width:0.1em;border-color:#ccc}
 
 div.mail{
+    position:relative;
     background-color:#000;
     max-width:120ex;
     float:right;
@@ -22,7 +23,7 @@ pre {white-space: pre-wrap}
 
 .q {background-color:#fff;color:#000}
 .title {font-weight:bold;font-size:.88em;float:right;background-color:#fff;color:#000;margin:0 0 1.4em 0}
-
+.timestamp {color:#888;float: right;top:0;}
 a {
     color:#fff;
     text-decoration:none;
@@ -39,7 +40,6 @@ a[rel=untyped] {
     border-width:.1em;
 }
 a[rel=untyped]:hover {background-color: #fff}
-a[rel=permalink] { padding:0 .9em 0 0}
 a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;}
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;}
 a[property="sioc:addressed_to"],a[property="sioc:has_creator"] { border-style:dotted;border-width:.1em;border-color:#aaa; white-space:nowrap;float:left }

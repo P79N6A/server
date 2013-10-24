@@ -45,10 +45,8 @@ class E
       lc = x[:group][label] ||= E.c
       arc = x.q['arc'].do{|a| a.expand }
 
-      [{style: "top: #{r['x']}%; left: 0", class: :date, c: r[Date][0]},
-       {style: "top: #{r['x']}%; left: #{r['y']}%",
-         c: [{_: :a, href: r.url, c: '#', class: :link},
-             {_: :a,
+      [{style: "top: #{r['x']}%; left: #{r['y']}%",
+         c: [{_: :a,
                title: r[Date][0],
                href: '#'+r.uri,
                class: :label,

@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 require_relative 'mailTmail'
 class E
 
@@ -89,7 +89,7 @@ class E
   fn 'view/mail',->d,e{
     title = nil
 
-    # JS/CSS dependencies
+    # JS/CSS
     [(H.once e,'mail.js',
       (H.css '/css/mail'), {_: :style, c: "a {background-color: #{E.cs}}"},
       (H.js '/js/mail'),
@@ -109,8 +109,8 @@ class E
         
         {:class => :mail,
           
-          c: [# link to self
-              {_: :a, name: m.uri, href: m.url+'?graph=triplrHref', rel: :permalink, title: :raw, c: ' '},
+          c: [# message link
+              {_: :a, name: m.uri, href: m.url+'?triplr=triplrHref', rel: :raw, title: :raw, c: '&nbsp;'},
               
               # To:, From: index search links
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
@@ -122,6 +122,8 @@ class E
               (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
                 {_: :a, title: :reply, c: 'r',
                   href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},'<br clear=all>',
+
+              {class: :timestamp, c: m[Date].do{|d|d.map{|d|d.to_s[0..18]}}},
 
               # content
               {_: :pre,
