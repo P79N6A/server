@@ -17,7 +17,7 @@ class E
   # placeholder graph (not empty)
   fn 'protograph/_',->d,_,m{
     m[d.uri] = {}
-  }
+    rand.to_s.h}
 
   fn 'protograph/',->e,q,g{
     set = F['set/'+q['set']][e,q,g]

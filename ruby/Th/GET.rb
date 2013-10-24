@@ -63,7 +63,6 @@ class E
     response # resource handler
   end
   
-  # HTTP response
   def response
 
     q = @r.q       # query-string

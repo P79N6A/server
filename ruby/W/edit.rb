@@ -1,11 +1,10 @@
 watch __FILE__
 class E
 
-  # editable graph on FS triplestore
+  fn 'protograph/editable',->resource,env,graph{
+    Fn 'protograph/_',resource,env,graph}
+
   fn 'graph/editable',->resource,env,graph{
-    # graph skeleton [anti 404]
-    Fn 'graph/_',resource,env,graph
-    # graph state
     resource.fromStream graph, :triplrFsStore
     puts graph
   }
@@ -82,8 +81,8 @@ class E
       c: [(H.once e, 'edit', (H.css '/css/edit')),
           {_: :h2, c: p},
           # existing entries
-          g.map{|s,r| r[p].map{|o|
-              triple[s,p,o]}.cr},
+          g.map{|s,r| r[p].do{|p| p.map{|o|
+              triple[s,p,o]}.cr}},
           # new entry
           triple[e['uri'],p,''],' ',
           {_: :input, type: :submit, value: 'save'},
