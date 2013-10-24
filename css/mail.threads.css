@@ -7,7 +7,9 @@ a {
     color:#fff;
     margin-left:1.61em;
     font-size:2em;
-    padding:  0 1.4em 0 1.4em}
+    padding:  0 1.4em 0 1.4em;
+    border-radius: .1em .1em .25em .25em;
+}
 #down:hover {background-color:#aaf}
 
 .to {font-size:0.8em;
@@ -50,3 +52,9 @@ td.subject {max-width:78em;vertical-align:top;text-align:right}
     border-color: #aaa;
     border-style:dotted;
     border-width:.1em}
+
+
+.bottom a[rel=prev] {padding-right: 1.8em}
+.bottom a[rel=next] {padding-left: 1.8em}
+a[rel] {color:#888}
+a[rel]:hover {background-color:#888;color:#222}

@@ -18,9 +18,6 @@ class E
     (Pathname.glob d + p).map &:E
   end
   fn 'set/glob',->d,e,m{d.glob.concat d.pathSegment.glob}
-  fn 'graph/glob',->d,e,m{
-    (F['set/glob'][d,e,m]).map{|c|
-      c.fromStream m, :triplrInode, false }}
   
   def parent
     E Pathname.new(uri).parent

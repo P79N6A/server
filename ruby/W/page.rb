@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   fn 'head/page',->d,e{
@@ -29,6 +29,6 @@ class E
 
     [(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')), # n/p key shortcuts
      c,(H (F['view/'+e.q['v']]||F['view']).(d,e)),      # content
-     '<br clear=all>',c]}
+     '<br clear=all>',{class: :bottom, c: c}]}
   
 end
