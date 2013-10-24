@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   fn 'set/find',->e,q,m{
@@ -7,8 +7,7 @@ class E
     r=q['q'] && '-iregex ' + ('.*'+q['q']+'.*').sh
     [e,e.pathSegment].map{|e|
       `find #{e.sh} #{t} #{s} #{r} | head -n 1024`.lines.map{|l|
-        puts "found #{l}"
-        l.unpathURI} if e.e}.compact.flatten}
+        l.chomp.unpathURI} if e.e}.compact.flatten}
 
   fn 'view/find',->i,e{
     {_: :form, method: :GET, action: e['REQUEST_PATH'].t,

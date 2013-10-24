@@ -40,6 +40,6 @@ class E
      {class: :ls,
        c: (Fn 'view/tab',i,e)},
      (Fn 'view/find',i,e),'<br clear=all>',
-     {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
+     {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
 
 end

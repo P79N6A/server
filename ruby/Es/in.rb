@@ -1,3 +1,4 @@
+watch __FILE__
 class E
 
   # Graph -> tripleStream -> Graph
@@ -27,6 +28,7 @@ class E
 
   # graph identifier - for filesystem-based resultsets
   fn 'graphID',->g{
+    puts "graphID  #{g.keys.join ' '}"
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
