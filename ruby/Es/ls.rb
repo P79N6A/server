@@ -1,12 +1,5 @@
-#watch __FILE__
+watch __FILE__
 class E
-
-  fn 'set/ls',->d,e,m{d.c.concat d.pathSegment.c}
-
-  fn 'graph/fs',->d,e,m{ d.fromStream m, :triplrInode, false }
-  fn 'graph/ls',->d,e,m{
-    (F['set/ls'][d,e,m]).map{|c|
-      c.fromStream m, :triplrInode, false }}
 
   # basic directory view 
   fn 'view/dir',->i,e{
@@ -22,7 +15,7 @@ class E
        if r[Posix+'dir#child']
          url = r.E.localURL e
          {class: :dir, style: "background-color: #{E.cs}", # dir wrapper
-           c: [{c: [{_: :a, href: url+'?graph=ls&view=ls', # link to ls
+           c: [{c: [{_: :a, href: url.t+'?view=ls&triplr=id', # link to ls
                       c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')},
                     {_: :a, href: url.t, c: '/'}]},
                r[Posix+'dir#child'].map{|c|a[c]}]}   # children
@@ -39,7 +32,7 @@ class E
     up = (if dir.pathSegment.uri == '/'
             '/'
           else
-            dir.parent.url+'?graph=ls&view=ls'
+            dir.parent.url.t+'?view=ls&triplr=id'
           end)
 
     [(H.css '/css/ls'),
