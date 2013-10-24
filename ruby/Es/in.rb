@@ -19,10 +19,6 @@ class E
     m[d.uri] = {}
   }
 
-  def E.graphFromStream s
-    fn 'graph/'+s.to_s,->e,_,m{e.fromStream m, s}
-  end
-
   fn 'protograph/',->e,q,g{
     set = F['set/'+q['set']][e,q,g]
     set.map{|u| g[u.uri] ||= u }

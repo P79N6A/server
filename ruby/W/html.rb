@@ -143,13 +143,11 @@ elsif b.grep(/\.log$/).size / s > t
     glob.select(&:f).do{|f|f.map{|r|
         yield r.uri,Type,E('blob')
         yield r.uri,Content,r.r}} end
-  graphFromStream :triplrBlob
 
   def triplrHref enc=nil
     puts @r
     yield uri,Content,(e && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
   end
-  graphFromStream :triplrHref
 
   fn Render+'text/html',->d,e{
     v = e.q['view'].to_s

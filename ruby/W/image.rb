@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def triplrImage &f
@@ -7,17 +7,16 @@ class E
     
  * add triplrImage in K.rb (and use fast hw or unchanging resourceSets (per-day/group dirs))
  * export EXIF to RDF
-     sh$ e / exif     irb> '/'.E.exif
+    sh$ e / exif     irb> '/'.E.exif
  * enable triplr via query-string (automatic in thumbnail link to full)
-     graph=triplrImage
+    triplr=triplrImage
 =end
     triplrStdOut 'exiftool', EXIF, &f
   end
-  graphFromStream :triplrImage
 
   def exif
     take.map{|g|
-      if g.uri.match /(jpg|gif|png)$/i
+      if g.uri.match /(jpe?g|gif|png)$/i
         g.ef.w g.fromStream({},:triplrImage), true
         puts "EXIFtool #{g} #{g.ef.size}bytes"
       end}
@@ -52,8 +51,8 @@ class E
   
   fn 'view/th',->i,e{
     s=e.q['s']||'233'
-    i.map{|u,i| u.match(/(gif|jpg|png|tiff)$/i) &&
-      {_: :a, href: i.url+'?graph=triplrImage&view=img',
+    i.map{|u,i| u.match(/(gif|jpe?g|png|tiff)$/i) &&
+      {_: :a, href: i.url+'?triplr=triplrImage&view=img',
         c: {_: :img, src: i.url+'?'+s+'x'+s}}}}
 
   F['view/'+MIMEtype+'image/gif'] = F['view/th']
@@ -71,7 +70,7 @@ class E
     seen={}
 
     # extension-based filter
-    x=->i{i&&i.match(/(jpg|gif|png)$/i)&&i}
+    x=->i{i&&i.match(/(jpe?g|gif|png)$/i)&&i}
 
     [(H.once e,:mu,H.js('/js/mu')),H.js('/js/images'),
      m.values.map{|v|
