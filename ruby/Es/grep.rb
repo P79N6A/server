@@ -55,7 +55,8 @@ class E
              # exerpt
              l[0..404].gsub(a){|g|
                H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
-           },"<br>"]]}]
+           },"<br>"]]},
+       {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('view').qs, style: "background-color: #{E.cs}",c: '&darr;'}]
     end }
 
 end
