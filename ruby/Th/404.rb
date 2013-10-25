@@ -31,6 +31,10 @@ class E
   fn 'view/404',->d,e{
     [H.css('/css/404'),d.html]}
 
+  # a small non-empty graph
+  fn 'protograph/_',->d,_,m{
+    m[d.uri] = {}
+    rand.to_s.h}
 
   # check response-codes for a list of URIs (linebreak-separated *.u files)
   def checkURIs

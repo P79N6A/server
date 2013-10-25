@@ -10,38 +10,24 @@ class E
     end; m
   end
 
-  # tripleStream pipeline into graph
-  fn 'graph/|',->e,_,m{
-    [e,e.pathSegment].map{|e|
-      e.fromStream m, *_['|'].split(/,/)}}
-
-  # placeholder graph (not empty)
-  fn 'protograph/_',->d,_,m{
-    m[d.uri] = {}
-    rand.to_s.h}
-
   fn 'protograph/',->e,q,g{
     set = F['set/'+q['set']][e,q,g]
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
     # identify
     [F['graphID'][g], F['triplr'][e,q]].h}
 
-  # graph identifier - for filesystem-based resultsets
-  fn 'graphID',->g{
-#    puts "graphID  #{g.keys.join ' '}"
-    g.sort.map{|u,r|
-      [u, r.respond_to?(:m) && r.m]}.h}
-
   fn 'graph/',->e,q,m{
     triplr = F['triplr'][e,q]
     m.values.map{|r|
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
 
+  fn 'graphID',->g{
+    g.sort.map{|u,r|
+      [u, r.respond_to?(:m) && r.m]}.h}
+
   fn 'triplr',->e,q{
     t = q['triplr']
-    t && e.respond_to?(t) && t ||
-    :triplrMIME 
-  }
+    t && e.respond_to?(t) && t || :triplrMIME }
 
   # document-set
   fn 'set/',->e,q,_{
