@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # Graph -> tripleStream -> Graph
@@ -22,7 +22,7 @@ class E
 
   fn 'protograph/',->e,q,g{
     set = F['set/'+q['set']][e,q,g]
-    set.map{|u| g[u.uri] ||= u }
+    set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
     # identify
     [F['graphID'][g], F['triplr'][e,q]].h}
 

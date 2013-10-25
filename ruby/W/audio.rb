@@ -10,11 +10,8 @@ class E
   fn 'set/audio',->d,e,m{d.audioNodes}
   fn 'set/video',->d,e,m{d.videoNodes}
 
-  fn 'graph/findaudio',->e,q,m{
-    t=q['day'] && q['day'].match(/^\d+$/) && '-ctime -'+q['day']
-    s=q['size'] && q['size'].match(/^\d+$/) && '-size +'+q['size']+'M'
-    r=(q['find'] ? '.*'+q['find'].gsub(/[^a-zA-Z0-9\.\ ]+/,'.*') : '') + '.*.\(aif\|flac\|m4a\|mp3\|aac\|ogg\|wav\)'
-    `find #{e.sh} #{t} #{s} -iregex "#{r}"`.lines.map{|p|p.unpathURI.do{|a|m[a.uri]=a}}}
+  fn 'set/findaudio',->e,q,m{
+    F['set/find'][e,q,m,'\(aif\|flac\|m4a\|mp3\|aac\|ogg\|wav\)']}
 
   fn 'view/audio/item',->m,e{
     {_: :a,class: :entry, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'),

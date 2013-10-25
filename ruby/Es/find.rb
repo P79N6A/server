@@ -1,13 +1,14 @@
 #watch __FILE__
 class E
 
-  fn 'set/find',->e,q,m{
-    t=q['day'] && q['day'].match(/^\d+$/) && '-ctime -'+q['day']
-    s=q['size'] && q['size'].match(/^\d+$/) && '-size +'+q['size']+'M'
-    r=q['q'] && '-iregex ' + ('.*'+q['q']+'.*').sh
-    [e,e.pathSegment].map{|e|
-      `find #{e.sh} #{t} #{s} #{r} | head -n 1024`.lines.map{|l|
-        l.chomp.unpathURI} if e.e}.compact.flatten}
+  fn 'set/find',->e,q,m,x=''{
+    q['q'].do{|q|
+      r = '-iregex ' + ('.*' + q + '.*' + x).sh
+      s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'}
+      t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d }
+      [e,e.pathSegment].map{|e| e.e &&
+        `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
+        lines.map{|l|l.chomp.unpathURI}}.compact.flatten}}
 
   fn 'view/find',->i,e{
     {_: :form, method: :GET, action: e['REQUEST_PATH'].t,
