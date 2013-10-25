@@ -13,3 +13,6 @@ a {text-decoration:none}
 a:hover {background-color:#f70;color:#000}
 a.line {}
 a[rel] {color:#fff}
+.bottom a[rel=prev] {padding-right: 1.8em}
+.bottom a[rel=next] {padding-left: 1.8em}
+.bottom a[rel] {border-width:.1em 0 .1em 0;border-color:#ccc;border-style:dotted}

@@ -1,19 +1,23 @@
 
 .text { float: right }
 
-.text > a {color: #fff}
+.text a {
+    color: #fff;
+    text-decoration: none;
+}
 
-pre > a { text-decoration: none;
-            padding: .1em;
-            color: #000;
-	    background-color:#0f0;
-            }
+.text pre > a {
+    padding: .1em;
+    color: #000;
+    background-color:#0f0;
+}
 
-pre { padding:.5em;
-      margin:0 .1em .1em .1em;
-      color:#fff;
-      background-color:#000;
-      border-style:dotted;
-      border-width:.13em;
-      white-space: pre-wrap;
-      }
+.text pre {
+    padding:.5em;
+    margin:0 .1em .1em .1em;
+    color:#fff;
+    background-color:#000;
+    border-style:dotted;
+    border-width:.13em;
+    white-space: pre-wrap;
+}
