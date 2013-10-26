@@ -7,6 +7,7 @@ class E
     doc = uri.sub '#','%23'
     chan = bare
     yield doc,'chan',chan
+    # parses irssi (& weechat, maybe?) theme - in /css/i/
     r.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
       s = doc + '#' + doc + ':' + (i+=1).to_s
       yield s,Date,day+'T'+m[0]+':'+m[1]+':00'

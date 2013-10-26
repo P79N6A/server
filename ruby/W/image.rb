@@ -12,7 +12,7 @@ class E
         e = g.ef
         if !e.e || e.m < g.m
           g.ef.w g.fromStream({},:triplrImage), true
-          puts "EXIF #{g} #{g.ef.size}bytes"
+          puts "EXIF #{g} #{g.ef.size} bytes"
         end
       end}
   end
