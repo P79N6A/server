@@ -14,8 +14,9 @@ body {
 div.mail{
     position:relative;
     background-color:#000;
-    max-width:120ex;
+    max-width:100%;
     float:right;
+    overflow:hidden;
     border-radius:0 1em 1em 1em;
     margin:.2em;
 }
