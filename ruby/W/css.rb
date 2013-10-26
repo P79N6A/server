@@ -2,13 +2,12 @@ class E
 
   def nokogiri; require 'nokogiri'; Nokogiri::HTML.parse read end
 
-  def triplrCSSselect
-    glob.select(&:f).do{|f|(f.empty? ? [self] : f).map{|r|r.nokogiri.do{|c|c.css(sel).map{|e|
-      yield r.uri+'#css:'+sel,Content,e.to_s
-          }}}} end
-
-  fn 'graph/css',->d,e,m{
-    d.fromStream m,:triplrCSSselect,e['selector']}
+  def triplrCSS
+    puts "TriplrCSS"
+    @r.q['sel'].do{|s|
+      (nokogiri.css s).map{|e|
+        yield uri+'#css:'+s,Content,e.to_s}}
+  end
 
   MIMEsource['text/css'] ||= [:triplrSourceCode]
 

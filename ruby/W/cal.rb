@@ -12,12 +12,6 @@ class E
     def day; as Fn 'cal/day' end
   def month; as Fn 'cal/month' end
 
-  fn 'graph/cal',->d,e,m{
-    DateTime.parse(e['s']||'2011-03-03').
-     upto(e['f'].do{|f|DateTime.parse f} || DateTime.now).
-     map{|d|m[d.iso8601]={Date=>[d]}}
-    m }
-
   fn 'table/year',->d{ m={}
     d.map{|u,r|
       r[Date][0].do{|t|
