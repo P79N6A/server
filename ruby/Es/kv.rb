@@ -1,23 +1,5 @@
-#watch __FILE__
+watch __FILE__
 class E
-=begin
-   a key/value RDF store on the filesystem
-
-  get
-   E['http://www.kanzaki.com/ns/music#EnglishHorn'][RDFs+'comment']
-   -> ["A double-reed woodwind instrument, larger member of the oboe family."]
-  
-  set
-   (E'lement')['level']='trace'
-  
-  update
-   E['lement']['level','trace','abundant']
-  
-  delete
-   E('lement')['level','abundant','']
-  
-=end
-
 
   def []= p,o
     self[p,o]
@@ -62,8 +44,6 @@ class E
     self[p].each{|o| self[p,o,'']}
   end
 
-  # property list
-  # E -> [E]
   def listPredicates
     subtree.map &:ro
    end
