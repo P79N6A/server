@@ -9,3 +9,12 @@ a{text-decoration:none}
 td.key {text-align:right;white-space: nowrap}
 .frag {font-weight:bold;color:#00f;background-color:#fff}
 .abbr {font-size:.9em}
+table.playlist {
+    border-spacing:0;
+}
+table.playlist td {
+    white-space:nowrap;
+    max-width: 19em;
+    padding:0;
+    overflow: hidden;
+}

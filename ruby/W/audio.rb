@@ -10,7 +10,7 @@ class E
   fn 'set/audio',->d,e,m{d.audioNodes}
   fn 'set/video',->d,e,m{d.videoNodes}
 
-  AudioInfo = [Stat+'mtime',Stat+'size',*%w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description Year Frequency Bitrate Content_type Album-Movie-Show_title Title-songname-content_description Lead_performers-Soloists}.map{|a|Audio+a}]
+  AudioInfo = %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.map{|a|Audio+a}.concat [Stat+'mtime',Stat+'size']
 
   fn 'set/findaudio',->e,q,m{
     F['set/find'][e,q,m,'\(aif\|flac\|m4a\|mp3\|aac\|ogg\|wav\)']}
@@ -33,14 +33,14 @@ class E
       {_: e.q.has_key?('video') ? :video : :audio, id: :player, controls: true}),
      {_: :table, class: :playlist,
        c: [{_: :tr,
-             c: [{_: :th, c: :id},
+             c: [{_: :td, c: :id},
                  AudioInfo.map{|k|
-                   {_: :th, c: k}}]},c.()]}]}
+                   {_: :td, c: k}}]},c.()]}]}
 
   fn 'view/audio',->d,e{
     i = F['view/audio/item']
     Fn 'view/audio/base',d,e,->{
-      d.map{|_,r|i.(r,e)}}}
+      d.sort_by{|_,r|r[Stat+'mtime'][0].to_s}.reverse.map{|_,r|i.(r,e)}}}
 
   def audioScan
     a('.png').e ||
