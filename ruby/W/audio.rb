@@ -1,8 +1,8 @@
 watch __FILE__
 class E
 
-  F["?"]||={}; F["?"].update({'a'=>{'set' => 'audio','view' => 'audio'},
-                              'v'=>{'set' => 'video','view' => 'audio','video'=>true}})
+  F["?"]||={}; F["?"].update({'a'=>{'set' => 'audio','view' => 'audio',triplr: :id},
+                              'v'=>{'set' => 'video','view' => 'audio',triplr: :id, 'video'=>true}})
 
   def audioNodes;take.select &:audioNode end;def audioNode;true if ext.match /(aif|wav|flac|mp3|m4a|aac|ogg)/i end
   def videoNodes;take.select &:videoNode end;def videoNode;true if ext.match /(avi|flv|mkv|mpg|mp4|wmv)/i end
@@ -10,12 +10,16 @@ class E
   fn 'set/audio',->d,e,m{d.audioNodes}
   fn 'set/video',->d,e,m{d.videoNodes}
 
+  AudioInfo = [Stat+'mtime',Stat+'size',*%w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description Year Frequency Bitrate Content_type Album-Movie-Show_title Title-songname-content_description Lead_performers-Soloists}.map{|a|Audio+a}]
+
   fn 'set/findaudio',->e,q,m{
     F['set/find'][e,q,m,'\(aif\|flac\|m4a\|mp3\|aac\|ogg\|wav\)']}
 
   fn 'view/audio/item',->m,e{
-    {_: :tr, c: {_: :td, c: {_: :a,class: :entry, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'),
-      c: m.E.bare+" \n"}}}}
+    {_: :tr,
+      c: [{_: :td, c: {_: :a, class: :entry, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'), c: m.E.bare}},
+          AudioInfo.map{|k|{_: :td, c: m[k].html}},
+         ]}}
 
   fn 'view/audio/base',->d,e,c=nil{
     [(H.once e,:mu,(H.js '/js/mu')),
@@ -27,14 +31,16 @@ class E
       (H.css '/css/audio'),
       (H.css '/css/table'),
       {_: e.q.has_key?('video') ? :video : :audio, id: :player, controls: true}),
-     {_: :table, class: :playlist, c: c.()}]}
-  
-  fn 'view/audio',->d,e{i=F['view/audio/item']
+     {_: :table, class: :playlist,
+       c: [{_: :tr,
+             c: [{_: :th, c: :id},
+                 AudioInfo.map{|k|
+                   {_: :th, c: k}}]},c.()]}]}
+
+  fn 'view/audio',->d,e{
+    i = F['view/audio/item']
     Fn 'view/audio/base',d,e,->{
-      d.group_by{|u,r|
-        u.split('/')[0..-2].join '/'}.map{|b,g|
-        [{_: :a, class: :directory, href: b, c: ['<br>',b,'<br>']},"\n",
-         g.map{|r|i.(r[1],e)},"\n"]}}}
+      d.map{|_,r|i.(r,e)}}}
 
   def audioScan
     a('.png').e ||
