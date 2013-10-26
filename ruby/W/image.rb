@@ -5,12 +5,15 @@ class E
     triplrStdOut 'exiftool', EXIF, &f
   end
   
-  # export EXIF to RDF in JSON (recursive)
+  # export EXIF to RDF-in-JSON (recursive)
   def exif
     take.map{|g|
       if g.uri.match /(jpe?g|gif|png)$/i
-        g.ef.w g.fromStream({},:triplrImage), true
-        puts "EXIFtool #{g} #{g.ef.size}bytes"
+        e = g.ef
+        if !e.e || e.m < g.m
+          g.ef.w g.fromStream({},:triplrImage), true
+          puts "EXIF #{g} #{g.ef.size}bytes"
+        end
       end}
   end
 

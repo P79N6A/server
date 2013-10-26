@@ -24,7 +24,7 @@ module FeedParse
       u = m[2] && (u = m[2].match /about=["']?([^'">\s]+)/) && u[1] ||
           m[3] && (((u = m[3].match /<(gu)?id[^>]*>([^<]+)/) || (u = m[3].match /<(link)>([^<]+)/)) && u[2])
 
-      yield u,E::Type,(E::SIOC+'Post').E     ;#puts "post #{u}"
+      yield u, E::Type, (E::SIOC+'Post').E
 
       #links
       m[3].scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
