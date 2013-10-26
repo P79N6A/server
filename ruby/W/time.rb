@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class Time
   def html; H({_: :time, datetime: iso8601, c: to_s}) end
@@ -30,8 +30,10 @@ class E
     e[:graph] = d
     e[:group] = {}
     e[:color] = E.cs
+    h = e.q['height'].do{|h|h.match(/[0-9]+/) && h.to_i.min(1).max(1024) } || '64'
+    
 
-    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}]}
+    [H.css('/css/timegraph'),{class: :timegraph, style: "height: #{h}em", c: c.()}]}
 
   # timegraph entry
   fn 'view/timegraph/item',->r,x{
@@ -42,13 +44,13 @@ class E
       labelP = x.q['label'].do{|l|l.expand} || Creator
       label = ([*r[labelP]][0]).do{|l|
                l.respond_to?(:uri) ? l.uri : l.to_s}
-      lc = x[:group][label] ||= E.c
+      lc = x[:group][label] ||= E.cs
       arc = x.q['arc'].do{|a| a.expand }
 
       [{style: "top: #{r['x']}%; left: #{r['y']}%",
          c: [{_: :a,
                title: r[Date][0],
-               href: '#'+r.uri,
+               href: r.url,
                class: :label,
                style: "background-color: #{lc}",
                c: label,
@@ -95,7 +97,6 @@ class E
  ## SIMILE Timeline 
  #  http://www.simile-widgets.org/
 
-  # JSON format
   fn Render+'application/timeline',->d,e{
     {dateTimeFormat: 'iso8601',
       events: d.values.map{|r|
