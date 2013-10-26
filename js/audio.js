@@ -43,6 +43,7 @@ var audio = function(){
 
     qa('audio').map(function(){this.load(); this.on("ended",jump)})
 
+    // winamp/audacious+cmus keycodes
     document.addEventListener("keydown",function(e){
 	switch(e.keyCode){
 	case 13:
@@ -99,6 +100,6 @@ var audio = function(){
 	setTimeout(function(){
             if(a.duration){
                 a.currentTime=window.location.hash.split('|')[1]
-                a.play()}},1338)}}
+                a.play()}},1500)}}
 
 document.addEventListener("DOMContentLoaded", audio, false);
