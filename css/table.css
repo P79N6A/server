@@ -1,22 +1,17 @@
-table { }
-
-td.label a { background-color:#0f0;
-             color:#fff;}
+table {
+    background-color:white;
+    color:black}
 
 td {
      border-style:dotted;
-     border-width:0 .22em .12em 0;
+     border-width:.1em .1em 0 0;
      border-color:#3cf;
      vertical-align:bottom;
      text-align:right;
      }
 
 [property="uri"] {white-space:nowrap}
-[property="uri"] a {
-                     background-color:#000;
-                     color:#fff;
-                     padding:.1em;
-                     }
+
 .scheme { display: none; }
 .frag {font-weight:bold;}
 
@@ -25,7 +20,7 @@ td {
                  padding:.1em;
                  font-weight:bold;
                  margin:0;
-                 background-color:#b2f7ff;
+                 background-color:#bbb;
                  color:#000
                  }
 

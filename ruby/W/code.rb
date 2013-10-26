@@ -1,18 +1,19 @@
 class E
   
   # show querystring mappings
-  fn '/qs/GET',->e,r{F['?'].html.hR}
+  fn '/qs/GET',->e,r{H([F['?'].html,H.css('/css/html')]).hR}
 
   def triplrSourceCode
-    # MIME                   strip x-
     m = mime.split(/\//)[-1].sub(/^x-/,'')
-
     # show line numbers?
     n = @r.has_key?('n') && "--line-number-ref=#{uri.sh}"
-
-    yield uri,Content,
-    `source-highlight -f html -o STDOUT -i #{sh} -s #{m} #{n}`
-  end
+    if size < 512e3
+      yield uri,Content,
+      `source-highlight -f html -o STDOUT -i #{sh} -s #{m} #{n}`
+    else
+      puts "skipping #{uri}"
+    end
+ end
 
   fn 'view/code',->d,e{[{_: :style, c: 'body{background-color:white;color:black}'},
     d.values.map{|r|[r.E.do{|e|[{_: :a,name: e.uri},e.html(e.base,true)]},'<br>',

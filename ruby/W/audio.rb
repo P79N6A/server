@@ -14,8 +14,8 @@ class E
     F['set/find'][e,q,m,'\(aif\|flac\|m4a\|mp3\|aac\|ogg\|wav\)']}
 
   fn 'view/audio/item',->m,e{
-    {_: :a,class: :entry, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'),
-      c: m.E.bare+" \n"}}
+    {_: :tr, c: {_: :td, c: {_: :a,class: :entry, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'),
+      c: m.E.bare+" \n"}}}}
 
   fn 'view/audio/base',->d,e,c=nil{
     [(H.once e,:mu,(H.js '/js/mu')),
@@ -27,8 +27,7 @@ class E
       (H.css '/css/audio'),
       (H.css '/css/table'),
       {_: e.q.has_key?('video') ? :video : :audio, id: :player, controls: true}),
-     {id: :playlist,
-       c: {:class => :playlistItems,c: c.()}}]}
+     {_: :table, class: :playlist, c: c.()}]}
   
   fn 'view/audio',->d,e{i=F['view/audio/item']
     Fn 'view/audio/base',d,e,->{
