@@ -3,7 +3,6 @@ class E
   def nokogiri; require 'nokogiri'; Nokogiri::HTML.parse read end
 
   def triplrCSS
-    puts "TriplrCSS"
     @r.q['sel'].do{|s|
       (nokogiri.css s).map{|e|
         yield uri+'#css:'+s,Content,e.to_s}}

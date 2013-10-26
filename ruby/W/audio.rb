@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   F["?"]||={}; F["?"].update({'a'=>{'set' => 'audio','view' => 'audio'},
@@ -18,10 +18,15 @@ class E
       c: m.E.bare+" \n"}}
 
   fn 'view/audio/base',->d,e,c=nil{
-    [{_: :span, id: :jump,c: '&#x10c2;&nbsp;&nbsp;&nbsp;'},{_: :span, id: :rand,r: :true,c: :r},
-     (H.once e,:mu,(H.js '/js/mu')),(H.js '/js/audio'),H.css('/css/audio'),H.css('/css/table'),
-     {_: e.q.has_key?('video') ? :video : :audio, id: :player, controls: true},
-     {id: :data},
+    [(H.once e,:mu,(H.js '/js/mu')),
+     (H.once e,:audio,
+      {_: :span, id: :jump,c: '&#x10c2;&nbsp;&nbsp;&nbsp;'},
+      {_: :span, id: :rand,r: :true,c: :r},
+      {id: :data},
+      (H.js '/js/audio'),
+      (H.css '/css/audio'),
+      (H.css '/css/table'),
+      {_: e.q.has_key?('video') ? :video : :audio, id: :player, controls: true}),
      {id: :playlist,
        c: {:class => :playlistItems,c: c.()}}]}
   
