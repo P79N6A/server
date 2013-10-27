@@ -14,11 +14,11 @@ class E
        (url = uri.E.localURL e
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
-             {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editP&nocache'},
+             {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editP'},
              s.map{|p,o|
               {class: :property,
                  c: [{_: :a, class: :edit, c: :edit,
-                       href: e['REQUEST_PATH']+'?graph=editable&filter=p&nocache&view=editPO&p=uri,'+CGI.escape(p)},
+                       href: e['REQUEST_PATH']+'?graph=editable&filter=p&view=editPO&p=uri,'+CGI.escape(p)},
                      (case p
                       when 'uri'
                         {_: :a, class: :uri, c: p, href: p}
@@ -43,7 +43,6 @@ class E
            # editor arguments
            { filter: :p,
               graph: :editable,
-            nocache: :true,
                view: :editPO}.map{|n,v|
            {_: :input, type: :hidden, name: n, value: v}},
 
@@ -82,7 +81,7 @@ class E
           # new entry
           triple[e['uri'],p,''],' ',
           {_: :input, type: :submit, value: 'save'},
-          {_: :a, c: ' cancel', href: e['REQUEST_PATH']+'?view=edit&graph=editable&nocache'}
+          {_: :a, c: ' cancel', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}
          ]}}
 
 end

@@ -30,10 +30,9 @@ class E
     }
 
     # parameters for editor
-    @r.q.update({ 'view' => 'editPO',
-                  'graph' => 'editable',
-                  'p' => p.uri,
-                  'nocache' => 'true'})
+    @r.q.update({'view' => 'editPO',
+                 'graph' => 'editable',
+                 'p' => p.uri})
     self.GET
   end
 

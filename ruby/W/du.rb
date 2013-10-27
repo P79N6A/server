@@ -9,6 +9,8 @@ class E
                     'protovis.view' => 'starburst'
                   }})
 
+  fn 'protograph/du',->d,_,m{rand.to_s.h}
+
   fn 'graph/du',->e,_,m{
     puts "du #{e.sh}"
     `du -a #{e.sh}`.lines.to_a[0..-2].map{|p|

@@ -23,7 +23,7 @@ class E
     %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
 
     # link to editable resource
-    s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable&nocache']]
+    s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable']]
 
     r.q['view'] = '404'
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
