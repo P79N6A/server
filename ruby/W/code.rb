@@ -10,8 +10,6 @@ class E
     if size < 512e3
       yield uri,Content,
       `source-highlight -f html -o STDOUT -i #{sh} -s #{m} #{n}`
-    else
-      puts "skipping #{uri}"
     end
  end
 

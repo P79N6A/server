@@ -1,4 +1,3 @@
-#watch __FILE__
 class E
 
   def E.c; '#%06x' % rand(16777216) end

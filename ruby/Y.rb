@@ -1,4 +1,4 @@
-# watch __FILE__ for 'development mode' reload on changes:
+# 'development mode' reload and view invalidation on changes
 def watch f
   E::Watch[f]=File.mtime f
   puts 'dev '+f end
@@ -8,7 +8,6 @@ class E
   F={}
   Watch={}
 
-  # check for source-changes
   def self.dev
     Watch.each{|f,ts|
       if ts < File.mtime(f)
@@ -16,22 +15,16 @@ class E
       end }
   end
 
-  # call URI-named function
+  # call URI function
   def y *a
-#    puts "call #{uri}"
     F[uri][*a]
   end
 
 end
 
-# URI-named function
-def Fn a,*g
-#  puts "missing fn #{a}" unless E::F[a]
-  E::F[a][*g]
-end
-
-# define URI-named function
+# URI-named functions
 def fn u,y
   E::F[u.to_s] && puts("#{u} redefined")
   E::F[u.to_s] = y
 end
+def Fn a,*g; E::F[a][*g] end

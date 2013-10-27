@@ -6,13 +6,10 @@ class E
     RDF::Writer.for(f).buffer{|w|
       d.values.each{|r|
         r.triples{|s,p,o|
-#          puts :s,s,:p,p,:o,o.class,o
           w << RDF::Statement.new(RDF::URI(s),RDF::URI(p),
                                   (o.class==Hash||o.class==E) ?
                                     RDF::URI(o.uri) :
                                     RDF::Literal(o))}}}
-  rescue Exception => e
-    puts [:RDF,d.keys[0..8],f,e].join ' '
   end
 
   fn Render+'application/ld+json',->d,_=nil{E.renderRDF d, :jsonld}
@@ -31,9 +28,6 @@ class E
         ((o.class==RDF::Node || o.class==RDF::URI) ? o.to_s.E :
                                                      o.value.do{|v|
                                                        v.class == String ? v.to_utf8 : v})}}
-    self
-  rescue Exception => e
-    puts [:RDF,uri,e].join ' '
   end
 
 end
