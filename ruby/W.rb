@@ -8,7 +8,8 @@ css
 csv
 du
 edit
-examine/examine
+examine
+exhibit
 feed
 histogram
 html
@@ -17,12 +18,15 @@ info
 json
 mail
 man
+moz
 page
 post
 pdf
+protovis
 rdf
 schema
 search
+sw
 table
 text
 time
