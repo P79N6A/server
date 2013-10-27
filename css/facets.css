@@ -1,0 +1,26 @@
+.sidebar {
+    position:fixed;
+    top:5em;left:0;
+}
+.sidebar div {display:block}
+.facet {
+    cursor:pointer;
+    background-color:#000;
+    color:#f0a;
+    max-height:18em;
+    max-width:21em;
+    overflow:scroll;
+    white-space:nowrap}
+.facet .name {
+    background-color:black;
+    color:white;
+    margin-left:.22em;
+    opacity:.8}
+.facet .count {
+    float:left;
+    text-align:right;
+    min-width:2.4ex;
+    font-weight: bold}
+.a {
+    background-color:#8f3;
+    color:#000;}

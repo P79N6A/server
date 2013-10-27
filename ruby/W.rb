@@ -8,8 +8,8 @@ css
 csv
 du
 edit
-examine
 exhibit
+facets
 feed
 histogram
 html
