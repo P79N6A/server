@@ -2,11 +2,8 @@ class E
 
   AudioInfo = %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.map{|a|Audio+a}.concat [Stat+'mtime',Stat+'size']
 
-  def audioNodes;take.select &:audioNode end;def audioNode;true if ext.match /(aif|wav|flac|mp3|m4a|aac|ogg)/i end
-  def videoNodes;take.select &:videoNode end;def videoNode;true if ext.match /(avi|flv|mkv|mpg|mp4|wmv)/i end
-
-  fn 'set/audio',->d,e,m{d.audioNodes}
-  fn 'set/video',->d,e,m{d.videoNodes}
+  fn 'set/audio',->d,e,m{d.take.select{|e|e.ext.match /(aif|wav|flac|mp3|m4a|aac|ogg)/i}}
+  fn 'set/video',->d,e,m{d.take.select{|e|e.ext.match /(avi|flv|mkv|mpg|mp4|wmv)/i}}
 
   fn 'view/audio',->d,e{
     i = F['view/audio/item']

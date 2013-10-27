@@ -10,6 +10,7 @@ class E
                   }})
 
   fn 'graph/du',->e,_,m{
+    puts "du #{e.sh}"
     `du -a #{e.sh}`.lines.to_a[0..-2].map{|p|
       begin
         s,p = p.split /\t/ # size, path
