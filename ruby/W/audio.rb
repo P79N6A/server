@@ -1,4 +1,3 @@
-watch __FILE__
 class E
 
   fn 'set/audio',->d,e,m{d.take.select{|e|e.ext.match /(aif|wav|flac|mp3|m4a|aac|ogg)/i}}
