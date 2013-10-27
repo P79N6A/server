@@ -1,3 +1,4 @@
+watch __FILE__
 class E
 
   fn 'set/audio',->d,e,m{d.take.select{|e|e.ext.match /(aif|wav|flac|mp3|m4a|aac|ogg)/i}}
@@ -13,11 +14,11 @@ class E
      (H.once e,:audio, (H.js '/js/audio'), %w{audio table}.map{|c|(H.css '/css/'+c)},
       {id: :rand, c: :r}, {id: :jump, c: '&rarr;'}, {id: :info},
       {_: e.q.has_key?('video') ? :video : :audio, id: :player, controls: true}),'<br clear=all>',
-     {_: :table, class: :playlist, c: c.()}]}
+     {class: :table, c: c.()}]}
 
   fn 'view/audio/item',->m,e{
-    {_: :tr, c: [{_: :td, c: {_: :a, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'), c: m.E.bare}},
+    {class: :tr, c: [{class: :td, c: {_: :a, href: '#'+m.uri.gsub('%','%25').gsub('#','%23'), c: m.E.bare}},
           %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.map{|a|Audio+a}.
-          concat([Stat+'mtime',Stat+'size']).map{|k|{_: :td, c: m[k].html}}]}}
+          concat([Stat+'mtime',Stat+'size']).map{|k|{class: :td, c: m[k].html}}]}}
 
 end

@@ -5,10 +5,14 @@ a{text-decoration:none}
 #jump {float:left;font-size:3.33em;padding:0 .2em 0 .2em;background-color:#0f0;color:black}
 #rand {float:left;font-size:3.33em;padding:0 .3em 0 .2em;background-color:#33f;color:#fff}
 #info {font-weight:bold; font-size: 2em}
-table.playlist {
+.table {
+    display: table;
     border-spacing:0}
-table.playlist td:first-child {max-width:24em;}
-table.playlist td {
+.table .td:first-child {max-width:24em;}
+.table .tr {
+    display: table-row;}
+.table .td {
+    display: table-cell;
     white-space:nowrap;
     max-width: 14em;
     padding:0;

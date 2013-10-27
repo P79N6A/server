@@ -26,7 +26,6 @@ class E
                n[o.to_s] # identifier
              }}].join ' '
         }.do{|f|
-          puts "fv #{f}"
           [f.map{|o|'<div class="'+o+'">'}, # facet wrapper
            view[r,e], # resource
            (0..f.size-1).map{|c|'</div>'}]}}}
