@@ -5,10 +5,9 @@ var audio = function(){
     var changeTrack = function(i){
 	var t=decodeURIComponent(i)
 	q('title').txt(t)
+	q('#info').txt(t)
 	a.attr('src',i).load()
-	a.play()
-	GET(i+'?view&un',function(d){
-	    q('#data').innerHTML=d.responseText	})}
+	a.play()}
 
     var selecta = function(){
 	if (r.hasAttribute('r')){
