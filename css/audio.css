@@ -16,3 +16,4 @@ table.playlist td {
     max-width: 14em;
     padding:0;
     overflow: hidden;}
+table input {font-size:.7em;margin:0;padding:0}
