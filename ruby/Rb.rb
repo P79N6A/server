@@ -64,7 +64,6 @@ end
 
 class NilClass
   def do; nil end
-  def method_missing f,*a; puts "nil##{f} #{caller[0]}" end
   def to_ary; [] end
   def to_hash; {} end
   def to_s; "" end

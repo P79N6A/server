@@ -7,8 +7,6 @@ class E
 
   # query
   fn 'protograph/roonga',->d,e,m{
-    puts "groonga"
-
     ga = E.groonga
 
     # search expression
@@ -85,8 +83,6 @@ class E
       r.time = i[E::Date].do{|t|t[0].to_time}
     }
     self
-  rescue Exception => x
-    $stderr.puts x,x.message
   end
   
   # remove

@@ -83,7 +83,6 @@ class E
   def ln t
     t = t.E # cast bare URI/string to resource
     if !t.e # destination exist?
-#     puts "ln #{no} #{t.no}"
       t.dirname.mk
       FileUtils.symlink node, t.node
     end

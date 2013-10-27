@@ -5,9 +5,7 @@ class E
     Fn 'protograph/_',resource,env,graph}
 
   fn 'graph/editable',->resource,env,graph{
-    resource.fromStream graph, :triplrFsStore
-    puts graph
-  }
+    resource.fromStream graph, :triplrFsStore}
 
   # show resource w/ links into editor
   fn 'view/edit',->g,e{
@@ -63,8 +61,6 @@ class E
 
     # triple -> input
     triple = ->s,p,o{
-
-      puts "#{s} #{p} #{o}"
 
       # triple identifier
       i = (s.E.concatURI p).concatURI E(p).literal o

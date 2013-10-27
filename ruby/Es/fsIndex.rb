@@ -21,7 +21,7 @@ class E
   end
 
   # reachable graph along named predicate
-  def walk p, g={}, v={}                             #; puts "walk "+uri
+  def walk p, g={}, v={}
     graph g       # cumulative graph
     v[uri] = true # visited mark
 
@@ -54,7 +54,7 @@ class E
           r['d'].match(/^(a|de)sc$/) &&
           r['d'].to_sym ||
           :desc
-    puts "set/index #{top} #{count} #{dir} #{d}"
+
     (top.send f, count, dir, r['offset'],(d if f == :rangePO)).do{|s|
       # pagination pointers
       a,b = s[0], s.size > 1 && s.pop
@@ -74,7 +74,6 @@ class E
 
   # predicate-object index
   def poIndex o
-    puts "poi #{uri} #{o.class} #{o} #{pIndex.concatURI o}"
     pIndex.concatURI o
   end
  

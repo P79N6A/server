@@ -5,7 +5,7 @@ class E
   end
 
 
-  # addJSON :: tripleStream -> JSON graph (fs)
+  # tripleStream -> fs
   def addJSON i,g,p=[]
     fromStream({},i).map{|u,r| # stream -> graph
       (E u).do{|e| # resource
@@ -19,8 +19,6 @@ class E
          e.roonga g # index content
          )}}
     self
-    rescue Exception => e
-    puts :addJSON,uri,e
   end
 
   fn 'view/application/json',->m,e{

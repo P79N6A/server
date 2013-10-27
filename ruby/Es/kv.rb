@@ -18,7 +18,6 @@ class E
   end
 
   def editFs p, o, newVal=nil
-    puts "editFS #{uri} #{p} #{o}"
     t = (concatURI p).concatURI o
     if newVal # update
       if t.e  # oldVal?

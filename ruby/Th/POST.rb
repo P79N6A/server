@@ -21,7 +21,6 @@ class E
 
       # change detected
       unless oU.uri == vU.uri
-        puts "#{o} -> v"
         # edit triple
         s[p,o,v]
       end

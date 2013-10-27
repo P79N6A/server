@@ -44,7 +44,7 @@ class E
       ttl.deleteNode      # convert Turtle 
       ef.w g,true if !ef.e# to JSON (for faster loading)
       roonga "schema"     # index in rroonga
-      m={};      puts uri # statistics graph 
+      m={}                # statistics graph 
       g.map{|u,_|         # each resource
         c[u] &&           # do stats exist?
         m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
@@ -69,17 +69,13 @@ class E
           if undo
             if t.e
               t.deleteNode # remove link
-              puts "-#{t}"
             end
           else
             unless t.e
               ef.ln t      # add link
-              puts "#{t} -> #{ef}"
             end
           end
         }}}
-    rescue Exception => e
-    puts e
   end
 
   def schemaUnlinkSlashURIs
