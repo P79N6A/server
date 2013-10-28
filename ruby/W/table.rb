@@ -74,10 +74,8 @@ class E
            )}}}
     m}
 
-  F["?"]||={}
-  F["?"].update({'elements'=>{'view' => 'p','pv' => 't','table' => 'elements', 'cellview' => 'element'}})
-
- # element
+  # http://localhost/PeriodicTable.owl?view=p&pv=t&table=elements&cellview=element
+  # element
   fn 'view/element',->d,e{
     l = d[d.keys[0]]
     [H.once(e,'elements.css',H.css('/css/elements')),
