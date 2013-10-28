@@ -111,7 +111,7 @@ class E
    if b.grep(/^msg\./).size / s > t # email
       Fn 'view/threads',d,e
 elsif b.grep(/(aif|wav|flac|mp3|m4a|aac|ogg)$/i).size / s > t # audio
-      Fn 'view/audioplayer', d,e
+      Fn 'view/audio', d,e
 elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t # images
       Fn 'view/th', d,e
 elsif b.grep(/\.log$/).size / s > t

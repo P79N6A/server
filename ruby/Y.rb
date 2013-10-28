@@ -26,4 +26,7 @@ end
 def fn u,y
   E::F[u.to_s] = y
 end
-def Fn a,*g; E::F[a][*g] end
+def Fn a,*g
+  puts "missing #{a} from #{caller[0]}" unless E::F[a]
+  E::F[a][*g]
+end
