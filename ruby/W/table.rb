@@ -15,7 +15,7 @@ class E
        {_: :style, id: :lS}),
      (Fn 'view/'+(e.q['pv']||'tab'),d,e)]}
 
-  # table layout, sparse matrix of rows/cols - see table/elements for usage
+  # table layout, sparse matrix of rows/columns
   fn 'view/t',->d,e,l=nil,a=nil{
     [H.once(e,'table',H.css('/css/table')),
      {_: :table, c:
@@ -58,28 +58,5 @@ class E
                 keys.map{|k|
                   {_: :td, property: k, c: e[k].do{|v|
                       (v.class==Array ? v : [v]).map(&:html).join ' '}}}}}]})}
-  
-  fn 'table/elements',->d{ m={}
-    g='http://www.daml.org/2003/01/periodictable/PeriodicTable#group'
-    p='http://www.daml.org/2003/01/periodictable/PeriodicTable#period'
-    d.map{|u,r|
-      r[g].do{|g|   g = g[0].uri.match(/[0-9]+$/)
-        r[p].do{|p| p = p[0].uri.match(/[0-9]+$/)
-          g && p &&
-          (g = g[0].to_i
-           p = p[0].to_i
-           m[p]     ||= {}
-           m[p][g]  ||= {}
-           m[p][g][u] = r
-           )}}}
-    m}
 
-  # http://localhost/PeriodicTable.owl?view=p&pv=t&table=elements&cellview=element
-  # element
-  fn 'view/element',->d,e{
-    l = d[d.keys[0]]
-    [H.once(e,'elements.css',H.css('/css/elements')),
-     {class: l['http://www.daml.org/2003/01/periodictable/PeriodicTable#classification'].do{|p|p[0].uri.label},
-       c: [l['http://www.daml.org/2003/01/periodictable/PeriodicTable#symbol'],(Fn 'view',d,e)]}]}
-  
 end
