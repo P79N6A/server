@@ -33,8 +33,7 @@ class E
     if (uri.node.expand_path.to_s.index FSbase) == 0
       e['uri'] = uri.uri
       # response
-      r = nil
-      # request method
+      r = nil              # request method
       b = Benchmark.measure{ r = uri.send e.fn }
       F['log'][r[0],e,b.real]
       r

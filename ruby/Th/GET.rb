@@ -62,14 +62,15 @@ class E
   end
 
   def GET_resource
-    findIndex=->p{
-      p
-    }
-    handleReq  = F[ 'req/' + @r.q['y'] ]         # any host * any path -> @y parametric handler
-    handlePath = F[@r['REQUEST_PATH'].t+('GET')] # any host * a path         /handle?thing
-    handleURI  = F[ uri.t + ('GET') ]            # a host * a path   http://h/handle?thing
-    handleNdx  = findIndex[self]                 # containing path   http://h/handle/thing
-    (handleReq||handlePath||handleURI).do{|y|y[self,@r]} ||
+    handleNdx=->p{
+      p.pathSegment.parents.map{|p|
+        F[@r['REQUEST_PATH'].t+'GET']||F[p.uri.t+'GET']}.compact[0]}
+    handleReq  = F['req/' + @r.q['y']]         # any host * any path -> @y parametric handler
+    handlePath = F[@r['REQUEST_PATH'].t+'GET'] # any host * a path         /handle?thing
+    handleURI  = F[uri.t + 'GET']              # a host * a path   http://h/handle?thing
+                                               # containing path   http://h/handle/thing
+    (handleReq||handlePath||handleURI||handleNdx[self]).do{|y|
+      y[self,@r]} ||
     as('index.html').do{|i| i.e && # HTML index
       ((uri[-1]=='/') ? i.env(@r).GET_file : # index in dir
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
