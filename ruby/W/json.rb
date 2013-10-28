@@ -19,6 +19,8 @@ class E
          e.roonga g # index content
          )}}
     self
+  rescue Exception => e
+    puts "addJSON #{e}"
   end
 
   fn 'view/application/json',->m,e{
