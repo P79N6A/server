@@ -2,7 +2,8 @@
 class E
 
   FSbase   = `pwd`.chomp ;  BaseLen = FSbase.size
-  S        = '._' # data directory
+  Prefix   = '/@'  # non-HTTP URI path resolution-prefix
+  S        = '._'  # data directory
 
   # URIs
   W3    = 'http://www.w3.org/'

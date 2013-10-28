@@ -1,7 +1,7 @@
 #watch __FILE__
 class E
   
-  # property selector toolbar
+  # property selection toolbar (works on RDFa views)
   fn 'view/p',->d,e{
     [H.once(e,'property.toolbar',H.once(e,'p',(H.once e,:mu,H.js('/js/mu')),
      H.js('/js/p'),
@@ -15,7 +15,7 @@ class E
        {_: :style, id: :lS}),
      (Fn 'view/'+(e.q['pv']||'tab'),d,e)]}
 
-  # table layout, sparse matrix of rows/columns
+  # custom table layout, sparse matrix of rows/columns
   fn 'view/t',->d,e,l=nil,a=nil{
     [H.once(e,'table',H.css('/css/table')),
      {_: :table, c:
@@ -33,7 +33,7 @@ class E
                     {_: :td, class: :cell, c:(Fn 'view/'+(a||e.q['cellview']),c,e)}
                     }||{_: :td}}}}}}}}]}
 
-# a simple tabular view
+# tabular view
   fn 'view/table',->i,e{
     [H.css('/css/table'),
      (Fn 'table',i.values,e)]}
