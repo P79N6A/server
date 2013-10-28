@@ -20,22 +20,31 @@ class E
   end
 
   def maybeSend m,b,lH=false
-    send? ? # agent already has this version?
-    b[].do{|b| # prepare response
-      h = {'Content-Type'=> m, 'ETag'=> @r['ETag']} # response header
-      m.match(/^(audio|image|video)/) &&            # media MIME-type?
-      h.update({'Cache-Control' => 'no-transform'}) # no further compression
-      h.update({'MS-Author-Via' => 'DAV, SPARQL'})  # authoring
+    # agent need this version?
+    send? ?
+    # continue
+    b[].do{|b|
+      # response metadata
+      h = {
+        'Content-Type'=> m,
+        'ETag'=> @r['ETag'],
+      }.merge @r['Cache']
+
+      # don't compress media MIMEs
+      m.match(/^(audio|image|video)/) && h.update({'Cache-Control' => 'no-transform'})
+
+      # Link dataURL for non-hypermedia/RDF payloads
       lH && h.update({'Link' => '<' + (URI.escape uri) + '?format=text/n3>; rel=meta'})
+
       b.class == E ? (Nginx ?                                                     # nginx enabled
                       [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
                       Apache ?                                              # Apache enabled
                       [200,h.update({'X-Sendfile' => b.d}),[]] :   # Apache file-handler
-                      (r = Rack::File.new nil                      # create Rack file-handler
-                       r.instance_variable_set '@path',b.d         # set path
-                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]}) # Rack file-handler
+                      (r = Rack::File.new nil                      # Rack file-handler
+                       r.instance_variable_set '@path',b.d
+                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})
                       ) :
-      [200, h, b]} : # response
+      [200, h, b]} : # normal (unaccelerated) response
       [304,{},[]]    # client has response version
   end
 
@@ -53,14 +62,18 @@ class E
   end
 
   def GET_resource
-    handleReq  = F[ 'req/' + @r.q['y'] ]
-    handlePath = F[@r['REQUEST_PATH'].t+('GET')]
-    handleURI  = F[ uri.t + ('GET') ]
+    findIndex=->p{
+      p
+    }
+    handleReq  = F[ 'req/' + @r.q['y'] ]         # any host * any path -> @y parametric handler
+    handlePath = F[@r['REQUEST_PATH'].t+('GET')] # any host * a path         /handle?thing
+    handleURI  = F[ uri.t + ('GET') ]            # a host * a path   http://h/handle?thing
+    handleNdx  = findIndex[self]                 # containing path   http://h/handle/thing
     (handleReq||handlePath||handleURI).do{|y|y[self,@r]} ||
     as('index.html').do{|i| i.e && # HTML index
       ((uri[-1]=='/') ? i.env(@r).GET_file : # index in dir
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
-    response # resource handler
+    response # standard handler
   end
   
   def response

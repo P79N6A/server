@@ -1,8 +1,5 @@
 class E
   
-  # show querystring mappings
-  fn '/qs/GET',->e,r{H([F['?'].html,H.css('/css/html')]).hR}
-
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     # show line numbers?

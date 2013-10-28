@@ -1,13 +1,22 @@
+watch __FILE__
 require 'rack'
 %w{GET HEAD POST PATCH uid util 404 500}.map{|i|require_relative 'Th/' + i}
-
+require 'benchmark'
 class E
 
   Prefix   = '/@'
 
-  F['log']=->c,e{
-    $stdout.puts [e.fn,c,['http://', e['SERVER_NAME'], e['REQUEST_URI']].join,
-                  e['HTTP_USER_AGENT'],e['HTTP_REFERER']].join ' '}
+  Slow ||= {}
+
+  F['log']=->c,e,x=nil{ # response code, environment, extra stuff
+    uri = ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join
+    if x && x.class==Float && x > 1
+      Slow[uri] ||= 0
+      Slow[uri] += x
+    end
+    $stdout.puts [e.fn,c,uri,e['HTTP_USER_AGENT'],e['HTTP_REFERER'],x].join ' '}
+
+  F['/slow/GET'] = ->e,r{H([Slow.html,H.css('/css/500')]).hR}
 
   def E.call e
     dev
@@ -23,8 +32,11 @@ class E
     
     if (uri.node.expand_path.to_s.index FSbase) == 0
       e['uri'] = uri.uri
-      r = uri.send e.fn 
-      F['log'][r[0],e]
+      # response
+      r = nil
+      # request method
+      b = Benchmark.measure{ r = uri.send e.fn }
+      F['log'][r[0],e,b.real]
       r
     else
       [403,{},['Forbidden']]
