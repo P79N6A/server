@@ -122,6 +122,8 @@ class E
       puts "tried to open #{d}"
       nil
     end
+  rescue Exception => e
+    puts e
   end
 
   def w o,s=false
