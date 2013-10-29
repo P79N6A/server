@@ -73,11 +73,10 @@ class E
     handleURI  = F[uri.t + m]                # a host * a path   http://h/handle?thing
                                              # containing path   http://h/handle/thing
     (handleReq||handlePath||handleURI||handleNdx[self]).do{|y|
-#      puts "handlr #{y}"
       y[self,@r]} ||
-    as('index.html').do{|i| i.e && # HTML index
-      ((uri[-1]=='/') ? i.env(@r).GET_file : # index in dir
-       [301, {Location: uri.t}]  )} ||       # rebase to index dir
+    as('index.html').do{|i| i.e && # HTML-file index
+      ((uri[-1]=='/') ? i.env(@r).GET_file : # currently in dir?
+       [301, {Location: uri.t}]  )} ||       # rebase to dir
     response # standard handler
   end
 
