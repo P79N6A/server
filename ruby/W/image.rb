@@ -55,7 +55,7 @@ class E
   F['view/'+MIMEtype+'image/png'] = F['view/th']
 
   # display just the images found in content
-  fn 'view/imgs',->m,e{ require 'nokogiri'
+  fn 'view/imgs',->m,e{
 
     # height argument
     h = e.q['h'].do{|h|

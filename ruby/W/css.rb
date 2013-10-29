@@ -1,6 +1,7 @@
+require 'nokogiri'
 class E
 
-  def nokogiri; require 'nokogiri'; Nokogiri::HTML.parse read end
+  def nokogiri;  Nokogiri::HTML.parse read end
 
   def triplrCSS
     @r.q['sel'].do{|s|

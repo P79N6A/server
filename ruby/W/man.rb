@@ -13,7 +13,7 @@ class E
       # section selection
       s = nil
       m.match(/^([0-9])\/(.*)/).do{|p|
-        s = p[1]; m = p[2]}
+        s, m = p[1], p[2] }
 
       # source
       mp = `man -w #{s} #{Shellwords.escape m}`.chomp
@@ -22,7 +22,12 @@ class E
         # cache HTML renderings
         html = "/man/#{m}#{s}.html".E
         unless html.e && html.m > Pathname(mp).stat.mtime
-          html.w `zcat #{mp} | groff -T html -man -P -D -P /dev/null`
+          page = `zcat #{mp} | groff -T html -man -P -D -P /dev/null`
+          page = Nokogiri::HTML.parse page
+          page.css('a[name="SEE ALSO"]')[0].do{|a|
+            also = a.parent.next_element
+            also.inner_html = also.text.gsub /\b(\w+)\(([0-9])\)/mi, '<a href="/man/\2/\1"><b>\1</b>(\2)</a>'}
+          html.w page
         end
         
         # response

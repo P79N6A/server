@@ -14,7 +14,6 @@ feed
 histogram
 html
 image
-info
 json
 mail
 man

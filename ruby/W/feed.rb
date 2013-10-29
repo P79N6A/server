@@ -61,7 +61,6 @@ class E
   end
 
   def triplrFeedReddit &f
-    require 'nokogiri'
     triplrFeed {|s,p,o|
      p == Content ?
       Nokogiri::HTML.parse(o).do{|o|
