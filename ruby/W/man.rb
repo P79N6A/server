@@ -22,14 +22,21 @@ class E
         # cache HTML renderings
         html = "/man/#{m}#{s}.html".E
         unless html.e && html.m > Pathname(mp).stat.mtime
+
+          # create page
           page = `zcat #{mp} | groff -T html -man -P -D -P /dev/null`
           page = Nokogiri::HTML.parse page
-          page.css('a[name="SEE ALSO"]')[0].do{|a|
-            also = a.parent.next_element
-            also.inner_html = also.text.gsub /\b([^(]+)\(([0-9])\)/mi, '<a href="/man/\2/\1"><b>\1</b>(\2)</a>'}
+
+          # add links
+          page.css('b').map{|b|
+            b.next.do{|n|
+              n.to_s.match(/\(([0-9])\)(.*)/).do{|section|
+                name, s = b.inner_text, section[1]
+                n.replace section[2]
+                b.replace " <a href='/man/#{s}/#{name}'><b>#{name}</b>(#{s})</a>"}}}
           html.w page
         end
-        
+          
         # response
         html.env(r).GET_file
       end
