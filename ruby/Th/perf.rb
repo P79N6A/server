@@ -1,5 +1,4 @@
-
-watch __FILE__
+#watch __FILE__
 require 'benchmark'
 
 class E
@@ -8,12 +7,12 @@ class E
   F['log']=->c,e,x=nil{ # response code, environment, extra stuff
     uri = ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join
     if x && x.class==Float && x > 1
-      s = Slow[uri] ||= {uri: uri}
+      s = Slow[uri] ||= {}
       s[:time] ||= 0
       s[:time] += x
       s[:last] = Time.now
-      if Slow.size > 500
-        #gc
+      if Slow.size > 10e3
+        Slow = {}
       end
     end
     $stdout.puts [e.fn,c,uri,e['HTTP_USER_AGENT'],e['HTTP_REFERER'],x].join ' '}
