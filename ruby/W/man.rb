@@ -8,12 +8,10 @@ class E
   end
 
   fn '/man/GET',->e,r{
-    e.pathSegment.uri.match(/\/man\/(.*)/).do{|m|
+    e.pathSegment.uri.sub('/man','').tail.do{|m|
       m = Shellwords.escape m[1]
       mp = `man -w #{m}`.chomp
       `zcat #{mp} | groff -T html -man`.hR
     } || F[E404][e,r]}
-
-
 
 end
