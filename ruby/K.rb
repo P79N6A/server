@@ -129,6 +129,7 @@ class E
     'message/rfc822'=> true,
     'text/ansi'=>true,
     'text/log'=>true,
+    'text/man'=>true,
     'text/nfo'=>true,
     'text/rtf'=>true}
 
