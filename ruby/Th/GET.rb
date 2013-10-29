@@ -62,21 +62,25 @@ class E
   end
 
   def GET_resource
+    m = 'GET'
+    h = 'http://' + @r['SERVER_NAME']
     handleNdx=->p{
       p.pathSegment.parents.map{|p|
-        F[@r['REQUEST_PATH'].t+'GET']||F[p.uri.t+'GET']}.compact[0]}
-    handleReq  = F['req/' + @r.q['y']]         # any host * any path -> @y parametric handler
-    handlePath = F[@r['REQUEST_PATH'].t+'GET'] # any host * a path         /handle?thing
-    handleURI  = F[uri.t + 'GET']              # a host * a path   http://h/handle?thing
-                                               # containing path   http://h/handle/thing
+        p = p.uri.t
+        F[p+m]||F[h+p+m]}.compact[0]}
+    handleReq  = F['req/' + @r.q['y']]       # any host * any path -> @y parametric handler
+    handlePath = F[@r['REQUEST_PATH'].t + m] # any host * a path         /handle?thing
+    handleURI  = F[uri.t + m]                # a host * a path   http://h/handle?thing
+                                             # containing path   http://h/handle/thing
     (handleReq||handlePath||handleURI||handleNdx[self]).do{|y|
+#      puts "handlr #{y}"
       y[self,@r]} ||
     as('index.html').do{|i| i.e && # HTML index
       ((uri[-1]=='/') ? i.env(@r).GET_file : # index in dir
        [301, {Location: uri.t}]  )} ||       # rebase to index dir
     response # standard handler
   end
-  
+
   def response
 
     q = @r.q       # query-string
