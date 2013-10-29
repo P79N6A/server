@@ -26,7 +26,7 @@ class E
           page = Nokogiri::HTML.parse page
           page.css('a[name="SEE ALSO"]')[0].do{|a|
             also = a.parent.next_element
-            also.inner_html = also.text.gsub /\b(\w+)\(([0-9])\)/mi, '<a href="/man/\2/\1"><b>\1</b>(\2)</a>'}
+            also.inner_html = also.text.gsub /\b([^(]+)\(([0-9])\)/mi, '<a href="/man/\2/\1"><b>\1</b>(\2)</a>'}
           html.w page
         end
         
