@@ -11,7 +11,9 @@ class E
     e.pathSegment.uri.sub('/man/','/').tail.do{|m|
       m = Shellwords.escape m
       mp = `man -w #{m}`.chomp
-      `zcat #{mp} | groff -T html -man`.hR
+      unless mp.empty?
+        `zcat #{mp} | groff -T html -man`.hR
+      end
     } || F[E404][e,r]}
 
 end

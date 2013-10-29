@@ -1,4 +1,4 @@
- INSTALL               notes
+ INSTALL               NOTES
  ruby/install          rsync src to site-lib
  ruby/install symlink  link to src from site-lib
  export RUBYLIB=ruby   just add dir to Ruby PATH
@@ -6,7 +6,7 @@
 
  EXTRAS
  bundle install  (in ruby/ pull in optional RDF libs)
- apt-get install ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight man2html thin
+ apt-get install ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
 
  DAEMON        notes
  infod         standalone
