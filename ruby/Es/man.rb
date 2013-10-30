@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   def triplrMan
@@ -28,7 +28,9 @@ class E
           page = Nokogiri::HTML.parse page
 
           # add links
-          page.css('body')[0].add_child H H.css('/css/man')
+          body = page.css('body')[0]
+          body.add_child H H.css('/css/man')
+          body.add_child H[{_: :style, c: "a {background-color:#{E.cs}}"}]
           page.css('b').map{|b|
             b.next.do{|n|
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|

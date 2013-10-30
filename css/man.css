@@ -4,10 +4,8 @@ body {
     color:#fff;
 }
 a {
-    font-size:1.05em;
-    background-color:#0f0;
     color:#000;
-    text-decoration:none;
-    padding:.1em;
-    }
-a:hover {color:white}
+}
+a:hover {
+    color:#fff;
+}
