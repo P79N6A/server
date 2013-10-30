@@ -3,10 +3,10 @@ watch __FILE__
 class E
 
   fn '/GET',->e,r{
-    html= e.as 'index.html'
-    if i.e
+    html = e.as 'index.html'
+    if html.e
       if e.uri[-1] == '/'
-        i.env(r).GET_file
+        html.env(r).GET_file
       else
         [301, {Location: e.uri.t}, []]
       end
