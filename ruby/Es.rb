@@ -13,5 +13,5 @@ man
 mime
 out
 rdf
-shell
+sh
 }.map{|e|require_relative 'Es/'+e}
