@@ -3,12 +3,6 @@ class E
 
   def nokogiri;  Nokogiri::HTML.parse read end
 
-  def triplrCSS
-    @r.q['sel'].do{|s|
-      (nokogiri.css s).map{|e|
-        yield uri+'#css:'+s,Content,e.to_s}}
-  end
-
   MIMEsource['text/css'] ||= [:triplrSourceCode]
 
 end

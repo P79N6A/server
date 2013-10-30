@@ -6,7 +6,6 @@ code
 color
 css
 csv
-du
 edit
 exhibit
 facets

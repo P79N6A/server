@@ -1,4 +1,5 @@
 %w{
+du
 filter
 find
 fs
