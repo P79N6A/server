@@ -69,10 +69,8 @@ class E
   end
 
   def GET_resource
-    host = 'http://' + @r['SERVER_NAME']
-    handleReq  = F['req/' + @r.q['y']] # @y parametric resource-handler
-    h = handleReq || pathHandler
-    puts "found handler #{h}"
+    handleReq  = F['req/' + @r.q['y']] # parametric resource-handler
+    h = handleReq || (pathHandler 'http://' + @r['SERVER_NAME'])
     h ? h[self, @r] : response
   end
   
