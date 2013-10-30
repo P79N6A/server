@@ -3,11 +3,16 @@ watch __FILE__
 class E
 
   fn '/GET',->e,r{
-    e.as('index.html').do{|i| i.e && # HTML-file index
-      ((e.uri[-1]=='/') ? (i.env r).GET_file : # currently in dir?
-       [301, {Location: e.uri.t}, []]  )} ||   # rebase to dir
-    e.response
-  }
+    html= e.as 'index.html'
+    if i.e
+      if e.uri[-1] == '/'
+        i.env(r).GET_file
+      else
+        [301, {Location: e.uri.t}, []]
+      end
+    else
+      e.response
+    end}
 
 
 end
