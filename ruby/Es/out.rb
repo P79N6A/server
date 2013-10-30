@@ -6,4 +6,6 @@ class E
    E[Render+ mime].y graph, e
   end
 
+  fn '/E/GET',->e,r{[301,{Location: '/'},[]]}
+
 end
