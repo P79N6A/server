@@ -28,6 +28,7 @@ class E
           page = Nokogiri::HTML.parse page
 
           # add links
+          page.css('body')[0].add_child H H.css('/css/man')
           page.css('b').map{|b|
             b.next.do{|n|
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|

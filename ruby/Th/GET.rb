@@ -61,11 +61,11 @@ class E
    (thumb? ? thumb : self).GET_file
   end
 
-  def pathHandler h='', m='GET'
-    pathSegment.cascade.map{|x|
-      x = x.uri.t
-      F[h+x+m] || F[x+m]}.
-      compact[0]
+  def pathHandler host, method='GET'
+    pathSegment.cascade.map{|path|
+      pH = path.uri.t + method
+      hH = host + pH
+      F[pH] || F[hH] }.compact[0]
   end
 
   def GET_resource
