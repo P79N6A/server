@@ -15,13 +15,11 @@ html
 image
 json
 mail
-man
 moz
 page
 post
 pdf
 protovis
-rdf
 schema
 search
 sw
