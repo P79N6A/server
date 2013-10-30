@@ -22,21 +22,29 @@ class E
         # cache HTML renderings
         html = "/man/#{m}#{s}.html".E
         unless html.e && html.m > Pathname(mp).stat.mtime
-
+          
           # create page
           page = `zcat #{mp} | groff -T html -man -P -D -P /dev/null`
           page = Nokogiri::HTML.parse page
-
-          # add links
           body = page.css('body')[0]
+          
+          # CSS
           body.add_child H H.css('/css/man')
           body.add_child H[{_: :style, c: "a {background-color:#{E.cs}}"}]
+          
+          # markup plaintext commands in SEE ALSO
+          page.css('a[name="SEE ALSO"]')[0].do{|a|
+            also = a.parent.next_element
+            also.inner_html = also.text.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
+          
+          # commands to links
           page.css('b').map{|b|
             b.next.do{|n|
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|
                 name, s = b.inner_text, section[1]
                 n.replace section[2]
                 b.replace " <a href='/man/#{s}/#{name}'><b>#{name}</b>(#{s})</a>"}}}
+
           html.w page
         end
           
