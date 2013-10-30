@@ -3,9 +3,14 @@ require 'benchmark'
 
 class E
   Slow ||= {}
+  Errors ||= {}
 
   F['log']=->c,e,x=nil{ # response code, environment, extra stuff
     uri = ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join
+    if 500 == c
+      Errors[uri] ||= {}
+      Errors[uri][:time] = Time.now
+    end
     if x && x.class==Float && x > 1
       s = Slow[uri] ||= {}
       s[:time] ||= 0

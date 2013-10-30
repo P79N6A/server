@@ -14,6 +14,8 @@ td.path {text-align:right}
 td.index {text-align:right;border-color:#000;border-width:0 0 .1em 0;border-style:dotted;background-color:#ddd;color:#000}
 td.context {border-color:#ddd;border-width:0 0 .1em 0;border-style:dotted;padding:.15em}"]]}
 
+  F['/E/error/GET'] = ->e,r{1/0}
+
   fn 'E500',->x,r{
   [500,{'Content-Type'=>'text/html'},
    [H[{_: :html,
@@ -33,5 +35,7 @@ td.context {border-color:#ddd;border-width:0 0 .1em 0;border-style:dotted;paddin
                             c: [{_: :td, class: :path, c: F['abbrURI'][p[0]]},
                                 {_: :td, class: :index, c: p[1]},
                                 {_: :td, class: :context, c: p[2].hrefs}].cr}}.cr]}]}]}]]]}
+
+  F['/500/GET'] = ->e,r{H([Errors.sort_by{|u,r|r[:time]}.reverse.html,H.css('/css/500')]).hR}
   
 end
