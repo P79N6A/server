@@ -19,15 +19,6 @@ class E
   end
   fn 'set/glob',->d,e,m{d.glob.concat d.pathSegment.glob}
   
-  def parent
-    E Pathname.new(uri).parent
-  end
-  def parents
-    parent.do{|p|
-      p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)}
-  end
-
-
   def siblings
     parent.c
   end

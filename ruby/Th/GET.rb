@@ -61,66 +61,18 @@ class E
    (thumb? ? thumb : self).GET_file
   end
 
-  def GET_resource
-    m = 'GET'
-    h = 'http://' + @r['SERVER_NAME']
-    handleNdx=->p{
-      p.pathSegment.parents.map{|p|
-        p = p.uri.t
-        F[p+m]||F[h+p+m]}.compact[0]}
-    handleReq  = F['req/' + @r.q['y']]       # any host * any path -> @y parametric handler
-    handlePath = F[@r['REQUEST_PATH'].t + m] # any host * a path         /handle?thing
-    handleURI  = F[uri.t + m]                # a host * a path   http://h/handle?thing
-                                             # containing path   http://h/handle/thing
-    (handleReq||handlePath||handleURI||handleNdx[self]).do{|y|
-      y[self,@r]} ||
-    as('index.html').do{|i| i.e && # HTML-file index
-      ((uri[-1]=='/') ? i.env(@r).GET_file : # currently in dir?
-       [301, {Location: uri.t}]  )} ||       # rebase to dir
-    response # standard handler
+  def pathHandler h='', m='GET'
+    pathSegment.cascade.map{|x|
+      x = x.uri.t
+      F[h+x+m] || F[x+m]}.
+      compact[0]
   end
 
-  def response
-
-    q = @r.q       # query-string
-    g = q['graph'] # graph-function selector
-
-    # empty response graph
-    m = {}
-
-    # identify graph
-    graphID = (F['protograph/' + g] || F['protograph/']).do{|p|p[self,q,m]}
-
-    return F[E404][self,@r] if m.empty?
-
-    # identify response
-    @r['ETag'] ||= [graphID, q, @r.format, Watch].h
-
-    maybeSend @r.format, ->{
-      
-      # response
-      r = E'/E/req/' + @r['ETag'].dive
-      if r.e # response exists
-        r    # cached response
-      else
-        
-        # graph
-        c = E '/E/graph/' + graphID.dive
-        if c.e # graph exists
-          m.merge! c.r true
-        else
-          # build graph
-          (F['graph/' + g] || F['graph/']).do{|f| f[self,q,m]}
-          # cache graph
-          c.w m,true
-        end
-
-        # graph sort/filter
-        E.filter q, m, self
-
-        # cache response
-        r.w render @r.format, m, @r
-      end }
+  def GET_resource
+    host = 'http://' + @r['SERVER_NAME']
+    handleReq  = F['req/' + @r.q['y']] # @y parametric resource-handler
+    h = handleReq || pathHandler
+    h ? h[self, @r] : response
   end
   
 end

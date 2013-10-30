@@ -11,3 +11,5 @@
 # Y  lambdas
 
 %w{Y K Rb N Es W Th}.map{|e| require 'infod/' + e}
+
+require 'infod/local'

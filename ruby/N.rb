@@ -66,12 +66,25 @@ class E
     [doc,docs,dir].flatten.compact
   end
 
+  def parent
+    E Pathname.new(uri).parent
+  end
+
+  def parents
+    parent.do{|p|
+      p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)}
+  end
+
+  def cascade
+    [self].concat parents
+  end
+
   def dirname
     n = node.dirname
     n = '/' if n.to_s.size <= BaseLen
     n.E
   end
-  
+
   # local URL from unlocatable identifier (mail MSGID, etc)
   def url
     path? ? uri : Prefix + (CGI.escape uri)
