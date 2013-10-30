@@ -72,6 +72,7 @@ class E
     host = 'http://' + @r['SERVER_NAME']
     handleReq  = F['req/' + @r.q['y']] # @y parametric resource-handler
     h = handleReq || pathHandler
+    puts "found handler #{h}"
     h ? h[self, @r] : response
   end
   
