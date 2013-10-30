@@ -62,10 +62,13 @@ class E
   end
 
   def pathHandler host, method='GET'
-    pathSegment.cascade.map{|path|
-      pH = path.uri.t + method
-      hH = host + pH
-      F[pH] || F[hH] }.compact[0]
+    paths = pathSegment.cascade.map{|path|path.uri.t + method}
+    [host,""].map{|host|
+      paths.map{|path|
+        handler = F[host + path]
+        return handler if handler
+      }}
+    nil
   end
 
   def GET_resource
