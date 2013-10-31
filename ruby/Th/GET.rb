@@ -4,7 +4,7 @@ class E
   def GET
     f = [self,       # path & domain
          pathSegment # path, all domains
-        ].find{|f| f.f }
+        ].compact.find{|f| f.f }
 
     if f
        a = @r.accept.values.flatten
@@ -62,12 +62,15 @@ class E
   end
 
   def pathHandler host, method='GET'
-    paths = pathSegment.cascade.map{|path|path.uri.t + method}
-    [host,""].map{|host|
-      paths.map{|path|
-        handler = F[host + path]
-        return handler if handler
-      }}
+    pathSegment.do{|p|
+      paths = p.cascade.map{|path|
+        path.uri.t + method }
+      [host,""].map{|host|
+        paths.map{|path|
+#          puts "lookup #{host+path}"
+          handler = F[host + path]
+          return handler if handler
+        }}}
     nil
   end
 

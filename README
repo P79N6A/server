@@ -4,8 +4,6 @@
  export RUBYLIB=ruby   just add dir to Ruby PATH
  gem install infod     a probably older and more-stable isotope
 
- EXTRAS
- bundle install  (in ruby/ pull in optional RDF libs)
  apt-get install ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
 
  DAEMON        notes

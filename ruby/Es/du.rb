@@ -10,7 +10,7 @@ class E
 
   fn 'protograph/du',->d,_,m{
     e = [d,d.pathSegment
-        ].find{|f| f.e }
+        ].compact.find{|f| f.e }
     if e
       puts "du #{e}"
       m[e.uri] = e

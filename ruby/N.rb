@@ -59,13 +59,6 @@ class E
     uri.frag
   end
 
-  def docs
-    doc = self if e # directly-referenced doc
-    docs = docBase.glob ".{e,html,n3,nt,owl,rdf,ttl}" # basename-sharing docs
-    dir = (d? && uri[-1]=='/' && uri.size>1) ? c : [] # trailing slash descends
-    [doc,docs,dir].flatten.compact
-  end
-
   def parent
     E Pathname.new(uri).parent
   end
@@ -106,7 +99,7 @@ class E
 
   def pathSegment
     m = uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/)
-    m && m[2] && m[2].E || '/'.E
+    m && m[2] && m[2].E || nil
   end
 
   # URI extension :: E -> string

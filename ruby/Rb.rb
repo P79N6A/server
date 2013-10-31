@@ -4,7 +4,7 @@ class Array
   def head; self[0] end
   def tail; self[1..-1] end
   def snd;  self[1] end
-  def r; self[rand length] end
+  def random; self[rand length] end
   def h; join.h end
   def intersperse i
     inject([]){|a,b|a << b << i}[0..-2]

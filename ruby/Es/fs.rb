@@ -13,12 +13,6 @@ class E
   end
   alias_method :no, :node
 
-  # glob :: pattern -> [E]
-  def glob p=""
-    (Pathname.glob d + p).map &:E
-  end
-  fn 'set/glob',->d,e,m{d.glob.concat d.pathSegment.glob}
-  
   def siblings
     parent.c
   end

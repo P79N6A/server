@@ -22,6 +22,7 @@ class E
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
 
   fn 'graphID',->g{
+    puts "resources #{g.keys.join ' '}"
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
@@ -33,7 +34,7 @@ class E
   fn 'set/',->e,q,_{
     s = []
     s.concat e.docs
-    s.concat e.pathSegment.docs
+    e.pathSegment.do{|p| s.concat p.docs }
     s }
 
   def triplrMIME &b

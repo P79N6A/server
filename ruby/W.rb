@@ -17,7 +17,6 @@ json
 mail
 moz
 page
-post
 pdf
 protovis
 schema

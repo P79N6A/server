@@ -180,7 +180,8 @@ elsif b.grep(/\.log$/).size / s > t
         yield r.uri,Content,r.r}} end
 
   def triplrHref enc=nil
-    yield uri,Content,(e && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
+    puts "triplrHref #{uri} #{d}"
+    yield uri,Content,(f && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
   end
 
   fn Render+'text/html',->d,e{

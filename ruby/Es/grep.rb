@@ -2,7 +2,7 @@
 class E
 
   fn 'set/grep',->e,q,m{
-    [e,e.pathSegment].map{|e|
+    [e,e.pathSegment].compact.map{|e|
       `grep -rl#{q.has_key?('i') && 'i'} #{q['q'].sh} #{e.sh}`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathURI}}.flatten
   }
 

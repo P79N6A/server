@@ -108,9 +108,6 @@ class E
   end
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
-  fn 'req/randomFile',->e,r{
-    g = e.glob.concat e.pathSegment.glob
-    !g.empty? ? [302, {Location: g[rand*g.size].uri},[]] : [404]}
 
 end
 

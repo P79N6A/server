@@ -3,6 +3,7 @@ du
 filter
 find
 fs
+glob
 grep
 groonga
 in
