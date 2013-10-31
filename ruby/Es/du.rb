@@ -9,23 +9,22 @@ class E
                   }})
 
   fn 'protograph/du',->d,_,m{
-    m[d.uri] = {}
+    e = [d,d.pathSegment
+        ].find{|f| f.e }
+    if e
+      puts "du #{e}"
+      m[e.uri] = e
+    end
     rand.to_s.h
   }
 
   fn 'graph/du',->e,_,m{
-    e = [e,e.pathSegment
-        ].find{|f| f.e }
-    `du -a #{e.sh}`.lines.to_a[0..-2].map{|p|
-      begin
-        s,p = p.split /\t/ # size, path
-        p = p.unpathURI    # path -> URI
-        m[p.uri]={'uri'=>p.uri,'size'=>s.to_i}
-      rescue
-        nil
-      end
-    }
-    m}
+    `du -a #{m.values[0].sh}`.lines.to_a[0..-2].map{|p|
+      puts "hmm"
+      s,p = p.split /\t/ # size, path
+      p = p.unpathURI    # path -> URI
+      m[p.uri]={'uri'=>p.uri,'size'=>s.to_i}}
+    m }
 
   fn 'protovis/du',->e,c{
     m={}        # model
