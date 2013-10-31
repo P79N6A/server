@@ -20,8 +20,7 @@ class E
 
   fn 'graph/du',->e,_,m{
     `du -a #{m.values[0].sh}`.lines.to_a[0..-2].map{|p|
-      puts "hmm"
-      s,p = p.split /\t/ # size, path
+      s,p = p.chomp.split /\t/ # size, path
       p = p.unpathURI    # path -> URI
       m[p.uri]={'uri'=>p.uri,'size'=>s.to_i}}
     m }
