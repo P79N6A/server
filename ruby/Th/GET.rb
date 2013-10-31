@@ -74,6 +74,7 @@ class E
   def GET_resource
     handleReq  = F['req/' + @r.q['y']] # parametric resource-handler
     h = handleReq || (pathHandler 'http://' + @r['SERVER_NAME'])
+#    puts "handlr #{h}"
     h ? h[self, @r] : response
   end
   

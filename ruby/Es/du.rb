@@ -1,6 +1,5 @@
-#watch __FILE__
+watch __FILE__
 class E
-
   F["?"]||={}
   F["?"].update({'du'=>{
                    'graph' => 'du',
@@ -9,10 +8,14 @@ class E
                     'protovis.view' => 'starburst'
                   }})
 
-  fn 'protograph/du',->d,_,m{rand.to_s.h}
+  fn 'protograph/du',->d,_,m{
+    m[d.uri] = {}
+    rand.to_s.h
+  }
 
   fn 'graph/du',->e,_,m{
-    puts "du #{e.sh}"
+    e = [e,e.pathSegment
+        ].find{|f| f.e }
     `du -a #{e.sh}`.lines.to_a[0..-2].map{|p|
       begin
         s,p = p.split /\t/ # size, path
