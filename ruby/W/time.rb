@@ -70,7 +70,7 @@ class E
   fn 'filter/timeofday',->e,m,_{
     m.map{|_,r|r[Date].do{|ds| ds.map{|d|
           d = d.to_time
-          r['/timeofday']=[60 * d.hour + d.min]}}}}
+          r['timeofday']=[60 * d.hour + d.min]}}}}
 
   fn 'filter/timegraph',->e,m,_{
 

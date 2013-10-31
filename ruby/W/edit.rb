@@ -5,7 +5,8 @@ class E
     Fn 'protograph/_',resource,env,graph}
 
   fn 'graph/editable',->resource,env,graph{
-    resource.fromStream graph, :triplrFsStore}
+    resource.fromStream graph, :triplrFsStore
+    [Title,Creator,Content].map{|u|graph[u]||={}}}
 
   # show resource w/ links into editor
   fn 'view/edit',->g,e{
