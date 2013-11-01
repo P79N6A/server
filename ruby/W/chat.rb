@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def triplrLog &f
@@ -7,7 +7,7 @@ class E
     doc = uri.sub '#','%23'
     chan = bare
     yield doc,'chan',chan
-    # parses irssi (& weechat, maybe?) theme - in /css/i/
+    # parses irssi (& weechat?) output format in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
     r.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
       s = doc + '#' + doc + ':' + (i+=1).to_s
       yield s,Date,day+'T'+m[0]+':'+m[1]+':00'
@@ -17,7 +17,7 @@ class E
       yield s,Type,E[SIOCt+'InstantMessage']
       yield s,'hasLink',(m[3].match(/http:\//) ? 'true' : 'false')
       yield s,'hasNum','true' if m[3].match(/\d/)
-    } rescue nil
+    }
     yield doc,Date,day
   end
 
