@@ -1,7 +1,6 @@
 %w{
 audio
 cal
-chat
 code
 color
 css
@@ -13,6 +12,7 @@ feed
 histogram
 html
 image
+im
 json
 mail
 moz

@@ -1,24 +1,24 @@
 watch __FILE__
 class E
 
-  def triplrLog &f
+  # sprintf()-style format in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
+  def triplrIRC &f
     i=-1
     day = dirname.uri.split('/')[-3..-1].join('-')
     doc = uri.sub '#','%23'
-    chan = bare
-    yield doc,'chan',chan
-    # parses irssi (& weechat?) output format in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
-    r.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
-      s = doc + '#' + doc + ':' + (i+=1).to_s
-      yield s,Date,day+'T'+m[0]+':'+m[1]+':00'
-      yield s,'chan',chan
-      yield s,Creator,m[2]
-      yield s,Content,m[3].hrefs(true)
-      yield s,Type,E[SIOCt+'InstantMessage']
-      yield s,'hasLink',(m[3].match(/http:\//) ? 'true' : 'false')
-      yield s,'hasNum','true' if m[3].match(/\d/)
-    }
+    channel = bare
     yield doc,Date,day
+    r.lines.map{|l|
+      l.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
+        s = doc + '#' + doc + ':' + (i+=1).to_s
+        yield s, Date,                day+'T'+m[0]+':'+m[1]+':00'
+        yield s, SIOCt+'ChatChannel', channel
+        yield s, Creator,             m[2]
+        yield s, Content,             m[3].hrefs(true)
+        yield s, Type,                E[SIOCt+'InstantMessage']
+        yield s, 'hasLink',           (m[3].match(/http:\//) ? 'true' : 'false')
+        yield s, 'hasNum', 'true' if m[3].match(/\d/)} rescue (puts "skipped #{l}")
+    }
   end
 
   def tw g='m'

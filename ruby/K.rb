@@ -105,7 +105,7 @@ class E
     'text/ansi'            => [:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
     'text/html'            => [:triplrRDFformats, :rdfa],
-    'text/log'             => [:triplrLog],
+    'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
     'text/nfo'             => [:triplrHref,'cp437'],
     'text/ntriples'        => [:triplrRDFformats, :ntriples],
