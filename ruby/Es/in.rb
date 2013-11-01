@@ -11,9 +11,11 @@ class E
   end
 
   fn 'protograph/',->e,q,g{
-    set = F['set/'+q['set']][e,q,g]
+    setFunction = F['set/' + q['set']] || F['set/']
+    set = setFunction[e,q,g]
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
-    # identify
+
+    # unique identity for graph
     [F['graphID'][g], F['triplr'][e,q]].h}
 
   fn 'graph/',->e,q,m{
@@ -79,7 +81,7 @@ class Hash
 
   def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
 
-  # self -> tripleStream
+  # Hash -> tripleStream
   def triples
     s = uri
     map{|p,o|

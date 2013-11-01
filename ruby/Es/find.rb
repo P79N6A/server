@@ -6,7 +6,7 @@ class E
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'}
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d }
-      [e,e.pathSegment].compact.map{|e| e.e &&
+      [e,e.pathSegment].compact.select(&:e).map{|e|
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
         lines.map{|l|l.chomp.unpathURI}}.compact.flatten}}
 

@@ -2,9 +2,10 @@
 class E
 
   fn 'set/grep',->e,q,m{
-    [e,e.pathSegment].compact.map{|e|
-      `grep -rl#{q.has_key?('i') && 'i'} #{q['q'].sh} #{e.sh}`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathURI}}.flatten
-  }
+    q['q'].do{|query|
+      [e,e.pathSegment].compact.select(&:e).map{|e|
+        grep = "grep -rl#{q.has_key?('i') && 'i'} #{query.sh} #{e.sh}"  # ;puts grep
+        `#{grep}`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathURI}}.flatten}}
 
   fn 'view/grep',->d,e{
     w = e.q['q']
