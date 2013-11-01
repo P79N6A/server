@@ -61,24 +61,35 @@ class E
    (thumb? ? thumb : self).GET_file
   end
 
-  def pathHandler host, method='GET'
-    pathSegment.do{|p|
-      paths = p.cascade.map{|path|
-        path.uri.t + method }
-      [host,""].map{|host|
-        paths.map{|path|
-#          puts "lookup #{host+path}"
-          handler = F[host + path]
-          return handler if handler
-        }}}
-    nil
-  end
-
   def GET_resource
     handleReq  = F['req/' + @r.q['y']] # parametric resource-handler
     h = handleReq || (pathHandler 'http://' + @r['SERVER_NAME'])
 #    puts "handlr #{h}"
     h ? h[self, @r] : response
   end
+
+  def pathHandler host, method='GET'
+    pathSegment.do{|p|
+      paths = p.cascade.map{|path|
+        path.uri.t + method }
+      [host,""].map{|host|
+        paths.map{|path|
+          handler = F[host + path]
+          return handler if handler
+        }}}
+    nil
+  end
+
+  fn '/GET',->e,r{
+    html = e.as 'index.html'
+    if html.e
+      if e.uri[-1] == '/'
+        html.env(r).GET_file
+      else
+        [301, {Location: e.uri.t}, []]
+      end
+    else
+      e.response
+    end}
   
 end
