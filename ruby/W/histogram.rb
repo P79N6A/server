@@ -48,7 +48,7 @@ class E
       bw = width / nb }
 
     # construct bins
-    (0..nb-1).map{|b|h[b] = {}}
+    (0..nb).map{|b|h[b] = {}}
 
     # each resource
     m.map{|u,r|

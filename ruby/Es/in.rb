@@ -22,7 +22,7 @@ class E
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
 
   fn 'graphID',->g{
-    puts "resources #{g.keys.join ' '}"
+#    puts "r #{g.keys.join ' '}"
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
