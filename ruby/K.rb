@@ -91,7 +91,7 @@ class E
     'application/atom+xml' => [:triplrFeed],
     'application/markdown' => [:triplrMarkdown],
     'application/org'      => [:triplrOrg],
-    'application/rdf+xml'  => [:triplrRDFformats,:rdfxml],
+    'application/rdf+xml'  => [:triplrRDF,:rdfxml],
     'application/json'     => [:triplrJSON],
     'application/pdf'      => [:triplrPDF],
     'application/textile'  => [:triplrTextile],
@@ -104,16 +104,16 @@ class E
     'message/rfc822'       => [:triplrMail],
     'text/ansi'            => [:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
-    'text/html'            => [:triplrRDFformats, :rdfa],
+    'text/html'            => [:triplrRDF, :rdfa],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
     'text/nfo'             => [:triplrHref,'cp437'],
-    'text/ntriples'        => [:triplrRDFformats, :ntriples],
+    'text/ntriples'        => [:triplrRDF, :ntriples],
     'text/plain'           => [:triplrHref],
     'text/rtf'             => [:triplrRTF],
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
-    'text/turtle'          => [:triplrRDFformats,:turtle],
+    'text/turtle'          => [:triplrRDF,:turtle],
   }
 
   # prefer a view even if requested file exists
