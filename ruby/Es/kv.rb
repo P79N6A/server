@@ -6,44 +6,43 @@ class E
   end
 
   def [] p,o=nil, v=nil
-    if o
-      # bare predicateURI to resource
-      p = p.E
-      # literal to literalURI
-      o = p.literal o unless o.class == E
+    if o # set
       editFs p,o,v
-    else
-      concatURI(p).listPredicates
+    else # get
+      (concatURI p).properties
     end
   end
 
-  def editFs p, o, newVal=nil
+  def editFs p, o, oO=nil
+    p = p.E
+    o = p.literal o unless o.class == E
     t = (concatURI p).concatURI o
-    if newVal # update
-      if t.e  # oldVal?
-        t.deleteNode # remove triple
+    if oO                # updated triple
+      if t.e             # original triple exist?
+        t.deleteNode     # remove triple
         indexEdit p,o,'' # unindex
       end
-      self[p,newVal] unless newVal.empty? # add triple
+      self[p,oO] unless oO.empty? # new triple
     else
       unless t.e
         indexEdit p,o,nil # index triple
+        puts "o #{o}"
         t.mk              # make triple
       end
     end
   end
 
   def triplrFsStore
-    listPredicates.map{|p|
+    properties.map{|p|
       self[p].map{|o|
-        yield uri, p.uri, o }}
+        yield uri, p.uri, o}}
   end
 
   def deletePredicate p
-    self[p].each{|o| self[p,o,'']}
+    self[p].each{|o|self[p,o,'']}
   end
 
-  def listPredicates
+  def properties
     subtree.map &:ro
    end
 
