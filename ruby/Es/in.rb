@@ -11,8 +11,7 @@ class E
   end
 
   fn 'protograph/',->e,q,g{
-    setFunction = F['set/' + q['set']] || F['set/']
-    set = setFunction[e,q,g]
+    set = (F['set/' + q['set']] || F['set/'])[e,q,g]
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
 
     # unique fingerprint from graph

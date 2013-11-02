@@ -1,7 +1,7 @@
-watch __FILE__
+#watch __FILE__
 class E
 
-  # sprintf()-style format in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
+  # sprintf() formats in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
   def triplrIRC &f
     i=-1
     day = dirname.uri.split('/')[-3..-1].join('-')

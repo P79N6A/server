@@ -17,7 +17,7 @@ class E
     m = {}
 
     # identify graph
-    graphID = (F['protograph/' + g] || F['protograph/']).do{|p|p[self,q,m]}
+    graphID = (F['protograph/' + g] || F['protograph/'])[self,q,m]
 
     return F[E404][self,@r] if m.empty?
 
@@ -37,8 +37,8 @@ class E
         if c.e # graph exists
           m.merge! c.r true
         else
-          # build graph
-          (F['graph/' + g] || F['graph/']).do{|f| f[self,q,m]}
+          # construct graph
+          (F['graph/' + g] || F['graph/'])[self,q,m]
           # cache graph
           c.w m,true
         end

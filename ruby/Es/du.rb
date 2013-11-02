@@ -1,5 +1,6 @@
-watch __FILE__
+#watch __FILE__
 class E
+
   F["?"]||={}
   F["?"].update({'du'=>{
                    'graph' => 'du',
@@ -9,14 +10,9 @@ class E
                   }})
 
   fn 'protograph/du',->d,_,m{
-    e = [d,d.pathSegment
-        ].compact.find{|f| f.e }
-    if e
-      puts "du #{e}"
-      m[e.uri] = e
-    end
-    rand.to_s.h
-  }
+    e = [d,d.pathSegment].compact.find &:e
+    m[e.uri] = e if e
+    rand.to_s.h }
 
   fn 'graph/du',->e,_,m{
     `du -a #{m.values[0].sh}`.lines.to_a[0..-2].map{|p|
