@@ -15,8 +15,11 @@ class E
     set = setFunction[e,q,g]
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
 
-    # unique identity for graph
-    [F['graphID'][g], F['triplr'][e,q]].h}
+    # unique fingerprint from graph
+    [F['graphID'][g],
+     F['triplr'][e,q],
+     q.has_key?('nocache').do{|_|rand}
+    ].h}
 
   fn 'graph/',->e,q,m{
     triplr = F['triplr'][e,q]
@@ -24,7 +27,6 @@ class E
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
 
   fn 'graphID',->g{
-#    puts "r #{g.keys.join ' '}"
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
