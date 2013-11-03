@@ -19,7 +19,7 @@ class E
 
   fn 'protograph/thread',->d,_,g{
     d.walk SIOC+'reply_of',g
-    F['graphID'][g]}
+    F['docsID'][g]}
 
   # overview of all messages in set
   fn 'view/threads',->d,env{

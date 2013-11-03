@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   def triplrMan
@@ -16,15 +16,16 @@ class E
         s, m = p[1], p[2] }
 
       # source
-      mp = `man -w #{s} #{Shellwords.escape m}`.chomp
-      unless mp.empty?
+      man = `man -w #{s} #{Shellwords.escape m}`.chomp
+      unless man.empty?
 
-        # cache HTML renderings
-        html = "/man/#{m}#{s}.html".E
-        unless html.e && html.m > Pathname(mp).stat.mtime
-          
+        roff = man.E
+        html = (roff.dir.to_s.sub(/.*\/share/,'') + '/' + roff.bare + '.html').E
+
+        unless html.e && html.m > Pathname(man).stat.mtime
+          puts "updating"
           # create page
-          page = `zcat #{mp} | groff -T html -man -P -D -P /dev/null`
+          page = `zcat #{man} | groff -T html -man -P -D -P /dev/null`
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
           

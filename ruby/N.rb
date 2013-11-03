@@ -77,6 +77,7 @@ class E
     n = '/' if n.to_s.size <= BaseLen
     n.E
   end
+  alias_method :dir, :dirname
 
   # local URL from unlocatable identifier (mail MSGID, etc)
   def url

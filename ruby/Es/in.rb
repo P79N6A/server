@@ -10,22 +10,26 @@ class E
     end; m
   end
 
+  # default proto-graph
+  #   mint graph identifier
+  #   any graph setup (:g variable mutation) is preserved
   fn 'protograph/',->e,q,g{
     set = (F['set/' + q['set']] || F['set/'])[e,q,g]
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
-
-    # unique fingerprint from graph
-    [F['graphID'][g],
+    # unique fingerprint for graph
+    [F['docsID'][g],
      F['triplr'][e,q],
      q.has_key?('nocache').do{|_|rand}
     ].h}
 
+  # default graph
+  #  filesystem storage
   fn 'graph/',->e,q,m{
     triplr = F['triplr'][e,q]
     m.values.map{|r|
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
 
-  fn 'graphID',->g{
+  fn 'docsID',->g{
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
