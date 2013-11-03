@@ -18,16 +18,21 @@ class E
     o = p.literal o unless o.class == E
     t = (concatURI p).concatURI o
     if oO                # updated triple
-      if t.e             # original triple exist?
+      if t.e             # old triple exists?
         t.deleteNode     # remove triple
         indexEdit p,o,'' # unindex
       end
-      self[p,oO] unless oO.empty? # new triple
+      self[p,oO] unless oO.empty? # add triple
     else
-      unless t.e
+      unless t.e          # triple exists?
         indexEdit p,o,nil # index triple
-        puts "o #{o}"
-        t.mk              # make triple
+        if o.f            # add triple
+          # link resource
+        elsif o.e
+          # symlink resource
+        else
+          t.mk # name resource
+        end
       end
     end
   end

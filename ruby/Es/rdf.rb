@@ -15,9 +15,10 @@ class E
             w << (RDF::Statement.new s,p,o) if o }}}
   end
 
-  def triplrRDF f
-    require 'linkeddata'
-    RDF::Reader.open(d, :format => f){|r|
+  def triplrRDF format=:rdfa, localFile=true  ; require 'linkeddata'
+    location = (localFile && f) ? d : uri
+    puts [:RDF,location].join ' '
+    RDF::Reader.open(location, :format => format){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s, [RDF::Node, RDF::URI].member?(o.class) ? E(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}
   end
