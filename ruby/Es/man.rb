@@ -24,6 +24,8 @@ class E
 
         unless html.e && html.m > Pathname(man).stat.mtime
           puts "updating"
+          langs = Pathname('/usr/share/man').c.select{|p|!p.to_s.match /man[^\/]+$/}.map{|p|File.basename p}
+          puts "langs #{langs}"
           # create page
           page = `zcat #{man} | groff -T html -man -P -D -P /dev/null`
           page = Nokogiri::HTML.parse page
