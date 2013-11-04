@@ -14,7 +14,7 @@ class E
       s = nil
       m.match(/^([0-9])\/(.*)/).do{|p|
         s, m = p[1], p[2] }
-
+      
       # source
       man = `man -w #{s} #{Shellwords.escape m}`.chomp
       unless man.empty?
@@ -22,25 +22,32 @@ class E
         roff = man.E
         html = (roff.dir.to_s.sub(/.*\/share/,'') + '/' + roff.bare + '.html').E
 
-        unless html.e && html.m > Pathname(man).stat.mtime
-          puts "updating"
-          langs = Pathname('/usr/share/man').c.select{|p|!p.to_s.match /man[^\/]+$/}.map{|p|File.basename p}
-          puts "langs #{langs}"
-          # create page
+        cached = html.e && html.m > (Pathname man).stat.mtime
+        cached = false
+        unless cached
+          puts " #{man} -> #{html}"
+          locales = Pathname('/usr/share/man').c.select{|p|
+            !p.to_s.match /man[^\/]+$/
+          }.map{|p|File.basename p}
+
+          # base HTML from groff
           page = `zcat #{man} | groff -T html -man -P -D -P /dev/null`
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
           
-          # CSS
+          # add CSS link
           body.add_child H H.css('/css/man')
           body.add_child H[{_: :style, c: "a {background-color:#{E.cs}}"}]
+          
+          # add localization links
+          body.css('h1')[0].add_previous_sibling H locales.map{|l|{_: :a, class: :lang, href: r['REQUEST_PATH']+'?lang='+l, c: l}}
           
           # markup plaintext commands in SEE ALSO
           page.css('a[name="SEE ALSO"]')[0].do{|a|
             also = a.parent.next_element
             also.inner_html = also.text.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
           
-          # commands to links
+          # convert commands to links
           page.css('b').map{|b|
             b.next.do{|n|
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|
