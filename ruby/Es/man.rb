@@ -16,12 +16,12 @@ class E
         s, m = p[1], p[2] }
       
       locale = r.q['lang'] || r['HTTP_ACCEPT_LANGUAGE'].do{|a| a.split(/,/)[0] }
-      localization = locale.do{|l| '-L ' + l }
+      localization = locale.do{|l| '-L ' + l.sh }
       lang = locale.do{|l| "?lang=" + l }
       
       # source
-      puts "man #{localization} -w #{s} #{Shellwords.escape m}"
-      man = `man #{localization} -w #{s} #{Shellwords.escape m}`.chomp
+       puts "man #{localization} -w #{s} #{m.sh}"
+      man = `man #{localization} -w #{s} #{m.sh}`.chomp
       unless man.empty?
 
         roff = man.E
@@ -49,10 +49,12 @@ class E
            ).add_previous_sibling H locales.map{|l|
             {_: :a, class: :lang, href: r['REQUEST_PATH']+'?lang='+l, c: l}}
           
-          # markup commands in SEE ALSO
-          page.css('a[name="SEE ALSO"]')[0].do{|a|
-            also = a.parent.next_element
-            also.inner_html = also.text.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
+          # inspect plaintext
+          #  HTMLize hyperlinks
+          #  markup commands
+          page.xpath('//text()').map{|a|
+            a.replace a.to_s.hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('
+          }
           
           # href-ize commands
           page.css('b').map{|b|
