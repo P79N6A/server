@@ -7,7 +7,7 @@ class E
     elsif file = [self,pathSegment].compact.find(&:f)
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      (@r.q.has_any_key %w{format view} ||
+      (@r.q.has_any_key(%w{format view}) ||
        MIMEcook[file.mimeP] || !accepted) ? getPath : (file.env @r).getFile
     else
       getPath

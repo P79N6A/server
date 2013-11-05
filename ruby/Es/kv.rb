@@ -28,10 +28,13 @@ class E
         indexEdit p,o,nil # index triple
         if o.f            # add triple
           # link resource
+          o.ln t
         elsif o.e
           # symlink resource
+          o.ln_s t
         else
-          t.mk # name resource
+          # name resource
+          t.mk
         end
       end
     end

@@ -74,6 +74,15 @@ class E
     t = t.E # cast bare URI/string to resource
     if !t.e # destination exist?
       t.dirname.mk
+      FileUtils.link node, t.node
+    end
+  end
+
+  # create symlink
+  def ln_s t
+    t = t.E # cast bare URI/string to resource
+    if !t.e # destination exist?
+      t.dirname.mk
       FileUtils.symlink node, t.node
     end
   end
