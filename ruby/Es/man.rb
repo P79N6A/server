@@ -10,6 +10,7 @@ class E
   fn '/man/GET',->e,r{
     e.pathSegment.uri.sub('/man/','/').tail.do{|name|
 
+      manPath = '/usr/share/man'
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
       langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
@@ -26,17 +27,13 @@ class E
         htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
-        cached = false
-        
+        cached = false        
         unless cached
-          locales = Pathname('/usr/share/man').c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
+          locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
           localesAvail = locales.select{|l|
-            puts l
-          }
-          
-
-          # basic HTML from GROHTML(1)
-          pageCmd = "zcat #{man} | groff -T html -man -P -D -P #{htmlBase.d}/images"
+            File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}
+          imagePath = htmlBase.d + '/images'; FileUtils.mkdir_p imagePath unless File.exist? imagePath
+          pageCmd = "zcat #{man} | groff -T html -man -P -D -P #{imagePath}"
           page = `#{pageCmd}`.to_utf8
 
         [[:acceptLang,acceptLang],
@@ -45,6 +42,7 @@ class E
          [:qs, q],
          [:roff,man],
          [:htmlBase,htmlBase.d],
+         [:imagePath,imagePath],
          [:localizations,localesAvail],
          [:pageCmd,pageCmd],
          [:cached?, cached ? :true : :false],
@@ -68,7 +66,7 @@ class E
           #  HTMLize hyperlinks
           #  markup commands
           page.xpath('//text()').map{|a|
-            a.replace a.to_s.hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('
+            a.replace a.to_s.gsub('&gt;','>').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('
           }
           
           # href-ize commands
