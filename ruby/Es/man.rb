@@ -10,24 +10,21 @@ class E
   fn '/man/GET',->e,r{
     e.pathSegment.uri.sub('/man/','/').tail.do{|name|
 
+      acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
+      lang = r.q['lang'] || acceptLang
+      langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
+      q = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
+      
       section = nil
       name.match(/^([0-9])\/(.*)/).do{|p|
         section, name = p[1], p[2] }
-      
-     aLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
-      lang = r.q['lang'] || aLang
-      langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
-
-      q = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
-
       man = `man #{langSH} -w #{section} #{name.sh}`.chomp
-
+      
       unless man.empty?
 
         roff = man.E
         htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
         html = htmlBase.as roff.bare + '.html'
-
         cached = html.e && html.m > (Pathname man).stat.mtime
         cached = false
         
@@ -42,16 +39,17 @@ class E
           pageCmd = "zcat #{man} | groff -T html -man -P -D -P #{htmlBase.d}/images"
           page = `#{pageCmd}`.to_utf8
 
-        [[:aLang,aLang],
+        [[:acceptLang,acceptLang],
          [:lang, lang],
          [:langSH, langSH],
          [:qs, q],
          [:roff,man],
          [:htmlBase,htmlBase.d],
+         [:localizations,localesAvail],
          [:pageCmd,pageCmd],
          [:cached?, cached ? :true : :false],
         ].map{|p|
-          puts [" "*(8-p[0].size),*p].join ' '}
+          puts [" "*(13-p[0].size),*p].join ' '}
           
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
