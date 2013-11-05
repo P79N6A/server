@@ -6,24 +6,28 @@ class E
     section = nil
     name.match(/^([0-9])\/(.*)/).do{|p|
       section, name = p[1], p[2] }
-    
-    if name.match /\//
+
+    if name.empty? || name.match(/\//)
       e.response
     else
+
       manPath = '/usr/share/man'
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
       superLang = lang.do{|l| (l.split /[_-]/)[0] }
       langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
       man = `man #{langSH} -w #{section} #{name.sh}`.chomp      
+
       if man.empty?
         F[E404][e,r]
       else
+
         roff = man.E
         htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
-        cached=false
+#        cached=false
+
         unless cached
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
           localesAvail = locales.select{|l|
@@ -33,7 +37,7 @@ class E
           pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
           page = `#{pageCmd}`.to_utf8
 
-          [[:name,name],[:acceptLang,acceptLang],[:lang, lang],[:langSH, langSH],[:superLang, superLang],[:qs, q],[:roff,man],[:htmlBase,htmlBase.d],[:imagePath,imagePath],[:localizations,localesAvail],[:pageCmd,pageCmd]].map{|p| puts [" "*(13-p[0].size),*p].join ' '}
+          [[:name,name],[:acceptLang,acceptLang],[:lang, lang],[:langSH, langSH],[:superLang, superLang],[:roff,man],[:htmlBase,htmlBase.d],[:imagePath,imagePath],[:localizations,localesAvail],[:pageCmd,pageCmd]].map{|p| puts [" "*(13-p[0].size),*p].join ' '}
           
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
