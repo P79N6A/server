@@ -17,12 +17,6 @@ class E
       end}
   end
 
-  def thumb?
-   mimeP.match(/^(image|video)/) && # is file an image?
-   @r.qs.match(/^[0-9]{0,3}x[0-9]{0,3}$/) && # valid dimensions?
-    base.match(/^[^.]/) # skip "invisible" images
-  end
-
   def thumb
     E['/E/image/'+
       [no.stat.do{|s|

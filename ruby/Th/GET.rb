@@ -12,7 +12,7 @@ class E
     cook = MIMEcook[f.mimeP] && !@r.q.has_key?('raw')
   accept = a.empty? || (a.member? f.mimeP) || (a.member? '*/*')
 
- (view || cook || !accept) ? self.GET_resource : f.env(@r).GET_img
+ (view || cook || !accept) ? self.GET_resource : f.env(@r).GET_file
 
     else
       self.GET_resource
@@ -55,10 +55,6 @@ class E
   def GET_file
     @r['ETag'] = [m,size].h
     maybeSend mimeP,->{self},:link
-  end
-
-  def GET_img
-   (thumb? ? thumb : self).GET_file
   end
 
   def GET_resource
