@@ -13,7 +13,7 @@ class E
       manPath = '/usr/share/man'
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
-      superLang = lang.split(/[_-]/)[0]
+      superLang = lang.do{|l| (l.split /[_-]/)[0] }
       langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
       q = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
       
