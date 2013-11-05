@@ -15,27 +15,40 @@ class E
       m.match(/^([0-9])\/(.*)/).do{|p|
         s, m = p[1], p[2] }
       
-      locale = r.q['lang'] || r['HTTP_ACCEPT_LANGUAGE'].do{|a| a.split(/,/)[0] }
-      localization = locale.do{|l| '-L ' + l.sh }
-      lang = locale.do{|l| "?lang=" + l }
-      
-      # source
-       puts "man #{localization} -w #{s} #{m.sh}"
-      man = `man #{localization} -w #{s} #{m.sh}`.chomp
+     aLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
+      lang = r.q['lang'] || aLang
+      langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
+
+      q = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
+
+      man = `man #{langSH} -w #{s} #{m.sh}`.chomp
       unless man.empty?
 
         roff = man.E
-        html = (roff.dir.to_s.sub(/.*\/share/,'') + '/' + roff.bare + '.html').E
+        htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
+        html = htmlBase.as roff.bare + '.html'
 
         cached = html.e && html.m > (Pathname man).stat.mtime
         cached = false
+        
+        [[:aLang,aLang],
+         [:lang, lang],
+         [:langSH, langSH],
+         [:qs, q],
+         [:roff,man],
+         [:htmlBase,htmlBase.d],
+         [:cached?, cached ? :true : :false],
+        ].map{|p|
+          puts [" "*(8-p[0].size),*p].join ' '
+        }
+
         unless cached
-          puts " #{man} -> #{html}"
-
           locales = Pathname('/usr/share/man').c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
+          # figure out which translations exist
+          
 
-          # basic HTML from groff
-          page = `zcat #{man} | groff -T html -man -P -D -P /dev/null`.to_utf8
+          # basic HTML from GROHTML(1)
+          page = `zcat #{man} | groff -T html -man -P -D -P #{htmlBase.d}/images`.to_utf8
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
           
@@ -62,7 +75,7 @@ class E
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|
                 name, s = b.inner_text, section[1]
                 n.replace section[2]
-                b.replace " <a href='/man/#{s}/#{name}#{lang}'><b>#{name}</b>(#{s})</a>"}}}
+                b.replace " <a href='/man/#{s}/#{name}#{q}'><b>#{name}</b>(#{s})</a>"}}}
 
           html.w page
         end
