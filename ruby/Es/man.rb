@@ -28,7 +28,7 @@ class E
         htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
-cached=false
+
         unless cached
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
           localesAvail = locales.select{|l|
@@ -67,7 +67,7 @@ cached=false
           # webize image paths
           body.css('img').map{|i|
             p = (i.attr 'src').unpathURI
-            %w{src alt}.map{|a| i.set_attribute a, p}}
+            i.replace H[{_: :img, src: p}]}
 
           # inspect plaintext
           #  HTMLize hyperlinks
