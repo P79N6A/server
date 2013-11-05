@@ -7,7 +7,7 @@ class E
     # item link + preview
     a = -> i { i = i.E
       {_: :a, href: i.localURL(e),
-        c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?233x233'} : i.uri.sub(/.*\//,'')}}
+        c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?y=scaleImage&px=233'} : i.uri.sub(/.*\//,'')}}
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r|

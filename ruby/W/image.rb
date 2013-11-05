@@ -18,14 +18,15 @@ class E
   end
 
   fn 'req/scaleImage',->e,r{
-    if e.e
+    e = [e,e.pathSegment].compact.find(&:f)
+    if e
       size = r.q['px'].to_i.min(8).max(4096)
       stat = e.node.stat
       id = [stat.ino,stat.mtime,size].h.dive
       path = E['/E/image/'+id+'.png']
       if !path.e
         path.dirname.mk
-        if mimeP.match(/^video/)
+        if e.mimeP.match(/^video/)
           `ffmpegthumbnailer -s #{size} -i #{e.sh} -o #{path.sh}`
         else
           `gm convert #{e.sh} -thumbnail "#{size}x#{size}" #{path.sh}`
@@ -46,10 +47,9 @@ class E
      (H.css '/css/img')]}
   
   fn 'view/th',->i,e{
-    s=e.q['s']||'233'
     i.map{|u,i| u.match(/(gif|jpe?g|png|tiff)$/i) &&
       {_: :a, href: i.url+'?triplr=triplrImage&view=img',
-        c: {_: :img, src: i.url+'?'+s+'x'+s}}}}
+        c: {_: :img, src: i.url+'?y=scaleImage&px=233'}}}}
 
   F['view/'+MIMEtype+'image/gif'] = F['view/th']
   F['view/'+MIMEtype+'image/jpeg']= F['view/th']
