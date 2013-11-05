@@ -33,7 +33,8 @@ class E
           localesAvail = locales.select{|l|
             File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}
           imagePath = htmlBase.d + '/images'; FileUtils.mkdir_p imagePath unless File.exist? imagePath
-          pageCmd = "zcat #{man} | groff -T html -man -P -D -P #{imagePath}"
+          preconv = %w{hu pt tr}.member?(lang) ? "" : "-k"
+          pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
           page = `#{pageCmd}`.to_utf8
 
         [[:acceptLang,acceptLang],
