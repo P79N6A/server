@@ -46,7 +46,6 @@ class E
     for: 'application/fortran',
     gemspec: 'application/ruby',
     gif: 'image/gif',
-    gz: 'text/man',
     hs: 'application/haskell',
     html: 'text/html',
     ico: 'image/x-ico',

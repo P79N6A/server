@@ -1,34 +1,29 @@
 watch __FILE__
 class E
   
-  def triplrMan
-    if size < 256e3
-      yield uri, Content, `zcat #{sh} | groff -T html -man`
-    end
-  end
-  
   fn '/man/GET',->e,r{
-    e.pathSegment.uri.sub('/man/','/').tail.do{|name|
-
+    name = e.pathSegment.uri.sub('/man/','/').tail
+    section = nil
+    name.match(/^([0-9])\/(.*)/).do{|p|
+      section, name = p[1], p[2] }
+    
+    if name.match /\//
+      e.response
+    else
       manPath = '/usr/share/man'
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
       superLang = lang.do{|l| (l.split /[_-]/)[0] }
       langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
-      q = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
-      
-      section = nil
-      name.match(/^([0-9])\/(.*)/).do{|p|
-        section, name = p[1], p[2] }
-      man = `man #{langSH} -w #{section} #{name.sh}`.chomp
-      
-      unless man.empty?
-
+      man = `man #{langSH} -w #{section} #{name.sh}`.chomp      
+      if man.empty?
+        F[E404][e,r]
+      else
         roff = man.E
         htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
-
+        cached=false
         unless cached
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
           localesAvail = locales.select{|l|
@@ -38,18 +33,7 @@ class E
           pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
           page = `#{pageCmd}`.to_utf8
 
-        [[:acceptLang,acceptLang],
-         [:lang, lang],
-         [:langSH, langSH],
-         [:superLang, superLang],
-         [:qs, q],
-         [:roff,man],
-         [:htmlBase,htmlBase.d],
-         [:imagePath,imagePath],
-         [:localizations,localesAvail],
-         [:pageCmd,pageCmd],
-         [:cached?, cached ? :true : :false],
-        ].map{|p| puts [" "*(13-p[0].size),*p].join ' '}
+          [[:name,name],[:acceptLang,acceptLang],[:lang, lang],[:langSH, langSH],[:superLang, superLang],[:qs, q],[:roff,man],[:htmlBase,htmlBase.d],[:imagePath,imagePath],[:localizations,localesAvail],[:pageCmd,pageCmd]].map{|p| puts [" "*(13-p[0].size),*p].join ' '}
           
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
@@ -76,20 +60,22 @@ class E
             a.replace a.to_s.gsub('&gt;','>').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('
           }
           
+          qs = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
           # href-ize commands
           page.css('b').map{|b|
             b.next.do{|n|
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|
                 name, s = b.inner_text, section[1]
                 n.replace section[2]
-                b.replace " <a href='/man/#{s}/#{name}#{q}'><b>#{name}</b>(#{s})</a>"}}}
+                b.replace " <a href='/man/#{s}/#{name}#{qs}'><b>#{name}</b>(#{s})</a>"}}}
 
           html.w page
         end
-          
+        
         # response
         html.env(r).GET_file
       end
-    } || F[E404][e,r]}
+    end
+  }
 
 end
