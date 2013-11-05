@@ -28,14 +28,18 @@ class E
         cached = html.e && html.m > (Pathname man).stat.mtime
 #        cached=false
 
-        unless cached
+        if !cached
+
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
           localesAvail = locales.select{|l|
             File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}
-          imagePath = htmlBase.d + '/images'; FileUtils.mkdir_p imagePath unless File.exist? imagePath
+
+          imagePath = htmlBase.d + '/images'
+          FileUtils.mkdir_p imagePath unless File.exist? imagePath
+
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
           pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
-          page = `#{pageCmd}`.to_utf8
+          page = `#{pageCmd}`#.to_utf8
 
           [[:name,name],[:acceptLang,acceptLang],[:lang, lang],[:langSH, langSH],[:superLang, superLang],[:roff,man],[:htmlBase,htmlBase.d],[:imagePath,imagePath],[:localizations,localesAvail],[:pageCmd,pageCmd]].map{|p| puts [" "*(13-p[0].size),*p].join ' '}
           
@@ -60,13 +64,13 @@ class E
           # inspect plaintext
           #  HTMLize hyperlinks
           #  markup commands
-          page.xpath('//text()').map{|a|
+          body.xpath('//text()').map{|a|
             a.replace a.to_s.gsub('&gt;','>').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('
           }
           
           qs = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
           # href-ize commands
-          page.css('b').map{|b|
+          body.css('b').map{|b|
             b.next.do{|n|
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|
                 name, s = b.inner_text, section[1]
