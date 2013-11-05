@@ -1,40 +1,38 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def GET
-    f = [self,       # path & domain
-         pathSegment # path, all domains
-        ].compact.find{|f| f.f }
-
-    if f
-       a = @r.accept.values.flatten
-    view = @r.q.has_any_key %w{format view}
-    cook = MIMEcook[f.mimeP] && !@r.q.has_key?('raw')
-  accept = a.empty? || (a.member? f.mimeP) || (a.member? '*/*')
-
- (view || cook || !accept) ? self.GET_resource : f.env(@r).GET_file
-
+    if reqFn = F['req/'+@r.q['y']]
+      reqFn[self,@r]
+    elsif file = [self,pathSegment].compact.find(&:f)
+      a = @r.accept.values.flatten
+      accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
+      (@r.q.has_any_key %w{format view} ||
+       MIMEcook[file.mimeP] || !accepted) ? getPath : (file.env @r).getFile
     else
-      self.GET_resource
+      getPath
     end
   end
 
+  def getPath
+    h = pathHandler 'http://' + @r['SERVER_NAME']
+    h ? h[self, @r] : response
+  end
+
+  def send?
+    !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
+  end
+  
   def maybeSend m,b,lH=false
     # agent need this version?
     send? ?
     # continue
     b[].do{|b|
       # response metadata
-      h = {
-        'Content-Type'=> m,
-        'ETag'=> @r['ETag'],
-      }.merge @r['Cache']
-
-      # don't compress media MIMEs
-      m.match(/^(audio|image|video)/) && h.update({'Cache-Control' => 'no-transform'})
-
-      # Link dataURL for non-hypermedia/RDF payloads
-      lH && h.update({'Link' => '<' + (URI.escape uri) + '?format=text/n3>; rel=meta'})
+      h = {'Content-Type'=> m,
+           'ETag'=> @r['ETag']}
+      h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/
+      h.update({'Link' => '<' + (URI.escape uri) + '?format=text/n3>; rel=meta'}) if lH
 
       b.class == E ? (Nginx ?                                                     # nginx enabled
                       [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
@@ -48,44 +46,9 @@ class E
       [304,{},[]]    # client has response version
   end
 
-  def send?
-    !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
-  end  
-
-  def GET_file
+  def getFile
     @r['ETag'] = [m,size].h
     maybeSend mimeP,->{self},:link
   end
 
-  def GET_resource
-    handleReq  = F['req/' + @r.q['y']] # parametric resource-handler
-    h = handleReq || (pathHandler 'http://' + @r['SERVER_NAME'])
-#    puts "handlr #{h}"
-    h ? h[self, @r] : response
-  end
-
-  def pathHandler host, method='GET'
-    pathSegment.do{|p|
-      paths = p.cascade.map{|path|
-        path.uri.t + method }
-      [host,""].map{|host|
-        paths.map{|path|
-          handler = F[host + path]
-          return handler if handler
-        }}}
-    nil
-  end
-
-  fn '/GET',->e,r{
-    html = e.as 'index.html'
-    if html.e
-      if e.uri[-1] == '/'
-        html.env(r).GET_file
-      else
-        [301, {Location: e.uri.t}, []]
-      end
-    else
-      e.response
-    end}
-  
 end

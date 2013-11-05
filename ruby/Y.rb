@@ -20,6 +20,18 @@ class E
     F[uri][*a]
   end
 
+  def pathHandler host, method='GET'
+    pathSegment.do{|p|
+      paths = p.cascade.map{|path|
+        path.uri.t + method }
+      [host,""].map{|host|
+        paths.map{|path|
+          handler = F[host + path]
+          return handler if handler
+        }}}
+    nil
+  end
+
 end
 
 # URI-named functions

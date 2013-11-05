@@ -81,7 +81,7 @@ class E
         end
         
         # response
-        html.env(r).GET_file
+        html.env(r).getFile
       end
     end
   }

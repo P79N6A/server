@@ -42,4 +42,17 @@ class E
      (Fn 'view/find',i,e),'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
 
+  # a root-level handler
+  fn '/GET',->e,r{
+    html = e.as 'index.html'
+    if html.e
+      if e.uri[-1] == '/'
+        html.env(r).getFile
+      else
+        [301, {Location: e.uri.t}, []]
+      end
+    else
+      e.response
+    end}
+
 end

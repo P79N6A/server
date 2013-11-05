@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def triplrImage &f
@@ -17,18 +17,25 @@ class E
       end}
   end
 
-  def thumb
-    E['/E/image/'+
-      [no.stat.do{|s|
-         [s.ino,s.mtime]},
-       @r.qs].h.dive+'.png'].do{|n| n.e ||
-      (n.dirname.mk
-       mimeP.match(/^video/) &&
-       `ffmpegthumbnailer -s #{@r.qs.match(/[0-9]+/).to_s} -i #{sh} -o #{n.sh}` ||
-       `gm convert #{sh} -thumbnail "#{@r.qs}" #{n.sh}`)
-      n.env @r }
-  end
-  
+  fn 'req/scaleImage',->e,r{
+    if e.e
+      size = r.q['px'].to_i.min(8).max(4096)
+      stat = e.node.stat
+      id = [stat.ino,stat.mtime,size].h.dive
+      path = E['/E/image/'+id+'.png']
+      if !path.e
+        path.dirname.mk
+        if mimeP.match(/^video/)
+          `ffmpegthumbnailer -s #{size} -i #{e.sh} -o #{path.sh}`
+        else
+          `gm convert #{e.sh} -thumbnail "#{size}x#{size}" #{path.sh}`
+        end
+      end
+      (path.env r).getFile
+    else
+      F[E404][e,r]
+    end}
+
   fn 'view/img',->i,_{
     [i.values.map{|i|
        [{_: :a, href: i.url,
