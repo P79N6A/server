@@ -8,12 +8,11 @@ class E
   end
   
   fn '/man/GET',->e,r{
-    e.pathSegment.uri.sub('/man/','/').tail.do{|m|
+    e.pathSegment.uri.sub('/man/','/').tail.do{|name|
 
-      # section selection
-      s = nil
-      m.match(/^([0-9])\/(.*)/).do{|p|
-        s, m = p[1], p[2] }
+      section = nil
+      name.match(/^([0-9])\/(.*)/).do{|p|
+        section, name = p[1], p[2] }
       
      aLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || aLang
@@ -21,7 +20,8 @@ class E
 
       q = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
 
-      man = `man #{langSH} -w #{s} #{m.sh}`.chomp
+      man = `man #{langSH} -w #{section} #{name.sh}`.chomp
+
       unless man.empty?
 
         roff = man.E
@@ -31,24 +31,28 @@ class E
         cached = html.e && html.m > (Pathname man).stat.mtime
         cached = false
         
+        unless cached
+          locales = Pathname('/usr/share/man').c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
+          localesAvail = locales.select{|l|
+            puts l
+          }
+          
+
+          # basic HTML from GROHTML(1)
+          pageCmd = "zcat #{man} | groff -T html -man -P -D -P #{htmlBase.d}/images"
+          page = `#{pageCmd}`.to_utf8
+
         [[:aLang,aLang],
          [:lang, lang],
          [:langSH, langSH],
          [:qs, q],
          [:roff,man],
          [:htmlBase,htmlBase.d],
+         [:pageCmd,pageCmd],
          [:cached?, cached ? :true : :false],
         ].map{|p|
-          puts [" "*(8-p[0].size),*p].join ' '
-        }
-
-        unless cached
-          locales = Pathname('/usr/share/man').c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
-          # figure out which translations exist
+          puts [" "*(8-p[0].size),*p].join ' '}
           
-
-          # basic HTML from GROHTML(1)
-          page = `zcat #{man} | groff -T html -man -P -D -P #{htmlBase.d}/images`.to_utf8
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
           
@@ -59,7 +63,7 @@ class E
           # add localization links
           (body.css('h1')[0] ||
            body.css('p')[0]
-           ).add_previous_sibling H locales.map{|l|
+           ).add_previous_sibling H localesAvail.map{|l|
             {_: :a, class: :lang, href: r['REQUEST_PATH']+'?lang='+l, c: l}}
           
           # inspect plaintext
