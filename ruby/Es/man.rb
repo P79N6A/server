@@ -13,6 +13,7 @@ class E
       manPath = '/usr/share/man'
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
+      superLang = lang.split(/[_-]/)[0]
       langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
       q = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
       
@@ -27,19 +28,20 @@ class E
         htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
-        cached = false        
+cached=false
         unless cached
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
           localesAvail = locales.select{|l|
             File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}
           imagePath = htmlBase.d + '/images'; FileUtils.mkdir_p imagePath unless File.exist? imagePath
-          preconv = %w{hu pt tr}.member?(lang) ? "" : "-k"
+          preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
           pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
           page = `#{pageCmd}`.to_utf8
 
         [[:acceptLang,acceptLang],
          [:lang, lang],
          [:langSH, langSH],
+         [:superLang, superLang],
          [:qs, q],
          [:roff,man],
          [:htmlBase,htmlBase.d],
@@ -47,8 +49,7 @@ class E
          [:localizations,localesAvail],
          [:pageCmd,pageCmd],
          [:cached?, cached ? :true : :false],
-        ].map{|p|
-          puts [" "*(13-p[0].size),*p].join ' '}
+        ].map{|p| puts [" "*(13-p[0].size),*p].join ' '}
           
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
@@ -63,6 +64,11 @@ class E
            ).add_previous_sibling H localesAvail.map{|l|
             {_: :a, class: :lang, href: r['REQUEST_PATH']+'?lang='+l, c: l}}
           
+          # webize image paths
+          body.css('img').map{|i|
+            p = (i.attr 'src').unpathURI
+            %w{src alt}.map{|a| i.set_attribute a, p}}
+
           # inspect plaintext
           #  HTMLize hyperlinks
           #  markup commands
