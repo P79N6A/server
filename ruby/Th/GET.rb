@@ -1,4 +1,3 @@
-watch __FILE__
 class E
 
   def GET
@@ -12,6 +11,11 @@ class E
     else
       getPath
     end
+  end
+
+  def getFile
+    @r['ETag'] = [m,size].h
+    maybeSend mimeP,->{self},:link
   end
 
   def getPath
@@ -44,11 +48,6 @@ class E
                       ) :
       [200, h, b]} : # normal (unaccelerated) response
       [304,{},[]]    # client has response version
-  end
-
-  def getFile
-    @r['ETag'] = [m,size].h
-    maybeSend mimeP,->{self},:link
   end
 
 end

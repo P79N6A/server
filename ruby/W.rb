@@ -24,6 +24,7 @@ search
 sw
 table
 text
+threads
 time
 wiki
 }.each{|r|require_relative 'W/'+r}
