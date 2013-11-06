@@ -41,8 +41,11 @@ class E
        c: (Fn 'view/tab',i,e)},
      (Fn 'view/find',i,e),'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
-
-  # a root-level handler
+  
+  # (global handler customizations here)
+  # 
+  # example: try to find an index.html, fallback
+  # to basic graph-fs response (out.rb)
   fn '/GET',->e,r{
     html = e.as 'index.html'
     if html.e
