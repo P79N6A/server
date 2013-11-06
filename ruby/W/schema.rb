@@ -99,7 +99,7 @@ class E
   def E.schemaDocs
     @docs ||=
       (source = E['http://prefix.cc/popular/all.file.txt']
-       mirror = E['http://localhost/css/i/prefix.cc.txt']
+       mirror = E['/prefix.txt']
        schemae = (mirror.e ? mirror : source).
        read.split("\n").           # each doc
        grep(/^[^#]/).              # skip commented
