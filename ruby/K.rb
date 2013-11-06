@@ -80,6 +80,7 @@ class E
     ttl: 'text/turtle',
     txt: 'text/plain',
     u: 'application/uri',
+    url: 'text/plain',
     wav: 'audio/wav',
     wmv: 'video/wmv',
     xlsx: 'application/excel',
@@ -130,7 +131,8 @@ class E
     'text/log'=>true,
     'text/man'=>true,
     'text/nfo'=>true,
-    'text/rtf'=>true}
+    'text/rtf'=>true,
+  }
 
   %w{c c++ fortran haskell makefile pascal perl php python ruby}.map{|t|
     %w{application/ text/x-}.map{|m|
