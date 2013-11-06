@@ -1,6 +1,8 @@
 #watch __FILE__
 class E
   
+  # uses "rapper" , from raptor2-utils to fetch/write RDF files 
+
   # install schema-cache
   def E.schemaCache
     E.schemaDocs.map &:schemaCache

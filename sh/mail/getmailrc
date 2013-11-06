@@ -1,3 +1,13 @@
+[options]
+verbose = 1
+delete = true
+
 [destination]
 type = MDA_external
 path = /usr/bin/procmail
+
+[retriever]
+type = SimplePOP3Retriever
+server = 
+username = 
+password = 
