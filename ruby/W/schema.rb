@@ -4,98 +4,72 @@ class E
   build a local, searchable cache of RDF schemae
 
   "rapper" from raptor2-utils is used
+  and 3rd-party data:
 
-  seed data:
   curl http://prefix.cc/popular/all.file.txt > prefix.txt
   curl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt
 
 =end
-  # install schema-cache
+
+  # build schema-cache
   def E.schemaCache
     E.schemaDocs.map &:schemaCache
   end
+
   def E.schemaUncache
     E.schemaDocs.map &:schemaUncache
   end
 
   def schemaCache
-    schemaCacheDoc
-    schemaIndexDoc
-  end
-  def schemaUncache
-    schemaUnindexDoc
-    schemaUnlinkSlashURIs
-    schemaUncacheDoc
-  end
+    weight = E.schemaStatistics
 
-  # cache schema docs
-  def schemaCacheDoc
-    if ttl.e || ef.e # already cached?
-      print "cache #{uri} "
-    else
-      ttl.w(`rapper -o turtle #{uri}`) # write turtle
-    end
-  end
+    # cache Turtle representation of resource
+    ttl.w(`rapper -o turtle #{uri}`) unless ttl.e
 
-  def schemaUncacheDoc
-    ef.deleteNode  # remove JSON
-    ttl.deleteNode # remove Turtle
-  end
-  
-  # index schema docs
-  def schemaIndexDoc
-    c = E.schemaStatistics
-    if (nt.e ||                           # skip already-processed docs
-        ttl.do{|d|d.e && d.size > 256e3}) # skip huge dbpedia/wordnet dumps
-      print "e "
-    else
-      g = graph           # schema graph
-      ttl.deleteNode      # convert Turtle 
-      ef.w g,true if !ef.e# to JSON (for faster loading)
-      roonga "schema"     # index in rroonga
+    # skip indexed docs & huge dbpedia/wordnet dumps
+    unless nt.e || ttl.do{|t| t.e && t.size > 256e3}
       m={}                # statistics graph 
-      g.map{|u,_|         # each resource
-        c[u] &&           # do stats exist?
-        m[u] = {'uri'=>u, '/frequency' => c[u]}} # add to graph
-      nt.w E.renderRDF m  # store N-triples
-      schemaLinkSlashURIs # link "Slash-URI" resources to definer
+      graph.map{|u,_|
+        weight[u] &&
+        m[u] = {'uri'=> u,
+          '/frequency' => weight[u]}}
+      nt.w E.renderRDF m, :ntriples
+      schemaLinkSlashURIs
     end
   end
 
-  def schemaUnindexDoc
-    unroonga
-    nt.deleteNode
-  end
-
-  # make slash-URIs resolvable
   def schemaLinkSlashURIs undo=false
-    return if !ef.e      # cache populated?
+    return if !ef.e      # doc exist?
     graph.do{|m|                     # build graph
       m.map{|u,r|                    # iterate through URIs
         r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
-          t = u.E.ef     # symlink location
+          t = u.E.ef     # link URI
           t.dirname.mk   # parent dir
-          if undo
-            if t.e
+          if undo          # undo?
+            if t.e         # link exist?
               t.deleteNode # remove link
             end
-          else
-            unless t.e
+          else             # do
+            unless t.e     # link exist?
               ef.ln t      # add link
             end
-          end
-        }}}
+          end }}}
   end
 
   def schemaUnlinkSlashURIs
     schemaLinkSlashURIs :undo
   end
 
+  def schemaUncache
+    ef.deleteNode  #-JSON
+    ttl.deleteNode #-Turtle
+  end
+
   # parse gromgull's BTC statistics
   def E.schemaStatistics
     @gromgull ||=
       (data = '/predicates.txt'.E
-    (puts "missing predicates.txt"; exit) unless data.e
+    (puts "download:\ncurl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt"; exit) unless data.e
     # occurrence count :: URI -> int
     usage = {}
     data.read.each_line{|e|
