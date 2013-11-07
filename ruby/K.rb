@@ -104,7 +104,6 @@ class E
     'message/rfc822'       => [:triplrMail],
     'text/ansi'            => [:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
-    'text/html'            => [:triplrRDF, :rdfa],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
     'text/nfo'             => [:triplrHref,'cp437'],

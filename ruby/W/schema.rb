@@ -61,8 +61,7 @@ class E
   end
 
   def schemaUncache
-    ef.deleteNode  #-JSON
-    ttl.deleteNode #-Turtle
+    ef.deleteNode
   end
 
   # parse gromgull's BTC statistics
