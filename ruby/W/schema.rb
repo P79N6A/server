@@ -31,7 +31,7 @@ class E
   # cache schema docs
   def schemaCacheDoc
     if ttl.e || ef.e # already cached?
-      print "c "
+      print "cache #{uri} "
     else
       ttl.w(`rapper -o turtle #{uri}`) # write turtle
     end
