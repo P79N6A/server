@@ -25,6 +25,9 @@ class E
     # link to editable resource
     s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable']]
 
+    # link to nearby resources
+    s['#seeAlso']=[e.parent,*e.a('*').glob]
+
     r.q['view'] = '404'
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
   
