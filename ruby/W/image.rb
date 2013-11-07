@@ -18,21 +18,21 @@ class E
   end
 
   fn 'req/scaleImage',->e,r{
-    e = [e,e.pathSegment].compact.find(&:f)
-    if e
+    i = [e,e.pathSegment].compact.find(&:f)
+    if i && i.size > 0
       size = r.q['px'].to_i.min(8).max(4096)
-      stat = e.node.stat
+      stat = i.node.stat
       id = [stat.ino,stat.mtime,size].h.dive
       path = E['/E/image/'+id+'.png']
       if !path.e
         path.dirname.mk
-        if e.mimeP.match(/^video/)
-          `ffmpegthumbnailer -s #{size} -i #{e.sh} -o #{path.sh}`
+        if i.mimeP.match(/^video/)
+          `ffmpegthumbnailer -s #{size} -i #{i.sh} -o #{path.sh}`
         else
-          `gm convert #{e.sh} -thumbnail "#{size}x#{size}" #{path.sh}`
+          `gm convert #{i.sh} -thumbnail "#{size}x#{size}" #{path.sh}`
         end
       end
-      (path.env r).getFile
+      path.e ? (path.env r).getFile : F[E404][e,r]
     else
       F[E404][e,r]
     end}
