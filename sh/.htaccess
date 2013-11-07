@@ -2,5 +2,6 @@ RewriteEngine On
 RewriteCond %{SERVER_PORT} ^80$
 RewriteRule ^ http://%{HTTP_HOST}:3000%{REQUEST_URI} [P]
 XSendFile On
-# in /etc/apache2/sites-enabled/host.conf
+
+# /etc/apache2/sites-enabled/host.conf:
 # XSendFilePath /var/www

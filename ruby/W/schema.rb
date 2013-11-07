@@ -1,8 +1,15 @@
-#watch __FILE__
+watch __FILE__
 class E
-  
-  # uses "rapper" , from raptor2-utils to fetch/write RDF files 
+=begin  
+  build a local, searchable cache of RDF schemae
 
+  "rapper" from raptor2-utils is used
+
+  seed data:
+  curl http://prefix.cc/popular/all.file.txt > prefix.txt
+  curl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt
+
+=end
   # install schema-cache
   def E.schemaCache
     E.schemaDocs.map &:schemaCache
@@ -87,8 +94,8 @@ class E
   # parse gromgull's BTC statistics
   def E.schemaStatistics
     @gromgull ||=
-      (data = '/predicates.2010'.E
-    (puts "curl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.2010"; exit) unless data.e
+      (data = '/predicates.txt'.E
+    (puts "missing predicates.txt"; exit) unless data.e
     # occurrence count :: URI -> int
     usage = {}
     data.read.each_line{|e|
