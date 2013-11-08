@@ -15,6 +15,7 @@ index
 json
 kv
 ls
+mail
 man
 mime
 out

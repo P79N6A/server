@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 require 'benchmark'
 
 class E
@@ -25,7 +25,7 @@ class E
   F['/health/GET'] = ->e,r{
     (H [{_: :h1,
           c: {_: :a, href: '/', style: "background-color:"+E.cs, c: '/'}},
-        {c: [{_: :b, c: r['SERVER_NAME']},' disk ',`df --output=pcent /|tail -n 1`]},
+        {c: [{_: :b, c: r['SERVER_NAME']},' storage ',`df --output=pcent /|tail -n 1`]},
         {_: :a, href: '/slow', c: 'slow queries'},
         {_: :A, href: '/500', c: 'broken requests'},
         H.css('/css/health')

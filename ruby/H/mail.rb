@@ -1,7 +1,4 @@
-require_relative 'mailTmail'
 class E
-
-  alias_method :triplrMail, :triplrTmail
 
   fn 'view/mail',->d,e{
     title = nil

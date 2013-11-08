@@ -126,7 +126,7 @@ class E
       {_: :link, rel: :meta, type: f,
         href:'http://' + e['SERVER_NAME'] + e['REQUEST_PATH'] + e.q.merge({'format' => f}).qs}}.cr}
 
-  fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
+  fn 'head.icon',->{{_: :link, href:'/css/misc/favicon.ico', rel: :icon}}
 
   # domain-specific view
   fn 'view',->d,e{( Fn 'view/divine/set',d,e)||

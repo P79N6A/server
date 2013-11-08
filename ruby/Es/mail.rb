@@ -1,4 +1,7 @@
 class E
+  
+  # dep resolution
+  # apt-get install ruby-tmail
 
   def triplrTmail                         ; require 'tmail'
 
@@ -38,6 +41,12 @@ class E
   rescue Exception => e
     puts [:mail,uri,e].join(' ')
   end
+
+  alias_method :triplrMail, :triplrTmail
+
+  # pure-ruby mail is only 10x (vs 100x) slower than C-ext based TMail w/ new parser
+  # API is mostly identical, URIs strings arent <>-wrapped
+  # TODO replace this msg with triplrMail if anyone wants it
 
 end
 
