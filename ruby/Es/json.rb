@@ -14,7 +14,7 @@ class E
         (p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
          j.w({u => r},true) # write doc
          puts "a #{e}"
-         # link opaque-URI docs as siblings of base-URI
+         # link opaque-URI docs as siblings of base-URI for doc-discoverability
          e.a('.e').do{|u| (j.ln u) unless ((j.uri == u.uri) || u.e)  }
          e.roonga g # index content
          )}}

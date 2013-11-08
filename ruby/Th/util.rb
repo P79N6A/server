@@ -85,21 +85,4 @@ class E
          self) : @r
   end
 
-  F['log']=->c,e,x=nil{ # response code, environment, extra stuff
-    uri = ['http://', e['SERVER_NAME'], e['REQUEST_URI']].join
-    if 500 == c
-      Errors[uri] ||= {}
-      Errors[uri][:time] = Time.now
-    end
-    if x && x.class==Float && x > 1
-      s = Slow[uri] ||= {}
-      s[:time] ||= 0
-      s[:time] += x
-      s[:last] = Time.now
-      if Slow.size > 10e3
-        Slow = {}
-      end
-    end
-    $stdout.puts [e.fn,c,uri,e['HTTP_USER_AGENT'],e['HTTP_REFERER'],x].join ' '}
-
 end
