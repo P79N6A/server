@@ -7,12 +7,9 @@ class E
       d.values.each{|r| r.triples{|s,p,o|
           s = RDF::URI s
           p = RDF::URI p
-          o = begin
-                [E,Hash].member?(o.class) ? (RDF::URI o.uri) : (RDF::Literal o)
-              rescue Exception => e
-                puts "#Error in #{s} #{p} #{o}\n{e}"
-              end
-            w << (RDF::Statement.new s,p,o) if o }}}
+          o = ([E,Hash].member?(o.class) ? (RDF::URI o.uri) : (RDF::Literal o)) rescue nil
+          (w << (RDF::Statement.new s,p,o) if o ) rescue nil
+        }}}
   end
 
   def triplrRDF format=:rdfa, localFile=true  ; require 'linkeddata'

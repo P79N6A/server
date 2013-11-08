@@ -1,24 +1,23 @@
 watch __FILE__
 class E
-=begin  
-  a local cache of RDF schema docs
+#  http://librdf.org/raptor/
 
-  http://librdf.org/raptor/
+#  curl http://prefix.cc/popular/all.file.txt > prefix.txt
+#  curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
 
-  curl http://prefix.cc/popular/all.file.txt > prefix.txt
-  curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
-
-=end
-
-  # make schema-cache
-  def E.name
-    E.schemaDocs.map &:schemaCache
+  def E.schema
+    d = E.schemaDocs
+    # fetch/cache/index schemas
+    d.map &:schemaCache
+    # put all schemas in single NTriples file
+    graph = {}
+    
   end
 
   def schemaCache
     weight = E.schemaWeights
 
-    # cache Turtle representation of resource
+    # cache Turtle representation
     ttl.w(`rapper -o turtle #{uri}`) unless ttl.e
 
     # skip indexed docs & huge dbpedia/wordnet dumps
@@ -53,18 +52,10 @@ class E
   end
 
   fn '/schema/GET',->e,r{
-    r.q.merge!({
-                 'graph'=>'roonga',
-                 'context'=>'schema',
-                 'view'=>'search',
-                 'filter'=>'frag',
-                 'v'=>'schema',
-                 'c'=>(r.q.has_key?('q') ? 1000 : 0)
-               })
-    e.response
+
   }
   
-  fn 'u/schema/weight',->d,e{
+  fn 'schema/weight',->d,e{
     q = e.q['q']
     d.keys.map{|k| k.class==String && d[k].class==Hash &&
       (s=0
@@ -74,41 +65,5 @@ class E
             q.camelToke.map(&:downcase).map{|c|
               u.match(c) && 3 || 0}.sum)
        d[k]['score'] = s )}}
-  
-  fn 'view/schema',->d,e{
-    # score resources on popularity, URL friendliness 
-    Fn 'u/schema/weight',d,e
-    # sort updated response-graph based on score
-    d = d.select{|u,r|
-      r['score'] && r['score'].respond_to?(:>)
-    }.sort_by{|u,r| r['score'] }.reverse
-
-    d.size > 0 &&
-    (# fit values to CSS range
-     scale = 255 / d[0][1]['score'].do{|s|s > 0 && s || 1}
-     [(H.css '/css/schema'),'<table>',
-      d.map{|u,r|
-        # score -> normalized score
-        v = r['score'] * scale
-        # score -> greyscale value
-        f = '%02x' % v
-        # greyscale val -> full CSS
-        style = 'color:#'+(v > 128 ? '000' : 'fff')+';background-color:#'+f+f+f
-        # stats on stats
-        title = r['/frequency'][0].to_s + ' | %.3f'%r['score']
-
-        [{_: :tr, class: :overview, style: style, title: title,
-           c: [{_: :td, class: :identity,
-                 c: u.E.html},
-               {_: :td, class: :label,
-                 c: [{_: :span, class: :stats, c: title},
-                     r[RDFs+'label'][0].do{|l|
-                       {_: :a, href: r.uri,class: :label,c: l}}]}]},
-         {_: :tr, class: :details, style: style, title: title,
-           c: {_: :td, colspan: 2, class: :describe,
-             c: [r[RDFs+'comment'][0].do{|l|
-                   {_: :span,class: :comment, c: l}},' ',
-                 {_: :a, href: '/@'+u.sub('#','%23')+'?filter=frag',
-                   c: '&gt;&gt;'}]}}]},'</table>'])}
 
 end
