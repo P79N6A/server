@@ -1,8 +1,19 @@
 class E
 
   def triplrPDF &f
-    yield uri,Content,`pdftotext #{sh}; cat #{docBase.a('.txt').sh}`
-    dateNorm :triplrStdOut,'pdfinfo', &f
+
+    text = docBase.a '.txt'
+    unless text.e && text.m > m
+      puts "PDF #{uri}"
+      `pdftotext #{sh}`
+    end
+
+    # metadata
+    triplrStdOut 'pdfinfo', &f
+
+    # body
+    yield uri, Content, `cat #{text.sh}`
+
   end
 
 end
