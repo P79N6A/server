@@ -1,19 +1,24 @@
 %w{
 du
+feed
 filter
 find
 fs
 glob
 grep
 groonga
+html
 in
 index
+json
 kv
 ls
 man
 mime
 out
+pager
 rdf
 schema
 sh
+text
 }.map{|e|require_relative 'Es/'+e}

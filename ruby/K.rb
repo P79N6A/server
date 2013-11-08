@@ -5,7 +5,6 @@ class E
   Prefix   = '/@'  # non-HTTP URI path resolution-prefix
   S        = '._'  # (meta)data directory
 
-  # URIs
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"
@@ -30,8 +29,10 @@ class E
   EXIF     = 'http://www.w3.org/2003/12/exif/ns#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
+  Render = 'render/'
+  Apache = ENV['apache']
+  Nginx  = ENV['nginx']
 
-  # file-name extension -> MIME type
   MIME={
     aif: 'audio/aif',
     ans: 'text/ansi',
@@ -86,7 +87,6 @@ class E
     xlsx: 'application/excel',
   }
 
-  # MIME type -> triplrFn
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
     'application/markdown' => [:triplrMarkdown],
@@ -158,8 +158,5 @@ class E
   def == u
       to_s == u.to_s
   end
-
-  Nginx = ENV['nginx']
-  Apache = ENV['apache']
 
 end

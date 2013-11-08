@@ -44,7 +44,7 @@ end
 class Object
   def html *a
     name = self.class
-    href = "http://www.ruby-doc.org/core/#{name}.html"
+    href = "https://duckduckgo.com/?q=ruby+#{name}"
     "<a href=#{href}><b>#{name}</b></a>"
   end
 end
@@ -122,14 +122,13 @@ class E
 
   fn 'head.formats',->e{
     formats = %w{application/json text/n3}
-#   formats = F.keys.grep(/^render/).map{|f|f[7..-1]} # all
     formats.map{|f|
       {_: :link, rel: :meta, type: f,
         href:'http://' + e['SERVER_NAME'] + e['REQUEST_PATH'] + e.q.merge({'format' => f}).qs}}.cr}
 
   fn 'head.icon',->{{_: :link, href:'/css/i/favicon.ico', rel: :icon}}
 
-  # type-specific view
+  # domain-specific view
   fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
     d.values.map{|r|Fn 'view/divine/item',r,e}}
 
@@ -165,14 +164,8 @@ elsif b.grep(/\.log$/).size / s > t
        f.({r.uri => r},e)}) ||
     [r.html,H.once(e,'css',H.css('/css/html'))] }
 
-  # display multiple views (comma-separated)
+  # multiple views (comma-separated)
   fn 'view/multi',->d,e{e.q['views'].split(',').map{|v|Fn'view/'+v,d,e}}
-
-  # show available views
-  fn 'view/?',->d,e{
-    [{_: :style, c: 'a {min-width:22em;text-align:right}'},
-    F.keys.grep(/^view\/(?!application)/).map{|v|
-      [{_: :a, href: e['REQUEST_PATH']+e.q.merge({'view' => v[5..-1]}).qs,c: v},'<br>']}]}
 
   def triplrBlob
     glob.select(&:f).do{|f|f.map{|r|
