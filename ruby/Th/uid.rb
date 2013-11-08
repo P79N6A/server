@@ -21,4 +21,8 @@ class E
   fn '/whoami/GET',->e,r{
     [302,{Location: '/@'+r.uid.uri},[]]}
 
+  fn 'http://www.facebook.com/GET',->e,r{
+    H[{_: :a, href: e.uri, c: e.uri}].hR}
+
+
 end
