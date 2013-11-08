@@ -19,7 +19,6 @@ moz
 page
 pdf
 protovis
-schema
 search
 sw
 table

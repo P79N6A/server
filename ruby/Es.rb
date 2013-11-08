@@ -14,5 +14,6 @@ man
 mime
 out
 rdf
+schema
 sh
 }.map{|e|require_relative 'Es/'+e}

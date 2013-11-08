@@ -10,7 +10,7 @@ class E
           o = begin
                 [E,Hash].member?(o.class) ? (RDF::URI o.uri) : (RDF::Literal o)
               rescue Exception => e
-                puts "#{e} \ntriple:\n#{s} #{p} #{o}"
+                puts "#Error in #{s} #{p} #{o}\n{e}"
               end
             w << (RDF::Statement.new s,p,o) if o }}}
   end

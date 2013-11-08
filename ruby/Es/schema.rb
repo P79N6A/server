@@ -3,19 +3,19 @@ class E
 =begin  
   build a local, searchable cache of RDF schemae
 
-  "rapper" from raptor2-utils is used
-  and 3rd-party data:
+  "rapper" from raptor2-utils is used, & 3rd-party data:
 
   curl http://prefix.cc/popular/all.file.txt > prefix.txt
   curl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt
 
 =end
 
-  # build schema-cache
+  # make schema-cache
   def E.schemaCache
     E.schemaDocs.map &:schemaCache
   end
 
+  # empty schema-cache
   def E.schemaUncache
     E.schemaDocs.map &:schemaUncache
   end
@@ -32,7 +32,7 @@ class E
       graph.map{|u,_|
         weight[u] &&
         m[u] = {'uri'=> u,
-          '/frequency' => weight[u]}}
+          'http://whats-your.name/property/usageFrequency' => weight[u]}}
       nt.w E.renderRDF m, :ntriples
       schemaLinkSlashURIs
     end
