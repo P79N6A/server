@@ -1,80 +1,45 @@
 watch __FILE__
 class E
 =begin  
-  build a local, searchable cache of RDF schemae
+  a local cache of RDF schema docs
 
-  "rapper" from raptor2-utils is used, & 3rd-party data:
+  http://librdf.org/raptor/
 
   curl http://prefix.cc/popular/all.file.txt > prefix.txt
-  curl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt
+  curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
 
 =end
 
   # make schema-cache
-  def E.schemaCache
+  def E.name
     E.schemaDocs.map &:schemaCache
   end
 
-  # empty schema-cache
-  def E.schemaUncache
-    E.schemaDocs.map &:schemaUncache
-  end
-
   def schemaCache
-    weight = E.schemaStatistics
+    weight = E.schemaWeights
 
     # cache Turtle representation of resource
     ttl.w(`rapper -o turtle #{uri}`) unless ttl.e
 
     # skip indexed docs & huge dbpedia/wordnet dumps
     unless nt.e || ttl.do{|t| t.e && t.size > 256e3}
-      m={}               # statistics graph 
+      m={}
       graph.map{|u,_|     # each property
-        weight[u] &&       # stats exist?
-        m[u] = {'uri'=> u, # append
-          'http://whats-your.name/property/usageFrequency' => weight[u]}}
-      nt.w E.renderRDF m, :ntriples # write .nt w/ associated weights
-      schemaLinkSlashURIs
+        weight[u] &&      # annotate if stats exist
+        m[u] = {'uri'=> u,'http://whats-your.name/property/usageFrequency' => weight[u]}}
+      nt.w E.renderRDF m, :ntriples # store in .nt
     end
   end
 
-  def schemaLinkSlashURIs undo=false
-    return if !ttl.e      # doc exist?
-    graph.do{|m|
-      m.map{|u,r|                    # each URI
-        r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
-          t = u.E.ttl     # target
-          t.dirname.mk    # containing dir
-          if undo          # undo?
-            if t.e         # link exist?
-              t.deleteNode # remove link
-            end
-          else             # do
-            unless t.e     # link exist?
-              ttl.ln t      # add link
-            end
-          end }}}
-  end
-
-  def schemaUnlinkSlashURIs
-    schemaLinkSlashURIs :undo
-  end
-
-  def schemaUncache
-    ttl.deleteNode
-    nt.deleteNode
-  end
-
-  def E.schemaStatistics
+  def E.schemaWeights
     @gromgull ||=
-      (data = '/predicates.txt'.E
-    (puts "download:\ncurl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt"; exit) unless data.e
-    # occurrence count :: URI -> int
-    usage = {}
-    data.read.each_line{|e|
-      e.match(/(\d+)[^<]+<([^>]+)>/).do{|r|
-        usage[r[2]] = r[1].to_i }}
-    usage)
+      (data = '/properties.txt'.E
+       (puts "download\ncurl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt"; exit) unless data.e
+       w = {}
+       data.read.each_line{|e|
+         e.match(/(\d+)[^<]+<([^>]+)>/).do{|r|
+           w[r[2]] = r[1].to_i }}
+       w)
   end
   
   def E.schemaDocs
