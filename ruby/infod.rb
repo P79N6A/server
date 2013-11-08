@@ -7,7 +7,6 @@
 # N  naming
 # Rb Ruby native-types
 # Th HTTP
-# W  forms and formats
 # Y  lambdas
 
-%w{Y K Rb N Es W Th}.map{|e| require 'infod/' + e}
+%w{Y K Rb N Es H Th}.map{|e| require 'infod/' + e}

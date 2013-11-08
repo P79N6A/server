@@ -4,21 +4,17 @@ cal
 code
 color
 css
-csv
 edit
 exhibit
 facets
 histogram
-image
 im
 mail
 moz
-pdf
 protovis
-search
 sw
 table
 threads
 time
 wiki
-}.each{|r|require_relative 'W/'+r}
+}.each{|r|require_relative 'H/'+r}

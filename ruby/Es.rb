@@ -1,4 +1,5 @@
 %w{
+csv
 du
 feed
 filter
@@ -8,6 +9,7 @@ glob
 grep
 groonga
 html
+image
 in
 index
 json
@@ -17,8 +19,10 @@ man
 mime
 out
 pager
+pdf
 rdf
 schema
+search
 sh
 text
 }.map{|e|require_relative 'Es/'+e}
