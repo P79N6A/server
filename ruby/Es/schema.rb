@@ -28,30 +28,30 @@ class E
 
     # skip indexed docs & huge dbpedia/wordnet dumps
     unless nt.e || ttl.do{|t| t.e && t.size > 256e3}
-      m={}                # statistics graph 
-      graph.map{|u,_|
-        weight[u] &&
-        m[u] = {'uri'=> u,
+      m={}               # statistics graph 
+      graph.map{|u,_|     # each property
+        weight[u] &&       # stats exist?
+        m[u] = {'uri'=> u, # append
           'http://whats-your.name/property/usageFrequency' => weight[u]}}
-      nt.w E.renderRDF m, :ntriples
+      nt.w E.renderRDF m, :ntriples # write .nt w/ associated weights
       schemaLinkSlashURIs
     end
   end
 
   def schemaLinkSlashURIs undo=false
-    return if !ef.e      # doc exist?
-    graph.do{|m|                     # build graph
-      m.map{|u,r|                    # iterate through URIs
+    return if !ttl.e      # doc exist?
+    graph.do{|m|
+      m.map{|u,r|                    # each URI
         r[RDFs+'isDefinedBy'].do{|d| # check for DefinedBy attribute
-          t = u.E.ef     # link URI
-          t.dirname.mk   # parent dir
+          t = u.E.ttl     # target
+          t.dirname.mk    # containing dir
           if undo          # undo?
             if t.e         # link exist?
               t.deleteNode # remove link
             end
           else             # do
             unless t.e     # link exist?
-              ef.ln t      # add link
+              ttl.ln t      # add link
             end
           end }}}
   end
@@ -61,10 +61,10 @@ class E
   end
 
   def schemaUncache
-    ef.deleteNode
+    ttl.deleteNode
+    nt.deleteNode
   end
 
-  # parse gromgull's BTC statistics
   def E.schemaStatistics
     @gromgull ||=
       (data = '/predicates.txt'.E
@@ -77,7 +77,6 @@ class E
     usage)
   end
   
-  # parse schema URIs
   def E.schemaDocs
     @docs ||=
       (source = E['http://prefix.cc/popular/all.file.txt']
