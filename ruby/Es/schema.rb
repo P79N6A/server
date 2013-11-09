@@ -17,7 +17,7 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
     g = {}
     E.schemaDocs.map(&:ef).flatten.map{|d|d.graphFromFile g}
     '/schema.txt'.E.w g.map{|u,r|
-      [u,(r[UsageWeight]||0),r[Label],r[DC+'description'],r[Purl+'dc/elements/1.1/description'],r[RDFs+'comment']].join(' ').gsub("\n"," ") if u.path?
+      [(r[UsageWeight]||0),u,r[Label],r[DC+'description'],r[Purl+'dc/elements/1.1/description'],r[RDFs+'comment']].join(' ').gsub("\n"," ") if u.path?
     }.compact.join "\n"
   end
 
@@ -57,7 +57,16 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
   end
 
   fn '/schema/GET',->e,r{
-    
+    q = r.q['q']
+    if q && !q.empty?
+      grep = "grep -i #{q} #{'/schema.txt'.E.d} | sort -nr | head -n 255";puts grep
+      `#{grep}`.lines.to_a.map{|i|
+        c,u,t = i.split(' ',3)
+        [c,"<a href='#{u}'>#{u}</a>",t].join ' '
+      }.join("<br>\n").hR
+    else
+      'q'.hR
+    end
   }
   
   fn 'schema/weight',->d,e{
