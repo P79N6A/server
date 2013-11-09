@@ -7,29 +7,26 @@ class E
 # curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
 # wget http://schema.org/docs/schema_org_rdfa.html
 
-  def E.schema
-    g = {}
-    d = E.schemaDocs
-    # fetch/cache/index schemas
-    d.map &:schemaCache
-    # all schemas to single NTriples file
-    d.map(&:ef).flatten.map{|d|d.graphFromFile g}
-    puts g.keys.size
+  def E.cacheSchemas
+    E.schemaDocs.map &:cacheSchema
   end
 
-  def schemaCache
-    weight = E.schemaWeights
+  def E.indexSchemas
+    # all schemas to single NTriples file
+    d.map(&:ef).flatten.map{|d|d.graphFromFile g}
+    puts g.keys.size    
+  end
 
-    # cache Turtle representation
+  def cacheschema
+    # fetch Turtle
     ttl.w(`rapper -o turtle #{uri}`) unless ttl.e
 
     # except indexed docs & huge dbpedia/wordnet dumps
     unless ef.e || ttl.do{|t| t.e && t.size > 256e3}
-      g = ttl.graphFromFile
-      g.map{|u,r|     # each resource
-        if weight[u]
-          r['http://schema.whats-your.name/usageFrequency'] = weight[u]
-        end }
+      g = ttl.graphFromFile # parse
+      g.map{|u,r|           # each resource
+        E.schemaWeights[u].do{|w| # grab stats
+          r['http://schema.whats-your.name/usageFrequency'] = w }}
       ef.w g,true # write annotated graph
     end
   end

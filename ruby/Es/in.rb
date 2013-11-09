@@ -66,31 +66,3 @@ class E
   end
 
 end
-
-class Hash
-
-  def graph g
-    g.merge!({uri=>self})
-  end
-
-  def mergeGraph g
-    g.values.each do |r|
-      r.triples do |s,p,o|
-        self[s] = {'uri' => s} unless self[s].class == Hash 
-        self[s][p] ||= []
-        self[s][p].push o unless self[s][p].member? o
-      end
-    end
-    self
-  end
-
-  def attr p;map{|_,r|r[p].do{|o|return o}}; nil end
-
-  # Hash -> tripleStream
-  def triples
-    s = uri
-    map{|p,o|
-      o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}
-  end
-
-end

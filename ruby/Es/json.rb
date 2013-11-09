@@ -1,3 +1,27 @@
+class Hash
+
+  def graph g
+    g.merge!({uri=>self})
+  end
+
+  def mergeGraph g
+    g.values.each{|r|
+      r.triples{|s,p,o|
+        self[s] = {'uri' => s} unless self[s].class == Hash 
+        self[s][p] ||= []
+        self[s][p].push o unless self[s][p].member? o }} if g
+    self
+  end
+
+  # tripleStream emitter
+  def triples
+    s = uri
+    map{|p,o|
+      o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}
+  end
+
+end
+
 class E
 
   def triplrJSON
