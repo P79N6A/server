@@ -5,15 +5,16 @@ class E
 
 # curl http://prefix.cc/popular/all.file.txt > prefix.txt
 # curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
-# http://schema.org/docs/schema_org_rdfa.html
+# wget http://schema.org/docs/schema_org_rdfa.html
 
   def E.schema
+    g = {}
     d = E.schemaDocs
     # fetch/cache/index schemas
     d.map &:schemaCache
-    # put all schemas in single NTriples file
-    graph = {}
-    d.map
+    # all schemas to single NTriples file
+    d.map(&:ef).flatten.map{|d|d.graphFromFile g}
+    puts g.keys.size
   end
 
   def schemaCache
@@ -22,13 +23,14 @@ class E
     # cache Turtle representation
     ttl.w(`rapper -o turtle #{uri}`) unless ttl.e
 
-    # skip indexed docs & huge dbpedia/wordnet dumps
-    unless nt.e || ttl.do{|t| t.e && t.size > 256e3}
-      m={}
-      graph.map{|u,_|     # each property
-        weight[u] &&      # annotate if stats exist
-        m[u] = {'uri'=> u,'http://whats-your.name/property/usageFrequency' => weight[u]}}
-      nt.w E.renderRDF m, :ntriples # store in .nt
+    # except indexed docs & huge dbpedia/wordnet dumps
+    unless ef.e || ttl.do{|t| t.e && t.size > 256e3}
+      g = ttl.graphFromFile
+      g.map{|u,r|     # each resource
+        if weight[u]
+          r['http://schema.whats-your.name/usageFrequency'] = weight[u]
+        end }
+      ef.w g,true # write annotated graph
     end
   end
 
