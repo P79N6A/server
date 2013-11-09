@@ -1,10 +1,11 @@
 watch __FILE__
 class E
 
-#  http://librdf.org/raptor/
+# rapper from http://librdf.org/raptor/
 
-#  curl http://prefix.cc/popular/all.file.txt > prefix.txt
-#  curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
+# curl http://prefix.cc/popular/all.file.txt > prefix.txt
+# curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
+# http://schema.org/docs/schema_org_rdfa.html
 
   def E.schema
     d = E.schemaDocs
@@ -12,7 +13,7 @@ class E
     d.map &:schemaCache
     # put all schemas in single NTriples file
     graph = {}
-    
+    d.map
   end
 
   def schemaCache
@@ -53,7 +54,7 @@ class E
   end
 
   fn '/schema/GET',->e,r{
-
+    
   }
   
   fn 'schema/weight',->d,e{

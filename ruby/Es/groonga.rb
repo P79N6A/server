@@ -1,9 +1,7 @@
 #watch __FILE__
 class E
-
+#  ruby search-engine & column-store
 #  http://groonga.org/ http://ranguba.org/
-#  https://github.com/groonga/groonga
-#  https://github.com/ranguba/rroonga
 
   # query
   fn 'protograph/roonga',->d,e,m{
