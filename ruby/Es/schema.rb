@@ -1,16 +1,35 @@
 watch __FILE__
 class E
+=begin
+ www)
+ http://data.whats-your.name
 
-# rapper from http://librdf.org/raptor/
+ local)
+  wget http://whats-your.name/schema.txt
+  x-www-browser http://localhost/schema
 
-# curl http://prefix.cc/popular/all.file.txt > prefix.txt
-# curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt
-# wget http://schema.org/docs/schema_org_rdfa.html
+ manual rebuild of schemacache)
+ 1) fetch
+ ) RDF schema pointer document
+   curl http://prefix.cc/popular/all.file.txt > prefix.txt  
+ ) RDF usage data
+   curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt  
+ ) other schemae as RDF
+   wget http://schema.org/docs/schema_org_rdfa.html
+   ..
+ 2) analyze
+ irb> E.cacheSchemas
+  ..  E.indexSchemas
+
+ your schema missing? encourage publishing on WWW and contacting prefix.cc admins
+ see also http://www.w3.org/2013/04/vocabs/
+
+=end 
 
 UsageWeight = 'http://schema.whats-your.name/usageFrequency'
 
   def E.cacheSchemas
-    E.schemaDocs.map &:cacheSchema
+    E.schemaDocs.map &:schemaRDF
   end
 
   def E.indexSchemas
@@ -21,7 +40,7 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
     }.compact.join "\n"
   end
 
-  def cacheSchema
+  def schemaRDF
     # write Turtle
     ttl.w(`rapper -o turtle #{uri}`) unless ttl.e
 
