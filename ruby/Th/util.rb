@@ -8,9 +8,10 @@ class String
       d[k]=v}
     d
   end
-  # HTML response with current body
+  # HTML response of string body
   def hR
-    [200,{'Content-Type'=>'text/html'},[self]]
+    [200,{'Content-Type'=>'text/html; charset=utf-8'},
+     [self]]
   end
 end
 

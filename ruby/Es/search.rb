@@ -20,7 +20,7 @@ class E
             except('q','start','uri'). # new query & offset for this search
             map{|a,s|
               {_: :input, name:  a, value: s, :type => :hidden}}]}},
-     {style: "width: 100%; height: 3em"}
+     {style: "display:block; width: 100%; height: 3em"}
     ]}
 
 end

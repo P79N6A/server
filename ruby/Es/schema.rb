@@ -57,13 +57,17 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
   end
 
   fn '/schema/GET',->e,r{
-    q = r.q['q']
-    search = "grep -i #{q} #{'/schema.txt'.E.d} | sort -nr | head -n 255"
-    (H [(H.css '/css/search'),(H.css '/css/schema'),
-        F['view/search/form'][r.q,r],
-        (`#{search}`.lines.to_a.map{|i|
-           c,u,t = i.split(' ',3)
-           [c," <a href='#{u}'>#{u}</a> ",t,"<br>\n"]} if q && !q.empty?)
+    if (q = r.q['q']) && !q.empty?
+      search = "grep -i #{q.sh} #{'/schema.txt'.E.d} | head -n 255"
+      found = `#{search}`.to_utf8.lines.to_a.map{|i|
+        c,u,t = i.split ' ',3
+        c = c.to_i
+        [("<b>#{c}</b>" unless c.zero?),
+         " <a href='#{u}'>#{F['abbrURI'][u]}</a> ",
+         t,"<br>\n"]}
+    end
+    (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),
+        F['view/search/form'][r.q,r], found
        ]).hR}
   
 end
