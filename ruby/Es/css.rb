@@ -10,8 +10,12 @@ end
 class H
 
   def H.css a,inline=false
-    p=a+'.css'
-    inline ? {_: :style, c: p.E.r} :
-      {_: :link, href: p, rel: :stylesheet, type: E::MIME[:css]} end
+    p = a + '.css'
+    if inline
+      {_: :style, c: p.E.r}
+    else
+      {_: :link, href: p, rel: :stylesheet, type: E::MIME[:css]}
+    end
+  end
 
 end

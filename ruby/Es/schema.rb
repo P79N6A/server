@@ -58,26 +58,12 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
 
   fn '/schema/GET',->e,r{
     q = r.q['q']
-    if q && !q.empty?
-      grep = "grep -i #{q} #{'/schema.txt'.E.d} | sort -nr | head -n 255";puts grep
-      `#{grep}`.lines.to_a.map{|i|
-        c,u,t = i.split(' ',3)
-        [c,"<a href='#{u}'>#{u}</a>",t].join ' '
-      }.join("<br>\n").hR
-    else
-      'q'.hR
-    end
-  }
+    search = "grep -i #{q} #{'/schema.txt'.E.d} | sort -nr | head -n 255"
+    (H [(H.css '/css/search'),(H.css '/css/schema'),
+        F['view/search/form'][r.q,r],
+        (`#{search}`.lines.to_a.map{|i|
+           c,u,t = i.split(' ',3)
+           [c," <a href='#{u}'>#{u}</a> ",t,"<br>\n"]} if q && !q.empty?)
+       ]).hR}
   
-  fn 'schema/weight',->d,e{
-    q = e.q['q']
-    d.keys.map{|k| k.class==String && d[k].class==Hash &&
-      (s=0
-       u=k.downcase
-       d[k]['/frequency'][0].to_i.do{|f|f > 0 && (s=s + (Math.log f))}
-       s=s+(u.label.match(q.downcase) && 6 || 
-            q.camelToke.map(&:downcase).map{|c|
-              u.match(c) && 3 || 0}.sum)
-       d[k]['score'] = s )}}
-
 end

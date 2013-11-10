@@ -3,16 +3,14 @@ audio
 cal
 code
 color
-css
 edit
 exhibit
 facets
+hf
 histogram
 im
 mail
 moz
-protovis
-sw
 table
 threads
 time

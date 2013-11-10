@@ -1,45 +1,5 @@
-body{ background-color:#eee;}
-a {text-decoration:none;}
-table {
- border-spacing:0;
-}
-tr.overview td{
-    padding-top: .2em;
-
-}
-tr.details td {
-border-style:dashed;
-border-color:#fff;
-border-width:0 0 0.2em 0;
-padding-left:20%;
-}
-td.identity {
-    white-space: nowrap;
-    width:0%;
-    max-width:60ex;
-    text-align:right;
-}
-td.label{
-    width:100%;
-}
-span.stats {
-    float: right;
-    color:#ccc;
-}
-a.label {
-font-size:1.3em;
-font-weight:bold;
-color: #58fff5;
-background-color:#000;
-border-radius:.4em 0 .4em 0;
-}
-.abbr{
-    background-color:#000;
-    color:#f8f8f8;
-}
-.frag {
-    font-size:1.3em;
-    font-weight:bold;
-    background-color:#00a7d1;
-    color:#fff;
+a {
+    text-decoration:none;
+    color: #000;
+    background-color:#0f0;
 }
