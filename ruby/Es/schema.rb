@@ -66,8 +66,9 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
          " <a href='#{u}'>#{F['abbrURI'][u]}</a> ",
          t,"<br>\n"]}
     end
-    (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),
-        F['view/search/form'][r.q,r], found
+    (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
+        F['view/search/form'][r.q,r], found,
+        'source ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: 'http://schema.org', c: 'schema.org'},
        ]).hR}
   
 end
