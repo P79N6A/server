@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 =begin
  www)  http://data.whats-your.name
@@ -93,7 +93,7 @@ class E
     end
     (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
         F['view/search/form'][r.q,r], found,
-        '<br>sources',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: 'http://schema.org', c: 'schema.org'},
+        '<br>sources ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: SchemasRDFa[0], c: 'schema.org'},
        ]).hR}
   
 end
