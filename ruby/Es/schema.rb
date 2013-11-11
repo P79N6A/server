@@ -6,7 +6,7 @@ class E
  local) wget http://whats-your.name/schema.txt
         x-www-browser http://localhost/schema
 
- manual rebuild of schemacache)
+ rebuild)
  1) fetch
  ) RDF schema pointer document
    curl http://prefix.cc/popular/all.file.txt > prefix.txt  
@@ -16,15 +16,20 @@ class E
  irb> E.cacheSchemas
   ..  E.indexSchemas
 
- your schema missing? publish on WWW and contact prefix.cc admins (or this projects' ?)
- more ideas at http://www.w3.org/2013/04/vocabs/
+ schema missing? publish and contact prefix.cc,
+ see also ideas at http://www.w3.org/2013/04/vocabs/
 
-=end 
+=end
 
-UsageWeight = 'http://schema.whats-your.name/usageFrequency'
+  UsageWeight = 'http://schema.whats-your.name/usageFrequency'
+  SchemasRDFa = %w{http://schema.org/docs/schema_org_rdfa.html}.map &:E
 
   def E.cacheSchemas
     E.schemaDocs.map &:cacheSchema
+    # rapper2 is failing at RDFa autodiscovery, import them again
+    SchemasRDFa.map{|s|
+      s.ttl.w `rapper -i rdfa -o turtle #{s.uri}`
+      s.ef.w s.ttl.graphFromFile,true}
   end
 
   def E.indexSchemas
@@ -68,13 +73,12 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
   
   def E.schemaDocs
     @schemaDocs ||=
-      (schemasA = %w{http://schema.org/docs/schema_org_rdfa.html}.map &:E
-       source = E['http://prefix.cc/popular/all.file.txt']
+      (source = E['http://prefix.cc/popular/all.file.txt']
        mirror = E['/prefix.txt']
        (mirror.e ? mirror : source).   # select schema-pointers doc
        read.split(/\n/).grep(/^[^#]/). # each uncommented line
        map{|t| t.split(/\t/)[1].E }.   # parse to resource pointer
-       concat schemasA)                # additional schemas
+       concat SchemasRDFa)             # schema list
   end
 
   fn '/schema/GET',->e,r{
@@ -89,7 +93,7 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
     end
     (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
         F['view/search/form'][r.q,r], found,
-        'source ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: 'http://schema.org', c: 'schema.org'},
+        '<br>sources',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: 'http://schema.org', c: 'schema.org'},
        ]).hR}
   
 end
