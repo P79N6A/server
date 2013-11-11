@@ -1,12 +1,10 @@
 watch __FILE__
 class E
 =begin
- www)
- http://data.whats-your.name
+ www)  http://data.whats-your.name
 
- local)
-  wget http://whats-your.name/schema.txt
-  x-www-browser http://localhost/schema
+ local) wget http://whats-your.name/schema.txt
+        x-www-browser http://localhost/schema
 
  manual rebuild of schemacache)
  1) fetch
@@ -14,33 +12,36 @@ class E
    curl http://prefix.cc/popular/all.file.txt > prefix.txt  
  ) RDF usage data
    curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt  
- ) other schemae as RDF
-   wget http://schema.org/docs/schema_org_rdfa.html
-   ..
  2) analyze
  irb> E.cacheSchemas
   ..  E.indexSchemas
 
- your schema missing? encourage publishing on WWW and contacting prefix.cc admins
- see also http://www.w3.org/2013/04/vocabs/
+ your schema missing? publish on WWW and contact prefix.cc admins (or this projects' ?)
+ more ideas at http://www.w3.org/2013/04/vocabs/
 
 =end 
 
 UsageWeight = 'http://schema.whats-your.name/usageFrequency'
 
   def E.cacheSchemas
-    E.schemaDocs.map &:schemaRDF
+    E.schemaDocs.map &:cacheSchema
   end
 
   def E.indexSchemas
     g = {}
     E.schemaDocs.map(&:ef).flatten.map{|d|d.graphFromFile g}
-    '/schema.txt'.E.w g.map{|u,r|
-      [(r[UsageWeight]||0),u,r[Label],r[DC+'description'],r[Purl+'dc/elements/1.1/description'],r[RDFs+'comment']].join(' ').gsub("\n"," ") if u.path?
+    '/schema.txt'.E.w g.sort_by{|u,r|r[UsageWeight]}.map{|u,r|
+      [(r[UsageWeight]||0),
+       u,
+       r[Label],
+       r[DC+'description'],
+       r[Purl+'dc/elements/1.1/description'],
+       r[RDFs+'comment']
+      ].join(' ').gsub("\n"," ") if u.path?
     }.compact.join "\n"
   end
 
-  def schemaRDF
+  def cacheSchema
     # write Turtle
     ttl.w(`rapper -o turtle #{uri}`) unless ttl.e
 
@@ -55,7 +56,7 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
   end
 
   def E.schemaWeights
-    @gromgull ||=
+    @schemaWeights ||=
       (data = '/properties.txt'.E
        (puts "download\ncurl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt"; exit) unless data.e
        w = {}
@@ -66,13 +67,14 @@ UsageWeight = 'http://schema.whats-your.name/usageFrequency'
   end
   
   def E.schemaDocs
-    @docs ||=
-      (source = E['http://prefix.cc/popular/all.file.txt']
+    @schemaDocs ||=
+      (schemasA = %w{http://schema.org/docs/schema_org_rdfa.html}.map &:E
+       source = E['http://prefix.cc/popular/all.file.txt']
        mirror = E['/prefix.txt']
-       schemae = (mirror.e ? mirror : source).
-       read.split("\n").           # each doc
-       grep(/^[^#]/).              # skip commented
-       map{|t|t.split(/\t/)[1].E}) # URI field
+       (mirror.e ? mirror : source).   # select schema-pointers doc
+       read.split(/\n/).grep(/^[^#]/). # each uncommented line
+       map{|t| t.split(/\t/)[1].E }.   # parse to resource pointer
+       concat schemasA)                # additional schemas
   end
 
   fn '/schema/GET',->e,r{
