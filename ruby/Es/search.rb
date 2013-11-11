@@ -16,11 +16,9 @@ class E
     [{:class => :form,
       c: {_: :form, action: e['REQUEST_PATH'],
         c: [{_: :input, name: :q, value: q['q']}, # search box
-            q.update(q['view'] ? {} : {'view' => 'search'}). # show searchbox above results unless other view specified
-            except('q','start','uri'). # new query & offset for this search
+            q.except('q','start'). # new query & offset for this search
             map{|a,s|
               {_: :input, name:  a, value: s, :type => :hidden}}]}},
-     {style: "display:block; width: 100%; height: 3em"}
-    ]}
+     {class: :space}]}
 
 end
