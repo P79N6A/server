@@ -27,7 +27,7 @@ class E
           g[t.uri]=g[t.uri].succ}}}
 
     # CSS
-    [(H.css '/css/mail.threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
+    [(H.css '/css/threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
 
      # predicate tafting
      ([{_: :a, class: :rangeP, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p']},'&nbsp;',

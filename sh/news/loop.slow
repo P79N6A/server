@@ -1,6 +1,0 @@
-#!/bin/sh
-while true; do
-date
-sh/news/boston.rb b.whats-your.name
-sleep 42000
-done
