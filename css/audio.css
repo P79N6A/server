@@ -1,20 +1,14 @@
 body {margin:0}
 div {display: inline;}
 a{text-decoration:none}
-#player {float: left;width:100%}
+#media {float: left;width:100%}
 #jump {float:left;font-size:3.33em;padding:0 .2em 0 .2em;background-color:#0f0;color:black}
 #rand {float:left;font-size:3.33em;padding:0 .3em 0 .2em;background-color:#33f;color:#fff}
 #info {font-weight:bold; font-size: 2em}
-.table {
-    display: table;
-    border-spacing:0}
-.table .td:first-child {max-width:24em;}
-.table .tr {
-    display: table-row;}
-.table .td {
-    display: table-cell;
+.abbr {display: none}
+td {
+    max-width: 22em;
     white-space:nowrap;
-    max-width: 14em;
-    padding:0;
-    overflow: hidden;}
-table input {font-size:.7em;margin:0;padding:0}
+    overflow: hidden;
+}
+td input {font-size: .8em}
