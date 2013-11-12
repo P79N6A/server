@@ -2,9 +2,8 @@
 require 'infod'
 
 unless h = ARGV[0]
-  puts "missing hostname arg"
-  exit  
+  puts "hostname argument required"
+  exit
 end
 
-'/sh/news/boston.u'.E.uris.tail.
-  map{|u|u.getFeed h}
+'/sh/news/boston.u'.E.uris.tail.map{|u|u.getFeed h}
