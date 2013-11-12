@@ -1,5 +1,5 @@
 var audio = function(){
-    var a = document.querySelector('#player')
+    var a = document.querySelector('#media')
     var r=q('#rand'),t=qa('.entry')
 
     var changeTrack = function(i){

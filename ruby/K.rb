@@ -87,8 +87,8 @@ class E
     xlsx: 'application/excel',
   }
 
-  VideoFiles = /(avi|flv|mkv|mpg|mp4|wmv)$/i
-  AudioFiles = /(aif|wav|flac|mp3|m4a|aac|ogg)$/i
+  VideoFile = /(avi|flv|mkv|mpg|mp4|wmv)$/i
+  AudioFile = /(aif|wav|flac|mp3|m4a|aac|ogg)$/i
 
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],

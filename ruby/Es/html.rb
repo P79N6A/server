@@ -147,7 +147,7 @@ class E
       t = 0.42 # threshold
       if b.grep(/^msg\./).size / s > t
         Fn 'view/threads',d,e
-      elsif b.grep(AudioFiles).size / s > t
+      elsif b.grep(AudioFile).size / s > t
         Fn 'view/audio', d,e
       elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t
         Fn 'view/th', d,e

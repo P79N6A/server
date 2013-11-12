@@ -2,13 +2,18 @@ body {margin:0}
 div {display: inline;}
 a{text-decoration:none}
 #media {float: left;width:100%}
-#jump {float:left;font-size:3.33em;padding:0 .2em 0 .2em;background-color:#0f0;color:black}
-#rand {float:left;font-size:3.33em;padding:0 .3em 0 .2em;background-color:#33f;color:#fff}
+#jump {float:left;font-size:3.33em;padding:0 .2em 0 .2em;background-color:orange;color:#fff}
+#rand {float:left;font-size:3.33em;padding:0 .3em 0 .2em;background-color:#ddf;color:#000}
 #info {font-weight:bold; font-size: 2em}
 .abbr {display: none}
 td {
-    max-width: 22em;
+    max-width: 21.22em;
     white-space:nowrap;
     overflow: hidden;
 }
-td input {font-size: .8em}
+td input {
+    font-size: 1em;
+    border-width: 0;
+    margin:0;
+    padding:0
+}
