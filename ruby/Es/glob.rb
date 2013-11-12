@@ -6,7 +6,7 @@ class E
   end
 
   fn 'set/glob',->d,e=nil,_=nil{
-    [d,d.pathSegment].compact.map(&:glob).flatten}
+    [d,d.pathSegment].compact.map(&:glob).flatten[0..3e3]}
 
   fn 'req/randomFile',->e,r{
     g = F['set/glob'][e]
