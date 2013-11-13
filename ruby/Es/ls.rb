@@ -26,7 +26,6 @@ class E
 
   F['view/'+MIMEtype+'inode/directory']=F['view/dir']
 
-  # tabular rendering
   fn 'view/ls',->i,e{
     dir = e['uri'].E
     up = (if dir.pathSegment.uri == '/'
@@ -38,20 +37,21 @@ class E
     [(H.css '/css/ls'),
      {_: :a, class: :up, href: up, c: '&uarr;'},
      {class: :ls,
-       c: (Fn 'view/tab',i,e)},
+       c: (Fn 'view/table',i,e)},
      (Fn 'view/find',i,e),'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
   
-  # (global handler customizations here)
-  # 
-  # example: try to find an index.html, fallback
-  # to basic graph-fs response (out.rb)
+  # top-level handler
+  # one could hook a favorite "Routes" library here
+  # or delete entirely and just get a fs-backed response
   fn '/GET',->e,r{
+
+    # does an index.html exist?
     html = e.as 'index.html'
     if html.e
-      if e.uri[-1] == '/'
-        html.env(r).getFile
-      else
+      if e.uri[-1] == '/'   # inside dir?
+        html.env(r).getFile # show index
+      else                  # descend to indexed dir
         [301, {Location: e.uri.t}, []]
       end
     else

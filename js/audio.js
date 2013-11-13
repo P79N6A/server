@@ -1,28 +1,19 @@
+var a
 var audio = function(){
 
-    var track = 'td[property="uri"]'
+    var track = 'td[property="uri"] a'
     var audio = document.querySelector('#media')
     var random = q('#rand')
     var trax = qa(track)
+    a = audio
 
-    console.log("trax",trax)
-    
     var changeTrack = function(i){
 	var track = decodeURIComponent(i)
 	q('title').txt(track)
 	q('#info').txt(track)
-	audio.attr('src',i).load()
+	audio.src = i
+	audio.load()
 	audio.play()}
-
-    var select = function(){
-	if (random.hasAttribute('r')){
-	    return trax[Math.floor(Math.random()*trax.length)]
-	} else {
-	    var cur = q('a[href="#'+audio.attr('src')+'"]')
-	    if(cur && cur.nextSibling) {
-		return cur.nextSibling
-	    } else {
-		return q(track)}}}
 
     var updatePosition = function(p){
 	window.location.hash = a.attr('src')+'|'+p}
@@ -36,8 +27,19 @@ var audio = function(){
 	updatePosition(p)}
 
     var jump = function(){
-	var s = select()
-	window.location.href = s.attr('href')}
+	var s
+	if (random.hasAttribute('r')){
+	   s = trax[Math.floor(Math.random()*trax.length)]
+	} else {
+	    var cur = q(track+'[href="'+audio.attr('src')+'"]')
+	    console.log('cur',cur,cur.parentNode.parentNode.nextSibling.firstChild.firstChild)
+	    if(cur && cur.parentNode.parentNode.nextSibling) {
+		s = cur.parentNode.parentNode.nextSibling.firstChild.firstChild
+	    } else {
+		s = q(track)
+	    }
+	}
+	window.location.hash = s.attr('href')}
 
     var toggleRand = function(e){
 	if (random.hasAttribute('r')){
@@ -57,7 +59,12 @@ var audio = function(){
     audio.on("ended",jump)
     if(window.location.hash) hashChange()
     window.onhashchange = hashChange
-
+    trax.on('click',function(e){
+	window.location.hash = e.target.parentNode.attr('href')
+	e.preventDefault()
+	return false
+    })
+    
     document.addEventListener("keydown",function(e){
 	switch(e.keyCode){
 	case 13:

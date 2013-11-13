@@ -8,7 +8,6 @@ histogram
 mail
 microblog
 mozilla
-table
 threads
 time
 wiki
