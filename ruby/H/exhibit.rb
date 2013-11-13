@@ -1,3 +1,4 @@
+watch __FILE__
 class E
  fn Render+'application/json+exhibit',->d,e{
   fields=e.q['f'].do{|f|f.split /,/}
@@ -5,8 +6,8 @@ class E
       r.keys.-(['uri']).map{|k|
         f=k.frag.do{|f|(f.gsub /\W/,'').downcase} # alphanumeric id restriction 
         if !fields || (fields.member? f)
-          r[f]=r[k][0].to_s # rename fieldnames, unwrap value
-          r.delete k unless f==k # cleanup unless id same as before
+          r[f] = r[k].html       # render fields
+          r.delete k unless f==k # new identifier
         else
           r.delete k
         end}

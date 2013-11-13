@@ -1,7 +1,6 @@
 %w{
 audio
 cal
-code
 edit
 exhibit
 facets
