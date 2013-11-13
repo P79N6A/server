@@ -2,13 +2,12 @@
 audio
 cal
 edit
-exhibit
 facets
 hf
 histogram
-im
 mail
-moz
+microblog
+mozilla
 table
 threads
 time
