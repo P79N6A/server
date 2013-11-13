@@ -7,7 +7,6 @@ hf
 histogram
 mail
 microblog
-mozilla
 threads
 time
 wiki
