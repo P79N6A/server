@@ -1,17 +1,32 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   fn '/man/GET',->e,r{
+    manPath = '/usr/share/man'
+
+    # eat selector
     name = e.pathSegment.uri.sub('/man/','/').tail
+
+    # section requested?
     section = nil
-    name.match(/^([0-9])\/(.*)/).do{|p|
-      section, name = p[1], p[2] }
+    name.match(/^([0-9])(\/|$)/).do{|p|
+      section = p[1]
+      name = p.post_match }
 
-    if name.empty? || name.match(/\//)
-      e.response
+    if !name || name.empty? || name.match(/\//)
+      if section
+        # enumerate section children
+        (H [H.css('/css/man'),{_: :style, c: "a {margin-right:.15em;background-color: #{E.cs}}"},
+            Pathname(manPath+'/man'+section).c.map{|p|
+              n = p.basename.to_s.sub /\.[0-9][a-z]*\...$/,''
+            }.group_by{|e|e[0].match(/[a-zA-Z]/) ? e[0].downcase : '0-9'}.sort.map{|g,m|
+              [{_: :h3, c: g},
+               m.map{|n|[{_: :a, href: '/man/'+section+'/'+n, c: n },'']}]}
+           ]).hR
+      else
+        e.response
+      end
     else
-
-      manPath = '/usr/share/man'
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
       superLang = lang.do{|l| (l.split /[_-]/)[0] }
