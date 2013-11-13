@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
   
   fn '/man/GET',->e,r{
@@ -41,7 +41,6 @@ class E
         htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
-#        cached=false
 
         if !cached
 

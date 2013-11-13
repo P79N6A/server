@@ -23,10 +23,11 @@ class E
 
   def resource
     # bubble up site then global tree until handled (false return-value to pass)
-    lambdas = pathSegment.cascade.map{|p| p.uri.t + 'GET' }
-    ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
-        F[h + p].do{|fn| fn[self,@r].do{|r| return r}}}}
-
+    pathSegment.do{|path|
+      lambdas = path.cascade.map{|p| p.uri.t + 'GET' }
+      ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
+          F[h + p].do{|fn| fn[self,@r].do{|r| return r}}}}}
+    
     # default handler
     response
   end
