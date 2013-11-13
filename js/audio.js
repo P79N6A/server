@@ -1,48 +1,63 @@
 var audio = function(){
-    var a = document.querySelector('#media')
-    var r=q('#rand'),t=qa('.entry')
 
+    var track = 'td[property="uri"]'
+    var audio = document.querySelector('#media')
+    var random = q('#rand')
+    var trax = qa(track)
+
+    console.log("trax",trax)
+    
     var changeTrack = function(i){
-	var t=decodeURIComponent(i)
-	q('title').txt(t)
-	q('#info').txt(t)
-	a.attr('src',i).load()
-	a.play()}
+	var track = decodeURIComponent(i)
+	q('title').txt(track)
+	q('#info').txt(track)
+	audio.attr('src',i).load()
+	audio.play()}
 
-    var selecta = function(){
-	if (r.hasAttribute('r')){
-	    return t[Math.floor(Math.random()*t.length)]
+    var select = function(){
+	if (random.hasAttribute('r')){
+	    return trax[Math.floor(Math.random()*trax.length)]
 	} else {
-	    var cur = q('a[href="#'+a.attr('src')+'"]')
+	    var cur = q('a[href="#'+audio.attr('src')+'"]')
 	    if(cur && cur.nextSibling) {
 		return cur.nextSibling
 	    } else {
-		return q('.entry')}}}
+		return q(track)}}}
 
-    var at=function(p){window.location.hash=a.attr('src')+'|'+p}
+    var updatePosition = function(p){
+	window.location.hash = a.attr('src')+'|'+p}
 
     var seek = function(s){
-	var p=a.currentTime+s
-	if (p > a.duration){
-	   p = p - a.duration
+	var p = audio.currentTime + s
+	if (p > audio.duration){
+	   p = p - audio.duration
 	} else if (p < 0) {
-	    p = p + a.duration}
-	at(p)}
+	    p = p + audio.duration}
+	updatePosition(p)}
 
-    var jump = function(){var s = selecta()
-	window.location.href=s.attr('href')}
-    q('#jump').on("click",jump)
+    var jump = function(){
+	var s = select()
+	window.location.href = s.attr('href')}
 
-    var rand=function(e){
-	if (r.hasAttribute('r')){
-	    r.removeAttr('r').style.backgroundColor='#ddf'
+    var toggleRand = function(e){
+	if (random.hasAttribute('r')){
+	    random.removeAttr('r').style.backgroundColor='#ddf'
 	} else {
-	    r.attr('r','r').style.backgroundColor='#33f'}}
-    r.on("click",rand)
+	    random.attr('r','r').style.backgroundColor='#33f'}}
 
-    qa('audio').map(function(){this.load(); this.on("ended",jump)})
+    var hashChange = function(){
+	var h = window.location.hash.slice(1).split('|')
+	var track = h[0]
+	var   pos = h[1]
+	if(audio.attr('src') != track) changeTrack(track) 
+	if(pos < audio.duration) audio.currentTime=pos}
 
-    // winamp/audacious+cmus keycodes
+    random.on("click",toggleRand)
+    q('#jump').on("click",jump)
+    audio.on("ended",jump)
+    if(window.location.hash) hashChange()
+    window.onhashchange = hashChange
+
     document.addEventListener("keydown",function(e){
 	switch(e.keyCode){
 	case 13:
@@ -76,29 +91,16 @@ var audio = function(){
 	    seek(30);
 	    break;
 	case 82:
-	    rand();
+	    toggleRand();
 	    break;
 	case 32:
-	    if(a.paused){
-		a.play()
+	    if(audio.paused){
+		audio.play()
 	    }else{
-		at(a.currentTime)
-		a.pause()}
+		updatePosition(audio.currentTime)
+		audio.pause()}
 	    e.preventDefault()
 	    break;
-	}},false)
-    
-    var hashChange = function(){
-	var h=window.location.hash.slice(1).split('|')
-	if(a.attr('src')!=h[0]) changeTrack(h[0]) 
-	if(h[1]<a.duration) a.currentTime=h[1]}
-
-    window.onhashchange = hashChange
-    if(window.location.hash){
-	hashChange()
-	setTimeout(function(){
-            if(a.duration){
-                a.currentTime=window.location.hash.split('|')[1]
-                a.play()}},1500)}}
+	}},false)}
 
 document.addEventListener("DOMContentLoaded", audio, false);

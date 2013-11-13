@@ -1,4 +1,7 @@
-body {margin:0}
+body {
+    margin:0;
+    background-color:#aaa;
+}
 div {display: inline;}
 a{text-decoration:none}
 #media {float: left;width:100%}

@@ -2,7 +2,6 @@
 audio
 cal
 code
-color
 edit
 exhibit
 facets
