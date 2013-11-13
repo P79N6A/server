@@ -44,7 +44,7 @@ class E
       labelP = x.q['label'].do{|l|l.expand} || Creator
       label = ([*r[labelP]][0]).do{|l|
                l.respond_to?(:uri) ? l.uri : l.to_s}
-      lc = x[:group][label] ||= E.cs
+      lc = x[:group][label] ||= E.c
       arc = x.q['arc'].do{|a| a.expand }
 
       [{style: "top: #{r['x']}%; left: #{r['y']}%",

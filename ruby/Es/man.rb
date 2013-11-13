@@ -19,7 +19,7 @@ class E
       man = `man #{langSH} -w #{section} #{name.sh}`.chomp      
 
       if man.empty?
-        F[E404][e,r]
+        return false
       else
 
         roff = man.E

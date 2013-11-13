@@ -1,15 +1,18 @@
 class E
 
   def GET
+    # bespoke handler ||
+    # raw file ||
+    # resource
     if reqFn = F['req/'+@r.q['y']]
       reqFn[self,@r]
     elsif file = [self,pathSegment].compact.find(&:f)
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
       (@r.q.has_any_key(%w{format view}) ||
-       MIMEcook[file.mimeP] || !accepted) ? getPath : (file.env @r).getFile
+       MIMEcook[file.mimeP] || !accepted) ? resource : (file.env @r).getFile
     else
-      getPath
+      resource
     end
   end
 
@@ -18,9 +21,14 @@ class E
     maybeSend mimeP,->{self},:link
   end
 
-  def getPath
-    h = pathHandler 'http://' + @r['SERVER_NAME']
-    h ? h[self, @r] : response
+  def resource
+    # bubble up site then global tree until handled (false return-value to pass)
+    lambdas = pathSegment.cascade.map{|p| p.uri.t + 'GET' }
+    ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
+        F[h + p].do{|fn| fn[self,@r].do{|r| return r}}}}
+
+    # default handler
+    response
   end
 
   def send?
