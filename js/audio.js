@@ -1,11 +1,9 @@
-var a
 var audio = function(){
 
     var track = 'td[property="uri"] a'
     var audio = document.querySelector('#media')
     var random = q('#rand')
     var trax = qa(track)
-    a = audio
 
     var changeTrack = function(i){
 	var track = decodeURIComponent(i)
@@ -16,7 +14,7 @@ var audio = function(){
 	audio.play()}
 
     var updatePosition = function(p){
-	window.location.hash = a.attr('src')+'|'+p}
+	window.location.hash = audio.attr('src')+'|'+p}
 
     var seek = function(s){
 	var p = audio.currentTime + s
@@ -32,9 +30,8 @@ var audio = function(){
 	   s = trax[Math.floor(Math.random()*trax.length)]
 	} else {
 	    var cur = q(track+'[href="'+audio.attr('src')+'"]')
-	    console.log('cur',cur,cur.parentNode.parentNode.nextSibling.firstChild.firstChild)
-	    if(cur && cur.parentNode.parentNode.nextSibling) {
-		s = cur.parentNode.parentNode.nextSibling.firstChild.firstChild
+	    if(cur && (s = cur.parentNode.parentNode.nextSibling.querySelector(track))) {
+//		console.log('next',s)
 	    } else {
 		s = q(track)
 	    }

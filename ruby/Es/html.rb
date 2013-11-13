@@ -244,8 +244,6 @@ class E
                     c: (Fn 'abbrURI',k)} : k}}},
             *es.map{|e|
               {_: :tr, about: e.uri, c:
-                keys.map{|k|
-                  {_: :td, property: k, c: e[k].do{|v|
-                      (v.class==Array ? v : [v]).map(&:html).join ' '}}}}}]})}
+                keys.map{|k| {_: :td, property: k, c: e[k].send(k=='uri' ? :href : :html)} }}}]})}
 
 end
