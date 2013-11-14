@@ -1,7 +1,6 @@
 #watch __FILE__
 class E
 
-  # basic directory view 
   fn 'view/dir',->i,e{
 
     # item link + preview
@@ -11,24 +10,24 @@ class E
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r|
-       # directory?
        if r[Posix+'dir#child']
          url = r.E.localURL e
-         {class: :dir, style: "background-color: #{E.cs}", # dir wrapper
-           c: [{c: [{_: :a, href: url.t+'?view=ls&triplr=id', # link to ls
+         {class: :dir, style: "background-color: #{E.cs}",    # dir wrapper
+           c: [{c: [{_: :a, href: url.t+'?view=ls&triplr=id', # link to "ls"
                       c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')},
                     {_: :a, href: url.t, c: '/'}]},
-               r[Posix+'dir#child'].map{|c|a[c]}]}   # children
+               r[Posix+'dir#child'].map{|c|a[c]}]}
        else
          a[r]
        end
      }]}
 
-  F['view/'+MIMEtype+'inode/directory']=F['view/dir']
+  F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
   fn 'view/ls',->i,e{
     dir = e['uri'].E
-    up = (if dir.pathSegment.uri == '/'
+    path = dir.pathSegment
+    up = (if !path || path.uri == '/'
             '/'
           else
             dir.parent.url.t+'?view=ls&triplr=id'
@@ -41,20 +40,20 @@ class E
      (Fn 'view/find',i,e),'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
   
-  # top-level handler
-  # one could hook a favorite "Routes" library here
-  # or delete entirely and just get a fs-backed response
+  # top-level pathHandler
+  # can be delete entirely for default response (w/o index.html lookup)
+  # not a bad place to hook a Routing-engine for "synthetic"-URIs etc
   fn '/GET',->e,r{
 
-    # does an index.html exist?
     html = e.as 'index.html'
     if html.e
       if e.uri[-1] == '/'   # inside dir?
         html.env(r).getFile # show index
       else                  # descend to indexed dir
-        [301, {Location: e.uri.t}, []]
+        [301, {Location: e.uri.t}, []] # redirect
       end
     else
+      # continue to fs-backed response
       e.response
     end}
 

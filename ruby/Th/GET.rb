@@ -45,7 +45,7 @@ class E
       h = {'Content-Type'=> m,
            'ETag'=> @r['ETag']}
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/
-      h.update({'Link' => '<' + (URI.escape uri) + '?format=text/n3>; rel=meta'}) if lH
+      h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if lH
 
       b.class == E ? (Nginx ?                                                     # nginx enabled
                       [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler

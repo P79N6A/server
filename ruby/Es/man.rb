@@ -55,7 +55,16 @@ class E
           pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
           page = `#{pageCmd}`#.to_utf8
 
-          [[:name,name],[:acceptLang,acceptLang],[:lang, lang],[:langSH, langSH],[:superLang, superLang],[:roff,man],[:htmlBase,htmlBase.d],[:imagePath,imagePath],[:localizations,localesAvail],[:pageCmd,pageCmd]].map{|p| puts [" "*(13-p[0].size),*p].join ' '}
+          [[:name,name],
+           [:acceptLang,acceptLang],
+           [:lang, lang],
+           [:langSH, langSH],
+           [:superLang, superLang],
+           [:roff,man],
+           [:htmlBase,htmlBase.d],
+           [:imagePath,imagePath],
+           [:localizations,localesAvail],
+           [:pageCmd,pageCmd]].map{|p| puts [" "*(13-p[0].size),*p].join ' ' }
           
           page = Nokogiri::HTML.parse page
           body = page.css('body')[0]
