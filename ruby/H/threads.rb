@@ -1,17 +1,20 @@
+watch __FILE__
 class E
 
   F["?"] ||= {}
-  F["?"].update({
-   'thread' =>{'graph'=>'thread',
-               'sort' => 'dc:date',
-               'reverse' => nil,
-               'view' => 'multi',
-               'views' => 'timegraph,mail',
-               'arc' => '/parent',
-               'label' => 'sioc:name'},
-      'ann' =>{'view'=>'threads',
-               'matchP' => 'dc:title',
-               'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/}})
+  F["?"].update({'thread' =>{
+                    'graph'=>'thread',
+                    'sort' => 'dc:date',
+                    'reverse' => nil,
+                    'view' => 'multi',
+                    'views' => 'timegraph,mail',
+                    'arc' => '/parent',
+                    'label' => 'sioc:name'},
+                  'ann' =>{
+                    'view'=>'threads',
+                    'set'=>'glob',
+                    'matchP' => 'dc:title',
+                    'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/}})
 
     fn 'protograph/thread',->d,_,g{
     d.walk SIOC+'reply_of',g
