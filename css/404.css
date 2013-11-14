@@ -9,8 +9,7 @@ div {
 
 a {
     font-size:1.05em;
-    background-color:#004f69;
-    color:#efe;
+    color:#000;
     text-decoration:none;
     padding:.1em;
     }
@@ -22,12 +21,6 @@ td.key {
 
 td.key .abbr:hover {
     color:#fff;
-}
-
-
-td.key a {
-    background-color: #009;
-    color: #bff;
 }
 
 td.key div {

@@ -18,7 +18,7 @@ class E
     s['request-method'] = [H[{_: :a, c: s['request-method'][0], style: 'font-weight: bold',
                                href: 'http://www.w3.org/Protocols/HTTP/Methods/'+s['request-method'][0]+'.html'}]]
     s['server-protocol'] = [E['http://www.w3.org/Protocols/rfc2616/rfc2616.html']]
-    s['server-software'] = [H[{_: :a, href: 'http://github.com/infodaemon/www', c: :infodaemon}]]
+    s['server-software'] = [H[{_: :a, href: 'http://github.com/infodaemon/www', c: :infod}]]
     ['remote-addr','server-name',Header+'host'].map{|a|s[a] = [E['http://' + s[a][0]]] }
     %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
 
@@ -32,7 +32,8 @@ class E
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
   
   fn 'view/404',->d,e{
-    [H.css('/css/404'),d.html]}
+    [H.css('/css/404'),{_: :style, c: "a {background-color:#{E.cs}}"},
+     d.html]}
 
   # a small non-empty graph
   fn 'protograph/_',->d,_,m{
