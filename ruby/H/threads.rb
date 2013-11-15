@@ -41,11 +41,11 @@ class E
            # link to individual post
            (t[1].size > 1 &&
             ['<br>', t[1].map{|s|
-
+               
                # author name and RDFa
-               [{_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
-                  c: (s[SIOC+'name']||s[Creator]).do{|n|n[0]}
-                },' ']}]),'<br>']},'</td>',
+               {_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
+                 c: (s[SIOC+'name']||s[Creator]).do{|n|n[0]}
+               }}]),'<br>']},'</td>',
 
         # label & link to group
         {_: :td, class: :group, property: To,
