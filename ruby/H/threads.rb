@@ -44,7 +44,7 @@ class E
 
                # author name and RDFa
                [{_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
-                  c: s[SIOC+'name'].do{|n|n[0].split(/\W/,2)[0]}
+                  c: (s[SIOC+'name']||s[Creator]).do{|n|n[0]}
                 },' ']}]),'<br>']},'</td>',
 
         # label & link to group

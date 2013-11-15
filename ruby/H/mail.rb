@@ -24,7 +24,7 @@ class E
         {:class => :mail,
           
           c: [# message link
-              {_: :a, name: m.uri, href: m.url+'?triplr=triplrHref', rel: :raw, title: :raw, c: '&nbsp;'},
+              {_: :a, name: m.uri, href: m.url+'?view=base', rel: :raw, title: :raw, c: '&nbsp;'},
               
               # To:, From: index search links
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
