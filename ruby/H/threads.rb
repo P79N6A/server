@@ -39,16 +39,11 @@ class E
 
      # group by recipient
      group_by{|r,k| k[0].do{|k|
-         k[To].do{|o|o.head.uri}}}.
+         k[To].do{|o|o.head.uri}}}.map{|e|
 
-     # display
-     map{|e|
-       # recipient-group color
+       # rec-group
        c = '#%06x' % rand(16777216)
-       ['<tr><td class=subject>',
-        
-        # show most-popular groups first
-        e[1].sort_by{|m|m[1].size}.reverse.map{|t|
+       ['<tr><td class=subject>', e[1].map{|t|
 
           # link to thread
           [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: t[1][0].url+'??=thread',
@@ -63,7 +58,7 @@ class E
                   c: s[SIOC+'name'].do{|n|n[0].split(/\W/,2)[0]}
                 },' ']}]),'<br>']},'</td>',
 
-        # recipient group
+        # label & link to group
         {_: :td, class: :group, property: To,
           c: {_: :a, :class => :to, style: 'background-color:'+c, c: e[0] && e[0].split(/@/)[0],
             href: e[0] && e[0].E.url+'?set=indexPO&p=sioc:addressed_to&view=page&v=threads'}},
