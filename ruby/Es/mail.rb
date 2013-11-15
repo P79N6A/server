@@ -1,6 +1,6 @@
 class E
   
-  # dep resolution
+  # TMail version: 1.2.7.1-4
   # apt-get install ruby-tmail
 
   def triplrTmail                         ; require 'tmail'
@@ -21,7 +21,8 @@ class E
          e.index SIOC+'reply_of', i[o]}}}) # index references
 
       # yield triples
-      yield e.uri, Type,    E[SIOCt+'MailMessage']
+      yield e.uri, Type,    E[SIOCt + 'MailMessage']
+      yield e.uri, Type,    E[SIOC  + 'Post']
       yield e.uri, Date,    m.date.iso8601    if m.date
       yield e.uri, Content, m.decentBody
         [[:subject,Title],

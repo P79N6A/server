@@ -20,8 +20,9 @@ class E
 
      '<table>',
 
-     # group by thread name
-     d.values.group_by{|r|
+     # group posts by thread name
+     d.values.select{|r| r[Type].do{|t| t.map(&:uri).member? SIOC+'Post'}
+     }.group_by{|r|
        [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}.
 
      # group by recipient
@@ -36,10 +37,11 @@ class E
           [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: t[1][0].url+'??=thread',
              c: t[0].to_s.gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')},
 
+
            # link to individual post
            (t[1].size > 1 &&
             ['<br>', t[1].map{|s|
-               puts "t0 #{t[0]} #{s.uri}"
+
                # author name and RDFa
                [{_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
                   c: s[SIOC+'name'].do{|n|n[0].split(/\W/,2)[0]}
