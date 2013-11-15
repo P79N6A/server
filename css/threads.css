@@ -12,15 +12,22 @@ a {
 }
 #down:hover {background-color:#aaf}
 
-.to {font-size:0.8em;
+.group .to {
+    color:#fff;
+    border-radius: 0 .4em .4em 0;
+    padding-right:.08em;
+}
+
+.to {
      color:black;
      padding:0;
-     margin:0}
+     margin:0;
+    }
 
 .g {float:left;
     margin-left:0.2em;
-    background-color:#eee;
-    color:#050}
+    background-color:#fff;
+    color:#bbb}
 
 td.group {vertical-align:top;
 	  text-align:left}

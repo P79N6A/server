@@ -30,7 +30,7 @@ class E
          k[To].do{|o|o.head.uri}}}.map{|e|
 
        # rec-group
-       c = '#%06x' % rand(16777216)
+       c = E.c
        ['<tr><td class=subject>', e[1].map{|t|
 
           # link to thread
