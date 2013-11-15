@@ -8,7 +8,7 @@ a {
     margin-left:1.61em;
     font-size:2em;
     padding:  0 1.4em 0 1.4em;
-    border-radius: .1em .1em .25em .25em;
+    border-radius: .16em .16em .25em .25em;
 }
 #down:hover {background-color:#aaf}
 
@@ -32,7 +32,7 @@ td.subject {max-width:78em;vertical-align:top;text-align:right}
     border-width:0 0 0.2em 0;
     border-style:dotted;
     border-radius:.4em 0 0 .4em;
-    padding-left:.2em;
+    padding-left:.18em;
     margin:0;
 }
 .thread:hover, .thread:hover:visited {background-color:#f04}

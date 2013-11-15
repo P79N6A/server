@@ -39,7 +39,7 @@ class E
            # link to individual post
            (t[1].size > 1 &&
             ['<br>', t[1].map{|s|
-
+               puts "t0 #{t[0]} #{s.uri}"
                # author name and RDFa
                [{_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
                   c: s[SIOC+'name'].do{|n|n[0].split(/\W/,2)[0]}
