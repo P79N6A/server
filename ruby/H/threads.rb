@@ -1,25 +1,10 @@
 watch __FILE__
 class E
-
-  F["?"] ||= {}
-  F["?"].update({'thread' =>{
-                    'graph'=>'thread',
-                    'sort' => 'dc:date',
-                    'reverse' => nil,
-                    'view' => 'multi',
-                    'views' => 'timegraph,mail',
-                    'arc' => '/parent',
-                    'label' => 'sioc:name'},
-                  'ann' =>{
-                    'view'=>'threads',
-                    'set'=>'glob',
-                    'matchP' => 'dc:title',
-                    'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/}})
-
-    fn 'protograph/thread',->d,_,g{
+  
+  fn 'protograph/thread',->d,_,g{
     d.walk SIOC+'reply_of',g
     F['docsID'][g]}
-
+  
   fn 'view/threads',->d,env{
 
     # CSS
@@ -27,7 +12,6 @@ class E
 
      # predicate tafting
      ([{_: :a, class: :rangeP, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p']},'&nbsp;',
-       {_: :a, class: :current, href: '/m?y=day', c: ' '},'&nbsp;',
        {_: :a, class: :rangePO, href: E[env['uri']].url+'?set=indexPO&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
       ] if env.q['set']=='indexPO'),
 
@@ -68,5 +52,20 @@ class E
      # link to unabbreviated content of post-set
      {_: :a, id: :down, c: '&darr;',
        href: env['REQUEST_PATH'] + env.q.merge({'view'=>'page','views'=>'timegraph,mail','arc'=>'/parent','v'=>'multi','sort'=>'dc:date','reverse'=>true}).qs}]}
+
+  F["?"] ||= {}
+  F["?"].update({'thread' =>{
+                    'graph'=>'thread',
+                    'sort' => 'dc:date',
+                    'reverse' => nil,
+                    'view' => 'multi',
+                    'views' => 'timegraph,mail',
+                    'arc' => '/parent',
+                    'label' => 'sioc:name'},
+                  'ann' =>{
+                    'view'=>'threads',
+                    'set'=>'glob',
+                    'matchP' => 'dc:title',
+                    'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/}})
 
 end
