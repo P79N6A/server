@@ -1,7 +1,7 @@
 #watch __FILE__
 class E
 
-  # POSIX-fs backed index of triples
+  # POSIX-fs based index of triples
   # 
 
   # index a triple 

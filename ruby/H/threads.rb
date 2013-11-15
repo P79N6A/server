@@ -22,13 +22,6 @@ class E
 
   fn 'view/threads',->d,env{
 
-    # occurrence-count statistics
-    g = {}
-    d.map{|_,m|
-      m[To].do{|to|to.map{|t|
-          g[t.uri]||=0
-          g[t.uri]=g[t.uri].succ}}}
-
     # CSS
     [(H.css '/css/threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
 
@@ -40,16 +33,13 @@ class E
 
      '<table>',
 
-     # subgroup by title
+     # group by thread name
      d.values.group_by{|r|
        [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}.
 
      # group by recipient
-     group_by{|r,k|
-
-       # show most-popular first
-       k[0].do{|k|
-         k[To].do{|o|o.sort_by{|t|g[t.uri]}.reverse.head.uri}}}.
+     group_by{|r,k| k[0].do{|k|
+         k[To].do{|o|o.head.uri}}}.
 
      # display
      map{|e|
