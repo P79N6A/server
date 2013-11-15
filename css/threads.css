@@ -31,8 +31,10 @@ td.subject {max-width:78em;vertical-align:top;text-align:right}
     color:#fff;
     border-width:0 0 0.2em 0;
     border-style:dotted;
+    border-radius:.4em 0 0 .4em;
+    padding-left:.2em;
     margin:0;
-    padding:0}
+}
 .thread:hover, .thread:hover:visited {background-color:#f04}
 .thread:visited {
     background-color:#fff;
@@ -51,7 +53,7 @@ td.subject {max-width:78em;vertical-align:top;text-align:right}
 .rangePO {
     background-color: white;
     color: #000;
-    border-radius: 0 0 .4em 0;
+    border-radius: 0 .4em .4em 0;
 }
 .rangeP, .rangePO, .current {
     padding: 0 .3em 0 .3em;
