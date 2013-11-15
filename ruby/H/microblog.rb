@@ -31,6 +31,7 @@ class E
     base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('a.details').attr('href') # subject URI
+      yield s, Type, E[SIOC+'Post']
       yield s, Type, E[SIOCt+'MicroblogPost']
       yield s, Creator, E(base+'/'+t.css('.username b')[0].inner_text)
       yield s, SIOC+'name',t.css('.fullname')[0].inner_text
