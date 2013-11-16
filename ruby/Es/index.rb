@@ -168,7 +168,7 @@ class Pathname
 div {display:block; padding:.3em}</style>',
      {_: :h3, c: e['uri']},{_: :br},
      d.map{|u,r|
-      {c: {_: :a, href: r.url+'?set=indexPO&p='+e['uri']+'&view=page&views=timegraph,mail&v=multi&c=8', c: u}}
+      {c: {_: :a, href: r.url+'?set=indexPO&p='+URI.escape(e['uri'])+'&view=page&views=timegraph,mail&v=multi&c=8', c: u}}
     }]}
 
   fn '/index/GET',->e,r{
