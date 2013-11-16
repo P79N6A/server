@@ -29,16 +29,16 @@ class E
      group_by{|r,k| k[0].do{|k|
          k[To].do{|o|o.head.uri}}}.map{|e|
 
-       # rec-group
+       # group
        c = E.c
        ['<tr><td class=subject>', e[1].map{|t|
 
-          # link to thread
+          # thread
           [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: t[1][0].url+'??=thread',
              c: t[0].to_s.gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')},
 
 
-           # link to individual post
+           # post
            (t[1].size > 1 &&
             ['<br>', t[1].map{|s|
                
@@ -47,7 +47,6 @@ class E
                  c: (s[SIOC+'name']||s[Creator]).do{|n|n[0]}
                }}]),'<br>']},'</td>',
 
-        # label & link to group
         {_: :td, class: :group, property: To,
           c: {_: :a, :class => :to, style: 'background-color:'+c, c: e[0] && e[0].split(/@/)[0],
             href: e[0] && e[0].E.url+'?set=indexPO&p=sioc:addressed_to&view=page&v=threads'}},
