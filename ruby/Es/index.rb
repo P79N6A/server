@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # POSIX-fs based index of triples
@@ -170,5 +170,10 @@ div {display:block; padding:.3em}</style>',
      d.map{|u,r|
       {c: {_: :a, href: r.url+'?set=indexPO&p='+e['uri']+'&view=page&views=timegraph,mail&v=multi&c=8', c: u}}
     }]}
+
+  fn '/index/GET',->e,r{
+   (H [{_: :style, c: "a {font-size:3em;display:block}
+a:hover {background-color:#00f}"},
+       '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&view=page&v=linkPO&c=12', c: p}}}]).hR}
 
 end

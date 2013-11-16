@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
   
   fn 'protograph/thread',->d,_,g{
@@ -12,8 +12,7 @@ class E
 
      # predicate tafting
      ([{_: :a, class: :rangeP, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p'].do{|p|
-           {'sioc:addressed_to' => 'to',
-             Creator => 'from'}[p] || p
+           {'sioc:addressed_to' => 'to', 'sioc:has_creator' => 'From'}[p] || p
          }},'&nbsp;',
        {_: :a, class: :rangePO, href: E[env['uri']].url+'?set=indexPO&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
       ] if env.q['set']=='indexPO'),
