@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 require 'benchmark'
 
 class E
@@ -23,6 +23,7 @@ class E
     $stdout.puts [e.fn,c,uri,e['HTTP_USER_AGENT'],e['HTTP_REFERER'],x].join ' '}
 
   F['/health/GET'] = ->e,r{
+    e.pathSegment.uri.match(/^(\/|\/health)$/) &&
     (H [{_: :h1,
           c: {_: :a, href: '/', style: "background-color:"+E.cs, c: '/'}},
         {c: [{_: :b, c: r['SERVER_NAME']},' storage ',`df --output=pcent /|tail -n 1`]},
