@@ -78,9 +78,11 @@ var audio = function(){
 	    break;
 	case 37:
 	    seek(-5);
+	    e.preventDefault();
 	    break;
 	case 39:
 	    seek(5);
+	    e.preventDefault();
 	    break;
 	case 33:
 	    seek(600);
