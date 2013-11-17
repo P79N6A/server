@@ -5,7 +5,7 @@ class E
     q['q'].do{|query|
       [e,e.pathSegment].compact.select(&:e).map{|e|
         grep = "grep -rl#{q.has_key?('i') && 'i'} #{query.sh} #{e.sh}"  # ;puts grep
-        `#{grep}`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathURI}}.flatten}}
+        `#{grep}`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathFs}}.flatten}}
 
   fn 'view/grep',->d,e{
     w = e.q['q']

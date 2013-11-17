@@ -8,7 +8,7 @@ class E
   fn 'graph/du',->e,_,m{
     `du -a #{m.values[0].sh}`.each_line{|l|
       s,p = l.chomp.split /\t/ # size, path
-      p = p.unpathURI          # path -> URI
+      p = p.unpathFs           # path -> URI
       m[p.uri] = {'uri' => p.uri,
             Stat+'size' => [s.to_i]}}
     m }

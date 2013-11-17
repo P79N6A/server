@@ -139,7 +139,7 @@ end
 class Pathname
 
   def E
-    to_s.force_encoding('UTF-8').unpathURI
+    to_s.force_encoding('UTF-8').unpathFs
   end
 
   def c

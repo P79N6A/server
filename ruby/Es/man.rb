@@ -81,7 +81,7 @@ class E
           
           # webize image paths
           body.css('img').map{|i|
-            p = (i.attr 'src').unpathURI
+            p = (i.attr 'src').unpathFs
             i.replace H[{_: :img, src: p}]}
 
           # inspect plaintext

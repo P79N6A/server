@@ -268,8 +268,7 @@ class String
     Shellwords.escape self
   end
 
-  # full FS path -> URI
-  def unpathURI
+  def unpathFs
     self[E::BaseLen..-1].do{|p|
       (p.match(/^\/([a-z]+:)\/+(.*)/).do{|m|m[1]+'//'+m[2]}||p).E}
   end

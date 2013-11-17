@@ -8,7 +8,7 @@ class E
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d }
       [e,e.pathSegment].compact.select(&:e).map{|e|
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
-        lines.map{|l|l.chomp.unpathURI}}.compact.flatten}}
+        lines.map{|l|l.chomp.unpathFs}}.compact.flatten}}
 
   fn 'view/find',->i,e{
     {_: :form, method: :GET, action: e['REQUEST_PATH'].t,

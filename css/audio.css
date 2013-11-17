@@ -7,7 +7,7 @@ a{text-decoration:none}
 #media {float: left;width:100%}
 #jump {float:left;font-size:3.33em;padding:0 .2em 0 .2em;background-color:orange;color:#fff}
 #rand {float:left;font-size:3.33em;padding:0 .3em 0 .2em;background-color:#ddf;color:#000}
-#info {font-weight:bold; font-size: 2em}
+#info {font-weight:bold; font-size: 2em;background-color:#000;color:#fff}
 .abbr {display: none}
 td {
     max-width: 21.22em;
