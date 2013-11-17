@@ -8,7 +8,7 @@ var audio = function(){
     var changeTrack = function(i){
 	var track = decodeURIComponent(i)
 	q('title').txt(track)
-	q('#info').txt(track)
+	q('#info').txt(track).attr('href',track+'?view=base')
 	audio.src = i
 	audio.load()
 	audio.play()}

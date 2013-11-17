@@ -13,7 +13,7 @@ class E
 
     [(H.once e, :mu, (H.js '/js/mu')),
      (H.once e, :audio, (H.js '/js/audio'), (H.css '/css/audio'),
-      {id: :rand,c: :r}, {id: :jump,c: '&rarr;'}, {id: :info},
+      {id: :rand,c: :r}, {id: :jump,c: '&rarr;'}, {id: :info, target: :_blank, _: :a},
       {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true}),'<br>',
      F['view/table'][d,e]]}
 
