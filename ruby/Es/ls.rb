@@ -40,9 +40,8 @@ class E
      (Fn 'view/find',i,e),'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
   
-  # top-level pathHandler
-  # can be delete entirely for default response (w/o index.html lookup)
-  # not a bad place to hook a Routing-engine for "synthetic"-URIs etc
+  # if a req got this far, try to use an index.html
+  # you can safely delete this
   fn '/GET',->e,r{
 
     html = e.as 'index.html'
@@ -53,7 +52,7 @@ class E
         [301, {Location: e.uri.t}, []] # redirect
       end
     else
-      # continue to fs-backed response
+      # continue to default response
       e.response
     end}
 
