@@ -17,7 +17,7 @@ class E
     n=->o{ 
       i[o]||='f'+(c+=1).to_s}
 
-    view=F['view/'+ (e.q['fv'] || 'divine') + '/item']
+    view=F['view/'+ (e.q['fv'] || 'divine') + '/resource']
     resources=->{
       m.map{|u,r| # each resource
         a.map{|p,_| # each facet

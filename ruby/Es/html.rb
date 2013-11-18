@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 def H _
   # Ruby object-literal syntax as HTML constructors
@@ -133,18 +133,20 @@ class E
 
   # domain-specific view
   fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
-    d.values.map{|r|Fn 'view/divine/item',r,e}}
+    d.values.map{|r|Fn 'view/divine/resource',r,e}}
 
-  # no domain-specific view
   fn 'view/base',->d,e{
     [H.once(e,'base',H.css('/css/html')),
      d.values.map(&:html)]}
 
-  # select domain-view - filename inspect
+  # domain-specific view of set
   fn 'view/divine/set',->d,e{
     d.values.map{|e|e.E.base}.do{|b|
-      s = b.size.to_f
-      t = 0.42 # threshold
+      # TODO look at RDF-types, not just paths? resource-level already does,
+      # "once" constraint on set-wide components means inbuilt set views "just work" already..
+      s = b.size.to_f # set size
+      t = 0.42 # threshold - common max is 0.5 as mails emit file + msg-ID resources,
+               # a/v pre-exported ID3/EXIF in .e "sidecar" files, etc
       if b.grep(/^msg\./).size / s > t
         Fn 'view/threads',d,e
       elsif b.grep(AudioFile).size / s > t
@@ -156,17 +158,17 @@ class E
       else false
       end}}
 
-  # select domain-view - RDF-type inspect
-  fn 'view/divine/item',->r,e{
-    r.class == Hash &&
+  # domain-specific view of resource
+  fn 'view/divine/resource',->r,e{
+    graph = {r.uri => r}
+    view = r.class == Hash &&
     r[Type] &&
     r[Type][0] &&
     r[Type][0].respond_to?(:uri) &&
-    (t = r[Type][0].uri # RDF type
+    (t = r[Type][0].uri
      (F['view/'+t] ||
-      F['view/'+t.split(/\//)[-2]]).do{|f|
-       f.({r.uri => r},e)}) ||
-    [r.html,H.once(e,'css',H.css('/css/html'))] }
+      F['view/'+t.split(/\//)[-2]])) || 'view/base' 
+    F[view][graph,e]}
 
   # multiple views (comma-separated)
   fn 'view/multi',->d,e{e.q['views'].split(',').map{|v|Fn'view/'+v,d,e}}
