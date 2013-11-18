@@ -54,7 +54,7 @@ class E
 
   # linebreak-delimited list of URIs
   def triplrUriList
-    open(d).readlines.map{|l|
+    open(d).readlines.grep(/^[^#]/).map{|l|
       l = l.chomp
       yield uri, '/rel', l
       yield   l, '/rev', uri
