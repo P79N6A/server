@@ -9,7 +9,6 @@ class E
     p = p.E
     indexEdit p, (o.class == E ? o : p.literal(o)), nil
   end
-  # TODO upwardly-bubbling aggregation stats, non-FS index backends (redis? SQLite?, Redland?)
 
   # index a triple - no input type-normalization
   def indexEdit p,o,a
