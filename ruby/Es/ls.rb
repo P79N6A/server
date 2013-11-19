@@ -44,6 +44,8 @@ class E
   # you can safely delete this
   fn '/GET',->e,r{
 
+    # TODO check for index.html on all-domains path
+
     html = e.as 'index.html'
     if html.e
       if e.uri[-1] == '/'   # inside dir?

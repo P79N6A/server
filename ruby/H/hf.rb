@@ -5,6 +5,8 @@
 # wget http://www1.m2.mediacat.ne.jp/binews/bib11.zip http://hfcc.org/data/b11/b11allx2.zip
 # unzip *zip
 
+# TODO continue using as stress-test , possibly break out into fuzzing package
+
 class E
 
   F["?"]||={}

@@ -13,6 +13,7 @@ class E
       e.e || (                            # Message-ID locatable?
        ln e                               # create message-id path 
        # index previously unseen mail
+       # TODO move this outside the triplr, when triplrMail is written
        self.index Creator,  m.from[0].E   # index From
        m.to.do{|t|self.index To, t[0].E}  # index To
 

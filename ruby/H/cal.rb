@@ -1,6 +1,8 @@
 #watch __FILE__
 class E
 
+  # TODO test rww.io/data.fm linked-data calendar apps for compatibility with our backend (and fix our backend if it doesn't work, obiously..)
+
     fn 'cal/day',->{Time.now.strftime '%Y/%m/%d/'}
   fn 'cal/month',->{Time.now.strftime '%Y/%m/'}
 

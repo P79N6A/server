@@ -9,6 +9,7 @@ class E
     p = p.E
     indexEdit p, (o.class == E ? o : p.literal(o)), nil
   end
+  # TODO upwardly-bubbling aggregation stats, non-FS index backends (redis? SQLite?, Redland?)
 
   # index a triple - no input type-normalization
   def indexEdit p,o,a
@@ -163,6 +164,7 @@ class Pathname
   end
 
   # construct p/o index-traversal links
+  # TODO add a form to sioc to/from search (who.rb) when applicable
   fn 'view/linkPO',->d,e{
     ['<style>a {background-color: #000;text-decoration:none;border-style:dotted;border-width:.1em;border-color:#fff;;color:#fff;font-size:1.3em;border-radius:.62em;padding:.1em}
 div {display:block; padding:.3em}</style>',

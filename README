@@ -1,8 +1,8 @@
  INSTALL               NOTES
  ruby/install          rsync src to site-lib
  ruby/install symlink  link to src from site-lib
- export RUBYLIB=ruby   just add dir to Ruby PATH
- gem install infod     a probably older and more-stable isotope
+ export RUBYLIB=ruby   env var to run in-place
+ gem install infod     occasional "release" version
 
  apt-get install ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
 
@@ -10,7 +10,7 @@
  infod         standalone
    ''  apache  sh/.htaccess
    ''  nginx   sh/nginx
- infod lo -d   listen only on localhost and go to background
+ infod lo -d   localhost only + daemonize
 
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
 git@gitorious.org:element/www.git   https://gitorious.org/element/www

@@ -2,6 +2,8 @@
 #watch __FILE__
 
 class String
+
+  # TODO some people (or more accurately broken hard-wrapping email/forum-systems) insert linebreaks into URLs, consider allowing this
   def hrefs i=false
     (partition /(https?:\/\/(\([^)]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       p[0].gsub('<','&lt;').gsub('>','&gt;')+
