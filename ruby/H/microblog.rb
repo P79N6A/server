@@ -4,7 +4,9 @@ class E
   # sprintf() formats in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
   def triplrIRC &f
     i=-1
-    day = dirname.uri.split('/')[-3..-1].join('-')
+    day = dirname.uri.split('/')[-3..-1].do{|dp|
+      dp.join('-') if dp[0].match(/^\d{4}$/)
+    }||''
     doc = uri.sub '#','%23'
     channel = bare
     yield doc,Date,day
@@ -15,8 +17,8 @@ class E
         yield s, SIOCt+'ChatChannel', channel
         yield s, Creator,             m[2]
         yield s, Content,             m[3].hrefs(true)
-        yield s, Type,                E[SIOC+'Post']
         yield s, Type,                E[SIOCt+'InstantMessage']
+        yield s, Type,                E[SIOC+'Post']
         yield s, 'hasLink',           (m[3].match(/http:\//) ? 'true' : 'false')
         yield s, 'hasNum', 'true' if m[3].match(/\d/)} rescue (puts "skipped #{l}")
     }
@@ -31,8 +33,8 @@ class E
     base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('a.details').attr('href') # subject URI
-      yield s, Type, E[SIOC+'Post']
       yield s, Type, E[SIOCt+'MicroblogPost']
+      yield s, Type, E[SIOC+'Post']
       yield s, Creator, E(base+'/'+t.css('.username b')[0].inner_text)
       yield s, SIOC+'name',t.css('.fullname')[0].inner_text
       yield s, Atom+"/link/image", E(t.css('.avatar')[0].attr('src'))

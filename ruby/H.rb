@@ -3,6 +3,7 @@ audio
 cal
 edit
 facets
+forum
 hf
 histogram
 mail

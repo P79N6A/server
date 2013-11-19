@@ -131,47 +131,68 @@ class E
 
   fn 'head.icon',->{{_: :link, href:'/css/misc/favicon.ico', rel: :icon}}
 
-  # domain-specific view
-  fn 'view',->d,e{( Fn 'view/divine/set',d,e)||
-    d.values.map{|r|Fn 'view/divine/resource',r,e}}
+  # select views - none were specified
+  # may end up here when browsing a FS
+  fn 'view/select',->d,e{#(Fn 'view/divine/set',d,e)||
+                  (Fn 'view/divine/files',d,e)||
+   d.values.map{|r|Fn 'view/divine/resource',r,e}}
+
+  # default view
+  F['view'] = F['view/select']
 
   fn 'view/base',->d,e{
     [H.once(e,'base',H.css('/css/html')),
      d.values.map(&:html)]}
 
-  # domain-specific view of set
+  # select a view based on RDF-type majority
   fn 'view/divine/set',->d,e{
+    # we'd be throwing away oddball resources to select one view for all of them
+    # but maybe you have a specific reason to
+    # inbuilt views support calling on set or per-resource basis, via "once" spec of set-wide components
+    # so views are selected per-resource unless you hack here..
+  }
+
+  # if overwhelmingly one of these types, use a media view (override w/ view=base)
+  fn 'view/divine/files',->d,e{
+
+    # w/o RDF there is still type info in file names
     d.values.map{|e|e.E.base}.do{|b|
-      # TODO look at RDF-types, not just paths? resource-level already does,
-      # "once" constraint on set-wide components means inbuilt set views "just work"
-      s = b.size.to_f # identifier-set size
-      t = 0.42 # threshold, max of 0.5 as files and contained resource are separate
+      s = b.size.to_f # size of set
+      t = 0.42        # threshold, max of 0.5 as file and RDF resource are separate
       if b.grep(/^msg\./).size / s > t
         Fn 'view/threads',d,e
+
       elsif b.grep(AudioFile).size / s > t
         Fn 'view/audio', d,e
+
       elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t
         Fn 'view/th', d,e
+
       elsif b.grep(/\.log$/).size / s > t
         Fn 'view/chat', d,e
+
       else false
       end}}
-=begin
-  # domain-specific view of resource
+
+  # select a view for a RDF resource
   fn 'view/divine/resource',->r,e{
     graph = {r.uri => r}
-    view = 'view/base' # default
+    view = F['view/base']
+    # find types, skipping malformed/missing info
     if r.class == Hash
-
+      r[Type].do{|types|
+        views = types.map{|t|
+          # discard non-URIs
+          t.uri if t.respond_to? :uri}.
+        compact.map{|t|
+          subtype = t
+          type = subtype.split(/\//)[-2]
+          [F['view/' + subtype],
+           F['view/' + type]]}.flatten.compact
+        view = views[0] unless views.empty?}
     end
-    r[Type] &&
-    r[Type][0] &&
-    r[Type][0].respond_to?(:uri) &&
-    ( = r[Type][0].uri
-     (F['view/'+t] ||
-      F['view/'+t.split(/\//)[-2]]))
-    F[view][graph,e]}
-=end
+    view[graph,e]}
+
   # multiple views (comma-separated)
   fn 'view/multi',->d,e{e.q['views'].split(',').map{|v|Fn'view/'+v,d,e}}
 
