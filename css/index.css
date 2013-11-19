@@ -1,0 +1,15 @@
+a {
+    background-color: #000;
+    text-decoration:none;
+    border-style:dotted;
+    border-width:.1em;
+    border-color:#fff;
+    color:#fff;
+    font-size:1.3em;
+    border-radius:.62em;
+    padding:.1em;
+}
+div {
+    display:block;
+    padding:.3em;
+}

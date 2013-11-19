@@ -162,19 +162,16 @@ class Pathname
     set
   end
 
-  # construct p/o index-traversal links
-  # TODO add a form to sioc to/from search (who.rb) when applicable
-  fn 'view/linkPO',->d,e{
-    ['<style>a {background-color: #000;text-decoration:none;border-style:dotted;border-width:.1em;border-color:#fff;;color:#fff;font-size:1.3em;border-radius:.62em;padding:.1em}
-div {display:block; padding:.3em}</style>',
-     {_: :h3, c: e['uri']},{_: :br},
-     d.map{|u,r|
-      {c: {_: :a, href: r.url+'?set=indexPO&p='+URI.escape(e['uri'])+'&view=page&views=timegraph,mail&v=multi&c=8', c: u}}
-    }]}
-
+  # enumerate unique predicates in index
   fn '/index/GET',->e,r{
    (H [{_: :style, c: "a {font-size:3em;display:block}
 a:hover {background-color:#00f}"},
        '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&view=page&v=linkPO&c=12', c: p}}}]).hR}
+
+  # p/o index-traversal pointers
+  fn 'view/linkPO',->d,e{
+    [(H.css '/css/index'),{_: :h3, c: e['uri']},'<br>',
+     
+     d.map{|u,r| {c: {_: :a, href: r.url+'?set=indexPO&p=' + URI.escape(e['uri']) + '&view=page&views=timegraph,mail&v=multi&c=8', c: u}}}]}
 
 end
