@@ -110,6 +110,23 @@ class E
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
 
+
+  # enumerate unique predicates in index
+  fn '/index/GET',->e,r{
+   (H [{_: :style, c: "a {font-size:3em;display:block}
+a:hover {background-color:#00f}"},
+       '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&view=page&v=linkPO&c=12', c: p}}}]).hR}
+
+  # p/o index-traversal pointers
+  fn 'view/linkPO',->d,e{
+    p = e['uri']
+    [(H.css '/css/index'),(H.js '/js/search'),{_: :h3, c: p},
+     # front-end to search on SIOC predicate+object URIs
+     %w{sioc:has_creator sioc:addressed_to}.member?(p).do{|_|
+       {_: :form, action: '/whois',c: [{_: :input, type: :hidden, name: :p, value: p},{_: :input, name: :q}]}
+     },
+     d.map{|u,r| {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&views=timegraph,mail&v=multi&c=8', c: u}}}]}
+
 end
 
 
@@ -161,17 +178,5 @@ class Pathname
     # result set
     set
   end
-
-  # enumerate unique predicates in index
-  fn '/index/GET',->e,r{
-   (H [{_: :style, c: "a {font-size:3em;display:block}
-a:hover {background-color:#00f}"},
-       '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&view=page&v=linkPO&c=12', c: p}}}]).hR}
-
-  # p/o index-traversal pointers
-  fn 'view/linkPO',->d,e{
-    [(H.css '/css/index'),{_: :h3, c: e['uri']},'<br>',
-     
-     d.map{|u,r| {c: {_: :a, href: r.url+'?set=indexPO&p=' + URI.escape(e['uri']) + '&view=page&views=timegraph,mail&v=multi&c=8', c: u}}}]}
 
 end

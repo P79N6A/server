@@ -1,15 +1,17 @@
+div {
+    display:block;
+    margin:.36em;
+}
 a {
     background-color: #000;
     text-decoration:none;
-    border-style:dotted;
+    border-style:solid;
     border-width:.1em;
-    border-color:#fff;
+    border-color:#eee;
     color:#fff;
     font-size:1.3em;
-    border-radius:.62em;
+    border-radius:0 .6em .6em 0;
     padding:.1em;
 }
-div {
-    display:block;
-    padding:.3em;
-}
+a:hover {background-color: #f06}
+input {font-size:1.2em}
