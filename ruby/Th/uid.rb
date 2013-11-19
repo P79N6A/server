@@ -21,6 +21,4 @@ class E
   fn '/whoami/GET',->e,r{
     [302,{Location: '/@'+r.uid.uri},[]]}
 
-  # TODO  WebID
-
 end
