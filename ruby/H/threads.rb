@@ -13,12 +13,14 @@ class E
      # predicate tafting & search
      (p = env.q['p']
       o = env['uri'].E
-      [{_: :a, class: :rangeP, href: '/@'+p+'?set=indexP&view=page&v=linkPO&c=12', c: {'sioc:addressed_to' => 'to', 'sioc:has_creator' => 'From'}[p] || p}, '&nbsp;',
+      [(H.js '/js/search'),
+       {_: :a, class: :rangeP, href: '/@'+p+'?set=indexP&view=page&v=linkPO&c=12', c: {'sioc:addressed_to' => 'to', 'sioc:has_creator' => 'From'}[p] || p}, '&nbsp;',
        {_: :a, class: :rangePO, href: o.url+'?set=indexPO&view=page&v=threads&c=32&p='+p, c: env['uri']},
        {_: :form, action: (URI.escape (p.expand.E.poIndex o).uri),
          c: [{_: :input, name: :set, value: :grep, type: :hidden},
+             {_: :input, name: :view,value: :grep, type: :hidden},
              {_: :input, name: :q}
-            ]}
+            ]},
       ] if env.q['set']=='indexPO'),
 
      '<table>',

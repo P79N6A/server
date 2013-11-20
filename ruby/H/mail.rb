@@ -30,7 +30,7 @@ class E
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
                 m[a[1]].do{|m|
                   m.map{|f| f.respond_to?(:uri) &&
-                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=mail&c=12', c: f.uri}}}},
+                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=threads&c=12', c: f.uri}}}},
 
               # mailto URI with embedded reply metadata
               (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&

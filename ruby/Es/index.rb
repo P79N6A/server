@@ -121,7 +121,7 @@ a:hover {background-color:#00f}"},
   # p/o index-traversal pointers
   fn 'view/linkPO',->d,e{
     p = e['uri']
-    [(H.css '/css/index'),(H.js '/js/search'),{_: :h3, c: p},
+    [(H.css '/css/index'),(H.js '/js/search'),{_: :b, c: p},
      # front-end to search on SIOC predicate+object URIs
      %w{sioc:has_creator sioc:addressed_to}.member?(p).do{|_|
        {_: :form, action: '/whois',c: [{_: :input, type: :hidden, name: :p, value: p},{_: :input, name: :q}]}

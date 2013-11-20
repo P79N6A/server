@@ -14,4 +14,6 @@ a {
     padding:.1em;
 }
 a:hover {background-color: #f06}
-input {font-size:1.2em}
+b,input {font-size:1.25em}
+form,input {display:inline}
+input {border-radius:.6em;margin-left:.25em}
