@@ -27,7 +27,7 @@ class E
       # sequential pattern
       p = /#{w.join '.*'}/i
 
-      [H.css('/css/search'),
+      [H.css('/css/search'), H.css('/css/grep'),
        F['view/search/form'][e.q,e],
        {_: :style, c: c.values.map{|i|
            # word color
