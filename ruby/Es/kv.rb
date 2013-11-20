@@ -28,12 +28,15 @@ class E
         indexEdit p,o,nil # index triple
         if o.f            # add triple
           # link resource
+#          puts "link #{o} #{t}"
           o.ln t
         elsif o.e
           # symlink resource
+#          puts "symlink #{o} #{t}"
           o.ln_s t
         else
           # name resource
+          puts "origin missing #{t}"
           t.mk
         end
       end

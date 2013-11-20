@@ -20,6 +20,8 @@ module FeedParse
     #items
     scan(%r{<(rss:|atom:)?(item|entry)([\s][^>]*)?>(.*?)</\1?\2>}mi){|m|
 
+      # TODO (gu)id field is often unresolvable. maybe use link[rel=alternate] as identifier instead since it's resolvable & HTTP
+
       # find identifier
       u = m[2] && (u = m[2].match /about=["']?([^'">\s]+)/) && u[1] ||
           m[3] && (((u = m[3].match /<(gu)?id[^>]*>([^<]+)/) || (u = m[3].match /<(link)>([^<]+)/)) && u[2])

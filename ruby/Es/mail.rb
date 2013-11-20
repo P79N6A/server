@@ -1,6 +1,6 @@
 class E
   
-  # TMail version: 1.2.7.1-4
+  # TMail version: 1.2.7.1-4 from
   # apt-get install ruby-tmail
 
   def triplrTmail                         ; require 'tmail'
@@ -10,16 +10,16 @@ class E
     (TMail::Mail.load node).do{|m|        # parse
       d = m.message_id; return unless d   # parse successful?
       e = i[d]                            # Message resource
+
+      # index previously unseen mail
+      # TODO move this outside triplr, if another triplr is written
       e.e || (                            # Message-ID locatable?
        ln e                               # create message-id path 
-       # index previously unseen mail
-       # TODO move this outside the triplr, when triplrMail is written
        self.index Creator,  m.from[0].E   # index From
        m.to.do{|t|self.index To, t[0].E}  # index To
 
-       %w{in_reply_to references}.map{|p|
-        m.send(p).do{|os| os.map{|o|
-         e.index SIOC+'reply_of', i[o]}}}) # index references
+       %w{in_reply_to references}.map{|p| m.send(p).do{|os| os.map{|o|
+        e.index SIOC+'reply_of', i[o]}}}) # index references
 
       # yield triples
       yield e.uri, Type,    E[SIOCt + 'MailMessage']
