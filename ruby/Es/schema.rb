@@ -35,7 +35,7 @@ class E
   def E.indexSchemas
     g = {}
     E.schemaDocs.map(&:ef).flatten.map{|d|d.graphFromFile g}
-    '/schema.txt'.E.w g.sort_by{|u,r|r[UsageWeight]}.map{|u,r|
+    '/schema/schema.txt'.E.w g.sort_by{|u,r|r[UsageWeight]}.map{|u,r|
       [(r[UsageWeight]||0),
        u,
        r[Label],
@@ -83,7 +83,7 @@ class E
 
   fn '/schema/GET',->e,r{
     if (q = r.q['q']) && !q.empty?
-      search = "grep -i #{q.sh} #{'/schema.txt'.E.d} | head -n 255"
+      search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 255"
       found = `#{search}`.to_utf8.lines.to_a.map{|i|
         c,u,t = i.split ' ',3
         c = c.to_i
