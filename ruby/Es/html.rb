@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 
 def H _
   # Ruby object-literal syntax as HTML constructors

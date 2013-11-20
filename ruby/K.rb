@@ -1,9 +1,9 @@
 #watch __FILE__
 class E
 
-  FSbase   = `pwd`.chomp ;  BaseLen = FSbase.size
-  Prefix   = '/@'  # non-HTTP URI path resolution-prefix
-  S        = '._'  # (meta)data directory
+  FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
+  Prefix = '/@'  # non-HTTP URI path resolution-prefix
+  S      = /\._/ # data path-separator
 
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'

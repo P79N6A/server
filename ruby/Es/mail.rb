@@ -1,6 +1,6 @@
 class E
   
-  # TMail version: 1.2.7.1-4 from
+  # TMail version: 1.2.7.1-4 from:
   # apt-get install ruby-tmail
 
   def triplrTmail                         ; require 'tmail'

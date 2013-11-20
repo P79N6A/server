@@ -36,7 +36,7 @@ class E
           o.ln_s t
         else
           # name resource
-          puts "origin missing #{t}"
+          puts "origin missing #{t} , adding URI ref"
           t.mk
         end
       end

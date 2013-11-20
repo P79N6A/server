@@ -155,12 +155,13 @@ class E
   end
 
   def u
-    @u ||= E (f ? dirname + '/.' + File.basename(path) : path.t + E::S)
+    # data-storage path for resource
+    @u ||= E (f ? dirname + '/.' + (File.basename path) : path.t + '._')
   end
 
   # (_ _ o) -> o
   def innerPath
-    uri.split(/#{E::S}/)[-1].unpath
+    (uri.split S)[-1].unpath
   end
   alias_method :ro, :innerPath
 
