@@ -7,7 +7,7 @@ class E
   %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.map{|a|Audio + a}.concat(['uri',Stat+'mtime', Stat+'size']).map{|p|AudioK[p] = true}
 
   fn 'view/audio',->d,e{
-    # constrain to audio files
+    d = d.dup
     d.delete_if{|p,o| !p.match AudioFile }
     d.values.map{|r| r.delete_if{|p,o| !AudioK[p] }}
 
