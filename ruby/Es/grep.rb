@@ -55,10 +55,10 @@ class E
           # show 3 matches per resource
           [g[-1*(g.size.max 3)..-1].map{|l|   
              # exerpt
-             l[0..404].gsub(a){|g|
+             l[0..403].gsub(a){|g|
                H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
            },"<br>"]]},
-       {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('view').qs, style: "background-color: #{E.cs}",c: '&darr;'}]
+       {_: :a, class: :down, href: e['REQUEST_PATH']+e.q.except('view').qs, style: "background-color: #{E.cs}",c: '&darr;'}]
     end }
 
 end
