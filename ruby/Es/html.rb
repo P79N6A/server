@@ -194,7 +194,9 @@ class E
     view[graph,e]}
 
   # multiple views (comma-separated)
-  fn 'view/multi',->d,e{e.q['views'].split(',').map{|v|Fn'view/'+v,d,e}}
+  fn 'view/multi',->d,e{
+    e.q['views'].split(',').map{|v|
+      F['view/'+v].do{|f|f[d,e]}}}
 
   def triplrBlob
     glob.select(&:f).do{|f|f.map{|r|
