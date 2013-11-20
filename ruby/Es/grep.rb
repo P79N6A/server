@@ -2,6 +2,7 @@
 class E
 
   fn 'set/grep',->e,q,m{
+    q['i'] ||= true # normal people want case-insensitive, i think - comment to unstick
     q['q'].do{|query|
       [e,e.pathSegment].compact.select(&:e).map{|e|
         grep = "grep -rl#{q.has_key?('i') && 'i'} #{query.sh} #{e.sh}"  # ;puts grep

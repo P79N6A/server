@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   fn 'protograph/thread',->d,_,g{
@@ -10,11 +10,15 @@ class E
     # CSS
     [(H.css '/css/threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
 
-     # predicate tafting
-     ([{_: :a, class: :rangeP, href: '/@'+env.q['p']+'?set=indexP&view=page&v=linkPO&c=12', c: env.q['p'].do{|p|
-           {'sioc:addressed_to' => 'to', 'sioc:has_creator' => 'From'}[p] || p
-         }},'&nbsp;',
-       {_: :a, class: :rangePO, href: E[env['uri']].url+'?set=indexPO&view=page&v=threads&c=32&p='+env.q['p'], c: env['uri']}
+     # predicate tafting & search
+     (p = env.q['p']
+      o = env['uri'].E
+      [{_: :a, class: :rangeP, href: '/@'+p+'?set=indexP&view=page&v=linkPO&c=12', c: {'sioc:addressed_to' => 'to', 'sioc:has_creator' => 'From'}[p] || p}, '&nbsp;',
+       {_: :a, class: :rangePO, href: o.url+'?set=indexPO&view=page&v=threads&c=32&p='+p, c: env['uri']},
+       {_: :form, action: (URI.escape (p.expand.E.poIndex o).uri),
+         c: [{_: :input, name: :set, value: :grep, type: :hidden},
+             {_: :input, name: :q}
+            ]}
       ] if env.q['set']=='indexPO'),
 
      '<table>',
@@ -61,10 +65,7 @@ class E
                     'graph'=>'thread',
                     'sort' => 'dc:date',
                     'reverse' => nil,
-                    'view' => 'multi',
-                    'views' => 'timegraph,mail',
-                    'arc' => '/parent',
-                    'label' => 'sioc:name'},
+                    'view' => 'mail'},
                   'ann' =>{
                     'view'=>'threads',
                     'set'=>'glob',

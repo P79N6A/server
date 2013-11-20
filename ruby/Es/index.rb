@@ -113,6 +113,7 @@ class E
 
   # enumerate unique predicates in index
   fn '/index/GET',->e,r{
+    e.pathSegment.uri.match(/^\/index$/) &&
    (H [{_: :style, c: "a {font-size:3em;display:block}
 a:hover {background-color:#00f}"},
        '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&view=page&v=linkPO&c=12', c: p}}}]).hR}
