@@ -40,21 +40,18 @@ class E
      (Fn 'view/find',i,e),'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
   
-  # if a req got this far, try to use an index.html
-  # you can safely delete this
+  # user-patchable default-handler
   fn '/GET',->e,r{
-
-    # TODO check for index.html on all-domains path
-
-    html = e.as 'index.html'
-    if html.e
-      if e.uri[-1] == '/'   # inside dir?
-        html.env(r).getFile # show index
-      else                  # descend to indexed dir
-        [301, {Location: e.uri.t}, []] # redirect
+    x = 'index.html'
+    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e
+    if i
+      if e.uri[-1] == '/' # inside dir?
+        i.env(r).getFile  # show index
+      else                # descend to indexed dir
+        [301, {Location: e.uri.t}, []]
       end
     else
-      # continue to default response
+      # default handler
       e.response
     end}
 
