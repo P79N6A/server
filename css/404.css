@@ -19,9 +19,7 @@ td.key {
 }
 
 
-td.key .abbr:hover {
-    color:#fff;
-}
+td.key .abbr {display: none}
 
 td.key div {
     white-space:nowrap;
