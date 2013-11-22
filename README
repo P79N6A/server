@@ -1,11 +1,11 @@
- PRE ruby-tmail graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
+ PREINSTALL graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
+ RUBY       rack thin tmail nokogiri -> cd ruby && bundle install
 
  INSTALL               NOTES
  ruby/install          rsync src to site-lib
  ruby/install symlink  link to src from site-lib
  export RUBYLIB=ruby   env var to run in-place
  gem install infod     occasional "release" version
-
 
 
  DAEMON        notes
