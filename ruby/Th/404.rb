@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   E404 = 'req/'+HTTP+'404'
@@ -9,18 +9,17 @@ class E
     s = g[id]     # resource pointer
 
     # link request-environment data
+    fn = r['REQUEST_METHOD']
     r.map{|k,v| 
-      s[k.sub(/^HTTP_/,Header).gsub('_','-').downcase] = k == 'uri' ? v : [v] }
+      s[Header + k] = k == 'uri' ? v : [v] }
     s[Type] = [E[HTTP+'Response']]
     s[HTTP+'statusCodeValue']=[404]
-    s['query'] = [r.q]
-    s['ACCEPT'] = [r.accept]
-    s['request-method'] = [H[{_: :a, c: s['request-method'][0], style: 'font-weight: bold',
-                               href: 'http://www.w3.org/Protocols/HTTP/Methods/'+s['request-method'][0]+'.html'}]]
-    s['server-protocol'] = [E['http://www.w3.org/Protocols/rfc2616/rfc2616.html']]
-    s['server-software'] = [H[{_: :a, href: 'http://github.com/infodaemon/www', c: :infod}]]
-    ['remote-addr','server-name',Header+'host'].map{|a|s[a] = [E['http://' + s[a][0]]] }
-    %w{CHARSET LANGUAGE ENCODING}.map{|a|s['ACCEPT_'+a] = [(r.accept_ '_' + a)]}
+    s['#query'] = [r.q]
+    s[Header+'ACCEPT'] = [r.accept]
+    %w{CHARSET LANGUAGE ENCODING}.map{|a|
+      s[Header+'ACCEPT_'+a] = [(r.accept_ '_' + a)]}
+    s[HTTP+'MTHD'] = [H[{_: :a, c: fn, style: 'font-weight: bold', href: 'http://www.w3.org/Protocols/HTTP/Methods/'+fn+'.html'}]]
+    s[Header+'HTTP_HOST'] = [E['http://' + s[Header+'HTTP_HOST'][0]]]
 
     # link to editable resource
     s[Edit]=[E[r['REQUEST_PATH']+'?view=edit&graph=editable']]

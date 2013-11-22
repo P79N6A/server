@@ -21,7 +21,10 @@ class E
   end
 
   [['application/ld+json',:jsonld],
+   ['application/json+ld',:jsonld],
+   ['application/jsonld',:jsonld],
    ['application/rdf+xml',:rdfxml],
+   ['application/rdfxml',:rdfxml],
    ['text/ntriples',:ntriples],
    ['text/turtle',:turtle],
    ['text/rdf+n3',:n3],
