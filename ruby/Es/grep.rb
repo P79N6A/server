@@ -10,10 +10,7 @@ class E
 
   fn 'view/grep',->d,e{
     w = e.q['q']
-    e.q['set']='grep'
-    unless w
-      F['view/search'][d,e]
-    else
+    if w
       # words supplied in query
       w = w.scan(/[\w]+/).map(&:downcase).uniq
 

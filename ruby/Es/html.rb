@@ -124,15 +124,13 @@ class E
      (Fn 'head.icon')].cr}
 
   fn 'head.formats',->e{
-    formats = %w{application/json text/n3}
+    formats = %w{text/plain text/n3 application/json+ld}
     formats.map{|f|
       {_: :link, rel: :meta, type: f,
         href:'http://' + e['SERVER_NAME'] + e['REQUEST_PATH'] + e.q.merge({'format' => f}).qs}}.cr}
 
   fn 'head.icon',->{{_: :link, href:'/css/misc/favicon.ico', rel: :icon}}
 
-  # select views - none were specified
-  # may end up here when browsing a FS
   fn 'view/select',->d,e{#(Fn 'view/divine/set',d,e)||
                   (Fn 'view/divine/files',d,e)||
    d.values.map{|r|Fn 'view/divine/resource',r,e}}
@@ -152,10 +150,7 @@ class E
     # so views are selected per-resource unless you hack here..
   }
 
-  # if overwhelmingly one of these types, use a media view (override w/ view=base)
   fn 'view/divine/files',->d,e{
-
-    # w/o RDF there is still type info in file names
     d.values.map{|e|e.E.base}.do{|b|
       s = b.size.to_f # size of set
       t = 0.42        # threshold, max of 0.5 as file and RDF resource are separate

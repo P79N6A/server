@@ -12,7 +12,6 @@ class E
       e = i[d]                            # Message resource
 
       # index previously unseen mail
-      # TODO move this outside triplr, if another triplr is written
       e.e || (                            # Message-ID locatable?
        ln e                               # create message-id path 
        self.index Creator,  m.from[0].E   # index From

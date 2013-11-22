@@ -1,4 +1,4 @@
-# 'development mode' reload and view invalidation on changes
+
 def watch f
   E::Watch[f]=File.mtime f
   puts 'dev '+f end
@@ -15,17 +15,19 @@ class E
       end }
   end
 
-  # call URI function
+  # call lambda @id
   def y *a
     F[uri][*a]
   end
 
 end
 
-# URI-named functions
+# URI -> function
+
 def fn u,y
   E::F[u.to_s] = y
 end
+
 def Fn a,*g
   puts "missing #{a} from #{caller[0]}" unless E::F[a]
   E::F[a][*g]
