@@ -22,6 +22,11 @@ class E
      q.has_key?('nocache').do{|_|rand}
     ].h}
 
+  # an almost-empty graph to defeat 404
+  fn 'protograph/_',->d,_,m{
+    m[d.uri] = {}
+    rand.to_s.h}
+
   # default graph
   #  filesystem storage
   fn 'graph/',->e,q,m{

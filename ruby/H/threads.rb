@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
   
   fn 'protograph/thread',->d,_,g{
