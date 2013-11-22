@@ -35,7 +35,7 @@ class E
          k[To].do{|o|o.head.uri}}}.map{|e|
 
        # group
-       c = E.c
+       c = E.cs
        ['<tr><td class=subject>', e[1].map{|t|
 
           # thread
