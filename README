@@ -1,12 +1,13 @@
- PREINSTALL graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
- RUBY       rack thin tmail nokogiri -> cd ruby && bundle install
+ PREINSTALL
+ OS   graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
+ RUBY rack thin tmail nokogiri
+   >  cp ruby/bin/infod /usr/local/bin
+   >  cd ruby && bundle install
 
  INSTALL               NOTES
- ruby/install          rsync src to site-lib
- ruby/install symlink  link to src from site-lib
- export RUBYLIB=ruby   env var to run in-place
- gem install infod     occasional "release" version
-
+ ruby/install          rsync to site-lib
+ ruby/install symlink  link from site-lib
+ export RUBYLIB=ruby   use in-place
 
  DAEMON        notes
  infod         standalone
