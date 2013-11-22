@@ -88,7 +88,7 @@ class E
        r.map{|k,v| # each predicate
          p = k.split(/[\/#]/)[-1]       # predicate
          k == 'uri' ||                  # already displayed
-         [" "*(16-p.size).min(1),p," ", # align objects 
+         [" "*(18-p.size).min(1),p," ", # align objects 
           (v.class==Array ? v:[v]).map{|v|# each object
             v.respond_to?(:uri) ? v.uri : # object-URI
             v.to_s.                       # object-content

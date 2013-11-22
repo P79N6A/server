@@ -1,4 +1,3 @@
-watch __FILE__
 class E
 
   E404 = 'req/'+HTTP+'404'
