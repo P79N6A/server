@@ -15,7 +15,7 @@ class E
              {_: :a, class: :addField, c: '+p ', href: url+'?graph=_&view=editP'},'<br>',
              s.map{|p,o|
               {class: :property,
-                 c: [{_: :a, class: :uri, href: p, c: p},'<br>',
+                 c: [{_: :a, class: :uri, href: e['REQUEST_PATH']+'?graph=editable&view=editPO&p='+CGI.escape(p), title: :edit, c: p},'<br>',
                      (case p
                       when 'uri'
                         {_: :a, c: p, href: p}
@@ -23,9 +23,7 @@ class E
                         {_: :pre, c: o}
                       else
                         o.html
-                      end),' ',
-                     {_: :a, class: :edit, c: :edit,href: e['REQUEST_PATH']+'?graph=editable&view=editPO&p='+CGI.escape(p)},
-                    ]}}]})}]}
+                      end)]}}]})}]}
 
   # select or mint a property to edit
   fn 'view/editP',->g,e{

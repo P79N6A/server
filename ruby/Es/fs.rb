@@ -150,7 +150,7 @@ class Pathname
   end
   
   def deleteNode
-    FileUtils.send file? ? :rm : :rmdir, self
+    FileUtils.send (file?||symlink?) ? :rm : :rmdir, self
     parent.deleteNode if parent.c.empty?
   end
 
