@@ -12,19 +12,20 @@ class E
        (url = uri.E.localURL e
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
-             {_: :a, class: :addField, c: '+add field', href: url+'?graph=_&view=editP'},
+             {_: :a, class: :addField, c: '+property', href: url+'?graph=_&view=editP'},
              s.map{|p,o|
               {class: :property,
-                 c: [{_: :a, class: :edit, c: :edit,
-                       href: e['REQUEST_PATH']+'?graph=editable&filter=p&view=editPO&p=uri,'+CGI.escape(p)},
+                 c: [{_: :a, href: p, c: p},'<br>',
                      (case p
                       when 'uri'
-                        {_: :a, class: :uri, c: p, href: p}
+                        {_: :a, c: p, href: p}
                       when Content
                         {_: :pre, c: o}
                       else
                         o.html
-                      end)]}}]})}]}
+                      end),' ',
+                     {_: :a, class: :edit, c: :edit,href: e['REQUEST_PATH']+'?graph=editable&filter=p&view=editPO&p=uri,'+CGI.escape(p)},
+                    ]}}]})}]}
 
   # select or mint a property to edit
   fn 'view/editP',->g,e{

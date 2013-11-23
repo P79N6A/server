@@ -1,22 +1,24 @@
+body {font-family: sans-serif}
 .resource {
     background-color:#eee;
     border-style:dotted;
     border-width:.2em;
     border-color:#aaa;
     border-radius:1em;
-    padding:.5em;
+    padding:0 .5em .5em .5em;
     margin: .5em;
+}
+
+.resource > a.uri {
+    font-size:1.1em;
+    background-color:#fff;
+    color: #000;
 }
 
 .property {
     background-color:#fff;
     border-radius:.5em;
     padding:.2em;
-}
-
-
-.property:hover {
-    background-color: #888;
 }
 
 .property > a.uri {
@@ -27,9 +29,10 @@
 }
 
 .property > .edit {
-    float: right;
+    border-radius:.5em;
+    padding:.1em;
     background-color: #4f4;
-    color: #4a4;
+    color: #fff;
 }
 
 
@@ -38,10 +41,7 @@
     color: #222;
 }
 
-a.uri {
-    font-family: sans-serif;
-    text-decoration: none;
-}
+a {text-decoration: none}
 
 
 
