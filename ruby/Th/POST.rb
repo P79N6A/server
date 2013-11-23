@@ -31,11 +31,8 @@ class E
       # snapshot current resource state
       
     }
-
-    # parameters for editor
     @r.q.update({'view' => 'editPO',
-                 'graph' => 'editable',
-                 'p' => p.uri})
+                 'graph' => 'editable'})
     self.GET
   end
 

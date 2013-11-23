@@ -54,33 +54,29 @@ class E
   # edit triples
   fn 'view/editPO',->g,e{
 
-    p = e.q['p'].expand
+    p = e.q['p'].do{|p|p.expand}
 
     # triple -> input
     triple = ->s,p,o{
-
-      # triple identifier
+      # identifier
       i = (s.E.concatURI p).concatURI E(p).literal o
-
       [(case p
         when Content
           {_: :textarea, name: i, c: o, rows: 24, cols: 80}
         else
           {_: :input, name: i, value: o}
         end
-        ),'<br>',
-      ]}
+        ),'<br>']}
 
     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
-      c: [(H.once e, 'edit', (H.css '/css/edit')),
-          {_: :h2, c: p},
-          # existing entries
-          g.map{|s,r| r[p].do{|o_| o_.map{|o|
-              triple[s,p,o]}.cr}},
-          # new entry
-          triple[e['uri'],p,''],' ',
+      c: [(H.once e, 'edit', (H.css '/css/edit')),          
+          g.map{|s,r|
+            (p ? [p] : r.keys).
+            map{|p| r[p].do{|os|
+                [{_: :b, c: p},'<br>',
+                 os.map{|o|triple[s,p,o]}.cr,
+                 triple[e['uri'],p,'']]}}},
           {_: :input, type: :submit, value: 'save'},
-          {_: :a, class: :back, c: 'back', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}
-         ]}}
+          {_: :a, class: :back, c: 'back', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}]}}
 
 end
