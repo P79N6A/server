@@ -13,13 +13,16 @@ class E
       # original triple
       s,p,o = [sP,pP,oP].map &:unpath
       puts [:POST,:s,s,:p,p,:o,o.class,o].join(' ')
+
+      # nuke trailing slash(es)
+      s = s.uri[0..-2].E if s.uri[-1] == '/'
       p = p.uri[0..-2].E if p.uri[-1] == '/'
 
       # object-delta URIs
       vU = E.literal v
       oU = oP.E
 
-      # change detected
+      # change detected?
       unless oU.uri == vU.uri
         # edit triple
         s[p,o,v]
