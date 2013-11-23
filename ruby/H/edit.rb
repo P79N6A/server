@@ -1,14 +1,11 @@
 watch __FILE__
 class E
 
-  fn 'protograph/editable',->resource,env,graph{
-    Fn 'protograph/_',resource,env,graph}
+  F['protograph/editable'] = F['protograph/_']
 
-  fn 'graph/editable',->resource,env,graph{
-    resource.fromStream graph, :triplrFsStore
-    [Title,Creator,Content].map{|u|graph[u]||={}}}
+  fn 'graph/editable',->e,env,g{
+    e.fromStream g, :triplrFsStore}
 
-  # show resource w/ links into editor
   fn 'view/edit',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s| uri && s &&
@@ -77,7 +74,7 @@ class E
       c: [(H.once e, 'edit', (H.css '/css/edit')),
           {_: :h2, c: p},
           # existing entries
-          g.map{|s,r| r[p].do{|p| p.map{|o|
+          g.map{|s,r| r[p].do{|o_| o_.map{|o|
               triple[s,p,o]}.cr}},
           # new entry
           triple[e['uri'],p,''],' ',

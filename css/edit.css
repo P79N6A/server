@@ -1,43 +1,19 @@
 .resource {
+    background-color:#eee;
     border-style:dotted;
-    border-width:.1em;
+    border-width:.2em;
     border-color:#aaa;
-    border-radius:.6em .6em 0 .6em;
+    border-radius:1em;
+    padding:.5em;
     margin: .5em;
 }
 
-.tripleURI {
-    background-color: #ccc;
-    color: #222;
-}
-
-a.uri {
-    font-family: sans-serif;
-    text-decoration: none;
-}
-
-.resource > a.uri {
-    color:#000;
-    background-color:#fff;
-    border-radius:0 0 .4em 0;
-    padding: .04em;
-}
-
-.addField {
-    background-color: #8d8;
-    color: #fff;
-    padding:.1em;
-    border-radius: .5em .2em .2em .5em;
-    margin-left: .8em;
-}
-
 .property {
-    background-color:#000;
-    color:#fff;
-    border-style:dotted;
-    border-width:.1em 0 0 0;
-    border-color:#aaa;
+    background-color:#fff;
+    border-radius:.5em;
+    padding:.2em;
 }
+
 
 .property:hover {
     background-color: #888;
@@ -54,6 +30,27 @@ a.uri {
     float: right;
     background-color: #4f4;
     color: #4a4;
+}
+
+
+.tripleURI {
+    background-color: #ccc;
+    color: #222;
+}
+
+a.uri {
+    font-family: sans-serif;
+    text-decoration: none;
+}
+
+
+
+.addField {
+    background-color: #8d8;
+    color: #fff;
+    padding:.1em;
+    border-radius: .5em .2em .2em .5em;
+    margin-left: .8em;
 }
 
 pre {white-space: pre-wrap}
