@@ -12,7 +12,7 @@ class E
 
       # original triple
       s,p,o = [sP,pP,oP].map &:unpath
-      puts :s,s.class,s,:p,p.class,p,:o,o.class,o
+      puts [:POST,:s,s,:p,p,:o,o.class,o].join(' ')
       p = p.uri[0..-2].E if p.uri[-1] == '/'
 
       # object-delta URIs

@@ -17,6 +17,8 @@ class E
     p = p.E
     o = p.literal o unless o.class == E
     t = (concatURI p).concatURI o
+    puts [:editFS,t.dirname,t].join ' '
+    
     if oO                # updated triple
       if t.e             # old triple exists?
         t.deleteNode     # remove triple
@@ -26,13 +28,14 @@ class E
     else
       unless t.e          # triple exists?
         indexEdit p,o,nil # index triple
+        t.dirname.mk
         if o.f            # add triple
           # link resource
-#          puts "link #{o} #{t}"
+          puts "link #{o} #{t}"
           o.ln t
         elsif o.e
           # symlink resource
-#          puts "symlink #{o} #{t}"
+          puts "symlink #{o} #{t}"
           o.ln_s t
         else
           # name resource

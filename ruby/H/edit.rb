@@ -80,7 +80,7 @@ class E
           # new entry
           triple[e['uri'],p,''],' ',
           {_: :input, type: :submit, value: 'save'},
-          {_: :a, c: ' cancel', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}
+          {_: :a, class: :back, c: 'back', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}
          ]}}
 
 end

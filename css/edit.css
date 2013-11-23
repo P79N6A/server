@@ -41,7 +41,7 @@ a {text-decoration: none}
 
 
 
-.addField {
+.addField, .back {
     background-color: #4f4;
     color: #fff;
     padding:.1em;
