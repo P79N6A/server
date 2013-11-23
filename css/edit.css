@@ -24,14 +24,6 @@ body {font-family: sans-serif}
     margin-left:-.4em;
 }
 
-.property > .edit {
-    border-radius:.5em;
-    padding:.1em;
-    background-color: #4f4;
-    color: #fff;
-}
-
-
 .tripleURI {
     background-color: #ccc;
     color: #222;
@@ -39,14 +31,12 @@ body {font-family: sans-serif}
 
 a {text-decoration: none}
 
-
-
-.addField, .back {
+.edit, .back {
     background-color: #4f4;
     color: #fff;
     padding:.1em;
     border-radius: .5em .2em .2em .5em;
-    margin-left: .8em;
+    margin-left: .5em;
 }
 
 pre {white-space: pre-wrap}

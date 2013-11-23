@@ -10,12 +10,13 @@ class E
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s| uri && s &&
        (url = uri.E.localURL e
+        edit = e['REQUEST_PATH']+'?graph=editable&view=editPO'
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
-             {_: :a, class: :addField, c: '+p ', href: url+'?graph=_&view=editP'},'<br>',
+             {_: :a, class: :edit, c: '+p', href: url+'?graph=_&view=editP'},{_: :a, class: :edit, href: edit,c: :edit},'<br>',
              s.map{|p,o|
               {class: :property,
-                 c: [{_: :a, class: :uri, href: e['REQUEST_PATH']+'?graph=editable&view=editPO&p='+CGI.escape(p), title: :edit, c: p},'<br>',
+                 c: [{_: :a, class: :uri, href: edit + '&p=' + CGI.escape(p), title: :edit, c: p},' ',
                      (case p
                       when 'uri'
                         {_: :a, c: p, href: p}
@@ -67,7 +68,8 @@ class E
         else
           {_: :input, name: i, value: o}
         end
-        )]}
+        ),'<br>',
+      ]}
 
     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
       c: [(H.once e, 'edit', (H.css '/css/edit')),
