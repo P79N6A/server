@@ -1,16 +1,13 @@
 body {font-family: sans-serif}
 .resource {
     background-color:#eee;
-    border-style:dotted;
-    border-width:.2em;
-    border-color:#aaa;
     border-radius:1em;
     padding:0 .5em .5em .5em;
     margin: .5em;
 }
 
 .resource > a.uri {
-    font-size:1.1em;
+    font-size:1.4em;
     background-color:#fff;
     color: #000;
 }
@@ -18,14 +15,13 @@ body {font-family: sans-serif}
 .property {
     background-color:#fff;
     border-radius:.5em;
-    padding:.2em;
+    padding:0 .2em .2em .2em;
 }
 
 .property > a.uri {
-    width: 30%;
-    font-weight:bold;
-    background-color: #fff;
-    color: #0cf;
+    background-color: #0cf;
+    color: #fff;
+    margin-left:-.4em;
 }
 
 .property > .edit {
@@ -46,7 +42,7 @@ a {text-decoration: none}
 
 
 .addField {
-    background-color: #8d8;
+    background-color: #4f4;
     color: #fff;
     padding:.1em;
     border-radius: .5em .2em .2em .5em;
