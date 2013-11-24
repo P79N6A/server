@@ -98,7 +98,10 @@ class Hash
                      {_: :pre, style: "white-space: pre-wrap", c: v}
                    when 'uri'
                      u = v.E
-                     {_: :a, id: u, href: u.url, c: v}
+                     [{_: :a, id: u, href: u.url, c: v},
+                      {_: :a, style: "float: right; background-color: #fff;color: #8f8",
+                        href: u.url+'?graph=editable&view=edit',c: "&#9881;"}
+                     ]
                    else
                      v.html
                    end), class: :val}].cr}}.cr})
