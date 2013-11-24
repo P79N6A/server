@@ -71,11 +71,12 @@ class E
     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
       c: [(H.once e, 'edit', (H.css '/css/edit')),          
           g.map{|s,r|
-            (p ? [p] : r.keys).
-            map{|p| r[p].do{|os|
-                [{_: :b, c: p},'<br>',
-                 os.map{|o|triple[s,p,o]}.cr,
-                 triple[e['uri'],p,'']]}}},
+            (p ? [p] : r.keys).map{|p|
+              [{_: :b, c: p},'<br>',
+               r[p].do{|os|
+                 os.map{|o|triple[s,p,o]}}, # extant
+               triple[e['uri'],p,''] # blank
+              ]}},
           {_: :input, type: :submit, value: 'save'},
           {_: :a, class: :back, c: 'back', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}]}}
 
