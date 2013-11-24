@@ -1,8 +1,7 @@
  PREINSTALL
  OS   graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
- RUBY rack thin tmail nokogiri
-   >  cp ruby/bin/infod /usr/local/bin
-   >  cd ruby && bundle install
+ RUBY > cp ruby/bin/infod /usr/local/bin
+      > cd ruby && bundle install
 
  INSTALL               NOTES
  ruby/install          rsync to site-lib
