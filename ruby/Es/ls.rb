@@ -18,7 +18,7 @@ class E
                     {_: :a, href: url.t, c: '/'}]},
                r[Posix+'dir#child'].map{|c|a[c]}]}
        else
-         a[r]
+         [a[r], r.html]
        end
      }]}
 
