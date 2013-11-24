@@ -9,8 +9,6 @@ class E
         s,p,o = [s,p,o].map &:unpath
         s = s.uri[0..-2].E if s.uri[-1] == '/'
         p = p.uri[0..-2].E if p.uri[-1] == '/'
-        
-        # object-delta
         vU = E.literal v
         oU = oP.E
         unless oU.uri == vU.uri
@@ -18,8 +16,11 @@ class E
         end
       end}
 
-    @r.q.update({'view' => 'editPO',
-                 'graph' => 'editable'})
+    g={}
+    fromStream g, :triplrFsStore
+    ef.w g,true
+
+    @r.q.update({'view' => 'editPO','graph' => 'editable'})
     self.GET
   end
 
