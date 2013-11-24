@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def []= p,o
@@ -16,6 +16,7 @@ class E
   def editFs p, o, oO=nil
     p = p.E
     o = p.literal o unless o.class == E
+    puts ["editFS",:s,uri,:p,p,:o,o,o.class,:oV,oO,oO.class].join ' '
     t = (concatURI p).concatURI o
     if oO                # updated triple
       if t.e             # old triple exists?

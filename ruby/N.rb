@@ -178,7 +178,7 @@ class E
   def literal o
 
     # already a URI
-    return self if o.class == E
+    return o if o.class == E
 
     # blob for non-strings
     return literalBlob o unless o.class == String

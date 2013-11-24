@@ -1,5 +1,6 @@
 watch __FILE__
 class E
+  # a HTML <form> approach to RDF editing
 
   F['protograph/editable'] = F['protograph/_']
 
@@ -56,17 +57,16 @@ class E
 
     p = e.q['p'].do{|p|p.expand}
 
-    # triple -> input
+    # triple -> <input>
     triple = ->s,p,o{
-      # identifier
-      i = (s.E.concatURI p).concatURI E(p).literal o
+      id = (s.E.concatURI p).concatURI E(p).literal o
       [(case p
         when Content
-          {_: :textarea, name: i, c: o, rows: 24, cols: 80}
+          {_: :textarea, name: id, c: o, rows: 24, cols: 80}
         else
-          {_: :input, name: i, value: o}
+          {_: :input, name: id, value: o}
         end
-        ),'<br>']}
+        ),"<br>\n"]}
 
     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
       c: [(H.once e, 'edit', (H.css '/css/edit')),          

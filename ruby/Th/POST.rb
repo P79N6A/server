@@ -10,6 +10,7 @@ class E
         s = s.uri[0..-2].E if s.uri[-1] == '/'
         p = p.uri[0..-2].E if p.uri[-1] == '/'
         unless oP.E == (E.literal v)
+          puts ["POST",:s,uri,:p,p,:o,o,o.class,:oV,v,v.class].join ' '
           s[p,o,v] # edit
         end
       end}
