@@ -8,7 +8,7 @@ class E
 
   fn 'view/audio',->d,e{
     d = d.dup
-    d.delete_if{|p,o| !p.match AudioFile }
+    d.delete_if{|p,o| !p.match AudioFile } unless e.q.has_key?('all')
     d.values.map{|r| r.delete_if{|p,o| !AudioK[p] }}
 
     [(H.once e, :mu, (H.js '/js/mu')),
