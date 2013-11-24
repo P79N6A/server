@@ -1,9 +1,13 @@
 
-.text { float: right }
+.text {
+    float: right;
+    margin: .3em;
+}
 
 .text a {
     color: #fff;
     text-decoration: none;
+    border-radius:0;
 }
 
 .text pre > a {
@@ -14,7 +18,7 @@
 
 .text pre {
     padding:.4em;
-    margin:0 .1em .1em .1em;
+    margin:0;
     color:#fff;
     background-color:#000;
     border-style:dotted;
