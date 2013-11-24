@@ -2,11 +2,8 @@
 class E
 
   fn 'view/dir',->i,e{
-
-    # item link + preview
     a = -> i { i = i.E
-      {_: :a, href: i.localURL(e),
-        c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?y=scaleImage&px=233'} : i.uri.sub(/.*\//,'')}}
+      {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?y=scaleImage&px=233'} : i.uri.sub(/.*\//,'')}}
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r|
@@ -18,9 +15,8 @@ class E
                     {_: :a, href: url.t, c: '/'}]},
                r[Posix+'dir#child'].map{|c|a[c]}]}
        else
-         [a[r], r.html]
-       end
-     }]}
+         r.html
+       end }]}
 
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
