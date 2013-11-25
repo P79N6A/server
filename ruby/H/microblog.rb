@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # sprintf() formats in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
@@ -57,14 +57,17 @@ class E
     Fn'view/chat/base',d,e,->{d.map{|u,r|Fn 'view/chat/item',r,e}}}
 
   fn 'view/chat/item',->r,e{
+    if r.class == Hash
     line = r.E.frag
     r[Type] && r[Type].map(&:uri).include?(SIOCt+'MailMessage') && r[:mail]=true
     r[Content] && 
     [{_: :a, id: line},
      {_: :a, :class => :date, href: r.url, c: r[Date][0].match(/T([0-9:]{5})/)[1]},
+
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
             c: [r[Atom+"/link/image"].do{|p| {_: :img, class: :a, src: p[0].uri}},
                 {_: :span, c: r[SIOC+'name']||r[Creator]||'#'}]}},' ',
+
         {_: :span, :class => :tw, 
        c: [r[Atom+'/link/media'].do{|a|
              a.compact.map{|a|{_: :a, href: r.url, c: {_: :img, src: a.uri}}}},
@@ -72,8 +75,10 @@ class E
             {_: :a, href: r.url, c: r[Title],:class => r[:mail] ? :titleMail : :title}),
            r[:mail] ? (r[Content].map{|c|c.lines.to_a.grep(/^[^&@_]+$/)[0..21]}) : r[Content],
           ]},' ',
+
      {_: :a, class: :line, href: '#'+line, c: '&nbsp;'},
-     "<br>\n"] if r.uri}
+     "<br>\n"]
+    end}
   
   fn 'view/chat/base',->d,e,c{
     [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body, span.nick span, a {background-color: #{E.c}}\n"}),

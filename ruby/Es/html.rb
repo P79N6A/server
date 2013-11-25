@@ -119,7 +119,7 @@ class E
 
   fn 'abbrURI',->u{
     u.to_s.sub(/(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]*)$/,
-     '<div class="abbr"><div class="scheme">\k<scheme></div>\k<abbr></div><div class="frag">\k<frag></div>')}
+     '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>')}
 
   fn 'head',->d,e{
     [{_: :title, c: e.uri},

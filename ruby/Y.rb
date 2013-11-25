@@ -29,6 +29,6 @@ def fn u,y
 end
 
 def Fn a,*g
-  puts "missing #{a} from #{caller[0]}" unless E::F[a]
+  puts "#{a} de #{caller[0]}" #unless E::F[a]
   E::F[a][*g]
 end
