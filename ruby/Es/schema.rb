@@ -88,7 +88,7 @@ class E
         c,u,t = i.split ' ',3
         c = c.to_i
         [("<b>#{c}</b>" unless c.zero?),
-         " <a href='#{u}'>#{F['abbrURI'][u]}</a> ",
+         " <a href='#{u}'>#{u.abbrURI}</a> ",
          t,"<br>\n"]}
     end
     (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),

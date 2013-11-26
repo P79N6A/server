@@ -54,7 +54,11 @@ class String
     gsub(/\n/,"<br>\n")
   end
   def href name=nil
-    '<a href="'+self+'">'+(name||(Fn 'abbrURI',self))+'</a>'
+    '<a href="'+self+'">' + (name||abbrURI) + '</a>'
+  end
+  def abbrURI
+    sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]*)$/,
+    '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
   def html
     if match /\A(\/|http)[\S]+\Z/
@@ -91,7 +95,7 @@ class Hash
             [{_: :td,
                c: {_: :a, name: k,
                  href: (k == 'uri' ? v : k),
-                 c: (Fn 'abbrURI',k)}, class: :key},
+                 c: k.to_s.abbrURI}, class: :key},
              {_: :td,
                c: (case k
                    when E::Content
@@ -116,10 +120,6 @@ class E
   def link
     html '#',true
   end
-
-  fn 'abbrURI',->u{
-    u.to_s.sub(/(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]*)$/,
-     '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>')}
 
   fn 'head',->d,e{
     [{_: :title, c: e.uri},
@@ -266,7 +266,7 @@ class E
                 {_: :th, class: :label, property: k,
                   c: q ? {_: :a,
                     href: q['REQUEST_PATH']+q.q.except('reverse').merge({'sort'=>k}).merge(q.q.member?('reverse') ? {} : {'reverse'=>true}).qs,
-                    c: (Fn 'abbrURI',k)} : k}}},
+                    c: k.abbrURI} : k}}},
             *es.map{|e|
               {_: :tr, about: e.uri, c:
                 keys.map{|k| {_: :td, property: k, c: e[k].send(k=='uri' ? :href : :html)} }}}]})}

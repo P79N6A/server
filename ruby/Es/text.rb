@@ -4,10 +4,10 @@
 class String
 
   def hrefs i=false
-    # keep consuming URL chars when:
+    # keep consuming URL chars WHEN
     #  ( to ) - ")" won't match without an opener, such as when URL is placed in ()s
     #  , or . followed by non-whitespace
-    #  not URI-wrapping chars, phrase/sentence terminators , . or whitespace
+    #  NOT URI-wrapping chars, phrase/sentence terminators , . or whitespace
     (partition /(https?:\/\/(\([^)]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       p[0].gsub('<','&lt;').gsub('>','&gt;')+
       (p[1].empty?&&''||'<a rel=untyped href='+p[1]+'>'+p[1].do{|p|
@@ -55,7 +55,7 @@ class E
 
   fn 'view/title/item',->r,e{
     {_: :a, class: :title, href: r.E.url,
-      c: r[Title] || (Fn 'abbrURI', r.uri)}}
+      c: r[Title] || r.uri.abbrURI}}
 
   # linebreak-delimited list of URIs
   def triplrUriList

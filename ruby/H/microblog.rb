@@ -57,7 +57,6 @@ class E
     Fn'view/chat/base',d,e,->{d.map{|u,r|Fn 'view/chat/item',r,e}}}
 
   fn 'view/chat/item',->r,e{
-    if r.class == Hash
     line = r.E.frag
     r[Type] && r[Type].map(&:uri).include?(SIOCt+'MailMessage') && r[:mail]=true
     r[Content] && 
@@ -77,8 +76,7 @@ class E
           ]},' ',
 
      {_: :a, class: :line, href: '#'+line, c: '&nbsp;'},
-     "<br>\n"]
-    end}
+     "<br>\n"]}
   
   fn 'view/chat/base',->d,e,c{
     [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body, span.nick span, a {background-color: #{E.c}}\n"}),
