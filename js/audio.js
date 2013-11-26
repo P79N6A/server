@@ -31,7 +31,7 @@ var audio = function(){
 	} else {
 	    var cur = q(track+'[href="'+audio.attr('src')+'"]')
 	    if(cur && (s = cur.parentNode.parentNode.nextSibling.querySelector(track))) {
-//		console.log('next',s)
+		// next found
 	    } else {
 		s = q(track)
 	    }

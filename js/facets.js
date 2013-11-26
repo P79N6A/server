@@ -1,7 +1,7 @@
 var e = function(){
     qa('.facet span.name').click(function(e){
 	var t = e.target
-	console.log('k')
+
 	// predicate-object tuple
 	var pon = t.parentNode
 
@@ -31,7 +31,6 @@ var e = function(){
     })
 
     qa('.facet .predicate').click(function(e){
-	console.log('fclk')
 	var t = e.target.parentNode
 	t.style.display='none'
 	q('.selector[facet='+t.attr('facet')+']').style.display='inline'
