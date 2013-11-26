@@ -2,9 +2,10 @@ body {margin: 0}
 .selector {
     border-radius: 0 0 .5em .5em;
     background-color: #eee;
-    display: inline;
+    display: none;
     font-size:1.3em;
-    padding: .2em
+    padding: .2em;
+    margin: .16em;
 }
 .selector:hover {
     background-color:#fff;
@@ -21,7 +22,11 @@ body {margin: 0}
     max-height:18em;
     max-width:21em;
     overflow:scroll;
-    white-space:nowrap}
+    white-space:nowrap;
+}
+.facet .predicate {
+    font-size: 1.3em;
+}
 .facet .name {
     background-color:black;
     color:white;

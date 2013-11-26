@@ -1,7 +1,7 @@
 var e = function(){
     qa('.facet span.name').click(function(e){
 	var t = e.target
-
+	console.log('k')
 	// predicate-object tuple
 	var pon = t.parentNode
 
@@ -25,11 +25,16 @@ var e = function(){
 
 	// create selected-facet stylesheet
 	q('style.'+p) && q('style.'+p).remove()
-	q('body').append(el('style').attr('class',p).txt(s.join('\n')))})
+	q('body').append(el('style').attr('class',p).txt(s.join('\n')))
+	e.preventDefault();
+	return false;
+    })
 
-    qa('.facet').click(function(e){
-	e.target.style.display='none'
-	q('.selector[facet='+e.target.attr('facet')+']').style.display='inline'
+    qa('.facet .predicate').click(function(e){
+	console.log('fclk')
+	var t = e.target.parentNode
+	t.style.display='none'
+	q('.selector[facet='+t.attr('facet')+']').style.display='inline'
     })
 
     qa('.selector').click(function(e){

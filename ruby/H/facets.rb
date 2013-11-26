@@ -33,13 +33,13 @@ class E
     [(H.css'/css/facets'),(H.js'/js/facets'),(H.js'/js/mu'),
 
      a.map{|b,_|{_: :style, class: n[b]}},
-
+     '&nbsp;' * 22,
      a.map{|f,v|{class: :selector, facet: n[f], c: f.label}},
 
      # facet selection
      {class: :sidebar, c: a.map{|f,v|
-         {class: :facet, title: f, facet: n[f], # predicate
-           c: [f.label,
+         {class: :facet, facet: n[f], # predicate
+           c: [{class: :predicate, c: f.label},
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  k.respond_to?(:label) &&
                  {facet: n.(k.to_s), # predicate-object tuple
