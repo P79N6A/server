@@ -5,13 +5,13 @@ var audio = function(){
     var random = q('#rand')
     var trax = qa(track)
 
-    var changeTrack = function(i){
+    var changeTrack = function(i,t){
 	var track = decodeURIComponent(i)
 	q('title').txt(track)
 	q('#info').txt(track).attr('href',track+'?view=base')
 	audio.src = i
-	audio.load()
-	audio.play()}
+	audio.attr('time',t)
+	audio.load()}
 
     var updatePosition = function(p){
 	window.location.hash = audio.attr('src')+'|'+p}
@@ -49,7 +49,7 @@ var audio = function(){
 	var h = window.location.hash.slice(1).split('|')
 	var track = h[0]
 	var   pos = h[1]
-	if(audio.attr('src') != track) changeTrack(track) 
+	if(audio.attr('src') != track) changeTrack(track,pos)
 	if(pos < audio.duration) audio.currentTime=pos}
 
     random.on("click",toggleRand)
@@ -62,6 +62,11 @@ var audio = function(){
 	e.preventDefault()
 	return false
     })
+    audio.on('canplay',function(){
+	audio.play()
+	audio.currentTime = audio.attr('time')
+    })
+    
     
     document.addEventListener("keydown",function(e){
 	switch(e.keyCode){
