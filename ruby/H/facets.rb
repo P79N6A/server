@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   fn 'view/facets/main',->a,m,e{
@@ -34,6 +34,8 @@ class E
 
      a.map{|b,_|{_: :style, class: n[b]}},
 
+     a.map{|f,v|{class: :selector, facet: n[f], c: f.label}},
+
      # facet selection
      {class: :sidebar, c: a.map{|f,v|
          {class: :facet, title: f, facet: n[f], # predicate
@@ -42,8 +44,7 @@ class E
                  k.respond_to?(:label) &&
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
-                       {_: :span, class: :name, c: k.label}]}}]}}},
-     
+                       {_: :span, class: :name, c: k.label}]}}]}}},     
      (F['view/'+e.q['fv']+'/base']||
       ->m,e,r{r.()}).(m,e,resources)]}
   

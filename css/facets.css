@@ -1,6 +1,17 @@
+body {margin: 0}
+.selector {
+    border-radius: 0 0 .5em .5em;
+    background-color: #eee;
+    display: inline;
+    font-size:1.3em;
+    padding: .2em
+}
+.selector:hover {
+    background-color:#fff;
+}
 .sidebar {
     position:fixed;
-    top:5em;left:0;
+    top:0;left:0;
 }
 .sidebar div {display:block}
 .facet {
