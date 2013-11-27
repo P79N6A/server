@@ -221,6 +221,7 @@ class E
   
   # property-selector toolbar (requires RDFa views)
   fn 'view/p',->d,e{
+    #TODO fragmentURI scheme for selection-state
     [H.once(e,'property.toolbar',H.once(e,'p',(H.once e,:mu,H.js('/js/mu')),
      H.js('/js/p'),
      H.css('/css/table')),

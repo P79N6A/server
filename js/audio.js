@@ -45,7 +45,6 @@ var audio = function(){
 	    random.attr('r','r').style.backgroundColor='#33f'}}
 
     var hashChange = function(){
-	// TODO onloaded trigger to set offset after waiting for load
 	var h = window.location.hash.slice(1).split('|')
 	var track = h[0]
 	var   pos = h[1]

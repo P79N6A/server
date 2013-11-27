@@ -14,14 +14,14 @@ body {margin: 0}
 
 .sidebar {
     position:fixed;
-    top:0;left:0;
+    top:0;right:0;
 }
 .sidebar div {display:block}
 
 .facet {
     cursor:pointer;
-    max-width:25em;
-    max-height:22em;
+    width:10em;
+    max-height:25em;
     overflow:scroll;
     white-space:nowrap;
     background-color:#fff;
