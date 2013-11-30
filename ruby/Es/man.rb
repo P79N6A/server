@@ -88,9 +88,9 @@ class E
           #  HTMLize hyperlinks
           #  markup commands
           body.xpath('//text()').map{|a|
-            a.replace a.to_s.gsub('&gt;','>').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('
-          }
-          
+            a.replace a.to_s.gsub('&gt;','>').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
+          body.css('font').map{|f|f.remove_attribute 'color'}
+
           qs = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
           # href-ize commands
           body.css('b').map{|b|
