@@ -29,8 +29,8 @@ class E
     r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
 
     # pagination resources
-    m['prev']={'uri' => 'prev','url' => '/search','start' => start + c, 'c' => c} if down
-    m['next']={'uri' => 'next','url' => '/search','start' => start - c, 'c' => c} if up
+    m[Prev]={'uri' => Prev,'url' => '/search','start' => start + c, 'c' => c} if down
+    m[Next]={'uri' => Next,'url' => '/search','start' => start - c, 'c' => c} if up
 
     # search-result identifiers
     r = r.map{|r| r['.uri'].E }

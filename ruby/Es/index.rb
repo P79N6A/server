@@ -41,8 +41,8 @@ class E
     ('/'.E.take c, o, d.uri).do{|s|             # take subtree
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
-      m['prev'] = {'uri' => 'prev', 'url' => desc.url,'d' => 'desc'}
-      m['next'] = {'uri' => 'next', 'url' => asc.url, 'd' => 'asc'}
+      m[Prev] = {'uri' => Prev, 'url' => desc.url,'d' => 'desc'}
+      m[Next] = {'uri' => Next, 'url' => asc.url, 'd' => 'asc'}
       s }}
 
   # subtree traverse index on p+o cursor

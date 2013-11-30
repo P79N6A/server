@@ -26,6 +26,7 @@ class E
   Posix    = W3   + 'ns/posix/'
   Stat     = Posix + 'stat#'
   Label    = RDFs + 'label'
+  LDP      = W3 + 'ns/ldp#'
   EXIF     = 'http://www.w3.org/2003/12/exif/ns#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
