@@ -60,8 +60,8 @@ class E
       a,b = s[0], s.size > 1 && s.pop
       desc,asc = r['d'] && r['d']=='asc' && [a,b]||[b,a]
       # insert pointers in response-graph
-      m['prev']={'uri' => 'prev','url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
-      m['next']={'uri' => 'next','url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc
+      m[Prev]={'uri' => Prev,'url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
+      m[Next]={'uri' => Next,'url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc
       s }}
 
   fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
