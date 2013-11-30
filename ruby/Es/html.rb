@@ -89,7 +89,7 @@ end
 
 class Hash
   def html
-    H({_: :table, class: :html, c: 
+    H({_: :table, class: :html, c:
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,
@@ -102,10 +102,7 @@ class Hash
                      {_: :pre, style: "white-space: pre-wrap", c: v}
                    when 'uri'
                      u = v.E
-                     [{_: :a, id: u, href: u.url, c: v},
-                      {_: :a, style: "float: right; background-color: #fff;color: #8f8",
-                        href: u.url+'?graph=editable&view=edit',c: "&#9881;"}
-                     ]
+                     {_: :a, id: u, href: u.url, c: v}
                    else
                      v.html
                    end), class: :val}].cr}}.cr})
@@ -150,7 +147,7 @@ class E
     # we'd be throwing away oddball resources to select one view for all of them
     # but maybe you have a specific reason to
     # inbuilt views support calling on set or per-resource basis, via "once" spec of set-wide components
-    # so views are selected per-resource unless you hack here..
+    # so views are selected per-resource unless you hack here & uncomment caller in #view.select
   }
 
   fn 'view/divine/files',->d,e{
