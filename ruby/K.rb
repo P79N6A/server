@@ -19,7 +19,7 @@ class E
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
-  Type     = W3   + "1999/02/22-rdf-syntax-ns#type"
+  Type     = W3   + "ns/rdf#type"
   RDFs     = W3   + '2000/01/rdf-schema#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
@@ -144,7 +144,7 @@ class E
   Abbrev={
     "dc" => DC,
     "foaf" => FOAF,
-    "rdf" => W3+"1999/02/22-rdf-syntax-ns#",
+    "rdf" => W3 + "ns/rdf#" ,
     "rdfs" => RDFs,
     "sioc" => SIOC,
     "stat" => Stat,
