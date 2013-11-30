@@ -7,7 +7,7 @@ class E
       r.delete_if{|p,o|!a[p]}}}
 
   fn 'filter.frag',->e,m,r{
-    f = [r.uri].concat m['frag']['res']
+    f = [r.uri].concat m[r.uri][RDFs+'member']
     m.keys.map{|u|
       m.delete u unless f.member? u}}
 

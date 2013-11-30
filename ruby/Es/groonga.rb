@@ -5,6 +5,7 @@ class E
 
   # query
   fn 'protograph/roonga',->d,e,m{
+    uri = d.env['uri']
     ga = E.groonga
 
     # search expression
@@ -35,14 +36,14 @@ class E
     # search-result identifiers
     r = r.map{|r| r['.uri'].E }
 
-    # fragment identifiers
-    m['frag'] = {'uri' => 'frag', 'res' => r}
+    # set members
+    m[uri] = {'uri' => uri, RDFs+'member' => r}
 
     # containing documents
     r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
 
-    # no 404 on 0 results - searchbox view
-    m['/s']={'uri'=>'/s'} if m.empty?
+    # blank search on 0 results instead of 404
+    m['/search']={'uri'=>'/search'} if m.empty?
 
     F['docsID'][m]}
 
