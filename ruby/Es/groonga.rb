@@ -74,6 +74,7 @@ class E
   # index resource 
   def roonga graph="global", m = self.graph
     g = E.groonga          # db
+    puts "roonga #{graph} #{uri}"
     m.map{|u,i|
       r = g[u] || g.add(u) # create or load entry
       r.uri = u            # update data

@@ -10,6 +10,26 @@ class E
     end; m
   end
 
+  def insertDocs triplr, h=nil, p=[], &b
+    graph = fromStream({},triplr)
+    graph.map{|u,r| # stream -> graph
+      e = u.E           # resource
+      j = e.ef          # doc
+      j.e ||            # exists?
+      (puts "in #{u}"
+       j.w({u=>r},true) # insert
+       p.map{|p|        # each indexable property
+     r[p].do{|v|        # values exists?
+       v.map{|o|        # each value
+        e.index p,o}}}  # property index 
+       e.roonga h if h  # full-text index
+       # opaqueURI path <> sibling of docBase path
+       u = e.a '.e'
+       (j.ln u) unless ((j.uri == u.uri) || u.e))}
+    graph.triples &b if b
+    self
+  end
+
   # default proto-graph
   #   mint graph identifier
   #   any graph setup (:g variable mutation) is preserved

@@ -27,27 +27,6 @@ class E
     yield uri, '/application/json', (JSON.parse read) if e
   end
 
-  def insertDocs triplr, h=nil, p=[], &b
-    graph = fromStream({},triplr)
-    graph.map{|u,r| # stream -> graph
-      e = u.E           # resource
-      j = e.ef          # doc
-      j.e ||            # exists?
-      (puts "in #{u}"
-       j.w({u=>r},true) # insert
-       p.map{|p|        # each indexable property
-     r[p].do{|v|        # values exists?
-       v.map{|o|        # each value
-        e.index p,o}}}  # property index 
-       e.roonga h if h  # full-text index
-       # opaqueURI path <> sibling of docBase path
-       u = e.a '.e'
-       (j.ln u) unless ((j.uri == u.uri) || u.e))}
-    # pass through triples if requested
-    graph.triples &b if b
-    self
-  end
-
   fn 'view/application/json',->m,e{
     m.map{|u,j|
       e.q['sel'].do{|s|

@@ -24,7 +24,7 @@ class E
     }
   end
 
-  def tw g='m'
+  def tw g
     no.readlines.shuffle.each_slice(22){|s|
       E['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].insertDocs :triplrTweets, g}
   end
