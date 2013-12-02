@@ -56,13 +56,15 @@ class E
           :desc
 
     (top.send f, count, dir, r['offset'],(d if f == :rangePO)).do{|s|
-      # pagination pointers
-      a,b = s[0], s.size > 1 && s.pop
-      desc,asc = r['d'] && r['d']=='asc' && [a,b]||[b,a]
-      # insert pointers in response-graph
+      # orient pagination pointers
+      ascending = r['d'].do{|d| d == 'asc' }
+      first, last = s[0], s.size > 1 && s.pop
+      desc, asc = ascending && [first,last] || [last,first]
+      # annotate response-graph
+      m[d.uri] = {'uri' => d.uri, RDFs+'member' => s}
       m[Prev]={'uri' => Prev,'url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
       m[Next]={'uri' => Next,'url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc
-      s }}
+      s.map(&:docs).flatten.uniq }}
 
   fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
   F['set/indexPO'] = F['set/index']
