@@ -10,11 +10,11 @@ class E
       yield e, Type,    E[SIOC  + 'Post']
       yield e, Date,    m.date.iso8601 if m.date
       yield e, Content, m.decentBody
-        [[:subject,Title],   # 0 accessor method
-              [:to,To,true], # 1 predicate URI
-              [:cc,To,true], # 2 node || literal
-             [:bcc,To,true], # 3 unwrap id?
-   [:friendly_from,SIOC+'name'],
+        [[:subject,Title],      # row index
+              [:to,To,true],    # 0 accessor method
+              [:cc,To,true],    # 1 predicate URI
+             [:bcc,To,true],    # 2 node || literal
+   [:friendly_from,SIOC+'name'],# 3 unwrap id?
             [:from,Creator,true],
         [:reply_to,'/mail/reply_to',true],
      [:in_reply_to,SIOC+'reply_of',true,true],

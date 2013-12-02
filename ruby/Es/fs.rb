@@ -121,6 +121,7 @@ class E
   end
 
   def w o,s=false
+    puts " w #{uri}"
     dirname.mk
     writeFile (s ? o.to_json : o)
     self
