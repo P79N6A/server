@@ -1,53 +1,36 @@
+watch __FILE__
 class E
-  
-  # TMail version: 1.2.7.1-4 from:
-  # apt-get install ruby-tmail
 
-  def triplrTmail                         ; require 'tmail'
-
-    # read message
-    i = -> i {E i[1..-2]}                 # Message-ID -> E
-    (TMail::Mail.load node).do{|m|        # parse
-      d = m.message_id; return unless d   # parse successful?
-      e = i[d]                            # Message resource
-
-      # index previously unseen mail
-      e.e || (                            # Message-ID locatable?
-       ln e                               # create message-id path 
-       self.index Creator,  m.from[0].E   # index From
-       m.to.do{|t|self.index To, t[0].E}  # index To
-
-       %w{in_reply_to references}.map{|p| m.send(p).do{|os| os.map{|o|
-        e.index SIOC+'reply_of', i[o]}}}) # index references
-
-      # yield triples
-      yield e.uri, Type,    E[SIOCt + 'MailMessage']
-      yield e.uri, Type,    E[SIOC  + 'Post']
-      yield e.uri, Date,    m.date.iso8601    if m.date
-      yield e.uri, Content, m.decentBody
-        [[:subject,Title],
-              [:to,To,true],
-              [:cc,To,true],
-             [:bcc,To,true],
+  # v1.2.7 -  apt-get install ruby-tmail
+  def triplrTmail  ; require 'tmail'
+    (TMail::Mail.load node).do{|m|      # parse
+      d = m.message_id; return unless d # parse successful?
+      e = d[1..-2]                      # unwrap id
+      yield e, Type,    E[SIOCt + 'MailMessage']
+      yield e, Type,    E[SIOC  + 'Post']
+      yield e, Date,    m.date.iso8601 if m.date
+      yield e, Content, m.decentBody
+        [[:subject,Title],   # 0 accessor method
+              [:to,To,true], # 1 predicate URI
+              [:cc,To,true], # 2 node || literal
+             [:bcc,To,true], # 3 unwrap id?
    [:friendly_from,SIOC+'name'],
             [:from,Creator,true],
         [:reply_to,'/mail/reply_to',true],
-     [:in_reply_to,'/parent',true,true],
      [:in_reply_to,SIOC+'reply_of',true,true],
       [:references,SIOC+'reply_of',true,true],
-        ].each{|a| m.send(a[0]).do{|o| [*o].map{|o|
-            yield e.uri,a[1],                        # skip empty String values 
-            (a[2] ? (a[3] ? i[o] : o.E) : o.to_utf8) unless o.match(/\A[, \n]*\Z/)}}}}
-
+        ].each{|a| # field
+        m.send(a[0]).do{|o| [*o].map{|o|
+            unless o.match /\A[, \n]*\Z/ # skip "empty" values
+              yield e, a[1], (a[2] ? (a[3] ? o[1..-2] : o).E : o.to_utf8)
+            end}}}}
   rescue Exception => e
-    puts [:mail,uri,e].join(' ')
+    puts [:tMail,uri,e].join ' '
   end
 
-  alias_method :triplrMail, :triplrTmail
-
-  # pure-ruby mail is only 10x (vs 100x) slower than C-ext based TMail w/ new parser
-  # API is mostly identical, URIs strings arent <>-wrapped
-  # TODO replace this msg with triplrMail if anyone wants it
+  def triplrMail &f
+    insertDocs :triplrTmail, nil, [Creator,To,SIOC+'reply_of'], &f
+  end
 
 end
 

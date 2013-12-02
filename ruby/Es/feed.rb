@@ -51,8 +51,8 @@ class E
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
-  def getFeed g; addJSON :triplrFeed,g end
-  def getFeedReddit g; addJSON :triplrFeedReddit,g end
+  def getFeed g; insertDocs :triplrFeed,g end
+  def getFeedReddit g; insertDocs :triplrFeedReddit,g end
 
   # tripleStream
   def triplrFeed &f 

@@ -16,7 +16,7 @@ class E
   def editFs p, o, oO=nil
     p = p.E
     o = p.literal o unless o.class == E
-    puts ["editFS",:s,uri,:p,p,:o,o,o.class,:oV,oO,oO.class].join ' '
+#    puts ["editFS",:s,uri,:p,p,:o,o,o.class,:oV,oO,oO.class].join ' '
     t = (concatURI p).concatURI o
     if oO                # updated triple
       if t.e             # old triple exists?
@@ -28,11 +28,11 @@ class E
       unless t.e          # triple exists?
         indexEdit p,o,nil # index triple
         if o.f            # add triple
-          o.ln t          # (hard) link
+          o.ln t          # hard link
         elsif o.e
-          o.ln_s t        # symlink
+          o.ln_s t        # symbolic link
         else
-          t.mk            ; puts "origin missing #{t}"
+          t.mk            # dir entry
         end
       end
     end

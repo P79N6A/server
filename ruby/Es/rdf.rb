@@ -4,17 +4,16 @@ class E
   def self.renderRDF d,f
     require 'linkeddata'
     (RDF::Writer.for f).buffer{|w|
-      d.values.each{|r| r.triples{|s,p,o|
-          s = RDF::URI s
-          p = RDF::URI p
-          o = ([E,Hash].member?(o.class) ? (RDF::URI o.uri) : (RDF::Literal o)) rescue nil
-          (w << (RDF::Statement.new s,p,o) if o ) rescue nil
-        }}}
+      d.triples{|s,p,o|
+        s = RDF::URI s
+        p = RDF::URI p
+        o = ([E,Hash].member?(o.class) ? (RDF::URI o.uri) : (RDF::Literal o)) rescue nil
+        (w << (RDF::Statement.new s,p,o) if o ) rescue nil
+      }}
   end
-
+  
   def triplrRDF format=:rdfa, localFile=true  ; require 'linkeddata'
     location = (localFile && f) ? d : uri
-    puts [:RDF,location].join ' '
     RDF::Reader.open(location, :format => format){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s, [RDF::Node, RDF::URI].member?(o.class) ? E(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}

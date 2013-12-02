@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #watch __FILE__
 class E
   
@@ -58,9 +59,8 @@ class E
 
         '</tr>']},'</table>',
 
-     # link to unabbreviated content of post-set
-     {_: :a, id: :down, c: '&darr;',
-       href: env['REQUEST_PATH'] + env.q.merge({'view'=>'page','views'=>'timegraph,mail','arc'=>'/parent','v'=>'multi','sort'=>'dc:date','reverse'=>true}).qs}]}
+     # drill down to full-content of this set
+     {_: :a, id: :down, href: env['REQUEST_PATH'] + env.q.merge({'view'=>'page','v'=>'mail'}).qs, c: '↓'}]}
 
   F["?"] ||= {}
   F["?"].update({'thread' =>{

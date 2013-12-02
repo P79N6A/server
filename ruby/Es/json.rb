@@ -5,19 +5,18 @@ class Hash
   end
 
   def mergeGraph g
-    g.values.each{|r|
-      r.triples{|s,p,o|
-        self[s] = {'uri' => s} unless self[s].class == Hash 
-        self[s][p] ||= []
-        self[s][p].push o unless self[s][p].member? o }} if g
+    g.triples{|s,p,o|
+      self[s] = {'uri' => s} unless self[s].class == Hash 
+      self[s][p] ||= []
+      self[s][p].push o unless self[s][p].member? o } if g
     self
   end
 
-  # tripleStream emitter
-  def triples
-    s = uri
-    map{|p,o|
-      o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}
+  # self -> tripleStream
+  def triples &f
+    map{|s,r|
+      r.map{|p,o|
+        o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'}}
   end
 
 end
@@ -28,23 +27,25 @@ class E
     yield uri, '/application/json', (JSON.parse read) if e
   end
 
-
-  # tripleStream -> fs
-  def addJSON i,g,p=[]
-    fromStream({},i).map{|u,r| # stream -> graph
-      (E u).do{|e| # resource
-        j = e.ef   # inode
-        j.e ||     # exists?
-        (p.map{|p|r[p].do{|o|e.index p,o[0]}} # index properties
-         j.w({u => r},true) # write doc
-         puts "a #{e}"
-         # link opaque-URI docs as siblings of base-URI for doc-discoverability
-         e.a('.e').do{|u| (j.ln u) unless ((j.uri == u.uri) || u.e)  }
-         e.roonga g # index content
-         )}}
+  def insertDocs triplr, h=nil, p=[], &b
+    graph = fromStream({},triplr)
+    graph.map{|u,r| # stream -> graph
+      e = u.E           # resource
+      j = e.ef          # doc
+      j.e ||            # exists?
+      (j.w({u=>r},true) # insert
+       p.map{|p|        # each indexable property
+     r[p].do{|v|        # values exists?
+       v.map{|o|        # each value
+        e.index p,o}}}  # property index 
+       e.roonga h if h  # full-text index
+                          puts "in #{u}"
+       # opaqueURI path <> sibling of docBase path
+       u = e.a '.e'
+       (j.ln u) unless ((j.uri == u.uri) || u.e))}
+    # pass through triples if requested
+    graph.triples &b if b
     self
-  rescue Exception => e
-    puts "addJSON #{e}"
   end
 
   fn 'view/application/json',->m,e{
