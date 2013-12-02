@@ -4,8 +4,6 @@ class E
    E[Render+ mime].y graph, e
   end
 
-  fn '/E/GET',->e,r{[301,{Location: '/'},[]]}
-
   def response
 
     q = @r.q       # query-string
