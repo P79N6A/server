@@ -57,7 +57,6 @@ class E
   # tripleStream
   def triplrFeed &f 
     dateNorm :triplrFeedSIOCize,:triplrFeedRaw,&f
-  rescue Exception => x
   end
 
   def triplrFeedReddit &f

@@ -16,7 +16,7 @@ class E
       e = u.E           # resource
       j = e.ef          # doc
       j.e ||            # exists?
-      (puts "in #{u}"
+      (puts " < #{u}"
        j.w({u=>r},true) # insert
        p.map{|p|        # each indexable property
      r[p].do{|v|        # values exists?

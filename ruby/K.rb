@@ -105,7 +105,7 @@ class E
     'audio/mpeg'           => [:triplrStdOut,'id3info',Audio,/\((.*?)\)$/],
     'audio'                => [:triplrStdOut,'sndfile-info',Audio],
     'inode/symlink'        => [:triplrSymlink],
-    'message/rfc822'       => [:triplrMail],
+    'message/rfc822'       => [:triplrMailMessage],
     'text/ansi'            => [:triplrANSI],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
     'text/log'             => [:triplrIRC],

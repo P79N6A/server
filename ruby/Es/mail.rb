@@ -1,11 +1,29 @@
-watch __FILE__
+#watch __FILE__
 class E
+=begin
 
-  # v1.2.7 -  apt-get install ruby-tmail
-  def triplrTmail  ; require 'tmail'
-    (TMail::Mail.load node).do{|m|      # parse
-      d = m.message_id; return unless d # parse successful?
-      e = d[1..-2]                      # unwrap id
+TMail 1.2.7 uses 2% time of Mail 2.5.4
+
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.400338888168335g
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720932006836
+
+Mail is used as a fallback (adjust in #triplrMailMessage)
+
+ apt-get install ruby-tmail
+
+=end
+
+%w{mail tmail}.map{|lib|
+    begin 
+      require lib 
+    rescue LoadError => e
+      puts e
+    end}
+
+  def triplrTmail &f
+    (TMail::Mail.load node).do{|m| # parse
+      d = m.message_id; return unless d  # parse successful?
+      e = d[1..-2]                       # unwrap identifier
       yield e, Type,    E[SIOCt + 'MailMessage']
       yield e, Type,    E[SIOC  + 'Post']
       yield e, Date,    m.date.iso8601 if m.date
@@ -24,11 +42,34 @@ class E
             unless o.match /\A[, \n]*\Z/ # skip "empty" values
               yield e, a[1], (a[2] ? (a[3] ? o[1..-2] : o).E : o.to_utf8)
             end}}}}
+
   rescue Exception => e
-    puts [:tMail,uri,e].join ' '
+    puts [uri,e,e.backtrace[0]].join ' '
+    triplrMail &f
   end
 
-  def triplrMail &f
+  def triplrMail
+    (f && (Mail.read node)).do{|m|
+      e = m.message_id; return unless e  # parse successful?
+      yield e, Type,    E[SIOCt + 'MailMessage']
+      yield e, Type,    E[SIOC  + 'Post']
+      yield e, Date,    m.date.iso8601 if m.date
+      yield e, Content, m.body.decoded.to_utf8
+        [[:subject,Title],
+              [:to,To,true],
+              [:cc,To,true],
+             [:bcc,To,true],
+            [:from,Creator,true],
+        [:reply_to,'/mail/reply_to',true],
+     [:in_reply_to,SIOC+'reply_of',true],
+      [:references,SIOC+'reply_of',true],
+        ].each{|a| # field
+        m.send(a[0]).do{|o| [*o].map{|o|
+            yield e, a[1], (a[2] ? o.E : o.to_utf8)
+          }}}}
+  end
+
+  def triplrMailMessage &f
     insertDocs :triplrTmail, nil, [Creator,To,SIOC+'reply_of'], &f
   end
 
@@ -51,6 +92,7 @@ module TMail
           elsif !attachment?(part) && c.sub_type != 'html'
             part.unicode_body.hrefs(true)
           else
+            # give attachments a URI and make them locatable
             (c["name"]||'attach').do{|a|
               message_id ? (message_id[1..-2]+'/'+a).E.do{|i|
                 i.w part.body if !i.e
