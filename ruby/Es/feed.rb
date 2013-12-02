@@ -71,7 +71,7 @@ class E
 
   # tripleStream
   def triplrFeedRaw &f
-    read.extend(FeedParse).parse &f
+    read.to_utf8.extend(FeedParse).parse &f
   end
 
   # tripleStream -> tripleStream
