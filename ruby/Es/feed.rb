@@ -51,10 +51,9 @@ class E
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
-  def getFeed g; insertDocs :triplrFeed,g end
-  def getFeedReddit g; insertDocs :triplrFeedReddit,g end
+  def getFeed       g; insertDocs :triplrFeed, g end
+  def getFeedReddit g; insertDocs :triplrFeedReddit, g end
 
-  # tripleStream
   def triplrFeed &f 
     dateNorm :triplrFeedSIOCize,:triplrFeedRaw,&f
   end
@@ -68,12 +67,12 @@ class E
       } : (yield s,p,o)}
   end
 
-  # tripleStream
   def triplrFeedRaw &f
     read.to_utf8.extend(FeedParse).parse &f
+  rescue Exception => e
+    puts [uri,e,e.backtrace[0]].join ' '
   end
 
-  # tripleStream -> tripleStream
   def triplrFeedSIOCize *f
     send(*f){|s,p,o|
       yield s,
@@ -88,7 +87,6 @@ class E
         Atom+'title' => Title,
       }[p]||p,
       o } end
-
 
   fn Render+'application/atom+xml',->d,e{
     id = 'http://' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
