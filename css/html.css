@@ -1,10 +1,10 @@
 body {
     font-family: sans-serif;}
-a {
+a { text-decoration:none;}
+.abbr,a[id]{
     background-color:#7786A7;
     color:#fff;
-    text-decoration:none;}
-
+}
 table.html {
     float:left;
     background-color:#d8d8d8;
