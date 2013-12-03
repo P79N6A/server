@@ -4,8 +4,8 @@ class E
 
 TMail 1.2.7 uses 2% time of Mail 2.5.4
 
-HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.400338888168335g
-HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720932006836
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.4003388
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720
 
 Mail is used as a fallback (adjust in #triplrMailMessage)
 
@@ -28,6 +28,7 @@ Mail is used as a fallback (adjust in #triplrMailMessage)
       yield e, Type,    E[SIOC  + 'Post']
       yield e, Date,    m.date.iso8601 if m.date
       yield e, Content, m.decentBody
+      yield e, '/mail/reply_to', E[m.header['x-original-to'].to_s]
         [[:subject,Title],      # row index
               [:to,To,true],    # 0 accessor method
               [:cc,To,true],    # 1 predicate URI
