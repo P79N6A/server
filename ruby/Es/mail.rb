@@ -28,7 +28,7 @@ Mail is used as a fallback (adjust in #triplrMailMessage)
       yield e, Type,    E[SIOC  + 'Post']
       yield e, Date,    m.date.iso8601 if m.date
       yield e, Content, m.decentBody
-      yield e, '/mail/reply_to', E[m.header['x-original-to'].to_s]
+      m.header['x-original-to'].do{|f| yield e, '/mail/reply_to', E[f.to_s] }
         [[:subject,Title],      # row index
               [:to,To,true],    # 0 accessor method
               [:cc,To,true],    # 1 predicate URI
