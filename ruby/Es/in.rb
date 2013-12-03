@@ -10,6 +10,13 @@ class E
     end; m
   end
 
+=begin
+ * stream triples into graph (memory)
+ * import missing resources to store (fs)
+ * behave as normal triplr to caller, with
+   side-effect of import/indexing to kb
+
+=end
   def insertDocs triplr, h=nil, p=[], &b
     graph = fromStream({},triplr)
     graph.map{|u,r| # stream -> graph
@@ -21,31 +28,29 @@ class E
      r[p].do{|v|        # values exists?
        v.map{|o|        # each value
         e.index p,o}}}  # property index 
-       e.roonga h if h  # full-text index
-       )}
-    graph.triples &b if b
+      e.roonga h if h)} # full-text index
+    graph.triples &b if b # emit the triples
     self
   end
 
-  # default proto-graph
-  #   mint graph identifier
-  #   any graph setup (:g variable mutation) is preserved
+  # proto-graph formation
+  #  graph-identifier for cache & conditional-response is purpose of "protograph"
+  #  any graph population is preserved for (possible) expansion
   fn 'protograph/',->e,q,g{
-    set = (F['set/' + q['set']] || F['set/'])[e,q,g]
+    set = (F['set/'+q['set']] || F['set/'])[e,q,g]
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
-    # unique fingerprint for graph
     [F['docsID'][g],
      F['triplr'][e,q],
      q.has_key?('nocache').do{|_|rand}
     ].h}
 
-  # an almost-empty graph to defeat 404
+  # a placeholder graph
+  # useful for initializing an editor on a blank resource, etc
   fn 'protograph/_',->d,_,m{
     m[d.uri] = {}
     rand.to_s.h}
 
-  # default graph
-  #  filesystem storage
+  # default graph (fs-backing)
   fn 'graph/',->e,q,m{
     triplr = F['triplr'][e,q]
     m.values.map{|r|
