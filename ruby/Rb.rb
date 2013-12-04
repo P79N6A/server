@@ -45,6 +45,7 @@ end
 
 class Object
   def id; self end
+  def uri; 'ruby:'+object_id.to_s end
   def do; yield self end
 end
 

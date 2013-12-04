@@ -61,7 +61,10 @@ class E
       first, last = s[0], s.size > 1 && s.pop
       desc, asc = ascending && [first,last] || [last,first]
       # annotate response-graph
-      m[d.uri] = {'uri' => d.uri, RDFs+'member' => s}
+      m[d.uri] = {
+        'uri' => d.uri,
+        Type=>LDP+'container',
+        RDFs+'member' => s}
       m[Prev]={'uri' => Prev,'url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
       m[Next]={'uri' => Next,'url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc
       s.map(&:docs).flatten.uniq }}

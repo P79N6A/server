@@ -36,10 +36,12 @@ class E
     # search-result identifiers
     r = r.map{|r| r['.uri'].E }
 
-    # set members
-    m[uri] = {'uri' => uri, RDFs+'member' => r}
+    m[uri] = {
+      'uri' => uri,
+      Type=>LDP+'container',
+      RDFs+'member' => r}
 
-    # containing documents
+    # contained docs
     r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
 
     # blank search on 0 results instead of 404
