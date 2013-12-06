@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 class String
 
@@ -83,20 +83,17 @@ class E
   end
 
   fn Render+'text/plain',->d,_=nil{
-    d.map{|u,r|# each resource
-      [u,"\n", # subject URI
-       r.map{|k,v| # each predicate
-         p = k.split(/[\/#]/)[-1]       # predicate
-         k == 'uri' ||                  # already displayed
-         [" "*(18-p.size).min(1),p," ", # align objects 
-          (v.class==Array ? v:[v]).map{|v|# each object
-            v.respond_to?(:uri) ? v.uri : # object-URI
-            v.to_s.                       # object-content
-            gsub(/<\/*(br|p|div)[^>]*>/,"\n").           # add linebreaks 
-            gsub(/<a.*?href="*([^'">\s]+)[^>]*>/,'\1 '). # unwrap links
-            gsub(/<[^>]+>/,'').                          # remove HTML
-            gsub(/\n+/,"\n")}.                           # collapse empty space
-          intersperse(' '),"\n"]},"\n"]}.join}           # collate
+    d.values.map{|r|
+      [r.map{|k,v|
+        ["<",(k=='uri' ? '' : k),"> ", # predicate
+         (v.class==Array ? v:[v]).map{|v|# each object
+           v.respond_to?(:uri) ? '<'+v.uri+'>' : # object-URI
+           v.to_s.                       # object-content
+           gsub(/<\/*(br|p|div)[^>]*>/,"\n").           # add linebreaks 
+           gsub(/<a.*?href="*([^'">\s]+)[^>]*>/,'<\1> '). # unwrap links
+           gsub(/<[^>]+>/,'').                          # remove HTML
+           gsub(/\n+/,"\n")}.                           # collapse empty space
+         intersperse(' '),"\n"]},"\n"]}.join}                 # collate
 
   F['view/text/plain']=->d,e{
     {_: :pre, c: F[Render+'text/plain'][d,e]}}
