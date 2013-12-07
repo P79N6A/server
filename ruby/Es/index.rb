@@ -63,7 +63,7 @@ class E
       # annotate response-graph
       m[d.uri] = {
         'uri' => d.uri,
-        Type=>LDP+'container',
+        Type => [LDP+'container'],
         RDFs+'member' => s}
       m[Prev]={'uri' => Prev,'url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
       m[Next]={'uri' => Next,'url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc

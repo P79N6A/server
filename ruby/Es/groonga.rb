@@ -36,9 +36,10 @@ class E
     # search-result identifiers
     r = r.map{|r| r['.uri'].E }
 
+    # result set
     m[uri] = {
       'uri' => uri,
-      Type=>LDP+'container',
+      Type => [LDP+'container'],
       RDFs+'member' => r}
 
     # contained docs
