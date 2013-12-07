@@ -27,7 +27,7 @@ class E
      '<table>',
 
      # group posts by thread name
-     d.values.select{|r| r[Type].do{|t| t.map(&:uri).member? SIOC+'Post'}
+     d.values.select{|r| r[Type].do{|t| [*t].map{|t| t.respond_to?(:uri) && t.uri}.member? SIOC+'Post'}
      }.group_by{|r|
        [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}.
 
