@@ -1,5 +1,7 @@
-#watch __FILE__
+watch __FILE__
+
 module FeedParse
+
   def html; CGI.unescapeHTML self end
   def cdata; sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'end
   def guess; send (case self
@@ -11,16 +13,16 @@ module FeedParse
                      :html
                    end) end
 
-  def parse # Universal feed-parser
+  def parse
 
-    #xml qname table
+    #prefix table
     x={}
     match(/<(rdf|rss|feed)([^>]+)/i)[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|x[m[0]]=m[1]}
 
     #items
     scan(%r{<(rss:|atom:)?(item|entry)([\s][^>]*)?>(.*?)</\1?\2>}mi){|m|
 
-      # find identifier
+      # identifier
       u = m[2] && (u = m[2].match /about=["']?([^'">\s]+)/) && u[1] ||
           m[3] && (((u = m[3].match /<(gu)?id[^>]*>([^<]+)/) || (u = m[3].match /<(link)>([^<]+)/)) && u[2])
 
@@ -55,7 +57,18 @@ class E
   def getFeedReddit g; insertDocs :triplrFeedReddit, g end
 
   def triplrFeed &f 
-    dateNorm :triplrFeedSIOCize,:triplrFeedRaw,&f
+    dateNorm :contentURIresolve,:triplrFeedTypeNormalize,:triplrFeedRaw,&f
+  end
+
+  def contentURIresolve *f
+    send(*f){|s,p,o|
+      yield s, p, p == Content ?
+      (Nokogiri::HTML.parse o).do{|o|
+        o.css('a').map{|a|
+          if a.has_attribute? 'href'
+            (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
+          end}
+        o.to_s} : o}
   end
 
   def triplrFeedReddit &f
@@ -73,7 +86,7 @@ class E
     puts [uri,e,e.backtrace[0]].join ' '
   end
 
-  def triplrFeedSIOCize *f
+  def triplrFeedTypeNormalize *f
     send(*f){|s,p,o|
       yield s,
       { Purl+'dc/elements/1.1/creator' => Creator,
