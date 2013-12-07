@@ -8,8 +8,8 @@ class E
 
   fn 'view/audio',->d,e{
     d = d.dup
-    d.delete_if{|p,o| !p.match AudioFile } unless e.q.has_key?('all')
-    d.values.map{|r| r.delete_if{|p,o| !AudioK[p] }}
+    d.delete_if{|p,o|(p.respond_to? :match)&&(!p.match AudioFile)} unless e.q.has_key?('all')
+    d.values.map{|r| r.class==Hash && r.delete_if{|p,o| !AudioK[p] }}
 
     [(H.once e, :mu, (H.js '/js/mu')),
      (H.once e, :audio, (H.js '/js/audio'), (H.css '/css/audio'), {id: :rand, c: :r}, {id: :jump, c: '&rarr;'}, {id: :info, target: :_blank, _: :a},
