@@ -63,7 +63,10 @@ class E
        ]}]}
   
   def self.filter o,m,r
-    o['filter'].do{|f|f.split(/,/).map{|f|Fn 'filter.'+f,o,m,r}}
+    o['filter'].do{|f| # user-supplied
+      f.split(/,/).map{|f| # comma-seperated filters
+        F['filter.'+f].do{|f|f[o,m,r]}}} # if they exist
+
     Fn'filter.basic',o,m,r if o.has_any_key ['reverse','sort','max','min','match']
     m
   end
