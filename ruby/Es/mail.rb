@@ -13,13 +13,6 @@ Mail is used as a fallback (adjust in #triplrMailMessage)
 
 =end
 
-%w{mail tmail}.map{|lib|
-    begin 
-      require lib 
-    rescue LoadError => e
-      puts e
-    end}
-
   def triplrTmail &f
     (TMail::Mail.load node).do{|m| # parse
       d = m.message_id; return unless d  # parse successful?
@@ -49,7 +42,14 @@ Mail is used as a fallback (adjust in #triplrMailMessage)
     triplrMail &f
   end
 
+  begin 
+    require 'tmail'
+  rescue LoadError => e
+    puts e
+  end
+
   def triplrMail
+    require 'mail'
     (f && (Mail.read node)).do{|m|
       e = m.message_id; return unless e  # parse successful?
       yield e, Type,    E[SIOCt + 'MailMessage']

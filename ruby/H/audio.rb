@@ -4,15 +4,23 @@ class E
   fn 'set/video',->d,e,m{d.take.select{|e|e.ext.match VideoFile}}
 
   AudioK = {}
-  %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.map{|a|Audio + a}.concat(['uri',Stat+'mtime', Stat+'size']).map{|p|AudioK[p] = true}
+  %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.
+    map{|a|Audio + a}.concat(['uri', Stat+'mtime', Stat+'size']).map{|p|AudioK[p] = true}
 
-  fn 'view/audio',->d,e{
-    d = d.dup
-    d.delete_if{|p,o|(p.respond_to? :match)&&(!p.match AudioFile)} unless e.q.has_key?('all')
-    d.values.map{|r| r.class==Hash && r.delete_if{|p,o| !AudioK[p] }}
+  fn 'view/audio',->d,e{ d = d.dup
 
-    [(H.once e, :mu, (H.js '/js/mu')),
-     (H.once e, :audio, (H.js '/js/audio'), (H.css '/css/audio'), {id: :rand, c: :r}, {id: :jump, c: '&rarr;'}, {id: :info, target: :_blank, _: :a},
+    # skip non-audio files
+    d.delete_if{|p,o|
+      (p.respond_to? :match) &&
+      (!p.match AudioFile)}
+
+    # select data-fields
+    d.values.map{|r|
+      r.class==Hash &&
+      r.delete_if{|p,o|!AudioK[p]}}
+
+    [(H.once e, :mu, (H.js '/js/mu')),(H.once e, :audio,(H.js '/js/audio'),(H.css '/css/audio'),
+      {id: :rand, c: :r}, {id: :jump, c: '&rarr;'}, {id: :info, target: :_blank, _: :a},
       {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true}), '<br>',
      F['view/table'][d,e]]}
 
