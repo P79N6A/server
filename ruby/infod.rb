@@ -32,7 +32,7 @@ schema
 search
 sh
 text
-HTTP
+HTTP GET HEAD POST PATCH perf uid util 404 500
 audio
 cal
 edit
