@@ -32,6 +32,18 @@ schema
 search
 sh
 text
+HTTP
+audio
+cal
+edit
+facets
+forum
+hf
+histogram
+mail.out
+microblog
+threads
+time
+who
+wiki
 }.map{|e|require_relative e}
-
-%w{HTML HTTP}.map{|e| require 'infod/' + e}
