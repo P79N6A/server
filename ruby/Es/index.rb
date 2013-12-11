@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # POSIX-fs based index of triples
@@ -70,7 +70,7 @@ class E
       s.map(&:docs).flatten.uniq }}
 
   fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
-  F['set/indexPO'] = F['set/index']
+   F['set/indexPO']     =  F['set/index']
 
   # predicate index
   def pIndex
@@ -123,7 +123,7 @@ class E
 a:hover {background-color:#00f}"},
        '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&view=page&v=linkPO&c=12', c: p}}}]).hR}
 
-  # p/o index-traversal pointers
+  # p+o index-traversal pointers
   fn 'view/linkPO',->d,e{
     p = e['uri']
     [(H.css '/css/index'),(H.js '/js/search'),{_: :b, c: p},
@@ -131,7 +131,10 @@ a:hover {background-color:#00f}"},
      %w{sioc:has_creator sioc:addressed_to}.member?(p).do{|_|
        {_: :form, action: '/whois',c: [{_: :input, type: :hidden, name: :p, value: p},{_: :input, name: :q}]}
      },
-     d.map{|u,r| {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&views=timegraph,mail&v=multi&c=8', c: u}}}]}
+     # set members
+     d[p][RDFs+'member'].do{|m|
+       m.map{|r|
+         {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&views=timegraph,mail&v=multi&c=8', c: r.uri}}}}]}
 
 end
 
