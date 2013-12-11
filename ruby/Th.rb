@@ -10,8 +10,8 @@ class E
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     p = e['REQUEST_PATH'].force_encoding 'UTF-8'
 
-    uri = CGI.unescape(if (p.index Prefix) == 0
-                         p[Prefix.size..-1]
+    uri = CGI.unescape(if (p.index URIURL) == 0
+                         p[URIURL.size..-1]
                        else
                          'http://' + e['SERVER_NAME'] + (p.gsub '+','%2B')
                        end).E.env e

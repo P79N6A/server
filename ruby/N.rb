@@ -83,9 +83,9 @@ class E
   end
   alias_method :dir, :dirname
 
-  # local URL from unlocatable identifier (mail MSGID, etc)
+  # URL from unlocatable identifier (mail MSGID, etc)
   def url
-    path? ? uri : Prefix + (CGI.escape uri)
+    path? ? uri : URIURL + (CGI.escape uri)
   end
 
   # local URL even if locatable-identifier
@@ -98,7 +98,7 @@ class E
       pathSegment.uri
     # non-local
     else
-      Prefix + (CGI.escape uri)
+      URIURL + (CGI.escape uri)
     end
   end
 

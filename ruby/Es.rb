@@ -1,4 +1,5 @@
 %w{
+mime
 code
 css
 csv
@@ -19,7 +20,6 @@ kv
 ls
 mail
 man
-mime
 out
 pager
 pdf
