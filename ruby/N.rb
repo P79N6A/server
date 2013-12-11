@@ -178,6 +178,11 @@ class E
   def E.literal o
     E['/'].literal o
   end
+  
+  Literal={}
+   [Purl+'dc/elements/1.1/date',
+    Date,DC+'created',DC+'modified',
+   ].map{|f|Literal[f]=true}
 
   def literal o
 

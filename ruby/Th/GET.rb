@@ -1,4 +1,7 @@
 class E
+  
+  Apache = ENV['apache']
+  Nginx  = ENV['nginx']
 
   def GET
     # bespoke handler ||

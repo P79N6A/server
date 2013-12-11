@@ -13,7 +13,6 @@ class E
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   DC       = Purl + 'dc/terms/'
   Date     = DC   + 'date'
-  Modified = DC   + 'modified'
   Title    = DC   + 'title'
   Name     = FOAF + 'name'
   To       = SIOC + 'addressed_to'
@@ -28,19 +27,8 @@ class E
   Label    = RDFs + 'label'
   LDP      = W3 + 'ns/ldp#'
   EXIF     = W3 + '2003/12/exif/ns#'
-  Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
-  Render = 'render/'
-  Apache = ENV['apache']
-  Nginx  = ENV['nginx']
   
-  Literal={}
-   [Purl+'dc/elements/1.1/date',
-    Date,
-    DC+'created',
-    Modified,
-   ].map{|f|Literal[f]=true}
-
   Prefix={
     "dc" => DC,
     "foaf" => FOAF,

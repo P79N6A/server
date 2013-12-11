@@ -3,6 +3,8 @@ class E
   VideoFile = /(avi|flv|mkv|mpg|mp4|wmv)$/i
   AudioFile = /(aif|wav|flac|mp3|m4a|aac|ogg)$/i
 
+  Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
+
   fn 'set/audio',->d,e,m{d.take.select{|e|e.ext.match AudioFile}}
   fn 'set/video',->d,e,m{d.take.select{|e|e.ext.match VideoFile}}
 
