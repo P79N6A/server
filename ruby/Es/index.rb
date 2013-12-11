@@ -55,6 +55,8 @@ class E
           r['d'].to_sym ||
           :desc
 
+#    puts "index #{f} #{top} size #{count} dir #{dir} offset #{r['offset']}"
+
     (top.send f, count, dir, r['offset'],(d if f == :rangePO)).do{|s|
       # orient pagination pointers
       ascending = r['d'].do{|d| d == 'asc' }
@@ -88,12 +90,14 @@ class E
   end
 
   # range query - predicate
-  def rangeP n=8,d=:desc,s=nil,o=nil
-    pIndex.subtree(n,d,s).map &:ro
+  def rangeP size=8, dir=:desc, offset=nil, object=nil
+    puts "rangeP #{uri} size #{size} dir #{dir} offset #{offset}"
+    pIndex.subtree(size,dir,offset).map &:ro
   end
 
   # range query - predicate-object
   def rangePO n=8,d=:desc,s=nil,o
+    puts "rangePO #{uri} #{o} size #{n} dir #{d} offset #{s}"
     poIndex(o).subtree(n,d,s).map &:ro
   end
 
@@ -182,6 +186,7 @@ class Pathname
            ok = true         # iterator is now within range
         end )}}
 
+    puts "Pathname('#{to_s}').take #{count},:#{direction},#{offset ? "'#{offset}'" : 'nil'}"
     visit.(c) # start 
 
     # result set
