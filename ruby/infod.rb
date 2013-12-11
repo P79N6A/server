@@ -1,12 +1,37 @@
+%w{
+constants
+functions
+names
+mime
+code
+css
+csv
+du
+feed
+filter
+find
+fs
+glob
+grep
+groonga
+html
+image
+in
+index
+json
+kv
+ls
+mail.in
+man
+out
+pager
+pdf
+rdf
+ruby
+schema
+search
+sh
+text
+}.map{|e|require_relative e}
 
-# the table of elements
-
-# Es infrastructure
-# H  HTML
-# K  constants
-# N  naming
-# Rb Ruby native-types
-# Th HTTP
-# Y  lambdas
-
-%w{Y K Rb N Es H Th}.map{|e| require 'infod/' + e}
+%w{HTML HTTP}.map{|e| require 'infod/' + e}

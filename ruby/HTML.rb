@@ -6,10 +6,10 @@ facets
 forum
 hf
 histogram
-mail
+mail.out
 microblog
 threads
 time
 who
 wiki
-}.each{|r|require_relative 'H/'+r}
+}.each{|r|require_relative r}

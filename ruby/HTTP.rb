@@ -1,6 +1,6 @@
 #watch __FILE__
 require 'rack'
-%w{GET HEAD POST PATCH perf uid util 404 500}.map{|i|require_relative 'Th/' + i}
+%w{GET HEAD POST PATCH perf uid util 404 500}.map{|i|require_relative i}
 
 class E
 
