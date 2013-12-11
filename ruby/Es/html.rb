@@ -145,7 +145,7 @@ class E
   # select a view based on RDF-type majority
   fn 'view/divine/set',->d,e{
     # we'd be throwing away oddball resources to select one view for all of them
-    # but maybe you have a specific reason to
+    # but maybe you have a specific reason - normalization, cleanup..
     # inbuilt views support calling on set or per-resource basis, via "once" spec of set-wide components
     # so views are selected per-resource unless you hack here & uncomment caller in #view.select
   }

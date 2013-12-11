@@ -15,7 +15,7 @@ class E
                     {_: :a, href: url.t, c: '/'}]},
                r[Posix+'dir#child'].map{|c|a[c]}]}
        else
-         r.html
+         F['view/base'][{u => r},e]
        end }]}
 
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
