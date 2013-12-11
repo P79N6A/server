@@ -27,8 +27,10 @@ class E
   Label    = RDFs + 'label'
   LDP      = W3 + 'ns/ldp#'
   EXIF     = W3 + '2003/12/exif/ns#'
+  Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
-  
+  Render   = 'http://whats-your.name/www#RenderMIME/'
+
   Prefix={
     "dc" => DC,
     "foaf" => FOAF,
