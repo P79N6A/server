@@ -22,6 +22,10 @@ class E
     @uri = uri.to_s
   end
 
+  def == u
+      to_s == u.to_s
+  end
+
   def basename
     File.basename path
   end
@@ -256,12 +260,11 @@ class String
   # expand qname-style identifier to URI
   Expand={}
   def expand
-    # memoize lookups
    (Expand.has_key? self) ?
     Expand[self] :
    (Expand[self] =
      match(/([^:]+):([^\/].*)/).do{|e|
-       (E::Abbrev[e[1]]||e[1]+':')+e[2]} || 
+      ( E::Prefix[e[1]] || e[1]+':' )+e[2]} || 
      self )
   end
 
