@@ -1,24 +1,10 @@
 #watch __FILE__
 
-module Th
-  FingerprintKeys = %w{
-   HTTP_ACCEPT
-   HTTP_ACCEPT_CHARSET
-   HTTP_ACCEPT_LANGUAGE
-   HTTP_ACCEPT_ENCODING
-   HTTP_USER_AGENT
-   HTTP_ORIGIN_ADDR
-   REMOTE_ADDR
-}
-
-  def uid
-    ('/u/'+FingerprintKeys.map{|i|self[i]}.h.dive).E
-  end
-end
+# http://www.multicians.org/cookie.html
 
 class E
 
-  fn '/whoami/GET',->e,r{
-    [302,{Location: '/@'+r.uid.uri},[]]}
+#  fn '/whoami/GET',->e,r{
+#    [302,{Location: '/@'+r.uid.uri},[]]}
 
 end
