@@ -1,11 +1,12 @@
 %w{
 constants
-functions
+lambda
 names
 mime
 404
 500
 audio
+blog
 cal
 code
 css

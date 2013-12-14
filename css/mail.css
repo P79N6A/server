@@ -44,5 +44,4 @@ a[rel=untyped]:hover {background-color: #fff}
 a[property="sioc:addressed_to"] {background-color:#000;color:#ccc;}
 a[property="sioc:has_creator"] {background-color:#ddd;color:#000;}
 a[property="sioc:addressed_to"],a[property="sioc:has_creator"] { border-style:dotted;border-width:.1em;border-color:#aaa; white-space:nowrap;float:left }
-a[title="reply"] { padding:0 .3em 0 .3em}
 a.line {color: #555;background-color:#000;font-size:.8em}

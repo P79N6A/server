@@ -1,3 +1,4 @@
+watch __FILE__
 class E
 
   fn 'view/mail',->d,e{
@@ -30,11 +31,11 @@ class E
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
                 m[a[1]].do{|m|
                   m.map{|f| f.respond_to?(:uri) &&
-                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=threads&c=12', c: f.uri}}}},
+                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=page&v=threads&c=12', c: f.uri}}}},
 
               # mailto URI with embedded reply metadata
               (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
-                {_: :a, title: :reply, c: 'r',
+                {_: :a, title: :reply, c: 're',
                   href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
 
               {class: :timestamp, c: m[Date].do{|d|d.map{|d|d.to_s[0..18]}}}, '<br clear=all>',
