@@ -76,7 +76,7 @@ class E
                r[p].do{|os|
                  os.map{|o|triple[s,p,o]}}, # extant
                triple[e['uri'],p,''] # blank
-              ]}},
+              ]} if r.class == Hash},
           {_: :input, type: :submit, value: 'save'},
           {_: :a, class: :back, c: 'back', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}]}}
 
