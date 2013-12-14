@@ -84,7 +84,7 @@ class E
 
   fn Render+'text/plain',->d,_=nil{
     d.values.map{|r|
-      [r.map{|k,v|
+      [(r.map{|k,v|
         ["<",(k=='uri' ? '' : k),"> ", # predicate
          (v.class==Array ? v:[v]).map{|v|# each object
            v.respond_to?(:uri) ? '<'+v.uri+'>' : # object-URI
@@ -93,7 +93,7 @@ class E
            gsub(/<a.*?href="*([^'">\s]+)[^>]*>/,'<\1> '). # unwrap links
            gsub(/<[^>]+>/,'').                          # remove HTML
            gsub(/\n+/,"\n")}.                           # collapse empty space
-         intersperse(' '),"\n"]},"\n"]}.join}                 # collate
+         intersperse(' '),"\n"]} if r.class==Hash),"\n"]}.join} # collate
 
   F['view/text/plain']=->d,e{
     {_: :pre, c: F[Render+'text/plain'][d,e]}}
