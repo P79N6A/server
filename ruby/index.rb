@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   # POSIX-fs based index of triples
@@ -186,7 +186,7 @@ class Pathname
            ok = true         # iterator is now within range
         end )}}
 
-    puts "Pathname('#{to_s}').take #{count},:#{direction},#{offset ? "'#{offset}'" : 'nil'}"
+#    puts "Pathname('#{to_s}').take #{count},:#{direction},#{offset ? "'#{offset}'" : 'nil'}"
     visit.(c) # start 
 
     # result set

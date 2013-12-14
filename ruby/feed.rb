@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 
 module FeedParse
 
@@ -22,7 +22,7 @@ module FeedParse
     #items
     scan(%r{<(rss:|atom:)?(item|entry)([\s][^>]*)?>(.*?)</\1?\2>}mi){|m|
 
-      # identifier
+      # identifier select -> RDF URI || <id> || <link>
       u = m[2] && (u = m[2].match /about=["']?([^'">\s]+)/) && u[1] ||
           m[3] && (((u = m[3].match /<(gu)?id[^>]*>([^<]+)/) || (u = m[3].match /<(link)>([^<]+)/)) && u[2])
 
