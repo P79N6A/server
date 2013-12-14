@@ -1,17 +1,5 @@
 #watch __FILE__
 class E
-=begin
-
-TMail 1.2.7 uses 2% time of Mail 2.5.4
-
-HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.4003388
-HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720
-
-Mail is used as a fallback (adjust in #triplrMailMessage)
-
- apt-get install ruby-tmail
-
-=end
 
   def triplrTmail &f
     (TMail::Mail.load node).do{|m| # parse
@@ -47,6 +35,18 @@ Mail is used as a fallback (adjust in #triplrMailMessage)
   rescue LoadError => e
     puts e
   end
+
+=begin
+
+TMail 1.2.7 takes 2% time of Mail 2.5.4
+
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.4003388
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720
+
+Mail (below) available as a fallback (adjust defaults in #triplrMailMessage)
+
+=end
+
 
   def triplrMail
     require 'mail'

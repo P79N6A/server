@@ -1,5 +1,5 @@
  PREINSTALL
- OS   graphicsmagick libimage-exiftool-perl libid3-tools source-highlight
+ OS   graphicsmagick libimage-exiftool-perl libid3-tools source-highlight ruby-tmail bundler
  RUBY cp ruby/bin/infod /usr/local/bin
       cd ruby && bundle install
 

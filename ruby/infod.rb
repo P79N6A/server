@@ -21,12 +21,13 @@ index
 json
 kv
 ls
-mail.in
+mail
 man
 out
 pager
 pdf
 rdf
+rfc822
 ruby
 schema
 search
@@ -40,7 +41,6 @@ facets
 forum
 hf
 histogram
-mail.out
 microblog
 threads
 time
