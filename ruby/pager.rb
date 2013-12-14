@@ -6,10 +6,14 @@ class E
 
   fn 'head/page',->d,e{
     v = e.q['v']
-    unless v == 'page'
-      h = F['head/'+v] || F['head'] 
-      h[d,e]
-    end}
+    # head of contained view
+    [(unless v == 'page'
+        h = F['head/'+v] || F['head'] 
+        h[d,e]
+      end),
+     # page links, preserving ambient query-string values
+     d[Next].do{|n|{_: :link, rel: :next, href: [*n['url']][0]+e.q.merge(n).except('uri','url').qs}},
+     d[Prev].do{|p|{_: :link, rel: :prev, href: [*p['url']][0]+e.q.merge(p).except('uri','url').qs}}]}
 
   fn 'view/page',->d,e{
     # try daydirs if no pagination data provided
