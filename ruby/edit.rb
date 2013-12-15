@@ -1,12 +1,19 @@
 watch __FILE__
 class E
-  # a HTML <form> approach to RDF editing
 
   F['protograph/editable'] = F['protograph/_']
 
   fn 'graph/editable',->e,env,g{
     e.fromStream g, :triplrFsStore}
 
+  # select a prototype graph
+  # , or go blank
+  fn 'view/create',->g,e{
+    [H.css('/css/create'),{_: :b, c: :create},
+     Prototypes.map{|s,_|
+       {_: :a, href:  e['REQUEST_PATH']+'?graph=editable&view=edit&prototype='+(CGI.escape s), c: s.label}}]}
+
+  # 
   fn 'view/edit',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
      g.map{|uri,s| uri && s &&
@@ -14,7 +21,7 @@ class E
         edit = e['REQUEST_PATH']+'?graph=editable&view=editPO'
        {class: :resource,
          c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
-             {_: :a, class: :edit, c: '+p', href: url+'?graph=_&view=editP'},{_: :a, class: :edit, href: edit,c: :edit},'<br>',
+             {_: :a, class: :edit, c: '+predicate', href: url+'?graph=_&view=addP'},{_: :a, class: :edit, href: edit,c: :edit},'<br>',
              s.map{|p,o|
               {class: :property,
                  c: [{_: :a, class: :uri, href: edit + '&p=' + CGI.escape(p), title: :edit, c: p},' ',
@@ -28,7 +35,7 @@ class E
                       end)]}}]})}]}
 
   # select or mint a property to edit
-  fn 'view/editP',->g,e{
+  fn 'view/addP',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
 
      # core properties

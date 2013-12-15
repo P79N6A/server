@@ -50,11 +50,14 @@ class E
     m[d.uri] = {}
     rand.to_s.h}
 
-  # default graph (fs-backing)
+  # default graph, fs-backed
   fn 'graph/',->e,q,m{
     triplr = F['triplr'][e,q]
     m.values.map{|r|
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
+=begin default graph-function can be set without querystring or source-hacking,
+       register a GET handler + set the query-hash as desired:: q['graph']='redis'
+=end
 
   fn 'docsID',->g{
     g.sort.map{|u,r|

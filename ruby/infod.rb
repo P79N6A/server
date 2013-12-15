@@ -43,6 +43,7 @@ PATCH
 pdf
 perf
 POST
+prototype
 rdf
 rfc822
 ruby
