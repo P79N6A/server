@@ -44,13 +44,15 @@ class E
        c: [ g.map{|s,r|
               url = s.E.localURL e 
               # per-resource links
+              {class: :resource, c:
               [{_: :a, class: :uri, id: s, c: s, href: url},
-               {_: :a, class: :edit, c: '+predicate', href: url+'?graph=_&view=addP'},
+               {_: :a, class: :edit, c: '+predicate', href: url+'?graph=_&view=addP'},'<br><br>',
 
                # each property
-               r.keys.concat(ps).uniq.map{|p|[ {_: :b, c: p}, '<br>',
+               r.keys.concat(ps).uniq.map{|p|
+                 [{_: :b, c: p}, '<br>',
                   r[p].do{|os| os.map{|o|triple[s,p,o]}}, # existing triples
-                  triple[e['uri'],p,'']]}]},              # create a triple
+                  triple[e['uri'],p,''], '<br>']}]}},             # create a triple
 
        {_: :input, type: :submit, value: 'save'}]}]}
   
