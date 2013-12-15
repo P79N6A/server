@@ -19,7 +19,7 @@ class E
       e['uri'] = uri.uri
       # response
       r = nil              # request method
-      b = Benchmark.measure{ r = uri.send e.fn }
+      b = Benchmark.measure{ r = uri.send e.verb }
       F['log'][r[0],e,b.real]
       r
     else

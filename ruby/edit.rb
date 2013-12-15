@@ -22,7 +22,8 @@ class E
     # input field for a triple
     # TODO more HTML5 typed-inputs
     triple = ->s,p,o{
-      id = (s.E.concatURI p).concatURI E(p).literal o
+      id = (s.E.concatURI p).concatURI E(p).literal o if (s && p && o)
+      puts "triplr #{id}"
       [(case p
         when Content
           {_: :textarea, name: id, c: o, rows: 24, cols: 80}
@@ -51,11 +52,10 @@ class E
                # each property
                r.keys.concat(ps).uniq.map{|p|
                  [{_: :b, c: p}, '<br>',
-                  r[p].do{|os| os.map{|o|triple[s,p,o]}}, # existing triples
-                  triple[e['uri'],p,''], '<br>']}]}},             # create a triple
-
+                  r[p].do{|o| [*o].map{|o|triple[s,p,o]}}, # existing triples
+                  triple[e['uri'],p,''], '<br>']}]}}, # create triple
        {_: :input, type: :submit, value: 'save'}]}]}
-  
+
   # select a property to edit
   fn 'view/addP',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),

@@ -20,7 +20,7 @@ class E
         Slow = {}
       end
     end
-    $stdout.puts [e.fn,c,uri,e['HTTP_USER_AGENT'],e['HTTP_REFERER'],x].join ' '}
+    $stdout.puts [e.verb,c,uri,e['HTTP_USER_AGENT'],e['HTTP_REFERER'],x].join ' '}
 
   F['/health/GET'] = ->e,r{
     e.pathSegment.uri.match(/^(\/|\/health)$/) &&

@@ -19,7 +19,7 @@ module Th
 
   # unparsed query-string
   def qs
-    (['GET','HEAD'].member? fn) ? self['QUERY_STRING'] : self['rack.input'].read
+    (['GET','HEAD'].member? verb) ? self['QUERY_STRING'] : self['rack.input'].read
   end
 
   # memoize query
@@ -59,7 +59,7 @@ module Th
 
   def accept; @accept ||= accept_ end
 
-  def fn
+  def verb
     self['REQUEST_METHOD']
   end
 
