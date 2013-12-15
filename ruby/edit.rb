@@ -11,60 +11,16 @@ class E
   fn 'view/create',->g,e{
     [H.css('/css/create'),{_: :b, c: :create},
      Prototypes.map{|s,_|
-       {_: :a, href:  e['REQUEST_PATH']+'?graph=editable&view=edit&prototype='+(CGI.escape s), c: s.label}}]}
+       if s.nil?
+         {_: :b, c: '&nbsp;'}
+       else
+         {_: :a, href:  e['REQUEST_PATH']+'?graph=_&view=edit&prototype='+(CGI.escape s), c: s.label}
+       end}]}
 
-  # 
   fn 'view/edit',->g,e{
-    [(H.once e, 'edit', (H.css '/css/edit')),
-     g.map{|uri,s| uri && s &&
-       (url = uri.E.localURL e
-        edit = e['REQUEST_PATH']+'?graph=editable&view=editPO'
-       {class: :resource,
-         c: [{_: :a, class: :uri, id: uri, c: uri, href: url, title: 'view '+uri},
-             {_: :a, class: :edit, c: '+predicate', href: url+'?graph=_&view=addP'},{_: :a, class: :edit, href: edit,c: :edit},'<br>',
-             s.map{|p,o|
-              {class: :property,
-                 c: [{_: :a, class: :uri, href: edit + '&p=' + CGI.escape(p), title: :edit, c: p},' ',
-                     (case p
-                      when 'uri'
-                        {_: :a, c: p, href: p}
-                      when Content
-                        {_: :pre, c: o}
-                      else
-                        o.html
-                      end)]}}]})}]}
 
-  # select or mint a property to edit
-  fn 'view/addP',->g,e{
-    [(H.once e, 'edit', (H.css '/css/edit')),
-
-     # core properties
-     [Date,Title,Creator,Content,Label].map{|p|
-       {_: :a, href: p, c: p.label+' '}},
-
-     # URI-typed input
-     {_: :form, action: e['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
-
-           # editor arguments
-           { filter: :p,
-              graph: :editable,
-               view: :editPO}.map{|n,v|
-           {_: :input, type: :hidden, name: n, value: v}},
-
-           # submit
-           {_: :input, type: :submit, value: 'property'},
-          ]},
-     # schema search-engine
-     #{_: :iframe, style: 'width: 100%;height:42ex', src: 'http://data.whats-your.name'}
-    ]}
-
-  # edit triples
-  fn 'view/editPO',->g,e{
-
-    p = e.q['p'].do{|p|p.expand}
-
-    # triple -> <input>
+    # input field for a triple
+    # TODO more HTML5 typed-inputs
     triple = ->s,p,o{
       id = (s.E.concatURI p).concatURI E(p).literal o
       [(case p
@@ -75,16 +31,46 @@ class E
         end
         ),"<br>\n"]}
 
-    {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
-      c: [(H.once e, 'edit', (H.css '/css/edit')),          
-          g.map{|s,r|
-            (p ? [p] : r.keys).map{|p|
-              [{_: :b, c: p},'<br>',
-               r[p].do{|os|
-                 os.map{|o|triple[s,p,o]}}, # extant
-               triple[e['uri'],p,''] # blank
-              ]} if r.class == Hash},
-          {_: :input, type: :submit, value: 'save'},
-          {_: :a, class: :back, c: 'back', href: e['REQUEST_PATH']+'?view=edit&graph=editable'}]}}
+    ps = []
+    e.q['prototype'].do{|pr|
+      Prototypes[pr].do{|v|
+        ps = v}}
+
+    # global assets
+    [(H.once e, 'edit', (H.css '/css/edit')),
+     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
+
+       # each resource
+       c: [ g.map{|s,r|
+              url = s.E.localURL e 
+              # per-resource links
+              [{_: :a, class: :uri, id: s, c: s, href: url},
+               {_: :a, class: :edit, c: '+predicate', href: url+'?graph=_&view=addP'},
+
+               # each property
+               r.keys.concat(ps).uniq.map{|p|[ {_: :b, c: p}, '<br>',
+                  r[p].do{|os| os.map{|o|triple[s,p,o]}}, # existing triples
+                  triple[e['uri'],p,'']]}]},              # create a triple
+
+       {_: :input, type: :submit, value: 'save'}]}]}
+  
+  # select a property to edit
+  fn 'view/addP',->g,e{
+    [(H.once e, 'edit', (H.css '/css/edit')),
+
+     # ubiquitous properties
+     [Date,Title,Creator,Content,Label].map{|p|
+       {_: :a, href: p, c: p.label+' '}},
+
+     {_: :form, action: e['REQUEST_PATH'], method: :GET,
+       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
+
+           # editor args
+           { filter: :p,
+              graph: :editable,
+               view: :editPO}.map{|n,v|
+           {_: :input, type: :hidden, name: n, value: v}},
+
+           {_: :input, type: :submit, value: 'property'}]}]}
 
 end

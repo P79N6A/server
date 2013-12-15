@@ -55,8 +55,8 @@ class E
     triplr = F['triplr'][e,q]
     m.values.map{|r|
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
-=begin default graph-function can be set without querystring or source-hacking,
-       register a GET handler + set the query-hash as desired:: q['graph']='redis'
+=begin default graph-function w/o querystring or source-hacking:
+       register a GET handler + adjust env Hash.  q['graph'] = :hexastore
 =end
 
   fn 'docsID',->g{
