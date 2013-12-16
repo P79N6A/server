@@ -39,14 +39,14 @@ class E
     !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
   end
   
-  def maybeSend m,b,lH=false
-    c = lH ? 200 : 209 # is this the resource or a description?
+  def maybeSend m,b,iR=false
+    c = iR ? 200 : 209 # is this the resource or a description of it?
     send? ?            # does agent have this version?
     b[].do{|b|         # continue with response
       h = {'Content-Type'=> m,
            'ETag'=> @r['ETag']}
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
-      h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if lH     # link to description
+      h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if iR     # link to description
       b.class == E ? (Nginx ?                                                   # nginx chosen?
                       [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
                       Apache ?                                                  # Apache chosen?
