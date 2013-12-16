@@ -40,25 +40,22 @@ class E
   end
   
   def maybeSend m,b,lH=false
-    # is this the resource or a description?
-    c = lH ? 200 : 209
-    send? ?
-    b[].do{|b|
+    c = lH ? 200 : 209 # is this the resource or a description?
+    send? ?            # does agent have this version?
+    b[].do{|b|         # continue with response
       h = {'Content-Type'=> m,
            'ETag'=> @r['ETag']}
-      h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/
-      h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if lH
-
-      b.class == E ? (Nginx ?                                                     # nginx enabled
-                      [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
-                      Apache ?                                              # Apache enabled
-                      [c,h.update({'X-Sendfile' => b.d}),[]] : # Apache file-handler
-                      (r = Rack::File.new nil                  # Rack file-handler
-                       r.instance_variable_set '@path',b.d # rack inits response, needs our headers
-                       r.serving(@r).do{|s,m,b|[(s == 200 ? c : s),m.update(h),b]})
-                      ) :
-      [c, h, b]} : # normal (un-fs-accel'd) response
-      [304,{},[]]  # client has response entity
+      h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
+      h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if lH     # link to description
+      b.class == E ? (Nginx ?                                                   # nginx chosen?
+                      [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
+                      Apache ?                                                  # Apache chosen?
+                      [c,h.update({'X-Sendfile' => b.d}),[]] : # Apache handler
+                      (r = Rack::File.new nil                  # Rack handler
+                       r.instance_variable_set '@path',b.d     # configure Rack response
+                       r.serving(@r).do{|s,m,b|[(s == 200 ? c : s),m.update(h),b]})) :
+      [c, h, b]} : # normal response
+      [304,{},[]]  # client has response
   end
 
 end
