@@ -88,14 +88,19 @@ class FalseClass
 end
 
 class Hash
-  def html
+  def html e={'SERVER_NAME'=>'localhost'}
     H({_: :table, class: :html, c:
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,
-               c: {_: :a, name: k,
-                 href: (k == 'uri' ? v : k),
-                 c: k.to_s.abbrURI}, class: :key},
+               c: [{_: :a, name: k,
+                     href: (k == 'uri' ? v : k),
+                     c: k.to_s.abbrURI},
+                   k == 'uri' ?
+                   {_: :a,
+                     style: 'float: left;color:#eee',
+                     c: :e,
+                     href: uri.E.localURL(e)} : nil], class: :key},
              {_: :td,
                c: (case k
                    when E::Content
@@ -104,8 +109,8 @@ class Hash
                      u = v.E
                      {_: :a, id: u, href: u.url, c: v}
                    else
-                     v.html
-                   end), class: :val}].cr}}.cr})
+                     v.html e
+                   end), class: :val}]}}})
   end
 end
 
@@ -140,7 +145,7 @@ class E
 
   fn 'view/base',->d,e{
     [H.once(e,'base',H.css('/css/html')),
-     d.values.map(&:html)]}
+     d.values.map{|v|v.html e}]}
 
   # select a view based on RDF-type majority
   fn 'view/divine/set',->d,e{
