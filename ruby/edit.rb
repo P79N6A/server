@@ -10,36 +10,28 @@ class E
   # , or go blank
   fn 'view/create',->g,e{
     [H.css('/css/create'),{_: :b, c: :create},
-     Prototypes.map{|s,_|
-       if s.nil?
-         {_: :b, c: '&nbsp;'}
-       else
-         {_: :a, href:  e['REQUEST_PATH']+'?graph=_&view=edit&prototype='+(CGI.escape s), c: s.label}
-       end}]}
+     Prototypes.map{|s,_| s.nil? ? {_: :b, c: '&nbsp;'} : {_: :a, href:  e['REQUEST_PATH']+'?graph=_&view=edit&prototype='+(CGI.escape s), c: s.label}}]}
 
   fn 'view/edit',->g,e{
-
-    # input field for a triple
-    # TODO more HTML5 typed-inputs
     triple = ->s,p,o{
-      id = (s.E.concatURI p).concatURI E(p).literal o if (s && p && o)
-      puts "triplr #{id}"
-      [(case p
-        when Content
-          {_: :textarea, name: id, c: o, rows: 24, cols: 80}
-        when Date
-          {_: :input, name: id, type: 'datetime-local', value: o.empty? ? Time.now.iso8601[0..18] : o}
-        else
-          {_: :input, name: id, value: o, size: 54}
-        end
-        ),"<br>\n"]}
+      if s && p && o
+        id = s.E.concatURI(p).concatURI (E p).literal o
+        [(case p
+          when Content
+            {_: :textarea, name: id, c: o, rows: 24, cols: 80}
+          when Date
+            {_: :input, name: id, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
+          else
+            {_: :input, name: id, value: o, size: 54}
+          end
+          ),"<br>\n"]
+      end}
 
     ps = []
     e.q['prototype'].do{|pr|
       Prototypes[pr].do{|v|
         ps = v}}
 
-    # global assets
     [(H.once e, 'edit', (H.css '/css/edit')),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
 
