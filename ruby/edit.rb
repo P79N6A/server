@@ -28,7 +28,7 @@ class E
         when Content
           {_: :textarea, name: id, c: o, rows: 24, cols: 80}
         when Date
-          {_: :input, name: id, type: 'datetime-local', value: o.empty? ? Time.now.iso8601 : o}
+          {_: :input, name: id, type: 'datetime-local', value: o.empty? ? Time.now.iso8601[0..18] : o}
         else
           {_: :input, name: id, value: o, size: 54}
         end
