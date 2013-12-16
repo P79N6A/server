@@ -27,8 +27,10 @@ class E
       [(case p
         when Content
           {_: :textarea, name: id, c: o, rows: 24, cols: 80}
+        when Date
+          {_: :input, name: id, type: 'datetime-local', value: o.empty? ? Time.now.iso8601 : o}
         else
-          {_: :input, name: id, value: o}
+          {_: :input, name: id, value: o, size: 54}
         end
         ),"<br>\n"]}
 
@@ -50,6 +52,7 @@ class E
                {_: :a, class: :edit, c: '+predicate', href: url+'?graph=_&view=addP'},'<br><br>',
 
                # each property
+#               r.keys.concat(ps).uniq.-(['uri']).map{|p|
                r.keys.concat(ps).uniq.map{|p|
                  [{_: :b, c: p}, '<br>',
                   r[p].do{|o| [*o].map{|o|triple[s,p,o]}}, # existing triples
