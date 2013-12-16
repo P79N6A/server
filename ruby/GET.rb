@@ -40,26 +40,25 @@ class E
   end
   
   def maybeSend m,b,lH=false
-    # agent need this version?
+    # is this the resource or a description?
+    c = lH ? 200 : 209
     send? ?
-    # continue
     b[].do{|b|
-      # response metadata
       h = {'Content-Type'=> m,
            'ETag'=> @r['ETag']}
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/
       h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if lH
 
       b.class == E ? (Nginx ?                                                     # nginx enabled
-                      [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
+                      [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx file-handler
                       Apache ?                                              # Apache enabled
-                      [200,h.update({'X-Sendfile' => b.d}),[]] :   # Apache file-handler
-                      (r = Rack::File.new nil                      # Rack file-handler
-                       r.instance_variable_set '@path',b.d
-                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})
+                      [c,h.update({'X-Sendfile' => b.d}),[]] : # Apache file-handler
+                      (r = Rack::File.new nil                  # Rack file-handler
+                       r.instance_variable_set '@path',b.d # rack inits response, needs our headers
+                       r.serving(@r).do{|s,m,b|[(s == 200 ? c : s),m.update(h),b]})
                       ) :
-      [200, h, b]} : # normal (unaccelerated) response
-      [304,{},[]]    # client has response version
+      [c, h, b]} : # normal (un-fs-accel'd) response
+      [304,{},[]]  # client has response entity
   end
 
 end
