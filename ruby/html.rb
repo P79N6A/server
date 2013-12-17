@@ -36,7 +36,7 @@ class H
 end
 
 class Array
-  def html table=true
+  def html e=nil
     map(&:html).join ' '
   end
 end
@@ -60,7 +60,7 @@ class String
     sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]*)$/,
     '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
-  def html
+  def html e=nil
     if match /\A(\/|http)[\S]+\Z/
       href
     else
@@ -72,19 +72,19 @@ class String
 end
 
 class Fixnum
-  def html; H({_: :input, type: :number, value: to_s}) end
+  def html e=nil; H({_: :input, type: :number, value: to_s}) end
 end
 
 class Float
-  def html; H({_: :input, type: :number, value: to_s}) end
+  def html e=nil; H({_: :input, type: :number, value: to_s}) end
 end
 
 class TrueClass
-  def html; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
+  def html e=nil; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
 end
 
 class FalseClass
-  def html; H({_: :input, type: :checkbox, title: :False}) end
+  def html e=nil; H({_: :input, type: :checkbox, title: :False}) end
 end
 
 class Hash
@@ -100,7 +100,7 @@ class Hash
                    {_: :a,
                      style: 'float: left;color:#eee',
                      c: :e,
-                     href: uri.E.localURL(e)} : nil], class: :key},
+                     href: uri.E.localURL(e)+'?graph=editable&view=edit'} : nil], class: :key},
              {_: :td,
                c: (case k
                    when E::Content

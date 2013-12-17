@@ -41,7 +41,7 @@ class E
   def triplrFsStore
     properties.map{|p|
       self[p].map{|o|
-        yield uri+'#', p.uri, o}}
+        yield uri, p.uri, o}}
   end
 
   def deletePredicate p

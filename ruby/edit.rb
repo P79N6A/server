@@ -45,10 +45,10 @@ class E
 
                # each property
 #               r.keys.concat(ps).uniq.-(['uri']).map{|p|
-               r.keys.concat(ps).uniq.map{|p|
+               (r.keys.concat(ps).uniq.map{|p|
                  [{_: :b, c: p}, '<br>',
                   r[p].do{|o| [*o].map{|o|triple[s,p,o]}}, # existing triples
-                  triple[e['uri'],p,''], '<br>']}]}}, # create triple
+                  triple[e['uri'],p,''], '<br>']} if r.class==Hash)]}}, # create triple
        {_: :input, type: :submit, value: 'save'}]}]}
 
   # select a property to edit
