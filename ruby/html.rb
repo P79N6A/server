@@ -96,11 +96,10 @@ class Hash
                c: [{_: :a, name: k,
                      href: (k == 'uri' ? v : k),
                      c: k.to_s.abbrURI},
-                   k == 'uri' ?
-                   {_: :a,
+                   ({_: :a,
                      style: 'float: left;color:#eee',
                      c: :e,
-                     href: uri.E.localURL(e)+'?graph=editable&view=edit'} : nil], class: :key},
+                     href: uri.E.localURL(e)+'?graph=editable&view=edit'} if (k == 'uri') && uri.match(/#/))], class: :key},
              {_: :td,
                c: (case k
                    when E::Content
