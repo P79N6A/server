@@ -4,7 +4,7 @@ class E
   def POST
     (Rack::Request.new @r).params.map{|k,v|
       s, p, o = (CGI.unescape k).split S
-      if (s && p && o)
+      if s && p && o
         oP = o # object path
         begin
           s,p,o = [s,p,o].map &:unpath

@@ -15,6 +15,7 @@ class E
   fn 'view/edit',->g,e{
     triple = ->s,p,o{
       if s && p && o
+        puts s,p,o
         id = s.E.concatURI(p).concatURI (E p).literal o
         [(case p
           when Content
@@ -28,7 +29,9 @@ class E
       end}
     
     ps = []
-    e.q['prototype'].do{|pr| Prototypes[pr].do{|v| ps.concat v }}
+    e.q['prototype'].do{|pr| Prototypes[pr].do{|v|
+        g[e['uri']+'#'] ||= {}
+        ps.concat v }}
     e.q['p'].do{|p| ps.push p }
 
     [(H.once e, 'edit', (H.css '/css/edit')),
@@ -47,25 +50,16 @@ class E
                (r.keys.concat(ps).uniq.map{|p|
                  [{_: :b, c: p}, '<br>',
                   r[p].do{|o| [*o].map{|o|triple[s,p,o]}}, # existing triples
-                  triple[e['uri'],p,''], '<br>']} if r.class==Hash)]}}, # create triple
+                  triple[e['uri'],p,''], '<br>']} if r.class==Hash)]} if s.match(/#/)}, # create triple
        {_: :input, type: :submit, value: 'save'}]}]}
 
   # select a property to edit
   fn 'view/addP',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
-
-     # ubiquitous properties
-     [Date,Title,Creator,Content,Label].map{|p|
-       {_: :a, href: p, c: p.label+' '}},
+     [Date,Title,Creator,Content,Label].map{|p|{_: :a, href: p, c: p.label+' '}},
 
      {_: :form, action: e['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
-
-           # editor args
-           { graph: :editable,
-              view: :edit}.map{|n,v|
-           {_: :input, type: :hidden, name: n, value: v}},
-
+       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 64},
            {_: :input, type: :submit, value: 'property'}]}]}
 
 end
