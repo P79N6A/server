@@ -94,7 +94,7 @@ class E
     if uri.index('/') == 0
       uri
     # host match
-    elsif uri.index('http://'+e['SERVER_NAME']+'/') == 0
+    elsif e && uri.index('http://'+e['SERVER_NAME']+'/') == 0
       pathSegment.uri
     # non-local
     else
