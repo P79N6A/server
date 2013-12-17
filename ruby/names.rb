@@ -311,29 +311,33 @@ class String
   # path -> URI || literal
   def unpath
 
-    # URI with scheme
+    # HTTP URI
     if m = (match /^\/([a-z]+:)\/+(.*)/)
       (m[1] + '//' + m[2]).E
 
-    # String literal in store
-    elsif match /^\/E\/blob/
-      self.E.r
+    # CURIE
+    elsif m = (match /^\/([^\/:]+:[^\/]+)/)
+      m[1].expand.E
 
-    # JSON literal in store
-    elsif match /^\/E\/json/
-      self.E.r true
-
-    # String literal in basename
-    elsif match /^\/l\//
-      File.basename self
-
-    # URI (opaque)
+    # opaque URI w/ optional extension
     elsif match /^\/E\/..\//
       self[9..-1].match(/([^.]+)(.*)/).do{|c|
         (Base64.urlsafe_decode64 c[1]) + c[2]
-      }.E
+    }.E
 
-    # normal path
+    # String literal
+    elsif match /^\/E\/blob/
+      self.E.r
+
+    # JSON literal
+    elsif match /^\/E\/json/
+      self.E.r true
+
+    # literal in basename
+    elsif match /^\/l\//
+      File.basename self
+
+    # plain path
     else
       self.E
     end
