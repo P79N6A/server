@@ -19,12 +19,12 @@ class E
         end
       end}
 
-    g={}
+    # update graph snapshot
+    g = {}
     fromStream g, :triplrFsStore
-    ef.w g,true
+    ef.w g, true
 
-    @r.q.update({'view' => 'editPO','graph' => 'editable'})
-    self.GET
+    [303,{'Location'=>uri},[]]
   end
 
 end
