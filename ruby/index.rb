@@ -76,7 +76,7 @@ class E
 
   # predicate index
   def pIndex
-    prependURI '/index/'
+    shorten.prependURI '/index/'
   end
 
   # predicate-object index

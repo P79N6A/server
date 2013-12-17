@@ -120,6 +120,10 @@ class E
     uri.expand.E
   end
 
+  def shorten
+    uri.shorten.E
+  end
+
   def prependURI u
     E u.to_s + uri
   end
@@ -133,7 +137,7 @@ class E
   end
 
   def concatURI b
-    u.appendURI b.E.path
+    u.appendURI b.E.shortPath
   end
 
   alias_method :a, :appendURI
@@ -142,6 +146,19 @@ class E
 
   def path?
     uri.path?
+  end
+
+  def shortPath
+    @shortPath ||=
+      (if path?
+         if uri.match /^\//
+           uri
+         else
+           '/' + uri.shorten
+         end
+       else
+         '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
+       end)
   end
 
   # URI -> path
@@ -174,7 +191,8 @@ class E
   end
 
   # literals to URIs
-
+  # currently used for iso8601 dates mapping to paths, so date-range queries can be done w/ just dir/fs tooling
+  # could also use as a "trie" for autocomplete or sorting on strings
   def E.literal o
     E['/'].literal o
   end
@@ -262,7 +280,7 @@ class String
     self[4..-1]
   end
 
-  # expand qname-style identifier to URI
+  # expand qname/CURIE-style identifier to URI
   Expand={}
   def expand
    (Expand.has_key? self) ?
@@ -271,6 +289,14 @@ class String
      match(/([^:]+):([^\/].*)/).do{|e|
       ( E::Prefix[e[1]] || e[1]+':' )+e[2]} || 
      self )
+  end
+
+  # shrink URI to qname/CURIE/prefix'd identifier
+  def shorten
+    E::Prefix.map{|p,f|
+      return p + ':' + self[f.size..-1]  if (index f) == 0
+    }
+    self
   end
 
   def sh
@@ -307,7 +333,7 @@ class String
         (Base64.urlsafe_decode64 c[1]) + c[2]
       }.E
 
-    # path
+    # normal path
     else
       self.E
     end
