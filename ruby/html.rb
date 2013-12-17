@@ -36,8 +36,8 @@ class H
 end
 
 class Array
-  def html e=nil
-    map(&:html).join ' '
+  def html v=nil
+    map{|e|e.html v}.join ' '
   end
 end
 
@@ -115,12 +115,9 @@ class Hash
 end
 
 class E
-  def html name=nil,l=false
-      (l ? url : uri).href name
-   end
 
-  def link
-    html '#',true
+  def html *a
+    url.href
   end
 
   fn 'head',->d,e{
