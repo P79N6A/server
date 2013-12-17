@@ -12,7 +12,7 @@
  infod         standalone
    ''  apache  sh/.htaccess
    ''  nginx   sh/nginx
- infod lo -d   localhost only + daemonize
+ infod lo -d   localhost + daemonize
 
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
 git@gitorious.org:element/www.git   https://gitorious.org/element/www

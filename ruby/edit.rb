@@ -26,11 +26,10 @@ class E
           end
           ),"<br>\n"]
       end}
-
+    
     ps = []
-    e.q['prototype'].do{|pr|
-      Prototypes[pr].do{|v|
-        ps = v}}
+    e.q['prototype'].do{|pr| Prototypes[pr].do{|v| ps.concat v }}
+    e.q['p'].do{|p| ps.push p }
 
     [(H.once e, 'edit', (H.css '/css/edit')),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
@@ -63,9 +62,8 @@ class E
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 53},
 
            # editor args
-           { filter: :p,
-              graph: :editable,
-               view: :editPO}.map{|n,v|
+           { graph: :editable,
+              view: :edit}.map{|n,v|
            {_: :input, type: :hidden, name: n, value: v}},
 
            {_: :input, type: :submit, value: 'property'}]}]}
