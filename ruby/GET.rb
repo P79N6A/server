@@ -41,7 +41,8 @@ class E
   end
   
   def maybeSend m,b,iR=false
-    c = iR ? 200 : 209 # is this the resource or a description of it?
+#    c = iR ? 200 : 209 # is this the resource or a description of it?
+    c = 200
     send? ?            # does agent have this version?
     b[].do{|b|         # continue with response
       h = {'Content-Type'=> m,

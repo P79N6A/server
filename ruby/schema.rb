@@ -3,7 +3,8 @@ class E
 =begin
  www)  http://data.whats-your.name
 
- local) wget http://whats-your.name/schema.txt
+ local) cd schema
+        wget http://whats-your.name/schema.txt
         x-www-browser http://localhost/schema
 
  rebuild)
@@ -12,7 +13,7 @@ class E
    curl http://prefix.cc/popular/all.file.txt > prefix.txt  
  ) RDF usage data
    curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt  
- 2) analyze
+ 2) massage
  irb> E.cacheSchemas
   ..  E.indexSchemas
 

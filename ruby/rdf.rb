@@ -1,7 +1,7 @@
 #watch __FILE__
 class E
 
-  begin require 'linkeddata'; rescue LoadError => e; puts 'linkeddata lib not found' end
+  begin require 'linkeddata'; rescue LoadError => e; puts 'linkeddata library not found' end
 
   def self.renderRDF d,f
     (RDF::Writer.for f).buffer{|w|
