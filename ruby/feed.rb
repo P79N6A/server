@@ -57,18 +57,7 @@ class E
   def getFeedReddit g; insertDocs :triplrFeedReddit, g end
 
   def triplrFeed &f 
-    dateNorm :contentURIresolve,:triplrFeedTypeNormalize,:triplrFeedRaw,&f
-  end
-
-  def contentURIresolve *f
-    send(*f){|s,p,o|
-      yield s, p, p == Content ?
-      (Nokogiri::HTML.parse o).do{|o|
-        o.css('a').map{|a|
-          if a.has_attribute? 'href'
-            (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
-          end}
-        o.to_s} : o}
+    dateNorm :contentURIresolve,:triplrFeedNormalize,:triplrFeedRaw,&f
   end
 
   def triplrFeedReddit &f
@@ -86,7 +75,7 @@ class E
     puts [uri,e,e.backtrace[0]].join ' '
   end
 
-  def triplrFeedTypeNormalize *f
+  def triplrFeedNormalize *f
     send(*f){|s,p,o|
       yield s,
       { Purl+'dc/elements/1.1/creator' => Creator,

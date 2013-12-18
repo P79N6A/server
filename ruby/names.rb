@@ -192,7 +192,7 @@ class E
 
   # literals to URIs
   # currently used for iso8601 dates mapping to paths, so date-range queries can be done w/ just dir/fs tooling
-  # could also use as a "trie" for autocomplete or sorting on strings
+  # could also use as a "trie" for autocomplete or sorting strings
   def E.literal o
     E['/'].literal o
   end

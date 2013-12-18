@@ -204,6 +204,17 @@ class E
     yield uri,Content,(f && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
   end
 
+  def contentURIresolve *f
+    send(*f){|s,p,o|
+      yield s, p, p == Content ?
+      (Nokogiri::HTML.parse o).do{|o|
+        o.css('a').map{|a|
+          if a.has_attribute? 'href'
+            (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
+          end}
+        o.to_s} : o}
+  end
+
   fn Render+'text/html',->d,e{
     v = e.q['view'].to_s
     h = F['head/'+v] || F['head'] 
