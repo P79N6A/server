@@ -11,12 +11,13 @@ class E
       Errors[uri] ||= {}
       Errors[uri][:time] = Time.now
     end
+    # log slow requests
     if x && x.class==Float && x > 1
       s = Slow[uri] ||= {}
       s[:time] ||= 0
       s[:time] += x
       s[:last] = Time.now
-      if Slow.size > 10e3
+      if Slow.size > 85
         Slow = {}
       end
     end
@@ -28,7 +29,7 @@ class E
           c: {_: :a, href: '/', style: "background-color:"+E.cs, c: '/'}},
         {c: [{_: :b, c: r['SERVER_NAME']},' storage ',`df --output=pcent /|tail -n 1`]},
         {_: :a, href: '/slow', c: 'slow queries'},
-        {_: :A, href: '/500', c: 'broken requests'},
+        {_: :a, href: '/500', c: 'broken requests'},
         H.css('/css/health')
        ]).hR}
 
