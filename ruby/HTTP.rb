@@ -1,4 +1,3 @@
-#watch __FILE__
 require 'rack'
 
 class E
@@ -9,27 +8,17 @@ class E
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     p = e['REQUEST_PATH'].force_encoding 'UTF-8'
 
-    uri = CGI.unescape(if (p.index URIURL) == 0
-                         p[URIURL.size..-1]
-                       else
-                         'http://' + e['SERVER_NAME'] + (p.gsub '+','%2B')
-                       end).E.env e
-    
+    uri = CGI.unescape((p.index(URIURL) == 0) ? p[URIURL.size..-1] : ('http://'+e['SERVER_NAME']+(p.gsub '+','%2B'))).E.env e
+
     if (uri.node.expand_path.to_s.index FSbase) == 0
       e['uri'] = uri.uri
-      # response
-      r = nil              # request method
-      b = Benchmark.measure{ r = uri.send e.verb }
-      F['log'][r[0],e,b.real]
-      r
+      uri.send e.verb
     else
       [403,{},['Forbidden']]
     end
 
   rescue Exception => x
-    $stderr.puts 500, e['REQUEST_URI'] ,x.message,x.backtrace
-    F['log'][500,e]
-    F['E500'][x,@r]
+    F['E500'][x,e]
   end
 
 end

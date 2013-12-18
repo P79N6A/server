@@ -29,9 +29,10 @@ class E
     pathSegment.do{|path|
       lambdas = path.cascade.map{|p| p.uri.t + 'GET' }
       ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
-          F[h + p].do{|fn| fn[self,@r].do{|r| return r}}}}}
-    
-    # default handler
+          F[h + p].do{|fn| fn[self,@r].do{|r|
+              $stdout.puts [r[0],uri,@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
+              return r
+            }}}}}
     response
   end
 

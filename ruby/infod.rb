@@ -41,7 +41,6 @@ out
 pager
 PATCH
 pdf
-perf
 POST
 prototype
 rdf
