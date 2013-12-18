@@ -1,14 +1,11 @@
 #watch __FILE__
 class E
 
-  # shorthand-URL endpoints to look-up people in fs-index
+  # shorthand-URL endpoints to look-up people in index
 
   fn '/whois/GET',->e,r{
-    # TODO a comprehensive search - merge to/from SIOC + foaf:person results
-
     w = (r.q['p']||'').match(/to$/) ? 'to' : 'from'
-    [302,{Location: '/' + w + '/' + (URI.escape (r.q['q']||''))},[]]
-  }
+    [302,{Location: '/'+w+'/'+(URI.escape (r.q['q']||''))},[]]}
 
   fn '/to/GET',->e,r{
     name = e.pathSegment.uri.sub('/to/','/').tail

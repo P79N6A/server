@@ -3,13 +3,12 @@ class E
   Errors ||= {}
 
   fn 'E500',->x,e{
-    msg = x.message
-  stack = x.backtrace
-    $stderr.puts [500, e['REQUEST_URI'], msg, stack[0]].join ' '
+    stack = x.backtrace
+    $stderr.puts [500, e['REQUEST_URI'], x.class, x.message, stack[0]].join ' '
 
     Errors[e['uri']] ||= {}
     Errors[e['uri']][:time] = Time.now
-    Errors[e['uri']][:what] = [msg,stack[0]]
+    Errors[e['uri']][:what] = [x.class.to_s, x.message, stack[0]]
 
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
@@ -18,7 +17,7 @@ class E
               {_: :body,
                 c: [{_: :h1, c: 500},
                     {_: :table,
-                      c: [{_: :tr,c: [{_: :td, c: {_: :b, c: x.class}},{_: :td, class: :space},{_: :td, class: :message, c: msg.hrefs}]},
+                      c: [{_: :tr,c: [{_: :td, c: {_: :b, c: x.class}},{_: :td, class: :space},{_: :td, class: :message, c: x.message.hrefs}]},
                           stack.map{|f| p = f.split /:/, 3
                             {_: :tr,
                               c: [{_: :td, class: :path, c: p[0].abbrURI},
@@ -28,7 +27,7 @@ class E
   F['/500/GET'] = ->e,r{H([Errors.sort_by{|u,r|r[:time]}.reverse.html,H.css('/css/500')]).hR}
   F['/500/test/GET'] = ->e,r{1/0}
 
-  # filesystem /css/500.css takes priority over this if it's found
+  # filesystem takes priority over this if it's found
   fn '/css/500.css/GET',->e,r{
     [200,{'Content-Type'=>'text/css'},["
 body {margin:0; font-family: sans-serif; background-color:#fff; color:#000}

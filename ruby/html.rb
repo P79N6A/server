@@ -217,7 +217,7 @@ class E
              {_: :body, c: v[d,e]}].cr}].cr)}
 
   
-  # property-selector toolbar (requires RDFa views)
+  # property-selector toolbar - requires RDFa view
   fn 'view/p',->d,e{
     #TODO fragmentURI scheme for selection-state
     [H.once(e,'property.toolbar',H.once(e,'p',(H.once e,:mu,H.js('/js/mu')),
