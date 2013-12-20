@@ -6,13 +6,12 @@
  INSTALL               NOTES
  ruby/install          rsync to site-lib
  ruby/install symlink  link from site-lib
- export RUBYLIB=ruby   use in-place
 
  DAEMON        notes
  infod         standalone
    ''  apache  sh/.htaccess
    ''  nginx   sh/nginx
- infod lo -d   localhost + daemonize
+   ''  lo -d   localhost + daemonize
 
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
 git@gitorious.org:element/www.git   https://gitorious.org/element/www
