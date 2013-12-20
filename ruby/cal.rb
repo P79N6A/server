@@ -52,6 +52,7 @@ class E
   fn 'view/month',->d,e{
     [(d.delete :time).do{|month|
        {_: :b, c: month.strftime('%B'),style: "color: #{E.cs}"}},
+     F['view/'+e.q['monthview']].do{|v|v[d,e]} ||
      F['view/t'][d,e,'day','day']]}
 
     fn 'view/day',->d,e{

@@ -19,6 +19,7 @@ class E
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
   Type     = W3   + "ns/rdf#type"
+  RDF1999  = W3   + "1999/02/22-rdf-syntax-ns#"
   RDFs     = W3   + 'ns/rdfs#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
