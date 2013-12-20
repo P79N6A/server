@@ -48,8 +48,21 @@ class E
     m }
 
    fn 'view/year',->d,e{F['view/t'][d,e,'month','month']}
-  fn 'view/month',->d,e{[{_: :b, c: (d.delete :time).strftime('%B'),style: "color: #{E.cs}"}, F['view/t'][d,e,'day','day']]}
-    fn 'view/day',->d,e{[{_: :b, c: (d.delete :time).strftime('%d'),style: "color: #888"},    F['view/t'][d,e,'hour','hour']]}
-   fn 'view/hour',->d,e{[{_: :b, c: (d.delete :time).strftime('%H'),style: "float:left"}, F['view/title'][d,e]]}
+
+  fn 'view/month',->d,e{
+    [(d.delete :time).do{|month|
+       {_: :b, c: month.strftime('%B'),style: "color: #{E.cs}"}},
+     F['view/t'][d,e,'day','day']]}
+
+    fn 'view/day',->d,e{
+    [(d.delete :time).do{|day|
+       {_: :b, c: day.strftime('%d'),style: "float:left; color: #888"}},
+     F['view/'+e.q['dayview']].do{|v|v[d,e]} ||
+     F['view/t'][d,e,'hour','hour']]}
+
+   fn 'view/hour',->d,e{
+    [(d.delete :time).do{|hour|
+       {_: :b, c: hour.strftime('%H'),style: "float:left"}},
+     F['view/title'][d,e]]}
 
 end
