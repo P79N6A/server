@@ -1,4 +1,3 @@
-#watch __FILE__
 class E
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
@@ -18,16 +17,17 @@ class E
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
-  Type     = W3   + "ns/rdf#type"
-  RDF1999  = W3   + "1999/02/22-rdf-syntax-ns#"
-  RDFs     = W3   + 'ns/rdfs#'
+  RDF1k9   = W3   + "1999/02/22-rdf-syntax-ns#"
+  EXIF     = W3   + '2003/12/exif/ns#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
+  LDP      = W3   + 'ns/ldp#'
   Posix    = W3   + 'ns/posix/'
-  Stat     = Posix + 'stat#'
+  Type     = W3   + "ns/rdf#type"
+  RDFs     = W3   + 'ns/rdfs#'
+  HTML     = RDF1k9 + "HTML"
   Label    = RDFs + 'label'
-  LDP      = W3 + 'ns/ldp#'
-  EXIF     = W3 + '2003/12/exif/ns#'
+  Stat     = Posix + 'stat#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
   Render   = 'http://whats-your.name/www#RenderMIME/'

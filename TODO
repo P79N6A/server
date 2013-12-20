@@ -1,6 +1,5 @@
 500.rb - view -> table
 cal.rb - fix anything needed to make https://github.com/rww-apps/ld-cal work w/ our backend
-constants.rb - add RDF 1999 uri , after making ::RDF fixes for in rdf.rb
 edit.rb - #ids
 edit.rb - store version histories, optionally - Memento? http://www.mementoweb.org/guide/resourcetype/
 forum/blog.rb - URI-shorthand :simulacra: to existing sioc-infrastructure of feeds/mail
