@@ -1,8 +1,14 @@
+watch __FILE__
 class E
 
   def render mime,   graph, e
    E[Render+ mime].y graph, e
   end
+
+  fn 'view/?',->d,e{
+    F.keys.grep(/^view\/(?!application|text\/x-)/).map{|v|
+      v = v[5..-1] # eat selector
+      [{_: :a, href: e['REQUEST_PATH']+e.q.merge({'view'=>v}).qs, c: v},"<br>\n"]}}
 
   def response
 
