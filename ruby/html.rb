@@ -125,7 +125,7 @@ class E
      (Fn 'head.icon')].cr}
 
   fn 'head.formats',->e{
-    formats = %w{text/plain text/n3 application/json+ld}
+    formats = %w{text/n3 application/json+ld}
     formats.map{|f|
       {_: :link, rel: :meta, type: f,
         href:'http://' + e['SERVER_NAME'] + e['REQUEST_PATH'] + e.q.merge({'format' => f}).qs}}.cr}

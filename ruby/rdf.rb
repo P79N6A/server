@@ -1,14 +1,14 @@
 #watch __FILE__
 class E
 
-  begin require 'linkeddata'; rescue LoadError => e; puts 'linkeddata library not found' end
+  begin require 'linkeddata'; rescue LoadError => e; puts 'linkeddata library 404' end
 
   def self.renderRDF d,f
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
-        s = RDF::URI s
+        s = RDF::URI s.E.url
         p = RDF::URI p
-        o = ([E,Hash].member?(o.class) ? (RDF::URI o.uri) : (RDF::Literal o)) rescue nil
+        o = ([E,Hash].member?(o.class) ? (RDF::URI o.url) : (RDF::Literal o)) rescue nil
         (w << (RDF::Statement.new s,p,o) if o ) rescue nil
       }}
   end
