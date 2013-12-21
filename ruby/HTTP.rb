@@ -10,12 +10,8 @@ class E
 
     uri = CGI.unescape((p.index(URIURL) == 0) ? p[URIURL.size..-1] : ('http://'+e['SERVER_NAME']+(p.gsub '+','%2B'))).E.env e
 
-    if (uri.node.expand_path.to_s.index FSbase) == 0
-      e['uri'] = uri.uri
-      uri.send e.verb
-    else
-      [403,{},['Forbidden']]
-    end
+    uri.inside ? ( e['uri'] = uri.uri
+                   uri.send e.verb ) : [403,{},[]]
 
   rescue Exception => x
     F['E500'][x,e]

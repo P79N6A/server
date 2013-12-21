@@ -13,6 +13,10 @@ class E
   end
   alias_method :no, :node
 
+  def inside
+    node.expand_path.to_s.index(FSbase) == 0
+  end
+
   def siblings
     parent.c
   end
