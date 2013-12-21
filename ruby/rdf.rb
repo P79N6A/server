@@ -3,14 +3,15 @@ class E
 
   begin require 'linkeddata'; rescue LoadError => e; puts 'linkeddata library 404' end
 
-  def self.renderRDF d,f
+  def self.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
-        s = RDF::URI s.E.url
+        s = RDF::URI s.E.hostURL(e)
         p = RDF::URI p
-        o = ([E,Hash].member?(o.class) ? (RDF::URI o.url) : (RDF::Literal o)) rescue nil
-        (w << (RDF::Statement.new s,p,o) if o ) rescue nil
-      }}
+        o = ([E,Hash].member?(o.class) ? (RDF::URI o.E.hostURL(e)) : (RDF::Literal o)) rescue nil
+        #puts [:RDF,s,p,o].join ' '
+
+        (w << (RDF::Statement.new s,p,o) if o ) rescue nil }}
   end
   
   def triplrRDF format=nil, local=true
@@ -30,6 +31,6 @@ class E
    ['text/rdf+n3',:n3],
    ['text/n3',:n3]
   ].map{|mime|
-    F[Render+mime[0]] = ->d,a=nil{E.renderRDF d, mime[1]}}
+    F[Render+mime[0]] = ->d,e{E.renderRDF d, mime[1], e}}
 
 end

@@ -83,18 +83,28 @@ class E
   end
   alias_method :dir, :dirname
 
-  # URL from unlocatable identifier (mail MSGID, etc)
+  # /path URL from unlocatable identifier (mail MSGID, etc)
   def url
     path? ? uri : URIURL + (CGI.escape uri)
+  end
+
+  # http://path URL from unlocatable identifier
+  def hostURL e
+    host = 'http://'+e['SERVER_NAME']
+    if uri.index('/') == 0 
+      host + uri
+    else
+      path? ? uri : host + URIURL + (CGI.escape uri)
+    end
   end
 
   # local URL even if locatable-identifier
   def localURL e
     # path
-    if uri.index('/') == 0
+    if uri.index('/') == 0 # already a local path
       uri
     # host match
-    elsif e && uri.index('http://'+e['SERVER_NAME']+'/') == 0
+    elsif e && uri.index('http://'+e['SERVER_NAME']+'/') == 0 
       pathSegment.uri
     # non-local
     else

@@ -37,7 +37,7 @@ class E
   #  graph-identifier for cache & conditional-response is purpose of "protograph"
   #  any graph population is preserved for (possible) expansion
   fn 'protograph/',->e,q,g{
-    set = (F['set/'+q['set']] || F['set/'])[e,q,g]
+    set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
     [F['docsID'][g],
      F['triplr'][e,q],

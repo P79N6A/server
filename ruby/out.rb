@@ -13,7 +13,7 @@ class E
     m = {}
 
     # identify graph
-    graphID = (F['protograph/' + g] || F['protograph/'])[self,q,m]
+    graphID = (g && F['protograph/' + g] || F['protograph/'])[self,q,m]
 
     return F[E404][self,@r] if m.empty?
 
@@ -34,7 +34,7 @@ class E
           m.merge! c.r true
         else
           # construct graph
-          (F['graph/' + g] || F['graph/'])[self,q,m]
+          (g && F['graph/' + g] || F['graph/'])[self,q,m]
           # cache graph
           c.w m,true
         end

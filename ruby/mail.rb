@@ -34,7 +34,7 @@ class E
                     {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&view=page&v=threads&c=12', c: f.uri}}}},
 
               # mailto URI with embedded reply metadata
-              (m['/mail/reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
+              (m[SIOC+'reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) &&
                 {_: :a, title: :reply, c: 're',
                   href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
 

@@ -8,7 +8,7 @@ class E
 
     Errors[e['uri']] ||= {}
     Errors[e['uri']][:time] = Time.now
-    Errors[e['uri']][:env] = [e, x.class.to_s, x.message, stack.join('<br>\n')]
+    Errors[e['uri']][:env] = [e, x.class.to_s, x.message, stack.join('<br>')]
 
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,

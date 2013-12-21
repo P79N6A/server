@@ -7,7 +7,7 @@ class E
     # bespoke handler ||
     # raw file ||
     # resource
-    if reqFn = F['req/'+@r.q['y']]
+    if reqFn = @r.q['y'].do{|r| F['req/'+r] }
       reqFn[self,@r]
     elsif file = [self,pathSegment].compact.find(&:f)
       a = @r.accept.values.flatten

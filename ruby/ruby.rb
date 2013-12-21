@@ -52,16 +52,10 @@ class Fixnum
 end
 
 class  FalseClass
-  def do; nil end
-  def to_s; "" end
-  alias_method :to_str,:to_s
+  def do; false end
 end
 
 class NilClass
   def do; nil end
-  def to_ary; [] end
-  def to_hash; {} end
-  def to_s; "" end
   def html e=nil; "" end
-  def to_str; "" end
 end
