@@ -51,8 +51,6 @@ end
 
 class String
   def h; Digest::SHA1.hexdigest self end
-  def hsub h; map{|e|h[e]||e} end
-  def map; each_char.map{|l| yield l}.join end
   def tail; self[1..-1] end
   def to_utf8; encode('UTF-8', undef: :replace) end
   def t; match(/\/$/) ? self : self+'/' end

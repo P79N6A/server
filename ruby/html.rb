@@ -1,17 +1,13 @@
 #watch __FILE__
 
 def H _
-  # Ruby object-literal syntax as HTML constructors
   case _
-  when Hash then
+  when Hash
     '<'+(_[:_]||:div).to_s+(_.keys-[:_,:c]).map{|a|
-      ' '+a.to_s+'='+"'"+
-      _[a].to_s.hsub({"'"=>'%27',
-                       '>'=>'%3E',
-                       '<'=>'%3C'})+"'"}.join+'>'+
+      ' '+a.to_s+'='+"'"+_[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}+"'"}.join+'>'+
       (_[:c] ? (H _[:c]) : '')+
       (_[:_] == :link ? '' : ('</'+(_[:_]||:div).to_s+'>'))
-  when Array then
+  when Array
     _.map{|n|H n}.join
   else
     _.to_s if _
