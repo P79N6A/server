@@ -1,12 +1,8 @@
-500.rb - view -> table
 cal.rb - fix anything needed to make https://github.com/rww-apps/ld-cal work w/ our backend
 edit.rb - #ids
 edit.rb - store version histories, optionally - Memento? http://www.mementoweb.org/guide/resourcetype/
 forum/blog.rb - URI-shorthand :simulacra: to existing sioc-infrastructure of feeds/mail
-hf.rb - collapse emptyspace, break out to sep repo
-HTTP.rb - ringbuff of last 100K reqs for facets.rb?
-index.rb - protograph/graph pairs for non-fs (ok indirect-fs) stores (hexastore/4store/sord/redis/leveldb)
-mail.rb - webize message-ID/email-address at triplr stage rather than in HTMLize stage - for tabulator and misc vaporware n3-consumers
+index.rb - protograph/graph pairs for non-fs (indirect-fs) stores (hexastore/4store/sord/redis/leveldb..)
 man.rb - add RDFa, fs-index references for backlink-finding /   manpage-graph
 names.rb - remove h/m/s from Datetime literal-paths - overkill
 rdf.rb - RDF:HTML literal-datatype on sioc:content - hack tab'r suprt if missing http://lists.w3.org/Archives/Public/public-rdf-wg/2012May/0222.html
