@@ -10,7 +10,7 @@ class E
     n = e.q['bins'].do{|b| b.to_f.max(999.0).min(1)} || 64.0
     
     # hv :: bin template 
-    v = F['view/'+e.q['hv']]
+    v = F['view/'+(e.q['hv']||'title')]
 
     # construct histogram bins
     (Fn 'view/histogram/bins',d,a,n).do{|h,m|
@@ -27,8 +27,8 @@ class E
           { class: 'histBin b'+b.to_s,
             c: [# label bin
                 {_: :h3, c: from + ' &rarr; ' + to },
-                # bin children view
-                (v.(r,e) if v)]})}]}}
+                # bin-scoped view
+                v[r,e]]})}]}}
 
   F['view/h']=F['view/histogram']
 

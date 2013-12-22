@@ -24,7 +24,6 @@ glob
 grep
 groonga
 HEAD
-hf
 histogram
 html
 HTTP

@@ -191,8 +191,9 @@ class E
 
   # multiple views (comma-separated)
   fn 'view/multi',->d,e{
-    e.q['views'].split(',').map{|v|
-      F['view/'+v].do{|f|f[d,e]}}}
+    e.q['views'].do{|vs|
+      vs.split(',').map{|v|
+        F['view/'+v].do{|f|f[d,e]}}}}
 
   def triplrBlob
     glob.select(&:f).do{|f|f.map{|r|
@@ -246,21 +247,26 @@ class E
   # table-cell placement on sparse matrix of rows/columns
   # cal.rb contains an example usage
   fn 'view/t',->d,e,l=nil,a=nil{
-    [H.once(e,'table',H.css('/css/table')),
-     {_: :table, c:
-     {_: :tbody, c: (Fn 'table/'+(l||e.q['table']),d).do{|t|
-          rx = t.keys.max
-          rm = t.keys.min
-          c = t.values.map(&:keys)
-          cm = c.map(&:min).min
-          cx = c.map(&:max).max
-          (rm..rx).map{|r|
-            {_: :tr, c: 
-              t[r].do{|r|
-                (cm..cx).map{|c|
-                  r[c].do{|c|
-                    {_: :td, class: :cell, c:(Fn 'view/'+(a||e.q['cellview']),c,e)}
-                    }||{_: :td}}}}}}}}]}
+    layout = e.q['table'] || l
+    if layout
+      [H.once(e,'table',H.css('/css/table')),
+       {_: :table, c:
+         {_: :tbody, c: (Fn 'table/'+layout,d).do{|t|
+             rx = t.keys.max
+             rm = t.keys.min
+             c = t.values.map(&:keys)
+             cm = c.map(&:min).min
+             cx = c.map(&:max).max
+             (rm..rx).map{|r|
+               {_: :tr, c: 
+                 t[r].do{|r|
+                   (cm..cx).map{|c|
+                     r[c].do{|c|
+                       {_: :td, class: :cell, c:(Fn 'view/'+(a||e.q['cellview']||'title'),c,e)}
+                     }||{_: :td}}}}}}}}]
+    else
+      "table= layout arg required"
+    end}
 
   fn 'view/table',->i,e{[H.css('/css/table'),(Fn 'table',i.values,e)]}
 

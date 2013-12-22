@@ -233,7 +233,7 @@ class E
 
   # pathname for short literals
   def literalURI o
-    E "/l/"+(Literal[uri] && o.gsub(/[\.:\-T+]/,'/'))+'/'+o
+    E "/l/"+o.gsub(/[\.:\-T+]/,'/')+'/'+o if Literal[uri] && o
   end
  
   def literalBlobURI o
