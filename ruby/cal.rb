@@ -52,13 +52,13 @@ class E
   fn 'view/month',->d,e{
     [(d.delete :time).do{|month|
        {_: :b, c: month.strftime('%B'),style: "color: #{E.cs}"}},
-     F['view/'+e.q['monthview']].do{|v|v[d,e]} ||
+     e.q['monthview'].do{|v|F['view/'+v].do{|v|v[d,e]}} ||
      F['view/t'][d,e,'day','day']]}
 
     fn 'view/day',->d,e{
     [(d.delete :time).do{|day|
        {_: :b, c: day.strftime('%d'),style: "float:left; color: #888"}},
-     F['view/'+e.q['dayview']].do{|v|v[d,e]} ||
+     e.q['dayview'].do{|v| F['view/'+v].do{|v|v[d,e]}} ||
      F['view/t'][d,e,'hour','hour']]}
 
    fn 'view/hour',->d,e{

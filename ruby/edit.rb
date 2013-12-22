@@ -15,8 +15,10 @@ class E
   fn 'view/edit',->g,e{
     triple = ->s,p,o{
       if s && p && o
-        puts s,p,o
-        id = s.E.concatURI(p).concatURI (E p).literal o
+        s = s.E
+        p = p.E
+        oE = p.literal o
+        (id = s.concatURI(p).concatURI oE
         [(case p
           when Content
             {_: :textarea, name: id, c: o, rows: 24, cols: 80}
@@ -25,7 +27,7 @@ class E
           else
             {_: :input, name: id, value: o, size: 54}
           end
-          ),"<br>\n"]
+          ),"<br>\n"]) if oE
       end}
     
     ps = []

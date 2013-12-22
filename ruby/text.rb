@@ -55,7 +55,7 @@ class E
 
   fn 'view/title/item',->r,e{
     {_: :a, class: :title, href: r.E.url,
-      c: r[Title] || r.uri.abbrURI} if r.respond_to?(&:E)}
+      c: r[Title] || r.uri.abbrURI} if r.class == E || r.class == Hash}
 
   # linebreak-delimited list of URIs
   def triplrUriList
