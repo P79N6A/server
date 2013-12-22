@@ -4,7 +4,7 @@ def H _
   case _
   when Hash
     '<'+(_[:_]||:div).to_s+(_.keys-[:_,:c]).map{|a|
-      ' '+a.to_s+'='+"'"+_[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}+"'"}.join+'>'+
+      ' '+a.to_s+'='+"'"+_[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join+"'"}.join+'>'+
       (_[:c] ? (H _[:c]) : '')+
       (_[:_] == :link ? '' : ('</'+(_[:_]||:div).to_s+'>'))
   when Array
