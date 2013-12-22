@@ -8,7 +8,7 @@ class E
     v = e.q['v']
     # head of contained view
     [(unless v == 'page'
-        h = F['head/'+v] || F['head'] 
+        h = v && F['head/'+v] || F['head']
         h[d,e]
       end),
      # page links, preserving ambient query-string values
@@ -35,7 +35,7 @@ class E
            title: (n['b']||n['url']), c: '&rarr;'}}]
 
     [(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')), # n/p key shortcuts
-     c,(H (F['view/'+e.q['v']]||F['view']).(d,e)),      # content
+     c,(H (e.q['v'].do{|v|F['view/'+v]} || F['view']).(d,e)),      # content
      '<br clear=all>',{class: :bottom, c: c}]}
   
 end
