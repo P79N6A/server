@@ -17,7 +17,7 @@ class E
     n=->o{ 
       i[o]||='f'+(c+=1).to_s}
 
-    view = F['view/'+e.q['fv']+'/item'] || F['view/title/item']
+    view = e.q['fv'].do{|fv| F['view/'+fv+'/item'] } || F['view/title/item']
     resources=->{
       m.map{|u,r| # each resource
         a.map{|p,_| # each facet
@@ -45,7 +45,7 @@ class E
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
                        {_: :span, class: :name, c: k.label}]}}]}}},     
-     (F['view/'+e.q['fv']+'/base']||
+     (e.q['fv'].do{|fv|F['view/'+fv+'/base']} || 
       ->m,e,r{r.()}).(m,e,resources)]}
   
   fn 'view/facets/select',->m,e{
