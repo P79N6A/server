@@ -53,6 +53,7 @@ end
 
 class  FalseClass
   def do; false end
+#  def to_s; caller[0] end
 end
 
 class NilClass

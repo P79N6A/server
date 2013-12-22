@@ -14,7 +14,7 @@ def H _
   when Array then
     _.map{|n|H n}.join
   else
-    _.to_s
+    _.to_s if _
   end
 end
 
