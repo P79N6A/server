@@ -44,8 +44,7 @@ class E
       r[p]
     }.flatten.do{|v|
       # values
-      v = v.compact.map{|v|
-       ( p == Date ? v.to_time : v ).to_f}
+      v = v.map{|v| p == Date ? v.to_time : v }.select{|v| v.respond_to? :to_f}.map &:to_f
       max = v.max || 0
       min = v.min || 0
       width = (max-min).do{|w| w.zero? ? 1 : w}
@@ -60,17 +59,21 @@ class E
       # binnable properties
       r[p].do{|v|
         v.each{|v|
-          # bin selector
-          b = (((p == Date ? v.to_time : v).to_f - min) / bw).floor
-
-          # append to bin
-          h[b][u] = r }}}
+          # date handling
+          v = p == Date ? v.to_time : v
+          if v.respond_to? :to_f
+            # bin select
+            b = ((v.to_f - min) / bw).floor
+            # append
+            h[b][u] = r
+          end
+        }}}
 
     # histogram model
     [h, {min: min, max: max, bw: bw}] }
 
   fn 'histogram',->h{
-    scale = 255 / h.map{|b,r|r.keys.size}.max.do{|m|m.zero? ? 1 : m}.to_f
+    scale = 255 / h.map{|b,r|r.keys.size}.max.do{|m|m.zero? ? 1 : m}.do{|m|m.respond_to?(:to_f) ? m.to_f : 1}
     bins = h.keys.sort
     ['<table class=histogram><tr>',
      bins.map{|b|
