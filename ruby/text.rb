@@ -48,12 +48,11 @@ class E
             r[Content]]}}}
 
   fn 'view/title',->d,e{
-    i = F['view/title/item']
+    i = F['itemview/title']
     [d.map{|u,r|[i.(r,e),' ']},
-     (H.once e,'title',(H.css '/css/title'))
-    ]}
+     (H.once e,'title',(H.css '/css/title'))]}
 
-  fn 'view/title/item',->r,e{
+  fn 'itemview/title',->r,e{
     {_: :a, class: :title, href: r.E.url,
       c: r[Title] || r.uri.abbrURI} if (r.class == E || r.class == Hash) && r.uri}
 

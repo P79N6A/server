@@ -1,7 +1,16 @@
 #watch __FILE__
 class E
+=begin
+   faceted-filter, implemented via dynamically-generated style-sheets
 
-  fn 'view/facets/main',->a,m,e{
+   user defines 'itemview/name' which is wrapped by tagged DOM nodes
+   structure conformed to in microblog & timegraph (time.rb) views
+
+   ?view=facets will prompt on which properties (predicates) to use
+
+=end
+
+  fn 'facets',->a,m,e{
     # facets
     a = Hash[(a.split ',').map{|a|[a,{}]}]
 
@@ -17,7 +26,7 @@ class E
     n=->o{ 
       i[o]||='f'+(c+=1).to_s}
 
-    view = e.q['fv'].do{|fv| F['view/'+fv+'/item'] } || F['view/title/item']
+    view = e.q['fv'].do{|fv| F['itemview/'+fv] } || F['itemview/title']
     resources=->{
       m.map{|u,r| # each resource
         a.map{|p,_| # each facet
@@ -45,16 +54,15 @@ class E
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
                        {_: :span, class: :name, c: k.label}]}}]}}},     
-     (e.q['fv'].do{|fv|F['view/'+fv+'/base']} || 
-      ->m,e,r{r.()}).(m,e,resources)]}
+     (e.q['fv'].do{|fv|F['baseview/'+fv]} || ->m,e,r{r.()}).(m,e,resources)]}
   
-  fn 'view/facets/select',->m,e{
+  fn 'view/facetSelect',->m,e{
     [(H.js '/js/facets.select'),(H.js '/js/mu'),(H.css '/css/facets'),
      E.graphProperties(m).map{|e|[{c: e},' ']},
      {_: 'button', c: 'Go'}]}
 
   fn 'view/facets',->m,e{
-    e.q['a'].do{|a|Fn 'view/facets/main',a,m,e} || 
-                  (Fn 'view/facets/select',m,e)}
+    e.q['a'].do{|a|Fn 'facets',a,m,e} ||
+                  (Fn 'view/facetSelect',m,e)}
 
 end

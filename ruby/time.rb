@@ -17,14 +17,12 @@ end
 
 class E
 
-  # linked-timeline
   fn 'view/timegraph',->g,e{
-    i = F['view/timegraph/item']
-    Fn 'view/timegraph/base',g,e,->{
+    i = F['itemview/timegraph']
+    Fn 'baseview/timegraph',g,e,->{
       g.map{|u,r|i.(r,e)}}}
-  
-  # timegraph container-element
-  fn 'view/timegraph/base',->d,e,c{
+
+  fn 'baseview/timegraph',->d,e,c{
     Fn 'filter.timegraph', e.q,d,nil
 
     e[:graph] = d
@@ -36,7 +34,7 @@ class E
     [H.css('/css/timegraph'),{class: :timegraph, style: "height: #{h}em", c: c.()}]}
 
   # timegraph entry
-  fn 'view/timegraph/item',->r,x{
+  fn 'itemview/timegraph',->r,x{
 
     # on resources w x-axis field
     if r[x.q['x'] || Date]
