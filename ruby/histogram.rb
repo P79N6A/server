@@ -1,7 +1,11 @@
 #watch __FILE__
 class E
 
-  fn 'view/histogram',->d,e{
+  fn 'view/histogram',->m,e{
+    e.q['a'].do{|a|Fn 'histogram/main',m,e} ||
+    (Fn 'view/facetSelect',m,e)}
+
+  fn 'histogram/main',->d,e{
 
     # a :: attribute to chart
     a = e.q['a'].do{|e|e.expand} || Date
@@ -13,10 +17,10 @@ class E
     v = F['view/'+(e.q['hv']||'title')]
 
     # construct histogram bins
-    (Fn 'view/histogram/bins',d,a,n).do{|h,m|
+    (Fn 'histogram/bins',d,a,n).do{|h,m|
       
       [H.css('/css/hist'),%w{mu hist}.map{|s|H.js('/js/'+s)},
-       (Fn 'view/histogram/render',h),{style: "width: 100%; height: 5em"},
+       (Fn 'histogram',h),{style: "width: 100%; height: 5em"},
        h.map{|b,r|
          # skip empty bins
          r.empty? ? ' ' :
@@ -33,7 +37,7 @@ class E
   F['view/h']=F['view/histogram']
 
   # Graph, property, numBins  -> {bin -> Graph}
-  fn 'view/histogram/bins',->m,p,nb{
+  fn 'histogram/bins',->m,p,nb{
     h = {}; bw = 0; min = 0; max = 0
     m.map{|u,r|
       # attribute accessor
@@ -65,7 +69,7 @@ class E
     # histogram model
     [h, {min: min, max: max, bw: bw}] }
 
-  fn 'view/histogram/render',->h{
+  fn 'histogram',->h{
     scale = 255 / h.map{|b,r|r.keys.size}.max.do{|m|m.zero? ? 1 : m}.to_f
     bins = h.keys.sort
     ['<table class=histogram><tr>',
