@@ -1,6 +1,7 @@
 #watch __FILE__
 class E
-#  ruby search-engine & column-store
+
+#  adaptor for a ruby text-search-engine & column-store
 #  http://groonga.org/ http://ranguba.org/
 
   # query
