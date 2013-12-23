@@ -81,6 +81,10 @@ class E
     yield uri, Content, `which antiword && antiword #{sh}`.hrefs
   end
 
+  def triplrTeX
+    yield uri, Content, `cat #{sh} | tth -r`
+  end
+
   fn Render+'text/plain',->d,_=nil{
     d.values.map{|r|
       [(r.map{|k,v|

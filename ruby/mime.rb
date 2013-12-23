@@ -88,6 +88,7 @@ class E
     rdf: 'application/rdf+xml',
     rtf: 'text/rtf',
     ssv: 'text/semicolon-separated-values',
+    tex: 'text/x-tex',
     textile: 'application/textile',
     tsv: 'text/tab-separated-values',
     ttl: 'text/turtle',
@@ -125,6 +126,7 @@ class E
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
     'text/turtle'          => [:triplrRDF,:turtle],
+    'text/x-tex'          => [:triplrTeX],
   }
 
   # prefer a view even if requested file exists
@@ -143,6 +145,7 @@ class E
     'text/man'=>true,
     'text/nfo'=>true,
     'text/rtf'=>true,
+    'text/x-tex'=>true,
   }
 
   %w{c c++ fortran haskell makefile pascal perl php python ruby}.map{|t|
