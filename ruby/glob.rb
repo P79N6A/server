@@ -12,7 +12,7 @@ class E
 
   fn 'req/randomFile',->e,r{
     g = F['set/glob'][e]
-    !g.empty? ? [302, {Location: g.random.uri}, []] : [404]}
+    !g.empty? ? [302, {Location: g[rand g.length].uri}, []] : [404]}
 
   def docs
     doc = self if e # directly-referenced doc
