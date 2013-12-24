@@ -1,12 +1,13 @@
 #watch __FILE__
 class E
 
-#  adaptor for a ruby text-search-engine & column-store
+#  adaptor for ruby text-search-engine & column-store
 #  http://groonga.org/ http://ranguba.org/
 
   # query
   fn 'protograph/roonga',->d,e,m{
-    uri = d.env['uri']
+
+    # groonga engine
     ga = E.groonga
 
     # search expression
@@ -30,24 +31,18 @@ class E
     # sort results
     r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
 
-    # pagination resources
-    m[Prev]={'uri' => Prev,'url' => '/search','start' => start + c, 'c' => c} if down
-    m[Next]={'uri' => Next,'url' => '/search','start' => start - c, 'c' => c} if up
-
-    # search-result identifiers
+    # results -> graph
     r = r.map{|r| r['.uri'].E }
+    (r.map &:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
 
-    # result set
+    # response description
+    uri = d.env['REQUEST_URI']
     m[uri] = {
       'uri' => uri,
       Type => [LDP+'container'],
       RDFs+'member' => r}
-
-    # contained docs
-    r.map(&:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
-
-    # blank search on 0 results instead of 404
-    m['/search']={'uri'=>'/search'} if m.empty?
+    m[uri][Prev]={'uri' => '/search' + e.merge({'start' => start + c, 'c' => c}).qs} if down
+    m[uri][Next]={'uri' => '/search' + e.merge({'start' => start - c, 'c' => c}).qs} if up
 
     F['docsID'][m]}
 
