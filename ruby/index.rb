@@ -43,8 +43,8 @@ class E
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
       u = m[d.env['REQUEST_URI']] ||= {}     
-      u[Prev] = {'uri' => desc.url+'?d=desc'} if desc
-      u[Next] = {'uri' => asc.url+'?d=asc'} if asc
+      u[Prev] = {'uri' => desc.url+r.merge({'d' => 'desc'}).qs} if desc
+      u[Next] = {'uri' => asc.url+r.merge({'d' => 'asc'}).qs} if asc
       s }}
 
   # subtree traverse index on p+o cursor
