@@ -33,41 +33,41 @@ class E
     self
   end
 
-  # proto-graph formation
-  #  graph-identifier for cache & conditional-response is purpose of "protograph"
-  #  any graph population is preserved for (possible) expansion
+  # default "protograph"
+  # a graph-identifier (for cache, conditional-response, etc) is returned
+  # any graph population is preserved after this function exits
   fn 'protograph/',->e,q,g{
+    # expand to set of resources
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
+    # set resource-thunks
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
+
+    # identifier
     [F['docsID'][g],
      F['triplr'][e,q],
      q.has_key?('nocache').do{|_|rand}
     ].h}
 
-  # a placeholder graph
-  # useful for initializing an editor on a blank resource, etc
-  fn 'protograph/_',->d,_,m{
-    m[d.uri] = {}
-    rand.to_s.h}
-
   # default graph, fs-backed
-  fn 'graph/',->e,q,m{
-    triplr = F['triplr'][e,q]
+  # to change default graph w/o querystring or source-hacking,
+  # define a GET handler which updates env: q['graph'] = 'hexastore'
+  fn 'graph/',->e,q,m{ triplr = F['triplr'][e,q]
     m.values.map{|r|
+      # expand resource thunks
       (r.env e.env).graphFromFile m, triplr if r.class == E }}
-=begin default graph-function w/o querystring or source-hacking:
-       register a GET handler + adjust env Hash.  q['graph'] = :hexastore
-=end
 
+  # unique ID for this set of docs
+  # ~= Apache ETag-generation
   fn 'docsID',->g{
     g.sort.map{|u,r|
       [u, r.respond_to?(:m) && r.m]}.h}
 
+  # allow overriding of MIME-derived triplr
   fn 'triplr',->e,q{
     t = q['triplr']
     t && e.respond_to?(t) && t || :triplrMIME }
 
-  # document-set
+  # default document-set
   fn 'set/',->e,q,_{
     s = []
     s.concat e.docs
@@ -84,8 +84,8 @@ class E
 
   def graphFromFile g={}, triplr=:triplrMIME
     g.mergeGraph r(true) if ext=='e' # JSON -> graph
-    [:triplrInode,        # filesystem data
-     triplr].# format-specific tripleStream emitter
+    [:triplrInode, # filesystem triples
+     triplr]. # format-specific triples
       each{|i| fromStream g,i } # tripleStream -> Graph
     g
   end

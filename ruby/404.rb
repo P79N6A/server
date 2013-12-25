@@ -27,4 +27,10 @@ s[HTTP+'statusCodeValue'] = [404]
     [H.css('/css/404'),{_: :style, c: "a {background-color:#{E.cs}}"},
      d.html]}
 
+  # a placeholder graph
+  # useful for initializing an editor on an empty resource
+  fn 'protograph/_',->d,_,m{
+    m[d.uri] = {}
+    rand.to_s.h}
+
 end
