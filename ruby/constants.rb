@@ -17,7 +17,8 @@ class E
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
-  RDF1k9   = W3   + "1999/02/22-rdf-syntax-ns#"
+  XHV      = W3   + '1999/xhtml/vocab#'
+  RDFns    = W3   + "1999/02/22-rdf-syntax-ns#"
   EXIF     = W3   + '2003/12/exif/ns#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
@@ -25,7 +26,7 @@ class E
   Posix    = W3   + 'ns/posix/'
   Type     = W3   + "ns/rdf#type"
   RDFs     = W3   + 'ns/rdfs#'
-  HTML     = RDF1k9 + "HTML"
+  HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
   Stat     = Posix + 'stat#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'

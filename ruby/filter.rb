@@ -1,15 +1,18 @@
+watch __FILE__
 class E
-
-  # narrow to specified properties
+ 
   fn 'filter.p',->e,m,_{
     a=Hash[*e['p'].split(/,/).map(&:expand).map{|p|[p,true]}.flatten]
     m.values.map{|r|
       r.delete_if{|p,o|!a[p]}}}
 
-  fn 'filter.frag',->e,m,r{
-    f = [r.uri].concat m[r.uri][RDFs+'member']
-    m.keys.map{|u|
-      m.delete u unless f.member? u}}
+  fn 'filter.set',->e,m,r{
+    # result-sets have RDFs set-members
+    # filter=set narrows graph to these, gone will be data on the docs containing the data or other fragment identifiers which didn't match keyword-search terms if indexing granularity is smaller than doc-level
+    uri = r.env['REQUEST_URI']
+    f = [uri] # container can stay
+    m[uri].do{|c|c[RDFs+'member'].do{|m| f.concat m.map &:uri }}
+    m.keys.map{|u| m.delete u unless f.member? u}}
 
   fn 'filter.basic',->o,m,_{
     d=m.values
