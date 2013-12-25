@@ -135,7 +135,7 @@ a:hover {background-color:#00f}"},
        {_: :form, action: '/whois',c: [{_: :input, type: :hidden, name: :p, value: p},{_: :input, name: :q}]}
      },
      # set members
-     d[p][RDFs+'member'].do{|m|
+     d[e['REQUEST_URI']][RDFs+'member'].do{|m|
        m.map{|r|
          {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&views=timegraph,mail&v=multi&c=8', c: r.uri}}}}]}
 
