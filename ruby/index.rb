@@ -57,20 +57,19 @@ class E
           r['d'].to_sym ||
           :desc
 
-#    puts "index #{f} #{top} size #{count} dir #{dir} offset #{r['offset']}"
-
     (top.send f, count, dir, r['offset'],(d if f == :rangePO)).do{|s|
       # orient pagination pointers
       ascending = r['d'].do{|d| d == 'asc' }
       first, last = s[0], s.size > 1 && s.pop
       desc, asc = ascending && [first,last] || [last,first]
-      # annotate response-graph
-      m[d.uri] = {
-        'uri' => d.uri,
-        Type => [LDP+'container'],
-        RDFs+'member' => s}
-      m[Prev]={'uri' => Prev,'url' => d.url,'d' => 'desc','offset' => desc.uri} if desc
-      m[Next]={'uri' => Next,'url' => d.url,'d' => 'asc', 'offset' => asc.uri}  if asc
+
+      # response description
+      u = m[d.env['REQUEST_URI']] ||= {}
+      u[Type] = [LDP+'container']
+      u[RDFs+'member'] = s
+      u[Prev] = {'uri' => d.url + r.merge({'d' => 'desc','offset' => desc.uri}).qs} if desc
+      u[Next] = {'uri' => d.url + r.merge({'d' => 'asc', 'offset' => asc.uri}).qs}  if asc
+
       s.map(&:docs).flatten.uniq }}
 
   fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
