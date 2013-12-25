@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # POSIX-fs based index of triples
@@ -38,11 +38,13 @@ class E
   fn 'set/subtree',->d,r,m{
     c =(r['c'].do{|c|c.to_i + 1} || 3).max(100) # one extra for start of next-page
     o = r['d'] =~ /^a/ ? :asc : :desc           # direction
+
     ('/'.E.take c, o, d.uri).do{|s|             # take subtree
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
-      m[Prev] = {'uri' => Prev, 'url' => desc.url,'d' => 'desc'}
-      m[Next] = {'uri' => Next, 'url' => asc.url, 'd' => 'asc'}
+      u = m[d.env['REQUEST_URI']] ||= {}     
+      u[Prev] = {'uri' => desc.url+'?d=desc'} if desc
+      u[Next] = {'uri' => asc.url+'?d=asc'} if asc
       s }}
 
   # subtree traverse index on p+o cursor
@@ -147,7 +149,7 @@ class Pathname
   def take count=1000, direction=:desc, offset=nil
 
     # construct offset-path
-    offset = to_s + offset.gsub(/\/+/,'/').E.path if offset
+    offset = (to_s + offset).gsub(/\/+/,'/').E.path if offset
 
     # in-range indicator
     ok = false
@@ -161,7 +163,7 @@ class Pathname
 
     # visitation function
     visit=->nodes{
-      
+
       # sort nodes in asc or desc order
       nodes.sort_by(&:to_s).send(v).each{|n|
         ns = n.to_s
@@ -184,9 +186,7 @@ class Pathname
            ok = true         # iterator is now within range
         end )}}
 
-#    puts "Pathname('#{to_s}').take #{count},:#{direction},#{offset ? "'#{offset}'" : 'nil'}"
-    visit.(c) # start 
-
+    visit.(c) # start
     # result set
     set
   end
