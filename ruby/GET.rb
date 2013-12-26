@@ -40,14 +40,18 @@ class E
     !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
   end
   
-  def maybeSend m,b,iR=false
-    c = 200
+  def maybeSend m, b, iR = false; c = 200
     send? ?            # does agent have this version?
     b[].do{|b|         # continue with response
+
       h = {'Content-Type'=> m,
            'ETag'=> @r['ETag']}
+
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
       h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if iR     # link to description
+      h.update({'MS-Author-Via' => 'SPARQL'})  # authoring preference
+
+      # frontend-specific response handlers
       b.class == E ? (Nginx ?                                                   # nginx chosen?
                       [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
                       Apache ?                                                  # Apache chosen?
