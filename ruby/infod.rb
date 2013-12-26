@@ -52,7 +52,6 @@ text
 threads
 time
 uid
-util
 whois
 wiki
 }.map{|e|require_relative e}

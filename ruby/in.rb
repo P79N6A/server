@@ -39,7 +39,7 @@ class E
   fn 'protograph/',->e,q,g{
     # expand to set of resources
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    # set resource-thunks
+    # link resource-thunks
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
 
     # identifier
@@ -48,7 +48,7 @@ class E
      q.has_key?('nocache').do{|_|rand}
     ].h}
 
-  # default graph, fs-backed
+  # default graph (filesystem backed)
   # to change default graph w/o querystring or source-hacking,
   # define a GET handler which updates env: q['graph'] = 'hexastore'
   fn 'graph/',->e,q,m{ triplr = F['triplr'][e,q]
