@@ -37,41 +37,39 @@ class E
   # a graph-identifier (for cache, conditional-response, etc) is returned
   # any graph population is preserved after this function exits
   fn 'protograph/',->e,q,g{
-    # expand to set of resources
+    # expand to set of filesystem resources
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     # link resource-thunks
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
-
-    # identifier
-    [F['docsID'][g],
-     F['triplr'][e,q],
-     q.has_key?('nocache').do{|_|rand}
-    ].h}
+    F['docsID'][g,q]}
 
   # default graph (filesystem backed)
   # to change default graph w/o querystring or source-hacking,
   # define a GET handler which updates env: q['graph'] = 'hexastore'
-  fn 'graph/',->e,q,m{ triplr = F['triplr'][e,q]
+  fn 'graph/',->e,q,m{
+    t = q['triplr'].do{|t|(e.respond_to? t) && t} || :triplrMIME
     m.values.map{|r|
-      # expand resource thunks
-      (r.env e.env).graphFromFile m, triplr if r.class == E }}
+      # graph from resource references
+      (r.env e.env).graphFromFile m, t if r.class == E }}
 
-  # unique ID for this set of docs
+  # unique ID for a set of docs
   # ~= Apache ETag-generation
-  fn 'docsID',->g{
-    g.sort.map{|u,r|
-      [u, r.respond_to?(:m) && r.m]}.h}
-
-  # allow overriding of MIME-derived triplr
-  fn 'triplr',->e,q{
-    t = q['triplr']
-    t && e.respond_to?(t) && t || :triplrMIME }
+  fn 'docsID',->g,q{
+    [q.has_key?('nocache').do{|_|rand},
+     g.sort.map{|u,r|
+       [u, r.respond_to?(:m) && r.m]}].h}
 
   # default document-set
-  fn 'set/',->e,q,_{
+  fn 'set/',->e,q,g{
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs }
+    unless s.empty?
+      uri = e.env['REQUEST_URI']
+      g[uri] = {
+        'uri' => uri,
+        RDFs+'member' => s}
+    end
     s }
 
   def triplrMIME &b

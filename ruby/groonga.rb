@@ -44,7 +44,7 @@ class E
     m[uri][Prev]={'uri' => '/search' + e.merge({'start' => start + c, 'c' => c}).qs} if down
     m[uri][Next]={'uri' => '/search' + e.merge({'start' => start - c, 'c' => c}).qs} if up
 
-    F['docsID'][m]}
+    F['docsID'][m,e]}
 
   def E.groonga
     @groonga ||= (require 'groonga'

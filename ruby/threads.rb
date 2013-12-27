@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class E
   
-  fn 'protograph/thread',->d,_,g{
+  fn 'protograph/thread',->d,e,g{
     d.walk SIOC+'reply_of',g
-    F['docsID'][g]}
+    F['docsID'][g,e]}
   
   fn 'view/threads',->d,env{
 
