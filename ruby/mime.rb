@@ -153,4 +153,16 @@ class E
       MIMEcook[m+t] = true
   }}
 
+  def render mime,   graph, e
+   E[Render+ mime].y graph, e
+  end
+
+  def triplrMIME &b
+    mimeP.do{|mime|
+      yield uri, E::Type, (E MIMEtype+mimeP)
+      (MIMEsource[mimeP]||
+       MIMEsource[mimeP.split(/\//)[0]]).do{|s|
+        send *s,&b }}
+  end
+
 end

@@ -191,6 +191,11 @@ class E
       vs.split(',').map{|v|
         F['view/'+v].do{|f|f[d,e]}}}}
 
+  fn 'view/?',->d,e{
+    F.keys.grep(/^view\/(?!application|text\/x-)/).map{|v|
+      v = v[5..-1] # eat selector
+      [{_: :a, href: e['REQUEST_PATH']+e.q.merge({'view'=>v}).qs, c: v},"<br>\n"]}}
+
   def triplrBlob
     glob.select(&:f).do{|f|f.map{|r|
         yield r.uri,Type,E('blob')

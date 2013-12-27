@@ -21,6 +21,7 @@ forum
 fs
 GET
 glob
+graph
 grep
 groonga
 HEAD
@@ -29,14 +30,12 @@ html
 HTTP
 image
 index
-in
 json
 kv
 ls
 mail
 man
 microblog
-out
 pager
 PATCH
 pdf

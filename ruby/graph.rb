@@ -39,25 +39,18 @@ class E
   fn 'protograph/',->e,q,g{
     # expand to set of filesystem resources
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    # link resource-thunks
+    # link resource-refs
     set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
     F['docsID'][g,q]}
 
   # default graph (filesystem backed)
   # to change default graph w/o querystring or source-hacking,
-  # define a GET handler which updates env: q['graph'] = 'hexastore'
+  # define a GET handler with non-default env: q['graph'] = 'hexastore'
   fn 'graph/',->e,q,m{
     t = q['triplr'].do{|t|(e.respond_to? t) && t} || :triplrMIME
     m.values.map{|r|
       # graph from resource references
       (r.env e.env).graphFromFile m, t if r.class == E }}
-
-  # unique ID for a set of docs
-  # ~= Apache ETag-generation
-  fn 'docsID',->g,q{
-    [q.has_key?('nocache').do{|_|rand},
-     g.sort.map{|u,r|
-       [u, r.respond_to?(:m) && r.m]}].h}
 
   # default document-set
   fn 'set/',->e,q,g{
@@ -71,14 +64,6 @@ class E
         RDFs+'member' => s}
     end
     s }
-
-  def triplrMIME &b
-    mimeP.do{|mime|
-      yield uri,E::Type,(E MIMEtype+mimeP)
-      (MIMEsource[mimeP]||
-       MIMEsource[mimeP.split(/\//)[0]]).do{|s|
-        send *s,&b }}
-  end
 
   def graphFromFile g={}, triplr=:triplrMIME
     g.mergeGraph r(true) if ext=='e' # JSON -> graph
