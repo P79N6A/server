@@ -3,10 +3,9 @@ class E
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     # show line numbers?
-    n = @r.has_key?('n') && "--line-number-ref=#{uri.sh}"
+    n = @r.q.has_key?('n') ? "--line-number-ref=#{uri.sh}:" : ""
     if size < 512e3
-      yield uri,Content,
-      `source-highlight -f html -o STDOUT -i #{sh} -s #{m} #{n}`
+      yield uri,Content, `source-highlight -f html -s #{m} #{n} -i #{sh} -o STDOUT`
     end
  end
 

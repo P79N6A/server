@@ -5,7 +5,7 @@ class E
     q['i'] ||= true # normal people want case-insensitive, i think - comment to unstick
     q['q'].do{|query|
       [e,e.pathSegment].compact.select(&:e).map{|e|
-        grep = "grep -rl#{q.has_key?('i') && 'i'} #{query.sh} #{e.sh}"  # ;puts grep
+        grep = "grep -rl#{q.has_key?('i') ? 'i' : ''} #{query.sh} #{e.sh}"  # ;puts grep
         `#{grep}`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathFs}}.flatten}}
 
   fn 'view/grep',->d,e{
