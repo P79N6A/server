@@ -52,6 +52,7 @@ class E
     avi: 'video/avi',
     e: 'application/json+rdf',
     coffee: 'text/plain',
+    conf: 'text/plain',
     css: 'text/css',
     csv: 'text/comma-separated-values',
     doc: 'application/word',
