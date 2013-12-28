@@ -59,9 +59,12 @@ class E
     e.pathSegment.do{|p| s.concat p.docs }
     unless s.empty?
       uri = e.env['REQUEST_URI']
+      path = 'http://' + e.env['SERVER_NAME'] + e.env['REQUEST_PATH']
       g[uri] = {
         'uri' => uri,
-        RDFs+'member' => s}
+        RDFs+'member' => s,
+        DC+'hasFormat' => %w{text/n3 text/html}.map{|m| E(path + q.merge({'format' => m}).qs) unless e.env.format == m}.compact,
+      }
     end
     s }
 
