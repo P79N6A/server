@@ -22,8 +22,8 @@ class E
       t = ::Date.parse "#{m[2]}-#{m[3]}-#{m[4]}"
       pp = m[1] + (t-1).strftime('%Y/%m/%d') + m[5]
       np = m[1] + (t+1).strftime('%Y/%m/%d') + m[5]
-      u[Prev] = {'uri' => pp} if pp.E.e || E['http://' + e['SERVER_NAME'] + pp].e
-      u[Next] = {'uri' => np} if np.E.e || E['http://' + e['SERVER_NAME'] + np].e }
+      u[Prev] = {'uri' => pp + '?view=page'} if pp.E.e || E['http://' + e['SERVER_NAME'] + pp].e
+      u[Next] = {'uri' => np + '?view=page'} if np.E.e || E['http://' + e['SERVER_NAME'] + np].e }
 
     # links
     c=[u[Prev].do{|p|
