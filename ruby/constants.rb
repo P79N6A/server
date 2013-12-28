@@ -24,7 +24,8 @@ class E
   Header   = W3   + '2011/http-headers#'
   LDP      = W3   + 'ns/ldp#'
   Posix    = W3   + 'ns/posix/'
-  Type     = W3   + "ns/rdf#type"
+  Type     = RDFns+ "type"
+#  Type     = W3   + "ns/rdf#type"
   RDFs     = W3   + 'ns/rdfs#'
   HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
