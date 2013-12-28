@@ -63,7 +63,7 @@ class E
       g[uri] = {
         'uri' => uri,
         RDFs+'member' => s,
-        DC+'hasFormat' => %w{text/n3 text/html}.map{|m| E(path + q.merge({'format' => m}).qs) unless e.env.format == m}.compact,
+        DC+'hasFormat' => %w{text/n3 text/html}.map{|m| E(path + q.qs + '&format='+m) unless e.env.format == m}.compact,
       }
     end
     s }
