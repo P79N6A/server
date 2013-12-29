@@ -286,6 +286,6 @@ class E
                     c: k.abbrURI} : k}}},
             *es.map{|e|
               {_: :tr, about: e.uri, c:
-                keys.map{|k| {_: :td, property: k, c: e[k].send(k=='uri' ? :href : :html)} }}}]})}
+                keys.map{|k| {_: :td, property: k, c: e[k].send(((k=='uri') && e[k].respond_to?(:href)) ? :href : :html)} }}}]})}
 
 end

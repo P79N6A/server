@@ -47,10 +47,8 @@ class E
   # to change default graph w/o querystring or source-hacking,
   # define a GET handler with non-default env: q['graph'] = 'hexastore'
   fn 'graph/',->e,q,m{
-    t = q['triplr'].do{|t|(e.respond_to? t) && t} || :triplrMIME
     m.values.map{|r|
-      # graph from resource references
-      (r.env e.env).graphFromFile m, t if r.class == E }}
+      (r.env e.env).graphFromFile m if r.class == E }}
 
   # document-set as used in default protograph
   fn 'set/',->e,q,g{

@@ -34,7 +34,7 @@ class E
      {class: :ls,
        c: (Fn 'view/table',i,e)},
      (Fn 'view/find',i,e),'<br clear=all>',
-     {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('triplr','view').qs, c: '&darr;'}]}
+     {_: :a, class: :down, href: e['uri'].E.url.t + e.q.except('view').qs, c: '&darr;'}]}
   
   # user-patchable default-handler
   fn '/GET',->e,r{
