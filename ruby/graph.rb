@@ -23,7 +23,7 @@ class E
       e = u.E           # resource
       j = e.ef          # doc
       j.e ||            # exists?
-      (j.w({u=>r},true) ;puts' < '+u # insert doc
+      (j.w({u=>r},true) ;puts '< '+u # insert doc
        p.map{|p|        # each indexable property
      r[p].do{|v|        # values exists?
        v.map{|o|        # each value

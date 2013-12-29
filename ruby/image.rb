@@ -2,7 +2,7 @@
 class E
 
   def triplrImage &f
-    yield uri,Type,DC+'Image'
+    yield uri,Type,E[DC+'Image']
     triplrStdOut 'exiftool', EXIF, &f
   end
 
@@ -28,15 +28,13 @@ class E
 
   fn 'view/img',->i,_{
     [i.values.map{|i|
-       [{_: :a, href: i.url,
-          c: {_: :img,
-            style:'float:left;max-width:61.8%',
-            src: i.url}},
+       i[Type] && i[Type].map{|t|t.respond_to?(:uri) && t.uri}.include?(DC+'Image') &&
+       [{_: :a, href: i.url, c: {_: :img, style:'float:left;max-width:61.8%', src: i.url}},
         i.html]},
      (H.css '/css/img')]}
   
   fn 'view/th',->i,e{
-    i.map{|u,i| u.match(/(gif|jpe?g|png|tiff)$/i) &&
+    i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) &&
       {_: :a, href: i.url+'?view=img',
         c: {_: :img, src: i.url+'?y=scaleImage&px=233'}}}}
 
