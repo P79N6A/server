@@ -10,7 +10,7 @@ class E
        if r[Posix+'dir#child']
          url = r.E.localURL e
          {class: :dir, style: "background-color: #{E.cs}",    # dir wrapper
-           c: [{c: [{_: :a, href: url.t+'?view=ls&triplr=id', # link to "ls"
+           c: [{c: [{_: :a, href: url.t+'?view=ls', # link to "ls"
                       c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')},
                     {_: :a, href: url.t, c: '/'}]},
                r[Posix+'dir#child'].map{|c|a[c]}]}
@@ -26,7 +26,7 @@ class E
     up = (if !path || path.uri == '/'
             '/'
           else
-            dir.parent.url.t+'?view=ls&triplr=id'
+            dir.parent.url.t+'?view=ls'
           end)
 
     [(H.css '/css/ls'),

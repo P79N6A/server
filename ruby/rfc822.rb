@@ -43,8 +43,7 @@ TMail 1.2.7 takes 2% time of Mail 2.5.4
 HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.4003388
 HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720
 
-maybe you can't run C extensions - triplr=triplrMail in QS, or
-change default in #triplrMailMessage
+default can be tweaked in #triplrMailMessage
 
 =end
 

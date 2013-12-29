@@ -13,7 +13,6 @@ class E
   fn 'view/find',->i,e{
     {_: :form, method: :GET, action: e['REQUEST_PATH'].t,
       c: [{_: :input, name: :set, value: :find, type: :hidden},
-          {_: :input, name: :triplr, value: :id, type: :hidden},
           {_: :input, name: :view, value: :ls, type: :hidden},
           {_: :input, name: :q, style: 'float: left;font-size:1.3em'}]}}
 
