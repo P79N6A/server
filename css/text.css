@@ -1,3 +1,4 @@
+pre {margin:0}
 
 .text {
     float: right;
@@ -18,7 +19,6 @@
 
 .text pre {
     padding:.4em;
-    margin:0;
     color:#fff;
     background-color:#000;
     border-style:dotted;
