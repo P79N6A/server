@@ -61,7 +61,7 @@ class E
     r[Type] && r[Type].map{|t|t.respond_to?(:uri) && t.uri}.include?(SIOCt+'MailMessage') && r[:mail]=true
     r[Content] && r[Date] && r[Date][0]
     [{_: :a, id: line},
-     {_: :a, :class => :date, href: r.url, c: r[Date][0].match(/T([0-9:]{5})/)[1]},
+     {_: :a, :class => :date, href: r.url, c: r[Date][0].match(/T([0-9:]{5})/).do{|m|m[1]}},
 
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
             c: [r[Atom+"/link/image"].do{|p| {_: :img, class: :a, src: p[0].uri}},
