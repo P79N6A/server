@@ -9,6 +9,7 @@ td {
      vertical-align:bottom;
      text-align:right;
      }
+[property="uri"] {white-space:nowrap}
 
 .scheme { display: none; }
 .frag {font-weight:bold;}
