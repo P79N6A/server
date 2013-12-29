@@ -23,11 +23,7 @@ class E
   fn 'view/ls',->i,e{
     dir = e['uri'].E
     path = dir.pathSegment
-    up = (if !path || path.uri == '/'
-            '/'
-          else
-            dir.parent.url.t+'?view=ls'
-          end)
+    up = (!path || path.uri == '/') ? '/' : dir.parent.url.t + '?view=ls'
     i = i.dup
     f={}
     ['uri', Posix+'dir#child', Stat+'ftype', Stat+'mtime', Stat+'size', Type, Title].map{|p|f[p] = true}
