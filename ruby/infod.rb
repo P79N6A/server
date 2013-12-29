@@ -1,7 +1,6 @@
 %w{
 constants
 lambda
-names
 mime
 404
 500
@@ -36,6 +35,7 @@ ls
 mail
 man
 microblog
+names
 pager
 PATCH
 pdf

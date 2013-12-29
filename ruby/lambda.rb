@@ -5,6 +5,20 @@ def watch f
 
 class E
 
+  def initialize uri
+    @uri = uri.to_s
+  end
+
+  def E arg=nil
+    if arg
+      E.new arg
+    else
+      self
+    end
+  end
+
+  def E.[] u; u.E end
+
   F={}
   Watch={}
 
@@ -31,4 +45,8 @@ end
 def Fn a,*g
   puts "#{a} <> #{caller[0]}" unless E::F[a]
   E::F[a][*g]
+end
+
+def E e
+  E.new e
 end

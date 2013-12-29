@@ -1,26 +1,8 @@
 %w{base64 cgi shellwords}.each{|r|require(r)}
 
-def E e
-  E.new e
-end
-
 class E
 
-  def E.[] u; u.E end
-
-  def E arg=nil
-    if arg
-      E.new arg
-    else
-      self
-    end
-  end
-  
   attr_reader :uri
-
-  def initialize uri
-    @uri = uri.to_s
-  end
 
   def == u
       to_s == u.to_s
