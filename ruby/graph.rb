@@ -67,18 +67,17 @@ class E
     s }
 
   def graphFromFile g={}, triplr=:triplrMIME
-    if ext=='e' # native format can be merged right in
-      puts "< #{uri}"
-      g.mergeGraph r(true)
-    else
-      # total graphs are cached (HTTP.rb) - unique sets of resources
-      # sub-graphs are also cached since like HTTP requests we can reason about their freshness 
-      puts "t #{uri}"
-
-      [:triplrInode, triplr].each{|i| fromStream g,i }
-
+    _ = self
+    unless ext=='e' # native graph-format already
+      # construct native graph if missing or stale
+      _ = E '/E/graph/' + uri.h.dive
+      unless _.e && _.m > m;  e = {}
+        puts "< #{uri}"
+        [:triplrInode, triplr].each{|t| fromStream e, t }
+        _.w e, true
+      end
     end
-    g
+    g.mergeGraph _.r true
   end
 
   def graph g={}
