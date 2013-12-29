@@ -137,7 +137,7 @@ a:hover {background-color:#00f}"},
      # set members
      d[e['REQUEST_URI']][RDFs+'member'].do{|m|
        m.map{|r|
-         {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&views=timegraph,mail&v=multi&c=8', c: r.uri}}}}]}
+         {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&c=8', c: r.uri}}}}]}
 
 end
 
