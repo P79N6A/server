@@ -52,27 +52,32 @@ class E
       # graph from resource references
       (r.env e.env).graphFromFile m, t if r.class == E }}
 
-  # default document-set
+  # document-set as used in default protograph
   fn 'set/',->e,q,g{
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs }
     unless s.empty?
-      uri = e.env['REQUEST_URI']
-      path = 'http://' + e.env['SERVER_NAME'] + e.env['REQUEST_PATH']
-      g[uri] = {
-        'uri' => uri,
-        RDFs+'member' => s,
-        DC+'hasFormat' => %w{text/n3 text/html}.map{|m| E(path + q.qs + '&format='+m) unless e.env.format == m}.compact,
+      # set metadata
+      g[e.env['REQUEST_URI']] = {
+        RDFs+'member' => s, # links to facilitate jumping between data-browser and classic HTML views
+        DC+'hasFormat' => %w{text/n3 text/html}.map{|m| E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m) unless e.env.format == m}.compact,
       }
     end
     s }
 
   def graphFromFile g={}, triplr=:triplrMIME
-    g.mergeGraph r(true) if ext=='e' # JSON -> graph
-    [:triplrInode, # filesystem triples
-     triplr]. # format-specific triples
-      each{|i| fromStream g,i } # tripleStream -> Graph
+    if ext=='e' # native format can be merged right in
+      puts "< #{uri}"
+      g.mergeGraph r(true)
+    else
+      # total graphs are cached (HTTP.rb) - unique sets of resources
+      # sub-graphs are also cached since like HTTP requests we can reason about their freshness 
+      puts "t #{uri}"
+
+      [:triplrInode, triplr].each{|i| fromStream g,i }
+
+    end
     g
   end
 

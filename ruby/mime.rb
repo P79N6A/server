@@ -114,6 +114,7 @@ class E
     'audio/mp4'            => [:triplrStdOut,'faad -i',Audio],
     'audio/mpeg'           => [:triplrStdOut,'id3info',Audio,/\((.*?)\)$/],
     'audio'                => [:triplrStdOut,'sndfile-info',Audio],
+    'image'                => [:triplrImage],
     'inode/symlink'        => [:triplrSymlink],
     'message/rfc822'       => [:triplrMailMessage],
     'text/ansi'            => [:triplrANSI],
@@ -147,6 +148,13 @@ class E
     'text/nfo'=>true,
     'text/rtf'=>true,
     'text/x-tex'=>true,
+  }
+
+  # cache triplr output
+  MIMEcache={
+    'audio' => true,
+    'image' => true,
+#    '' => 
   }
 
   %w{c c++ fortran haskell makefile pascal perl php python ruby}.map{|t|

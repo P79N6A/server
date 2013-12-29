@@ -2,19 +2,8 @@
 class E
 
   def triplrImage &f
+    yield uri,Type,DC+'Image'
     triplrStdOut 'exiftool', EXIF, &f
-  end
-  
-  # export EXIF to RDF-in-JSON (recursive)
-  def exif
-    take.map{|g|
-      if g.uri.match /(jpe?g|gif|png)$/i
-        e = g.ef
-        if !e.e || e.m < g.m
-          g.ef.w g.fromStream({},:triplrImage), true
-          puts "EXIF #{g} #{g.ef.size} bytes"
-        end
-      end}
   end
 
   fn 'req/scaleImage',->e,r{
@@ -56,40 +45,43 @@ class E
   F['view/'+MIMEtype+'image/png'] = F['view/th']
 
   # display just the images found in content
-  fn 'view/imgs',->m,e{
+  fn 'view/imgs',->m, e { seen = {}
 
-    # height argument
+    # optional height argument
     h = e.q['h'].do{|h|
-      h.match(/^[0-9]+$/).do{|_|'height:'+h+'px'}}
-
-    # visited images
-    seen={}
+      h.match(/^[0-9]+$/).do{|_|'height:'+h+'px'}}||''
 
     # extension-based filter
     x=->i{i&&i.match(/(jpe?g|gif|png)$/i)&&i}
 
     [(H.once e,:mu,H.js('/js/mu')),H.js('/js/images'),
      m.values.map{|v|
-       # CSS selector-based search
+       # CSS-selector search inside content
        [[*v[Content]].map{|c| c.class == String &&
          (Nokogiri::HTML.parse(c).do{|c|
+
             [# <img> elements
              c.css('img').map{|i|i['src']}.compact,
+
              # <a> elements with image extensions
              c.css('a').map{|i|i['href']}.select(&x)]
             })},
+
         # check subject URI for image extension
         x.(v.uri),
+
         # check object URIs for image extension
         (v.respond_to?(:values) &&
          v.values.flatten.map{|v|
            v.respond_to?(:uri) && v.uri
          }.select(&x))
+
        ].flatten.uniq.compact.map{|s|
          # view 
          {uri: s,
            # img and  link to containing resource
            c: ->{"<a href='#{v.uri.to_s.do{|u|u.path? ? u : u.E.url}}'><img style='float:left;#{h}' src='#{s}'></a>"}}}}.flatten.map{|i|
+
        # show and mark as seen
        !seen[i[:uri]] &&
        (seen[i[:uri]] = true

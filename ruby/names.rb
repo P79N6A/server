@@ -269,6 +269,9 @@ class E
    {'uri' => uri}
   end
 
+  # implementation-specific internal pathnames not on the web
+  F['/E/GET'] = F[E404]
+
 end
 
 class Hash
