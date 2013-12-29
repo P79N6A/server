@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   fn 'view/dir',->i,e{
@@ -28,7 +28,12 @@ class E
           else
             dir.parent.url.t+'?view=ls'
           end)
-
+    i = i.dup
+    f={}
+    ['uri', Posix+'dir#child', Stat+'ftype', Stat+'mtime', Stat+'size', Type, Title].map{|p|f[p] = true}
+    i.values.map{|r|
+      r.class==Hash &&
+      r.delete_if{|p,o|!f[p]}}
     [(H.css '/css/ls'),
      {_: :a, class: :up, href: up, c: '&uarr;'},
      {class: :ls,
