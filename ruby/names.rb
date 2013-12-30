@@ -40,13 +40,6 @@ class E
      File.basename(p)[0..-(File.extname(p).size+1)]).E # doc
   end
 
-  # unique ID for a set of docs
-  # ~= Apache ETag-generation
-  fn 'docsID',->g,q{
-    [q.has_key?('nocache').do{|_|rand},
-     g.sort.map{|u,r|
-       [u, r.respond_to?(:m) && r.m]}].h}
-
   def frag
     uri.frag
   end
