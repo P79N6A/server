@@ -33,6 +33,6 @@ class E
 
     [(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')),c,
      (e.q['v'].do{|v|F['view/'+v]} || F['view'])[d,e],
-     {class: :bottom, style: "clear:all", c: c}]}
+     {class: :bottom, style: "clear:both", c: c}]}
   
 end
