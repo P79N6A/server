@@ -25,11 +25,10 @@ class E
   def ttl; @ttl||= docBase.a('.ttl') end
 
   def docBase
-    uri.split(/#/)[0].E.do{|d|
-      d.dirname.as d.bare }
+    uri.empty? ? ''.E : uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare }
   end
   
-  # same as above, but w/ URI errors
+  # and w/ URI-lib
   def docBaseURI
     u = URI uri
     s = u.scheme
