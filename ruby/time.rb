@@ -55,8 +55,7 @@ class E
              }]},
        
        # arc(s)
-       {_: :svg, c:
-         r[arc].do{|a|a.map{|e|
+       {_: :svg, c: r.class==Hash && r[arc].do{|a|a.map{|e|
              # target resource
              x[:graph][e.uri].do{|e|
                # arc path
@@ -76,8 +75,8 @@ class E
     y = e['y']         # y property
 
     # 2D values
-    vX = m.map{|_,r|r[x]}.flatten.compact.map(&:to_time).map &:to_f
-    vY = m.map{|_,r|r[y]}.flatten.compact.map &:to_f
+    vX = m.map{|_,r|r[x] if r.class==Hash}.flatten.compact.map(&:to_time).map &:to_f
+    vY = m.map{|_,r|r[y] if r.class==Hash}.flatten.compact.map &:to_f
     maxX = vX.max || 0
     minX = vX.min || 0
     maxY = vY.max || 0
@@ -89,8 +88,11 @@ class E
 
     # annotate resources
     m.map{|u,r|
-      r['x'] = [*r[x]][0].do{|v|(maxX - v.to_time.to_f)*scaleX} || 0
-      r['y'] = y.do{|y|[*r[y]][0].do{|v|(maxY - v.to_f)*scaleY} || 0} || rand(100)}}
+      if r.class==Hash
+        r['x'] = r[x].class==Array && r[x][0].do{|v|(maxX - v.to_time.to_f)*scaleX} || 0
+        r['y'] = y.do{|y|[*r[y]][0].do{|v|(maxY - v.to_f)*scaleY} || 0} || rand(100)
+      end
+    }}
 
  ## SIMILE Timeline 
  #  http://www.simile-widgets.org/
