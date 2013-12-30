@@ -4,6 +4,10 @@ class E
     self.GET.do{|s,h,b|[s,h,[]]}
   end
 
+  def OPTIONS
+    [200,{},[]]
+  end
+
   # HEAD response-codes on a (.u) list of URIs
   def checkURIs
     r = uris.select{|u|u.to_s.match /^http/}.map{|u|
