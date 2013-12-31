@@ -26,8 +26,7 @@ class E
   fn 'protograph/',->e,q,g{
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     unless set.empty?
-      g['#'] = { RDFs+'member' => set, DC+'hasFormat' => %w{text/n3 text/html}.map{|m|
-          E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m) unless e.env.format == m}.compact}
+      g['#'] = {RDFs+'member' => set, DC+'hasFormat' => %w{text/n3}.map{|m|E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m)}.compact}
       set.map{|u| g[u.uri] = u }
     end
     F['docsID'][g,q]}
