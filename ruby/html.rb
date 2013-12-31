@@ -116,7 +116,10 @@ class E
   end
 
   fn 'head',->d,e{
-    [{_: :title, c: e.uri},
+    titles = d.map{|u,r|
+      r[Title] if r.class==Hash
+    }.flatten.compact
+    [{_: :title, c: titles.size==1 ? titles[0] : e.uri},
      (Fn 'head.formats',e),
      (Fn 'head.icon')].cr}
 
