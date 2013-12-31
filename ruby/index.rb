@@ -42,7 +42,7 @@ class E
     ('/'.E.take c, o, d.uri).do{|s|             # take subtree
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
-      u = m[d.env['REQUEST_URI']] ||= {}     
+      u = m['#'] ||= {}     
       u[Prev] = {'uri' => desc.url+r.merge({'d' => 'desc'}).qs} if desc
       u[Next] = {'uri' => asc.url+r.merge({'d' => 'asc'}).qs} if asc
       s }}
@@ -64,8 +64,7 @@ class E
       desc, asc = ascending && [first,last] || [last,first]
 
       # response description
-      u = m[d.env['REQUEST_URI']] ||= {}
-      u[Type] = [LDP+'container']
+      u = m['#'] ||= {}
       u[RDFs+'member'] = s
       u[Prev] = {'uri' => d.url + r.merge({'d' => 'desc','offset' => desc.uri}).qs} if desc
       u[Next] = {'uri' => d.url + r.merge({'d' => 'asc', 'offset' => asc.uri}).qs}  if asc
@@ -135,7 +134,7 @@ a:hover {background-color:#00f}"},
        {_: :form, action: '/whois',c: [{_: :input, type: :hidden, name: :p, value: p},{_: :input, name: :q}]}
      },
      # set members
-     d[e['REQUEST_URI']][RDFs+'member'].do{|m|
+     d['#'][RDFs+'member'].do{|m|
        m.map{|r|
          {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&c=8', c: r.uri}}}}]}
 

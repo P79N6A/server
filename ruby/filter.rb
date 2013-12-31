@@ -7,11 +7,8 @@ class E
       r.delete_if{|p,o|!a[p]}}}
 
   fn 'filter.set',->e,m,r{
-    # result-sets have RDFs set-members
-    # filter=set narrows graph to these, gone will be data on the docs containing the data or other fragment identifiers which didn't match keyword-search terms if indexing granularity is smaller than doc-level
-    uri = r.env['REQUEST_URI']
-    f = [uri] # container
-    m[uri].do{|c|c[RDFs+'member'].do{|m| f.concat m.map &:uri }} # members
+    # filter to RDFs set-members, gone will be data on the docs containing the data or other fragments within a doc that didn't match keyword-search terms when indexing granularity is smaller than doc-level
+    f = m['#'].do{|c| c[RDFs+'member'].do{|m| m.map &:uri }} || [] # members
     m.keys.map{|u| m.delete u unless f.member? u}} # trim
 
   fn 'filter.basic',->o,m,_{

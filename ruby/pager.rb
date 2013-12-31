@@ -4,16 +4,15 @@ class E
   Next = LDP+'nextPage'
   Prev = LDP+'prevPage'
 
-  fn 'head/page',->d,e{
-    v = e.q['v']
-    u = d[e['REQUEST_URI']] ||= {}
-    # include head/ of wrapped view
+  fn 'head/page',->d,e{v=e.q['v']
+    u = d['#'] ||= {}
+    # head of wrapped view
     [((v && F['head/'+v] || F['head'])[d,e] unless v == 'page'),
      u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]}
 
   fn 'view/page',->d,e{
-    u = d[e['REQUEST_URI']] ||= {}
+    u = d['#'] ||= {}
 
     # use day-pages if no pagination data exists
     !u.has_any_key([Next,Prev]) &&

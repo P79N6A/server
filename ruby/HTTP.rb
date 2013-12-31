@@ -22,35 +22,28 @@ class E
          self) : @r
   end
 
-  # default "protograph"
-  # a graph-identifier (for cache, conditional-response, etc) is returned
-  # any graph population is preserved after this function exits
+  # default "protograph" identity and resource thunks
   fn 'protograph/',->e,q,g{
-    # expand to set of filesystem resources
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    # link resource-refs
-    set.map{|u| g[u.uri] ||= u if u.class == E } if set.class == Array
+    unless set.empty?
+      g['#'] = { RDFs+'member' => set, DC+'hasFormat' => %w{text/n3 text/html}.map{|m|
+          E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m) unless e.env.format == m}.compact}
+      set.map{|u| g[u.uri] = u }
+    end
     F['docsID'][g,q]}
 
-  # default graph (filesystem backed)
-  # to change default graph w/o querystring or source-hacking,
-  # define a GET handler with non-default env: q['graph'] = 'hexastore'
+  # default graph (filesystem store)
+  # to change default graph-construction fn,
+  # define GET handler w/ set-env: q['graph'] = 'hexastore' (or rewrite this function)
   fn 'graph/',->e,q,m{
     m.values.map{|r|
       (r.env e.env).graphFromFile m if r.class == E }}
 
-  # document-set as used in default protograph
+  # document-set for base protograph
   fn 'set/',->e,q,g{
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs }
-    unless s.empty?
-      # set metadata
-      g[e.env['REQUEST_URI']] = {
-        RDFs+'member' => s, # links to facilitate jumping between data-browser and classic HTML views
-        DC+'hasFormat' => %w{text/n3 text/html}.map{|m| E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m) unless e.env.format == m}.compact,
-      }
-    end
     s }
 
   # unique ID for a resource-set
@@ -97,7 +90,7 @@ class E
         # graph sort/filter
         E.filter q, m, self
 
-        # cache response
+        # response
         r.w render @r.format, m, @r
       end }
   end
