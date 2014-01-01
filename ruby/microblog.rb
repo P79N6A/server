@@ -49,8 +49,7 @@ class E
 
   fn 'head/chat',->d,e{
      t = d.map{|_,r|r[Date]}.flatten.compact.map &:to_time
-     c = d.map{|_,r|r[Content]}.compact.size
-    [{_: :title, c: "#{c} post#{c!=1 && 's'} #{t.min} -> #{t.max}"},
+    [{_: :title, c: "#{t.min} -> #{t.max}"},
      (Fn 'head.formats',e)]}
 
   fn 'view/chat',->d,e{
