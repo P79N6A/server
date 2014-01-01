@@ -115,6 +115,10 @@ class E
     c.empty? && self || c.r.randomLeaf
   end
 
+  def E.graphProperties g
+    g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+  end
+
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
 
