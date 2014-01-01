@@ -1,43 +1,18 @@
 #watch __FILE__
 class E
  
-  fn 'filter.p',->e,m,_{
-    a=Hash[*e['p'].split(/,/).map(&:expand).map{|p|[p,true]}.flatten]
-    m.values.map{|r|
-      r.delete_if{|p,o|!a[p]}}}
-
   fn 'filter.set',->e,m,r{
-    # filter to RDFs set-members, gone will be data on the docs containing the data or other fragments within a doc that didn't match keyword-search terms when indexing granularity is smaller than doc-level
+    # filter to RDFs set-members
+    # gone will be:
+    # data about docs containing the data
+    # other fragments in a doc not matching keyword-search terms when indexed per-fragment
     f = m['#'].do{|c| c[RDFs+'member'].do{|m| m.map &:uri }} || [] # members
     m.keys.map{|u| m.delete u unless f.member? u}} # trim
 
-  fn 'filter.basic',->o,m,_{
-    d=m.values
-    o['match'] && (p=o['matchP'].expand
-                   d=d.select{|r|r[p].do{|p|(p.class==Array ? p[0] : p).to_s.match o['match']}})
-    o['min'] && (min=o['min'].to_f
-                 p=o['minP'].expand
-                 d=d.select{|r|r[p].do{|p|(p.class==Array ? p[0] : p).to_f >= min }})
-    o['max'] && (max=o['max'].to_f
-                 p=o['maxP'].expand
-                 d=d.select{|r|r[p].do{|p|(p.class==Array ? p[0] : p).to_f <= max }})
-    o['sort'] && (p=o['sort'].expand
-                       _ = d.partition{|r|r[p]}
-                       d =_[0].sort_by{|r|r[p]}.concat _[1] rescue d)
-    o['sortN'] && (p=o['sortN'].expand
-                       _ = d.partition{|r|r[p]}
-                       d =_[0].sort_by{|r|
-                     (r[p].class==Array && r[p] || [r[p]])[0].do{|d|
-                       d.class==String && d.to_i || d
-                     }
-                   }.concat _[1])
-    o.has_key?('reverse') && d.reverse!
-    m.clear;d.map{|r|m[r['uri']]=r}}
-
   fn 'filter.map',->o,m,_{
-    o.except('filter','graph','view').map{|p,n|
-     p=p.expand
-     n=n.expand
+    o.map{|p,n|
+     p = p.expand
+     n = n.expand
       p!=n &&
       m.values.map{|r|
         r[p].do{|o|
@@ -66,8 +41,6 @@ class E
     o['filter'].do{|f| # user-supplied
       f.split(/,/).map{|f| # comma-seperated filters
         F['filter.'+f].do{|f|f[o,m,r]}}} # if they exist
-
-    Fn'filter.basic',o,m,r if o.has_any_key ['reverse','sort','max','min','match']
     m
   end
 
