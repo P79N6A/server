@@ -7,17 +7,13 @@ class E
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r|
-       if r[Posix+'dir#child']
-         url = r.E.localURL e
-         {class: :dir, style: "background-color: #{E.cs}",    # dir wrapper
-           c: [{c: [{_: :a, href: url.t+'?view=ls', # link to "ls"
-                      c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')},
-                    {_: :a, href: url.t, c: '/'}]},
-               r[Posix+'dir#child'].map{|c|a[c]}]}
-       else
-         F['view/base'][{u => r},e]
-       end }]}
-
+       url = r.E.localURL e
+       {class: :dir, style: "background-color: #{E.cs}",    # dir wrapper
+         c: [{c: [{_: :a, href: url.t+'?view=ls', # link to "ls"
+                    c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')},
+                  {_: :a, href: url.t, c: '/'}]},
+             r[Posix+'dir#child'].do{|c|c.map{|c|a[c]}}]}}]}
+  
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
   fn 'view/ls',->i,e{
