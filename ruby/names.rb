@@ -250,7 +250,7 @@ end
 
 class Hash
   def uri
-    self["uri"]
+    self["uri"]||""
   end
   def url; self.E.url end
   def label

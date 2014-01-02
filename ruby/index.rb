@@ -43,8 +43,8 @@ class E
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
       u = m['#'] ||= {}     
-      u[Prev] = {'uri' => desc.url+r.merge({'d' => 'desc'}).qs} if desc
-      u[Next] = {'uri' => asc.url+r.merge({'d' => 'asc'}).qs} if asc
+      u[Prev] = {'uri' => desc.url + {'d' => 'desc'}.qs} if desc
+      u[Next] = {'uri' => asc.url  + {'d' => 'asc'}.qs} if asc
       s }}
 
   # subtree traverse index on p+o cursor
@@ -66,8 +66,8 @@ class E
       # response description
       u = m['#'] ||= {}
       u[RDFs+'member'] = s
-      u[Prev] = {'uri' => d.url + r.merge({'d' => 'desc','offset' => desc.uri}).qs} if desc
-      u[Next] = {'uri' => d.url + r.merge({'d' => 'asc', 'offset' => asc.uri}).qs}  if asc
+      u[Prev] = {'uri' => d.url + {'d' => 'desc','offset' => desc.uri}.qs} if desc
+      u[Next] = {'uri' => d.url + {'d' => 'asc', 'offset' => asc.uri}.qs}  if asc
 
       s.map(&:docs).flatten.uniq }}
 

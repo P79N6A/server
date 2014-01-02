@@ -14,8 +14,7 @@ class E
  * stream triples into graph (memory)
  * import missing resources to store (fs)
  * behave as normal triplr to caller, with
-   side-effect of import/indexing to kb
-
+   side-effect of import/indexing to knowledgebase
 =end
   def insertDocs triplr, h=nil, p=[], &b
     graph = fromStream({},triplr)

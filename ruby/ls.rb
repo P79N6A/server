@@ -13,7 +13,7 @@ class E
                     c: r.uri.sub( 'http://'+e['SERVER_NAME'],'')},
                   {_: :a, href: url.t, c: '/'}]},
              r[Posix+'dir#child'].do{|c|c.map{|c|a[c]}}]}}]}
-  
+
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
   fn 'view/ls',->i,e{

@@ -89,12 +89,8 @@ class Hash
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,
-               c: [{_: :a, name: k,
-                     href: (k == 'uri' ? v : k),
-                     c: k.to_s.abbrURI},
-                   ({_: :a,
-                     style: 'float: left;color:#eee',
-                     c: :e,
+               c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI},
+                   ({_: :a, style: 'float: left;color:#eee', c: :e,
                      href: uri.E.localURL(e)+'?graph=editable&view=edit'} if (k == 'uri') && uri.match(/#/))], class: :key},
              {_: :td,
                c: (case k
