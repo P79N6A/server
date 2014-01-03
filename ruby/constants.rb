@@ -10,6 +10,7 @@ class E
   SIOC  = 'http://rdfs.org/sioc/ns#'
   SIOCt = 'http://rdfs.org/sioc/types#'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
+  Deri     = 'http://vocab.deri.ie/'
   DC       = Purl + 'dc/terms/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
@@ -27,7 +28,8 @@ class E
   Type     = RDFns+ "type"
 #  Type     = W3   + "ns/rdf#type"
   RDFs     = W3   + 'ns/rdfs#'
-  COGS     = 'http://vocab.deri.ie/cogs#'
+  COGS     = Deri + 'cogs#'
+  CSV      = Deri + 'scsv#'
   HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
   Stat     = Posix + 'stat#'
