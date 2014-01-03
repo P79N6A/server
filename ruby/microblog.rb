@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # sprintf() formats in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
@@ -77,6 +77,11 @@ class E
      {_: :a, class: :line, href: '#'+line, c: '&nbsp;'},
      "<br>\n"]}
   
+  F['view/'+SIOCt+'RedditPost']=->d,e{
+    d.map{|u,r|
+      {style: "background-color:white;color:black;float:left;border-radius:1em;padding:.5em;max-width:42em;margin:.5em",
+        c: F['itemview/chat'][r,e]}}}
+
   fn 'baseview/chat',->d,e,c{
     [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body, span.nick span, a {background-color: #{E.c}}\n"}),
      {:class => :ch, c: c.()},
