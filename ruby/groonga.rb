@@ -39,15 +39,14 @@ class E
       m['#'] = {RDFs+'member' => r}
       m['#'][Prev]={'uri' => '/search' + {'start' => start + c, 'c' => c}.qs} if down
       m['#'][Next]={'uri' => '/search' + {'start' => start - c, 'c' => c}.qs} if up
+      m['/search'] = {Type => E['search/form']}
 
     rescue Groonga::SyntaxError => x
+      m['/search'] = {Type => E['search/form']}
       m['#'] = {
         Type => E[COGS+'Exception'],
         Title => "bad expression",
         Content => CGI.escapeHTML(x.message)}
-      m['/search'] = {
-        Type => E['search/form'],
-      }
       e['nocache']=true
     end
 

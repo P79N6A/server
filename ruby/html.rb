@@ -179,7 +179,8 @@ class E
           subtype = t
           type = subtype.split(/\//)[-2]
           [F['view/' + subtype],
-           F['view/' + type]]}.flatten.compact
+          (F['view/' + type] if type)]}.
+        flatten.compact
         view = views[0] unless views.empty?}
     end
     view[graph,e]}

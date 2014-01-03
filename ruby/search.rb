@@ -8,12 +8,12 @@ class E
   fn 'head/search',->d,e{[{_: :title, c: e.q['q']},(Fn 'head.formats',e)]}
 
   fn 'view/search',->d,e{
-    [H.css('/css/search'),H.js('/js/search'),
-     (Fn 'view/search/form',e.q,e),
+    [(Fn 'view/search/form',e.q,e),
      (Fn 'view/page',d,e)]}
 
   fn 'view/search/form',-> q=nil,e { q||={}
-    [{:class => :form,
+    [H.css('/css/search'),H.js('/js/search'),
+     {:class => :form,
       c: {_: :form, action: e['REQUEST_PATH'],
         c: [{_: :input, name: :q, value: q['q']}, # search box
             q.except('q','start'). # new query & offset for this search
