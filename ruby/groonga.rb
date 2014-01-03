@@ -44,7 +44,9 @@ class E
       m['#'] = {
         Type => E[COGS+'Exception'],
         Title => "bad expression",
-        Content => CGI.escapeHTML(x.message)
+        Content => CGI.escapeHTML(x.message)}
+      m['/search'] = {
+        Type => E['search/form'],
       }
       e['nocache']=true
     end
