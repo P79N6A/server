@@ -35,8 +35,10 @@ class E
   # to change default graph-construction fn,
   # define GET handler w/ set-env: q['graph'] = 'hexastore' (or rewrite this function)
   fn 'graph/',->e,q,m{
-    m.values.map{|r|
-      (r.env e.env).graphFromFile m if r.class == E }}
+    # force thunks
+    m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
+    # cleanup thunks that didn't expand
+    m.delete_if{|u,r|r.class==E}}
 
   # document-set for base protograph
   fn 'set/',->e,q,g{
