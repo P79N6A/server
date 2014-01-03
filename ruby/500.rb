@@ -1,3 +1,4 @@
+watch __FILE__
 class E
   
   Errors ||= {}
@@ -26,6 +27,13 @@ class E
 
   F['/500/GET'] = ->e,r{H([Errors.sort_by{|u,r|r[:time]}.reverse.html,H.css('/css/500')]).hR}
   F['/500/test/GET'] = ->e,r{1/0}
+
+  F['view/'+COGS+'Exception']=->e,r{
+    e.values.map{|e|
+      {style: 'border-radius:1em;background-color:#333;color:#eee;float:left;max-width:42em',
+        c: [{_: :h2, c: "<b style='background-color:#f00'>&#0191;</b>"+(e[Title]||[]).to_s},
+            e[Content]||''
+           ]}}}
 
   # filesystem takes priority over this if it's found
   fn '/css/500.css/GET',->e,r{

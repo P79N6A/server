@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
 #  adaptor for ruby text-search-engine & column-store
@@ -16,28 +16,38 @@ class E
     # context
     g = e["context"] || d.env['SERVER_NAME']
 
-    # exec expression
-    r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
-            ga.select{|r| r['graph'] == g} # ordered set (index date-range)
+    begin
+      # execute
+      r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
+        ga.select{|r| r['graph'] == g} # ordered set (index date-range)
 
-    # offset, size
-    start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0
-    c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8
+      # offset, size
+      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0
+      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8
 
-    # are further results traversible?
-    down = r.size > start+c
-    up   = !(start<=0)
+      # are further results traversible?
+      down = r.size > start+c
+      up   = !(start<=0)
 
-    # sort results
-    r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
+      # sort results
+      r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
 
-    # results -> graph
-    r = r.map{|r| r['.uri'].E }
-    (r.map &:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
+      # results -> graph
+      r = r.map{|r| r['.uri'].E }
+      (r.map &:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
 
-    m['#'] = {RDFs+'member' => r}
-    m['#'][Prev]={'uri' => '/search' + {'start' => start + c, 'c' => c}.qs} if down
-    m['#'][Next]={'uri' => '/search' + {'start' => start - c, 'c' => c}.qs} if up
+      m['#'] = {RDFs+'member' => r}
+      m['#'][Prev]={'uri' => '/search' + {'start' => start + c, 'c' => c}.qs} if down
+      m['#'][Next]={'uri' => '/search' + {'start' => start - c, 'c' => c}.qs} if up
+
+    rescue Groonga::SyntaxError => x
+      m['#'] = {
+        Type => E[COGS+'Exception'],
+        Title => "bad expression",
+        Content => CGI.escapeHTML(x.message)
+      }
+      e['nocache']=true
+    end
 
     F['docsID'][m,e]}
 

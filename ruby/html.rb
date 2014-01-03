@@ -171,7 +171,7 @@ class E
     view = F['view/base']
     # find types, skipping malformed/missing info
     if r.class == Hash
-      r[Type].do{|types|
+      [*r[Type]].do{|types|
         views = types.map{|t|
           # discard non-URIs
           t.uri if t.respond_to? :uri}.

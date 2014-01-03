@@ -27,6 +27,7 @@ class E
   Type     = RDFns+ "type"
 #  Type     = W3   + "ns/rdf#type"
   RDFs     = W3   + 'ns/rdfs#'
+  COGS     = 'http://vocab.deri.ie/cogs#'
   HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
   Stat     = Posix + 'stat#'
