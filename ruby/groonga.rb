@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
 #  adaptor for ruby text-search-engine & column-store
