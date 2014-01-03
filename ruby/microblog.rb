@@ -79,7 +79,7 @@ class E
   
   F['view/'+SIOCt+'RedditPost']=->d,e{
     d.map{|u,r|
-      {style: "background-color:white;color:black;float:left;border-radius:1em;padding:.5em;max-width:42em;margin:.5em",
+      {style: "background-color:white;color:black;float:left;border-radius:.8em;padding:.4em;border-width:.18em;border-style:dotted;border-color:#eee;max-width:42em;margin:.5em",
         c: F['itemview/chat'][r,e]}}}
 
   fn 'baseview/chat',->d,e,c{
