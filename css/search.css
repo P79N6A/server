@@ -1,4 +1,3 @@
-div.formtop {position:fixed;z-index:8;top:.18em;left:.5em;}
 input {font-size:2em}
 input:hover {border-color:#0f0;border-style:dotted}
 .down { font-size: 2em;
@@ -7,4 +6,3 @@ input:hover {border-color:#0f0;border-style:dotted}
       background-color:#333;
       color: #fff;
       }
-.space {display:block; width: 100%; height: 3em}

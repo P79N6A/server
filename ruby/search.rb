@@ -18,7 +18,6 @@ class E
         c: [{_: :input, name: :q, value: q['q']}, # search box
             q.except('q','start'). # new query & offset for this search
             map{|a,s|
-              {_: :input, name:  a, value: s, :type => :hidden}}]}},
-     {class: :space}]}
+              {_: :input, name:  a, value: s, :type => :hidden}}]}}]}
 
 end

@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # Graph -> tripleStream -> Graph
@@ -32,11 +32,14 @@ class E
     self
   end
 
-  def graphFromFile g={}, triplr=:triplrMIME
+  def graphFromFile g={}
     _ = self
+    triplr = @r.do{|r|
+                    r.q['triplr'].do{|t|
+                          respond_to?(t) && t }} || :triplrMIME
     unless ext=='e' # native graph-format already
       # construct native graph if missing or stale
-      _ = E '/E/graph/' + uri.h.dive
+      _ = E '/E/graph/' + [triplr,uri].h.dive
       unless _.e && _.m > m;  e = {}
         puts "< #{uri}"
         [:triplrInode, triplr].each{|t| fromStream e, t }
