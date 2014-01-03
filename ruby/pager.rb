@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
   
   Next = LDP+'nextPage'
@@ -11,6 +11,9 @@ class E
      u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]}
 
+  fn 'view/'+LDP+'container',->d,e{
+    {style: "background-color:white;color:black;border-radius:.6em;float:left", c: '*'}}
+  
   fn 'view/page',->d,e{
     u = d['#'] ||= {}
 
