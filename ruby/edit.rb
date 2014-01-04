@@ -10,7 +10,7 @@ class E
   # , or go blank
   fn 'view/create',->g,e{
     [H.css('/css/create'),{_: :b, c: :create},
-     Prototypes.map{|s,_| s.nil? ? {_: :b, c: '&nbsp;'} : {_: :a, href:  e['REQUEST_PATH']+'?graph=_&view=edit&prototype='+(CGI.escape s), c: s.label}}]}
+     Prototypes.map{|s,_| s.nil? ? {_: :b, c: '&nbsp;'} : {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(CGI.escape s), c: s.label}}]}
 
   fn 'view/edit',->g,e{
     triple = ->s,p,o{

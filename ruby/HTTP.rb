@@ -70,7 +70,7 @@ class E
     return F[E404][self,@r] if m.empty?
 
     # identify response
-    @r['ETag'] ||= [graphID, q, @r.format, Watch].h
+    @r['ETag'] ||= [graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
       

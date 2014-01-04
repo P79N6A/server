@@ -19,7 +19,6 @@ class E
        {_: :a, class: :rangePO, href: o.url+'?set=indexPO&c=12&p='+p, c: env['uri']},
        {_: :form, action: (URI.escape (p.expand.E.poIndex o).uri),
          c: [{_: :input, name: :set, value: :grep, type: :hidden},
-             {_: :input, name: :view,value: :grep, type: :hidden},
              {_: :input, name: :q}
             ]},
       ] if env.q['set']=='indexPO'),
