@@ -23,23 +23,6 @@ class E
          self) : @r
   end
 
-  # default "protograph" identity and resource thunks
-  fn 'protograph/',->e,q,g{
-    set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    unless set.empty?
-      g['#'] = {RDFs+'member' => set, DC+'hasFormat' => %w{text/n3}.map{|m|E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m)}.compact}
-      set.map{|u| g[u.uri] = u }
-    end
-    F['docsID'][g,q]}
-
-  # default graph (filesystem store)
-  # to change default graph-construction fn,
-  # define GET handler w/ set-env: q['graph'] = 'hexastore' (or rewrite this function)
-  fn 'graph/',->e,q,m{
-    # force thunks
-    m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
-    # cleanup thunks that didn't expand
-    m.delete_if{|u,r|r.class==E}}
 
   # document-set for base protograph
   fn 'set/',->e,q,g{
@@ -58,14 +41,11 @@ class E
 
   def response
 
-    q = @r.q       # query-string
-    g = q['graph'] # graph-function selector
-
-    # empty response graph
     m = {}
 
     # identify graph
-    graphID = (g && F['protograph/' + g] || F['protograph/'])[self,q,m]
+    g = @r.q['graph']
+    graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
 
     return F[E404][self,@r] if m.empty?
 
@@ -86,13 +66,13 @@ class E
           m.merge! c.r true
         else
           # construct graph
-          (g && F['graph/' + g] || F['graph/'])[self,q,m]
+          (g && F['graph/' + g] || F['graph/'])[self,@r.q,m]
           # cache graph
           c.w m,true
         end
 
         # graph sort/filter
-        E.filter q, m, self
+        E.filter @r.q, m, self
 
         # response
         r.w render @r.format, m, @r

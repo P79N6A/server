@@ -1,10 +1,9 @@
 #watch __FILE__
 class E
 
-  # triple stream type-signature:
-  # (s,p,o)
-  # s = String (URI)
-  # p = 
+  # triple streams (yield s,p,o)
+  # s,p - URI as String
+  # o URI ? E class : anything
 
   # Graph -> tripleStream -> Graph
   def fromStream m,*i
@@ -36,6 +35,27 @@ class E
     graph.triples &b if b # emit the triples
     self
   end
+
+  # default "protograph" identity and resource thunks
+  fn 'protograph/',->e,q,g{
+    set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
+    unless set.empty?
+      g['#'] = {RDFs+'member' => set}
+      set.map{|u| g[u.uri] = u }
+    end
+    F['docsID'][g,q]}
+
+  # default graph (filesystem store)
+  # to change default graph-constructor update env q['graph'] = 'hexastore' (or rewrite this function)
+  # ie define a GET handler on / or a subdir, adjust backend and return false to continue
+  fn 'graph/',->e,q,m{
+    # force thunks
+    m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
+    # cleanup thunks that didn't expand
+    m.delete_if{|u,r|r.class==E}
+    # add links to varied formats
+    s = m['#'] ||= {}
+    s[DC+'hasFormat'] = %w{text/n3}.map{|m|E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m)}}
 
   def graphFromFile g={}
     _ = self

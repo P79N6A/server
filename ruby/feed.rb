@@ -66,7 +66,7 @@ class E
       Nokogiri::HTML.parse(o).do{|o|
         o.css('.md').do{|o|yield s,p,o}
         yield s,Creator,o.css('a')[-4].child.to_s.strip
-        yield s,Type,(SIOCt+'RedditPost').E
+        yield s,Type,(SIOCt+'BoardPost').E
       } : (yield s,p,o)}
   end
 

@@ -77,7 +77,7 @@ class E
      {_: :a, class: :line, href: '#'+line, c: '&nbsp;'},
      "<br>\n"]}
   
-  F['view/'+SIOCt+'RedditPost']=->d,e{
+  F['view/'+SIOCt+'BoardPost']=->d,e{
     d.map{|u,r|
       {style: "background-color:white;color:black;float:left;border-radius:.8em;padding:.4em;border-width:.18em;border-style:dotted;border-color:#eee;max-width:42em;margin:.5em",
         c: F['itemview/chat'][r,e]}}}

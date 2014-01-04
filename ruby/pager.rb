@@ -13,7 +13,9 @@ class E
 
   fn 'view/'+LDP+'container',->d,e{
     puts "container"
-    {style: "background-color:white;color:black;border-radius:.6em;float:left", c: '*'}}
+    {style: "background-color:white;color:black;border-radius:.6em;float:left",
+      c: [{_: :b, style: 'font-size:2em',c: '*'},
+          d['#'].do{|s|s[DC+'hasFormat'].do{|fs|fs.map{|f|{_: :a, href: f, c: f.label}}}}]}}
   
   fn 'view/page',->d,e{
     u = d['#'] ||= {}
