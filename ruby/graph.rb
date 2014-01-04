@@ -1,6 +1,11 @@
 #watch __FILE__
 class E
 
+  # triple stream type-signature:
+  # (s,p,o)
+  # s = String (URI)
+  # p = 
+
   # Graph -> tripleStream -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|

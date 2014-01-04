@@ -142,7 +142,7 @@ class E
   fn 'view/divine/set',->d,e{
     # we'd be throwing away oddball resources to select one view for all of them
     # but maybe you have a specific reason - normalization, cleanup..
-    # inbuilt views support calling on set or per-resource basis, via "once" spec of set-wide components
+    # inbuilt views support calling on set or per-resource basis, via "once" spec on set-wide components
     # so views are selected per-resource unless you hack here & uncomment caller in #view.select
   }
 
@@ -191,6 +191,7 @@ class E
       vs.split(',').map{|v|
         F['view/'+v].do{|f|f[d,e]}}}}
 
+  # enumerate available views
   fn 'view/?',->d,e{
     F.keys.grep(/^view\/(?!application|text\/x-)/).map{|v|
       v = v[5..-1] # eat selector

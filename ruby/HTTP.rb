@@ -1,3 +1,4 @@
+watch __FILE__
 require 'rack'
 
 class E
@@ -49,9 +50,11 @@ class E
 
   # unique ID for a resource-set
   fn 'docsID',->g,q{
-    [q.has_key?('nocache').do{|_|rand},
+    puts [:docs,*g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m].join ' '}].join "\n"
+   [q.has_key?('nocache').do{|_|rand},
      g.sort.map{|u,r|
-       [u, r.respond_to?(:m) && r.m]}].h}
+       [u, r.respond_to?(:m) && r.m]}].h
+  }
 
   def response
 
