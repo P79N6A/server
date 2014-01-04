@@ -35,7 +35,7 @@ class E
   
   fn 'view/th',->i,e{
     i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) &&
-      {_: :a, href: i.url+'?view=img',
+      {_: :a, href: i.url+'?view',
         c: {_: :img, src: i.url+'?y=scaleImage&px=233'}}}}
 
   F['view/'+MIMEtype+'image/gif'] = F['view/th']

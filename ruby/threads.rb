@@ -15,8 +15,8 @@ class E
      (p = env.q['p']
       o = env['uri'].E
       [(H.js '/js/search'),
-       {_: :a, class: :rangeP, href: '/@'+p+'?set=indexP&view=page&v=linkPO&c=12', c: {'sioc:addressed_to' => 'to', 'sioc:has_creator' => 'From'}[p] || p}, '&nbsp;',
-       {_: :a, class: :rangePO, href: o.url+'?set=indexPO&view=page&v=threads&c=32&p='+p, c: env['uri']},
+       {_: :a, class: :rangeP, href: '/@'+p+'?set=indexP&&c=12', c: {'sioc:addressed_to' => 'to', 'sioc:has_creator' => 'From'}[p] || p}, '&nbsp;',
+       {_: :a, class: :rangePO, href: o.url+'?set=indexPO&c=12&p='+p, c: env['uri']},
        {_: :form, action: (URI.escape (p.expand.E.poIndex o).uri),
          c: [{_: :input, name: :set, value: :grep, type: :hidden},
              {_: :input, name: :view,value: :grep, type: :hidden},
@@ -55,7 +55,7 @@ class E
 
         {_: :td, class: :group, property: To,
           c: {_: :a, :class => :to, style: 'background-color:'+c, c: e[0] && e[0].split(/@/)[0],
-            href: e[0] && e[0].E.url+'?set=indexPO&p=sioc:addressed_to&view=page&v=threads'}},
+            href: e[0] && e[0].E.url+'?set=indexPO&p=sioc:addressed_to'}},
 
         '</tr>']},'</table>',
 

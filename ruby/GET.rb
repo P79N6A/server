@@ -48,7 +48,7 @@ class E
            'ETag'=> @r['ETag']}
 
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
-      h.update({'Link' => '<' + @r['uri'] + '?view=base>; rel=meta'}) if iR     # link to description
+      h.update({'Link' => '<' + @r['uri'] + '?view>; rel=meta'}) if iR     # link to description
       h.update({'MS-Author-Via' => 'SPARQL'})  # authoring preference
 
       # frontend-specific response handlers

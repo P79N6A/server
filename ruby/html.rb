@@ -89,9 +89,7 @@ class Hash
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,
-               c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI},
-                   ({_: :a, style: 'float: left;color:#eee', c: :e,
-                     href: uri.E.localURL(e)+'?graph=editable&view=edit'} if (k == 'uri') && uri.match(/#/))], class: :key},
+               c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key},
              {_: :td,
                c: (case k
                    when E::Content
@@ -259,13 +257,14 @@ class E
              c = t.values.map(&:keys)
              cm = c.map(&:min).min
              cx = c.map(&:max).max
-             (rm..rx).map{|r|
+             rm && rx && (rm..rx).map{|r|
                {_: :tr, c: 
                  t[r].do{|r|
                    (cm..cx).map{|c|
                      r[c].do{|c|
                        {_: :td, class: :cell, c:(Fn 'view/'+(a||e.q['cellview']||'title'),c,e)}
-                     }||{_: :td}}}}}}}}]
+                     }||{_: :td}}}}} || ''
+           }}}]
     else
       "table= layout arg required"
     end}

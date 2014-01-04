@@ -14,7 +14,7 @@ class E
     else
       H({style: 'text-align: center',
           c: [To.E.rangeP.map(&:uri).grep(/#{name}/).map{|n|
-                {_: :a,href: n.E.url+'?set=indexPO&p=sioc:addressed_to&view=page&v', c: n}},
+                {_: :a,href: n.E.url+'?set=indexPO&p=sioc:addressed_to', c: n}},
               {_: :style, c: "a {display:block;text-decoration:none}"}]}).hR
     end}
 
@@ -25,7 +25,7 @@ class E
     else
       H({style: 'text-align: center',
           c: [Creator.E.rangeP(1e4).map(&:uri).grep(/#{name}/).map{|n|
-                {_: :a,href: n.E.url+'?set=indexPO&p=sioc:has_creator&view=page&v', c: n}},
+                {_: :a,href: n.E.url+'?set=indexPO&p=sioc:has_creator', c: n}},
               {_: :style, c: "a {display:block;text-decoration:none}"}]}).hR
     end}
   

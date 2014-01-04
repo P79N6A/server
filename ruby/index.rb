@@ -127,7 +127,7 @@ class E
     e.pathSegment.uri.match(/^\/index$/) &&
    (H [{_: :style, c: "a {font-size:3em;display:block}
 a:hover {background-color:#00f}"},
-       '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&view=page&v=linkPO&c=12', c: p}}}]).hR}
+       '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&c=12', c: p}}}]).hR}
 
   # p+o index-traversal pointers
   fn 'view/linkPO',->d,e{
@@ -140,7 +140,7 @@ a:hover {background-color:#00f}"},
      # set members
      d['#'][RDFs+'member'].do{|m|
        m.map{|r|
-         {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&view=page&c=8', c: r.uri}}}}]}
+         {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&c=8', c: r.uri}}}}]}
 
 end
 
