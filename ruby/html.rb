@@ -125,9 +125,8 @@ class E
 
   fn 'head.icon',->{{_: :link, href:'/css/misc/favicon.ico', rel: :icon}}
 
-  fn 'view/select',->d,e{#(Fn 'view/divine/set',d,e)||
-                  (Fn 'view/divine/files',d,e)||
-   d.values.map{|r|Fn 'view/divine/resource',r,e}}
+  fn 'view/select',->d,e{
+    d.values.map{|r|Fn 'view/divine/resource',r,e}}
 
   # default view
   F['view'] = F['view/select']
@@ -135,33 +134,6 @@ class E
   fn 'view/base',->d,e{
     [H.once(e,'base',H.css('/css/html')),
      d.values.map{|v|v.html e}]}
-
-  # select a view based on RDF-type majority
-  fn 'view/divine/set',->d,e{
-    # we'd be throwing away oddball resources to select one view for all of them
-    # but maybe you have a specific reason - normalization, cleanup..
-    # inbuilt views support calling on set or per-resource basis, via "once" spec on set-wide components
-    # so views are selected per-resource unless you hack here & uncomment caller in #view.select
-  }
-
-  fn 'view/divine/files',->d,e{
-    d.values.map{|e|e.E.base}.do{|b|
-      s = b.size.to_f # size of set
-      t = 0.42        # threshold, max of 0.5 as file and RDF resource are separate
-      if b.grep(/^msg\./).size / s > t
-        Fn 'view/threads',d,e
-
-      elsif b.grep(AudioFile).size / s > t
-        Fn 'view/audio', d,e
-
-      elsif b.grep(/(gif|jpe?g|png)$/i).size / s > t
-        Fn 'view/th', d,e
-
-      elsif b.grep(/\.log$/).size / s > t
-        Fn 'view/chat', d,e
-
-      else false
-      end}}
 
   # select a view for a RDF resource
   fn 'view/divine/resource',->r,e{

@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   fn 'view/dir',->i,e{
@@ -9,19 +9,18 @@ class E
      i.map{|u,r|
        url = r.E.localURL e
        {class: :dir, style: "background-color: #{E.cs}",    # dir wrapper
-         c: [{c: [{_: :a, href: url, c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
+         c: [{c: [{_: :a, href: url+'?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
                   {_: :a, href: url.t, c: '/'}]},
              r[Posix+'dir#child'].do{|c|c.map{|c|a[c]}}]}}]}
 
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
   fn 'view/ls',->i,e{
-    dir = e['uri'].E
-    path = dir.pathSegment
+    dir = e['uri'].E; path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
-    i = i.dup
-    f={}
-    ['uri', Posix+'dir#child', Stat+'ftype', Stat+'mtime', Stat+'size', Type, Title].map{|p|f[p] = true}
+    i = i.dup; f = {}
+    ['uri', Posix+'dir#child', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
+    i.delete_if{|u,r|!r[Stat+'ftype']}
     i.values.map{|r|
       r.class==Hash &&
       r.delete_if{|p,o|!f[p]}}
