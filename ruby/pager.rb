@@ -19,16 +19,6 @@ class E
   fn 'view/page',->d,e{
     u = d['#'] ||= {}
 
-    # use day-pages if no pagination data exists
-    !u.has_any_key([Next,Prev]) &&
-    e['REQUEST_PATH'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})(.*)/).do{|m|
-
-      t = ::Date.parse "#{m[2]}-#{m[3]}-#{m[4]}"
-      pp = m[1] + (t-1).strftime('%Y/%m/%d') + m[5]
-      np = m[1] + (t+1).strftime('%Y/%m/%d') + m[5]
-      u[Prev] = {'uri' => pp} if pp.E.e || E['http://' + e['SERVER_NAME'] + pp].e
-      u[Next] = {'uri' => np} if np.E.e || E['http://' + e['SERVER_NAME'] + np].e }
-
     # links
     c=[u[Prev].do{|p|
          {_: :a, rel: :prev, style: 'float:left; font-size:2em',href: p.uri, c: '&larr;'}},

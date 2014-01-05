@@ -40,16 +40,27 @@ class E
   fn 'protograph/',->e,q,g{
      g['#'] = {}
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    unless set.empty?
+    if set.empty?
+      g.delete '#'
+    else
       g['#'][RDFs+'member'] = set
       set.map{|u| g[u.uri] = u } # thunk
     end
     F['docsID'][g,q]}
 
+  # default resource-set
   fn 'set/',->e,q,g{
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs }
+    # day-dir hinted pagination
+    e.env['REQUEST_PATH'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})(.*)/).do{|m|
+      u = g['#']
+      t = ::Date.parse "#{m[2]}-#{m[3]}-#{m[4]}"
+      pp = m[1] + (t-1).strftime('%Y/%m/%d') + m[5]
+      np = m[1] + (t+1).strftime('%Y/%m/%d') + m[5]
+      u[Prev] = {'uri' => pp} if pp.E.e || E['http://' + e.env['SERVER_NAME'] + pp].e
+      u[Next] = {'uri' => np} if np.E.e || E['http://' + e.env['SERVER_NAME'] + np].e }
     s }
 
   # fs-derived ID for a resource-set

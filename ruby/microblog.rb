@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   # sprintf() formats in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>

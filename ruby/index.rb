@@ -42,7 +42,8 @@ class E
     ('/'.E.take c, o, d.uri).do{|s|             # take subtree
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
-      u = m['#'] ||= {}     
+      u = m['#']
+      u[Type] = E[LDP+'container']
       u[Prev] = {'uri' => desc.url + {'d' => 'desc'}.qs} if desc
       u[Next] = {'uri' => asc.url  + {'d' => 'asc'}.qs} if asc
       s }}
@@ -64,8 +65,9 @@ class E
       desc, asc = ascending && [first,last] || [last,first]
 
       # response description
-      u = m['#'] ||= {}
+      u = m['#']
       u[RDFs+'member'] = s
+      u[Type] = E[LDP+'container']
       u[Prev] = {'uri' => d.url + {'d' => 'desc','offset' => desc.uri}.qs} if desc
       u[Next] = {'uri' => d.url + {'d' => 'asc', 'offset' => asc.uri}.qs}  if asc
 
