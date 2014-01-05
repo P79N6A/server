@@ -83,7 +83,7 @@ class E
         c: F['itemview/chat'][r,e]}}}
 
   fn 'baseview/chat',->d,e,c{
-    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body, span.nick span, a {background-color: #{E.c}}\n"}),
+    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{E.c}}\n"}),
      {:class => :ch, c: c.()},
      (H.once e,'chat.tail',{id: :b})]}
 
