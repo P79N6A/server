@@ -12,9 +12,8 @@ class E
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]}
 
   fn 'view/'+LDP+'container',->d,e{
-    puts "container"
     {style: "background-color:white;color:black;border-radius:.6em;float:left",
-      c: [{_: :b, style: 'font-size:2em',c: '*'},
+      c: [{_: :b, style: 'font-size:2em;color:#22f',c: '*'},
           d['#'].do{|s|s[DC+'hasFormat'].do{|fs|fs.map{|f|{_: :a, href: f, c: f.label}}}}]}}
   
   fn 'view/page',->d,e{

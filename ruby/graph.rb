@@ -36,7 +36,7 @@ class E
     self
   end
 
-  # default "protograph" identity and resource thunks
+  # default "protograph" - identity + resource-thunks
   fn 'protograph/',->e,q,g{
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     unless set.empty?
@@ -58,15 +58,14 @@ class E
        [u, r.respond_to?(:m) && r.m]}].h }
 
   # default graph (filesystem store)
-  # to change default graph-constructor update env q['graph'] = 'hexastore' (or rewrite this function)
-  # ie define a GET handler on / or a subdir, adjust backend and return false to continue
+  # to change default graph-constructor update env q['graph'] = 'hexastore' (or overwrite this function)
+  # ie define a GET handler on / or a subdir, update env and return false
   fn 'graph/',->e,q,m{
     # force thunks
     m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
-    # cleanup thunks that didn't expand
+    # cleanup unexpanded thunks
     m.delete_if{|u,r|r.class==E}
-    # add links to varied formats
-    s = m['#'] ||= {}
+    s = m['#'] ||= {} # add links to varied formats
     s[DC+'hasFormat'] = %w{text/n3}.map{|m|E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m)}}
 
   def graphFromFile g={}

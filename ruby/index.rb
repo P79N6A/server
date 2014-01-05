@@ -49,7 +49,7 @@ class E
 
   # subtree traverse index on p+o cursor
   fn 'set/index',->d,r,m,f=:rangePO{
-    top = (f == :rangeP ? d : r['p']).expand.E
+    top = (f == :rangeP ? d : (r['p'] || '/')).expand.E
     count = r['c'] &&
             r['c'].to_i.max(1000)+1 || 22
     dir = r['d'] &&

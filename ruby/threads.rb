@@ -70,6 +70,7 @@ class E
                   'ann' =>{
                     'view'=>'threads',
                     'set'=>'glob',
+                    'filter'=>'regex',
                     'matchP' => 'dc:title',
                     'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/}})
 
