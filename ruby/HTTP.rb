@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 require 'rack'
 
 class E
@@ -50,7 +50,7 @@ class E
           m.merge! c.r true
         else
           # construct graph
-          (g && F['graph/' + g] || F['graph/'])[self,@r.q,m]
+          (g && F['graph/' + g] || F['graph/'])[self, @r.q,m]
           # cache graph
           c.w m,true
         end
@@ -78,7 +78,7 @@ class String
   end
 
   def hR
-    [200,{'Content-Type'=>'text/html; charset=utf-8'},[self]]
+    [200, {'Content-Type'=>'text/html; charset=utf-8'}, [self]]
   end
 
 end
@@ -111,9 +111,7 @@ module Th
   end
 
   def conneg
-    # format in querystring
     return q['format'] if q['format'] && E::F[E::Render+q['format']]
-    # format in Accept header
     accept.sort.reverse.map{|p|p[1].map{|mime|
      return mime if E::F[E::Render+mime]}}
     # default
@@ -135,7 +133,7 @@ class Hash
    '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end
 
-  def env r # attach environment variable
+  def env 
     @r = r
     self
   end
