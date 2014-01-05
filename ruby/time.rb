@@ -23,7 +23,7 @@ class E
       g.map{|u,r|i.(r,e)}}}
 
   fn 'baseview/timegraph',->d,e,c{
-    Fn 'filter.timegraph', e.q,d,nil
+    Fn 'filter/timegraph', e.q,d,nil
 
     e[:graph] = d
     e[:group] = {}
@@ -64,12 +64,12 @@ class E
                  y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}}]
     end }
 
-  fn 'filter.timeofday',->e,m,_{
+  fn 'filter/timeofday',->e,m,_{
     m.map{|_,r|r[Date].do{|ds| ds.map{|d|
           d = d.to_time
           r['timeofday']=[60 * d.hour + d.min]}}}}
 
-  fn 'filter.timegraph',->e,m,_{
+  fn 'filter/timegraph',->e,m,_{
 
     x = e['x'] || Date # x property
     y = e['y']         # y property

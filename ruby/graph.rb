@@ -45,6 +45,18 @@ class E
     end
     F['docsID'][g,q]}
 
+  fn 'set/',->e,q,g{
+    s = []
+    s.concat e.docs
+    e.pathSegment.do{|p| s.concat p.docs }
+    s }
+
+  # fs-derived ID for a resource-set
+  fn 'docsID',->g,q{
+   [q.has_key?('nocache').do{|_|rand},
+     g.sort.map{|u,r|
+       [u, r.respond_to?(:m) && r.m]}].h }
+
   # default graph (filesystem store)
   # to change default graph-constructor update env q['graph'] = 'hexastore' (or rewrite this function)
   # ie define a GET handler on / or a subdir, adjust backend and return false to continue

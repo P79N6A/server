@@ -23,34 +23,18 @@ class E
          self) : @r
   end
 
-
-  # document-set for base protograph
-  fn 'set/',->e,q,g{
-    s = []
-    s.concat e.docs
-    e.pathSegment.do{|p| s.concat p.docs }
-    s }
-
-  # unique ID for a resource-set
-  fn 'docsID',->g,q{
-    puts [:docs,*g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m].join ' '}].join "\n"
-   [q.has_key?('nocache').do{|_|rand},
-     g.sort.map{|u,r|
-       [u, r.respond_to?(:m) && r.m]}].h
-  }
-
   def response
 
     m = {}
 
-    # identify graph
+    # identity of graph (model)
     g = @r.q['graph']
     graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
 
     return F[E404][self,@r] if m.empty?
 
-    # identify response
-    @r['ETag'] ||= [graphID, @r.format, Watch].h
+    # identity of response (view)
+    @r['ETag'] ||= [%w{filter view}.map{|a| @r.q[a].do{|v| F[a + '/' + v] && v}}, graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
       

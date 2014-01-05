@@ -1,7 +1,7 @@
 #watch __FILE__
 class E
  
-  fn 'filter.set',->e,m,r{
+  fn 'filter/set',->e,m,r{
     # filter to RDFs set-members
     # gone will be:
     # data about docs containing the data
@@ -12,7 +12,7 @@ class E
   def self.filter o,m,r
     o['filter'].do{|f| # user-supplied
       f.split(/,/).map{|f| # comma-seperated filters
-        F['filter.'+f].do{|f|f[o,m,r]}}} # if they exist
+        F['filter/'+f].do{|f|f[o,m,r]}}} # if they exist
     m
   end
 
