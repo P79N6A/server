@@ -25,7 +25,7 @@ class E
   def ttl; @ttl||= docBase.a('.ttl') end
 
   def docBase
-    uri.empty? ? ''.E : uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare }
+    !uri.empty? && uri.split(/#/)[0].do{|u|u.E.do{|d| d.dirname.as d.bare }} || E['']
   end
   
   # and w/ URI-lib
