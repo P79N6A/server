@@ -78,26 +78,21 @@ class String
   end
 
   def hR
-    [200,{'Content-Type'=>'text/html; charset=utf-8'},
-     [self]]
+    [200,{'Content-Type'=>'text/html; charset=utf-8'},[self]]
   end
 
 end
 
 module Th
 
-  # raw query-string content
+  # query-string
   def qs
     (['GET','HEAD'].member? verb) ? self['QUERY_STRING'] : self['rack.input'].read
   end
 
-  # memoize parsed query-string
+  # parsed query-string
   def q
-    @q ||= (qs||'').qp.do{|q|
-      (q['?']).do{|d|
-        E::F['?'][d].do{|g| # expand aliases
-          g.merge q
-        } || q } || q}
+    @q ||= (qs||'').qp
   end
 
   def accept_ k=''
@@ -135,7 +130,7 @@ end
 
 class Hash
 
-  # generate querystring
+  # unparse querystring
   def qs
    '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end

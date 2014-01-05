@@ -11,7 +11,7 @@ class E
       (H.once e,:mu,(H.js '/js/mu')),
 
       # up to set-overview
-      ({_: :a, id: :up, href: e['REQUEST_PATH'] + e.q.merge({'view' => 'page', 'v' => 'threads'}).qs, c: '&uarr;'} if d.keys.size > 2),
+      ({_: :a, id: :up, href: e['REQUEST_PATH'] + e.q.merge({'view' => 'threads'}).qs, c: '&uarr;'} if d.keys.size > 2),
 
       # collapse/expand quoted content
       {id: :showQuote, c: :quotes, show: :true},{_: :style, id: :quote}),'<br>',
@@ -25,7 +25,7 @@ class E
         {:class => :mail,
           
           c: [# message link
-              {_: :a, name: m.uri, href: m.url, rel: :raw, title: :raw, c: '&nbsp;'},
+              {_: :a, name: m.uri, href: m.url+'?view=base', rel: :raw, title: :raw, c: '&nbsp;'},
               
               # To:, From: index search links
               [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
@@ -82,7 +82,7 @@ class E
                 # only show if changed from previous
                 title != t[0] && (
                  title = t[0] # update title
-                 [{:class => :title, c: t.html, _: :a, href: m.url+'??=thread#'+m.uri},
+                 [{:class => :title, c: t.html, _: :a, href: m.url+'?graph=thread#'+m.uri},
                   '<br clear=all>'])}]}]}]}
   
   # set a default view for RFC822 and SIOC types

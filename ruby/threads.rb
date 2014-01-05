@@ -4,6 +4,7 @@ class E
   
   fn 'protograph/thread',->d,e,g{
     d.walk SIOC+'reply_of',g
+    g['#']={RDFs+'member' => g.keys.map(&:E), Type => LDP+'container'}
     F['docsID'][g,e]}
   
   fn 'view/threads',->d,env{
@@ -39,7 +40,7 @@ class E
        ['<tr><td class=subject>', e[1].map{|t|
 
           # thread
-          [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: t[1][0].url+'??=thread',
+          [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: t[1][0].url+'?graph=thread',
              c: t[0].to_s.gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')},
 
 
@@ -48,7 +49,7 @@ class E
             ['<br>', t[1].map{|s|
                
                # author name and RDFa
-               {_: :a, property: Creator, href: s.url+'??=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
+               {_: :a, property: Creator, href: s.url+'?graph=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
                  c: (s[SIOC+'name']||s[Creator]).do{|n|n[0]}
                }}]),'<br>']},'</td>',
 
@@ -60,18 +61,5 @@ class E
 
      # drill down to full-content of this set
      {_: :a, id: :down, href: env['REQUEST_PATH'] + env.q.merge({'view'=>'mail'}).qs, c: '↓'}]}
-
-  F["?"] ||= {}
-  F["?"].update({'thread' =>{
-                    'graph'=>'thread',
-                    'sort' => 'dc:date',
-                    'reverse' => nil,
-                    'view' => 'mail'},
-                  'ann' =>{
-                    'view'=>'threads',
-                    'set'=>'glob',
-                    'filter'=>'regex',
-                    'matchP' => 'dc:title',
-                    'match' => /[^a-zA-Z][Aa][Nn][nN]([oO][uU]|[^a-zA-Z])/}})
 
 end
