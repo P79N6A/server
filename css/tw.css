@@ -6,7 +6,8 @@ a.date {color:#000;background-color:#888;font-size:.8em;}
 .tw div,p {display:inline}
 .tw .title {color:#000;background-color:#eee}
 .tw .titleMail {color:#fff;background-color:#0000ba}
-.tw a {color:#fff}
+.tw a * {color:#222;background-color:#fff}
+.tw b {color:#000;background-color:#fff}
 img.a {height:.96em;border-width:0}
 .tw img {max-width:100%}
 a {text-decoration:none}

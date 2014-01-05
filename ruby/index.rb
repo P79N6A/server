@@ -4,13 +4,13 @@ class E
   # POSIX-fs based index of triples
   # 
 
-  # index a triple 
+  # index a triple
   def index p,o
     p = p.E
     indexEdit p, (o.class == E ? o : p.literal(o)), nil
   end
 
-  # index a triple - no input type-normalization
+  # index a triple - no type-normalization
   def indexEdit p,o,a
     return if @noIndex
     p.pIndex.noIndex[o,self,a]
@@ -91,13 +91,13 @@ class E
 
   # range query - predicate
   def rangeP size=8, dir=:desc, offset=nil, object=nil
-    puts "rangeP #{uri} size #{size} dir #{dir} offset #{offset}"
+#    puts "rangeP #{uri} size #{size} dir #{dir} offset #{offset}"
     pIndex.subtree(size,dir,offset).map &:ro
   end
 
   # range query - predicate-object
   def rangePO n=8,d=:desc,s=nil,o
-    puts "rangePO #{uri} #{o} size #{n} dir #{d} offset #{s}"
+#    puts "rangePO #{uri} #{o} size #{n} dir #{d} offset #{s}"
     poIndex(o).subtree(n,d,s).map &:ro
   end
 

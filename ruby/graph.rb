@@ -38,10 +38,11 @@ class E
 
   # default "protograph" - identity + resource-thunks
   fn 'protograph/',->e,q,g{
+     g['#'] = {}
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     unless set.empty?
-      g['#'] = {RDFs+'member' => set}
-      set.map{|u| g[u.uri] = u }
+      g['#'][RDFs+'member'] = set
+      set.map{|u| g[u.uri] = u } # thunk
     end
     F['docsID'][g,q]}
 
@@ -58,7 +59,7 @@ class E
        [u, r.respond_to?(:m) && r.m]}].h }
 
   # default graph (filesystem store)
-  # to change default graph-constructor update env q['graph'] = 'hexastore' (or overwrite this function)
+  # to change default graph-constructor update env q['graph'] = 'hexa store' (or overwrite this function)
   # ie define a GET handler on / or a subdir, update env and return false
   fn 'graph/',->e,q,m{
     # force thunks
