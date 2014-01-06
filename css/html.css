@@ -1,13 +1,15 @@
 body {
     font-family: sans-serif;}
 a { text-decoration:none;}
-.abbr,a[id]{
+a[id]{
+    border-radius: .16em;
+    padding: 0 .1em 0 .1em;
     background-color:#7786A7;
     color:#fff;
 }
 table.html {
     float:left;
-    background-color:#d8d8d8;
+    background-color:#e1e1e1;
     border-radius:.62em .38em .38em .62em;
     padding:.18em;
     margin:.18em;}
@@ -27,8 +29,7 @@ td.val {
     background-color:#fff;
     color:#000;
     padding-left: .18em;
-    border-style:dotted;
-    border-width:0 0 .1em 0;
+    border-radius: .22em 0 0 .22em;
     border-color:#ccc;}
 
 td.val .frag {
