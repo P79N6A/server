@@ -38,7 +38,11 @@ td.val .frag {
     color: #fff;
     padding-right: .15em}
 
-td.val .abbr {display: inline; }
+td.val .abbr {
+    display: inline;
+    background-color: #78a;
+    color: #fff;
+}
 
 article {
     border-radius:1.2em;
