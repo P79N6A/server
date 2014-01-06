@@ -27,13 +27,13 @@ class E
 
     m = {}
 
-    # identity of graph (model)
+    # graph identity (model)
     g = @r.q['graph']
     graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
 
     return F[E404][self,@r] if m.empty?
 
-    # identity of response (view)
+    # response identity (view)
     @r['ETag'] ||= [%w{filter view}.map{|a| @r.q[a].do{|v| F[a + '/' + v] && v}}, graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
@@ -46,16 +46,16 @@ class E
         
         # graph
         c = E '/E/graph/' + graphID.dive
-        if c.e # graph exists
-          m.merge! c.r true
+        if c.e # exists
+          m = c.r true
         else
-          # construct graph
+          # construct
           (g && F['graph/' + g] || F['graph/'])[self, @r.q,m]
-          # cache graph
+          # cache
           c.w m,true
         end
 
-        # graph sort/filter
+        # deterministic filters
         E.filter @r.q, m, self
 
         # response
