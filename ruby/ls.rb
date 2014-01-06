@@ -9,7 +9,7 @@ class E
      i.map{|u,r|
        url = r.E.localURL e
        {class: :dir, style: "background-color: #{E.cs}",    # dir wrapper
-         c: [{c: [{_: :a, href: url+'?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
+         c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
                   {_: :a, href: url.t, c: '/'}]},
              r[Posix+'dir#child'].do{|c|c.map{|c|a[c]}}]}}]}
 
