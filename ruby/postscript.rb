@@ -14,12 +14,13 @@ class E
 
   F['view/'+MIMEtype+'application/postscript']=->r,e{
     [(H.once e, :mu,   (H.js '/js/mu')),(H.once e, :book, (H.js '/js/book')),
+     {_: :style, c: 'div[type="book"] a {background-color:#ccc;color:#fff;float:left;margin:.16em}'},
      r.values.map{|d|
       d[DC+'Image'].do{|is|
         is = is.sort_by(&:uri)
-        {id: d.uri, type: :book,
+        {type: :book,
           c: [{_: :img, style:'float:left;max-width:100%', src: is[0].url},
-              is.map{|i|
-                [{_: :a, style: 'background-color:#ccc;color:#fff',href: i.url, c: i.E.bare},' ']}]}}}]}
+              {name: :pages,
+                c: is.map{|i|{_: :a,href: i.url, c: i.E.bare}}}]}}}]}
 
 end
