@@ -40,6 +40,7 @@ pager
 PATCH
 pdf
 POST
+postscript
 prototype
 rdf
 rfc822

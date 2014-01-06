@@ -17,7 +17,7 @@ class E
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp css
  desktop diff d erlang errors flex fortran function glsl haskell haskell_literate haxe html java
  javascript key_string langdef latex ldap lisp log logtalk lsm lua m4 makefile manifest nohilite
- number outlang oz pascal pc perl php postscript prolog properties proto python ruby scala sh
+ number outlang oz pascal pc perl php prolog properties proto python ruby scala sh
  shellscript slang sml spec sql style symbols tcl texinfo todo url vala vbscript xml}
     .map{|l|
     ma = 'application/' + l

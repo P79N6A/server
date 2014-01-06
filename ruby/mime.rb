@@ -83,6 +83,7 @@ class E
     pdf: 'application/pdf',
     pl:  'application/perl',
     png: 'image/png',
+    ps:  'application/postscript',
     py:  'application/python',
     rb:  'application/ruby',
     ru:  'application/ruby',
@@ -108,6 +109,7 @@ class E
     'application/rdf+xml'  => [:triplrRDF,:rdfxml],
     'application/json'     => [:triplrJSON],
     'application/pdf'      => [:triplrPDF],
+    'application/postscript'=> [:triplrPS],
     'application/textile'  => [:triplrTextile],
     'application/uri'      => [:triplrUriList],
     'application/word'     => [:triplrWord],
@@ -128,7 +130,7 @@ class E
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
     'text/turtle'          => [:triplrRDF,:turtle],
-    'text/x-tex'          => [:triplrTeX],
+    'text/x-tex'           => [:triplrTeX],
   }
 
   # prefer a view even if requested file exists
@@ -137,6 +139,7 @@ class E
     'application/markdown' => true,
     'application/json+rdf' => true,
     'application/org' => true,
+    'application/postscript' => true,
     'application/textile' => true,
     'application/uri' => true,
     'application/word' => true,
