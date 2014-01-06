@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   def triplrPS
@@ -13,12 +13,11 @@ class E
   end
 
   F['view/'+MIMEtype+'application/postscript']=->r,e{
-    [(H.once e, :mu,   (H.js '/js/mu')),
-     (H.once e, :book, (H.js '/js/book')),
+    [(H.once e, :mu,   (H.js '/js/mu')),(H.once e, :book, (H.js '/js/book')),
      r.values.map{|d|
       d[DC+'Image'].do{|is|
         is = is.sort_by(&:uri)
-        {id: d.uri, type: :book
+        {id: d.uri, type: :book,
           c: [{_: :img, style:'float:left;max-width:100%', src: is[0].url},
               is.map{|i|
                 [{_: :a, style: 'background-color:#ccc;color:#fff',href: i.url, c: i.E.bare},' ']}]}}}]}
