@@ -3,7 +3,7 @@ class E
 
   def triplrPS
     p = E[dirname + '/.' + File.basename(path) + '/']
-    unless p.e && p.m > m 
+    unless p.e # && p.m > m 
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
     end
@@ -15,7 +15,10 @@ class E
   F['view/'+MIMEtype+'application/postscript']=->r,_{
     r.values.map{|d|
       d[DC+'Image'].do{|is|
-        is.sort_by(&:uri).map{|i|
-          {_: :img, style:'float:left;max-width:100%', src: i.url}}}}}
+        is = is.sort_by(&:uri)
+        {id: d.uri,
+          c: [{_: :img, style:'float:left;max-width:100%', src: is[0].url},
+              is.map{|i|
+                [{_: :a, style: 'background-color:#ccc;color:#fff',href: i.url, c: i.E.bare},' ']}]}}}}
 
 end
