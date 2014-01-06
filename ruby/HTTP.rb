@@ -18,11 +18,6 @@ class E
     F['E500'][x,e]
   end
 
-  def env r=nil
-    r ? (@r = r
-         self) : @r
-  end
-
   def response
 
     m = {}
@@ -34,14 +29,14 @@ class E
     return F[E404][self,@r] if m.empty?
 
     # response identity (view)
-    @r['ETag'] ||= [%w{filter view}.map{|a| @r.q[a].do{|v| F[a + '/' + v] && v}}, graphID, @r.format, Watch].h
+    @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
       
       # response
       r = E'/E/req/' + @r['ETag'].dive
-      if r.e # response exists
-        r    # cached response
+      if r.e # exists
+        r
       else
         
         # graph
@@ -54,11 +49,7 @@ class E
           # cache
           c.w m,true
         end
-
-        # deterministic filters
-        E.filter @r.q, m, self
-
-        # response
+                # cache < construct
         r.w render @r.format, m, @r
       end }
   end

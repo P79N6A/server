@@ -4,6 +4,11 @@ class E
 
   attr_reader :uri
 
+  def env r=nil
+    r ? (@r = r
+         self) : @r
+  end
+
   def == u
       to_s == u.to_s
   end
