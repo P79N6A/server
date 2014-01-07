@@ -47,11 +47,6 @@ class E
     }
   end
 
-  fn 'head/chat',->d,e{
-     t = d.map{|_,r|r[Date]}.flatten.compact.map &:to_time
-    [{_: :title, c: "#{t.min} -> #{t.max}"},
-     (Fn 'head.formats',e)]}
-
   fn 'view/chat',->d,e{
     Fn'baseview/chat',d,e,->{d.map{|u,r|Fn 'itemview/chat',r,e}}}
 
