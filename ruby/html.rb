@@ -172,19 +172,16 @@ class E
         o.to_s} : o}
   end
 
-  fn Render+'text/html',->d,e{
+  fn Render+'text/html',->d,e{ u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
-    v = F['view/'+e.q['view'].to_s] || F['view']
-    u = d['#']||={}
-    H ['<!DOCTYPE html>',
-       {_: :html,
-         c: [{_: :head,
-               c: ['<meta charset="utf-8" />',
+    view = F['view/'+e.q['view'].to_s] || F['view']
+    H ['<!DOCTYPE html>',{_: :html,
+         c: [{_: :head, c: ['<meta charset="utf-8" />',
                    {_: :title, c: titles.size==1 ? titles[0] : e.uri},
                    {_: :link, rel: :icon, href:'/css/misc/favicon.ico'},
-                   u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
-                   u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
-             {_: :body, c: v[d,e]}]}]}
+     u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
+     u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
+             {_: :body, c: view[d,e]}]}]}
 
   # property-selector toolbar - requires RDFa view
   fn 'view/p',->d,e{
