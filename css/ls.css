@@ -49,8 +49,8 @@ table {
     border-color:#696969;
     border-width:0 0 .1em 0 }
 td[property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap}
-.ls tr:nth-child(odd) {background: #eee;color:#000}
-.ls tr:nth-child(even) {background: #fff;color:#000}
+.ls tr:nth-child(odd) {background: #fff;color:#000}
+.ls tr:nth-child(even) {background: #eee;color:#000}
 
 .dir {
     max-width:64em;

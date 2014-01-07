@@ -1,7 +1,8 @@
 table {
     background-color:white;
     color:black}
-
+table th {
+    color: #999}
 td {
      border-style:dotted;
      border-width:.1em .1em 0 0;

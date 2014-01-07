@@ -85,7 +85,8 @@ end
 
 class Hash
   def html e={'SERVER_NAME'=>'localhost'}
-    H({_: :table, class: :html, c:
+    (keys.size == 1 && has_key?('uri')) ? url.href : 
+      H({_: :table, class: :html, c:
         map{|k,v|
           {_: :tr, property: k, c:
             [{_: :td,
@@ -232,12 +233,8 @@ class E
     keys = ks.keys
     keys.empty? ? es.html :
     H({_: :table,:class => :tab,
-        c: [{_: :tr,
-              c: keys.map{|k|
-                {_: :th, class: :label, property: k,
-                  c: q ? {_: :a,
-                    href: q['REQUEST_PATH']+q.q.except('reverse').merge({'sort'=>k}).merge(q.q.member?('reverse') ? {} : {'reverse'=>true}).qs,
-                    c: k.abbrURI} : k}}},
+        c: [{_: :tr, c: keys.map{|k|
+                {_: :th, class: :label, property: k, c: k.abbrURI}}},
             *es.map{|e|
               {_: :tr, about: e.uri, c:
                 keys.map{|k| {_: :td, property: k, c: e[k].html}}}}]})}
