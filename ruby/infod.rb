@@ -14,7 +14,6 @@ du
 edit
 facets
 feed
-filter
 find
 forum
 fs
@@ -41,7 +40,6 @@ PATCH
 pdf
 POST
 postscript
-prototype
 rdf
 rfc822
 ruby
