@@ -37,7 +37,6 @@ microblog
 names
 pager
 PATCH
-pdf
 POST
 postscript
 rdf
@@ -49,7 +48,6 @@ sh
 text
 threads
 time
-uid
 whois
 wiki
 }.map{|e|require_relative e}

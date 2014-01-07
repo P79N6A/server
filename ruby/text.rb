@@ -73,6 +73,10 @@ class E
     yield uri, Content, `cat #{sh} | aha`
   end
 
+  def triplrPDF &f
+    triplrStdOut 'pdfinfo', &f
+  end
+
   def triplrRTF
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs
   end
