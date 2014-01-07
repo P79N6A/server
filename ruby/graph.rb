@@ -94,7 +94,7 @@ class E
                           respond_to?(t) && t }} || :triplrMIME
     unless ext=='e' # native graph-format already
       # construct native graph if missing or stale
-      _ = E '/E/graph/' + [triplr,uri].h.dive
+      _ = E '/E/rdf/' + [triplr,uri].h.dive
       unless _.e && _.m > m;  e = {}
         puts "< #{uri}"
         [:triplrInode, triplr].each{|t| fromStream e, t }
