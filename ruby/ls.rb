@@ -16,19 +16,14 @@ class E
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
   fn 'view/ls',->i,e{
-    dir = e['uri'].E; path = dir.pathSegment
+    dir = e['uri'].E
+    path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
-    i = i.dup; f = {}
-    ['uri', Posix+'dir#child', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
+    i = i.dup
     i.delete_if{|u,r|!r[Stat+'ftype']}
-    i.values.map{|r|
-      r.class==Hash &&
-      r.delete_if{|p,o|!f[p]}}
     [(H.css '/css/ls'),
      {_: :a, class: :up, href: up, c: '&uarr;'},
-     {class: :ls,
-       c: (Fn 'view/table',i,e)},
-     (Fn 'view/find',i,e),'<br clear=all>',
+     {class: :ls, c: (Fn 'view/table',i,e)},
      {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
   
   # user-patchable default-handler
