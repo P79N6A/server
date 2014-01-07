@@ -109,22 +109,6 @@ class E
     url.href
   end
 
-  fn 'head',->d,e{
-    titles = d.map{|u,r|
-      r[Title] if r.class==Hash
-    }.flatten.compact
-    [{_: :title, c: titles.size==1 ? titles[0] : e.uri},
-     (Fn 'head.formats',e),
-     (Fn 'head.icon')].cr}
-
-  fn 'head.formats',->e{
-    formats = %w{text/n3 application/json+ld}
-    formats.map{|f|
-      {_: :link, rel: :meta, type: f,
-        href:'http://' + e['SERVER_NAME'] + e['REQUEST_PATH'] + e.q.merge({'format' => f}).qs}}.cr}
-
-  fn 'head.icon',->{{_: :link, href:'/css/misc/favicon.ico', rel: :icon}}
-
   fn 'view/select',->d,e{
     d.values.map{|r|Fn 'view/divine/resource',r,e}}
 
@@ -189,18 +173,17 @@ class E
   end
 
   fn Render+'text/html',->d,e{
-    v = e.q['view'].to_s
-    h = F['head/'+v] || F['head'] 
-    v = F['view/'+v] || F['view']
-    H(e.q.has_key?('un') ? v[d,e] :
-      ['<!DOCTYPE html>',
-       {_: :html,
-         c: [{_: :head,
-               c: ['<meta charset="utf-8" />',
-                   h[d,e]]},
-             {_: :body, c: v[d,e]}].cr}].cr)}
+    titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
+    v = F['view/'+e.q['view'].to_s] || F['view']
+    H ['<!DOCTYPE html>',
+       {_: :html, c: [{_: :head, c: ['<meta charset="utf-8" />',
+                   {_: :title, c: titles.size==1 ? titles[0] : e.uri},
+                   {_: :link, rel: :icon, href:'/css/misc/favicon.ico'},
+d['#'][Next].do{|n|{_: :link, rel: :next, href: n.uri}},
+d['#'][Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
+             {_: :body, c: v[d,e]}]}]}
 
-  
+
   # property-selector toolbar - requires RDFa view
   fn 'view/p',->d,e{
     #TODO fragmentURI scheme for selection-state

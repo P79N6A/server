@@ -4,13 +4,6 @@ class E
   Next = LDP+'nextPage'
   Prev = LDP+'prevPage'
 
-  fn 'head/page',->d,e{v=e.q['v']
-    u = d['#'] ||= {}
-    # head of wrapped view
-    [((v && F['head/'+v] || F['head'])[d,e] unless v == 'page'),
-     u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
-     u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]}
-
   fn 'view/'+LDP+'container',->d,e{
     {style: "background-color:white;color:black;border-radius:.6em;float:left",
       c: [{_: :b, style: 'font-size:2em;color:#22f',c: '*'},

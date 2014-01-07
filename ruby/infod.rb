@@ -35,7 +35,7 @@ mail
 man
 microblog
 names
-pager
+page
 PATCH
 POST
 postscript
