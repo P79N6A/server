@@ -8,8 +8,8 @@ class String
     #  ) only matches with an opener
     # ,. only match mid-URI
     # URI can span lines since some software injects linebreaks
-    (partition /(https?:\/\/(\([^)>\s\n]*\)|[,.\n]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
-      u = p[1].gsub "\n",'' # discard captured line-breaks
+    (partition /(https?:\/\/(\([^)>\s]*\)|[,.\n]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
+      u = p[1].gsub "\n",'' # discard mid-URL line-breaks
       p[0].gsub('<','&lt;').gsub('>','&gt;')+ # escape <>
       (p[1].empty?&&''||'<a rel=untyped href="'+u+'">'+u.do{|p|
          i && p.match(/(gif|jpe?g|png|tiff)$/i) && # inline images if asked for
