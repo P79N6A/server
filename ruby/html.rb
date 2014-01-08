@@ -110,18 +110,14 @@ class E
     url.href
   end
 
-  fn 'view/select',->d,e{
-    d.values.map{|r|Fn 'view/divine/resource',r,e}}
-
-  # default view
-  F['view'] = F['view/select']
+  fn 'view',->d,e{
+    d.values.sort_by{|r|r[Date].do{|d|d[0].to_s}||'Z'}.reverse.map{|r|Fn 'view/select',r,e}}
 
   fn 'view/base',->d,e,k=true{
     [H.once(e,'base',H.css('/css/html')),
      d.values.map{|v|v.html e,k}]}
 
-  # select a view for a RDF resource
-  fn 'view/divine/resource',->r,e{
+  fn 'view/select',->r,e{
     graph = {r.uri => r}
     view = F['view/base']
     # find types, skipping malformed/missing info
