@@ -84,13 +84,13 @@ class FalseClass
 end
 
 class Hash
-  def html e={'SERVER_NAME'=>'localhost'}
+  def html e={'SERVER_NAME'=>'localhost'},key=true
     (keys.size == 1 && has_key?('uri')) ? url.href : 
       H({_: :table, class: :html, c:
         map{|k,v|
           {_: :tr, property: k, c:
-            [{_: :td,
-               c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key},
+           [({_: :td,
+               c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key} if key),
              {_: :td,
                c: (case k
                    when E::Content
@@ -116,9 +116,9 @@ class E
   # default view
   F['view'] = F['view/select']
 
-  fn 'view/base',->d,e{
+  fn 'view/base',->d,e,k=true{
     [H.once(e,'base',H.css('/css/html')),
-     d.values.map{|v|v.html e}]}
+     d.values.map{|v|v.html e,k}]}
 
   # select a view for a RDF resource
   fn 'view/divine/resource',->r,e{
