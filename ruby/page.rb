@@ -5,21 +5,14 @@ class E
   Prev = LDP+'prevPage'
 
   fn 'view/'+LDP+'container',->d,e{
-    {style: "background-color:white;color:black;border-radius:.6em;float:left",
-      c: [{_: :b, style: 'font-size:2em;color:#22f',c: '*'},
-          d['#'].do{|s|s[DC+'hasFormat'].do{|fs|fs.map{|f|{_: :a, href: f, c: f.label}}}}]}}
-  
-  fn 'view/page',->d,e{
-    u = d['#'] ||= {}
+    u = d[''] || {}
+    {style: "float:left",
+      c: [u[Prev].do{|p|{_: :a, rel: :prev, style: 'background-color:white;color:black;font-size:2em',href: p.uri, c: '&larr;'}},
+          u[Next].do{|n|{_: :a, rel: :next, style: 'font-size:2em',href: n.uri, c: '&rarr;'}},
+          u[DC+'hasFormat'].do{|fs|
+            fs.map{|f|
+              [{_: :a, href: f,
+                c: (f.uri.match(/n3$/) ? {_: :img, src: '/css/misc/cube.png', style: 'height:2em'} :
+                    {style: 'background-color:white;color:black;display:inline;padding:.2em', c: f.label.split('%')[0]})},'<br>']}}]}}
 
-    # links
-    c=[u[Prev].do{|p|
-         {_: :a, rel: :prev, style: 'float:left; font-size:2em',href: p.uri, c: '&larr;'}},
-       u[Next].do{|n|
-         {_: :a, rel: :next, style: 'float:right;font-size:2em',href: n.uri, c: '&rarr;'}}]
-
-    [(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')),c,
-     (e.q['v'].do{|v|F['view/'+v]} || F['view'])[d,e],
-     {class: :bottom, style: "clear:both", c: c}]}
-  
 end

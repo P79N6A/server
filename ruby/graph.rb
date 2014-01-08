@@ -78,7 +78,7 @@ class E
     # cleanup unexpanded thunks
     m.delete_if{|u,r|r.class==E}
     s = m['#'] ||= {} # add links to varied formats
-    s[DC+'hasFormat'] = %w{text/n3}.map{|m|E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m)}}
+    s[DC+'hasFormat'] = %w{text/n3 application/ld%2Bjson}.map{|m|E('http://'+e.env['SERVER_NAME']+e.env['REQUEST_PATH']+'?format='+m)}}
 
   fn 'filter/set',->e,m,r{
     # filter to RDFs set-members, gone will be:
