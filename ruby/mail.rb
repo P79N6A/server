@@ -57,7 +57,7 @@ class E
                   lines.to_a.map{|l|
 
                     # line identifier
-                    f = m.uri + ':' + (i+=1).to_s
+#                    f = m.uri + ':' + (i+=1).to_s
                     
                     # wrapper
                     {_: :span, 
@@ -65,15 +65,14 @@ class E
                       # is line quoted?
                       class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c:
 
-                      # id
-                      [{_: :a, id: f},
+                      [# id
+#                       {_: :a, id: f},
 
                        # line
                        l.chomp,
 
                        # link
-                       (l.size > 64 &&
-                        {_: :a, class: :line, href: '#'+f,c: '&#160;'}),
+#                       (l.size > 64 && {_: :a, class: :line, href: '#'+f,c: '&#160;'}),
 
                      "\n" ]}}}}, # collate lines
 
