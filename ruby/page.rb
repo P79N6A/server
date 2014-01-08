@@ -12,7 +12,7 @@ class E
           u[DC+'hasFormat'].do{|fs|
             fs.map{|f|
               [{_: :a, href: f,
-                c: (f.uri.match(/n3$/) ? {_: :img, src: '/css/misc/cube.png', style: 'height:2em'} :
+                c: (f.uri.match(/n3$/) ? {_: :img, src: '/css/misc/cube.png', style: 'height:2em', alt: :n3, title: :n3} :
                     {style: 'background-color:white;color:black;display:inline;padding:.2em', c: f.label.split('%')[0]})},'<br>']}},
           (H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')) # n/p key mapping
          ]}}

@@ -57,12 +57,7 @@ class String
     '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
   def html e=nil
-    if match /\A(\/|http)[\S]+\Z/
-      href
-    else
-      self
-    end
-  rescue
+# CGI.escapeHTML self
     self
   end
 end
@@ -94,7 +89,7 @@ class Hash
              {_: :td,
                c: (case k
                    when E::Content
-                     {_: :pre, style: "white-space: pre-wrap;margin:0", c: v}
+                     v
                    when 'uri'
                      u = v.E
                      {_: :a, id: u, href: u.url, c: v}

@@ -2,6 +2,11 @@ watch __FILE__
 class E
 
   F['view/'+SIOCt+'BlogPost']=->g,e{
+
+    F['example/blogview'][g,e]
+  }
+
+  F['example/blogview']=->g,e{
     g.map{|u,r|
       case u
       when /boston\.com/ # remove spamcrap
@@ -9,7 +14,7 @@ class E
         F['view/base'][{u => r},e,false]
       when /flickr/ # metadata not really informative
         r[Content]
-      when /reddit/ # minimalist view
+      when /reddit/ # minimal view
         F['view/'+SIOCt+'BoardPost'][{u => r},e]
       when /universalhub/  # logo + trim spacehogging tagjunk
         c = Nokogiri::HTML.parse r[Content][0]
