@@ -12,7 +12,7 @@ class E
           style: 'float:left;max-width:40em;position:relative;background-color:#fff;border-color:#eee;margin-top:93px;padding-top:0;border-style:dotted;border-width:.3em;border-radius:0 .8em .8em .8em'
         }
       else
-        r.html
+        F['view/base'][{u => r},e]
       end
     }
   }
