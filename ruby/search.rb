@@ -4,10 +4,6 @@ class E
     r.q['graph'] = 'roonga'
     e.response }
 
-  fn 'view/search',->d,e{
-    [(Fn 'view/search/form',e.q,e),
-     (Fn 'view/page',d,e)]}
-
   fn 'view/search/form',-> q=nil,e { q||={}
     [H.css('/css/search'),H.js('/js/search'),
      {:class => :form,

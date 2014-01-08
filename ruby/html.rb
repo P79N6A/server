@@ -94,7 +94,7 @@ class Hash
              {_: :td,
                c: (case k
                    when E::Content
-                     {_: :pre, style: "white-space: pre-wrap", c: v}
+                     {_: :pre, style: "white-space: pre-wrap;margin:0", c: v}
                    when 'uri'
                      u = v.E
                      {_: :a, id: u, href: u.url, c: v}
