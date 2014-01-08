@@ -10,6 +10,7 @@ table {
 .up { font-size: 2em;
       font-weight: bold;
       padding:  0 1.4em 0 1.4em;
+      border-radius: .3em .3em 0 0;
       background-color:#0f3;
       color: #fff;
       }

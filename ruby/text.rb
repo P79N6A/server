@@ -4,13 +4,13 @@
 class String
 
   def hrefs i=false
-    # keep consuming URL chars WHEN
-    #  ( to ) - ")" won't match without an opener, such as when URL is placed in ()s
-    #  , or . followed by non-whitespace
-    #  NOT URI-wrapping chars, phrase/sentence terminators , . or whitespace
-    (partition /(https?:\/\/(\([^)]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
+    # text to HTML
+    #  ) only matches with an opener
+    # ,. match if following char is non-whitespace
+    # URI can span multiple lines since some software injects linebreaks
+    (partition /(https?:\/\/(\([^)>\s\n]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       p[0].gsub('<','&lt;').gsub('>','&gt;')+
-      (p[1].empty?&&''||'<a rel=untyped href='+p[1]+'>'+p[1].do{|p|
+      (p[1].empty?&&''||'<a rel=untyped href="'+p[1]+'">'+p[1].do{|p|
          i && p.match(/(gif|jpe?g|png|tiff)$/i) &&
          "<img src=#{p}>" || p
        }+'</a>')+
