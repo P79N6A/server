@@ -4,7 +4,7 @@ class E
   F['view/'+SIOCt+'BlogPost']=->g,e{
     g.map{|u,r|
       case u
-      when /boston.com/ # remove spamcrap
+      when /boston\.com/ # remove spamcrap
        (Nokogiri::HTML.parse r[Content][0]).css('p')[0].do{|p|r[Content]=p.inner_html}
         F['view/base'][{u => r},e,false]
       when /flickr/ # metadata not really informative
