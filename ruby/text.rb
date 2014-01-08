@@ -3,15 +3,16 @@
 
 class String
 
+  # text to HTML
   def hrefs i=false
-    # text to HTML
     #  ) only matches with an opener
-    # ,. match if following char is non-whitespace
-    # URI can span multiple lines since some software injects linebreaks
-    (partition /(https?:\/\/(\([^)>\s\n]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
-      p[0].gsub('<','&lt;').gsub('>','&gt;')+
-      (p[1].empty?&&''||'<a rel=untyped href="'+p[1]+'">'+p[1].do{|p|
-         i && p.match(/(gif|jpe?g|png|tiff)$/i) &&
+    # ,. only match mid-URI
+    # URI can span lines since some software injects linebreaks
+    (partition /(https?:\/\/(\([^)>\s\n]*\)|[,.\n]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
+      u = p[1].gsub "\n",'' # discard captured line-breaks
+      p[0].gsub('<','&lt;').gsub('>','&gt;')+ # escape <>
+      (p[1].empty?&&''||'<a rel=untyped href="'+u+'">'+u.do{|p|
+         i && p.match(/(gif|jpe?g|png|tiff)$/i) && # inline images if asked for
          "<img src=#{p}>" || p
        }+'</a>')+
       (p[2].empty?&&''||p[2].hrefs)
