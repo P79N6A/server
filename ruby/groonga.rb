@@ -18,7 +18,7 @@ class E
 
     begin
       # execute
-      r = q ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
+      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
         ga.select{|r| r['graph'] == g} # ordered set (index date-range)
 
       # offset, size
