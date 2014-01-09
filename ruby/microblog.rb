@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # sprintf() formats in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
@@ -51,36 +51,25 @@ class E
     Fn'baseview/chat',d,e,->{d.map{|u,r|Fn 'itemview/chat',r,e}}}
 
   fn 'itemview/chat',->r,e{
-    line = r.E.frag
     r[Type] && [*r[Type]].map{|t|t.respond_to?(:uri) && t.uri}.include?(SIOCt+'MailMessage') && r[:mail]=true
     r[Content] && r[Date] && r[Date][0] &&
-    [{_: :a, id: line},
-     {_: :a, :class => :date, href: r.url, c: r[Date][0].match(/T([0-9:]{5})/).do{|m|m[1]}},
-
+    [r[Date][0].match(/T([0-9:]{5})/).do{|m|m[1]},
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
-            c: [r[Atom+"/link/image"].do{|p| {_: :img, class: :a, src: p[0].uri}},
+            c: [r[Atom+"/link/image"].do{|p| {_: :img, src: p[0].uri}},
                 {_: :span, c: r[SIOC+'name']||r[Creator]||'#'}]}},' ',
-
-        {_: :span, :class => :tw, 
-       c: [r[Atom+'/link/media'].do{|a|
-             a.compact.map{|a|{_: :a, href: r.url, c: {_: :img, src: a.uri}}}},
-           ((r[Title].to_s==r[Content].to_s || r.uri.match(/twitter/)) && '' ||
-            {_: :a, href: r.url, c: r[Title],:class => r[:mail] ? :titleMail : :title}),
+        {_: :span, :class => :tw, # skip redundant title fields
+       c: [((r[Title].to_s == r[Content].to_s || r.uri.match(/twitter/)) && '' ||
+            {_: :a, :class => :title, href: r.url, c: r[Title]}), # skip quoted mail-lines & abbreviate
            r[:mail] ? (r[Content].map{|c|c.lines.to_a.grep(/^[^&@_]+$/)[0..21]}) : r[Content],
-          ]},' ',
+          ]},"<br>\n"]}
 
-     {_: :a, class: :line, href: '#'+line, c: '&nbsp;'},
-     "<br>\n"]}
-  
   F['view/'+SIOCt+'BoardPost']=->d,e{
     d.map{|u,r|
       {style: "background-color:white;color:black;float:left;border-radius:.8em;padding:.4em;border-width:.18em;border-style:dotted;border-color:#eee;max-width:42em;margin:.5em",
         c: F['itemview/chat'][r,e]}}}
 
   fn 'baseview/chat',->d,e,c{
-    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{E.c}}\n"}),
-     {:class => :ch, c: c.()},
-     (H.once e,'chat.tail',{id: :b})]}
+    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{E.c}}\n"}),c.()]}
 
   F['view/'+SIOCt+'InstantMessage']=F['view/chat']
   F['view/'+SIOCt+'MicroblogPost']=F['view/chat']
