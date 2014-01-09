@@ -65,7 +65,7 @@ class E
 
   F['view/'+SIOCt+'BoardPost']=->d,e{
     d.map{|u,r|
-      {style: "background-color:white;color:black;float:left;border-radius:.8em;padding:.4em;border-width:.18em;border-style:dotted;border-color:#eee;max-width:42em;margin:.5em",
+      {class: :BoardPost, style: "background-color:#ff4500;color:#fff;float:left;border-radius:.8em;padding:.4em;max-width:42em;margin:.5em",
         c: F['itemview/chat'][r,e]}}}
 
   fn 'baseview/chat',->d,e,c{
