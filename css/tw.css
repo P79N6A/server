@@ -1,7 +1,7 @@
 body { font-family: sans-serif }
-span.nick {min-width:15ex;text-align:right;display:inline-block}
-span.nick img {position:absolute;top:0;border-width:0}
-span.nick span {color:#000}
+span.nick {min-width:15ex;position:relative;text-align:right;display:inline-block}
+span.nick img {position:absolute;top:0;z-index:-1}
+span.nick span {color:#eee}
 .tw {color:#fff;background-color:#000;display:inline;white-space:pre-wrap}
 .tw div,p {display:inline}
 .tw .title {color:#000;background-color:#eee}

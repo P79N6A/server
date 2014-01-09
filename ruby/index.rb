@@ -67,7 +67,6 @@ class E
       # response description
       u = m['#']
       u[RDFs+'member'] = s
-      u[Type] = E[HTTP+'Response']
       u[Prev] = {'uri' => d.url + {'d' => 'desc','offset' => desc.uri}.qs} if desc
       u[Next] = {'uri' => d.url + {'d' => 'asc', 'offset' => asc.uri}.qs}  if asc
 

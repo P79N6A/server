@@ -2,7 +2,7 @@ watch __FILE__
 class E
 
   fn 'view/'+HTTP+'Response',->d,e{
-    u = d[''] || {}
+    u = d['#']
     {style: "float:left",
       c: [u[Prev].do{|p|{_: :a, rel: :prev, style: 'background-color:white;color:black;font-size:2.3em',href: p.uri, c: '&larr;'}},
           u[Next].do{|n|{_: :a, rel: :next, style: 'background-color:black;color:white;font-size:2.3em',href: n.uri, c: '&rarr;'}},'<br>',

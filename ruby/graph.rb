@@ -38,7 +38,7 @@ class E
 
   # default "protograph" - identity + resource-thunks
   fn 'protograph/',->e,q,g{
-     g['#'] = {}
+     g['#'] = {'uri' => '#'}
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     if set.empty?
       g.delete '#'
