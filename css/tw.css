@@ -1,7 +1,7 @@
 body { font-family: sans-serif }
 span.nick {min-width:15ex;position:relative;text-align:right;display:inline-block}
 span.nick img {position:absolute;top:0;z-index:-1}
-span.nick span {color:#eee}
+span.nick span {color:#fff;background-color:#aaa}
 .tw {color:#fff;background-color:#000;display:inline;white-space:pre-wrap}
 .tw div,p {display:inline}
 .tw .title {color:#000;background-color:#eee}
@@ -10,8 +10,4 @@ span.nick span {color:#eee}
 .tw img {max-width:100%}
 a {text-decoration:none}
 a:hover {background-color:#f70;color:#000}
-a.line {}
-.bottom a[rel=prev] {padding-right: 1.8em}
-.bottom a[rel=next] {padding-left: 1.8em}
-.bottom a[rel] {border-width:.1em 0 .1em 0;border-color:#ccc;border-style:dotted}
 table.html td.val {max-width:90ex}

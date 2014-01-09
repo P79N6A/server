@@ -55,7 +55,7 @@ class E
     r[Content] && r[Date] && r[Date][0] &&
     [r[Date][0].match(/T([0-9:]{5})/).do{|m|m[1]},
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
-            c: [r[Atom+"/link/image"].do{|p| {_: :img, src: p[0].uri}},
+            c: [r[Atom+"/link/image"].do{|p| {_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
                 {_: :span, c: r[SIOC+'name']||r[Creator]||'#'}]}},' ',
         {_: :span, :class => :tw, # skip redundant title fields
        c: [((r[Title].to_s == r[Content].to_s || r.uri.match(/twitter/)) && '' ||
