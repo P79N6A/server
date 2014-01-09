@@ -5,9 +5,9 @@
 .title {
     background-color: white;
     color: black;
-    border-style: dotted;
+    border-style: dashed;
     border-color: #aaa;
-    border-width: .1em;
+    border-width: 0 0 .1em .6em;
 }
 
 .scheme { display: none; }

@@ -59,7 +59,7 @@ class E
     [(d.delete :time).do{|day|
        {_: :b, c: day.strftime('%d'),style: "float:left; color: #888"}},
      e.q['dayview'].do{|v| F['view/'+v].do{|v|v[d,e]}} ||
-     F['view/t'][d,e,'hour','hour']]}
+     F['view/title'][d,e]]}
 
    fn 'view/hour',->d,e{
     [(d.delete :time).do{|hour|
