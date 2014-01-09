@@ -36,7 +36,7 @@ class E
       r = r.map{|r| r['.uri'].E }
       (r.map &:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
 
-      m['#'] = {RDFs+'member' => r,Type=>E[LDP+'container']}
+      m['#'] = {RDFs+'member' => r,Type=>E[HTTP+'Response']}
       m['#'][Prev]={'uri' => '/search' + {'start' => start + c, 'c' => c}.qs} if down
       m['#'][Next]={'uri' => '/search' + {'start' => start - c, 'c' => c}.qs} if up
       m['/search'] = {Type => E['search/form']}

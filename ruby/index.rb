@@ -43,7 +43,7 @@ class E
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
       u = m['#']
-      u[Type] = E[LDP+'container']
+      u[Type] = E[HTTP+'Response']
       u[Prev] = {'uri' => desc.url + {'d' => 'desc'}.qs} if desc
       u[Next] = {'uri' => asc.url  + {'d' => 'asc'}.qs} if asc
       s }}
@@ -67,7 +67,7 @@ class E
       # response description
       u = m['#']
       u[RDFs+'member'] = s
-      u[Type] = E[LDP+'container']
+      u[Type] = E[HTTP+'Response']
       u[Prev] = {'uri' => d.url + {'d' => 'desc','offset' => desc.uri}.qs} if desc
       u[Next] = {'uri' => d.url + {'d' => 'asc', 'offset' => asc.uri}.qs}  if asc
 

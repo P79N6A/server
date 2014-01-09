@@ -44,6 +44,7 @@ class E
       g.delete '#'
     else
       g['#'][RDFs+'member'] = set
+      g['#'][Type] = E[HTTP+'Response']
       set.map{|u| g[u.uri] = u } # thunk
     end
     F['docsID'][g,q]}

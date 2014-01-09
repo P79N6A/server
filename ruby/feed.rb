@@ -38,7 +38,9 @@ module FeedParse
       m[3].scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
         yield u,                           # s
         (x[e[0]&&e[0].chop]||E::RSS)+e[1], # p
-        e[3].extend(FeedParse).guess}}     # o
+        e[3].extend(FeedParse).guess.do{|o|# o
+          o.match(/\A(\/|http)[\S]+\Z/) ? o.E : o
+        }}}
     
     nil
   end

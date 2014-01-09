@@ -24,6 +24,8 @@ class E
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
   LDP      = W3   + 'ns/ldp#'
+  Next     = LDP+'nextPage'
+  Prev     = LDP+'prevPage'
   Posix    = W3   + 'ns/posix/'
   Type     = RDFns+ "type"
 #  Type     = W3   + "ns/rdf#type"

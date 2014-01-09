@@ -1,18 +1,22 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   F['view/'+SIOCt+'BlogPost']=->g,e{
 
     F['example/blogview'][g,e]
+
   }
 
   F['example/blogview']=->g,e{
     g.map{|u,r|
       case u
-      when /boston\.com/ # remove spamcrap
+      when /artery.wbur/ # compact whitespace a bit
+        r[Content] = {class: :WBUR, c: [{_: :style, c: ".WBUR p {margin:0}"},r[Content]]}
+        F['view/base'][{u => r},e,false]        
+      when /boston\.com/ # crop sharebuttons
        (Nokogiri::HTML.parse r[Content][0]).css('p')[0].do{|p|r[Content]=p.inner_html}
         F['view/base'][{u => r},e,false]
-      when /flickr/ # metadata not really informative
+      when /flickr/
         r[Content]
       when /reddit/ # minimal view
         F['view/'+SIOCt+'BoardPost'][{u => r},e]

@@ -4,7 +4,7 @@ class E
   
   fn 'protograph/thread',->d,e,g{
     d.walk SIOC+'reply_of',g
-    g['#']={RDFs+'member' => g.keys.map(&:E), Type => LDP+'container'}
+    g['#']={RDFs+'member' => g.keys.map(&:E), Type => (HTTP+'Response').E}
     F['docsID'][g,e]}
   
   fn 'view/threads',->d,env{

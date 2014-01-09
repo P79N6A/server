@@ -1,5 +1,6 @@
 #watch __FILE__
 
+# Ruby to HTML
 def H _
   case _
   when Hash
@@ -79,7 +80,7 @@ class FalseClass
 end
 
 class Hash
-  def html e={'SERVER_NAME'=>'localhost'},key=true
+  def html e={'SERVER_NAME'=>'localhost'}, key=true
     (keys.size == 1 && has_key?('uri')) ? url.href : 
       H({_: :table, class: :html, c:
         map{|k,v|
@@ -175,7 +176,7 @@ class E
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: view[d,e]}]}]}
 
-  # property-selector toolbar - requires RDFa view
+  # property-selector toolbar - utilizes RDFa view
   fn 'view/p',->d,e{
     #TODO fragmentURI scheme for selection-state
     [H.once(e,'property.toolbar',H.once(e,'p',(H.once e,:mu,H.js('/js/mu')),
