@@ -17,7 +17,7 @@ table {
 .down { font-size: 2em;
       font-weight: bold;
       padding:  0 1.4em 0 1.4em;
-      background-color:#eee;
+      background-color:#ddd;
       color: #fff;
       }
 .down:hover { background-color: black;

@@ -218,17 +218,14 @@ class E
 
   fn 'view/table',->i,e{[H.css('/css/table'),(Fn 'table',i.values,e)]}
 
-  fn 'table',->es,q=nil{
-    ks = {} # predicate table
+  fn 'table',->es,q=nil{ p = {}
     es.map{|e|e.respond_to?(:keys) &&
-              e.keys.map{|k|ks[k]=true}}
-    keys = ks.keys
+              e.keys.map{|k|p[k]=true}}
+    keys = p.keys
     keys.empty? ? es.html :
     H({_: :table,:class => :tab,
-        c: [{_: :tr, c: keys.map{|k|
-                {_: :th, class: :label, property: k, c: k.abbrURI}}},
+        c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
             *es.map{|e|
-              {_: :tr, about: e.uri, c:
-                keys.map{|k| {_: :td, property: k, c: e[k].html}}}}]})}
+              {_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.E.html : e[k].html}}}}]})}
 
 end
