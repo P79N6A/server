@@ -4,16 +4,18 @@ class E
   Nginx  = ENV['nginx']
 
   def GET
-    # bespoke handler ||
-    # raw file ||
-    # resource
     if reqFn = @r.q['y'].do{|r| F['req/'+r] }
+      # bespoke handler
       reqFn[self,@r]
+
     elsif file = [self,pathSegment].compact.find(&:f)
+
+      # file exists, but client might not accept its MIME, or want it transformed to another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      (@r.q.has_any_key(%w{format view}) ||
-       MIMEcook[file.mimeP] || !accepted) ? resource : (file.env @r).getFile
+      (@r.q.has_any_key(%w{format view}) || MIMEcook[file.mimeP] || !accepted) ?
+       resource : (file.env @r).getFile
+
     else
       resource
     end
