@@ -86,14 +86,16 @@ module Th
     @q ||= (qs||'').qp
   end
 
+  # Accept header -> Hash
   def accept_ k=''
     d={}
+    puts self['HTTP_ACCEPT'+k]
     self['HTTP_ACCEPT'+k].do{|k|
-      k.split(/,/).map{|e|
-        f,q=e.split(/;/)
-        i=q&&q.split(/=/)[1].to_f||1
-        d[i]||=[]
-        d[i].push f}}
+      (k.split /,/).map{|e| # each pair
+        f,q = e.split /;/   # split MIME from q value
+        i = q && q.split(/=/)[1].to_f || 0.999
+        d[i] ||= []; d[i].push f}} # append
+    d.sort.reverse.map{|q,mime|puts [q,mime].join ' '}
     d
   end
 
@@ -102,10 +104,9 @@ module Th
   end
 
   def conneg
-    return q['format'] if q['format'] && E::F[E::Render+q['format']]
-    accept.sort.reverse.map{|p|p[1].map{|mime|
-     return mime if E::F[E::Render+mime]}}
-    # default
+    accept.sort.reverse.map{|q,mimes|
+      mimes.map{|mime|
+        return mime if E::F[E::Render+mime]}}
     'text/html'
   end
 

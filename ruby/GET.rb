@@ -13,7 +13,7 @@ class E
       # file exists, but client might not accept its MIME, or want it transformed to another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      (@r.q.has_any_key(%w{format view}) || MIMEcook[file.mimeP] || !accepted) ?
+      (!accepted || MIMEcook[file.mimeP] || @r.q.has_key?('view')) ?
        resource : (file.env @r).getFile
 
     else
