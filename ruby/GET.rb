@@ -32,7 +32,7 @@ class E
       lambdas = path.cascade.map{|p| p.uri.t + 'GET' }
       ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
           F[h + p].do{|fn| fn[self,@r].do{|r|
-              $stdout.puts [r[0],'http://'+@r['SERVER_NAME']+@r['REQUEST_URI'],@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
+              $stdout.puts [r[0],'http://'+@r['SERVER_NAME']+@r['REQUEST_URI'],@r['HTTP_USER_AGENT'],@r['HTTP_REFERER'],@r.format].join ' '
               return r
             }}}}}
     response
@@ -51,7 +51,7 @@ class E
 
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
       h.update({'Link' => '<' + @r['uri'] + '?view>; rel=meta'}) if iR     # link to description
-      h.update({'MS-Author-Via' => 'SPARQL'})  # authoring preference
+#      h.update({'MS-Author-Via' => 'SPARQL'})  # authoring preference
 
       # frontend-specific response handlers
       b.class == E ? (Nginx ?                                                   # nginx chosen?
