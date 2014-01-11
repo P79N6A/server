@@ -7,7 +7,7 @@ class E
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
       if s && p && o
-        s = RDF::URI s.E.hostURL e
+        s = RDF::URI s=='#' ? '' : (s.E.hostURL e)
         p = RDF::URI p
         o = ([E,Hash].member?(o.class) ? (RDF::URI o.E.hostURL(e)) : (RDF::Literal o)) rescue nil
         (w << (RDF::Statement.new s,p,o) if o ) rescue nil
