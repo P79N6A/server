@@ -23,7 +23,7 @@ class E
       when /universalhub/  # logo + trim spacehogging tagjunk
         c = Nokogiri::HTML.parse r[Content][0]
         c.css('section').map{|x|x.remove}
-        {c: [{_: :a, href: r['http://purl.org/rss/1.0/link'][0],
+        {c: [{_: :a, href: r['http://purl.org/rss/1.0/link'][0].E.uri,
                c: [{_: :img, src: '/logos/uhub.png',style: 'position:absolute;top:-93px'},
                    {_: :h2, style: 'color:#000;margin:0',c: r[Title]}]},c.to_s],
           style: 'float:left;max-width:40em;position:relative;background-color:#fff;border-color:#eee;margin-top:93px;margin-right:.3em;padding-top:0;border-style:dotted;border-width:.3em;border-radius:0 .8em .8em .8em'}

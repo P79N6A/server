@@ -93,8 +93,7 @@ module Th
       (k.split /,/).map{|e| # each pair
         f,q = e.split /;/   # split MIME from q value
         i = q && q.split(/=/)[1].to_f || 0.999
-        d[i] ||= []; d[i].push f}} # append
-    d.sort.reverse.map{|q,mime|puts [q,mime].join ' '}
+        d[i] ||= []; d[i].push f.strip}} # append
     d
   end
 
