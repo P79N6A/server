@@ -1,20 +1,16 @@
 #watch __FILE__
 class E
 =begin
-   graph construction is two-pass. a unique identifier must be returned from first-pass lambda found in protograph/ namespace
-   do *fast* stuff in the first such as filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass.. or even just a different list of resources for the first pass. look thru source for examples.. 
+   graph construction is two-pass. the first-pass is to see if the second-pass needs to be run..
+   so do *fast* stuff like filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass and get default behaviour for the other. the first-pass is closely related to ETag - http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3
 
-   a new second-pass might use resources identified in the first-pass, but query CBD (concise-bounded description) from a SPARQL store instead of the local fs. this software was originaly developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible. and to experiment with hybrid approaches - "touch" a file on successful POSTs, so a remote store only has to be queried once per local-resource change. or the inverse, running complex SPARQL queries to find a needle in a haystack that is actually a pile of local files
+   a new second-pass might query a CBD (concise-bounded description) from a SPARQL store instead of the local fs. this software was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, and to experiment with hybrids - "touch" a file on successful POSTs, so a remote store only has to be queried once per resource-change. or the inverse, running complex SPARQL queries to find a needle in a haystack of local files then continuing as if Apache serving up files
 
-  Graph structure ..in memory a Hash 
-  {'http://example.com/#i" => { FOAF+'name' => "Carmen"},
-   'ftp://rdfs.org/sioc.rdf' => { POSIX+'size' => 5439 }}
+  "triple streams" are functions which yield a triple
+  s,p - URI in String , o - Literal or URI (object responds to #uri such as E class or {'uri' => 'file://'} Hash
 
 =end
-  # triple streams (yield s,p,o)
-  # s,p - URI as String
-  # o URI ? E class : anything
-  # Graph -> tripleStream -> Graph
+
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -82,8 +78,7 @@ class E
 
   # default graph (filesystem store)
   # to use a different default-graph function (w/o patching here, or querystring param), define a GET handler on / (or a subdir),
-  # update configuration such as q['graph'] = 'hexastore' and return false or call #response. see groonga for an example alternate
-  # 
+  # update configuration such as q['graph'] = 'hexastore' and return false or call #response
   fn 'graph/',->e,q,m{
     # force thunks
     m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
