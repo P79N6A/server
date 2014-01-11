@@ -87,7 +87,7 @@ class E
 
     i = m.keys.grep /(jpe?g|gif|png)$/i
     unless i.empty?
-      ph = m[e.uri] ||= {}
+      ph = m[e.uri] ||= {'uri' => e.uri}
       ph[Type] ||= []
       ph[Type].push E[PAC+'PhotoAlbum']
       ph[PAC+'Contains'] = i.map(&:E)
