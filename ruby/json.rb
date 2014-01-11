@@ -27,7 +27,6 @@ class E
   def triplrJSON
     yield uri, '/application/json', (JSON.parse read) if e
   rescue Exception => e
-    puts [uri,e,e.backtrace[0]].join ' '
   end
 
   def to_json *a

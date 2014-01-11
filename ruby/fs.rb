@@ -117,7 +117,6 @@ class E
     if f
       p ? (JSON.parse readFile) : readFile
     else
-      puts "tried to open #{d}"
       nil
     end
   rescue Exception => e
@@ -125,7 +124,6 @@ class E
   end
 
   def w o,s=false
-#    puts " w #{uri}"
     dirname.mk
     writeFile (s ? o.to_json : o)
     self

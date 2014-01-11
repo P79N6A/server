@@ -26,14 +26,12 @@ class E
             end}}}}
 
   rescue Exception => e
-    puts [uri,e,e.backtrace[0]].join ' '
     triplrMail &f
   end
 
   begin 
     require 'tmail'
   rescue LoadError => e
-    puts e
   end
 
 =begin

@@ -7,7 +7,6 @@ class E
 
   fn 'set/glob',->d,e=nil,_=nil{
     p = [d,d.pathSegment].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
-    puts ["discarding paths:", p[1]] unless p[1].empty?
     p[0] }
 
   fn 'req/randomFile',->e,r{

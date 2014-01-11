@@ -43,7 +43,6 @@ def fn u,y
 end
 
 def Fn a,*g
-  puts "#{a} <> #{caller[0]}" unless E::F[a]
   E::F[a][*g]
 end
 

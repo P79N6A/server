@@ -19,8 +19,8 @@ class E
         yield s, Content,             m[3].hrefs(true)
         yield s, Type,                E[SIOCt+'InstantMessage']
         yield s, Type,                E[SIOC+'Post']
-        yield s, 'hasLink',           (m[3].match(/http:\//) ? 'true' : 'false')
-        yield s, 'hasNum', 'true' if m[3].match(/\d/)} rescue (puts "skipped #{l}")
+        yield s, SIOC+'link',        (m[3].match(/http:\//) ? 'true' : 'false')
+      } rescue nil
     }
   end
 

@@ -1,7 +1,7 @@
 #watch __FILE__
 class E
 
-  begin require 'linkeddata'; rescue LoadError => e; puts 'linkeddata uninstalled?' end
+  begin require 'linkeddata'; rescue LoadError => e; end
 
   def self.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w|

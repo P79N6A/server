@@ -150,7 +150,6 @@ class E
         yield r.uri,Content,r.r}} end
 
   def triplrHref enc=nil
-    puts "triplrHref #{uri} #{d}"
     yield uri,Content,(f && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
   end
 

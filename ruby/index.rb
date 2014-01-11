@@ -92,13 +92,11 @@ class E
 
   # range query - predicate
   def rangeP size=8, dir=:desc, offset=nil, object=nil
-#    puts "rangeP #{uri} size #{size} dir #{dir} offset #{offset}"
     pIndex.subtree(size,dir,offset).map &:ro
   end
 
   # range query - predicate-object
   def rangePO n=8,d=:desc,s=nil,o
-#    puts "rangePO #{uri} #{o} size #{n} dir #{d} offset #{s}"
     poIndex(o).subtree(n,d,s).map &:ro
   end
 
