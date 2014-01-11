@@ -10,6 +10,7 @@ class E
   SIOC  = 'http://rdfs.org/sioc/ns#'
   SIOCt = 'http://rdfs.org/sioc/types#'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
+  DIG      = 'http://dig.csail.mit.edu/'
   Deri     = 'http://vocab.deri.ie/'
   DC       = Purl + 'dc/terms/'
   Date     = DC   + 'date'
@@ -30,6 +31,7 @@ class E
   Type     = RDFns+ "type"
 #  Type     = W3   + "ns/rdf#type"
   RDFs     = W3   + 'ns/rdfs#'
+  PAC      = DIG  + '2008/PAC/ontology/pac#'
   COGS     = Deri + 'cogs#'
   CSV      = Deri + 'scsv#'
   HTML     = RDFns + "HTML"
