@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 require 'rack'
 
 class E
@@ -8,7 +8,7 @@ class E
     e.extend Th
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     p = e['REQUEST_PATH'].force_encoding 'UTF-8'
-
+    puts "path #{p}"
     uri = CGI.unescape((p.index(URIURL) == 0) ? p[URIURL.size..-1] : ('http://'+e['SERVER_NAME']+(p.gsub '+','%2B'))).E.env e
 
     uri.inside ? ( e['uri'] = uri.uri
@@ -94,7 +94,7 @@ module Th
         f,q = e.split /;/   # split MIME from q value
         i = q && q.split(/=/)[1].to_f || 0.999
         d[i] ||= []; d[i].push f}} # append
-#    d.sort.reverse.map{|q,mime|puts [q,mime].join ' '}
+    d.sort.reverse.map{|q,mime|puts [q,mime].join ' '}
     d
   end
 
@@ -103,6 +103,11 @@ module Th
   end
 
   def conneg
+    return 'text/html' if q['view']
+    # pathname extension
+    {'.n3' => 'text/n3', '.ttl' => 'text/turtle', '.html' => 'text/html'}[File.extname self['uri']].do{|mime|
+      return mime}
+    # Accept header
     accept.sort.reverse.map{|q,mimes|
       mimes.map{|mime|
         return mime if E::F[E::Render+mime]}}

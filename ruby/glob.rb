@@ -15,10 +15,12 @@ class E
     !g.empty? ? [302, {Location: g[rand g.length].uri}, []] : [404]}
 
   def docs
-    doc = self if e # directly-referenced doc
-    docs = docBase.glob ".{e,html,n3,nt,owl,rdf,ttl}" # basename-sharing docs
+    db = docBase
+    this = self if e
+    base = db if db.e
+    docs = db.glob ".{e,html,n3,nt,owl,rdf,ttl}" # basename-sharing docs
     dir = (d? && uri[-1]=='/' && uri.size>1) ? c : [] # trailing slash descends
-    [doc,docs,dir].flatten.compact
+    [base,this,docs,dir].flatten.compact
   end
 
 end
