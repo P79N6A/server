@@ -22,6 +22,7 @@ class E
   XHV      = W3   + '1999/xhtml/vocab#'
   RDFns    = W3   + "1999/02/22-rdf-syntax-ns#"
   EXIF     = W3   + '2003/12/exif/ns#'
+  WF       = W3   + '2005/01/wf/flow#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
   LDP      = W3   + 'ns/ldp#'

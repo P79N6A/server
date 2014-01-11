@@ -27,7 +27,7 @@ class E
       r.class==Hash &&
       r.delete_if{|p,o|!f[p]}}
     [(H.css '/css/ls'),
-     {_: :a, class: :up, href: up, c: '&uarr;'},
+     {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
      {class: :ls, c: (Fn 'view/table',i,e)},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
   
