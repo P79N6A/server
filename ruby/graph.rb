@@ -83,16 +83,7 @@ class E
     # force thunks
     m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
     # cleanup unexpanded thunks
-    m.delete_if{|u,r|r.class==E}
-
-    i = m.keys.grep /(jpe?g|gif|png)$/i
-    unless i.empty?
-      ph = m[e.uri] ||= {'uri' => e.uri}
-      ph[Type] ||= []
-      ph[Type].push E[PAC+'PhotoAlbum']
-      ph[PAC+'Contains'] = i.map(&:E)
-    end
-  }
+    m.delete_if{|u,r|r.class==E}}
 
   fn 'filter/set',->e,m,r{
     # filter to RDFs set-members, gone will be:
