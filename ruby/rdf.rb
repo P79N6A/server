@@ -30,10 +30,11 @@ class E
     F[Render+mime[0]] = ->d,e{E.renderRDF d, mime[1], e}}
 
   F['view/data'] = ->d,e {
-    t = 'https://w3.scripts.mit.edu/tabulator/'
-    [(H.css t + 'tabbedtab'),
+    local = true
+    tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'
+    [(H.css tab + 'tabbedtab'),
      (H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
-     (H.js t + 'js/mashup/mashlib'),
+     (H.js tab + 'js/mashup/mashlib'),
 "<script>
 jQuery(document).ready(function() {
     var uri = window.location.href;
