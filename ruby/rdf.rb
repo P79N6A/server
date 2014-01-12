@@ -29,4 +29,19 @@ class E
   ].map{|mime|
     F[Render+mime[0]] = ->d,e{E.renderRDF d, mime[1], e}}
 
+  F['view/data'] = ->d,e {
+    t = 'https://w3.scripts.mit.edu/tabulator/'
+    [(H.css t + 'tabbedtab'),
+     (H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
+     (H.js t + 'js/mashup/mashlib'),
+"<script>
+jQuery(document).ready(function() {
+    var uri = window.location.href;
+    window.document.title = uri;
+    var kb = tabulator.kb;
+    var subject = kb.sym(uri);
+    tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
+});</script>",
+     {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
+
 end

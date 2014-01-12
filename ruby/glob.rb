@@ -17,8 +17,9 @@ class E
   def docs
     base = docBase
     [(base if base.e && pathSegment!='/'),
-     base.glob(".{e,html,n3,nt,owl,rdf,ttl}"), # basename-sharing docs
-     ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash descends
+     (self if base != self && e && uri[-1]!='/'),
+     base.glob(".{e,html,n3,nt,owl,rdf,ttl}"), # docs
+     ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash = children
     ].flatten.compact
   end
 
