@@ -97,7 +97,8 @@ class E
   F['/schema.jsonld/GET']= F['/schema.n3/GET']
 
   fn '/schema/GET',->e,r{
-    if (q = r.q['q']) && !q.empty?
+    q = r.q['q']
+    if q && !q.empty?
       search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 255"
       found = `#{search}`.to_utf8.lines.to_a.map{|i|
         c,u,t = i.split ' ',3
@@ -106,7 +107,9 @@ class E
          " <a href='#{u}'>#{u.abbrURI}</a> ",
          t,"<br>\n"]}
     end
-    (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),{_: :a, style: 'float:right',href: '//schema.whats-your.name/schema.n3?q=thumbnail', c: {_: :img, src: '/css/misc/cube.png'}},
+    (H ['<html><body>',
+        q.do{|q|{_: :a, style: 'float:left',href: '/schema.n3?q='+CGI.escape(q), c: {_: :img, src: '/css/misc/cube.png'}}},
+        (H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
         F['view/search/form'][r.q,r], found,
         '<br>sources ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: SchemasRDFa[0], c: 'schema.org'},' ',
        ]).hR}
