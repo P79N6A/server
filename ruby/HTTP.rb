@@ -66,10 +66,8 @@ module Th
   end
 
   def conneg
-    return 'text/html' if q.has_key?('view')
-    # pathname extension
-    {
-      '.html' => 'text/html',
+    #  extension
+    { '.html' => 'text/html',
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/ntriples',
       '.n3' => 'text/n3',
