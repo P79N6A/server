@@ -105,7 +105,8 @@ class E
     end
     (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
         F['view/search/form'][r.q,r], found,
-        '<br>sources ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: SchemasRDFa[0], c: 'schema.org'},
+        '<br>sources ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: SchemasRDFa[0], c: 'schema.org'},' ',
+        {_: :a, href: '//schema.whats-your.name/schema.n3?q=thumbnail', c: {_: :img, src: '/css/misc/cube.png'}}
        ]).hR}
   
 end
