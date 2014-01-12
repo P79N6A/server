@@ -9,7 +9,10 @@ class E
       if s && p && o
         s = RDF::URI s=='#' ? '' : (s.E.hostURL e)
         p = RDF::URI p
-        o = ([E,Hash].member?(o.class) ? (RDF::URI o.E.hostURL(e)) : (RDF::Literal o)) rescue nil
+        o = ([E,Hash].member?(o.class) ? (RDF::URI o.E.hostURL(e)) :
+             (l = RDF::Literal o
+              l.datatype=RDF.XMLLiteral if p == Content
+              l)) rescue nil
         (w << (RDF::Statement.new s,p,o) if o ) rescue nil
       end
       }}
