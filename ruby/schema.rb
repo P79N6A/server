@@ -92,6 +92,9 @@ class E
         g[u] = {'uri' => u, 'http://www.w3.org/2000/01/rdf-schema#comment' => t, 'http://purl.org/vocommons/voaf#occurrences' => c}}
     end
     [200,{'Content-Type'=>'text/n3; charset=utf-8'},[(e.render e.env.format, g, e.env)]]}
+  F['/schema.ttl/GET']   = F['/schema.n3/GET']
+  F['/schema.nt/GET']    = F['/schema.n3/GET']
+  F['/schema.jsonld/GET']= F['/schema.n3/GET']
 
   fn '/schema/GET',->e,r{
     if (q = r.q['q']) && !q.empty?
@@ -106,7 +109,7 @@ class E
     (H ['<html><body>',(H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
         F['view/search/form'][r.q,r], found,
         '<br>sources ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: SchemasRDFa[0], c: 'schema.org'},' ',
-        {_: :a, href: '//schema.whats-your.name/schema.n3?q=thumbnail', c: {_: :img, src: '/css/misc/cube.png'}}
+        {_: :a, href: '//schema.whats-your.name/schema.nt?q=thumbnail', c: {_: :img, src: '/css/misc/cube.png'}}
        ]).hR}
   
 end

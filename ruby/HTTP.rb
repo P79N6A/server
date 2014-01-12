@@ -68,8 +68,15 @@ module Th
   def conneg
     return 'text/html' if q.has_key?('view')
     # pathname extension
-    {'.n3' => 'text/n3', '.ttl' => 'text/turtle', '.html' => 'text/html'}[File.extname self['uri']].do{|mime|
+    {
+      '.html' => 'text/html',
+      '.jsonld' => 'application/ld+json',
+      '.nt' => 'text/ntriples',
+      '.n3' => 'text/n3',
+      '.ttl' => 'text/turtle',
+    }[File.extname self['uri']].do{|mime|
       return mime}
+
     # Accept header
     accept.sort.reverse.map{|q,mimes|
       mimes.map{|mime|
