@@ -16,7 +16,7 @@ class E
 
   def docs
     base = docBase
-    [(base if base.e       && base.uri[-1]!='/'),
+    [(base if pathSegment!='/' && base.e),
      (self if base != self && e && uri[-1]!='/'),
      base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
      ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash = children
