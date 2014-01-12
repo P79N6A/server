@@ -91,7 +91,7 @@ class E
         c = c.to_i
         g[u] = {'uri' => u, 'http://www.w3.org/2000/01/rdf-schema#comment' => t, 'http://purl.org/vocommons/voaf#occurrences' => c}}
     end
-    [200,{'Content-Type'=>'text/n3; charset=utf-8'},[(e.render e.env.format, g, e.env)]]}
+    [200,{'Content-Type'=>e.env.format+'; charset=utf-8'},[(e.render e.env.format, g, e.env)]]}
   F['/schema.ttl/GET']   = F['/schema.n3/GET']
   F['/schema.nt/GET']    = F['/schema.n3/GET']
   F['/schema.jsonld/GET']= F['/schema.n3/GET']
