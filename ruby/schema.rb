@@ -4,7 +4,7 @@ class E
  www)  http://data.whats-your.name
 
  local) cd schema
-        wget http://whats-your.name/schema.txt
+        curl http://data.whats-your.name/schema/schema.txt.gz | zcat > schema/schema.txt
         x-www-browser http://localhost/schema
 
  rebuild)
@@ -17,7 +17,7 @@ class E
  irb> E.cacheSchemas
   ..  E.indexSchemas
 
- schema missing? publish and contact prefix.cc,
+ schema missing? publish and add to prefix.cc,
  see also ideas at http://www.w3.org/2013/04/vocabs/
 
 =end
