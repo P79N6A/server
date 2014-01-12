@@ -82,6 +82,17 @@ class E
        concat SchemasRDFa)             # schema list
   end
 
+  fn '/schema.n3/GET',->e,r{
+    g = {}
+    if (q = r.q['q']) && !q.empty?
+      search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 86"
+      found = `#{search}`.to_utf8.lines.to_a.map{|i|
+        c,u,t = i.split ' ',3
+        c = c.to_i
+        g[u] = {'uri' => u, 'http://www.w3.org/2000/01/rdf-schema#comment' => t, 'http://purl.org/vocommons/voaf#occurrences' => c}}
+    end
+    [200,{'Content-Type'=>'text/n3; charset=utf-8'},[(e.render e.env.format, g, e.env)]]}
+
   fn '/schema/GET',->e,r{
     if (q = r.q['q']) && !q.empty?
       search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 255"

@@ -116,7 +116,6 @@ class E
 
   fn 'view/select',->r,e{
     graph = {r.uri => r}
-    puts r
     view = F['view/base']
     # find types, skipping malformed/missing info
     if r.class == Hash
@@ -132,7 +131,6 @@ class E
         flatten.compact
         view = views[0] unless views.empty?}
     end
-    puts "view #{view}"
     view[graph,e]}
 
   # multiple views (comma-separated)

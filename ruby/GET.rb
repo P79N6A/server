@@ -38,6 +38,42 @@ class E
     response
   end
 
+  def response
+
+    m = {}
+
+    # graph identity (model)
+    g = @r.q['graph']
+    graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
+
+    return F[E404][self,@r] if m.empty?
+
+    # response identity (view)
+    @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
+
+    maybeSend @r.format, ->{
+      
+      # response
+      r = E'/E/req/' + @r['ETag'].dive
+      if r.e # exists
+        r
+      else
+        
+        # graph
+        c = E '/E/graph/' + graphID.dive
+        if c.e # exists
+          m = c.r true
+        else
+          # construct
+          (g && F['graph/' + g] || F['graph/'])[self, @r.q,m]
+          # cache
+          c.w m,true
+        end
+                # cache < construct
+        r.w render @r.format, m, @r
+      end }
+  end
+
   def send?
     !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
   end
