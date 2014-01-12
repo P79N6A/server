@@ -1,3 +1,4 @@
+watch __FILE__
 class E
 
   # glob :: pattern -> [E]
@@ -14,14 +15,11 @@ class E
     !g.empty? ? [302, {Location: g[rand g.length].uri}, []] : [404]}
 
   def docs
-#    puts "resources found for #{uri}"
-    db = docBase
-    base = db if db.e
-    this = self if (db.uri.t != uri.t) && e
-    docs = db.glob ".{e,html,n3,nt,owl,rdf,ttl}" # basename-sharing docs
-    dir = (d? && uri[-1]=='/' && uri.size>1) ? c : [] # trailing slash descends
-#    puts [:base,base,"\n",:self,this,"\n",:docs,docs,"\n",:child,dir].flatten.compact.join ' '
-    [base,this,docs,dir].flatten.compact
+    base = docBase
+    [(base if base.e && pathSegment!='/'),
+     base.glob(".{e,html,n3,nt,owl,rdf,ttl}"), # basename-sharing docs
+     ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash descends
+    ].flatten.compact
   end
 
 end
