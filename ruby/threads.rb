@@ -62,6 +62,6 @@ class E
         '</tr>']},'</table>',
 
      # drill down to full-content of this set
-     {_: :a, id: :down, href: env['REQUEST_PATH'] + env.q.merge({'view'=>'mail'}).qs, c: '↓'}]}
+     {_: :a, id: :down, href: env['REQUEST_PATH'].t, c: '↓'}]}
 
 end
