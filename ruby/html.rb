@@ -107,7 +107,8 @@ class E
   end
 
   fn 'view',->d,e{
-    d.values.sort_by{|r|r[Date].do{|d|d[0].to_s}||'Z'}.reverse.map{|r|Fn 'view/select',r,e}}
+    d.values.sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
+    map{|r| Fn 'view/select',r,e }}
 
   fn 'view/base',->d,e,k=true{
     [H.once(e,'base',H.css('/css/html')),
@@ -115,10 +116,11 @@ class E
 
   fn 'view/select',->r,e{
     graph = {r.uri => r}
+    puts r
     view = F['view/base']
     # find types, skipping malformed/missing info
     if r.class == Hash
-      [*r[Type]].do{|types|
+      (r[Type].class==Array ? r[Type] : [r[Type]]).do{|types|
         views = types.map{|t|
           # discard non-URIs
           t.uri if t.respond_to? :uri}.
@@ -130,6 +132,7 @@ class E
         flatten.compact
         view = views[0] unless views.empty?}
     end
+    puts "view #{view}"
     view[graph,e]}
 
   # multiple views (comma-separated)
