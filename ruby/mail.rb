@@ -38,43 +38,7 @@ class E
                 {_: :a, title: :reply, c: 're',
                   href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
 
-              {class: :timestamp, c: m[Date].do{|d|d.map{|d|d.to_s[0..18]}}}, '<br clear=all>',
-
-              # content
-              {_: :pre,
-                c: m[Content].map{|b|
-
-                  # line count
-                  i = 0
-
-                  # HTML message content
-                  b.class==String && b.              
-
-                  # erase empty quoted lines
-                  gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").
-
-                  # each line
-                  lines.to_a.map{|l|
-
-                    # line identifier
-#                    f = m.uri + ':' + (i+=1).to_s
-                    
-                    # wrapper
-                    {_: :span, 
-                      
-                      # is line quoted?
-                      class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c:
-
-                      [# id
-#                       {_: :a, id: f},
-
-                       # line
-                       l.chomp,
-
-                       # link
-#                       (l.size > 64 && {_: :a, class: :line, href: '#'+f,c: '&#160;'}),
-
-                     "\n" ]}}}}, # collate lines
+              {class: :timestamp, c: m[Date].do{|d|d.map{|d|d.to_s[0..18]}}}, '<br clear=all>',m[Content],
 
               # title
               m[Title].do{|t|
