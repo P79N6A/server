@@ -92,6 +92,10 @@ class E
     m.keys.map{|u| m.delete u unless f.member? u}} # trim
 
   def graphFromFile g={}
+    if !e
+      puts "missing file! "+d
+      return
+    end
     _ = self
     triplr = @r.do{|r|
                     r.q['triplr'].do{|t|

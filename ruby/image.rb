@@ -28,7 +28,7 @@ class E
 
   fn 'view/img',->i,_{
     [i.values.select{|v|v.class==Hash}.map{|i|
-       i[Type] && i[Type].map{|t|t.respond_to?(:uri) && t.uri}.include?(DC+'Image') &&
+       i[Type] && (i[Type].class==Array ? i[Type] : [i[Type]]).map{|t|t.respond_to?(:uri) && t.uri}.include?(DC+'Image') &&
        [{_: :a, href: i.url, c: {_: :img, style:'float:left;max-width:61.8%', src: i.url}},
         i.html]},
      (H.css '/css/img')]}
