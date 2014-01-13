@@ -1,56 +1,116 @@
 #watch __FILE__
 class E
 
-  fn 'view/mail',->d,e{
-    title = nil
+  def triplrTmail &f
+    (TMail::Mail.load node).do{|m| # parse
+      d = m.message_id; return unless d  # parse successful?
+      e = d[1..-2]                       # unwrap identifier
+      yield e, Type,    E[SIOCt + 'MailMessage']
+      yield e, Type,    E[SIOC  + 'Post']
+      yield e, Date,    m.date.iso8601 if m.date
+      m.header['x-original-to'].do{|f| yield e, SIOC+'reply_to', E[f.to_s] }
+        [[:subject,Title],      # row index
+              [:to,To,true],    # 0 accessor method
+              [:cc,To,true],    # 1 predicate URI
+             [:bcc,To,true],    # 2 node || literal
+   [:friendly_from,SIOC+'name'],# 3 unwrap id?
+            [:from,Creator,true],
+        [:reply_to,SIOC+'reply_to',true],
+     [:in_reply_to,SIOC+'reply_of',true,true],
+      [:references,SIOC+'reply_of',true,true],
+        ].each{|a| # field
+        m.send(a[0]).do{|o| [*o].map{|o|
+            unless o.match /\A[, \n]*\Z/ # skip "empty" values
+              yield e, a[1], (a[2] ? (a[3] ? o[1..-2] : o).E : o.to_utf8)
+            end}}}
+      yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap;background-color:black;color:white;padding:.2em',
+                            c: m.decentBody.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted emptylines , tag quoted lines
+                              {_: :span, class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c: [ l.chomp, "\n" ]}}},
+                           {_: :style, c: "pre.mail .q {background-color:white;color:black}\npre.mail a {background-color: cyan;color:black}"}
+                          ])
+    }
 
-    # JS/CSS
-    [(H.once e,'mail.js',
-      (H.css '/css/mail'), {_: :style, c: "a {background-color: #{E.cs}}"},
-      (H.js '/js/mail'),
-      (H.once e,:mu,(H.js '/js/mu')),
+  rescue Exception => e
+    triplrMail &f
+  end
 
-      # up to set-overview
-      ({_: :a, id: :up, href: e['REQUEST_PATH'] + e.q.merge({'view' => 'threads'}).qs, c: '&uarr;'} if d.keys.size > 2),
+  begin 
+    require 'tmail'
+  rescue LoadError => e
+  end
 
-      # collapse/expand quoted content
-      {id: :showQuote, c: :quotes, show: :true},{_: :style, id: :quote}),'<br>',
+=begin
 
-     # each message
-     d.values.map{|m|
+TMail 1.2.7 takes 2% time of Mail 2.5.4
 
-       # content available?
-       [m.class == Hash && (m.has_key? E::SIOC+'content') &&
-        
-        {:class => :mail,
-          
-          c: [# message link
-              {_: :a, name: m.uri, href: m.url+'?view=base', rel: :raw, title: :raw, c: '&nbsp;'},
-              
-              # To:, From: index search links
-              [['sioc:has_creator',Creator],['sioc:addressed_to',To]].map{|a|
-                m[a[1]].do{|m|
-                  m.map{|f| f.respond_to?(:uri) &&
-                    {_: :a, property: a[0], href: f.url+'?set=indexPO&p='+a[0]+'&c=12', c: f.uri}}}},
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.4003388
+HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720
 
-              # mailto URI with embedded reply metadata
-              (m[SIOC+'reply_to']||m[Creator]).do{|r| r[0] && r[0].respond_to?(:uri) && m[Title] &&
-                {_: :a, title: :reply, c: 're',
-                  href: "mailto:#{r[0].uri}?References=<#{m.uri}>&In-Reply-To=<#{m.uri}>&Subject=#{m[Title].join}"}},
+default can be tweaked in #triplrMailMessage
 
-              {class: :timestamp, c: m[Date].do{|d|d.map{|d|d.to_s[0..18]}}}, '<br clear=all>',m[Content],
+=end
 
-              # title
-              m[Title].do{|t|
-                # only show if changed from previous
-                title != t[0] && (
-                 title = t[0] # update title
-                 [{:class => :title, c: t.html, _: :a, href: m.url+'?graph=thread#'+m.uri},
-                  '<br clear=all>'])}]}]}]}
-  
-  # set a default view for RFC822 and SIOC types
-  [MIMEtype+'message/rfc822',
-   SIOCt+'MailMessage'].
-    map{|m| F['view/'+m] = F['view/mail'] }
+
+  def triplrMail
+    require 'mail'
+    (f && (Mail.read node)).do{|m|
+      e = m.message_id; return unless e  # parse successful?
+      yield e, Type,    E[SIOCt + 'MailMessage']
+      yield e, Type,    E[SIOC  + 'Post']
+      yield e, Date,    m.date.iso8601 if m.date
+      yield e, Content, m.body.decoded.to_utf8
+        [[:subject,Title],
+              [:to,To,true],
+              [:cc,To,true],
+             [:bcc,To,true],
+            [:from,Creator,true],
+        [:reply_to,SIOC+'reply_to',true],
+     [:in_reply_to,SIOC+'reply_of',true],
+      [:references,SIOC+'reply_of',true],
+        ].each{|a| # field
+        m.send(a[0]).do{|o| [*o].map{|o|
+            yield e, a[1], (a[2] ? o.E : o.to_utf8)
+          }}}}
+  end
+
+  def triplrMailMessage &f
+    insertDocs :triplrTmail, nil, [Creator,To,SIOC+'reply_of'], &f
+  end
 
 end
+
+module TMail
+  class Mail
+    def unicode_body
+      unquoted_body.to_utf8
+    end
+    def decentBody
+      unHTML=->t{t.split(/<body[^>]*>/)[-1].split(/<\/body>/)[0]}
+      if multipart?
+        parts.collect{ |part|
+          c = part["content-type"]
+          if part.multipart?
+            part.decentBody
+          elsif header.nil?
+            ""
+          elsif !attachment?(part) && c.sub_type != 'html'
+            part.unicode_body.hrefs(true)
+          else
+            # give attachments a URI and make them locatable
+            (c["name"]||'attach').do{|a|
+              message_id ? (message_id[1..-2]+'/'+a).E.do{|i|
+                i.w part.body if !i.e
+                '<a href='+i.url+'>'+(part.main_type=='image' ? '<img src="'+i.url+'">' : a)+"</a><br>\n"
+              } : ""};end
+        }.join
+
+      else
+        unicode_body.do{|b|content_type&&content_type.match(/html/) ? unHTML.(b) : b.hrefs(true)}
+      end
+    rescue
+      ''
+    end 
+  end
+end
+
+class String; def is_binary_data?; true; end; end

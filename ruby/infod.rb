@@ -40,7 +40,6 @@ PATCH
 POST
 postscript
 rdf
-rfc822
 ruby
 schema
 search
