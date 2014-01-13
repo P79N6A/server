@@ -123,6 +123,7 @@ class E
     'text/comma-separated-values'=>[:triplrCSV,/,/],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
+    'text/n3'              => [:triplrRDF, :n3],
     'text/nfo'             => [:triplrHref,'cp437'],
     'text/ntriples'        => [:triplrRDF, :ntriples],
     'text/plain'           => [:triplrHref],

@@ -60,8 +60,8 @@ class E
   def triplrUriList
     open(d).readlines.grep(/^[^#]/).map{|l|
       l = l.chomp
-      yield uri, '/rel', l
-      yield   l, '/rev', uri
+      yield uri, '/rel', l.E
+      yield   l, '/rev', self
     }
   end
 
