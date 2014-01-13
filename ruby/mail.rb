@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def triplrTmail &f
@@ -8,13 +8,13 @@ class E
       yield e, Type,    E[SIOCt + 'MailMessage']
       yield e, Type,    E[SIOC  + 'Post']
       yield e, Date,    m.date.iso8601 if m.date
-      m.header['x-original-to'].do{|f| yield e, SIOC+'reply_to', E[f.to_s] }
-        [[:subject,Title],      # row index
-              [:to,To,true],    # 0 accessor method
+      m.header['x-original-to'].do{|f| yield e, SIOC+'reply_to', E["mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
+      yield e, Title, m.subject.to_utf8
+      yield e, SIOC+'name', m.friendly_from.to_utf8
+      yield e, Creator, E['/a/'+m.from[0].to_utf8]
+             [[:to,To,true],    # 0 accessor method
               [:cc,To,true],    # 1 predicate URI
              [:bcc,To,true],    # 2 node || literal
-   [:friendly_from,SIOC+'name'],# 3 unwrap id?
-            [:from,Creator,true],
         [:reply_to,SIOC+'reply_to',true],
      [:in_reply_to,SIOC+'reply_of',true,true],
       [:references,SIOC+'reply_of',true,true],
@@ -23,15 +23,15 @@ class E
             unless o.match /\A[, \n]*\Z/ # skip "empty" values
               yield e, a[1], (a[2] ? (a[3] ? o[1..-2] : o).E : o.to_utf8)
             end}}}
-      yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap;background-color:black;color:white;padding:.2em',
+      yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
                             c: m.decentBody.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted emptylines , tag quoted lines
                               {_: :span, class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c: [ l.chomp, "\n" ]}}},
-                           {_: :style, c: "pre.mail .q {background-color:white;color:black}\npre.mail a {background-color: cyan;color:black}"}
+                           {_: :style, c: "pre.mail .q {background-color:#000;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}"}
                           ])
     }
 
-  rescue Exception => e
-    triplrMail &f
+#  rescue Exception => e
+#    triplrMail &f
   end
 
   begin 

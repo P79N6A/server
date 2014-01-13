@@ -2,9 +2,9 @@
 class E
 =begin
    graph construction is two-pass. the first-pass is to see if the second-pass needs to be run..
-   so do *fast* stuff like filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass and get default behaviour for the other. the first-pass is closely related to an ETag - http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3
+   so do *fast* stuff like filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass and get default behaviour for the other. the first-pass returns an ETag - http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3
 
-   a new second-pass might query a CBD (concise-bounded description) from a SPARQL store instead of the local fs. this software was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, and to experiment with hybrids - "touch" a file on successful POSTs, so a remote store only has to be queried once per resource-change. or the inverse, running complex SPARQL queries to find a needle in a haystack of local files then continuing as if Apache serving files
+   a new second-pass might query a CBD (concise-bounded description) from a SPARQL store instead of the local fs. this software was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, and to experiment with hybrids - "touch" a file on successful POSTs, so a remote store only has to be queried once per resource-change. or the inverse of running complex SPARQL queries to find a needle in a haystack of local fs then continuing as if Apache serving files
 
   "triple streams" are functions which yield a triple of the following type-signature:
   s,p - URI in String , o - Literal or URI (object responds to #uri such as E class or {'uri' => '/some.n3'} Hash
@@ -101,13 +101,12 @@ class E
                     r.q['triplr'].do{|t|
                           respond_to?(t) && t }} || :triplrMIME
     unless ext=='e' # native graph-format already
-      # construct native graph if missing or stale
       _ = E '/E/rdf/' + [triplr,uri].h.dive
-      unless _.e && _.m > m;  e = {}
-        puts "< #{uri}"
+#      unless _.e && _.m > m;
+        e = {} ; puts "< #{uri}"
         [:triplrInode, triplr].each{|t| fromStream e, t }
         _.w e, true
-      end
+#      end
     end
     g.mergeGraph _.r true
   end
