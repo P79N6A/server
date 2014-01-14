@@ -22,7 +22,7 @@ class E
 
   # reachable graph along named predicate
   def walk p, g={}, v={}
-    puts "walk #{uri}"
+#    puts "walk #{uri}"
     graph g       # cumulative graph
     v[uri] = true # visited mark
 

@@ -41,10 +41,10 @@ class E
         Type=>E[HTTP+'Response']}
       m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down
       m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      m['/search'] = {Type => E['search/form']}
+      m['/search'] = {Type => E['http://sindice.com/vocab/search#']}
 
     rescue Groonga::SyntaxError => x
-      m['/search'] = {Type => E['search/form']}
+      m['/search'] = {Type => E['http://sindice.com/vocab/search#']}
       m['#'] = {
         Type => E[COGS+'Exception'],
         Title => "bad expression",
