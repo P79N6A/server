@@ -104,13 +104,13 @@ class E
     triplr = @r.do{|r|
                     r.q['triplr'].do{|t|
                           respond_to?(t) && t }} || :triplrMIME
-    unless ext=='e' # native graph-format already
+    unless ext=='e' # native graph-format
       _ = E '/E/rdf/' + [triplr,uri].h.dive
-#      unless _.e && _.m > m;
+      unless _.e && _.m > m;       # up to date?
         e = {} ; puts "< #{uri}"
         [:triplrInode, triplr].each{|t| fromStream e, t }
         _.w e, true
-#      end
+      end
     end
     g.mergeGraph _.r true
   end
