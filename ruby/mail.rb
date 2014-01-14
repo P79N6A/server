@@ -6,7 +6,7 @@ class E
   rescue LoadError => e
   end
 
-  def triplrTmail
+  def triplrTmail &f
     messagePath = ->id{
       h = id.h # hash
       '/msg/' + h[0..1] + '/' + h[2] + '/' + id}
@@ -33,7 +33,7 @@ class E
           yield e, SIOC+'reply_of', E[messagePath[r[1..-2]]]}}}
                            # minimal local markup to use as HTML-literal even if decoupled from specialized view
       yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
-                            c: m.concat_message(e.E).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # < skip quoted emptylines  v tag quoted lines
+                            c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # < skip quoted emptylines  v tag quoted lines
                               {_: :span, class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c: [ l.chomp, "\n" ]}}},
                            {_: :style, c: "pre.mail .q {background-color:#000;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}"}])}
   rescue Exception => e
@@ -59,12 +59,11 @@ module TMail
     def unicode_body
       unquoted_body.to_utf8
     end
-    def concat_message i, partCount=0
-puts "concat #{i.class} #{i}"
+    def concat_message i, partCount=0, &f
       if multipart?
         parts.map{|part|
           if part.multipart?   # and even more nested parts..
-            part.concat_message i, partCount
+            part.concat_message i, partCount, &f
           elsif !attachment?(part) && part.sub_type != 'html'
             part.unicode_body.hrefs true
           else # attachment
@@ -72,6 +71,7 @@ puts "concat #{i.class} #{i}"
             p = i.as (part['content-type']['name'] || ('attach'+partCount.to_s + '.' + (E::MIME.invert[part.content_type] || '.bin').to_s))
             p.w part.body if !p.e # write attachment into message container
             partCount += 1        # display images
+            yield i.uri, E::SIOC+'attachment', p
             '<a href="'+p.uri+'">'+(part.main_type=='image' ? '<img src="'+p.uri+'">' : '')+p.uri.label+"</a><br>\n"
           end
         }.join
