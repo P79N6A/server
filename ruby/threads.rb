@@ -3,7 +3,7 @@
 class E
   
   fn 'protograph/thread',->d,e,g{
-    d.walk SIOC+'reply_of',g
+    d.pathSegment.walk SIOC+'reply_of',g
     g['#']={'uri' => '#',
       RDFs+'member' => g.keys.map(&:E),
       Type => (HTTP+'Response').E}

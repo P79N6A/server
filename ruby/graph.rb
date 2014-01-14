@@ -63,7 +63,6 @@ class E
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs }
-    puts "found #{s}"
     # day-dir hinted pagination
     e.env['REQUEST_PATH'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})(.*)/).do{|m|
       u = g['#']

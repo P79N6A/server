@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   begin 
@@ -35,7 +35,7 @@ class E
       yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
                             c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # < skip quoted emptylines  v tag quoted lines
                               {_: :span, class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c: [ l.chomp, "\n" ]}}},
-                           {_: :style, c: "pre.mail .q {background-color:#000;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}"}])}
+                           {_: :style, c: "pre.mail .q {background-color:#0018ff;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}"}])}
   rescue Exception => e
     puts e
   end
@@ -48,7 +48,7 @@ class E
 HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.4003388
 HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720
 
-almost a copy of above works but identifiers are not wrapped in <>, with caching it might be fast enough..
+almost a copy of above works but identifiers are not wrapped in <> - with caching it might be fast enough..
 
 =end
 
