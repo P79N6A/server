@@ -56,13 +56,15 @@ td[property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap}
 
 .dir {
     max-width:64em;
+    overflow:hidden;
     float:left;
     border-radius:0 1em 1em 1em;
     padding:.3em;
-    margin:.3em}
+    margin:.3em;}
 .dir div:first-child a{
     font-weight: bold;
     font-size:2em;
+    white-space:nowrap;
     margin-right:.016em}
 .dir a {
     background-color:#fff;

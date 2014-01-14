@@ -41,7 +41,7 @@ class E
   end
 
   def triplrMailMessage &f
-    insertDocs :triplrTmail, nil, [Creator,To,SIOC+'reply_of'], &f
+    insertDocs :triplrTmail, nil, [To,SIOC+'reply_of'], &f
   end
 =begin
  there's another mail library called Mail, as of v2.5.4 takes 50x as long as tmail (apt-get install ruby-tmail)
@@ -67,8 +67,8 @@ module TMail
           elsif !attachment?(part) && part.sub_type != 'html'
             part.unicode_body.hrefs true
           else # attachment
-            i.mk # create containing directory
-            p = i.as (part['content-type']['name'] || ('attach'+partCount.to_s + '.' + (E::MIME.invert[part.content_type] || '.bin').to_s))
+            a = i.a('.attache').mk # create container
+            p = a.as(part['content-type']['name'] || (partCount.to_s + '.' + (E::MIME.invert[part.content_type] || '.bin').to_s))
             p.w part.body if !p.e # write attachment into message container
             partCount += 1        # display images
             yield i.uri, E::SIOC+'attachment', p

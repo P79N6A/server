@@ -63,6 +63,7 @@ class E
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs }
+    puts "found #{s}"
     # day-dir hinted pagination
     e.env['REQUEST_PATH'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})(.*)/).do{|m|
       u = g['#']
@@ -108,7 +109,7 @@ class E
       _ = E '/E/rdf/' + [triplr,uri].h.dive
       unless _.e && _.m > m;       # up to date?
         e = {} ; puts "< #{uri}"
-        [:triplrInode, triplr].each{|t| fromStream e, t }
+        [:triplrInode,triplr].each{|t| fromStream e, t }
         _.w e, true
       end
     end
