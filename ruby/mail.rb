@@ -2,36 +2,34 @@ watch __FILE__
 class E
 
   def triplrTmail &f
-    (TMail::Mail.load node).do{|m| # parse
-      d = m.message_id; return unless d  # parse successful?
-      e = d[1..-2]                       # unwrap identifier
-      yield e, Type,    E[SIOCt + 'MailMessage']
-      yield e, Type,    E[SIOC  + 'Post']
-      yield e, Date,    m.date.iso8601 if m.date
-      m.header['x-original-to'].do{|f| yield e, SIOC+'reply_to', E["mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
+    messagePath = ->id{
+      '/msg/' + id.h[0..1] + '/' + id}
+
+    (TMail::Mail.load node).do{|m|      # load
+      d = m.message_id; return unless d # parse successful?
+      id = d[1..-2]                     # message-ID
+      e = messagePath[id]               # webized ID
+      yield e, DC+'identifier', id      # original ID
+      yield e, Type, E[SIOCt + 'MailMessage']
+      yield e, Type, E[SIOC  + 'Post']
+      yield e, Date, m.date.iso8601 if m.date
       yield e, Title, m.subject.to_utf8
       yield e, SIOC+'name', m.friendly_from.to_utf8
-      yield e, Creator, E['/e/'+m.from[0].to_utf8]
-             [[:to,To,true],    # 0 accessor method
-              [:cc,To,true],    # 1 predicate URI
-             [:bcc,To,true],    # 2 node || literal
-        [:reply_to,SIOC+'reply_to',true],
-     [:in_reply_to,SIOC+'reply_of',true,true],
-      [:references,SIOC+'reply_of',true,true],
-        ].each{|a| # field
-        m.send(a[0]).do{|o| [*o].map{|o|
-            unless o.match /\A[, \n]*\Z/ # skip "empty" values
-              yield e, a[1], (a[2] ? (a[3] ? o[1..-2] : o).E : o.to_utf8)
-            end}}}
+      yield e, Creator, E['/mail/'+m.from[0].to_utf8]
+      m.header['x-original-to'].do{|f|
+        yield e, SIOC+'reply_to', E["mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
+      %w{to cc bcc}.map{|to|
+        m.send(to).do{|to| to.map{|to|
+          yield e, To, E['/mail/'+to.to_utf8]}}}
+      %w{in_reply_to references}.map{|ref|
+        m.send(ref).do{|refs| refs.map{|r|
+          yield e, SIOC+'reply_of', E[messagePath[r[1..-2]]]}}}
       yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
                             c: m.decentBody.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted emptylines , tag quoted lines
                               {_: :span, class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c: [ l.chomp, "\n" ]}}},
-                           {_: :style, c: "pre.mail .q {background-color:#000;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}"}
-                          ])
-    }
-
-#  rescue Exception => e
-#    triplrMail &f
+                           {_: :style, c: "pre.mail .q {background-color:#000;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}"}])}
+  rescue Exception => e
+    puts e
   end
 
   begin 
