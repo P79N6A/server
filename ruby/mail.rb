@@ -24,7 +24,7 @@ class E
       yield e, SIOC+'name', m.friendly_from.to_utf8
       yield e, Creator, E['/m/'+m.from[0].to_utf8]
       m.header['x-original-to'].do{|f|
-        yield e, SIOC+'reply_to', E["mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
+        yield e, SIOC+'reply_to', E[URI.escape "mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.map{|to|
           yield e, To, E['/m/'+to.to_utf8]}}}
