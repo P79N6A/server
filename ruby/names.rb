@@ -3,6 +3,7 @@
 class E
 
   attr_reader :uri
+  alias_method :url, :uri
 
   def env r=nil
     r ? (@r = r
@@ -69,22 +70,17 @@ class E
   end
   alias_method :dir, :dirname
 
-  # /path URL from unlocatable identifier (mail MSGID, etc)
-  def url
-    path? ? uri : URIURL + (CGI.escape uri)
-  end
-
-  # http://path URL from unlocatable identifier
+  # add hostname to URI if missing
   def hostURL e
     host = 'http://'+e['SERVER_NAME']
     if uri.index('/') == 0 
       host + uri
     else
-      path? ? uri : host + URIURL + (CGI.escape uri)
+      uri
     end
   end
 
-  # local URL even if locatable-identifier
+  # locator for local data about global URI
   def localURL e
     # path
     if uri.index('/') == 0 # already a local path
@@ -257,7 +253,7 @@ class Hash
   def uri
     self["uri"]||""
   end
-  def url; self.E.url end
+  alias_method :url, :uri
   def label
     self[E::Label] || uri.label
   end

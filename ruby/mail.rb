@@ -11,7 +11,7 @@ class E
       m.header['x-original-to'].do{|f| yield e, SIOC+'reply_to', E["mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
       yield e, Title, m.subject.to_utf8
       yield e, SIOC+'name', m.friendly_from.to_utf8
-      yield e, Creator, E['/a/'+m.from[0].to_utf8]
+      yield e, Creator, E['/e/'+m.from[0].to_utf8]
              [[:to,To,true],    # 0 accessor method
               [:cc,To,true],    # 1 predicate URI
              [:bcc,To,true],    # 2 node || literal

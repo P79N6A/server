@@ -1,13 +1,17 @@
 #watch __FILE__
 class E
 =begin
-   graph construction is two-pass. the first-pass is to see if the second-pass needs to be run..
-   so do *fast* stuff like filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass and get default behaviour for the other. the first-pass returns an ETag - http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3
+  graph resolution is two-pass
 
-   a new second-pass might query a CBD (concise-bounded description) from a SPARQL store instead of the local fs. this software was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, and to experiment with hybrids - "touch" a file on successful POSTs, so a remote store only has to be queried once per resource-change. or the inverse of running complex SPARQL queries to find a needle in a haystack of local fs then continuing as if Apache serving files
+  protograph/
+ the first-pass will determine if the second-pass needs to run. an eTag will be derived from the return-value and any graph additions preserved for the next pass. ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass and get default behaviour for the other. for more implementation ideas see: http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3
 
-  "triple streams" are functions which yield a triple of the following type-signature:
-  s,p - URI in String , o - Literal or URI (object responds to #uri such as E class or {'uri' => '/some.n3'} Hash
+  graph/
+   a second-pass might query a CBD (concise-bounded description) from a SPARQL store. info"daemon was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like "touch" a file on successful POSTs so a store only has to be queried occasionally, and to facilitate simply hooking up bits of Ruby code to names rather than try to shoehorn what you're trying to say into some QueryLang where you're additionally without standard library functions thus necessitating more roundtrips and latency via marshalling/unmarshalling, parsing, loopback network-abstraction, nascent RDF-via-SPARQL-as-ORM-libs.. by all means knock yourself out experimenting w/ defining graph-handlers for this stuff though - i know i do!
+
+  triple streams are functions which yield triples
+  s,p - URI in String , o - Literal or URI (object must respond to #uri such as '/path'.E or {'uri' => '/some.n3'}
+  these can be formed into pipelines. the data ingesting/massaging stream-processors in feed.rb are modularized this way
 
 =end
 
