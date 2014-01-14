@@ -16,7 +16,7 @@ class E
       id = d[1..-2]                     # message-ID
       e = messagePath[id]               # webized ID
       yield e, DC+'identifier', id      # original ID
-      yield e, Posix+'path', self       # original path
+      yield e, DC+'source', self        # original file
       yield e, Type, E[SIOCt + 'MailMessage']
       yield e, Type, E[SIOC  + 'Post']
       yield e, Date, m.date.iso8601 if m.date
@@ -60,10 +60,11 @@ module TMail
       unquoted_body.to_utf8
     end
     def concat_message i, partCount=0
+puts "concat #{i.class} #{i}"
       if multipart?
         parts.map{|part|
           if part.multipart?   # and even more nested parts..
-            part.concat_message id, partCount
+            part.concat_message i, partCount
           elsif !attachment?(part) && part.sub_type != 'html'
             part.unicode_body.hrefs true
           else # attachment
