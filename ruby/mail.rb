@@ -31,7 +31,7 @@ class E
       yield creator, Type, E[FOAF+'Person']
       yield creator, SIOC+'creator_of', E[creator+'posts']
       yield creator+'posts', Type, E[LDP+'Container']
-      yield creator+'posts', LDP+'firstPage', E[creator[0..-2]+'%23?set=indexPO&p=sioc:has_creator']
+      yield creator+'posts', LDP+'firstPage', E['/index/sioc:has_creator/'+URI.escape(creator)]
 
       m.header['x-original-to'].do{|f|
         yield e, SIOC+'reply_to', E[URI.escape "mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }

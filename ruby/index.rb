@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # POSIX-fs based index of triples
@@ -51,16 +51,14 @@ class E
       s }}
 
   # subtree traverse index on p+o cursor
-  fn 'set/index',->d,r,m,f=:rangePO{
-    top = (f == :rangeP ? d : (r['p'] || '/')).expand.E
+  fn 'set/index',->d,r,m{
+    top = r['p'].expand.E
     count = r['c'] &&
-            r['c'].to_i.max(1000)+1 || 22
-    dir = r['d'] &&
-          r['d'].match(/^(a|de)sc$/) &&
-          r['d'].to_sym ||
-          :desc
-   puts [top, f, count, dir, r['offset'],(d.pathSegment if f == :rangePO)].join ' '
-    (top.send f, count, dir, r['offset'],(d.pathSegment if f == :rangePO)).do{|s|
+            r['c'].to_i.max(1000) || 8
+    dir = r['d'] && r['d'].match(/^(a|de)sc$/) &&
+          r['d'].to_sym || :desc
+
+    (top.rangePO count+1, dir, r['offset'], r['o']).do{|s|
       # orient pagination pointers
       ascending = r['d'].do{|d| d == 'asc' }
       first, last = s[0], s.size > 1 && s.pop
@@ -68,13 +66,17 @@ class E
       # response description
       u = m['#']
       u[RDFs+'member'] = s
-      u[Prev] = {'uri' => d.url + {'d' => 'desc','offset' => desc.uri}.qs} if desc
-      u[Next] = {'uri' => d.url + {'d' => 'asc', 'offset' => asc.uri}.qs}  if asc
+      u[Prev] = {'uri' => '/index/' + r['p'] + '/' + CGI.escape(r['o']) + {'offset' => desc.uri, 'c' => count}.qs } if desc
+      u[Next] = {'uri' => '/index/' + r['p'] + '/' + CGI.escape(r['o']) + {'offset' => asc.uri, 'c' => count}.qs } if asc
 
       s.map(&:docs).flatten.uniq }}
 
-  fn 'set/indexP',->d,r,m{Fn 'set/index',d,r,m,:rangeP}
-   F['set/indexPO']     =  F['set/index']
+  fn '/index/GET',->e,r{
+    a = e.pathSegment.uri[7..-1].split '/',2
+    r.q['set'] = 'index'
+    r.q['p'] = a[0]
+    r.q['o'] = CGI.unescape a[1]
+    e.response}
 
   # predicate index
   def pIndex
@@ -121,26 +123,6 @@ class E
 
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
-
-  # enumerate unique predicates in index
-  fn '/index/GET',->e,r{
-    e.pathSegment.uri.match(/^\/index$/) &&
-   (H [{_: :style, c: "a {font-size:3em;display:block}
-a:hover {background-color:#00f}"},
-       '/index'.E.take.map{|e|e.uri[6..-1].unpath.do{|p|{_: :a, href: '/@'+URI.escape(p.uri)+'?set=indexP&c=12', c: p}}}]).hR}
-
-  # p+o index-traversal pointers
-  fn 'view/linkPO',->d,e{
-    p = e['uri']
-    [(H.css '/css/index'),(H.js '/js/search'),{_: :b, c: p},
-     # front-end to search on SIOC predicate+object URIs
-     %w{sioc:has_creator sioc:addressed_to}.member?(p).do{|_|
-       {_: :form, action: '/whois',c: [{_: :input, type: :hidden, name: :p, value: p},{_: :input, name: :q}]}
-     },
-     # set members
-     d['#'][RDFs+'member'].do{|m|
-       m.map{|r|
-         {c: {_: :a, href: r.url+'?set=indexPO&p=' + (URI.escape p) + '&c=8', c: r.uri}}}}]}
 
 end
 

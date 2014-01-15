@@ -47,6 +47,5 @@ sh
 text
 threads
 time
-whois
 wiki
 }.map{|e|require_relative e}

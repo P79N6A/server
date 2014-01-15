@@ -47,7 +47,7 @@ class E
       d = doc.E
       if !d.e
         d.w g, true
-        puts "doc < #{doc}"
+        puts "#{doc} < #{g.keys.join ' '}"
       end}
     graph.triples &b if b # emit the triples
     self
