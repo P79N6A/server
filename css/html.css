@@ -21,7 +21,7 @@ td.key .abbr {display: none}
 td.key .frag {
     font-weight:bold;
     background-color:#fff;
-    color:#0cf;
+    color:#45b;
     padding-left:.2em;
     border-radius:.38em 0 0 .38em}
 
@@ -34,7 +34,7 @@ td.val {
 
 td.val .frag {
     display: inline;
-    background-color: #91ACB3;
+    background-color: #3391aa;
     color: #fff;
     padding-right: .15em}
 
