@@ -3,10 +3,13 @@
 class E
   
   fn 'protograph/thread',->d,e,g{
+    # find reachable discussion by recursively walking reply_of arcs
     d.pathSegment.do{|p|p.walk SIOC+'reply_of',g }
     g['#']={'uri' => '#',
       RDFs+'member' => g.keys.map(&:E),
-      Type => (HTTP+'Response').E} unless g.empty?
+      Type => [E[HTTP+'Response'],
+               E[SIOC+'Thread']
+              ]} unless g.empty?
     F['docsID'][g,e]}
   
   fn 'view/threads',->d,env{

@@ -23,6 +23,7 @@ class E
       yield e, Date, m.date.iso8601 if m.date
       yield e, Title, m.subject.to_utf8
       yield e, Creator, E[creator]
+      yield e, SIOC+'has_discussion', E[e+'?graph=thread']
       yield creator, SIOC+'name', m.friendly_from.to_utf8
       m.header['x-original-to'].do{|f|
         yield e, SIOC+'reply_to', E[URI.escape "mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
