@@ -32,9 +32,7 @@ class E
       yield creator, SIOC+'creator_of', E[posts]
       yield posts, Type, E[LDP+'Container']
       yield posts, LDP+'firstPage', E['/index/sioc:has_creator/'+CGI.escape(creator)]
-
-      m.header['x-original-to'].do{|f|
-        yield e, SIOC+'reply_to', E[URI.escape "mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
+      yield e, SIOC+'reply_to', E[URI.escape "mailto:#{m.header['x-original-to']||from}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"]
 
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.map{|to|
