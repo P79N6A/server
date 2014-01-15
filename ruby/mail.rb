@@ -28,7 +28,6 @@ class E
 
       yield creator, SIOC+'name', m.friendly_from.to_utf8
       yield creator, DC+'identifier', E['mailto:'+from]
-      yield creator, Type, E[FOAF+'Person']
             posts = '/m/'+from+'#posts'
       yield creator, SIOC+'creator_of', E[posts]
       yield posts, Type, E[LDP+'Container']
@@ -39,7 +38,10 @@ class E
 
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.map{|to|
-          yield e, To, E['/m/'+to.to_utf8]}}}
+            to = to.to_utf8
+            r = '/m/'+to+'#'+to
+            yield e, To, E[r]
+            yield r, SIOC+'container_of', E['/index/sioc:addressed_to/'+CGI.escape(r)]}}}
 
       %w{in_reply_to references}.map{|ref|
         m.send(ref).do{|refs| refs.map{|r|
