@@ -26,13 +26,12 @@ class E
       yield e, Creator, E[creator]
       yield e, SIOC+'has_discussion', E[e+'?graph=thread']
 
-      # some info if this person hasn't been seen before
       yield creator, SIOC+'name', m.friendly_from.to_utf8
       yield creator, DC+'identifier', E['mailto:'+from]
       yield creator, Type, E[FOAF+'Person']
       yield creator, SIOC+'creator_of', E[creator+'posts']
       yield creator+'posts', Type, E[LDP+'Container']
-      yield creator+'posts', LDP+'firstPage', 'asd'
+      yield creator+'posts', LDP+'firstPage', E[creator[0..-2]+'%23?set=indexPO&p=sioc:has_creator']
 
       m.header['x-original-to'].do{|f|
         yield e, SIOC+'reply_to', E[URI.escape "mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
@@ -57,7 +56,7 @@ class E
   end
 
   def triplrMailMessage &f
-    insertDocs :triplrTmail, nil, [To,SIOC+'reply_of'], &f
+    insertDocs :triplrTmail, nil, [To,SIOC+'has_creator',SIOC+'reply_of'], &f
   end
 =begin
  there's another mail library called Mail, as of v2.5.4 takes 50x as long as tmail (apt-get install ruby-tmail)

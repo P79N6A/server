@@ -107,7 +107,7 @@ class E
     (H ['<html><body>',
         q.do{|q|{_: :a, style: 'float:left',href: '/schema.n3?q='+CGI.escape(q), c: {_: :img, src: '/css/misc/cube.png'}}},
         (H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
-        F['view/search/form'][r.q,r], found,
+        F['view/'+Search][r.q,r], found,
         '<br>sources ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: SchemasRDFa[0], c: 'schema.org'},' ',
        ]).hR}
   

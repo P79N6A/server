@@ -33,18 +33,6 @@ class E
   def docBase
     !uri.empty? && uri.split(/#/)[0].do{|u|u.E.do{|d| d.dirname.as d.bare }} || E['']
   end
-  
-  # and w/ URI-lib
-  def docBaseURI
-    u = URI uri
-    s = u.scheme
-    p = u.path
-    p = '/' if p.empty?
-    ((s ? s + '://' : '') + # scheme
-     u.host +               # host
-     File.dirname(p).t +    # path
-     File.basename(p)[0..-(File.extname(p).size+1)]).E # doc
-  end
 
   def frag
     uri.frag
@@ -80,7 +68,7 @@ class E
     end
   end
 
-  # locator for local data about global URI
+  # pointer to local data about global URI
   def localURL e
     # path
     if uri.index('/') == 0 # already a local path
@@ -183,8 +171,8 @@ class E
   end
 
   # literals to URIs
-  # currently used for iso8601 dates mapping to paths, so date-range queries can be done w/ just dir/fs tooling
-  # could also use as a "trie" for autocomplete or sorting strings
+  # currently used for iso8601 dates mapping to paths, so date-range queries (depth-first subtrees) can be done w/ dir/fs tools
+  # could also use as a "trie" for autocomplete + sorted-strings
   def E.literal o
     E['/'].literal o
   end

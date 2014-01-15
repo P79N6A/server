@@ -25,7 +25,7 @@ class E
       p = /#{w.join '.*'}/i
 
       [H.css('/css/search'), H.css('/css/grep'),
-       F['view/search/form'][e.q,e],
+       F['view/'+Search][e.q,e],
        {_: :style, c: c.values.map{|i|
            # word color
            b = rand(16777216)
