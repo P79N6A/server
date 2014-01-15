@@ -59,7 +59,7 @@ class E
   end
 
   def triplrMailMessage &f
-    insertDocs :triplrTmail, nil, [To,SIOC+'has_creator',SIOC+'reply_of'], &f
+    insertDocs :triplrTmail, @r['SERVER_NAME'], [To,SIOC+'has_creator',SIOC+'reply_of'], &f
   end
 =begin
  there's another mail library called Mail, as of v2.5.4 takes 50x as long as tmail (apt-get install ruby-tmail)

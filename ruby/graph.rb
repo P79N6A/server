@@ -7,7 +7,7 @@ class E
  the first-pass will determine if the second-pass needs to run. an eTag will be derived from the return-value and any graph additions preserved for the next pass. ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass and get default behaviour for the other. for more ideas see <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
 
   graph/
-   a second-pass might query a CBD (concise-bounded description) from a SPARQL store. infoD was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like "touch" a file on successful POSTs so a store only has to be queried occasionally, and to facilitate simply hooking up bits of Ruby code to names rather than try to shoehorn what you're trying to say into some QueryLang where you're additionally without standard library functions necessitating more roundtrips and latency via marshalling/unmarshalling, parsing, loopback network-abstraction, nascent RDF-via-SPARQL-as-ORM-libs.. but go nuts experimenting w/ graph-handlers for this stuff,,i do..
+   a second-pass might query a CBD (concise-bounded description) from a SPARQL store. infod was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like "touch" a file on successful POSTs so a store only has to be queried occasionally, and to facilitate simply hooking up bits of Ruby code to names rather than try to shoehorn what you're trying to say into some QueryLang where you're additionally without standard library functions necessitating more roundtrips and latency via marshalling/unmarshalling, parsing, loopback network-abstraction, nascent RDF-via-SPARQL-as-ORM-libs.. but go nuts experimenting w/ graph-handlers for this stuff,,i do..
 
   triple streams are functions which yield triples
   s,p - URI in String , o - Literal or URI (object must respond to #uri such as '/path'.E or {'uri' => '/some.n3'}
@@ -29,24 +29,24 @@ class E
  * behave as normal triplr to caller, with
    side-effect of import/indexing to knowledgebase
 =end
-  def insertDocs triplr, h=true, p=[], &b
+  def insertDocs triplr, host, p=[], &b
     graph = fromStream({},triplr)
     docs = {}
     graph.map{|u,r|
-      e = u.E               # resource
-      doc = e.ef            # doc
-      doc.e ||              # exists?
-      (docs[doc.uri] ||= {} # init doc graph
-       docs[doc.uri][u] = r # add to graph
-       p.map{|p|            # each indexable property
-         r[p].do{|v|        # values exists?
-           v.map{|o|        # each value
-             e.index p,o}}} # add to property index 
-       e.roonga h if h)}    # and full-text index
+      e = u.E                # resource
+      doc = e.ef             # doc
+      doc.e ||               # exists?
+      (docs[doc.uri] ||= {}  # init doc graph
+       docs[doc.uri][u] = r  # add to graph
+       p.map{|p|             # each indexable property
+         r[p].do{|v|         # values exists?
+           v.map{|o|         # each value
+             e.index p,o}}})}# add to property index 
     docs.map{|doc,g|
       d = doc.E
       if !d.e
-        d.w g, true
+        d.w g, true   # write doc
+        d.roonga host # text index
         puts "#{doc} < #{g.keys.join ' '}"
       end}
     graph.triples &b if b # emit the triples
