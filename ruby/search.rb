@@ -10,9 +10,7 @@ class E
     [H.css('/css/search'),H.js('/js/search'),
      {:class => :form,
       c: {_: :form, action: '/search',
-        c: [{_: :input, name: :q, value: e.q['q']}, # search box
-            e.q.except('q','start'). # new query & offset for this search
-            map{|a,s|
-              {_: :input, name:  a, value: s, :type => :hidden}}]}}]}
+         c: {_: :input, name: :q}, # search box
+       }}]}
 
 end
