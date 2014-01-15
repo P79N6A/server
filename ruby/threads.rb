@@ -3,10 +3,10 @@
 class E
   
   fn 'protograph/thread',->d,e,g{
-    d.pathSegment.walk SIOC+'reply_of',g
+    d.pathSegment.do{|p|p.walk SIOC+'reply_of',g }
     g['#']={'uri' => '#',
       RDFs+'member' => g.keys.map(&:E),
-      Type => (HTTP+'Response').E}
+      Type => (HTTP+'Response').E} unless g.empty?
     F['docsID'][g,e]}
   
   fn 'view/threads',->d,env{
