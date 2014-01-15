@@ -6,31 +6,35 @@ class E
   rescue LoadError => e
   end
 
-  def triplrTmail &f
-    messagePath = ->id{
-      h = id.h # hash
-      '/msg/' + h[0..1] + '/' + h[2] + '/' + id}
+  MessagePath = ->id{
+    h = id.h # hash identifier
+    '/msg/' + h[0..1] + '/' + h[2] + '/' + id}
 
+  def triplrTmail &f
     (TMail::Mail.load node).do{|m|      # load
       d = m.message_id; return unless d # parse successful?
       id = d[1..-2]                     # message-ID
-      e = messagePath[id]               # webized ID
+      e = MessagePath[id]               # webized ID
+      creator = '/m/'+m.from[0].to_utf8 # author ID
       yield e, DC+'identifier', id      # original ID
       yield e, DC+'source', self        # original file
       yield e, Type, E[SIOCt + 'MailMessage']
       yield e, Type, E[SIOC  + 'Post']
       yield e, Date, m.date.iso8601 if m.date
       yield e, Title, m.subject.to_utf8
-      yield e, SIOC+'name', m.friendly_from.to_utf8
-      yield e, Creator, E['/m/'+m.from[0].to_utf8]
+      yield e, Creator, E[creator]
+      yield creator, SIOC+'name', m.friendly_from.to_utf8
       m.header['x-original-to'].do{|f|
         yield e, SIOC+'reply_to', E[URI.escape "mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
+
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.map{|to|
           yield e, To, E['/m/'+to.to_utf8]}}}
+
       %w{in_reply_to references}.map{|ref|
         m.send(ref).do{|refs| refs.map{|r|
-          yield e, SIOC+'reply_of', E[messagePath[r[1..-2]]]}}}
+          yield e, SIOC+'reply_of', E[MessagePath[r[1..-2]]]}}}
+
       # local markup for RDF:HTML without specialized view
       yield e, Content,
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
