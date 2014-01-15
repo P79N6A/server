@@ -35,7 +35,7 @@ class E
       yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
                             c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # < skip quoted emptylines  v tag quoted lines
                               {_: :span, class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c: [ l.chomp, "\n" ]}}},
-                           {_: :style, c: "pre.mail .q {background-color:#0018ff;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}"}])}
+                           {_: :style, c: "pre.mail .q {background-color:#0018ff;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}\npre.mail img {max-width:100%}"}])}
   rescue Exception => e
     puts e
   end
