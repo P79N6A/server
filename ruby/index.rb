@@ -13,7 +13,7 @@ class E
   # index a triple - no type-normalization
   def indexEdit p,o,a
     return if @noIndex
-    puts "index #{p} #{o} #{a}"
+#    puts "index #{p} #{o} #{a}"
     p.pIndex.noIndex[o,self,a]
   end
   def noIndex
