@@ -6,7 +6,7 @@ class E
 
   F['/search.n3/GET'] = F['/search/GET']
 
-  fn 'view/search/form',-> q=nil,e { q||={}
+  fn 'view/'+Search,-> q=nil,e { q||={}
     [H.css('/css/search'),H.js('/js/search'),
      {:class => :form,
       c: {_: :form, action: e['REQUEST_PATH'],

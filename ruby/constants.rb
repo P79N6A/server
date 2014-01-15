@@ -38,6 +38,7 @@ class E
   HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
   Stat     = Posix + 'stat#'
+  Search   = 'http://sindice.com/vocab/search#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
   Render   = 'http://whats-your.name/www#RenderMIME/'
