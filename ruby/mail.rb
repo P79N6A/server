@@ -31,11 +31,13 @@ class E
       %w{in_reply_to references}.map{|ref|
         m.send(ref).do{|refs| refs.map{|r|
           yield e, SIOC+'reply_of', E[messagePath[r[1..-2]]]}}}
-                           # minimal local markup to use as HTML-literal even if decoupled from specialized view
-      yield e, Content, H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
-                            c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # < skip quoted emptylines  v tag quoted lines
-                              {_: :span, class: ((l.match /(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? 'q' : 'u'), c: [ l.chomp, "\n" ]}}},
-                           {_: :style, c: "pre.mail .q {background-color:#0018ff;color:#fff}\npre.mail a {background-color: #91acb3;color:#fff}\npre.mail img {max-width:100%}"}])}
+      # local markup for RDF:HTML without specialized view
+      yield e, Content,
+      H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
+           c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
+             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, c: l} : l # wrap quoted lines
+           }},
+         {_: :style, c: "pre.mail .q {background-color:#00f;color:#fff}\npre.mail a{background-color:#ef3}\npre.mail img {max-width:100%}"}])}
   rescue Exception => e
     puts e
   end
