@@ -64,11 +64,11 @@ class String
 end
 
 class Fixnum
-  def html e=nil; H({_: :input, type: :number, value: to_s}) end
+  def html e=nil; to_s end
 end
 
 class Float
-  def html e=nil; H({_: :input, type: :number, value: to_s}) end
+  def html e=nil; to_s end
 end
 
 class TrueClass
