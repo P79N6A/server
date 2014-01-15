@@ -33,11 +33,11 @@ class E
            (msgs.size > 1 && # more than one author?
             ['<br>', msgs.map{|s| # show
                 {_: :a, property: Creator, href: s.url+'?graph=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
-                 c: s[Creator][0].uri.label.split(/@/)[0] }}]),'<br>']},'</td>',
+                 c: s[Creator]}}]),'<br>']},'</td>',
 
-        {_: :td, class: :group, property: To,
+        ({_: :td, class: :group, property: To,
           c: {_: :a, :class => :to, style: 'background-color:'+c, c: group.label,
-            href: '/index/sioc:addressed_to/'+CGI.escape(group)+'?view=threads&c=24'}},
+            href: '/index/sioc:addressed_to/'+CGI.escape(group)+'?view=threads&c=24'}} if group),
 
         '</tr>']},'</table>']}
 

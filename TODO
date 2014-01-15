@@ -1,9 +1,0 @@
-cal.rb - fix anything needed to make https://github.com/rww-apps/ld-cal work w/ our backend
-edit.rb - #ids
-edit.rb - store version histories, optionally - Memento? http://www.mementoweb.org/guide/resourcetype/
-forum/blog.rb - URI-shorthand :simulacra: to existing sioc-infrastructure of feeds/mail
-index.rb - protograph/graph pairs for non-fs (indirect-fs) stores (hexastore/4store/sord/redis/leveldb..)
-man.rb - add RDFa, fs-index references for backlink-finding /   manpage-graph
-names.rb - remove h/m/s from Datetime literal-paths - overkill
-schema.rb - search to return RDF not just HTML (as in groonga.rb)
-wiki.rb - add views to browse/diff version histories
