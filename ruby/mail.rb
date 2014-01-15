@@ -15,7 +15,8 @@ class E
       d = m.message_id; return unless d # parse successful?
       id = d[1..-2]                     # message-ID
       e = MessagePath[id]               # webized ID
-      creator = '/m/'+m.from[0].to_utf8 # author ID
+      from = m.from[0].to_utf8          # author
+      creator = '/m/'+from+'#'          # author URI
       yield e, DC+'identifier', id      # original ID
       yield e, DC+'source', self        # original file
       yield e, Type, E[SIOCt + 'MailMessage']
@@ -24,7 +25,15 @@ class E
       yield e, Title, m.subject.to_utf8
       yield e, Creator, E[creator]
       yield e, SIOC+'has_discussion', E[e+'?graph=thread']
+
+      # some info if this person hasn't been seen before
       yield creator, SIOC+'name', m.friendly_from.to_utf8
+      yield creator, DC+'identifier', E['mailto:'+from]
+      yield creator, Type, E[FOAF+'Person']
+      yield creator, SIOC+'creator_of', E[creator+'posts']
+      yield creator+'posts', Type, E[LDP+'Container']
+      yield creator+'posts', LDP+'firstPage', 'asd'
+
       m.header['x-original-to'].do{|f|
         yield e, SIOC+'reply_to', E[URI.escape "mailto:#{f}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"] }
 
@@ -36,7 +45,7 @@ class E
         m.send(ref).do{|refs| refs.map{|r|
           yield e, SIOC+'reply_of', E[MessagePath[r[1..-2]]]}}}
 
-      # local markup for RDF:HTML without specialized view
+      # RDF:HTML with self-contained minimal styling
       yield e, Content,
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
            c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines

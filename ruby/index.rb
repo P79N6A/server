@@ -58,13 +58,12 @@ class E
           r['d'].match(/^(a|de)sc$/) &&
           r['d'].to_sym ||
           :desc
-
-    (top.send f, count, dir, r['offset'],(d if f == :rangePO)).do{|s|
+   puts [top, f, count, dir, r['offset'],(d.pathSegment if f == :rangePO)].join ' '
+    (top.send f, count, dir, r['offset'],(d.pathSegment if f == :rangePO)).do{|s|
       # orient pagination pointers
       ascending = r['d'].do{|d| d == 'asc' }
       first, last = s[0], s.size > 1 && s.pop
       desc, asc = ascending && [first,last] || [last,first]
-
       # response description
       u = m['#']
       u[RDFs+'member'] = s
