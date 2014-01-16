@@ -83,32 +83,16 @@ class E
   end
 
   fn '/schema.n3/GET',->e,r{
+    r.q['view']='table'
     g = {}
     if (q = r.q['q']) && !q.empty?
-      search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 86"
+      search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 255"
       found = `#{search}`.to_utf8.lines.to_a.map{|i|
         c,u,t = i.split ' ',3
         c = c.to_i
         g[u] = {'uri' => u, 'http://www.w3.org/2000/01/rdf-schema#comment' => t, 'http://purl.org/vocommons/voaf#occurrences' => c}}
     end
     [200,{'Content-Type'=>e.env.format+'; charset=utf-8'},[(e.render e.env.format, g, e.env)]]}
-
-  fn '/schema/GET',->e,r{
-    q = r.q['q']
-    if q && !q.empty?
-      search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 255"
-      found = `#{search}`.to_utf8.lines.to_a.map{|i|
-        c,u,t = i.split ' ',3
-        c = c.to_i
-        [("<b>#{c}</b>" unless c.zero?),
-         " <a href='#{u}'>#{u.abbrURI}</a> ",
-         t,"<br>\n"]}
-    end
-    (H ['<html><body>',
-        q.do{|q|{_: :a, style: 'float:left',href: '/schema.n3?q='+CGI.escape(q), c: {_: :img, src: '/css/misc/cube.png'}}},
-        (H.css '/css/search'),(H.css '/css/schema'),(H.js '/js/search'),
-        F['view/'+Search][r.q,r], found,
-        '<br>sources ',{_: :a, href: 'http://prefix.cc', c: 'prefix.cc'},' and ',{_: :a, href: SchemasRDFa[0], c: 'schema.org'},' ',
-       ]).hR}
+  F['/schema/GET']=F['/schema.n3/GET']
   
 end
