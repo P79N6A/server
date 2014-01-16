@@ -22,6 +22,8 @@ class E
   F={}
   Watch={}
 
+  NullView = -> d,e {}
+
   def self.dev
     Watch.each{|f,ts|
       if ts < File.mtime(f)

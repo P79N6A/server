@@ -115,7 +115,7 @@ class E
     unless ext=='e' # native graph-format
       _ = E '/E/rdf/' + [triplr,uri].h.dive
       unless _.e && _.m > m;       # up to date?
-        e = {} ; puts "< #{uri}"
+        e = {} ; puts " + #{uri}"
         [:triplrInode,triplr].each{|t| fromStream e, t }
         _.w e, true
       end
