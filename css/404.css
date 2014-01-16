@@ -15,12 +15,14 @@ a {
     padding:.1em;
     }
 
-td.key {
+td {
     text-align:right;
 }
+td.key {text-align:left}
 
+table {float: right}
 
-td.key .abbr {display: none}
+td.key .scheme, td.key .abbr {display: none}
 
 td.key div {
     white-space:nowrap;
@@ -32,8 +34,6 @@ td.key .frag {
     color:#000;
     height: 100%;
 }
-
-td.key .scheme {display: none}
 
 td.val {
     border-style:dotted;
