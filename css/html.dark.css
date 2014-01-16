@@ -1,0 +1,60 @@
+body {
+    font-family: sans-serif;
+    background-color:#000;
+    color:#fff;
+}
+a { text-decoration:none;}
+a[id]{
+    border-radius: .16em;
+    padding: 0 .1em 0 .1em;
+    background-color:#7786A7;
+    color:#fff;
+}
+table.html {
+    float:left;
+    border-radius:.62em .38em .38em .62em;
+    padding:.18em;
+    margin:.18em;}
+
+.scheme { display: none; }
+td {vertical-align:bottom}
+td.key {text-align:right}
+td.key .abbr {display: none}
+td.key .frag {
+    font-weight:bold;
+    color:#fff;
+    background-color:#272727;
+    padding-left:.2em;
+    border-radius:.38em 0 0 .38em}
+
+td.val {
+    background-color:#000;
+    padding-left: .18em;
+    border-radius: .22em 0 0 .22em;
+    border-color:#ccc;}
+
+td.val .frag {
+    display: inline;
+    background-color: #5dc1db;
+    color: #fff;
+    padding-right: .15em}
+
+td.val .abbr {
+    display: inline;
+    background-color: #78a;
+    color: #fff;
+}
+
+pre.mail a[rel=untyped] {
+    color:#000;
+    background-color: #5f0;
+    border-radius:.2em .3em .3em .2em;
+    border-style: dotted;
+    border-color: #000;
+    border-width: .1em;
+}
+article {
+    border-radius:1.2em;
+    border-style:dotted;
+    border-width:.1em;
+    border-color:#00f0ff;}

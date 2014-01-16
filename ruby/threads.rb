@@ -33,7 +33,7 @@ class E
            (msgs.size > 1 && # more than one author?
             ['<br>', msgs.map{|s| # show
                 {_: :a, property: Creator, href: s.url+'?graph=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
-                 c: s[Creator]}}]),'<br>']},'</td>',
+                 c: s[Creator].do{|c|c[0].uri.split('#')[1]}}}]),'<br>']},'</td>',
 
         ({_: :td, class: :group, property: To,
           c: {_: :a, :class => :to, style: 'background-color:'+c, c: group.label,

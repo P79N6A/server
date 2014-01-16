@@ -36,7 +36,6 @@ man
 microblog
 names
 page
-PATCH
 POST
 postscript
 rdf
