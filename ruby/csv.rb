@@ -8,7 +8,7 @@ class E
       lines[0].do{|fields| # ok, we have at least one line..
         yield uri+'#', Type, E[CSV+'Table']
         yield uri+'#', CSV+'rowCount', lines.size
-        yield uri+'#', COGS+'View', E[uri+'?view=table']
+        yield uri+'#', COGS+'View', E[uri+'?view=p']
         lines[1..-1].each_with_index{|row,line|
           row.each_with_index{|field,i|
             id = uri + '#row:' + line.to_s
