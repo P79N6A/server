@@ -1,6 +1,6 @@
-#watch __FILE__
+watch __FILE__
 
-# Ruby to HTML
+# HTML in Ruby literals
 def H _
   case _
   when Hash
@@ -98,7 +98,11 @@ class E
   end
 
   fn 'view',->d,e{
-    d.values.sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
+    d.values.select{|r|
+      !r.has_key?('uri') || # URI field missing
+      !r.uri.match(/^_:/)   # blank node
+    }.
+    sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
     map{|r| Fn 'view/select',r,e }}
 
   fn 'view/base',->d,e,k=true{
