@@ -24,6 +24,7 @@ table.html {
     color: #000;
 }
 
+
 td.key {text-align:right}
 
 .abbr,.scheme {
@@ -31,7 +32,7 @@ td.key {text-align:right}
 }
 td.val {
     background-color:#fff;
-    border-color:#ddd;
+    border-color:#eee;
     border-style:dotted;
     border-width: 0 0 .1em 0}
 
@@ -39,6 +40,8 @@ td.key > a > .frag {
     font-weight:bold;
     color: #22f;
     background-color:#fff;
+    border-radius: .4em 0 0 .4em;
+    padding-left: .1em;
 }
 
 pre.mail {
