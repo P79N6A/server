@@ -17,14 +17,12 @@ table.html {
     border-width:.2em;
     border-color:#eee;
     border-style:solid;
-    color:#000;
+    background-color: #fff;
+    color: #000;
 }
 
 .scheme { display: none; }
-td {
-    vertical-align:bottom;
-    background-color:#fff;
-}
+
 td.key .abbr {
     display: none;
 }

@@ -91,6 +91,8 @@ class Hash
   end
 end
 
+NullView = -> d,e {}
+
 class E
 
   def html *a

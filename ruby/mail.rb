@@ -68,6 +68,9 @@ almost a copy of above works but identifiers are not wrapped in <> - with cachin
 
 =end
 
+# skip displaying a box for the file that led to the email, w/o explicitly enabling by choosing another view
+F['view/'+MIMEtype+'message/rfc822'] = NullView
+
 end
 
 module TMail
