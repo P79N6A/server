@@ -93,7 +93,7 @@ class Hash
       H({_: :table, class: :html, c: map{|k,v|
             unless k == 'uri' && (v.match IsBnode)
               {_: :tr, property: k, c:
-                [k == E::Content ? {_: :td, colspan: 2, c: v} :
+                [k == E::Content ? {_: :td, class: :val, colspan: 2, c: v} :
                  [
                   ({_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key} if key),
                   {_: :td, c: k == 'uri' ? v.E.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e,g), class: :val},
