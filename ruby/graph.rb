@@ -47,7 +47,7 @@ class E
       if !d.e
         d.w g, true   # write doc
         d.roonga host # text index
-        puts "#{doc} < #{g.keys.join ' '}"
+        puts " + #{g.keys.join ' '}"
       end}
     graph.triples &b if b # emit the triples
     self
