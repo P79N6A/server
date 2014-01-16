@@ -1,7 +1,7 @@
 #watch __FILE__
 
 class Time
-  def html e=nil; H({_: :time, datetime: iso8601, c: to_s}) end
+  def html e=nil,g=nil; H({_: :time, datetime: iso8601, c: to_s}) end
 end
 
 class Object

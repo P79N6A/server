@@ -33,8 +33,8 @@ class H
 end
 
 class Array
-  def html v=nil
-    map{|e|e.html v}.join ' '
+  def html v=nil,g=nil
+    map{|e|e.html v,g}.join ' '
   end
 end
 
@@ -57,37 +57,50 @@ class String
     sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]*)$/,
     '<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
-  def html e=nil
-# CGI.escapeHTML self
+  def html e=nil,g=nil
     self
   end
 end
 
 class Fixnum
-  def html e=nil; to_s end
+  def html e=nil,g=nil; to_s end
 end
 
 class Float
-  def html e=nil; to_s end
+  def html e=nil,g=nil; to_s end
 end
 
 class TrueClass
-  def html e=nil; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
+  def html e=nil,g=nil; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
 end
 
 class FalseClass
-  def html e=nil; H({_: :input, type: :checkbox, title: :False}) end
+  def html e=nil,g=nil; H({_: :input, type: :checkbox, title: :False}) end
 end
 
+IsBnode = /^_:/
+
 class Hash
-  def html e={'SERVER_NAME'=>'localhost'}, key=true
-    (keys.size == 1 && has_key?('uri')) ? url.href : 
-      H({_: :table, class: :html, c:
-        map{|k,v|
-          {_: :tr, property: k, c:
-              [k == E::Content ? {_: :td, colspan: 2, c: v} :
-               [{_: :td, c: k == 'uri' ? v.E.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e), class: :val},
-                ({_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key} if key)]]}}})
+  def html e={'SERVER_NAME'=>'localhost'}, g={}, key=true
+    if keys.size == 1 && has_key?('uri')
+      if uri.match IsBnode
+        g[uri].do{|r|
+          r.html e,g,key } || uri.href
+      else
+        uri.href
+      end
+    else
+      H({_: :table, class: :html, c: map{|k,v|
+            unless k == 'uri' && (v.match IsBnode)
+              {_: :tr, property: k, c:
+                [k == E::Content ? {_: :td, colspan: 2, c: v} :
+                 [
+                  ({_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key} if key),
+                  {_: :td, c: k == 'uri' ? v.E.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e,g), class: :val},
+                 ]]}
+            end
+          }})
+    end
   end
 end
 
@@ -100,18 +113,20 @@ class E
   fn 'view',->d,e{
     d.values.select{|r|
       !r.has_key?('uri') || # URI field missing
-      !r.uri.match(/^_:/)   # blank node
+      !r.uri.match(IsBnode) # blank node
+      true
     }.
     sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
-    map{|r| Fn 'view/select',r,e }}
+    map{|r| Fn 'view/select',r,e,d}.
+    push(d.keys.grep(IsBnode).empty? ? [] : {_: :style, c: 'td.val .abbr {display: none}'})}
 
-  fn 'view/base',->d,e,k=true{
+  fn 'view/base',->d,e,k=true,graph=nil{
     [H.once(e,'base',H.css('/css/html')),
-     d.values.map{|v|v.html e,k}]}
+     d.values.map{|v|v.html e,graph,k}]}
 
-  fn 'view/select',->r,e{
+  fn 'view/select',->r,e,d{
     graph = {r.uri => r}
-    view = F['view/base']
+    view = nil
     # find types, skipping malformed/missing info
     if r.class == Hash
       (r[Type].class==Array ? r[Type] : [r[Type]]).do{|types|
@@ -126,7 +141,11 @@ class E
         flatten.compact
         view = views[0] unless views.empty?}
     end
-    view[graph,e]}
+    if !view
+      F['view/base'][graph,e,true,d]
+    else
+      view[graph,e]
+    end}
 
   # multiple views (comma-separated)
   fn 'view/multi',->d,e{
