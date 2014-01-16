@@ -50,7 +50,10 @@ td.val .abbr {
     background-color: #78a;
     color: #fff;
 }
-pre.mail {float: right}
+pre.mail {
+    float: right;
+    max-width: 80em; overflow: hidden;
+}
 pre.mail a[rel=untyped] {
     color:#000;
     background-color: rgba(89, 255, 6, 1);
