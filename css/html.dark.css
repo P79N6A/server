@@ -35,7 +35,7 @@ td.val {
 
 td.val .frag {
     display: inline;
-    background-color: #5dc1db;
+    background-color:rgba(0, 95, 239, 1);
     color: #fff;
     padding-right: .15em}
 
@@ -49,11 +49,6 @@ pre.mail a[rel=untyped] {
     color:#000;
     background-color: rgba(89, 255, 6, 1);
     font-size:1.1em;
-    padding-left:.1em;
-    border-radius:.2em .08em .08em .2em;
-    border-style:dotted;
-    border-width:.1em;
-
 }
 article {
     border-radius:1.2em;
