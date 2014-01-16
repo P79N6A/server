@@ -85,18 +85,9 @@ class Hash
       H({_: :table, class: :html, c:
         map{|k,v|
           {_: :tr, property: k, c:
-           [({_: :td,
-               c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key} if key),
-             {_: :td,
-               c: (case k
-                   when E::Content
-                     v
-                   when 'uri'
-                     u = v.E
-                     {_: :a, id: u, href: u.url, c: v}
-                   else
-                     v.html e
-                   end), class: :val}]}}})
+              [k == E::Content ? {_: :td, colspan: 2, c: v} :
+               [{_: :td, c: k == 'uri' ? v.E.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e), class: :val},
+                ({_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? v : k), c: k.to_s.abbrURI}], class: :key} if key)]]}}})
   end
 end
 
