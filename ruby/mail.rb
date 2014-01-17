@@ -24,14 +24,9 @@ class E
       yield e, Date, m.date.iso8601 if m.date
       yield e, Title, m.subject.to_utf8
       yield e, Creator, E[creator]
-      yield e, SIOC+'has_discussion', E[e+'?graph=thread']
-
+      yield e, SIOC+'has_discussion', E[e+'?graph=thread#discussion']
       yield creator, SIOC+'name', m.friendly_from.to_utf8
       yield creator, DC+'identifier', E['mailto:'+from]
-            posts = '/m/'+from+'#posts'
-      yield creator, SIOC+'creator_of', E[posts]
-      yield posts, Type, E[LDP+'Container']
-      yield posts, LDP+'firstPage', E['/index/sioc:has_creator/'+CGI.escape(creator)]
       yield e, SIOC+'reply_to', E[URI.escape "mailto:#{m.header['x-original-to']||from}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"]
 
       %w{to cc bcc}.map{|to|
@@ -57,16 +52,11 @@ class E
   end
 
   def triplrMailMessage &f
-    insertDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], &f
+    ix = ->doc, graph{
+      
+    }
+    addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], ix &f
   end
-=begin
- there's another mail library called Mail, as of v2.5.4 takes 50x as long as tmail (apt-get install ruby-tmail)
-HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrMail curl/7.33.0  5.4003388
-HEAD 200 http://m/m/2013/12/01/?nocache=&triplr=triplrTmail curl/7.33.0  0.1198720
-
-almost a copy of above works but identifiers are not wrapped in <> - with caching it might be fast enough..
-
-=end
 
 # skip displaying a box for the file that led to the email, w/o explicitly enabling by choosing another view
 F['view/'+MIMEtype+'message/rfc822'] = NullView

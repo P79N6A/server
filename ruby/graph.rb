@@ -29,25 +29,21 @@ class E
  * behave as normal triplr to caller, with
    side-effect of import/indexing to knowledgebase
 =end
-  def insertDocs triplr, host, p=[], hook=nil, &b
+  def addDocs triplr, host, p=[], hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
     graph.map{|u,r|
-      e = u.E                # resource
-      doc = e.ef             # doc
-      doc.e ||               # exists?
-      (docs[doc.uri] ||= {}  # init doc graph
-       docs[doc.uri][u] = r  # add to graph
-       p.map{|p|             # each indexable property
-         r[p].do{|v|         # values exists?
-           v.map{|o|         # each value
-             e.index p,o}}})}# add to property index 
-    docs.map{|doc,g|
-      d = doc.E
-      if !d.e
-        d.w g, true   # write doc
-        puts " + #{g.keys.join ' '}"
-      end}
+      e = u.E               # resource
+      doc = e.ef            # doc
+      doc.e ||              # exists?
+      (docs[doc.uri] ||= {} # init doc graph
+       docs[doc.uri][u] = r # add to graph
+       p.map{|p|            # each indexable property
+         r[p].do{|v|        # values exists?
+           v.map{|o|        # each value
+             e.index p,o}}})} # index
+    docs.map{|d,g| d.E.w g,true # write docs
+      hook[d,g] if hook }
     graph.triples &b if b # emit the triples
     self
   end
