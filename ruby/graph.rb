@@ -29,7 +29,7 @@ class E
  * behave as normal triplr to caller, with
    side-effect of import/indexing to knowledgebase
 =end
-  def insertDocs triplr, host, p=[], &b
+  def insertDocs triplr, host, p=[], hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
     graph.map{|u,r|
@@ -46,7 +46,6 @@ class E
       d = doc.E
       if !d.e
         d.w g, true   # write doc
-        d.roonga host # text index
         puts " + #{g.keys.join ' '}"
       end}
     graph.triples &b if b # emit the triples

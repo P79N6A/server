@@ -71,15 +71,6 @@ class E
 
       s.map(&:docs).flatten.uniq }}
 
-  fn '/index/GET',->e,r{
-    a = e.pathSegment.uri[7..-1].split '/',2
-    if a[0] && a[1]
-      r.q['set'] = 'index'
-      r.q['p'] = a[0]
-      r.q['o'] = CGI.unescape a[1]
-    end
-    e.response}
-
   # predicate index
   def pIndex
     shorten.prependURI '/index/'

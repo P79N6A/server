@@ -8,7 +8,7 @@ class E
 
   MessagePath = ->id{
     h = id.h # hash identifier
-    '/msg/' + h[0..1] + '/' + h[2] + '/' + id}
+    '/msg/' + h[0..2] + '/' + id}
 
   def triplrTmail &f
     (TMail::Mail.load node).do{|m|      # load
@@ -57,7 +57,7 @@ class E
   end
 
   def triplrMailMessage &f
-    insertDocs :triplrTmail, @r['SERVER_NAME'], [To,SIOC+'has_creator',SIOC+'reply_of'], &f
+    insertDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], &f
   end
 =begin
  there's another mail library called Mail, as of v2.5.4 takes 50x as long as tmail (apt-get install ruby-tmail)
