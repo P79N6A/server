@@ -35,20 +35,22 @@ class E
     graph.map{|u,r|
       e = u.E               # resource
       doc = e.ef            # doc
-      doc.e ||              # exists?
-      (docs[doc.uri] ||= {} # init doc graph
+      doc.e ||              # exists - we're nondestructive here
+      (docs[doc.uri] ||= {} # init doc-graph
        docs[doc.uri][u] = r # add to graph
-       p.map{|p|            # each indexable property
-         r[p].do{|v|        # values exists?
-           v.map{|o|        # each value
-             e.index p,o}}})} # index
-    docs.map{|d,g| d.E.w g,true # write docs
-      hook[d,g] if hook }
-    graph.triples &b if b # emit the triples
+       p.map{|p|             # index predicate
+         r[p].do{|v|v.map{|o| # values exist?
+             e.index p,o}}})} # index triple
+    docs.map{|d,g|       # resources in docs
+      puts "+doc #{d}"
+      d = d.E
+      d.w g,true # write
+      hook[d,g] if hook } # call insert-hook
+    graph.triples &b if b # emit triples
     self
   end
 
-  # default protograph - identity + resource-thunks
+  # default protograph - identity < lazy-expandable resource-thunks
   # Resource, Query, Graph -> graphID
   fn 'protograph/',->e,q,g{
      g['#'] = {'uri' => '#'}
@@ -99,23 +101,19 @@ class E
     m.keys.map{|u| m.delete u unless f.member? u}} # trim
 
   def graphFromFile g={}
-    if !e
-      puts "missing file! "+d
-      return
-    end
-    _ = self
-    triplr = @r.do{|r|
-                    r.q['triplr'].do{|t|
-                          respond_to?(t) && t }} || :triplrMIME
-    unless ext=='e' # native graph-format
-      _ = E '/E/rdf/' + [triplr,uri].h.dive
-      unless _.e && _.m > m;       # up to date?
-        e = {} ; puts " + #{uri}"
-        [:triplrInode,triplr].each{|t| fromStream e, t }
-        _.w e, true
+    return unless e
+    doc = self
+    unless ext=='e' # already native-format
+      triplr = @r.do{|r|r.q['triplr'].do{|t| (respond_to? t) && t }} || :triplrMIME
+      doc = E '/E/rdf/' + [triplr,uri].h.dive
+      unless doc.e && doc.m > m; # freshness check
+        graph = {}
+        [:triplrInode,triplr].each{|t| fromStream graph, t }
+        puts "#{uri} -> RDF"
+        doc.w graph, true
       end
     end
-    g.mergeGraph _.r true
+    g.mergeGraph doc.r true
   end
 
   def graph g={}

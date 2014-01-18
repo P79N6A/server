@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   begin 
@@ -32,9 +32,8 @@ class E
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.map{|to|
             to = to.to_utf8
-            r = '/m/'+to+'#'+to
-            yield e, To, E[r]
-            yield r, SIOC+'container_of', E['/index/sioc:addressed_to/'+CGI.escape(r)]}}}
+            yield e, To, E['/m/'+to+'#'+to]
+          }}}
 
       %w{in_reply_to references}.map{|ref|
         m.send(ref).do{|refs| refs.map{|r|
@@ -45,21 +44,26 @@ class E
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
            c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
              l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, c: l} : l # wrap quoted lines
-           }},
-         {_: :style, c: "pre.mail .q {background-color:#00f;color:#fff}\npre.mail a{background-color:#ef3}\npre.mail img {max-width:100%}"}])}
+           }},{_: :style, c: "pre.mail .q {background-color:#00f;color:#fff}\npre.mail a{background-color:#ef3}\npre.mail img {max-width:100%}"}])}
   rescue Exception => e
     puts e
   end
 
   def triplrMailMessage &f
+    # indexing function, called on previously-unseen doc-graphs
     ix = ->doc, graph{
-      
-    }
-    addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], ix &f
+      graph.map{|u,r|
+        a = [] # addresses
+        r[Creator].do{|c|a.concat c}
+        r[To].do{|t|a.concat t}
+        r[Date].do{|t|
+          st = '/'+t[0].gsub('-','/').sub('T','.').sub(/\+.*/,'.'+u.h[0..1]+'.e')
+          a.map{|rel|
+            doc.ln E[rel.uri.split('#')[0]+st]}}}}
+    addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], ix, &f
   end
 
-# skip displaying a box for the file that led to the email, w/o explicitly enabling by choosing another view
-F['view/'+MIMEtype+'message/rfc822'] = NullView
+  F['view/'+MIMEtype+'message/rfc822'] = NullView # hide containing file in default render
 
 end
 
