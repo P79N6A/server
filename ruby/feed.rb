@@ -56,8 +56,16 @@ class E
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
-  def getFeed       g; addDocs :triplrFeed, g end
-  def getFeedReddit g; addDocs :triplrFeedReddit, g end
+  FeedArchiver = -> doc, graph, host {
+    graph.map{|u,r|
+      r[Date].do{|t|
+        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/')}.#{u.sub(/^http.../,'').gsub '/','.'}.e"]} || puts("no Date found #{u}")
+    }}
+
+  GREP_DIRS.push /^\/news\/\d{4}\//
+
+  def getFeed       g; addDocs :triplrFeed, g, nil, FeedArchiver end
+  def getFeedReddit g; addDocs :triplrFeedReddit, g, nil, FeedArchiver end
 
   def triplrFeed &f 
     dateNorm :contentURIresolve,:triplrFeedNormalize,:triplrFeedRaw,&f

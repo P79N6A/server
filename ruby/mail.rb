@@ -62,7 +62,7 @@ class E
 
   def triplrMailMessage &f
     # indexing function, called on previously-unseen doc-graphs
-    ix = ->doc, graph{
+    ix = ->doc, graph, host {
       graph.map{|u,r|
         a = [] # addresses
         r[Creator].do{|c|a.concat c}

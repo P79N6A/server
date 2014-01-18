@@ -4,6 +4,7 @@ lambda
 mime
 404
 500
+grep
 audio
 blog
 cal
@@ -20,7 +21,6 @@ fs
 GET
 glob
 graph
-grep
 groonga
 HEAD
 histogram
