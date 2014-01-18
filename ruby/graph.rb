@@ -55,7 +55,7 @@ class E
   fn 'protograph/',->e,q,g{
      g['#'] = {'uri' => '#'}
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    if set.empty?
+    if !set || set.empty?
       g.delete '#'
     else
       g['#'][RDFs+'member'] = set

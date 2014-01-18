@@ -4,11 +4,12 @@ class E
   GREP_DIRS=[]
 
   fn 'set/grep',->e,q,m{
-    q['i'] ||= true # case-insensitive by default
     q['q'].do{|query|
-      [e,e.pathSegment].compact.select(&:e).map{|e|
-        grep = "grep -rl#{q.has_key?('i') ? 'i' : ''} #{query.sh} #{e.sh}"
-        `#{grep}`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathFs}}.flatten}}
+      path = e.pathSegment
+      GREP_DIRS.find{|p|path.uri.match p}.do{|allow|
+        [e,path].compact.select(&:e).map{|e|
+          `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathFs}}.flatten
+      }||(puts "no grep available on #{path}")}}
 
   fn 'view/grep',->d,e{
     w = e.q['q']
