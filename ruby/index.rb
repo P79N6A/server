@@ -36,52 +36,29 @@ class E
     g
   end
 
-  # subtree traverse
   fn 'set/subtree',->d,r,m{
-    c =(r['c'].do{|c|c.to_i + 1} || 3).max(100) # one extra for start of next-page
+    c =(r['c'].do{|c|c.to_i + 1} || 8).max(100) # one extra for start of next-page
     o = r['d'] =~ /^a/ ? :asc : :desc           # direction
-
-    ('/'.E.take c, o, d.uri).do{|s|             # take subtree
+    (d.pathSegment.take c, o, r['offset'].do{|o|o.E}).do{|s|             # take subtree
       desc, asc = o == :desc ?                  # orient pagination hints
       [s.pop, s[0]] : [s[0], s.pop]
       u = m['#']
       u[Type] = E[HTTP+'Response']
-      u[Prev] = {'uri' => desc.url + {'d' => 'desc'}.qs} if desc
-      u[Next] = {'uri' => asc.url  + {'d' => 'asc'}.qs} if asc
+      u[Prev] = {'uri' => d.uri + '?set=subtree&d=desc&offset=' + (URI.escape desc.uri)} if desc
+      u[Next] = {'uri' => d.uri + '?set=subtree&d=asc&offset=' + (URI.escape asc.uri)} if asc
       s }}
-
-  # subtree traverse index on p+o cursor
-  fn 'set/index',->d,r,m{
-    top = r['p'].expand.E
-    count = r['c'] &&
-            r['c'].to_i.max(1000) || 8
-    dir = r['d'] && r['d'].match(/^(a|de)sc$/) &&
-          r['d'].to_sym || :desc
-
-    (top.rangePO count+1, dir, r['offset'], r['o']).do{|s|
-      # orient pagination pointers
-      ascending = r['d'].do{|d| d == 'asc' }
-      first, last = s[0], s.size > 1 && s.pop
-      desc, asc = ascending && [first,last] || [last,first]
-      # response description
-      u = m['#']
-      u[RDFs+'member'] = s
-      u[Prev] = {'uri' => '/index/' + r['p'] + '/' + CGI.escape(r['o']) + {'offset' => desc.uri, 'c' => count}.qs } if desc
-      u[Next] = {'uri' => '/index/' + r['p'] + '/' + CGI.escape(r['o']) + {'offset' => asc.uri, 'c' => count}.qs } if asc
-
-      s.map(&:docs).flatten.uniq }}
 
   # predicate index
   def pIndex
     shorten.prependURI '/index/'
   end
 
-  # predicate-object index
+  # predicate+object index
   def poIndex o
     pIndex.concatURI o
   end
  
-  # predicate-object index lookup
+  # predicate+object index lookup
   def po o
     pIndex[o.class == E ? o : literal(o)]
   end
@@ -91,7 +68,7 @@ class E
     pIndex.subtree(size,dir,offset).map &:ro
   end
 
-  # range query - predicate-object
+  # range query - predicate+object
   def rangePO n=8,d=:desc,s=nil,o
     poIndex(o).subtree(n,d,s).map &:ro
   end
@@ -122,49 +99,33 @@ end
 
 class Pathname
 
-  # take N els from fs tree in sorted, depth-first order
+  # fs sorted depth-first subtree
   def take count=1000, direction=:desc, offset=nil
+    offset = offset.d if offset
 
-    # construct offset-path
-    offset = (to_s + offset).gsub(/\/+/,'/').E.path if offset
-
-    # in-range indicator
-    ok = false
-
-    # result set
+    ok = false    # in-range mark
     set=[]
-
-    # asc/desc operators
     v,m={asc:      [:id,:>=],
         desc: [:reverse,:<=]}[direction]
 
-    # visitation function
     visit=->nodes{
-
-      # sort nodes in asc or desc order
       nodes.sort_by(&:to_s).send(v).each{|n|
         ns = n.to_s
-        # have we got enough nodes?
         return if 0 >= count
 
-        # continue if
-        (# already in-range
-         ok ||
-         # no offset specified
-         !offset ||
-         # offset satisfies in-range operator
+        (ok || # already in-range
+         !offset || # no offset required
          (sz = [ns,offset].map(&:size).min
-          ns[0..sz-1].send(m,offset[0..sz-1]))) && (
-         if !(c = n.c).empty? # has children?
+          ns[0..sz-1].send(m,offset[0..sz-1]))) &&
+        (if !(c = n.c).empty? # has children?
            visit.(c)          # visit children
          else
-           count = count - 1 # decrement wanted-nodes count
+           count = count - 1 # decrement nodes-left count
            set.push n        # add node to result-set
-           ok = true         # iterator is now within range
+           ok = true         # mark iterator as within range
         end )}}
 
-    visit.(c) # start
-    # result set
+    visit.(c)
     set
   end
 

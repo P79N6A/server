@@ -109,7 +109,7 @@ class E
       unless doc.e && doc.m > m; # freshness check
         graph = {}
         [:triplrInode,triplr].each{|t| fromStream graph, t }
-        puts "#{uri} -> RDF"
+#        puts "#{uri} -> RDF"
         doc.w graph, true
       end
     end

@@ -10,6 +10,15 @@ class E
     h = id.h # hash identifier
     '/msg/' + h[0..2] + '/' + id}
 
+  F['/m/GET'] = -> e,r{
+    puts e.pathSegment
+    if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)\/$/)
+      r.q['set'] = 'subtree'
+      e.response
+    else
+      false      
+    end}
+
   def triplrTmail &f
     (TMail::Mail.load node).do{|m|      # load
       d = m.message_id; return unless d # parse successful?
