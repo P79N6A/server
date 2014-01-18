@@ -1,6 +1,8 @@
 #watch __FILE__
 class E
 
+  GREP_DIRS=[]
+
   fn 'set/grep',->e,q,m{
     q['i'] ||= true # case-insensitive by default
     q['q'].do{|query|

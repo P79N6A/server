@@ -6,9 +6,10 @@ class E
   rescue LoadError => e
   end
 
-  MessagePath = ->id{
-    h = id.h # hash identifier
+  MessagePath = ->id{ h = id.h # hash identifier
     '/msg/' + h[0..2] + '/' + id}
+
+  GREP_DIRS.push /\/m\/[^\/]+\// # allow grep within a single address
 
   F['/m/GET'] = -> e,r{
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
