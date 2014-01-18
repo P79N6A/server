@@ -1,8 +1,4 @@
 class E
-  
-  fn '/search/GET',->e,r{
-    r.q['graph'] = 'roonga'
-    e.response }
 
   F['/search.n3/GET'] = F['/search/GET']
 
