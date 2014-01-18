@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   begin 
@@ -14,8 +14,7 @@ class E
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set'] = 'subtree'
       r.q['view'] ||= 'threads'
-      r.q['c'] ||= 12
-      e.response
+       e.response
     else
       false      
     end}

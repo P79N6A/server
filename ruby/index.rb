@@ -38,7 +38,7 @@ class E
 
   fn 'set/subtree',->d,r,m{
     p = d.pathSegment
-    c = (r['c'].do{|c|c.to_i + 1} || 8).max(100) # one extra for start of next-page
+    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(100) # an extra for next-page pointer
     o = r['d'] =~ /^a/ ? :asc : :desc            # direction
     (p.take c, o, r['offset'].do{|o|o.E}).do{|s| # take subtree
       first, last = s[0], s.size > 1 && s.pop

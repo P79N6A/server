@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class E
   
   fn 'protograph/thread',->d,e,g{
@@ -18,7 +18,7 @@ class E
     threads = posts.group_by{|r| # group by thread-name
        [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}
 
-    [F['view/'+HTTP+'Response'][{'#' => d['#']},env],d.values.find{|r|r.has_key? Name}.do{|a|a[Name]},'<br clear=all>',
+    [F['view/'+HTTP+'Response'][{'#' => d['#']},env],'<br clear=all>',
      (H.css '/css/threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
      '<table>',
      threads.group_by{|r,k| # group by recipient
@@ -36,9 +36,9 @@ class E
                  c: s[Creator].do{|c|c[0].uri.split('#')[1]}}}]),'<br>']},'</td>',
 
         ({_: :td, class: :group, property: To,
-          c: {_: :a, :class => :to, style: 'background-color:'+c, c: group.label,
-            href: '/index/sioc:addressed_to/'+CGI.escape(group)+'?view=threads&c=24'}} if group),
+          c: {_: :a, :class => :to, style: 'background-color:'+c, c: group.label, href: group}} if group),
+        '</tr>']},'</table>',
 
-        '</tr>']},'</table>']}
+     {_: :a, id: :down, href: env['REQUEST_PATH'] + env.q.merge({'view'=>''}).qs, c: '↓'}]}
 
 end
