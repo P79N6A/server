@@ -11,9 +11,10 @@ class E
     '/msg/' + h[0..2] + '/' + id}
 
   F['/m/GET'] = -> e,r{
-    puts e.pathSegment
-    if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)\/$/)
+    if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set'] = 'subtree'
+      r.q['view'] ||= 'threads'
+      r.q['c'] ||= 12
       e.response
     else
       false      
@@ -34,9 +35,10 @@ class E
       yield e, Title, m.subject.to_utf8
       yield e, Creator, E[creator]
       yield e, SIOC+'has_discussion', E[e+'?graph=thread#discussion']
-      yield creator, SIOC+'name', m.friendly_from.to_utf8
+      yield creator, Name, m.friendly_from.to_utf8
       yield creator, DC+'identifier', E['mailto:'+from]
-      yield e, SIOC+'reply_to', E[URI.escape "mailto:#{m.header['x-original-to']||from}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}"]
+      yield e, SIOC+'reply_to',
+      E[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}&")+'#reply']
 
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.map{|to|

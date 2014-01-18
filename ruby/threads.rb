@@ -18,7 +18,7 @@ class E
     threads = posts.group_by{|r| # group by thread-name
        [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}
 
-    [F['view/'+HTTP+'Response'][{'#' => d['#']},env],
+    [F['view/'+HTTP+'Response'][{'#' => d['#']},env],d.values.find{|r|r.has_key? Name}.do{|a|a[Name]},'<br clear=all>',
      (H.css '/css/threads'),{_: :style, c: "body {background-color: ##{rand(2).even? ? 'fff' : '000'}}"},
      '<table>',
      threads.group_by{|r,k| # group by recipient

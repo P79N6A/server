@@ -15,7 +15,7 @@ class E
   DC       = Purl + 'dc/terms/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
-  Name     = FOAF + 'name'
+  Name     = SIOC + 'name'
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'

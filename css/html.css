@@ -5,9 +5,7 @@ body {
 a { text-decoration:none;}
 
 a[id]{
-    border-radius: .16em;
-    padding: 0 .1em 0 .1em;
-    background-color:#7786A7;
+    background-color:#bbb;
     color:#fff;
 }
 
@@ -17,9 +15,6 @@ table.html {
     border-radius:.62em;
     padding:.18em;
     margin:.18em;
-    border-width:.2em;
-    border-color:#ddd;
-    border-style:solid;
     background-color: #eee;
     color: #000;
 }
@@ -30,18 +25,21 @@ td.key {text-align:right}
 .abbr,.scheme {
     display: none;
 }
-td.val {
-    background-color:#fff;
-    border-color:#eee;
-    border-style:dotted;
-    border-width: 0 0 .1em 0}
+
+td.val {background-color:#fff}
 
 td.key > a > .frag {
     font-weight:bold;
     color: #22f;
     background-color:#fff;
     border-radius: .4em 0 0 .4em;
-    padding-left: .1em;
+    padding-left: .1em}
+
+td.val > a > .frag {
+    border-radius: 0 .4em .4em 0;
+    color: #fff;
+    background-color:#00f;
+    border: 0.1em dotted #fff;    
 }
 
 pre.mail {

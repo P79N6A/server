@@ -1,6 +1,6 @@
-watch __FILE__
+#watch __FILE__
 
-# HTML in Ruby literals
+# Ruby as HTML
 def H _
   case _
   when Hash

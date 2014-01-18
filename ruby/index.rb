@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   # POSIX-fs based index of triples
@@ -37,16 +37,17 @@ class E
   end
 
   fn 'set/subtree',->d,r,m{
-    c =(r['c'].do{|c|c.to_i + 1} || 8).max(100) # one extra for start of next-page
-    o = r['d'] =~ /^a/ ? :asc : :desc           # direction
-    (d.pathSegment.take c, o, r['offset'].do{|o|o.E}).do{|s|        # take subtree
+    p = d.pathSegment
+    c = (r['c'].do{|c|c.to_i + 1} || 8).max(100) # one extra for start of next-page
+    o = r['d'] =~ /^a/ ? :asc : :desc            # direction
+    (p.take c, o, r['offset'].do{|o|o.E}).do{|s| # take subtree
       first, last = s[0], s.size > 1 && s.pop
       desc, asc = o == :asc ? [first,last] : [last,first]
       u = m['#']
       u[Type] = E[HTTP+'Response']
       u[Prev] = {'uri' => d.uri + '?set=subtree&d=desc&offset=' + (URI.escape desc.uri)} if desc
       u[Next] = {'uri' => d.uri + '?set=subtree&d=asc&offset=' + (URI.escape asc.uri)} if asc
-      s }}
+      s.concat p.docs }}
 
   # predicate index
   def pIndex

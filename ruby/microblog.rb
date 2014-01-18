@@ -36,7 +36,7 @@ class E
       yield s, Type, E[SIOCt+'MicroblogPost']
       yield s, Type, E[SIOC+'Post']
       yield s, Creator, E(base+'/'+t.css('.username b')[0].inner_text)
-      yield s, SIOC+'name',t.css('.fullname')[0].inner_text
+      yield s, Name,t.css('.fullname')[0].inner_text
       yield s, Atom+"/link/image", E(t.css('.avatar')[0].attr('src'))
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       content = t.css('.tweet-text')[0]
@@ -56,7 +56,7 @@ class E
     [r[Date][0].match(/T([0-9:]{5})/).do{|m|m[1]},
      {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
             c: [r[Atom+"/link/image"].do{|p| {_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
-                {_: :span, c: r[SIOC+'name']||r[Creator]||'#'}]}},' ',
+                {_: :span, c: r[Name]||r[Creator]||'#'}]}},' ',
         {_: :span, :class => :tw, # skip redundant title fields
        c: [((r[Title].to_s == r[Content].to_s || r.uri.match(/twitter/)) && '' ||
             {_: :a, :class => :title, href: r.url, c: r[Title]}), # skip quoted mail-lines & abbreviate
