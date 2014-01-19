@@ -43,14 +43,19 @@ table {
     font-weight:bold;
     font-size:1.23em }
 .ls td {
-    padding:0 0 0 1em;
-    font-weight:bold;
-    text-align:right;
-    vertical-align:top;
-    border-style:dotted;
-    border-color:#696969;
-    border-width:0 0 .1em 0 }
+    border-color:#ccf;
+    padding: 0 .4em 0 .4em;
+}
 td[property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap}
+td[property="http://www.w3.org/ns/posix/dir#child"] .frag {
+    font-weight: normal;
+    background-color: #00e;
+    color: #fff;
+    border-style: dotted;
+    border-width: 0 0 .17em 0;
+    border-color: #00f;
+    font-size: .9em;
+}
 .ls tr:nth-child(odd) {background: #fff;color:#000}
 .ls tr:nth-child(even) {background: #eee;color:#000}
 
