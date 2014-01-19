@@ -105,7 +105,7 @@ class E
   fn '/GET',->e,r{
     x = 'index.html'
     i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e
-    if i
+    if i && !r['REQUEST_URI'].match(/\?/)
       if e.uri[-1] == '/' # inside dir?
         i.env(r).getFile  # show index
       else                # descend into dir
