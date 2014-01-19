@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   fn 'view/dir',->i,e{
@@ -32,14 +32,14 @@ class E
      {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
 
   fn 'protograph/du',->d,q,m{
-    path = d.pathSegment
-    GREP_DIRS.find{|p|path.uri.match p}.do{|allow|
+    d.pathSegment.do{|path|
+    GREP_DIRS.find{|p|path.uri.match p}.do{|ok|
       e = [d,path].compact.find &:e
       q['view'] ||= 'table'
       q['sort'] = Stat+'size'
       q['reverse'] = true
       m[e.uri] = e if e
-      rand.to_s.h}}
+      rand.to_s.h}}}
 
   fn 'graph/du',->e,_,m{
     `du -a #{m.values[0].sh}`.each_line{|l|

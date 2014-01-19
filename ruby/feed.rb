@@ -62,7 +62,7 @@ class E
         doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/')}.#{u.sub(/^http.../,'').gsub '/','.'}.e"]} || puts("no Date found #{u}")
     }}
 
-  GREP_DIRS.push /^\/news\/\d{4}\//
+  GREP_DIRS.push /^\/news\/\d{4}/
 
   def getFeed       g; addDocs :triplrFeed, g, nil, FeedArchiver end
   def getFeedReddit g; addDocs :triplrFeedReddit, g, nil, FeedArchiver end
