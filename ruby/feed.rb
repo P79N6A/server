@@ -56,10 +56,10 @@ class E
   alias_method :feeds, :listFeeds
 
   FeedArchiver = -> doc, graph, host {
+    doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t|
-        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/').sub(/(.00.00|Z)$/,'')}.#{u.sub(/^http.../,'').gsub '/','.'}.e"]} || puts("Date? #{u}")
-    }}
+        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/').sub(/(.00.00|Z)$/,'')}.#{u.sub(/^http.../,'').gsub '/','.'}.e"]}}}
 
   GREP_DIRS.push /^\/news\/\d{4}/
 

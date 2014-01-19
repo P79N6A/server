@@ -7,7 +7,7 @@ class E
      u[Next].do{|n|{_: :a, rel: :next, style: 'background-color:black;color:white;font-size:2.3em;float:right;clear:both;border-radius:0',href: n.uri, c: '&rarr;'}},
      {_: :a, href: e['REQUEST_PATH'] + e.q.merge({'view'=>'data'}).qs, # data browser
        c: {_: :img, src: '/css/misc/cube.png', style: 'height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}},
-     (H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')) # next/prev key mapping
+     #(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu')) # (n)ext (p)rev key mappings
     ]}
 
 end

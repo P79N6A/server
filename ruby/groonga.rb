@@ -6,10 +6,10 @@ class E
       http://groonga.org/
 =end
   
-  fn 'view/'+Search+'Groonga',-> d,e {{_: :form, action: '/', c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :graph, val: :groonga}]}}
+  fn 'view/'+Search+'Groonga',-> d,e {{_: :form, action: '/', c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :graph, value: :groonga}]}}
 
   fn 'protograph/groonga',->d,e,m{
-    ga = E.groonga
+    E.groonga.do{|ga|
     q = e['q']                               # search expression
     g = e["context"] || d.env['SERVER_NAME'] # context
 
@@ -36,12 +36,14 @@ class E
       e['nocache']=true
     end
 
-    F['docsID'][m,e]}
+    F['docsID'][m,e]}}
 
   def E.groonga
-    @groonga ||= (require 'groonga'
-                  E['/E/groonga'].groonga
-                  Groonga["E"] )
+    @groonga ||=
+      (begin require 'groonga'
+         E['/E/groonga'].groonga
+         Groonga["E"]
+       rescue LoadError => e; end)
   end
 
   # init groongaDB
@@ -64,15 +66,14 @@ class E
   
   # add
   def roonga graph="global", m = self.graph
-    puts "g #{graph} #{uri} #{m.keys.join ' '}"
-    g = E.groonga          # db
+   E.groonga.do{|g|
     m.map{|u,i|
       r = g[u] || g.add(u) # create or load entry
       r.uri = u            # update data
       r.graph = graph.to_s
       r.content = i.to_s
       r.time = i[E::Date].do{|t|t[0].to_time}
-    }
+    }}
     self
   end
   
