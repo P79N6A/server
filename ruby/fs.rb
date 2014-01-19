@@ -50,10 +50,12 @@ class E
   end
   alias_method :m, :mtime
 
-  def triplrInode children=true
-    e && (d? && (yield uri, Posix + 'dir#parent', parent
-                 children && c.map{|c| yield uri, Posix + 'dir#child', c})
-          node.stat.do{|s|[:size,:ftype,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}})
+  def triplrInode
+    if d?
+      yield uri, Posix+'dir#parent', parent
+      c.map{|c| yield uri, Posix + 'dir#child', E[c.uri.gsub('?','%3F').gsub('#','23')]}
+    end
+    node.stat.do{|s|[:size,:ftype,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}}
   end
   
   def triplrSymlink
