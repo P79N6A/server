@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   fn 'view/dir',->i,e{
@@ -31,9 +31,11 @@ class E
      {class: :ls, c: (Fn 'view/table',i,e)},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
 
-  fn 'protograph/du',->d,_,m{
+  fn 'protograph/du',->d,q,m{
     e = [d,d.pathSegment].compact.find &:e
-    puts _.class
+    q['view'] ||= 'table'
+    q['sort'] = Stat+'size'
+    q['reverse'] = true
     m[e.uri] = e if e
     rand.to_s.h }
 
@@ -42,6 +44,7 @@ class E
       s,p = l.chomp.split /\t/ # size, path
       p = p.unpathFs           # path -> URI
       m[p.uri] = {'uri' => p.uri,
+        Posix+'util#du' => E[p.uri+'?graph=du#du'],
             Stat+'size' => [s.to_i]}}
     m }
   

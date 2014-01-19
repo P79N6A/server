@@ -11,8 +11,9 @@ td {
      text-align:right;
      }
 [property="uri"] {white-space:nowrap;max-width:33ex;overflow:hidden}
+[property="uri"] .abbr {display: inline}
 
-.scheme { display: none; }
+.scheme,.abbr { display: none; }
 .frag {font-weight:bold;}
 
 #properties .n {

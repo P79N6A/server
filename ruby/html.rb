@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 def H _
   case _
@@ -152,12 +152,6 @@ class E
       view[graph,e]
     end}
 
-  # multiple views (comma-separated)
-  fn 'view/multi',->d,e{
-    e.q['views'].do{|vs|
-      vs.split(',').map{|v|
-        F['view/'+v].do{|f|f[d,e]}}}}
-
   # enumerate available views
   fn 'view/?',->d,e{
     F.keys.grep(/^view\/(?!application|text\/x-)/).map{|v|
@@ -238,16 +232,14 @@ class E
       "table= layout arg required"
     end}
 
-  fn 'view/table',->i,e{[H.css('/css/table'),(Fn 'table',i.values,e)]}
-
-  fn 'table',->es,q=nil{ p = {}
-    es.map{|e|e.respond_to?(:keys) &&
-              e.keys.map{|k|p[k]=true}}
-    keys = p.keys
-    keys.empty? ? es.html :
-    H({_: :table,:class => :tab,
-        c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
-            *es.map{|e|
-              {_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.E.html : e[k].html}}}}]})}
+  fn 'view/table',->g,e{
+    keys = E.graphProperties g
+    v = g.values
+    e.q['sort'].do{|p| v = v.sort_by{|x|x[p]}}
+    v = v.reverse if e.q['reverse']
+    [H.css('/css/table'),
+     {_: :table,:class => :tab,
+       c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
+           v.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.E.html : e[k].html}}}}]}]}
 
 end
