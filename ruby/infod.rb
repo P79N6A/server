@@ -10,7 +10,6 @@ blog
 cal
 code
 csv
-du
 edit
 facets
 feed
@@ -27,7 +26,6 @@ html
 HTTP
 image
 index
-json
 kv
 ls
 mail

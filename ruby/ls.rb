@@ -30,20 +30,19 @@ class E
      {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
      {class: :ls, c: (Fn 'view/table',i,e)},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
-  
-  # user-patchable default-handler
-  fn '/GET',->e,r{
-    x = 'index.html'
-    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e
-    if i
-      if e.uri[-1] == '/' # inside dir?
-        i.env(r).getFile  # show index
-      else                # descend to indexed dir
-        [301, {Location: e.uri.t}, []]
-      end
-    else
-      # default handler
-      e.response
-    end}
 
+  fn 'protograph/du',->d,_,m{
+    e = [d,d.pathSegment].compact.find &:e
+    puts _.class
+    m[e.uri] = e if e
+    rand.to_s.h }
+
+  fn 'graph/du',->e,_,m{
+    `du -a #{m.values[0].sh}`.each_line{|l|
+      s,p = l.chomp.split /\t/ # size, path
+      p = p.unpathFs           # path -> URI
+      m[p.uri] = {'uri' => p.uri,
+            Stat+'size' => [s.to_i]}}
+    m }
+  
 end

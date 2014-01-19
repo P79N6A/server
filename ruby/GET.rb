@@ -101,4 +101,18 @@ class E
       [304,{},[]]  # client has response
   end
 
+  # user-patchable default handler - give index.html or defer to internal default-handler #response
+  fn '/GET',->e,r{
+    x = 'index.html'
+    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e
+    if i
+      if e.uri[-1] == '/' # inside dir?
+        i.env(r).getFile  # show index
+      else                # descend into dir
+        [301, {Location: e.uri.t}, []]
+      end
+    else
+      e.response
+    end}
+
 end
