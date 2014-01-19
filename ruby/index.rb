@@ -11,9 +11,9 @@ class E
   end
 
   # index a triple - no type-normalization
+  # we jsut rotate them, use existing k/v store and set @noIndex to stop looping infinitely to index the index..
   def indexEdit p,o,a
     return if @noIndex
-#    puts "index #{p} #{o} #{a}"
     p.pIndex.noIndex[o,self,a]
   end
   def noIndex
@@ -51,37 +51,31 @@ class E
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s.concat p.docs }}
 
-  # predicate index
   def pIndex
     shorten.prependURI '/index/'
   end
 
-  # predicate+object index
   def poIndex o
     pIndex.concatURI o
   end
  
-  # predicate+object index lookup
+  # predicate+object pair lookup
   def po o
     pIndex[o.class == E ? o : literal(o)]
   end
 
-  # range query - predicate
   def rangeP size=8, dir=:desc, offset=nil, object=nil
     pIndex.subtree(size,dir,offset).map &:ro
   end
 
-  # range query - predicate+object
   def rangePO n=8,d=:desc,s=nil,o
     poIndex(o).subtree(n,d,s).map &:ro
   end
 
-  # E -> [node]
   def subtree *a
     u.take *a
   end
 
-  # E -> [E]
   def take *a
     no.take(*a).map &:E
   end
@@ -102,7 +96,6 @@ end
 
 class Pathname
 
-  # fs sorted depth-first subtree
   def take count=1000, direction=:desc, offset=nil
     offset = offset.d if offset
 
