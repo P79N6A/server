@@ -36,10 +36,11 @@ td.key > a > .frag {
     padding-left: .1em}
 
 td.val > a > .frag {
-    border-radius: 0 .4em .4em 0;
+    border-radius: .2em .3em .3em .2em;
     color: #fff;
-    background-color:#00f;
+    background-color:#08f;
     border: 0.1em dotted #fff;    
+    padding: 0 .12em 0 .12em;
 }
 
 pre.mail {

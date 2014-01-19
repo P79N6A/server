@@ -15,8 +15,7 @@ module FeedParse
 
   def parse
 
-    #prefix table
-    x={}
+    x={} #prefix table
     match(/<(rdf|rss|feed)([^>]+)/i)[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|x[m[0]]=m[1]}
 
     #items
@@ -59,7 +58,7 @@ class E
   FeedArchiver = -> doc, graph, host {
     graph.map{|u,r|
       r[Date].do{|t|
-        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/')}.#{u.sub(/^http.../,'').gsub '/','.'}.e"]} || puts("no Date found #{u}")
+        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/').sub(/(.00.00|Z)$/,'')}.#{u.sub(/^http.../,'').gsub '/','.'}.e"]} || puts("Date? #{u}")
     }}
 
   GREP_DIRS.push /^\/news\/\d{4}/
