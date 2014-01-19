@@ -27,8 +27,8 @@ class E
     # triplr/view mappings
     [ma,mt].map{|m|
       MIMEsource[m] ||= [:triplrSourceCode]
+      fn 'view/'+m, F['view/code']}}
 
-      fn 'view/'+m, F['view/code']
-  }}
+  MIMEsource['text/css'] ||= [:triplrSourceCode] # i hear CSS is Turing complete now, http://inamidst.com/whits/2014/formats
 
 end

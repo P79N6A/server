@@ -1,54 +1,38 @@
 #watch __FILE__
 class E
+=begin
+      gem install rroonga
+      a ruby full-text searcher & column-store
+      http://groonga.org/
+=end
+  
+  fn 'view/'+Search+'Groonga',-> d,e {{_: :form, action: '/', c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :graph, val: :groonga}]}}
 
-#  adaptor for ruby text-search-engine & column-store
-#  http://groonga.org/ http://ranguba.org/
-
-  # query
-  fn 'protograph/roonga',->d,e,m{
-
-    # groonga engine
+  fn 'protograph/groonga',->d,e,m{
     ga = E.groonga
-
-    # search expression
-    q = e['q']
-
-    # context
-    g = e["context"] || d.env['SERVER_NAME']
+    q = e['q']                               # search expression
+    g = e["context"] || d.env['SERVER_NAME'] # context
 
     begin
-      # execute
       r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
-        ga.select{|r| r['graph'] == g} # ordered set (index date-range)
+        ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
 
-      # offset, size
-      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0
-      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8
+      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0 # offset
+      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8 # count
+      down = r.size > start+c                                       # prev
+      up   = !(start<=0)                                            # next
+      r = r.sort(e.has_key?('best') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
+      r = r.map{|r| r['.uri'].E }                                   # URI
+      (r.map &:docs).flatten.uniq.map{|r|m[r.uri] = r.env e}        # set resource thunks
 
-      # are further results traversible?
-      down = r.size > start+c
-      up   = !(start<=0)
-
-      # sort results
-      r = r.sort(e.has_key?('score') ? [["_score"]] : [["time", "descending"]],:offset => start,:limit => c)
-
-      # results -> graph
-      r = r.map{|r| r['.uri'].E }
-      (r.map &:docs).flatten.uniq.map{|r| m[r.uri] = r.env e}
-
-      m['#'] = {'uri' => '#',
-        RDFs+'member' => r,
-        Type=>E[HTTP+'Response']}
-      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down
-      m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      m['/search'] = {Type => E[Search]}
+      m['#'] = {'uri' => '#', RDFs+'member' => r, Type=>E[HTTP+'Response']} # add pagination data to request-graph
+      m['#'][Prev]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start + c, 'c' => c}.qs} if down
+      m['#'][Next]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start - c, 'c' => c}.qs} if up
+      m['/'] = {Type => E[Search+'Groonga']}
 
     rescue Groonga::SyntaxError => x
-      m['/search'] = {Type => E[Search]}
-      m['#'] = {
-        Type => E[COGS+'Exception'],
-        Title => "bad expression",
-        Content => CGI.escapeHTML(x.message)}
+      m['/'] = {Type => E[Search+'Groonga']}
+      m['#'] = {Type => E[COGS+'Exception'], Title => "invalid expr", Content => CGI.escapeHTML(x.message)}
       e['nocache']=true
     end
 

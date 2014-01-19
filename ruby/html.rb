@@ -1,6 +1,5 @@
 #watch __FILE__
 
-# Ruby as HTML
 def H _
   case _
   when Hash
@@ -20,9 +19,15 @@ class H
   def H.[] h; H h end
 
   def H.js a,inline=false
-    p=a+'.js'
+    p = a + '.js'
     inline ? {_: :script, c: p.E.r} :
     {_: :script, type: "text/javascript", src: p}
+  end
+
+  def H.css a,inline=false
+    p = a + '.css'
+    inline ? {_: :style, c: p.E.r} :
+    {_: :link, href: p, rel: :stylesheet, type: E::MIME[:css]}
   end
 
   def H.once e,n,*h
@@ -167,6 +172,9 @@ class E
   def triplrHref enc=nil
     yield uri,Content,(f && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
   end
+
+  require 'nokogiri'
+  def nokogiri;  Nokogiri::HTML.parse read end
 
   def contentURIresolve *f
     send(*f){|s,p,o|

@@ -9,7 +9,6 @@ audio
 blog
 cal
 code
-css
 csv
 du
 edit
@@ -41,7 +40,6 @@ postscript
 rdf
 ruby
 schema
-search
 sh
 text
 threads
