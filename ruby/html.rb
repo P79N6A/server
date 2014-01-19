@@ -234,7 +234,7 @@ class E
   fn 'view/table',->g,e{
     keys = E.graphProperties g
     v = g.values
-    e.q['sort'].do{|p| v = v.sort_by{|x|x[p]}}
+    e.q['sort'].do{|p| v = v.sort_by{|s|s[p].do{|o|o[0].to_s}||''}}
     v = v.reverse if e.q['reverse']
     [H.css('/css/table'),
      {_: :table,:class => :tab,
