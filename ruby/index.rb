@@ -49,7 +49,7 @@ class E
       u[Type] = E[HTTP+'Response']
       u[Prev] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
-      s.concat p.docs }}
+      s }}
 
   def pIndex
     shorten.prependURI '/index/'

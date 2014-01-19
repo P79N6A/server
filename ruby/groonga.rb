@@ -14,24 +14,24 @@ class E
     g = e["context"] || d.env['SERVER_NAME'] # context
 
     begin
+      m['/'] = {Type => E[Search+'Groonga']} # add a groonga resource to the graph
+
       r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
         ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
 
-      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0 # offset
-      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 8 # count
-      down = r.size > start+c                                       # prev
-      up   = !(start<=0)                                            # next
+      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset
+      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
+      down = r.size > start+c                                        # prev
+      up   = !(start<=0)                                             # next
       r = r.sort(e.has_key?('best') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      r = r.map{|r| r['.uri'].E }                                   # URI
-      (r.map &:docs).flatten.uniq.map{|r|m[r.uri] = r.env e}        # set resource thunks
+      r = r.map{|r| r['.uri'].E }                                    # URI
+      (r.map &:docs).flatten.uniq.map{|r|m[r.uri] = r.env e}         # set resource thunks
 
       m['#'] = {'uri' => '#', RDFs+'member' => r, Type=>E[HTTP+'Response']} # add pagination data to request-graph
       m['#'][Prev]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start + c, 'c' => c}.qs} if down
       m['#'][Next]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      m['/'] = {Type => E[Search+'Groonga']}
 
     rescue Groonga::SyntaxError => x
-      m['/'] = {Type => E[Search+'Groonga']}
       m['#'] = {Type => E[COGS+'Exception'], Title => "invalid expr", Content => CGI.escapeHTML(x.message)}
       e['nocache']=true
     end
@@ -44,7 +44,7 @@ class E
                   Groonga["E"] )
   end
 
-  # load or create groongaDB at URI
+  # init groongaDB
   def groonga
     return Groonga::Database.open d if e # open db
     dirname.mk                           # create containing dir
@@ -62,9 +62,9 @@ class E
                                   %w{graph content}.map{|c| t.index("E." + c) }}}
   end
   
-  # index resource 
+  # add
   def roonga graph="global", m = self.graph
-#    puts "text #{graph} < #{uri} #{m.keys.join ' '}"
+    puts "g #{graph} #{uri} #{m.keys.join ' '}"
     g = E.groonga          # db
     m.map{|u,i|
       r = g[u] || g.add(u) # create or load entry
