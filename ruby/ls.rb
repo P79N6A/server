@@ -16,6 +16,8 @@ class E
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
   fn 'view/ls',->i,e{
+    e.q['sort'] ||= 'stat:mtime'
+    e.q['reverse'] ||= true
     dir = e['uri'].E
     path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url

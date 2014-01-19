@@ -234,7 +234,11 @@ class E
   fn 'view/table',->g,e{
     keys = E.graphProperties g
     v = g.values
-    e.q['sort'].do{|p| v = v.sort_by{|s|s[p].do{|o|o[0].to_s}||''}}
+    e.q['sort'].do{|p|
+      p = p.expand
+      v = v.sort_by{|s|
+        s[p].do{|o|
+          o[0].to_s}||''}} # cast to a single type (String) so sort will work. every object *should* have a #to_s
     v = v.reverse if e.q['reverse']
     [H.css('/css/table'),
      {_: :table,:class => :tab,
