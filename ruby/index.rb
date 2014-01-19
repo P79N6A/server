@@ -36,7 +36,7 @@ class E
     g
   end
 
-  fn 'set/subtree',->d,r,m{
+  fn 'set/depth',->d,r,m{ # depth-first
     global = !r.has_key?('local')
     p = global ? d.pathSegment : d
     loc = global ? '' : '&local'
@@ -47,8 +47,8 @@ class E
       desc, asc = o == :asc ? [first,last] : [last,first]
       u = m['#']
       u[Type] = E[HTTP+'Response']
-      u[Prev] = {'uri' => d.uri + "?set=subtree&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
-      u[Next] = {'uri' => d.uri + "?set=subtree&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
+      u[Prev] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
+      u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s.concat p.docs }}
 
   # predicate index

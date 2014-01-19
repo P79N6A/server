@@ -10,7 +10,7 @@ td {
      vertical-align:bottom;
      text-align:right;
      }
-[property="uri"] {white-space:nowrap;max-width:33ex;overflow:hidden}
+[property="uri"] {white-space:nowrap;max-width:39ex;overflow:hidden}
 [property="uri"] .abbr {display: inline}
 
 .scheme,.abbr { display: none; }

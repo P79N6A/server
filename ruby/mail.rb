@@ -13,7 +13,7 @@ class E
 
   F['/m/GET'] = -> e,r{
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
-      r.q['set'] = 'subtree'
+      r.q['set'] = 'depth'
       r.q['view'] ||= 'threads'
        e.response
     else
