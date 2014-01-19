@@ -32,12 +32,14 @@ class E
      {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
 
   fn 'protograph/du',->d,q,m{
-    e = [d,d.pathSegment].compact.find &:e
-    q['view'] ||= 'table'
-    q['sort'] = Stat+'size'
-    q['reverse'] = true
-    m[e.uri] = e if e
-    rand.to_s.h }
+    path = d.pathSegment
+    GREP_DIRS.find{|p|path.uri.match p}.do{|allow|
+      e = [d,path].compact.find &:e
+      q['view'] ||= 'table'
+      q['sort'] = Stat+'size'
+      q['reverse'] = true
+      m[e.uri] = e if e
+      rand.to_s.h}}
 
   fn 'graph/du',->e,_,m{
     `du -a #{m.values[0].sh}`.each_line{|l|
