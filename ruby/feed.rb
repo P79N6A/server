@@ -58,8 +58,8 @@ class E
   FeedArchiver = -> doc, graph, host {
     doc.roonga host
     graph.map{|u,r|
-      r[Date].do{|t|
-        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/').sub(/(.00.00|Z)$/,'')}.#{u.sub(/^http.../,'').gsub(/\.(www|com)\./,'').gsub '/','.'}.e"]}}}
+      r[Date].do{|t| # link doc to date-index
+        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/').sub(/(.00.00|Z)$/,'')}.#{u.sub(/^http.../,'').gsub('/','.').gsub /\.(com|org|status|twitter|www)/,''}.e"]}}}
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
