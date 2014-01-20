@@ -5,7 +5,7 @@ body {
 a { text-decoration:none;}
 
 a[id]{
-    background-color:#ccc;
+    background-color:#bbb;
     color:#fff;
 }
 
@@ -30,7 +30,7 @@ td.val {background-color:#fff}
 
 td.key > a > .frag {
     font-weight:bold;
-    color: #22f;
+    color: #3d3dff;
     background-color:#fff;
     border-radius: .4em 0 0 .4em;
     padding-left: .1em}

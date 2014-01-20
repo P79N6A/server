@@ -35,28 +35,28 @@ table {
     font-weight:bold;
     font-size:1.23em }
 .ls td {
-    border-color:#ccf;
+    border-style: dotted;
+    border-color: #e3e3e3;
+    border-width: 0 0 .1em 0;
     padding: 0 .4em 0 .4em;
 }
-td[property="uri"] {text-align:right}
-td[property="uri"] .abbr {
+.ls td[property="uri"] {text-align:right}
+.ls td[property="uri"] .abbr {
     display: inline;
-    background-color:#fff;
-    color: #888;
-    font-size: .9em;
+    color: #999;
 }
-td[property="uri"] .frag {color:#fff;background-color:#000;padding:.1em}
-td[property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap;background-color:#fff;color:#555;font-size:.86em}
-td[property="http://www.w3.org/ns/posix/stat#size"] {text-align:right;background-color:#555;color:#fff;font-weight:bold}
-td[property="http://www.w3.org/ns/posix/dir#child"] .frag {
+.ls td[property="uri"] .frag {color:#fff;background-color:#000;padding:.1em}
+.ls [property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap;background-color:#222;color:#fff;font-size:.86em}
+.ls [property="http://www.w3.org/ns/posix/stat#size"] {text-align:right;background-color:#777;color:#fff;font-weight:bold}
+.ls td[property="http://www.w3.org/ns/posix/stat#ftype"] {background-color:#fff}
+.ls td[property="http://www.w3.org/ns/posix/dir#child"] {background-color:#aaa}
+.ls td[property="http://www.w3.org/ns/posix/dir#child"] .frag {
     font-weight: normal;
     background-color: #fff;
     color: #00a;
     font-weight: bold;
     border: .1em #00f dotted;
 }
-.ls tr:nth-child(odd) {background: #fff;color:#000}
-.ls tr:nth-child(even) {background: #f8f8f8;color:#000}
 
 .dir {
     max-width:64em;
