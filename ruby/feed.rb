@@ -64,7 +64,7 @@ class E
     graph.map{|u,r|
       r[Date].do{|t| # link doc to date-index
         t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
-        stop = /\b(blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www)\b/
+        stop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
         b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(stop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
         doc.ln E["http://#{host}/news/#{t}#{b}e"]}}
   doc}
