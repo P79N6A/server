@@ -59,7 +59,9 @@ class E
     doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t| # link doc to date-index
-        doc.ln E["http://#{host}/news/#{t[0].gsub(/[-T]/,'/').sub(/(.00.00|Z)$/,'')}.#{u.sub(/^http.../,'').gsub('/','.').gsub /\.(com|org|status|twitter|www)/,''}.e"]}}}
+        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones
+        b = (u.sub(/^http.../,'').gsub('/','.').gsub(/(com|org|status|twitter|www)\./,'').sub(/\d{8,}/,'')+'.').gsub /\.+/,'.' # derive a unique basename
+        doc.ln E["http://#{host}/news/#{t}.#{b}e"]}}}
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
