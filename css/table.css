@@ -3,19 +3,8 @@ table {
     color:black}
 table th {
     color: #999}
-td {
-     border-style:dotted;
-     border-width:.1em .1em 0 0;
-     border-color:#3cf;
-     vertical-align:bottom;
-     text-align:right;
-     }
+
 [property="uri"] {white-space:nowrap;max-width:39ex;overflow:hidden}
-[property="uri"] .abbr {
-    display: inline;
-    background-color:#fff;
-    color: #55d;
-}
 
 .scheme,.abbr { display: none; }
 .frag {font-weight:bold;}
@@ -44,8 +33,3 @@ td {
          background-color:#fdd;
          color:#f00;
          }
-
-a { text-decoration:none;
-    background-color:cyan;
-    color:black;
- }

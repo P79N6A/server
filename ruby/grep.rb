@@ -1,10 +1,12 @@
 #watch __FILE__
 class E
 
+  fn 'view/'+Posix+'util#grep',-> d,e {{_: :form, c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :set, value: :grep}]}}
+
   GREP_DIRS=[]
 
   fn 'set/grep',->e,q,m{
-    q['q'].do{|query|
+    q['q'].do{|query| m[e.uri+'#grep'] = {Type => E[Posix+'util#grep']}
       path = e.pathSegment
       GREP_DIRS.find{|p|path.uri.match p}.do{|allow|
         [e,path].compact.select(&:e).map{|e|
@@ -27,8 +29,7 @@ class E
       # sequential pattern
       p = /#{w.join '.*'}/i
 
-      [H.css('/css/search'), H.css('/css/grep'),
-       F['view/'+Search][e.q,e],
+      [H.css('/css/grep'),
        {_: :style, c: c.values.map{|i|
            # word color
            b = rand(16777216)
@@ -57,8 +58,7 @@ class E
              # exerpt
              l[0..403].gsub(a){|g|
                H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
-           },"<br>"]]},
-       {_: :a, class: :down, href: e['REQUEST_PATH']+e.q.except('view').qs, style: "background-color: #{E.cs}",c: '&darr;'}]
+           },"<br>"]]}]
     end }
 
 end

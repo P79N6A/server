@@ -28,13 +28,6 @@ table {
       }
 
 .ls .abbr{display:none}
-.ls a {
-    float: right;
-    background-color:#05f;
-    margin-left:.13em;
-    color:#fff;
-    font-weight:normal;
-}
 .ls td.label a {
     padding: .18em 0 0 0;
     background-color:#f00;
@@ -45,16 +38,25 @@ table {
     border-color:#ccf;
     padding: 0 .4em 0 .4em;
 }
-td[property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap;font-size:.8em}
+td[property="uri"] {text-align:right}
+td[property="uri"] .abbr {
+    display: inline;
+    background-color:#fff;
+    color: #888;
+    font-size: .9em;
+}
+td[property="uri"] .frag {color:#fff;background-color:#000;padding:.1em}
+td[property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap;background-color:#fff;color:#555;font-size:.86em}
+td[property="http://www.w3.org/ns/posix/stat#size"] {text-align:right;background-color:#555;color:#fff;font-weight:bold}
 td[property="http://www.w3.org/ns/posix/dir#child"] .frag {
     font-weight: normal;
     background-color: #fff;
     color: #00a;
-    font-size: .9em;
     font-weight: bold;
+    border: .1em #00f dotted;
 }
 .ls tr:nth-child(odd) {background: #fff;color:#000}
-.ls tr:nth-child(even) {background: #eee;color:#000}
+.ls tr:nth-child(even) {background: #f8f8f8;color:#000}
 
 .dir {
     max-width:64em;
