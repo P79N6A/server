@@ -55,13 +55,19 @@ class E
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
+  # add existing resources to index
+  #
+  # 'http:/'.E.take.select{|e|e.ext=='e'}.map{|r|E::FeedArchiver[r,r.graph,'localhost']}
+
   FeedArchiver = -> doc, graph, host {
     doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t| # link doc to date-index
-        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and other non-unique words
-        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'.').gsub(/\b(blog|com(ments)?|org|photo|post|status|tag|twitter|www)/,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-        doc.ln E["http://#{host}/news/#{t}#{b}e"]}}}
+        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
+        stop = /\b(blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www)\b/
+        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(stop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+        doc.ln E["http://#{host}/news/#{t}#{b}e"]}}
+  doc}
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
