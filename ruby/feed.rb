@@ -19,19 +19,19 @@ module FeedParse
 
     # scan for resources
     scan(%r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi){|m|
-      # identifier select
+      # identifier search
       attrs = m[2]
       inner = m[3]
-      u = attrs.do{|a|
-        puts "attrs #{a.class} #{a}"
+      u = attrs.do{|a| # RDF-style identifier (RSS 1.0)
         a.match(/about=["']?([^'">\s]+)/).do{|s|
-          puts "val #{s.class} #{s}"
           s[1] }} ||
-      (inner.match(/<(link)>([^<]+)/) || inner.match(/<(gu)?id[^>]*>([^<]+)/)).do{|s| s[2]}
+      (inner.match(/<link>([^<]+)/) || # <link> child-node or href attribute
+       inner.match(/<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/) ||
+       inner.match(/<(?:gu)?id[^>]*>([^<]+)/)).do{|s| s[1]} # <id> child 
 
       if u
         if !u.match /^http/
-          puts "non-HTTP ID #{u}"
+          puts "no HTTP URIs found #{u}"
           u = '/junk/'+u.gsub('/','.')
         end
         yield u, E::Type, (E::SIOCt+'BlogPost').E
@@ -50,7 +50,7 @@ module FeedParse
             o.match(/\A(\/|http)[\S]+\Z/) ? o.E : o
           }}
       else
-        puts "no ID found #{inner}"
+        puts "no post-identifiers found #{u}"
       end
       }
     
