@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 module FeedParse
 
@@ -14,32 +14,45 @@ module FeedParse
                    end) end
 
   def parse
-
-    x={} #prefix table
+    x={} # populate XMLns prefix table
     match(/<(rdf|rss|feed)([^>]+)/i)[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|x[m[0]]=m[1]}
 
-    #items
-    scan(%r{<(rss:|atom:)?(item|entry)([\s][^>]*)?>(.*?)</\1?\2>}mi){|m|
+    # scan for resources
+    scan(%r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi){|m|
+      # identifier select
+      attrs = m[2]
+      inner = m[3]
+      u = attrs.do{|a|
+        puts "attrs #{a.class} #{a}"
+        a.match(/about=["']?([^'">\s]+)/).do{|s|
+          puts "val #{s.class} #{s}"
+          s[1] }} ||
+      (inner.match(/<(link)>([^<]+)/) || inner.match(/<(gu)?id[^>]*>([^<]+)/)).do{|s| s[2]}
 
-      # identifier select -> RDF URI || <id> || <link>
-      u = m[2] && (u = m[2].match /about=["']?([^'">\s]+)/) && u[1] ||
-          m[3] && (((u = m[3].match /<(gu)?id[^>]*>([^<]+)/) || (u = m[3].match /<(link)>([^<]+)/)) && u[2])
-
-      yield u, E::Type, (E::SIOCt+'BlogPost').E
-      yield u, E::Type, (E::SIOC+'Post').E
-
-      #links
-      m[3].scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
-        e[1].match(/(href|url|src)=['"]?([^'">\s]+)/).do{|url|
-          yield(u,E::Atom+'/link/'+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].E)}}
-
-      #elements
-      m[3].scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
-        yield u,                           # s
-        (x[e[0]&&e[0].chop]||E::RSS)+e[1], # p
-        e[3].extend(FeedParse).guess.do{|o|# o
-          o.match(/\A(\/|http)[\S]+\Z/) ? o.E : o
-        }}}
+      if u
+        if !u.match /^http/
+          puts "non-HTTP ID #{u}"
+          u = '/junk/'+u.gsub('/','.')
+        end
+        yield u, E::Type, (E::SIOCt+'BlogPost').E
+        yield u, E::Type, (E::SIOC+'Post').E
+        
+        #links
+        inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
+          e[1].match(/(href|url|src)=['"]?([^'">\s]+)/).do{|url|
+            yield(u,E::Atom+'/link/'+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].E)}}
+        
+        #elements
+        inner.scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
+          yield u,                           # s
+          (x[e[0]&&e[0].chop]||E::RSS)+e[1], # p
+          e[3].extend(FeedParse).guess.do{|o|# o
+            o.match(/\A(\/|http)[\S]+\Z/) ? o.E : o
+          }}
+      else
+        puts "no ID found #{inner}"
+      end
+      }
     
     nil
   end

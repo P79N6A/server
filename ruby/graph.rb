@@ -105,12 +105,11 @@ class E
     unless ext=='e' # already native-format
       triplr = @r.do{|r|r.q['triplr'].do{|t| (respond_to? t) && t }} || :triplrMIME
       doc = E '/E/rdf/' + [triplr,uri].h.dive
-      unless doc.e && doc.m > m; # freshness check
+#      unless doc.e && doc.m > m; # freshness check
         graph = {}
         [:triplrInode,triplr].each{|t| fromStream graph, t }
-#        puts "#{uri} -> RDF"
         doc.w graph, true
-      end
+#      end
     end
     g.mergeGraph doc.r true
   end

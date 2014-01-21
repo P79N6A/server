@@ -26,9 +26,8 @@ class E
                                   {_: :td, class: :context, c: (p[2]||'').hrefs}].cr}}.cr]}]}]}]]]}
 
   F['/500/GET'] = ->e,r{
-    body = H[Errors.sort_by{|u,r|r[:time]}.reverse.html, H.css('/css/500')]
+    body = H [Errors.sort_by{|u,r|r[:time]}.reverse.html, H.css('/css/500')]
     [200, {'Content-Type'=>'text/html; charset=utf-8'}, [body]]}
-  F['/500/test/GET'] = ->e,r{1/0}
 
   F['view/'+COGS+'Exception']=->e,r{
     e.values.map{|e|
