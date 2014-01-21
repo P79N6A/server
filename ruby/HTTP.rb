@@ -66,7 +66,7 @@ module Th
   end
 
   def conneg
-    #  extension
+    # specific format-variant URI
     { '.html' => 'text/html',
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/ntriples',

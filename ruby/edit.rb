@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   Prototypes = {
@@ -7,9 +7,10 @@ class E
     'blank'=>[]
   }
 
-  F['protograph/editable'] = F['protograph/_']
+  F['protograph/edit'] = F['protograph/_']
 
-  fn 'graph/editable',->e,env,g{
+  fn 'graph/edit',->e,env,g{
+    env['view']||='edit'
     e.fromStream g, :triplrFsStore}
 
   # select a prototype graph
