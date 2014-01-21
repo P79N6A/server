@@ -58,7 +58,7 @@ class E
   end
   alias_method :dir, :dirname
 
-  # add hostname to URI if missing
+  # add hostname to URI (if missing)
   def hostURL e
     host = 'http://'+e['SERVER_NAME']
     if uri.index('/') == 0 
@@ -70,15 +70,12 @@ class E
 
   # pointer to local data about global URI
   def localURL e
-    # path
-    if uri.index('/') == 0 # already a local path
-      uri
-    # host match
+    if uri.index('/') == 0
+      uri             # already a local path
     elsif e && uri.index('http://'+e['SERVER_NAME']+'/') == 0 
-      pathSegment.uri
-    # non-local
+      pathSegment.uri # host match, unchanged local path
     else
-      URIURL + (CGI.escape uri)
+      '/' + uri       # URI -> local path
     end
   end
 
@@ -232,7 +229,7 @@ class E
    {'uri' => uri}
   end
 
-  # implementation-specific internal pathnames not on the web
+  # internal pathnames not on the web (cached representations)
   F['/E/GET'] = F[E404]
 
 end

@@ -1,7 +1,6 @@
 class E
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
-  URIURL = '/@'  # non-HTTP URI path resolution-prefix
   S      = /\._/ # data path-separator
 
   W3    = 'http://www.w3.org/'
@@ -21,17 +20,18 @@ class E
   Content  = SIOC + 'content'
   XHV      = W3   + '1999/xhtml/vocab#'
   RDFns    = W3   + "1999/02/22-rdf-syntax-ns#"
+  RDFs     = W3   + '2000/01/rdf-schema#'
+# RDFns    = W3   + 'ns/rdf#'
+# RDFs     = W3   + 'ns/rdfs#'
   EXIF     = W3   + '2003/12/exif/ns#'
   WF       = W3   + '2005/01/wf/flow#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
   LDP      = W3   + 'ns/ldp#'
-  Next     = LDP+'nextPage'
-  Prev     = LDP+'prevPage'
+  Next     = LDP  + 'nextPage'
+  Prev     = LDP  + 'prevPage'
   Posix    = W3   + 'ns/posix/'
   Type     = RDFns+ "type"
-#  Type     = W3   + "ns/rdf#type"
-  RDFs     = W3   + 'ns/rdfs#'
   PAC      = DIG  + '2008/PAC/ontology/pac#'
   COGS     = Deri + 'cogs#'
   CSV      = Deri + 'scsv#'

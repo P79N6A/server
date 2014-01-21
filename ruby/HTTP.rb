@@ -4,15 +4,18 @@ require 'rack'
 class E
 
   def E.call e
-    dev
-    e.extend Th
+    e.extend Th # add HTTP utility functions to environment table
+    dev # see if watched files were changed
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
-    p = e['REQUEST_PATH'].force_encoding 'UTF-8'
+    path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
+    resource = E['http://'+e['SERVER_NAME']+path]
 
-    uri = CGI.unescape((p.index(URIURL) == 0) ? p[URIURL.size..-1] : ('http://'+e['SERVER_NAME']+(p.gsub '+','%2B'))).E.env e
-
-    uri.inside ? ( e['uri'] = uri.uri
-                   uri.send e.verb ) : [403,{},[]]
+    if resource.inside
+      e['uri'] = resource.uri
+      (resource.env e).send e['REQUEST_METHOD']
+    else
+      [403,{},[]]
+    end
 
   rescue Exception => x
     F['E500'][x,e]
@@ -20,37 +23,22 @@ class E
 
 end
 
-class String
-
-  # querystring parse
-  def qp
-    d={}
-    split(/&/).map{|e|
-      k,v=e.split(/=/,2).map{|x|
-         CGI.unescape x}
-      d[k]=v}
-    d
-  end
-
-  def hR
-    [200, {'Content-Type'=>'text/html; charset=utf-8'}, [self]]
-  end
-
-end
-
 module Th
 
-  # query-string
-  def qs
-    (['GET','HEAD'].member? verb) ? self['QUERY_STRING'] : self['rack.input'].read
-  end
-
-  # parsed query-string
+  # Query-String -> Hash
   def q
-    @q ||= (qs||'').qp
+    @q ||=
+      (if q = self['QUERY_STRING']
+         h = {}
+         q.split(/&/).map{|e| k,v = e.split(/=/,2).map{|x| CGI.unescape x }
+                              h[k] = v }
+         h
+       else
+         {}
+       end)
   end
 
-  # Accept header -> Hash
+  # Accept -> Hash
   def accept_ k=''
     d={}
     self['HTTP_ACCEPT'+k].do{|k|
@@ -75,7 +63,7 @@ module Th
     }[File.extname self['uri']].do{|mime|
       return mime}
 
-    # Accept header
+    # Accept formats
     accept.sort.reverse.map{|q,mimes|
       mimes.map{|mime|
         return mime if E::F[E::Render+mime]}}
@@ -84,15 +72,11 @@ module Th
 
   def accept; @accept ||= accept_ end
 
-  def verb
-    self['REQUEST_METHOD']
-  end
-
 end
 
 class Hash
 
-  # unparse querystring
+  # Hash -> Query-String
   def qs
    '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end

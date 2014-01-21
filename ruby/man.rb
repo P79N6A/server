@@ -16,13 +16,13 @@ class E
     if !name || name.empty? || name.match(/\//)
       if section
         # enumerate section children
-        (H [H.css('/css/man'),{_: :style, c: "a {background-color: #{E.cs}}"},
+     body = H [H.css('/css/man'),{_: :style, c: "a {background-color: #{E.cs}}"},
             Pathname(manPath+'/man'+section).c.map{|p|
               n = p.basename.to_s.sub /\.[0-9][a-z]*\...$/,''
             }.group_by{|e|e[0].match(/[a-zA-Z]/) ? e[0].downcase : '0-9'}.sort.map{|g,m|
               [{_: :h3, c: g},
-               m.map{|n|[{_: :a, href: '/man/'+section+'/'+n, c: n },' ']}]}
-           ]).hR
+               m.map{|n|[{_: :a, href: '/man/'+section+'/'+n, c: n },' ']}]}]
+        [200, {'Content-Type'=>'text/html; charset=utf-8'}, [body]]
       else
         e.response
       end
