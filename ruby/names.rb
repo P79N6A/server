@@ -155,56 +155,21 @@ class E
     d.force_encoding('UTF-8').sh
   end
 
-  # literals to URIs
-  # currently used for iso8601 dates mapping to paths, so date-range queries (depth-first subtrees) can be done w/ dir/fs tools
-  # could also use as a "trie" for autocomplete + sorted-strings
   def E.literal o
-    E['/'].literal o
+    ''.E.literal o
   end
-  
-  Literal={}
-   [Purl+'dc/elements/1.1/date',
-    Date,DC+'created',DC+'modified',
-   ].map{|f|Literal[f]=true}
 
   def literal o
-
-    # already a URI
     return o if o.class == E
-
-    # blob for non-strings
-    return literalBlob o unless o.class == String
-
-    # whitelisted predicateURIs to paths
-    return literalURI o if (Literal[uri] || o.size<=88) && !o.match(/\//)
-
-    # string matches URI format
-    return E o if o.match %r{\A[a-z]+://[^\s]+\Z}
-
-    # blob
-    literalBlob o
-
-  end
-
-  # pathname for short literals
-  def literalURI o
-    E "/l/"+o.gsub(/[\.:\-T+]/,'/')+'/'+o if Literal[uri] && o
-  end
- 
-  def literalBlobURI o
-    if o.class == String
-      E "/E/blob/"+o.h.dive
-    else
-      E "/E/json/"+[o].to_json.h.dive
-    end
-  end
-
-  def literalBlob o
-    u = literalBlobURI o
+    u = (if o.class == String
+           E "/E/blob/"+o.h.dive
+         else
+           E "/E/json/"+[o].to_json.h.dive
+         end)
     u.w o, !o.class == String unless u.f
   end
 
-  # spaceship
+  # spaceship comparison-operator
   def <=> c
     to_s <=> c.to_s
   end
@@ -217,7 +182,7 @@ class E
    {'uri' => uri}
   end
 
-  # internal pathnames not on the web (cached representations)
+  # internal pathnames not on the web (cached representations, index databases)
   F['/E/GET'] = F[E404]
 
 end
@@ -259,7 +224,7 @@ class String
      self )
   end
 
-  # shrink URI to qname/CURIE/prefix'd identifier
+  # shrink URI to qname/CURIE/prefixed identifier
   def shorten
     E::Prefix.map{|p,f|
       return p + ':' + self[f.size..-1]  if (index f) == 0
@@ -294,10 +259,6 @@ class String
     # JSON literal
     elsif match /^\/E\/json/
       self.E.r true
-
-    # literal in basename
-    elsif match /^\/l\//
-      File.basename self
 
     # plain path
     else
