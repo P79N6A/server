@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 exit 0 if ARGV.empty?
 require 'infod'
-puts (E ARGV[0]).send *ARGV[1..-1].map{|a|
-  # URI/path arguments become resources
-  a.path? ? a.E : a}
+puts (E ARGV[0]).send *ARGV[1..-1]
+
