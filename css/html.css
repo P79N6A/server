@@ -27,6 +27,7 @@ td.key {text-align:right}
 }
 
 td.val {background-color:#fff}
+tr[property="http://rdfs.org/sioc/ns#content"] td.val {border-radius: .5em}
 
 td.key > a > .frag {
     font-weight:bold;
