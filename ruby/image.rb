@@ -78,7 +78,7 @@ class E
          # view 
          {uri: s,
            # img and  link to containing resource
-           c: ->{"<a href='#{v.uri.to_s.do{|u|u.path? ? u : u.E.url}}'><img style='float:left;#{h}' src='#{s}'></a>"}}}}.flatten.map{|i|
+           c: ->{"<a href='#{v.uri}'><img style='float:left;#{h}' src='#{s}'></a>"}}}}.flatten.map{|i|
 
        # show and mark as seen
        !seen[i[:uri]] &&

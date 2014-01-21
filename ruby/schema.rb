@@ -43,7 +43,7 @@ class E
        r[DC+'description'],
        r[Purl+'dc/elements/1.1/description'],
        r[RDFs+'comment']
-      ].join(' ').gsub("\n"," ") if u.path?
+      ].join(' ').gsub("\n"," ")
     }.compact.join "\n"
   end
 

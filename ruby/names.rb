@@ -1,4 +1,4 @@
-%w{base64 cgi shellwords}.each{|r|require(r)}
+%w{cgi shellwords}.each{|r|require(r)}
 
 class E
 
@@ -121,34 +121,22 @@ class E
   alias_method :+, :appendURI
   alias_method :as, :appendSlashURI
 
-  def path?
-    uri.path?
-  end
-
   def shortPath
     @shortPath ||=
-      (if path?
-         if uri.match /^\//
-           uri
-         else
-           '/' + uri.shorten
-         end
+      (if uri.match /^\//
+         uri
        else
-         '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
+         '/' + uri.shorten
        end)
   end
 
   # URI -> path
   def path
     @path ||=
-      (if path?
-         if uri.match /^\//
-           uri
-         else
-           '/' + uri
-         end
+      (if uri.match /^\//
+         uri
        else
-         '/E/' + uri.h.dive[0..5] + (Base64.urlsafe_encode64 uri)
+         '/' + uri
        end)
   end
 
@@ -295,15 +283,9 @@ class String
     if m = (match /^\/([a-z]+:)\/+(.*)/)
       (m[1] + '//' + m[2]).E
 
-    # CURIE
+    # prefix-shortened URI
     elsif m = (match /^\/([^\/:]+:[^\/]+)/)
       m[1].expand.E
-
-    # opaque URI w/ optional extension
-    elsif match /^\/E\/..\//
-      self[9..-1].match(/([^.]+)(.*)/).do{|c|
-        (Base64.urlsafe_decode64 c[1]) + c[2]
-    }.E
 
     # String literal
     elsif match /^\/E\/blob/
@@ -326,10 +308,6 @@ class String
   
   def E
     E.new self
-  end
-
-  def path?
-    (match /^(\.|\/|https?:\/)/) && true || false
   end
 
   def frag
