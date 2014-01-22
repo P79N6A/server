@@ -66,7 +66,7 @@ class E
   end
 
   def uris
-    graph.keys.map &:E
+    graph.keys.select{|u|u.match /^http/}.map &:E
   end
 
   def triplrANSI

@@ -10,7 +10,7 @@ class E
 
   # HEAD response-codes on a (.u) list of URIs
   def checkURIs
-    r = uris.select{|u|u.to_s.match /^http/}.map{|u|
+    r = uris.map{|u|
       c = [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u] # HEAD
       puts c.join ' ' 
       c } # status, uri tuple
