@@ -6,7 +6,7 @@ a { text-decoration:none;}
 tr[property="uri"] > td.val {max-width: 30ex;overflow:hidden}
 
 table.html {
-    float:left;display:inline;
+    display:inline;
     max-width: 90ex;
     border-radius:.62em;
     padding:.18em;
@@ -24,7 +24,9 @@ td.key {text-align:right}
 
 td.val {background-color:#fff}
 tr[property="http://rdfs.org/sioc/ns#content"] td.val {border-radius: .5em}
-
+tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val {font-size:.8em}
+tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {background-color:#fff;color:#08f;border-style:dotted;border-color:#08f}
+tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag:hover {background-color:#cff;}
 td.key > a > .frag {
     font-weight:bold;
     color: #3d3dff;

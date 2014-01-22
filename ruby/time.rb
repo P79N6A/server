@@ -31,7 +31,7 @@ class E
     h = e.q['height'].do{|h|h.match(/[0-9]+/) && h.to_i.min(1).max(1024) } || '64'
     
 
-    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}]}
+    [H.css('/css/timegraph'),{class: :timegraph, c: c.()},F['view'][d,e]]}
 
   # timegraph entry
   fn 'itemview/timegraph',->r,x{
@@ -48,10 +48,10 @@ class E
       [{style: "top: #{r['x']}%; left: #{r['y']}%",
          c: [{_: :a,
                title: r[Date][0],
-               href: r.url,
+               href: '#'+r.uri,
                class: :label,
-               style: "border-color: #{lc};color: #{lc}",
-               c: label,
+               style: "border-color: #{lc};background-color: #{lc}",
+               c: label.split('@')[0],
              }]},
        
        # arc(s)
@@ -59,7 +59,7 @@ class E
              # target resource
              x[:graph][e.uri].do{|e|
                # arc path
-               {_: :line, class: :arc, stroke: x[:color],
+               {_: :line, class: :arc, stroke: lc, 'stroke-dasharray' => '1,1', 
                  y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
                  y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}}]
     end }
