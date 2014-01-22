@@ -38,7 +38,7 @@ class E
       yield creator, Name, m.friendly_from.to_utf8
       yield creator, DC+'identifier', E['mailto:'+from]
       yield e, SIOC+'reply_to',
-      E[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{e}>&In-Reply-To=<#{e}>&Subject=#{m.subject.to_utf8}&")+'#reply']
+      E[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject.to_utf8}&")+'#reply']
 
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.map{|to|

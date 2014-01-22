@@ -16,7 +16,7 @@ r.map{|k,v| s[Header + k] = k == 'uri' ? v : [v] }
                   s[Type] = [E[HTTP+'Response']]
 s[HTTP+'statusCodeValue'] = [404]
     s[Header+'HTTP_HOST'] = [E['http://' + s[Header+'HTTP_HOST'][0]]] if s[Header+'HTTP_HOST']
-                  s[Edit] = [E[r['REQUEST_PATH']+'?graph=edit']]
+                  s[Edit] = [E[r['REQUEST_PATH']+'?graph=create']]
               s['#query'] = [r.q]
             s['#seeAlso'] = [e.parent,*e.a('*').glob]
               r.q['view'] = '404'
