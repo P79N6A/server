@@ -4,10 +4,10 @@ class E
   graph resolution is two-pass
 
   protograph/
- the first-pass will determine if the second-pass needs to run. an eTag will be derived from the return-value and any graph additions preserved for the next pass. ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. you can define only a second or first-pass and get default behaviour for the other. for more ideas see <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
+ the first-pass will determine if the second-pass needs to run. an eTag will be derived from the return-value and any graph additions preserved for the next pass. ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. for more ideas see <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
 
   graph/
-   a second-pass might query a CBD (concise-bounded description) from a SPARQL store. infod was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like "touch" a file on successful POSTs so a store only has to be queried occasionally, and to facilitate simply hooking up bits of Ruby code to names rather than try to shoehorn what you're trying to say into some QueryLang where you're additionally without standard library functions necessitating more roundtrips and latency via marshalling/unmarshalling, parsing, loopback network-abstraction, nascent RDF-via-SPARQL-as-ORM-libs.. but go nuts experimenting w/ graph-handlers for this stuff,,i do..
+   second-pass might query a CBD (concise-bounded description) from a SPARQL store. this code was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like "touch" a file on successful POSTs so a store only has to be queried occasionally, and to facilitate simply hooking up bits of Ruby code to names rather than try to shoehorn what you're trying to say into some QueryLang where you're additionally without standard library functions necessitating more roundtrips and latency via marshalling/unmarshalling, parsing, loopback network-abstraction, nascent RDF-via-SPARQL-as-ORM-libs.. but go nuts experimenting w/ graph-handlers for this stuff,,i do..
 
   triple streams are functions which yield triples
   s,p - URI in String , o - Literal or URI (object must respond to #uri such as '/path'.E or {'uri' => '/some.n3'}
@@ -91,13 +91,6 @@ class E
     m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
     # cleanup unexpanded thunks
     m.delete_if{|u,r|r.class==E}}
-
-  fn 'filter/set',->e,m,r{
-    # filter to RDFs set-members, gone will be:
-    # data about docs containing the data
-    # other fragments in a doc not matching search when indexed per-fragment
-    f = m['#'].do{|c| c[RDFs+'member'].do{|m| m.map &:uri }} || [] # members
-    m.keys.map{|u| m.delete u unless f.member? u}} # trim
 
   def graphFromFile g={}
     return unless e

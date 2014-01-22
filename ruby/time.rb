@@ -64,6 +64,11 @@ class E
                  y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}}]
     end }
 
+  F['view/timeofday']=->d,e{
+    e.q['a']='timeofday'
+    F['filter/timeofday'][e.q,d,nil]
+    F['view/histogram'][d,e]}
+
   fn 'filter/timeofday',->e,m,_{
     m.map{|_,r|r[Date].do{|ds| ds.map{|d|
           d = d.to_time
