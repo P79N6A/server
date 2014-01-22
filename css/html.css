@@ -3,15 +3,11 @@ body {
 }
 
 a { text-decoration:none;}
-
-a[id]{
-    background-color:#bbb;
-    color:#fff;
-}
+tr[property="uri"] > td.val {max-width: 30ex;overflow:hidden}
 
 table.html {
-    float:left;
-    max-width: 80em;
+    float:left;display:inline;
+    max-width: 90ex;
     border-radius:.62em;
     padding:.18em;
     margin:.18em;

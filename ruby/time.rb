@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class Time
   def html e=nil,g=nil; H({_: :time, datetime: iso8601, c: to_s}) end
@@ -31,7 +31,7 @@ class E
     h = e.q['height'].do{|h|h.match(/[0-9]+/) && h.to_i.min(1).max(1024) } || '64'
     
 
-    [H.css('/css/timegraph'),{class: :timegraph, style: "height: #{h}em", c: c.()}]}
+    [H.css('/css/timegraph'),{class: :timegraph, c: c.()}]}
 
   # timegraph entry
   fn 'itemview/timegraph',->r,x{
@@ -41,16 +41,16 @@ class E
 
       labelP = x.q['label'].do{|l|l.expand} || Creator
       label = ([*r[labelP]][0]).do{|l|
-               l.respond_to?(:uri) ? l.uri : l.to_s}
+               l.respond_to?(:uri) ? l.E.label : l.to_s}
       lc = x[:group][label] ||= E.c
-      arc = x.q['arc'].do{|a| a.expand }
+      arc = x.q['arc'].do{|a| a.expand } || (SIOC+'reply_of')
 
       [{style: "top: #{r['x']}%; left: #{r['y']}%",
          c: [{_: :a,
                title: r[Date][0],
                href: r.url,
                class: :label,
-               style: "background-color: #{lc}",
+               style: "border-color: #{lc};color: #{lc}",
                c: label,
              }]},
        
@@ -59,7 +59,7 @@ class E
              # target resource
              x[:graph][e.uri].do{|e|
                # arc path
-               {_: :line, class: :arc, stroke: x[:color], 'stroke-dasharray'=>"2,2",
+               {_: :line, class: :arc, stroke: x[:color],
                  y1: e['x'].to_s+'%', x1: e['y'].to_s+'%',
                  y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}}]
     end }

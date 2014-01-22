@@ -1,11 +1,5 @@
-table {
-    background-color:white;
-    color:black}
 table th {
     color: #999}
-
-[property="uri"] {white-space:nowrap;max-width:39ex;overflow:hidden}
-
 .scheme,.abbr { display: none; }
 .frag {font-weight:bold;}
 
