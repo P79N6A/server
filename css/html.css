@@ -23,7 +23,7 @@ table.html {
 }
 
 
-td.key {text-align:right}
+td.key {vertical-align:top;text-align:right}
 
 .abbr,.scheme {
     display: none;

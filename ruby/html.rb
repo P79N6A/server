@@ -122,8 +122,7 @@ class E
       true
     }.
     sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
-    map{|r| Fn 'view/select',r,e,d}.
-    push(d.keys.grep(IsBnode).empty? ? [] : {_: :style, c: 'td.val .abbr {display: none}'})}
+    map{|r| Fn 'view/select',r,e,d}}
 
   fn 'view/base',->d,e,k=true,graph=nil{
     [H.once(e,'base',H.css('/css/html')),
