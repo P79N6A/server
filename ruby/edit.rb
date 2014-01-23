@@ -7,16 +7,16 @@ class E
     'blank'=>[]
   }
 
+  F['protograph/create'] = F['protograph/_']
   F['protograph/edit'] = F['protograph/_']
 
+  fn 'graph/create',->e,env,g{env['view']||='create'}
   fn 'graph/edit',->e,env,g{
     env['view']||='edit'
-    e.fromStream g, :triplrFsStore}
+    e.fromStream g, :triplrFsStore }
 
-  # select a prototype graph
-  # , or go blank
   fn 'view/create',->g,e{
-    [H.css('/css/create'),{_: :b, c: :create},
+    [{_: :style, c: 'a {display:block;font-size:2em}'},{_: :b, c: :create},
      Prototypes.map{|s,_| s.nil? ? {_: :b, c: '&nbsp;'} : {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(CGI.escape s), c: s.label}}]}
 
   fn 'view/edit',->g,e{
