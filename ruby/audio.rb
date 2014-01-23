@@ -3,12 +3,20 @@ class E
   VideoFile = /(avi|flv|mkv|mpg|mp4|wmv)$/i
   AudioFile = /(aif|wav|flac|mp3|m4a|aac|ogg)$/i
 
-  fn 'set/audio',->d,e,m{d.take.select{|e|e.ext.match AudioFile}}
-  fn 'set/video',->d,e,m{d.take.select{|e|e.ext.match VideoFile}}
+  fn 'set/audio',->d,e,m{
+    e['view'] = 'audio'
+    d.take.select{|e|e.ext.match AudioFile}}
 
+  fn 'set/video',->d,e,m{
+    e['view'] = 'audio'
+    e['video'] = true
+    d.take.select{|e|e.ext.match VideoFile}}
+
+  # table of audio-resource properties
   AudioK = {}
-  %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.
-    map{|a|Audio + a}.concat(['uri', Stat+'mtime', Stat+'size']).map{|p|AudioK[p] = true}
+  %w{Album-Movie-Show_title Lead_performers-Soloists Title-songname-content_description}.map{|a|Audio + a}.
+    concat(['uri', Stat+'mtime', Stat+'size']).
+    map{|p|AudioK[p] = true}
 
   fn 'view/audio',->d,e{ d = d.dup
 
