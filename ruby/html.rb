@@ -1,5 +1,6 @@
 #watch __FILE__
 
+# (H) templates
 def H _
   case _
   when Hash
@@ -131,7 +132,6 @@ class E
   fn 'view/select',->r,e,d{
     graph = {r.uri => r}
     view = nil
-    # find types, skipping malformed/missing info
     if r.class == Hash
       (r[Type].class==Array ? r[Type] : [r[Type]]).do{|types|
         views = types.map{|t|
@@ -145,7 +145,7 @@ class E
         flatten.compact
         view = views[0] unless views.empty?}
     end
-    if !view
+    if !view # default view
       F['view/base'][graph,e,true,d]
     else
       view[graph,e]
@@ -238,7 +238,7 @@ class E
       p = p.expand
       v = v.sort_by{|s|
         s[p].do{|o|
-          o[0].to_s}||''}} # cast to a single type (String) so sort will work. every object *should* have a #to_s
+          o[0].to_s}||''}} # cast to a single type (String) so sort will work. every class seems to have a #to_s
     v = v.reverse if e.q['reverse']
     [H.css('/css/table'),
      {_: :table,:class => :tab,
