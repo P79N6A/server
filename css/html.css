@@ -3,10 +3,17 @@ body {
 }
 
 a { text-decoration:none;}
-tr[property="uri"] > td.val {max-width: 30ex;overflow:hidden}
+tr[property="uri"] > td.val {max-width: 80ex}
+tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
+tr[property="uri"] > td.val > a{
+    background-color: #00e;
+    color:#fff;
+    font-weight: bold;
+    border-radius: .1em;
+    padding: 0 .1em 0 .1em;
+}
 
 table.html {
-
     max-width: 90ex;
     border-radius:.62em;
     padding:.18em;
@@ -29,7 +36,7 @@ tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {background-color:#
 tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag:hover {background-color:#cff;}
 td.key > a > .frag {
     font-weight:bold;
-    color: #3d3dff;
+    color: #33f;
     background-color:#fff;
     border-radius: .4em 0 0 .4em;
     padding-left: .1em}
@@ -37,7 +44,7 @@ td.key > a > .frag {
 td.val > a > .frag {
     border-radius: .2em .3em .3em .2em;
     color: #fff;
-    background-color:#08f;
+    background-color:#07f;
     border: 0.1em dotted #fff;    
     padding: 0 .12em 0 .12em;
 }
