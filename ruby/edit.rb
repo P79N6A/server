@@ -20,10 +20,10 @@ class E
   # editable triples
   F['protograph/edit'] = F['protograph/blank']
   fn 'graph/edit',->e,env,g{
-    env['view']||='edit'
+    env['view'] ||= 'edit'          # use edit-view
+    g[e.uri] = {}                   # add current resource
+    e.fromStream g, :triplrFsStore} # add fs-sourced triples
     
-    e.fromStream g, :triplrFsStore }
-
 =begin HTML <form> based RDF-editor
       optional arguments: 
       prototype - initialize fields for a resource-type
@@ -36,9 +36,9 @@ class E
       if s && p && o
         s = s.E
         p = p.E
-        oE = p.literal o # cast literal to URI
+        oE = p.literal o                  # cast literal to URI
         (id = s.concatURI(p).concatURI oE # triple identifier
-        [(case p         #  http://dev.w3.org/html5/markup/input.html#input
+        [(case p                          # more to support http://dev.w3.org/html5/markup/input.html#input
           when Content
             {_: :textarea, name: id, c: o, rows: 24, cols: 80}
           when Date
@@ -58,12 +58,11 @@ class E
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
 
        # each resource
-       c: [ g.map{|s,r|
-              url = s.E.localURL e 
-              # per-resource links
+       c: [ g.map{|s,r| url = s.E.localURL e
+
               {class: :resource, c:
               [{_: :a, class: :uri, id: s, c: s, href: url},
-               {_: :a, class: :edit, c: '+predicate', href: url+'?graph=blank&view=addP'},'<br><br>',
+               {_: :a, class: :edit, c: '+property', href: url+'?graph=blank&view=addP'},'<br><br>',
 
                # each property
 #               r.keys.concat(ps).uniq.-(['uri']).map{|p|
