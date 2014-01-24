@@ -1,7 +1,6 @@
 #watch __FILE__
 class E
 
-  # glob :: pattern -> [E]
   def glob p=""
     (Pathname.glob d + p).map &:E
   end
@@ -16,10 +15,10 @@ class E
 
   def docs
     base = docBase
-    [(base if pathSegment!='/' && base.e),
-     (self if base != self && e && uri[-1]!='/'),
+    [(base if pathSegment!='/' && base.e),         # doc-base
+     (self if base != self && e && uri[-1]!='/'),  # requested path
      base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
-     ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash = children
+     ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> child resources
     ].flatten.compact
   end
 

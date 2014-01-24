@@ -3,21 +3,25 @@ class E
 
   Prototypes = {
     SIOCt+'MicroblogPost' => [Content],
-    SIOCt+'BlogPost' => [Date, Title, Content], nil=>nil,
-    'blank'=>[]
+    SIOCt+'BlogPost' => [Title, Content],    
   }
 
-  F['protograph/create'] = F['protograph/_']
-  F['protograph/edit'] = F['protograph/_']
+  # 404 -> create resource
+  F['protograph/create'] = -> e,env,g {
+    env['view'] = 'create'
+    F['protograph/_'][e,env,g]}
 
-  fn 'graph/create',->e,env,g{env['view']||='create'}
-  fn 'graph/edit',->e,env,g{
-    env['view']||='edit'
-    e.fromStream g, :triplrFsStore }
-
+  # prototype selector
   fn 'view/create',->g,e{
-    [{_: :style, c: 'a {display:block;font-size:2em}'},{_: :b, c: :create},
-     Prototypes.map{|s,_| s.nil? ? {_: :b, c: '&nbsp;'} : {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(CGI.escape s), c: s.label}}]}
+    [{_: :style, c: 'a {display:block;font-size:2em}'},{_: :b, c: :type},
+     Prototypes.map{|t,ps|
+       {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(CGI.escape t), c: t.label}}]}
+
+  # load existing triples 
+  F['protograph/edit'] = F['protograph/_']
+  fn 'graph/edit',->e,env,g{  env['view']||='edit'
+                    e.fromStream g, :triplrFsStore }
+
 
   fn 'view/edit',->g,e{
     triple = ->s,p,o{
