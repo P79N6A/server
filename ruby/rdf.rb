@@ -1,9 +1,16 @@
 #watch __FILE__
 class E
 
-  begin require 'linkeddata'; rescue LoadError => e; end
+  def E.linkeddata
+    @linkeddata ||=
+      (begin require 'linkeddata'
+       rescue LoadError => e
+         puts "linkeddata library not found"
+       end)
+  end
 
   def self.renderRDF d,f,e
+    E.linkeddata.do{|ld|
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
       if s && p && o
@@ -14,15 +21,15 @@ class E
               l.datatype=RDF.XMLLiteral if p == Content
               l)) rescue nil
         (w << (RDF::Statement.new s,p,o) if o ) rescue nil
-      end
-      }}
+      end}}}
   end
   
   def triplrRDF format=nil, local=true
+    E.linkeddata.do{|ld|
     uri = (local && f) ? d : uri
     RDF::Reader.open(uri, :format => format){|r|
       r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s, [RDF::Node, RDF::URI].member?(o.class) ? E(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}
+        yield s.to_s, p.to_s, [RDF::Node, RDF::URI].member?(o.class) ? E(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}}
   end
 
   [['application/ld+json',:jsonld],
