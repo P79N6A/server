@@ -18,10 +18,12 @@ class E
        {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(CGI.escape t), c: t.label}}]}
 
   # editable triples
-  F['protograph/edit'] = F['protograph/blank']
-  fn 'graph/edit',->e,env,g{
+  F['protograph/edit'] = -> e,env,g {
     env['view'] ||= 'edit'          # use edit-view
-    g[e.uri] = {}                   # add current resource
+    g[e.uri+'#'] = {}               # add current resource
+    rand.to_s.h}
+    
+  fn 'graph/edit',->e,env,g{
     e.fromStream g, :triplrFsStore} # add fs-sourced triples
     
 =begin HTML <form> based RDF-editor
@@ -70,7 +72,7 @@ class E
                     (o.class == Array ? o : [o]).map{|o| # each object
                       triple[s,p,o]}},                   # show (existing) triples
 
-                  triple[e['uri'],p,''], # field of new triple
+                  triple[s,p,''], # field of new triple
                   
                   '<br>']} if r.class==Hash)]}},
            {_: :input, type: :submit, value: 'save'}]}]}

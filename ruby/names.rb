@@ -141,7 +141,7 @@ class E
   end
 
   def u
-    # data-storage path for resource
+    # metadata storage-path of resource
     @u ||= E (f ? dirname + '/.' + (File.basename path) : path.t + '._')
   end
 
