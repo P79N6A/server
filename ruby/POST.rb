@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   def POST
@@ -7,14 +7,14 @@ class E
     when /^application\/sparql-update/
 
     when /^application\/x-www-form-urlencoded/
+      puts :POST
       ch = nil
       (Rack::Request.new @r).params.map{|k,v|
-        s, p, o = (CGI.unescape k).split S
+        s, p, o = (CGI.unescape k).split /\/\._/
         if s && p && o 
           oP = o
           s, p, o = [s, p, o].map &:unpath
-          s = s.uri[0..-2].E if s.uri[-1] == '/'
-          p = p.uri[0..-2].E if p.uri[-1] == '/'
+          puts "s #{s} p #{p} o #{o.class} #{o}"
           if oP.E == (E.literal v) && s.uri.match(/^http/) && p.uri.match(/^http/)
             puts "POST <#{s}> <#{p}> <#{o}>"
             s[p,o,v]

@@ -167,6 +167,7 @@ class E
            E "/E/json/"+[o].to_json.h.dive
          end)
     u.w o, !o.class == String unless u.f
+    u
   end
 
   # spaceship comparison-operator

@@ -32,13 +32,13 @@ class E
   fn 'view/edit',->g,e{
 
     # render a triple
-    triple = ->s,p,o{ puts "triple #{s} #{p} #{o}"
+    triple = ->s,p,o{
       if s && p && o
         s = s.E
         p = p.E
-        oE = p.literal o                  # cast literal to URI
-        (id = s.concatURI(p).concatURI oE # triple identifier
-        [(case p                          # more to support here.. http://dev.w3.org/html5/markup/input.html#input
+        oE = p.literal o                 # cast literal to URI
+        id = s.concatURI(p).concatURI oE # triple identifier
+        [(case p.uri                     # more to support here.. http://dev.w3.org/html5/markup/input.html#input
           when Content
             {_: :textarea, name: id, c: o, rows: 24, cols: 80}
           when Date
@@ -46,7 +46,7 @@ class E
           else
             {_: :input, name: id, value: o, size: 54}
           end
-          ),"<br>\n"]) if oE
+          ),"<br>\n"]
       end}
    
     ps = [] # predicates to show as editable
@@ -62,10 +62,10 @@ class E
              uri = s.E.localURL e
               {class: :resource, c:
               [{_: :a, class: :uri, id: s, c: s, href: uri},
-               {_: :a, class: :edit, c: '+property', href: uri+'?graph=blank&view=addP'},'<br><br>',
+               {_: :a, class: :edit, c: '+property', href: uri+'?graph=blank&view=addP'},"<br>\n",
 
                (r.keys.concat(ps).uniq.map{|p| # resource + prototype/initialize predicates
-                 [{_: :b, c: p}, '<br>',       # property label
+                 [{_: :b, c: p}, "<br>\n",       # property label
                   r[p].do{|o|                            # objects
                     (o.class == Array ? o : [o]).map{|o| # each object
                       triple[s,p,o]}},                   # show (existing) triples
