@@ -5,30 +5,30 @@ class E
     type = @r['CONTENT_TYPE']
     case type
     when /^application\/sparql-update/
-
+      puts "SPARQL"
     when /^application\/x-www-form-urlencoded/
-      puts :POST
-      ch = nil
+      changed = false
       (Rack::Request.new @r).params.map{|k,v|
         s, p, o = (CGI.unescape k).split /\/\._/
         if s && p && o 
-          oP = o
+          oP = o # original object URI (maybe expands to literal below)
           s, p, o = [s, p, o].map &:unpath
-          puts "s #{s} p #{p} o #{o.class} #{o}"
-          if oP.E == (E.literal v) && s.uri.match(/^http/) && p.uri.match(/^http/)
-            puts "POST <#{s}> <#{p}> <#{o}>"
-            s[p,o,v]
-            ch = true
+          if s.uri.match(/^http/) && p.uri.match(/^http/)
+            puts "POST <#{s}> <#{p}> <#{oP}> <#{E.literal v}>"
+            if oP.E != (E.literal v) 
+              changed = true
+              s[p,o,v]
+            end
           end
         end}
-      if ch # state changed
+      if changed
         g = {}
         fromStream g, :triplrFsStore
         ef.w g, true
       end
     end
-
-    [303,{'Location'=>uri},[]]    
+    self.GET
+    #[303,{'Location'=>uri},[]]    
   end
 
 end
