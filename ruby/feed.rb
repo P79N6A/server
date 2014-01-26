@@ -47,7 +47,7 @@ module FeedParse
           yield u,                           # s
           (x[e[0]&&e[0].chop]||E::RSS)+e[1], # p
           e[3].extend(FeedParse).guess.do{|o|# o
-            o.match(/\A(\/|http)[\S]+\Z/) ? o.E : o
+            o.match(/\A(\/|http)[\S]+\Z/) ? o.E : E::F['cleanHTML'][o]
           }}
       else
         puts "no post-identifiers found #{u}"

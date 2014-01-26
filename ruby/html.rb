@@ -168,6 +168,17 @@ class E
   require 'nokogiri'
   def nokogiri;  Nokogiri::HTML.parse read end
 
+  F['HTMLbody'] = -> b {
+    b.split(/<body[^>]*>/)[-1].split(/<\/body>/)[0] }
+
+  F['cleanHTML'] = -> b {
+    h = Nokogiri::HTML.fragment F['HTMLbody'][b]
+    h.css('iframe').remove
+    h.css('script').remove
+    h.xpath("//@*[starts-with(name(),'on')]").remove
+    h.to_s
+  }
+
   def contentURIresolve *f
     send(*f){|s,p,o|
       yield s, p, p == Content ?
