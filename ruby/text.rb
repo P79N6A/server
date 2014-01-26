@@ -107,4 +107,6 @@ class E
 
   fn Render+'text/uri',->d,_=nil{d.keys.join "\n"}
 
+  F['htmlBody'] = -> b {(b.split /<body[^>]*>/)[-1].split(/<\/body>/)[0]}
+
 end

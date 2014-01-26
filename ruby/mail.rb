@@ -102,7 +102,7 @@ module TMail
       else # just a part
         unicode_body.do{|b|
           if content_type && content_type.match(/html/)
-           (b.split /<body[^>]*>/)[-1].split(/<\/body>/)[0]
+            E::F['htmlBody'][b]
           else
             b.hrefs true
           end}

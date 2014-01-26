@@ -171,7 +171,7 @@ class E
   def contentURIresolve *f
     send(*f){|s,p,o|
       yield s, p, p == Content ?
-      (Nokogiri::HTML.parse o).do{|o|
+      (Nokogiri::HTML.fragment o).do{|o|
         o.css('a').map{|a|
           if a.has_attribute? 'href'
             (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
