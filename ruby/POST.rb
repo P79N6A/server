@@ -13,7 +13,7 @@ class E
         if s && p && o 
           s, p, o = [s, p, o].map &:unpath
           if s.uri.match(/^http/) && p.uri.match(/^http/)
-            oO = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : v
+            oO = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
             if o != oO
               changed = true
               s[p,o,oO]
@@ -30,7 +30,7 @@ class E
         end
       end
     end
-    [303,{'Location'=>uri},[]]
+    [303,{'Location'=>uri+'?graph=edit'},[]]
   end
 
 end

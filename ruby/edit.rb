@@ -43,7 +43,8 @@ class E
         id = s.concatURI(p).concatURI oE # triple identifier
         [(case p.uri                     # more to support here.. http://dev.w3.org/html5/markup/input.html#input
           when Content
-            {_: :textarea, name: id, c: o, rows: 16, cols: 80}
+            [{_: :textarea, name: id, c: o, rows: 16, cols: 80},
+            '<br>',o]
           when Date
             {_: :input, name: id, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
           else
@@ -57,7 +58,7 @@ class E
       Prototypes[pr].do{|v|ps.concat v }} # prototype imports
     e.q['predicate'].do{|p|ps.push p }    # explicit predicate
 
-    [{_: :style, c: '.abbr {display: none}'},
+    [{_: :style, c: ".abbr {display: none}\ntd {vertical-align:top}"},
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
 
        c: [{_: :a, class: :edit, c: '+add field',
@@ -66,7 +67,8 @@ class E
              uri = s.E.localURL e
              {_: :table, style: 'background-color:#eee',
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: uri}}},
-                   r.keys.concat(ps).uniq.map{|p| # resource + prototype/initialize predicates
+                   {_: :input, type: :hidden, name: s.E.concatURI(Edit.E).concatURI(E['/']), value: e['uri']+'?graph=edit'},
+                   r.keys.-([Edit]).concat(ps).uniq.map{|p| # resource + prototype/initialize predicates
                      {_: :tr,
                        c: [{_: :td, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # property
                            {_: :td,
