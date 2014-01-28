@@ -11,14 +11,13 @@ class E
       (Rack::Request.new @r).params.map{|k,v|
         s, p, o = (CGI.unescape k).split /\/\._/
         if s && p && o 
-          oP = o # original object URI (maybe expands to literal below)
           s, p, o = [s, p, o].map &:unpath
           if s.uri.match(/^http/) && p.uri.match(/^http/)
-            oQ = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : E.literal(v)
-            puts "POST <#{s}> <#{p}> <#{oP}> <#{oQ}>"
-            if oP.E != oQ
+            oV = v.empty? ? v : v.match(/\A(\/|http)[\S]+\Z/) ? v.E : E.literal(v)
+            puts "POST <#{s}> <#{p}> <#{o}> <#{oV}>"
+            if o != oV
               changed = true
-              s[p,o,oQ]
+              s[p,o,oV]
             end
           end
         end}

@@ -22,7 +22,7 @@ class E
         t.deleteNode     # remove triple
         indexEdit p,o,'' # unindex
       end                # add
-      self[p,oO] unless oO.class==String && oO.empty?
+      self[p,oO] unless oO.class==String && oO.empty? # 3rd arg is new value, empty-string -> nil
     else
       unless t.e          # triple exists?
         indexEdit p,o,nil # index triple
