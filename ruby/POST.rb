@@ -23,12 +23,16 @@ class E
         end}
       if changed
         g = {}
-        fromStream g, :triplrFsStore
-        ef.w g, true
+        fromStream g, :triplrDoc
+        if g.empty?
+          puts "empty"
+          ef.deleteNode
+        else
+          ef.w g, true
+        end
       end
     end
-    self.GET
-    #[303,{'Location'=>uri},[]]    
+    [303,{'Location'=>uri},[]]
   end
 
 end

@@ -24,7 +24,7 @@ class E
     rand.to_s.h}
     
   fn 'graph/edit',->e,env,g{
-    e.fromStream g, :triplrFsStore} # add fs-sourced triples
+    e.fromStream g, :triplrDoc} # add fs-sourced triples
     
 =begin HTML <form> based RDF-editor
       optional arguments: 
@@ -42,7 +42,7 @@ class E
         id = s.concatURI(p).concatURI oE # triple identifier
         [(case p.uri                     # more to support here.. http://dev.w3.org/html5/markup/input.html#input
           when Content
-            {_: :textarea, name: id, c: o, rows: 24, cols: 80}
+            {_: :textarea, name: id, c: o, rows: 16, cols: 80}
           when Date
             {_: :input, name: id, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
           else
@@ -51,39 +51,38 @@ class E
           ),"<br>\n"]
       end}
    
-    ps = [] # predicates to show as editable
+    ps = [] # predicates to go editable on
     e.q['prototype'].do{|pr|
       Prototypes[pr].do{|v|ps.concat v }} # prototype attributes
     e.q['predicate'].do{|p|ps.push p }    # explicit
 
-    [(H.once e, 'edit', (H.css '/css/edit')),
+    [{_: :style, c: '.abbr {display: none}'},
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
 
-       # each resource
-       c: [g.map{|s,r|
+       c: [{_: :a, class: :edit, c: '+add field',
+             href: e['uri']+'?graph=blank&view=addP', style: 'background-color:#0f0;border-radius:5em;color:#000;padding:.5em'},
+           g.map{|s,r| # subject
              uri = s.E.localURL e
-              {class: :resource, c:
-              [{_: :a, class: :uri, id: s, c: s, href: uri},
-               {_: :a, class: :edit, c: '+property', href: uri+'?graph=blank&view=addP'},"<br>\n",
-
-               (r.keys.concat(ps).uniq.map{|p| # resource + prototype/initialize predicates
-                 [{_: :b, c: p}, "<br>\n",       # property label
-                  r[p].do{|o|                            # objects
-                    (o.class == Array ? o : [o]).map{|o| # each object
-                      triple[s,p,o]}},                   # show (existing) triples
-
-                  triple[s,p,''], # field of new triple
-                  
-                  '<br>']} if r.class==Hash)]}},
+             {_: :table, style: 'background-color:#eee',
+               c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: uri}}},
+                   r.keys.concat(ps).uniq.map{|p| # resource + prototype/initialize predicates
+                     {_: :tr,
+                       c: [{_: :td, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # property
+                           {_: :td,
+                             c: [r[p].do{|o|                            # objects
+                                   (o.class == Array ? o : [o]).map{|o| # each object
+                                     triple[s,p,o]}},                   # existing triples
+                                 triple[s,p,'']]}]}}]}},                # new triple
            {_: :input, type: :submit, value: 'save'}]}]}
 
   # select a property to edit
   fn 'view/addP',->g,e{
     [(H.once e, 'edit', (H.css '/css/edit')),
-     [Date,Title,Creator,Content,Label].map{|p|{_: :a, href: p, c: p.label+' '}},
+     [Date,Title,Creator,Content,Label].map{|p|[{_: :a, href: p, c: p},'<br>']},
 
      {_: :form, action: e['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 64},
+       c: [{_: :input, type: :url, name: :predicate, pattern: '^http.*$', size: 64},
+           {_: :input, type: :hidden, name: :graph, value: :edit},
            {_: :input, type: :submit, value: 'property'}]}]}
 
 end
