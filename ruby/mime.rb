@@ -79,6 +79,7 @@ class E
     nfo: 'text/nfo',
     nt:  'text/ntriples',
     ntriples:  'text/ntriples',
+    org: 'application/org',
     owl: 'application/rdf+xml',
     pdf: 'application/pdf',
     pl:  'application/perl',

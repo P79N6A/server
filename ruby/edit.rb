@@ -3,7 +3,8 @@ class E
 
   Prototypes = {
     SIOCt+'MicroblogPost' => [Content],
-    SIOCt+'BlogPost' => [Title, Content],    
+    SIOCt+'BlogPost' => [Title, Content],
+    SIOCt+'WikiArticle' => [Title, Content],
   }
 
   # 404 -> create resource
@@ -53,8 +54,8 @@ class E
    
     ps = [] # predicates to go editable on
     e.q['prototype'].do{|pr|
-      Prototypes[pr].do{|v|ps.concat v }} # prototype attributes
-    e.q['predicate'].do{|p|ps.push p }    # explicit
+      Prototypes[pr].do{|v|ps.concat v }} # prototype imports
+    e.q['predicate'].do{|p|ps.push p }    # explicit predicate
 
     [{_: :style, c: '.abbr {display: none}'},
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
