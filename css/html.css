@@ -49,6 +49,10 @@ td.val > a > .frag {
     padding: 0 .12em 0 .12em;
 }
 
+pre {
+  white-space: pre-wrap;
+}
+
 pre.mail {
     max-width: 80em; overflow: hidden;
 }
