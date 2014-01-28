@@ -13,11 +13,10 @@ class E
         if s && p && o 
           s, p, o = [s, p, o].map &:unpath
           if s.uri.match(/^http/) && p.uri.match(/^http/)
-            oV = v.empty? ? v : v.match(/\A(\/|http)[\S]+\Z/) ? v.E : E.literal(v)
-            puts "POST <#{s}> <#{p}> <#{o}> <#{oV}>"
-            if o != oV
+            oO = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : v
+            if o != oO
               changed = true
-              s[p,o,oV]
+              s[p,o,oO]
             end
           end
         end}
