@@ -169,7 +169,7 @@ class E
   def nokogiri;  Nokogiri::HTML.parse read end
 
   F['HTMLbody'] = -> b {
-    b.to_s.split(/<body[^>]*>/)[-1].split(/<\/body>/)[0] }
+    b.to_s.split(/<body[^>]*>/)[-1].to_s.split(/<\/body>/)[0] }
 
   F['cleanHTML'] = -> b {
     h = Nokogiri::HTML.fragment F['HTMLbody'][b]
