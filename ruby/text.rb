@@ -56,12 +56,14 @@ class E
     {_: :a, class: :title, href: r.E.url,
       c: r[Title] || r.uri.abbrURI} if (r.class == E || r.class == Hash) && r.uri}
 
-  # linebreak-delimited list of URIs
+  # a list of URIs
   def triplrUriList
+    yield uri, COGS+'View', E[uri+'?view=csv']
     open(d).readlines.grep(/^[^#]/).map{|l|
       l = l.chomp
       yield uri, '/rel', l.E
-      yield   l, '/rev', self
+      yield l, '/rev', self
+      yield l, Type, E[CSV+'Row']
     }
   end
 

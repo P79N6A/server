@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class E
 
   # CSV -> tripleStream
@@ -8,7 +8,7 @@ class E
       lines[0].do{|fields| # ok, we have at least one line..
         yield uri+'#', Type, E[CSV+'Table']
         yield uri+'#', CSV+'rowCount', lines.size
-        yield uri+'#', COGS+'View', E[uri+'?view=p']
+        yield uri+'#', COGS+'View', E[uri+'?view=csv']
         lines[1..-1].each_with_index{|row,line|
           row.each_with_index{|field,i|
             id = uri + '#row:' + line.to_s
@@ -17,6 +17,16 @@ class E
           }}}}
   end
 
-  F['view/'+CSV+'Row']=NullView
+  F['view/csv'] = -> d,e {
+    d.values.map{|r|
+      r.delete_if{|p,o|
+        !(r.class==Hash &&
+          r[Type].do{|t| t.class == Array &&
+            t.map{|t|t.respond_to?(:uri) && t.uri}.member?(CSV+'Row')})}}
+    [F['view/p'][d,e],
+     {_: :style, c: 'table.tab .abbr {display: inline}'}
+    ]}
+
+  F['view/'+CSV+'Row'] = NullView
 
 end
