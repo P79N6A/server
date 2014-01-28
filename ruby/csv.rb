@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   # CSV -> tripleStream
@@ -18,13 +18,17 @@ class E
   end
 
   F['view/csv'] = -> d,e {
-    d.values.map{|r|
-      r.delete_if{|p,o|
-        !(r.class==Hash &&
-          r[Type].do{|t| t.class == Array &&
-            t.map{|t|t.respond_to?(:uri) && t.uri}.member?(CSV+'Row')})}}
+    # ignore non-rows
+    d.delete_if{|s,r|
+      !(r.class==Hash &&
+        r[Type].do{|t|
+          t.class == Array &&
+          t.map(&:maybeURI).member?(CSV+'Row')})}
+    # done w/ the type-tag
+    d.values.map{|r|r.delete Type}
+
     [F['view/p'][d,e],
-     {_: :style, c: 'table.tab .abbr {display: inline}'}
+     {_: :style, c: 'table.tab .abbr, table.tab .scheme {display: inline}'}
     ]}
 
   F['view/'+CSV+'Row'] = NullView

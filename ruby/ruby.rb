@@ -46,6 +46,7 @@ end
 class Object
   def id; self end
   def do; yield self end
+  def maybeURI; nil end
 end
 
 class String

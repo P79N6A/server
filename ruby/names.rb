@@ -4,6 +4,7 @@ class E
 
   attr_reader :uri
   alias_method :url, :uri
+  alias_method :maybeURI, :uri
 
   def env r=nil
     r ? (@r = r
@@ -193,6 +194,7 @@ class Hash
     self["uri"]||""
   end
   alias_method :url, :uri
+  alias_method :maybeURI, :uri
   def label
     self[E::Label] || uri.label
   end
