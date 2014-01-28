@@ -27,8 +27,8 @@ class E
   fn 'graph/edit',->e,env,g{
     e.fromStream g, :triplrDoc} # add fs-sourced triples
     
-=begin HTML <form> based RDF-editor
-      optional arguments: 
+=begin HTML <form> RDF editor
+      arg
       prototype - initialize fields for a resource-type
       predicate - initialize field for a particular predicate
 =end

@@ -14,10 +14,11 @@ class E
           oP = o # original object URI (maybe expands to literal below)
           s, p, o = [s, p, o].map &:unpath
           if s.uri.match(/^http/) && p.uri.match(/^http/)
-            puts "POST <#{s}> <#{p}> <#{oP}> <#{E.literal v}>"
-            if oP.E != (E.literal v) 
+            oQ = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : E.literal(v)
+            puts "POST <#{s}> <#{p}> <#{oP}> <#{oQ}>"
+            if oP.E != oQ
               changed = true
-              s[p,o,v]
+              s[p,o,oQ]
             end
           end
         end}
@@ -25,7 +26,6 @@ class E
         g = {}
         fromStream g, :triplrDoc
         if g.empty?
-          puts "empty"
           ef.deleteNode
         else
           ef.w g, true

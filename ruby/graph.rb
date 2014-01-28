@@ -1,17 +1,15 @@
 #watch __FILE__
 class E
 =begin
-  graph resolution is two-pass
+  graph construction is two-pass:
 
-  protograph/
- the first-pass will determine if the second-pass needs to run. an eTag will be derived from the return-value and any graph additions preserved for the next pass. ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities. for more ideas see <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
+ the first-pass will signify if the second-pass needs to be run. an eTag is be derived from the return-value, ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities.. <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
 
-  graph/
-   second-pass might query a CBD (concise-bounded description) from a SPARQL store. this code was originally developed as an alternative to fragility & latency of relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like "touch" a file on successful POSTs so a store only has to be queried occasionally, and to facilitate simply hooking up bits of Ruby code to names rather than try to shoehorn what you're trying to say into some QueryLang where you're additionally without standard library functions necessitating more roundtrips and latency via marshalling/unmarshalling, parsing, loopback network-abstraction, nascent RDF-via-SPARQL-as-ORM-libs.. but go nuts experimenting w/ graph-handlers for this stuff,,i do..
+   second-pass might fetch RDF from a SPARQL store. this lib was developed as an alternative to relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like SPARQLING up a set of files to be returned in standard Apache-as-static-fileserver fashion, and to webize all sorts of non-RDF like email, directories, plain-text etc
 
-  triple streams are functions which yield triples
-  s,p - URI in String , o - Literal or URI (object must respond to #uri such as '/path'.E or {'uri' => '/some.n3'}
-  these can be formed into pipelines. the data ingesting/massaging stream-processors in feed.rb are modularized this way
+  triple streams - a source function yields triples up to the caller as it finds them,
+  a function providing just a block (consume yielded values) is a sink, both is a filter 
+  these can be stacked into pipelines. see the data-massaging stream-processors in feed.rb
 
 =end
 

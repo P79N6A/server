@@ -21,8 +21,8 @@ class E
       if t.e             # old triple exists?
         t.deleteNode     # remove triple
         indexEdit p,o,'' # unindex
-      end
-      self[p,oO] unless oO.empty? # add triple
+      end                # add
+      self[p,oO] unless oO.class==String && oO.empty?
     else
       unless t.e          # triple exists?
         indexEdit p,o,nil # index triple
