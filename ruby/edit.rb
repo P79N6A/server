@@ -80,9 +80,7 @@ class E
 
   # select a property to edit
   fn 'view/addP',->g,e{
-    [(H.once e, 'edit', (H.css '/css/edit')),
-     [Date,Title,Creator,Content,Label].map{|p|[{_: :a, href: p, c: p},'<br>']},
-
+    [[Date,Title,Creator,Content,Label].map{|p|[{_: :a, href: p, c: p},'<br>']},
      {_: :form, action: e['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :predicate, pattern: '^http.*$', size: 64},
            {_: :input, type: :hidden, name: :graph, value: :edit},
