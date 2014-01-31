@@ -23,15 +23,12 @@ class E
       g.map{|u,r|i.(r,e)}}}
 
   fn 'baseview/timegraph',->d,e,c{
-    Fn 'filter/timegraph', e.q,d,nil
-
     e[:graph] = d
     e[:group] = {}
-    e[:color] = E.cs
-    h = e.q['height'].do{|h|h.match(/[0-9]+/) && h.to_i.min(1).max(1024) } || '64'
-    
-
-    [F['view'][d,e],H.css('/css/timegraph'),{class: :timegraph, c: c.()}]}
+    [F['view'][d,e],H.css('/css/timegraph'),
+     {class: :timegraph,
+       c: (Fn 'filter/timegraph', e.q,d,nil
+           c.())}]}
 
   # timegraph entry
   fn 'itemview/timegraph',->r,x{
@@ -43,7 +40,7 @@ class E
       label = ([*r[labelP]][0]).do{|l|
                l.respond_to?(:uri) ? l.E.label : l.to_s}
       lc = x[:group][label] ||= E.c
-      arc = x.q['arc'].do{|a| a.expand } || (SIOC+'reply_of')
+      arc = x.q['arc'].do{|a| a.expand } || (SIOC+'has_parent')
 
       [{style: "top: #{r['x']}%; left: #{r['y']}%",
          c: [{_: :a,

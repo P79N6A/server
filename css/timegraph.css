@@ -1,4 +1,4 @@
-.timegraph  {width: 26%;height:80em;float:left;position:fixed;top:0;left:0}
+.timegraph  {width: 26%;height:64em;float:left;position:fixed;top:0;left:0}
 .timegraph > svg { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
 .timegraph > div { position: absolute; z-index: 2}
 .timegraph a { border-style: dotted; border-radius: .3em; border-width :.1em; text-decoration: none; color:#fff;padding:.1em;white-space: nowrap}

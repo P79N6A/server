@@ -49,6 +49,7 @@ class E
       %w{in_reply_to references}.map{|ref|
         m.send(ref).do{|refs| refs.map{|r|
           yield e, SIOC+'reply_of', E[MessagePath[r[1..-2]]]}}}
+      m.in_reply_to.do{|refs| refs.map{|r|yield e, SIOC+'has_parent', E[MessagePath[r[1..-2]]]}}
 
       # RDF:HTML message-body
       yield e, Content,
