@@ -31,7 +31,7 @@ class E
     h = e.q['height'].do{|h|h.match(/[0-9]+/) && h.to_i.min(1).max(1024) } || '64'
     
 
-    [H.css('/css/timegraph'),{class: :timegraph, c: c.()},F['view'][d,e]]}
+    [F['view'][d,e],H.css('/css/timegraph'),{class: :timegraph, c: c.()}]}
 
   # timegraph entry
   fn 'itemview/timegraph',->r,x{
