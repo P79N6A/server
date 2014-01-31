@@ -50,12 +50,12 @@ class E
         m.send(ref).do{|refs| refs.map{|r|
           yield e, SIOC+'reply_of', E[MessagePath[r[1..-2]]]}}}
 
-      # RDF:HTML with self-contained minimal styling
+      # RDF:HTML message-body
       yield e, Content,
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
            c: m.concat_message(e.E,0,&f).gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
-             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, c: l} : l # wrap quoted lines
-           }},{_: :style, c: "pre.mail .q {background-color:#00f;color:#fff}\npre.mail a{background-color:#ef3}\npre.mail img {max-width:100%}"}])}
+             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # quotes
+           }},(H.css '/css/mail',true)])}
   rescue Exception => e
     puts e
   end
