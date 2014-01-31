@@ -85,7 +85,6 @@ class E
     m && m[2] && m[2].E || nil
   end
 
-  # URI extension :: E -> string
   def ext
     File.extname(uri).tail||''
   end
@@ -131,18 +130,16 @@ class E
        end)
   end
 
-  # URI -> path
   def path
-    @path ||=
-      (if uri.match /^\//
-         uri
-       else
-         '/' + uri
-       end)
+    if uri.match /^\//
+      uri
+    else
+      '/' + uri
+    end
   end
 
   def u
-    # metadata storage-path of resource
+    # path for data about this resource
     @u ||= E (f ? dirname + '/.' + (File.basename path) : path.t + '._')
   end
 
