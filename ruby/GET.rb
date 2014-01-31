@@ -10,7 +10,7 @@ class E
 
     elsif file = [self,pathSegment].compact.find(&:f)
 
-      # file exists, but client might not accept its MIME, or want it transformed to another MIME
+      # file exists. check if client or server want it transformed to another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
       (!accepted || MIMEcook[file.mimeP] || @r.q.has_key?('view')) ?
@@ -23,7 +23,7 @@ class E
 
   def getFile
     @r['ETag'] = [m,size].h
-    maybeSend mimeP,->{self},:link
+    maybeSend mimeP,->{self}
   end
 
   def resource
@@ -42,13 +42,13 @@ class E
 
     m = {}
 
-    # graph identity (model)
+    # graph-identity (model)
     g = @r.q['graph']
     graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
 
     return F[E404][self,@r] if m.empty?
 
-    # response identity (view)
+    # response-identity (view)
     @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
@@ -78,18 +78,13 @@ class E
     !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
   end
   
-  def maybeSend m, b, iR = false; c = 200
-    send? ?            # does agent have this version?
-    b[].do{|b|         # continue with response
-
-      h = {'Content-Type'=> m,
-           'ETag'=> @r['ETag']}
-
+  def maybeSend m, b; c = 200
+    send? ?
+    b[].do{|b| # continue
+      h = {'Content-Type'=> m, 'ETag'=> @r['ETag']}
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
-      h.update({'Link' => '<' + @r['uri'] + '?view>; rel=meta'}) if iR     # link to description
-#      h.update({'MS-Author-Via' => 'SPARQL'})  # authoring preference
 
-      # frontend-specific response handlers
+      # frontend-specific handlers
       b.class == E ? (Nginx ?                                                   # nginx chosen?
                       [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
                       Apache ?                                                  # Apache chosen?
@@ -101,7 +96,7 @@ class E
       [304,{},[]]  # client has response
   end
 
-  # user-patchable default handler - give index.html or defer to internal default-handler #response
+  # user-patchable default handler - use index.html or defer to internal default-handler #response
   fn '/GET',->e,r{
     x = 'index.html'
     i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e
