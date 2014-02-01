@@ -6,7 +6,7 @@ class E
   end
 
   def [] p,o=nil, v=nil
-    if o # set/update
+    if o
       editFs p,o,v
     else
       getFs p
@@ -39,6 +39,10 @@ class E
         end
       end
     end
+  end
+
+  def po
+    indexPath[o]
   end
 
   def literal o

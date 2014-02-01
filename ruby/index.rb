@@ -11,13 +11,13 @@ class E
   end
 
   # index triple
-  # flip position - prepend /index - use k/v store - @noIndex so no loop indexing the index
+  # rotate positions - prepend /index - use k/v store - @noIndex so no loop indexing the index
   def index_ p,o,a
     return if @noIndex
-    p.pIndex.noIndex[o,self,a]
+    p.indexPath.skipIndex[o,self,a]
   end
 
-  def noIndex
+  def skipIndex
     @noIndex = 1
     self
   end
@@ -52,12 +52,8 @@ class E
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s }}
 
-  def pIndex
+  def indexPath
     shorten.prependURI '/index/'
-  end
-
-  def po
-    pIndex[o]
   end
 
   def take *a
