@@ -4,18 +4,19 @@ class E
   # POSIX-fs based index of triples
   # 
 
-  # index a triple
+  # index a triple, type-normalization wrapper
   def index p,o
     p = p.E
-    indexEdit p, (o.class == E ? o : p.literal(o)), nil
+    index_ p, (o.class == E ? o : p.literal(o)), nil
   end
 
-  # index a triple - no type-normalization
-  # we jsut rotate them, use existing k/v store and set @noIndex to stop looping infinitely to index the index..
-  def indexEdit p,o,a
+  # index a triple
+  # flip position, use existing k/v store + set @noIndex to stop looping infinitely to index the index..
+  def index_ p,o,a
     return if @noIndex
     p.pIndex.noIndex[o,self,a]
   end
+
   def noIndex
     @noIndex = 1
     self
@@ -55,25 +56,8 @@ class E
     shorten.prependURI '/index/'
   end
 
-  def poIndex o
-    pIndex.concatURI o
-  end
- 
-  # predicate+object pair lookup
   def po o
-    pIndex[o.class == E ? o : literal(o)]
-  end
-
-  def rangeP size=8, dir=:desc, offset=nil, object=nil
-    pIndex.subtree(size,dir,offset).map &:ro
-  end
-
-  def rangePO n=8,d=:desc,s=nil,o
-    poIndex(o).subtree(n,d,s).map &:ro
-  end
-
-  def subtree *a
-    u.take *a
+    pIndex[o]
   end
 
   def take *a
@@ -108,7 +92,7 @@ class Pathname
       nodes.sort_by(&:to_s).send(v).each{|n|
         ns = n.to_s
         return if 0 >= count
-
+2
         (ok || # already in-range
          !offset || # no offset required
          (sz = [ns,offset].map(&:size).min

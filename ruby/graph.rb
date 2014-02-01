@@ -8,8 +8,8 @@ class E
    second-pass might fetch RDF from a SPARQL store. this lib was developed as an alternative to relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like SPARQLING up a set of files to be returned in standard Apache-as-static-fileserver fashion, and to webize all sorts of non-RDF like email, directories, plain-text etc
 
   triple streams - a source function yields triples up to the caller as it finds them,
-  a function providing just a block (consume yielded values) is a sink, both is a filter 
-  these can be stacked into pipelines. see the data-massaging stream-processors in feed.rb
+  a function providing a block (consumes yielded values) is a sink, both is a filter 
+  these can be stacked into pipelines. see the data-massaging stream-processing in feed.rb
 
 =end
 

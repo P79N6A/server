@@ -114,7 +114,7 @@ class E
   end
 
   def concatURI b
-    u.appendURI b.E.shortPath
+    meta.appendURI b.E.shortPath
   end
 
   alias_method :a, :appendURI
@@ -138,16 +138,9 @@ class E
     end
   end
 
-  def u
-    # path for data about this resource
-    @u ||= E (f ? dirname + '/.' + (File.basename path) : path.t + '._')
+  def meta # path for metadata storage
+    @u ||= E[f ? dirname + '/.' + (File.basename path) : path]
   end
-
-  # (_ _ o) -> o
-  def innerPath
-    (uri.split S)[-1].unpath
-  end
-  alias_method :ro, :innerPath
 
   def sh
     d.force_encoding('UTF-8').sh
@@ -248,19 +241,10 @@ class String
     if m = (match /^\/([a-z]+:)\/+(.*)/)
       (m[1] + '//' + m[2]).E
 
-    # prefix-shortened URI
+    # CURIE
     elsif m = (match /^\/([^\/:]+:[^\/]+)/)
       m[1].expand.E
 
-    # String literal
-    elsif match /^\/E\/blob/
-      self.E.r
-
-    # JSON literal
-    elsif match /^\/E\/json/
-      self.E.r true
-
-    # plain path
     else
       self.E
     end

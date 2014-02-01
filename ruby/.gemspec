@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "infod"
-  s.version = "0.0.3.1"
+  s.version = "0.0.3.2"
   s.description = "www-server"
   s.summary = s.description
   s.executables = %w(infod)

@@ -17,21 +17,21 @@ class E
     p = p.E
     o = p.literal o unless o.class == E
     t = (concatURI p).concatURI o
-    if oO                # updated triple
-      if t.e             # old triple exists?
-        t.deleteNode     # remove triple
-        indexEdit p,o,'' # unindex
-      end                # add
-      self[p,oO] unless oO.class==String && oO.empty? # 3rd arg is new value, empty-string -> nil
+    if oO              # updated triple
+      if t.e           # old triple exists?
+        t.deleteNode   # remove triple
+        index_ p,o,''  # unindex
+      end              # add
+      self[p,oO] unless oO.class==String && oO.empty? # 3rd arg means new val - empty-val -> nil
     else
-      unless t.e          # triple exists?
-        indexEdit p,o,nil # index triple
-        if o.f            # add triple
-          o.ln t          # hard link
+      unless t.e       # triple exists?
+        index_ p,o,nil # index triple
+        if o.f         # add triple
+          o.ln t       # hard link
         elsif o.e
-          o.ln_s t        # symbolic link
+          o.ln_s t     # symbolic link
         else
-          t.mk            # dir entry
+          t.mk         # dir entry
         end
       end
     end
@@ -50,7 +50,7 @@ class E
   end
 
   def properties
-    subtree.map &:ro
-   end
+    meta.c.map{|c|c.base.expand.E}
+  end
 
 end
