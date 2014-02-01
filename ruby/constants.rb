@@ -52,4 +52,6 @@ class E
     "stat" => Stat,
   }
 
+  attr_reader :uri
+
 end

@@ -6,11 +6,15 @@ class E
   end
 
   def [] p,o=nil, v=nil
-    if o # set
+    if o # set/update
       editFs p,o,v
-    else # get
-      (concatURI p).properties
+    else
+      getFs p
     end
+  end
+
+  def getFs p
+    concatURI(p).properties
   end
 
   def editFs p, o, oO=nil
@@ -22,7 +26,7 @@ class E
         t.deleteNode   # remove triple
         index_ p,o,''  # unindex
       end              # add
-      self[p,oO] unless oO.class==String && oO.empty? # 3rd arg means new val - empty-val -> nil
+      self[p,oO] unless oO.class==String && oO.empty? # 2nd arg is new val - skip empty-val / nil
     else
       unless t.e       # triple exists?
         index_ p,o,nil # index triple
@@ -31,10 +35,21 @@ class E
         elsif o.e
           o.ln_s t     # symbolic link
         else
-          t.mk         # dir entry
+          t.mk         # dirent
         end
       end
     end
+  end
+
+  def literal o
+    return o if o.class == E
+    u = (if o.class == String
+           E "/E/blob/"+o.h.dive
+         else
+           E "/E/json/"+[o].to_json.h.dive
+         end)
+    u.w o, !o.class == String unless u.f
+    u
   end
 
   def triplrDoc &f

@@ -22,7 +22,9 @@ s[HTTP+'statusCodeValue'] = [404]
               r.q['view'] = '404'
 
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
-  
+
+  F['/E/GET'] = F[E404]  
+
   fn 'view/404',->d,e{
     [H.css('/css/404'),{_: :style, c: "a {background-color:#{E.cs}}"},
      d.html]}

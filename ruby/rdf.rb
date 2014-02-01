@@ -1,6 +1,10 @@
 #watch __FILE__
 class E
 
+  def nt;  @nt ||= docBase.a('.nt') end
+  def n3;  @n3 ||= docBase.a('.n3') end
+  def ttl; @ttl||= docBase.a('.ttl') end
+
   def E.linkeddata
     @linkeddata ||=
       (begin require 'linkeddata'

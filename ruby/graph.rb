@@ -105,6 +105,8 @@ class E
     g.mergeGraph doc.r true
   end
 
+  def ef;  @ef ||= docBase.a('.e') end
+
   def graph g={}
     docs.map{|d|d.graphFromFile g}  # tripleStream -> graph
     g

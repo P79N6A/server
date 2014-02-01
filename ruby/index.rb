@@ -4,14 +4,14 @@ class E
   # POSIX-fs based index of triples
   # 
 
-  # index a triple, type-normalization wrapper
+  # index one triple, type-normalizing wrapper
   def index p,o
     p = p.E
     index_ p, (o.class == E ? o : p.literal(o)), nil
   end
 
-  # index a triple
-  # flip position, use existing k/v store + set @noIndex to stop looping infinitely to index the index..
+  # index triple
+  # flip position - prepend /index - use k/v store - @noIndex so no loop indexing the index
   def index_ p,o,a
     return if @noIndex
     p.pIndex.noIndex[o,self,a]
@@ -54,9 +54,6 @@ class E
 
   def pIndex
     shorten.prependURI '/index/'
-  end
-
-  def po o
     pIndex[o]
   end
 
