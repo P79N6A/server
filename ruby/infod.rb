@@ -13,14 +13,11 @@ csv
 edit
 facets
 feed
-find
 forum
 fs
 GET
-glob
 graph
 groonga
-HEAD
 histogram
 html
 HTTP
@@ -38,9 +35,7 @@ postscript
 rdf
 ruby
 schema
-sh
 text
 threads
 time
-wiki
 }.map{|e|require_relative e}
