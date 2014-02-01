@@ -112,6 +112,15 @@ class E
     g
   end
 
+  def docs
+    base = docBase
+    [(base if pathSegment!='/' && base.e),         # doc-base
+     (self if base != self && e && uri[-1]!='/'),  # requested path
+     base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
+     ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> child resources
+    ].flatten.compact
+  end
+
   def triplrJSON
     yield uri, '/application/json', (JSON.parse read) if e
   rescue Exception => e
