@@ -54,6 +54,9 @@ class E
 
   def pIndex
     shorten.prependURI '/index/'
+  end
+
+  def po
     pIndex[o]
   end
 

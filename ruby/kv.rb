@@ -65,7 +65,7 @@ class E
   end
 
   def properties
-    meta.c.map{|c|c.base.expand.E}
+    container.c.map{|c|c.base.expand.E}
   end
 
 end
