@@ -21,6 +21,14 @@ class E
     end
   end
 
+  def HEAD
+    self.GET.do{|s,h,b|[s,h,[]]}
+  end
+
+  def OPTIONS
+    [200,{},[]]
+  end
+
   def getFile
     @r['ETag'] = [m,size].h
     maybeSend mimeP,->{self}

@@ -75,6 +75,17 @@ class E
     yield uri, Content, `cat #{sh} | aha`
   end
 
+  def triplrMarkdown
+    require 'markdown'
+    yield uri,Content,Markdown.new(r).to_html
+  end
+
+  def triplrOrg
+    require 'org-ruby'
+    r.do{|r|
+      yield uri,Content,Orgmode::Parser.new(r).to_html}
+  end
+
   def triplrPDF &f
     triplrStdOut 'pdfinfo', &f
   end
@@ -83,12 +94,16 @@ class E
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs
   end
 
-  def triplrWord
-    yield uri, Content, `which antiword && antiword #{sh}`.hrefs
-  end
-
   def triplrTeX
     yield uri, Content, `cat #{sh} | tth -r`
+  end
+
+  def triplrTextile; require 'redcloth'
+    yield uri,Content,RedCloth.new(r).to_html
+  end
+
+  def triplrWord
+    yield uri, Content, `which antiword && antiword #{sh}`.hrefs
   end
 
   fn Render+'text/plain',->d,_=nil{
