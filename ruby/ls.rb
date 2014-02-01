@@ -33,6 +33,21 @@ class E
      {class: :ls, c: (Fn 'view/table',i,e)},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
 
+  fn 'set/find',->e,q,m,x=''{
+    q['q'].do{|q|
+      r = '-iregex ' + ('.*' + q + '.*' + x).sh
+      s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+      t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+      [e,e.pathSegment].compact.select(&:e).map{|e|
+        `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
+        lines.map{|l|l.chomp.unpathFs}}.compact.flatten}}
+
+  fn 'view/find',->i,e{
+    {_: :form, method: :GET, action: e['REQUEST_PATH'].t,
+      c: [{_: :input, name: :set, value: :find, type: :hidden},
+          {_: :input, name: :view, value: :ls, type: :hidden},
+          {_: :input, name: :q, style: 'float: left;font-size:1.3em'}]}}
+
   fn 'protograph/du',->d,q,m{
     d.pathSegment.do{|path|
     GREP_DIRS.find{|p|path.uri.match p}.do{|ok|
