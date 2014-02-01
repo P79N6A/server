@@ -29,7 +29,6 @@ mail
 man
 microblog
 names
-page
 POST
 postscript
 rdf

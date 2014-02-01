@@ -11,7 +11,7 @@ class E
   end
 
   # index triple
-  # rotate positions - prepend /index - use k/v store - @noIndex so no loop indexing the index
+  # flip order , prepend /index , use k/v store , @noIndex so no loop indexing the index
   def index_ p,o,a
     return if @noIndex
     p.indexPath.skipIndex[o,self,a]
