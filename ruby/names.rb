@@ -30,24 +30,24 @@ class E
   def cascade; [self].concat parents end
   def concatURI b; container.appendURI b.E.shortPath end
   def container; @u ||= E[f ? dirname + '/.' + (File.basename path) : path] end
-  def dirname; node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.E end
-  def docBase; uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare } end
-  def env r=nil; r ? (@r = r; self) : @r end
+  def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.E end
+  def docBase;  uri.split(/#/)[0].E.do{|d| d.dirname.as d.bare } end
+  def env r=nil;r ? (@r = r; self) : @r end
   def expand;   uri.expand.E end
   def ext;      File.extname(uri).tail||'' end
   def frag;     uri.frag end
   def label;    uri.label end
-  def parent; E Pathname.new(uri).parent end
-  def parents; parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
-  def path;    uri.match(/^\//) ? uri : ('/'+uri) end
+  def parent;   E Pathname.new(uri).parent end
+  def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
+  def path;     uri.match(/^\//) ? uri : ('/'+uri) end
   def pathSegment; uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/).do{|p|p[2]&&p[2].E}||nil end
   def prependURI u; E u.to_s + uri end
   def shorten;   uri.shorten.E end
   def shortPath; uri.match(/^\//) ? uri : ('/' + uri.shorten) end
-  def == u;    to_s == u.to_s end
-  def <=> c;   to_s <=> c.to_s end
-  def sh;      d.force_encoding('UTF-8').sh end
-  def to_s;    uri end
+  def == u;      to_s == u.to_s end
+  def <=> c;     to_s <=> c.to_s end
+  def sh;        d.force_encoding('UTF-8').sh end
+  def to_s;      uri end
   def to_h;    {'uri' => uri} end
 
   alias_method :a, :appendURI
@@ -62,24 +62,16 @@ class E
 end
 
 class Hash
-  def uri
-    self["uri"]||""
-  end
+  def E; E.new uri end
+  def uri; self["uri"]||"" end
+  def label; uri.label end
   alias_method :url, :uri
   alias_method :maybeURI, :uri
-  def label
-    self[E::Label] || uri.label
-  end
-  def E
-    E.new uri
-  end
 end
 
 class String
 
-  def dive
-    self[0..2]+'/'+self[3..-1]
-  end
+  def dive; self[0..2]+'/'+self[3..-1] end
 
   # expand CURIE
   Expand={}
@@ -121,9 +113,9 @@ class String
 
   end
   
-  def E; E.new self end
-  def frag; split(/#/).pop() end
+  def E;     E.new self end
+  def frag;  split(/#/).pop() end
   def label; split(/[\/#]/)[-1] end
-  def sh; Shellwords.escape self end
+  def sh;    Shellwords.escape self end
 
 end
