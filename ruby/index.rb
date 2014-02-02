@@ -57,7 +57,7 @@ class E
   end
 
   def take *a
-    no.take(*a).map &:E
+    node.take(*a).map &:E
   end
 
   def randomLeaf

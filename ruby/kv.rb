@@ -14,7 +14,20 @@ class E
   end
 
   def predicate p
-      container.appendURI(p.E.shorten).c
+    pp = predicatePath p
+    
+  end
+
+  def predicatePath p
+    container.appendURI p.E.shorten
+  end
+
+  def predicates
+    container.c.map{|c|c.base.expand.E}
+  end
+
+  def po
+    indexPath[o]
   end
 
   def editFs p, o, oO=nil
@@ -39,15 +52,6 @@ class E
         end
       end
     end
-  end
-#  def concatURI b; container.appendURI b.E.shortPath end
-
-  def properties
-    container.c.map{|c|c.base.expand.E}
-  end
-
-  def po
-    indexPath[o]
   end
 
   def literal o

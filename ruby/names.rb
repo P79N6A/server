@@ -52,6 +52,7 @@ class E
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def path;     uri.match(/^\//) ? uri : ('/'+uri) end
   def pathSegment; uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/).do{|p|p[2]&&p[2].E}||nil end
+  def predicatePath p; container.appendURI p.E.shorten end
   def prependURI u; E u.to_s + uri end
   def read;     f ? readFile : get end
   def readFile; File.open(d).read end
@@ -78,7 +79,6 @@ class E
   alias_method :f, :file?
   alias_method :m, :mtime
   alias_method :maybeURI, :uri
-  alias_method :no, :node
   alias_method :url, :uri
 
 end
@@ -103,7 +103,7 @@ class String
    (Expand[self] =
      match(/([^:]+):([^\/].*)/).do{|e|
       ( E::Prefix[e[1]] || e[1]+':' )+e[2]} || 
-     gsub '|','/' )
+     gsub('|','/'))
   end
 
   # shrink to entryname, CURIE if possible
@@ -111,7 +111,7 @@ class String
     E::Prefix.map{|p,f|
       return p + ':' + self[f.size..-1]  if (index f) == 0
     }
-    gsub '/','|'
+    gsub('/','|')
   end
 
   def unpath skip=E::BaseLen
