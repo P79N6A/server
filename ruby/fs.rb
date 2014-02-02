@@ -4,52 +4,6 @@
 
 class E
 
-  def d
-    node.to_s
-  end
-
-  def node
-    Pathname.new FSbase + path
-  end
-  alias_method :no, :node
-
-  def inside
-    node.expand_path.to_s.index(FSbase) == 0
-  end
-
-  def siblings
-    parent.c
-  end
-
-  def children
-    node.c.map &:E
-  end
-  alias_method :c, :children
-
-
-  # node exists?
-  def exist?
-    node.exist?
-  end
-  alias_method :e, :exist?
-
-  # directory?
-  def d?
-    node.directory?
-  end
-
-  # file?
-  def file?
-    node.file?
-  end
-  alias_method :f, :file?
-
-  # modification time
-  def mtime
-    node.stat.mtime if e
-  end
-  alias_method :m, :mtime
-
   def triplrInode
     if d?
       yield uri, Posix+'dir#parent', parent
@@ -63,19 +17,7 @@ class E
       target = t.to_s.index(FSbase)==0 ? t.E : t.to_s
       yield uri, '/linkTarget', target }
   end
-  
-  def realpath
-    node.realpath
-  rescue Errno::ENOENT
-    nil
-  end
 
-  def mk
-    e || FileUtils.mkdir_p(d)
-    self
-  end
-
-  # create link
   def ln t
     t = t.E # cast bare URI/string to resource
     if !t.e # destination exist?
@@ -84,35 +26,12 @@ class E
     end
   end
 
-  # create symlink
   def ln_s t
     t = t.E # cast bare URI/string to resource
     if !t.e # destination exist?
       t.dirname.mk
       FileUtils.symlink node, t.node
     end
-  end
-
-  def touch
-    FileUtils.touch node
-    self
-  end
-    
-  def deleteNode
-    node.deleteNode if e
-    self
-  end
-
-  def size
-    node.size
-  end
-
-  def read
-    f ? r : get
-  end
-
-  def get
-    (open uri).read
   end
 
   def r p=false
@@ -129,18 +48,6 @@ class E
     dirname.mk
     writeFile (s ? o.to_json : o)
     self
-  end
-
-  def writeFile c
-    File.open(d,'w'){|f|f << c}
-  end
-
-  def readFile
-    File.open(d).read
-  end
-
-  def glob p=""
-    (Pathname.glob d + p).map &:E
   end
 
   fn 'set/glob',->d,e=nil,_=nil{

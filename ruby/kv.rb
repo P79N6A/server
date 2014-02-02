@@ -9,23 +9,23 @@ class E
     if o
       editFs p,o,v
     else
-      getFs p
+      predicate p
     end
   end
 
-  def getFs p
-    concatURI(p).properties
+  def predicate p
+      container.appendURI(p.E.shorten).c
   end
 
   def editFs p, o, oO=nil
     p = p.E
     o = p.literal o unless o.class == E
     t = (concatURI p).concatURI o
-    if oO              # updated triple
-      if t.e           # old triple exists?
-        t.deleteNode   # remove triple
-        index_ p,o,''  # unindex
-      end              # add
+    if oO             # updated triple
+      if t.e          # old triple exists?
+        t.delete      # remove triple
+        index_ p,o,'' # unindex
+      end             # add
       self[p,oO] unless oO.class==String && oO.empty? # 2nd arg is new val - skip empty-val / nil
     else
       unless t.e       # triple exists?
@@ -39,6 +39,11 @@ class E
         end
       end
     end
+  end
+#  def concatURI b; container.appendURI b.E.shortPath end
+
+  def properties
+    container.c.map{|c|c.base.expand.E}
   end
 
   def po
@@ -62,14 +67,6 @@ class E
 
   def triplrResource
     properties.map{|p|self[p].map{|o| yield uri, p.uri, o}}
-  end
-
-  def deletePredicate p
-    self[p].each{|o|self[p,o,'']}
-  end
-
-  def properties
-    container.c.map{|c|c.base.expand.E}
   end
 
 end
