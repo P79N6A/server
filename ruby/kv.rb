@@ -37,34 +37,14 @@ class E
         ext = '.json'
       end
       t = pp.as str.h + ext
-    end
-    t = (concatURI p).concatURI o
-    if oO             # updated triple
-      if t.e          # old triple exists?
-        t.delete      # remove triple
-        index_ p,o,'' # unindex
-      end             # add
-      self[p,oO] unless oO.class==String && oO.empty? # 2nd arg is new val - skip empty-val / nil
-    else
-      unless t.e       # triple exists?
-        index_ p,o,nil # index triple
-
+      if undo
+        t.delete if t.e
+      else
+        t.w str, !o.class == String unless t.e
       end
     end
   end
 
   def unsetFs p,o; setFS p,o,true end
-
-  def literal o
-    return o if o.class == E
-    u = (if o.class == String
-           E "/E/blob/"+o.h.dive
-         else
-           E "/E/json/"+[o].to_json.h.dive
-         end)
-    u.w o, !o.class == String unless u.f
-    u
-  end
-
 
 end
