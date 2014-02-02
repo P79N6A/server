@@ -52,6 +52,10 @@ class E
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s }}
 
+  def po
+    indexPath[o]
+  end
+
   def indexPath
     shorten.prependURI '/index/'
   end
@@ -88,7 +92,6 @@ class Pathname
       nodes.sort_by(&:to_s).send(v).each{|n|
         ns = n.to_s
         return if 0 >= count
-2
         (ok || # already in-range
          !offset || # no offset required
          (sz = [ns,offset].map(&:size).min

@@ -1,38 +1,42 @@
 #watch __FILE__
 class E
 
-  def []= p,o
-    self[p,o]
-  end
-
-  def [] p,o=nil, v=nil
-    if o
-      editFs p,o,v
-    else
-      predicate p
-    end
-  end
+  def [] p; predicate p end
 
   def predicate p
     pp = predicatePath p
     
   end
 
-  def predicatePath p
-    container.appendURI p.E.shorten
-  end
-
   def predicates
     container.c.map{|c|c.base.expand.E}
   end
 
-  def po
-    indexPath[o]
+  def []= p,o
+    setFs p,o
   end
 
-  def editFs p, o, oO=nil
-    p = p.E
-    o = p.literal o unless o.class == E
+  def unsetFs p,o; setFS p,o,true end
+  def setFs p, o, undo = false
+    pp = predicatePath p
+    if o.class == E # resource
+      t = pp.a o.path
+      if undo
+        
+      else
+        unless t.e
+          if o.f # file
+            o.ln t  # link
+          elsif o.e  # exists
+            o.ln_s t  # symbolic link
+          else
+            t.mk     # dirent
+          end
+        end
+      end
+    else # literal value
+
+    end
     t = (concatURI p).concatURI o
     if oO             # updated triple
       if t.e          # old triple exists?
@@ -43,13 +47,7 @@ class E
     else
       unless t.e       # triple exists?
         index_ p,o,nil # index triple
-        if o.f         # add triple
-          o.ln t       # hard link
-        elsif o.e
-          o.ln_s t     # symbolic link
-        else
-          t.mk         # dirent
-        end
+
       end
     end
   end
@@ -70,7 +68,7 @@ class E
   end
 
   def triplrResource
-    properties.map{|p|self[p].map{|o| yield uri, p.uri, o}}
+    predicates.map{|p|self[p].map{|o| yield uri, p.uri, o}}
   end
 
 end
