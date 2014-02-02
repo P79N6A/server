@@ -63,7 +63,7 @@ end
 class Pathname
 
   def E
-    to_s.force_encoding('UTF-8').unpathFs
+    to_s.force_encoding('UTF-8').unpath
   end
 
   def c

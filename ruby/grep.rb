@@ -10,7 +10,7 @@ class E
       path = e.pathSegment
       GREP_DIRS.find{|p|path.uri.match p}.do{|allow|
         [e,path].compact.select(&:e).map{|e|
-          `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpathFs}}.flatten
+          `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpath}}.flatten
       }||(puts "no grep available on #{path}")}}
 
   fn 'view/grep',->d,e{

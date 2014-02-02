@@ -95,7 +95,7 @@ class String
 
   def dive; self[0..2]+'/'+self[3..-1] end
 
-  # expand CURIE
+  # expand possibly CURIE entryname
   Expand={}
   def expand
    (Expand.has_key? self) ?
@@ -103,41 +103,25 @@ class String
    (Expand[self] =
      match(/([^:]+):([^\/].*)/).do{|e|
       ( E::Prefix[e[1]] || e[1]+':' )+e[2]} || 
-     self )
+     gsub '|','/' )
   end
 
-  # shrink to CURIE
+  # shrink to entryname, CURIE if possible
   def shorten
     E::Prefix.map{|p,f|
       return p + ':' + self[f.size..-1]  if (index f) == 0
     }
-    self
+    gsub '/','|'
   end
 
-  def unpathFs
-    self[E::BaseLen..-1].do{|p|
+  def unpath skip=E::BaseLen
+    self[skip..-1].do{|p|
       (p.match(/^\/([a-z]+:)\/+(.*)/).do{|m|m[1]+'//'+m[2]}||p).E}
   end
 
-  def unpath
-
-    # HTTP URI
-    if m = (match /^\/([a-z]+:)\/+(.*)/)
-      (m[1] + '//' + m[2]).E
-
-    # CURIE
-    elsif m = (match /^\/([^\/:]+:[^\/]+)/)
-      m[1].expand.E
-
-    else
-      self.E
-    end
-
-  end
-  
-  def E;     E.new self end
-  def frag;  split(/#/).pop() end
+  def E; E.new self end
+  def frag; split(/#/).pop() end
   def label; split(/[\/#]/)[-1] end
-  def sh;    Shellwords.escape self end
+  def sh; Shellwords.escape self end
 
 end

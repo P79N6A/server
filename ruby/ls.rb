@@ -40,7 +40,7 @@ class E
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       [e,e.pathSegment].compact.select(&:e).map{|e|
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
-        lines.map{|l|l.chomp.unpathFs}}.compact.flatten}}
+        lines.map{|l|l.chomp.unpath}}.compact.flatten}}
 
   fn 'view/find',->i,e{
     {_: :form, method: :GET, action: e['REQUEST_PATH'].t,
@@ -61,7 +61,7 @@ class E
   fn 'graph/du',->e,_,m{
     `du -a #{m.values[0].sh}`.each_line{|l|
       s,p = l.chomp.split /\t/ # size, path
-      p = p.unpathFs           # path -> URI
+      p = p.unpath            # path -> URI
       m[p.uri] = {'uri' => p.uri,
         Posix+'util#du' => E[p.uri+'?graph=du#du'],
             Stat+'size' => [s.to_i]}}
