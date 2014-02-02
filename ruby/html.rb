@@ -165,7 +165,6 @@ class E
     yield uri,Content,(f && read).do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs
   end
 
-  require 'nokogiri'
   def nokogiri;  Nokogiri::HTML.parse read end
 
   F['HTMLbody'] = -> b {

@@ -1,27 +1,4 @@
-%w{cgi shellwords}.each{|r|require(r)}
-
 class E
-
-  # add hostname to URI (if missing)
-  def hostURL e
-    host = 'http://'+e['SERVER_NAME']
-    if uri.index('/') == 0 
-      host + uri
-    else
-      uri
-    end
-  end
-
-  # URL to local data about global URI
-  def localURL e
-    if uri.index('/') == 0
-      uri             # already a local path
-    elsif e && uri.index('http://'+e['SERVER_NAME']+'/') == 0 
-      pathSegment.uri # host match, unchanged local path
-    else
-      '/' + uri       # URI -> local path
-    end
-  end
 
   def appendURI u; E uri + u.to_s end
   def appendSlashURI u; E uri.t + u.to_s end
@@ -43,6 +20,7 @@ class E
   def frag;     uri.frag end
   def get;      open(uri).read end
   def glob p=""; (Pathname.glob d + p).map &:E end
+  def hostURL e; host='http://'+e['SERVER_NAME']; (uri.index('/') == 0 ? host : '') + uri end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
   def label;    uri.label end
   def mk;       e || FileUtils.mkdir_p(d); self end
@@ -53,6 +31,7 @@ class E
   def path;     uri.match(/^\//) ? uri : ('/'+uri) end
   def pathSegment; uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/).do{|p|p[2]&&p[2].E}||nil end
   def predicatePath p; container.appendURI p.E.shorten end
+  def predicates; container.c.map{|c|c.base.expand.E} end
   def prependURI u; E u.to_s + uri end
   def read;     f ? readFile : get end
   def readFile; File.open(d).read end
@@ -80,6 +59,16 @@ class E
   alias_method :m, :mtime
   alias_method :maybeURI, :uri
   alias_method :url, :uri
+
+  def localURL e
+    if uri.index('/') == 0
+      uri             # already a local path
+    elsif e && uri.index('http://'+e['SERVER_NAME']+'/') == 0 
+      pathSegment.uri # host match, unchanged local path
+    else
+      '/' + uri       # URI -> local path
+    end
+  end
 
 end
 

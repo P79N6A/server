@@ -2,40 +2,41 @@
 class E
 
   def [] p; predicate p end
+  def []= p,o; setFs p,o end
 
   def predicate p
     pp = predicatePath p
     
   end
 
-  def predicates
-    container.c.map{|c|c.base.expand.E}
-  end
-
-  def []= p,o
-    setFs p,o
-  end
-
-  def unsetFs p,o; setFS p,o,true end
   def setFs p, o, undo = false
     pp = predicatePath p
     if o.class == E # resource
       t = pp.a o.path
       if undo
-        
+        t.delete if t.e
       else
         unless t.e
-          if o.f # file
-            o.ln t  # link
-          elsif o.e  # exists
-            o.ln_s t  # symbolic link
-          else
-            t.mk     # dirent
+          if o.f    # file
+            o.ln t  # link to file
+          elsif o.e  # non-file
+            o.ln_s t # symlink
+          else      # no target
+            t.mk    # dirent
           end
         end
       end
-    else # literal value
-
+    else # literal
+      str = nil
+      ext = nil
+      if o.class == String
+        str = o
+        ext = '.txt'
+      else
+        str = o.to_json
+        ext = '.json'
+      end
+      t = pp.as str.h + ext
     end
     t = (concatURI p).concatURI o
     if oO             # updated triple
@@ -52,6 +53,8 @@ class E
     end
   end
 
+  def unsetFs p,o; setFS p,o,true end
+
   def literal o
     return o if o.class == E
     u = (if o.class == String
@@ -63,12 +66,5 @@ class E
     u
   end
 
-  def triplrDoc &f
-    docBase.glob('#*').map{|s| s.triplrResource &f}
-  end
-
-  def triplrResource
-    predicates.map{|p|self[p].map{|o| yield uri, p.uri, o}}
-  end
 
 end

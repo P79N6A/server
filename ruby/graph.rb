@@ -121,6 +121,9 @@ class E
     ].flatten.compact
   end
 
+  def triplrDoc &f; docBase.glob('#*').map{|s| s.triplrResource &f} end
+  def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
+
   def triplrJSON
     yield uri, '/application/json', (JSON.parse read) if e
   rescue Exception => e

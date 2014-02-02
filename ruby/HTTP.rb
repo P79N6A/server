@@ -1,6 +1,4 @@
 #watch __FILE__
-require 'rack'
-
 class E
 
   def E.call e

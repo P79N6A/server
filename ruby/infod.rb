@@ -1,4 +1,16 @@
 %w{
+cgi
+date
+digest/sha1
+fileutils
+json
+nokogiri
+open-uri
+pathname
+rack
+shellwords
+}.each{|r|require r}
+%w{
 constants
 lambda
 mime
