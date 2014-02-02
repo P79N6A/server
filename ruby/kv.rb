@@ -11,6 +11,7 @@ class E
 
   def setFs p, o, undo = false
     pp = predicatePath p
+    puts "setFS #{uri} #{pp} #{o}"
     if o.class == E # resource
       t = pp.a o.path
       if undo

@@ -30,7 +30,7 @@ class E
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def path;     uri.match(/^\//) ? uri : ('/'+uri) end
   def pathSegment; uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/).do{|p|p[2]&&p[2].E}||nil end
-  def predicatePath p; container.appendURI p.E.shorten end
+  def predicatePath p; container.as p.E.shorten end
   def predicates; container.c.map{|c|c.base.expand.E} end
   def prependURI u; E u.to_s + uri end
   def read;     f ? readFile : get end
