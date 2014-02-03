@@ -63,21 +63,15 @@ puts pp
       yield uri, '/linkTarget', target }
   end
 
-  def ln t
+  def ln t, y=:link
     t = t.E # cast bare URI/string to resource
     if !t.e # destination exist?
       t.dirname.mk
-      FileUtils.link node, t.node
+      FileUtils.send y, node, t.node
     end
   end
 
-  def ln_s t
-    t = t.E # cast bare URI/string to resource
-    if !t.e # destination exist?
-      t.dirname.mk
-      FileUtils.symlink node, t.node
-    end
-  end
+  def ln_s t; ln t, :symlink end
 
   def r p=false
     if f
@@ -99,9 +93,7 @@ end
 
 class Pathname
 
-  def E
-    to_s.force_encoding('UTF-8').unpath
-  end
+  def E; to_s.force_encoding('UTF-8').unpath end
 
   def c
     return [] unless directory?
@@ -115,10 +107,4 @@ class Pathname
     parent.deleteNode if parent.c.empty?
   end
 
-end
-
-class File::Stat
-  def utime
-    mtime.to_i
-  end
 end
