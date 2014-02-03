@@ -46,7 +46,7 @@ class E
   Prefix={
     "dc" => DC,
     "foaf" => FOAF,
-    "rdf" => W3 + "ns/rdf#" ,
+    "rdf" => RDFns,
     "rdfs" => RDFs,
     "sioc" => SIOC,
     "stat" => Stat,

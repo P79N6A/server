@@ -1,6 +1,54 @@
 #watch __FILE__
 class E
 
+  def [] p; predicate p end
+  def []= p,o; setFs p,o end
+
+  def predicate p
+    pp = predicatePath p
+puts pp
+  end
+
+  def setFs p, o, undo = false
+    pp = predicatePath p
+    if o.class == E # resource
+      t = pp.a o.path # triple URI
+      if undo
+        t.delete if t.e
+      else
+        unless t.e
+          if o.f    # file
+            o.ln t  # link to file
+          elsif o.e  # non-file
+            o.ln_s t # symlink
+          else      # target 404
+            t.mk    # dirent
+          end
+        end
+      end
+    else # literal
+      str = nil
+      ext = nil
+      if o.class == String
+        str = o
+        ext = '.txt'
+      else
+        str = o.to_json
+        ext = '.json'
+      end
+      t = pp.as str.h + ext # triple URI
+      if undo
+        t.delete if t.e
+      else
+        t.w str unless t.e  # write
+      end
+    end
+    puts "#{undo ? :un : ''}setFS <#{uri}> <#{p}> #{o.class == E ? "<#{o}>" : o}"
+
+  end
+
+  def unsetFs p,o; setFs p,o,true end
+
   def triplrInode
     if d?
       yield uri, Posix+'dir#parent', parent
@@ -46,14 +94,6 @@ class E
     writeFile (s ? o.to_json : o)
     self
   end
-
-  fn 'set/glob',->d,e=nil,_=nil{
-    p = [d,d.pathSegment].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
-    p[0] }
-
-  fn 'req/randomFile',->e,r{
-    g = F['set/glob'][e]
-    !g.empty? ? [302, {Location: g[rand g.length].uri}, []] : [404]}
 
 end
 

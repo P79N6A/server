@@ -35,7 +35,6 @@ html
 HTTP
 image
 index
-kv
 ls
 mail
 man
