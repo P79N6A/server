@@ -7,6 +7,7 @@ class E
     when /^application\/sparql-update/
       puts "SPARQL"
     when /^application\/x-www-form-urlencoded/
+      puts "form"
       changed = false
       (Rack::Request.new @r).params.map{|k,v|
         s, p, o = (CGI.unescape k).split /\/\._/
@@ -30,7 +31,8 @@ class E
         end
       end
     end
-    [303,{'Location'=>uri+'?graph=edit'},[]]
+#    [303,{'Location'=>uri+'?graph=edit'},[]]
+    self.GET
   end
 
 end
