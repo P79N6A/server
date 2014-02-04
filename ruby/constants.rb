@@ -48,6 +48,7 @@ class E
     "rdf" => RDFns,
     "rdfs" => RDFs,
     "sioc" => SIOC,
+    "sioct" => SIOCt,
     "stat" => Stat,
   }
 

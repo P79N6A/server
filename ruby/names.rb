@@ -70,6 +70,26 @@ class E
     end
   end
 
+  def objectPath o
+    p,v=(if o.class == E # node
+           [o.path, nil]
+         else            # value
+           literal o
+         end)
+    [(a p), v]
+  end
+
+  def literal o
+    str = nil
+    ext = nil
+    if o.class == String
+      str = o;         ext='.txt'
+    else
+      str = o.to_json; ext='.json'
+    end
+    ['/'+str.h+ext, str]
+  end
+
 end
 
 class Hash

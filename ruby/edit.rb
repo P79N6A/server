@@ -16,7 +16,7 @@ class E
   fn 'view/create',->g,e{
     [{_: :style, c: 'a {display:block;font-size:2em}'},{_: :b, c: :type},
      Prototypes.map{|t,ps|
-       {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(CGI.escape t), c: t.label}}]}
+       {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(URI.escape t.shorten), c: t.label}}]}
 
   # editable triples
   F['protograph/edit'] = -> e,env,g {
@@ -35,26 +35,23 @@ class E
   fn 'view/edit',->g,e{
 
     # render a triple
-    triple = ->s,p,o{
+    triple = ->s,p,o{ # http://dev.w3.org/html5/markup/input.html#input
       if s && p && o
-        s = s.E
-        p = p.E
-        oE = p.literal o                 # cast literal to URI
-        id = s.concatURI(p).concatURI oE # triple identifier
-        [(case p.uri                     # more to support here.. http://dev.w3.org/html5/markup/input.html#input
+        t = s.E.predicatePath(p).objectPath(o)
+        [(case p.E.uri
           when Content
-            [{_: :textarea, name: id, c: o, rows: 16, cols: 80},
+            [{_: :textarea, name: t, c: o, rows: 16, cols: 80},
             '<br>',o]
           when Date
-            {_: :input, name: id, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
+            {_: :input, name: t, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
           else
-            {_: :input, name: id, value: o, size: 54}
+            {_: :input, name: t, value: o, size: 54}
           end
           ),"<br>\n"]
       end}
    
     ps = [] # predicates to go editable on
-    e.q['prototype'].do{|pr|
+    e.q['prototype'].do{|pr| pr = pr.expand
       Prototypes[pr].do{|v|ps.concat v }} # prototype imports
     e.q['predicate'].do{|p|ps.push p }    # explicit predicate
 
@@ -67,7 +64,6 @@ class E
              uri = s.E.localURL e
              {_: :table, style: 'background-color:#eee',
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: uri}}},
-                   {_: :input, type: :hidden, name: s.E.concatURI(Edit.E).concatURI(E['/']), value: e['uri']+'?graph=edit'},
                    r.keys.-([Edit]).concat(ps).uniq.map{|p| # resource + prototype/initialize predicates
                      {_: :tr,
                        c: [{_: :td, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # property

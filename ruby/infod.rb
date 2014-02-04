@@ -8,8 +8,8 @@ nokogiri
 open-uri
 pathname
 rack
-shellwords
-}.each{|r|require r}
+shellwords}.map{|r|require r}
+
 %w{
 constants
 lambda

@@ -27,11 +27,12 @@ class E
   end
 
   def setFs p, o, undo = false, short = true
-    pp = predicatePath p, short
+    p = predicatePath p, short # s+p URI
+    t,v = p.objectPath o # triple URI
+    puts "#{undo ? :un : ''}setFS #{t}"
     if o.class == E # resource
-      t = pp.a o.path # triple URI
       if undo
-        t.delete if t.e
+        t.delete if t.e # undo
       else
         unless t.e
           if o.f    # file
@@ -44,24 +45,12 @@ class E
         end
       end
     else # literal
-      str = nil
-      ext = nil
-      if o.class == String
-        str = o
-        ext = '.txt'
-      else
-        str = o.to_json
-        ext = '.json'
-      end
-      t = pp.as str.h + ext # triple URI
       if undo
-        t.delete if t.e
+        t.delete if t.e  # remove 
       else
-        t.w str unless t.e  # write
+        t.w v unless t.e # write
       end
     end
-    puts "#{undo ? :un : ''}setFS <#{uri}> <#{p}> #{o.class == E ? "<#{o}>" : o}"
-
   end
 
   def unsetFs p,o; setFs p,o,true end
