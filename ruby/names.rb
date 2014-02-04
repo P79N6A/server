@@ -3,7 +3,7 @@ class E
   def appendURI u; E uri + u.to_s end
   def appendSlashURI u; E uri.t + u.to_s end
   def basename; File.basename path end
-  def barename; basename.sub(/\.#{ext}$/,'') end
+  def barename; basename.sub(/\.#{ext}$/,'') rescue basename end
   def cascade; [self].concat parents end
   def children; node.c.map &:E end
   def container; @u ||= E[f ? dirname + '/.' + (File.basename path) : path] end
