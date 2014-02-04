@@ -133,7 +133,7 @@ class E
     to_h.to_json *a
   end
 
-  fn Render+'application/json',->d,_=nil{[d].to_json}
+  fn Render+'application/json',->d,_=nil{d.to_json}
 
 end
 

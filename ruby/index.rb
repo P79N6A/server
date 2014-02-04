@@ -4,22 +4,9 @@ class E
   # POSIX-fs based index of triples
   # 
 
-  # index one triple, type-normalizing wrapper
   def index p,o
-    p = p.E
-    index_ p, (o.class == E ? o : p.literal(o)), nil
-  end
-
-  # index triple
-  # flip order , prepend /index , use k/v store , @noIndex so no loop indexing the index
-  def index_ p,o,a
-    return if @noIndex
-    p.indexPath.skipIndex[o,self,a]
-  end
-
-  def skipIndex
-    @noIndex = 1
-    self
+    return unless o.class == E
+    p.E.indexPath[o] = self
   end
 
   # reachable graph along named predicate
@@ -52,7 +39,7 @@ class E
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s }}
 
-  def po
+  def po o
     indexPath[o]
   end
 

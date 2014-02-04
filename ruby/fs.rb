@@ -3,10 +3,11 @@ class E
 
   def [] p; predicate p end
   def []= p,o
-    unless o
-      predicate(p).map{|o|unsetFs p,o}
-    else
+    if o
       setFs p,o
+    else
+      (predicate p).map{|o|
+        unsetFs p,o}
     end
   end
 
