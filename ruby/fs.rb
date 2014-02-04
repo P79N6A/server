@@ -5,8 +5,18 @@ class E
   def []= p,o; setFs p,o end
 
   def predicate p
-    pp = predicatePath p
-puts pp
+    p = predicatePath p
+    p.take.map{|o|
+      if o.f # literal
+        case o.ext
+        when "json"
+          o.r true
+        else
+          o.r
+        end
+      else # resource
+       E[o.uri.unpath p.uri.size]
+      end}
   end
 
   def setFs p, o, undo = false

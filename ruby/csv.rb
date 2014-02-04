@@ -24,7 +24,7 @@ class E
         r[Type].do{|t|
           t.class == Array &&
           t.map(&:maybeURI).member?(CSV+'Row')})}
-    # done w/ the type-tag
+    # eat the type-tag
     d.values.map{|r|r.delete Type}
 
     [F['view/p'][d,e],
