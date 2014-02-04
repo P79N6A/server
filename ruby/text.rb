@@ -3,7 +3,8 @@
 
 class String
 
-  # text to HTML
+  def h; Digest::SHA1.hexdigest self end
+
   def hrefs i=false
     #  ) only matches with an opener
     # ,. only match mid-URI
@@ -19,9 +20,11 @@ class String
   rescue
     self
   end
-  def camelToke
-    scan /[A-Z]+(?=\b|[A-Z][a-z])|[A-Z]?[a-z]+/
-  end
+
+  def tail; self[1..-1] end
+  def to_utf8; encode('UTF-8', undef: :replace) end
+  def t; match(/\/$/) ? self : self+'/' end
+
 end
 
 class E

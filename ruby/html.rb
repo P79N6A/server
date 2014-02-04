@@ -39,9 +39,14 @@ class H
 end
 
 class Array
-  def html v=nil,g=nil
-    map{|e|e.html v,g}.join ' '
+  def cr; intersperse "\n" end
+  def head; self[0] end
+  def html v=nil,g=nil; map{|e|e.html v,g}.join ' ' end
+  def h; join.h end
+  def intersperse i
+    inject([]){|a,b|a << b << i}[0..-2]
   end
+  def tail; self[1..-1] end
 end
 
 class Object
@@ -69,10 +74,14 @@ end
 
 class Fixnum
   def html e=nil,g=nil; to_s end
+  def max i; i > self ? self : i end
+  def min i; i < self ? self : i end
 end
 
 class Float
   def html e=nil,g=nil; to_s end
+  def max i; i > self ? self : i end
+  def min i; i < self ? self : i end
 end
 
 class TrueClass

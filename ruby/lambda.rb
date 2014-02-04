@@ -1,3 +1,17 @@
+class FalseClass
+  def do; false end
+end
+
+class NilClass
+  def do; nil end
+  def html e=nil,g=nil; "" end
+end
+
+class Object
+  def id; self end
+  def do; yield self end
+  def maybeURI; nil end
+end
 
 def watch f
   E::Watch[f]=File.mtime f

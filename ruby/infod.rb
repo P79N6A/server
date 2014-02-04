@@ -42,7 +42,6 @@ microblog
 names
 POST
 rdf
-ruby
 schema
 text
 threads
