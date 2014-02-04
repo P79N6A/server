@@ -10,15 +10,16 @@ class E
       changed = false
       (Rack::Request.new @r).params.map{|k,v|
         s, p, tripleA = JSON.parse CGI.unescape k
+        s = s.E
         o = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
-        pp = s.E.predicatePath(p)
+        pp = s.predicatePath(p)
         tripleB = pp.objectPath o
         puts "A #{tripleA}"
         puts "B #{tripleB}"
         if tripleA != tripleB
           changed = true
-          puts "Edit"
-#          s[p,o,oO]
+          tripleA.delete if tripleA && tripleA.e
+          s[p]=o
         end
       }
       

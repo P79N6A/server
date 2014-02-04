@@ -28,8 +28,8 @@ class E
 
   def setFs p, o, undo = false, short = true
     p = predicatePath p, short # s+p URI
-    t,v = p.objectPath o # triple URI
-    puts "#{undo ? :un : ''}setFS #{t}"
+    t,literal = p.objectPath o # s+p+o URI
+    puts "#{undo ? :un : ''}setFS #{t} #{literal}"
     if o.class == E # resource
       if undo
         t.delete if t.e # undo
@@ -48,7 +48,7 @@ class E
       if undo
         t.delete if t.e  # remove 
       else
-        t.w v unless t.e # write
+        t.w literal unless t.e # write
       end
     end
   end
