@@ -13,13 +13,14 @@ class E
         s = s.E
         o = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
         pp = s.predicatePath(p)
-        tripleB = pp.objectPath o
+        tripleB = pp.objectPath(o)[0]
         puts "A #{tripleA}"
         puts "B #{tripleB}"
         if tripleA != tripleB
           changed = true
-          tripleA.delete if tripleA && tripleA.e
-          s[p]=o
+          tripleA && tripleA.E.do{|t|
+            t.delete if t.e }
+          s[p] = o
         end
       }
       
@@ -27,14 +28,14 @@ class E
         g = {}
         fromStream g, :triplrDoc
         if g.empty?
-#          ef.deleteNode
+          ef.deleteNode
         else
           ef.w g, true
         end
       end
     end
-#    [303,{'Location'=>uri+'?graph=edit'},[]]
-    self.GET
+    [303,{'Location'=>uri+'?graph=edit'},[]]
+#    self.GET
   end
 
 end

@@ -36,7 +36,7 @@ class E
 
     # render a triple
     triple = ->s,p,o{ # http://dev.w3.org/html5/markup/input.html#input
-      spo = o && s.E.predicatePath(p).objectPath(o)
+      spo = o && s.E.predicatePath(p).objectPath(o)[0].uri
       t = CGI.escape [s,p,spo].to_json
       [(case p.E.uri
         when Content
