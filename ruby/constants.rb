@@ -1,7 +1,6 @@
 class E
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
-  S      = /\._/ # data path-separator
 
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'

@@ -28,14 +28,6 @@ class Hash
       ks.map{|k|h.delete k}
       h}
   end
-  def has_keys ks; ks.each{|k|
-      return false unless has_key? k
-    }; true
-  end
-  def has_any_key ks; ks.each{|k|
-      return true if has_key? k
-    }; false
-  end
 end
 
 class NilClass
