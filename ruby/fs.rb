@@ -2,7 +2,13 @@
 class E
 
   def [] p; predicate p end
-  def []= p,o; setFs p,o end
+  def []= p,o
+    unless o
+      predicate(p).map{|o|unsetFs p,o}
+    else
+      setFs p,o
+    end
+  end
 
   def predicate p
     p = predicatePath p
