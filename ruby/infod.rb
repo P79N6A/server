@@ -41,7 +41,6 @@ man
 microblog
 names
 POST
-postscript
 rdf
 ruby
 schema
