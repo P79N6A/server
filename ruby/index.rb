@@ -6,7 +6,7 @@ class E
 
   def index p,o
     return unless o.class == E
-    p.E.indexPath[o] = self
+    p.E.indexPath.setFs o,self,false,false
   end
 
   # reachable graph along named predicate
@@ -40,7 +40,7 @@ class E
       s }}
 
   def po o
-    indexPath[o]
+    indexPath.predicate o, false
   end
 
   def indexPath

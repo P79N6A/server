@@ -11,8 +11,8 @@ class E
     end
   end
 
-  def predicate p
-    p = predicatePath p
+  def predicate p, short = true
+    p = predicatePath p, short
     p.take.map{|o|
       if o.f # literal
         case o.ext
@@ -26,8 +26,8 @@ class E
       end}
   end
 
-  def setFs p, o, undo = false
-    pp = predicatePath p
+  def setFs p, o, undo = false, short = true
+    pp = predicatePath p, short
     if o.class == E # resource
       t = pp.a o.path # triple URI
       if undo
