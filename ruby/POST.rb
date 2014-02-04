@@ -7,25 +7,26 @@ class E
     when /^application\/sparql-update/
       puts "SPARQL"
     when /^application\/x-www-form-urlencoded/
-      puts "form"
       changed = false
       (Rack::Request.new @r).params.map{|k,v|
-        s, p, o = (CGI.unescape k).split /\/\._/
-        if s && p && o 
-          s, p, o = [s, p, o].map &:unpath
-          if s.uri.match(/^http/) && p.uri.match(/^http/)
-            oO = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
-            if o != oO
-              changed = true
-              s[p,o,oO]
-            end
-          end
-        end}
+        s, p, tripleA = JSON.parse CGI.unescape k
+        o = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
+        pp = s.E.predicatePath(p)
+        tripleB = pp.objectPath o
+        puts "A #{tripleA}"
+        puts "B #{tripleB}"
+        if tripleA != tripleB
+          changed = true
+          puts "Edit"
+#          s[p,o,oO]
+        end
+      }
+      
       if changed
         g = {}
         fromStream g, :triplrDoc
         if g.empty?
-          ef.deleteNode
+#          ef.deleteNode
         else
           ef.w g, true
         end

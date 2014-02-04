@@ -197,7 +197,7 @@ class E
        {_: :a, rel: :next, href: n.uri, c: '&rarr;',
          style: 'color:#fff;background-color:#eee;font-size:2.3em;float:right;clear:both;border-radius:0'}},
 
-     {_: :a, href: e['REQUEST_PATH'].sub(/\.html$/,'') + e.q.merge({'view'=>'data'}).qs, # data browser
+     {_: :a, rel: :nofollow, href: e['REQUEST_PATH'].sub(/\.html$/,'') + e.q.merge({'view'=>'data'}).qs, # data browser
        c: {_: :img, src: '/css/misc/cube.png', style: 'height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}},
      (H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))]} # (n)ext (p)rev key binding
 

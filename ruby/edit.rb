@@ -36,20 +36,19 @@ class E
 
     # render a triple
     triple = ->s,p,o{ # http://dev.w3.org/html5/markup/input.html#input
-      if s && p && o
-        t = s.E.predicatePath(p).objectPath(o)[0]
-        [(case p.E.uri
-          when Content
-            [{_: :textarea, name: t, c: o, rows: 16, cols: 80},
-            '<br>',o]
-          when Date
-            {_: :input, name: t, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
-          else
-            {_: :input, name: t, value: o, size: 54}
-          end
-          ),"<br>\n"]
-      end}
-   
+      spo = o && s.E.predicatePath(p).objectPath(o)
+      t = CGI.escape [s,p,spo].to_json
+      [(case p.E.uri
+        when Content
+          [{_: :textarea, name: t, c: o, rows: 16, cols: 80},
+           '<br>',o]
+        when Date
+          {_: :input, name: t, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
+        else
+          {_: :input, name: t, value: o, size: 54}
+        end
+        ),"<br>\n"]}
+    
     ps = [] # predicates to go editable on
     e.q['prototype'].do{|pr| pr = pr.expand
       Prototypes[pr].do{|v|ps.concat v }} # prototype imports
@@ -71,7 +70,7 @@ class E
                              c: [r[p].do{|o|                            # objects
                                    (o.class == Array ? o : [o]).map{|o| # each object
                                      triple[s,p,o]}},                   # existing triples
-                                 triple[s,p,'']]}]}}]}},                # new triple
+                                 triple[s,p,nil]]}]}}]}},                # new triple
            {_: :input, type: :submit, value: 'save'}]}]}
 
   # select a property to edit
