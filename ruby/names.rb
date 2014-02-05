@@ -124,7 +124,6 @@ class String
   end
 
   def unpath skip=E::BaseLen
-    puts "unpath #{self} #{skip}"
     self[skip..-1].do{|p|
       (p.match(/^\/([a-z]+:)\/+(.*)/).do{|m|m[1]+'//'+m[2]}||p).E}
   end

@@ -54,18 +54,18 @@ class E
       Prototypes[pr].do{|v|ps.concat v }} # prototype imports
     e.q['predicate'].do{|p|ps.push p }    # explicit predicate
 
-    [{_: :style, c: ".abbr {display: none}\ntd {vertical-align:top}"},
+    [H.css('/css/html'),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
 
        c: [{_: :a, class: :edit, c: '+add field',
              href: e['uri']+'?graph=blank&view=addP', style: 'background-color:#0f0;border-radius:5em;color:#000;padding:.5em'},
            g.map{|s,r| # subject
              uri = s.E.localURL e
-             {_: :table, style: 'background-color:#eee',
+             {_: :table, class: :html,
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: uri}}},
                    r.keys.-([Edit]).concat(ps).uniq.map{|p| # resource + prototype/initialize predicates
                      {_: :tr,
-                       c: [{_: :td, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # property
+                       c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # property
                            {_: :td,
                              c: [r[p].do{|o|                            # objects
                                    (o.class == Array ? o : [o]).map{|o| # each object
