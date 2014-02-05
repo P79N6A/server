@@ -2,14 +2,11 @@ watch __FILE__
 class E
 
   def POST
-    type = @r['CONTENT_TYPE']
-    case type
-    when /^application\/sparql-update/
-      puts "SPARQL"
+    case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       changed = false
       (Rack::Request.new @r).params.map{|k,v| s, p, tripleA = JSON.parse CGI.unescape k
-        s = s.E # subject
+        s = s.E
        pp = s.predicatePath p
         o = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
         tripleB = pp.objectPath(o)[0]
