@@ -35,11 +35,9 @@ class E
         t.delete if t.e # undo
       else
         unless t.e
-          if o.f    # file
-            o.ln t  # link to file
-          elsif o.e  # non-file
-            o.ln_s t # symlink
-          else      # target 404
+          if o.f    # file?
+            o.ln t  # link
+          else
             t.mk    # dirent
           end
         end

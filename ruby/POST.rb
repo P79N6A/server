@@ -19,7 +19,7 @@ class E
         g = {}
         fromStream g, :triplrDoc
         if g.empty? # no triples left
-          ef.deleteNode
+          ef.delete
         else        # snapshot to graph-doc
           ef.w g, true
         end

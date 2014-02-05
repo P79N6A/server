@@ -3,9 +3,9 @@ class E
 =begin
   graph construction is two-pass:
 
- the first-pass will signify if the second-pass needs to be run. an eTag is be derived from the return-value, ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities.. <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
+ the first-pass will signify if the second-pass needs to be run. an ETag is be derived from the return-value, ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities.. <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
 
-   second-pass might fetch RDF from a SPARQL store. this lib was developed as an alternative to relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like SPARQLING up a set of files to be returned in standard Apache-as-static-fileserver fashion, and to webize all sorts of non-RDF like email, directories, plain-text etc
+   second-pass might fetch RDF from a SPARQL store. this lib was developed as an alternative to relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like SPARQLING up a set of files to be returned in standard Apache-as-static-fileserver fashion, and to webize non-RDF filesystem-content like email, directories, plain-text etc
 
   triple streams - a source function yields triples up to the caller as it finds them,
   a function providing a block (consumes yielded values) is a sink, both is a filter 
@@ -122,6 +122,7 @@ class E
   end
 
   def triplrDoc &f; docBase.glob('#*').map{|s| s.triplrResource &f} end
+
   def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
 
   def triplrJSON
