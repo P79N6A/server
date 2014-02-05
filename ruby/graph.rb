@@ -40,7 +40,7 @@ class E
          r[p].do{|v|v.map{|o| # values exist?
              e.index p,o}}})} # index triple
     docs.map{|d,g|            # resources in docs
-      d = d.E; puts "+doc #{d}"
+      d = d.E; puts "+doc #{d.docBase}"
       d.w g,true              # write
       hook[d,g,host] if hook} # insert-hook
     graph.triples &b if b     # emit triples
