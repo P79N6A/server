@@ -1,15 +1,19 @@
-#watch __FILE__
+watch __FILE__
 class E
 
-  F['view/'+SIOCt+'BlogPost']=->g,e{
+  F['/blog/post/GET'] = -> d,e {
+    [200,{'Content-Type'=>'text/html'},
+     [H(['name',
+         {_: :form,
+           c: [{_: :input, name: :name, style: "font-size:1.6em;width:48ex"},
+               {_: :input, type: :submit, value: ' go '}
+              ]}])]]}
 
-    F['example/blogview'][g,e]
-
-  }
+  F['view/'+SIOCt+'BlogPost']=->g,e{F['example/blogview'][g,e]}
 
   F['example/blogview']=->g,e{
     g.map{|u,r|
-      case u
+      case u # match against URIs for customized views
       when /artery.wbur/ # compact whitespace a bit
         r[Content] = {class: :WBUR, c: [{_: :style, c: ".WBUR p {margin:0}"},r[Content]]}
         F['view/base'][{u => r},e,false]        
