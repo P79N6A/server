@@ -13,8 +13,9 @@ class E
 
   def predicate p, short = true
     p = predicatePath p, short
-    p.take.map{|o|
-      if o.f # literal
+    p.node.take.map{|n|
+      if n.file? # literal
+        o = n.E
         case o.ext
         when "json"
           o.r true
@@ -22,7 +23,7 @@ class E
           o.r
         end
       else # resource
-       E[o.uri.unpath p.uri.size]
+       E[n.to_s.unpath p.d.size]
       end}
   end
 
