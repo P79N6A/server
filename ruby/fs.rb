@@ -71,6 +71,7 @@ class E
 
   def ln t, y=:link
     t = t.E # cast bare URI/string to resource
+    t = t.uri[0..-2].E if t.uri[-1] == '/'
     if !t.e # destination exist?
       t.dirname.mk
       FileUtils.send y, node, t.node

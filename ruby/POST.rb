@@ -8,28 +8,22 @@ class E
       puts "SPARQL"
     when /^application\/x-www-form-urlencoded/
       changed = false
-      (Rack::Request.new @r).params.map{|k,v|
-        s, p, tripleA = JSON.parse CGI.unescape k
-        s = s.E
+      (Rack::Request.new @r).params.map{|k,v| s, p, tripleA = JSON.parse CGI.unescape k
+        s = s.E # subject
+       pp = s.predicatePath p
         o = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
-        pp = s.predicatePath(p)
         tripleB = pp.objectPath(o)[0]
-        puts "A #{tripleA}"
-        puts "B #{tripleB}"
-        if tripleA != tripleB
+        if tripleA.to_s != tripleB.to_s
+          tripleA && tripleA.E.do{|t| t.delete if t.e }
+          s[p] = o unless o.class==String && o.empty?
           changed = true
-          tripleA && tripleA.E.do{|t|
-            t.delete if t.e }
-          s[p] = o
-        end
-      }
-      
+        end}
       if changed
         g = {}
         fromStream g, :triplrDoc
-        if g.empty?
+        if g.empty? # no triples left
           ef.deleteNode
-        else
+        else        # snapshot to graph-doc
           ef.w g, true
         end
       end
