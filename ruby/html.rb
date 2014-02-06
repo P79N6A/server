@@ -119,7 +119,7 @@ class E
     url.href
   end
 
-  fn 'view',->d,e{
+  F['view']=->d,e{
     d.values.select{|r|
       !r.has_key?('uri') || # URI field missing
       !r.uri.match(IsBnode) # blank node
@@ -128,11 +128,11 @@ class E
     sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
     map{|r| Fn 'view/select',r,e,d}}
 
-  fn 'view/base',->d,e,k=true,graph=nil{
+  F['view/base']=->d,e,k=true,graph=nil{
     [H.once(e,'base',H.css('/css/html')),
      d.values.map{|v|v.html e,graph,k}]}
 
-  fn 'view/select',->r,e,d={}{
+  F['view/select']=->r,e,d=nil{
     graph = {r.uri => r}
     view = nil
     if r.class == Hash
