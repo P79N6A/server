@@ -43,7 +43,7 @@ class E
           [{_: :textarea, name: t, c: o, rows: 16, cols: 80},
            '<br>',o]
         when Date
-          {_: :input, name: t, type: :datetime, value: o.empty? ? Time.now.iso8601 : o}
+          {_: :input, name: t, type: :datetime, value: !o || o.empty? && Time.now.iso8601 || o}
         else
           {_: :input, name: t, value: o, size: 54}
         end

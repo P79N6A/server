@@ -1,10 +1,16 @@
 watch __FILE__
 class E
 
+  F['/blog/post/POST'] = -> d,e {
+#puts  (Rack::Request.new ).params
+    puts "ASDASDASDA"
+    d.basicPOST
+  }
+
   F['/blog/post/GET'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
      [H(['name',
-         {_: :form,
+         {_: :form, method: :POST,
            c: [{_: :input, name: :name, style: "font-size:1.6em;width:48ex"},
                {_: :input, type: :submit, value: ' go '}
               ]}])]]}

@@ -2,6 +2,17 @@ watch __FILE__
 class E
 
   def POST
+    # custom handler lookup cascade
+    pathSegment.do{|path|
+      lambdas = path.cascade.map{|p| p.uri.t + 'POST' }
+      ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
+          F[h + p].do{|fn| fn[self,@r].do{|r|
+              $stdout.puts [r[0],'http://'+@r['SERVER_NAME']+@r['REQUEST_URI'],@r['HTTP_USER_AGENT'],@r['HTTP_REFERER'],@r.format].join ' '
+              return r
+            }}}}}
+    basicPOST
+  end
+  def basicPOST
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       changed = false
