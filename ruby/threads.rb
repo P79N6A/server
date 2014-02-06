@@ -14,7 +14,7 @@ class E
   
   fn 'view/threads',->d,env{
     posts = d.values.select{|r| # we want SIOC posts
-      r[Type].do{|t| [*t].map{|t| t.respond_to?(:uri) && t.uri}.member? SIOC+'Post'}}
+      r[Type].do{|t| [*t].map(&:maybeURI).member? SIOC+'Post'}}
     threads = posts.group_by{|r| # group by Title
        [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}
 

@@ -28,7 +28,7 @@ class E
 
   fn 'view/img',->i,_{
     [i.values.select{|v|v.class==Hash}.map{|i|
-       i[Type] && (i[Type].class==Array ? i[Type] : [i[Type]]).map{|t|t.respond_to?(:uri) && t.uri}.include?(DC+'Image') &&
+       i[Type] && (i[Type].class==Array ? i[Type] : [i[Type]]).map(&:maybeURI).include?(DC+'Image') &&
        [{_: :a, href: i.url, c: {_: :img, style:'float:left;max-width:61.8%', src: i.url}},
         i.html]},
      (H.css '/css/img')]}
@@ -70,9 +70,7 @@ class E
 
         # check object URIs for image extension
         (v.respond_to?(:values) &&
-         v.values.flatten.map{|v|
-           v.respond_to?(:uri) && v.uri
-         }.select(&x))
+         v.values.flatten.map(&:maybeURI).select(&x))
 
        ].flatten.uniq.compact.map{|s|
          # view 

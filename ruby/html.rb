@@ -1,6 +1,5 @@
 #watch __FILE__
 
-# H templates
 def H _
   case _
   when Hash
@@ -50,11 +49,7 @@ class Array
 end
 
 class Object
-  def html *a
-    name = self.class
-    href = "https://duckduckgo.com/?q=ruby+#{name}"
-    "<a href=#{href}><b>#{name}</b></a>"
-  end
+  def html *a; self.class end
 end
 
 class String
@@ -142,10 +137,7 @@ class E
     view = nil
     if r.class == Hash
       (r[Type].class==Array ? r[Type] : [r[Type]]).do{|types|
-        views = types.map{|t|
-          # discard non-URIs
-          t.uri if t.respond_to? :uri}.
-        compact.map{|t|
+        views = types.map(&:maybeURI).compact.map{|t|
           subtype = t
           type = subtype.split(/\//)[-2]
           [F['view/' + subtype],
@@ -158,12 +150,6 @@ class E
     else
       view[graph,e]
     end}
-
-  # enumerate available views
-  fn 'view/?',->d,e{
-    F.keys.grep(/^view\/(?!application|text\/x-)/).map{|v|
-      v = v[5..-1] # eat selector
-      [{_: :a, href: e['REQUEST_PATH']+e.q.merge({'view'=>v}).qs, c: v},"<br>\n"]}}
 
   def triplrBlob
     glob.select(&:f).do{|f|f.map{|r|
