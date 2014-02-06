@@ -2,9 +2,11 @@ watch __FILE__
 class E
 
   F['/blog/post/POST'] = -> d,e {
-#puts  (Rack::Request.new ).params
-    puts "ASDASDASDA"
-    d.basicPOST
+    name = Rack::Request.new(d.env).params['name'].gsub(' ','_').gsub('/','_')
+    doc = 'http://'+e['SERVER_NAME']+Time.now.strftime('/%Y/%m/')+name
+    q = "?prototype=sioct:BlogPost&graph=edit"
+    (doc+'#').E[Title] = name
+    [303,{'Location' => doc + q},[]]
   }
 
   F['/blog/post/GET'] = -> d,e {
