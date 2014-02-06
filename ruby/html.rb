@@ -132,7 +132,7 @@ class E
     [H.once(e,'base',H.css('/css/html')),
      d.values.map{|v|v.html e,graph,k}]}
 
-  fn 'view/select',->r,e,d{
+  fn 'view/select',->r,e,d={}{
     graph = {r.uri => r}
     view = nil
     if r.class == Hash
