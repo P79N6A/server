@@ -2,12 +2,13 @@ watch __FILE__
 class E
 
   F['/blog/post/POST'] = -> d,e {
-    name = Rack::Request.new(d.env).params['name'].gsub(' ','_').gsub('/','_')
+    name = Rack::Request.new(d.env).params['name'].gsub(/[\s\/]/,'_')
     doc = 'http://'+e['SERVER_NAME']+Time.now.strftime('/%Y/%m/')+name
+    post = (doc+'#').E
+    post[Title] = name
+    post[Type] = E[SIOCt+'BlogPost']
     q = "?prototype=sioct:BlogPost&graph=edit"
-    (doc+'#').E[Title] = name
-    [303,{'Location' => doc + q},[]]
-  }
+    [303,{'Location' => doc + q},[]]}
 
   F['/blog/post/GET'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
