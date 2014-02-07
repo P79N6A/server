@@ -2,13 +2,13 @@ watch __FILE__
 class E
 
   F['/blog/post/POST'] = -> d,e {
-    name = Rack::Request.new(d.env).params['name'].gsub(/[\s\/]/,'_')
+    name = URI.escape (Rack::Request.new d.env).params['name'].gsub /[\s\/]/,'_'
     doc = 'http://'+e['SERVER_NAME']+Time.now.strftime('/%Y/%m/')+name
     post = (doc+'#').E
-    post[Title] = name
     post[Type] = E[SIOCt+'BlogPost']
-    q = "?prototype=sioct:BlogPost&graph=edit"
-    [303,{'Location' => doc + q},[]]}
+    post[Title] = name
+    edit = "?prototype=sioct:BlogPost&graph=edit"
+    [303,{'Location' => doc + edit},[]]}
 
   F['/blog/post/GET'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
@@ -22,7 +22,7 @@ class E
 
   F['example/blogview']=->g,e{
     g.map{|u,r|
-      case u # match against URIs for customized views
+      case u # match against URIs for customized view
       when /artery.wbur/ # compact whitespace a bit
         r[Content] = {class: :WBUR, c: [{_: :style, c: ".WBUR p {margin:0}"},r[Content]]}
         F['view/base'][{u => r},e,false]        

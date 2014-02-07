@@ -28,7 +28,7 @@ class E
     global = !r.has_key?('local')
     p = global ? d.pathSegment : d
     loc = global ? '' : '&local'
-    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(128) # an extra for next-page pointer
+    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(1024) # an extra for next-page pointer
     o = r['d'] =~ /^a/ ? :asc : :desc            # direction
     (p.take c, o, r['offset'].do{|o|o.E}).do{|s| # take subtree
       first, last = s[0], s.size > 1 && s.pop
