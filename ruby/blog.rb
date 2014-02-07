@@ -2,7 +2,7 @@ watch __FILE__
 class E
 
   F['/blog/post/POST'] = -> d,e {
-    name = URI.escape (Rack::Request.new d.env).params['name'].gsub('?','%3F').gsub /[\s\/]/,'_'
+    name = URI.escape (Rack::Request.new d.env).params['name'].gsub /[?#\s\/]/,'_'
     doc = 'http://'+e['SERVER_NAME']+Time.now.strftime('/%Y/%m/')+name
     post = doc.E.a '#'
     post[Type] = E[SIOCt+'BlogPost']

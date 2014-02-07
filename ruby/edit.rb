@@ -25,6 +25,7 @@ class E
     rand.to_s.h}
     
   fn 'graph/edit',->e,env,g{
+    puts "graph.edit #{e}"
     e.fromStream g, :triplrDoc} # add fs-sourced triples
     
 =begin HTML <form> RDF editor
