@@ -2,9 +2,9 @@ watch __FILE__
 class E
 
   F['/blog/post/POST'] = -> d,e {
-    name = URI.escape (Rack::Request.new d.env).params['name'].gsub /[\s\/]/,'_'
+    name = URI.escape (Rack::Request.new d.env).params['name'].gsub('?','%3F').gsub /[\s\/]/,'_'
     doc = 'http://'+e['SERVER_NAME']+Time.now.strftime('/%Y/%m/')+name
-    post = (doc+'#').E
+    post = doc.E.a '#'
     post[Type] = E[SIOCt+'BlogPost']
     post[Title] = name
     edit = "?prototype=sioct:BlogPost&graph=edit"
@@ -26,13 +26,17 @@ class E
       when /artery.wbur/ # compact whitespace a bit
         r[Content] = {class: :WBUR, c: [{_: :style, c: ".WBUR p {margin:0}"},r[Content]]}
         F['view/base'][{u => r},e,false]        
+
       when /boston\.com/ # crop sharebuttons
        (Nokogiri::HTML.parse r[Content][0]).css('p')[0].do{|p|r[Content]=p.inner_html}
         F['view/base'][{u => r},e,false]
+
       when /flickr/
         r[Content]
+
       when /reddit/ # minimal view
         F['view/'+SIOCt+'BoardPost'][{u => r},e]
+
       when /universalhub/  # logo + trim spacehogging tagjunk
         c = Nokogiri::HTML.fragment r[Content][0]
         c.css('section').map{|x|x.remove}
