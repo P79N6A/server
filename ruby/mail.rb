@@ -2,7 +2,7 @@
 class E
 
   begin 
-    require 'tmail'
+
   rescue LoadError => e
   end
 
@@ -21,6 +21,7 @@ class E
     end}
 
   def triplrTmail &f
+
     (TMail::Mail.load node).do{|m|      # load
       d = m.message_id; return unless d # parse successful?
       id = d[1..-2]                     # message-ID
@@ -61,18 +62,18 @@ class E
     puts e
   end
 
+  IndexMail = ->doc, graph, host {
+    graph.map{|u,r|
+      a = [] # address references
+      r[Creator].do{|c|a.concat c}
+      r[To].do{|t|a.concat t}
+      r[Date].do{|t|
+        st = '/'+t[0].gsub('-','/').sub('T','.').sub(/\+.*/,'.'+u.h[0..1]+'.e')
+        a.map{|rel|
+          doc.ln E[rel.uri.split('#')[0]+st]}}}}
+
   def triplrMailMessage &f
-    # indexing function, called on previously-unseen doc-graphs
-    ix = ->doc, graph, host {
-      graph.map{|u,r|
-        a = [] # addresses
-        r[Creator].do{|c|a.concat c}
-        r[To].do{|t|a.concat t}
-        r[Date].do{|t|
-          st = '/'+t[0].gsub('-','/').sub('T','.').sub(/\+.*/,'.'+u.h[0..1]+'.e')
-          a.map{|rel|
-            doc.ln E[rel.uri.split('#')[0]+st]}}}}
-    addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], ix, &f
+    addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
   end
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide containing file in default render

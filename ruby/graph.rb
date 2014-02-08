@@ -94,11 +94,10 @@ class E
     return unless e
     doc = self
     unless ext=='e' # already native-format
-      triplr = @r.do{|r|r.q['triplr'].do{|t| (respond_to? t) && t }} || :triplrMIME
-      doc = E '/E/rdf/' + [triplr,uri].h.dive
-      unless doc.e && doc.m > m; # freshness check
+      doc = E '/E/RDF' + path
+      unless doc.e && doc.m > m # up-to-date?
         graph = {}
-        [:triplrInode,triplr].each{|t| fromStream graph, t }
+        [:triplrInode,:triplrMIME].map{|t| fromStream graph, t}
         doc.w graph, true
       end
     end
