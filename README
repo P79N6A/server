@@ -4,12 +4,14 @@ Arch Linux
  packer -S graphicsmagick source-highlight perl-image-exiftool id3tool
  
  cd ruby
+
  bundle install
+
  ./install  (or)  ./install symlink  (or)  gem install infod
 
  link/copy {css,js} to pwd,
 
- infod         standalone
+ infod
    ''  apache  sh/.htaccess
    ''  nginx   sh/nginx
    ''  lo -d   localhost + daemonize

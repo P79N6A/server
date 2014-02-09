@@ -71,7 +71,7 @@ class E
     # TMail is significantly faster (50* on TM1.2.7 v M2.5.4) C-extension requiring abandonware that barely worked on 1.9, and no on 2.0 or 2.1...
     # debian's patched ruby-tmail (until it rolls into oblivion) mostly works (about 1% of mails fail to encoding issues)
     # a mail will only be parsed by Mail.rb once (slowly) but if youre feeling brave:
-#    addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
+    # addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
   end
 
   def triplrMail &f

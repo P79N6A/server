@@ -5,7 +5,7 @@ class E
 
  the first-pass will signify if the second-pass needs to be run. an ETag is be derived from the return-value, ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities.. <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
 
-   second-pass might fetch RDF from a SPARQL store. this lib was developed as an alternative to relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like SPARQLING up a set of files to be returned in standard Apache-as-static-fileserver fashion, and to webize non-RDF filesystem-content like email, directories, plain-text etc
+   second-pass might fetch RDF from a SPARQL store. this lib was developed as an alternative to relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like SPARQLING up a set of files to be returned in standard Apache-as-static-fileserver fashion, and to webize non-RDF filesystem-content like email, directories, URLs in plain-text etc
 
   triple streams - a source function yields triples up to the caller as it finds them,
   a function providing a block (consumes yielded values) is a sink, both is a filter 
@@ -94,7 +94,7 @@ class E
     return unless e
     doc = self
     unless ext=='e' # already native-format
-      doc = E '/E/RDF' + path
+      doc = E '/E/RDF' + uri.h.dive
       unless doc.e && doc.m > m # up-to-date?
         graph = {}
         [:triplrInode,:triplrMIME].map{|t| fromStream graph, t}
