@@ -12,15 +12,12 @@ case method
 when 'install'             ; puts \
   `rsync -av "#{srcDir}/" #{dest}`
   `cp        "#{srcFile}" #{dest}.rb`
-  
+  `cp #{srcDir}/bin/infod #{destBin}`  
+
 when 'symlink'
-  if File.exist? dest
-    puts "#{dest} already exists"
-  else
-    `ln -s #{srcDir}/bin/infod #{destBin}`
-    `ln -s "#{srcFile}" #{dest}.rb`
-    `ln -s  "#{srcDir}" #{dest}`
-  end
+  `ln -s #{srcDir}/bin/infod #{destBin}`
+  `ln -s "#{srcFile}" #{dest}.rb`
+  `ln -s  "#{srcDir}" #{dest}`
 
 when 'uninstall'
   `rm -r #{dest} #{dest}.rb #{destBin}`
