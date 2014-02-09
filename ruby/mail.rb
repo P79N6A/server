@@ -1,11 +1,6 @@
 #watch __FILE__
 class E
 
-  begin 
-
-  rescue LoadError => e
-  end
-
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
 
   GREP_DIRS.push /^\/m\/[^\/]+\// # allow grep within a single address
@@ -73,9 +68,9 @@ class E
 
   def triplrMailMessage &f
     addDocs :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
-    # TMail is significantly faster (50* in 1.2.7 v. 2.5.4) but C-extension based quasi-abandonware that barely worked on 1.9, and no on 2.0 or 2.1...
-    # debian's patched ruby-tmail (until it rolls into oblivion) has mostly worked (about 1% of mails fail to parse due to encoding issues) for a decade
-    # a mail will only be parsed by Mail.rb once (cached) but leaving triplrTmail in case you've a need for speed 
+    # TMail is significantly faster (50* on TM1.2.7 v M2.5.4) C-extension requiring abandonware that barely worked on 1.9, and no on 2.0 or 2.1...
+    # debian's patched ruby-tmail (until it rolls into oblivion) mostly works (about 1% of mails fail to encoding issues)
+    # a mail will only be parsed by Mail.rb once (slowly) but if youre feeling brave:
 #    addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
   end
 
