@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class E
 
   F['/blog/post/POST'] = -> d,e {
