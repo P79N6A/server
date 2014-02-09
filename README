@@ -1,9 +1,10 @@
-debian graphicsmagick libimage-exiftool-perl libid3-tools source-highlight bundler
-  arch graphicsmagick perl-image-exiftool id3tool source-highlight 
+TRIPLR util
+Debian graphicsmagick source-highlight libimage-exiftool-perl libid3-tools
+Arch   graphicsmagick source-highlight perl-image-exiftool id3tool
 
  cd ruby
  bundle install
- ./install symlink
+ sh install symlink  (or)  ./install  (or)  gem install infod
 
  DAEMON        NOTES
  infod         standalone
