@@ -70,33 +70,35 @@ class E
     addDocs :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
     # TMail is significantly faster (50* on TM1.2.7 v M2.5.4) C-extension requiring abandonware that barely worked on 1.9, and no on 2.0 or 2.1...
     # debian's ruby-tmail (until it rolls into oblivion) mostly works (about 1% of mails fail to encoding issues)
-    # addDocs :triplrTmail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
   end
 
   def triplrMail &f
     (f && (Mail.read node)).do{|m|
       id = m.message_id; return unless id # message-ID
       e = MessagePath[id]               # webized ID
-      from = m.from[0].to_utf8          # author
+      from = m.from.do{|f|f[0].to_utf8} # author
+      return unless from
       creator = '/m/'+from+'#'+from     # author URI
       yield e, DC+'identifier', id      # original ID
       yield e, DC+'source', self        # original file
       yield e, Type, E[SIOCt + 'MailMessage']
       yield e, Type, E[SIOC  + 'Post']
       yield e, Date, m.date.iso8601 if m.date
-      yield e, Title, m.subject.to_utf8
+      m.subject.do{|s|
+        s = s.to_utf8
+        yield e, Title, s
+      yield e, SIOC+'reply_to',E[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{s}&")+'#reply']}
       yield e, Creator, E[creator]
       yield e, SIOC+'has_discussion', E[e+'?graph=thread&view=timegraph#discussion']
 #      yield creator, Name, m.friendly_from.to_utf8
       yield creator, DC+'identifier', E['mailto:'+from]
-      yield e, SIOC+'reply_to',
-      E[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject.to_utf8}&")+'#reply']
+
 
       %w{to cc bcc}.map{|to|
-        m.send(to).do{|to| to.map{|to|
-            to = to.to_utf8
-            yield e, To, E['/m/'+to+'#'+to]
-          }}}
+        m.send(to).do{|to| to.justArray.map{|to|
+            to.do{|to|
+              to.to_utf8
+              yield e, To, E['/m/'+to+'#'+to]}}}}
 
       %w{in_reply_to references}.map{|ref|
         m.send(ref).do{|rs| (rs.class == Array ? rs : [rs]).map{|r|
@@ -106,7 +108,7 @@ class E
       # RDF:HTML message-body
       yield e, Content,
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
-           c: m.body.decoded.to_utf8.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
+           c: m.text_part.to_s.to_utf8.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
              l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # quotes
            }},(H.css '/css/mail',true)])}
   end

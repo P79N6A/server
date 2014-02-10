@@ -12,6 +12,7 @@ class Object
   def id; self end
   def do; yield self end
   def maybeURI; nil end
+  def justArray; [self] end
 end
 
 def watch f

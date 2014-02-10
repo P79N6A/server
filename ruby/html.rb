@@ -46,6 +46,7 @@ class Array
     inject([]){|a,b|a << b << i}[0..-2]
   end
   def tail; self[1..-1] end
+  def justArray; self end
 end
 
 class Object
