@@ -3,13 +3,11 @@ Debian
 Arch Linux
  packer -S graphicsmagick source-highlight perl-image-exiftool id3tool
  
- cd ruby
-
+ (cd ruby)
  bundle install
-
  ./install  (or)  ./install symlink  (or)  gem install infod
 
- link/copy {css,js} to pwd,
+ link/copy {css,js}
 
  infod
    ''  apache  sh/.htaccess
