@@ -26,7 +26,8 @@ class R
     e[:group] = {}
     [F['view'][d,e],H.css('/css/timegraph'),
      {class: :timegraph,
-       c: F['filter/timegraph'][e.q,d,nil,c.()]}]}
+       c: (F['filter/timegraph'][ e.q, d, nil]
+           c.())}]}
 
   # timegraph entry
   fn 'itemview/timegraph',->r,x{
