@@ -127,7 +127,7 @@ class R
       true
     }.
     sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
-    map{|r| Fn 'view/select',r,e,d}}
+    map{|r| F['view/select'][r,e,d]}}
 
   F['view/base']=->d,e,k=true,graph=nil{
     [H.once(e,'base',H.css('/css/html')),
@@ -217,7 +217,7 @@ class R
          {_: :a, class: :n, href: k, c: k.label+' '}}},
        {_: :style, id: :pS},
        {_: :style, id: :lS}),
-     (Fn 'view/'+(e.q['pv']||'table'),d,e)]}
+     (F['view/'+(e.q['pv']||'table')][d,e])]}
 
   # table-cell placement on sparse matrix of rows/columns
   # cal.rb contains an example usage
@@ -226,7 +226,7 @@ class R
     if layout
       [H.once(e,'table',H.css('/css/table')),
        {_: :table, c:
-         {_: :tbody, c: (Fn 'table/'+layout,d).do{|t|
+         {_: :tbody, c: (F['table/'+layout][d]).do{|t|
              rx = t.keys.max
              rm = t.keys.min
              c = t.values.map(&:keys)
@@ -237,7 +237,7 @@ class R
                  t[r].do{|r|
                    (cm..cx).map{|c|
                      r[c].do{|c|
-                       {_: :td, class: :cell, c:(Fn 'view/'+(a||e.q['cellview']||'title'),c,e)}
+                       {_: :td, class: :cell, c:(F['view/'+(a||e.q['cellview']||'title')][c,e])}
                      }||{_: :td}}}}} || ''
            }}}]
     else

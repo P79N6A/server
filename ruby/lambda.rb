@@ -65,13 +65,8 @@ class R
 end
 
 # URI -> function
-
 def fn u,y
   R::F[u.to_s] = y
-end
-
-def Fn a,*g
-  R::F[a][*g]
 end
 
 def R e

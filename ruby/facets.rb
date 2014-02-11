@@ -62,7 +62,7 @@ class R
      {_: 'button', c: 'Go'}]}
 
   fn 'view/facets',->m,e{
-    e.q['a'].do{|a|Fn 'facets',a,m,e} ||
-                  (Fn 'view/facetSelect',m,e)}
+    e.q['a'].do{|a|F['facets'][a,m,e]} ||
+    F['view/facetSelect'][m,e]}
 
 end

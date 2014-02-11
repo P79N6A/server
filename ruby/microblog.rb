@@ -48,7 +48,7 @@ class R
   end
 
   fn 'view/chat',->d,e{
-    Fn'baseview/chat',d,e,->{d.map{|u,r|Fn 'itemview/chat',r,e}}}
+    F['baseview/chat'][d, e, ->{d.map{|u,r|F['itemview/chat'][r,e]}}]}
 
   fn 'itemview/chat',->r,e{
     r[Type] && [*r[Type]].map(&:maybeURI).include?(SIOCt+'MailMessage') && r[:mail]=true

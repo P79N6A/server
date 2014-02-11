@@ -19,16 +19,14 @@ class R
 
   fn 'view/timegraph',->g,e{
     i = F['itemview/timegraph']
-    Fn 'baseview/timegraph',g,e,->{
-      g.map{|u,r|i.(r,e)}}}
+    F['baseview/timegraph'][g,e,->{g.map{|u,r|i.(r,e)}}]}
 
   fn 'baseview/timegraph',->d,e,c{
     e[:graph] = d
     e[:group] = {}
     [F['view'][d,e],H.css('/css/timegraph'),
      {class: :timegraph,
-       c: (Fn 'filter/timegraph', e.q,d,nil
-           c.())}]}
+       c: F['filter/timegraph'][e.q,d,nil,c.()]}]}
 
   # timegraph entry
   fn 'itemview/timegraph',->r,x{

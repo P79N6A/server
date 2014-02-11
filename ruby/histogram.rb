@@ -2,8 +2,8 @@
 class R
 
   fn 'view/histogram',->m,e{
-    e.q['a'].do{|a|Fn 'histogram/main',m,e} ||
-    (Fn 'view/facetSelect',m,e)}
+    e.q['a'].do{|a|F['histogram/main'][m,e]} ||
+    (F['view/facetSelect'][m,e])}
 
   fn 'histogram/main',->d,e{
 
@@ -17,10 +17,10 @@ class R
     v = F['view/'+(e.q['hv']||'title')]
 
     # construct histogram bins
-    (Fn 'histogram/bins',d,a,n).do{|h,m|
+    (F['histogram/bins'][d,a,n]).do{|h,m|
       
       [H.css('/css/hist'),%w{mu hist}.map{|s|H.js('/js/'+s)},
-       (Fn 'histogram',h),{style: "width: 100%; height: 5em"},
+       (F['histogram'][h]),{style: "width: 100%; height: 5em"},
        h.map{|b,r|
          # skip empty bins
          r.empty? ? ' ' :
