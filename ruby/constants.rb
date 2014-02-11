@@ -1,4 +1,4 @@
-class E
+class R
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
 

@@ -1,5 +1,5 @@
 watch __FILE__
-class E
+class R
 
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
 
@@ -23,7 +23,7 @@ class E
       r[Date].do{|t|
         st = '/'+t[0].gsub('-','/').sub('T','.').sub(/\+.*/,'.'+u.h[0..1]+'.e')
         a.map{|rel|
-          doc.ln E[rel.uri.split('#')[0]+st]}}}}
+          doc.ln R[rel.uri.split('#')[0]+st]}}}}
 
   def triplrMailMessage &f
     addDocs :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
@@ -38,29 +38,29 @@ class E
       creator = '/m/'+from+'#'+from     # author URI
       yield e, DC+'identifier', id      # original ID
       yield e, DC+'source', self        # original file
-      yield e, Type, E[SIOCt + 'MailMessage']
-      yield e, Type, E[SIOC  + 'Post']
+      yield e, Type, R[SIOCt + 'MailMessage']
+      yield e, Type, R[SIOC  + 'Post']
       yield e, Date, m.date.iso8601 if m.date
       m.subject.do{|s|
         s = s.to_utf8
         yield e, Title, s
-      yield e, SIOC+'reply_to',E[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{s}&")+'#reply']}
-      yield e, Creator, E[creator]
-      yield e, SIOC+'has_discussion', E[e+'?graph=thread&view=timegraph#discussion']
+      yield e, SIOC+'reply_to',R[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{s}&")+'#reply']}
+      yield e, Creator, R[creator]
+      yield e, SIOC+'has_discussion', R[e+'?graph=thread&view=timegraph#discussion']
 #      yield creator, Name, m.friendly_from.to_utf8
-      yield creator, DC+'identifier', E['mailto:'+from]
+      yield creator, DC+'identifier', R['mailto:'+from]
 
 
       %w{to cc bcc}.map{|to|
         m.send(to).do{|to| to.justArray.map{|to|
             to.do{|to|
               to.to_utf8
-              yield e, To, E['/m/'+to+'#'+to]}}}}
+              yield e, To, R['/m/'+to+'#'+to]}}}}
 
       %w{in_reply_to references}.map{|ref|
         m.send(ref).do{|rs| (rs.class == Array ? rs : [rs]).map{|r|
-          yield e, SIOC+'reply_of', E[MessagePath[r]]}}}
-      m.in_reply_to.do{|r| yield e, SIOC+'has_parent', E[MessagePath[r]]}
+          yield e, SIOC+'reply_of', R[MessagePath[r]]}}}
+      m.in_reply_to.do{|r| yield e, SIOC+'has_parent', R[MessagePath[r]]}
 
       # RDF:HTML message-body
       yield e, Content,
@@ -88,17 +88,17 @@ module TMail
             part.unicode_body.hrefs true
           else # attachment
             a = i.a('.attache').mk # create container
-            p = a.as(part['content-type']['name'] || (partCount.to_s + '.' + (E::MIME.invert[part.content_type] || '.bin').to_s))
+            p = a.as(part['content-type']['name'] || (partCount.to_s + '.' + (R::MIME.invert[part.content_type] || '.bin').to_s))
             p.w part.body if !p.e # write attachment into message container
             partCount += 1        # display images
-            yield i.uri, E::SIOC+'attachment', p
+            yield i.uri, R::SIOC+'attachment', p
             '<a href="'+p.uri+'">'+(part.main_type=='image' ? '<img src="'+p.uri+'">' : '')+p.uri.label+"</a><br>\n"
           end
         }.join
       else # just a part
         unicode_body.do{|b|
           if content_type && content_type.match(/html/)
-            E::F['cleanHTML'][b]
+            R::F['cleanHTML'][b]
           else
             b.hrefs true
           end}

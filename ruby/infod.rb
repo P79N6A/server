@@ -4,6 +4,7 @@ date
 digest/sha1
 fileutils
 json
+linkeddata
 mail
 nokogiri
 open-uri

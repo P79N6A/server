@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 
   # sprintf() formats in <https://github.com/infodaemon/www/blob/60a9b5f51cf15d5723afd9172767843d97190d8f/css/i/lotek.theme>
   def triplrIRC &f
@@ -17,8 +17,8 @@ class E
         yield s, SIOCt+'ChatChannel', channel
         yield s, Creator,             m[2]
         yield s, Content,             m[3].hrefs(true)
-        yield s, Type,                E[SIOCt+'InstantMessage']
-        yield s, Type,                E[SIOC+'Post']
+        yield s, Type,                R[SIOCt+'InstantMessage']
+        yield s, Type,                R[SIOC+'Post']
         yield s, SIOC+'link',        (m[3].match(/http:\//) ? 'true' : 'false')
       } rescue nil
     }
@@ -26,18 +26,18 @@ class E
 
   def tw g
     node.readlines.shuffle.each_slice(22){|s|
-      E['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocs :triplrTweets, g, nil, FeedArchiver}
+      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocs :triplrTweets, g, nil, FeedArchiver}
   end
 
   def triplrTweets
     base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('a.details').attr('href') # subject URI
-      yield s, Type, E[SIOCt+'MicroblogPost']
-      yield s, Type, E[SIOC+'Post']
-      yield s, Creator, E(base+'/'+t.css('.username b')[0].inner_text)
+      yield s, Type, R[SIOCt+'MicroblogPost']
+      yield s, Type, R[SIOC+'Post']
+      yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
       yield s, Name,t.css('.fullname')[0].inner_text
-      yield s, Atom+"/link/image", E(t.css('.avatar')[0].attr('src'))
+      yield s, Atom+"/link/image", R(t.css('.avatar')[0].attr('src'))
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       content = t.css('.tweet-text')[0]
       content.css('a').map{|a|
@@ -69,7 +69,7 @@ class E
         c: F['itemview/chat'][r,e]}}}
 
   fn 'baseview/chat',->d,e,c{
-    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{E.c}}\n"}),c.()]}
+    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{R.c}}\n"}),c.()]}
 
   F['view/'+SIOCt+'InstantMessage']=F['view/chat']
   F['view/'+SIOCt+'MicroblogPost']=F['view/chat']

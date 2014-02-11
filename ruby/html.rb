@@ -20,14 +20,14 @@ class H
 
   def H.js a,inline=false
     p = a + '.js'
-    inline ? {_: :script, c: p.E.r} :
+    inline ? {_: :script, c: p.R.r} :
     {_: :script, type: "text/javascript", src: p}
   end
 
   def H.css a,inline=false
     p = a + '.css'
-    inline ? {_: :style, c: p.E.r} :
-    {_: :link, href: p, rel: :stylesheet, type: E::MIME[:css]}
+    inline ? {_: :style, c: p.R.r} :
+    {_: :link, href: p, rel: :stylesheet, type: R::MIME[:css]}
   end
 
   def H.once e,n,*h
@@ -103,10 +103,10 @@ class Hash
       H({_: :table, class: :html, c: map{|k,v|
             unless k == 'uri' && (v.match IsBnode)
               {_: :tr, property: k, c:
-                [k == E::Content ? {_: :td, class: :val, colspan: 2, c: v} :
+                [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
                  [
-                  ({_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? (v.E.docBase.localURL e)+'?graph=edit' : k), c: k.to_s.abbrURI}], class: :key} if key),
-                  {_: :td, c: k == 'uri' ? v.E.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e,g), class: :val},
+                  ({_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? (v.R.docBase.localURL e)+'?graph=edit' : k), c: k.to_s.abbrURI}], class: :key} if key),
+                  {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e,g), class: :val},
                  ]]}
             end
           }})
@@ -114,7 +114,7 @@ class Hash
   end
 end
 
-class E
+class R
 
   def html *a
     url.href
@@ -213,7 +213,7 @@ class E
      {_: :a, href: '#', c: '-', id: :hideP},
      {_: :a, href: '#', c: '+', id: :showP},
      {_: :span, id: 'properties',
-       c: E.graphProperties(d).map{|k|
+       c: R.graphProperties(d).map{|k|
          {_: :a, class: :n, href: k, c: k.label+' '}}},
        {_: :style, id: :pS},
        {_: :style, id: :lS}),
@@ -245,7 +245,7 @@ class E
     end}
 
   fn 'view/table',->g,e{
-    keys = E.graphProperties g
+    keys = R.graphProperties g
     v = g.values
     e.q['sort'].do{|p|
       p = p.expand
@@ -256,6 +256,6 @@ class E
     [H.css('/css/table'),
      {_: :table,:class => :tab,
        c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
-           v.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.E.html : e[k].html}}}}]}]}
+           v.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
 
 end

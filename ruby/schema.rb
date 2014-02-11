@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 =begin
  www)  http://data.whats-your.name
 
@@ -14,8 +14,8 @@ class E
  ) RDF usage data
    curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt  
  2) massage
- irb> E.cacheSchemas
-  ..  E.indexSchemas
+ irb> R.cacheSchemas
+  ..  R.indexSchemas
 
  schema missing? publish and add to prefix.cc,
  see also ideas at http://www.w3.org/2013/04/vocabs/
@@ -23,20 +23,20 @@ class E
 =end
 
   UsageWeight = 'http://schema.whats-your.name/usageFrequency'
-  SchemasRDFa = %w{http://schema.org/docs/schema_org_rdfa.html}.map &:E
+  SchemasRDFa = %w{http://schema.org/docs/schema_org_rdfa.html}.map &:R
 
-  def E.cacheSchemas
-    E.schemaDocs.map &:cacheSchema
+  def R.cacheSchemas
+    R.schemaDocs.map &:cacheSchema
     # rapper2 is failing at RDFa autodiscovery, import them again
     SchemasRDFa.map{|s|
       s.ttl.w `rapper -i rdfa -o turtle #{s.uri}`
       s.ef.w s.ttl.graphFromFile,true}
   end
 
-  def E.indexSchemas
+  def R.indexSchemas
     g = {}
-    E.schemaDocs.map(&:ef).flatten.map{|d|d.graphFromFile g}
-    '/schema/schema.txt'.E.w g.sort_by{|u,r|r[UsageWeight]}.map{|u,r|
+    R.schemaDocs.map(&:ef).flatten.map{|d|d.graphFromFile g}
+    '/schema/schema.txt'.R.w g.sort_by{|u,r|r[UsageWeight]}.map{|u,r|
       [(r[UsageWeight]||0),
        u,
        r[Label],
@@ -55,15 +55,15 @@ class E
     unless ef.e || ttl.do{|t| t.e && t.size > 256e3}
       g = ttl.graphFromFile # parse
       g.map{|u,r|           # each resource
-        E.schemaWeights[u].do{|w| # grab stats
+        R.schemaWeights[u].do{|w| # grab stats
           r[UsageWeight] = w }}
       ef.w g,true # write annotated graph
     end
   end
 
-  def E.schemaWeights
+  def R.schemaWeights
     @schemaWeights ||=
-      (data = '/properties.txt'.E
+      (data = '/properties.txt'.R
        (puts "download\ncurl http://data.whats-your.name/schema/gromgull.gz | zcat > predicates.txt"; exit) unless data.e
        w = {}
        data.read.each_line{|e|
@@ -72,13 +72,13 @@ class E
        w)
   end
   
-  def E.schemaDocs
+  def R.schemaDocs
     @schemaDocs ||=
-      (source = E['http://prefix.cc/popular/all.file.txt']
-       mirror = E['/prefix.txt']
+      (source = R['http://prefix.cc/popular/all.file.txt']
+       mirror = R['/prefix.txt']
        (mirror.e ? mirror : source).   # select schema-pointers doc
        read.split(/\n/).grep(/^[^#]/). # each uncommented line
-       map{|t| t.split(/\t/)[1].E }.   # parse to resource pointer
+       map{|t| t.split(/\t/)[1].R }.   # into a Resource
        concat SchemasRDFa)             # schema list
   end
 
@@ -86,7 +86,7 @@ class E
     r.q['view']='table'
     g = {}
     if (q = r.q['q']) && !q.empty?
-      search = "grep -i #{q.sh} #{'/schema/schema.txt'.E.d} | head -n 255"
+      search = "grep -i #{q.sh} #{'/schema/schema.txt'.R.d} | head -n 255"
       found = `#{search}`.to_utf8.lines.to_a.map{|i|
         c,u,t = i.split ' ',3
         c = c.to_i

@@ -1,4 +1,4 @@
-class E
+class R
   
   Apache = ENV['apache']
   Nginx  = ENV['nginx']
@@ -62,13 +62,13 @@ class E
     maybeSend @r.format, ->{
       
       # response
-      r = E'/E/req/' + @r['ETag'].dive
+      r = R '/E/req/' + @r['ETag'].dive
       if r.e # exists
         r
       else
         
         # graph
-        c = E '/E/graph/' + graphID.dive
+        c = R '/E/graph/' + graphID.dive
         if c.e # exists
           m = c.r true
         else
@@ -93,7 +93,7 @@ class E
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
 
       # frontend-specific handlers
-      b.class == E ? (Nginx ?                                                   # nginx chosen?
+      b.class == R ? (Nginx ?                                                   # nginx chosen?
                       [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
                       Apache ?                                                  # Apache chosen?
                       [c,h.update({'X-Sendfile' => b.d}),[]] : # Apache handler

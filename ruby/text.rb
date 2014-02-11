@@ -27,13 +27,13 @@ class String
 
 end
 
-class E
+class R
 
   fn 'view/monospace',->d,e{
     [(H.once e,'text',(H.css '/css/text')),
      d.values.map{|v|
       v[Content].do{|c|
-         b = E.cs
+         b = R.cs
         {class: :text,
            c: [{_: :a, href: v.url+'?view', c: v.label, style: "background-color:" + b},
                {_: :pre,  c: c, style: "border-color:" + b}]}}}]}
@@ -56,22 +56,22 @@ class E
      (H.once e,'title',(H.css '/css/title'))]}
 
   fn 'itemview/title',->r,e{
-    {_: :a, class: :title, href: r.E.url,
-      c: r[Title] || r.uri.abbrURI} if (r.class == E || r.class == Hash) && r.uri}
+    {_: :a, class: :title, href: r.R.url,
+      c: r[Title] || r.uri.abbrURI} if (r.class == R || r.class == Hash) && r.uri}
 
   # a list of URIs
   def triplrUriList
-    yield uri, COGS+'View', E[uri+'?view=csv']
+    yield uri, COGS+'View', R[uri+'?view=csv']
     open(d).readlines.grep(/^[^#]/).map{|l|
       l = l.chomp
-      yield uri, '/rel', l.E
+      yield uri, '/rel', l.R
       yield l, '/rev', self
-      yield l, Type, E[CSV+'Row']
+      yield l, Type, R[CSV+'Row']
     }
   end
 
   def uris
-    graph.keys.select{|u|u.match /^http/}.map &:E
+    graph.keys.select{|u|u.match /^http/}.map &:R
   end
 
   def triplrANSI
@@ -94,7 +94,7 @@ class E
   end
 
   def triplrPS
-    p = E[dirname + '/.' + File.basename(path) + '/']
+    p = R[dirname + '/.' + File.basename(path) + '/']
     unless p.e
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
@@ -112,7 +112,7 @@ class E
         {type: :book,
           c: [{_: :img, style:'float:left;max-width:100%', src: is[0].url},
               {name: :pages,
-                c: is.map{|i|{_: :a,href: i.url, c: i.E.bare}}}]}}}]}
+                c: is.map{|i|{_: :a,href: i.url, c: i.R.bare}}}]}}}]}
 
   def triplrRTF
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs

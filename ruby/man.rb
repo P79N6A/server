@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
   
   fn '/man/GET',->e,r{
     manPath = '/usr/share/man'
@@ -16,7 +16,7 @@ class E
     if !name || name.empty? || name.match(/\//)
       if section
         # enumerate section children
-     body = H [H.css('/css/man'),{_: :style, c: "a {background-color: #{E.cs}}"},
+     body = H [H.css('/css/man'),{_: :style, c: "a {background-color: #{R.cs}}"},
             Pathname(manPath+'/man'+section).c.map{|p|
               n = p.basename.to_s.sub /\.[0-9][a-z]*\...$/,''
             }.group_by{|e|e[0].match(/[a-zA-Z]/) ? e[0].downcase : '0-9'}.sort.map{|g,m|
@@ -37,8 +37,8 @@ class E
         return false
       else
 
-        roff = man.E
-        htmlBase = roff.dir.to_s.sub(/.*\/share/,'').E
+        roff = man.R
+        htmlBase = roff.dir.to_s.sub(/.*\/share/,'').R
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
 
@@ -59,7 +59,7 @@ class E
           
           # add CSS link
           body.add_child H H.css('/css/man')
-          body.add_child H[{_: :style, c: "a {background-color:#{E.cs}}"}]
+          body.add_child H[{_: :style, c: "a {background-color:#{R.cs}}"}]
           
           # add localization links
           (body.css('h1')[0] ||

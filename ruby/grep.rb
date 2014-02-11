@@ -1,12 +1,12 @@
 #watch __FILE__
-class E
+class R
 
   fn 'view/'+Posix+'util#grep',-> d,e {{_: :form, c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :set, value: :grep}]}}
 
   GREP_DIRS=[]
 
   fn 'set/grep',->e,q,m{
-    q['q'].do{|query| m[e.uri+'#grep'] = {Type => E[Posix+'util#grep']}
+    q['q'].do{|query| m[e.uri+'#grep'] = {Type => R[Posix+'util#grep']}
       path = e.pathSegment
       GREP_DIRS.find{|p|path.uri.match p}.do{|allow|
         [e,path].compact.select(&:e).map{|e|
@@ -52,7 +52,7 @@ class E
          # match?
          !g.empty? &&                                       
          [# link to resource
-          r.E.do{|e|{_: :a, href: e.url, c: e}}, '<br>',
+          r.R.do{|e|{_: :a, href: e.url, c: e}}, '<br>',
           # show 3 matches per resource
           [g[-1*(g.size.max 3)..-1].map{|l|   
              # exerpt

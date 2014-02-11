@@ -1,8 +1,8 @@
 #watch __FILE__
-class E
+class R
 
   def triplrImage &f
-    yield uri,Type,E[DC+'Image']
+    yield uri,Type,R[DC+'Image']
     triplrStdOut 'exiftool', EXIF, &f
   end
 
@@ -12,7 +12,7 @@ class E
       size = r.q['px'].to_i.min(8).max(4096)
       stat = i.node.stat
       id = [stat.ino,stat.mtime,size].h.dive
-      path = E['/E/image/'+id+'.png']
+      path = R['/E/image/'+id+'.png']
       if !path.e
         path.dirname.mk
         if i.mimeP.match(/^video/)
@@ -83,8 +83,8 @@ class E
        (seen[i[:uri]] = true
         i[:c].())}]}
 
-  def E.c; '#%06x' % rand(16777216) end
-  def E.cs; '#%02x%02x%02x' % F['color/hsv2rgb'][rand*6,1,1] end
+  def R.c; '#%06x' % rand(16777216) end
+  def R.cs; '#%02x%02x%02x' % F['color/hsv2rgb'][rand*6,1,1] end
 
   fn 'color/hsv2rgb',->h,s,v{
     i = h.floor

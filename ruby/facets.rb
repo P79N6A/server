@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 =begin
    faceted-filter, implemented via dynamically-generated style-sheets
 
@@ -58,7 +58,7 @@ class E
   
   fn 'view/facetSelect',->m,e{
     [(H.js '/js/facets.select'),(H.js '/js/mu'),(H.css '/css/facets'),
-     E.graphProperties(m).map{|e|[{c: e},' ']},
+     R.graphProperties(m).map{|e|[{c: e},' ']},
      {_: 'button', c: 'Go'}]}
 
   fn 'view/facets',->m,e{

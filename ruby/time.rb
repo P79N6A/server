@@ -15,7 +15,7 @@ class Object
   end
 end
 
-class E
+class R
 
   fn 'view/timegraph',->g,e{
     i = F['itemview/timegraph']
@@ -38,8 +38,8 @@ class E
 
       labelP = x.q['label'].do{|l|l.expand} || Creator
       label = ([*r[labelP]][0]).do{|l|
-               l.respond_to?(:uri) ? l.E.label : l.to_s}
-      lc = x[:group][label] ||= E.c
+               l.respond_to?(:uri) ? l.R.label : l.to_s}
+      lc = x[:group][label] ||= R.c
       arc = x.q['arc'].do{|a| a.expand } || (SIOC+'has_parent')
 
       [{style: "top: #{r['x']}%; left: #{r['y']}%",

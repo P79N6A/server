@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 =begin
   graph construction is two-pass:
 
@@ -31,7 +31,7 @@ class E
     graph = fromStream({},triplr)
     docs = {}
     graph.map{|u,r|
-      e = u.E                 # resource
+      e = u.R                 # resource
       doc = e.ef              # doc
       doc.e ||                # exists - we're nondestructive here
       (docs[doc.uri] ||= {}   # init doc-graph
@@ -40,7 +40,7 @@ class E
          r[p].do{|v|v.map{|o| # values exist?
              e.index p,o}}})} # index triple
     docs.map{|d,g|            # resources in docs
-      d = d.E; puts "<#{d.docBase}>"
+      d = d.R; puts "<#{d.docBase}>"
       d.w g,true              # write
       hook[d,g,host] if hook} # insert-hook
     graph.triples &b if b     # emit triples
@@ -56,7 +56,7 @@ class E
       g.delete '#'
     else
       g['#'][RDFs+'member'] = set
-      g['#'][Type] = E[HTTP+'Response']
+      g['#'][Type] = R[HTTP+'Response']
       set.map{|u| g[u.uri] = u } # thunk
     end
     F['docsID'][g,q]}
@@ -71,8 +71,8 @@ class E
       t = ::Date.parse "#{m[2]}-#{m[3]}-#{m[4]}"
       pp = m[1] + (t-1).strftime('%Y/%m/%d') + m[5]
       np = m[1] + (t+1).strftime('%Y/%m/%d') + m[5]
-      u[Prev] = {'uri' => pp} if pp.E.e || E['http://' + e.env['SERVER_NAME'] + pp].e
-      u[Next] = {'uri' => np} if np.E.e || E['http://' + e.env['SERVER_NAME'] + np].e }
+      u[Prev] = {'uri' => pp} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
+      u[Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
     s }
 
   # fs-derived ID for a resource-set
@@ -86,15 +86,15 @@ class E
   # update configuration such as q['graph'] = 'hexastore' and return false or call #response..
   fn 'graph/',->e,q,m{
     # force thunks
-    m.values.map{|r|(r.env e.env).graphFromFile m if r.class == E }
+    m.values.map{|r|(r.env e.env).graphFromFile m if r.class == R }
     # cleanup unexpanded thunks
-    m.delete_if{|u,r|r.class==E}}
+    m.delete_if{|u,r|r.class==R}}
 
   def graphFromFile g={}
     return unless e
     doc = self
     unless ext=='e' # already native-format
-      doc = E '/E/RDF' + uri.h.dive
+      doc = R '/E/RDF' + uri.h.dive
 #      unless doc.e && doc.m > m # up-to-date?
         graph = {}
         [:triplrInode,:triplrMIME].map{|t| fromStream graph, t}

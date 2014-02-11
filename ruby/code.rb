@@ -1,4 +1,4 @@
-class E
+class R
   
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
@@ -10,7 +10,7 @@ class E
  end
 
   fn 'view/code',->d,e{[{_: :style, c: 'body{background-color:white;color:black}'},
-    d.values.map{|r|[r.E.do{|e|[{_: :a,name: e.uri},e.html(e.base,true)]},'<br>',
+    d.values.map{|r|[r.R.do{|e|[{_: :a,name: e.uri},e.html(e.base,true)]},'<br>',
                       r[Content]]}]}
 
   # ls /usr/share/source-highlight/*.lang | xargs -i basename {} .lang | tr "\n" " "

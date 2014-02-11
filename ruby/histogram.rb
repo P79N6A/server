@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 
   fn 'view/histogram',->m,e{
     e.q['a'].do{|a|Fn 'histogram/main',m,e} ||

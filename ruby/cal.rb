@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
   
   fn 'req/day',->e,r{
     [303, {'Location'=> e.day.uri + r.q.except('y').qs}, []]}
@@ -51,7 +51,7 @@ class E
 
   fn 'view/month',->d,e{
     [(d.delete :time).do{|month|
-       {_: :b, c: month.strftime('%B'),style: "color: #{E.cs}"}},
+       {_: :b, c: month.strftime('%B'),style: "color: #{R.cs}"}},
      F['view/t'][d,e,'day','day-terminate']]}
 
     fn 'view/day-terminate',->d,e{

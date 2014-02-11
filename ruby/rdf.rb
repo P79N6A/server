@@ -1,39 +1,29 @@
 #watch __FILE__
-class E
+class R
 
   def nt;  @nt ||= docBase.a('.nt') end
   def n3;  @n3 ||= docBase.a('.n3') end
   def ttl; @ttl||= docBase.a('.ttl') end
 
-  def E.linkeddata
-    @linkeddata ||=
-      (begin require 'linkeddata'
-       rescue LoadError => e
-         puts "linkeddata library not found"
-       end)
-  end
-
   def self.renderRDF d,f,e
-    E.linkeddata.do{|ld|
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
       if s && p && o
-        s = RDF::URI s=='#' ? '' : (s.E.hostURL e)
+        s = RDF::URI s=='#' ? '' : (s.R.hostURL e)
         p = RDF::URI p
-        o = ([E,Hash].member?(o.class) ? (RDF::URI o.E.hostURL(e)) :
+        o = ([R,Hash].member?(o.class) ? (RDF::URI o.R.hostURL(e)) :
              (l = RDF::Literal o
               l.datatype=RDF.XMLLiteral if p == Content
               l)) rescue nil
         (w << (RDF::Statement.new s,p,o) if o ) rescue nil
-      end}}}
+      end}}
   end
   
   def triplrRDF format=nil, local=true
-    E.linkeddata.do{|ld|
     uri = (local && f) ? d : uri
     RDF::Reader.open(uri, :format => format){|r|
       r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s, [RDF::Node, RDF::URI].member?(o.class) ? E(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}}
+        yield s.to_s, p.to_s, [RDF::Node, RDF::URI].member?(o.class) ? R[o] : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}
   end
 
   [['application/ld+json',:jsonld],
@@ -41,7 +31,7 @@ class E
    ['text/turtle',:turtle],
    ['text/n3',:n3]
   ].map{|mime|
-    F[Render+mime[0]] = ->d,e{E.renderRDF d, mime[1], e}}
+    F[Render+mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
   F['view/data'] = ->d,e {
     local = true

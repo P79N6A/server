@@ -34,20 +34,20 @@ module FeedParse
           puts "no HTTP URIs found #{u}"
           u = '/junk/'+u.gsub('/','.')
         end
-        yield u, E::Type, (E::SIOCt+'BlogPost').E
-        yield u, E::Type, (E::SIOC+'Post').E
+        yield u, R::Type, (R::SIOCt+'BlogPost').R
+        yield u, R::Type, (R::SIOC+'Post').R
         
         #links
         inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
           e[1].match(/(href|url|src)=['"]?([^'">\s]+)/).do{|url|
-            yield(u,E::Atom+'/link/'+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].E)}}
-        
+            yield(u,R::Atom+'/link/'+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].R)}}
+
         #elements
         inner.scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
           yield u,                           # s
-          (x[e[0]&&e[0].chop]||E::RSS)+e[1], # p
+          (x[e[0]&&e[0].chop]||R::RSS)+e[1], # p
           e[3].extend(FeedParse).guess.do{|o|# o
-            o.match(/\A(\/|http)[\S]+\Z/) ? o.E : E::F['cleanHTML'][o]
+            o.match(/\A(\/|http)[\S]+\Z/) ? o.R : R::F['cleanHTML'][o]
           }}
       else
         puts "no post-identifiers found #{u}"
@@ -58,19 +58,19 @@ module FeedParse
   end
 end
 
-class E
+class R
 
   Atom = W3+'2005/Atom'
    RSS = Purl+'rss/1.0/'
   RSSm = RSS+'modules/'
-  Feed = (E RSS+'channel')
+  Feed = (R RSS+'channel')
 
-  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|E (URI uri).merge(u.attr :href)} end
+  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
   # add existing resources to index
   #
-  # 'http:/'.E.take.select{|e|e.ext=='e'}.map{|r|E::FeedArchiver[r,r.graph,'localhost']}
+  # 'http:/'.R.take.select{|e|e.ext=='e'}.map{|r|R::FeedArchiver[r,r.graph,'localhost']}
 
   FeedArchiver = -> doc, graph, host {
     doc.roonga host
@@ -79,7 +79,7 @@ class E
         t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
         stop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
         b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(stop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-        doc.ln E["http://#{host}/news/#{t}#{b}e"]}}
+        doc.ln R["http://#{host}/news/#{t}#{b}e"]}}
   doc}
 
   GREP_DIRS.push /^\/news\/\d{4}/
@@ -97,7 +97,7 @@ class E
       Nokogiri::HTML.parse(o).do{|o|
         o.css('.md').do{|o|yield s,p,o}
         yield s,Creator,o.css('a')[-4].child.to_s.strip
-        yield s,Type,(SIOCt+'BoardPost').E
+        yield s,Type,(SIOCt+'BoardPost').R
       } : (yield s,p,o)}
   end
 

@@ -1,14 +1,14 @@
 #watch __FILE__
-class E
+class R
 
   fn 'view/dir',->i,e{
-    a = -> i { i = i.E
+    a = -> i { i = i.R
       {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?y=scaleImage&px=233'} : i.uri.sub(/.*\//,'')}}
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r|
-       url = r.E.localURL e
-       {class: :dir, style: "background-color: #{E.cs}",    # dir wrapper
+       url = r.R.localURL e
+       {class: :dir, style: "background-color: #{R.cs}",    # dir wrapper
          c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
                   {_: :a, href: url.t, c: '/'}]},
              r[Posix+'dir#child'].do{|c|c.map{|c|a[c]}}]}}]}
@@ -18,7 +18,7 @@ class E
   fn 'view/ls',->i,e{
     e.q['sort'] ||= 'stat:mtime'
     e.q['reverse'] ||= true
-    dir = e['uri'].E
+    dir = e['uri'].R
     path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
     i = i.dup
@@ -31,7 +31,7 @@ class E
     [(H.css '/css/ls'),
      {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
      {class: :ls, c: (Fn 'view/table',i,e)},'<br clear=all>',
-     {_: :a, class: :down, href: e['uri'].E.url.t, c: '&darr;'}]}
+     {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
 
   fn 'set/find',->e,q,m,x=''{
     q['q'].do{|q|
@@ -71,7 +71,7 @@ class E
       s,p = l.chomp.split /\t/ # size, path
       p = p.unpath            # path -> URI
       m[p.uri] = {'uri' => p.uri,
-        Posix+'util#du' => E[p.uri+'?graph=du#du'],
+        Posix+'util#du' => R[p.uri+'?graph=du#du'],
             Stat+'size' => [s.to_i]}}
     m }
   

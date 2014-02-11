@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 
   # no link-follow
   def mime
@@ -168,12 +168,12 @@ class E
   }}
 
   def render mime,   graph, e
-   E[Render+ mime].y graph, e
+   R[Render+ mime].y graph, e
   end
 
   def triplrMIME &b
     mimeP.do{|mime|
-      yield uri, E::Type, (E MIMEtype+mimeP)
+      yield uri, R::Type, (R MIMEtype+mimeP)
       (MIMEsource[mimeP]||
        MIMEsource[mimeP.split(/\//)[0]]).do{|s|
         send *s,&b }}

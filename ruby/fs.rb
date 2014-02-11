@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 
   def [] p; predicate p end
   def []= p,o
@@ -15,7 +15,7 @@ class E
     p = predicatePath p, short
     p.node.take.map{|n|
       if n.file? # literal
-        o = n.E
+        o = n.R
         case o.ext
         when "json"
           o.r true
@@ -23,7 +23,7 @@ class E
           o.r
         end
       else # resource
-       E[n.to_s.unpath p.d.size]
+       R[n.to_s.unpath p.d.size]
       end}
   end
 
@@ -31,7 +31,7 @@ class E
     p = predicatePath p, short # s+p URI
     t,literal = p.objectPath o # s+p+o URI
     puts "#{undo ? :- : :+} <#{t}>"
-    if o.class == E # resource
+    if o.class == R # resource
       if undo
         t.delete if t.e # undo
       else
@@ -57,20 +57,20 @@ class E
   def triplrInode
     if d?
       yield uri, Posix+'dir#parent', parent
-      c.map{|c| yield uri, Posix + 'dir#child', E[c.uri.gsub('?','%3F').gsub('#','23')]}
+      c.map{|c| yield uri, Posix + 'dir#child', R[c.uri.gsub('?','%3F').gsub('#','23')]}
     end
     node.stat.do{|s|[:size,:ftype,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}}
   end
   
   def triplrSymlink
     realpath.do{|t|
-      target = t.to_s.index(FSbase)==0 ? t.E : t.to_s
+      target = t.to_s.index(FSbase)==0 ? t.R : t.to_s
       yield uri, '/linkTarget', target }
   end
 
   def ln t, y=:link
-    t = t.E # cast bare URI/string to resource
-    t = t.uri[0..-2].E if t.uri[-1] == '/'
+    t = t.R
+    t = t.uri[0..-2].R if t.uri[-1] == '/'
     if !t.e # destination exist?
       t.dirname.mk
       FileUtils.send y, node, t.node
@@ -99,7 +99,7 @@ end
 
 class Pathname
 
-  def E; to_s.force_encoding('UTF-8').unpath end
+  def R; to_s.force_encoding('UTF-8').unpath end
 
   def c
     return [] unless directory?

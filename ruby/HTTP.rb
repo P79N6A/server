@@ -1,12 +1,12 @@
 #watch __FILE__
-class E
+class R
 
-  def E.call e
-    e.extend Th # add HTTP utility functions to environment table
+  def R.call e
+    e.extend Th # HTTP utility functions
     dev # see if watched files were changed
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
-    resource = E['http://'+e['SERVER_NAME']+path]
+    resource = R['http://'+e['SERVER_NAME']+path]
 
     if resource.inside
       e['uri'] = resource.uri
@@ -64,7 +64,7 @@ module Th
     # Accept formats
     accept.sort.reverse.map{|q,mimes|
       mimes.map{|mime|
-        return mime if E::F[E::Render+mime]}}
+        return mime if R::F[R::Render+mime]}}
     'text/html'
   end
 

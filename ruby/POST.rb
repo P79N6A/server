@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 
   def POST
     # custom handler lookup cascade
@@ -17,12 +17,12 @@ class E
     when /^application\/x-www-form-urlencoded/
       changed = false
       (Rack::Request.new @r).params.map{|k,v| s, p, tripleA = JSON.parse CGI.unescape k
-        s = s.E
+        s = s.R
        pp = s.predicatePath p
-        o = v.match(/\A(\/|http)[\S]+\Z/) ? v.E : F['cleanHTML'][v]
+        o = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : F['cleanHTML'][v]
         tripleB = pp.objectPath(o)[0]
         if tripleA.to_s != tripleB.to_s
-          tripleA && tripleA.E.do{|t| t.delete if t.e }
+          tripleA && tripleA.R.do{|t| t.delete if t.e }
           s[p] = o unless o.class==String && o.empty?
           changed = true
         end}

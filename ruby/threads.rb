@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 #watch __FILE__
-class E
+class R
   
   fn 'protograph/thread',->d,e,g{
     # find reachable discussion by recursively walking reply_of arcs
     d.pathSegment.do{|p|p.walk SIOC+'reply_of',g }
     g['#']={'uri' => '#',
-      RDFs+'member' => g.keys.map(&:E),
-      Type => [E[HTTP+'Response'],
-               E[SIOC+'Thread']
+      RDFs+'member' => g.keys.map(&:R),
+      Type => [R[HTTP+'Response'],
+               R[SIOC+'Thread']
               ]} unless g.empty?
     F['docsID'][g,e]}
   
@@ -23,7 +23,7 @@ class E
      '<table>',
      threads.group_by{|r,k| # group by recipient
        k[0].do{|k| k[To].do{|o|o.head.uri}}}.
-     map{|group,threads| c = E.cs
+     map{|group,threads| c = R.cs
        ['<tr><td class=subject>',
         threads.map{|title,msgs| # thread
           [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: msgs[0].url+'?graph=thread&view=timegraph',

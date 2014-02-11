@@ -5,7 +5,7 @@ end
 class NilClass
   def do; nil end
   def html e=nil,g=nil; "" end
-  def E; "".E end
+  def R; "".R end
 end
 
 class Object
@@ -16,24 +16,24 @@ class Object
 end
 
 def watch f
-  E::Watch[f]=File.mtime f
+  R::Watch[f]=File.mtime f
   puts 'dev '+f end
 
-class E
+class R
 
   def initialize uri
     @uri = uri.to_s
   end
 
-  def E arg=nil
+  def R arg=nil
     if arg
-      E.new arg
+      R.new arg
     else
       self
     end
   end
 
-  def E.[] u; u.E end
+  def R.[] u; u.R end
 
   F={}
   Watch={}
@@ -67,13 +67,13 @@ end
 # URI -> function
 
 def fn u,y
-  E::F[u.to_s] = y
+  R::F[u.to_s] = y
 end
 
 def Fn a,*g
-  E::F[a][*g]
+  R::F[a][*g]
 end
 
-def E e
-  E.new e
+def R e
+  R.new e
 end

@@ -1,4 +1,4 @@
-class E
+class R
 
 =begin
 

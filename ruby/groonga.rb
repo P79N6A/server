@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
 =begin
       gem install rroonga
       a ruby full-text searcher & column-store
@@ -9,12 +9,12 @@ class E
   fn 'view/'+Search+'Groonga',-> d,e {{_: :form, action: '/', c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :graph, value: :groonga}]}}
 
   fn 'protograph/groonga',->d,e,m{
-    E.groonga.do{|ga|
+    R.groonga.do{|ga|
     q = e['q']                               # search expression
     g = e["context"] || d.env['SERVER_NAME'] # context
 
     begin
-      m['/'] = {Type => E[Search+'Groonga']} # add a groonga resource to the graph
+      m['/'] = {Type => R[Search+'Groonga']} # add a groonga resource to the graph
 
       r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
         ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
@@ -24,24 +24,24 @@ class E
       down = r.size > start+c                                        # prev
       up   = !(start<=0)                                             # next
       r = r.sort(e.has_key?('best') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      r = r.map{|r| r['.uri'].E }                                    # URI
+      r = r.map{|r|r['.uri'].R}                                      # read URI
       (r.map &:docs).flatten.uniq.map{|r|m[r.uri] = r.env e}         # set resource thunks
 
-      m['#'] = {'uri' => '#', RDFs+'member' => r, Type=>E[HTTP+'Response']} # add pagination data to request-graph
+      m['#'] = {'uri' => '#', RDFs+'member' => r, Type=>R[HTTP+'Response']} # add pagination data to request-graph
       m['#'][Prev]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start + c, 'c' => c}.qs} if down
       m['#'][Next]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start - c, 'c' => c}.qs} if up
 
     rescue Groonga::SyntaxError => x
-      m['#'] = {Type => E[COGS+'Exception'], Title => "invalid expr", Content => CGI.escapeHTML(x.message)}
+      m['#'] = {Type => R[COGS+'Exception'], Title => "invalid expr", Content => CGI.escapeHTML(x.message)}
       e['nocache']=true
     end
 
     F['docsID'][m,e]}}
 
-  def E.groonga
+  def R.groonga
     @groonga ||=
       (begin require 'groonga'
-         E['/E/groonga'].groonga
+         R['/E/groonga'].groonga
          Groonga["E"]
        rescue LoadError => e; end)
   end
@@ -72,14 +72,14 @@ class E
       r.uri = u            # update data
       r.graph = graph.to_s
       r.content = i.to_s
-      r.time = i[E::Date].do{|t|t[0].to_time}
+      r.time = i[R::Date].do{|t|t[0].to_time}
     }}
     self
   end
   
   # remove
   def unroonga
-    g = E.groonga
+    g = R.groonga
     graph.keys.push(uri).map{|u|g[u].delete}
   end
 
