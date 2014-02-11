@@ -1,5 +1,5 @@
 #watch __FILE__
-class E
+class R
   
   Errors ||= {}
 
@@ -44,7 +44,7 @@ h1 {padding:.2em; background-color:#f00; color:#fff; margin:0}
 div {display:inline}
 table {border-spacing:0;margin:0}
 b {background-color:#eee;color:#500;padding:.1em .3em .1em .3em}
-.frag {font-weight:bold; color:#000; background-color:#{E.cs}}
+.frag {font-weight:bold; color:#000; background-color:#{R.cs}}
 td.space {background-color:#ddd}
 td.message {background-color:#009;color:#fff}
 td.path {text-align:right}

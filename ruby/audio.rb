@@ -1,4 +1,4 @@
-class E
+class R
 
   VideoFile = /(avi|flv|mkv|mpg|mp4|wmv)$/i
   AudioFile = /(aif|wav|flac|mp3|m4a|aac|ogg)$/i

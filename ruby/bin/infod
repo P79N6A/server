@@ -28,7 +28,7 @@ module Rack
     def self.load _
       Rack::Builder.new {
         use Rack::Deflater
-        run E
+        run R
       }.to_app
     end
   end
