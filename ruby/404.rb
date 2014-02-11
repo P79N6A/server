@@ -1,4 +1,4 @@
-class E
+class R
 
   E404 = 'req/'+HTTP+'404'
 
@@ -13,10 +13,10 @@ r.map{|k,v| s[Header + k] = k == 'uri' ? v : [v] }
   %w{CHARSET LANGUAGE ENCODING}.map{|a|
     s[Header+'ACCEPT_'+a] = [r.accept_('_' + a)]}
        s[Header+'ACCEPT'] = [r.accept]
-                  s[Type] = [E[HTTP+'Response']]
+                  s[Type] = [R[HTTP+'Response']]
 s[HTTP+'statusCodeValue'] = [404]
-    s[Header+'HTTP_HOST'] = [E['http://' + s[Header+'HTTP_HOST'][0]]] if s[Header+'HTTP_HOST']
-                  s[Edit] = [E[r['REQUEST_PATH']+'?graph=create']]
+    s[Header+'HTTP_HOST'] = [R['http://' + s[Header+'HTTP_HOST'][0]]] if s[Header+'HTTP_HOST']
+                  s[Edit] = [R[r['REQUEST_PATH']+'?graph=create']]
               s['#query'] = [r.q]
             s['#seeAlso'] = [e.parent,*e.a('*').glob]
               r.q['view'] = '404'
@@ -26,7 +26,7 @@ s[HTTP+'statusCodeValue'] = [404]
   F['/E/GET'] = F[E404]  
 
   fn 'view/404',->d,e{
-    [H.css('/css/404'),{_: :style, c: "a {background-color:#{E.cs}}"},
+    [H.css('/css/404'),{_: :style, c: "a {background-color:#{R.cs}}"},
      d.html]}
 
   # a resource-placeholder graph
