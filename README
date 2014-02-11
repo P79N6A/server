@@ -1,9 +1,5 @@
-Debian
- apt-get install graphicsmagick source-highlight libimage-exiftool-perl libid3-tools
-Arch Linux
- packer -S graphicsmagick source-highlight perl-image-exiftool id3tool
  
- (cd ruby)
+ cd ruby
  bundle install
  ./install  (or)  ./install symlink  (or)  gem install infod
 
@@ -14,9 +10,9 @@ Arch Linux
    ''  nginx   sh/nginx
    ''  lo -d   localhost + daemonize
 
+Debian  apt-get install graphicsmagick source-highlight libimage-exiftool-perl libid3-tools
+Arch    packer -S graphicsmagick source-highlight perl-image-exiftool id3tool
+
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
 git@gitorious.org:element/www.git   https://gitorious.org/element/www
 git://repo.or.cz/www.git            http://repo.or.cz/w/www.git
-
-API an object of class E with one field, a URI, and a reference to request environment
-    a JSON/HASH model for graphs 

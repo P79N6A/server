@@ -62,13 +62,13 @@ class R
     maybeSend @r.format, ->{
       
       # response
-      r = R '/E/req/' + @r['ETag'].dive
+      r = R '/cache/req/'+@r['ETag'].dive
       if r.e # exists
         r
       else
         
         # graph
-        c = R '/E/graph/' + graphID.dive
+        c = R '/cache/graph/'+graphID.dive
         if c.e # exists
           m = c.r true
         else

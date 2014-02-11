@@ -61,7 +61,7 @@ class R
        c: [{_: :a, class: :edit, c: '+add field',
              href: e['uri']+'?graph=blank&view=addP', style: 'background-color:#0f0;border-radius:5em;color:#000;padding:.5em'},
            g.map{|s,r| # subject
-             uri = s.E.localURL e
+             uri = s.R.localURL e
              {_: :table, class: :html,
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: uri}}},
                    r.keys.-([Edit]).concat(ps).uniq.map{|p| # resource + prototype/initialize predicates

@@ -1,3 +1,0 @@
-#!/usr/bin/env ruby
-%w{infod irb}.map{|r|require r}
-IRB.start

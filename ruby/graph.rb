@@ -94,7 +94,7 @@ class R
     return unless e
     doc = self
     unless ext=='e' # already native-format
-      doc = R '/E/RDF' + uri.h.dive
+      doc = R '/cache/RDF' + uri.h.dive
 #      unless doc.e && doc.m > m # up-to-date?
         graph = {}
         [:triplrInode,:triplrMIME].map{|t| fromStream graph, t}

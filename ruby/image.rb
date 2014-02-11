@@ -12,7 +12,7 @@ class R
       size = r.q['px'].to_i.min(8).max(4096)
       stat = i.node.stat
       id = [stat.ino,stat.mtime,size].h.dive
-      path = R['/E/image/'+id+'.png']
+      path = R['/cache/thumbnail/'+id+'.png']
       if !path.e
         path.dirname.mk
         if i.mimeP.match(/^video/)

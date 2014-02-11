@@ -41,8 +41,8 @@ class R
   def R.groonga
     @groonga ||=
       (begin require 'groonga'
-         R['/E/groonga'].groonga
-         Groonga["E"]
+         R['/cache/groonga'].groonga
+         Groonga["R"]
        rescue LoadError => e; end)
   end
 
@@ -52,7 +52,7 @@ class R
     dirname.mk                           # create containing dir
     Groonga::Database.create(:path => d) # create db
     Groonga::Schema.define{|s|           # create schema
-      s.create_table("E",:type => :hash,:key_type => "ShortText"){|t|
+      s.create_table("R",:type => :hash,:key_type => "ShortText"){|t|
         t.short_text "uri"
         t.short_text "graph"
         t.text "content"
@@ -61,12 +61,12 @@ class R
                      :type => :patricia_trie,
                      :key_normalize => true,
                      :default_tokenizer => "TokenBigram"){|t|
-                                  %w{graph content}.map{|c| t.index("E." + c) }}}
+                                  %w{graph content}.map{|c| t.index("R." + c) }}}
   end
   
   # add
   def roonga graph="global", m = self.graph
-   E.groonga.do{|g|
+   R.groonga.do{|g|
     m.map{|u,i|
       r = g[u] || g.add(u) # create or load entry
       r.uri = u            # update data
