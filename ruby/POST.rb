@@ -13,6 +13,7 @@ class R
     basicPOST
   end
   def basicPOST
+    return [303,{'Location'=>uri},[]]
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       changed = false
@@ -37,7 +38,6 @@ class R
       end
     end
     [303,{'Location'=>uri+'?graph=edit'},[]]
-#    self.GET
   end
 
 end

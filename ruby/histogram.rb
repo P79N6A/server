@@ -17,10 +17,10 @@ class R
     v = F['view/'+(e.q['hv']||'title')]
 
     # construct histogram bins
-    (F['histogram/bins'][d,a,n]).do{|h,m|
+    F['histogram/bins'][d,a,n].do{|h,m|
       
       [H.css('/css/hist'),%w{mu hist}.map{|s|H.js('/js/'+s)},
-       (F['histogram'][h]),{style: "width: 100%; height: 5em"},
+       F['histogram'][h],{style: "width: 100%; height: 5em"},
        h.map{|b,r|
          # skip empty bins
          r.empty? ? ' ' :
