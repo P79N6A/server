@@ -30,7 +30,7 @@ class R
       r.delete_if{|p,o|!f[p]}}
     [(H.css '/css/ls'),
      {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
-     {class: :ls, c: (F['view/table'][i,e])},'<br clear=all>',
+     {class: :ls, c: F['view/table'][i,e]},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
 
   fn 'set/find',->e,q,m,x=''{

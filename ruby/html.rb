@@ -217,7 +217,7 @@ class R
          {_: :a, class: :n, href: k, c: k.label+' '}}},
        {_: :style, id: :pS},
        {_: :style, id: :lS}),
-     (F['view/'+(e.q['pv']||'table')][d,e])]}
+     F['view/'+(e.q['pv']||'table')][d,e]]}
 
   # table-cell placement on sparse matrix of rows/columns
   # cal.rb contains an example usage
@@ -226,7 +226,7 @@ class R
     if layout
       [H.once(e,'table',H.css('/css/table')),
        {_: :table, c:
-         {_: :tbody, c: (F['table/'+layout][d]).do{|t|
+         {_: :tbody, c: F['table/'+layout][d].do{|t|
              rx = t.keys.max
              rm = t.keys.min
              c = t.values.map(&:keys)
@@ -237,9 +237,9 @@ class R
                  t[r].do{|r|
                    (cm..cx).map{|c|
                      r[c].do{|c|
-                       {_: :td, class: :cell, c:(F['view/'+(a||e.q['cellview']||'title')][c,e])}
-                     }||{_: :td}}}}} || ''
-           }}}]
+                       {_: :td, class: :cell, c:F['view/'+(a||e.q['cellview']||'title')][c,e]}} ||
+                     {_: :td}}}}} ||
+             '' }}}]
     else
       "table= layout arg required"
     end}
