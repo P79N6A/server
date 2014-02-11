@@ -25,15 +25,11 @@ class R
     @uri = uri.to_s
   end
 
-  def R arg=nil
-    if arg
-      R.new arg
-    else
-      self
-    end
+  def R uri = nil
+    uri ? R.new(uri) : self
   end
 
-  def R.[] u; u.R end
+  def R.[] uri; R.new uri end
 
   F={}
   Watch={}
@@ -45,11 +41,6 @@ class R
       if ts < File.mtime(f)
         load f
       end }
-  end
-
-  # call lambda @id
-  def y *a
-    F[uri][*a]
   end
 
   # util, prefix, cleaner -> tripleStream
@@ -69,6 +60,6 @@ def fn u,y
   R::F[u.to_s] = y
 end
 
-def R e
-  R.new e
+def R uri
+  R.new uri
 end

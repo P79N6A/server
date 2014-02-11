@@ -167,8 +167,8 @@ class R
       MIMEcook[m+t] = true
   }}
 
-  def render mime,   graph, e
-   R[Render+ mime].y graph, e
+  def render mime, graph, e
+    F[Render+mime][graph, e]
   end
 
   def triplrMIME &b
