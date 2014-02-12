@@ -3,7 +3,7 @@ body {
 }
 
 a { text-decoration:none;}
-tr[property="uri"] > td.val {max-width: 80ex}
+tr[property="uri"] > td.val {max-width: 80ex; overflow: hidden}
 tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
 tr[property="uri"] > td.val > a{
     background-color: #00e;

@@ -42,21 +42,23 @@ class R
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post']].map{|t|yield e, Type, t}        # RDF types
 
-    m.from.do{|f|f[0].to_utf8}.do{|f|                # has author?
-      creator = '/m/'+f+'#'+f                        # author URI
-      yield e, Creator, R[creator]                   # message -> author
-      yield creator, DC+'identifier', R['mailto:'+f] # author ID
-      # yield creator, Name, m.friendly_from.to_utf8 # author name
+    m.from.do{|f|                                    # any authors?
+      f.justArray.map{|f|                            # each author
+        f = f.to_utf8
+        creator = '/m/'+f+'#'+f                        # author URI
+        yield e, Creator, R[creator]                   # message -> author
+        yield creator, DC+'identifier', R['mailto:'+f] # author ID
+        # yield creator, Name, m.friendly_from.to_utf8 # author name
 
-      yield e, SIOC+'reply_to',                      # reply URI
-      R[URI.escape("mailto:#{m.header['x-original-to']||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}
+        yield e, SIOC+'reply_to',                      # reply URI
+        R[URI.escape("mailto:#{m.header['x-original-to']||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
     yield e, Date, m.date.iso8601 if m.date          # date
 
     m.subject.do{|s|yield e, Title, s.to_utf8}       # subject
 
     yield e, SIOC+'has_discussion',                  # thread
-    R[e+'?graph=thread&view=timegraph#discussion']
+    R[e+'?graph=thread&view=timegraph#discussion'] if m.in_reply_to || m.references
 
     %w{to cc bcc}.map{|to|                           # reciever fields
       m.send(to).do{|to|                             # has field?
@@ -75,7 +77,7 @@ class R
     parts = m.all_parts.push m                       # parts
 
     parts.select{|p|                                 # text parts
-      p.mime_type=='text/plain' &&
+      (!p.mime_type || p.mime_type=='text/plain') &&
       Mail::Encodings.defined?(p.body.encoding)      # decodable?
     }.map{|p|
       yield e, Content,
@@ -94,7 +96,7 @@ class R
       html.w p.decoded if !html.e
       htmlCount += 1 }
 
-    m.attachments.map{|p|
+    m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
       file = attache[].as name
       file.w p.body.decoded if !file.e # write part
