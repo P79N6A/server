@@ -43,7 +43,7 @@ class R
       yield creator, DC+'identifier', R['mailto:'+f] # author ID
       # yield creator, Name, m.friendly_from.to_utf8 # author name
       yield e, SIOC+'reply_to',                      # reply URI
-      R[URI.escape("mailto:#{m.header['x-original-to']||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{s}&")+'#reply']}
+      R[URI.escape("mailto:#{m.header['x-original-to']||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}
     yield e, Date, m.date.iso8601 if m.date          # date
     m.subject.do{|s|yield e, Title, s.to_utf8}       # subject
     yield e, SIOC+'has_discussion',                  # thread
@@ -60,11 +60,16 @@ class R
     m.in_reply_to.do{|r|                             # direct reference
       yield e, SIOC+'has_parent', R[MessagePath[r]]}
     m.all_parts.map{|p|
-      yield e, Content,
-      H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
-           c: m.text_part.to_s.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
-             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # quotes
-           }},(H.css '/css/mail',true)])        
+      if p.text?
+        c = p.decoded
+        yield e, Content,
+        H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
+             c: c.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
+               l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # quotes
+             }},(H.css '/css/mail',true)])
+      else
+
+      end
     }
     
   end
