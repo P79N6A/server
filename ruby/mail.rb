@@ -48,8 +48,6 @@ class R
         creator = '/m/'+f+'#'+f                        # author URI
         yield e, Creator, R[creator]                   # message -> author
         yield creator, DC+'identifier', R['mailto:'+f] # author ID
-        # yield creator, Name, m.friendly_from.to_utf8 # author name
-
         yield e, SIOC+'reply_to',                      # reply URI
         R[URI.escape("mailto:#{m.header['x-original-to']||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
@@ -83,7 +81,7 @@ class R
       yield e, Content,
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap', # wrap body
            c: p.decoded.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted*empty lines
-             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? # quoted lines
+             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ?        # quoted?
              {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quotes
            }},(H.css '/css/mail',true)])}
 
@@ -91,23 +89,22 @@ class R
 
     htmlCount = 0
     parts.select{|p|p.mime_type=='text/html'}.map{|p| # HTML content
-      html = attache[].as "page#{htmlCount}.html"
-      yield e, DC+'hasFormat', html
-      html.w p.decoded if !html.e
+      html = attache[].as "page#{htmlCount}.html"     # name
+      yield e, DC+'hasFormat', html                   # message -> HTML resource
+      html.w p.decoded if !html.e                     # write content
       htmlCount += 1 }
-
+                                                      # attached
     m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
-      file = attache[].as name
-      file.w p.body.decoded if !file.e # write part
-      yield e, SIOC+'attachment', file
-      if p.main_type=='image'
+      file = attache[].as name                        # name
+      file.w p.body.decoded if !file.e                # write
+      yield e, SIOC+'attachment', file                # message -> attached resource
+      if p.main_type=='image'                         # image reference in HTML
         yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
-      end
-    }
+      end }
 
   end
 
-  F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-file metadata in default view
+  F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container in default view
 
 end
