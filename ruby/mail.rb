@@ -83,8 +83,10 @@ class R
              }},(H.css '/css/mail',true)])
       else
         attache = e.R.a('.attache').mk # filesystem container
-        file = attache.as(p.filename.do{|f|f.to_utf8} || (rand.to_s.h + '.' + (R::MIME.invert[p.mime_type] || 'bin').to_s))
-        file.w p.body if !file.e # write part
+        name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (R::MIME.invert[p.mime_type] || 'bin').to_s)
+        puts "name #{name}"
+        file = attache.as name
+        file.w p.body #if !file.e # write part
         yield e, R::SIOC+'attachment', file
         if p.main_type=='image'
           yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
