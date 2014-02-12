@@ -73,7 +73,7 @@ class R
       yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
 
     m.all_parts.push(m).map{|p|                      # parts
-      if p.text? && p.sub_type!='html' && Mail::Encodings.defined?(p.body.encoding)
+      if p.text? && p.sub_type!='html'               # text part
         c = p.decoded.to_utf8                        # decode
         yield e, Content,                            # content
         H([{_: :pre, class: :mail, style: 'white-space: pre-wrap', # wrap body
@@ -83,13 +83,13 @@ class R
              }},(H.css '/css/mail',true)])
       else
         attache = e.R.a('.attache').mk # filesystem container
-        file = attache.as(p.filename || (rand.to_s.h + '.' + (R::MIME.invert[p.mime_type] || '.bin').to_s))
+        file = attache.as(p.filename.do{|f|f.to_utf8} || (rand.to_s.h + '.' + (R::MIME.invert[p.mime_type] || 'bin').to_s))
         file.w p.body if !file.e # write part
         yield e, R::SIOC+'attachment', file
         if p.main_type=='image'
           yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
         end
-      end}
+      end if Mail::Encodings.defined?(p.body.encoding)}
   end
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-file metadata in default view
