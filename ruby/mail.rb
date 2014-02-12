@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
@@ -107,8 +107,19 @@ class R
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-resource in default view
 =begin
-  move messages to another system:
+  USAGE(context)
+
+  admin (irb) move messages among filesystems
   p = R['/m/semantic-web@w3.org'].take.map{|g|'.' + g.graph.values.find{|r|r.has_key?(R::DC+'source')}[R::DC+'source'][0].R.path}
-  `rsync -avRz #{p.join ' '} h:/home/user/.mail/`
+  `rsync -avRz #{p.join ' '} h:/www/`
+
+  view (rb) default to overview of directory
+  F['/mail/GET'] = -> e,r {
+   r.q['view'] ||= 'threads' if e.uri[-1] == '/'
+    false }
+
+  home (sh) current day-dir in Markdown  
+  echo "[today](/?y=day&view=threads)" > TODAY.md 
+
 =end
 end
