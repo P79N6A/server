@@ -34,8 +34,8 @@ class R
   end
 
   def triplrMail
-    m = mail          ; return unless m      # mail
-    id = m.message_id ; return unless id     # message-ID
+    m = mail          ; return unless m              # mail
+    id = m.message_id ; return unless id             # message-ID
     e = MessagePath[id]                              # message URI
     yield e, DC+'identifier', id                     # origin-domain ID
     yield e, DC+'source', self                       # source-file URI
@@ -72,26 +72,38 @@ class R
     m.in_reply_to.do{|r|                             # direct-reference predicate
       yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
 
-    m.all_parts.push(m).map{|p|                      # parts
-      if p.text? && p.sub_type!='html'               # text part
-        c = p.decoded.to_utf8                        # decode
-        yield e, Content,                            # content
-        H([{_: :pre, class: :mail, style: 'white-space: pre-wrap', # wrap body
-             c: c.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted*empty lines
-               l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? # quoted lines
-               {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quotes
-             }},(H.css '/css/mail',true)])
-      else
-        attache = e.R.a('.attache').mk # filesystem container
-        name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (R::MIME.invert[p.mime_type] || 'bin').to_s)
-        puts "name #{name}"
-        file = attache.as name
-        file.w p.body #if !file.e # write part
-        yield e, R::SIOC+'attachment', file
-        if p.main_type=='image'
-          yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
-        end
-      end if Mail::Encodings.defined?(p.body.encoding)}
+    parts = m.all_parts.push m                       # parts
+
+    parts.select{|p|                                 # text parts
+      p.mime_type=='text/plain' &&
+      Mail::Encodings.defined?(p.body.encoding)      # decodable?
+    }.map{|p|
+      yield e, Content,
+      H([{_: :pre, class: :mail, style: 'white-space: pre-wrap', # wrap body
+           c: p.decoded.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted*empty lines
+             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? # quoted lines
+             {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quotes
+           }},(H.css '/css/mail',true)])}
+
+    attache = -> { e.R.a('.attache').mk } # filesystem container for attachments & parts
+
+    htmlCount = 0
+    parts.select{|p|p.mime_type=='text/html'}.map{|p| # HTML content
+      html = attache[].as "page#{htmlCount}.html"
+      yield e, DC+'hasFormat', html
+      html.w p.decoded if !html.e
+      htmlCount += 1 }
+
+    m.attachments.map{|p|
+      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
+      file = attache[].as name
+      file.w p.body.decoded if !file.e # write part
+      yield e, SIOC+'attachment', file
+      if p.main_type=='image'
+        yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
+      end
+    }
+
   end
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-file metadata in default view
