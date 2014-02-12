@@ -54,24 +54,23 @@ class R
           to.do{|to|                                 # non-nil? 
             to = to.to_utf8                          # UTF-8
             yield e, To, R['/m/'+to+'#'+to]}}}}      # recipient URI
-    %w{in_reply_to references}.map{|ref|             # reference fields
-     m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect references
+    %w{in_reply_to references}.map{|ref|             # reference predicates
+     m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
       yield e, SIOC+'reply_of', R[MessagePath[r]]}}} # reference URI
-    m.in_reply_to.do{|r|                             # direct reference
-      yield e, SIOC+'has_parent', R[MessagePath[r]]}
-    m.all_parts.map{|p|
-      if p.text?
-        c = p.decoded
-        yield e, Content,
-        H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
-             c: c.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
-               l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # quotes
+    m.in_reply_to.do{|r|                             # direct-reference predicate
+      yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
+    m.all_parts.push(m).map{|p|                      # parts
+     if p.text?&&Mail::Encodings.defined?(p.body.encoding)# text?
+        c = p.decoded.to_utf8                        # decode
+        yield e, Content,                            # content
+        H([{_: :pre, class: :mail, style: 'white-space: pre-wrap', # wrap body
+             c: c.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip empty*quoted lines
+               l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? # quoted lines
+               {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quotes
              }},(H.css '/css/mail',true)])
       else
 
-      end
-    }
-    
+      end}
   end
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide containing file in default render
