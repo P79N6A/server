@@ -10,8 +10,8 @@
    ''  nginx   sh/nginx
    ''  lo -d   localhost + daemonize
 
-Debian  apt-get install graphicsmagick source-highlight libimage-exiftool-perl libid3-tools
-Arch    packer -S graphicsmagick source-highlight perl-image-exiftool id3tool
+Debian apt-get install graphicsmagick source-highlight libimage-exiftool-perl libid3-tools
+Arch   packer -S graphicsmagick source-highlight perl-image-exiftool id3tool
 
 git://github.com/infodaemon/www.git https://github.com/infodaemon/www
 git@gitorious.org:element/www.git   https://gitorious.org/element/www

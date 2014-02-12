@@ -49,7 +49,7 @@ class R
         yield e, Creator, R[creator]                   # message -> author
         yield creator, DC+'identifier', R['mailto:'+f] # author ID
         yield e, SIOC+'reply_to',                      # reply URI
-        R[URI.escape("mailto:#{m.header['x-original-to']||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
+        R[URI.escape("mailto:#{m.reply_to.do{|t|t[0]}||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
     yield e, Date, m.date.iso8601 if m.date          # date
 
