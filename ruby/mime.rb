@@ -155,13 +155,6 @@ class R
     'text/x-tex'=>true,
   }
 
-  # cache triplr output
-  MIMEcache={
-    'audio' => true,
-    'image' => true,
-#    '' => 
-  }
-
   %w{c c++ fortran haskell makefile pascal perl php python ruby}.map{|t|
     %w{application/ text/x-}.map{|m|
       MIMEcook[m+t] = true

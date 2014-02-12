@@ -29,45 +29,44 @@ class R
     addDocs :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
   end
 
-  def triplrMail &f
-    (f && (Mail.read node)).do{|m|
-      id = m.message_id; return unless id # message-ID
-      e = MessagePath[id]               # webized ID
-      from = m.from.do{|f|f[0].to_utf8} # author
-      return unless from
-      creator = '/m/'+from+'#'+from     # author URI
-      yield e, DC+'identifier', id      # original ID
-      yield e, DC+'source', self        # original file
-      yield e, Type, R[SIOCt + 'MailMessage']
-      yield e, Type, R[SIOC  + 'Post']
-      yield e, Date, m.date.iso8601 if m.date
-      m.subject.do{|s|
-        s = s.to_utf8
-        yield e, Title, s
-      yield e, SIOC+'reply_to',R[URI.escape("mailto:#{m.header['x-original-to']||from}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{s}&")+'#reply']}
-      yield e, Creator, R[creator]
-      yield e, SIOC+'has_discussion', R[e+'?graph=thread&view=timegraph#discussion']
-#      yield creator, Name, m.friendly_from.to_utf8
-      yield creator, DC+'identifier', R['mailto:'+from]
-
-
-      %w{to cc bcc}.map{|to|
-        m.send(to).do{|to| to.justArray.map{|to|
-            to.do{|to|
-              to.to_utf8
-              yield e, To, R['/m/'+to+'#'+to]}}}}
-
-      %w{in_reply_to references}.map{|ref|
-        m.send(ref).do{|rs| (rs.class == Array ? rs : [rs]).map{|r|
-          yield e, SIOC+'reply_of', R[MessagePath[r]]}}}
-      m.in_reply_to.do{|r| yield e, SIOC+'has_parent', R[MessagePath[r]]}
-
-      # RDF:HTML message-body
+  def triplrMail
+    m = f && (Mail.read node) ; return unless m      # mail
+    id = m.message_id         ; return unless id     # message-ID
+    e = MessagePath[id]                              # message URI
+    yield e, DC+'identifier', id                     # origin-domain ID
+    yield e, DC+'source', self                       # source-file URI
+    [R[SIOCt+'MailMessage'],                         # SIOC types
+     R[SIOC+'Post']].map{|t|yield e, Type, t}        # RDF types
+    m.from.do{|f|f[0].to_utf8}.do{|f|                # has author?
+      creator = '/m/'+f+'#'+f                        # author URI
+      yield e, Creator, R[creator]                   # message -> author
+      yield creator, DC+'identifier', R['mailto:'+f] # author ID
+      # yield creator, Name, m.friendly_from.to_utf8 # author name
+      yield e, SIOC+'reply_to',                      # reply URI
+      R[URI.escape("mailto:#{m.header['x-original-to']||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{s}&")+'#reply']}
+    yield e, Date, m.date.iso8601 if m.date          # date
+    m.subject.do{|s|yield e, Title, s.to_utf8}       # subject
+    yield e, SIOC+'has_discussion',                  # thread
+    R[e+'?graph=thread&view=timegraph#discussion']
+    %w{to cc bcc}.map{|to|                           # reciever fields
+      m.send(to).do{|to|                             # has field?
+        to.justArray.map{|to|                        # each recipient
+          to.do{|to|                                 # non-nil? 
+            to = to.to_utf8                          # UTF-8
+            yield e, To, R['/m/'+to+'#'+to]}}}}      # recipient URI
+    %w{in_reply_to references}.map{|ref|             # reference fields
+     m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect references
+      yield e, SIOC+'reply_of', R[MessagePath[r]]}}} # reference URI
+    m.in_reply_to.do{|r|                             # direct reference
+      yield e, SIOC+'has_parent', R[MessagePath[r]]}
+    m.all_parts.map{|p|
       yield e, Content,
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
            c: m.text_part.to_s.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty-lines
              l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ? {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # quotes
-           }},(H.css '/css/mail',true)])}
+           }},(H.css '/css/mail',true)])        
+    }
+    
   end
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide containing file in default render
