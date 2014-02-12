@@ -106,5 +106,9 @@ class R
   end
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-resource in default view
-
+=begin
+  move messages to another system:
+  p = R['/m/semantic-web@w3.org'].take.map{|g|'.' + g.graph.values.find{|r|r.has_key?(R::DC+'source')}[R::DC+'source'][0].R.path}
+  `rsync -avRz #{p.join ' '} h:/home/user/.mail/`
+=end
 end
