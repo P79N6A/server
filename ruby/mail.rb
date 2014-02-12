@@ -21,7 +21,7 @@ class R
       r[Creator].do{|c|a.concat c}
       r[To].do{|t|a.concat t}
       r[Date].do{|t|
-        st = '/'+t[0].gsub('-','/').sub('T','.').sub(/\+.*/,'.'+u.h[0..1]+'.e')
+        st = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e'
         a.map{|rel|
           doc.ln R[rel.uri.split('#')[0]+st]}}}}
 
@@ -105,6 +105,6 @@ class R
 
   end
 
-  F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container in default view
+  F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-resource in default view
 
 end
