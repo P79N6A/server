@@ -85,7 +85,7 @@ class R
              {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quotes
            }},(H.css '/css/mail',true)])}
 
-    attache = -> { e.R.a('.attache').mk } # filesystem container for attachments & parts
+    attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 
     htmlCount = 0
     parts.select{|p|p.mime_type=='text/html'}.map{|p| # HTML content
