@@ -36,7 +36,7 @@ class R
   def triplrMail
     m = mail          ; return unless m              # mail
     id = m.message_id ; return unless id             # message-ID
-    e = MessagePath[id]                              # message URI
+    e = MessagePath[id.gsub(/[<>]/,'')]              # message URI
     yield e, DC+'identifier', id                     # origin-domain ID
     yield e, DC+'source', self                       # source-file URI
     [R[SIOCt+'MailMessage'],                         # SIOC types
