@@ -9,7 +9,7 @@ class R
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
       if s && p && o
-        s = RDF::URI s=='#' ? '' : (s.R.hostURL e)
+        s = RDF::URI s=='#' ? e['REQUEST_URI'] : (s.R.hostURL e)
         p = RDF::URI p
         o = ([R,Hash].member?(o.class) ? (RDF::URI o.R.hostURL(e)) :
              (l = RDF::Literal o

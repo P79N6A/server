@@ -60,25 +60,19 @@ class R
     @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
-      
-      # response
-      r = R '/cache/req/'+@r['ETag'].dive
-      if r.e # exists
+
+      r = R '/cache/view/' + @r['ETag'].dive
+      if r.e # exists?
         r
       else
-        
-        # graph
-        c = R '/cache/graph/'+graphID.dive
-        if c.e # exists
+        c = R '/cache/model/' + graphID.dive
+        if c.e # exists?
           m = c.r true
         else
-          # construct
-          (g && F['graph/' + g] || F['graph/'])[self, @r.q,m]
-          # cache
-          c.w m,true
+          (g && F['graph/' + g] || F['graph/'])[self, @r.q,m] # construct
+          c.w m,true # cache
         end
-                # cache < construct
-        r.w render @r.format, m, @r
+        r.w render @r.format, m, @r # construct -> cache
       end }
   end
 
