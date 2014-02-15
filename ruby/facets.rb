@@ -17,7 +17,7 @@ class R
     # facet stats
     m.map{|s,r| a.map{|p,_|
         r[p].do{|o|
-          (o.class==Array ? o : [o]).map{|o|
+            o.justArray.map{|o|
             a[p][o]=(a[p][o]||0)+1}}}}
 
 
@@ -31,7 +31,7 @@ class R
       m.map{|u,r| # each resource
         a.map{|p,_| # each facet
           [n[p], r[p].do{|o| # value
-             (o.class==Array ? o : [o]).map{|o|
+               o.justArray.map{|o|
                n[o.to_s] # identifier
              }}].join ' '
         }.do{|f|

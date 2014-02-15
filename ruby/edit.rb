@@ -68,10 +68,10 @@ class R
                      {_: :tr,
                        c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # property
                            {_: :td,
-                             c: [r[p].do{|o|                            # objects
-                                   (o.class == Array ? o : [o]).map{|o| # each object
-                                     triple[s,p,o]}},                   # existing triples
-                                 triple[s,p,nil]]}]}}]}},                # new triple
+                             c: [r[p].do{|o|              # objects
+                                   o.justArray.map{|o|    # each object
+                                     triple[s,p,o]}},     # existing triples
+                                 triple[s,p,nil]]}]}}]}}, # new triple
            {_: :input, type: :submit, value: 'save'}]}]}
 
   # select a property to edit

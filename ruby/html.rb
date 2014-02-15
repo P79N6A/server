@@ -137,7 +137,7 @@ class R
     graph = {r.uri => r}
     view = nil
     if r.class == Hash
-      (r[Type].class==Array ? r[Type] : [r[Type]]).do{|types|
+      r[Type].justArray.do{|types|
         views = types.map(&:maybeURI).compact.map{|t|
           subtype = t
           type = subtype.split(/\//)[-2]

@@ -157,8 +157,7 @@ class Hash
   def triples &f
     map{|s,r|
       r.map{|p,o|
-        o.class == Array ? o.each{|o| yield s,p,o} : yield(s,p,o) unless p=='uri'} if r.class == Hash
-    }
+        o.justArray.map{|o|yield s,p,o} unless p=='uri'} if r.class == Hash}
   end
 
 end
