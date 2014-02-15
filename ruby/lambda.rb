@@ -49,7 +49,7 @@ class R
       i = i.split /:/
     yield uri, (f + (i[0].match(g)||[0,i[0]])[1].       # s
      gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # p
-      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v.hrefs}} # o
+      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v}} # o
   rescue
   end
 
