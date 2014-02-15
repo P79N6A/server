@@ -33,7 +33,6 @@ class R
 
     rescue Groonga::SyntaxError => x
       m['#'] = {Type => R[COGS+'Exception'], Title => "invalid expr", Content => CGI.escapeHTML(x.message)}
-      e['nocache']=true
     end
 
     F['docsID'][m,e]}}

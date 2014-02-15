@@ -76,10 +76,7 @@ class R
     s }
 
   # fs-derived ID for a resource-set
-  fn 'docsID',->g,q{
-   [q.has_key?('nocache').do{|_|rand},
-     g.sort.map{|u,r|
-       [u, r.respond_to?(:m) && r.m]}].h }
+  fn 'docsID',->g,q{g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h }
 
   # default graph (filesystem store)
   # to use a different default-graph function (w/o patching here, or querystring param), define a GET handler on / (or a subdir),
