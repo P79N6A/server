@@ -43,7 +43,6 @@ class R
   def <=> c;    to_s <=> c.to_s end
   def sh;       d.force_encoding('UTF-8').sh end
   def to_s;     uri end
-  def to_h;    {'uri' => uri} end
   def touch;    FileUtils.touch node; self end
   def writeFile c; File.open(d,'w'){|f|f << c} end
 

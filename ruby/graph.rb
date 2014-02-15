@@ -130,7 +130,7 @@ class R
   end
 
   def to_json *a
-    to_h.to_json *a
+    {'uri' => uri}.to_json *a
   end
 
   fn Render+'application/json',->d,_=nil{d.to_json}

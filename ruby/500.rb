@@ -1,16 +1,9 @@
 #watch __FILE__
 class R
-  
-  Errors ||= {}
 
   fn 'E500',->x,e{
     stack = x.backtrace
     $stderr.puts [500, e['REQUEST_URI'], x.class, x.message, stack[0]].join ' '
-
-    Errors[e['uri']] ||= {}
-    Errors[e['uri']][:time] = Time.now
-    Errors[e['uri']][:env] = [e, x.class.to_s, x.message, stack.join('<br>')]
-
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
           c: [{_: :head,
@@ -24,10 +17,7 @@ class R
                               c: [{_: :td, class: :path, c: p[0].abbrURI},
                                   {_: :td, class: :index, c: p[1]},
                                   {_: :td, class: :context, c: (p[2]||'').hrefs}].cr}}.cr]}]}]}]]]}
-
-  F['/500/GET'] = ->e,r{
-    body = H [Errors.sort_by{|u,r|r[:time]}.reverse.html, H.css('/css/500')]
-    [200, {'Content-Type'=>'text/html; charset=utf-8'}, [body]]}
+  F['req/500']=->e,r{1/0}
 
   F['view/'+COGS+'Exception']=->e,r{
     e.values.map{|e|
