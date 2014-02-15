@@ -15,7 +15,7 @@ shellwords}.map{|r|require r}
 %w{
 constants
 lambda
-mime
+MIME
 404
 500
 grep
@@ -45,6 +45,7 @@ names
 POST
 rdf
 schema
+SPARQL
 text
 threads
 time
