@@ -1,5 +1,5 @@
 class R
-
+  F['req/500']=->e,r{1/0}
   fn 'E500',->x,e{
     $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
     [500,{'Content-Type'=>'text/html'},

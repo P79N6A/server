@@ -40,7 +40,7 @@ end
 class Array
   def cr; intersperse "\n" end
   def head; self[0] end
-  def html v=nil,g=nil; map{|e|e.html v,g}.join ' ' end
+  def html v=nil; map{|e|e.html v}.join ' ' end
   def h; join.h end
   def intersperse i
     inject([]){|a,b|a << b << i}[0..-2]
@@ -63,53 +63,41 @@ class String
   def abbrURI
     sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
-  def html e=nil,g=nil
+  def html e=nil
     self
   end
 end
 
 class Fixnum
-  def html e=nil,g=nil; to_s end
+  def html e=nil; to_s end
   def max i; i > self ? self : i end
   def min i; i < self ? self : i end
 end
 
 class Float
-  def html e=nil,g=nil; to_s end
+  def html e=nil; to_s end
   def max i; i > self ? self : i end
   def min i; i < self ? self : i end
 end
 
 class TrueClass
-  def html e=nil,g=nil; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
+  def html e=nil; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
 end
 
 class FalseClass
-  def html e=nil,g=nil; H({_: :input, type: :checkbox, title: :False}) end
+  def html e=nil; H({_: :input, type: :checkbox, title: :False}) end
 end
 
-IsBnode = /^_:/
-
 class Hash
-  def html e={'SERVER_NAME'=>'localhost'}, g={}, key=true
+  def html e={'SERVER_NAME'=>'localhost'}
     if keys.size == 1 && has_key?('uri')
-      if uri.match IsBnode
-        g[uri].do{|r|
-          r.html e,g,key } || uri.href
-      else
-        uri.href
-      end
+      uri.href
     else
       H({_: :table, class: :html, c: map{|k,v|
-            unless k == 'uri' && (v.match IsBnode)
-              {_: :tr, property: k, c:
-                [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
-                 [
-                  ({_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? (v.R.docBase.localURL e)+'?graph=edit' : k), c: k.to_s.abbrURI}], class: :key} if key),
-                  {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e,g), class: :val},
-                 ]]}
-            end
-          }})
+            {_: :tr, property: k, c:
+              [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
+               [{_: :td, c: [{_: :a, name: k, href: (k == 'uri' ? (v.R.docBase.localURL e)+'?graph=edit' : k), c: k.to_s.abbrURI}], class: :key},
+                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e), class: :val}]]}}})
     end
   end
 end
@@ -121,36 +109,26 @@ class R
   end
 
   F['view']=->d,e{
-    d.values.select{|r|
-      !r.has_key?('uri') || # URI field missing
-      !r.uri.match(IsBnode) # blank node
-      true
-    }.
-    sort_by{|r| r[Date].do{|d| d[0].to_s} || ''}.reverse.
-    map{|r| F['view/select'][r,e,d]}}
-
-  F['view/base']=->d,e,k=true,graph=nil{
-    [H.once(e,'base',H.css('/css/html')),
-     d.values.map{|v|v.html e,graph,k}]}
-
-  F['view/select']=->r,e,d=nil{
-    graph = {r.uri => r}
-    view = nil
-    if r.class == Hash
-      r[Type].justArray.do{|types|
-        views = types.map(&:maybeURI).compact.map{|t|
-          subtype = t
-          type = subtype.split(/\//)[-2]
-          [F['view/' + subtype],
-          (F['view/' + type] if type)]}.
-        flatten.compact
-        view = views[0] unless views.empty?}
-    end
-    if !view # default view
-      F['view/base'][graph,e,true,d]
-    else
-      view[graph,e]
-    end}
+    d.values.map{|r|
+      graph = {r.uri => r}
+      view = nil
+      if r.class == Hash
+        r[Type].justArray.do{|types|
+          views = types.map(&:maybeURI).compact.map{|t|
+            subtype = t
+            type = subtype.split(/\//)[-2]
+            [F['view/' + subtype],
+             (F['view/' + type] if type)]}.
+          flatten.compact
+          view = views[0] unless views.empty?}
+      end
+      if !view
+        F['view/base'][graph,e]
+      else
+        view[graph,e]
+      end}}
+  
+  F['view/base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
 
   def triplrBlob
     glob.select(&:f).do{|f|f.map{|r|

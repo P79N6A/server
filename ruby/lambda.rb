@@ -4,7 +4,7 @@ end
 
 class NilClass
   def do; nil end
-  def html e=nil,g=nil; "" end
+  def html e=nil; "" end
   def R; "".R end
 end
 

@@ -1,12 +1,18 @@
 
-body {margin:0; font-family: sans-serif; background-color:#fff; color:#000}
-h1 {padding:.2em; background-color:#f00; color:#fff; margin:0}
-div {display:inline}
+body {margin:0; font-family: monospace; background-color:#000; color:#fff}
 table {border-spacing:0;margin:0}
-b {background-color:#eee;color:#500;padding:.1em .3em .1em .3em}
-.frag {font-weight:bold; color:#000; background-color:#0055ff}
-td.space {background-color:#ddd}
-td.message {background-color:#009;color:#fff}
-td.path {text-align:right}
-td.index {text-align:right;border-color:#000;border-width:0 0 .1em 0;border-style:dotted;background-color:#ddd;color:#000}
+b,.frag {background-color:#fff;color:#000}
+
+td.message {background-color:#008;color:#fff}
+
+td.path {
+    text-align:right;
+    background-color:#000;
+    color:#fff}
+td.index {
+    text-align:right;
+    border-color:#000;
+    border-width:.1em;
+    border-style:dotted;
+    background-color:#eee;color:#000}
 td.context {border-color:#ddd;border-width:0 0 .1em 0;border-style:dotted;padding:.15em}
