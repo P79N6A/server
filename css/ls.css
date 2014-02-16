@@ -40,7 +40,9 @@ table {
     border-width: 0 0 .1em 0;
     padding: 0 .4em 0 .4em;
 }
-.ls td[property="uri"] {text-align:right}
+.ls td[property="uri"] {
+    text-align:right;
+    white-space:nowrap}
 .ls td[property="uri"] .abbr {
     display: inline;
     color: #999;

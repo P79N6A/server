@@ -25,11 +25,11 @@ class R
       case u # match against URIs for customized view
       when /artery.wbur/ # compact whitespace a bit
         r[Content] = {class: :WBUR, c: [{_: :style, c: ".WBUR p {margin:0}"},r[Content]]}
-        F['view/base'][{u => r},e,false]        
+        F['view/base'][{u => r},e]
 
       when /boston\.com/ # crop sharebuttons
        (Nokogiri::HTML.parse r[Content][0]).css('p')[0].do{|p|r[Content]=p.inner_html}
-        F['view/base'][{u => r},e,false]
+        F['view/base'][{u => r},e]
 
       when /flickr/
         r[Content]
@@ -45,7 +45,7 @@ class R
                    {_: :h2, style: 'color:#000;margin:0',c: r[Title]}]},c.to_s],
           style: 'float:left;max-width:40em;position:relative;background-color:#fff;border-color:#eee;margin-top:93px;margin-right:.3em;padding-top:0;border-style:dotted;border-width:.3em;border-radius:0 .8em .8em .8em'}
       else
-        F['view/base'][{u => r},e,false]
+        F['view/base'][{u => r},e]
       end}}
 
 end

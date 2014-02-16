@@ -12,3 +12,4 @@ a {text-decoration:none}
 a:hover {background-color:#f70;color:#000}
 .BoardPost .tw {background-color:#fff;color:#000}
 table.html {background-color:#eee;float:left}
+table.html td.key {display: none}
