@@ -106,6 +106,7 @@ class R
   end
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-resource in default view
+  F['view/'+MIMEtype+'text/n3'] = NullView
 =begin
   USAGE(context)
 
