@@ -155,16 +155,13 @@ class R
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
-  FeedArchiver = -> doc, graph, options {
-    host = options[:hostname]
+  FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
+  FeedArchiver = -> doc, graph, host {
     doc.roonga host
-    graph.map{|u,r|
-      r[Date].do{|t| # link doc to date-index
-        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
-        stop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
-        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(stop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-        doc.ln R["http://#{host}/news/#{t}#{b}e"]}}
-  doc}
+    graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
+      time = t.gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones
+      base = (graph.name.to_s.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+      doc.ln R["http://#{host}/news/#{time}#{base}n3"]}}
 
   GREP_DIRS.push /^\/news\/\d{4}/
 

@@ -65,14 +65,15 @@ class R
   
   # add
   def roonga graph="global", m = self.graph
-   R.groonga.do{|g|
-    m.map{|u,i|
-      r = g[u] || g.add(u) # create or load entry
-      r.uri = u            # update data
-      r.graph = graph.to_s
-      r.content = i.to_s
-      r.time = i[R::Date].do{|t|t[0].to_time}
-    }}
+    R.groonga.do{|g|
+      puts "indexing #{uri}"
+      m.map{|u,i|
+        r = g[u] || g.add(u) # create or load entry
+        r.uri = u            # update data
+        r.graph = graph.to_s
+        r.content = i.to_s
+        r.time = i[R::Date].do{|t|t[0].to_time}
+      }}
     self
   end
   

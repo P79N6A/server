@@ -45,14 +45,14 @@ class R
 # * resource to RDF::Repository
 # * import missing resources
   def addDocsRDF options = {}
-    g = RDF::Repository.load self, :format => :feed  ; puts "<#{uri}> parsed #{g.count} statements"
+    g = RDF::Repository.load self, :format => :feed  ; puts "<#{uri}> found #{g.count} statements"
     g.each_graph.map{|graph|
       if graph.named?
         doc = graph.name.n3
         unless doc.e
           doc.dirname.mk
-          RDF::Writer.open(doc.d){|f| f << graph }   ; puts "<#{doc}> +document (#{graph.count} triples)"
-          options[:hook][doc,graph,options] if options[:hook]
+          RDF::Writer.open(doc.d){|f| f << graph }   ; puts "<#{doc.docBase}> +document (#{graph.count} triples)"
+          options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
     g
