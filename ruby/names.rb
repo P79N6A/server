@@ -1,7 +1,7 @@
 class R
 =begin
   these name-manipulating functions are mostly straight out of File/Pathname standard library
-  as jQuery resources have underlying DOM nodes, RDF::URIs have an associated filesystem node when using R subclass
+  a RDF::URI identified resource has an associated filesystem node while using the "R" subclass
 =end
 
   def appendURI u; R uri + u.to_s end

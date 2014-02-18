@@ -1,6 +1,8 @@
 #watch __FILE__
 class R
 
+  def getFeed h='localhost'; addDocsRDF :hostname => h, :hook => FeedArchiver end
+
   module Feed
     
     class Format < RDF::Format
@@ -165,10 +167,6 @@ class R
   doc}
 
   GREP_DIRS.push /^\/news\/\d{4}/
-
-  def getFeed host='localhost', hook=nil
-    addDocsRDF :hostname => host, :hook => FeedArchiver
-  end
 
   fn Render+'application/atom+xml',->d,e{
     id = 'http://' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
