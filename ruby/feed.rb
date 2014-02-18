@@ -26,8 +26,11 @@ class R
       
       def each_statement &fn
         dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o|
-          fn.call RDF::Statement.new (RDF::URI s), (RDF::URI p), o.class == R ? (RDF::URI o) : (RDF::Literal o)}
-      end
+          fn.call RDF::Statement.new(s.R, p.R,
+                                     o.class == R ? o : (l = RDF::Literal o
+                                                         l.datatype=RDF.XMLLiteral if p == Content
+                                                         l),
+                                     :context => s.R.docBase)} end
 
       def each_triple &block
         each_statement{|s| block.call *s.to_triple}
@@ -162,10 +165,19 @@ class R
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
-  def getFeed hostname='localhost'
-    graph = RDF::Graph.load self, :format => :feed
-    puts "graph #{uri} #{graph.count}"
-#    addDocs :triplrFeed, g, nil, FeedArchiver
+  def getFeed hostname='localhost', hook=nil
+    g = RDF::Repository.load self, :format => :feed           ;     puts "<#{uri}> parsed #{g.count} statements"
+    g.each_graph.map{|graph|
+      if graph.named?
+        doc = graph.name.n3
+        unless doc.e
+          doc.dirname.mk
+          RDF::Writer.open(doc.d){|f| f << graph }
+          puts "<#{doc}> +document (#{graph.count} triples)"
+          hook[doc,graph,hostname] if hook
+        end
+      end}
+    self
   end
 
   fn Render+'application/atom+xml',->d,e{

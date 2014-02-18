@@ -22,10 +22,9 @@ class R
   end
 
 =begin
- * stream triples into graph (memory)
+ * resource to JSON graph
  * import missing resources to store (fs)
- * behave as normal triplr to caller, with
-   side-effect of import/indexing to knowledgebase
+ * behave as normal triplr to caller
 =end
   def addDocs triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
@@ -44,6 +43,22 @@ class R
       d.w g,true              # write
       hook[d,g,host] if hook} # insert-hook
     graph.triples &b if b     # emit triples
+    self
+  end
+# * resource to RDF::Repository
+# * import missing resources
+  def addDocsRDF hostname, hook=nil
+    g = RDF::Repository.load self, :format => :feed           ; puts "<#{uri}> parsed #{g.count} statements"
+    g.each_graph.map{|graph|
+      if graph.named?
+        doc = graph.name.n3
+        unless doc.e
+          doc.dirname.mk
+          RDF::Writer.open(doc.d){|f| f << graph }            ; puts "<#{doc}> +document (#{graph.count} triples)"
+
+          hook[doc,graph,hostname] if hook
+        end
+      end}
     self
   end
 
