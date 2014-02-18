@@ -95,18 +95,4 @@ class R
       end
     }}
 
-  # tripleStream -> tripleStream
-  def dateNorm *f
-    send(*f){|s,p,o|
-      yield *({'CreationDate' => true,
-               'Date' => true,
-                RSS+'pubDate' => true,
-                Date => true,
-                Purl+'dc/elements/1.1/date' => true,
-                Atom+'published' => true,
-                Atom+'updated' => true
-              }[p] ?
-              [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
-  end
-
 end

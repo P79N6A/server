@@ -160,17 +160,6 @@ class R
          c: {_: :img, src: '/css/misc/cube.png', style: 'height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}},
        (H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))]}} # (n)ext (p)rev key binding
 
-  def contentURIresolve *f
-    send(*f){|s,p,o|
-      yield s, p, p == Content ?
-      (Nokogiri::HTML.fragment o).do{|o|
-        o.css('a').map{|a|
-          if a.has_attribute? 'href'
-            (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
-          end}
-        o.to_s} : o}
-  end
-
   fn Render+'text/html',->d,e{ u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
     view = F['view/'+e.q['view'].to_s] || F['view']

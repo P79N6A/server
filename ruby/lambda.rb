@@ -21,10 +21,6 @@ def watch f
 
 class R
 
-  def initialize uri
-    @uri = uri.to_s
-  end
-
   def R uri = nil
     uri ? R.new(uri) : self
   end

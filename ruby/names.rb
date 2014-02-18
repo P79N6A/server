@@ -42,7 +42,6 @@ class R
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
   def sh;       d.force_encoding('UTF-8').sh end
-  def to_s;     uri end
   def touch;    FileUtils.touch node; self end
   def writeFile c; File.open(d,'w'){|f|f << c} end
 
@@ -56,8 +55,9 @@ class R
   alias_method :e, :exist?
   alias_method :f, :file?
   alias_method :m, :mtime
-  alias_method :maybeURI, :uri
-  alias_method :url, :uri
+  alias_method :maybeURI, :to_s
+  alias_method :url, :to_s
+  alias_method :uri, :to_s
 
   def localURL e
     if uri.index('/') == 0

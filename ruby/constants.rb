@@ -1,4 +1,4 @@
-class R
+class R < RDF::URI
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
 
@@ -51,7 +51,5 @@ class R
     "sioct" => SIOCt,
     "stat" => Stat,
   }
-
-  attr_reader :uri
 
 end
