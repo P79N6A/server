@@ -66,7 +66,6 @@ class R
   # add
   def roonga graph="global", m = self.graph
     R.groonga.do{|g|
-      puts "indexing #{uri}"
       m.map{|u,i|
         r = g[u] || g.add(u) # create or load entry
         r.uri = u            # update data
