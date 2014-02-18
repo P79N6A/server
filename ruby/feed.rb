@@ -10,6 +10,7 @@ class R
     end
 
     class Reader < RDF::Reader
+
       format Format
 
       def initialize(input = $stdin, options = {}, &block)
@@ -23,9 +24,9 @@ class R
         nil
       end
       
-      def each_statement &b
+      def each_statement &fn
         dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o|
-          b.call RDF::Statement.new(RDF::URI(s), RDF::URI(p), o.class == R ? RDF::URI(o) : RDF::Literal(o))}
+          fn.call RDF::Statement.new (RDF::URI s), (RDF::URI p), o.class == R ? (RDF::URI o) : (RDF::Literal o)}
       end
 
       def each_triple &block
@@ -92,7 +93,7 @@ class R
             inner.scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
               yield u,                           # s
               (x[e[0]&&e[0].chop]||R::RSS)+e[1], # p
-              e[3].extend(FeedParse).guess.do{|o|# o
+           e[3].extend(SniffContent).sniff.do{|o|# o
                 o.match(/\A(\/|http)[\S]+\Z/) ? o.R : R::F['cleanHTML'][o]
               }}
           else
@@ -114,7 +115,32 @@ class R
                   }[p] ?
                   [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
       end
+
     end
+
+    module SniffContent
+
+      def sniff
+        send (case self
+              when /^\s*<\!/m
+                :cdata
+              when /</m
+                :id
+              else
+                :html
+              end)
+      end
+
+      def html
+        CGI.unescapeHTML self
+      end
+
+      def cdata
+        sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'
+      end
+
+    end
+
   end
 
   Atom = W3+'2005/Atom'
@@ -136,7 +162,11 @@ class R
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
-  def getFeed g; addDocs :triplrFeed, g, nil, FeedArchiver end
+  def getFeed hostname='localhost'
+    graph = RDF::Graph.load self, :format => :feed
+    puts "graph #{uri} #{graph.count}"
+#    addDocs :triplrFeed, g, nil, FeedArchiver
+  end
 
   fn Render+'application/atom+xml',->d,e{
     id = 'http://' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
@@ -156,8 +186,6 @@ class R
                      d[Creator].do{|c|{_: :author, c: c[0]}},
                      {_: :content, type: :xhtml,
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
-                         c: d[Content]}}].cr
-               }}.cr
-            ]}])}
+                         c: d[Content]}}].cr}}.cr]}])}
 
 end
