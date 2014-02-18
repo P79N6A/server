@@ -1,4 +1,8 @@
 class R
+=begin
+  these name-manipulating functions are mostly straight out of File/Pathname standard library
+  as jQuery resources have underlying DOM nodes, RDF::URIs have an associated filesystem node when using R subclass
+=end
 
   def appendURI u; R uri + u.to_s end
   def appendSlashURI u; R uri.t + u.to_s end
@@ -45,6 +49,8 @@ class R
   def touch;    FileUtils.touch node; self end
   def writeFile c; File.open(d,'w'){|f|f << c} end
 
+  # shortcuts
+  
   alias_method :+, :appendURI
   alias_method :a, :appendURI
   alias_method :as, :appendSlashURI

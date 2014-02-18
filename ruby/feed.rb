@@ -153,7 +153,8 @@ class R
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
-  FeedArchiver = -> doc, graph, host {
+  FeedArchiver = -> doc, graph, options {
+    host = options[:hostname]
     doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t| # link doc to date-index
@@ -165,19 +166,8 @@ class R
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
-  def getFeed hostname='localhost', hook=nil
-    g = RDF::Repository.load self, :format => :feed           ;     puts "<#{uri}> parsed #{g.count} statements"
-    g.each_graph.map{|graph|
-      if graph.named?
-        doc = graph.name.n3
-        unless doc.e
-          doc.dirname.mk
-          RDF::Writer.open(doc.d){|f| f << graph }
-          puts "<#{doc}> +document (#{graph.count} triples)"
-          hook[doc,graph,hostname] if hook
-        end
-      end}
-    self
+  def getFeed host='localhost', hook=nil
+    addDocsRDF :hostname => host, :hook => FeedArchiver
   end
 
   fn Render+'application/atom+xml',->d,e{

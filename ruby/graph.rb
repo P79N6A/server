@@ -1,16 +1,15 @@
 #watch __FILE__
 class R
 =begin
-  graph construction is two-pass:
+  graph construction is two-pass, or Protograph and Graph
 
- the first-pass will signify if the second-pass needs to be run. an ETag is be derived from the return-value, ideal fingerprint sources include filestats, mtime checks, extremely trivial SPARQL queries, SHA160 hashes of in-RAM entities.. <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
+  Protograph = ETag. ideal fingerprint sources include filestats, mtime checks (#m), SHA160 hashes of in-RAM entities - <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
 
-   second-pass might fetch RDF from a SPARQL store. this lib was developed as an alternative to relying on (large, hard-to-implement, must be running, configured & connectable) SPARQL stores by using the filesystem as much as possible, to experiment with hybrids like SPARQLING up a set of files to be returned in standard Apache-as-static-fileserver fashion, and to webize non-RDF filesystem-content like email, directories, URLs in plain-text etc
+  a tripleStream function constructing a block (consumes yielded values) is a sink, inverse is a source, both a filter
+  these can be stacked into pipelines, as in feed.rb
 
-  triple streams - a source function yields triples up to the caller as it finds them,
-  a function providing a block (consumes yielded values) is a sink, both is a filter 
-  these can be stacked into pipelines. see the data-massaging stream-processing in feed.rb
-
+  there are two ways to do everything, a simple JSON in-memory graph serializable to .e files,
+  or the increasingly-mature RDF library
 =end
 
   def fromStream m,*i
@@ -21,11 +20,8 @@ class R
     end; m
   end
 
-=begin
- * resource to JSON graph
- * import missing resources to store (fs)
- * behave as normal triplr to caller
-=end
+# * resource to JSON graph
+# * import missing resources to store (fs)
   def addDocs triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
@@ -45,21 +41,21 @@ class R
     graph.triples &b if b     # emit triples
     self
   end
+
 # * resource to RDF::Repository
 # * import missing resources
-  def addDocsRDF hostname, hook=nil
-    g = RDF::Repository.load self, :format => :feed           ; puts "<#{uri}> parsed #{g.count} statements"
+  def addDocsRDF options = {}
+    g = RDF::Repository.load self, :format => :feed  ; puts "<#{uri}> parsed #{g.count} statements"
     g.each_graph.map{|graph|
       if graph.named?
         doc = graph.name.n3
         unless doc.e
           doc.dirname.mk
-          RDF::Writer.open(doc.d){|f| f << graph }            ; puts "<#{doc}> +document (#{graph.count} triples)"
-
-          hook[doc,graph,hostname] if hook
+          RDF::Writer.open(doc.d){|f| f << graph }   ; puts "<#{doc}> +document (#{graph.count} triples)"
+          options[:hook][doc,graph,options] if options[:hook]
         end
       end}
-    self
+    g
   end
 
   # default protograph - identity < lazy-expandable resource-thunks
