@@ -1,9 +1,9 @@
 #watch __FILE__
 class R
 
-  def nt;  @nt ||= docBase.a('.nt') end
-  def n3;  @n3 ||= docBase.a('.n3') end
-  def ttl; @ttl||= docBase.a('.ttl') end
+  def nt; docBase.a '.nt' end
+  def n3; docBase.a '.n3' end
+  def ttl; docBase.a '.ttl' end
 
   def self.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w|

@@ -20,8 +20,8 @@ class R
     end; m
   end
 
-# * resource to JSON graph
-# * import missing resources to store (fs)
+# resource -> graph
+# missing resources -> local store
   def addDocs triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
@@ -42,16 +42,14 @@ class R
     self
   end
 
-# * resource to RDF::Repository
-# * import missing resources
   def addDocsRDF options = {}
-    g = RDF::Repository.load self, :format => :feed  ; puts "<#{uri}> found #{g.count} statements"
+    g = RDF::Repository.load self, :format => :feed
     g.each_graph.map{|graph|
       if graph.named?
         doc = graph.name.n3
         unless doc.e
           doc.dirname.mk
-          RDF::Writer.open(doc.d){|f| f << graph }   ; puts "<#{doc.docBase}> +document (#{graph.count} triples)"
+          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docBase}> #{graph.count} triples"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
