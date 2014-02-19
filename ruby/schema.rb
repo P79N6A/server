@@ -1,24 +1,14 @@
 #watch __FILE__
 class R
 =begin
- www)  http://data.whats-your.name
 
- local) cd schema
-        curl http://data.whats-your.name/schema/schema.txt.gz | zcat > schema/schema.txt
-        x-www-browser http://localhost/schema
+ curl http://data.whats-your.name/schema/schema.txt.gz | zcat > schema/schema.txt
+ http://localhost/schema
 
  rebuild)
- 1) fetch
- ) RDF schema pointer document
-   curl http://prefix.cc/popular/all.file.txt > prefix.txt  
- ) RDF usage data
-   curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt  
- 2) massage
+ curl http://data.whats-your.name/schema/gromgull.gz | zcat > properties.txt  
  irb> R.cacheSchemas
   ..  R.indexSchemas
-
- schema missing? publish and add to prefix.cc,
- see also ideas at http://www.w3.org/2013/04/vocabs/
 
 =end
 

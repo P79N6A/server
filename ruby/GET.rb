@@ -14,7 +14,7 @@ class R
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
       (!accepted || MIMEcook[file.mimeP] || @r.q.has_key?('view')) ?
-       resource : (file.env @r).getFile
+       resource : (file.env @r).fileGET
 
     else
       resource
@@ -29,7 +29,7 @@ class R
     [200,{},[]]
   end
 
-  def getFile
+  def fileGET
     @r['ETag'] = [m,size].h
     maybeSend mimeP,->{self}
   end
@@ -104,7 +104,7 @@ class R
     i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e
     if i && !r['REQUEST_URI'].match(/\?/)
       if e.uri[-1] == '/' # inside dir?
-        i.env(r).getFile  # show index
+        i.env(r).fileGET  # show index
       else                # descend into dir
         [301, {Location: e.uri.t}, []]
       end

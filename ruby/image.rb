@@ -21,7 +21,7 @@ class R
           `gm convert #{i.sh} -thumbnail "#{size}x#{size}" #{path.sh}`
         end
       end
-      path.e ? (path.env r).getFile : F[E404][e,r]
+      path.e ? (path.env r).fileGET : F[E404][e,r]
     else
       F[E404][e,r]
     end}

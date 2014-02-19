@@ -92,7 +92,7 @@ class R
         end
         
         # response
-        html.env(r).getFile
+        html.env(r).fileGET
       end
     end
   }
