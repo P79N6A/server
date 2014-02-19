@@ -18,42 +18,7 @@ class R
     end; m
   end
 
-# GET Resource -> Graph
-# missing resources -> local store
-  def addDocs triplr, host, p=nil, hook=nil, &b
-    graph = fromStream({},triplr)
-    docs = {}
-    graph.map{|u,r|
-      e = u.R                 # resource
-      doc = e.ef              # doc
-      doc.e ||                # exists - we're nondestructive here
-      (docs[doc.uri] ||= {}   # init doc-graph
-       docs[doc.uri][u] = r   # add to graph
-       p && p.map{|p|         # index predicate
-         r[p].do{|v|v.map{|o| # values exist?
-             e.index p,o}}})} # index triple
-    docs.map{|d,g|            # resources in docs
-      d = d.R; puts "<#{d.docBase}>"
-      d.w g,true              # write
-      hook[d,g,host] if hook} # insert-hook
-    graph.triples &b if b     # emit triples
-    self
-  end
-  def addDocsRDF options = {}
-    g = RDF::Repository.load self, options
-    g.each_graph.map{|graph|
-      if graph.named?
-        doc = graph.name.n3
-        unless doc.e
-          doc.dirname.mk
-          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docBase}> #{graph.count} triples"
-          options[:hook][doc,graph,options[:hostname]] if options[:hook]
-        end
-      end}
-    g
-  end
-
-  # default protograph - identity < lazy-expandable resource-thunks
+  # default protograph - identity + lazy-expandable resource-thunks
   # Resource, Query, Graph -> graphID
   fn 'protograph/',->e,q,g{
      g['#'] = {'uri' => '#'}
@@ -84,9 +49,7 @@ class R
   # fs-derived ID for a resource-set
   fn 'docsID',->g,q{g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h }
 
-  # default graph (filesystem store)
-  # to use a different default-graph function (w/o patching here, or querystring param), define a GET handler on / (or a subdir),
-  # update configuration such as q['graph'] = 'hexastore' and return false or call #response..
+  # default graph
   fn 'graph/',->e,q,m{
     # force thunks
     m.values.map{|r|(r.env e.env).graphFromFile m if r.class == R }
@@ -121,6 +84,45 @@ class R
      base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
      ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> child resources
     ].flatten.compact
+  end
+
+
+# GET Resource -> Graph
+# missing resources -> local store
+
+  # JSON + Hash variant
+  def addDocs triplr, host, p=nil, hook=nil, &b
+    graph = fromStream({},triplr)
+    docs = {}
+    graph.map{|u,r|
+      e = u.R                 # resource
+      doc = e.ef              # doc
+      doc.e ||                # exists - we're nondestructive here
+      (docs[doc.uri] ||= {}   # init doc-graph
+       docs[doc.uri][u] = r   # add to graph
+       p && p.map{|p|         # index predicate
+         r[p].do{|v|v.map{|o| # values exist?
+             e.index p,o}}})} # index triple
+    docs.map{|d,g|            # resources in docs
+      d = d.R; puts "<#{d.docBase}>"
+      d.w g,true              # write
+      hook[d,g,host] if hook} # insert-hook
+    graph.triples &b if b     # emit triples
+    self
+  end
+  # RDF::Graph variant
+  def addDocsRDF options = {}
+    g = RDF::Repository.load self, options
+    g.each_graph.map{|graph|
+      if graph.named?
+        doc = graph.name.n3
+        unless doc.e
+          doc.dirname.mk
+          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docBase}> #{graph.count} triples"
+          options[:hook][doc,graph,options[:hostname]] if options[:hook]
+        end
+      end}
+    g
   end
 
   def triplrDoc &f; docBase.glob('#*').map{|s| s.triplrResource &f} end
