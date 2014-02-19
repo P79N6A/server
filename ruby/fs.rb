@@ -87,7 +87,7 @@ class R
 
   def r p=false
     if f
-      p ? (JSON.parse readFile) : readFile
+      p ? (JSON.parse File.open(d).read) : File.open(d).read
     else
       nil
     end

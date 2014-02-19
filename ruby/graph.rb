@@ -128,7 +128,7 @@ class R
   def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
 
   def triplrJSON
-    yield uri, '/application/json', (JSON.parse read) if e
+    yield uri, '/application/json', r(true) if e
   rescue Exception => e
   end
 

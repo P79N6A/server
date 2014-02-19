@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://whats-your.name/www/"
   s.licenses = ["Unlicense"]
   s.require_path = "."
-  %w{rack thin nokogiri}.map{|d| s.add_dependency d }
+  %w{linkeddata mail nokogiri rack thin}.map{|d| s.add_dependency d }
   s.authors = ['<carmen@whats-your.name>']
   s.email = "_@whats-your.name"
 end

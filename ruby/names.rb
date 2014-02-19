@@ -22,7 +22,6 @@ class R
   def ext;      File.extname(uri).tail||'' end
   def file?;    node.file? end
   def frag;     uri.frag end
-  def get;      open(uri).read end
   def glob p=""; (Pathname.glob d + p).map &:R end
   def hostURL e; host='http://'+e['SERVER_NAME']; (uri.index('/') == 0 ? host : '') + uri end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
@@ -37,8 +36,6 @@ class R
   def predicatePath p,s=true; container.as s ? p.R.shorten : p end
   def predicates; container.c.map{|c|c.base.expand.R} end
   def prependURI u; R u.to_s + uri end
-  def read;     f ? readFile : get end
-  def readFile; File.open(d).read end
   def realpath; node.realpath rescue Errno::ENOENT end
   def shorten;  uri.shorten.R end
   def siblings; parent.c end

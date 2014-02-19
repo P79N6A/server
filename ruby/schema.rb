@@ -74,9 +74,7 @@ class R
   
   def R.schemaDocs
     @schemaDocs ||=
-      (source = R['http://prefix.cc/popular/all.file.txt']
-       mirror = R['/prefix.txt']
-       (mirror.e ? mirror : source).   # select schema-pointers doc
+      (open('http://prefix.cc/popular/all.file.txt'). # schemae
        read.split(/\n/).grep(/^[^#]/). # each uncommented line
        map{|t| t.split(/\t/)[1].R }.   # into a Resource
        concat SchemasRDFa)             # schema list
