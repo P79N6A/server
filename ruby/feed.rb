@@ -1,7 +1,14 @@
 #watch __FILE__
 class R
 
-  def getFeed h='localhost'; addDocsRDF :hostname => h, :hook => FeedArchiver end
+  def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiver, :hostname => h end
+
+  Atom = W3+'2005/Atom'
+   RSS = Purl+'rss/1.0/'
+  RSSm = RSS+'modules/'
+
+  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
+  alias_method :feeds, :listFeeds
 
   module Feed
     
@@ -147,13 +154,6 @@ class R
     end
 
   end
-
-  Atom = W3+'2005/Atom'
-   RSS = Purl+'rss/1.0/'
-  RSSm = RSS+'modules/'
-
-  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
-  alias_method :feeds, :listFeeds
 
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
   FeedArchiver = -> doc, graph, host {

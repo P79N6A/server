@@ -1,15 +1,13 @@
 #watch __FILE__
 class R
 =begin
-  graph construction is two-pass, or Protograph and Graph
+  two-pass graph construction aka Protograph and Graph
 
   Protograph = ETag. ideal fingerprint sources include filestats, mtime checks (#m), SHA160 hashes of in-RAM entities - <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
 
   a tripleStream function constructing a block (consumes yielded values) is a sink, inverse is a source, both a filter
   these can be stacked into pipelines, as in feed.rb
 
-  there are two ways to do everything, a simple JSON in-memory graph serializable to .e files,
-  or the increasingly-mature RDF library
 =end
 
   def fromStream m,*i
@@ -20,7 +18,7 @@ class R
     end; m
   end
 
-# resource -> graph
+# GET Resource -> Graph
 # missing resources -> local store
   def addDocs triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
@@ -41,9 +39,8 @@ class R
     graph.triples &b if b     # emit triples
     self
   end
-
   def addDocsRDF options = {}
-    g = RDF::Repository.load self, :format => :feed
+    g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?
         doc = graph.name.n3
