@@ -17,6 +17,14 @@ class R
     end
   end
 
+  def predicatePath p, s = true
+    container.as s ? p.R.shorten : p
+  end
+
+  def predicates
+    container.c.map{|c|c.base.expand.R}
+  end
+
   def predicate p, short = true
     p = predicatePath p, short
     p.node.take.map{|n|
@@ -58,7 +66,9 @@ class R
     end
   end
 
-  def unsetFs p,o; setFs p,o,true end
+  def unsetFs p,o
+    setFs p,o,true
+  end
 
   def triplrInode
     if d?
