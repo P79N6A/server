@@ -1,7 +1,7 @@
 class R
 =begin
-  these name-manipulating functions are mostly straight out of File/Pathname standard library
-  a RDF::URI identified resource has an associated filesystem node while using the "R" subclass
+  name-manipulating functions
+  a RDF::URI-identified-resource has an associated filesystem node when using our subclass..
 =end
 
   def appendURI u; R uri + u.to_s end
@@ -12,22 +12,17 @@ class R
   def children; node.c.map &:R end
   def container; @u ||= R[f ? dirname + '/.' + (File.basename path) : path] end
   def d;        node.to_s end
-  def delete;   node.deleteNode if e; self end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
   def docBase;  uri.split(/#/)[0].R.do{|d| d.dirname.as d.bare } end
   def d?;       node.directory? end
   def env r=nil;r ? (@r = r; self) : @r end
-  def exist?;   node.exist? end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
-  def file?;    node.file? end
   def frag;     uri.frag end
   def glob p=""; (Pathname.glob d + p).map &:R end
   def hostURL e; host='http://'+e['SERVER_NAME']; (uri.index('/') == 0 ? host : '') + uri end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
   def label;    uri.label end
-  def mk;       e || FileUtils.mkdir_p(d); self end
-  def mtime;    node.stat.mtime if e end
   def node;     Pathname.new FSbase + path end
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
@@ -43,8 +38,6 @@ class R
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
   def sh;       d.force_encoding('UTF-8').sh end
-  def touch;    FileUtils.touch node; self end
-  def writeFile c; File.open(d,'w'){|f|f << c} end
 
   # shortcuts
   
@@ -55,9 +48,6 @@ class R
   alias_method :bare, :barename
   alias_method :c, :children
   alias_method :dir, :dirname
-  alias_method :e, :exist?
-  alias_method :f, :file?
-  alias_method :m, :mtime
   alias_method :maybeURI, :to_s
   alias_method :url, :to_s
   alias_method :uri, :to_s

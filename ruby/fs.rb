@@ -77,15 +77,21 @@ class R
   def ln t, y=:link
     t = t.R
     t = t.uri[0..-2].R if t.uri[-1] == '/'
-    if !t.e # destination exist?
+    if !t.e
       t.dirname.mk
       FileUtils.send y, node, t.node
     end
   end
 
+  def delete;   node.deleteNode if e; self end
+  def exist?;   node.exist? end
+  def file?;    node.file? end
   def ln_s t; ln t, :symlink end
+  def mk;       e || FileUtils.mkdir_p(d); self end
+  def mtime;    node.stat.mtime if e end
+  def touch;    FileUtils.touch node; self end
 
-  def r p=false
+  def read p=false
     if f
       p ? (JSON.parse File.open(d).read) : File.open(d).read
     else
@@ -95,11 +101,18 @@ class R
     puts e
   end
 
-  def w o,s=false
+  def write o,s=false
     dirname.mk
-    writeFile (s ? o.to_json : o)
+    File.open(d,'w'){|f|
+      f << (s ? o.to_json : o)}
     self
   end
+
+  alias_method :e, :exist?
+  alias_method :f, :file?
+  alias_method :m, :mtime
+  alias_method :r, :read
+  alias_method :w, :write
 
 end
 
