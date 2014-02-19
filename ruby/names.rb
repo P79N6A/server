@@ -15,7 +15,6 @@ class R
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
   def docBase;  uri.split(/#/)[0].R.do{|d| d.dirname.as d.bare } end
   def d?;       node.directory? end
-  def env r=nil;r ? (@r = r; self) : @r end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
   def frag;     uri.frag end

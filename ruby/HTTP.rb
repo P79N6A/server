@@ -1,9 +1,13 @@
 #watch __FILE__
 class R
 
+  def env r=nil
+    r ? (@r = r; self) : @r
+  end
+
   def R.call e
     e.extend Th # HTTP utility functions
-    dev # see if watched files were changed
+    dev         # watched files changed?
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
     resource = R['http://'+e['SERVER_NAME']+path]
