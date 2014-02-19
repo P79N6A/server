@@ -1,18 +1,33 @@
 #watch __FILE__
 class R
+=begin usage
+
+  messages matching an address
+  msgs = R['/m/semantic-web@w3.org'].take
+
+  mirror originating message-files elsewhere
+  src = R::DC + 'source'
+  files = msgs.map{|g| '.' + g.graph.values.find{|r|r.has_key? src}[src].head.R.path}
+  `rsync -avRz #{files.join ' '} h:/www/`
+
+  summary view for directories
+  F['/mail/GET'] = -> e,r {
+   r.q['view'] ||= 'threads' if e.uri[-1] == '/'
+   nil }
+
+=end
 
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
-
-  GREP_DIRS.push /^\/m\/[^\/]+\// # allow grep within a single address
+  GREP_DIRS.push /^\/m\/[^\/]+\// # allow for a single address
 
   F['/m/GET'] = -> e,r{
-    # set overview(summary) view and start a depth-first view of message tree of this address
+    # use summary view and start a newest-first tree-range at address
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
-      r.q['set'] ||= 'depth'
+      r.q['set']  ||= 'depth'
       r.q['view'] ||= 'threads'
-       e.response
+      e.response
     else
-      false      
+      false
     end}
 
   IndexMail = ->doc, graph, host {
@@ -107,20 +122,5 @@ class R
 
   F['view/'+MIMEtype+'message/rfc822'] = NullView # hide container-resource in default view
   F['view/'+MIMEtype+'text/n3'] = NullView
-=begin
-  USAGE(context)
 
-  admin (irb) move messages among filesystems
-  p = R['/m/semantic-web@w3.org'].take.map{|g|'.' + g.graph.values.find{|r|r.has_key?(R::DC+'source')}[R::DC+'source'][0].R.path}
-  `rsync -avRz #{p.join ' '} h:/www/`
-
-  view (rb) default to overview of directory
-  F['/mail/GET'] = -> e,r {
-   r.q['view'] ||= 'threads' if e.uri[-1] == '/'
-    false }
-
-  home (sh) current day-dir in Markdown  
-  echo "[today](/?y=day&view=threads)" > TODAY.md 
-
-=end
 end
