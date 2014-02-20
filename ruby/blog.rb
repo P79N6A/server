@@ -1,9 +1,9 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   F['/blog/post/POST'] = -> d,e {
-    name = URI.escape (Rack::Request.new d.env).params['name'].gsub /[?#\s\/]/,'_'
-    doc = 'http://'+e['SERVER_NAME']+Time.now.strftime('/%Y/%m/')+name
+    name = (Rack::Request.new d.env).params['name']
+    doc = 'http://' + e['SERVER_NAME'] + Time.now.strftime('/%Y/%m/') + URI.escape(name.gsub /[?#\s\/]/,'_')
     post = doc.R.a '#'
     post[Type] = R[SIOCt+'BlogPost']
     post[Title] = name
