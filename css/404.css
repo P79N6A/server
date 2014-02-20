@@ -1,9 +1,3 @@
-body {
-    background-color:#000;
-    color:#fff;
-    font-family:'Anonymous Pro';
-}
-
 body > table {margin:auto}
 body > table > tbody > tr > td > a > span.abbr {display:inline}
 .scheme, .abbr {display: none}
