@@ -35,7 +35,7 @@ class R
   end
 
   def resource
-    # bubble up site then global tree until handled (false return-value to pass)
+    # bubble up full-hostname then path tree until handled
     pathSegment.do{|path|
       lambdas = path.cascade.map{|p| p.uri.t + 'GET' }
       ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
@@ -50,13 +50,13 @@ class R
 
     m = {}
 
-    # graph-identity (model)
-    g = @r.q['graph']
+    # Model
+    g = @r.q['graph'] # model identity function
     graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
 
     return F[E404][self,@r] if m.empty?
 
-    # response-identity (view)
+    # View
     @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
@@ -98,7 +98,7 @@ class R
       [304,{},[]]  # client has response
   end
 
-  # user-patchable default handler - use index.html or defer to internal default-handler #response
+  # user-patchable root-level handler - index.html or continue to default-handler
   fn '/GET',->e,r{
     x = 'index.html'
     i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e

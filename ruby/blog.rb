@@ -3,12 +3,15 @@ class R
 
   F['/blog/post/POST'] = -> d,e {
     name = (Rack::Request.new d.env).params['name']
-    doc = 'http://' + e['SERVER_NAME'] + Time.now.strftime('/%Y/%m/') + URI.escape(name.gsub /[?#\s\/]/,'_')
-    post = doc.R.a '#'
+    host = 'http://' + e['SERVER_NAME']
+    docBase = R[host + Time.now.strftime('/%Y/%m/') + URI.escape(name.gsub /[?#\s\/]/,'_')]
+    date = R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/')]
+    docBase.ef.touch.ln_s date
+    post = docBase.a '#'
     post[Type] = R[SIOCt+'BlogPost']
     post[Title] = name
     edit = "?prototype=sioct:BlogPost&graph=edit"
-    [303,{'Location' => doc + edit},[]]}
+    [303,{'Location' => (docBase + edit).uri},[]]}
 
   F['/blog/post/GET'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
