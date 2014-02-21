@@ -13,30 +13,41 @@ class R
     basicPOST
   end
   def basicPOST
-    return [303,{'Location'=>uri},[]]
+#    return [303,{'Location'=>uri},[]] # comment to shutoff POST
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       changed = false
-      (Rack::Request.new @r).params.map{|k,v| s, p, tripleA = JSON.parse CGI.unescape k
+      (Rack::Request.new @r).params.map{|k,v|
+
+        # triple ID field
+        s, p, tripleA = JSON.parse CGI.unescape k
         s = s.R
        pp = s.predicatePath p
+
+        # clean input 
         o = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : F['cleanHTML'][v]
+
+        # delta ID
         tripleB = pp.objectPath(o)[0]
-        if tripleA.to_s != tripleB.to_s
+
+        if tripleA.to_s != tripleB.to_s # changed?
+          # remove triple
           tripleA && tripleA.R.do{|t| t.delete if t.e }
+          # create triple
           s[p] = o unless o.class==String && o.empty?
           changed = true
         end}
       if changed
-        g = {}
+        g = {} # triples -> graph
         fromStream g, :triplrDoc
         if g.empty? # no triples left
           ef.delete
-        else        # snapshot to graph-doc
+        else # write graph to doc #TODO mint docURI for version and (sym|hard)link to it
           ef.w g, true
         end
       end
     end
+    # continue - back to editor
     [303,{'Location'=>uri+'?graph=edit'},[]]
   end
 
