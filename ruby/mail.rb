@@ -5,7 +5,7 @@ class R
   messages matching an address
   msgs = R['/m/semantic-web@w3.org'].take
 
-  mirror originating message-files elsewhere
+  mirror message-files elsewhere
   src = R::DC+'source'
   files = msgs.map{|g| '.' + g.graph.values.find{|r|r.has_key? src}[src].head.R.path}
   `rsync -avRz #{files.join ' '} h:/www/`

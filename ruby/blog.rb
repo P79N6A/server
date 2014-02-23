@@ -2,17 +2,19 @@ watch __FILE__
 class R
 
   # traverse collection of blog-posts
-  F['/blog/post/GET'] = -> d,e {
-
-  }
+  F['/blog/GET'] = -> d,e {
+    if d.pathSegment.uri.sub(/^\/blog/,'/') == '/'          # if /blog or /:
+      e.q['set'] ||= 'depth'; e.q['local'] = true           # range posts in date-order
+      R['http://'+e['SERVER_NAME']+'/blog'].env(e).response # continue response on post-tree URI
+    end}
 
   # decode POSTed title, mint derived-URI, set title+type properties there, continue to editor
   F['/blog/post/POST'] = -> d,e {
     title = (Rack::Request.new d.env).params['title']
     host = 'http://' + e['SERVER_NAME']
     docBase = R[host + Time.now.strftime('/%Y/%m/') + URI.escape(title.gsub /[?#\s\/]/,'_')]
-    date = R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/')]
-    docBase.ef.touch.ln_s date
+    dateLink = R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/') + '.e']
+    docBase.ef.touch.ln_s dateLink
     post = docBase.a '#'
     post[Type] = R[SIOCt+'BlogPost']
     post[Title] = title

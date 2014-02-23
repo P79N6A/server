@@ -23,7 +23,8 @@ class R
     uri = (local && f) ? d : uri
     RDF::Reader.open(uri, :format => format){|r|
       r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s, [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}
+        yield s.to_s, p.to_s,
+        [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}
   end
 
   [['application/ld+json',:jsonld],
