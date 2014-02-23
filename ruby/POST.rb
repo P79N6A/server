@@ -16,25 +16,21 @@ class R
 
   def formPOST
     changed = false
-    (Rack::Request.new @r).params.map{|k,v|
-      
-      # triple ID field
-      s, p, tripleA = JSON.parse CGI.unescape k
-      s = s.R
-      pp = s.predicatePath p
-
-      # clean input 
-      o = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : F['cleanHTML'][v]
-
-      # delta ID
-      tripleB = pp.objectPath(o)[0]
-
-      if tripleA.to_s != tripleB.to_s # changed?
-        # remove triple
-        tripleA && tripleA.R.do{|t| t.delete if t.e }
-        # create triple
-        s[p] = o unless o.class==String && o.empty?
-        changed = true
+    params = (Rack::Request.new @r).params
+    params.map{|k,v|
+      s, p, tripleA = JSON.parse CGI.unescape k rescue JSON::ParserError
+      if s
+        s = s.R # subject URI
+        pp = s.predicatePath p # s+p path
+        o = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : F['cleanHTML'][v] # HTML cleanup
+        tripleB = pp.objectPath(o)[0] # new triple
+        if tripleA.to_s != tripleB.to_s # changed?
+          # remove triple
+          tripleA && tripleA.R.do{|t| t.delete if t.e }
+          # create triple
+          s[p] = o unless o.class==String && o.empty?
+          changed = true
+        end
       end}
     if changed # update doc
       g = {} # triples -> graph
@@ -45,7 +41,7 @@ class R
         ef.w g, true
       end
     end
-    [303,{'Location'=>uri+'?graph=edit'},[]]
+    [303,{'Location'=>uri+'?graph=edit'+(params['mono'] ? '&mono' : '')},[]]
   end
 
 end

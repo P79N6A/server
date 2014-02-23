@@ -54,6 +54,7 @@ class R
     e.q['prototype'].do{|pr| pr = pr.expand
       Prototypes[pr].do{|v|ps.concat v }} # prototype imports
     e.q['predicate'].do{|p|ps.push p }    # explicit predicate
+    mono = e.q.has_key? 'mono' # 1:1 predicate->object
 
     [H.css('/css/html'),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
@@ -68,10 +69,12 @@ class R
                      {_: :tr,
                        c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # property
                            {_: :td,
-                             c: [r[p].do{|o|              # objects
+                             c: [r[p].do{|o|              # object?
                                    o.justArray.map{|o|    # each object
-                                     triple[s,p,o]}},     # existing triples
-                                 triple[s,p,nil]]}]}}]}}, # new triple
+                                     triple[s,p,o]}},     # extant triples
+                                 (triple[s,p,nil] unless r[p] && mono) # add triple
+                                ]}]}}]}},
+          ({_: :input, type: :hidden, name: :mono, value: :true} if mono),
            {_: :input, type: :submit, value: 'save'}]}]}
 
   # select a property to edit

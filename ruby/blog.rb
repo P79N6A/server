@@ -3,23 +3,19 @@ class R
 
   # traverse collection of blog-posts
   F['/blog/GET'] = -> d,e {
-    if d.pathSegment.uri.sub(/^\/blog/,'/') == '/'          # if /blog or /:
-      e.q['set'] ||= 'depth'; e.q['local'] = true           # range posts in date-order
-      R['http://'+e['SERVER_NAME']+'/blog'].env(e).response # continue response on post-tree URI
-    end}
+    e.q['set'] ||= 'depth'; e.q['local'] = true           # post range in date-order
+    R['http://'+e['SERVER_NAME']+'/blog'].env(e).response # continue response
+  }
 
   # decode POSTed title, mint derived-URI, set title+type properties there, continue to editor
   F['/blog/post/POST'] = -> d,e {
     title = (Rack::Request.new d.env).params['title']
-    host = 'http://' + e['SERVER_NAME']
-    docBase = R[host + Time.now.strftime('/%Y/%m/') + URI.escape(title.gsub /[?#\s\/]/,'_')]
-    dateLink = R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/') + '.e']
-    docBase.ef.touch.ln_s dateLink
-    post = docBase.a '#'
+    base = R['http://' + e['SERVER_NAME'] + Time.now.strftime('/%Y/%m/%d/') + URI.escape(title.gsub /[?#\s\/]/,'_')]
+    post = base.a '#'
     post[Type] = R[SIOCt+'BlogPost']
     post[Title] = title
-    edit = "?prototype=sioct:BlogPost&graph=edit"
-    [303,{'Location' => (docBase + edit).uri},[]]}
+    base.ef.ln_s R['/index/date/blogpost/' + Time.now.iso8601[0..18].gsub('-','/')]
+    [303,{'Location' => (base+"?prototype=sioct:BlogPost&graph=edit&mono").uri},[]]}
 
   # POST post-title to /blog/post
   F['/blog/post/GET'] = -> d,e {
