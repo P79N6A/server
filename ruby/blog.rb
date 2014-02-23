@@ -1,23 +1,30 @@
 watch __FILE__
 class R
 
+  # traverse collection of blog-posts
+  F['/blog/post/GET'] = -> d,e {
+
+  }
+
+  # decode POSTed title, mint derived-URI, set title+type properties there, continue to editor
   F['/blog/post/POST'] = -> d,e {
-    name = (Rack::Request.new d.env).params['name']
+    title = (Rack::Request.new d.env).params['title']
     host = 'http://' + e['SERVER_NAME']
-    docBase = R[host + Time.now.strftime('/%Y/%m/') + URI.escape(name.gsub /[?#\s\/]/,'_')]
+    docBase = R[host + Time.now.strftime('/%Y/%m/') + URI.escape(title.gsub /[?#\s\/]/,'_')]
     date = R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/')]
     docBase.ef.touch.ln_s date
     post = docBase.a '#'
     post[Type] = R[SIOCt+'BlogPost']
-    post[Title] = name
+    post[Title] = title
     edit = "?prototype=sioct:BlogPost&graph=edit"
     [303,{'Location' => (docBase + edit).uri},[]]}
 
+  # POST post-title to /blog/post
   F['/blog/post/GET'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
-     [H(['name',
+     [H(['title',
          {_: :form, method: :POST,
-           c: [{_: :input, name: :name, style: "font-size:1.6em;width:48ex"},
+           c: [{_: :input, name: :title, style: "font-size:1.6em;width:48ex"},
                {_: :input, type: :submit, value: ' go '}
               ]}])]]}
 

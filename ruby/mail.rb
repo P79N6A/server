@@ -6,11 +6,11 @@ class R
   msgs = R['/m/semantic-web@w3.org'].take
 
   mirror originating message-files elsewhere
-  src = R::DC + 'source'
+  src = R::DC+'source'
   files = msgs.map{|g| '.' + g.graph.values.find{|r|r.has_key? src}[src].head.R.path}
   `rsync -avRz #{files.join ' '} h:/www/`
 
-  summary view for directories
+  summary view on directories
   F['/mail/GET'] = -> e,r {
    r.q['view'] ||= 'threads' if e.uri[-1] == '/'
    nil }
@@ -18,7 +18,7 @@ class R
 =end
 
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
-  GREP_DIRS.push /^\/m\/[^\/]+\// # allow for a single address
+  GREP_DIRS.push /^\/m\/[^\/]+\// # allow on a single address
 
   F['/m/GET'] = -> e,r{
     # use summary view and start a newest-first tree-range at address
