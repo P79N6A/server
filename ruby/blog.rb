@@ -12,11 +12,10 @@ class R
   F['/blog/post/POST'] = -> d,e {
     host = 'http://' + e['SERVER_NAME']
     title = (Rack::Request.new d.env).params['title']
-    base = R[host + Time.now.strftime('/%Y/%m/%d/') + URI.escape(title.gsub /[?#\s\/]/,'_')]
-    post = base.a '#'
-    post[Type] = R[SIOCt+'BlogPost']
-    post[Title] = title
-    base.ef.ln_s R[host + '/time/' + Time.now.iso8601[0..18].gsub('-','/') + '.e']
+    base = R[host+Time.now.strftime('/%Y/%m/%d/')+URI.escape(title.gsub /[?#\s\/]/,'_')] # doc 
+    post = base.a '#'                                                              # editable resource
+    post[Type] = R[SIOCt+'BlogPost']; post[Title] = title                          # add type-tag & title
+    base.ef.ln_s R[host + '/time/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # add to datetime-index
     [303,{'Location' => (base+"?prototype=sioct:BlogPost&graph=edit&mono").uri},[]]}
 
   # POST post-title to /blog/post
