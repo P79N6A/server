@@ -3,18 +3,20 @@ class R
 
   # traverse collection of blog-posts
   F['/blog/GET'] = -> d,e {
-    e.q['set'] ||= 'depth'; e.q['local'] = true           # post range in date-order
-    R['http://'+e['SERVER_NAME']+'/blog'].env(e).response # continue response
-  }
+    e.q['set'] = 'depth' # post-range in date-order on host
+    e.q['local'] = true   # hostname not global paths
+    e.q['c'] = 8
+    R['http://'+e['SERVER_NAME']+'/time'].env(e).response}
 
-  # decode POSTed title, mint derived-URI, set title+type properties there, continue to editor
+  # decode POSTed title, mint derived-URI, set title+type properties, continue to editor
   F['/blog/post/POST'] = -> d,e {
+    host = 'http://' + e['SERVER_NAME']
     title = (Rack::Request.new d.env).params['title']
-    base = R['http://' + e['SERVER_NAME'] + Time.now.strftime('/%Y/%m/%d/') + URI.escape(title.gsub /[?#\s\/]/,'_')]
+    base = R[host + Time.now.strftime('/%Y/%m/%d/') + URI.escape(title.gsub /[?#\s\/]/,'_')]
     post = base.a '#'
     post[Type] = R[SIOCt+'BlogPost']
     post[Title] = title
-    base.ef.ln_s R['/index/date/blogpost/' + Time.now.iso8601[0..18].gsub('-','/')]
+    base.ef.ln_s R[host + '/time/' + Time.now.iso8601[0..18].gsub('-','/') + '.e']
     [303,{'Location' => (base+"?prototype=sioct:BlogPost&graph=edit&mono").uri},[]]}
 
   # POST post-title to /blog/post
