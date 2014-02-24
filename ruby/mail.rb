@@ -68,7 +68,7 @@ class R
 
     yield e, Date, m.date.iso8601 if m.date          # date
 
-    m.subject.do{|s|yield e, Title, s.to_utf8}       # subject
+    m.subject.do{|s|yield e, Title, s.to_utf8.hrefs} # subject
 
     yield e, SIOC+'has_discussion',                  # thread
     R[e+'?graph=thread&view=timegraph#discussion'] if m.in_reply_to || m.references
