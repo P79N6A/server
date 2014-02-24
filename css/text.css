@@ -24,4 +24,5 @@ pre {margin:0}
     border-style:dotted;
     border-width:.13em;
     white-space: pre-wrap;
+    max-width:92ex;
 }
