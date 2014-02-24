@@ -3,9 +3,9 @@ class R
 
   # traverse collection of blog-posts
   F['/blog/GET'] = -> d,e {
-    e.q['set'] = 'depth' # post-range in date-order on host
-    e.q['local'] = true   # hostname not global paths
-    e.q['c'] = 8
+    e.q['set'] = 'depth' # post-range in date-order
+    e.q['local'] = true  # hostname-specific paths
+    e.q['c'] = 8         # count
     R['http://'+e['SERVER_NAME']+'/time'].env(e).response}
 
   # decode POSTed title, mint derived-URI, set title+type properties, continue to editor
@@ -54,7 +54,13 @@ class R
                    {_: :h2, style: 'color:#000;margin:0',c: r[Title]}]},c.to_s],
           style: 'float:left;max-width:40em;position:relative;background-color:#fff;border-color:#eee;margin-top:93px;margin-right:.3em;padding-top:0;border-style:dotted;border-width:.3em;border-radius:0 .8em .8em .8em'}
       else
-        F['view/base'][{u => r},e]
+        [F['view/base'][{u => r},e],F['view/comment'][{u => r},e]]
       end}}
+
+  F['view/comment'] = -> g,e {
+    g.map{|u,r|
+      "comment"
+    }
+  }
 
 end

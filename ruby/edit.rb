@@ -29,9 +29,8 @@ class R
     e.fromStream g, :triplrDoc} # add fs-sourced triples
     
 =begin HTML <form> RDF editor
-      arg
-      prototype - initialize fields for a resource-type
-      predicate - initialize field for a particular predicate
+ @prototype  bundle of fields for a resource-type
+ @predicate  init field for a particular predicate
 =end
   fn 'view/edit',->g,e{
 
