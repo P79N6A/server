@@ -63,8 +63,12 @@ class R
         creator = '/m/'+f+'#'+f                        # author URI
         yield e, Creator, R[creator]                   # message -> author
         yield creator, DC+'identifier', R['mailto:'+f] # author ID
+                                                       # reply to
+        r2 = m['List-Post'].do{|lp|lp.decoded[8..-2]} || # List-Post
+             m.reply_to.do{|t|t[0]} ||                   # Reply-To
+             f                                           # From
         yield e, SIOC+'reply_to',                      # reply URI
-        R[URI.escape("mailto:#{m.reply_to.do{|t|t[0]}||f}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
+        R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
     yield e, Date, m.date.iso8601 if m.date          # date
 
