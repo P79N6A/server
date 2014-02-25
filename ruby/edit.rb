@@ -28,9 +28,9 @@ class R
     puts "graph.edit #{e}"
     e.fromStream g, :triplrDoc} # add fs-sourced triples
     
-=begin HTML <form> RDF editor
- @prototype  bundle of fields for a resource-type
- @predicate  init field for a particular predicate
+=begin HTML <form> triple-editor
+  @prototype bundle of fields for a type
+  @predicate add field for a particular predicate
 =end
   fn 'view/edit',->g,e{
 

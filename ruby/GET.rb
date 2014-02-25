@@ -48,31 +48,30 @@ class R
 
   def response
 
-    m = {}
+    m = {} # TODO request-model as RDF::Graph, benchmark vs our pickle-able JSON graphs, + write persistable RDF::Repository class of similar performance
 
     # Model
-    g = @r.q['graph'] # model identity function
+    g = @r.q['graph'] # model identity
     graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
 
-    return F[E404][self,@r] if m.empty?
+    return F[E404][self,@r] if m.empty? # protograph empty - nothing found
 
     # View
     @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
 
     maybeSend @r.format, ->{
-
       r = R '/cache/view/' + @r['ETag'].dive
-      if r.e # exists?
+      if r.e # view exists?
         r
       else
         c = R '/cache/model/' + graphID.dive
-        if c.e # exists?
+        if c.e # model exists?
           m = c.r true
         else
-          (g && F['graph/' + g] || F['graph/'])[self, @r.q,m] # construct
-          c.w m,true # cache
+          (g && F['graph/' + g] || F['graph/'])[self, @r.q,m]
+          c.w m,true # model -> cache
         end
-        r.w render @r.format, m, @r # construct -> cache
+        r.w render @r.format, m, @r # view -> cache
       end }
   end
 

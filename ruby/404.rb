@@ -23,15 +23,12 @@ s[HTTP+'statusCodeValue'] = [404]
 
     [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
 
-  F['/cache/GET'] = F[E404]
-
   fn 'view/404',->d,e{
     [H.css('/css/404'),{_: :style, c: "a {background-color:#{R.cs}}"},
      d.html]}
 
-  # a resource-placeholder graph
-  fn 'protograph/blank',->d,_,m{
-    m[d.uri] = {}
+  fn 'protograph/blank',->d,_,m{ # 404 is determined by #empty?
+    m[d.uri] = {} # insert a resource
     rand.to_s.h}
 
   def checkURIs
@@ -40,9 +37,11 @@ s[HTTP+'statusCodeValue'] = [404]
       puts c.join ' ' 
       c } # status, uri tuple
     puts "\n\n"
-    r.map{|c|
-      # show anomalies
+    r.map{|c| # inspect anomalies
       puts c.join(' ') unless c[0] == 200 }
   end
+
+  F['/cache/GET'] = F[E404]
+  F['/index/GET'] = F[E404]
 
 end
