@@ -1,0 +1,11 @@
+Modules
+
+ https://github.com/linkeddata/mod_authn_webid
+ https://tn123.org/mod_xsendfile/
+
+VirtualHost file-path line:
+
+in Debian /etc/apache2/sites-enabled/hostname.conf
+   ArchLn /etc/httpd/conf/extra/httpd-vhosts.conf
+
+ XSendFilePath /var/www
