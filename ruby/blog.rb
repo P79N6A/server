@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   # traverse collection of blog-posts
@@ -53,9 +53,15 @@ class R
                c: [{_: :img, src: '/logos/uhub.png',style: 'position:absolute;top:-93px'},
                    {_: :h2, style: 'color:#000;margin:0',c: r[Title]}]},c.to_s],
           style: 'float:left;max-width:40em;position:relative;background-color:#fff;border-color:#eee;margin-top:93px;margin-right:.3em;padding-top:0;border-style:dotted;border-width:.3em;border-radius:0 .8em .8em .8em'}
-      else
-        [{_: :a, href: u, c: {_: :h1, c: r[Title]}},{_: :p, c: r[Content]},
-         F['view/comment'][{u => r},e]]
+      else # host matches current
+        if u.index('http://'+e['SERVER_NAME']) == 0
+          [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
+           {_: :p, c: r[Content]},
+#           F['view/comment'][{u => r},e]
+          ]
+        else # non-local (imported) host
+          F['view/base'][{u => r},e]
+        end
       end}}
 
   F['view/comment'] = -> g,e {
