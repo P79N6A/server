@@ -1,11 +1,16 @@
-Modules
+WebID <https://github.com/linkeddata/mod_authn_webid>
 
- https://github.com/linkeddata/mod_authn_webid
- https://tn123.org/mod_xsendfile/
+ssl.conf:
 
-VirtualHost file-path line:
+LoadModule authn_webid_module modules/mod_authn_webid.so
+SSLVerifyClient optional_no_ca
 
-in Debian /etc/apache2/sites-enabled/hostname.conf
-   ArchLn /etc/httpd/conf/extra/httpd-vhosts.conf
+<Location />
+    AuthType WebID
+    Require everyone
+    AuthWebIDAuthoritative off
+</Location>
 
- XSendFilePath /var/www
+sendfile <https://tn123.org/mod_xsendfile/>
+
+conf: XSendFilePath /var/www
