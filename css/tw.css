@@ -37,9 +37,4 @@ a {text-decoration:none}
     background-color:#fff;
     color:#000}
 
-table.html {
-    border-spacing: 0}
-table.html td.val {
-    border-style:dotted;
-    border-color:#eee;
-    border-width:0 0 .1em 0}
+table.html {border-spacing: 0}
