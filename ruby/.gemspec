@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "infod"
-  s.version = "0.0.3.5"
+  s.version = "0.0.3.6"
   s.description = "a HTTP server"
   s.summary = "webize your filesystem"
   s.executables = %w(infod)
@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.licenses = ["Unlicense"]
   s.require_path = "."
   %w{linkeddata mail nokogiri rack thin}.map{|d|
-   s.add_runtime_dependency d, '~> 0' }
+   s.add_runtime_dependency d }
   s.authors = ['<carmen@whats-your.name>']
   s.email = "_@whats-your.name"
 end
