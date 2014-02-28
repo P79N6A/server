@@ -49,4 +49,4 @@ SPARQL
 text
 threads
 time
-}.map{|e|require_relative e}
+}.map{|e|require 'infod/'+e}
