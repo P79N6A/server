@@ -40,7 +40,7 @@ class R
   def R.groonga
     @groonga ||=
       (begin require 'groonga'
-         R['/index/groonga'].groonga
+         R['/cache/groonga'].groonga
          Groonga["R"]
        rescue LoadError => e; end)
   end
@@ -64,7 +64,7 @@ class R
   end
   
   # add
-  def roonga graph="global", m = self.graph
+  def roonga graph="localhost", m = self.graph
     R.groonga.do{|g|
       m.map{|u,i|
         r = g[u] || g.add(u) # create or load entry
