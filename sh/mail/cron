@@ -1,3 +1,3 @@
 #!/bin/sh
-su -c getmail username
-rsync -avz /home/user/.mail laptop:/home/user
+getmail
+rsync -avz .mail h:
