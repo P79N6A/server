@@ -19,6 +19,15 @@ def watch f
   R::Watch[f]=File.mtime f
   puts 'dev '+f end
 
+# URI -> function
+def fn u,y
+  R::F[u.to_s] = y
+end
+
+def R uri
+  R.new uri
+end
+
 class R
 
   def R uri = nil
@@ -38,30 +47,6 @@ class R
         load f
       end }
   end
-
-  # util, prefix, cleaner -> tripleStream
-  def triplrStdOut e,f='/',g=/^\s*(.*?)\s*$/,a=sh
-    `#{e} #{a}|grep :`.each_line{|i|
-      i = i.split /:/
-    yield uri, (f + (i[0].match(g)||[0,i[0]])[1].       # s
-     gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # p
-      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v}} # o
-  rescue
-  end
-
-end
-
-# URI -> function
-def fn u,y
-  R::F[u.to_s] = y
-end
-
-def R uri
-  R.new uri
-end
-
-
-class R
 
 =begin
   name-manipulating functions
