@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
 exit 0 if ARGV.empty?
-require 'infod'
+require 'fr/constants'
 puts R[ARGV[0]].send *ARGV[1..-1]
-
