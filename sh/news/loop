@@ -1,6 +1,0 @@
-#!/bin/sh
-while true; do
-date
-sh/news/boston localhost
-sleep 2520
-done
