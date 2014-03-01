@@ -97,18 +97,22 @@ class R
       [304,{},[]]  # client has response
   end
 
-  # user-patchable root-level handler - index.html or continue to default-handler
   fn '/GET',->e,r{
     x = 'index.html'
-    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e
-    if i && !r['REQUEST_URI'].match(/\?/)
+    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e # file exists
+    if i && !r['REQUEST_URI'].match(/\?/) # querystring implies up-to-date query
       if e.uri[-1] == '/' # inside dir?
         i.env(r).fileGET  # show index
-      else                # descend into dir
-        [301, {Location: e.uri.t}, []]
+      else
+        [301, {Location: e.uri.t}, []] # descend into dir
       end
     else
-      e.response
+      if r['REQUEST_URI'].match(/\/index.html$/) # request an index
+        r.format
+        e.parent.env(r).response
+      else
+        e.response
+      end
     end}
 
 end

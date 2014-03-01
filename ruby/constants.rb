@@ -96,7 +96,6 @@ microblog
 POST
 rdf
 schema
-SPARQL
 text
 threads
 time
