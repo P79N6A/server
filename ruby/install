@@ -2,4 +2,4 @@
 src  = File.expand_path File.dirname __FILE__
 name = File.basename File.dirname src
 dest = RbConfig::CONFIG["sitelibdir"] + '/' + name
-puts `ln -svT  "#{src}" #{dest}`
+puts `ln -sT  "#{src}" #{dest}`
