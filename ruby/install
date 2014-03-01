@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
- name = ARGV[0]
-
 src  = File.expand_path File.dirname __FILE__
-dest = RbConfig::CONFIG["sitelibdir"] + '/' + (name || 'fr')
-
-`ln -sv  "#{src}" #{dest}`
+name = File.basename File.dirname src
+dest = RbConfig::CONFIG["sitelibdir"] + '/' + name
+puts `ln -svT  "#{src}" #{dest}`
