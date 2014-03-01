@@ -1,4 +1,4 @@
-#watch __FILE__
+require_relative 'constants'
 class R
 
   def env r=nil

@@ -65,7 +65,7 @@ class R
 
 =begin
   name-manipulating functions
-  a RDF::URI-identified-resource has an associated filesystem node when using our subclass..
+  a RDF::URI-identified-resource has an associated filesystem node in R-type
 =end
 
   def appendURI u; R uri + u.to_s end

@@ -10,43 +10,7 @@ nokogiri
 open-uri
 pathname
 rack
-shellwords}.map{|r|require r};%w{
-constants
-MIME
-404
-500
-grep
-audio
-blog
-cal
-code
-csv
-edit
-facets
-feed
-forum
-fs
-GET
-graph
-groonga
-histogram
-html
-HTTP
-image
-index
-ls
-mail
-man
-microblog
-names
-POST
-rdf
-schema
-SPARQL
-text
-threads
-time
- }.map{|r|require_relative r}
+shellwords}.map{|r|require r}
 
 class R < RDF::URI
 
@@ -101,5 +65,41 @@ class R < RDF::URI
     "sioct" => SIOCt,
     "stat" => Stat,
   }
+
+%w{
+MIME
+names
+404
+500
+grep
+audio
+blog
+cal
+code
+csv
+edit
+facets
+feed
+forum
+fs
+GET
+graph
+groonga
+histogram
+html
+image
+index
+ls
+mail
+man
+microblog
+POST
+rdf
+schema
+SPARQL
+text
+threads
+time
+ }.map{|r|require_relative r}
 
 end
