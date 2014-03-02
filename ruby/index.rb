@@ -73,7 +73,7 @@ class R
         [301, {Location: e.uri.t}, []] # goto: dir/
       end
     else
-      if r['REQUEST_URI'].match(/\/index.(html|n3|ttl|txt)$/) # request an index
+      if r['REQUEST_URI'].match(/\/index.(html|jsonld|nt|n3|ttl|txt)$/) # request an index
         r.format # format from name
         e.parent.as('').env(r). # remain inside dir 
           response # index response

@@ -62,6 +62,7 @@ module Th
       '.nt' => 'text/ntriples',
       '.n3' => 'text/n3',
       '.ttl' => 'text/turtle',
+      '.txt' => 'text/plain',
     }[File.extname self['uri']].do{|mime|
       return mime}
 
