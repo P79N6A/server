@@ -62,22 +62,23 @@ class R
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
 
-
+  # register a handler on /, add index support
   fn '/GET',->e,r{
     x = 'index.html'
-    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e # index file exists
-    if i && !r['REQUEST_URI'].match(/\?/) # querystring implies up-to-date query
-      if e.uri[-1] == '/' # inside dir?
-        i.env(r).fileGET  # show index
+    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e # file exists?
+    if i && !r['REQUEST_URI'].match(/\?/) # querystring implies query - skip file
+      if e.uri[-1] == '/' # inside dir? (Apache mod_dir does this, most upstream servers don't)
+        i.env(r).fileGET  # index file -> response
       else
-        [301, {Location: e.uri.t}, []] # descend to path
+        [301, {Location: e.uri.t}, []] # goto: dir/
       end
     else
-      if r['REQUEST_URI'].match(/\/index.html$/) # request an index
-        r.format
-        e.parent.env(r).response
+      if r['REQUEST_URI'].match(/\/index.(html|n3|ttl|txt)$/) # request an index
+        r.format # format from name
+        e.parent.as('').env(r). # remain inside dir 
+          response # index response
       else
-        e.response
+        e.response # default
       end
     end}
 
