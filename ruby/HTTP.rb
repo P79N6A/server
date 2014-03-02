@@ -56,7 +56,8 @@ module Th
   end
 
   def conneg
-    # specific format-variant URI
+
+    # URI of format-variant
     { '.html' => 'text/html',
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/ntriples',
@@ -66,10 +67,11 @@ module Th
     }[File.extname self['uri']].do{|mime|
       return mime}
 
-    # Accept formats
+    # Accept values
     accept.sort.reverse.map{|q,mimes| # sort on descending q-value
-      mimes.map{|mime| # available renderers
-        return mime if R::F[R::Render+mime]}}
+      mimes.map{|mime|
+        return mime if R::F[R::Render+mime]}} # available renderer
+
     'text/html'
   end
 
