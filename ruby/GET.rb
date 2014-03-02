@@ -97,22 +97,4 @@ class R
       [304,{},[]]  # client has response
   end
 
-  fn '/GET',->e,r{
-    x = 'index.html'
-    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e # file exists
-    if i && !r['REQUEST_URI'].match(/\?/) # querystring implies up-to-date query
-      if e.uri[-1] == '/' # inside dir?
-        i.env(r).fileGET  # show index
-      else
-        [301, {Location: e.uri.t}, []] # descend into dir
-      end
-    else
-      if r['REQUEST_URI'].match(/\/index.html$/) # request an index
-        r.format
-        e.parent.env(r).response
-      else
-        e.response
-      end
-    end}
-
 end

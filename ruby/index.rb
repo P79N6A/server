@@ -62,6 +62,25 @@ class R
   fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
   fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
 
+
+  fn '/GET',->e,r{
+    x = 'index.html'
+    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e # index file exists
+    if i && !r['REQUEST_URI'].match(/\?/) # querystring implies up-to-date query
+      if e.uri[-1] == '/' # inside dir?
+        i.env(r).fileGET  # show index
+      else
+        [301, {Location: e.uri.t}, []] # descend to path
+      end
+    else
+      if r['REQUEST_URI'].match(/\/index.html$/) # request an index
+        r.format
+        e.parent.env(r).response
+      else
+        e.response
+      end
+    end}
+
 end
 
 

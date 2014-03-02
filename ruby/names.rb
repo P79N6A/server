@@ -38,7 +38,6 @@ class R
 
   F={}
   Watch={}
-
   NullView = -> d,e {}
 
   def self.dev
@@ -50,7 +49,7 @@ class R
 
 =begin
   name-manipulating functions
-  a RDF::URI-identified-resource has an associated filesystem node in R-type
+  a RDF::URI-identified-resource has an associated filesystem node w/ R subtype
 =end
 
   def appendURI u; R uri + u.to_s end
