@@ -67,8 +67,8 @@ module Th
       return mime}
 
     # Accept formats
-    accept.sort.reverse.map{|q,mimes|
-      mimes.map{|mime|
+    accept.sort.reverse.map{|q,mimes| # sort on descending q-value
+      mimes.map{|mime| # available renderers
         return mime if R::F[R::Render+mime]}}
     'text/html'
   end

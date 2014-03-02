@@ -74,8 +74,7 @@ class R
       end
     else
       if r['REQUEST_URI'].match(/\/index.(html|jsonld|nt|n3|ttl|txt)$/) # request an index
-        r.format # format from name
-        e.parent.as('').env(r). # remain inside dir 
+        e.parent.as('').env(r). # eat virtual pathname, remain in dir 
           response # index response
       else
         e.response # default
