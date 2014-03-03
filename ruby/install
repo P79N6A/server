@@ -1,5 +1,3 @@
 #!/usr/bin/env ruby
-src  = File.expand_path File.dirname __FILE__
-name = File.basename File.dirname src
-dest = RbConfig::CONFIG["sitelibdir"] + '/' + name
-puts `ln -vsT  "#{src}" #{dest}`
+src = File.expand_path File.dirname __FILE__
+puts `ln -vsT  "#{src}" #{RbConfig::CONFIG["sitelibdir"]+'/' + File.basename(File.dirname src)}`
