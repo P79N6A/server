@@ -19,10 +19,9 @@ pre {margin:0}
 
 .text pre {
     padding:.4em;
-    color:#fff;
-    background-color:#000;
-    border-style:dotted;
-    border-width:.13em;
+    color:#000;
+    background-color:#fff;
+    border:.1em dotted;
     white-space: pre-wrap;
     max-width:92ex;
 }
