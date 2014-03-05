@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+case ARGV[0]
+when 'apache'
+  ARGV.shift
+  ENV['apache']='y'
+when /^(lo|local)$/
+  ARGV.shift
+  ARGV.unshift *%w{-p 80 -a 127.0.0.1}
+when 'nginx'
+  ARGV.shift
+  ENV['nginx']='y'
+else
+  ARGV.unshift *%w{-p 80}
+end
+ARGV.unshift *%w{--threaded}
+unless ARGV[-1].match /(start|stop|restart|config|install)/
+  ARGV.push 'start'
+end
+
+%w{rrww/HTTP thin}.map{|l| require l}
+
+module Rack
+  module Adapter
+    def self.guess _
+      :rack
+    end
+    def self.load _
+      Rack::Builder.new {
+        use Rack::Deflater
+        run R
+      }.to_app
+    end
+  end
+end
+
+Thin::Runner.new(ARGV).run!

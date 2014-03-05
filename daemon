@@ -1,4 +1,0 @@
-#!/bin/sh
-#apache=y thin --threaded -r./ruby/HTTP -R ./ruby/httpd.ru -d start
-#nginx=y thin --threaded -r./ruby/HTTP -R ./ruby/httpd.ru -d start
-thin --threaded -r./ruby/HTTP -R ./ruby/httpd.ru -p 80 start
