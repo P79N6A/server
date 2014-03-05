@@ -1,6 +1,6 @@
 #!/bin/sh
 while true; do
-    date
-    news/boston localhost
-    sleep 2500
+  date
+  news/boston.infrequent.sh localhost
+  sleep 2500
 done

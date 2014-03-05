@@ -2,6 +2,7 @@
 class R
 
   def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiver, :hostname => h end
+  def getFeeds h='localhost'; uris.tail.map{|u| u.getFeed h} end
 
   Atom = W3+'2005/Atom'
    RSS = Purl+'rss/1.0/'
