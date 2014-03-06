@@ -99,6 +99,7 @@ schema
 text
 threads
 time
- }.map{|r|require_relative r}
+uid
+}.map{|r|require_relative r}
 
 end
