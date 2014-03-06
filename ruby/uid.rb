@@ -10,8 +10,11 @@ class R
             ].join "\n"
       x509 = OpenSSL::X509::Certificate.new pem
       pubkey = x509.public_key
-      puts pubkey
-     }
+      x509.extensions.find{|x|x.oid=='subjectAltName'}.do{|altName|
+        s = altName.value.sub(/^URI:/,'')
+        puts s
+      }
+    }
   }
-
+  
 end
