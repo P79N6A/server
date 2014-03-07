@@ -1,8 +1,7 @@
-watch __FILE__
+#watch __FILE__
 class R
 
-  # based on
-  # https://github.com/linkeddata/ldphp/blob/master/www/inc/webid.lib.php
+  # concept via https://github.com/linkeddata/ldphp/blob/master/www/inc/webid.lib.php
 
   F['/whoami/GET'] = -> d,e { response = nil
 
@@ -30,10 +29,7 @@ class R
               mCert = m.to_i
               mWeb = result[:m].value.to_i 16
               if mCert == mWeb
-                body = RDF::Writer.for(:n3).buffer do |writer|
-                  writer << graph
-                end
-                response = [200,{'Content-Type'=>'text/n3; charset=utf-8'},[body]]
+                response = [200,{'Content-Type'=>'text/n3; charset=utf-8'},[graph.dump(:n3)]]
               end
             end}}
       end}
