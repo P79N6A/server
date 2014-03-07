@@ -16,8 +16,9 @@ class R
             e = pubkey.e
             graph = RDF::Repository.load(uri)
             query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{uri}> :key [ :modulus ?m; :exponent ?e; ] . }"
-            r = SPARQL.execute query,graph
-            puts r
+            SPARQL.execute query, graph do |result|
+              puts result.class
+            end
           }
         }
       end
