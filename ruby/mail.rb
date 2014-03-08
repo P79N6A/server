@@ -10,11 +10,6 @@ class R
   files = msgs.map{|g| '.' + g.graph.values.find{|r|r.has_key? src}[src].head.R.path}
   `rsync -avRz #{files.join ' '} h:/www/`
 
-  summary view on directories
-  F['/mail/GET'] = -> e,r {
-   r.q['view'] ||= 'threads' if e.uri[-1] == '/'
-   nil }
-
 =end
 
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}

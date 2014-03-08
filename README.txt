@@ -16,3 +16,7 @@ for apache & nginx see conf/
 
 REQUISITES
 cd ruby; bundle install
+
+GIT
+https://github.com/hallwaykid/rrww
+https://gitorious.org/element/www

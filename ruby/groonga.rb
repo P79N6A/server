@@ -27,7 +27,7 @@ class R
       r = r.map{|r|r['.uri'].R}                                      # read URI
       (r.map &:docs).flatten.uniq.map{|r|m[r.uri] = r.env e}         # set resource thunks
 
-      m['#'] = {'uri' => '#', RDFs+'member' => r, Type=>R[HTTP+'Response']} # add pagination data to request-graph
+      m['#'] = {'uri' => '#', Type=>R[HTTP+'Response']} # add pagination data to request-graph
       m['#'][Prev]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start + c, 'c' => c}.qs} if down
       m['#'][Next]={'uri' => '/' + {'graph' => 'groonga', 'q' => q, 'start' => start - c, 'c' => c}.qs} if up
 

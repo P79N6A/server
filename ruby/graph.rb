@@ -26,7 +26,6 @@ class R
     if !set || set.empty?
       g.delete '#'
     else
-      g['#'][RDFs+'member'] = set
       g['#'][Type] = R[HTTP+'Response']
       set.map{|u| g[u.uri] = u } # thunk
     end
