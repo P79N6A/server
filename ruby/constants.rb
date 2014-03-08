@@ -93,7 +93,6 @@ man
 microblog
 POST
 rdf
-schema
 text
 threads
 time
