@@ -1,12 +1,10 @@
 thin --threaded -r./ruby/HTTP -R ./ruby/httpd.ru -p 80 start
 
 INSTALL
-
 ruby ruby/install
 cp ruby/{rww,R} ~/bin
 
 DAEMON
-
   rww apache   # as backend to apache
   rww nginx    # nginx
   rww          # port 80, no frontend
@@ -20,3 +18,6 @@ cd ruby; bundle install
 GIT
 https://github.com/hallwaykid/rrww
 https://gitorious.org/element/www
+
+NOTE
+this server is going away, you probably wanted <https://github.com/ruby-rdf/rack-linkeddata>
