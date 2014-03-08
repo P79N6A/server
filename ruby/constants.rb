@@ -79,7 +79,6 @@ csv
 edit
 facets
 feed
-forum
 fs
 GET
 graph
