@@ -147,7 +147,7 @@ class R
     h.xpath("//@*[starts-with(name(),'on')]").remove
     h.to_s
   }
-
+  # render response metadata - pagination links 
   fn 'view/'+HTTP+'Response',->d,e{
     d['#'].do{|u|
       [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;',style: 'color:#fff;background-color:#000;font-size:2.4em;float:left;clear:both'}},

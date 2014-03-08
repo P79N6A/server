@@ -121,9 +121,6 @@ class R
            gsub(/\n+/,"\n")}.                           # collapse empty space
          intersperse(' '),"\n"]} if r.class==Hash),"\n"]}.join} # collate
 
-  F['view/text/plain']=->d,e{
-    {_: :pre, c: F[Render+'text/plain'][d,e]}}
-
   fn Render+'text/uri',->d,_=nil{d.keys.join "\n"}
 
 end
