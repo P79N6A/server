@@ -136,7 +136,8 @@ class R
         yield r.uri,Content,r.r}} end
 
   def triplrHref enc=nil
-    yield uri,Content,open(d).read.do{|r|enc ? r.force_encoding(enc).to_utf8 : r}.hrefs if f
+    yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap', 
+                            c: open(d).read.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
   end
 
   def nokogiri;  Nokogiri::HTML.parse (open uri).read end

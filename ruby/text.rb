@@ -33,22 +33,8 @@ end
 
 class R
 
-  fn 'view/monospace',->d,e{
-    [(H.once e,'text',(H.css '/css/text')),
-     d.values.map{|v|
-      v[Content].do{|c|
-         b = R.cs
-        {class: :text,
-           c: [{_: :a, href: v.url+'?view', c: v.label, style: "background-color:" + b},
-               {_: :pre,  c: c, style: "border-color:" + b}]}}}]}
-
-  F['view/'+MIMEtype+'application/word']= F['view/monospace']
-  F['view/'+MIMEtype+'blob']            = F['view/monospace']
-  F['view/'+MIMEtype+'text/plain']      = F['view/monospace']
-  F['view/'+MIMEtype+'text/rtf']        = F['view/monospace']
-
   fn 'view/'+MIMEtype+'text/nfo',->r,_{r.values.map{|r|{_: :pre,
-      style: 'background-color:#000;padding:2em;color:#fff;float:left;font-family: "Courier New", "DejaVu Sans Mono", monospace; font-size: 13px; line-height: 13px',
+      style: 'font-family: "Courier New", "DejaVu Sans Mono", monospace; font-size: 13px; line-height: 13px',
         c: [{_: :a, 
               style: 'color:#0f0;font-size:1.1em;font-weight:bold', 
               href: r.url, c: r.uri},'<br>',
