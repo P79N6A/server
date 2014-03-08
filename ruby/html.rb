@@ -130,11 +130,6 @@ class R
   
   F['view/base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
 
-  def triplrBlob
-    glob.select(&:f).do{|f|f.map{|r|
-        yield r.uri,Type,E('blob')
-        yield r.uri,Content,r.r}} end
-
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap', 
                             c: open(d).read.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
