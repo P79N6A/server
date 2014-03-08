@@ -29,7 +29,8 @@ class R
               mCert = m.to_i
               mWeb = result[:m].value.to_i 16
               if mCert == mWeb
-                response = [200,{'Content-Type'=>'text/n3; charset=utf-8'},[graph.dump(:n3)]]
+#                response = [200,{'Content-Type'=>'text/n3; charset=utf-8'},[graph.dump(:n3)]]
+                response = [302,{'Location'=>uri},[]]
               end
             end}}
       end}
