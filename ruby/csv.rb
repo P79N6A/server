@@ -18,18 +18,28 @@ class R
   end
 
   F['view/csv'] = -> d,e {
-    # ignore non-rows
     d.delete_if{|s,r|
       !(r.class==Hash &&
         r[Type].do{|t|
           t.class == Array &&
           t.map(&:maybeURI).member?(CSV+'Row')})}
-    # eat the type-tag
-    d.values.map{|r|r.delete Type}
-
     [F['view/p'][d,e],
-     {_: :style, c: 'table.tab .abbr, table.tab .scheme {display: inline}'}
-    ]}
+     {_: :style, c: 'table.tab .abbr, table.tab .scheme {display: inline}'}]}
+
+  # property-selector toolbar + tabular view (dynamic CSS on RDFa element-attributes)
+  fn 'view/p',->d,e{
+    #TODO fragmentURI scheme for selection-state
+    [H.once(e,'property.toolbar',H.once(e,'p',(H.once e,:mu,H.js('/js/mu')),
+     H.js('/js/p'),
+     H.css('/css/table')),
+     {_: :a, href: '#', c: '-', id: :hideP},
+     {_: :a, href: '#', c: '+', id: :showP},
+     {_: :span, id: 'properties',
+       c: R.graphProperties(d).map{|k|
+         {_: :a, class: :n, href: k, c: k.label+' '}}},
+       {_: :style, id: :pS},
+       {_: :style, id: :lS}),
+     F['view/table'][d,e]]}
 
   F['view/'+CSV+'Row'] = NullView
 

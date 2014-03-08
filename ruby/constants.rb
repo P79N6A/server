@@ -74,7 +74,6 @@ names
 grep
 audio
 blog
-cal
 code
 csv
 edit

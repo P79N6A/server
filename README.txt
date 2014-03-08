@@ -20,4 +20,4 @@ https://github.com/hallwaykid/rrww
 https://gitorious.org/element/www
 
 NOTE
-this server is going away, you probably wanted <https://github.com/ruby-rdf/rack-linkeddata>
+this server is going away, you probably want <https://github.com/ruby-rdf/rack-linkeddata>

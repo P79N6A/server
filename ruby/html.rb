@@ -172,46 +172,6 @@ class R
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: view[d,e]}]}]}
 
-  # property-selector toolbar - utilizes RDFa view
-  fn 'view/p',->d,e{
-    #TODO fragmentURI scheme for selection-state
-    [H.once(e,'property.toolbar',H.once(e,'p',(H.once e,:mu,H.js('/js/mu')),
-     H.js('/js/p'),
-     H.css('/css/table')),
-     {_: :a, href: '#', c: '-', id: :hideP},
-     {_: :a, href: '#', c: '+', id: :showP},
-     {_: :span, id: 'properties',
-       c: R.graphProperties(d).map{|k|
-         {_: :a, class: :n, href: k, c: k.label+' '}}},
-       {_: :style, id: :pS},
-       {_: :style, id: :lS}),
-     F['view/'+(e.q['pv']||'table')][d,e]]}
-
-  # table-cell placement on sparse matrix of rows/columns
-  # cal.rb contains an example usage
-  fn 'view/t',->d,e,l=nil,a=nil{
-    layout = e.q['table'] || l
-    if layout
-      [H.once(e,'table',H.css('/css/table')),
-       {_: :table, c:
-         {_: :tbody, c: F['table/'+layout][d].do{|t|
-             rx = t.keys.max
-             rm = t.keys.min
-             c = t.values.map(&:keys)
-             cm = c.map(&:min).min
-             cx = c.map(&:max).max
-             rm && rx && (rm..rx).map{|r|
-               {_: :tr, c: 
-                 t[r].do{|r|
-                   (cm..cx).map{|c|
-                     r[c].do{|c|
-                       {_: :td, class: :cell, c:F['view/'+(a||e.q['cellview']||'title')][c,e]}} ||
-                     {_: :td}}}}} ||
-             '' }}}]
-    else
-      "table= layout arg required"
-    end}
-
   fn 'view/table',->g,e{
     keys = R.graphProperties g
     v = g.values
