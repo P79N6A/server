@@ -33,23 +33,6 @@ end
 
 class R
 
-  fn 'view/'+MIMEtype+'text/nfo',->r,_{r.values.map{|r|{_: :pre,
-      style: 'font-family: "Courier New", "DejaVu Sans Mono", monospace; font-size: 13px; line-height: 13px',
-        c: [{_: :a, 
-              style: 'color:#0f0;font-size:1.1em;font-weight:bold', 
-              href: r.url, c: r.uri},'<br>',
-            r[Content]]}}}
-
-  fn 'view/title',->d,e{
-    i = F['itemview/title']
-    [d.map{|u,r|[i.(r,e),' ']},
-     (H.once e,'title',(H.css '/css/title'))]}
-
-  fn 'itemview/title',->r,e{
-    {_: :a, class: :title, href: r.R.url,
-      c: r[Title] || r.uri.abbrURI} if (r.class == R || r.class == Hash) && r.uri}
-
-  # a list of URIs
   def triplrUriList
     yield uri, COGS+'View', R[uri+'?view=csv']
     open(d).readlines.grep(/^[^#]/).map{|l|

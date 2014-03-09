@@ -1,4 +1,4 @@
-thin --threaded -r./ruby/HTTP -R ./ruby/httpd.ru -p 80 start
+USAGE  thin --threaded -r./ruby/HTTP -R ./ruby/httpd.ru -p 80 start
 
 INSTALL
 ruby ruby/install
@@ -13,11 +13,6 @@ DAEMON
 for apache & nginx see conf/
 
 REQUISITES
-cd ruby; bundle install
+cd ruby && bundle install
 
-GIT
-https://github.com/hallwaykid/rrww
-https://gitorious.org/element/www
-
-NOTE
-this server is going away, you probably want <https://github.com/ruby-rdf/rack-linkeddata>
+GIT <https://github.com/hallwaykid/rrww> <https://gitorious.org/element/www>

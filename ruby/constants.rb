@@ -83,7 +83,6 @@ fs
 GET
 graph
 groonga
-histogram
 html
 image
 index

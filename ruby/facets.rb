@@ -2,12 +2,8 @@
 class R
 =begin
    faceted-filter, implemented via dynamically-generated style-sheets
-
-   user defines 'itemview/name' which is wrapped by tagged DOM nodes
-   structure conformed to in microblog & timegraph (time.rb) views
-
-   ?view=facets will prompt on which properties (predicates) to use
-
+   query-string:
+     fv = (name)  render singleton-resource w/ itemview lambda
 =end
 
   fn 'facets',->a,m,e{
@@ -26,7 +22,9 @@ class R
     n=->o{ 
       i[o]||='f'+(c+=1).to_s}
 
-    view = e.q['fv'].do{|fv| F['itemview/'+fv] } || F['itemview/title']
+    view = e.q['fv'].do{|fv| F['itemview/'+fv] } || ->r,e{
+      {_: :a, class: :title, href: r.R.url, c: r[Title] || r.uri.abbrURI} if (r.class == R || r.class == Hash) && r.uri}
+
     resources=->{
       m.map{|u,r| # each resource
         a.map{|p,_| # each facet
