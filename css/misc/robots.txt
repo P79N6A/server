@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /E
-Disallow: /http:
-Disallow: /@
-Disallow: /.git
