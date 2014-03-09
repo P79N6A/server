@@ -1,4 +1,3 @@
-watch __FILE__
 class R
 
   # facet-filtering - dynamic CSS
@@ -12,7 +11,6 @@ class R
         r[p].do{|o|
             o.justArray.map{|o|
             a[p][o]=(a[p][o]||0)+1}}}}
-
 
     # facet identifiers
     i={}; c=-1
