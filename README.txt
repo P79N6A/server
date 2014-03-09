@@ -2,7 +2,7 @@ USAGE  thin --threaded -r./ruby/HTTP -R ./ruby/httpd.ru -p 80 start
 
 INSTALL
 ruby ruby/install
-cp ruby/{rww,R} ~/bin
+cp ruby/bin/* ~/bin
 
 DAEMON
   rww apache   # as backend to apache
