@@ -15,9 +15,8 @@ class R
 
 
     # facet identifiers
-    i={};         c=-1
-    n=->o{ 
-      i[o]||='f'+(c+=1).to_s}
+    i={}; c=-1
+    n=->o{i[o] ||= 'f'+(c+=1).to_s}
 
     view = e.q['fv'].do{|fv| F['itemview/'+fv] } || ->r,e{
       {_: :a, class: :title, href: r.R.url, c: r[Title] || r.uri.abbrURI} if (r.class == R || r.class == Hash) && r.uri}
@@ -37,6 +36,7 @@ class R
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
                        {_: :span, class: :name, c: k.label}]}}]}}},     
+
      m.map{|u,r| # each resource
        a.map{|p,_| # each facet
          [n[p], r[p].do{|o| # value
@@ -45,7 +45,7 @@ class R
             }}].join ' '
        }.do{|f|
          [f.map{|o|'<div class="'+o+'">'}, # facet wrapper
-          view[r,e], # resource
+          F['view'][{u => r},e], # resource
           (0..f.size-1).map{|c|'</div>'}]}}]}
 
 end
