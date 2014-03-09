@@ -24,10 +24,8 @@ class R
     g[e.uri+'#'] = {}               # add current resource
     rand.to_s.h}
     
-  fn 'graph/edit',->e,env,g{
-    puts "graph.edit #{e}"
-    e.fromStream g, :triplrDoc} # add fs-sourced triples
-    
+  fn 'graph/edit',->e,env,g{e.fromStream g, :triplrDoc} # fs-store triples
+
 =begin HTML <form> triple-editor
   @prototype bundle of fields for a type
   @predicate add field for a particular predicate
