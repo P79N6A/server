@@ -86,10 +86,9 @@ class R
   end
 
 
-# GET Resource -> Graph
-# missing resources -> local store
+# GET Resource -> local RDF cache
 
-  # JSON + Hash variant
+  # JSON + Hash (.e)
   def addDocsJSON triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
@@ -110,7 +109,7 @@ class R
     self
   end
 
-  # RDF::Graph variant
+  # RDF::Repository (.n3)
   def addDocsRDF options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -126,7 +125,6 @@ class R
   end
 
   def triplrDoc &f; docBase.glob('#*').map{|s| s.triplrResource &f} end
-
   def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
 
   def triplrJSON

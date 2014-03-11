@@ -104,9 +104,15 @@ class R
   def exist?;   node.exist? end
   def file?;    node.file? end
   def ln_s t; ln t, :symlink end
-  def mk;       e || FileUtils.mkdir_p(d); self end
   def mtime;    node.stat.mtime if e end
   def touch;    FileUtils.touch node; self end
+
+  def mk
+    e || FileUtils.mkdir_p(d)
+    self
+  rescue Exception => e
+    puts e
+  end
 
   def read p=false
     if f
