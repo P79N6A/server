@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version = "0.0.3.4"
   s.description = "linked-data oriented webserver"
   s.summary = s.description
-  s.executables = %w(R rww)
+  s.executables = %w(R ww)
   s.files = Dir.glob('rrww/*')
   s.licenses = ["Unlicense"]
   s.require_path = "."
