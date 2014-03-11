@@ -15,8 +15,7 @@ class R
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
   GREP_DIRS.push /^\/m\/[^\/]+\// # allow on a single address
 
-  F['/m/GET'] = -> e,r{
-    # use summary view and start a newest-first tree-range at address
+  F['/m/GET'] = -> e,r{ # address path
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set']  ||= 'depth'
       r.q['view'] ||= 'threads'
@@ -36,7 +35,7 @@ class R
           doc.ln R[rel.uri.split('#')[0]+st]}}}}
 
   def triplrMailMessage &f
-    addDocs :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
+    addDocsJSON :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
   end
 
   def mail

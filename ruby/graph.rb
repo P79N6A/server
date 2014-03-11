@@ -90,7 +90,7 @@ class R
 # missing resources -> local store
 
   # JSON + Hash variant
-  def addDocs triplr, host, p=nil, hook=nil, &b
+  def addDocsJSON triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
     graph.map{|u,r|
@@ -109,6 +109,7 @@ class R
     graph.triples &b if b     # emit triples
     self
   end
+
   # RDF::Graph variant
   def addDocsRDF options = {}
     g = RDF::Repository.load self, options

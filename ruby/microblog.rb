@@ -25,17 +25,8 @@ class R
 
   def tw g
     node.readlines.shuffle.each_slice(22){|s|
-      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocs :triplrTweets, g, nil, FeedArchiverJSON}
+      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocsJSON :triplrTweets, g, nil, FeedArchiverJSON}
   end
-
-  FeedArchiverJSON = -> doc, graph, host {
-    doc.roonga host
-    graph.map{|u,r|
-      r[Date].do{|t| # link doc to date-index
-        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
-        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-        doc.ln R["http://#{host}/news/#{t}#{b}e"]}}
-  doc}
 
   def triplrTweets
     base = 'http://twitter.com'

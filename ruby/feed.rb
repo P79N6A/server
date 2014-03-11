@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiver, :hostname => h end
+  def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h end
   def getFeeds h='localhost'; uris.tail.map{|u| u.getFeed h} end
 
   Atom = W3+'2005/Atom'
@@ -157,7 +157,17 @@ class R
   end
 
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
-  FeedArchiver = -> doc, graph, host {
+
+  FeedArchiverJSON = -> doc, graph, host {
+    doc.roonga host
+    graph.map{|u,r|
+      r[Date].do{|t| # link doc to date-index
+        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
+        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+        doc.ln R["http://#{host}/news/#{t}#{b}e"]}}
+    doc}
+
+  FeedArchiverRDF = -> doc, graph, host {
     doc.roonga host
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones
