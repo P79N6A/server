@@ -1,10 +1,6 @@
 #watch __FILE__
 class R
 
-  def nt; docBase.a '.nt' end
-  def n3; docBase.a '.n3' end
-  def ttl; docBase.a '.ttl' end
-
   def self.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
@@ -34,7 +30,7 @@ class R
   ].map{|mime|
     F[Render+mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  F['view/data'] = ->d,e {
+  F['view/data'] = ->d,e { # tabulator, supplied by server
     local = true
     tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'
     [(H.css tab + 'tabbedtab'),
@@ -49,5 +45,9 @@ jQuery(document).ready(function() {
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
+
+  def n3; docBase.a '.n3' end
+
+  F['view/'+MIMEtype+'text/n3'] = NullView
 
 end
