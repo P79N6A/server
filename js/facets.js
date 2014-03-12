@@ -35,17 +35,6 @@ var e = function(){
 	q('body').append(el('style').attr('class',p).txt(s.join('\n')))
     })
 
-    // hide controls
-    qa('.facet .predicate').click(function(e){
-	var t = e.target.parentNode
-	t.style.display='none'
-	q('.selector[facet='+t.attr('facet')+']').style.display='inline'})
-    // show
-    qa('.selector').click(function(e){
-	e.target.style.display='none'
-	q('.facet[facet='+e.target.attr('facet')+']').style.display='block'})
-
-
 };
 
 document.addEventListener("DOMContentLoaded", e, false);
