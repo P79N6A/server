@@ -16,7 +16,7 @@ class R
   fn 'view/create',->g,e{
     [{_: :style, c: 'a {display:block;font-size:2em}'},{_: :b, c: :type},
      Prototypes.map{|t,ps|
-       {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(URI.escape t.shorten), c: t.label}}]}
+       {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(URI.escape t.shorten), c: t.abbrURI}}]}
 
   # editable triples
   F['protograph/edit'] = -> e,env,g {

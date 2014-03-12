@@ -23,17 +23,16 @@ class R
 
      a.map{|b,_|{_: :style, class: n[b]}},
      '&nbsp;' * 22,
-     a.map{|f,v|{class: :selector, facet: n[f], c: f.label}},
+     a.map{|f,v|{class: :selector, facet: n[f], c: f}},
 
      # facet selection
      {class: :sidebar, c: a.map{|f,v|
          {class: :facet, facet: n[f], # predicate
-           c: [{class: :predicate, c: f.label},
+           c: [{class: :predicate, c: f},
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
-                 k.respond_to?(:label) &&
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
-                       {_: :span, class: :name, c: k.label}]}}]}}},     
+                       {_: :span, class: :name, c: k}]}}]}}},     
 
      m.map{|u,r| # each resource
        a.map{|p,_| # each facet
