@@ -57,7 +57,6 @@ class R
   def d;        node.to_s end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
   def docBase;  uri.split(/#/)[0].R.do{|d| d.dirname.as d.bare } end
-  def d?;       node.directory? end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
   def glob p=""; (Pathname.glob d + p).map &:R end

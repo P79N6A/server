@@ -69,7 +69,7 @@ class R
   end
 
   def triplrInode
-    if d?
+    if node.directory?
       yield uri, Posix+'dir#parent', parent
       c.map{|c| yield uri, Posix + 'dir#child', R[c.uri.gsub('?','%3F').gsub('#','23')]}
     end

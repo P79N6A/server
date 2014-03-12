@@ -81,7 +81,7 @@ class R
     [(base if pathSegment!='/' && base.e),         # doc-base
      (self if base != self && e && uri[-1]!='/'),  # requested path
      base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
-     ((d? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> child resources
+     ((node.directory? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> children
     ].flatten.compact
   end
 

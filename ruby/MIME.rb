@@ -8,7 +8,7 @@ class R
 
        if node.symlink?
          "inode/symlink"
-       elsif d?
+       elsif node.directory?
          "inode/directory"
        elsif base.index('msg.')==0 # how to make procmail append a non-gibberish extension?
          "message/rfc822"
