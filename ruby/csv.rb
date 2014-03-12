@@ -23,22 +23,7 @@ class R
         r[Type].do{|t|
           t.class == Array &&
           t.map(&:maybeURI).member?(CSV+'Row')})}
-    [F['view/p'][d,e],
-     {_: :style, c: 'table.tab .abbr, table.tab .scheme {display: inline}'}]}
-
-  # property-selector toolbar + tabular view (dynamic CSS on RDFa element-attributes)
-  fn 'view/p',->d,e{
-    [H.once(e,'property.toolbar',H.once(e,'p',(H.once e,:mu,H.js('/js/mu')),
-     H.js('/js/p'),
-     H.css('/css/table')),
-     {_: :a, href: '#', c: '-', id: :hideP},
-     {_: :a, href: '#', c: '+', id: :showP},
-     {_: :span, id: 'properties',
-       c: R.graphProperties(d).map{|k|
-         {_: :a, class: :n, href: k, c: k.label+' '}}},
-       {_: :style, id: :pS},
-       {_: :style, id: :lS}),
-     F['view/table'][d,e]]}
+    F['view/table'][d,e]}
 
   F['view/'+CSV+'Row'] = NullView
 

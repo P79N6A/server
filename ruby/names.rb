@@ -68,7 +68,6 @@ class R
   def glob p=""; (Pathname.glob d + p).map &:R end
   def hostURL e; host='http://'+e['SERVER_NAME']; (uri.index('/') == 0 ? host : '') + uri end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
-  def label;    uri.label end
   def node;     Pathname.new FSbase + path end
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
@@ -128,7 +127,6 @@ end
 class Hash
   def R; R.new uri end
   def uri; self["uri"]||"" end
-  def label; uri.label end
   alias_method :url, :uri
   alias_method :maybeURI, :uri
 end
@@ -162,7 +160,6 @@ class String
   end
 
   def R; R.new self end
-  def label; split(/[\/#]/)[-1] end
   def sh; Shellwords.escape self end
 
 end
