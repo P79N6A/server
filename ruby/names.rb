@@ -47,11 +47,6 @@ class R
       end }
   end
 
-=begin
-  name-manipulating functions
-  a RDF::URI-identified-resource has an associated filesystem node w/ R subtype
-=end
-
   def appendURI u; R uri + u.to_s end
   def appendSlashURI u; R uri.t + u.to_s end
   def basename; File.basename path end
@@ -66,7 +61,6 @@ class R
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
   def glob p=""; (Pathname.glob d + p).map &:R end
-  def hostURL e; host='http://'+e['SERVER_NAME']; (uri.index('/') == 0 ? host : '') + uri end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
   def node;     Pathname.new FSbase + path end
   def parent;   R Pathname.new(uri).parent end

@@ -5,9 +5,9 @@ class R
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
       if s && p && o
-        s = RDF::URI s=='#' ? e['REQUEST_URI'] : (s.R.hostURL e)
+        s = RDF::URI s == '#' ? e['REQUEST_URI'] : s
         p = RDF::URI p
-        o = ([R,Hash].member?(o.class) ? (RDF::URI o.R.hostURL(e)) :
+        o = ([R,Hash].member?(o.class) ? (RDF::URI o) :
              (l = RDF::Literal o
               l.datatype=RDF.XMLLiteral if p == Content
               l)) rescue nil
