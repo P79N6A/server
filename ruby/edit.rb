@@ -8,9 +8,9 @@ class R
   }
 
   # 404 -> create resource
-  F['protograph/create'] = -> e,env,g {
+  F['graph/create'] = -> e,env,g {
     env['view'] = 'create'
-    F['protograph/blank'][e,env,g]}
+    F['graph/blank'][e,env,g]}
 
   # prototype select
   fn 'view/create',->g,e{
@@ -19,12 +19,11 @@ class R
        {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(URI.escape t.shorten), c: t.abbrURI}}]}
 
   # editable triples
-  F['protograph/edit'] = -> e,env,g {
+  F['graph/edit'] = -> e,env,g {
     env['view'] ||= 'edit'          # use edit-view
     g[e.uri+'#'] = {}               # add current resource
+    e.fromStream g, :triplrDoc
     rand.to_s.h}
-    
-  fn 'graph/edit',->e,env,g{e.fromStream g, :triplrDoc} # fs-store triples
 
 =begin HTML <form> triple-editor
   @prototype bundle of fields for a type

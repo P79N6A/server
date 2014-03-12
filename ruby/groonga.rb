@@ -8,7 +8,7 @@ class R
   
   fn 'view/'+Search+'Groonga',-> d,e {{_: :form, action: '/', c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :graph, value: :groonga}]}}
 
-  fn 'protograph/groonga',->d,e,m{
+  fn 'graph/groonga',->d,e,m{
     R.groonga.do{|ga|
     q = e['q']                               # search expression
     g = e["context"] || d.env['SERVER_NAME'] # context

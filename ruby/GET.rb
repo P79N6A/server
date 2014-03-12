@@ -48,53 +48,41 @@ class R
 
   def response
 
-    m = {} # TODO request-model as RDF::Graph, benchmark vs our pickle-able JSON graphs, + write persistable RDF::Repository class of similar performance
+    m = {} # model
 
-    # Model
-    g = @r.q['graph'] # model identity
-    graphID = (g && F['protograph/' + g] || F['protograph/'])[self,@r.q,m]
+    # Model identity
+    g = @r.q['graph']
+    graphID = (g && F['graph/' + g] || F['graph/'])[self,@r.q,m]
 
-    return F[E404][self,@r] if m.empty? # protograph empty - nothing found
+    return F[E404][self,@r] if m.empty?
 
-    # View
+    # View identity
     @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
-
-    maybeSend @r.format, ->{
-      r = R '/cache/view/' + @r['ETag'].dive
-      if r.e # view exists?
-        r
-      else
-        c = R '/cache/model/' + graphID.dive
-        if c.e # model exists?
-          m = c.r true
-        else
-          (g && F['graph/' + g] || F['graph/'])[self, @r.q,m]
-          c.w m,true # model -> cache
-        end
-        r.w render @r.format, m, @r # view -> cache
-      end }
+    
+    maybeSend @r.format, ->{# finish response if needed
+      m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # expand model
+      m.delete_if{|u,r|r.class == R} # cleanup unexpanded thunks
+      render @r.format, m, @r} # view
   end
 
   def send?
     !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
   end
   
-  def maybeSend m, b; c = 200
+  def maybeSend m, b
     send? ?
     b[].do{|b| # continue
       h = {'Content-Type'=> m, 'ETag'=> @r['ETag']}
       h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
 
       # frontend-specific handlers
-      b.class == R ? (Nginx ?                                                   # nginx chosen?
-                      [c,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
-                      Apache ?                                                  # Apache chosen?
-                      [c,h.update({'X-Sendfile' => b.d}),[]] : # Apache handler
-                      (r = Rack::File.new nil                  # Rack handler
-                       r.instance_variable_set '@path',b.d     # configure Rack response
-                       r.serving(@r).do{|s,m,b|[(s == 200 ? c : s),m.update(h),b]})) :
-      [c, h, b]} : # normal response
-      [304,{},[]]  # client has response
+      b.class == R ? (Nginx ?  [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
+                      Apache ? [200,h.update({'X-Sendfile' => b.d}),[]] : # Apache handler
+                      (r = Rack::File.new nil # Rack handler
+                       r.instance_variable_set '@path', b.d
+                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})) :
+      [200,h,[b]]} : # normal response
+      [304,{},[]] # client has response
   end
 
 end

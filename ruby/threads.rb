@@ -2,8 +2,7 @@
 #watch __FILE__
 class R
   
-  fn 'protograph/thread',->d,e,g{
-    # walk reply_of arcs
+  fn 'graph/thread',->d,e,g{
     d.pathSegment.do{|p|p.walk SIOC+'reply_of',g }
     unless g.empty?
       thread = '#discussion'

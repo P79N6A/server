@@ -27,7 +27,7 @@ s[HTTP+'statusCodeValue'] = [404]
     [H.css('/css/404'),{_: :style, c: "a {background-color:#{R.cs}}"},
      d.html]}
 
-  fn 'protograph/blank',->d,_,m{ # 404 is determined by #empty?
+  fn 'graph/blank',->d,_,m{ # 404 is determined by #empty?
     m[d.uri] = {} # insert a resource
     rand.to_s.h}
 

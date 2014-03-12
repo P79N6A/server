@@ -10,7 +10,7 @@ class R
   end
 
   # default graph - identity + lazy-expandable resource-pointers
-  fn 'protograph/',->e,q,g{
+  fn 'graph/',->e,q,g{
      g['#'] = {'uri' => '#'}
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     if !set || set.empty?
@@ -37,13 +37,6 @@ class R
 
   # fs-derived ID for a resource-set
   fn 'docsID',->g,q{g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h }
-
-  # default graph
-  fn 'graph/',->e,q,m{
-    # force thunks
-    m.values.map{|r|(r.env e.env).graphFromFile m if r.class == R }
-    # cleanup unexpanded thunks
-    m.delete_if{|u,r|r.class==R}}
 
   def graphFromFile g={}
     return unless e
