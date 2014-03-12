@@ -29,7 +29,7 @@ class R
   fn 'baseview/timegraph',->d,e,c{
     e[:graph] = d
     e[:group] = {}
-    [F['view'][d,e],H.css('/css/timegraph'),
+    [F['view'][Hash[d.sort_by{|u,r| r.class==Hash && r[Date].do{|d|d.justArray[0].to_s} || ''}.reverse],e],H.css('/css/timegraph'),
      {class: :timegraph,
        c: (F['filter/timegraph'][ e.q, d, nil]
            c.())}]}
@@ -39,18 +39,12 @@ class R
 
     # on resources w x-axis field
     if r[x.q['x'] || Date]
-
-      labelP = x.q['label'].do{|l|l.expand} || Creator
-      label = ([*r[labelP]][0]).do{|l|
-               l.respond_to?(:uri) ? l.uri.abbrURI : l.to_s}
+      label = r[x.q['label'].do{|l|l.expand}||Creator].justArray[0].do{|l|l.respond_to?(:uri) ? l.uri.split(/[\/#]/)[-1] : l.to_s}
       lc = x[:group][label] ||= R.c
       arc = x.q['arc'].do{|a| a.expand } || (SIOC+'has_parent')
 
       [{style: "top: #{r['x']}%; left: #{r['y']}%",
-         c: [{_: :a,
-               title: r[Date][0],
-               href: '#'+r.uri,
-               class: :label,
+         c: [{_: :a, title: r[Date][0], href: '#'+r.uri, class: :label,
                style: "border-color: #{lc};background-color: #{lc}",
                c: label.split('@')[0],
              }]},
