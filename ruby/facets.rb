@@ -18,9 +18,6 @@ class R
 
     [(H.css'/css/facets'),(H.js'/js/facets'),(H.js'/js/mu'),
 
-     a.map{|b,_|{_: :style, class: n[b]}},
-     a.map{|f,v|{class: :selector, facet: n[f], c: f}},
-
      # facet selection
      {class: :sidebar, c: a.map{|f,v|
          {class: :facet, facet: n[f], # predicate
