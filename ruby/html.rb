@@ -145,9 +145,8 @@ class R
     h.css('iframe').remove
     h.css('script').remove
     h.xpath("//@*[starts-with(name(),'on')]").remove
-    h.to_s
-  }
-  # render response metadata - pagination links 
+    h.to_s}
+
   fn 'view/'+HTTP+'Response',->d,e{
     d['#'].do{|u|
       [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;',style: 'color:#fff;background-color:#000;font-size:2.4em;float:left;clear:both'}},
@@ -169,16 +168,9 @@ class R
 
   fn 'view/table',->g,e{
     keys = R.graphProperties g
-    v = g.values
-    e.q['sort'].do{|p|
-      p = p.expand
-      v = v.sort_by{|s|
-        s[p].do{|o|
-          o[0].to_s}||''}} # cast to a single type (String) so sort will work. every class seems to have a #to_s
-    v = v.reverse if e.q['reverse']
     [H.css('/css/table'),
      {_: :table,:class => :tab,
        c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
-           v.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
+           g.values.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
 
 end

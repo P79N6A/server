@@ -16,8 +16,6 @@ class R
   F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
 
   fn 'view/ls',->i,e{
-    e.q['sort'] ||= 'stat:mtime'
-    e.q['reverse'] ||= true
     dir = e['uri'].R
     path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
@@ -56,23 +54,4 @@ class R
     g = F['set/glob'][e]
     !g.empty? ? [302, {Location: g[rand g.length].uri}, []] : [404]}
 
-  fn 'protograph/du',->d,q,m{
-    d.pathSegment.do{|path|
-    GREP_DIRS.find{|p|path.uri.match p}.do{|ok|
-      e = [d,path].compact.find &:e
-      q['view'] ||= 'table'
-      q['sort'] = Stat+'size'
-      q['reverse'] = true
-      m[e.uri] = e if e
-      rand.to_s.h}}}
-
-  fn 'graph/du',->e,_,m{
-    `du -a #{m.values[0].sh}`.each_line{|l|
-      s,p = l.chomp.split /\t/ # size, path
-      p = p.unpath            # path -> URI
-      m[p.uri] = {'uri' => p.uri,
-        Posix+'util#du' => R[p.uri+'?graph=du#du'],
-            Stat+'size' => [s.to_i]}}
-    m }
-  
 end
