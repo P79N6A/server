@@ -65,7 +65,6 @@ class R
   def d?;       node.directory? end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
-  def frag;     uri.frag end
   def glob p=""; (Pathname.glob d + p).map &:R end
   def hostURL e; host='http://'+e['SERVER_NAME']; (uri.index('/') == 0 ? host : '') + uri end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
@@ -78,13 +77,10 @@ class R
   def prependURI u; R u.to_s + uri end
   def realpath; node.realpath rescue Errno::ENOENT end
   def shorten;  uri.shorten.R end
-  def siblings; parent.c end
   def size;     node.size end
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
   def sh;       d.force_encoding('UTF-8').sh end
-
-  # shortcuts
   
   alias_method :+, :appendURI
   alias_method :a, :appendURI
@@ -166,7 +162,6 @@ class String
   end
 
   def R; R.new self end
-  def frag; split(/#/).pop() end
   def label; split(/[\/#]/)[-1] end
   def sh; Shellwords.escape self end
 
