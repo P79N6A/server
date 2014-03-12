@@ -51,18 +51,11 @@ class R
     node.take(*a).map &:R
   end
 
-  def randomLeaf
-    c.empty? && self || c.r.randomLeaf
-  end
-
   def R.graphProperties g
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
   end
 
-  fn 'set/randomLeaf',->d,e,m{[d.randomLeaf]}
-  fn 'req/randomLeaf',->e,r{[302, {Location: e.randomLeaf.uri},[]]}
-
-  # register a handler on /, add index support
+  # handler on /
   fn '/GET',->e,r{
     x = 'index.html'
     i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e # file exists?

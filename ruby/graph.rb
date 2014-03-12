@@ -1,14 +1,5 @@
 #watch __FILE__
 class R
-=begin
-  two-pass graph construction aka Protograph and Graph
-
-  Protograph = ETag. ideal fingerprint sources include filestats, mtime checks (#m), SHA160 hashes of in-RAM entities - <http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-25#section-2.3>
-
-  a tripleStream function constructing a block (consumes yielded values) is a sink, inverse is a source, both a filter
-  these can be stacked into pipelines, as in feed.rb
-
-=end
 
   def fromStream m,*i
     send(*i) do |s,p,o|
@@ -18,8 +9,7 @@ class R
     end; m
   end
 
-  # default protograph - identity + lazy-expandable resource-thunks
-  # Resource, Query, Graph -> graphID
+  # default graph - identity + lazy-expandable resource-pointers
   fn 'protograph/',->e,q,g{
      g['#'] = {'uri' => '#'}
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
@@ -69,7 +59,7 @@ class R
     g.mergeGraph doc.r true
   end
 
-  def ef;  @ef ||= docBase.a('.e') end
+  def ef; docBase.a '.e' end
 
   def graph g={}
     docs.map{|d|d.graphFromFile g}  # tripleStream -> graph
@@ -84,7 +74,6 @@ class R
      ((node.directory? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> children
     ].flatten.compact
   end
-
 
 # GET Resource -> local RDF cache
 
