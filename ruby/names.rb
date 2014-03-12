@@ -67,7 +67,6 @@ class R
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def path;     uri.match(/^\//) ? uri : ('/'+uri) end
   def pathSegment; uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/).do{|p|p[2]&&p[2].R}||nil end
-  def prependURI u; R u.to_s + uri end
   def realpath; node.realpath rescue Errno::ENOENT end
   def shorten;  uri.shorten.R end
   def size;     node.size end

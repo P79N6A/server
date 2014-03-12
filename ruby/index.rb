@@ -44,7 +44,7 @@ class R
   end
 
   def indexPath
-    shorten.prependURI '/index/'
+    R['/index/'+shorten]
   end
 
   def take *a
