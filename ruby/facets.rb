@@ -1,28 +1,24 @@
 class R
 
-  # facet-filtering - dynamic CSS
+  # facet-filtering - dynamic CSS edition
 
   fn 'view/facets',->m,e{
-
     a = Hash[(e.q['a'].split ',').map{|a|[a.expand,{}]}]
 
-    # facet stats
+    # statistics
     m.map{|s,r| a.map{|p,_|
         r[p].do{|o|
             o.justArray.map{|o|
             a[p][o]=(a[p][o]||0)+1}}}}
 
-    # facet identifiers
-    i={}; c=-1
-    n=->o{i[o] ||= 'f'+(c+=1).to_s}
-
-    view = e.q['fv'].do{|fv| F['itemview/'+fv] } || ->r,e{
-      {_: :a, class: :title, href: r.R.url, c: r[Title] || r.uri.abbrURI} if (r.class == R || r.class == Hash) && r.uri}
+    # identifiers
+    i = {}
+    c = 0
+    n = ->o{i[o] ||= 'f'+(c+=1).to_s}
 
     [(H.css'/css/facets'),(H.js'/js/facets'),(H.js'/js/mu'),
 
      a.map{|b,_|{_: :style, class: n[b]}},
-     '&nbsp;' * 22,
      a.map{|f,v|{class: :selector, facet: n[f], c: f}},
 
      # facet selection
@@ -32,7 +28,7 @@ class R
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
-                       {_: :span, class: :name, c: k}]}}]}}},     
+                       {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.uri.abbrURI : k.to_s)}]}}]}}},
 
      m.map{|u,r| # each resource
        a.map{|p,_| # each facet

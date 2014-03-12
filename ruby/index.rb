@@ -55,22 +55,19 @@ class R
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
   end
 
-  # handler on /
   fn '/GET',->e,r{
-    x = 'index.html'
-    i = [e,e.pathSegment].compact.map{|e|e.as x}.find &:e # file exists?
-    if i && !r['REQUEST_URI'].match(/\?/) # querystring implies query - skip file
-      if e.uri[-1] == '/' # inside dir? (Apache mod_dir does this, most upstream servers don't)
-        i.env(r).fileGET  # index file -> response
+    i = [e,e.pathSegment].compact.map{|e|e.as 'index.html'}.find &:e # file exists?
+    if i && !r['REQUEST_URI'].match(/\?/) # querystring?
+      if e.uri[-1] == '/' # inside dir?
+        i.env(r).fileGET  # file
       else
-        [301, {Location: e.uri.t}, []] # goto: dir/
+        [301, {Location: e.uri.t}, []] # into dir/
       end
     else
-      if r['REQUEST_URI'].match(/\/index.(html|jsonld|nt|n3|ttl|txt)$/) # request an index
-        e.parent.as('').env(r). # eat virtual pathname, remain in dir 
-          response # index response
+      if r['REQUEST_URI'].match(/\/index.(html|jsonld|nt|n3|ttl|txt)$/) # explicit index
+        e.parent.as('').env(r).response # erase index virtual-pathname, remain in dir
       else
-        e.response # default
+        e.response
       end
     end}
 

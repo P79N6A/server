@@ -45,43 +45,25 @@ class R
   # display just the images found in content
   fn 'view/imgs',->m, e { seen = {}
 
-    # optional height argument
-    h = e.q['h'].do{|h|
-      h.match(/^[0-9]+$/).do{|_|'height:'+h+'px'}}||''
+    x = ->i{i && i.match(/(jpe?g|gif|png)$/i) && i } # extension match
 
-    # extension-based filter
-    x=->i{i&&i.match(/(jpe?g|gif|png)$/i)&&i}
-
-    [(H.once e,:mu,H.js('/js/mu')),H.js('/js/images'),
-     m.values.map{|v|
-       # CSS-selector search inside content
+    m.values.map{|v|
        [[*v[Content]].map{|c| c.class == String &&
-         (Nokogiri::HTML.parse(c).do{|c|
-
-            [# <img> elements
-             c.css('img').map{|i|i['src']}.compact,
-
-             # <a> elements with image extensions
-             c.css('a').map{|i|i['href']}.select(&x)]
+         (Nokogiri::HTML.parse(c).do{|c|              # CSS-selector search
+            [c.css('img').map{|i|i['src']}.compact,   # <img>
+             c.css('a').map{|i|i['href']}.select(&x)] # <a> with image extension
             })},
-
-        # check subject URI for image extension
-        x.(v.uri),
-
-        # check object URIs for image extension
-        (v.respond_to?(:values) &&
+        x.(v.uri),                                    # subject URI w/ image extension
+        (v.respond_to?(:values) &&                    # object URIs w/ image extension
          v.values.flatten.map(&:maybeURI).select(&x))
 
        ].flatten.uniq.compact.map{|s|
-         # view 
-         {uri: s,
-           # img and  link to containing resource
-           c: ->{"<a href='#{v.uri}'><img style='float:left;#{h}' src='#{s}'></a>"}}}}.flatten.map{|i|
+         {uri: s, c: "<a href='#{v.uri}'><img style='float:left;height:255px' src='#{s}'></a>"}}}.flatten.map{|i|
 
        # show and mark as seen
        !seen[i[:uri]] &&
        (seen[i[:uri]] = true
-        i[:c].())}]}
+        i[:c])}}
 
   def R.c; '#%06x' % rand(16777216) end
   def R.cs; '#%02x%02x%02x' % F['color/hsv2rgb'][rand*6,1,1] end
