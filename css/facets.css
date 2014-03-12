@@ -20,7 +20,7 @@ body {margin: 0}
 
 .facet {
     cursor:pointer;
-    width:10em;
+    width:16em;
     max-height:25em;
     overflow:scroll;
     white-space:nowrap;
