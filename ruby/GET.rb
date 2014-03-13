@@ -31,7 +31,7 @@ class R
 
   def fileGET
     @r['ETag'] = [m,size].h
-    maybeSend mimeP,->{self}
+    condResponse mimeP,->{self}
   end
 
   def resource
@@ -57,32 +57,27 @@ class R
     return F[E404][self,@r] if m.empty?
 
     # View identity
-    @r['ETag'] ||= [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
+    @r['ETag'] = [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
     
-    maybeSend @r.format, ->{# finish response if needed
-      m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # expand model
-      m.delete_if{|u,r|r.class == R} # cleanup unexpanded thunks
-      render @r.format, m, @r} # view
-  end
-
-  def send?
-    !((m=@r['HTTP_IF_NONE_MATCH']) && m.strip.split(/\s*,\s*/).include?(@r['ETag']))
+    condResponse @r.format, ->{ # lazy response-finisher
+      m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # expand graph
+      m.delete_if{|u,r|r.class == R} # wipe unexpanded thunks
+      render @r.format, m, @r} # model -> view
   end
   
-  def maybeSend m, b
-    send? ?
-    b[].do{|b| # continue
-      h = {'Content-Type'=> m, 'ETag'=> @r['ETag']}
-      h.update({'Cache-Control' => 'no-transform'}) if m.match /^(audio|image|video)/ # already compresed
+  def condResponse format, body
+    @r['HTTP_IF_NONE_MATCH'].do{|m|
+      m.strip.split(/\s*,\s*/).include?(@r['ETag']) && # client has entity
+      [304,{},[]]} ||
+    body.call.do{|body|
+      head = {'Content-Type' => format, 'ETag' => @r['ETag']}
+      head.update({'Cache-Control' => 'no-transform'}) if format.match /^(audio|image|video)/
 
-      # frontend-specific handlers
-      b.class == R ? (Nginx ?  [200,h.update({'X-Accel-Redirect' => '/fs' + b.path}),[]] : # Nginx handler
-                      Apache ? [200,h.update({'X-Sendfile' => b.d}),[]] : # Apache handler
-                      (r = Rack::File.new nil # Rack handler
-                       r.instance_variable_set '@path', b.d
-                       r.serving(@r).do{|s,m,b|[s,m.update(h),b]})) :
-      [200,h,[b]]} : # normal response
-      [304,{},[]] # client has response
+      body.class == R ? (Nginx ? [200,head.update({'X-Accel-Redirect' => '/fs' + body.path}),[]] : # Nginx
+                         Apache ? [200,head.update({'X-Sendfile' => body.d}),[]] : # Apache
+                         (f = Rack::File.new nil; f.instance_variable_set '@path', body.d # Rack
+                          f.serving(@r).do{|s,h,b|[s,h.update(head),b]})) :
+      [200,head,[body]]}
   end
 
 end
