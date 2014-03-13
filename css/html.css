@@ -6,12 +6,8 @@ a { text-decoration:none;}
 tr[property="uri"] > td.val {max-width: 80ex; overflow: hidden}
 tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
 tr[property="uri"] > td.val > a{
-    background-color: #00e;
-    color:#fff;
-    font-weight: bold;
-    border-radius: .1em;
-    padding: 0 .1em 0 .1em;
-}
+    color:#888;
+    font-weight: bold;}
 
 table.html {
     max-width: 90ex;
@@ -31,13 +27,22 @@ tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {background-color:#
 tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag:hover {background-color:#03f;color:#fff}
 td.key > a > .frag {
     font-weight:bold;
-    color: #fff;
-    background-color:#00f}
+    background-color: #000;
+    color:#fff;
+    border-radius:.36em .08em .08em .36em;
+    padding-left:.2em;
+    padding-right:.08em;
+}
 
 td.val > a > .frag {
-    border-radius: .2em;
-    color: #fff;
-    background-color:#04f}
+    border-radius: .3em;
+    border: .1em dotted #e8e8e8;
+    color: #000;
+    background-color:#cdd6db;
+}
+td.val > a > .frag:hover {
+    background-color: #fff;
+}
 
 pre {
   white-space: pre-wrap;

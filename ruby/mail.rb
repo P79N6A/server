@@ -47,7 +47,7 @@ class R
     id = m.message_id ; return unless id             # message-ID
     e = MessagePath[id.gsub(/[<>]/,'')]              # message URI
 #    yield e, DC+'identifier', id                     # origin-domain ID
-    yield e, DC+'source', self                       # source-file URI
+#    yield e, DC+'source', self                       # source-file URI
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post']].map{|t|yield e, Type, t}        # RDF types
 
