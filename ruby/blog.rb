@@ -26,4 +26,9 @@ class R
     base.ef.ln_s R[host + '/time/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
     [303,{'Location' => (base+"?prototype=sioct:BlogPost&graph=edit&mono").uri},[]]}
 
+  F['view/'+SIOCt+'BoardPost']=->d,e{ d.map{|u,r|
+      {class: :BoardPost, style: "background-color:#fff;color:#000;float:left;padding:.3em;max-width:42em;margin:.5em",
+        c: [{_: :h3, style: 'margin:0',c: {_: :a, href: u, c: r[Title]}},
+            F['itemview/chat'][r,e]]}}}
+
 end

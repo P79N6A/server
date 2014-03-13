@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrIRC &f
@@ -47,25 +47,15 @@ class R
   end
 
   fn 'view/chat',->d,e{
-    F['baseview/chat'][d, e, ->{d.map{|u,r|F['itemview/chat'][r,e]}}]}
-
-  fn 'itemview/chat',->r,e{
-    r[Content] && r[Date] && r[Date][0] &&
-    [r[Date][0].match(/T([0-9:]{5})/).do{|m|m[1]},
-     {_: :span, :class => :nick, c: {_: :a, href: r.uri,
+    [(H.once e,'chat',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{R.c}}"}),
+     d.map{|u,r|
+       r[Content] && r[Date]
+       [r[Date].justArray[0].match(/T([0-9:]{5})/).do{|m|m[1]},
+        {_: :span, :class => :nick, c: {_: :a, href: r.uri,
             c: [r[Atom+"/link/image"].do{|p|{_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
                 {_: :span, c: r[Creator].do{|c|
                     c[0].respond_to?(:uri) ? c[0].uri.abbrURI : c[0].to_s}}]}},' ',
-        {_: :span, :class => :tw, c: r[Content]},"<br>\n"]}
-
-  F['view/'+SIOCt+'BoardPost']=->d,e{
-    d.map{|u,r|
-      {class: :BoardPost, style: "background-color:#fff;color:#000;float:left;padding:.3em;max-width:42em;margin:.5em",
-        c: [{_: :h3, style: 'margin:0',c: {_: :a, href: u, c: r[Title]}},
-            F['itemview/chat'][r,e]]}}}
-
-  fn 'baseview/chat',->d,e,c{
-    [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{R.c}}\n"}),c.()]}
+        {_: :span, :class => :tw, c: r[Content]},"<br>\n"]}]}
 
   F['view/'+SIOCt+'InstantMessage']=F['view/chat']
   F['view/'+SIOCt+'MicroblogPost']=F['view/chat']
