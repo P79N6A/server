@@ -55,14 +55,14 @@ class R
      {_: :span, :class => :nick, c: {_: :a, href: r.uri,
             c: [r[Atom+"/link/image"].do{|p|{_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
                 {_: :span, c: r[Creator].do{|c|
-                    c[0].respond_to?(:uri) ? c[0].uri.abbrURI : c[0].to_s
-                  }||'#'}]}},' ',
+                    c[0].respond_to?(:uri) ? c[0].uri.abbrURI : c[0].to_s}}]}},' ',
         {_: :span, :class => :tw, c: r[Content]},"<br>\n"]}
 
   F['view/'+SIOCt+'BoardPost']=->d,e{
     d.map{|u,r|
-      {class: :BoardPost, style: "background-color:#ff4500;color:#fff;float:left;border-radius:.8em;padding:.4em;max-width:42em;margin:.5em",
-        c: F['itemview/chat'][r,e]}}}
+      {class: :BoardPost, style: "background-color:#fff;color:#000;float:left;padding:.3em;max-width:42em;margin:.5em",
+        c: [{_: :h3, style: 'margin:0',c: {_: :a, href: u, c: r[Title]}},
+            F['itemview/chat'][r,e]]}}}
 
   fn 'baseview/chat',->d,e,c{
     [(H.once e,'chat.head',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{R.c}}\n"}),c.()]}
