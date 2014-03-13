@@ -22,9 +22,7 @@ td.key {vertical-align:top;text-align:right}
 .abbr,.scheme {display: none}
 
 tr[property="http://rdfs.org/sioc/ns#content"] td.val {border-radius: 0}
-tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val {font-size:.7em}
-tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {background-color:#fff;color:#03f}
-tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag:hover {background-color:#03f;color:#fff}
+tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {font-size:.73em;background-color:#000;color:#fff}
 td.key > a > .frag {
     font-weight:bold;
     background-color: #000;
@@ -53,7 +51,8 @@ pre.mail {
 }
 pre.mail a[rel=untyped] {
     color:#000;
-    background-color: rgba(89, 255, 6, 1);
+    background-color: rgba(61, 255, 0, 1);
     font-size:1.1em;
+    font-weight: bold;
 }
 input {border-width:0}
