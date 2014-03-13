@@ -34,7 +34,6 @@ class R
        c: (F['filter/timegraph'][ e.q, d, nil]
            c.())}]}
 
-  # timegraph entry
   fn 'itemview/timegraph',->r,x{
 
     # on resources w x-axis field

@@ -6,7 +6,7 @@ a { text-decoration:none;}
 tr[property="uri"] > td.val {max-width: 80ex; overflow: hidden}
 tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
 tr[property="uri"] > td.val > a{
-    color:#888;
+    color:#777;
     font-weight: bold;}
 
 table.html {
@@ -36,7 +36,7 @@ td.val > a > .frag {
     border-radius: .3em;
     border: .1em dotted #e8e8e8;
     color: #000;
-    background-color:#cdd6db;
+    background-color:#e7e7e7;
 }
 td.val > a > .frag:hover {
     background-color: #fff;
