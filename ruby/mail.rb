@@ -69,7 +69,7 @@ class R
     m.subject.do{|s|yield e, Title, s.to_utf8.hrefs} # subject
 
     yield e, SIOC+'has_discussion',                  # thread
-    R[e+'?graph=thread&view=timegraph#discussion'] if m.in_reply_to || m.references
+    R[e+'?graph=thread#discussion'] if m.in_reply_to || m.references
 
     %w{to cc bcc}.map{|to|                           # reciever fields
       m.send(to).do{|to|                             # has field?
