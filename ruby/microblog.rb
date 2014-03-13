@@ -50,17 +50,14 @@ class R
     F['baseview/chat'][d, e, ->{d.map{|u,r|F['itemview/chat'][r,e]}}]}
 
   fn 'itemview/chat',->r,e{
-    r[Type] && [*r[Type]].map(&:maybeURI).include?(SIOCt+'MailMessage') && r[:mail]=true
     r[Content] && r[Date] && r[Date][0] &&
     [r[Date][0].match(/T([0-9:]{5})/).do{|m|m[1]},
-     {_: :span, :class => :nick, c: {_: :a, href: r[Atom+'/link/alternate'].do{|a|a[0].uri}||r.url,
-            c: [r[Atom+"/link/image"].do{|p| {_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
-                {_: :span, c: r[Name]||r[Creator]||'#'}]}},' ',
-        {_: :span, :class => :tw, # skip redundant title fields
-       c: [((r[Title].to_s == r[Content].to_s || r.uri.match(/twitter/)) && '' ||
-            {_: :a, :class => :title, href: r.url, c: r[Title]}), # skip quoted mail-lines & abbreviate
-           r[:mail] ? (r[Content].map{|c|c.lines.to_a.grep(/^[^&@_]+$/)[0..21]}) : r[Content],
-          ]},"<br>\n"]}
+     {_: :span, :class => :nick, c: {_: :a, href: r.uri,
+            c: [r[Atom+"/link/image"].do{|p|{_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
+                {_: :span, c: r[Creator].do{|c|
+                    c[0].respond_to?(:uri) ? c[0].uri.abbrURI : c[0].to_s
+                  }||'#'}]}},' ',
+        {_: :span, :class => :tw, c: r[Content]},"<br>\n"]}
 
   F['view/'+SIOCt+'BoardPost']=->d,e{
     d.map{|u,r|
