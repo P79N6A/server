@@ -32,6 +32,7 @@ span.nick span {
 .tw img {max-width:100%}
 
 a {text-decoration:none}
+.abbr,.scheme {display: none}
 
 .BoardPost .tw {
     background-color:#fff;
