@@ -19,12 +19,6 @@ table {
       color: #fff;
       border-radius:0 0 .3em .3em;
       }
-.down:hover { background-color: black;
-              color: white }
-.du { color: #fff;
-      background-color:#05f;
-      padding:.1em .1em .1em .6em;
-      }
 
 .ls .abbr{display:none}
 .ls td.label a {
@@ -41,13 +35,12 @@ table {
 }
 .ls td[property="uri"] {white-space:nowrap}
 
-.ls [property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap;font-size:.9em}
+.ls [property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap}
 .ls td[property="http://www.w3.org/ns/posix/dir#child"] .frag {
     font-weight: normal;
-    background-color: #fff;
-    color: #00a;
+    background-color: #ff0;
+    color: #000;
     font-weight: bold;
-    border: .1em #00f dotted;
 }
 
 .dir {
