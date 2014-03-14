@@ -44,14 +44,4 @@ class R
     p = [d,d.pathSegment].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
 
-  fn 'view/find',->i,e{
-    {_: :form, method: :GET, action: e['REQUEST_PATH'].t,
-      c: [{_: :input, name: :set, value: :find, type: :hidden},
-          {_: :input, name: :view, value: :ls, type: :hidden},
-          {_: :input, name: :q, style: 'float: left;font-size:1.3em'}]}}
-
-  fn 'req/randomFile',->e,r{
-    g = F['set/glob'][e]
-    !g.empty? ? [302, {Location: g[rand g.length].uri}, []] : [404]}
-
 end
