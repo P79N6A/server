@@ -3,7 +3,7 @@ class R
 
   def triplrImage &f
     yield uri,Type,R[DC+'Image']
-    triplrStdOut 'exiftool', EXIF, &f
+#    triplrStdOut 'exiftool', EXIF, &f
   end
 
   fn 'req/scaleImage',->e,r{

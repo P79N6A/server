@@ -5,14 +5,16 @@ ruby ruby/install
 cp ruby/bin/{R,ww} ~/bin
 
 DAEMON
+ ww
  ww apache   # backend to apache
  ww nginx    # under nginx
- ww          # port 80, no frontend
- ww local -d # standalone listening on 127.0.0.1 in background
+ ww local -d # daemonized serving on 127.0.0.1
 
-for apache & nginx see conf/
+ apache & nginx configs in conf/
 
 REQUISITES
 cd ruby && bundle install
 
 GIT <https://github.com/hallwaykid/rrww> <https://gitorious.org/element/www>
+
+WARNING perpetually under-construction playground - not finished product
