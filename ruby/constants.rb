@@ -74,6 +74,7 @@ names
 grep
 audio
 blog
+chan
 code
 csv
 edit
