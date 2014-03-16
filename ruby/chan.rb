@@ -8,6 +8,13 @@ class R
     e.q['view'] ||= 'chan'
     nil} # just add some ambient configuration
 
+  F['/chan/POST'] = -> d,e {
+    puts "Chajd"
+    req = Rack::Request.new d.env
+    p = req.params
+    puts p
+  }
+
   F['set/chan'] = -> d,r,m {
     s = F['set/depth'][R['/chan'],r,m]
     s.push '/chan'.R
@@ -18,8 +25,8 @@ class R
     br = '<br>'
     post = {_: :form, method: :POST,
       c: [{_: :input, title: :title, name: :title, size: 32},br,
-          {_: :textarea, rows: 8, cols: 32,name: :title},br,
-          {_: :input, type: :file},
+          {_: :textarea, rows: 8, cols: 32, name: :comment},br,
+          {_: :input, type: :file, name: :file},
           {_: :input, type: :submit, value: 'post '}
          ]}
 
