@@ -1,11 +1,11 @@
 #watch __FILE__
 class R
 
-  # traverse collection of blog-posts
+  # range over collection of posts
   F['/blog/GET'] = -> d,e {
     e.q['set'] = 'depth' # post-range in date-order
-    e.q['local'] = true  # hostname-specific paths
-    e.q['c'] = 8         # count
+    e.q['local'] = true  # hostname-specific
+    e.q['c'] ||= 8       # page size
     R['http://'+e['SERVER_NAME']+'/time'].env(e).response}
 
   # post name <input>
@@ -17,7 +17,7 @@ class R
                {_: :input, type: :submit, value: ' go '}
               ]}])]]}
 
-  # mint URI using date and cleaned name, set a few attrs and forward to default editor
+  # mint URI of date and name, insert title+type and forward to default editor
   F['/blog/post/POST'] = -> d,e {
     host = 'http://' + e['SERVER_NAME']
     title = (Rack::Request.new d.env).params['title'] # decode POST-ed title

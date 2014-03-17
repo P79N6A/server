@@ -16,6 +16,7 @@ class R
       uri = '/' + Time.now.iso8601[0..18].gsub('-','/') + name
       file = p['file']
       if file && file[:type].match(/^image/)
+        basename = file[:filename]
         puts file
       end
       [303,{'Location' => uri},[]]
