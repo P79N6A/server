@@ -9,15 +9,14 @@ class R
     nil} # just add some ambient configuration
 
   F['/chan/POST'] = -> d,e{
-    req = Rack::Request.new d.env
-    p = req.params
-    puts p
+    p = (Rack::Request.new d.env).params
     content = p['content']
     if content && !content.empty?
       name = p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || ''
       uri = '/' + Time.now.iso8601[0..18].gsub('-','/') + name
-      if p['file']
-        puts (p['file'].class)
+      file = p['file']
+      if file && file[:type].match(/^image/)
+        puts file
       end
       [303,{'Location' => uri},[]]
     end}
@@ -30,7 +29,7 @@ class R
 
   F['view/chan'] = -> d,e {
     br = '<br>'
-    post = {_: :form, method: :POST,
+    post = {_: :form, method: :POST, enctype: "multipart/form-data",
       c: [{_: :input, title: :title, name: :title, size: 32},br,
           {_: :textarea, rows: 8, cols: 32, name: :content},br,
           {_: :input, type: :file, name: :file},

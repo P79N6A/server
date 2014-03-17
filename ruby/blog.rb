@@ -8,6 +8,7 @@ class R
     e.q['c'] = 8         # count
     R['http://'+e['SERVER_NAME']+'/time'].env(e).response}
 
+  # post name <input>
   F['/blog/post/GET'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
      [H(['title',
@@ -16,6 +17,7 @@ class R
                {_: :input, type: :submit, value: ' go '}
               ]}])]]}
 
+  # mint URI using date and cleaned name, set a few attrs and forward to default editor
   F['/blog/post/POST'] = -> d,e {
     host = 'http://' + e['SERVER_NAME']
     title = (Rack::Request.new d.env).params['title'] # decode POST-ed title
