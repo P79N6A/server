@@ -15,15 +15,19 @@ class R
 
       uri = '/' + Time.now.iso8601[0..18].gsub('-','/') + (p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || '')
 
-      post = {'uri' => uri, Content => content}
-      post[Title] = t if t = p['title']
+      post = {
+        'uri' => uri,
+        Type => SIOCt+'BoardPost',
+        Content => content,
+      }
+      p['title'].do{|t| post[Title] = t}
 
       file = p['file']
       if file && file[:type].match(/^image/)
         basename = file[:filename]
         puts file
       end
-      post.jsonDoc.w({uri => post},true)
+      R[uri].jsonDoc.w({uri => post},true)
       
       [303,{'Location' => uri},[]]
     else
