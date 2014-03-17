@@ -52,7 +52,7 @@ class R
     g.mergeGraph doc.r true
   end
 
-  def ef; docBase.a '.e' end
+  def jsonDoc; docBase.a '.e' end
 
   def graph g={}
     docs.map{|d|d.graphFromFile g}  # tripleStream -> graph
@@ -76,7 +76,7 @@ class R
     docs = {}
     graph.map{|u,r|
       e = u.R                 # resource
-      doc = e.ef              # doc
+      doc = e.jsonDoc         # doc
       doc.e ||                # exists - we're nondestructive here
       (docs[doc.uri] ||= {}   # init doc-graph
        docs[doc.uri][u] = r   # add to graph

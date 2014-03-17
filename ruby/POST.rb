@@ -33,9 +33,9 @@ class R
       g = {} # triples -> graph
       fromStream g, :triplrDoc
       if g.empty? # 0 triples
-        ef.delete
-      else # graph -> doc #TODO write doc-per-version and symlink current (optional history)
-        ef.w g, true
+        jsonDoc.delete
+      else # graph -> doc #TODO mint URI for version and symlink current
+        jsonDoc.w g, true
       end
     end
     [303,{'Location'=>uri+'?graph=edit'+(params['mono'] ? '&mono' : '')},[]]

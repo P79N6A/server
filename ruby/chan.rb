@@ -12,14 +12,22 @@ class R
     p = (Rack::Request.new d.env).params
     content = p['content']
     if content && !content.empty?
-      name = p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || ''
-      uri = '/' + Time.now.iso8601[0..18].gsub('-','/') + name
+
+      uri = '/' + Time.now.iso8601[0..18].gsub('-','/') + (p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || '')
+
+      post = {'uri' => uri, Content => content}
+      post[Title] = t if t = p['title']
+
       file = p['file']
       if file && file[:type].match(/^image/)
         basename = file[:filename]
         puts file
       end
+      post.jsonDoc.w({uri => post},true)
+      
       [303,{'Location' => uri},[]]
+    else
+      [303,{'Location' => d.uri},[]]
     end}
 
   F['set/chan'] = -> d,r,m {
