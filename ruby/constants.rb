@@ -74,7 +74,7 @@ names
 grep
 audio
 blog
-chan
+board
 code
 csv
 edit

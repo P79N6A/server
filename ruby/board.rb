@@ -1,32 +1,37 @@
 watch __FILE__
 class R
 
-  ChanRecent = []
+  BoardRecent = []
 
-  F['/chan/GET'] = -> d,e {
-    e.q['set'] = 'chan' if %w{/ /chan}.member? d.pathSegment
-    e.q['view'] ||= 'chan'
+  F['/board/GET'] = -> d,e {
+    e.q['set'] = 'board' if %w{/ /board}.member? d.pathSegment
+    e.q['view'] ||= 'board'
     nil} # just add some ambient configuration
 
-  F['/chan/POST'] = -> d,e{
+  F['/board/POST'] = -> d,e{
     p = (Rack::Request.new d.env).params
     content = p['content']
     if content && !content.empty?
+      host = 'http://' + e['SERVER_NAME']
+      path = Time.now.iso8601[0..18].gsub('-','/') + ( p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || '' )
+      uri = host + '/' + path
 
-      uri = '/' + Time.now.iso8601[0..18].gsub('-','/') + (p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || '')
-
+      # post as Hash+JSON
       post = {
         'uri' => uri,
-        Type => SIOCt+'BoardPost',
+        Type => R[SIOCt+'BoardPost'],
         Content => content,
       }
       p['title'].do{|t| post[Title] = t}
 
+      # optional attachment
       file = p['file']
       if file && file[:type].match(/^image/)
         basename = file[:filename]
         puts file
       end
+
+      # save
       R[uri].jsonDoc.w({uri => post},true)
       
       [303,{'Location' => uri},[]]
@@ -34,13 +39,13 @@ class R
       [303,{'Location' => d.uri},[]]
     end}
 
-  F['set/chan'] = -> d,r,m {
-    s = F['set/depth'][R['/chan'],r,m]
-    s.push '/chan'.R
+  F['set/board'] = -> d,r,m {
+    s = F['set/depth'][R['/board'],r,m]
+    s.push '/board'.R
     puts s
     s}
 
-  F['view/chan'] = -> d,e {
+  F['view/board'] = -> d,e {
     br = '<br>'
     post = {_: :form, method: :POST, enctype: "multipart/form-data",
       c: [{_: :input, title: :title, name: :title, size: 32},br,
