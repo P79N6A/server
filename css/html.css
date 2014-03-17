@@ -22,7 +22,8 @@ td.key {vertical-align:top;text-align:right}
 .abbr,.scheme {display: none}
 
 tr[property="http://rdfs.org/sioc/ns#content"] td.val {border-radius: 0}
-tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {font-size:.73em;background-color:#000;color:#fff;border-width:0}
+tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val {font-size:.73em}
+tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {background-color:#000;color:#fff;border-width:0}
 td.key > a > .frag {
     font-weight:bold;
     background-color: #000;
