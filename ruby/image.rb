@@ -58,7 +58,7 @@ class R
          v.values.flatten.map(&:maybeURI).select(&x))
 
        ].flatten.uniq.compact.map{|s|
-         {uri: s, c: "<a href='#{v.uri}'><img style='float:left;height:255px' src='#{s}'></a>"}}}.flatten.map{|i|
+         {uri: s, c: "<a href='#{s}'><img style='float:left;height:255px' src='#{s}'></a>"}}}.flatten.map{|i|
 
        # show and mark as seen
        !seen[i[:uri]] &&
