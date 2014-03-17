@@ -47,17 +47,13 @@ class R
   end
 
   def response
-
-    m = {} # model
-
-    # Model identity
+    m = {} # init Model
     g = @r.q['graph']
-    graphID = (g && F['graph/' + g] || F['graph/'])[self,@r.q,m]
+    graph = (g && F['graph/' + g] || F['graph/'])[self,@r.q,m] # Model identifier
 
     return F[E404][self,@r] if m.empty?
 
-    # View identity
-    @r['ETag'] = [@r.q['view'].do{|v|F['view/' + v] && v}, graphID, @r.format, Watch].h
+    @r['ETag'] = [@r.q['view'].do{|v|F['view/'+v] && v}, graph, @r.format].h # View identifier
     
     condResponse @r.format, ->{ # lazy response-finisher
       m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # expand graph

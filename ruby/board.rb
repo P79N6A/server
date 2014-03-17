@@ -8,6 +8,8 @@ class R
     e.q['view'] ||= 'board'
     nil} # just add some ambient configuration
 
+  F['/forum/GET'] = F['/board/GET']
+
   F['/board/POST'] = -> d,e{
     p = (Rack::Request.new d.env).params
     content = p['content']
@@ -20,9 +22,9 @@ class R
       post = {
         'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
-        Content => content,
+        Content => F['cleanHTML'][content],
       }
-      p['title'].do{|t| post[Title] = t}
+      p['title'].do{|t| post[Title] = t.hrefs}
 
       # optional attachment
       file = p['file']
@@ -45,6 +47,15 @@ class R
     puts s
     s}
 
+  F['view/'+SIOCt+'BoardPost'] = -> d,e {
+    posts = d.values.ofType SIOCt+'BoardPost'}
+    posts.map{|post|
+      [post[Title].do{|t|{_: :h3, c: t}}
+       
+      ]
+    }
+  }
+
   F['view/board'] = -> d,e {
     br = '<br>'
     post = {_: :form, method: :POST, enctype: "multipart/form-data",
@@ -56,5 +67,7 @@ class R
 
     [post]
   }
+
+  
 
 end
