@@ -5,21 +5,17 @@ class R
 
   F['/board/GET'] = -> d,e {
     e.q['set'] = 'board' if %w{/ /board}.member? d.pathSegment
-    e.q['view'] ||= 'board'
-    nil} # just add some ambient configuration
-
-  F['/forum/GET'] = F['/board/GET']
+    nil}
 
   F['/board/POST'] = -> d,e{
-    p = (Rack::Request.new d.env).params
+    p = (Rack::Request.new d.env).params # parse input
     content = p['content']
     if content && !content.empty?
       host = 'http://' + e['SERVER_NAME']
       path = Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' + ( p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || rand.to_s.h[0..3] )
       uri = host + '/' + path
 
-      # post as Hash+JSON
-      post = {
+      post = { # post as Hash+JSON
         'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
         Content => F['cleanHTML'][content],
@@ -30,10 +26,9 @@ class R
       file = p['file']
       if file && file[:type].match(/^image/)
         basename = file[:filename]
-#        puts (file.methods - Object.methods)
       end
 
-      doc = R[uri].jsonDoc      # JSON
+      doc = R[uri].jsonDoc      # doc
       doc.w({uri => post},true) # save
       doc.ln_s R['/index/board/'+uri] # link to timeline
       
@@ -42,11 +37,8 @@ class R
       [303,{'Location' => d.uri},[]]
     end}
 
-  F['set/board'] = -> d,r,m {
-    s = F['set/depth'][R['/board'],r,m]
-    s.push '/board'.R
-    puts s
-    s}
+  F['set/board'] = -> r,q,m {
+    F['set/depth'][R['/index/board/http://' + r.env['SERVER_NAME']],q,m]}
 
   F['view/'+SIOCt+'BoardPost'] = -> d,e {
     posts = d.resourcesOfType SIOCt+'BoardPost'
