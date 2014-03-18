@@ -148,4 +148,10 @@ class Hash
         o.justArray.map{|o|yield s,p,o} unless p=='uri'} if r.class == Hash}
   end
 
+  def resourcesOfType type
+    values.select{|resource|
+      resource[R::Type].do{|types|
+        types.justArray.map(&:maybeURI).member? type }}
+  end
+
 end

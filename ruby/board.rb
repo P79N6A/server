@@ -15,7 +15,7 @@ class R
     content = p['content']
     if content && !content.empty?
       host = 'http://' + e['SERVER_NAME']
-      path = Time.now.iso8601[0..18].gsub('-','/') + ( p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || '' )
+      path = Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' + ( p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || rand.to_s.h[0..3] )
       uri = host + '/' + path
 
       # post as Hash+JSON
@@ -30,11 +30,12 @@ class R
       file = p['file']
       if file && file[:type].match(/^image/)
         basename = file[:filename]
-        puts file
+#        puts (file.methods - Object.methods)
       end
 
-      # save
-      R[uri].jsonDoc.w({uri => post},true)
+      doc = R[uri].jsonDoc      # JSON
+      doc.w({uri => post},true) # save
+      doc.ln_s R['/index/board/'+uri] # link to timeline
       
       [303,{'Location' => uri},[]]
     else
@@ -48,11 +49,12 @@ class R
     s}
 
   F['view/'+SIOCt+'BoardPost'] = -> d,e {
-    posts = d.values.ofType SIOCt+'BoardPost'}
+    posts = d.resourcesOfType SIOCt+'BoardPost'
     posts.map{|post|
-      [post[Title].do{|t|{_: :h3, c: t}}
-       
-      ]
+      {class: :boardPost, style: 'float: right; border: .1em dotted #ccc',
+        c: [post[Title].do{|t|{_: :h3, c: t}},
+            post[Content]
+           ]}
     }
   }
 

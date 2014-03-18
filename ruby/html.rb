@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 def H _
   case _
@@ -47,7 +47,6 @@ class Array
   end
   def tail; self[1..-1] end
   def justArray; self end
-  def ofType t; select{|r| r[Type].do{|t| t.justArray.map(&:maybeURI).member? t} end # RDF Type match
 end
 
 class Object
