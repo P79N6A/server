@@ -5,6 +5,7 @@ class R
 
   F['/board/GET'] = -> d,e {
     e.q['set'] = 'board' if %w{/ /board}.member? d.pathSegment
+    e.q['view'] = 'board'
     nil}
 
   F['/board/POST'] = -> d,e{
@@ -30,15 +31,11 @@ class R
 
       doc = R[uri].jsonDoc      # doc
       doc.w({uri => post},true) # save
-      doc.ln_s R['/index/board/'+uri] # link to timeline
-      
+
       [303,{'Location' => uri},[]]
     else
       [303,{'Location' => d.uri},[]]
     end}
-
-  F['set/board'] = -> r,q,m {
-    F['set/depth'][R['/index/board/http://' + r.env['SERVER_NAME']],q,m]}
 
   F['view/'+SIOCt+'BoardPost'] = -> d,e {
     posts = d.resourcesOfType SIOCt+'BoardPost'
@@ -46,9 +43,7 @@ class R
       {class: :boardPost, style: 'float: right; border: .1em dotted #ccc',
         c: [post[Title].do{|t|{_: :h3, c: t}},
             post[Content]
-           ]}
-    }
-  }
+           ]}}}
 
   F['view/board'] = -> d,e {
     br = '<br>'

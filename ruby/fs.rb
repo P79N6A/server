@@ -1,9 +1,5 @@
 #watch __FILE__
 class R
-=begin
-  a RDF::URI has a path defined in names.rb, so do other concepts like a full "triple" - here we've built a RDF store using them
-  since this results in one path per-triple, it's mainly used for current resource-state and "backlink" (reverse order) indexing
-=end
 
   def [] p; predicate p end
   def []= p,o
