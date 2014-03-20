@@ -22,9 +22,9 @@ class R
           `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`
         end
       end
-      path.e ? (path.env r).fileGET : F[E404][e,r]
+      path.e ? (path.env r).fileGET : F[404][e,r]
     else
-      F[E404][e,r]
+      F[404][e,r]
     end}
   
   fn 'view/th',->i,e{

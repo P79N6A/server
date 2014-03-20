@@ -21,7 +21,7 @@ def watch f
 
 # URI -> function
 def fn u,y
-  R::F[u.to_s] = y
+  R::F[u] = y
 end
 
 def R uri

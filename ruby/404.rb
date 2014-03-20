@@ -1,8 +1,6 @@
 class R
 
-  E404 = 'req/'+HTTP+'404'
-
-  fn E404,->e,r{
+  fn 404,->e,r{
    id = e.uri     # response URI
     g = {id=>{}}  # response graph
     s = g[id]     # resource pointer
@@ -41,7 +39,7 @@ s[HTTP+'statusCodeValue'] = [404]
       puts c.join(' ') unless c[0] == 200 }
   end
 
-  F['/cache/GET'] = F[E404]
-  F['/index/GET'] = F[E404]
+  F['/cache/GET'] = F[404]
+  F['/index/GET'] = F[404]
 
 end

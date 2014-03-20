@@ -43,7 +43,7 @@ class R
     m = {} # init graph
     g = @r.q['graph'] # bespoke graph
     graph = (g && F['graph/' + g] || F['graph/'])[self,@r.q,m] # Model identity
-    return F[E404][self,@r] if m.empty?
+    return F[404][self,@r] if m.empty?
     @r['ETag'] = [@r.q['view'].do{|v|F['view/'+v] && v}, graph, @r.format].h # View identity
     condResponse @r.format, ->{
       m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # force resource-thunks

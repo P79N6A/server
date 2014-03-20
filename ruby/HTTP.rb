@@ -20,7 +20,7 @@ class R
     end
 
   rescue Exception => x
-    F['E500'][x,e]
+    F[500][x,e]
   end
 
 end

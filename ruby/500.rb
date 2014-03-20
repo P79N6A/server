@@ -1,6 +1,6 @@
 class R
 
-  fn 'E500',->x,e{ $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
+  fn 500,->x,e{ $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
           c: [{_: :head,c: [{_: :title, c: 500},(H.css '/css/500')]},
