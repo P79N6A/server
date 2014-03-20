@@ -41,7 +41,6 @@ class R
   def setFs p, o, undo = false, short = true
     p = predicatePath p, short # s+p URI
     t,literal = p.objectPath o # s+p+o URI
-    puts "#{undo ? :- : :+} <#{t}>"
     if o.class == R # resource
       if undo
         t.delete if t.e # undo
@@ -109,8 +108,6 @@ class R
   def mk
     e || FileUtils.mkdir_p(d)
     self
-  rescue Exception => e
-    puts e
   end
 
   def read p=false
@@ -119,8 +116,6 @@ class R
     else
       nil
     end
-  rescue Exception => e
-    puts e
   end
 
   def write o,s=false

@@ -91,7 +91,6 @@ class R
 
           if u
             if !u.match /^http/
-              puts "no HTTP URIs found #{u}"
               u = '/junk/'+u.gsub('/','.')
             end
             yield u, R::Type, (R::SIOCt+'BlogPost').R
@@ -109,8 +108,6 @@ class R
            e[3].extend(SniffContent).sniff.do{|o|# o
                 o.match(/\A(\/|http)[\S]+\Z/) ? o.R : R::F['cleanHTML'][o]
               }}
-          else
-            puts "no post-identifiers found #{u}"
           end
         }
 

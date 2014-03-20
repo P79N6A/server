@@ -8,10 +8,10 @@ class R
   fn 'set/grep',->e,q,m{
     q['q'].do{|query| m[e.uri+'#grep'] = {Type => R[Posix+'util#grep']}
       path = e.pathSegment
-      GREP_DIRS.find{|p|path.uri.match p}.do{|allow|
+      GREP_DIRS.find{|p|path.uri.match p}.do{|_|
         [e,path].compact.select(&:e).map{|e|
           `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpath}}.flatten
-      }||(puts "no grep available on #{path}")}}
+      }}}
 
   fn 'view/grep',->d,e{
     w = e.q['q']

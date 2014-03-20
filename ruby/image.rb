@@ -8,7 +8,6 @@ class R
 
   fn '/thumbnail/GET',->e,r{
     t = R['http://'+r['SERVER_NAME']+e.pathSegment.to_s.sub(/^.thumbnail/,'')]
-    puts "thumb #{t}"
     i = [t,t.pathSegment].compact.find(&:f)
     if i && i.size > 0
       stat = i.node.stat

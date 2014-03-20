@@ -2,7 +2,7 @@ watch __FILE__
 class R
 
   # default graph - identity + resource-pointers
-  fn 'graph/',->e,q,g{ puts "graph #{e}"
+  fn 'graph/',->e,q,g{
     g['#'] = {'uri' => '#'}
     set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
     if !set || set.empty?
@@ -10,7 +10,6 @@ class R
     else
       g['#'][Type] = R[HTTP+'Response']
       set.map{|u| g[u.uri] = u } # thunk
-      puts "set #{set.join ' '}"
     end
     F['docsID'][g,q]}
 
@@ -58,7 +57,6 @@ class R
 
   def docs
     base = docBase # path sans "extension"
-    puts "docs #{uri} -> #{base}"
     [(base if pathSegment!='/' && base.e),         # docbase
      (self if base != self && e && uri[-1]!='/'),  # unaltered path
      base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs through docbase

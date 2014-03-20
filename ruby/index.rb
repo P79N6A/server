@@ -11,16 +11,12 @@ class R
 
   # reachable graph along named predicate
   def walk p, g={}, v={}
-#    puts "walk #{uri}"
-    graph g       # cumulative graph
-    v[uri] = true # visited mark
-
+    graph g       # (accumulative) graph
+    v[uri] = true # visited-mark
     rel = g[uri].do{|s|s[p]} ||[]
     rev = (p.R.po self) ||[]
-
     rel.concat(rev).map{|r|
       v[r.uri] || (r.R.walk p,g,v)}
-
     g
   end
 
