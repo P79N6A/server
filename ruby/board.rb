@@ -8,6 +8,8 @@ class R
     e.q['view'] = 'board'
     nil}
 
+  F['/forum/GET'] = F['/board/GET']
+
   F['/board/POST'] = -> d,e{
     p = (Rack::Request.new d.env).params # parse input
     content = p['content']

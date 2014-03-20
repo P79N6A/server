@@ -1,20 +1,11 @@
-#watch __FILE__
+watch __FILE__
 class R
-=begin usage
-
-  messages matching an address
-  msgs = R['/m/semantic-web@w3.org'].take
-
-  mirror message-files backing a resource-set
-  src = R::DC+'source'
-  files = msgs.map{|g| '.' + g.graph.values.find{|r|r.has_key? src}[src].head.R.path}
-  `rsync -avRz #{files.join ' '} h:/www/`
-
-=end
 
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
   GREP_DIRS.push /^\/m\/[^\/]+\// # allow on a single address
 
+
+  # init a subtree range over posts at mail-address path
   F['/m/GET'] = -> e,r{ # address path
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set']  ||= 'depth'
@@ -24,6 +15,11 @@ class R
       false
     end}
 
+  # map message-id to storage path
+  F['/mid/GET'] = -> e,r{
+    R[MessagePath[e.base]].env(r).response}
+
+  # link a message to address paths
   IndexMail = ->doc, graph, host {
     graph.map{|u,r|
       a = [] # address references
