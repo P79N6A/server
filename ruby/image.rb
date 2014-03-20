@@ -3,40 +3,33 @@ class R
 
   def triplrImage &f
     yield uri,Type,R[DC+'Image']
-#    triplrStdOut 'exiftool', EXIF, &f
+#    triplrStdOut 'exiftool', EXIF, &f # slow but detailed
   end
 
-  fn 'req/scaleImage',->e,r{
-    i = [e,e.pathSegment].compact.find(&:f)
+  fn '/thumbnail/GET',->e,r{
+    t = R['http://'+r['SERVER_NAME']+e.pathSegment.to_s.sub(/^.thumbnail/,'')]
+    puts "thumb #{t}"
+    i = [t,t.pathSegment].compact.find(&:f)
     if i && i.size > 0
-      size = r.q['px'].to_i.min(8).max(4096)
       stat = i.node.stat
-      id = [stat.ino,stat.mtime,size].h.dive
+      id = [stat.ino,stat.mtime].h.dive
       path = R['/cache/thumbnail/'+id+'.png']
       if !path.e
         path.dirname.mk
         if i.mimeP.match(/^video/)
-          `ffmpegthumbnailer -s #{size} -i #{i.sh} -o #{path.sh}`
+          `ffmpegthumbnailer -s 256 -i #{i.sh} -o #{path.sh}`
         else
-          `gm convert #{i.sh} -thumbnail "#{size}x#{size}" #{path.sh}`
+          `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`
         end
       end
       path.e ? (path.env r).fileGET : F[E404][e,r]
     else
       F[E404][e,r]
     end}
-
-  fn 'view/img',->i,_{
-    [i.values.select{|v|v.class==Hash}.map{|i|
-       i[Type] && i[Type].justArray.map(&:maybeURI).include?(DC+'Image') &&
-       [{_: :a, href: i.url, c: {_: :img, style:'float:left;max-width:61.8%', src: i.url}},
-        i.html]},
-     (H.css '/css/img')]}
   
   fn 'view/th',->i,e{
     i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) &&
-      {_: :a, href: i.url+'?view=img',
-        c: {_: :img, src: i.url+'?y=scaleImage&px=233'}}}}
+      {_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.pathSegment}}}}
 
   F['view/'+MIMEtype+'image/gif'] = F['view/th']
   F['view/'+MIMEtype+'image/jpeg']= F['view/th']

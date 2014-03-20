@@ -3,7 +3,7 @@ class R
 
   fn 'view/dir',->i,e{
     a = -> i { i = i.R
-      {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: i.uri+'?y=scaleImage&px=233'} : i.uri.sub(/.*\//,'')}}
+      {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
 
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r|
