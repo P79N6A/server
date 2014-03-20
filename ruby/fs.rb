@@ -1,6 +1,9 @@
 #watch __FILE__
 class R
 
+  def triplrDoc &f; docBase.glob('#*').map{|s| s.triplrResource &f} end
+  def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
+
   def [] p; predicate p end
   def []= p,o
     if o

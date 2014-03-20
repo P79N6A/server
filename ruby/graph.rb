@@ -1,5 +1,33 @@
-#watch __FILE__
+watch __FILE__
 class R
+
+  # default graph - identity + resource-pointers
+  fn 'graph/',->e,q,g{ puts "graph #{e}"
+    g['#'] = {'uri' => '#'}
+    set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
+    if !set || set.empty?
+      g.delete '#' # unset response metadata for 404
+    else
+      g['#'][Type] = R[HTTP+'Response']
+      set.map{|u| g[u.uri] = u } # thunk
+      puts "set #{set.join ' '}"
+    end
+    F['docsID'][g,q]}
+
+  fn 'set/',->e,q,g{
+    s = []
+    s.concat e.docs
+    e.pathSegment.do{|p| s.concat p.docs }
+    e.env['REQUEST_PATH'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})(.*)/).do{|m| # path a day-dir?
+      t = ::Date.parse "#{m[2]}-#{m[3]}-#{m[4]}" # Date object
+      pp = m[1] + (t-1).strftime('%Y/%m/%d') + m[5] # prev day
+      np = m[1] + (t+1).strftime('%Y/%m/%d') + m[5] # next day
+      g['#'][Prev] = {'uri' => pp} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
+      g['#'][Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
+    s }
+
+  # fs-derived ID for a resource-set
+  fn 'docsID',->g,q{g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h }
 
   def fromStream m,*i
     send(*i) do |s,p,o|
@@ -9,34 +37,10 @@ class R
     end; m
   end
 
-  # default graph - identity + lazy-expandable resource-pointers
-  fn 'graph/',->e,q,g{
-     g['#'] = {'uri' => '#'}
-    set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    if !set || set.empty?
-      g.delete '#'
-    else
-      g['#'][Type] = R[HTTP+'Response']
-      set.map{|u| g[u.uri] = u } # thunk
-    end
-    F['docsID'][g,q]}
-
-  fn 'set/',->e,q,g{
-    s = []
-    s.concat e.docs
-    e.pathSegment.do{|p| s.concat p.docs }
-    # day-dir hinted pagination
-    e.env['REQUEST_PATH'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})(.*)/).do{|m|
-      u = g['#']
-      t = ::Date.parse "#{m[2]}-#{m[3]}-#{m[4]}"
-      pp = m[1] + (t-1).strftime('%Y/%m/%d') + m[5]
-      np = m[1] + (t+1).strftime('%Y/%m/%d') + m[5]
-      u[Prev] = {'uri' => pp} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
-      u[Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
-    s }
-
-  # fs-derived ID for a resource-set
-  fn 'docsID',->g,q{g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h }
+  def graph g={}
+    docs.map{|d|d.graphFromFile g}
+    g
+  end
 
   def graphFromFile g={}
     return unless e
@@ -52,24 +56,17 @@ class R
     g.mergeGraph doc.r true
   end
 
-  def jsonDoc; docBase.a '.e' end
-
-  def graph g={}
-    docs.map{|d|d.graphFromFile g}  # tripleStream -> graph
-    g
-  end
-
   def docs
-    base = docBase
-    [(base if pathSegment!='/' && base.e),         # doc-base
-     (self if base != self && e && uri[-1]!='/'),  # requested path
-     base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
+    base = docBase # path sans "extension"
+    puts "docs #{uri} -> #{base}"
+    [(base if pathSegment!='/' && base.e),         # docbase
+     (self if base != self && e && uri[-1]!='/'),  # unaltered path
+     base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs through docbase
      ((node.directory? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> children
     ].flatten.compact
   end
 
-# GET Resource -> local RDF cache
-
+  # GET Resource -> local RDF cache
   # JSON + Hash (.e)
   def addDocsJSON triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
@@ -90,7 +87,7 @@ class R
     graph.triples &b if b     # emit triples
     self
   end
-
+  # GET Resource -> local RDF cache
   # RDF::Repository (.n3)
   def addDocsRDF options = {}
     g = RDF::Repository.load self, options
@@ -106,8 +103,7 @@ class R
     g
   end
 
-  def triplrDoc &f; docBase.glob('#*').map{|s| s.triplrResource &f} end
-  def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
+  def jsonDoc; docBase.a '.e' end
 
   def triplrJSON
     yield uri, '/application/json', r(true) if e
