@@ -1,11 +1,11 @@
 watch __FILE__
 class R
 
-  MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
-  GREP_DIRS.push /^\/m\/[^\/]+\// # allow on a single address
+  # Message-ID -> storage path
+  MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id} # String
+  F['/mid/GET'] = -> e,r{R[MessagePath[e.base]].env(r).response} # HTTP
 
-
-  # init a subtree range over posts at mail-address path
+  # init a subtree range over posts at mailing-address path
   F['/m/GET'] = -> e,r{ # address path
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set']  ||= 'depth'
@@ -14,10 +14,8 @@ class R
     else
       false
     end}
-
-  # map message-id to storage path
-  F['/mid/GET'] = -> e,r{
-    R[MessagePath[e.base]].env(r).response}
+  # allow grep on address paths
+  GREP_DIRS.push /^\/m\/[^\/]+\//
 
   # link a message to address paths
   IndexMail = ->doc, graph, host {
