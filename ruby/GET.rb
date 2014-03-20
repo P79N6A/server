@@ -1,21 +1,14 @@
 class R
   
-  Apache = ENV['apache']
+  Apache = ENV['apache'] # apache=true in shell-environment
   Nginx  = ENV['nginx']
 
   def GET
-    if reqFn = @r.q['y'].do{|r| F['req/'+r] }
-      # bespoke handler
-      reqFn[self,@r]
-
-    elsif file = [self,pathSegment].compact.find(&:f)
-
-      # file exists. check if client or server want it transformed to another MIME
+    if file = [self,pathSegment].compact.find(&:f); # file exists, client or server might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
       (!accepted || MIMEcook[file.mimeP] || @r.q.has_key?('view')) ?
        resource : (file.env @r).fileGET
-
     else
       resource
     end
@@ -34,8 +27,8 @@ class R
     condResponse mimeP,->{self}
   end
 
-  def resource
-    # bubble up full-hostname then path tree until handled
+  def resource # handler search
+    # bubble up dir-tree at http://host/path first, then /path (matching all hosts)
     pathSegment.do{|path|
       lambdas = path.cascade.map{|p| p.uri.t + 'GET' }
       ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
@@ -47,18 +40,15 @@ class R
   end
 
   def response
-    m = {} # init Model
-    g = @r.q['graph']
-    graph = (g && F['graph/' + g] || F['graph/'])[self,@r.q,m] # Model identifier
-
+    m = {} # init graph
+    g = @r.q['graph'] # bespoke graph
+    graph = (g && F['graph/' + g] || F['graph/'])[self,@r.q,m] # Model identity
     return F[E404][self,@r] if m.empty?
-
-    @r['ETag'] = [@r.q['view'].do{|v|F['view/'+v] && v}, graph, @r.format].h # View identifier
-    
-    condResponse @r.format, ->{ # lazy response-finisher
-      m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # expand graph
-      m.delete_if{|u,r|r.class == R} # wipe unexpanded thunks
-      render @r.format, m, @r} # model -> view
+    @r['ETag'] = [@r.q['view'].do{|v|F['view/'+v] && v}, graph, @r.format].h # View identity
+    condResponse @r.format, ->{
+      m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # force resource-thunks
+      m.delete_if{|u,r|r.class == R} # cleanup unexpanded thunks
+      render @r.format, m, @r} # model -> view -> response
   end
   
   def condResponse format, body

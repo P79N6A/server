@@ -17,10 +17,7 @@ end
 
 class R
 
-  fn 'req/day',->e,r{
-    [303, {'Location'=> e.day.uri + r.q.except('y').qs}, []]}
-
-  def day; as Time.now.strftime '%Y/%m/%d/' end
+  fn '/today/GET',->e,r{[303, {'Location'=> Time.now.strftime('/%Y/%m/%d/?') + r['QUERY_STRING'] }, []]}
 
   fn 'view/timegraph',->g,e{
     i = F['itemview/timegraph']
