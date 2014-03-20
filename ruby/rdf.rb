@@ -7,7 +7,7 @@ class R
       if s && p && o
         s = RDF::URI s == '#' ? e['REQUEST_URI'] : s
         p = RDF::URI p
-        o = ([R,Hash].member?(o.class) ? (RDF::URI o) :
+        o = ([R,Hash].member?(o.class) ? (RDF::URI o.uri) :
              (l = RDF::Literal o
               l.datatype=RDF.XMLLiteral if p == Content
               l)) rescue nil
