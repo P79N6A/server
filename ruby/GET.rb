@@ -39,7 +39,6 @@ class R
   end
 
   def response
-    q = @r.q # querystring
     m = {'#' => {'uri' => '#',
                   Type => R[HTTP+'Response']}}
 
@@ -53,7 +52,7 @@ class R
                   @r.format].h                        # response MIME
 
     condResponse @r.format, ->{
-      set.map{|r|r.env(@r).toGraph m} # expand set
+      set.map{|r|r.env(@r).toGraph m} # expand graph
       render @r.format, m, @r} # model -> view -> response
   end
   

@@ -23,6 +23,8 @@ class R
     F[500][x,e]
   end
 
+  def q; @r.q end
+
 end
 
 module Th

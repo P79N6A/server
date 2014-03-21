@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
   
-  fn 'graph/thread',->d,e,g{
+  fn '/thread/GET',->e,r{
+    mid = e.base
+    puts mid.class,mid
     d.pathSegment.do{|p|p.walk SIOC+'reply_of',g }
     unless g.empty?
       thread = "#discussion"
@@ -12,7 +14,8 @@ class R
         RDFs + 'member' => g.keys.map(&:R)}
       g['#'] = {'uri' => '#', Type => [R[HTTP+'Response']]}
     end
-    F['docsID'][g,e]}
+    F['docsID'][g,e]
+  }
   
   fn 'view/threads',->d,env{
     posts = d.values.select{|r| # we want SIOC posts

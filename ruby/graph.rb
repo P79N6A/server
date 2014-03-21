@@ -13,9 +13,6 @@ class R
       g['#'][Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
     s }
 
-  # fs-derived ID for a resource-set
-  fn 'docsID',->g,q{g.h }
-
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -44,12 +41,10 @@ class R
   end
 
   def docs
-    docs = [(self if e),
+    [(self if e),
      docBase.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"),
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
-    puts docs
-    docs
   end
 
   # GET Resource -> local RDF cache
