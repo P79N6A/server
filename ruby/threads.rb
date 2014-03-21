@@ -3,19 +3,15 @@ watch __FILE__
 class R
   
   fn '/thread/GET',->e,r{
-    mid = e.base
-    puts mid.class,mid
-    d.pathSegment.do{|p|p.walk SIOC+'reply_of',g }
-    unless g.empty?
-      thread = "#discussion"
-      e['view'] ||= "timegraph"
-      g[thread] = {'uri' => thread,
-        Type => R[SIOC+'Thread'],
-        RDFs + 'member' => g.keys.map(&:R)}
-      g['#'] = {'uri' => '#', Type => [R[HTTP+'Response']]}
-    end
-    F['docsID'][g,e]
-  }
+    r.q['view'] ||= "timegraph"
+    m = {'#' => {'uri' => '#', Type => [R[HTTP+'Response']]}}
+
+    R[MessagePath[e.base]].walk SIOC+'reply_of', m
+    return F[404][e,r] if m.keys.size <= 1
+
+    m["#discussion"] = {'uri' => "#discussion", Type => R[SIOC+'Thread'], RDFs+'member' => m.keys.map(&:R)}
+    r['ETag'] = [r.q['view'].do{|v|F['view/'+v] && v}, m.keys.sort, r.format].h
+    e.condResponse r.format, ->{e.render r.format, m, r}}
   
   fn 'view/threads',->d,env{
     posts = d.values.select{|r| # we want SIOC posts
@@ -31,12 +27,12 @@ class R
      map{|group,threads| c = R.cs
        ['<tr><td class=subject>',
         threads.map{|title,msgs| # thread
-          [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: msgs[0].url+'?graph=thread',
+          [{_: :a, property: Title, :class => 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.base,
              c: title.to_s.gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')},
 
            (msgs.size > 1 && # more than one author
             ['<br>', msgs.map{|s| # show authors
-                {_: :a, property: Creator, href: s.url+'?graph=thread#'+s.uri, :class => 'sender', style: 'background-color:'+c,
+                {_: :a, property: Creator, href: '/thread/'+s.R.base+'#'+s.uri, :class => 'sender', style: 'background-color:'+c,
                  c: s[Creator].do{|c|c[0].uri.split('#')[1].split('@')[0]}}}]),'<br clear=all>']},'</td>',
 
         ({_: :td, class: :group, property: To,
