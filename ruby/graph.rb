@@ -55,12 +55,11 @@ class R
     g.mergeGraph doc.r true
   end
 
-  def docs
-    base = docBase # path sans "extension"
-    [(base if pathSegment!='/' && base.e),         # docbase
-     (self if base != self && e && uri[-1]!='/'),  # unaltered path
-     base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs through docbase
-     ((node.directory? && uri[-1]=='/' && uri.size>1) ? c : []) # trailing slash -> children
+  def docs # fs resources
+    base = docBase # full-path sans extension
+    [(base if base.e),(self if base != self && e),
+     base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
+     ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
   end
 

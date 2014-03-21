@@ -69,7 +69,10 @@ class R
   def triplrInode
     if node.directory?
       yield uri, Posix+'dir#parent', parent
-      c.map{|c| yield uri, Posix + 'dir#child', R[c.uri.gsub('?','%3F').gsub('#','23')]}
+      yield uri, Type, R[LDP+'Container']
+      yield uri, Type, R[Stat+'Directory']
+      c.map{|c|
+        yield uri, LDP+'contains', R[c.uri.gsub('?','%3F').gsub('#','23')]}
     end
     node.stat.do{|s|[:size,:ftype,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}}
   end

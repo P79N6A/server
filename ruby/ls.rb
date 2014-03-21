@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  fn 'view/dir',->i,e{
+  fn 'view/'+Stat+'Directory',->i,e{
     a = -> i { i = i.R
       {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
 
@@ -11,9 +11,7 @@ class R
        {class: :dir, style: "background-color: #{R.cs}",    # dir wrapper
          c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
                   {_: :a, href: url.t, c: '/'}]},
-             r[Posix+'dir#child'].do{|c|c.map{|c|a[c]}}]}}]}
-
-  F['view/'+MIMEtype+'inode/directory'] = F['view/dir']
+             r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
 
   fn 'view/ls',->i,e{
     dir = e['uri'].R
@@ -22,7 +20,7 @@ class R
     i = i.dup
     i.delete_if{|u,r|!r[Stat+'ftype']}
     f = {}
-    ['uri', Posix+'dir#child', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
+    ['uri', LDP+'contains', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
     i.values.map{|r|
       r.class==Hash &&
       r.delete_if{|p,o|!f[p]}}
