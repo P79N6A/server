@@ -67,7 +67,7 @@ class R
       yield e, Title, s}
 
     yield e, SIOC+'has_discussion',                  # thread
-    R['/thread/'+id+'#discussion'] if m.in_reply_to || m.references
+    R['/thread/'+id+'#'+e] if m.in_reply_to || m.references
 
     %w{to cc bcc}.map{|to|                           # reciever fields
       m.send(to).do{|to|                             # has field?
