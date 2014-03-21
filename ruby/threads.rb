@@ -2,15 +2,17 @@
 watch __FILE__
 class R
   
-  fn '/thread/GET',->e,r{
-    r.q['view'] ||= "timegraph"
-    m = {'#' => {'uri' => '#', Type => [R[HTTP+'Response']]}}
+  fn '/thread/GET',-> e, r {
+    m = {}
+    R[MessagePath[e.docBase.basename]].walk SIOC+'reply_of', m
+    return F[404][e,r] if m.empty?
 
-    R[MessagePath[e.base]].walk SIOC+'reply_of', m
-    return F[404][e,r] if m.keys.size <= 1
+    m.merge!({'#' => {'uri' => '#', Type => R[HTTP+'Response']}})
 
-    m["#discussion"] = {'uri' => "#discussion", Type => R[SIOC+'Thread'], RDFs+'member' => m.keys.map(&:R)}
-    r['ETag'] = [r.q['view'].do{|v|F['view/'+v] && v}, m.keys.sort, r.format].h
+    v = r.q['view'] ||= "timegraph"
+
+    r['ETag'] = [(F['view/'+v] && v), m.keys.sort, r.format].h
+
     e.condResponse r.format, ->{e.render r.format, m, r}}
   
   fn 'view/threads',->d,env{
