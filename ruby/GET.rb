@@ -39,14 +39,21 @@ class R
   end
 
   def response
-    m = {} # init graph
-    g = @r.q['graph'] # bespoke graph
-    graph = (g && F['graph/' + g] || F['graph/'])[self,@r.q,m] # Model identity
-    return F[404][self,@r] if m.empty?
-    @r['ETag'] = [@r.q['view'].do{|v|F['view/'+v] && v}, graph, @r.format].h # View identity
+    q = @r.q # querystring
+    m = {'#' => {'uri' => '#',
+                  Type => R[HTTP+'Response']}}
+
+    set = (q['set'].do{|s| F['set/'+s]} ||
+                           F['set'])[self,q,m]
+
+    return F[404][self,@r] if !set || set.empty?
+    # response identity
+    @r['ETag'] = [q['view'].do{|v|F['view/'+v] && v}, # view
+                  set.sort.map{|r|[r, r.m]},          # resource version(s)
+                  @r.format].h                        # response MIME
+
     condResponse @r.format, ->{
-      m.values.map{|r|(r.env env).graphFromFile m if r.class == R } # force resource-thunks
-      m.delete_if{|u,r|r.class == R} # cleanup unexpanded thunks
+      set.map{|r|r.env(@r).toGraph m} # expand set
       render @r.format, m, @r} # model -> view -> response
   end
   

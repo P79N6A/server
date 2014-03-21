@@ -1,19 +1,7 @@
 watch __FILE__
 class R
 
-  # default graph - identity + resource-pointers
-  fn 'graph/',->e,q,g{
-    g['#'] = {'uri' => '#'}
-    set = (q['set'] && F['set/'+q['set']] || F['set/'])[e,q,g]
-    if !set || set.empty?
-      g.delete '#' # unset response metadata for 404
-    else
-      g['#'][Type] = R[HTTP+'Response']
-      set.map{|u| g[u.uri] = u } # thunk
-    end
-    F['docsID'][g,q]}
-
-  fn 'set/',->e,q,g{
+  fn 'set',->e,q,g{
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs }
@@ -26,7 +14,7 @@ class R
     s }
 
   # fs-derived ID for a resource-set
-  fn 'docsID',->g,q{g.sort.map{|u,r|[u, r.respond_to?(:m) && r.m]}.h }
+  fn 'docsID',->g,q{g.h }
 
   def fromStream m,*i
     send(*i) do |s,p,o|
@@ -37,11 +25,11 @@ class R
   end
 
   def graph g={}
-    docs.map{|d|d.graphFromFile g}
+    docs.map{|d|d.toGraph g}
     g
   end
 
-  def graphFromFile g={}
+  def toGraph g={}
     return unless e
     doc = self
     unless ext=='e' # already native-format
