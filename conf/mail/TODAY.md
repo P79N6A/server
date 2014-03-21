@@ -1,2 +1,2 @@
-[today](/?y=day&view=threads)
+[today](/today?view=threads)
 ==============

@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.description = "linked-data oriented webserver"
   s.summary = s.description
   s.executables = %w(R ww)
-  s.files = Dir.glob('rrww/*')
+  s.files = Dir.glob('ww/*') # ln -s . ww in ruby (or use desired name)
   s.licenses = ["Unlicense"]
   s.require_path = "."
   %w{rack thin nokogiri linkeddata}.map{|d| s.add_dependency d }

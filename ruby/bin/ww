@@ -17,7 +17,7 @@ unless ARGV[-1].match /(start|stop|restart|config|install)/
   ARGV.push 'start'
 end
 
-%w{rrww/HTTP thin}.map{|l| require l}
+%w{ww/HTTP thin}.map{|l| require l}
 
 module Rack
   module Adapter
