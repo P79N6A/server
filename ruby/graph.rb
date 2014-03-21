@@ -56,11 +56,14 @@ class R
   end
 
   def docs # fs resources
+    puts "resources of #{uri}"
     base = docBase # full-path sans extension
-    [(base if base.e),(self if base != self && e),
+    docs = [(base if base.e),(self if base != self && e),
      base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
+    puts docs
+    docs
   end
 
   # GET Resource -> local RDF cache

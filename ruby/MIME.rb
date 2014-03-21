@@ -132,6 +132,7 @@ class R
 
   # prefer a view even if requested file exists
   MIMEcook={
+    'application/json+rdf' => true,
     'application/markdown' => true,
     'application/org' => true,
     'application/postscript' => true,
