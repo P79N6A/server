@@ -14,7 +14,7 @@ pre.mail a[rel=untyped] {
 tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val {font-size:.73em}
 tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {background-color:#000;color:#fff;border-width:0}
 
-tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
+tr[property="http://www.w3.org/2000/01/rdf-schema#label"],tr[property="http://purl.org/dc/terms/identifier"] {display:none}
 
 pre.mail .q {background-color:#00f;color:#fff;display:block}
 pre.mail .q[depth="1"] {background-color:#03f;color:#fff}

@@ -62,7 +62,7 @@ class R
      base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
-    puts docs
+#    puts docs
     docs
   end
 
