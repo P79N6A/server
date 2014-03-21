@@ -111,6 +111,9 @@ class R
   def mk
     e || FileUtils.mkdir_p(d)
     self
+  rescue Exception => x
+    puts x
+    self
   end
 
   def read p=false

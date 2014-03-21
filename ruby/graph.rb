@@ -43,14 +43,12 @@ class R
     g.mergeGraph doc.r true
   end
 
-  def docs # fs resources
-    puts "resources of #{uri}"
-    base = docBase # full-path sans extension
-    docs = [(base if base.e),(self if base != self && e),
-     base.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"), # docs
+  def docs
+    docs = [(self if e),
+     docBase.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"),
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
-#    puts docs
+    puts docs
     docs
   end
 
