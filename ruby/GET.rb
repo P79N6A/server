@@ -4,10 +4,10 @@ class R
   Nginx  = ENV['nginx']
 
   def GET
-    if file = [self,pathSegment].compact.find(&:f); # file exists, client or server might want another MIME
+    if file = [self,pathSegment].compact.find(&:f) # file exists, client or server might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      (!accepted || MIMEcook[file.mimeP] || @r.q.has_key?('view')) ?
+      (!accepted || MIMEcook[file.mimeP]) ?
        resource : (file.env @r).fileGET
     else
       resource
@@ -28,8 +28,7 @@ class R
   end
 
   def resource # handler search
-    # bubble up dir-tree at http://host/path first, then /path (matching all hosts)
-    pathSegment.do{|path|
+    pathSegment.do{|path| # bubble up tree at http://host/path first, then /path (matching all hosts)
       lambdas = path.cascade.map{|p| p.uri.t + 'GET' }
       ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
           F[h + p].do{|fn| fn[self,@r].do{|r|
