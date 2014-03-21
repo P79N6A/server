@@ -6,14 +6,15 @@ class R
   F['/mid/GET'] = -> e,r{R[MessagePath[e.base]].env(r).response} # HTTP
 
   # init a subtree range over posts at mailing-address path
-  F['/m/GET'] = -> e,r{ # address path
+  F['/m/GET'] = -> e,r{
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set']  ||= 'depth'
       r.q['view'] ||= 'threads'
-      e.response
+      e.docBase.response
     else
       false
     end}
+
   # allow grep on address paths
   GREP_DIRS.push /^\/m\/[^\/]+\//
 

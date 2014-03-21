@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 watch __FILE__
 class R
-  
+
   fn '/thread/GET',-> e, r {
     m = {}
     R[MessagePath[e.docBase.basename]].walk SIOC+'reply_of', m
     return F[404][e,r] if m.empty?
 
-    m.merge!({'#' => {'uri' => '#', Type => R[HTTP+'Response']}})
-
     v = r.q['view'] ||= "timegraph"
-
     r['ETag'] = [(F['view/'+v] && v), m.keys.sort, r.format].h
 
     e.condResponse r.format, ->{e.render r.format, m, r}}
