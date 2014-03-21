@@ -13,8 +13,7 @@ class R
     e.condResponse r.format, ->{e.render r.format, m, r}}
   
   fn 'view/threads',->d,env{
-    posts = d.values.select{|r| # we want SIOC posts
-      r[Type].do{|t| [*t].map(&:maybeURI).member? SIOC+'Post'}}
+    posts = d.resourcesOfType SIOC+'Post'
     threads = posts.group_by{|r| # group by Title
        [*r[Title]][0].do{|t|t.sub(/^[rR][eE][^A-Za-z]./,'')}}
 
