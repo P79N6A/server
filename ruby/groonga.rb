@@ -42,10 +42,12 @@ class R
       (begin require 'groonga'
          R['/cache/groonga'].groonga
          Groonga["R"]
-       rescue LoadError => e; end)
+       rescue LoadError => e
+         puts e
+       end)
   end
 
-  # init groongaDB
+  # groonga DB at URI
   def groonga
     return Groonga::Database.open d if e # open db
     dirname.mk                           # create containing dir
