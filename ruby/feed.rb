@@ -2,13 +2,15 @@
 class R
 
   F['/news/GET'] = -> d,e {
-    if %w{/news /news/ /news/index.n3}.member? d.pathSegment
+    if %w{/news /news/ /news/index.n3 /news.n3}.member? d.pathSegment
       e.q['set'] ||= 'depth' # post-range in date-order
       e.q['local'] ||= true  # hostname-specific
       e.q['c'] ||= 32        # page size
-      e.q.delete 'view' if e.q['view'] == 'ls'
-    end
-    false}
+      e.q.delete 'view' if e.q['view'] == 'ls' # may have navigated here from fs view
+      R['http://'+e['SERVER_NAME']+'/news'].env(e).response # continue
+    end}
+
+  F['/news.n3/GET'] = F['/news/GET']
 
   def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h end
   def getFeeds h='localhost'; uris.tail.map{|u| u.getFeed h} end
