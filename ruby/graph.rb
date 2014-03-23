@@ -4,7 +4,7 @@ class R
   fn 'fileset',->e,q,g{
     s = []
     s.concat e.docs
-    e.pathSegment.do{|p| s.concat p.docs }
+    e.pathSegment.do{|p| s.concat p.docs unless p.uri == '/'}
     e.env['REQUEST_PATH'].match(/(.*?\/)([0-9]{4})\/([0-9]{2})\/([0-9]{2})(.*)/).do{|m| # path a day-dir?
       t = ::Date.parse "#{m[2]}-#{m[3]}-#{m[4]}" # Date object
       pp = m[1] + (t-1).strftime('%Y/%m/%d') + m[5] # prev day
