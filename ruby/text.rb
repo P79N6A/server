@@ -47,6 +47,10 @@ class R
     graph.keys.select{|u|u.match /^http/}.map &:R
   end
 
+  def triplrHTMLpiece
+    yield uri,Content,r
+  end
+
   def triplrMarkdown
     require 'markdown'
     yield uri,Content,Markdown.new(r).to_html
