@@ -55,7 +55,7 @@ class R
             fileset.concat resource.docs}}}} # add to set
 
     return F[404][self,@r] if fileset.empty?
-    puts "set #{fileset.join ' '}"
+
     # response identity
     @r['ETag'] = [q['view'].do{|v|F['view/'+v] && v}, # view
                   fileset.sort.map{|r|[r, r.m]},      # resource version(s)

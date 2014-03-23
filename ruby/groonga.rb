@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 =begin ruby full-text search & column-store http://groonga.org/
       gem install rroonga
@@ -7,7 +7,10 @@ class R
 
   F['/search/GET'] = -> d,e {
     e.q['set'] = 'groonga'
+    e.q.delete 'view' if e.q['view'] == 'ls'
     nil}
+
+  F['/search.n3/GET'] = F['/search/GET']
 
   fn 'view/'+Search+'Groonga',-> d,e {
     {_: :form, action: '/search',
