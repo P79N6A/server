@@ -42,7 +42,7 @@ class R
 
   def docs
     [(self if e),
-     docBase.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"),
+     stripDoc.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"),
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
   end
@@ -62,7 +62,7 @@ class R
          r[p].do{|v|v.map{|o| # values exist?
              e.index p,o}}})} # index triple
     docs.map{|d,g|            # resources in docs
-      d = d.R; puts "<#{d.docBase}>"
+      d = d.R; puts "<#{d.stripDoc}>"
       d.w g,true              # write
       hook[d,g,host] if hook} # insert-hook
     graph.triples &b if b     # emit triples
@@ -77,14 +77,14 @@ class R
         doc = graph.name.n3
         unless doc.e
           doc.dirname.mk
-          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docBase}> #{graph.count} triples"
+          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.stripDoc}> #{graph.count} triples"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
     g
   end
 
-  def jsonDoc; docBase.a '.e' end
+  def jsonDoc; stripDoc.a '.e' end
 
   def triplrJSON
     yield uri, '/application/json', r(true) if e

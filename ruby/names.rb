@@ -56,7 +56,6 @@ class R
   def container; @u ||= R[f ? dirname + '/.' + (File.basename path) : path] end
   def d;        node.to_s end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
-  def docBase;  uri.split(/#/)[0].do{|u|R[u.sub(/\.(e|html|n3|nt|owl|rdf|ttl|txt)$/,"").sub(/\/$/,"")]} end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
   def glob p=""; (Pathname.glob d + p).map &:R end
@@ -69,6 +68,7 @@ class R
   def realpath; node.realpath rescue Errno::ENOENT end
   def shorten;  uri.shorten.R end
   def size;     node.size end
+  def stripDoc; uri.split(/#/)[0].do{|u|R[u.sub(/\.(e|html|n3|nt|owl|rdf|ttl|txt)$/,"").sub(/\/$/,"")]} end
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
   def sh;       d.force_encoding('UTF-8').sh end

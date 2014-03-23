@@ -10,7 +10,7 @@ class R
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set']  ||= 'depth'
       r.q['view'] ||= 'threads'
-      e.docBase.env(r).response
+      e.stripDoc.env(r).response
     else
       false
     end}

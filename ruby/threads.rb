@@ -4,7 +4,7 @@ class R
 
   fn '/thread/GET',-> e, r {
     m = {}
-    R[MessagePath[e.docBase.basename]].walk SIOC+'reply_of', m
+    R[MessagePath[e.stripDoc.basename]].walk SIOC+'reply_of', m
     return F[404][e,r] if m.empty?
 
     v = r.q['view'] ||= "timegraph"

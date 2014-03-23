@@ -46,7 +46,7 @@ jQuery(document).ready(function() {
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  def n3; docBase.a '.n3' end
+  def n3; stripDoc.a '.n3' end
 
   F['view/'+MIMEtype+'text/n3'] = NullView
 
