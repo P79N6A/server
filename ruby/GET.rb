@@ -28,10 +28,12 @@ class R
   end
 
   def resource # handler search
-    pathSegment.do{|path| # bubble up tree at http://host/path first, then /path (matching all hosts)
-      lambdas = path.cascade.map{|p| p.uri.t + 'GET' }
-      ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
-          F[h + p].do{|fn| fn[self,@r].do{|r|
+    pathSegment.do{|path|
+      paths = path.cascade.map{|p| p.uri.t + 'GET' }
+      ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path first, then /path (mounted on all hosts)
+        paths.map{|p| # bubble up path-tree
+          F[h + p].do{|fn| # function found
+            fn[self,@r].do{|r| # inspect resource-response for logging
               $stdout.puts [r[0],'http://'+@r['SERVER_NAME']+@r['REQUEST_URI'],@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
               return r
             }}}}}
@@ -39,20 +41,28 @@ class R
   end
 
   def response
-    m = {'#' => {'uri' => '#',
-                  Type => R[HTTP+'Response']}}
+    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # model w/ request-resource
 
-    set = (q['set'].do{|s| F['set/'+s]} ||
-                           F['set'])[self,q,m]
+    fileset = [] # empty set
+    fileFn = q['set'].do{|s| F['fileset/'+s]} || F['fileset']
+    fileFn[self,q,m].do{|files| # find files
+      fileset.concat files } # add to set
 
-    return F[404][self,@r] if !set || set.empty?
+    q['set'].do{|set| # resource-set
+      F['set/' + set].do{|setFn| # function found
+        setFn[self,q,m].do{|resources| # resources found
+          resources.map{|resource| # map to docs
+            fileset.concat resource.docs}}}} # add to set
+
+    return F[404][self,@r] if fileset.empty?
+    puts "set #{fileset.join ' '}"
     # response identity
     @r['ETag'] = [q['view'].do{|v|F['view/'+v] && v}, # view
-                  set.sort.map{|r|[r, r.m]},          # resource version(s)
+                  fileset.sort.map{|r|[r, r.m]},      # resource version(s)
                   @r.format].h                        # response MIME
 
     condResponse @r.format, ->{
-      set.map{|r|r.env(@r).toGraph m} # expand graph
+      fileset.map{|r|r.env(@r).toGraph m} # expand graph
       render @r.format, m, @r} # model -> view -> response
   end
   

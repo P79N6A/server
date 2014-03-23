@@ -20,7 +20,7 @@ class R
     g
   end
 
-  fn 'set/depth',->d,r,m{ # depth-first
+  fn 'fileset/depth',->d,r,m{ # depth-first
     global = !r.has_key?('local')
     p = global ? d.pathSegment : d
     loc = global ? '' : '&local'

@@ -5,7 +5,7 @@ class R
 
   GREP_DIRS=[]
 
-  fn 'set/grep',->e,q,m{
+  fn 'fileset/grep',->e,q,m{
     q['q'].do{|query| m[e.uri+'#grep'] = {Type => R[Posix+'util#grep']}
       path = e.pathSegment
       GREP_DIRS.find{|p|path.uri.match p}.do{|_|

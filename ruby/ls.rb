@@ -29,7 +29,7 @@ class R
      {class: :ls, c: F['view/table'][i,e]},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
 
-  fn 'set/find',->e,q,m,x=''{
+  fn 'fileset/find',->e,q,m,x=''{
     q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
@@ -38,7 +38,7 @@ class R
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
         lines.map{|l|l.chomp.unpath}}.compact.flatten}}
 
-  fn 'set/glob',->d,e=nil,_=nil{
+  fn 'fileset/glob',->d,e=nil,_=nil{
     p = [d,d.pathSegment].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
 
