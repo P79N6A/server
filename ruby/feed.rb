@@ -1,6 +1,15 @@
 #watch __FILE__
 class R
 
+  F['/news/GET'] = -> d,e {
+    if d.pathSegment == '/news'
+      e.q['set'] ||= 'depth' # post-range in date-order
+      e.q['local'] ||= true  # hostname-specific
+      e.q['c'] ||= 32      # page size
+    end
+    false}
+  
+
   def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h end
   def getFeeds h='localhost'; uris.tail.map{|u| u.getFeed h} end
 
@@ -156,7 +165,6 @@ class R
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
 
   FeedArchiverJSON = -> doc, graph, host {
-    doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t| # link doc to date-index
         t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
@@ -165,7 +173,6 @@ class R
     doc}
 
   FeedArchiverRDF = -> doc, graph, host {
-    doc.roonga host
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones
       base = (graph.name.to_s.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
