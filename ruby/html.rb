@@ -153,7 +153,7 @@ class R
       [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;',style: 'color:#fff;background-color:#000;font-size:2.4em;float:left;clear:both'}},
        u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;',style: 'color:#000;background-color:#fff;font-size:2.4em;float:right;clear:both;'}},
        {_: :a, rel: :nofollow, href: e['REQUEST_PATH'].do{|u| # linked-data entrypoint
-           u[-1]=='/' ? u+'index.n3' : u.R.n3} + (e['QUERY_STRING'].do{|qs|'?'+qs} || '') ,
+           u[-1]=='/' ? u+'index.n3' : u.R.n3} + e['QUERY_STRING'].do{|qs|qs.empty? ? '' : '?' + qs},
          c: {_: :img, src: '/css/misc/cube.png', style: 'height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}},
        (H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))]}} # (n)ext (p)rev key binding JS
 
