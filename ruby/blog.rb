@@ -8,7 +8,7 @@ class R
     e.q['c'] ||= 8       # page size
     R['http://'+e['SERVER_NAME']+'/blog'].env(e).response}
 
-  # post name <input>
+  # prompt for title
   F['/blog/post/GET'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
      [H(['title',
@@ -17,7 +17,7 @@ class R
                {_: :input, type: :submit, value: ' go '}
               ]}])]]}
 
-  # mint URI of date and name, insert title+type and forward to default editor
+  # mint URI (date and name), insert title+type to db, forward to default editor
   F['/blog/post/POST'] = -> d,e {
     host = 'http://' + e['SERVER_NAME']
     title = (Rack::Request.new d.env).params['title'] # decode POST-ed title

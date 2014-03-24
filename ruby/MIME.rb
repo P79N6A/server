@@ -142,6 +142,7 @@ class R
     'application/uri' => true,
     'inode/symlink' => true,
     'message/rfc822'=> true,
+    'text/html-part'=>true,
     'text/log'=>true,
     'text/man'=>true,
     'text/nfo'=>true,

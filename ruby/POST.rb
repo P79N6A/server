@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def POST
@@ -27,7 +27,6 @@ class R
     changed = false
     params = (Rack::Request.new @r).params
     params.map{|k,v|
-
       # original triple in this field
       s, p, o = JSON.parse CGI.unescape k rescue JSON::ParserError
 

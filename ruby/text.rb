@@ -47,9 +47,9 @@ class R
     graph.keys.select{|u|u.match /^http/}.map &:R
   end
 
-  def triplrHTMLpiece
-    yield uri,Content,r
-  end
+  def triplrHTMLpiece; yield uri,Content,r end
+
+  F['view/'+MIMEtype+'text/html-part']=->g,e{g.map{|u,r|r[Content]}}
 
   def triplrMarkdown
     require 'markdown'
