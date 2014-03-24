@@ -6,7 +6,7 @@ class R
     e.q['set'] = 'depth' # post-range in date-order
     e.q['local'] = true  # hostname-specific
     e.q['c'] ||= 8       # page size
-    R['http://'+e['SERVER_NAME']+'/time'].env(e).response}
+    R['http://'+e['SERVER_NAME']+'/blog'].env(e).response}
 
   # post name <input>
   F['/blog/post/GET'] = -> d,e {
@@ -26,7 +26,7 @@ class R
     post[Type] = R[SIOCt+'BlogPost'] # add SIOC post-type
     post[Title] = title              # add Title
     post.snapshot
-    base.jsonDoc.ln_s R[host + '/time/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
+    base.jsonDoc.ln_s R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
     [303,{'Location' => (base+"?prototype=sioct:BlogPost&view=edit&mono").uri},[]]}
 
   # view
