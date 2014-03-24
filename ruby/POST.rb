@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -27,19 +27,22 @@ class R
     changed = false
     params = (Rack::Request.new @r).params
     params.map{|k,v|
-      s, p, tripleX = JSON.parse CGI.unescape k rescue JSON::ParserError
+
+      # original triple in this field
+      s, p, o = JSON.parse CGI.unescape k rescue JSON::ParserError
+
       if s # parse successful?
         s = s.R # subject URI
-        pp = s.predicatePath p # s+p path
-        o = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : F['cleanHTML'][v] # HTML cleanup
-        tripleY = pp.objectPath(o)[0]   # editable triple
-        if tripleX.to_s != tripleY.to_s # changed?
-          tripleX && tripleX.R.do{|t| t.delete if t.e } # remove triple
-          s[p] = o unless o.class==String && o.empty?   # add triple
+        pp = s.predicatePath p # subject+predicate URI
+        object = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : F['cleanHTML'][v] # object Literal | URI
+        o_ = pp.objectPath(object)[0]
+        if o.to_s != o_.to_s # changed?
+          o && o.R.do{|t| t.delete if t.e } # -triple
+          s[p] = object unless object.class==String && object.empty? # +triple
           changed = true
         end
       end}
-    snapshot if changed # update collated doc
+    snapshot if changed # new doc
     [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
   end
 

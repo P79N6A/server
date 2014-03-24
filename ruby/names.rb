@@ -95,11 +95,11 @@ class R
   end
 
   def objectPath o
-    p,v=(if o.class == R
-           [o.path, nil]
-         else
-           literal o
-         end)
+    p,v = (if o.respond_to? :uri
+             [R[o.uri].path, nil]
+           else
+             literal o
+           end)
     [(a p), v]
   end
 

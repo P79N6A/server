@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   Prototypes = {
@@ -11,8 +11,8 @@ class R
 
     # lambda to render a triple
     triple = ->s,p,o{
-      spo = o && s.R.predicatePath(p).objectPath(o)[0].uri
-      t = CGI.escape [s,p,spo].to_json
+      obj = o && s.R.predicatePath(p).objectPath(o)[0].uri # identifiers of current state
+      t = CGI.escape [s,p,obj].to_json # squash to key
       [(case p.R.uri
         when Content
           [{_: :textarea, name: t, c: o, rows: 16, cols: 80},
