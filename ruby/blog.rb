@@ -29,4 +29,10 @@ class R
     base.jsonDoc.ln_s R[host + '/time/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
     [303,{'Location' => (base+"?prototype=sioct:BlogPost&view=edit&mono").uri},[]]}
 
+  # view
+  F['view/'+SIOCt+'BlogPost']=->g,e{
+    g.map{|u,r|
+      [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
+       r[Content]]}}
+
 end
