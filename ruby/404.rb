@@ -25,10 +25,6 @@ s[HTTP+'statusCodeValue'] = [404]
     [H.css('/css/404'),{_: :style, c: "a {background-color:#{R.cs}}"},
      d.html]}
 
-  fn 'graph/blank',->d,_,m{ # 404 is determined by #empty?
-    m[d.uri] = {} # insert a resource
-    rand.to_s.h}
-
   def checkURIs
     r = uris.map{|u|
       c = [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u] # HEAD

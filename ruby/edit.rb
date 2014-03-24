@@ -7,25 +7,13 @@ class R
     SIOCt+'WikiArticle' => [Title, Content],
   }
 
-  # 404 -> create resource
-  F['graph/create'] = -> e,env,g {
-    env['view'] = 'create'
-    F['graph/blank'][e,env,g]}
-
   # prototype select
   fn 'view/create',->g,e{
     [{_: :style, c: 'a {display:block;font-size:2em}'},{_: :b, c: :type},
      Prototypes.map{|t,ps|
        {_: :a, href:  e['REQUEST_PATH']+'?graph=edit&prototype='+(URI.escape t.shorten), c: t.abbrURI}}]}
 
-  # editable triples
-  F['graph/edit'] = -> e,env,g {
-    env['view'] ||= 'edit'          # use edit-view
-    g[e.uri+'#'] = {}               # add current resource
-    e.fromStream g, :triplrDoc
-    rand.to_s.h}
-
-=begin HTML <form> triple-editor
+=begin <form> triple-editor
   @prototype bundle of fields for a type
   @predicate add field for a particular predicate
 =end
