@@ -25,7 +25,8 @@ class R
     post = base.a '#'                # resource URI
     post[Type] = R[SIOCt+'BlogPost'] # add SIOC post-type
     post[Title] = title              # add Title
+    post.snapshot
     base.jsonDoc.ln_s R[host + '/time/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
-    [303,{'Location' => (base+"?prototype=sioct:BlogPost&graph=edit&mono").uri},[]]}
+    [303,{'Location' => (base+"?prototype=sioct:BlogPost&view=edit&mono").uri},[]]}
 
 end

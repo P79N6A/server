@@ -13,6 +13,16 @@ class R
     end
   end
 
+  def snapshot
+    g = {} # graph
+    fromStream g, :triplrDoc
+    if g.empty? # 0 triples
+      jsonDoc.delete
+    else # graph -> doc
+      jsonDoc.w g, true
+    end
+  end
+
   def formPOST
     changed = false
     params = (Rack::Request.new @r).params
@@ -29,15 +39,7 @@ class R
           changed = true
         end
       end}
-    if changed # update doc
-      g = {} # triples -> graph
-      fromStream g, :triplrDoc
-      if g.empty? # 0 triples
-        jsonDoc.delete
-      else # graph -> doc #TODO mint URI for version and symlink current
-        jsonDoc.w g, true
-      end
-    end
+    snapshot if changed # update doc
     [303,{'Location'=>uri+'?graph=edit'+(params['mono'] ? '&mono' : '')},[]]
   end
 
