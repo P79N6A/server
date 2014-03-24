@@ -1,13 +1,7 @@
-body {
-    font-family: sans-serif;
-}
-
-a { text-decoration:none;}
-tr[property="uri"] > td.val {max-width: 80ex; overflow: hidden}
-tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
-tr[property="uri"] > td.val > a{
-    color:#777;
-    font-weight: bold;}
+body {font-family: sans-serif}
+a {text-decoration:none}
+pre {white-space: pre-wrap}
+.abbr,.scheme {display: none}
 
 table.html {
     max-width: 90ex;
@@ -18,10 +12,6 @@ table.html {
 
 
 td.key {vertical-align:top;text-align:right}
-
-.abbr,.scheme {display: none}
-
-tr[property="http://rdfs.org/sioc/ns#content"] td.val {border-radius: 0}
 
 td.key > a > .frag {
     font-weight:bold;
@@ -42,8 +32,8 @@ td.val > a > .frag:hover {
     background-color: #fff;
 }
 
-pre {
-  white-space: pre-wrap;
-}
-
-input {border-width:0}
+tr[property="uri"] > td.val {max-width: 80ex; overflow: hidden}
+tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
+tr[property="uri"] > td.val > a{
+    color:#777;
+    font-weight: bold;}

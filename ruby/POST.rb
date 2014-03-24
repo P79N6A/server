@@ -39,8 +39,8 @@ class R
           changed = true
         end
       end}
-    snapshot if changed # update doc
-    [303,{'Location'=>uri+'?graph=edit'+(params['mono'] ? '&mono' : '')},[]]
+    snapshot if changed # update collated doc
+    [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
   end
 
 end

@@ -17,7 +17,8 @@ class R
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
       m[s][p] ||= []
-      m[s][p].push o unless m[s][p].member? o
+#      puts "fromStream #{s} #{p} #{o}"
+      m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
     end; m
   end
 
