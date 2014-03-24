@@ -24,7 +24,7 @@ class R
         end
         ),"<br>\n"]}
     
-    ps = [] # predicates to go editable on
+    ps = [] # predicates
     e.q['prototype'].do{|pr| pr = pr.expand
       Prototypes[pr].do{|v|ps.concat v }} # prototype imports
     e.q['predicate'].do{|p|ps.push p }    # explicit predicate
@@ -37,7 +37,7 @@ class R
            g.map{|s,r| # each (subject, resource)
              {_: :table, class: :html,
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: s}}}, # subject URI
-                   r.keys.concat(ps).uniq.map{|p| # each editable predicate
+                   r.keys.concat(ps).-(['uri']).uniq.map{|p| # each editable predicate
                      {_: :tr,
                        c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # predicate URI
                            {_: :td, c: [r[p].do{|o|       # has object?
@@ -50,10 +50,12 @@ class R
 
   # select a property to edit
   fn 'view/addP',->g,e{
-    [[Date,Title,Creator,Content,Label].map{|p|[{_: :a, href: p, c: p},'<br>']},
+    [[Date,Title,Creator,Content,Label].map{|p|
+       [{_: :a, href: e['REQUEST_PATH']+{'predicate' => p, 'view' => 'edit'}.qs, c: p},
+        '<br>']},
      {_: :form, action: e['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :predicate, pattern: '^http.*$', size: 64},
-           {_: :input, type: :hidden, name: :graph, value: :edit},
+           {_: :input, type: :hidden, name: :view, value: :edit},
            {_: :input, type: :submit, value: 'property'}]}]}
 
 end
