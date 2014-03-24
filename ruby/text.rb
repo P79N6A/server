@@ -72,7 +72,7 @@ class R
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
     end
-    yield uri, Content, `ps2txt #{sh}`.hrefs
+#    yield uri, Content, `ps2txt #{sh}`.hrefs
     p.a('*.png').glob.map{|i|yield uri, DC+'Image', i}
   end
 

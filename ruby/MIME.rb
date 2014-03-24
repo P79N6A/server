@@ -54,6 +54,7 @@ class R
     conf: 'text/plain',
     css: 'text/css',
     csv: 'text/comma-separated-values',
+    eps:  'application/postscript',
     flv: 'video/flv',
     for: 'application/fortran',
     gemspec: 'application/ruby',
