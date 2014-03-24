@@ -34,6 +34,10 @@ class R
     uri ? R.new(uri) : self
   end
 
+  # if you've opted to remove the subclass of RDF::URI (constants.rb) for performance or dependency reasons, uncomment these:
+#  def initialize uri; @uri = uri.to_s end
+#  def to_s; @uri end
+
   def R.[] uri; R.new uri end
 
   F={}

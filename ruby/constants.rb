@@ -13,6 +13,7 @@ rack
 shellwords}.map{|r|require r}
 
 class R < RDF::URI
+#class R
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
 

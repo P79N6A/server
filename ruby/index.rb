@@ -40,7 +40,7 @@ class R
   end
 
   def indexPath
-    R['/index/'+shorten]
+    R['/index/'+shorten.uri]
   end
 
   def take *a

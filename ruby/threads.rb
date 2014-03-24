@@ -4,7 +4,12 @@ class R
 
   fn '/thread/GET',-> e, r {
     m = {}
+#    require 'ruby-prof'
+#    RubyProf.start
     R[MessagePath[e.stripDoc.basename]].walk SIOC+'reply_of', m
+#    result = RubyProf.stop
+#    printer = RubyProf::FlatPrinter.new(result)
+#    printer.print(STDOUT)
     return F[404][e,r] if m.empty?
 
     v = r.q['view'] ||= "timegraph"
