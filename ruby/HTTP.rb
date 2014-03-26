@@ -58,6 +58,7 @@ module Th
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/ntriples',
       '.n3' => 'text/n3',
+      '.rdf' => 'application/rdf+xml',
       '.ttl' => 'text/turtle',
       '.txt' => 'text/plain',
     }[File.extname self['uri']].do{|mime|
