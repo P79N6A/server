@@ -7,7 +7,7 @@ class R
     # eat selector
     name = e.pathSegment.uri.sub('/man/','/').tail
 
-    # section requested?
+    # section prefix?
     section = nil
     name.match(/^([0-9])(\/|$)/).do{|p|
       section = p[1]
@@ -24,7 +24,7 @@ class R
                m.map{|n|[{_: :a, href: '/man/'+section+'/'+n, c: n },' ']}]}]
         [200, {'Content-Type'=>'text/html; charset=utf-8'}, [body]]
       else
-        e.response
+        F[404][e,r]
       end
     else
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}

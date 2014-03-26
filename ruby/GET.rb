@@ -43,7 +43,7 @@ class R
     fileFn[self,q,m].do{|files| # find files
       fileset.concat files } # add to set
 
-    q['set'].do{|set| # resource-set
+    q['set'].do{|set| # resource set
       F['set/' + set].do{|setFn| # function found
         setFn[self,q,m].do{|resources| # resources found
           resources.map{|resource| # map to docs
@@ -56,8 +56,7 @@ class R
                   fileset.sort.map{|r|[r, r.m]},      # resource version(s)
                   @r.format].h                        # response MIME
 
-    condResponse @r.format, ->{
-      puts [:GET,uri,@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
+    condResponse @r.format, ->{ puts [:GET,uri,@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
       fileset.map{|r|r.env(@r).toGraph m} # expand graph
       render @r.format, m, @r} # model -> view -> response
   end
