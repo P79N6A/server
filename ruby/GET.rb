@@ -40,7 +40,7 @@ class R
 
     fileset = [] # empty set
     fileFn = q['set'].do{|s| F['fileset/'+s]} || F['fileset']
-    fileFn[self,q,m].do{|files| # find files
+    fileFn[self,q,m].do{|files| # find
       fileset.concat files } # add to set
 
     q['set'].do{|set| # resource set
@@ -57,8 +57,17 @@ class R
                   @r.format].h                        # response MIME
 
     condResponse @r.format, ->{ puts [:GET,uri,@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
-      fileset.map{|r|r.env(@r).toGraph m} # expand graph
-      render @r.format, m, @r} # model -> view -> response
+      # RDF::Graph, all inputs are RDF and Writer exists for MIME
+      if @r.format != "text/html" &&
+          !fileset.find{|f|!f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
+          format = RDF::Format.for(:content_type => @r.format)
+        graph = RDF::Graph.new
+        fileset.map{|r| graph.load r.d}
+        graph.dump format.to_sym
+      else # Hash graph, combined RDF + non-RDF
+        fileset.map{|r|r.env(@r).toGraph m}
+        render @r.format, m, @r
+      end}
   end
   
   def condResponse format, body

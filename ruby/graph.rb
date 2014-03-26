@@ -43,7 +43,7 @@ class R
 
   def docs
     [(self if e),
-     stripDoc.glob(".{e,html,n3,nt,owl,rdf,ttl,txt}"),
+     stripDoc.glob(".{e,jsonld,n3,nt,rdf,ttl}"),
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
   end
