@@ -11,14 +11,9 @@ class R
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
     resource = R['http://'+e['SERVER_NAME']+path]
-
-    if resource.inside
+    resource.inside ? (
       e['uri'] = resource.uri
-      (resource.env e).send e['REQUEST_METHOD']
-    else
-      [403,{},[]]
-    end
-
+      (resource.env e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
     F[500][x,e]
   end
@@ -29,7 +24,6 @@ end
 
 module Th
 
-  # Query-String -> Hash
   def q
     @q ||=
       (if q = self['QUERY_STRING']
@@ -83,7 +77,6 @@ end
 
 class Hash
 
-  # Hash -> Query-String
   def qs
    '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end

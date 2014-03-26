@@ -28,15 +28,10 @@ class R
   end
 
   def resource # handler search
-    pathSegment.do{|path|
-      paths = path.cascade.map{|p| p.uri.t + 'GET' }
-      ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path first, then /path (mounted on all hosts)
-        paths.map{|p| # bubble up path-tree
-          F[h + p].do{|fn| # function found
-            fn[self,@r].do{|r| # inspect resource-response for logging
-              $stdout.puts [r[0],'http://'+@r['SERVER_NAME']+@r['REQUEST_URI'],@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
-              return r
-            }}}}}
+    paths = pathSegment.cascade.map{|p| p.uri.t + 'GET' }
+    ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path first, then /path (mounted on all hosts)
+      paths.map{|p| F[h + p].do{|fn|
+          fn[self,@r].do{|r|return r}}}}
     response
   end
 
@@ -62,6 +57,7 @@ class R
                   @r.format].h                        # response MIME
 
     condResponse @r.format, ->{
+      puts [:GET,uri,@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
       fileset.map{|r|r.env(@r).toGraph m} # expand graph
       render @r.format, m, @r} # model -> view -> response
   end
