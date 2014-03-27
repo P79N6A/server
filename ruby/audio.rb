@@ -4,11 +4,11 @@ class R
   AudioFile = /(aif|wav|flac|mp3|m4a|aac|ogg)$/i
 
   fn 'fileset/audio',->d,e,m{
-    e['view'] = 'audio'
+    e['view'] ||= 'audio'
     d.take.select{|e|e.ext.match AudioFile}}
 
   fn 'fileset/video',->d,e,m{
-    e['view'] = 'audio'
+    e['view'] ||= 'audio'
     e['video'] = true
     d.take.select{|e|e.ext.match VideoFile}}
 
