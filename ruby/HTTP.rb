@@ -1,6 +1,9 @@
 require_relative 'constants'
 class R
 
+  Apache = ENV['apache'] # apache=true in shell-environment
+  Nginx  = ENV['nginx']
+
   def env r=nil
     r ? (@r = r; self) : @r
   end

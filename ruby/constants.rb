@@ -26,6 +26,7 @@ class R < RDF::URI
   DIG      = 'http://dig.csail.mit.edu/'
   Deri     = 'http://vocab.deri.ie/'
   DC       = Purl + 'dc/terms/'
+  RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
   Name     = SIOC + 'name'
@@ -38,6 +39,7 @@ class R < RDF::URI
 # RDFns    = W3   + 'ns/rdf#'
 # RDFs     = W3   + 'ns/rdfs#'
   EXIF     = W3   + '2003/12/exif/ns#'
+  Atom     = W3   + '2005/Atom'
   WF       = W3   + '2005/01/wf/flow#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
@@ -52,6 +54,7 @@ class R < RDF::URI
   HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
   Stat     = Posix + 'stat#'
+
   Search   = 'http://sindice.com/vocab/search#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'

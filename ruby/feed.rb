@@ -15,10 +15,6 @@ class R
   def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h end
   def getFeeds h='localhost'; uris.tail.map{|u| u.getFeed h} end
 
-  Atom = W3+'2005/Atom'
-   RSS = Purl+'rss/1.0/'
-  RSSm = RSS+'modules/'
-
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
 
@@ -76,7 +72,7 @@ class R
             Atom+'author' => Creator,
             RSS+'description' => Content,
             RSS+'encoded' => Content,
-            RSSm+'content/encoded' => Content,
+            RSS+'modules/content/encoded' => Content,
             Atom+'content' => Content,
             RSS+'title' => Title,
             Atom+'title' => Title,

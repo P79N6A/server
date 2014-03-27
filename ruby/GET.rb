@@ -1,7 +1,4 @@
 class R
-  
-  Apache = ENV['apache'] # apache=true in shell-environment
-  Nginx  = ENV['nginx']
 
   def GET
     if file = [self,pathSegment].compact.find(&:f) # file exists, client or server might want another MIME
