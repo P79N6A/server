@@ -38,12 +38,12 @@ class R
   def response
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # model w/ request-resource
 
-    fileset = [] # empty set
+    fileset = []
     fileFn = q['set'].do{|s| F['fileset/'+s]} || F['fileset']
     fileFn[self,q,m].do{|files| # find
       fileset.concat files } # add to set
 
-    q['set'].do{|set| # resource set
+    q['set'].do{|set|
       F['set/' + set].do{|setFn| # function found
         setFn[self,q,m].do{|resources| # resources found
           resources.map{|resource| # map to docs
@@ -51,20 +51,21 @@ class R
 
     return F[404][self,@r] if fileset.empty?
 
-    # response identity
     @r['ETag'] = [q['view'].do{|v|F['view/'+v] && v}, # view
                   fileset.sort.map{|r|[r, r.m]},      # resource version(s)
                   @r.format].h                        # response MIME
 
-    condResponse @r.format, ->{ puts [:GET,uri,@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
-      # RDF::Graph, all inputs are RDF and Writer exists for MIME
-      if @r.format != "text/html" &&
-          !fileset.find{|f|!f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
+    condResponse @r.format, ->{
+      puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join ' '
+
+      # RDF::Graph when all inputs are RDF and Writer exists for MIME
+      if @r.format != "text/html" && ! fileset.find{|f| ! f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
           format = RDF::Format.for(:content_type => @r.format)
         graph = RDF::Graph.new
         fileset.map{|r| graph.load r.d}
         graph.dump format.to_sym
-      else # Hash graph, combined RDF + non-RDF
+
+      else # our JSON+Hash graph
         fileset.map{|r|r.env(@r).toGraph m}
         render @r.format, m, @r
       end}
@@ -72,8 +73,7 @@ class R
   
   def condResponse format, body
     @r['HTTP_IF_NONE_MATCH'].do{|m|
-      m.strip.split(/\s*,\s*/).include?(@r['ETag']) && # client has entity
-      [304,{},[]]} ||
+      m.strip.split(/\s*,\s*/).include?(@r['ETag']) && [304,{},[]]} ||
     body.call.do{|body|
       head = {'Content-Type' => format, 'ETag' => @r['ETag']}
       head.update({'Cache-Control' => 'no-transform'}) if format.match /^(audio|image|video)/
