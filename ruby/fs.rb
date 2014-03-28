@@ -18,6 +18,26 @@ class R
     container.as s ? p.R.shorten : p
   end
 
+  def objectPath o
+    p,v = (if o.respond_to? :uri
+             [R[o.uri].path, nil]
+           else
+             literal o
+           end)
+    [(a p), v]
+  end
+
+  def literal o
+    str = nil
+    ext = nil
+    if o.class == String
+      str = o;         ext='.txt'
+    else
+      str = o.to_json; ext='.json'
+    end
+    ['/'+str.h+ext, str]
+  end
+
   def predicates
     container.c.map{|c|c.base.expand.R}
   end

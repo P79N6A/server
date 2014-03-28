@@ -34,16 +34,11 @@ class R
     uri ? R.new(uri) : self
   end
 
-  # if you've opted to remove the subclass of RDF::URI (constants.rb) for performance or dependency reasons, uncomment these:
-#  def initialize uri; @uri = uri.to_s end
-#  def to_s; @uri end
-
   def R.[] uri; R.new uri end
 
   F={}
-  Watch={}
-  NullView = -> d,e {}
 
+  Watch={}
   def self.dev
     Watch.each{|f,ts|
       if ts < File.mtime(f)
@@ -98,25 +93,7 @@ class R
     end
   end
 
-  def objectPath o
-    p,v = (if o.respond_to? :uri
-             [R[o.uri].path, nil]
-           else
-             literal o
-           end)
-    [(a p), v]
-  end
-
-  def literal o
-    str = nil
-    ext = nil
-    if o.class == String
-      str = o;         ext='.txt'
-    else
-      str = o.to_json; ext='.json'
-    end
-    ['/'+str.h+ext, str]
-  end
+  NullView = -> d,e {}
 
 end
 
