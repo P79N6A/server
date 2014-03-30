@@ -58,5 +58,6 @@ class R
 
   F['view/'+SIOCt+'InstantMessage']=F['view/chat']
   F['view/'+SIOCt+'MicroblogPost']=F['view/chat']
+  F['view/'+MIMEtype+'text/log'] = NullView
 
 end
