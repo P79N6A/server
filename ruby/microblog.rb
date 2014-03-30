@@ -6,9 +6,8 @@ class R
     day = dirname.uri.split('/')[-3..-1].do{|dp|
       dp.join('-') if dp[0].match(/^\d{4}$/)
     }||''
-    doc = uri.sub '#','%23'
+    doc = uri.gsub '#','%23'
     channel = bare
-    yield doc,Date,day
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
         s = doc + '#' + doc + ':' + (i+=1).to_s
