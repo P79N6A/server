@@ -17,14 +17,12 @@ class R
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
       m[s][p] ||= []
-#      puts "fromStream #{s} #{p} #{o}"
       m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
     end; m
   end
 
   def graph g={}
-    docs.map{|d|d.toGraph g}
-    g
+    docs.map{|d|d.toGraph g} ;g
   end
 
   def toGraph g={}
@@ -69,6 +67,7 @@ class R
     graph.triples &b if b     # emit triples
     self
   end
+
   # GET Resource -> local RDF cache
   # RDF::Repository (.n3)
   def addDocsRDF options = {}

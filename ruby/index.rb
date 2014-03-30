@@ -107,8 +107,14 @@ class R
     R['/index/'+shorten.uri]
   end
 
-  def R.graphProperties g
-    g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+  def triplrDoc &f
+    stripDoc.glob('#*').map{|s|
+      s.triplrResource &f}
+  end
+
+  def triplrResource
+    predicates.map{|p|
+      self[p].map{|o| yield uri, p.uri, o}}
   end
 
 end

@@ -57,9 +57,6 @@ class R
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s }}
 
-  def triplrDoc &f; stripDoc.glob('#*').map{|s| s.triplrResource &f} end
-  def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
-
   def triplrInode
     if node.directory?
       yield uri, Posix+'dir#parent', parent

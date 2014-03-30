@@ -169,7 +169,7 @@ class R
              {_: :body, c: view[d,e]}]}]}
 
   fn 'view/table',->g,e{
-    keys = R.graphProperties g
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     [H.css('/css/table'),
      {_: :table,:class => :tab,
        c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
