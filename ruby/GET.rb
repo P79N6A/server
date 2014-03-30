@@ -82,4 +82,20 @@ class R
       [200,head,[body]]}
   end
 
+  fn '/GET',->e,r{ # default handler
+    i = [e,e.pathSegment].compact.map{|e|e.as 'index.html'}.find &:e # file exists?
+    if i && !r['REQUEST_URI'].match(/\?/) # querystring?
+      if e.uri[-1] == '/' # inside dir?
+        i.env(r).fileGET  # file
+      else
+        [301, {Location: e.uri.t}, []] # into dir/
+      end
+    else
+      if r['REQUEST_URI'].match(/\/index.(html|jsonld|nt|n3|rdf|ttl|txt)$/) # explicit index
+        e.parent.as('').env(r).response # erase virtual index-path
+      else
+        e.response
+      end
+    end}
+
 end

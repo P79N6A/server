@@ -1,90 +1,64 @@
 #watch __FILE__
 class R
 
+  fn 'view/'+Stat+'Directory',->i,e{
+    a = -> i { i = i.R
+      {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
+
+    [(H.once e, 'dir', (H.css '/css/ls')),
+     i.map{|u,r|
+       url = r.R.localURL e
+       {class: :dir, style: "background-color: #{R.cs}",    # dir wrapper
+         c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
+                  {_: :a, href: url.t, c: '/'}]},
+             r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
+
+  fn 'view/ls',->i,e{
+    dir = e['uri'].R
+    path = dir.pathSegment
+    up = (!path || path.uri == '/') ? '/' : dir.parent.url
+    i = i.dup
+    i.delete_if{|u,r|!r[Stat+'ftype']}
+    f = {}
+    ['uri', LDP+'contains', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
+    i.values.map{|r|
+      r.class==Hash &&
+      r.delete_if{|p,o|!f[p]}}
+    [(H.css '/css/ls'),
+     {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
+     {class: :ls, c: F['view/table'][i,e]},'<br clear=all>',
+     {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
+
+  fn 'fileset/find',->e,q,m,x=''{
+    q['q'].do{|q|
+      r = '-iregex ' + ('.*' + q + '.*' + x).sh
+      s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+      t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+      [e,e.pathSegment].compact.select(&:e).map{|e|
+        `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
+        lines.map{|l|l.chomp.unpath}}.compact.flatten}}
+
+  fn 'fileset/glob',->d,e=nil,_=nil{
+    p = [d,d.pathSegment].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
+    p[0] }
+
+  fn 'fileset/depth',->d,r,m{ # depth-first
+    global = !r.has_key?('local')
+    p = global ? d.pathSegment : d
+    loc = global ? '' : '&local'
+    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(1024) # an extra for next-page pointer
+    o = r['d'] =~ /^a/ ? :asc : :desc            # direction
+    (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # take subtree
+      first, last = s[0], s.size > 1 && s.pop
+      desc, asc = o == :asc ? [first,last] : [last,first]
+      u = m['#']
+      u[Type] = R[HTTP+'Response']
+      u[Prev] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
+      u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
+      s }}
+
   def triplrDoc &f; stripDoc.glob('#*').map{|s| s.triplrResource &f} end
   def triplrResource; predicates.map{|p| self[p].map{|o| yield uri, p.uri, o}} end
-
-  def [] p; predicate p end
-  def []= p,o
-    if o
-      setFs p,o
-    else
-      (predicate p).map{|o|
-        unsetFs p,o}
-    end
-  end
-
-  def predicatePath p, s = true
-    container.as s ? p.R.shorten : p
-  end
-
-  def objectPath o
-    p,v = (if o.respond_to? :uri
-             [R[o.uri].path, nil]
-           else
-             literal o
-           end)
-    [(a p), v]
-  end
-
-  def literal o
-    str = nil
-    ext = nil
-    if o.class == String
-      str = o;         ext='.txt'
-    else
-      str = o.to_json; ext='.json'
-    end
-    ['/'+str.h+ext, str]
-  end
-
-  def predicates
-    container.c.map{|c|c.base.expand.R}
-  end
-
-  def predicate p, short = true
-    p = predicatePath p, short
-    p.node.take.map{|n|
-      if n.file? # literal
-        o = n.R
-        case o.ext
-        when "json"
-          o.r true
-        else
-          o.r
-        end
-      else # resource
-       R[n.to_s.unpath p.d.size]
-      end}
-  end
-
-  def setFs p, o, undo = false, short = true
-    p = predicatePath p, short # s+p URI
-    t,literal = p.objectPath o # s+p+o URI
-    if o.class == R # resource
-      if undo
-        t.delete if t.e # undo
-      else
-        unless t.e
-          if o.f    # file?
-            o.ln t  # link
-          else
-            t.mk    # dirent
-          end
-        end
-      end
-    else # literal
-      if undo
-        t.delete if t.e  # remove 
-      else
-        t.w literal unless t.e # write
-      end
-    end
-  end
-
-  def unsetFs p,o
-    setFs p,o,true
-  end
 
   def triplrInode
     if node.directory?
@@ -109,7 +83,6 @@ class R
     yield uri, (f + (i[0].match(g)||[0,i[0]])[1].       # s
      gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # p
       i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v}} # o
-#  rescue
   end
 
   def ln t, y=:link
@@ -157,6 +130,10 @@ class R
   alias_method :r, :read
   alias_method :w, :write
 
+  def take *a
+    node.take(*a).map &:R
+  end
+
 end
 
 class Pathname
@@ -173,6 +150,34 @@ class Pathname
   def deleteNode
     FileUtils.send (file?||symlink?) ? :rm : :rmdir, self
     parent.deleteNode if parent.c.empty?
+  end
+
+  def take count=1000, direction=:desc, offset=nil
+    offset = offset.d if offset
+
+    ok = false    # in-range mark
+    set=[]
+    v,m={asc:      [:id,:>=],
+        desc: [:reverse,:<=]}[direction]
+
+    visit=->nodes{
+      nodes.sort_by(&:to_s).send(v).each{|n|
+        ns = n.to_s
+        return if 0 >= count
+        (ok || # already in-range
+         !offset || # no offset required
+         (sz = [ns,offset].map(&:size).min
+          ns[0..sz-1].send(m,offset[0..sz-1]))) &&
+        (if !(c = n.c).empty? # has children?
+           visit.(c)          # visit children
+         else
+           count = count - 1 # decrement nodes-left count
+           set.push n        # add node to result-set
+           ok = true         # mark iterator as within range
+        end )}}
+
+    visit.(c)
+    set
   end
 
 end

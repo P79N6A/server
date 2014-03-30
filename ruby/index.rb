@@ -1,8 +1,87 @@
 #watch __FILE__
 class R
 
-  # POSIX-fs based index of triples
-  # 
+  def [] p; predicate p end
+  def []= p,o
+    if o
+      setFs p,o
+    else
+      (predicate p).map{|o|
+        unsetFs p,o}
+    end
+  end
+
+  def predicatePath p, s = true
+    container.as s ? p.R.shorten : p
+  end
+
+  def objectPath o
+    p,v = (if o.respond_to? :uri
+             [R[o.uri].path, nil]
+           else
+             literal o
+           end)
+    [(a p), v]
+  end
+
+  def literal o
+    str = nil
+    ext = nil
+    if o.class == String
+      str = o;         ext='.txt'
+    else
+      str = o.to_json; ext='.json'
+    end
+    ['/'+str.h+ext, str]
+  end
+
+  def predicates
+    container.c.map{|c|c.base.expand.R}
+  end
+
+  def predicate p, short = true
+    p = predicatePath p, short
+    p.node.take.map{|n|
+      if n.file? # literal
+        o = n.R
+        case o.ext
+        when "json"
+          o.r true
+        else
+          o.r
+        end
+      else # resource
+       R[n.to_s.unpath p.d.size]
+      end}
+  end
+
+  def setFs p, o, undo = false, short = true
+    p = predicatePath p, short # s+p URI
+    t,literal = p.objectPath o # s+p+o URI
+    if o.class == R # resource
+      if undo
+        t.delete if t.e # undo
+      else
+        unless t.e
+          if o.f    # file?
+            o.ln t  # link
+          else
+            t.mk    # dirent
+          end
+        end
+      end
+    else # literal
+      if undo
+        t.delete if t.e  # remove 
+      else
+        t.w literal unless t.e # write
+      end
+    end
+  end
+
+  def unsetFs p,o
+    setFs p,o,true
+  end
 
   def index p,o
     return unless o.class == R
@@ -20,21 +99,6 @@ class R
     g
   end
 
-  fn 'fileset/depth',->d,r,m{ # depth-first
-    global = !r.has_key?('local')
-    p = global ? d.pathSegment : d
-    loc = global ? '' : '&local'
-    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(1024) # an extra for next-page pointer
-    o = r['d'] =~ /^a/ ? :asc : :desc            # direction
-    (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # take subtree
-      first, last = s[0], s.size > 1 && s.pop
-      desc, asc = o == :asc ? [first,last] : [last,first]
-      u = m['#']
-      u[Type] = R[HTTP+'Response']
-      u[Prev] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
-      u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
-      s }}
-
   def po o
     indexPath.predicate o, false
   end
@@ -43,61 +107,8 @@ class R
     R['/index/'+shorten.uri]
   end
 
-  def take *a
-    node.take(*a).map &:R
-  end
-
   def R.graphProperties g
     g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-  end
-
-  fn '/GET',->e,r{
-    i = [e,e.pathSegment].compact.map{|e|e.as 'index.html'}.find &:e # file exists?
-    if i && !r['REQUEST_URI'].match(/\?/) # querystring?
-      if e.uri[-1] == '/' # inside dir?
-        i.env(r).fileGET  # file
-      else
-        [301, {Location: e.uri.t}, []] # into dir/
-      end
-    else
-      if r['REQUEST_URI'].match(/\/index.(html|jsonld|nt|n3|rdf|ttl|txt)$/) # explicit index
-        e.parent.as('').env(r).response # erase virtual index-path
-      else
-        e.response
-      end
-    end}
-
-end
-
-
-class Pathname
-
-  def take count=1000, direction=:desc, offset=nil
-    offset = offset.d if offset
-
-    ok = false    # in-range mark
-    set=[]
-    v,m={asc:      [:id,:>=],
-        desc: [:reverse,:<=]}[direction]
-
-    visit=->nodes{
-      nodes.sort_by(&:to_s).send(v).each{|n|
-        ns = n.to_s
-        return if 0 >= count
-        (ok || # already in-range
-         !offset || # no offset required
-         (sz = [ns,offset].map(&:size).min
-          ns[0..sz-1].send(m,offset[0..sz-1]))) &&
-        (if !(c = n.c).empty? # has children?
-           visit.(c)          # visit children
-         else
-           count = count - 1 # decrement nodes-left count
-           set.push n        # add node to result-set
-           ok = true         # mark iterator as within range
-        end )}}
-
-    visit.(c)
-    set
   end
 
 end

@@ -90,14 +90,12 @@ groonga
 html
 image
 index
-ls
 mail
 man
 microblog
 POST
 rdf
 text
-threads
 time
 who
 }.map{|r|require_relative r}
