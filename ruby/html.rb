@@ -155,7 +155,7 @@ class R
        {_: :a, rel: :nofollow, href: e['REQUEST_PATH'].do{|u| # linked-data entrypoint
            u[-1]=='/' ? u+'index.n3' : u.R.n3} + e['QUERY_STRING'].do{|qs|qs.empty? ? '' : '?' + qs},
          c: {_: :img, src: '/css/misc/cube.png', style: 'height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}},
-       (H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))]}} # (n)ext (p)rev key binding JS
+       ([(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
   fn Render+'text/html',->d,e{ u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
