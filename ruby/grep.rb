@@ -3,8 +3,6 @@ class R
 
   fn 'view/'+Posix+'util#grep',-> d,e {{_: :form, c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :set, value: :grep}]}}
 
-  GREP_DIRS=[]
-
   fn 'fileset/grep',->e,q,m{
     q['q'].do{|query| m[e.uri+'#grep'] = {Type => R[Posix+'util#grep']}
       path = e.pathSegment

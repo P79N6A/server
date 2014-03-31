@@ -22,7 +22,6 @@ class R < RDF::URI
   SIOC  = 'http://rdfs.org/sioc/ns#'
   SIOCt = 'http://rdfs.org/sioc/types#'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
-  DIG      = 'http://dig.csail.mit.edu/'
   Deri     = 'http://vocab.deri.ie/'
   DC       = Purl + 'dc/terms/'
   RSS      = Purl + 'rss/1.0/'
@@ -47,7 +46,6 @@ class R < RDF::URI
   Prev     = LDP  + 'prevPage'
   Posix    = W3   + 'ns/posix/'
   Type     = RDFns+ "type"
-  PAC      = DIG  + '2008/PAC/ontology/pac#'
   COGS     = Deri + 'cogs#'
   CSV      = Deri + 'scsv#'
   HTML     = RDFns + "HTML"
@@ -56,7 +54,6 @@ class R < RDF::URI
 
   Search   = 'http://sindice.com/vocab/search#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
-  Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
   Render   = 'http://whats-your.name/www#RenderMIME/'
 
   Prefix={
@@ -72,8 +69,6 @@ class R < RDF::URI
 %w{
 MIME
 names
-404
-grep
 audio
 blog
 board
@@ -83,7 +78,9 @@ edit
 facets
 feed
 fs
+grep
 GET
+HTTP
 graph
 groonga
 html

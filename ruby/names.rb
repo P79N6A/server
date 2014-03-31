@@ -36,15 +36,17 @@ class R
 
   def R.[] uri; R.new uri end
 
-  F={}
+  F = {}
 
-  Watch={}
+  Watch = {}
   def self.dev
     Watch.each{|f,ts|
       if ts < File.mtime(f)
         load f
       end }
   end
+
+  GREP_DIRS = []
 
   def appendURI u; R uri + u.to_s end
   def appendSlashURI u; R uri.t + u.to_s end

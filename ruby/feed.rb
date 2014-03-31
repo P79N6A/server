@@ -200,4 +200,14 @@ class R
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                          c: d[Content]}}].cr}}.cr]}])}
 
+  def checkURIs
+    r = uris.map{|u|
+      c = [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u] # HEAD
+      puts c.join ' ' 
+      c } # status, uri tuple
+    puts "\n\n"
+    r.map{|c| # inspect anomalies
+      puts c.join(' ') unless c[0] == 200 }
+  end
+
 end
