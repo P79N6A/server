@@ -31,26 +31,23 @@ class R < RDF::URI
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
-  XHV      = W3   + '1999/xhtml/vocab#'
   RDFns    = W3   + "1999/02/22-rdf-syntax-ns#"
   RDFs     = W3   + '2000/01/rdf-schema#'
 # RDFns    = W3   + 'ns/rdf#'
 # RDFs     = W3   + 'ns/rdfs#'
   EXIF     = W3   + '2003/12/exif/ns#'
   Atom     = W3   + '2005/Atom'
-  WF       = W3   + '2005/01/wf/flow#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
   LDP      = W3   + 'ns/ldp#'
+  Stat     = W3   + 'ns/posix/stat#'
   Next     = LDP  + 'nextPage'
   Prev     = LDP  + 'prevPage'
-  Posix    = W3   + 'ns/posix/'
   Type     = RDFns+ "type"
   COGS     = Deri + 'cogs#'
   CSV      = Deri + 'scsv#'
   HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
-  Stat     = Posix + 'stat#'
 
   Search   = 'http://sindice.com/vocab/search#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'

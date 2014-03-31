@@ -1,4 +1,3 @@
-require_relative 'constants'
 class R
 
   Apache = ENV['apache'] # apache=true in shell-environment

@@ -59,7 +59,6 @@ class R
 
   def triplrInode
     if node.directory?
-      yield uri, Posix+'dir#parent', parent
       yield uri, Type, R[LDP+'Container']
       yield uri, Type, R[Stat+'Directory']
       c.map{|c|
