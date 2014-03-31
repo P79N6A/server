@@ -1,10 +1,9 @@
 #watch __FILE__
 class R
 
-  fn 'view/'+Posix+'util#grep',-> d,e {{_: :form, c: [{_: :input, name: :q, style: 'font-size:2em'},{_: :input, type: :hidden, name: :set, value: :grep}]}}
-
   fn 'fileset/grep',->e,q,m{
-    q['q'].do{|query| m[e.uri+'#grep'] = {Type => R[Posix+'util#grep']}
+    q['q'].do{|query|
+      q['view'] ||= 'grep'
       path = e.pathSegment
       GREP_DIRS.find{|p|path.uri.match p}.do{|_|
         [e,path].compact.select(&:e).map{|e|

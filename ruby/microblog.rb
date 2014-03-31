@@ -50,7 +50,7 @@ class R
      d.map{|u,r|
        r[Content] && r[Date]
        [r[Date].justArray[0].match(/T([0-9:]{5})/).do{|m|m[1]},
-        {_: :span, :class => :nick, c: {_: :a, href: r.uri,
+        {_: :span, :class => :nick, c: {_: :a, href: r.uri, id: r.uri.split('#')[-1],
             c: [r[Atom+"/link/image"].do{|p|{_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
                 {_: :span, c: r[Creator].do{|c|
                     c[0].respond_to?(:uri) ? c[0].uri.abbrURI : c[0].to_s}}]}},' ',
