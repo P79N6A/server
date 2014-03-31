@@ -33,37 +33,36 @@ class R
   end
 
   def response
-    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # model w/ request-resource
+    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response
 
     fileset = []
     fileFn = q['set'].do{|s| F['fileset/'+s]} || F['fileset']
-    fileFn[self,q,m].do{|files| # find
+    fileFn[self,q,m].do{|files| # file function
       fileset.concat files } # add to set
 
     q['set'].do{|set|
-      F['set/' + set].do{|setFn| # function found
-        setFn[self,q,m].do{|resources| # resources found
+      F['set/' + set].do{|setFn| # Resource function
+        setFn[self,q,m].do{|resources| # found
           resources.map{|resource| # map to docs
             fileset.concat resource.docs}}}} # add to set
 
     return F[404][self,@r] if fileset.empty?
-#    puts fileset.join ' '
 
-    @r['ETag'] = [q['view'].do{|v|F['view/'+v] && v}, # view
-                  fileset.sort.map{|r|[r, r.m]},      # resource version(s)
-                  @r.format].h                        # response MIME
+    @r['ETag'] = [q['view'].do{|v|F['view/'+v] && v}, # View
+                  fileset.sort.map{|r|[r, r.m]},      # entity version(s)
+                  @r.format].h                        # output MIME
 
     condResponse @r.format, ->{
       puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join ' '
 
-      # RDF::Graph when all inputs are RDF and Writer exists for MIME
+      # RDF Model - all input formats are RDF and Writer exists for output MIME
       if @r.format != "text/html" && ! fileset.find{|f| ! f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
           format = RDF::Format.for(:content_type => @r.format)
         graph = RDF::Graph.new
         fileset.map{|r| graph.load r.d}
         graph.dump format.to_sym
 
-      else # our JSON+Hash graph
+      else # JSON Model
         fileset.map{|r|r.env(@r).toGraph m}
         render @r.format, m, @r
       end}
@@ -83,7 +82,7 @@ class R
       [200,head,[body]]}
   end
 
-  fn '/GET',->e,r{ # default handler
+  fn '/GET',->e,r{ # global handler
     i = [e,e.pathSegment].compact.map{|e|e.as 'index.html'}.find &:e # file exists?
     if i && !r['REQUEST_URI'].match(/\?/) # querystring?
       if e.uri[-1] == '/' # inside dir?

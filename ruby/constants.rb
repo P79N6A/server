@@ -73,7 +73,6 @@ class R < RDF::URI
 MIME
 names
 404
-500
 grep
 audio
 blog
