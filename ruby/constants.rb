@@ -69,7 +69,6 @@ names
 audio
 blog
 board
-code
 csv
 edit
 facets
@@ -79,7 +78,6 @@ grep
 GET
 HTTP
 graph
-groonga
 html
 image
 index
@@ -87,7 +85,8 @@ mail
 man
 microblog
 POST
-rdf
+RDF
+search
 text
 time
 who
