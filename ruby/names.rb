@@ -52,7 +52,7 @@ class R
   def appendSlashURI u; R uri.t + u.to_s end
   def basename; File.basename path end
   def barename; basename.sub(/\.#{ext}$/,'') rescue basename end
-  def cascade; [self].concat parents end
+  def cascade;  [uri[-1] == '/' ? R[uri[0..-2]] : self].concat parents end
   def children; node.c.map &:R end
   def container; @u ||= R[f ? dirname + '/.' + (File.basename path) : path] end
   def d;        node.to_s end
