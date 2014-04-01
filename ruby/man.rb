@@ -24,7 +24,7 @@ class R
                m.map{|n|[{_: :a, href: '/man/'+section+'/'+n, c: n },' ']}]}]
         [200, {'Content-Type'=>'text/html; charset=utf-8'}, [body]]
       else
-        F[404][e,r]
+        E404[e,r]
       end
     else
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}

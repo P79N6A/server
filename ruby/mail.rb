@@ -8,7 +8,7 @@ class R
 
   GET['/thread'] = -> e, r { m = {}
     R[MessagePath[e.stripDoc.basename]].walk SIOC+'reply_of', m
-    return F[404][e,r] if m.empty?
+    return E404[e,r] if m.empty?
     v = r.q['view'] ||= "timegraph"
     r['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
     e.condResponse r.format, ->{Render[r.format][m, r]}}

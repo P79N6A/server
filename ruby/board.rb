@@ -21,7 +21,7 @@ class R
       post = { # post as Hash+JSON
         'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
-        Content => F['cleanHTML'][content],
+        Content => CleanHTML[content],
       }
       p['title'].do{|t| post[Title] = t.hrefs}
 

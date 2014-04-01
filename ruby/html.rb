@@ -108,7 +108,7 @@ class R
     url.href
   end
 
-  F['view']=->d,e{
+  View['select']=->d,e{
     d.values.map{|r|
       graph = {r.uri => r}
       view = nil
@@ -135,11 +135,11 @@ class R
 
   def nokogiri;  Nokogiri::HTML.parse (open uri).read end
 
-  F['HTMLbody'] = -> b {
+  HTMLbody = -> b {
     b.to_s.split(/<body[^>]*>/)[-1].to_s.split(/<\/body>/)[0] }
 
-  F['cleanHTML'] = -> b {
-    h = Nokogiri::HTML.fragment F['HTMLbody'][b]
+  CleanHTML = -> b {
+    h = Nokogiri::HTML.fragment HTMLbody[b]
     h.css('iframe').remove
     h.css('script').remove
     h.xpath("//@*[starts-with(name(),'on')]").remove
@@ -156,7 +156,7 @@ class R
 
   Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
-    view = View[e.q['view'].to_s] || F['view']
+    view = View[e.q['view'].to_s] || View['select']
     H ['<!DOCTYPE html>',{_: :html,
          c: [{_: :head, c: ['<meta charset="utf-8" />',
                    {_: :title, c: titles.size==1 ? titles[0] : e.uri},

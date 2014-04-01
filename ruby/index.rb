@@ -117,7 +117,7 @@ class R
       self[p].map{|o| yield uri, p.uri, o}}
   end
 
-  GET['/cache'] = F[404]
-  GET['/index'] = F[404]
+  GET['/cache'] = E404
+  GET['/index'] = E404
 
 end

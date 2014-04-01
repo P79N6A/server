@@ -17,12 +17,12 @@ class R
       e['uri'] = resource.uri
       resource.env(e).send('HTTP_'+e['REQUEST_METHOD'])) : [403,{},[]]
   rescue Exception => x
-    F[500][x,e]
+    E500[x,e]
   end
 
   def q; @r.q end
 
-  F[404]=->e,r{
+  E404 = -> e,r {
    id = e.uri     # response URI
     g = {id=>{}}  # response graph
     s = g[id]     # resource pointer
@@ -48,7 +48,7 @@ s[HTTP+'statusCodeValue'] = [404]
 
   GET['/500'] = -> d,e {1/0}
 
-  F[500]=->x,e{ $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
+  E500 = -> x,e { $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
           c: [{_: :head,c: [{_: :title, c: 500},(H.css '/css/500')]},

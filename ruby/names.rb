@@ -31,15 +31,12 @@ class R
 
   def R.[] uri; R.new uri end
 
-  F = {}
   View = {}
   FileSet = {}
   ResourceSet = {}
   Render = {}
   GET = {}
   POST = {}
-  # = {}
-  # = {}
 
   Watch = {}
   def self.dev

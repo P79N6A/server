@@ -20,18 +20,18 @@ class R
   GET['/today'] = -> e,r {[303, {'Location'=> Time.now.strftime('/%Y/%m/%d/?') + r['QUERY_STRING'] }, []]}
 
   View['timegraph'] = -> g,e {
-    i = F['itemview/timegraph']
-    F['baseview/timegraph'][g,e,->{g.map{|u,r|i.(r,e)}}]}
+    i = View['timegraph/item']
+    View['timegraph/base'][g,e,->{g.map{|u,r|i.(r,e)}}]}
 
-  F['baseview/timegraph'] = -> d,e,c {
+  View['timegraph/base'] = -> d,e,c {
     e[:graph] = d
     e[:group] = {}
-    [F['view'][Hash[d.sort_by{|u,r| r.class==Hash && r[Date].do{|d|d.justArray[0].to_s} || ''}.reverse],e],H.css('/css/timegraph'),
+    [View['select'][Hash[d.sort_by{|u,r| r.class==Hash && r[Date].do{|d|d.justArray[0].to_s} || ''}.reverse],e], H.css('/css/timegraph'),
      {class: :timegraph,
-       c: (F['filter/timegraph'][ e.q, d, nil]
+       c: (View['timegraph/filter'][ e.q, d, nil]
            c.())}]}
 
-  F['itemview/timegraph'] = -> r,x {
+  View['timegraph/item'] = -> r,x {
 
     # on resources w x-axis field
     if r[x.q['x'] || Date]
@@ -55,7 +55,7 @@ class R
                  y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}}]
     end }
 
-  F['filter/timegraph'] = -> e,m,_ {
+  View['timegraph/filter'] = -> e,m,_ {
 
     x = e['x'] || Date # x property
     y = e['y']         # y property

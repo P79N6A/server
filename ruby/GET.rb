@@ -36,7 +36,7 @@ class R
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response
 
     fileset = []
-    fileFn = q['set'].do{|s| FileSet[s]} || F['fileset']
+    fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
     fileFn[self,q,m].do{|files| # file function
       fileset.concat files } # add to set
 
@@ -46,7 +46,7 @@ class R
           resources.map{|resource| # docs
             fileset.concat resource.docs}}}} # add to set
 
-    return F[404][self,@r] if fileset.empty?
+    return E404[self,@r] if fileset.empty?
 
     @r['ETag'] = [q['view'].do{|v|View[v] && v}, # View
                   fileset.sort.map{|r|[r, r.m]}, # entity version(s)

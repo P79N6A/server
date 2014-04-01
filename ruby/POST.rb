@@ -31,7 +31,7 @@ class R
       if s # parse successful?
         s = s.R # subject URI
         pp = s.predicatePath p # subject+predicate URI
-        object = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : F['cleanHTML'][v] # object Literal | URI
+        object = v.match(/\A(\/|http)[\S]+\Z/) ? v.R : CleanHTML[v] # object Literal | URI
         o_ = pp.objectPath(object)[0]
         if o.to_s != o_.to_s # changed?
           o && o.R.do{|t| t.delete if t.e } # -triple

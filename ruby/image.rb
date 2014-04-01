@@ -21,9 +21,9 @@ class R
           `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`
         end
       end
-      path.e ? (path.env r).fileGET : F[404][e,r]
+      path.e ? (path.env r).fileGET : E404[e,r]
     else
-      F[404][e,r]
+      E404[e,r]
     end}
   
   View['th'] = -> i,e{
@@ -57,19 +57,22 @@ class R
         i[:c])}}
 
   def R.c; '#%06x' % rand(16777216) end
-  def R.cs; '#%02x%02x%02x' % F['color/hsv2rgb'][rand*6,1,1] end
+  def R.cs
 
-  F['color/hsv2rgb'] = -> h,s,v {
-    i = h.floor
-    f = h - i
-    p = v * (1 - s)
-    q = v * (1 - (s * f))
-    t = v * (1 - (s * (1 - f)))    
-    r,g,b=[[v,t,p],
-           [q,v,p],
-           [p,v,t],
-           [p,q,v],
-           [t,p,v],
-           [v,p,q]][i].map{|q|q*255.0}}
+    hsv2rgb = -> h,s,v {
+      i = h.floor
+      f = h - i
+      p = v * (1 - s)
+      q = v * (1 - (s * f))
+      t = v * (1 - (s * (1 - f)))    
+      r,g,b=[[v,t,p],
+             [q,v,p],
+             [p,v,t],
+             [p,q,v],
+             [t,p,v],
+             [v,p,q]][i].map{|q|q*255.0}}    
+
+    '#%02x%02x%02x' % hsv2rgb[rand*6,1,1]
+  end
 
 end
