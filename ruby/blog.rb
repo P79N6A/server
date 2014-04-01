@@ -73,15 +73,15 @@ class R
 
   def tw g
     node.readlines.shuffle.each_slice(22){|s|
-      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocsJSON :triplrTweets, g, nil, FeedArchiverJSON}
+      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocsJSON :triplrTwMsg, g, nil, FeedArchiverJSON}
   end
 
-  def triplrTw
+  def triplrTwUser
     open(d).readlines.map{|l|
       yield 'https://twitter.com/'+l.chomp, '/rev', self}
   end
 
-  def triplrTweets
+  def triplrTwMsg
     base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('a.details').attr('href') # subject URI

@@ -131,7 +131,7 @@ class R
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
     'text/turtle'          => [:triplrRDF,:turtle],
-    'text/tw'              => [:triplrTw],
+    'text/tw'              => [:triplrTwUser],
     'text/x-tex'           => [:triplrTeX],
   }
 
