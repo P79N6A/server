@@ -3,10 +3,12 @@ class R
 
   # range over collection of posts
   F['/blog/GET'] = -> d,e {
-    e.q['set'] = 'depth' # post-range in date-order
-    e.q['local'] = true  # hostname-specific
-    e.q['c'] ||= 8       # page size
-    R['http://'+e['SERVER_NAME']+'/blog'].env(e).response}
+    if %w{/ /blog}.member? d.pathSegment
+      e.q['set'] = 'depth' # post-range in date-order
+      e.q['local'] = true  # hostname-specific
+      e.q['c'] ||= 8       # page size
+    R['http://'+e['SERVER_NAME']+'/blog'].env(e).response
+    end}
 
   # prompt for title
   F['/blog/post/GET'] = -> d,e {
