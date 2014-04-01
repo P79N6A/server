@@ -13,7 +13,7 @@ class R
   F['/news.n3/GET'] = F['/news/GET']
 
   def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h end
-  def getFeeds h='localhost'; uris.tail.map{|u| u.getFeed h} end
+  def getFeeds h='localhost'; uris.map{|u| u.R.getFeed h} end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds

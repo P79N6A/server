@@ -1,7 +1,8 @@
 #watch __FILE__
 class R
 
-  # range over collection of posts
+  # traversible blog-post collection
+  # mount on a site-root w/ F['http://site/GET'] = F['/blog/GET']
   F['/blog/GET'] = -> d,e {
     if %w{/ /blog}.member? d.pathSegment
       e.q['set'] = 'depth' # post-range in date-order
@@ -31,7 +32,7 @@ class R
     base.jsonDoc.ln_s R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
     [303,{'Location' => (base+"?prototype=sioct:BlogPost&view=edit&mono").uri},[]]}
 
-  # view
+  # blogpost view
   F['view/'+SIOCt+'BlogPost']=->g,e{
     g.map{|u,r|
       [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
