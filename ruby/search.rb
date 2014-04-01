@@ -1,9 +1,62 @@
 #watch __FILE__
 class R
-=begin ruby full-text search & column-store http://groonga.org/
-      gem install rroonga
-      
-=end
+
+  fn 'fileset/grep',->e,q,m{
+    q['q'].do{|query|
+      q['view'] ||= 'grep'
+      path = e.pathSegment
+      GREP_DIRS.find{|p|path.uri.match p}.do{|_|
+        [e,path].compact.select(&:e).map{|e|
+          `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpath}}.flatten
+      }}}
+
+  fn 'view/grep',->d,e{
+    w = e.q['q']
+    if w
+      # words supplied in query
+      w = w.scan(/[\w]+/).map(&:downcase).uniq
+
+      # word index
+      c={}
+      w.each_with_index{|w,i|
+        c[w] = i }
+
+      # OR pattern
+      a = /(#{w.join '|'})/i
+      # sequential pattern
+      p = /#{w.join '.*'}/i
+
+      [H.css('/css/grep'),
+       {_: :style, c: c.values.map{|i|
+           # word color
+           b = rand(16777216)
+           # keep text contrasty
+           f = b > 8388608 ? :black : :white
+
+           # word CSS
+           ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
+
+       # each resource
+       d.map{|u,r|
+         # model to text/plain
+         l = F[Render+'text/plain'][{u => r},e].gsub(/<[^>]*>/,'').lines
+
+         # try sequential match
+         g = l.grep p
+         # try OR match
+         g = l.grep a if g.empty?                           
+
+         # match?
+         !g.empty? &&                                       
+         [# link to resource
+          r.R.do{|e|{_: :a, href: e.url, c: e}}, '<br>',
+          # show 3 matches per resource
+          [g[-1*(g.size.max 3)..-1].map{|l|   
+             # exerpt
+             l[0..403].gsub(a){|g|
+               H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
+           },"<br>"]]}]
+    end }
 
   F['/search/GET'] = -> d,e {
     e.q['set'] = 'groonga'
@@ -34,7 +87,7 @@ class R
       r}}
 
   def R.groonga
-    @groonga ||=
+    @groonga ||= # gem install rroonga
       (begin require 'groonga'
          R['/cache/groonga'].groonga
          Groonga["R"]

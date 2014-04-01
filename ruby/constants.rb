@@ -74,7 +74,6 @@ edit
 facets
 feed
 fs
-grep
 GET
 HTTP
 graph
