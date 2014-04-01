@@ -82,7 +82,6 @@ image
 index
 mail
 man
-microblog
 POST
 RDF
 search
