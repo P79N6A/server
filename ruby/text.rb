@@ -49,7 +49,7 @@ class R
 
   def triplrHTMLpiece; yield uri,Content,r end
 
-  F['view/'+MIMEtype+'text/html-part']=->g,e{g.map{|u,r|r[Content]}}
+  View[MIMEtype+'text/html-part']=->g,e{g.map{|u,r|r[Content]}}
 
   def triplrMarkdown
     require 'markdown'
@@ -76,7 +76,7 @@ class R
     p.a('*.png').glob.map{|i|yield uri, DC+'Image', i}
   end
 
-  F['view/'+MIMEtype+'application/postscript']=->r,e{
+  View[MIMEtype+'application/postscript']=->r,e{
     [(H.once e, :mu,   (H.js '/js/mu')),(H.once e, :book, (H.js '/js/book')),
      {_: :style, c: 'div[type="book"] a {background-color:#ccc;color:#fff;float:left;margin:.16em}'},
      r.values.map{|d|

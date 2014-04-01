@@ -19,7 +19,7 @@ class R
 
   fn '/today/GET',->e,r{[303, {'Location'=> Time.now.strftime('/%Y/%m/%d/?') + r['QUERY_STRING'] }, []]}
 
-  fn 'view/timegraph',->g,e{
+  View['timegraph'] = -> g,e {
     i = F['itemview/timegraph']
     F['baseview/timegraph'][g,e,->{g.map{|u,r|i.(r,e)}}]}
 

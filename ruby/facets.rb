@@ -2,7 +2,7 @@ class R
 
   # facet-filtering - dynamic CSS edition
 
-  fn 'view/facets',->m,e{
+  View['facets'] = -> m,e {
     a = Hash[(e.q['a'].split ',').map{|a|[a.expand,{}]}]
 
     # statistics

@@ -17,14 +17,14 @@ class R
           }}}}
   end
 
-  F['view/csv'] = -> d,e {
+  View['csv'] = -> d,e {
     d.delete_if{|s,r|
       !(r.class==Hash &&
         r[Type].do{|t|
           t.class == Array &&
           t.map(&:maybeURI).member?(CSV+'Row')})}
-    F['view/table'][d,e]}
+    View['table'][d,e]}
 
-  F['view/'+CSV+'Row'] = NullView
+  View[CSV+'Row'] = NullView
 
 end

@@ -36,21 +36,21 @@ class R
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response
 
     fileset = []
-    fileFn = q['set'].do{|s| F['fileset/'+s]} || F['fileset']
+    fileFn = q['set'].do{|s| FileSet[s]} || F['fileset']
     fileFn[self,q,m].do{|files| # file function
       fileset.concat files } # add to set
 
     q['set'].do{|set|
-      F['set/' + set].do{|setFn| # Resource function
-        setFn[self,q,m].do{|resources| # found
-          resources.map{|resource| # map to docs
+      ResourceSet[set].do{|setFn| # Resource function
+        setFn[self,q,m].do{|resources| # resources
+          resources.map{|resource| # docs
             fileset.concat resource.docs}}}} # add to set
 
     return F[404][self,@r] if fileset.empty?
 
-    @r['ETag'] = [q['view'].do{|v|F['view/'+v] && v}, # View
-                  fileset.sort.map{|r|[r, r.m]},      # entity version(s)
-                  @r.format].h                        # output MIME
+    @r['ETag'] = [q['view'].do{|v|View[v] && v}, # View
+                  fileset.sort.map{|r|[r, r.m]}, # entity version(s)
+                  @r.format].h                   # output MIME
 
     condResponse @r.format, ->{
       puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join ' '

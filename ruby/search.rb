@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  fn 'fileset/grep',->e,q,m{
+  FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       q['view'] ||= 'grep'
       path = e.pathSegment
@@ -10,7 +10,7 @@ class R
           `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpath}}.flatten
       }}}
 
-  fn 'view/grep',->d,e{
+  View['grep'] = -> d,e {
     w = e.q['q']
     if w
       # words supplied in query
@@ -65,11 +65,11 @@ class R
 
   F['/search.n3/GET'] = F['/search/GET']
 
-  fn 'view/'+Search+'Groonga',-> d,e {
+  View[Search+'Groonga'] = -> d,e {
     {_: :form, action: '/search',
       c: {_: :input, name: :q, style: 'font-size:2em'}}}
 
-  fn 'set/groonga',->d,e,m{
+  ResourceSet['groonga'] = ->d,e,m{
     R.groonga.do{|ga|
       q = e['q']                               # search expression
       g = e["context"] || d.env['SERVER_NAME'] # context

@@ -32,12 +32,12 @@ class R
     base.jsonDoc.ln_s R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
     [303,{'Location' => (base+"?prototype=sioct:BlogPost&view=edit&mono").uri},[]]}
 
-  F['view/'+SIOCt+'BlogPost'] = -> g,e {
+  View[SIOCt+'BlogPost'] = -> g,e {
     g.map{|u,r|
       [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
        r[Content]]}}
 
-  F['view/'+SIOCt+'MicroblogPost'] = -> d,e {
+  View[SIOCt+'MicroblogPost'] = -> d,e {
     [(H.once e,'chat',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{R.c}}"}),
      d.map{|u,r|
        r[Content] && r[Date]
@@ -48,7 +48,7 @@ class R
                     c[0].respond_to?(:uri) ? c[0].uri.abbrURI : c[0].to_s}}]}},' ',
         {_: :span, :class => :tw, c: r[Content]},"<br>\n"]}]}
 
-  F['view/'+SIOCt+'InstantMessage'] = F['view/'+SIOCt+'MicroblogPost']
+  View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost']
 
   def triplrIRC &f
     i=-1
@@ -99,6 +99,6 @@ class R
     }
   end
 
-  F['view/'+MIMEtype+'text/log'] = NullView
+  View[MIMEtype+'text/log'] = NullView
 
 end

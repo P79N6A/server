@@ -26,16 +26,15 @@ class R
       F[404][e,r]
     end}
   
-  fn 'view/th',->i,e{
+  View['th'] = -> i,e{
     i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) &&
       {_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.pathSegment}}}}
 
-  F['view/'+MIMEtype+'image/gif'] = F['view/th']
-  F['view/'+MIMEtype+'image/jpeg']= F['view/th']
-  F['view/'+MIMEtype+'image/png'] = F['view/th']
+  View[MIMEtype+'image/gif']  = View['th']
+  View[MIMEtype+'image/jpeg'] = View['th']
+  View[MIMEtype+'image/png']  = View['th']
 
-  # display just the images found in content
-  fn 'view/imgs',->m, e { seen = {}
+  View['imgs'] = -> m,e { seen = {} # unique images found
 
     x = ->i{i && i.match(/(jpe?g|gif|png)$/i) && i } # extension match
 

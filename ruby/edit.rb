@@ -7,7 +7,7 @@ class R
     SIOCt+'WikiArticle' => [Title, Content],
   }
 
-  fn 'view/edit',->g,e{
+  View['edit'] = -> g,e {
 
     # lambda to render a triple
     triple = ->s,p,o{
@@ -49,7 +49,7 @@ class R
            {_: :input, type: :submit, value: 'save'}]}]}
 
   # select a property to edit
-  fn 'view/addP',->g,e{
+  View['addP'] = -> g,e {
     [[Date,Title,Creator,Content,Label].map{|p|
        [{_: :a, href: e['REQUEST_PATH']+{'predicate' => p, 'view' => 'edit'}.qs, c: p},
         '<br>']},

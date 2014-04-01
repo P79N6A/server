@@ -39,7 +39,7 @@ class R
       [303,{'Location' => d.uri},[]]
     end}
 
-  F['view/'+SIOCt+'BoardPost'] = -> d,e {
+  View[SIOCt+'BoardPost'] = -> d,e {
     posts = d.resourcesOfType SIOCt+'BoardPost'
     posts.map{|post|
       {class: :boardPost, style: 'float: right; border: .1em dotted #ccc',
@@ -47,7 +47,7 @@ class R
             post[Content]
            ]}}}
 
-  F['view/board'] = -> d,e {
+  View['board'] = -> d,e {
     br = '<br>'
     post = {_: :form, method: :POST, enctype: "multipart/form-data",
       c: [{_: :input, title: :title, name: :title, size: 32},br,

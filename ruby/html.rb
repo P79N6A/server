@@ -117,18 +117,16 @@ class R
           views = types.map(&:maybeURI).compact.map{|t|
             subtype = t
             type = subtype.split(/\//)[-2]
-            [F['view/' + subtype],
-             (F['view/' + type] if type)]}.
-          flatten.compact
+            [View[subtype],(View[type] if type)]}.flatten.compact
           view = views[0] unless views.empty?}
       end
       if !view
-        F['view/base'][graph,e]
+        View['base'][graph,e]
       else
         view[graph,e]
       end}}
   
-  F['view/base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
+  View['base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
 
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap', 
@@ -147,9 +145,8 @@ class R
     h.xpath("//@*[starts-with(name(),'on')]").remove
     h.to_s}
 
-  # for convenience , render HTTP-response metadata in HTML view - ie pagination links
-  fn 'view/'+HTTP+'Response',->d,e{
-    d['#'].do{|u|
+  View[HTTP+'Response'] = -> d,e {
+    d['#'].do{|u| # HTTP-response metadata - pagination links
       [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;',style: 'color:#fff;background-color:#000;font-size:2.4em;float:left;clear:both'}},
        u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;',style: 'color:#000;background-color:#fff;font-size:2.4em;float:right;clear:both;'}},
        {_: :a, rel: :nofollow, href: e['REQUEST_PATH'].do{|u| # linked-data entrypoint
@@ -159,7 +156,7 @@ class R
 
   fn Render+'text/html',->d,e{ u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
-    view = F['view/'+e.q['view'].to_s] || F['view']
+    view = View[e.q['view'].to_s] || F['view']
     H ['<!DOCTYPE html>',{_: :html,
          c: [{_: :head, c: ['<meta charset="utf-8" />',
                    {_: :title, c: titles.size==1 ? titles[0] : e.uri},
@@ -168,7 +165,7 @@ class R
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: view[d,e]}]}]}
 
-  fn 'view/table',->g,e{
+  View['table'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     [H.css('/css/table'),
      {_: :table,:class => :tab,

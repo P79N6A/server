@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  fn 'view/'+Stat+'Directory',->i,e{
+  View[Stat+'Directory'] = -> i,e {
     a = -> i { i = i.R
       {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
 
@@ -13,7 +13,7 @@ class R
                   {_: :a, href: url.t, c: '/'}]},
              r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
 
-  fn 'view/ls',->i,e{
+  View['ls'] = -> i,e {
     dir = e['uri'].R
     path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
@@ -26,10 +26,10 @@ class R
       r.delete_if{|p,o|!f[p]}}
     [(H.css '/css/ls'),
      {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
-     {class: :ls, c: F['view/table'][i,e]},'<br clear=all>',
+     {class: :ls, c: View['table'][i,e]},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
 
-  fn 'fileset/find',->e,q,m,x=''{
+  FileSet['find'] = -> e,q,m,x='' {
     q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
@@ -38,11 +38,11 @@ class R
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
         lines.map{|l|l.chomp.unpath}}.compact.flatten}}
 
-  fn 'fileset/glob',->d,e=nil,_=nil{
+  FileSet['glob'] = -> d,e=nil,_=nil {
     p = [d,d.pathSegment].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
 
-  fn 'fileset/depth',->d,r,m{ # depth-first
+  FileSet['depth'] = -> d,r,m {
     global = !r.has_key?('local')
     p = global ? d.pathSegment : d
     loc = global ? '' : '&local'

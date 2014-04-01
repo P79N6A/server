@@ -31,7 +31,7 @@ class R
   ].map{|mime|
     F[Render+mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  F['view/data'] = ->d,e { # tabulator, supplied by server
+  View['tabulator'] = ->d,e {
     local = true
     tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'
     [(H.css tab + 'tabbedtab'),
@@ -49,6 +49,6 @@ jQuery(document).ready(function() {
 
   def n3; stripDoc.a '.n3' end
 
-  F['view/'+MIMEtype+'text/n3'] = NullView
+  View[MIMEtype+'text/n3'] = NullView
 
 end
