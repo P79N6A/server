@@ -40,7 +40,9 @@ class R
   View = {}
   FileSet = {}
   ResourceSet = {}
-  #= {}
+  Render = {}
+ #= {}
+ #= {}
 
   Watch = {}
   def self.dev

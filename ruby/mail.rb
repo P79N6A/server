@@ -11,7 +11,7 @@ class R
     return F[404][e,r] if m.empty?
     v = r.q['view'] ||= "timegraph"
     r['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
-    e.condResponse r.format, ->{e.render r.format, m, r}}
+    e.condResponse r.format, ->{Render[r.format][m, r]}}
 
   # subtree-range over posts at mailing-address path
   F['/m/GET'] = -> e,r{

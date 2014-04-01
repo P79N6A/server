@@ -64,7 +64,7 @@ class R
 
       else # JSON Model
         fileset.map{|r|r.env(@r).toGraph m}
-        render @r.format, m, @r
+        Render[@r.format][m, @r]
       end}
   end
   

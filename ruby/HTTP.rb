@@ -40,7 +40,7 @@ s[HTTP+'statusCodeValue'] = [404]
             s['#seeAlso'] = [e.parent,*e.a('*').glob]
               r.q['view'] = 404
 
-    [404,{'Content-Type'=> r.format},[e.render(r.format,g,r)]]}
+    [404,{'Content-Type'=> r.format},[Render[r.format][g,r]]]}
 
   View[404] = -> d,e {
     [H.css('/css/404'),{_: :style, c: "a {background-color:#{R.cs}}"},
@@ -109,7 +109,7 @@ module Th
     # Accept values
     accept.sort.reverse.map{|q,mimes| # sort on descending q-value
       mimes.map{|mime|
-        return mime if R::F[R::Render+mime]}} # available renderer
+        return mime if R::Render[mime]}} # available renderer
 
     'text/html'
   end

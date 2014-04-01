@@ -95,7 +95,7 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  fn Render+'application/json',->d,_=nil{d.to_json}
+  Render['application/json'] = -> d, _ = nil { d.to_json }
 
 end
 

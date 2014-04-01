@@ -154,7 +154,7 @@ class R
          c: {_: :img, src: '/css/misc/cube.png', style: 'height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}},
        ([(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
-  fn Render+'text/html',->d,e{ u = d['#']||{}
+  Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
     view = View[e.q['view'].to_s] || F['view']
     H ['<!DOCTYPE html>',{_: :html,

@@ -29,7 +29,7 @@ class R
    ['text/turtle',:turtle],
    ['text/n3',:n3]
   ].map{|mime|
-    F[Render+mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
+    Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
   View['tabulator'] = ->d,e {
     local = true

@@ -115,7 +115,7 @@ class R
 
   MIMEsource['text/css'] ||= [:triplrSourceCode] # i hear CSS is Turing complete now, http://inamidst.com/whits/2014/formats
 
-  fn Render+'text/plain',->d,_=nil{
+  Render['text/plain'] = -> d, _ = nil {
     d.values.map{|r|
       [(r.map{|k,v|
         ["<",(k=='uri' ? '' : k),"> ", # predicate
@@ -128,6 +128,6 @@ class R
            gsub(/\n+/,"\n")}.                           # collapse empty space
          intersperse(' '),"\n"]} if r.class==Hash),"\n"]}.join} # collate
 
-  fn Render+'text/uri',->d,_=nil{d.keys.join "\n"}
+  Render['text/uri'] = -> d, _ = nil {d.keys.join "\n"}
 
 end

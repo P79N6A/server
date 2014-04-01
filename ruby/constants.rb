@@ -21,6 +21,8 @@ class R < RDF::URI
   FOAF  = "http://xmlns.com/foaf/0.1/"
   SIOC  = 'http://rdfs.org/sioc/ns#'
   SIOCt = 'http://rdfs.org/sioc/types#'
+  Search   = 'http://sindice.com/vocab/search#'
+  Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Deri     = 'http://vocab.deri.ie/'
   DC       = Purl + 'dc/terms/'
@@ -48,10 +50,6 @@ class R < RDF::URI
   CSV      = Deri + 'scsv#'
   HTML     = RDFns + "HTML"
   Label    = RDFs + 'label'
-
-  Search   = 'http://sindice.com/vocab/search#'
-  Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
-  Render   = 'http://whats-your.name/www#RenderMIME/'
 
   Prefix={
     "dc" => DC,

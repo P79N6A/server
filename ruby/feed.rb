@@ -180,7 +180,7 @@ class R
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
-  fn Render+'application/atom+xml',->d,e{
+  Render['application/atom+xml'] = -> d,e {
     id = 'http://' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
     H(['<?xml version="1.0" encoding="utf-8"?>',
        {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
