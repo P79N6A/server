@@ -26,8 +26,7 @@ class R
       # sequential pattern
       p = /#{w.join '.*'}/i
 
-      [H.css('/css/grep'),
-       {_: :style, c: c.values.map{|i|
+      [{_: :style, c: c.values.map{|i|
            # word color
            b = rand(16777216)
            # keep text contrasty
