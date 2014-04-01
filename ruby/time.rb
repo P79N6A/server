@@ -23,7 +23,7 @@ class R
     i = F['itemview/timegraph']
     F['baseview/timegraph'][g,e,->{g.map{|u,r|i.(r,e)}}]}
 
-  F'baseview/timegraph'] = -> d,e,c {
+  F['baseview/timegraph'] = -> d,e,c {
     e[:graph] = d
     e[:group] = {}
     [F['view'][Hash[d.sort_by{|u,r| r.class==Hash && r[Date].do{|d|d.justArray[0].to_s} || ''}.reverse],e],H.css('/css/timegraph'),
