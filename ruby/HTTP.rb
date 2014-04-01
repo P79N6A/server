@@ -15,7 +15,7 @@ class R
     resource = R['http://'+e['SERVER_NAME']+path]
     resource.inside ? (
       e['uri'] = resource.uri
-      (resource.env e).send e['REQUEST_METHOD']) : [403,{},[]]
+      resource.env(e).send('HTTP_'+e['REQUEST_METHOD'])) : [403,{},[]]
   rescue Exception => x
     F[500][x,e]
   end
@@ -46,7 +46,7 @@ s[HTTP+'statusCodeValue'] = [404]
     [H.css('/css/404'),{_: :style, c: "a {background-color:#{R.cs}}"},
      d.html]}
 
-#  F['/500/GET'] = -> d,e {1/0}
+  GET['/500'] = -> d,e {1/0}
 
   F[500]=->x,e{ $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
     [500,{'Content-Type'=>'text/html'},

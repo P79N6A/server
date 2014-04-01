@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  F['/news/GET'] = -> d,e {
+  GET['/news'] = -> d,e {
     if %w{/news /news/ /news/index.n3 /news.n3}.member? d.pathSegment
       e.q['set'] ||= 'depth' # post-range in date-order
       e.q['local'] ||= true  # hostname-specific
@@ -10,7 +10,7 @@ class R
       R['http://'+e['SERVER_NAME']+'/news'].env(e).response # continue
     end}
 
-  F['/news.n3/GET'] = F['/news/GET']
+  GET['/news.n3'] = GET['/news']
 
   def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h end
   def getFeeds h='localhost'; uris.map{|u| u.R.getFeed h} end

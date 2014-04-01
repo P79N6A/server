@@ -6,7 +6,7 @@ class R
 #    triplrStdOut 'exiftool', EXIF, &f # slow but detailed
   end
 
-  fn '/thumbnail/GET',->e,r{
+  GET['/thumbnail'] = -> e,r {
     t = R['http://'+r['SERVER_NAME']+e.pathSegment.to_s.sub(/^.thumbnail/,'')]
     i = [t,t.pathSegment].compact.find(&:f)
     if i && i.size > 0

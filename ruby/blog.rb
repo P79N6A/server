@@ -2,8 +2,8 @@
 class R
 
   # traversible blog-post collection
-  # mount on a site-root w/ F['http://site/GET'] = F['/blog/GET']
-  F['/blog/GET'] = -> d,e {
+  # mount on a site-root w/ GET['http://site/'] = GET['/blog']
+  GET['/blog'] = -> d,e {
     if %w{/ /blog}.member? d.pathSegment
       e.q['set'] = 'depth' # post-range in date-order
       e.q['local'] = true  # hostname-specific
@@ -12,7 +12,7 @@ class R
     end}
 
   # prompt for title
-  F['/blog/post/GET'] = -> d,e {
+  GET['/blog/post'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
      [H(['title',
          {_: :form, method: :POST,
@@ -21,7 +21,7 @@ class R
               ]}])]]}
 
   # mint URI (date and name), insert title+type to db, forward to default editor
-  F['/blog/post/POST'] = -> d,e {
+  POST['/blog/post'] = -> d,e {
     host = 'http://' + e['SERVER_NAME']
     title = (Rack::Request.new d.env).params['title'] # decode POST-ed title
     base = R[host+Time.now.strftime('/%Y/%m/%d/')+URI.escape(title.gsub /[?#\s\/]/,'_')] # doc URI

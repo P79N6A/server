@@ -3,14 +3,14 @@ class R
 
   BoardRecent = []
 
-  F['/board/GET'] = -> d,e {
+  GET['/board'] = -> d,e {
     e.q['set'] = 'board' if %w{/ /board}.member? d.pathSegment
     e.q['view'] = 'board'
     nil}
 
-  F['/forum/GET'] = F['/board/GET']
+  GET['/forum'] = GET['/board']
 
-  F['/board/POST'] = -> d,e{
+  POST['/board'] = -> d,e{
     p = (Rack::Request.new d.env).params # parse input
     content = p['content']
     if content && !content.empty?

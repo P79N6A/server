@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
   
-  fn '/man/GET',->e,r{
+  GET['/man'] = -> e,r {
     manPath = '/usr/share/man'
 
     # eat selector

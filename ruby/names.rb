@@ -41,8 +41,10 @@ class R
   FileSet = {}
   ResourceSet = {}
   Render = {}
- #= {}
- #= {}
+  GET = {}
+  POST = {}
+  # = {}
+  # = {}
 
   Watch = {}
   def self.dev

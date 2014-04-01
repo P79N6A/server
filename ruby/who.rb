@@ -3,7 +3,7 @@ class R
 
   # concept via https://github.com/linkeddata/ldphp/blob/master/www/inc/webid.lib.php
 
-  F['/whoami/GET'] = -> d,e { response = nil
+  GET['/whoami'] = -> d,e { response = nil
 
     e['HTTP_SSL_CLIENT_CERT'].do{|v|
 

@@ -1,10 +1,10 @@
 #watch __FILE__
 class R
 
-  def POST
-    lambdas = pathSegment.cascade.map{|p| p.uri.t + 'POST' }
+  def HTTP_POST
+    lambdas = pathSegment.cascade
     ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
-        F[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
+        POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST

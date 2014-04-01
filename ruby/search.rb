@@ -58,12 +58,12 @@ class R
            },"<br>"]]}]
     end }
 
-  F['/search/GET'] = -> d,e {
+  GET['/search'] = -> d,e {
     e.q['set'] = 'groonga'
     e.q.delete 'view' if e.q['view'] == 'ls'
     nil}
 
-  F['/search.n3/GET'] = F['/search/GET']
+  GET['/search.n3'] = GET['/search']
 
   View[Search+'Groonga'] = -> d,e {
     {_: :form, action: '/search',

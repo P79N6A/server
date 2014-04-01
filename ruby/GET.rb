@@ -1,6 +1,6 @@
 class R
 
-  def GET
+  def HTTP_GET
     if file = [self,pathSegment].compact.find(&:f) # file exists, client or server might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
@@ -11,11 +11,11 @@ class R
     end
   end
 
-  def HEAD
+  def HTTP_HEAD
     self.GET.do{|s,h,b|[s,h,[]]}
   end
 
-  def OPTIONS
+  def HTTP_OPTIONS
     [200,{},[]]
   end
 
@@ -25,9 +25,9 @@ class R
   end
 
   def resource # handler search
-    paths = pathSegment.cascade.map{|p| p.uri.t + 'GET' }
+    paths = pathSegment.cascade
     ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path first, then /path (mounted on all hosts)
-      paths.map{|p| F[h + p].do{|fn|
+      paths.map{|p| GET[h + p].do{|fn|
           fn[self,@r].do{|r|return r}}}}
     response
   end
@@ -82,7 +82,7 @@ class R
       [200,head,[body]]}
   end
 
-  fn '/GET',->e,r{ # global handler
+  GET['/'] = -> e,r {
     i = [e,e.pathSegment].compact.map{|e|e.as 'index.html'}.find &:e # file exists?
     if i && !r['REQUEST_URI'].match(/\?/) # querystring?
       if e.uri[-1] == '/' # inside dir?

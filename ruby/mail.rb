@@ -3,10 +3,10 @@
 class R
 
   # Message-ID -> storage path
-  MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id} # String
-  F['/mid/GET'] = -> e,r{R[MessagePath[e.base]].env(r).response} # HTTP
+  MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
+  GET['/mid'] = -> e,r{R[MessagePath[e.base]].env(r).response}
 
-  fn '/thread/GET',-> e, r { m = {}
+  GET['/thread'] = -> e, r { m = {}
     R[MessagePath[e.stripDoc.basename]].walk SIOC+'reply_of', m
     return F[404][e,r] if m.empty?
     v = r.q['view'] ||= "timegraph"
@@ -14,7 +14,7 @@ class R
     e.condResponse r.format, ->{Render[r.format][m, r]}}
 
   # subtree-range over posts at mailing-address path
-  F['/m/GET'] = -> e,r{
+  GET['/m'] = -> e,r{
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set']  ||= 'depth'
       r.q['view'] ||= 'threads'
