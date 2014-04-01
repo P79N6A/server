@@ -27,6 +27,11 @@ class R
       R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocsJSON :triplrTweets, g, nil, FeedArchiverJSON}
   end
 
+  def triplrTw
+    open(d).readlines.map{|l|
+      yield 'https://twitter.com/'+l.chomp, '/rev', self}
+  end
+
   def triplrTweets
     base = 'http://twitter.com'
     nokogiri.css('div.tweet').map{|t|

@@ -95,6 +95,7 @@ class R
     tsv: 'text/tab-separated-values',
     ttl: 'text/turtle',
     txt: 'text/plain',
+    tw: 'text/tw',
     u: 'application/uri',
     url: 'text/plain',
     wav: 'audio/wav',
@@ -130,6 +131,7 @@ class R
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
     'text/turtle'          => [:triplrRDF,:turtle],
+    'text/tw'              => [:triplrTw],
     'text/x-tex'           => [:triplrTeX],
   }
 

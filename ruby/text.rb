@@ -44,7 +44,7 @@ class R
   end
 
   def uris
-    graph.keys.select{|u|u.match /^http/}.map &:R
+    graph.keys.select{|u|u.match /^http/}
   end
 
   def triplrHTMLpiece; yield uri,Content,r end
