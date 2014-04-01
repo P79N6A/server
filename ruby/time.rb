@@ -23,7 +23,7 @@ class R
     i = F['itemview/timegraph']
     F['baseview/timegraph'][g,e,->{g.map{|u,r|i.(r,e)}}]}
 
-  fn 'baseview/timegraph',->d,e,c{
+  F'baseview/timegraph'] = -> d,e,c {
     e[:graph] = d
     e[:group] = {}
     [F['view'][Hash[d.sort_by{|u,r| r.class==Hash && r[Date].do{|d|d.justArray[0].to_s} || ''}.reverse],e],H.css('/css/timegraph'),
@@ -31,7 +31,7 @@ class R
        c: (F['filter/timegraph'][ e.q, d, nil]
            c.())}]}
 
-  fn 'itemview/timegraph',->r,x{
+  F['itemview/timegraph'] = -> r,x {
 
     # on resources w x-axis field
     if r[x.q['x'] || Date]
@@ -55,7 +55,7 @@ class R
                  y2: r['x'].to_s+'%', x2: r['y'].to_s+'%'}}}}}]
     end }
 
-  fn 'filter/timegraph',->e,m,_{
+  F['filter/timegraph'] = -> e,m,_ {
 
     x = e['x'] || Date # x property
     y = e['y']         # y property

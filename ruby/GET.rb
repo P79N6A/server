@@ -12,7 +12,7 @@ class R
   end
 
   def HTTP_HEAD
-    self.GET.do{|s,h,b|[s,h,[]]}
+    self.HTTP_GET.do{|s,h,b|[s,h,[]]}
   end
 
   def HTTP_OPTIONS

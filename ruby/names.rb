@@ -19,11 +19,6 @@ def watch f
   R::Watch[f]=File.mtime f
   puts 'dev '+f end
 
-# URI -> function
-def fn u,y
-  R::F[u] = y
-end
-
 def R uri
   R.new uri
 end

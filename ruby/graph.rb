@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  fn 'fileset',->e,q,g{
+  F['fileset'] = -> e,q,g {
     s = []
     s.concat e.docs
     e.pathSegment.do{|p| s.concat p.docs unless p.uri == '/'}

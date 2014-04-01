@@ -59,7 +59,7 @@ class R
   def R.c; '#%06x' % rand(16777216) end
   def R.cs; '#%02x%02x%02x' % F['color/hsv2rgb'][rand*6,1,1] end
 
-  fn 'color/hsv2rgb',->h,s,v{
+  F['color/hsv2rgb'] = -> h,s,v {
     i = h.floor
     f = h - i
     p = v * (1 - s)
