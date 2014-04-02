@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   FileSet['default'] = -> e,q,g {

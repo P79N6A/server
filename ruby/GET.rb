@@ -12,7 +12,7 @@ class R
   end
 
   def HEAD
-    self.HTTP_GET.do{|s,h,b|[s,h,[]]}
+    self.GET.do{|s,h,b|[s,h,[]]}
   end
 
   def OPTIONS
@@ -46,7 +46,7 @@ class R
           resources.map{|resource| # docs
             fileset.concat resource.docs}}}} # add to set
 
-    return E404[self,@r] if fileset.empty?
+    return E404[self,@r,m] if fileset.empty?
 
     @r['ETag'] = [q['view'].do{|v|View[v] && v}, # View
                   fileset.sort.map{|r|[r, r.m]}, # entity version(s)

@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
   Apache = ENV['apache'] # apache=true in shell-environment
@@ -22,32 +23,20 @@ class R
 
   def q; @r.q end
 
-  E404 = -> e,r {
-   id = e.uri     # response URI
-    g = {id=>{}}  # response graph
-    s = g[id]     # resource pointer
-   fn = r['REQUEST_METHOD']
-
-    # request environment -> graph
-r.map{|k,v| s[Header + k] = k == 'uri' ? v : [v] }
-  %w{CHARSET LANGUAGE ENCODING}.map{|a|
-    s[Header+'ACCEPT_'+a] = [r.accept_('_' + a)]}
-       s[Header+'ACCEPT'] = [r.accept]
-                  s[Type] = [R[HTTP+'Response']]
-s[HTTP+'statusCodeValue'] = [404]
-    s[Header+'HTTP_HOST'] = [R['http://' + s[Header+'HTTP_HOST'][0]]] if s[Header+'HTTP_HOST']
-              s['#query'] = [r.q]
-            s['#seeAlso'] = [e.parent,*e.a('*').glob]
-              r.q['view'] = 404
-
+  E404 = -> e,r,g=nil {
+    g||={}
+    g[e.uri] ||= {}
+    s = g[e.uri] # request resource
+    r.map{|k,v| s[Header + k] = v }
+    %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'ACCEPT_'+a] = r.accept_('_'+a)}
+       s[Header+'ACCEPT'] = r.accept
+                 s[Title] = '404'
+              s['#query'] = r.q
+            s['#seeAlso'] = [e.parent, e.pathSegment.a('*').glob, e.a('*').glob]
+    r.q.delete 'view'
     [404,{'Content-Type'=> r.format},[Render[r.format][g,r]]]}
 
-  View[404] = -> d,e {
-    [H.css('/css/404'),{_: :style, c: "a {background-color:#{R.cs}}"},
-     d.html]}
-
-  GET['/500'] = -> d,e {1/0}
-
+#  GET['/500'] = -> d,e {1/0}
   E500 = -> x,e { $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
