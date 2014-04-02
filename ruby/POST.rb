@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  def HTTP_POST
+  def POST
     lambdas = pathSegment.cascade
     ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}

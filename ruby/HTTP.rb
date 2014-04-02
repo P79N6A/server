@@ -15,7 +15,7 @@ class R
     resource = R['http://'+e['SERVER_NAME']+path]
     resource.inside ? (
       e['uri'] = resource.uri
-      resource.env(e).send('HTTP_'+e['REQUEST_METHOD'])) : [403,{},[]]
+      resource.env(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
     E500[x,e]
   end

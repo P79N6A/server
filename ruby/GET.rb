@@ -1,6 +1,6 @@
 class R
 
-  def HTTP_GET
+  def GET
     if file = [self,pathSegment].compact.find(&:f) # file exists, client or server might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
@@ -11,11 +11,11 @@ class R
     end
   end
 
-  def HTTP_HEAD
+  def HEAD
     self.HTTP_GET.do{|s,h,b|[s,h,[]]}
   end
 
-  def HTTP_OPTIONS
+  def OPTIONS
     [200,{},[]]
   end
 

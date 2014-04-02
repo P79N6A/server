@@ -34,8 +34,8 @@ class R
 
   View[SIOCt+'BlogPost'] = -> g,e {
     g.map{|u,r|
-      [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
-       r[Content]]}}
+      {class: :blogpost, c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}}, r[Content]]}
+    }}
 
   View[SIOCt+'MicroblogPost'] = -> d,e {
     [(H.once e,'chat',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{R.c}}"}),

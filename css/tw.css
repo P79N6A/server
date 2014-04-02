@@ -34,9 +34,12 @@ span.nick span {
 a {text-decoration:none}
 .abbr,.scheme {display: none}
 
-.BoardPost .tw {
+.blogpost {
     background-color:#fff;
-    color:#000}
+    color:#000;
+    padding: 0 0 0 .4em;
+    border-radius:.5em;
+}
 
 table.html {border-spacing: 0}
 
