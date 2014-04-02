@@ -10,7 +10,7 @@ class R
 
   def R.call e
     e.extend Th # HTTP utility functions
-    dev         # watched files changed?
+    dev         # watched files
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
     resource = R['http://'+e['SERVER_NAME']+path]
@@ -24,20 +24,28 @@ class R
   def q; @r.q end
 
   E404 = -> e,r,g=nil {
-    g||={}
-    g[e.uri] ||= {}
-    s = g[e.uri] # request resource
-    r.map{|k,v| s[Header + k] = v }
+    g||={}; s = g[e.uri] ||= {}
+    s[Title] = '404'
+    s[RDFs+'seeAlso'] = [e.parent, e.pathSegment.a('*').glob, e.a('*').glob]
+    s['#query'] = Hash[r.q.map{|k,v|[k.hrefs,v.hrefs]}]
+    s[Header+'ACCEPT'] = r.accept
     %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'ACCEPT_'+a] = r.accept_('_'+a)}
-       s[Header+'ACCEPT'] = r.accept
-                 s[Title] = '404'
-              s['#query'] = r.q
-            s['#seeAlso'] = [e.parent, e.pathSegment.a('*').glob, e.a('*').glob]
+    r.map{|k,v| s[Header+k] = v }
     r.q.delete 'view'
     [404,{'Content-Type'=> r.format},[Render[r.format][g,r]]]}
 
-#  GET['/500'] = -> d,e {1/0}
-  E500 = -> x,e { $stderr.puts [500, e['REQUEST_URI'], x.class, x.message].join ' '
+  Errors = {}
+
+  GET['/500'] = -> e,r { 
+    r['ETag'] = Errors.keys.sort.h
+    e.condResponse r.format, ->{Render[r.format][Errors, r]}}
+
+  GET['/500/0'] = -> d,e {1/0}
+
+  E500 = -> x,e {
+    uri = 'http://'+e['SERVER_NAME']+e['REQUEST_URI']
+    $stderr.puts [500, uri, x.class, x.message].join ' '
+    Errors[e['uri']] ||= {'uri' => uri, Content => [x.class, x.message,x.backtrace[0..2]].flatten.join('<br>')}
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
           c: [{_: :head,c: [{_: :title, c: 500},(H.css '/css/500')]},
