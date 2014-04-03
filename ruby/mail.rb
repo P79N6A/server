@@ -50,7 +50,6 @@ class R
     id = m.message_id ; return unless id             # message-ID
     e = MessagePath[id.gsub(/[<>]/,'')]              # message URI
     yield e, DC+'identifier', id                     # origin-domain ID
-#    yield e, DC+'source', self                       # source-file URI
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post']].map{|t|yield e, Type, t}        # RDF types
 
@@ -59,8 +58,7 @@ class R
         f = f.to_utf8
         creator = '/m/'+f+'#'+f                        # author URI
         yield e, Creator, R[creator]                   # message -> author
-        yield creator, DC+'identifier', R['mailto:'+f] # author ID
-                                                       # reply to
+                                                       # reply target selection:
         r2 = m['List-Post'].do{|lp|lp.decoded[8..-2]} || # List-Post
              m.reply_to.do{|t|t[0]} ||                   # Reply-To
              f                                           # From
