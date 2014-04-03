@@ -62,8 +62,6 @@ class R
     e.q.delete 'view' if e.q['view'] == 'ls'
     nil}
 
-  GET['/search.n3'] = GET['/search']
-
   View[Search+'Groonga'] = -> d,e {
     {_: :form, action: '/search',
       c: {_: :input, name: :q, style: 'font-size:2em'}}}
@@ -81,9 +79,9 @@ class R
       up   = !(start<=0)                                             # next
       r = r.sort(e.has_key?('best') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
       r = r.map{|r|r['.uri'].R}                                      # URI field -> Resource
-      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down
+      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pagination
       m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      r}}
+      r }}
 
   def R.groonga
     @groonga ||= # gem install rroonga

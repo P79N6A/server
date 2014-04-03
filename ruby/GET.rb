@@ -1,14 +1,17 @@
 class R
 
   def GET
-    if file = [self,pathSegment].compact.find(&:f) # file exists, client or server might want another MIME
+    if file = [self,pathSegment].compact.find(&:f) # file exists, but client (or server) might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      (!accepted || MIMEcook[file.mimeP]) ?
-       resource : (file.env @r).fileGET
-    else
-      resource
+      return file.env(@r).fileGET unless !accepted || MIMEcook[file.mimeP]
     end
+
+    (if @r['REQUEST_PATH'].match(/\/index.(html|jsonld|nt|n3|rdf|ttl|txt)$/)
+       parent.as ''
+     else
+       stripDoc
+     end).env(@r).resourceGET
   end
 
   def HEAD
@@ -24,10 +27,11 @@ class R
     condResponse mimeP,->{self}
   end
 
-  def resource # handler search
+  def resourceGET # handler cascade
+    puts "resourceGET #{uri}"
     paths = pathSegment.cascade
     ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path first, then /path (mounted on all hosts)
-      paths.map{|p| GET[h + p].do{|fn|
+      paths.map{|p| GET[h + p].do{|fn| puts "handler #{h+p}"
           fn[self,@r].do{|r|return r}}}}
     response
   end
@@ -81,21 +85,5 @@ class R
                           f.serving(@r).do{|s,h,b|[s,h.update(head),b]})) :
       [200,head,[body]]}
   end
-
-  GET['/'] = -> e,r {
-    i = [e,e.pathSegment].compact.map{|e|e.as 'index.html'}.find &:e # file exists?
-    if i && !r['REQUEST_URI'].match(/\?/) # querystring?
-      if e.uri[-1] == '/' # inside dir?
-        i.env(r).fileGET  # file
-      else
-        [301, {Location: e.uri.t}, []] # into dir/
-      end
-    else
-      if r['REQUEST_URI'].match(/\/index.(html|jsonld|nt|n3|rdf|ttl|txt)$/) # explicit index
-        e.parent.as('').env(r).response # erase virtual index-path
-      else
-        e.response
-      end
-    end}
 
 end
