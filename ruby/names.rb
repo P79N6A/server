@@ -52,10 +52,11 @@ class R
   def appendSlashURI u; R uri.t + u.to_s end
   def basename; File.basename path end
   def barename; basename.sub(/\.#{ext}$/,'') rescue basename end
-  def cascade;  [uri[-1] == '/' ? R[uri[0..-2]] : self].concat parents end
+  def cascade;  [stripSlash].concat parents end
   def children; node.c.map &:R end
   def container; @u ||= R[f ? dirname + '/.' + (File.basename path) : path] end
   def d;        node.to_s end
+  def docroot;  stripFrag.stripDoc.stripSlash end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
@@ -69,7 +70,9 @@ class R
   def realpath; node.realpath rescue Errno::ENOENT end
   def shorten;  uri.shorten.R end
   def size;     node.size end
-  def stripDoc; uri.split(/#/)[0].do{|u|R[u.sub(/\.(e|html|n3|nt|owl|rdf|ttl|txt)$/,"")]} end
+  def stripDoc; R[uri.sub(/\.(e|html|n3|nt|owl|rdf|ttl|txt)$/,"")] end
+  def stripFrag; R[uri.split(/#/)[0]] end
+  def stripSlash; uri[-1] == '/' ? R[uri[0..-2]] : self end
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
   def sh;       d.force_encoding('UTF-8').sh end

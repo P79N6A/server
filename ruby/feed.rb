@@ -45,7 +45,8 @@ class R
                                      o.class == R ? o : (l = RDF::Literal o
                                                          l.datatype=RDF.XMLLiteral if p == Content
                                                          l),
-                                     :context => s.R.stripDoc)} end
+                                     :context => s.R.docroot)}
+      end
 
       def each_triple &block
         each_statement{|s| block.call *s.to_triple}

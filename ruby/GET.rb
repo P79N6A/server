@@ -5,13 +5,10 @@ class R
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
       return file.env(@r).fileGET unless !accepted || MIMEcook[file.mimeP]
-    end
-
-    (if @r['REQUEST_PATH'].match(/\/index.(html|jsonld|nt|n3|rdf|ttl|txt)$/)
-       parent.as ''
-     else
-       stripDoc
-     end).env(@r).resourceGET
+    end # enable conneg-hint paths:
+    uri = stripDoc # doc-format in extension
+    uri = uri.parent.as '' if uri.to_s.match(/\/index$/) # virtual index
+    uri.env(@r).resourceGET # continue at generic-resource URI
   end
 
   def HEAD

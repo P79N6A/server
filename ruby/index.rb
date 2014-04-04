@@ -108,7 +108,7 @@ class R
   end
 
   def triplrDoc &f
-    stripDoc.glob('#*').map{|s|
+      docroot.glob('#*').map{|s|
       s.triplrResource &f}
   end
 

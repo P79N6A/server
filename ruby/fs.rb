@@ -1,33 +1,19 @@
 #watch __FILE__
 class R
 
-  View[Stat+'Directory'] = -> i,e {
-    a = -> i { i = i.R
-      {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
-
-    [(H.once e, 'dir', (H.css '/css/ls')),
-     i.map{|u,r|
-       url = r.R.localURL e
-       {class: :dir, style: "background-color: #{R.cs}",    # dir wrapper
-         c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
-                  {_: :a, href: url.t, c: '/'}]},
-             r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
-
-  View['ls'] = -> i,e {
-    dir = e['uri'].R
-    path = dir.pathSegment
-    up = (!path || path.uri == '/') ? '/' : dir.parent.url
-    i = i.dup
-    i.delete_if{|u,r|!r[Stat+'ftype']}
-    f = {}
-    ['uri', LDP+'contains', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
-    i.values.map{|r|
-      r.class==Hash &&
-      r.delete_if{|p,o|!f[p]}}
-    [(H.css '/css/ls'),
-     {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
-     {class: :ls, c: View['table'][i,e]},'<br clear=all>',
-     {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
+  FileSet['default'] = -> e,q,g {
+    s = []
+    s.concat e.docs # host-specific docs
+    e.pathSegment.do{|p| s.concat p.docs unless p.uri == '/'} # global docs
+    e.env['REQUEST_PATH'].match(/\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
+      t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
+      pp = (t-1).strftime('/%Y/%m/%d/') # prev day
+      np = (t+1).strftime('/%Y/%m/%d/') # next day
+      g['#'][Prev] = {'uri' => pp} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
+      g['#'][Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
+    puts "docs #{s.join ' '}"
+    s
+  }
 
   FileSet['find'] = -> e,q,m,x='' {
     q['q'].do{|q|
@@ -56,6 +42,34 @@ class R
       u[Prev] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s }}
+
+  View[Stat+'Directory'] = -> i,e {
+    a = -> i { i = i.R
+      {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
+
+    [(H.once e, 'dir', (H.css '/css/ls')),
+     i.map{|u,r|
+       url = r.R.localURL e
+       {class: :dir, style: "background-color: #{R.cs}",    # dir wrapper
+         c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
+                  {_: :a, href: url.t, c: '/'}]},
+             r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
+
+  View['ls'] = -> i,e {
+    dir = e['uri'].R
+    path = dir.pathSegment
+    up = (!path || path.uri == '/') ? '/' : dir.parent.url
+    i = i.dup
+    i.delete_if{|u,r|!r[Stat+'ftype']}
+    f = {}
+    ['uri', LDP+'contains', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
+    i.values.map{|r|
+      r.class==Hash &&
+      r.delete_if{|p,o|!f[p]}}
+    [(H.css '/css/ls'),
+     {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
+     {class: :ls, c: View['table'][i,e]},'<br clear=all>',
+     {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
 
   def triplrInode
     if node.directory?

@@ -1,18 +1,6 @@
 #watch __FILE__
 class R
 
-  FileSet['default'] = -> e,q,g {
-    s = []
-    s.concat e.docs
-    e.pathSegment.do{|p| s.concat p.docs unless p.uri == '/'}
-    e.env['REQUEST_PATH'].match(/\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir?
-      t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
-      pp = (t-1).strftime('/%Y/%m/%d/') # prev day
-      np = (t+1).strftime('/%Y/%m/%d/') # next day
-      g['#'][Prev] = {'uri' => pp} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
-      g['#'][Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
-    s }
-
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -41,7 +29,7 @@ class R
 
   def docs
     [(self if e),
-     stripDoc.glob(".{e,jsonld,n3,nt,rdf,ttl}"),
+     docroot.glob(".{e,jsonld,n3,nt,rdf,ttl}"),
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
   end
@@ -61,7 +49,7 @@ class R
          r[p].do{|v|v.map{|o| # values exist?
              e.index p,o}}})} # index triple
     docs.map{|d,g|            # resources in docs
-      d = d.R; puts "<#{d.stripDoc}>"
+      d = d.R; puts "<#{d.docroot}>"
       d.w g,true              # write
       hook[d,g,host] if hook} # insert-hook
     graph.triples &b if b     # emit triples
@@ -77,14 +65,14 @@ class R
         doc = graph.name.n3
         unless doc.e
           doc.dirname.mk
-          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.stripDoc}> #{graph.count} triples"
+          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
     g
   end
 
-  def jsonDoc; stripDoc.a '.e' end
+  def jsonDoc; docroot.a '.e' end
 
   def triplrJSON
     yield uri, '/application/json', r(true) if e
