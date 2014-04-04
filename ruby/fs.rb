@@ -3,8 +3,8 @@ class R
 
   FileSet['default'] = -> e,q,g {
     s = []
-    s.concat e.docs # host-specific docs
-    e.pathSegment.do{|p| s.concat p.docs unless p.uri == '/'} # global docs
+    s.concat e.fileResources # host-specific
+    e.pathSegment.do{|p| s.concat p.fileResources unless p.uri == '/'} # global
     e.env['REQUEST_PATH'].match(/\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
       pp = (t-1).strftime('/%Y/%m/%d/') # prev day
@@ -70,6 +70,13 @@ class R
      {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
      {class: :ls, c: View['table'][i,e]},'<br clear=all>',
      {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
+
+  def fileResources
+    [(self if e),
+     docroot.glob(".{e,jsonld,n3,nt,rdf,ttl}"),
+     ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
+    ].flatten.compact
+  end
 
   def triplrInode
     if node.directory?

@@ -10,7 +10,7 @@ class R
   end
 
   def graph g={}
-    docs.map{|d|d.toGraph g} ;g
+    fileResources.map{|d|d.toGraph g} ;g
   end
 
   def toGraph g={}
@@ -25,13 +25,6 @@ class R
       end
     end
     g.mergeGraph doc.r true
-  end
-
-  def docs
-    [(self if e),
-     docroot.glob(".{e,jsonld,n3,nt,rdf,ttl}"),
-     ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
-    ].flatten.compact
   end
 
   # GET Resource -> local RDF cache

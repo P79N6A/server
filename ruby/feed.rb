@@ -10,7 +10,11 @@ class R
       R['http://'+e['SERVER_NAME']+'/news'].env(e).response # continue
     end}
 
-  def getFeed h='localhost'; addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h end
+  def getFeed h='localhost'
+    addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
+  rescue Exception => e
+    puts "#{uri} #{e}"
+  end
   def getFeeds h='localhost'; uris.map{|u| u.R.getFeed h} end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end

@@ -32,38 +32,39 @@ class R
     response
   end
 
-  def response
+  def response # default handler
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response
+  set = []
+    
+    # File set
+    fileFn = q['set'].do{|s| Set[s]} || Set['default']
+    fileFn[self,q,m].do{|files| set.concat files }
 
-    fileset = []
-    fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
-    fileFn[self,q,m].do{|files| # file function
-      fileset.concat files } # add to set
+    # Resource set
+    q['set'].do{|s|
+      ResourceSet[s].do{|setFn|
+        setFn[self,q,m].do{|resources|
+          resources.map{|resource|
+            set.concat resource.fileResources}}}}
 
-    q['set'].do{|set|
-      ResourceSet[set].do{|setFn| # Resource function
-        setFn[self,q,m].do{|resources| # resources
-          resources.map{|resource| # docs
-            fileset.concat resource.docs}}}} # add to set
-
-    return E404[self,@r,m] if fileset.empty?
+    return E404[self,@r,m] if set.empty?
 
     @r['ETag'] = [q['view'].do{|v|View[v] && v}, # View
-                  fileset.sort.map{|r|[r, r.m]}, # entity version(s)
+                  set.sort.map{|r|[r, r.m]}, # entity version(s)
                   @r.format].h                   # output MIME
 
     condResponse @r.format, ->{
       puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join ' '
 
       # RDF Model - all input formats are RDF and Writer exists for output MIME
-      if @r.format != "text/html" && ! fileset.find{|f| ! f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
+      if @r.format != "text/html" && ! set.find{|f| ! f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
           format = RDF::Format.for(:content_type => @r.format)
         graph = RDF::Graph.new
-        fileset.map{|r| graph.load r.d}
+        set.map{|r| graph.load r.d}
         graph.dump format.to_sym
 
       else # JSON Model
-        fileset.map{|r|r.env(@r).toGraph m}
+        set.map{|r|r.env(@r).toGraph m}
         Render[@r.format][m, @r]
       end}
   end
