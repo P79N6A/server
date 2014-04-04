@@ -69,7 +69,7 @@ class R
   def realpath; node.realpath rescue Errno::ENOENT end
   def shorten;  uri.shorten.R end
   def size;     node.size end
-  def stripDoc; uri.split(/#/)[0].do{|u|R[u.sub(/\.(e|html|n3|nt|owl|rdf|ttl|txt)$/,"").sub(/\/$/,"")]} end
+  def stripDoc; uri.split(/#/)[0].do{|u|R[u.sub(/\.(e|html|n3|nt|owl|rdf|ttl|txt)$/,"")]} end
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
   def sh;       d.force_encoding('UTF-8').sh end

@@ -28,10 +28,9 @@ class R
   end
 
   def resourceGET # handler cascade
-    puts "resourceGET #{uri}"
     paths = pathSegment.cascade
     ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path first, then /path (mounted on all hosts)
-      paths.map{|p| GET[h + p].do{|fn| puts "handler #{h+p}"
+      paths.map{|p| GET[h + p].do{|fn|
           fn[self,@r].do{|r|return r}}}}
     response
   end
