@@ -37,13 +37,13 @@ class R
   set = []
     
     # File set
-    fileFn = q['set'].do{|s| Set[s]} || Set['default']
+    fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
     fileFn[self,q,m].do{|files| set.concat files }
 
     # Resource set
     q['set'].do{|s|
-      ResourceSet[s].do{|setFn|
-        setFn[self,q,m].do{|resources|
+      ResourceSet[s].do{|resFn|
+        resFn[self,q,m].do{|resources|
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
