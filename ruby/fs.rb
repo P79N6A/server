@@ -11,7 +11,6 @@ class R
       np = (t+1).strftime('/%Y/%m/%d/') # next day
       g['#'][Prev] = {'uri' => pp} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
       g['#'][Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
-    puts "docs #{s.join ' '}"
     s
   }
 

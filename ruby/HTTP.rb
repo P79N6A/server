@@ -28,9 +28,9 @@ class R
     s[Title] = '404'
     s[RDFs+'seeAlso'] = [e.parent, e.pathSegment.a('*').glob, e.a('*').glob]
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
-    s[Header+'ACCEPT'] = r.accept
-    %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'ACCEPT_'+a] = r.accept_('_'+a)}
-    r.map{|k,v| s[Header+k] = v }
+    s[Header+'accept'] = r.accept
+    %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'accept-'+a.downcase] = r.accept_('_'+a)}
+    r.map{|k,v| s[Header+k.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v }
     r.q.delete 'view'
     [404,{'Content-Type'=> r.format},[Render[r.format][g,r]]]}
 
