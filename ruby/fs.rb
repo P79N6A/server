@@ -49,7 +49,7 @@ class R
     [(H.once e, 'dir', (H.css '/css/ls')),
      i.map{|u,r|
        url = r.R.localURL e
-       {class: :dir, style: "background-color: #{R.cs}",    # dir wrapper
+       {class: :dir, style: "background-color: #{R.cs}",
          c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
                   {_: :a, href: url.t, c: '/'}]},
              r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
@@ -93,12 +93,15 @@ class R
       yield uri, '/linkTarget', target }
   end
 
-  def triplrStdOut e,f='/',g=/^\s*(.*?)\s*$/,a=sh
+  def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
     `#{e} #{a}|grep :`.each_line{|i|
-      i = i.split /:/
-    yield uri, (f + (i[0].match(g)||[0,i[0]])[1].       # s
-     gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # p
-      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v}} # o
+   begin
+     i = i.split /:/
+    yield uri, (f + (i[0].match(g)||[0,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')),
+      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v}
+   rescue
+    puts "#{uri} skipped: #{i}"
+   end}
   end
 
   def ln t, y=:link

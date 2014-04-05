@@ -10,6 +10,23 @@ class R
           `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpath}}.flatten
       }}}
 
+  ResourceSet['groonga'] = ->d,e,m{
+    m['/search#'] = {Type => R[Search]}
+    R.groonga.do{|ga|
+      q = e['q']                               # search expression
+      g = e["context"] || d.env['SERVER_NAME'] # context
+      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
+      ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
+      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset
+      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
+      down = r.size > start+c                                        # prev
+      up   = !(start<=0)                                             # next
+      r = r.sort(e.has_key?('best') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
+      r = r.map{|r|r['.uri'].R}                                      # URI field -> Resource
+      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pagination
+      m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
+      r }}
+
   View['grep'] = -> d,e {
     w = e.q['q']
     if w
@@ -62,26 +79,9 @@ class R
     e.q.delete 'view' if e.q['view'] == 'ls'
     nil}
 
-  View[Search+'Groonga'] = -> d,e {
+  View[Search] = -> d,e {
     {_: :form, action: '/search',
       c: {_: :input, name: :q, style: 'font-size:2em'}}}
-
-  ResourceSet['groonga'] = ->d,e,m{
-    R.groonga.do{|ga|
-      q = e['q']                               # search expression
-      g = e["context"] || d.env['SERVER_NAME'] # context
-      m['/search#'] = {Type => R[Search+'Groonga']} # add a groonga resource to the graph      
-      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
-      ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
-      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset
-      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
-      down = r.size > start+c                                        # prev
-      up   = !(start<=0)                                             # next
-      r = r.sort(e.has_key?('best') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      r = r.map{|r|r['.uri'].R}                                      # URI field -> Resource
-      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pagination
-      m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      r }}
 
   def R.groonga
     @groonga ||= # gem install rroonga
@@ -93,7 +93,7 @@ class R
        end)
   end
 
-  # groonga DB at URI
+  # URI -> groonga DB
   def groonga
     return Groonga::Database.open d if e # open db
     dirname.mk                           # create containing dir
