@@ -4,4 +4,4 @@ a.track {background-color:#000;color:#fff;float:left;margin-right:.18em}
 #jump {float:left;font-size:3em;padding:.1em;background-color:orange;color:#fff}
 #rand {float:left;font-size:3em;padding:.1em;background-color:#ddf;color:#000}
 #info {font-weight:bold; font-size: 2em;background-color:#000;color:#fff}
-#infoPane {width: 28em}
+#infoPane {width: 32em; border-width:0;float:right}
