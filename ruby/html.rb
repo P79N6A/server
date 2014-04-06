@@ -109,23 +109,11 @@ class R
   end
 
   View['select']=->d,e{
-    d.values.map{|r|
-      graph = {r.uri => r}
-      view = nil
-      if r.class == Hash
-        r[Type].justArray.do{|types|
-          views = types.map(&:maybeURI).compact.map{|t|
-            subtype = t
-            type = subtype.split(/\//)[-2]
-            [View[subtype],(View[type] if type)]}.flatten.compact
-          view = views[0] unless views.empty?}
-      end
-      if !view
-        View['base'][graph,e]
-      else
-        view[graph,e]
-      end}}
-  
+    d.map{|u,r|
+      type = r[Type].justArray.find{|type|
+        type.respond_to?(:uri) && View[type.uri]}
+      View[type ? type.uri : 'base'][{u => r},e]}}
+
   View['base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
 
   def triplrHref enc=nil

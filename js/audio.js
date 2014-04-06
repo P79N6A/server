@@ -1,6 +1,6 @@
 var audio = function(){
 
-    var track = 'td[property="uri"] a'
+    var track = 'body > a'
     var audio = document.querySelector('#media')
     var random = q('#rand')
     var trax = qa(track)
@@ -30,8 +30,8 @@ var audio = function(){
 	   s = trax[Math.floor(Math.random()*trax.length)]
 	} else {
 	    var cur = q(track+'[href="'+audio.attr('src')+'"]')
-	    if(cur && (s = cur.parentNode.parentNode.nextSibling.querySelector(track))) {
-		// next bound as 's'
+	    if(cur && (s = cur.nextSibling)) {
+		// next bound
 	    } else {
 		s = q(track)
 	    }

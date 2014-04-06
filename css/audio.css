@@ -3,7 +3,7 @@ body {
     background-color:#aaa;
 }
 div {display: inline;}
-a{text-decoration:none}
+body > a > .frag {text-decoration:none;background-color:#000;color:#fff;float:left;margin-right:.18em}
 #media {float: left;width:100%}
 #jump {float:left;font-size:3.33em;padding:0 .2em 0 .2em;background-color:orange;color:#fff}
 #rand {float:left;font-size:3.33em;padding:0 .3em 0 .2em;background-color:#ddf;color:#000}
