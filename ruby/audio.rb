@@ -1,8 +1,4 @@
-watch __FILE__
 class R
-
-  VideoFile = /(avi|flv|mkv|mpg|mp4|wmv)$/i
-  AudioFile = /(aif|wav|flac|mp3|m4a|aac|ogg)$/i
 
   View['audio'] = ->d,e {
     [(H.once e, :audio,
@@ -14,7 +10,7 @@ class R
       {id: :info, target: :_blank, _: :a},
       {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true},
       {_: :iframe, id: :infoPane}),
-     d.map{|u,_|{_: :a, class: :track, href: u, c: u.split(/\//)[-1].sub('.mp3$','')}}]}
+     d.map{|u,_|{_: :a, class: :track, href: u, c: u.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}}]}
 
   %w{aif wav mpeg}.map{|a|View[MIMEtype+'audio/'+a]=View['audio']}
 end

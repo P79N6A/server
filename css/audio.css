@@ -1,7 +1,7 @@
 #info, a.track {text-decoration:none}
-a.track {background-color:#000;color:#fff;float:left;margin-right:.18em}
+a.track {background-color:#000;color:#fff;float:right;margin:.08em;padding:.08em}
 #media {width: 100%}
-#jump {float:left;font-size:3em;padding:.1em;background-color:orange;color:#fff}
-#rand {float:left;font-size:3em;padding:.1em;background-color:#ddf;color:#000}
+#jump {font-size:3em;padding:.1em;background-color:orange;color:#fff}
+#rand {font-size:3em;padding:.1em;background-color:#ddf;color:#000}
 #info {font-weight:bold; font-size: 2em;background-color:#000;color:#fff}
 #infoPane {width: 32em; border-width:0;float:right}
