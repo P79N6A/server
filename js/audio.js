@@ -1,6 +1,6 @@
 var audio = function(){
 
-    var track = 'body > a'
+    var track = 'a.track'
     var audio = document.querySelector('#media')
     var random = q('#rand')
     var trax = qa(track)
@@ -8,7 +8,8 @@ var audio = function(){
     var changeTrack = function(i,t){
 	var track = decodeURIComponent(i)
 	q('title').txt(track)
-	q('#info').txt(track).attr('href',track+'?view=base')
+	q('#info').txt(track).attr('href',track)
+	q('#infoPane').attr('src',track+'.html?view=base#'+track)
 	audio.src = i
 	audio.attr('time',t)
 	audio.load()}
@@ -57,7 +58,7 @@ var audio = function(){
     if(window.location.hash) hashChange()
     window.onhashchange = hashChange
     trax.on('click',function(e){
-	window.location.hash = e.target.parentNode.attr('href')
+	window.location.hash = e.target.attr('href')
 	e.preventDefault()
 	return false
     })
