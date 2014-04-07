@@ -15,7 +15,10 @@ class R
   rescue Exception => e
     puts "#{uri} #{e}"
   end
-  def getFeeds h='localhost'; uris.map{|u| u.R.getFeed h} end
+  def getFeeds h='localhost'
+    uris.map{|u| u.R.getFeed h}
+    nil
+  end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method :feeds, :listFeeds
