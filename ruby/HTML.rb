@@ -3,10 +3,11 @@
 def H _
   case _
   when Hash
-    void = [:img,:input,:link].member? _[:_] # area, base, br, col, embed, hr, img, input, keygen, link, meta, param, source, track, wbr
+#    void = [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr].member? _[:_]
+    void = [:img, :input, :link].member? _[:_]
     '<' + (_[:_] || :div).to_s + # name
       (_.keys - [:_,:c]).map{|a| # attributes
-      ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join +
+      ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join + # values
       (void ? '/' : '') + '>' + # opener
       (_[:c] ? (H _[:c]) : '') + # child nodes
       (void ? '' : ('</'+(_[:_]||:div).to_s+'>')) # closer
