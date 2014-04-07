@@ -73,9 +73,9 @@ facets
 feed
 fs
 GET
-HTTP
 graph
-html
+HTML
+HTTP
 image
 index
 mail

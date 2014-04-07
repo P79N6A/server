@@ -3,10 +3,13 @@
 def H _
   case _
   when Hash
-    '<'+(_[:_]||:div).to_s+(_.keys-[:_,:c]).map{|a|
-      ' '+a.to_s+'='+"'"+_[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join+"'"}.join+'>'+
-      (_[:c] ? (H _[:c]) : '')+
-      (_[:_] == :link ? '' : ('</'+(_[:_]||:div).to_s+'>'))
+    closed = _[ :_ ] == :link
+    '<' + (_[:_] || :div).to_s + # name
+      (_.keys - [:_,:c]).map{|a| # attributes
+      ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join +
+      (closed ? '/' : '') + '>' + # opener
+      (_[:c] ? (H _[:c]) : '') + # child nodes
+      (closed ? '' : ('</'+(_[:_]||:div).to_s+'>')) # closer
   when Array
     _.map{|n|H n}.join
   else
