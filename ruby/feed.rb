@@ -1,4 +1,3 @@
-#watch __FILE__
 class R
 
   GET['/news'] = -> d,e {

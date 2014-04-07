@@ -92,7 +92,9 @@ module Th
   def conneg
 
     # URI of format-variant
-    { '.html' => 'text/html',
+    {
+      '.atom' => 'application/atom+xml',
+      '.html' => 'text/html',
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/ntriples',
       '.n3' => 'text/n3',

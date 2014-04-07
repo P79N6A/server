@@ -55,10 +55,10 @@ class R
 
     condResponse @r.format, ->{
       puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join ' '
-
+      
       # RDF Model - all input formats are RDF and Writer exists for output MIME
-      if @r.format != "text/html" && ! set.find{|f| ! f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
-          format = RDF::Format.for(:content_type => @r.format)
+      if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
+          format = RDF::Writer.for(:content_type => @r.format)
         graph = RDF::Graph.new
         set.map{|r| graph.load r.d}
         graph.dump format.to_sym
