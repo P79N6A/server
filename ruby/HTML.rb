@@ -3,13 +3,13 @@
 def H _
   case _
   when Hash
-    closed = _[ :_ ] == :link
+    void = [:img,:input,:link].member? _[:_] # area, base, br, col, embed, hr, img, input, keygen, link, meta, param, source, track, wbr
     '<' + (_[:_] || :div).to_s + # name
       (_.keys - [:_,:c]).map{|a| # attributes
       ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join +
-      (closed ? '/' : '') + '>' + # opener
+      (void ? '/' : '') + '>' + # opener
       (_[:c] ? (H _[:c]) : '') + # child nodes
-      (closed ? '' : ('</'+(_[:_]||:div).to_s+'>')) # closer
+      (void ? '' : ('</'+(_[:_]||:div).to_s+'>')) # closer
   when Array
     _.map{|n|H n}.join
   else
