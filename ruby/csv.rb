@@ -1,6 +1,8 @@
 #watch __FILE__
 class R
 
+  # TODO use https://github.com/gkellogg/csv-ld
+
   # CSV -> tripleStream
   def triplrCSV d
     d = @r.q['delim']||d
