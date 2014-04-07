@@ -54,7 +54,7 @@ class R
                   @r.format].h                   # output MIME
 
     condResponse @r.format, ->{
-      puts [uri+'?'+@r['QUERY_STRING'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join ' '
+      puts ['http://'+@r['SERVER_NAME']+@r['REQUEST_URI'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join ' '
       
       # RDF Model - all input formats are RDF and Writer exists for output MIME
       if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
