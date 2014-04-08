@@ -8,6 +8,9 @@ class R
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
+    else
+      puts "POST #{uri} #{@r['CONTENT_TYPE']}"
+      [303,{'Location'=>uri},[]]
     end
   end
 
