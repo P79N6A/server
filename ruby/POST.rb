@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -8,6 +8,8 @@ class R
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
+    when /^text\/(n3|turtle)/
+      rdfPOST
     else
       puts "POST #{uri} #{@r['CONTENT_TYPE']}"
       [303,{'Location'=>uri},[]]
@@ -22,6 +24,12 @@ class R
     else # graph -> doc
       jsonDoc.w g, true
     end
+  end
+
+  def rdfPOST
+    data = @r['rack.input'].read
+    puts @r,data
+    [303,{'Location'=>uri},[]]
   end
 
   def formPOST
