@@ -73,7 +73,11 @@ class R
     @r['HTTP_IF_NONE_MATCH'].do{|m|
       m.strip.split(/\s*,\s*/).include?(@r['ETag']) && [304,{},[]]} ||
     body.call.do{|body|
-      head = {'Content-Type' => format, 'ETag' => @r['ETag']}
+      head = {
+        'Access-Control-Allow-Origin' => '*',
+        'Content-Type' => format,
+        'ETag' => @r['ETag'],
+      }
       head.update({'Cache-Control' => 'no-transform'}) if format.match /^(audio|image|video)/
 
       body.class == R ? (Nginx ? [200,head.update({'X-Accel-Redirect' => '/fs' + body.path}),[]] : # Nginx

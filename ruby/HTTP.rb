@@ -15,8 +15,6 @@ class R
     path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
     resource = R['http://'+e['SERVER_NAME']+path]
     resource.inside ? (
-      puts [e['REQUEST_METHOD'],'http://'+e['SERVER_NAME']+e['REQUEST_URI']].join ' '
-      
       e['uri'] = resource.uri
       resource.env(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
