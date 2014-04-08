@@ -5,7 +5,7 @@ class R
     s = []
     s.concat e.fileResources # host-specific
     e.pathSegment.do{|p| s.concat p.fileResources unless p.uri == '/'} # global
-    e.env['REQUEST_PATH'].match(/\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
+    e.env['REQUEST_PATH'].match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
       pp = (t-1).strftime('/%Y/%m/%d/') # prev day
       np = (t+1).strftime('/%Y/%m/%d/') # next day
