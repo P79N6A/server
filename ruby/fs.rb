@@ -9,8 +9,9 @@ class R
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
       pp = (t-1).strftime('/%Y/%m/%d/') # prev day
       np = (t+1).strftime('/%Y/%m/%d/') # next day
-      g['#'][Prev] = {'uri' => pp} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
-      g['#'][Next] = {'uri' => np} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
+      qs = q['view'].do{|v|'?view='+v} || ''
+      g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
+      g['#'][Next] = {'uri' => np + qs} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
     s
   }
 
