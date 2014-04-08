@@ -12,5 +12,5 @@ class R
       {_: :iframe, id: :infoPane}),
      d.map{|u,_|{_: :a, class: :track, href: u, c: u.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}}]}
 
-  %w{aif wav mpeg}.map{|a|View[MIMEtype+'audio/'+a]=View['audio']}
+  %w{aif wav mpeg mp4}.map{|a|View[MIMEtype+'audio/'+a]=View['audio']}
 end
