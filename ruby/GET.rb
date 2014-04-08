@@ -15,10 +15,6 @@ class R
     self.GET.do{|s,h,b|[s,h,[]]}
   end
 
-  def OPTIONS
-    [200,{},[]]
-  end
-
   def fileGET
     @r['ETag'] = [m,size].h
     condResponse mimeP,->{self}
