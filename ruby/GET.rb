@@ -7,7 +7,7 @@ class R
       return file.env(@r).fileGET unless !accepted || MIMEcook[file.mimeP]
     end # enable conneg-hint paths:
     uri = stripDoc # doc-format in extension
-    uri = uri.parent.as '' if uri.to_s.match(/\/index$/) # virtual index
+    uri = uri.parent.descend if uri.to_s.match(/\/index$/)
     uri.env(@r).resourceGET # continue at generic-resource URI
   end
 

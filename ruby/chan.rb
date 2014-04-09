@@ -9,7 +9,7 @@ class R
     if !path.match(/\//)
       if path.empty? # forum
         e.q['view'] ||= 'title'
-        r.as('').env(e).response
+        r.descend.env(e).response
       else # subforum
 puts :sub
       end

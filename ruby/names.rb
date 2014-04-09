@@ -56,6 +56,7 @@ class R
   def children; node.c.map &:R end
   def container; @u ||= R[f ? dirname + '/.' + (File.basename path) : path] end
   def d;        node.to_s end
+  def descend;  R uri.t end
   def docroot;  stripFrag.stripDoc.stripSlash end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
   def expand;   uri.expand.R end
