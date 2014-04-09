@@ -70,8 +70,7 @@ class R
       m.strip.split(/\s*,\s*/).include?(@r['ETag']) && [304,{},[]]} ||
     body.call.do{|body|
       head = {
-#        'Access-Control-Allow-Origin' => '*',
-        'Access-Control-Allow-Origin' => 'https://m',
+        'Access-Control-Allow-Origin' => '*',
         'Content-Type' => format,
         'ETag' => @r['ETag'],
       }

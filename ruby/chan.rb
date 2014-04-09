@@ -1,12 +1,21 @@
 watch __FILE__
 class R
 
-  BoardRecent = []
+  RecentPosts = {}
 
-  GET['/board'] = -> d,e {
-    e.q['set'] = 'board' if %w{/ /board}.member? d.pathSegment
-    e.q['view'] = 'board'
-    nil}
+  GET['/chan'] = -> r,e {
+    path = r.pathSegment.uri.sub(/^\/(board|chan|forum)\/*/,'/').tail
+    puts r.uri,path
+    if !path.match(/\//)
+      if path.empty? # forum
+puts :top
+#        e.q['set'] = 
+      else # subforum
+puts :sub
+      end
+    else # post
+puts :post
+    end}
 
   GET['/forum'] = GET['/board']
 

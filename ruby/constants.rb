@@ -66,7 +66,7 @@ MIME
 names
 audio
 blog
-board
+chan
 csv
 edit
 facets
