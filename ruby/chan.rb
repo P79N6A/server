@@ -3,13 +3,13 @@ class R
 
   RecentPosts = {}
 
-  GET['/chan'] = -> r,e {
-    path = r.pathSegment.uri.sub(/^\/(board|chan|forum)\/*/,'/').tail
+  GET['/ch'] = -> r,e {
+    path = r.pathSegment.uri.sub(/^\/(board|ch|forum)\/*/,'/').tail
     puts r.uri,path
     if !path.match(/\//)
       if path.empty? # forum
-puts :top
-#        e.q['set'] = 
+        e.q['view'] ||= 'title'
+        r.as('').env(e).response
       else # subforum
 puts :sub
       end
@@ -17,9 +17,7 @@ puts :sub
 puts :post
     end}
 
-  GET['/forum'] = GET['/board']
-
-  POST['/board'] = -> d,e{
+  POST['/ch'] = -> d,e{
     p = (Rack::Request.new d.env).params # parse input
     content = p['content']
     if content && !content.empty?

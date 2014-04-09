@@ -120,6 +120,14 @@ class R
 
   View['base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
 
+  View['title'] = -> g,e {
+    [g.map{|u,r|
+       {_: :a, href: u, c: r[Title]||u.R.basename}},
+     {_: :style, c: "
+a {font-size: 1.7em;font-weight:bold;text-decoration:none;background-color:#{R.cs};color:#fff;float:left;padding:.1em;margin:.1em}
+"}
+    ]}
+
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap', 
                             c: open(d).read.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
