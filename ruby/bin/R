@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
 exit 0 if ARGV.empty?
 require 'ww/constants'
-puts R[ARGV[0]].send *ARGV[1..-1]
+begin
+ puts R[ARGV[0]].send *ARGV[1..-1]
+rescue Exception => e
+ puts e.class, e.message, e.backtrace
+end
