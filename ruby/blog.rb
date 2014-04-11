@@ -2,7 +2,7 @@
 class R
 
   # traversible blog-post collection
-  # mount on a site-root w/ GET['http://site/'] = GET['/blog']
+  # to mount on a site-root  GET['http://site/'] = GET['/blog']
   GET['/blog'] = -> d,e {
     if %w{/ /blog}.member? d.pathSegment
       e.q['set'] = 'depth' # post-range in date-order
@@ -11,7 +11,7 @@ class R
     R['http://'+e['SERVER_NAME']+'/blog'].env(e).response
     end}
 
-  # prompt for title
+  # prompt for title of new post
   GET['/blog/post'] = -> d,e {
     [200,{'Content-Type'=>'text/html'},
      [H(['title',

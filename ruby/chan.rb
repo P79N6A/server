@@ -5,16 +5,15 @@ class R
 
   GET['/ch'] = -> r,e {
     path = r.pathSegment.uri.sub(/^\/(board|ch|forum)\/*/,'/').tail
-    puts r.uri,path
-    if !path.match(/\//)
-      if path.empty? # forum
+    if path.match(/^[^\/]*\/?$/)
+      if path.empty? # toplevel index
         e.q['view'] ||= 'title'
         r.descend.env(e).response
-      else # subforum
-puts :sub
+      else # sub index
+        puts "sub #{path}"
       end
     else # post
-puts :post
+
     end}
 
   POST['/ch'] = -> d,e{

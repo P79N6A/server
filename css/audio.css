@@ -1,4 +1,4 @@
-#info, a.track {text-decoration:none}
+a {text-decoration:none}
 a.track {background-color:#000;color:#fff;float:right;margin:.08em;padding:.08em}
 #media {width: 100%}
 #jump {font-size:3em;padding:.1em;background-color:orange;color:#fff}
