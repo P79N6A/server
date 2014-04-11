@@ -6,7 +6,8 @@ class R
 
   GET['/mid'] = -> e,r{R[MessagePath[e.base]].env(r).response}
 
-  GET['/thread'] = -> e, r { m = {}
+  GET['/thread'] = -> e, r {
+    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
     v = r.q['view'] ||= "timegraph"
