@@ -48,7 +48,7 @@ class R
   end
 
   def triplrMarkdown
-    require 'markdown'
+    require 'redcarpet'
     yield uri,Content,Markdown.new(r).to_html
   end
 
