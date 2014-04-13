@@ -159,7 +159,7 @@ a {font-size: 1.7em;font-weight:bold;text-decoration:none;background-color:#{R.c
       [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;',style: 'color:#fff;background-color:#000;font-size:2.4em;float:left;clear:both'}},
        u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;',style: 'color:#000;background-color:#fff;font-size:2.4em;float:right;clear:both;'}},
        ({_: :a, rel: :nofollow, href: (path[-1] == '/' ? path + 'index.n3' : path.R.n3) + qs,
-         c: {_: :img, src: '/css/misc/cube.png', style: 'height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}} if path),
+         c: {_: :img, src: '/css/misc/cube.png', style: 'float:right;height:2em;background-color:white;padding:.54em;border-radius:1em;margin:.2em'}} if path),
        ([(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
   Render['text/html'] = -> d,e { u = d['#']||{}
