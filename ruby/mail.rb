@@ -4,7 +4,7 @@ class R
 
   MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
 
-  GET['/mid'] = -> e,r{R[MessagePath[e.base]].env(r).response}
+  GET['/mid'] = -> e,r{R[MessagePath[e.base]].setEnv(r).response}
 
   GET['/thread'] = -> e, r {
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}}

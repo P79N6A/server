@@ -6,7 +6,7 @@ class R
       e.q['local'] ||= true  # hostname-specific
       e.q['c'] ||= 32        # page size
       e.q.delete 'view' if e.q['view'] == 'ls' # strip fs-view
-      R['http://'+e['SERVER_NAME']+'/news'].env(e).response # continue
+      R['http://'+e['SERVER_NAME']+'/news'].setEnv(e).response # continue
     end}
 
   def getFeed h='localhost'

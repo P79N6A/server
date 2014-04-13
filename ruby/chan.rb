@@ -8,7 +8,7 @@ class R
     if path.match(/^[^\/]*\/?$/)
       if path.empty? # toplevel index
         e.q['view'] ||= 'title'
-        r.descend.env(e).response
+        r.descend.setEnv(e).response
       else # sub index
         puts "sub #{path}"
       end

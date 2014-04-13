@@ -4,11 +4,11 @@ class R
     if file = [self,pathSegment].compact.find(&:f) # file exists, but client (or server) might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      return file.env(@r).fileGET unless !accepted || MIMEcook[file.mimeP]
+      return file.setEnv(@r).fileGET unless !accepted || MIMEcook[file.mimeP]
     end # enable conneg-hint paths:
     uri = stripDoc # doc-format in extension
     uri = uri.parent.descend if uri.to_s.match(/\/index$/)
-    uri.env(@r).resourceGET # continue at generic-resource URI
+    uri.setEnv(@r).resourceGET # continue at generic-resource URI
   end
 
   def HEAD
@@ -61,7 +61,7 @@ class R
         graph.dump format.to_sym
 
       else # JSON Model
-        set.map{|r|r.env(@r).toGraph m}
+        set.map{|r|r.setEnv(@r).toGraph m}
         Render[@r.format][m, @r]
       end}
   end

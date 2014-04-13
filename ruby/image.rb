@@ -21,7 +21,7 @@ class R
           `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`
         end
       end
-      path.e ? (path.env r).fileGET : E404[e,r]
+      path.e ? path.setEnv(r).fileGET : E404[e,r]
     else
       E404[e,r]
     end}

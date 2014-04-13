@@ -4,9 +4,15 @@ class R
   Apache = ENV['apache'] # apache=true in shell-environment
   Nginx  = ENV['nginx']
 
-  def env r=nil
-    r ? (@r = r; self) : @r
+  def setEnv r # request environment - Hash of HTTP Headers from Rack
+    @r = r
+    self
   end
+
+  def getEnv
+    @r
+  end
+  alias_method :env, :getEnv
 
   def R.call e
     e.extend Th # HTTP utility functions
@@ -16,7 +22,7 @@ class R
     resource = R['http://'+e['SERVER_NAME']+path]
     resource.inside ? (
       e['uri'] = resource.uri
-      resource.env(e).send e['REQUEST_METHOD']) : [403,{},[]]
+      resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
     E500[x,e]
   end
@@ -130,13 +136,9 @@ end
 
 class Hash
 
+  # TODO move to R.qs
   def qs
    '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
-  end
-
-  def env 
-    @r = r
-    self
   end
 
 end

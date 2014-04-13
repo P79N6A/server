@@ -8,7 +8,7 @@ class R
       e.q['set'] = 'depth' # post-range in date-order
       e.q['local'] = true  # hostname-specific
       e.q['c'] ||= 8       # page size
-    R['http://'+e['SERVER_NAME']+'/blog'].env(e).response
+    R['http://'+e['SERVER_NAME']+'/blog'].setEnv(e).response
     end}
 
   # prompt for title of new post
