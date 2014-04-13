@@ -14,7 +14,7 @@ class R
         (w << (RDF::Statement.new s,p,o) if o ) rescue nil
       end}}
   end
-  
+
   def triplrRDF format=nil, local=true
     uri = (local && f) ? d : uri
     RDF::Reader.open(uri, :format => format){|r|

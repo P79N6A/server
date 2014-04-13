@@ -54,14 +54,16 @@ class R
     condResponse @r.format, ->{
       puts ['http://'+@r['SERVER_NAME']+@r['REQUEST_URI'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join(' ') if @r['SERVER_NAME']
       
-      # RDF Model - all input formats are RDF and Writer exists for output MIME
+      # RDF Model - all in and out formats are RDF
       if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
           format = RDF::Writer.for(:content_type => @r.format)
+#        puts "#{set.join ' '} -> RDF graph -> #{@r.format}"
         graph = RDF::Graph.new
         set.map{|r| graph.load r.d}
         graph.dump format.to_sym
 
       else # JSON Model
+#        puts "#{set.join ' '} -> JSON model -> #{@r.format}"
         set.map{|r|r.setEnv(@r).toGraph m}
         Render[@r.format][m, @r]
       end}

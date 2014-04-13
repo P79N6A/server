@@ -142,9 +142,18 @@ class R
     self
   end
 
-  def read p=false
+  def read parseJSON=false
     if f
-      p ? (JSON.parse File.open(d).read) : File.open(d).read
+      if parseJSON
+        begin
+          JSON.parse File.open(d).read
+        rescue Exception => x
+          puts uri,x
+          {}
+        end
+      else
+        File.open(d).read
+      end
     else
       nil
     end

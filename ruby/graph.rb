@@ -70,6 +70,7 @@ class R
   def triplrJSON
     yield uri, '/application/json', r(true) if e
   rescue Exception => e
+    puts "triplrJSON #{e}"
   end
 
   def to_json *a
