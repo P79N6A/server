@@ -49,7 +49,8 @@ class R
 
   def triplrMarkdown
     require 'redcarpet'
-    yield uri,Content,Markdown.new(r).to_html
+    yield uri, Type, R[HTML]
+    yield uri, Content, ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(r)
   end
 
   def triplrOrg

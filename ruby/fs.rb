@@ -48,8 +48,9 @@ class R
   View[Stat+'File'] = -> i,e {
     i.map{|u,r|
       r[Stat+'size'].do{|s|
-        {_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'}
-      }}}
+        [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u+' '},
+         r[Content].do{|c|{_: :p, c: c}}
+        ]}}}
 
   View[Stat+'Directory'] = -> i,e {
     a = -> i { i = i.R
