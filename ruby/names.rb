@@ -92,7 +92,7 @@ class R
   def localURL e
     if uri.index('/') == 0
       uri             # already a local path
-    elsif e && uri.index('http://'+e['SERVER_NAME']+'/') == 0 
+    elsif e && uri.index('http://'+(e['SERVER_NAME']||'')+'/') == 0 
       pathSegment.uri # host match, unchanged local path
     else
       '/' + uri       # URI -> local path

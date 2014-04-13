@@ -5,13 +5,14 @@ class R
     s = []
     s.concat e.fileResources # host-specific
     e.pathSegment.do{|p| s.concat p.fileResources unless p.uri == '/'} # global
-    e.env['REQUEST_PATH'].match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
-      t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
-      pp = (t-1).strftime('/%Y/%m/%d/') # prev day
-      np = (t+1).strftime('/%Y/%m/%d/') # next day
-      qs = q['view'].do{|v|'?view='+v} || ''
-      g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
-      g['#'][Next] = {'uri' => np + qs} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }
+    e.env['REQUEST_PATH'].do{|path|
+      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
+        t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
+        pp = (t-1).strftime('/%Y/%m/%d/') # prev day
+        np = (t+1).strftime('/%Y/%m/%d/') # next day
+        qs = q['view'].do{|v|'?view='+v} || ''
+        g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
+        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }}
     s
   }
 
@@ -51,7 +52,7 @@ class R
      i.map{|u,r|
        url = r.R.localURL e
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+e['SERVER_NAME'],'')},
+         c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+(e['SERVER_NAME']||''),'')},
                   {_: :a, href: url.t, c: '/'}]},
              r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
 

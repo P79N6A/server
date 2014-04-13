@@ -119,7 +119,7 @@ module Th
       '.rdf' => 'application/rdf+xml',
       '.ttl' => 'text/turtle',
       '.txt' => 'text/plain',
-    }[File.extname self['uri']].do{|mime|
+    }[File.extname(self['uri']||'')].do{|mime|
       return mime}
 
     # Accept values

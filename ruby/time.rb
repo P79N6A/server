@@ -17,7 +17,7 @@ end
 
 class R
 
-  GET['/today'] = -> e,r {[303, {'Location'=> Time.now.strftime('/%Y/%m/%d/?') + r['QUERY_STRING'] }, []]}
+  GET['/today'] = -> e,r {[303, {'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'') }, []]}
 
   View['timegraph'] = -> g,e {
     i = View['timegraph/item']
