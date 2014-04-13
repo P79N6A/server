@@ -61,9 +61,9 @@ class R
     path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
     i = i.dup
-    i.delete_if{|u,r|!r[Stat+'ftype']}
+    i.delete_if{|u,r|!r[Stat+'size']}
     f = {}
-    ['uri', LDP+'contains', Stat+'ftype', Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
+    ['uri', LDP+'contains', Type, Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
     i.values.map{|r|
       r.class==Hash &&
       r.delete_if{|p,o|!f[p]}}
@@ -86,7 +86,10 @@ class R
       c.map{|c|
         yield uri, LDP+'contains', R[c.uri.gsub('?','%3F').gsub('#','%23')]}
     end
-    node.stat.do{|s|[:size,:ftype,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}}
+    node.stat.do{|s|
+      [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
+      yield uri, Type, R[Stat + s.ftype.capitalize]
+    }
   end
   
   def triplrSymlink

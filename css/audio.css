@@ -2,6 +2,6 @@ a {text-decoration:none}
 a.track {background-color:#000;color:#fff;float:right;margin:.08em;padding:.08em}
 #media {width:100%}
 #jump {float:right;font-size:3em;padding:.1em;background-color:orange;color:#fff}
-#rand {background-color:#ddf;color:#000;display:inline}
+#rand {background-color:#33f;color:#fff;display:inline}
 #info {font-weight:bold; font-size: 2em;background-color:#000;color:#fff}
 #infoPane {width: 32em; height:12.5em; border-width:0;float:right}
