@@ -2,10 +2,10 @@ class R
 
   def GET
     @r ||= {}.extend Th
-    if file = [self,pathSegment].compact.find(&:f) # file exists, but client (or server) might want another MIME
+    if file = [self,pathSegment].compact.find(&:f) # file exists at URI, but client (or server) might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      return file.setEnv(@r).fileGET unless !accepted || MIMEcook[file.mimeP]
+      return file.setEnv(@r).fileGET unless !accepted || (MIMEcook[file.mimeP] && !(q.has_key? 'raw'))
     end # enable conneg-hint paths:
     uri = stripDoc # doc-format in extension
     uri = uri.parent.descend if uri.to_s.match(/\/index$/)

@@ -140,7 +140,10 @@ a {font-size: 1.7em;font-weight:bold;text-decoration:none;background-color:#{R.c
     yield uri, Content, r
   end
 
-  View[HTML]=->g,e{g.map{|u,r|r[Content]}}
+  View[HTML]=->g,e{
+    g.map{|u,r|
+      {style: "display:inline-block", c: r[Content]}
+    }}
 
   HTMLbody = -> b {
     b.to_s.split(/<body[^>]*>/)[-1].to_s.split(/<\/body>/)[0] }
