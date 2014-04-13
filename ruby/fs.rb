@@ -100,7 +100,7 @@ class R
    begin
      i = i.split /:/
     yield uri, (f + (i[0].match(g)||[0,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')),
-      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : v}
+      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : (v.match(/\A(\/|http)[\S]+\Z/) ? v.R : v.hrefs)}
    rescue
     puts "#{uri} skipped: #{i}"
    end}
