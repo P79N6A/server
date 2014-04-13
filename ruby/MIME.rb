@@ -121,7 +121,7 @@ class R
     'inode/symlink'        => [:triplrSymlink],
     'message/rfc822'       => [:triplrMailMessage],
     'text/comma-separated-values'=>[:triplrCSV,/,/],
-    'text/html-part'       => [:triplrHTMLpiece],
+    'text/html-part'       => [:triplrHTML],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
     'text/n3'              => [:triplrRDF, :n3],
@@ -136,7 +136,7 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  # prefer a view even if requested file exists
+  # prefer triplr->model->view over direct file response
   MIMEcook={
     'application/json+rdf' => true,
     'application/markdown' => true,
@@ -160,9 +160,8 @@ class R
 
   def triplrMIME &b
     mimeP.do{|mime|
-      yield uri, R::Type, (R MIMEtype+mimeP)
-      (MIMEsource[mimeP]||
-       MIMEsource[mimeP.split(/\//)[0]]).do{|s|
+      (MIMEsource[mime]||
+       MIMEsource[mime.split(/\//)[0]]).do{|s|
         send *s,&b }}
   end
 

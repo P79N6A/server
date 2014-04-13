@@ -26,13 +26,9 @@ class R
       E404[e,r]
     end}
   
-  View['th'] = -> i,e{
+  View[DC+'Image'] = -> i,e{
     i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) &&
       {_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.pathSegment}}}}
-
-  View[MIMEtype+'image/gif']  = View['th']
-  View[MIMEtype+'image/jpeg'] = View['th']
-  View[MIMEtype+'image/png']  = View['th']
 
   View['imgs'] = -> m,e { seen = {} # unique images found
 

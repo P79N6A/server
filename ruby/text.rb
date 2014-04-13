@@ -47,10 +47,6 @@ class R
     graph.keys.select{|u|u.match /^http/}
   end
 
-  def triplrHTMLpiece; yield uri,Content,r end
-
-  View[MIMEtype+'text/html-part']=->g,e{g.map{|u,r|r[Content]}}
-
   def triplrMarkdown
     require 'markdown'
     yield uri,Content,Markdown.new(r).to_html
@@ -67,6 +63,7 @@ class R
   end
 
   def triplrPS
+    yield uri, Type, (R MIMEtype+'application/postscript')
     p = R[dirname + '/.' + File.basename(path) + '/']
     unless p.e
       p.mk

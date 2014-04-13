@@ -122,8 +122,6 @@ class R
 
   end
 
-  View[MIMEtype+'message/rfc822'] = NullView # hide file-container resource
-
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOC+'Post'
     threads = posts.group_by{|r| # group by Title

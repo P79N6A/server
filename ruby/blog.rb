@@ -101,6 +101,4 @@ class R
     }
   end
 
-  View[MIMEtype+'text/log'] = NullView
-
 end

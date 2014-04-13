@@ -135,6 +135,13 @@ a {font-size: 1.7em;font-weight:bold;text-decoration:none;background-color:#{R.c
 
   def nokogiri;  Nokogiri::HTML.parse (open uri).read end
 
+  def triplrHTML
+    yield uri, Type, R[HTML]
+    yield uri, Content, r
+  end
+
+  View[HTML]=->g,e{g.map{|u,r|r[Content]}}
+
   HTMLbody = -> b {
     b.to_s.split(/<body[^>]*>/)[-1].to_s.split(/<\/body>/)[0] }
 

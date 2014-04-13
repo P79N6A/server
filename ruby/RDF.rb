@@ -49,6 +49,4 @@ jQuery(document).ready(function() {
 
   def n3; docroot.a '.n3' end
 
-  View[MIMEtype+'text/n3'] = NullView
-
 end
