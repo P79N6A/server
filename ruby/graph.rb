@@ -20,7 +20,10 @@ class R
       doc = R '/cache/RDF/' + uri.h.dive
       unless doc.e && doc.m > m # up-to-date?
         graph = {}
-        [:triplrInode,:triplrMIME].map{|t| fromStream graph, t}
+        [
+         :triplrMIME,
+         :triplrInode,
+        ].map{|t| fromStream graph, t}
         doc.w graph, true
       end
     end

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #watch __FILE__
 class R
 
@@ -43,6 +44,12 @@ class R
       u[Prev] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
       u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
       s }}
+
+  View[Stat+'File'] = -> i,e {
+    i.map{|u,r|
+      r[Stat+'size'].do{|s|
+        {_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'}
+      }}}
 
   View[Stat+'Directory'] = -> i,e {
     a = -> i { i = i.R
