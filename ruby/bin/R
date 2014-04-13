@@ -2,7 +2,17 @@
 exit 0 if ARGV.empty?
 require 'ww/constants'
 begin
- puts R[ARGV[0]].send *ARGV[1..-1]
+  out = R[ARGV[0]].send *ARGV[1..-1]
+  if out.class==Array && out.size==3 && out[0].class == Fixnum
+    require 'thin'
+    response = Thin::Response.new
+    response.status, response.headers, response.body = *out
+    response.each do |part|
+      puts part
+    end
+  else
+    puts out
+  end
 rescue Exception => e
  puts e.class, e.message, e.backtrace
 end
