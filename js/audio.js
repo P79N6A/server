@@ -8,8 +8,7 @@ var audio = function(){
     var changeTrack = function(i){
 	var track = decodeURIComponent(i)
 	q('title').txt(track)
-	q('#info').txt(track).attr('href',track)
-	q('#infoPane').attr('src',track+'.html?view=base#'+track)
+	q('#info').txt(track).attr('href',track+'.html?view=base#'+track)
 	audio.src = i
 	audio.load()}
 
@@ -22,7 +21,7 @@ var audio = function(){
 
     var jump = function(){
 	var s
-	if (random.hasAttribute('r')){
+	if (!random.hasAttribute('r')){
 	   s = trax[Math.floor(Math.random()*trax.length)]
 	} else {
 	    var cur = q(track+'[href="'+audio.attr('src')+'"]')
@@ -62,6 +61,9 @@ var audio = function(){
     
     document.addEventListener("keydown",function(e){
 	switch(e.keyCode){
+	case 66:
+	    jump();
+	    break;
 	case 37:
 	    seek(-30);
 	    break;
