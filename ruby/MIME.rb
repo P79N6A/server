@@ -156,11 +156,6 @@ class R
     'text/x-tex'=>true,
   }
 
-  %w{c c++ fortran haskell makefile pascal perl php python ruby}.map{|t|
-    %w{application/ text/x-}.map{|m|
-      MIMEcook[m+t] = true
-  }}
-
   def triplrMIME &b
     mimeP.do{|mime|
       (MIMEsource[mime]||

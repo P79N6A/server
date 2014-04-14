@@ -34,7 +34,7 @@ end
 class R
 
   def triplrUriList
-    yield uri, COGS+'View', R[uri+'?view=csv']
+    yield uri, Type, R[COGS+'UriList']
     open(d).readlines.grep(/^[^#]/).map{|l|
       l = l.chomp
       yield uri, '/rel', l.R
@@ -42,6 +42,18 @@ class R
       yield l, Type, R[CSV+'Row']
     }
   end
+
+  View[COGS+'UriList'] = -> g,e {
+    [{_: :style, c: "
+ul.uris {background-color:#000;color:#fff;padding:.8em;float:left}
+ul.uris a {background-color:#0f0;color:#000;text-decoration:none}
+ul.uris a:hover {background-color:#bf0}
+"},
+     {_: :ul, class: :uris, c:
+       g.map{|u,r|
+         r['/rel'].do{|uris|
+           uris.map{|u|
+             {_: :li, c: {_: :a, hreF: u.uri, c: u.uri}}}}}}]}
 
   def uris
     graph.keys.select{|u|u.match /^http/}
@@ -98,18 +110,19 @@ class R
     yield uri,Content, `source-highlight -f html -s #{m} -i #{sh} -o STDOUT` if size < 512e3
   end
 
-  # ls /usr/share/source-highlight/*.lang | xargs -i basename {} .lang | tr "\n" " "
-  %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp css
- desktop diff d erlang errors flex fortran function glsl haskell haskell_literate haxe html java
- javascript key_string langdef latex ldap lisp log logtalk lsm lua m4 makefile manifest nohilite
+  %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
+ desktop diff d erlang errors flex fortran function glsl haskell haxe java
+ key_string langdef latex ldap lisp logtalk lsm lua m4 makefile manifest nohilite
  number outlang oz pascal pc perl php prolog properties proto python ruby scala sh
- shellscript slang sml spec sql style symbols tcl texinfo todo url vala vbscript xml}
-    .map{|l|
+ shellscript slang sml spec sql style symbols tcl texinfo todo vala vbscript}
+    .map{|l|# ls /usr/share/source-highlight/*.lang | xargs -i basename {} .lang | tr "\n" " "
     ma = 'application/' + l
     mt = 'text/x-' + l
-    MIME[l.to_sym] ||= ma # extension mapping
-    [ma,mt].map{|m| # triplr/view mappings
-      MIMEsource[m] ||= [:triplrSourceCode]}}
+    MIME[l.to_sym] ||= ma # extension -> MIME
+    [ma,mt].map{|m| # MIME -> triplr
+      MIMEsource[m] ||= [:triplrSourceCode]
+      MIMEcook[m] = true
+    }}
 
   MIMEsource['text/css'] ||= [:triplrSourceCode] # i hear CSS is Turing complete now, http://inamidst.com/whits/2014/formats
 
