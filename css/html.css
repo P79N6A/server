@@ -37,3 +37,11 @@ tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
 tr[property="uri"] > td.val > a{
     color:#777;
     font-weight: bold;}
+
+.HTML {
+    background-color: #fff;
+    color: #000;
+    float: left;
+    border-radius: .5em;
+    padding: .3em;
+}
