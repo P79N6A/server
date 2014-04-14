@@ -50,7 +50,6 @@ class R
     id = m.message_id ; return unless id             # message-ID
     e = MessagePath[id.gsub(/[<>]/,'')]              # message URI
 
-    yield uri, Type, R[COGS+'HiddenContainer']       # origin file
     yield e, DC+'identifier', id                     # origin-domain ID
 
     [R[SIOCt+'MailMessage'],                         # SIOC types
