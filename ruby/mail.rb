@@ -49,7 +49,10 @@ class R
     m = mail          ; return unless m              # mail
     id = m.message_id ; return unless id             # message-ID
     e = MessagePath[id.gsub(/[<>]/,'')]              # message URI
+
+    yield uri, Type, R[COGS+'HiddenContainer']       # origin file
     yield e, DC+'identifier', id                     # origin-domain ID
+
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post']].map{|t|yield e, Type, t}        # RDF types
 
