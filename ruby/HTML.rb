@@ -183,4 +183,6 @@ a {font-size: 1.7em;font-weight:bold;text-decoration:none;background-color:#{R.c
        c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
            g.values.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
 
+  View[COGS+'HiddenContainer'] = NullView
+
 end

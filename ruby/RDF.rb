@@ -16,6 +16,7 @@ class R
   end
 
   def triplrRDF format=nil, local=true
+    yield uri, Type, R[COGS+'HiddenContainer']
     uri = (local && f) ? d : uri
     RDF::Reader.open(uri, :format => format){|r|
       r.each_triple{|s,p,o|
