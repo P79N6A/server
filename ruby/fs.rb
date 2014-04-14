@@ -46,15 +46,16 @@ class R
       s }}
 
   View[Stat+'File'] = -> i,e {
-    i.map{|u,r|
-      r[Stat+'size'].do{|s|
-        {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u+' '},r[Content]]}}}}
+    [(H.once e, 'stat', (H.css '/css/ls')),
+     i.map{|u,r|
+       r[Stat+'size'].do{|s|
+         {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u+' '},r[Content]]}}}]}
 
   View[Stat+'Directory'] = -> i,e {
     a = -> i { i = i.R
       {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
 
-    [(H.once e, 'dir', (H.css '/css/ls')),
+    [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r|
        url = r.R.localURL e
        {class: :dir, style: "background-color: #{R.cs}",
