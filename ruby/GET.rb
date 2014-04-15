@@ -85,7 +85,7 @@ class R
         'Access-Control-Allow-Origin' => '*',
         'Content-Type' => format,
         'ETag' => @r['ETag'],
-      }.merge @r[:Response]
+      }.merge(@r[:Response]||{})
 
       head.update({'Cache-Control' => 'no-transform'}) if format.match /^(audio|image|video)/
 
