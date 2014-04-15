@@ -17,7 +17,7 @@ tr[property="http://rdfs.org/sioc/ns#reply_of"] td.val .frag {background-color:#
 tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"],tr[property="http://purl.org/dc/terms/identifier"] {display:none}
 
 pre.mail .q {background-color:#00f;color:#fff;display:block}
-pre.mail .q[depth="1"] {background-color:#03f;color:#fff}
+pre.mail .q[depth="1"] {background-color:#016;color:#fff}
 pre.mail .q[depth="2"] {background-color:#06f;color:#fff}
 pre.mail .q[depth="3"] {background-color:#4b02b8;color:#fff}
 pre.mail .q[depth="4"] {background-color:#cf0;color:#000}
