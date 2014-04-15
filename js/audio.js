@@ -20,15 +20,13 @@ var audio = function(){
     }
 
     var jump = function(){
-	var s
-	if (random.hasAttribute('on')){
-	   s = trax[Math.floor(Math.random()*trax.length)]
-	} else {
-	    var cur = q(track+'[href="'+audio.attr('src')+'"]')
-	    if(!(cur && (s = cur.nextSibling) && (s.className == 'track')))
-		s = trax[Math.floor(Math.random()*trax.length)]
-	}
-	window.location.hash = s.attr('href')}
+	var sel = trax[Math.floor(Math.random()*trax.length)], cur, next
+	!random.hasAttribute('on') &&
+	    (cur = q(track+'[href="'+audio.attr('src')+'"]')) && 
+	    (next = cur.nextSibling) &&
+	    (next.className == 'track') &&
+	    (sel = next)
+	window.location.hash = sel.attr('href')}
 
     var toggleRand = function(e){
 	if (random.hasAttribute('on')){
