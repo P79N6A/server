@@ -48,7 +48,7 @@ class R
             set.concat resource.fileResources}}}}
 
     if set.empty?
-      if @r['HTTP_ACCEPT'].match(/text\/n3/) || @r.format == 'text/n3'
+      if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
         return [200,{'Content-Type'=>'text/n3','MS-Author-Via' => 'DAV, SPARQL'},['']] # editable resource
       else
         return E404[self,@r,m]
