@@ -119,7 +119,7 @@ class R
               yield u,                           # s
               (x[e[0]&&e[0].chop]||R::RSS)+e[1], # p
            e[3].extend(SniffContent).sniff.do{|o|# o
-                o.match(/\A(\/|http)[\S]+\Z/) ? o.R : R::CleanHTML[o]
+                o.match(HTTP_URI) ? o.R : R::CleanHTML[o]
               }}
           end
         }

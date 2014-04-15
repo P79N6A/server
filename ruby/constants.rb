@@ -15,6 +15,7 @@ shellwords}.map{|r|require r}
 class R < RDF::URI
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
+  HTTP_URI = /\A(\/|http)[\S]+\Z/
 
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
