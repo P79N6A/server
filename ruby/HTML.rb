@@ -58,12 +58,6 @@ class Object
 end
 
 class String
-  def br
-    gsub(/\n/,"<br>\n")
-  end
-  def href name=nil
-    '<a href="'+self+'">' + (name||abbrURI) + '</a>'
-  end
   def abbrURI
     sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
@@ -95,7 +89,7 @@ end
 class Hash
   def html e={'SERVER_NAME'=>'localhost'}
     if keys.size == 1 && has_key?('uri')
-      uri.href
+      self.R.href
     else
       H({_: :table, class: :html, c: map{|k,v|
             {_: :tr, property: k, c:
@@ -109,7 +103,11 @@ end
 class R
 
   def html *a
-    url.href
+    href
+  end
+
+  def href name = nil
+    '<a href="'+uri+'">' + (name || uri.abbrURI) + '</a>'
   end
 
   View['select']=->d,e{
@@ -121,12 +119,7 @@ class R
   View['base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
 
   View['title'] = -> g,e {
-    [g.map{|u,r|
-       {_: :a, href: u, c: r[Title]||u.R.basename}},
-     {_: :style, c: "
-a {font-size: 1.7em;font-weight:bold;text-decoration:none;background-color:#{R.cs};color:#fff;float:left;padding:.1em;margin:.1em}
-"}
-    ]}
+    g.map{|u,r| {_: :h4, c: {_: :a, href: u, c: r[Title]||u.R.basename}}}}
 
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap', 
@@ -143,7 +136,7 @@ a {font-size: 1.7em;font-weight:bold;text-decoration:none;background-color:#{R.c
   View[HTML]=->g,e{
     [H.once(e,'base',H.css('/css/html')),
      g.map{|u,r|
-      {class: :HTML, c: [u.href,r[Content]]}}]}
+      {class: :HTML, c: [u.R.href,r[Content]]}}]}
 
   HTMLbody = -> b {
     b.to_s.split(/<body[^>]*>/)[-1].to_s.split(/<\/body>/)[0] }
