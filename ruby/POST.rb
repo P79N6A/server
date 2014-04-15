@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -6,6 +6,8 @@ class R
     ['http://'+@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
     case @r['CONTENT_TYPE']
+    when /^application\/sparql-update/
+      sparqlPOST
     when /^application\/x-www-form-urlencoded/
       formPOST
     when /^text\/(n3|turtle)/
@@ -27,6 +29,12 @@ class R
   end
 
   def rdfPOST
+    data = @r['rack.input'].read
+    puts @r,data
+    [303,{'Location'=>uri},[]]
+  end
+
+  def sparqlPOST
     data = @r['rack.input'].read
     puts @r,data
     [303,{'Location'=>uri},[]]
