@@ -49,7 +49,7 @@ class R
 
     @r['ETag'] = [q['view'].do{|v|View[v] && v}, # View
                   set.sort.map{|r|[r, r.m]}, # entity version(s)
-                  @r.format].h                   # output MIME
+                  @r.format].h               # output MIME
 
     condResponse @r.format, ->{
       puts ['http://'+@r['SERVER_NAME']+@r['REQUEST_URI'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join(' ') if @r['SERVER_NAME']
@@ -57,13 +57,13 @@ class R
       # RDF Model - all in and out formats are RDF
       if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
           format = RDF::Writer.for(:content_type => @r.format)
-#        puts "#{set.join ' '} -> RDF graph -> #{@r.format}"
+#        puts "#{set.join ' '} -> RDF -> #{@r.format}"
         graph = RDF::Graph.new
         set.map{|r| graph.load r.d}
         graph.dump format.to_sym
 
       else # JSON Model
-#        puts "#{set.join ' '} -> JSON model -> #{@r.format}"
+#        puts "#{set.join ' '} -> Hash -> #{@r.format}"
         set.map{|r|r.setEnv(@r).toGraph m}
         Render[@r.format][m, @r]
       end}

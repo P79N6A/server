@@ -21,23 +21,20 @@ var audio = function(){
 
     var jump = function(){
 	var s
-	if (!random.hasAttribute('r')){
+	if (random.hasAttribute('on')){
 	   s = trax[Math.floor(Math.random()*trax.length)]
 	} else {
 	    var cur = q(track+'[href="'+audio.attr('src')+'"]')
-	    if(cur && (s = cur.nextSibling)) {
-		// next bound
-	    } else {
-		s = q(track)
-	    }
+	    if(!(cur && (s = cur.nextSibling) && (s.className == 'track')))
+		s = trax[Math.floor(Math.random()*trax.length)]
 	}
 	window.location.hash = s.attr('href')}
 
     var toggleRand = function(e){
-	if (random.hasAttribute('r')){
-	    random.removeAttr('r').style.backgroundColor='#ddf'
+	if (random.hasAttribute('on')){
+	    random.removeAttr('on').style.backgroundColor='#33f'
 	} else {
-	    random.attr('r','r').style.backgroundColor='#33f'}
+	    random.attr('on',1).style.backgroundColor='#fff'}
     }
 
     var hashChange = function(){
@@ -60,6 +57,7 @@ var audio = function(){
     audio.on('canplay',function(){audio.play()})
     
     document.addEventListener("keydown",function(e){
+//	console.log(e.keyCode)
 	switch(e.keyCode){
 	case 66:
 	    jump();
@@ -68,6 +66,9 @@ var audio = function(){
 	    seek(-30);
 	    break;
 	case 39:
+	    seek(30);
+	    break;
+	case 190:
 	    seek(30);
 	    break;
 	case 32:
