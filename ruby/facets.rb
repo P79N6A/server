@@ -25,7 +25,7 @@ class R
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
-                       {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.uri.abbrURI : k.to_s)}]}}]}}},
+                       {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.R.abbr : k.to_s)}]}}]}}},
 
      m.map{|u,r| # each resource
        a.map{|p,_| # each facet

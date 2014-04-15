@@ -45,7 +45,7 @@ class R
         {_: :span, :class => :nick, c: {_: :a, href: r.uri, id: r.uri.split('#')[-1],
             c: [r[Atom+"/link/image"].do{|p|{_: :img, src: p[0].uri, style: "#{rand(2).zero? ? 'left' : 'right'}: 0"}},
                 {_: :span, c: r[Creator].do{|c|
-                    c[0].respond_to?(:uri) ? c[0].uri.abbrURI : c[0].to_s}}]}},' ',
+                    c[0].respond_to?(:uri) ? c[0].R.abbr : c[0].to_s}}]}},' ',
         {_: :span, :class => :tw, c: r[Content]},"<br>\n"]}]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost']

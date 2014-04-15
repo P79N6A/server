@@ -143,7 +143,7 @@ class R
                 {_: :a, property: Creator, href: '/thread/'+s.R.base+'#'+s.uri, :class => 'sender', style: 'background-color:'+c,
                  c: s[Creator].do{|c|c[0].uri.split('#')[1].split('@')[0]}}}]),'<br clear=all>']},'</td>',
         ({_: :td, class: :group, property: To,
-          c: {_: :a, :class => :to, style: 'background-color:'+c, c: group.abbrURI, href: group}} if group),
+          c: {_: :a, :class => :to, style: 'background-color:'+c, c: group.R.abbr, href: group}} if group),
         '</tr>']},'</table>',
      {_: :a, id: :down, href: env['REQUEST_PATH'] + env.q.merge({'view'=>''}).qs, c: '↓'}]} # drill down to full view
 

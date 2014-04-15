@@ -39,7 +39,7 @@ class R
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: s}}}, # subject URI
                    r.keys.concat(ps).-(['uri']).uniq.map{|p| # each editable predicate
                      {_: :tr,
-                       c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.abbrURI}}, # predicate URI
+                       c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}}, # predicate URI
                            {_: :td, c: [r[p].do{|o|       # has object?
                                    o.justArray.map{|o|    # each object
                                      triple[s,p,o]}},     # render triples

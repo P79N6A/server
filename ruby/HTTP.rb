@@ -62,7 +62,7 @@ class R
                       c: [{_: :tr,c: [{_: :td, c: {_: :b, c: x.class}},{_: :td, class: :space},{_: :td, class: :message, c: x.message.hrefs}]},
                           x.backtrace.map{|f| p = f.split /:/, 3
                             {_: :tr,
-                              c: [{_: :td, class: :path, c: p[0].abbrURI},
+                              c: [{_: :td, class: :path, c: p[0].R.abbr},
                                   {_: :td, class: :index, c: p[1]},
                                   {_: :td, class: :context, c: (p[2]||'').hrefs}].cr}}.cr]}]}]}]]]}
   def OPTIONS

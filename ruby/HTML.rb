@@ -58,9 +58,6 @@ class Object
 end
 
 class String
-  def abbrURI
-    sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
-  end
   def html e=nil
     self
   end
@@ -94,7 +91,7 @@ class Hash
       H({_: :table, class: :html, c: map{|k,v|
             {_: :tr, property: k, c:
               [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
-               [{_: :td, c: (k == 'uri' ? {} : {_: :a, name: k, href: k, c: k.to_s.abbrURI}), class: :key},
+               [{_: :td, c: (k == 'uri' ? {} : {_: :a, name: k, href: k, c: k.R.abbr}), class: :key},
                 {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e), class: :val}]]}}})
     end
   end
@@ -107,7 +104,11 @@ class R
   end
 
   def href name = nil
-    '<a href="'+uri+'">' + (name || uri.abbrURI) + '</a>'
+    '<a href="'+uri+'">' + (name || abbr) + '</a>'
+  end
+
+  def abbr
+    uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
 
   View['select']=->d,e{
@@ -173,7 +174,7 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     [H.css('/css/table'),
      {_: :table,:class => :tab,
-       c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.abbrURI}}},
+       c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.R.abbr}}},
            g.values.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
 
   View[COGS+'HiddenContainer'] = NullView
