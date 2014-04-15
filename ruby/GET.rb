@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
   def GET
@@ -85,6 +86,8 @@ class R
         'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
         'Content-Type' => format,
         'ETag' => @r['ETag'],
+        'Link' => "<#{aclURI}>; rel=acl",
+        'MS-Author-Via' => 'SPARQL',
       }.merge(@r[:Response]||{})
 
       head.update({'Cache-Control' => 'no-transform'}) if format.match /^(audio|image|video)/

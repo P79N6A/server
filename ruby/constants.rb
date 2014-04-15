@@ -42,6 +42,7 @@ class R < RDF::URI
   Atom     = W3   + '2005/Atom'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
+  ACL      = W3   + 'ns/auth/acl#'
   LDP      = W3   + 'ns/ldp#'
   Stat     = W3   + 'ns/posix/stat#'
   Next     = LDP  + 'nextPage'
@@ -86,6 +87,7 @@ RDF
 search
 text
 time
+WAC
 who
 }.map{|r|require_relative r}
 
