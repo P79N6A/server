@@ -45,7 +45,13 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
-    return E404[self,@r,m] if set.empty?
+    if set.empty?
+      if @r['HTTP_ACCEPT'].match /text\/n3/
+        return [200,{'Content-Type'=>'text/n3'},['']]
+      else
+        return E404[self,@r,m]
+      end
+    end
 
     @r['ETag'] = [q['view'].do{|v|View[v] && v}, # View
                   set.sort.map{|r|[r, r.m]}, # entity version(s)
