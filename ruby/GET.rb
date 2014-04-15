@@ -49,7 +49,7 @@ class R
 
     if set.empty?
       if @r['HTTP_ACCEPT'].match(/text\/n3/) || @r.format == 'text/n3'
-        return [200,{'Content-Type'=>'text/n3'},['']] # editable resource
+        return [200,{'Content-Type'=>'text/n3','MS-Author-Via' => 'DAV, SPARQL'},['']] # editable resource
       else
         return E404[self,@r,m]
       end
