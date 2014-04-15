@@ -1,7 +1,8 @@
 #watch __FILE__
 class R
 
-  # TODO use https://github.com/gkellogg/csv-ld
+  # if anyone uses CSV, check out..
+  # https://github.com/gkellogg/csv-ld
 
   # CSV -> tripleStream
   def triplrCSV d

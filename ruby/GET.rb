@@ -31,14 +31,15 @@ class R
   end
 
   def response # default handler
-    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response
-  set = []
-    
-    # File set
+    set = []
+    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response RDF
+    @r[:Response] = {} # Response Headers
+
+    # File
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
     fileFn[self,q,m].do{|files| set.concat files }
 
-    # Resource set
+    # Resource
     q['set'].do{|s|
       ResourceSet[s].do{|resFn|
         resFn[self,q,m].do{|resources|
@@ -47,7 +48,7 @@ class R
 
     if set.empty?
       if @r['HTTP_ACCEPT'].match /text\/n3/
-        return [200,{'Content-Type'=>'text/n3'},['']]
+        return [200,{'Content-Type'=>'text/n3'},['']] # editable resource
       else
         return E404[self,@r,m]
       end
@@ -66,8 +67,9 @@ class R
 #        puts "#{set.join ' '} -> RDF -> #{@r.format}"
         graph = RDF::Graph.new
         set.map{|r| graph.load r.d}
+        @r[:Response][:Triples] = graph.size.to_s
         graph.dump format.to_sym
-
+        
       else # JSON Model
 #        puts "#{set.join ' '} -> Hash -> #{@r.format}"
         set.map{|r|r.setEnv(@r).toGraph m}
@@ -83,7 +85,8 @@ class R
         'Access-Control-Allow-Origin' => '*',
         'Content-Type' => format,
         'ETag' => @r['ETag'],
-      }
+      }.merge @r[:Response]
+
       head.update({'Cache-Control' => 'no-transform'}) if format.match /^(audio|image|video)/
 
       body.class == R ? (Nginx ? [200,head.update({'X-Accel-Redirect' => '/fs' + body.path}),[]] : # Nginx

@@ -15,12 +15,12 @@ class R
   alias_method :env, :getEnv
 
   def R.call e
-    e.extend Th # HTTP utility functions
-    dev         # watched files
+    e.extend Th # add HTTP utility functions
+    dev         # check watched source
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
     resource = R['http://'+e['SERVER_NAME']+path]
-    resource.inside ? (
+    resource.inside ? ( #puts "_"*48; puts "URI #{resource.uri}"; e.map{|k,v|puts [k,v].join ' '}
       e['uri'] = resource.uri
       resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
@@ -68,12 +68,9 @@ class R
   def OPTIONS
     [200,
      {'Access-Control-Allow-Methods' => 'GET, PUT, POST, OPTIONS, HEAD, MKCOL, DELETE, PATCH',
-       'Access-Control-Allow-Origin' => '*',
        'Allow' => 'GET, PUT, POST, OPTIONS, HEAD, MKCOL, DELETE, PATCH',
        'Accept-Patch' => 'application/json',
-       'Accept-Post' => 'text/turtle;charset=utf-8,text/n3;charset=utf-8,text/nt;charset=utf-8,text/css;charset=utf-8,text/html;charset=utf-8,text/javascript;charset=utf-8,text/plain;charset=utf-8,application/rdf+xml;charset=utf-8,application/json;charset=utf-8,image/jpeg,image/jpeg,image/png,image/gif,font/otf',
-     },
-     []]
+       'Accept-Post' => 'text/turtle;charset=utf-8,text/n3;charset=utf-8,text/nt;charset=utf-8,text/css;charset=utf-8,text/html;charset=utf-8,text/javascript;charset=utf-8,text/plain;charset=utf-8,application/rdf+xml;charset=utf-8,application/json;charset=utf-8,image/jpeg,image/jpeg,image/png,image/gif,font/otf'},[]]
   end
 
 end
