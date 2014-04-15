@@ -91,7 +91,7 @@ class Hash
       H({_: :table, class: :html, c: map{|k,v|
             {_: :tr, property: k, c:
               [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
-               [{_: :td, c: (k == 'uri' ? {} : {_: :a, name: k, href: k, c: k.R.abbr}), class: :key},
+               [{_: :td, c: (k == 'uri' ? {} : {_: :a, name: k, href: k, c: R[k.to_s].abbr}), class: :key},
                 {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e), class: :val}]]}}})
     end
   end

@@ -47,7 +47,7 @@ class R
             set.concat resource.fileResources}}}}
 
     if set.empty?
-      if @r['HTTP_ACCEPT'].match /text\/n3/
+      if @r.format == 'text/n3'
         return [200,{'Content-Type'=>'text/n3'},['']] # editable resource
       else
         return E404[self,@r,m]
