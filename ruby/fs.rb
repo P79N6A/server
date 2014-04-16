@@ -58,9 +58,10 @@ class R
 
     [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r|
-       url = r.R.localURL e
+       resource = r.R
+       url = resource.localURL e
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [{c: [{_: :a, href: url.t + '?view=ls', c: r.uri.sub('http://'+(e['SERVER_NAME']||''),'')},
+         c: [{c: [{_: :a, href: url.t + '?view=ls', c: resource.abbr},
                   {_: :a, href: url.t, c: '/'}]},
              r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
 
