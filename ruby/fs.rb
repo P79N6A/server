@@ -49,7 +49,7 @@ class R
     [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r|
        r[Stat+'size'].do{|s|
-         {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u+' '},
+         {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u.R.abbr+' '},
                             r[Content]]}}}]}
 
   View[Stat+'Directory'] = -> i,e {
