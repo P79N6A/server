@@ -61,7 +61,6 @@ ul.uris a:hover {background-color:#bf0}
 
   def triplrMarkdown
     require 'redcarpet'
-    yield uri, Type, R[HTML]
     yield uri, Content, ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(r)
   end
 
