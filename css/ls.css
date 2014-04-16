@@ -54,14 +54,18 @@ table {
     padding:.3em;
     margin:.3em;}
 .dir div:first-child a{
+    float:left;
     font-weight: bold;
-    font-size:2em;
+    font-size:1.8em;
+    background-color:#000;
+    color:#fff;
     white-space:nowrap;
     margin-right:.016em}
 .dir a {
+    font-weight: bold;
     background-color:#fff;
-    color:#333;
-    float:left;
+    color:#000;
+    float:right;
     margin:.05em}
 .dir a:hover {
     background-color:#000;

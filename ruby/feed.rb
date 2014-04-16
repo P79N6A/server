@@ -173,8 +173,8 @@ class R
     graph.map{|u,r|
       r[Date].do{|t| # link doc to date-index
         t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
-        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-        doc.ln R["http://#{host}/news/#{t}#{b}e"]}}
+        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean basename
+        doc.ln R["http://#{host}/news/#{t}#{b}e"]}} # link to timeline
     doc}
 
   FeedArchiverRDF = -> doc, graph, host {
