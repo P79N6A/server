@@ -71,7 +71,7 @@ table {
     display: inline-block;
     background-color: #fff;
     color: #000;
-    border: .2em dotted #eaeaea;
+    border: .15em dotted #eee;
     border-radius: .6em;
     padding-left:.3em;
     padding-right:.2em;
@@ -79,10 +79,9 @@ table {
     max-width: 88ex;
     overflow: hidden
 }
-
 .File > a:first-child {
-    background-color: #222;
-    color:#fff;
+    margin: -.2em;
+    color: #000;
 }
 
 .File > a:first-child > .abbr{
@@ -90,7 +89,9 @@ table {
 }
 
 .File > a:first-child > .frag{
-    background-color:#000;
-    color:#fff;
+    background-color: #000;
+    color: #fff;
     font-weight:bold;
+    margin-left:.08em;
+    padding: .08em;
 }
