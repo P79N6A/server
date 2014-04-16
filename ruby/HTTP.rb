@@ -111,6 +111,7 @@ module Th
     {
       '.atom' => 'application/atom+xml',
       '.html' => 'text/html',
+      '.json' => 'application/json',
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/ntriples',
       '.n3' => 'text/n3',

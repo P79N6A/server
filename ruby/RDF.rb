@@ -24,7 +24,8 @@ class R
         [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}
   end
 
-  [['application/ld+json',:jsonld],
+  [['application/json',:json],
+   ['application/ld+json',:jsonld],
    ['application/rdf+xml',:rdfxml],
    ['text/ntriples',:ntriples],
    ['text/turtle',:turtle],

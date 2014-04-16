@@ -65,14 +65,14 @@ class R
       # RDF Model - all in and out formats are RDF
       if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
           format = RDF::Writer.for(:content_type => @r.format)
-#        puts "#{set.join ' '} -> RDF -> #{@r.format}"
+        puts "#{set.join ' '} -> RDF -> #{@r.format}"
         graph = RDF::Graph.new
         set.map{|r| graph.load r.d}
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump format.to_sym
         
       else # JSON Model
-#        puts "#{set.join ' '} -> Hash -> #{@r.format}"
+        puts "#{set.join ' '} -> Hash -> #{@r.format}"
         set.map{|r|r.setEnv(@r).toGraph m}
         Render[@r.format][m, @r]
       end}
