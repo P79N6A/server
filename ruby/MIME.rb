@@ -84,6 +84,7 @@ class R
     owl: 'application/rdf+xml',
     pdf: 'application/pdf',
     pl:  'application/perl',
+    pm:  'application/perl',
     png: 'image/png',
     ps:  'application/postscript',
     py:  'application/python',
