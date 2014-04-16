@@ -93,6 +93,7 @@ class R
     rdf: 'application/rdf+xml',
     rtf: 'text/rtf',
     ssv: 'text/semicolon-separated-values',
+    t:  'application/perl',
     tex: 'text/x-tex',
     tsv: 'text/tab-separated-values',
     ttl: 'text/turtle',

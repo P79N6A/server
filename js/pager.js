@@ -8,9 +8,6 @@ var pager = function(){
 	    document.location.href=q('a[rel=prev]').attr('href')
 	}
     }, false);
-    var search = document.querySelector('input[name=q]')
-    if (search)
-	search.addEventListener('keydown',function(e){e.stopPropagation()},false)
 }
 document.addEventListener("DOMContentLoaded", pager, false);
 

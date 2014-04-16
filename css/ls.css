@@ -69,6 +69,7 @@ table {
 
 .File {
     display: inline-block;
+    white-space: pre-wrap;
     background-color: #fff;
     color: #000;
     border: .14em dotted #ddd;
@@ -77,7 +78,6 @@ table {
     padding-right:.2em;
     margin: .15em;
     max-width: 88ex;
-    overflow: hidden
 }
 .File > a:first-child {
     margin: -.2em;

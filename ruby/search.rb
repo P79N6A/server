@@ -80,8 +80,8 @@ class R
     nil}
 
   View[Search] = -> d,e {
-    {_: :form, action: '/search',
-      c: {_: :input, name: :q, style: 'font-size:2em'}}}
+    [{_: :form, action: '/search', c: {_: :input, name: :q, style: 'font-size:2em'}},
+     (H.js '/js/search')]}
 
   def R.groonga
     @groonga ||= # gem install rroonga
