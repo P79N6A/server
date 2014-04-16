@@ -68,7 +68,7 @@ table {
     color:#fff }
 
 .File {
-    float: right;
+    display: inline-block;
     background-color: #fff;
     color: #000;
     border: .2em dotted #eee;
@@ -78,4 +78,9 @@ table {
     margin: .15em;
     max-width: 88ex;
     overflow: hidden
+}
+
+.File > a:first-child {
+    background-color: #222;
+    color:#fff;
 }
