@@ -2,7 +2,9 @@
 #watch __FILE__
 class R
 
-  MessagePath = ->id{'/msg/' + id.h[0..2] + '/' + id}
+  MessagePath = ->id{
+    id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
+    '/msg/' + id.h[0..2] + '/' + id}
 
   GET['/mid'] = -> e,r{R[MessagePath[e.base]].setEnv(r).response}
 
@@ -49,7 +51,7 @@ class R
   def triplrMail
     m = mail          ; return unless m              # mail
     id = m.message_id ; return unless id             # message-ID
-    e = MessagePath[id.gsub(/[<>]/,'')]              # message URI
+    e = MessagePath[id]                              # message URI
 
     yield e, DC+'identifier', id                     # origin-domain ID
 
