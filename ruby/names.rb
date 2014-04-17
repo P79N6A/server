@@ -4,7 +4,6 @@ end
 
 class NilClass
   def do; nil end
-  def html e=nil; "" end
 end
 
 class Object

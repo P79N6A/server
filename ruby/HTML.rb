@@ -44,7 +44,7 @@ end
 class Array
   def cr; intersperse "\n" end
   def head; self[0] end
-  def html v=nil; map{|e|e.html v}.join ' ' end
+  def html; map(&:html).join ' ' end
   def h; join.h end
   def intersperse i
     inject([]){|a,b|a << b << i}[0..-2]
@@ -54,37 +54,37 @@ class Array
 end
 
 class Object
-  def html *a; self.class end
+  def html; self.class end
 end
 
 class String
-  def html e=nil
+  def html
     self
   end
 end
 
 class Fixnum
-  def html e=nil; to_s end
+  def html; to_s end
   def max i; i > self ? self : i end
   def min i; i < self ? self : i end
 end
 
 class Float
-  def html e=nil; to_s end
+  def html; to_s end
   def max i; i > self ? self : i end
   def min i; i < self ? self : i end
 end
 
 class TrueClass
-  def html e=nil; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
+  def html; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
 end
 
 class FalseClass
-  def html e=nil; H({_: :input, type: :checkbox, title: :False}) end
+  def html; H({_: :input, type: :checkbox, title: :False}) end
 end
 
 class Hash
-  def html e={'SERVER_NAME'=>'localhost'}
+  def html
     if keys.size == 1 && has_key?('uri')
       self.R.href
     else
@@ -92,20 +92,17 @@ class Hash
             {_: :tr, property: k, c:
               [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
                [{_: :td, c: (k == 'uri' ? {} : {_: :a, name: k, href: k, c: R[k.to_s].abbr}), class: :key},
-                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html(e), class: :val}]]}}})
+                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u, href: u.url, c: v}} : v.html, class: :val}]]}}})
     end
   end
 end
 
 class R
 
-  def html *a
-    href
-  end
-
   def href name = nil
     '<a href="'+uri+'">' + (name || abbr) + '</a>'
   end
+  alias_method :html, :href
 
   def abbr
     uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
@@ -117,7 +114,7 @@ class R
         type.respond_to?(:uri) && View[type.uri]}
       View[type ? type.uri : 'base'][{u => r},e]}}
 
-  View['base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map{|v|v.html e}]}
+  View['base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map(&:html)]}
 
   View['title'] = -> g,e {
     g.map{|u,r| {_: :h4, c: {_: :a, href: u, c: r[Title]||u.R.basename}}}}

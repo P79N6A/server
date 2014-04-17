@@ -2,7 +2,7 @@ watch __FILE__
 class R
 
   def GET
-    @r ||= {}.extend Th
+    @r ||= {'SERVER_NAME' => 'localhost'}.extend Th
     if file = [self,pathSegment].compact.find(&:f) # file exists at URI, but client (or server) might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
@@ -28,7 +28,7 @@ class R
 
   def resourceGET # handler cascade
     paths = pathSegment.cascade
-    ['http://'+(@r['SERVER_NAME']||'localhost'),""].map{|h| # http://host/path then /path (all hosts)
+    ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path , /path
       paths.map{|p| GET[h + p].do{|fn|
 #          puts "#{h}#{p} handling"
           fn[self,@r].do{|r|return r}}}}
@@ -67,7 +67,7 @@ class R
     end
 
     condResponse ->{
-      puts ['http://'+@r['SERVER_NAME']+@r['REQUEST_URI'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join(' ') if @r['SERVER_NAME']
+      puts ['http://'+@r['SERVER_NAME']+@r['REQUEST_URI'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join(' ')
       
       # RDF Model -> View
       if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
