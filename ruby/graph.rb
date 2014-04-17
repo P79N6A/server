@@ -21,19 +21,19 @@ class R
   end
 
 
-  module JSON
+  module JSONGraph
 
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
       content_encoding 'utf-8'
-      reader { R::JSON::Reader }
+      reader { R::JSONGraph::Reader }
     end
 
     class Reader < RDF::Reader
       format Format
 
       def initialize(input = $stdin, options = {}, &block)
-        @graph = ::JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
+        @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
