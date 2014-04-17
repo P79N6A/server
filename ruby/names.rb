@@ -60,6 +60,7 @@ class R
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
   def glob p=""; (Pathname.glob d + p).map &:R end
+  def hostURL h; host='http://'+h; R[(uri.index('/') == 0 ? host : '') + uri] end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
   def node;     Pathname.new FSbase + path end
   def parent;   R Pathname.new(uri).parent end

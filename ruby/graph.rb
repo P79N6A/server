@@ -34,6 +34,7 @@ class R
 
       def initialize(input = $stdin, options = {}, &block)
         @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
+        @host = options[:host] || 'localhost'
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -45,10 +46,11 @@ class R
 
       def each_statement &fn
         @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R, p.R,
-                                     o.class == Hash ? o.R : (l = RDF::Literal o
-                                                              l.datatype=RDF.XMLLiteral if p == Content
-                                                              l))}
+          fn.call RDF::Statement.new(s.R.hostURL(@host), p.R,
+                                     o.class == Hash ? o.R.hostURL(@host) :
+                                     (l = RDF::Literal o
+                                      l.datatype=RDF.XMLLiteral if p == Content
+                                      l))}
       end
 
       def each_triple &block
