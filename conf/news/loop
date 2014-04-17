@@ -2,5 +2,5 @@
 while true; do
   date
   news/boston.infrequent.sh localhost
-  sleep 2500
+  sleep 9000
 done

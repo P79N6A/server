@@ -1,3 +1,3 @@
 #!/bin/sh
 R /news/boston.tw tw $1
-R http://www.reddit.com/r/boston+cambridgema+somerville/new/.rss?sort=new getFeed $1
+R /news/boston.f.u getFeeds $1

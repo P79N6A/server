@@ -4,14 +4,12 @@ require 'ww/constants'
 begin
   uri = R[ARGV[0]]
   r = R[uri.to_s.sub(/\?#{uri.query}$/,'')]
-  puts uri,r
   r.setEnv({
     'QUERY_STRING' => uri.query,
     'REQUEST_PATH' => r.pathSegment.to_s,
     'REQUEST_URI' => uri.pathSegment.to_s,
     'SERVER_NAME' => r.host,
     :Response => {}}.extend Th)
-puts r.env
   out = r.send *ARGV[1..-1]
   if out.class==Array && out.size==3 && out[0].class == Fixnum
     require 'thin'
