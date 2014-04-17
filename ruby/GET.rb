@@ -18,8 +18,12 @@ class R
   end
 
   def fileGET
-    @r['ETag'] = [m,size].h
-    condResponse mimeP,->{self}
+    @r[:Response].update({
+      'Content-Type' => mimeP,
+      'ETag' => [m,size].h,
+    })
+    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mimeP.match /^(audio|image|video)/
+    condResponse ->{ self }
   end
 
   def resourceGET # handler cascade
@@ -33,8 +37,7 @@ class R
 
   def response # default handler
     set = []
-    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response RDF
-    @r[:Response] = {} # Response Headers
+    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response model in RDF
 
     # File
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
@@ -47,56 +50,49 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
+    @r[:Response].update({
+        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
+        'Content-Type' => @r.format,
+        'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
+        'Link' => "<#{aclURI}>; rel=acl",
+        'MS-Author-Via' => 'SPARQL',
+    })
+
     if set.empty?
       if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
-        return [200,{'Content-Type'=>'text/n3','MS-Author-Via' => 'DAV, SPARQL'},['']] # editable resource
+        return [200,@r[:Response],['']] # editable resource
       else
         return E404[self,@r,m]
       end
     end
 
-    @r['ETag'] = [q['view'].do{|v|View[v] && v}, # View
-                  set.sort.map{|r|[r, r.m]}, # entity version(s)
-                  @r.format].h               # output MIME
-
-    condResponse @r.format, ->{
+    condResponse ->{
       puts ['http://'+@r['SERVER_NAME']+@r['REQUEST_URI'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join(' ') if @r['SERVER_NAME']
       
-      # RDF Model - all in and out formats are RDF
+      # RDF Model -> View
       if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
           format = RDF::Writer.for(:content_type => @r.format)
-        puts "#{set.join ' '} -> RDF -> #{@r.format}"
+#        puts "#{set.join ' '} -> RDF -> #{@r.format}"
         graph = RDF::Graph.new
         set.map{|r| graph.load r.d}
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump format.to_sym
         
-      else # JSON Model
-        puts "#{set.join ' '} -> Hash -> #{@r.format}"
+      else # JSON Model -> View
+#        puts "#{set.join ' '} -> Hash -> #{@r.format}"
         set.map{|r|r.setEnv(@r).toGraph m}
         Render[@r.format][m, @r]
       end}
   end
   
-  def condResponse format, body
-    @r['HTTP_IF_NONE_MATCH'].do{|m|
-      m.strip.split(/\s*,\s*/).include?(@r['ETag']) && [304,{},[]]} ||
+  def condResponse body
+    @r['HTTP_IF_NONE_MATCH'].do{|m|m.strip.split(/\s*,\s*/).include?(@r[:Response]['ETag']) && [304,{},[]]} ||
     body.call.do{|body|
-      head = {
-        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-        'Content-Type' => format,
-        'ETag' => @r['ETag'],
-        'Link' => "<#{aclURI}>; rel=acl",
-        'MS-Author-Via' => 'SPARQL',
-      }.merge(@r[:Response]||{})
-
-      head.update({'Cache-Control' => 'no-transform'}) if format.match /^(audio|image|video)/
-
-      body.class == R ? (Nginx ? [200,head.update({'X-Accel-Redirect' => '/fs' + body.path}),[]] : # Nginx
-                         Apache ? [200,head.update({'X-Sendfile' => body.d}),[]] : # Apache
+      body.class == R ? (Nginx ? [200,@r[:Response].update({'X-Accel-Redirect' => '/fs' + body.path}),[]] : # Nginx
+                        Apache ? [200,@r[:Response].update({'X-Sendfile' => body.d}),[]] : # Apache
                          (f = Rack::File.new nil; f.instance_variable_set '@path', body.d # Rack
-                          f.serving(@r).do{|s,h,b|[s,h.update(head),b]})) :
-      [200,head,[body]]}
+                          f.serving(@r).do{|s,h,b|[s,h.update(@r[:Response]),b]})) :
+      [200,@r[:Response],[body]]}
   end
 
 end

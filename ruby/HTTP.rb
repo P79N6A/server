@@ -22,6 +22,7 @@ class R
     resource = R['http://'+e['SERVER_NAME']+path]
     resource.inside ? ( #puts "_"*48; puts "URI #{resource.uri}"; e.map{|k,v|puts [k,v].join ' '}
       e['uri'] = resource.uri
+      e[:Response] = {}
       resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
     E500[x,e]
@@ -45,8 +46,8 @@ class R
   Errors = {}
 
   GET['/500'] = -> e,r { 
-    r['ETag'] = Errors.keys.sort.h
-    e.condResponse r.format, ->{Render[r.format][Errors, r]}}
+    r[:Response]['ETag'] = Errors.keys.sort.h
+    e.condResponse ->{Render[r.format][Errors, r]}}
 
   E500 = -> x,e {
     uri = 'http://'+e['SERVER_NAME']+e['REQUEST_URI']

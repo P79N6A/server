@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   FileSet['default'] = -> e,q,g {
@@ -41,9 +41,16 @@ class R
       desc, asc = o == :asc ? [first,last] : [last,first]
       u = m['#']
       u[Type] = R[HTTP+'Response']
-      u[Prev] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)} if desc
-      u[Next] = {'uri' => d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)} if asc
-      s }}
+      if desc
+        uri = d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)
+        u[Prev] = {'uri' => uri}
+puts        d.env[:Response]
+      end
+      if asc
+        uri = d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)
+        u[Next] = {'uri' => uri}
+      end
+      s}}
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'stat', (H.css '/css/ls')),

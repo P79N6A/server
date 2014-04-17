@@ -11,8 +11,9 @@ class R
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
     v = r.q['view'] ||= "timegraph"
-    r['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
-    e.condResponse r.format, ->{Render[r.format][m, r]}}
+    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
+    r[:Response]['Content-Type'] = r.format
+    e.condResponse ->{Render[r.format][m, r]}}
 
   GET['/m'] = -> e,r{ # range over posts
     if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
