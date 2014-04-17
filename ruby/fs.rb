@@ -75,7 +75,7 @@ class R
              r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
 
   View['ls'] = -> i,e {
-    dir = e['uri'].R
+    dir = e[:Response]['URI'].R
     path = dir.pathSegment
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
     i = i.dup
@@ -88,7 +88,7 @@ class R
     [(H.css '/css/ls'),
      {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
      {class: :ls, c: View['table'][i,e]},'<br clear=all>',
-     {_: :a, class: :down, href: e['uri'].R.url.t, c: '&darr;'}]}
+     {_: :a, class: :down, href: e[:Response]['URI'].R.url.t, c: '&darr;'}]}
 
   def fileResources
     [(self if e),

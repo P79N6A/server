@@ -15,24 +15,6 @@ class R
       end}}
   end
 
-  def triplrRDF format=nil, local=true
-    yield uri, Type, R[COGS+'HiddenContainer']
-    uri = (local && f) ? d : uri
-    RDF::Reader.open(uri, :format => format){|r|
-      r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s,
-        [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value.do{|v|v.class == String ? v.to_utf8 : v}}}
-  end
-
-  [['application/json',:json],
-   ['application/ld+json',:jsonld],
-   ['application/rdf+xml',:rdfxml],
-   ['text/ntriples',:ntriples],
-   ['text/turtle',:turtle],
-   ['text/n3',:n3]
-  ].map{|mime|
-    Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
-
   View['tabulator'] = ->d,e {
     local = true
     tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'

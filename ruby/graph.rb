@@ -9,22 +9,31 @@ class R
     end; m
   end
 
-  def graph g={}
-    fileResources.map{|d|d.toGraph g} ;g
+  def graph graph = {}
+    fileResources.map{|d|
+      d.fileToGraph graph}
+    graph
   end
 
-  def toGraph g={}
-    return unless e
+  def fileToGraph graph = {}
+    return graph unless e
+    graph.mergeGraph rdfDoc.r true
+  end
+
+  def rdfDoc # pointer to RDF representation of fs-item, or file itself if already RDF
     doc = self
-    unless ext=='e' # already native-format
+    unless %w{e jsonld n3 nt owl rdf ttl}.member? ext # already RDF!
       doc = R '/cache/RDF/' + uri.h.dive
       unless doc.e && doc.m > m # up-to-date?
-        graph = {}
-        [:triplrMIME,:triplrInode].map{|t| fromStream graph, t}
-        doc.w graph, true
+        g = {} # doc-graph
+        [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
+        doc.w g, true # update
+        puts "updating #{doc}"
+      else
+        puts "up-to-date #{doc}"
       end
     end
-    g.mergeGraph doc.r true
+    doc
   end
 
   # GET Resource -> local RDF cache

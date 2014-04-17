@@ -32,7 +32,7 @@ class R
 
     [H.css('/css/html'),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
-       c: [{_: :a, class: :edit, c: 'add predicate', href: e['uri']+'?view=addP'},
+       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=addP'},
 
            g.map{|s,r| # each (subject, resource)
              {_: :table, class: :html,

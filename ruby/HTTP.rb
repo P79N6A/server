@@ -23,9 +23,8 @@ class R
     resource = R['http://'+e['SERVER_NAME']+path]
 
     resource.inside ? (
-      e['uri'] = resource.uri
       e[:Links] = []
-      e[:Response] = {}
+      e[:Response] = {'URI' => resource.uri}
       resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
     E500[x,e]
@@ -42,7 +41,9 @@ class R
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
     s[Header+'accept'] = r.accept
     %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'accept-'+a.downcase] = r.accept_('_'+a)}
-    r.map{|k,v| s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v }
+    r.map{|k,v|
+      s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)
+    }
     r.q.delete 'view' unless r.q['view']=='edit'
     [404,{'Content-Type'=> r.format},[Render[r.format][g,r]]]}
 
@@ -55,7 +56,7 @@ class R
   E500 = -> x,e {
     uri = 'http://'+e['SERVER_NAME']+e['REQUEST_URI']
     $stderr.puts [500, uri, x.class, x.message].join ' '
-    Errors[e['uri']] ||= {'uri' => uri, Content => [x.class, x.message,x.backtrace[0..2]].flatten.join('<br>')}
+    Errors[uri] ||= {'uri' => uri, Content => [x.class, x.message,x.backtrace[0..2]].flatten.join('<br>')}
 
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
@@ -122,7 +123,7 @@ module Th
       '.rdf' => 'application/rdf+xml',
       '.ttl' => 'text/turtle',
       '.txt' => 'text/plain',
-    }[File.extname(self['uri']||'')].do{|mime|
+    }[File.extname(self['REQUEST_PATH'])].do{|mime|
       return mime}
 
     # Accept values

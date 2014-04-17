@@ -49,14 +49,15 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
+    @r[:Links].push "<#{aclURI}>; rel=acl"
     @r[:Response].update({
         'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
         'Content-Type' => @r.format,
         'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
         'MS-Author-Via' => 'SPARQL',
     })
-    @r[:Links].push "<#{aclURI}>; rel=acl"
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
+
     if set.empty?
       if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
         return [200,@r[:Response],['']] # editable resource
@@ -65,20 +66,19 @@ class R
       end
     end
 
-    condResponse ->{ puts [@r['uri'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].compact.join(' ')
+    condResponse ->{ puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].compact.join(' ')
       
-      # RDF Model -> View
-      if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
-          format = RDF::Writer.for(:content_type => @r.format)
-#        puts "#{set.join ' '} -> RDF -> #{@r.format}"
+      # Resources -> RDF Graph -> RDF View
+      if !%w{text/html}.member?(@r.format) && format = RDF::Writer.for(:content_type => @r.format)
+        puts "#{set.join ' '} -> RDF -> #{@r.format}"
         graph = RDF::Graph.new
-        set.map{|r| graph.load r.d}
+        set.map{|r| graph.load r.rdfDoc.d}
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump format.to_sym
         
-      else # JSON Model -> View
-#        puts "#{set.join ' '} -> Hash -> #{@r.format}"
-        set.map{|r|r.setEnv(@r).toGraph m}
+      else # Resources -> Hash -> non-RDF View
+        puts "#{set.join ' '} -> Hash -> #{@r.format}"
+        set.map{|r|r.setEnv(@r).fileToGraph m}
         Render[@r.format][m, @r]
       end}
   end
