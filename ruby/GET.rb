@@ -2,7 +2,6 @@ watch __FILE__
 class R
 
   def GET
-    @r ||= {'SERVER_NAME' => 'localhost'}.extend Th
     if file = [self,pathSegment].compact.find(&:f) # file exists at URI, but client (or server) might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
@@ -66,8 +65,7 @@ class R
       end
     end
 
-    condResponse ->{
-      puts ['http://'+@r['SERVER_NAME']+@r['REQUEST_URI'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].join(' ')
+    condResponse ->{ puts [@r['uri'], @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].compact.join(' ')
       
       # RDF Model -> View
       if @r.format != "text/html" && !set.find{|f| !f.uri.match /\.(jsonld|nt|n3|rdf|ttl)$/} &&
