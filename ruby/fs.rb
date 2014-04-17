@@ -41,14 +41,16 @@ class R
       desc, asc = o == :asc ? [first,last] : [last,first]
       u = m['#']
       u[Type] = R[HTTP+'Response']
+      links = []
       if desc
         uri = d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)
         u[Prev] = {'uri' => uri}
-puts        d.env[:Response]
+        d.env[:Links].push "<#{uri}>; rel=prev"
       end
       if asc
         uri = d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)
         u[Next] = {'uri' => uri}
+        d.env[:Links].push "<#{uri}>; rel=next"
       end
       s}}
 

@@ -24,6 +24,7 @@ class R
 
     resource.inside ? (
       e['uri'] = resource.uri
+      e[:Links] = []
       e[:Response] = {}
       resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x

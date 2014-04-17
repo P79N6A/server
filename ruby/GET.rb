@@ -53,10 +53,10 @@ class R
         'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
         'Content-Type' => @r.format,
         'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
-        'Link' => "<#{aclURI}>; rel=acl",
         'MS-Author-Via' => 'SPARQL',
     })
-
+    @r[:Links].push "<#{aclURI}>; rel=acl"
+    @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
     if set.empty?
       if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
         return [200,@r[:Response],['']] # editable resource
