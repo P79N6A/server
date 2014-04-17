@@ -20,10 +20,50 @@ class R
     graph.mergeGraph rdfDoc.r true
   end
 
-  def rdfDoc # pointer to RDF representation of fs-item, or file itself if already RDF
+
+  module JSON
+
+    class Format < RDF::Format
+      content_type     'application/json+rdf', :extension => :e
+      content_encoding 'utf-8'
+      reader { R::JSON::Reader }
+    end
+
+    class Reader < RDF::Reader
+      format Format
+
+      def initialize(input = $stdin, options = {}, &block)
+        @graph = ::JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
+        if block_given?
+          case block.arity
+          when 0 then instance_eval(&block)
+          else block.call(self)
+          end
+        end
+        nil
+      end
+
+      def each_statement &fn
+        @graph.triples{|s,p,o|
+          fn.call RDF::Statement.new(s.R, p.R,
+                                     o.class == Hash ? o.R : (l = RDF::Literal o
+                                                              l.datatype=RDF.XMLLiteral if p == Content
+                                                              l))}
+      end
+
+      def each_triple &block
+        each_statement{|s| block.call *s.to_triple}
+      end
+
+    end
+
+  end
+
+
+  def rdfDoc # pointer to RDF representation of fs-item, or itself if RDF
     doc = self
     unless %w{e jsonld n3 nt owl rdf ttl}.member? ext # already RDF!
-      doc = R '/cache/RDF/' + uri.h.dive
+      doc = R '/cache/RDF/' + uri.h.dive + '.e'
       unless doc.e && doc.m > m # up-to-date?
         g = {} # doc-graph
         [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize

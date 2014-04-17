@@ -68,16 +68,14 @@ class R
 
     condResponse ->{ puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].compact.join(' ')
       
-      # Resources -> RDF Graph -> RDF View
+      # Resources -> RDF Graph (Model) -> RDF format (View)
       if !%w{text/html}.member?(@r.format) && format = RDF::Writer.for(:content_type => @r.format)
-        puts "#{set.join ' '} -> RDF -> #{@r.format}"
+        puts "#{set.join ' '} -> #{@r.format}"
         graph = RDF::Graph.new
         set.map{|r| graph.load r.rdfDoc.d}
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump format.to_sym
-        
-      else # Resources -> Hash -> non-RDF View
-        puts "#{set.join ' '} -> Hash -> #{@r.format}"
+      else # plain HTML
         set.map{|r|r.setEnv(@r).fileToGraph m}
         Render[@r.format][m, @r]
       end}

@@ -14,6 +14,14 @@ class R
         (w << (RDF::Statement.new s,p,o) if o ) rescue nil
       end}}
   end
+  
+  [['application/ld+json',:jsonld],
+   ['application/rdf+xml',:rdfxml],
+   ['text/ntriples',:ntriples],
+   ['text/turtle',:turtle],
+   ['text/n3',:n3]
+  ].map{|mime|
+    Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
   View['tabulator'] = ->d,e {
     local = true
