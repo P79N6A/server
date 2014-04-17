@@ -152,13 +152,13 @@ class R
     self
   end
 
-  def read parseJSON=false
+  def readFile parseJSON=false
     if f
       if parseJSON
         begin
           JSON.parse File.open(d).read
         rescue Exception => x
-          puts uri,x
+          puts "error reading JSON: #{caller} #{uri} #{x}"
           {}
         end
       else
@@ -169,7 +169,7 @@ class R
     end
   end
 
-  def write o,s=false
+  def writeFile o,s=false
     dirname.mk
     File.open(d,'w'){|f|
       f << (s ? o.to_json : o)}
@@ -179,8 +179,8 @@ class R
   alias_method :e, :exist?
   alias_method :f, :file?
   alias_method :m, :mtime
-  alias_method :r, :read
-  alias_method :w, :write
+  alias_method :r, :readFile
+  alias_method :w, :writeFile
 
   def take *a
     node.take(*a).map &:R

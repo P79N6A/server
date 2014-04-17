@@ -17,62 +17,17 @@ class R
 
   def fileToGraph graph = {}
     return graph unless e
-    graph.mergeGraph rdfDoc.r true
+    graph.mergeGraph rdfDoc(%w{e}).r true
   end
 
-
-  module JSONGraph
-
-    class Format < RDF::Format
-      content_type     'application/json+rdf', :extension => :e
-      content_encoding 'utf-8'
-      reader { R::JSONGraph::Reader }
-    end
-
-    class Reader < RDF::Reader
-      format Format
-
-      def initialize(input = $stdin, options = {}, &block)
-        @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
-        @host = options[:host] || 'localhost'
-        if block_given?
-          case block.arity
-          when 0 then instance_eval(&block)
-          else block.call(self)
-          end
-        end
-        nil
-      end
-
-      def each_statement &fn
-        @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R.hostURL(@host), p.R,
-                                     o.class == Hash ? o.R.hostURL(@host) :
-                                     (l = RDF::Literal o
-                                      l.datatype=RDF.XMLLiteral if p == Content
-                                      l))}
-      end
-
-      def each_triple &block
-        each_statement{|s| block.call *s.to_triple}
-      end
-
-    end
-
-  end
-
-
-  def rdfDoc # pointer to RDF representation of fs-item, or itself if RDF
+  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl}
     doc = self
-    unless %w{e jsonld n3 nt owl rdf ttl}.member? ext # already RDF!
+    unless pass.member? ext # already RDF!
       doc = R '/cache/RDF/' + uri.h.dive + '.e'
       unless doc.e && doc.m > m # up-to-date?
         g = {} # doc-graph
         [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
         doc.w g, true # update
-        puts "updating #{doc}"
-      else
-        puts "up-to-date #{doc}"
       end
     end
     doc
@@ -117,6 +72,46 @@ class R
   end
 
   def jsonDoc; docroot.a '.e' end
+
+  module JSONGraph
+
+    class Format < RDF::Format
+      content_type     'application/json+rdf', :extension => :e
+      content_encoding 'utf-8'
+      reader { R::JSONGraph::Reader }
+    end
+
+    class Reader < RDF::Reader
+      format Format
+
+      def initialize(input = $stdin, options = {}, &block)
+        @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
+        @host = options[:host] || 'localhost'
+        if block_given?
+          case block.arity
+          when 0 then instance_eval(&block)
+          else block.call(self)
+          end
+        end
+        nil
+      end
+
+      def each_statement &fn
+        @graph.triples{|s,p,o|
+          fn.call RDF::Statement.new(s.R.hostURL(@host), p.R,
+                                     o.class == Hash ? o.R.hostURL(@host) :
+                                     (l = RDF::Literal o
+                                      l.datatype=RDF.XMLLiteral if p == Content
+                                      l))}
+      end
+
+      def each_triple &block
+        each_statement{|s| block.call *s.to_triple}
+      end
+
+    end
+
+  end
 
   def triplrJSON
     yield uri, '/application/json', r(true) if e

@@ -126,6 +126,7 @@ class R
     'text/html-part'       => [:triplrHTML],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
+    'text/n3'              => [:triplrN3],
     'text/nfo'             => [:triplrHref,'cp437'],
     'text/plain'           => [:triplrHref],
     'text/rtf'             => [:triplrRTF],
