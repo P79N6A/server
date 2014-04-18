@@ -59,6 +59,7 @@ class R
     for: 'application/fortran',
     gemspec: 'application/ruby',
     gif: 'image/gif',
+    go: 'text/x-c',
     hs: 'application/haskell',
     ht: 'text/html-part',
     html: 'text/html',
