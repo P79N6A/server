@@ -53,7 +53,6 @@ class R
   def barename; basename.sub(/\.#{ext}$/,'') rescue basename end
   def cascade;  [stripSlash].concat parents end
   def children; node.c.map &:R end
-  def container; @u ||= R[f ? dirname + '/.' + (File.basename path) : path] end
   def descend;  R uri.t end
   def docroot;  stripFrag.stripDoc.stripSlash end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end

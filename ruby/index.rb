@@ -12,7 +12,7 @@ class R
   end
 
   def predicatePath p, s = true
-    container.as s ? p.R.shorten : p
+    as s ? p.R.shorten : p
   end
 
   def objectPath o
@@ -36,7 +36,7 @@ class R
   end
 
   def predicates
-    container.c.map{|c|c.base.expand.R}
+    c.map{|c| c.base.expand.R }
   end
 
   def predicate p, short = true
