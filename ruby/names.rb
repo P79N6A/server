@@ -45,6 +45,7 @@ class R
   end
 
   GREP_DIRS = []
+  VHosts = 'domain'
 
   def appendURI u; R uri + u.to_s end
   def appendSlashURI u; R uri.t + u.to_s end
@@ -62,7 +63,7 @@ class R
   def glob p=""; (Pathname.glob d + p).map &:R end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
   def justPath; R[path] end
-  def node;     Pathname.new FSbase + (host.do{|h|'/domain/' + h + path} || uri) end
+  def node;     Pathname.new FSbase + (host.do{|h|'/' + VHosts + '/' + h + (path||'')} || to_s) end
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def realpath; node.realpath rescue nil end
@@ -119,9 +120,9 @@ class String
     gsub('/','|')
   end
 
-  def unpath skip = R::BaseLen
+  def unpath skip = R::BaseLen # filePath -> URI
     self[skip..-1].do{|p|
-      R[p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} ||
+      R[p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} ||
         p]}
   end
 
