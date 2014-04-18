@@ -69,12 +69,16 @@ class R
     condResponse ->{
       writer = RDF::Writer.for :content_type => @r.format
       if writer && ((@r.format != 'text/html') || q.has_key?('rdfa'))
-        graph = RDF::Graph.new             # Model
-        set.map{|r| graph.load r.rdfDoc.d, :host => @r['SERVER_NAME']} # resource state
+        graph = RDF::Graph.new
+        set.map{|r|
+          doc = r.rdfDoc
+          graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc} # resource state
+
         m['#'].map{|p,o| o.justArray.map{|o| graph << RDF::Statement.new(@r[:Response]['URI'].R, p.R,
                     [R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'} # request data
+
         @r[:Response][:Triples] = graph.size.to_s # graph size
-        graph.dump writer.to_sym           # RDF
+        graph.dump writer.to_sym # RDF
       else
         set.map{|r|r.setEnv(@r).fileToGraph m}
         Render[@r.format][m, @r] # HTML
