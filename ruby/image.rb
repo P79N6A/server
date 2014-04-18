@@ -7,8 +7,8 @@ class R
   end
 
   GET['/thumbnail'] = -> e,r {
-    t = R['http://'+r['SERVER_NAME']+e.pathSegment.to_s.sub(/^.thumbnail/,'')]
-    i = [t,t.pathSegment].compact.find(&:f)
+    t = R['http://'+r['SERVER_NAME']+e.justPath.to_s.sub(/^.thumbnail/,'')]
+    i = [t,t.justPath].compact.find(&:f)
     if i && i.size > 0
       stat = i.node.stat
       id = [stat.ino,stat.mtime].h.dive
@@ -28,7 +28,7 @@ class R
   
   View[DC+'Image'] = -> i,e{
     i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) &&
-      {_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.pathSegment}}}}
+      {_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}}
 
   View['imgs'] = -> m,e { seen = {} # unique images found
 

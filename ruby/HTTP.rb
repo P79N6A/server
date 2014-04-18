@@ -36,7 +36,7 @@ class R
   E404 = -> e,r,g=nil {
     g ||= {} # graph
     s = g[e.uri] ||= {} # resource
-    path = e.pathSegment
+    path = e.justPath
     s[Title] = '404'
     s[RDFs+'seeAlso'] = [e.parent, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
@@ -55,9 +55,9 @@ class R
     e.condResponse ->{Render[r.format][Errors, r]}}
 
   E500 = -> x,e {
-    uri = 'http://'+e['SERVER_NAME']+e['REQUEST_URI']
-    $stderr.puts [500, uri, x.class, x.message].join ' '
-    Errors[uri] ||= {'uri' => uri, Content => [x.class, x.message,x.backtrace[0..2]].flatten.join('<br>')}
+    where = e['SERVER_NAME'] + e['REQUEST_URI']
+    $stderr.puts [500, where, x.class, x.message].join ' '
+    Errors[where] ||= {'uri' => '//'+where, Content => [x.class, x.message,x.backtrace[0..2]].flatten.join('<br>')}
 
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,

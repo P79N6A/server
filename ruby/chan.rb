@@ -4,7 +4,7 @@ class R
   RecentPosts = {}
 
   GET['/ch'] = -> r,e {
-    path = r.pathSegment.uri.sub(/^\/(board|ch|forum)\/*/,'/').tail
+    path = r.justPath.uri.sub(/^\/(board|ch|forum)\/*/,'/').tail
     if path.match(/^[^\/]*\/?$/)
       if path.empty? # toplevel index
         e.q['view'] ||= 'title'
@@ -20,7 +20,7 @@ class R
     p = (Rack::Request.new d.env).params # parse input
     content = p['content']
     if content && !content.empty?
-      host = 'http://' + e['SERVER_NAME']
+      host = '//' + e['SERVER_NAME']
       path = Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' + ( p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || rand.to_s.h[0..3] )
       uri = host + '/' + path
 

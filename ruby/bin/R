@@ -6,8 +6,8 @@ begin
   r = R[uri.to_s.sub(/\?#{uri.query}$/,'')]
   r.setEnv({
              'QUERY_STRING' => uri.query||'',
-             'REQUEST_PATH' => r.pathSegment.to_s,
-             'REQUEST_URI' => uri.pathSegment.to_s,
+             'REQUEST_PATH' => r.justPath.to_s,
+             'REQUEST_URI' => uri.justPath.to_s,
              'SERVER_NAME' => r.host||'localhost',
              :Response => {},
              :Links => [],

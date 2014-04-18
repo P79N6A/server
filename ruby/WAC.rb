@@ -2,8 +2,8 @@
 class R
 
   def aclURI
-    if pathSegment == '/'
-      'http://' + @r['SERVER_NAME'] + '/.acl'
+    if justPath == '/'
+      '//' + @r['SERVER_NAME'] + '/.acl'
     elsif basename.index('.acl') == 0
       self
     else

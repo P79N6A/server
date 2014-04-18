@@ -2,7 +2,7 @@
 class R
 
   def GET
-    if file = [self,pathSegment].compact.find(&:f) # file exists at URI, but client (or server) might want another MIME
+    if file = [self,justPath].compact.find(&:f) # file exists at URI, but client (or server) might want another MIME
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
       return file.setEnv(@r).fileGET unless !accepted || (MIMEcook[file.mimeP] && !(q.has_key? 'raw'))
@@ -25,8 +25,8 @@ class R
     condResponse ->{ self }
   end
 
-  def resourceGET # handler cascade
-    paths = pathSegment.cascade
+  def resourceGET
+    paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
       paths.map{|p| GET[h + p].do{|fn|
 #          puts "#{h}#{p} handling"

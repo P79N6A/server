@@ -5,15 +5,15 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources # host-specific
-    e.pathSegment.do{|p| s.concat p.fileResources unless p.uri == '/'} # global
+    e.justPath.do{|p| s.concat p.fileResources unless p.uri == '/'} # global
     e.env['REQUEST_PATH'].do{|path|
       path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
         pp = (t-1).strftime('/%Y/%m/%d/') # prev day
         np = (t+1).strftime('/%Y/%m/%d/') # next day
         qs = q['view'].do{|v|'?view='+v} || ''
-        g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['http://' + e.env['SERVER_NAME'] + pp].e
-        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['http://' + e.env['SERVER_NAME'] + np].e }}
+        g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
+        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e }}
     s
   }
 
@@ -22,17 +22,17 @@ class R
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-      [e,e.pathSegment].compact.select(&:e).map{|e|
+      [e,e.justPath].compact.select(&:e).map{|e|
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
         lines.map{|l|l.chomp.unpath}}.compact.flatten}}
 
   FileSet['glob'] = -> d,e=nil,_=nil {
-    p = [d,d.pathSegment].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
+    p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
 
   FileSet['depth'] = -> d,r,m {
     global = !r.has_key?('local')
-    p = global ? d.pathSegment : d
+    p = global ? d.justPath : d
     loc = global ? '' : '&local'
     c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(9000) # an extra for next-page pointer
     o = r['d'] =~ /^a/ ? :asc : :desc            # direction
@@ -63,7 +63,7 @@ class R
 
   View[Stat+'Directory'] = -> i,e {
     a = -> i { i = i.R
-      {_: :a, href: i, c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
+      {_: :a, href: i, c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail' + i.justPath} : i.uri.sub(/.*\//,'')}}
 
     [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r|
@@ -75,7 +75,7 @@ class R
 
   View['ls'] = -> i,e {
     dir = e[:Response]['URI'].R
-    path = dir.pathSegment
+    path = dir.justPath
     up = (!path || path.uri == '/') ? '/' : dir.parent.url
     i = i.dup
     i.delete_if{|u,r|!r[Stat+'size']}

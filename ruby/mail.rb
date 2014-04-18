@@ -18,7 +18,7 @@ class R
     e.condResponse ->{Render[r.format][m, r]}}
 
   GET['/m'] = -> e,r{ # range over posts
-    if m = e.pathSegment.uri.match(/^\/m\/([^\/]+)$/)
+    if m = e.justPath.uri.match(/^\/m\/([^\/]+)$/)
       r.q['set']  ||= 'depth'
       r.q['view'] ||= 'threads'
       e.response

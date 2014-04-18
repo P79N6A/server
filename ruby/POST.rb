@@ -2,7 +2,7 @@
 class R
 
   def POST
-    lambdas = pathSegment.cascade
+    lambdas = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
     case @r['CONTENT_TYPE']

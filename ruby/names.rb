@@ -61,11 +61,10 @@ class R
   def filePath; node.to_s end
   def glob p=""; (Pathname.glob d + p).map &:R end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
-  def node;     Pathname.new FSbase + path end
+  def justPath; R[path] end
+  def node;     Pathname.new FSbase + (host.do{|h|'/domain/' + h + path} || uri) end
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
-  def path;     uri.match(/^\//) ? uri : ('/data/'+uri.split('://')[1]) end
-  def pathSegment; uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/).do{|p|p[2]&&p[2].R}||nil end
   def realpath; node.realpath rescue nil end
   def shorten;  uri.shorten.R end
   def size;     node.size end
@@ -122,7 +121,7 @@ class String
 
   def unpath skip = R::BaseLen
     self[skip..-1].do{|p|
-      R[p.match(/^\/data\/+(.*)/).do{|m|'//'+m[1]} ||
+      R[p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} ||
         p]}
   end
 

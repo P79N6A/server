@@ -123,7 +123,7 @@ ul.uris a:hover {background-color:#bf0}
       MIMEcook[m] = true
     }}
 
-  MIMEsource['text/css'] ||= [:triplrSourceCode] # i hear CSS is Turing complete now, http://inamidst.com/whits/2014/formats
+  MIMEsource['text/css'] ||= [:triplrSourceCode]
 
   Render['text/plain'] = -> d, _ = nil {
     d.values.map{|r|

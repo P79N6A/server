@@ -2,13 +2,13 @@
 class R
 
   # traversible blog-post collection
-  # to mount on a site-root  GET['http://site/'] = GET['/blog']
+  # mountable on site-root GET['host/'] = GET['/blog']
   GET['/blog'] = -> d,e {
-    if %w{/ /blog}.member? d.pathSegment
+    if %w{/ /blog}.member? d.justPath
       e.q['set'] = 'depth' # post-range in date-order
       e.q['local'] = true  # hostname-specific
       e.q['c'] ||= 8       # page size
-    R['http://'+e['SERVER_NAME']+'/blog'].setEnv(e).response
+    R['//'+e['SERVER_NAME']+'/blog'].setEnv(e).response
     end}
 
   # prompt for title of new post
@@ -22,7 +22,7 @@ class R
 
   # mint URI (date and name), insert title+type to db, forward to default editor
   POST['/blog/post'] = -> d,e {
-    host = 'http://' + e['SERVER_NAME']
+    host = '//' + e['SERVER_NAME']
     title = (Rack::Request.new d.env).params['title'] # decode POST-ed title
     base = R[host+Time.now.strftime('/%Y/%m/%d/')+URI.escape(title.gsub /[?#\s\/]/,'_')] # doc URI
     post = base.a '#'                # resource URI
@@ -68,7 +68,6 @@ class R
         yield s, Content,             m[3].hrefs(true)
         yield s, Type,                R[SIOCt+'InstantMessage']
         yield s, Type,                R[SIOC+'Post']
-        yield s, SIOC+'link',        (m[3].match(/http:\//) ? 'true' : 'false')
       } rescue nil
     }
   end
@@ -88,7 +87,7 @@ class R
   end
 
   def triplrTwMsg
-    base = 'http://twitter.com'
+    base = 'https://twitter.com'
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('a.details').attr('href') # subject URI
       yield s, Type, R[SIOCt+'MicroblogPost']

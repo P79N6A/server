@@ -5,7 +5,7 @@ class R
     manPath = '/usr/share/man'
 
     # eat selector
-    name = e.pathSegment.uri.sub('/man/','/').tail
+    name = e.justPath.uri.sub('/man/','/').tail
 
     # section prefix?
     section = nil

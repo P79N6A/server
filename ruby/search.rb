@@ -4,7 +4,7 @@ class R
   FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       q['view'] ||= 'grep'
-      path = e.pathSegment
+      path = e.justPath
       GREP_DIRS.find{|p|path.uri.match p}.do{|_|
         [e,path].compact.select(&:e).map{|e|
           `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|r.chomp.unpath}}.flatten

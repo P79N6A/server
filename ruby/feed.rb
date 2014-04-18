@@ -1,7 +1,7 @@
 class R
 
   GET['/news'] = -> d,e {
-    if %w{/news /news/}.member? d.pathSegment
+    if %w{/news /news/}.member? d.justPath
       e.q['set'] ||= 'depth' # post-range in date-order
       e.q['local'] ||= true  # hostname-specific
       e.q['c'] ||= 32        # page size
