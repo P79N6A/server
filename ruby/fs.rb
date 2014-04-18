@@ -63,15 +63,15 @@ class R
 
   View[Stat+'Directory'] = -> i,e {
     a = -> i { i = i.R
-      {_: :a, href: i.localURL(e), c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
+      {_: :a, href: i, c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail'+i.pathSegment} : i.uri.sub(/.*\//,'')}}
 
     [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r|
        resource = r.R
-       url = resource.localURL e
+       uri = resource.uri.t
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [{c: [{_: :a, href: url.t + '?view=ls', c: resource.abbr},
-                  {_: :a, href: url.t, c: '/'}]},
+         c: [{c: [{_: :a, href: uri + '?view=ls', c: resource.abbr},
+                  {_: :a, href: uri, c: '/'}]},
              r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
 
   View['ls'] = -> i,e {

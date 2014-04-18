@@ -88,18 +88,6 @@ class R
   alias_method :url, :to_s
   alias_method :uri, :to_s
 
-  def localURL e
-    if uri.index('/') == 0
-      uri             # already a local path
-    elsif e && uri.index('http://'+(e['SERVER_NAME']||'')+'/') == 0 
-      pathSegment.uri # host match, unchanged local path
-    else
-      '/' + uri       # URI -> local path
-    end
-  end
-
-  NullView = -> d,e {}
-
 end
 
 class Hash

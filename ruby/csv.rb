@@ -28,6 +28,6 @@ class R
           t.map(&:maybeURI).member?(CSV+'Row')})}
     View['table'][d,e]}
 
-  View[CSV+'Row'] = NullView
+  View[CSV+'Row'] = -> d,e {}
 
 end
