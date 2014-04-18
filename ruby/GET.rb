@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def GET
@@ -66,7 +66,7 @@ class R
       end
     end
 
-    condResponse ->{                        puts [uri, @r['HTTP_USER_AGENT'], @r['HTTP_REFERER']].compact.join(' ')
+    condResponse ->{
       writer = RDF::Writer.for :content_type => @r.format
       if writer && ((@r.format != 'text/html') || q.has_key?('rdfa'))
         graph = RDF::Graph.new             # graph
