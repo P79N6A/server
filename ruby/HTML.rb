@@ -174,6 +174,4 @@ class R
        c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.R.abbr}}},
            g.values.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
 
-  View[COGS+'HiddenContainer'] = NullView
-
 end

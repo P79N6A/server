@@ -99,7 +99,7 @@ class R
 
   def triplrInode
     if node.directory?
-      yield uri, Type, R[LDP+'Container']
+      yield uri, Type, R[LDP+'BasicContainer']
       yield uri, Type, R[Stat+'Directory']
       c.map{|c|
         yield uri, LDP+'contains', R[c.uri.gsub('?','%3F').gsub('#','%23')]}
