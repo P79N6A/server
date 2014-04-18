@@ -108,7 +108,6 @@ class R
   
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
-    'application/markdown' => [:triplrMarkdown],
     'application/org'      => [:triplrOrg],
     'application/json'     => [:triplrJSON],
     'application/pdf'      => [:triplrPDF],
@@ -124,6 +123,7 @@ class R
     'text/html-part'       => [:triplrHTML],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
+    'text/markdown'        => [:triplrMarkdown],
     'text/n3'              => [:triplrN3],
     'text/nfo'             => [:triplrHref,'cp437'],
     'text/plain'           => [:triplrHref],
