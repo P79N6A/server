@@ -83,6 +83,10 @@ class FalseClass
   def html; H({_: :input, type: :checkbox, title: :False}) end
 end
 
+class NilClass
+  def html; "" end
+end
+
 class Hash
   def html
     if keys.size == 1 && has_key?('uri')

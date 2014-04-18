@@ -70,8 +70,7 @@ class R
        resource = r.R
        uri = resource.uri.t
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [{c: [{_: :a, href: uri + '?view=ls', c: resource.abbr},
-                  {_: :a, href: uri, c: '/'}]},
+         c: [{c: {_: :a, href: uri, c: resource.abbr}},
              r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
 
   View['ls'] = -> i,e {
@@ -101,8 +100,7 @@ class R
     if node.directory?
       yield uri, Type, R[LDP+'BasicContainer']
       yield uri, Type, R[Stat+'Directory']
-      c.map{|c|
-        yield uri, LDP+'contains', R[c.uri.gsub('?','%3F').gsub('#','%23')]}
+      c.map{|c| yield uri, LDP+'contains', R[c.uri]}
     end
     node.stat.do{|s|
       [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
