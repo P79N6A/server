@@ -62,7 +62,8 @@ class R
   def glob p=""; (Pathname.glob d + p).map &:R end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
   def justPath; R[path] end
-  def node;     Pathname.new FSbase + (host.do{|h|'/' + VHosts + '/' + h + (path||'')} || to_s) end
+  def node;     Pathname.new FSbase + nodeLocation end
+  def nodeLocation; (host.do{|h|'/' + VHosts + '/' + h + (path||'')} || to_s) end
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def realpath; node.realpath rescue nil end
