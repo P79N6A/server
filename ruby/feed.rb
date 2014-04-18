@@ -6,7 +6,7 @@ class R
       e.q['local'] ||= true  # hostname-specific
       e.q['c'] ||= 32        # page size
       e.q.delete 'view' if e.q['view'] == 'ls' # strip fs-view
-      R['http://'+e['SERVER_NAME']+'/news'].setEnv(e).response # continue
+      R['//'+e['SERVER_NAME']+'/news'].setEnv(e).response # continue
     end}
 
   def getFeed h='localhost'
@@ -173,21 +173,21 @@ class R
     graph.map{|u,r|
       r[Date].do{|t| # link doc to date-index
         t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
-        b = (u.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean basename
-        doc.ln R["http://#{host}/news/#{t}#{b}e"]}} # link to timeline
+        b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean basename
+        doc.ln_s R["//#{host}/news/#{t}#{b}e"]}} # link to timeline
     doc}
 
   FeedArchiverRDF = -> doc, graph, host {
     doc.roonga host
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones
-      base = (graph.name.to_s.sub(/http:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-      doc.ln R["http://#{host}/news/#{time}#{base}n3"]}}
+      base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+      doc.ln_s R["//#{host}/news/#{time}#{base}n3"]}}
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
   Render['application/atom+xml'] = -> d,e {
-    id = 'http://' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
+    id = '//' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
     H(['<?xml version="1.0" encoding="utf-8"?>',
        {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
          c: [{_: :id, c: id},

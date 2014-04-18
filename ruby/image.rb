@@ -7,7 +7,7 @@ class R
   end
 
   GET['/thumbnail'] = -> e,r {
-    t = R['http://'+r['SERVER_NAME']+e.justPath.to_s.sub(/^.thumbnail/,'')]
+    t = R['//'+r['SERVER_NAME']+e.justPath.to_s.sub(/^.thumbnail/,'')]
     i = [t,t.justPath].compact.find(&:f)
     if i && i.size > 0
       stat = i.node.stat
