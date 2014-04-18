@@ -20,11 +20,12 @@ class R
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
 
     path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
-    resource = R['http://'+e['SERVER_NAME']+path]
+    resource = R["http#{e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : ''}://" + e['SERVER_NAME'] + path]
 
     resource.inside ? (
       e[:Links] = []
       e[:Response] = {'URI' => resource.uri}
+                       puts resource.uri
       resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
     E500[x,e]

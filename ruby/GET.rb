@@ -27,7 +27,7 @@ class R
 
   def resourceGET # handler cascade
     paths = pathSegment.cascade
-    ['http://'+@r['SERVER_NAME'],""].map{|h| # http://host/path , /path
+    [@r['SERVER_NAME'],""].map{|h|
       paths.map{|p| GET[h + p].do{|fn|
 #          puts "#{h}#{p} handling"
           fn[self,@r].do{|r|return r}}}}
