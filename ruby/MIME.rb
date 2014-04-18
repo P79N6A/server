@@ -140,7 +140,6 @@ class R
   # prefer triplr->model->view over direct file response
   MIMEcook={
     'application/json+rdf' => true,
-    'application/markdown' => true,
     'application/org' => true,
     'application/postscript' => true,
     'application/uri' => true,
