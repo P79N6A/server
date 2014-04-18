@@ -104,7 +104,7 @@ end
 class R
 
   def href name = nil
-    '<a href="'+uri+'">' + (name || abbr) + '</a>'
+    '<a href="'+uri+'">' + (name || uri.match(/(gif|jpe?g|png)$/i) ? "<img src='/thumbnail#{justPath}'>" : abbr) + '</a>'
   end
   alias_method :html, :href
 
