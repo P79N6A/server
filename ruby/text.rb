@@ -64,6 +64,13 @@ ul.uris a:hover {background-color:#bf0}
     yield uri, Content, ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(r)
   end
 
+  Render['text/markdown'] = -> d,e {
+    require 'reverse_markdown'
+    html = Render['text/html'][d,e]
+    md = ReverseMarkdown.convert html
+    md
+  }
+
   def triplrOrg
     require 'org-ruby'
     r.do{|r|
