@@ -71,7 +71,7 @@ class R
       if writer && ((@r.format != 'text/html') || q.has_key?('rdfa'))
         graph = RDF::Graph.new
         set.map{|r|
-          doc = r.rdfDoc
+          doc = r.setEnv(@r).rdfDoc
           graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc} # resource state
 
         m['#'].map{|p,o| o.justArray.map{|o| graph << RDF::Statement.new(@r[:Response]['URI'].R, p.R,

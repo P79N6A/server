@@ -23,7 +23,7 @@ class R
   def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # allowable docs
     doc = self
     unless pass.member? ext
-      doc = R['/cache/RDF/' + uri.h.dive + '.e'].setEnv env
+      doc = R['/cache/RDF/' + uri.h.dive + '.e']
       unless doc.e && doc.m > m # up-to-date?
         g = {} # doc graph
         [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
