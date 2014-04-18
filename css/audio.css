@@ -2,5 +2,5 @@ a {text-decoration:none}
 a.track {background-color:#000;color:#fff;margin:.08em;padding:.08em}
 #media {width:100%}
 #jump {font-size:3em;padding:.1em;background-color:orange;color:#fff}
-#jump, #rand {float:right;}
+#jump, #rand, a.track {float:right;}
 #info {float:left;font-weight:bold; font-size: 2em;background-color:#000;color:#fff}
