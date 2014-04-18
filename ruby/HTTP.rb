@@ -119,7 +119,6 @@ module Th
       '.html' => 'text/html',
       '.json' => 'application/json',
       '.jsonld' => 'application/ld+json',
-      '.md' => 'text/markdown',
       '.nt' => 'text/ntriples',
       '.n3' => 'text/n3',
       '.rdf' => 'application/rdf+xml',
