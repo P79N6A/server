@@ -53,19 +53,18 @@ class R
   def cascade;  [stripSlash].concat parents end
   def children; node.c.map &:R end
   def container; @u ||= R[f ? dirname + '/.' + (File.basename path) : path] end
-  def d;        node.to_s end
   def descend;  R uri.t end
   def docroot;  stripFrag.stripDoc.stripSlash end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
+  def filePath; node.to_s end
   def glob p=""; (Pathname.glob d + p).map &:R end
-  def hostURL h; host='http://'+h; R[(uri.index('/') == 0 ? host : '') + uri] end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
   def node;     Pathname.new FSbase + path end
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
-  def path;     uri.match(/^\//) ? uri : ('/'+uri) end
+  def path;     uri.match(/^\//) ? uri : ('/data/'+uri.split('://')[1]) end
   def pathSegment; uri.match(/^([a-z]+:\/\/[^\/]+)?(\/.*)/).do{|p|p[2]&&p[2].R}||nil end
   def realpath; node.realpath rescue nil end
   def shorten;  uri.shorten.R end
@@ -83,6 +82,7 @@ class R
   alias_method :base, :basename
   alias_method :bare, :barename
   alias_method :c, :children
+  alias_method :d, :filePath
   alias_method :dir, :dirname
   alias_method :maybeURI, :to_s
   alias_method :url, :to_s
@@ -122,7 +122,8 @@ class String
 
   def unpath skip = R::BaseLen
     self[skip..-1].do{|p|
-      (p.match(/^\/([a-z]+:)\/+(.*)/).do{|m|m[1]+'//'+m[2]}||p).R}
+      R[p.match(/^\/data\/+(.*)/).do{|m|'//'+m[1]} ||
+        p]}
   end
 
   def R; R.new self end

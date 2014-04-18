@@ -25,7 +25,6 @@ class R
     resource.inside ? (
       e[:Links] = []
       e[:Response] = {'URI' => resource.uri}
-      puts [resource, e['HTTP_USER_AGENT'], e['HTTP_REFERER']].compact.join(' ')
       resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
   rescue Exception => x
     E500[x,e]

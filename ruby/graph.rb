@@ -20,14 +20,14 @@ class R
     graph.mergeGraph rdfDoc(%w{e}).r true
   end
 
-  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl}
+  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # allowable docs
     doc = self
-    unless pass.member? ext # already RDF!
+    unless pass.member? ext
       doc = R '/cache/RDF/' + uri.h.dive + '.e'
       unless doc.e && doc.m > m # up-to-date?
-        g = {} # doc-graph
+        g = {} # doc graph
         [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
-        doc.w g, true # update
+        doc.w g, true
       end
     end
     doc
@@ -98,11 +98,9 @@ class R
 
       def each_statement &fn
         @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R.hostURL(@host), p.R,
-                                     o.class == Hash ? o.R.hostURL(@host) :
+          fn.call RDF::Statement.new(s.R, p.R, o.class == Hash ? o.R :
                                      (l = RDF::Literal o
-                                      l.datatype=RDF.XMLLiteral if p == Content
-                                      l))}
+                                      l.datatype=RDF.XMLLiteral if p == Content; l))}
       end
 
       def each_triple &block
