@@ -49,32 +49,32 @@ class R
 
   def appendURI u; R uri + u.to_s end
   def appendSlashURI u; R uri.t + u.to_s end
-  def basename; File.basename path end
   def barename; basename.sub(/\.#{ext}$/,'') rescue basename end
+  def basename; File.basename path end
   def cascade;  [stripSlash].concat parents end
   def children; node.c.map &:R end
+  def <=> c;    to_s <=> c.to_s end
   def descend;  R uri.t end
   def docroot;  stripFrag.stripDoc.stripSlash end
   def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
   def expand;   uri.expand.R end
   def ext;      File.extname(uri).tail||'' end
-  def filePath; node.to_s end
   def glob p=""; (Pathname.glob d + p).map &:R end
   def inside;   node.expand_path.to_s.index(FSbase) == 0 end
-  def justPath; R[path] end
-  def node;     Pathname.new FSbase + nodeLocation end
-  def nodeLocation; (host.do{|h|'/' + VHosts + '/' + h + (path||'')} || to_s) end
+  def node;     Pathname.new FSbase + '/' + pathPOSIXrel end
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
+  def pathPOSIX; node.to_s end
+  def pathPOSIXrel; (host.do{|h|VHosts + '/' + h + (path||'')} || uri[0] == '/' ? uri.tail : uri) end
+  def pathURI;  R[path] end
   def realpath; node.realpath rescue nil end
+  def sh;       d.force_encoding('UTF-8').sh end
   def shorten;  uri.shorten.R end
   def size;     node.size end
   def stripDoc; R[uri.sub(/\.(atom|e|html|json(ld)?|n3|nt|rdf|ttl|txt)$/,"")] end
   def stripFrag; R[uri.split(/#/)[0]] end
   def stripSlash; uri[-1] == '/' ? R[uri[0..-2]] : self end
   def == u;     to_s == u.to_s end
-  def <=> c;    to_s <=> c.to_s end
-  def sh;       d.force_encoding('UTF-8').sh end
   
   alias_method :+, :appendURI
   alias_method :a, :appendURI
@@ -82,8 +82,9 @@ class R
   alias_method :base, :basename
   alias_method :bare, :barename
   alias_method :c, :children
-  alias_method :d, :filePath
+  alias_method :d, :pathPOSIX
   alias_method :dir, :dirname
+  alias_method :justPath, :pathURI
   alias_method :maybeURI, :to_s
   alias_method :url, :to_s
   alias_method :uri, :to_s
@@ -120,7 +121,7 @@ class String
     gsub('/','|')
   end
 
-  def unpath skip = R::BaseLen # filePath -> URI
+  def unpath skip = R::BaseLen # POSIX path -> URI
     self[skip..-1].do{|p|
       R[p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} ||
         p]}
