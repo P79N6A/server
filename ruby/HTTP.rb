@@ -23,7 +23,9 @@ class R
     resource = R["http#{e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : ''}://" + e['SERVER_NAME'] + path]
     e[:Links] = []
     e[:Response] = {'URI' => resource.uri}
-    resource.setEnv(e).send e['REQUEST_METHOD']
+    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|status,headers,body|
+      puts [status,resource,headers['Content-Type'],e['HTTP_USER_AGENT'],e['HTTP_REFERER']].join ' '
+      [status,headers,body]}
   rescue Exception => x
     E500[x,e]
   end

@@ -68,8 +68,6 @@ class R
     end
 
     condResponse ->{
-      puts [uri,@r['HTTP_USER_AGENT'],@r['HTTP_REFERER']].join ' '
-
       if (@r.format != 'text/html') &&
           writer = (RDF::Writer.for :content_type => @r.format)
         graph = RDF::Graph.new
