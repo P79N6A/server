@@ -19,7 +19,7 @@ class R
     dev         # check watched source
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
-    path = (Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B').expand_path.to_s
+    path = (Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding 'UTF-8').expand_path.to_s
     resource = R["http#{e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : ''}://" + e['SERVER_NAME'] + path]
     e[:Links] = []
     e[:Response] = {'URI' => resource.uri}
