@@ -132,7 +132,7 @@ class R
     g.map{|u,r| {_: :h4, c: {_: :a, href: u, c: r[Title]||u.R.basename}}}}
 
   def triplrHref enc=nil
-    yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap', 
+    yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap',
                             c: open(d).read.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
   end
 
@@ -146,7 +146,7 @@ class R
   View[HTML]=->g,e{
     [H.once(e,'base',H.css('/css/html')),
      g.map{|u,r|
-      {class: :HTML, c: [u.R.href,r[Content]]}}]}
+      {class: :HTML, c: r[Content]}}]}
 
   HTMLbody = -> b {
     b.to_s.split(/<body[^>]*>/)[-1].to_s.split(/<\/body>/)[0] }
