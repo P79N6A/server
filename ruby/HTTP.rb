@@ -113,7 +113,7 @@ module Th
 
   def conneg
 
-    # URI of format-variant
+    # explicit URI of format-variant
     {
       '.atom' => 'application/atom+xml',
       '.html' => 'text/html',
@@ -127,10 +127,9 @@ module Th
     }[File.extname(self['REQUEST_PATH'])].do{|mime|
       return mime}
 
-    # Accept values
-    accept.sort.reverse.map{|q,mimes| # sort on descending q-value
+    accept.sort.reverse.map{|q,mimes| # descending q-values
       mimes.map{|mime|
-        return mime if R::Render[mime]}} # available renderer
+        return mime if R::Render[mime] || RDF::Writer.for(:content_type => mime)}}
 
     'text/html'
   end

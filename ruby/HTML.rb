@@ -104,7 +104,15 @@ end
 class R
 
   def href name = nil
-    '<a href="'+uri+'">' + (name || uri.match(/(gif|jpe?g|png)$/i) ? "<img src='/thumbnail#{justPath}'>" : abbr) + '</a>'
+    content = (if name
+                 name
+               elsif uri.match /(gif|jpe?g|png)$/i
+                 {_: :img, title: basename, src: '/thumbnail' + justPath}
+               else
+                 abbr
+               end)
+
+    H({_: :a, href: uri, c: content})
   end
   alias_method :html, :href
 
