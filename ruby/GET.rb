@@ -7,10 +7,10 @@ class R
       a = @r.accept.values.flatten
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
       return file.setEnv(@r).fileGET unless !accepted || (MIMEcook[file.mimeP] && !(q.has_key? 'raw'))
-    end # enable conneg-hint paths:
+    end # enable conneg-hint paths
     uri = stripDoc # doc-format in extension
-    uri = uri.parent.descend if uri.to_s.match(/\/index$/)
-    uri.setEnv(@r).resourceGET # continue at generic-resource URI
+    uri = uri.parent.descend if uri.to_s.match(/\/index$/) # virtual index (to add extension to)
+    uri.setEnv(@r).resourceGET # continue at generic-resource
   end
 
   def HEAD
