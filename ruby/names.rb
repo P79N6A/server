@@ -65,7 +65,7 @@ class R
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def pathPOSIX; node.to_s end
-  def pathPOSIXrel; (host.do{|h|VHosts + '/' + h + (path||'')} || uri[0] == '/' ? uri.tail : uri) end
+  def pathPOSIXrel; host.do{|h|VHosts + '/' + h + (path||'')} || (uri[0] == '/' ? uri.tail : uri) end
   def pathURI;  R[path] end
   def realpath; node.realpath rescue nil end
   def sh;       d.force_encoding('UTF-8').sh end
