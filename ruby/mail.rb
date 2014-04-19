@@ -12,6 +12,7 @@ class R
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
+    return [406,{},[]] unless Render[r.format]
     v = r.q['view'] ||= "timegraph"
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
     r[:Response]['Content-Type'] = r.format
