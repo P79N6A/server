@@ -18,15 +18,12 @@ class R
     e.extend Th # add HTTP utility functions
     dev         # check watched source
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
-
-    path = CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B'
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
+    path = (Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding('UTF-8').gsub '+','%2B').expand_path.to_s
     resource = R["http#{e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : ''}://" + e['SERVER_NAME'] + path]
-
-    resource.inside ? (
-      e[:Links] = []
-      e[:Response] = {'URI' => resource.uri}
-                       puts resource.uri
-      resource.setEnv(e).send e['REQUEST_METHOD']) : [403,{},[]]
+    e[:Links] = []
+    e[:Response] = {'URI' => resource.uri}
+    resource.setEnv(e).send e['REQUEST_METHOD']
   rescue Exception => x
     E500[x,e]
   end
