@@ -46,13 +46,13 @@ class R
       s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)
     }
     r.q.delete 'view' unless r.q['view']=='edit'
-    [404,{'Content-Type'=> r.format},[Render[r.format][g,r]]]}
+    [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
 
   Errors = {}
 
   GET['/500'] = -> e,r { 
     r[:Response]['ETag'] = Errors.keys.sort.h
-    e.condResponse ->{Render[r.format][Errors, r]}}
+    e.condResponse ->{Render['text/html'][Errors, r]}}
 
   E500 = -> x,e {
     where = e['SERVER_NAME'] + e['REQUEST_URI']
