@@ -65,7 +65,6 @@ class R
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def pathPOSIX; node.to_s end
-  def pathPOSIXrel; host.do{|h|VHosts + '/' + h + (path||'')} || (uri[0] == '/' ? uri.tail : uri) end
   def pathURI;  R[path] end
   def realpath; node.realpath rescue nil end
   def sh;       d.force_encoding('UTF-8').sh end
@@ -88,6 +87,14 @@ class R
   alias_method :maybeURI, :to_s
   alias_method :url, :to_s
   alias_method :uri, :to_s
+
+  def pathPOSIXrel
+    if h = host # vhost directories
+      VHosts + '/' + h + path + (query ? '?'+query : '')
+    else # absolute paths relative to server root
+      uri[0] == '/' ? uri.tail : uri
+    end
+  end
 
 end
 
