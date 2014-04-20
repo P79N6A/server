@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 case ARGV[0]
+when 'varnish'
+  ARGV.shift
+  ARGV.unshift *%w{-p 8080 -a 127.0.0.1}
 when 'apache'
   ARGV.shift
   ENV['apache']='y'
