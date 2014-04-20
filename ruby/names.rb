@@ -90,7 +90,7 @@ class R
 
   def pathPOSIXrel
     if h = host # vhost directories
-      VHosts + '/' + h + path + (query ? '?'+query : '')
+      VHosts + '/' + h + (path ? path : '') + (query ? '?'+query : '')
     else # absolute paths relative to server root
       uri[0] == '/' ? uri.tail : uri
     end
