@@ -166,6 +166,12 @@ class R
 
   end
 
+  def triplrFeed
+    RDF::Reader.open(d, :format => :feed){|r|
+      r.each_triple{|s,p,o|
+        yield s.to_s, p.to_s, o.class == RDF::URI ? R(o) : o.value}}
+  end
+
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
 
   FeedArchiverJSON = -> doc, graph, host {

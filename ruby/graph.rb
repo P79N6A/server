@@ -20,7 +20,7 @@ class R
     graph.mergeGraph rdfDoc(%w{e}).r true
   end
 
-  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # allowable docs
+  def rdfDoc pass = %w{atom e jsonld n3 nt owl rdf ttl} # allowable docs
     doc = self
     unless pass.member? ext
       doc = R['/cache/RDF/' + uri.h.dive + '.e']
