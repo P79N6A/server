@@ -104,8 +104,7 @@ class R
     end
     node.stat.do{|s|
       [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
-      yield uri, Type, R[Stat + s.ftype.capitalize]
-    }
+      yield uri, Type, R[Stat + s.ftype.capitalize]} unless node.symlink?
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
