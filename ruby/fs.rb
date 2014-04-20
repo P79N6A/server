@@ -63,7 +63,7 @@ class R
 
   View[Stat+'Directory'] = -> i,e {
     a = -> i { i = i.R
-      {_: :a, href: i, c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail' + i.justPath} : i.uri.sub(/.*\//,'')}}
+      {_: :a, href: i, c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail' + i.justPath} : i.uri.sub(/.*\//,' ')}}
 
     [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r|
