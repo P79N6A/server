@@ -13,7 +13,7 @@ class R
     addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
     self
   rescue Exception => e
-    puts "#{uri} #{e} #{e.backtrace.join "\n"}"
+#    puts "#{uri} #{e} #{e.backtrace.join "\n"}"
   end
   def getFeeds h='localhost'
     uris.map{|u| u.R.getFeed h}

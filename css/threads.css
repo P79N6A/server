@@ -33,7 +33,7 @@ a {
 
 td.group {vertical-align:top;
 	  text-align:left}
-td.subject {max-width:78em;vertical-align:top;text-align:right}
+td {max-width:78em;vertical-align:top;text-align:right}
 
 .thread {
     background-color:#000;
