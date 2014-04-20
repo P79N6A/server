@@ -107,12 +107,6 @@ class R
       yield uri, Type, R[Stat + s.ftype.capitalize]
     }
   end
-  
-  def triplrSymlink
-    realpath.do{|t|
-      target = t.to_s.index(FSbase)==0 ? t.R : t.to_s
-      yield uri, '/linkTarget', target }
-  end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
    yield uri, Type, (R MIMEtype+mimeP)
