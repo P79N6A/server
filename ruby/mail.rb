@@ -62,7 +62,7 @@ class R
       yield author, FOAF+'mbox', R['mailto:'+addr]
       yield author, SIOC+'name', name
       yield author, Type, R[FOAF+'Person']
-      yield dir, LDP+'fistPage', R[dir+'/']
+      yield dir, LDP+'firstPage', R[dir+'/']
     }
 
     yield e, Date, m.date.iso8601 if m.date          # date
