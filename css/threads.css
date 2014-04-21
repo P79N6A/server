@@ -50,7 +50,7 @@ td {max-width:78em;vertical-align:top;text-align:right}
     color:#000;
 }
 .abbr {display: none}
-.sender {color:#000;padding:0;margin-right:.14em;float:right}
+.sender {color:#000;padding:0;margin-left:-.2em}
 .sender:hover {color:#eef}
 .sender:visited {color:white}
 
