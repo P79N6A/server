@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -129,23 +129,20 @@ class R
   end
 
   View['threads'] = -> d,env {
-    br = '<br clear=all>'
     posts = d.resourcesOfType SIOC+'Post'
     threads = posts.group_by{|r| # group threads
       r[Title].do{|t|t[0].sub(/^[rR][eE][^A-Za-z]./,'').gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')} ||
       r[Content]}
     [{_: :table, c: threads.group_by{|r,k| # group recipients
-         k[0].do{|k| k[To].do{|o|o.head.uri}}}.map{|group,threads|
+         k[0].do{|k|k[To].do{|o|o[0].uri}}}.map{|group,threads|
          c = R.cs
          {_: :tr, c: [{_: :td,
            c: threads.map{|title,msgs| # thread
              [{_: :a, class: 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.base, c: title},
-              msgs.select(&:maybeURI).map{|s|
-               s[Creator].justArray.select(&:maybeURI).map{|cr|
-               {_: :a, href: '/thread/'+s.R.base+'#'+s.uri,class: 'sender', style: 'background-color:'+c, c: cr.R.fragment.do{|f|f.split('@')[0]}||cr.uri}}
-                     },br]}},
-               group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: 'background-color:'+c, c: g.R.abbr, href: g}}},
-              ]}}},(H.css '/css/threads'),
-     {_: :a, id: :down, href: env['REQUEST_PATH'] + env.q.merge({'view'=>''}).qs, c: '↓'}]} # drill down to full view
+              msgs.map{|s| s[Creator].select(&:maybeURI).map{|cr|
+               {_: :a, href: '/thread/'+s.R.base+'#'+s.uri,class: 'sender', style: 'background-color:'+c, c: cr.R.fragment.do{|f|f.split('@')[0]}||cr.uri}}}]}},
+               group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: 'background-color:'+c, c: g.R.abbr, href: g}}}]}}},
+     {_: :a, id: :down, href: env['REQUEST_PATH'] + env.q.merge({'view'=>''}).qs, c: '↓'}, # to full view
+     (H.css '/css/threads')]}
 
 end
