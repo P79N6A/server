@@ -23,7 +23,7 @@ class R
   ].map{|mime|
     Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  View['tabulator'] = ->d,e {
+  View['tabulate'] = ->d,e {
     local = true
     tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'
     [(H.css tab + 'tabbedtab'),

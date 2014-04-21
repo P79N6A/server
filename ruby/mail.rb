@@ -56,11 +56,13 @@ class R
     m[:from].addrs.head.do{|a|
       addr = a.address
       name = a.display_name || a.name
-      author = '/m/'+addr+'#'+addr
+      dir = '/m/'+addr
+      author = dir+'#'+addr
       yield author, DC+'identifier', addr
       yield author, FOAF+'mbox', R['mailto:'+addr]
       yield author, SIOC+'name', name
       yield author, Type, R[FOAF+'Person']
+      yield dir, LDP+'fistPage', R[dir+'/']
     }
 
     yield e, Date, m.date.iso8601 if m.date          # date
