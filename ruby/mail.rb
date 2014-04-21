@@ -18,8 +18,8 @@ class R
     r[:Response]['Content-Type'] = r.format
     e.condResponse ->{Render[r.format][m, r]}}
 
-  GET['/m'] = -> e,r{ # range over posts
-    if m = e.justPath.uri.match(/^\/m\/([^\/]+)$/)
+  GET['/m'] = -> e,r{ # range over posts when descended into author 
+    if m = e.justPath.uri.match(/^\/m\/([^\/]+)\/$/)
       r.q['set']  ||= 'depth'
       r.q['view'] ||= 'threads'
       e.response
@@ -52,6 +52,16 @@ class R
              f                                           # From
         yield e, SIOC+'reply_to',                      # reply URI
         R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
+
+    m[:from].addrs.head.do{|a|
+      addr = a.address
+      name = a.display_name || a.name
+      author = '/m/'+addr+'#'+addr
+      yield author, DC+'identifier', addr
+      yield author, FOAF+'mbox', R['mailto:'+addr]
+      yield author, SIOC+'name', name
+      yield author, Type, R[FOAF+'Person']
+    }
 
     yield e, Date, m.date.iso8601 if m.date          # date
 
