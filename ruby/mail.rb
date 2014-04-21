@@ -133,7 +133,7 @@ class R
       r[Date].do{|t|
         st = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e'
         a.map{|rel|
-          doc.ln R[rel.uri.split('#')[0]+st]}}}}
+          doc.ln_s R[rel.uri.split('#')[0]+st]}}}}
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOC+'Post'
