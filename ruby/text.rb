@@ -10,8 +10,8 @@ class String
     # ,. only match mid-URI
     (partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       u = p[1] # URI
-      p[0].gsub('<','&lt;').gsub('>','&gt;')+ # escape <> from pre-match
-      (p[1].empty?&&''||'<a rel="untyped" href="'+u+'">'+u.do{|p|
+      p[0].gsub('<','&lt;').gsub('&','&amp;').gsub('>','&gt;') + # escape text
+      (p[1].empty?&&''||'<a rel="untyped" href="'+u+'">'+u.do{|p| # create link
          i && p.match(/(gif|jpe?g|png|tiff)$/i) && # inline images if asked for
          "<img src=#{p}>" || p
        }+'</a>')+
