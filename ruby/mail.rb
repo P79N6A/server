@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -41,29 +41,45 @@ class R
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post']].map{|t|yield e, Type, t}        # RDF types
 
+    list = m['List-Post'].do{|l|l.decoded[8..-2]}    # list ID
+    m['List-Id'].do{|name|
+      name = name.decoded
+      dir = '/m/' + list                             # list Container
+      group = dir + '#' + list                       # list URI
+      yield group, Type, R[FOAF+'Group']             # list class
+      yield group, FOAF+'mbox', R['mailto:'+list]    # list address
+     (yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
+            ) unless name[1..-2] == list
+      yield group, SIOC+'has_container', dir.R
+      yield dir, LDP+'firstPage', R[dir+'/']
+    } if list
+
     m.from.do{|f|                                    # any authors?
       f.justArray.map{|f|                            # each author
         f = f.to_utf8
-        creator = '/m/'+f+'#'+f                        # author URI
-        yield e, Creator, R[creator]                   # message -> author
-                                                       # reply target selection:
-        r2 = m['List-Post'].do{|lp|lp.decoded[8..-2]} || # List-Post
-             m.reply_to.do{|t|t[0]} ||                   # Reply-To
-             f                                           # From
-        yield e, SIOC+'reply_to',                      # reply URI
+        creator = '/m/'+f+'#'+f                      # author URI
+        yield e, Creator, R[creator]                 # message -> author
+                                                     # reply target
+        r2 = list ||                                 #  List
+             m.reply_to.do{|t|t[0]} ||               #  Reply-To
+             f                                       #  From
+        yield e, SIOC+'reply_to',                    # reply URI
         R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
-    m[:from].addrs.head.do{|a|
-      addr = a.address
-      name = a.display_name || a.name
-      dir = '/m/'+addr
-      author = dir+'#'+addr
+    m[:from].addrs.head.do{|a|                      # author address
+      addr = a.address                              # author ID
+      name = a.display_name || a.name               # author name
+      dir = '/m/'+addr                              # author Container
+      author = dir+'#'+addr                         # author URI
       yield author, DC+'identifier', addr
+      yield author, Type, R[FOAF+'Person']
       yield author, FOAF+'mbox', R['mailto:'+addr]
       yield author, SIOC+'name', name
-      yield author, Type, R[FOAF+'Person']
+      yield author, SIOC+'has_container', dir.R
       yield dir, LDP+'firstPage', R[dir+'/']
     }
+
+
 
     yield e, Date, m.date.iso8601 if m.date          # date
 

@@ -100,7 +100,10 @@ class R
     if node.directory?
       yield uri, Type, R[LDP+'BasicContainer']
       yield uri, Type, R[Stat+'Directory']
-      c.map{|c| yield uri, LDP+'contains', c.node.symlink? ? c.realpath.R.docroot : c
+      c.map{|c|
+        i = c.node.symlink? ? c.realpath.R.docroot : c
+        yield uri, LDP+'contains', i
+        yield i.uri, SIOC+'has_container', uri.R
       }
     end
     node.stat.do{|s|
