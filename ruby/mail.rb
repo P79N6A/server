@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -27,27 +27,9 @@ class R
       false
     end}
 
-  # allow grep on address paths
   GREP_DIRS.push /^\/m\/[^\/]+\//
 
-  # link a message to address paths
-  IndexMail = ->doc, graph, host {
-    graph.map{|u,r|
-      a = [] # address references
-      r[Creator].do{|c|a.concat c}
-      r[To].do{|t|a.concat t}
-      r[Date].do{|t|
-        st = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e'
-        a.map{|rel|
-          doc.ln R[rel.uri.split('#')[0]+st]}}}}
-
-  def triplrMailMessage &f
-    addDocsJSON :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
-  end
-
-  def mail
-    Mail.read node if f
-  end
+  def mail; Mail.read node if f end
 
   def triplrMail
     m = mail          ; return unless m              # mail
@@ -125,8 +107,21 @@ class R
       if p.main_type=='image'                         # image reference in HTML
         yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
       end }
-
   end
+
+  def triplrMailMessage &f
+    addDocsJSON :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
+  end
+
+  IndexMail = ->doc, graph, host {
+    graph.map{|u,r|
+      a = [] # address references
+      r[Creator].do{|c|a.concat c}
+      r[To].do{|t|a.concat t}
+      r[Date].do{|t|
+        st = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e'
+        a.map{|rel|
+          doc.ln R[rel.uri.split('#')[0]+st]}}}}
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOC+'Post'
