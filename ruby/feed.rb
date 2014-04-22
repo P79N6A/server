@@ -2,7 +2,7 @@ class R
 
   GET['/news'] = -> d,e {
     if %w{/news /news/}.member? d.justPath
-      e.q['set'] ||= 'depth' # post-range in date-order
+      e.q['set'] ||= 'paged' # post-range in date-order
       e.q['local'] ||= true  # hostname-specific
       e.q['c'] ||= 32        # page size
       e.q.delete 'view' if e.q['view'] == 'ls' # strip fs-view

@@ -5,7 +5,7 @@ class R
   # mountable on site-root GET['host/'] = GET['/blog']
   GET['/blog'] = -> d,e {
     if %w{/ /blog}.member? d.justPath
-      e.q['set'] = 'depth' # post-range in date-order
+      e.q['set'] = 'paged' # post-range in date-order
       e.q['local'] = true  # hostname-specific
       e.q['c'] ||= 8       # page size
     R['//'+e['SERVER_NAME']+'/blog'].setEnv(e).response

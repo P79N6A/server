@@ -20,7 +20,7 @@ class R
 
   GET['/m'] = -> e,r{ # range over posts when descended into author 
     if m = e.justPath.uri.match(/^\/m\/([^\/]+)\/$/)
-      r.q['set']  ||= 'depth'
+      r.q['set']  ||= 'paged'
       r.q['view'] ||= 'threads'
       e.response
     else
@@ -51,7 +51,6 @@ class R
      (yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
             ) unless name[1..-2] == list
       yield group, SIOC+'has_container', dir.R
-      yield dir, LDP+'firstPage', R[dir+'/']
     } if list
 
     m.from.do{|f|                                    # any authors?
@@ -76,10 +75,7 @@ class R
       yield author, FOAF+'mbox', R['mailto:'+addr]
       yield author, SIOC+'name', name
       yield author, SIOC+'has_container', dir.R
-      yield dir, LDP+'firstPage', R[dir+'/']
     }
-
-
 
     yield e, Date, m.date.iso8601 if m.date          # date
 

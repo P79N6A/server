@@ -30,7 +30,7 @@ class R
     p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
 
-  FileSet['depth'] = -> d,r,m {
+  FileSet['paged'] = -> d,r,m {
     global = !r.has_key?('local')
     p = global ? d.justPath : d
     loc = global ? '' : '&local'
@@ -43,12 +43,12 @@ class R
       u[Type] = R[HTTP+'Response']
       links = []
       if desc
-        uri = d.uri + "?set=depth&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)
+        uri = d.uri + "?set=paged&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)
         u[Prev] = {'uri' => uri}
         d.env[:Links].push "<#{uri}>; rel=prev"
       end
       if asc
-        uri = d.uri + "?set=depth&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)
+        uri = d.uri + "?set=paged&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)
         u[Next] = {'uri' => uri}
         d.env[:Links].push "<#{uri}>; rel=next"
       end
@@ -98,12 +98,14 @@ class R
 
   def triplrInode
     if node.directory?
-      yield uri, Type, R[LDP+'BasicContainer']
-      yield uri, Type, R[Stat+'Directory']
+      dir = stripSlash.uri
+      yield dir, Type, R[LDP+'BasicContainer']
+      yield dir, Type, R[Stat+'Directory']
+      yield dir, LDP+'firstPage', R[dir+'/?set=paged']
       c.map{|c|
         i = c.node.symlink? ? c.realpath.R.docroot : c
-        yield uri, LDP+'contains', i
-        yield i.uri, SIOC+'has_container', uri.R
+        yield dir, LDP+'contains', i
+        yield i.uri, SIOC+'has_container', dir.R
       }
     end
     node.stat.do{|s|
