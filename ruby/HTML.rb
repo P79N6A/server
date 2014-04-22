@@ -156,7 +156,7 @@ class R
     h.css('iframe').remove
     h.css('script').remove
     h.xpath("//@*[starts-with(name(),'on')]").remove
-    h.to_s}
+    h.to_xhtml}
 
   View[HTTP+'Response'] = -> d,e { # HTTP-response data, such as page links
     d['#'].do{|u|

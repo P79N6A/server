@@ -47,7 +47,11 @@ class R
       def each_statement &fn
         dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
-                                     o.class == R ? o : (l = RDF::Literal o
+                                     o.class == R ? o : (l = RDF::Literal (if p == Content
+                                                                             R::CleanHTML[o]
+                                                                           else
+                                                                             o.gsub(/[&<>]+/,' ')
+                                                                           end)
                                                          l.datatype=RDF.XMLLiteral if p == Content
                                                          l),
                                      :context => s.R.docroot)}
@@ -117,7 +121,7 @@ class R
               yield u,                           # s
               (x[e[0]&&e[0].chop]||R::RSS)+e[1], # p
            e[3].extend(SniffContent).sniff.do{|o|# o
-                o.match(HTTP_URI) ? o.R : R::CleanHTML[o]
+                o.match(HTTP_URI) ? o.R : o
               }}
           end
         }
