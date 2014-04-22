@@ -20,7 +20,7 @@ class R
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
     p = Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding 'UTF-8'
-    path = p.expand_path.to_s                                 # interpret path segment of URI
+    path = p.expand_path.to_s                                 # interpret path component
     path = path + '/' if path[-1] != '/' && p.to_s[-1] == '/' # preserve trailing slash
     resource = R["http#{e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : ''}://" + e['SERVER_NAME'] + path]
     e[:Links] = []

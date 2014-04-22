@@ -23,6 +23,33 @@ class R
   ].map{|mime|
     Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
+  def addDocsRDF options = {}
+    g = RDF::Repository.load self, options
+    g.each_graph.map{|graph|
+      if graph.named?
+        doc = graph.name.n3
+        unless doc.e
+          doc.dirname.mk
+          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
+          options[:hook][doc,graph,options[:hostname]] if options[:hook]
+        end
+      end}
+    g
+  end
+
+  def rdfDoc pass = %w{atom e jsonld n3 nt owl rdf ttl} # narrow doc-types to those readable by RDF::Reader
+    doc = self
+    unless pass.member? ext
+      doc = R['/cache/RDF/' + uri.h.dive + '.e']
+      unless doc.e && doc.m > m # up-to-date?
+        g = {} # doc graph
+        [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
+        doc.w g, true
+      end
+    end
+    doc
+  end
+
   View['tabulate'] = ->d,e {
     local = true
     tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'

@@ -20,21 +20,7 @@ class R
     graph.mergeGraph rdfDoc(%w{e}).r true
   end
 
-  def rdfDoc pass = %w{atom e jsonld n3 nt owl rdf ttl} # allowable docs
-    doc = self
-    unless pass.member? ext
-      doc = R['/cache/RDF/' + uri.h.dive + '.e']
-      unless doc.e && doc.m > m # up-to-date?
-        g = {} # doc graph
-        [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
-        doc.w g, true
-      end
-    end
-    doc
-  end
-
-  # GET Resource -> local RDF cache
-  # JSON + Hash (.e)
+  # passthru triplr which adds missing resources to local RDF cache
   def addDocsJSON triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
@@ -53,22 +39,6 @@ class R
       hook[d,g,host] if hook} # insert-hook
     graph.triples &b if b     # emit triples
     self
-  end
-
-  # GET Resource -> local RDF cache
-  # RDF::Repository (.n3)
-  def addDocsRDF options = {}
-    g = RDF::Repository.load self, options
-    g.each_graph.map{|graph|
-      if graph.named?
-        doc = graph.name.n3
-        unless doc.e
-          doc.dirname.mk
-          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
-          options[:hook][doc,graph,options[:hostname]] if options[:hook]
-        end
-      end}
-    g
   end
 
   def jsonDoc; docroot.a '.e' end
