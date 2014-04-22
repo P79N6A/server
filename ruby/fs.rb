@@ -101,12 +101,12 @@ class R
       yield dir, Type, R[Stat+'Directory']
       yield dir, LDP+'firstPage', R[dir+'/?set=paged']
       c.map{|c|
-        i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c
+        i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c # dereference symlink
         yield dir, LDP+'contains', i
       }
     end
-    yield uri, SIOC+'has_container', parent unless pathURI == '/'
     node.stat.do{|s|
+      yield uri, SIOC+'has_container', parent unless pathURI == '/'
       [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
       yield uri, Type, R[Stat + s.ftype.capitalize]} unless node.symlink?
   end
