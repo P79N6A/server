@@ -31,9 +31,7 @@ class R
     p[0] }
 
   FileSet['paged'] = -> d,r,m {
-    global = r.has_key? 'global'
-    p = global ? d.justPath : d
-    loc = global ? '&global' : ''
+    p = d.e ? d : (d.justPath.e ? d.justPath : d)
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024) # one extra for next-page startpoint
     o = r['d'] =~ /^a/ ? :asc : :desc            # direction
     (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # subtree
@@ -43,12 +41,12 @@ class R
       u[Type] = R[HTTP+'Response']
       links = []
       if desc
-        uri = d.uri + "?set=paged&c=#{c-1}&d=desc#{loc}&offset=" + (URI.escape desc.uri)
+        uri = d.uri + "?set=paged&c=#{c-1}&d=desc&offset=" + (URI.escape desc.uri)
         u[Prev] = {'uri' => uri}
         d.env[:Links].push "<#{uri}>; rel=prev"
       end
       if asc
-        uri = d.uri + "?set=paged&c=#{c-1}&d=asc#{loc}&offset=" + (URI.escape asc.uri)
+        uri = d.uri + "?set=paged&c=#{c-1}&d=asc&offset=" + (URI.escape asc.uri)
         u[Next] = {'uri' => uri}
         d.env[:Links].push "<#{uri}>; rel=next"
       end
