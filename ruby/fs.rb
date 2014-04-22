@@ -103,11 +103,11 @@ class R
       yield dir, Type, R[Stat+'Directory']
       yield dir, LDP+'firstPage', R[dir+'/?set=paged']
       c.map{|c|
-        i = c.node.symlink? ? c.realpath.R.docroot : c
+        i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c
         yield dir, LDP+'contains', i
-        yield i.uri, SIOC+'has_container', dir.R
       }
     end
+    yield uri, SIOC+'has_container', parent unless pathURI == '/'
     node.stat.do{|s|
       [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
       yield uri, Type, R[Stat + s.ftype.capitalize]} unless node.symlink?

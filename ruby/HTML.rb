@@ -167,7 +167,7 @@ class R
 
   Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
-    view = View[e.q['view']] || View['tabulate']
+    view = View[e.q['view']] || View['select']
     H ['<!DOCTYPE html>',{_: :html,
          c: [{_: :head, c: ['<meta charset="utf-8" />',
                    {_: :title, c: titles.size==1 ? titles[0] : e.uri},
