@@ -60,16 +60,13 @@ class R
                             r[Content]]}}}]}
 
   View[Stat+'Directory'] = -> i,e {
-    a = -> i { i = i.R
-      {_: :a, href: i, c: i.uri.match(/(gif|jpe?g|png)$/i) ? {_: :img, src: '/thumbnail' + i.justPath} : i.uri.sub(/.*\//,' ')}}
-
     [(H.once e, 'stat', (H.css '/css/ls')),
-     i.map{|u,r|
-       resource = r.R
-       uri = resource.uri.t
+     i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [{c: {_: :a, href: uri, c: resource.abbr}},
-             r[LDP+'contains'].do{|c|c.map{|c|a[c]}}]}}]}
+         c: [{c: {_: :a, href: resource.uri.t, c: resource.abbr}},
+             r[LDP+'contains'].do{|c|c.map{|c| i = c.R
+                 {_: :a, href: i, c: i.uri.sub(/.*\//,' ')}}}]}}]}
+  View[LDP+'BasicContainer'] = View[Stat+'Directory']
 
   View['ls'] = -> i,e {
     dir = e[:Response]['URI'].R
