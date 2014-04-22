@@ -98,7 +98,6 @@ class R
     if node.directory?
       dir = stripSlash.uri
       yield dir, Type, R[LDP+'BasicContainer']
-      yield dir, Type, R[Stat+'Directory']
       yield dir, LDP+'firstPage', R[dir+'/?set=paged']
       c.map{|c|
         i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c # dereference symlink
