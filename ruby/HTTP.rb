@@ -46,7 +46,7 @@ class R
     r.map{|k,v|
       s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)
     }
-    r.q.delete 'view' unless r.q['view']=='edit'
+    r.q['view']='select'
     [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
 
   Errors = {}
