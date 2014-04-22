@@ -113,7 +113,7 @@ ul.uris a:hover {background-color:#bf0}
 
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
-    yield uri,Content, `source-highlight -f html -s #{m} -i #{sh} -o STDOUT` if size < 512e3
+    yield uri,Content, CleanHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`] if size < 512e3
   end
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp

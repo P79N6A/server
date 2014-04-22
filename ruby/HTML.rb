@@ -152,7 +152,7 @@ class R
     h = Nokogiri::HTML.fragment b
     h.css('iframe').remove
     h.css('script').remove
-    h.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless %w{about alt class href property rel src term title type}.member? a.name}}
+    h.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless %w{alt class color href rel src title type}.member? a.name}}
     h.to_xhtml}
 
   View[HTTP+'Response'] = -> d,e { # HTTP-response data, such as page links
