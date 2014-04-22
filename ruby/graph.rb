@@ -1,6 +1,8 @@
 #watch __FILE__
 class R
 
+  # graph in memory as Hash and storage as JSON :: {uri => {property => val}}
+
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -20,7 +22,7 @@ class R
     graph.mergeGraph rdfDoc(%w{e}).r true
   end
 
-  # passthru triplr which adds missing resources to local RDF cache
+  # pass-thru triplr which adds missing resources to local cache
   def addDocsJSON triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
@@ -43,7 +45,7 @@ class R
 
   def jsonDoc; docroot.a '.e' end
 
-  module JSONGraph
+  module JSONGraph # Reader for JSON format as RDF
 
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
