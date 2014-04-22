@@ -73,7 +73,7 @@ class R
         graph = RDF::Graph.new
         set.map{|r|
           doc = r.setEnv(@r).rdfDoc # resources
-          graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc} # populate
+          graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc if doc.e} # populate
 
         m['#'].map{|p,o| o.justArray.map{|o| graph << RDF::Statement.new(@r[:Response]['URI'].R, p.R,
                     [R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'} # request meta
