@@ -66,6 +66,7 @@ class R
          c: [{c: {_: :a, href: resource.uri.t, c: resource.abbr}},
              r[LDP+'contains'].do{|c|c.map{|c| i = c.R
                  {_: :a, href: i, c: i.uri.sub(/.*\//,' ')}}}]}}]}
+
   View[LDP+'BasicContainer'] = View[Stat+'Directory']
 
   View['ls'] = -> i,e {
@@ -91,20 +92,26 @@ class R
     ].flatten.compact
   end
 
-  def triplrInode
+  def triplrInode &f
     if node.directory?
-      dir = stripSlash.uri
+      dir = stripSlash
+      dir.triplrStat &f
+      dir = dir.uri
       yield dir, Type, R[LDP+'BasicContainer']
       yield dir, LDP+'firstPage', R[dir+'/?set=paged']
       c.map{|c|
-        i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c # dereference symlink
-        yield dir, LDP+'contains', i
-      }
+        i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c # dereference children
+        yield dir, LDP+'contains', i }
+    else
+      triplrStat &f unless node.symlink?
     end
-    node.stat.do{|s|
-      yield uri, SIOC+'has_container', parent unless pathURI == '/'
-      [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
-      yield uri, Type, R[Stat + s.ftype.capitalize]} unless node.symlink?
+  end
+
+  def triplrStat
+    s = node.stat
+    yield uri, SIOC+'has_container', parent unless !path || path == '/'
+    [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
+    yield uri, Type, R[Stat + s.ftype.capitalize]
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
