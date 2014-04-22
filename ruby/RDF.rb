@@ -51,7 +51,7 @@ class R
   end
 
   View['tabulate'] = ->d,e {
-    local = true
+    local = false
     tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'
     [(H.css tab + 'tabbedtab'),
      (H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
