@@ -34,9 +34,9 @@ class R
     global = !r.has_key?('local')
     p = global ? d.justPath : d
     loc = global ? '' : '&local'
-    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(9000) # an extra for next-page pointer
+    c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024) # one extra for next-page startpoint
     o = r['d'] =~ /^a/ ? :asc : :desc            # direction
-    (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # take subtree
+    (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # subtree
       first, last = s[0], s.size > 1 && s.pop
       desc, asc = o == :asc ? [first,last] : [last,first]
       u = m['#']

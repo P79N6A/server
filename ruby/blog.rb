@@ -7,7 +7,6 @@ class R
     if %w{/ /blog}.member? d.justPath
       e.q['set'] = 'paged' # post-range in date-order
       e.q['local'] = true  # hostname-specific
-      e.q['c'] ||= 8       # page size
     R['//'+e['SERVER_NAME']+'/blog'].setEnv(e).response
     end}
 
