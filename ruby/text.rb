@@ -9,12 +9,10 @@ class String
     #  ) only matches with an opener
     # ,. only match mid-URI
     (partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
-      u = p[1] # URI
+      u = p[1].gsub('&','&amp;') # URI
       p[0].gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # escape text
-      (p[1].empty?&&''||'<a rel="untyped" href="'+u+'">'+u.do{|p| # create link
-         i && p.match(/(gif|jpe?g|png|tiff)$/i) && # inline images if asked for
-         "<img src='#{p}'>" || p.gsub('&','&amp;')
-       }+'</a>')+
+      (p[1].empty?&&''||'<a rel="untyped" href="'+u+'">' +
+       ( i && u.match(/(gif|jpe?g|png|tiff)$/i) && "<img src='#{u}'>" || u ) + '</a>') +
       (p[2].empty?&&''||p[2].hrefs) # again on post-match tail
     }
   rescue
