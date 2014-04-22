@@ -13,7 +13,7 @@ class String
       p[0].gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # escape text
       (p[1].empty?&&''||'<a rel="untyped" href="'+u+'">'+u.do{|p| # create link
          i && p.match(/(gif|jpe?g|png|tiff)$/i) && # inline images if asked for
-         "<img src=#{p}>" || p
+         "<img src='#{p}'>" || p.gsub('&','&amp;')
        }+'</a>')+
       (p[2].empty?&&''||p[2].hrefs) # again on post-match tail
     }
