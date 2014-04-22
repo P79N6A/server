@@ -81,6 +81,7 @@ class R
             RSS+'description' => Content,
             RSS+'encoded' => Content,
             RSS+'modules/content/encoded' => Content,
+            RSS+'modules/slash/comments' => SIOC+'num_replies',
             Atom+'content' => Content,
             Atom+'summary' => Content,
             RSS+'title' => Title,
