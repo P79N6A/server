@@ -99,7 +99,7 @@ class R
       content.css('a').map{|a|
         u = a.attr 'href'
         a.set_attribute('href',base + u) if u.match /^\//}
-      yield s, Content, content.inner_html
+      yield s, Content, CleanHTML[content.inner_html]
     }
   end
 

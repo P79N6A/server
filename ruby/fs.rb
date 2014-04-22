@@ -33,7 +33,7 @@ class R
   FileSet['paged'] = -> d,r,m {
     global = r.has_key? 'global'
     p = global ? d.justPath : d
-    loc = global ? '' : '&local'
+    loc = global ? '&global' : ''
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024) # one extra for next-page startpoint
     o = r['d'] =~ /^a/ ? :asc : :desc            # direction
     (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # subtree
