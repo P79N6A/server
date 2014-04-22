@@ -3,10 +3,8 @@ class R
   GET['/news'] = -> d,e {
     if %w{/news /news/}.member? d.justPath
       e.q['set'] ||= 'paged' # post-range in date-order
-      e.q['local'] ||= true  # hostname-specific
       e.q['c'] ||= 32        # page size
-      e.q.delete 'view' if e.q['view'] == 'ls' # strip fs-view
-      R['//'+e['SERVER_NAME']+'/news'].setEnv(e).response # continue
+      nil
     end}
 
   def getFeed h='localhost'
@@ -67,7 +65,7 @@ class R
               if a.has_attribute? 'href'
                 (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
               end}
-            o.to_s} : o}
+            o.to_xhtml} : o}
       end
 
       def mapPredicates *f

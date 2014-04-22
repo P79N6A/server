@@ -18,13 +18,12 @@ class R
     r[:Response]['Content-Type'] = r.format
     e.condResponse ->{Render[r.format][m, r]}}
 
-  GET['/m'] = -> e,r{ # range over posts when descended into author 
+  GET['/m'] = -> e,r{
     if m = e.justPath.uri.match(/^\/m\/([^\/]+)\/$/)
       r.q['set']  ||= 'paged'
+      r.q['global'] = true
       r.q['view'] ||= 'threads'
-      e.response
-    else
-      false
+      nil
     end}
 
   GREP_DIRS.push /^\/m\/[^\/]+\//

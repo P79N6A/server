@@ -31,7 +31,7 @@ class R
     p[0] }
 
   FileSet['paged'] = -> d,r,m {
-    global = !r.has_key?('local')
+    global = r.has_key? 'global'
     p = global ? d.justPath : d
     loc = global ? '' : '&local'
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024) # one extra for next-page startpoint
