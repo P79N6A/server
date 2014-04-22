@@ -148,14 +148,11 @@ class R
      g.map{|u,r|
       {class: :HTML, c: r[Content]}}]}
 
-  HTMLbody = -> b {
-    b.to_s.split(/<body[^>]*>/)[-1].to_s.split(/<\/body>/)[0] }
-
   CleanHTML = -> b {
-    h = Nokogiri::HTML.fragment HTMLbody[b]
+    h = Nokogiri::HTML.fragment b
     h.css('iframe').remove
     h.css('script').remove
-    h.xpath("//@*[starts-with(name(),'on')]").remove
+    h.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless %w{about alt class href property rel src term title type}.member? a.name}}
     h.to_xhtml}
 
   View[HTTP+'Response'] = -> d,e { # HTTP-response data, such as page links

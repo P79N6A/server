@@ -82,6 +82,7 @@ class R
             RSS+'encoded' => Content,
             RSS+'modules/content/encoded' => Content,
             Atom+'content' => Content,
+            Atom+'summary' => Content,
             RSS+'title' => Title,
             Atom+'title' => Title,
           }[p]||p,
@@ -171,7 +172,7 @@ class R
   def triplrFeed
     RDF::Reader.open(d, :format => :feed){|r|
       r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s, o.class == RDF::URI ? R(o) : o.value}}
+        yield s.to_s, p.to_s, o.class == R ? o : o.value}}
   end
 
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
