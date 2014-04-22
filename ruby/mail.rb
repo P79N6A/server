@@ -151,7 +151,8 @@ class R
     threads = posts.group_by{|r| # group threads
       r[Title].do{|t|t[0].sub(/^[rR][eE][^A-Za-z]./,'').gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')} ||
       r[Content]}
-    [{_: :table, c: threads.group_by{|r,k| # group recipients
+    [View[HTTP+'Response'][d,env],
+     {_: :table, c: threads.group_by{|r,k| # group recipients
          k[0].do{|k|k[To].do{|o|o[0].uri}}}.map{|group,threads|
          c = R.cs
          {_: :tr, c: [{_: :td,
