@@ -30,28 +30,6 @@ class R
     p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
 
-  FileSet['paged'] = -> d,r,m {
-    p = d.e ? d : (d.justPath.e ? d.justPath : d)
-    c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024) # one extra for next-page startpoint
-    o = r['d'] =~ /^a/ ? :asc : :desc            # direction
-    (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # subtree
-      first, last = s[0], s.size > 1 && s.pop
-      desc, asc = o == :asc ? [first,last] : [last,first]
-      u = m['#']
-      u[Type] = R[HTTP+'Response']
-      links = []
-      if desc
-        uri = d.uri + "?set=paged&c=#{c-1}&d=desc&offset=" + (URI.escape desc.uri)
-        u[Prev] = {'uri' => uri}
-        d.env[:Links].push "<#{uri}>; rel=prev"
-      end
-      if asc
-        uri = d.uri + "?set=paged&c=#{c-1}&d=asc&offset=" + (URI.escape asc.uri)
-        u[Next] = {'uri' => uri}
-        d.env[:Links].push "<#{uri}>; rel=next"
-      end
-      s}}
-
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r|
@@ -64,6 +42,7 @@ class R
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
          c: [{c: {_: :a, href: resource.uri.t, c: resource.abbr}},
+             r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
              r[LDP+'contains'].do{|c|c.map{|c| i = c.R
                  {_: :a, href: i, c: i.uri.sub(/.*\//,' ')}}}]}}]}
 

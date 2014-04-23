@@ -39,25 +39,25 @@ class R
     set = []
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response model in RDF
 
-    # File customization-lambda
+    # File  directly-mapped filesystem resources
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
     fileFn[self,q,m].do{|files| set.concat files }
 
-    # Resource  custom generic-resource set (search / indexing handlers)
+    # Resource  custom generic-resource set (search / index handlers)
     q['set'].do{|s|
       ResourceSet[s].do{|resFn|
         resFn[self,q,m].do{|resources|
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
-    @r[:Links].push "<#{aclURI}>; rel=acl"
+    @r[:Links].push "<#{aclURI}>; rel=acl" # WAC
     @r[:Response].update({
         'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
         'Content-Type' => @r.format,
         'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
         'MS-Author-Via' => 'SPARQL',
     })
-    @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
+    @r[:Response]['Link'] = @r[:Links].intersperse(', ').join # Link Header
 
     if set.empty?
 #      if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
@@ -68,15 +68,14 @@ class R
     end
 
     condResponse ->{
-      if (@r.format != 'text/html') &&
-          writer = (RDF::Writer.for :content_type => @r.format)
+      if (@r.format != 'text/html') && writer = (RDF::Writer.for :content_type => @r.format)
         graph = RDF::Graph.new
         set.map{|r|
           doc = r.setEnv(@r).rdfDoc # resources
           graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc if doc.e} # populate
 
         m['#'].map{|p,o| o.justArray.map{|o| graph << RDF::Statement.new(@r[:Response]['URI'].R, p.R,
-                    [R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'} # request meta
+                    [R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'} # current env -> RDF
 
         @r[:Response][:Triples] = graph.size.to_s # size
         graph.dump writer.to_sym # RDF

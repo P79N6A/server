@@ -1,6 +1,28 @@
 #watch __FILE__
 class R
 
+  FileSet['paged'] = -> d,r,m {
+    p = d.e ? d : (d.justPath.e ? d.justPath : d)
+    c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024) # one extra for next-page startpoint
+    o = r['d'] =~ /^a/ ? :asc : :desc            # direction
+    (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # subtree
+      first, last = s[0], s.size > 1 && s.pop
+      desc, asc = o == :asc ? [first,last] : [last,first]
+      u = m['#']
+      u[Type] = R[HTTP+'Response']
+      links = []
+      if desc
+        uri = d.uri + "?set=paged&c=#{c-1}&d=desc&offset=" + (URI.escape desc.uri)
+        u[Prev] = {'uri' => uri}
+        d.env[:Links].push "<#{uri}>; rel=prev"
+      end
+      if asc
+        uri = d.uri + "?set=paged&c=#{c-1}&d=asc&offset=" + (URI.escape asc.uri)
+        u[Next] = {'uri' => uri}
+        d.env[:Links].push "<#{uri}>; rel=next"
+      end
+      s}}
+
   def [] p; predicate p end
   def []= p,o
     if o
