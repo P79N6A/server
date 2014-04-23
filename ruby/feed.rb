@@ -2,8 +2,12 @@ class R
 
   GET['/news'] = -> d,e {
     if %w{/news /news/}.member? d.justPath
-      e.q['set'] ||= 'paged' # post-range in date-order
-      e.q['c'] ||= 32        # page size
+      if !e.q['set']
+        e.q['set'] = 'paged' # forward to firstpage
+        e[:Status] = 333     # w/o a redirect
+        e[:Response]['Location'] = '/news/?set=paged'
+        e.q['c'] ||= 32
+      end
       nil
     end}
 

@@ -147,3 +147,5 @@ class Hash
   end
 
 end
+
+Rack::Utils::HTTP_STATUS_CODES[333] = "Returning Related"

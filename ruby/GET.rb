@@ -88,11 +88,12 @@ class R
   def condResponse body
     @r['HTTP_IF_NONE_MATCH'].do{|m|m.strip.split(/\s*,\s*/).include?(@r[:Response]['ETag']) && [304,{},[]]} ||
     body.call.do{|body|
-      body.class == R ? (Nginx ? [200,@r[:Response].update({'X-Accel-Redirect' => '/fs/' + body.pathPOSIXrel}),[]] : # Nginx
-                        Apache ? [200,@r[:Response].update({'X-Sendfile' => body.d}),[]] : # Apache
+      @r[:Status] ||= 200
+      body.class == R ? (Nginx ? [@r[:Status],@r[:Response].update({'X-Accel-Redirect' => '/fs/' + body.pathPOSIXrel}),[]] : # Nginx
+                        Apache ? [@r[:Status],@r[:Response].update({'X-Sendfile' => body.d}),[]] : # Apache
                          (f = Rack::File.new nil; f.instance_variable_set '@path', body.d # Rack
                           f.serving(@r).do{|s,h,b|[s,h.update(@r[:Response]),b]})) :
-      [200,@r[:Response],[body]]}
+      [@r[:Status],@r[:Response],[body]]}
   end
 
 end
