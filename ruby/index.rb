@@ -3,15 +3,17 @@ class R
 
   FileSet['paged'] = -> d,r,m {
     p = d.e ? d : (d.justPath.e ? d.justPath : d) # prefer host-specific index
-    c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024) # one extra for next-page start-pointer
+    c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
     o = r['d'] =~ /^a/ ? :asc : :desc            # direction
     (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # find page
       u = m['#'] # RDF of current page
       u[Type] = R[HTTP+'Response']
-      uri = d.uri + "?set=paged&c=#{c-1}&d=#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape s[0].uri)
-      u[Prev] = {'uri' => uri}                  # prev RDF
-      d.env[:Links].push "<#{uri}>; rel=prev"   # prev Link
-      if edge = s.size >= c && s.pop
+      if head = s[0]
+        uri = d.uri + "?set=paged&c=#{c-1}&d=#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
+        u[Prev] = {'uri' => uri}                # prev RDF
+        d.env[:Links].push "<#{uri}>; rel=prev" # prev Link
+      end
+      if edge = s.size >= c && s.pop # more?
         uri = d.uri + "?set=paged&c=#{c-1}&d=#{o}&offset=" + (URI.escape edge.uri)
         u[Next] = {'uri' => uri}                # next RDF
         d.env[:Links].push "<#{uri}>; rel=next" # next Link
