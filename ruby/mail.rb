@@ -9,10 +9,13 @@ class R
   GET['/mid'] = -> e,r{R[MessagePath[e.base]].setEnv(r).response}
 
   GET['/thread'] = -> e, r {
-    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}}
+    m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
     return [406,{},[]] unless Render[r.format]
+    m['#'] = {'uri' => '#',
+      Type => [R[LDP+'BasicContainer']],
+      LDP+'contains' => m.keys.map(&:R)}
     v = r.q['view'] ||= "timegraph"
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
     r[:Response]['Content-Type'] = r.format
@@ -83,8 +86,7 @@ class R
       yield e, Label, s
       yield e, Title, s}
 
-    yield e, SIOC+'has_discussion',                  # thread
-    R['/thread/'+id+'#'+e] if m.in_reply_to || m.references
+    yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
 
     %w{to cc bcc}.map{|to|                           # reciever fields
       m.send(to).do{|to|                             # has field?
