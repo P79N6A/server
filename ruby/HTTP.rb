@@ -149,3 +149,6 @@ class Hash
 end
 
 Rack::Utils::HTTP_STATUS_CODES[333] = "Returning Related"
+Rack::Utils::SYMBOL_TO_STATUS_CODE[:returning_related] = 333
+
+Thin::HTTP_STATUS_CODES = Rack::Utils::HTTP_STATUS_CODES
