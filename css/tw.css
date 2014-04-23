@@ -31,7 +31,7 @@ span.nick span {
 .tw img, td.val img {max-width:100%}
 
 a {text-decoration:none}
-.abbr,.scheme,s {display: none}
+.abbr,.invisible,.scheme,s {display: none}
 
 .blogpost {
     background-color:#fff;

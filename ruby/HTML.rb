@@ -161,7 +161,7 @@ class R
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
 
     view = View[e.q['view']] ||
-           View['tabulate']
+           View['select']
 
     H ['<!DOCTYPE html>',{_: :html,
          c: [{_: :head, c: ['<meta charset="utf-8" />',
