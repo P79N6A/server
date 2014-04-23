@@ -28,10 +28,10 @@ span.nick span {
 .tw b {
     color:#000;
     background-color:#fff}
-.tw img {max-width:100%}
+.tw img, td.val img {max-width:100%}
 
 a {text-decoration:none}
-.abbr,.scheme {display: none}
+.abbr,.scheme,s {display: none}
 
 .blogpost {
     background-color:#fff;
