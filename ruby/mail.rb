@@ -14,7 +14,7 @@ class R
     return E404[e,r] if m.empty?
     return [406,{},[]] unless Render[r.format]
     m['#'] = {'uri' => '#',
-      Type => [R[LDP+'BasicContainer']],
+      Type => [R[LDP+'BasicContainer'],R[SIOC+'Thread']],
       LDP+'contains' => m.keys.map(&:R)}
     v = r.q['view'] ||= "timegraph"
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
