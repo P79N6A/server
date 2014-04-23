@@ -52,8 +52,7 @@ class R
 
   Tabulate = -> d,e {
     e.q['view'] ||= 'tabulate'
-    nil
-  }
+    nil}
 
   View['tabulate'] = ->d,e {
     local = false
