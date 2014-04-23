@@ -164,7 +164,6 @@ class R
                   [' ',{_: :a, href: '/thread/'+s.R.base+'#'+s.uri,class: 'sender', style: 'background-color:'+c,
                      c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
                group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: 'background-color:'+c, c: g.R.abbr, href: g}}}]}}},
-     {_: :a, id: :down, href: env['REQUEST_PATH'], c: '↓'}, # to full view
      (H.css '/css/threads')]}
 
 end
