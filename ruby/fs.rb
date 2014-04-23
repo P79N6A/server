@@ -77,8 +77,8 @@ class R
       dir.triplrStat &f
       dir = dir.uri
       yield dir, Type, R[LDP+'BasicContainer']
-      yield dir, LDP+'firstPage', R[dir+'/?set=paged#desc']
-      yield dir, LDP+'firstPage', R[dir+'/?set=paged&d=asc#asc']
+      yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
+      yield dir, LDP+'firstPage', R[dir+'/?set=page&asc']
       c.map{|c|
         i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c # dereference children
         yield dir, LDP+'contains', i }

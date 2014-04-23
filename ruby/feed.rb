@@ -3,9 +3,9 @@ class R
   GET['/news'] = -> d,e {
     if %w{/news /news/}.member? d.justPath
       if !e.q['set']
-        e.q['set'] = 'paged' # forward to firstpage
-        e[:Status] = 333     # w/o a redirect
-        e[:Response]['Location'] = '/news/?set=paged'
+        e.q['set'] = 'page' # forward to first page
+        e[:Status] = 333    # w/o a redirect
+        e[:Response]['Location'] = '/news/?set=page'
         e.q['c'] ||= 32
       end
       nil
