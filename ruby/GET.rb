@@ -2,15 +2,15 @@
 class R
 
   def GET
-    i = 'index.html'
-    if file = [self,justPath,*(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f)
-      a = @r.accept.values.flatten
-      accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*')
-      return file.setEnv(@r).fileGET unless !accepted || (MIMEcook[file.mimeP] && !(q.has_key? 'raw'))
-    end # enable conneg-hint paths
+    i = 'index.html' # look for files at host-specific & global path
+    if file = [self,justPath,*(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f) # most-specific wins
+      a = @r.accept.values.flatten # Accept header
+      accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*') # server or client might want transcode to acceptable MIME
+      return file.setEnv(@r).fileGET unless !accepted || (MIMEcook[file.mimeP] && !(q.has_key? 'raw')) # accepted
+    end # conneg-hint paths
     uri = stripDoc # doc-format in extension
     uri = uri.parent.descend if uri.to_s.match(/\/index$/) # virtual index (to add extension to)
-    uri.setEnv(@r).resourceGET # continue at generic-resource
+    uri.setEnv(@r).resourceGET # generic-resource
   end
 
   def HEAD
@@ -39,11 +39,11 @@ class R
     set = []
     m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response model in RDF
 
-    # File
+    # File customization-lambda
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
     fileFn[self,q,m].do{|files| set.concat files }
 
-    # Resource
+    # Resource  custom generic-resource set (search / indexing handlers)
     q['set'].do{|s|
       ResourceSet[s].do{|resFn|
         resFn[self,q,m].do{|resources|
@@ -60,11 +60,11 @@ class R
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
     if set.empty?
-      if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
-        return [200,@r[:Response],['']] # editable resource
-      else
+#      if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
+#        return [200,@r[:Response],['']] # resource-thunk for data-browsers
+#      else
         return E404[self,@r,m]
-      end
+#      end
     end
 
     condResponse ->{
