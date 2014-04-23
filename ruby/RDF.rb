@@ -50,6 +50,11 @@ class R
     doc
   end
 
+  Tabulate = -> d,e {
+    e.q['view'] ||= 'tabulate'
+    nil
+  }
+
   View['tabulate'] = ->d,e {
     local = false
     tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'
