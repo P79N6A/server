@@ -17,8 +17,9 @@ class R
       Type => [R[LDP+'BasicContainer'],R[SIOC+'Thread']],
       LDP+'contains' => m.keys.map(&:R)}
     v = r.q['view'] ||= "timegraph"
-    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
+    r[:Response]['Access-Control-Allow-Origin'] = r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'
     r[:Response]['Content-Type'] = r.format
+    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
     e.condResponse ->{Render[r.format][m, r]}}
 
   GET['/m'] = -> e,r{
