@@ -158,13 +158,12 @@ class R
      {_: :table, c: threads.group_by{|r,k| # group recipients
          k[0].do{|k|k[To].do{|o|o[0].uri}}}.map{|group,threads|
          c = R.cs
-         {_: :tr, c: [{_: :td,
-           c: threads.map{|title,msgs| # thread
+         {_: :tr, c: [{_: :td, # each group
+           c: threads.map{|title,msgs| # each thread
              [{_: :a, class: 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.base, c: title},
-              msgs.map{|s| s[Creator].select(&:maybeURI).map{|cr|
-                  [' ',{_: :a, href: '/thread/'+s.R.base+'#'+s.uri,class: 'sender', style: 'background-color:'+c,
-                     c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
-               group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: 'background-color:'+c, c: g.R.abbr, href: g}}}]}}},
-     (H.css '/css/threads')]}
+              msgs.map{|s| s[Creator].select(&:maybeURI).map{|cr| # each author
+                  [' ',{_: :a, href: '/thread/'+s.R.base+'#'+s.uri,class: 'sender', style: 'background-color:'+c, c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
+               group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: 'background-color:'+c, c: g.R.abbr, href: g}}}]}}}, # group name
+     (H.css '/css/threads', true)]}
 
 end
