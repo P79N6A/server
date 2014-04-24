@@ -72,7 +72,6 @@ chan
 csv
 edit
 facets
-feed
 fs
 GET
 graph
@@ -82,6 +81,7 @@ image
 index
 mail
 man
+news
 POST
 RDF
 search
