@@ -34,7 +34,7 @@ class R
       man = `man #{langSH} -w #{section} #{name.sh}`.chomp      
 
       if man.empty?
-        return false
+        E404[e,r]
       else
 
         roff = man.R

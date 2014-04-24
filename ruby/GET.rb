@@ -2,14 +2,14 @@
 class R
 
   def GET
-    i = 'index.html' # look for files at host-specific & global path
+    i = 'index.html' # files at host-specific + global paths
     if file = [self,justPath,*(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f) # most-specific wins
       a = @r.accept.values.flatten # Accept header
       accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*') # server or client might want transcode to acceptable MIME
       return file.setEnv(@r).fileGET unless !accepted || (MIMEcook[file.mimeP] && !(q.has_key? 'raw')) # accepted
-    end # conneg-hint paths
+    end            # conneg-hint paths
     uri = stripDoc # doc-format in extension
-    uri = uri.parent.descend if uri.to_s.match(/\/index$/) # virtual index (to add extension to)
+    uri = uri.parent.descend if uri.to_s.match(/\/index$/) # index
     uri.setEnv(@r).resourceGET # generic-resource
   end
 
@@ -60,11 +60,7 @@ class R
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join # Link Header
 
     if set.empty?
-#      if @r['HTTP_ACCEPT'].do{|f|f.match(/text\/n3/)} || @r.format == 'text/n3'
-#        return [200,@r[:Response],['']] # resource-thunk for data-browsers
-#      else
-        return E404[self,@r,m]
-#      end
+      return E404[self,@r,m]
     end
 
     condResponse ->{
