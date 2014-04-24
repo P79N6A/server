@@ -118,7 +118,10 @@ class R
         type.respond_to?(:uri) && View[type.uri]}
       View[type ? type.uri : 'base'][{u => r},e]}}
 
-  View['base']=->d,e{[H.once(e,'base',H.css('/css/html')),d.values.map(&:html)]}
+  NoJS = -> d,e { e.q['view'] ||= 'select' ; nil }
+
+  View['base']=->d,e{[(d.values.map &:html),
+                      H.once(e,'base',H.css('/css/html',true))]}
 
   View['title'] = -> g,e {
     g.map{|u,r| {_: :h4, c: {_: :a, href: u, c: r[Title]||u.R.basename}}}}
@@ -147,7 +150,7 @@ class R
     h.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless %w{alt class color href rel src title type}.member? a.name}}
     h.to_xhtml}
 
-  View[HTTP+'Response'] = -> d,e { # HTTP-response data, such as page links
+  View[HTTP+'Response'] = -> d,e {
     d['#'].do{|u|
       path = e['REQUEST_PATH']
       qs = e['QUERY_STRING'].do{|qs|qs.empty? ? '' : '?' + qs} || ''
@@ -159,17 +162,13 @@ class R
 
   Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
-
-    view = View[e.q['view']] ||
-           View['select']
-
     H ['<!DOCTYPE html>',{_: :html,
          c: [{_: :head, c: ['<meta charset="utf-8" />',
                    {_: :title, c: titles.size==1 ? titles[0] : e.uri},
                    {_: :link, rel: :icon, href:'/css/misc/favicon.ico'},
      u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
-             {_: :body, c: view[d,e]}]}]}
+             {_: :body, c: (View[e.q['view']] || View['select'])[d,e]}]}]}
 
   View['table'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq

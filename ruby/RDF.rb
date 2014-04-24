@@ -50,9 +50,7 @@ class R
     doc
   end
 
-  Tabulate = -> d,e {
-    e.q['view'] ||= 'tabulate'
-    nil}
+  Tabulate = -> d,e { e.q['view'] ||= 'tabulate' ; nil }
 
   View['tabulate'] = ->d,e {
     local = false
