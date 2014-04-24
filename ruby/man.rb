@@ -38,7 +38,7 @@ class R
       else
 
         roff = man.R
-        htmlBase = roff.dir.to_s.sub(/.*\/share/,'').R
+        htmlBase = R['//' + r['SERVER_NAME'] + roff.dir.to_s.sub(/.*\/share/,'')]
         html = htmlBase.as roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
 
