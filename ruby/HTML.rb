@@ -112,15 +112,12 @@ class R
     uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
 
-  View['select']=->d,e{
+  View['HTML']=->d,e{ # dispatch a HTML view based on RDF types
     d.map{|u,r|
-      type = r[Type].justArray.find{|type|
-        type.respond_to?(:uri) && View[type.uri]}
-      View[type ? type.uri : 'base'][{u => r},e]}}
+      type = r[Type].justArray.find{|type| type.respond_to?(:uri) && View[type.uri]}
+      View[type ? type.uri : 'base'][{u => r},e]}} # domain-specific or fallback
 
-  NoJS = -> d,e { e.q['view'] ||= 'select' ; nil }
-
-  View['base']=->d,e{[(d.values.map &:html),
+  View['base']=->d,e{[(d.values.map &:html), # boring view
                       H.once(e,'base',H.css('/css/html',true))]}
 
   View['title'] = -> g,e {
@@ -168,7 +165,7 @@ class R
                    {_: :link, rel: :icon, href:'/css/misc/favicon.ico'},
      u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
-             {_: :body, c: (View[e.q['view']] || View['select'])[d,e]}]}]}
+             {_: :body, c: (View[e.q['view']] || View['HTML'])[d,e]}]}]}
 
   View['table'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq

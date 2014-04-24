@@ -51,6 +51,7 @@ class R
   end
 
   Tabulate = -> d,e { e.q['view'] ||= 'tabulate' ; nil }
+      NoJS = -> d,e { e.q['view'] ||= 'HTML' ; nil }
 
   View['tabulate'] = ->d,e {
     local = false

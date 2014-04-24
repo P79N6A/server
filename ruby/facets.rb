@@ -35,7 +35,7 @@ class R
             }}].join ' '
        }.do{|f|
          [f.map{|o|'<div class="'+o+'">'}, # facet wrapper
-          View['select'][{u => r},e], # resource
+          View['HTML'][{u => r},e], # resource
           (0..f.size-1).map{|c|'</div>'}]}}]}
 
 end

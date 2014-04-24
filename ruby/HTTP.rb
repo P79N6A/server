@@ -46,7 +46,7 @@ class R
     r.map{|k,v|
       s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)
     }
-    r.q['view']='select'
+    r.q['view'] = 'HTML'
     [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
 
   Errors = {}
