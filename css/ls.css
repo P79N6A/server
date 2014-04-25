@@ -80,7 +80,6 @@ table {
 
 .File {
     display: inline-block;
-    white-space: pre-wrap;
     background-color: #fff;
     color: #000;
     border: .14em dotted #ddd;
