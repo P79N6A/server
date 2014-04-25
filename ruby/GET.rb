@@ -37,7 +37,7 @@ class R
 
   def response # default handler
     set = []
-    m = {'#' => {'uri' => '#', Type => R[HTTP+'Response']}} # Response model in RDF
+    m = {'#' => {'uri' => '#', Type => R[LDP+'Resource']}}
 
     # File  directly-mapped filesystem resources
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
