@@ -3,7 +3,11 @@ body {margin:0; font-family: monospace; background-color:#000; color:#fff}
 table {border-spacing:0;margin:0}
 b,.frag {background-color:#fff;color:#000}
 a {text-decoration:none}
-td.message {background-color:#008;color:#fff}
+td.message {
+ background-color:#008;
+ color:#fff;
+ white-space: pre-wrap;
+ }
 
 a, td.path {
     text-align:right;

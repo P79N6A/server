@@ -66,7 +66,7 @@ class R
               {_: :body,
                 c: [{_: :h1, c: 500},
                     {_: :table,
-                      c: [{_: :tr,c: [{_: :td, c: {_: :b, c: x.class}},{_: :td, class: :space},{_: :td, class: :message, c: x.message.hrefs}]},
+                      c: [{_: :tr,c: [{_: :td, c: {_: :b, c: x.class}},{_: :td, class: :message, colspan: 2, c: x.message.hrefs}]},
                           x.backtrace.map{|f| p = f.split /:/, 3
                             {_: :tr,
                               c: [{_: :td, class: :path, c: p[0].R.abbr},

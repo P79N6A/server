@@ -57,9 +57,14 @@ ul.uris a:hover {background-color:#bf0}
     graph.keys.select{|u|u.match /^http/}
   end
 
+  class Pygment < ::Redcarpet::Render::HTML
+    def block_code(code, language)
+      ::Pygments.highlight(code, lexer: language)
+    end
+  end
+
   def triplrMarkdown
-    require 'redcarpet'
-    yield uri, Content, ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(r)
+    yield uri, Content, ::Redcarpet::Markdown.new(Pygment, fenced_code_blocks: true).render(r)
   end
 
   Render['text/markdown'] = -> d,e {
