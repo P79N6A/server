@@ -58,9 +58,9 @@ ul.uris a:hover {background-color:#bf0}
   end
 
   class Pygment < ::Redcarpet::Render::HTML
-    def block_code(code, language)
-      if language
-        IO.popen("pygmentize -l #{language.downcase.sh} -f html",'r+'){|p|
+    def block_code(code, lang)
+      if lang
+        IO.popen("pygmentize -l #{lang.downcase.sh} -f html",'r+'){|p|
           p.puts code
           p.close_write
           p.read
