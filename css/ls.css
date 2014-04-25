@@ -89,6 +89,7 @@ table {
     margin: .15em;
     max-width: 88ex;
 }
+
 .File > a:first-child {
     margin: -.2em;
     color: #000;
@@ -104,4 +105,11 @@ table {
     font-weight:bold;
     margin-left:.08em;
     padding: .08em;
+}
+
+.File code {
+    display: block;
+    margin: .5em;
+    padding: .5em;
+    border: .1em dotted #ccf;
 }
