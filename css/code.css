@@ -3,6 +3,7 @@ code {
     padding: .5em;
     border: .1em dotted #ccf;
     white-space: pre-wrap;
+    display: inline-block;
 }
 
 .highlight {
