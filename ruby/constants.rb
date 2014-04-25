@@ -9,7 +9,6 @@ mail
 nokogiri
 open-uri
 pathname
-pygments.rb
 rack
 redcarpet
 shellwords}.map{|r|require r}

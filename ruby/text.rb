@@ -59,12 +59,16 @@ ul.uris a:hover {background-color:#bf0}
 
   class Pygment < ::Redcarpet::Render::HTML
     def block_code(code, language)
-      ::Pygments.highlight(code, lexer: language)
+      IO.popen("pygmentize -l #{language.downcase.sh} -f html",'r+'){|p|
+        p.puts code
+        p.close_write
+        p.read
+      }
     end
   end
 
   def triplrMarkdown
-    yield uri, Content, ::Redcarpet::Markdown.new(Pygment, fenced_code_blocks: true).render(r)
+    yield uri, Content, ::Redcarpet::Markdown.new(Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
   Render['text/markdown'] = -> d,e {

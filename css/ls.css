@@ -106,10 +106,3 @@ table {
     margin-left:.08em;
     padding: .08em;
 }
-
-.File code {
-    display: block;
-    margin: .5em;
-    padding: .5em;
-    border: .1em dotted #ccf;
-}
