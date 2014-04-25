@@ -2,6 +2,7 @@ code {
     margin: .5em;
     padding: .5em;
     border: .1em dotted #ccf;
+    white-space: pre-wrap;
 }
 
 .highlight {
