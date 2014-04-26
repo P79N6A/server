@@ -31,11 +31,11 @@ class R
 
   GREP_DIRS = []
 
-  def appendURI u; R uri + u.to_s end
-  alias_method :a, :appendURI
-  alias_method :+, :appendURI
-  def as u; descend + u.to_s end
+  def + u; R uri + u.to_s end
+  def child u; descend + u.to_s end
   def descend; R uri.t end
+  alias_method :a, :+
+  alias_method :as, :child
 
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
