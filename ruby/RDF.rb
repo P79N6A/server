@@ -29,7 +29,7 @@ class R
       if graph.named?
         doc = graph.name.n3
         unless doc.e
-          doc.dirname.mk
+          doc.dir.mk
           RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end

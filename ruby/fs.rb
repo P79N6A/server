@@ -110,7 +110,7 @@ class R
   def ln t, y=:link
     t = t.R.stripSlash
     if !t.e
-      t.dirname.mk
+      t.dir.mk
       FileUtils.send y, node, t.node
     end
   end
@@ -154,7 +154,7 @@ class R
   end
 
   def writeFile o,s=false
-    dirname.mk
+    dir.mk
     File.open(d,'w'){|f|
       f << (s ? o.to_json : o)}
     self

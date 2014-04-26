@@ -4,8 +4,10 @@ class R
   def aclURI
     if basename.index('.acl') == 0
       self
+    elsif hierPart == '/'
+      child '.acl'
     else
-      R[dir].child '.acl.' + basename
+      dir.child '.acl.' + basename
     end
   end
 =begin

@@ -33,30 +33,32 @@ class R
 
   def + u; R uri + u.to_s end
   alias_method :a, :+
-  def descend; R uri.t end
+  def descend; uri.t.R end
   def child u; descend + u.to_s end
   alias_method :as, :child
 
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
-  def stripDoc;  R[uri.sub(Doc,'')] end
-  def stripFrag; R[uri.split(/#/)[0]] end
-  def stripSlash; uri[-1] == '/' ? R[uri[0..-2]] : self end
+  def stripDoc;  uri.sub(Doc,'').R end
+  def stripFrag; uri.split(/#/)[0].R end
+  def stripSlash; uri[-1] == '/' ? uri[0..-2].R : self end
   def docroot; stripFrag.stripDoc.stripSlash end
 
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
-  def queryPart; query ? '?' + query : '' end
   def justPath; hierPart.R end
+  def queryPart; query ? '?' + query : '' end
 
-  def basename s = nil
-    s ? (File.basename hierPart, s) : (File.basename hierPart) end
-  def dirname; hostPart + (File.dirname hierPart) end
-  def dir; R dirname end
+  def basename suffix = nil
+    suffix ? (File.basename hierPart, suffix) : (File.basename hierPart)
+  end
   def bare; basename suffix end
 
+  def dirname; hostPart + (File.dirname hierPart) end
+  def dir; dirname.R end
+
   def parent; R hostPart + Pathname.new(hierPart).parent.to_s end
-  def hierarchy; %w{. /}.member?(hierPart) ? [self] : [self].concat(parent.hierarchy) end
+  def hierarchy; %w{. .. /}.member?(hierPart) ? [self] : [self].concat(parent.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
   VHosts = 'domain'

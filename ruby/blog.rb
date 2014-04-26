@@ -51,7 +51,7 @@ class R
 
   def triplrIRC &f
     i=-1
-    day = dirname.uri.split('/')[-3..-1].do{|dp|
+    day = dirname.split('/')[-3..-1].do{|dp|
       dp.join('-') if dp[0].match(/^\d{4}$/)
     }||''
     doc = uri.gsub '#','%23'

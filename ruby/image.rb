@@ -14,7 +14,7 @@ class R
       id = [stat.ino,stat.mtime].h.dive
       path = R['/cache/thumbnail/'+id+'.png']
       if !path.e
-        path.dirname.mk
+        path.dir.mk
         if i.mimeP.match(/^video/)
           `ffmpegthumbnailer -s 256 -i #{i.sh} -o #{path.sh}`
         else

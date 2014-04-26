@@ -96,7 +96,7 @@ class R
   # URI -> groonga DB
   def groonga
     return Groonga::Database.open d if e # open db
-    dirname.mk                           # create containing dir
+    dir.mk                               # create containing dir
     Groonga::Database.create(:path => d) # create db
     Groonga::Schema.define{|s|           # create schema
       s.create_table("R",:type => :hash,:key_type => "ShortText"){|t|
