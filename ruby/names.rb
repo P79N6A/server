@@ -32,9 +32,9 @@ class R
   GREP_DIRS = []
 
   def + u; R uri + u.to_s end
-  def child u; descend + u.to_s end
-  def descend; R uri.t end
   alias_method :a, :+
+  def descend; R uri.t end
+  def child u; descend + u.to_s end
   alias_method :as, :child
 
   def ext; (File.extname uri).tail || '' end
@@ -45,15 +45,15 @@ class R
   def docroot; stripFrag.stripDoc.stripSlash end
 
   def hostPart; host ? '//' + host : '' end
-  def pathPart; path || '/' end
-  def justPath; pathPart.R end
+  def hierPart; path || '/' end
+  def justPath; hierPart.R end
 
   def basename suffix = nil
-    suffix ? (File.basename to_s, suffix) : (File.basename to_s) end
-  def dirname; hostPart + (File.dirname pathPart) end
+    suffix ? (File.basename hierPart, suffix) : (File.basename hierPart) end
+  def dirname; hostPart + (File.dirname hierPart) end
   def bare; basename suffix end
   alias_method :base, :basename
-  alias_method :dir,  :dirname
+  alias_method :dir, :dirname
 
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
