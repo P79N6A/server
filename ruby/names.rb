@@ -39,56 +39,36 @@ class R
 
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
-  def stripDoc;  R[uri.sub(/\.(atom|e|html|json(ld)?|n3|nt|rdf|ttl|txt)$/,"")] end
+  def stripDoc;  R[uri.sub(Doc,'')] end
   def stripFrag; R[uri.split(/#/)[0]] end
   def stripSlash; uri[-1] == '/' ? R[uri[0..-2]] : self end
   def docroot; stripFrag.stripDoc.stripSlash end
 
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
+  def queryPart; query ? '?' + query : '' end
   def justPath; hierPart.R end
 
   def basename s = nil
     s ? (File.basename hierPart, s) : (File.basename hierPart) end
   def dirname; hostPart + (File.dirname hierPart) end
+  def dir; R dirname end
   def bare; basename suffix end
 
-  def parent;   R Pathname.new(uri).parent end
-  def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
-  def cascade;  [stripSlash].concat parents end
+  def parent; R hostPart + Pathname.new(hierPart).parent.to_s end
+  def hierarchy; %w{. /}.member?(hierPart) ? [self] : [self].concat(parent.hierarchy) end
+  def cascade; stripSlash.hierarchy end
 
   VHosts = 'domain'
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def pathPOSIXrel
-    if h = host # vhost directories
-      VHosts + '/' + h + (path ? path : '') + (query ? '?'+query : '')
-    else # absolute paths relative to server root
+    if h = host
+      VHosts + '/' + h + hierPart + queryPart
+    else
       uri[0] == '/' ? uri.tail : uri
     end
   end
 
-end
-
-class FalseClass
-  def do; false end
-end
-
-class Hash
-  def R; R.new uri end
-  def uri; self["uri"]||"" end
-  alias_method :url, :uri
-  alias_method :maybeURI, :uri
-end
-
-class NilClass
-  def do; nil end
-end
-
-class Object
-  def id; self end
-  def do; yield self end
-  def maybeURI; nil end
-  def justArray; [self] end
 end
 
 class String

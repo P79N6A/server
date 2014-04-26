@@ -56,6 +56,7 @@ end
 
 class Object
   def html; self.class end
+  def justArray; [self] end
 end
 
 class String

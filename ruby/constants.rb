@@ -17,6 +17,7 @@ class R < RDF::URI
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
   HTTP_URI = /\A(\/|http)[\S]+\Z/
+  Doc = /\.(atom|e|html|json(ld)?|n3|nt|owl|rdf|ttl|txt)$/
 
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
@@ -96,4 +97,25 @@ who
   alias_method :url, :to_s
   alias_method :uri, :to_s
 
+end
+
+class FalseClass
+  def do; false end
+end
+
+class Hash
+  def R; R.new uri end
+  def uri; self["uri"]||"" end
+  alias_method :url, :uri
+  alias_method :maybeURI, :uri
+end
+
+class NilClass
+  def do; nil end
+end
+
+class Object
+  def id; self end
+  def do; yield self end
+  def maybeURI; nil end
 end
