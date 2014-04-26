@@ -50,7 +50,7 @@ class R
 
   def basename suffix = nil
     suffix ? (File.basename to_s, suffix) : (File.basename to_s) end
-  def dirname; hostPart + (path.do{|p|File.dirname p} || '/') end
+  def dirname; hostPart + (File.dirname pathPart) end
   def bare; basename suffix end
   alias_method :base, :basename
   alias_method :dir,  :dirname
