@@ -10,7 +10,7 @@ class R
          "inode/symlink"
        elsif node.directory?
          "inode/directory"
-       elsif base.index('msg.')==0 # how to make procmail append a non-gibberish extension?
+       elsif basename.index('msg.')==0 # how to set procmail file suffix?
          "message/rfc822"
        elsif MIME[t]
          MIME[t]

@@ -2,13 +2,10 @@
 class R
 
   def aclURI
-    path = justPath
-    if !path || path == '/'
-      hostPart + '/.acl'
-    elsif basename.index('.acl') == 0
+    if basename.index('.acl') == 0
       self
     else
-      dirname + '/.acl.' + basename
+      R[dir].child '.acl.' + basename
     end
   end
 =begin

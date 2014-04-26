@@ -6,7 +6,7 @@ class R
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
-  GET['/mid'] = -> e,r{R[MessagePath[e.base]].setEnv(r).response}
+  GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response}
 
   GET['/thread'] = -> e, r {
     m = {}
@@ -160,9 +160,9 @@ class R
          c = R.cs
          {_: :tr, c: [{_: :td, # each group
            c: threads.map{|title,msgs| # each thread
-             [{_: :a, class: 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.base, c: title},
+             [{_: :a, class: 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.basename, c: title},
               msgs.map{|s| s[Creator].select(&:maybeURI).map{|cr| # each author
-                  [' ',{_: :a, href: '/thread/'+s.R.base+'#'+s.uri,class: 'sender', style: 'background-color:'+c, c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
+                  [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri,class: 'sender', style: 'background-color:'+c, c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
                group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: 'background-color:'+c, c: g.R.abbr, href: g}}}]}}}, # group name
      (H.css '/css/threads', true)]}
 

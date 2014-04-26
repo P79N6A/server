@@ -52,8 +52,6 @@ class R
     s ? (File.basename hierPart, s) : (File.basename hierPart) end
   def dirname; hostPart + (File.dirname hierPart) end
   def bare; basename suffix end
-  alias_method :base, :basename
-  alias_method :dir, :dirname
 
   def parent;   R Pathname.new(uri).parent end
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end

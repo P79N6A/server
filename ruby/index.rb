@@ -58,7 +58,7 @@ class R
   end
 
   def predicates
-    c.map{|c| c.base.expand.R }
+    c.map{|c| c.basename.expand.R }
   end
 
   def predicate p, short = true
