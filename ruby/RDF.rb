@@ -51,16 +51,9 @@ class R
   end
 
   Tabulate = -> d,e { e.q['view'] ||= 'tabulate' ; nil }
-      NoJS = -> d,e { e.q['view'] ||= 'HTML' ; nil }
-
-  View['tabulate'] = ->d,e {
-    local = false
-    tab = (local ? '/js/' : 'https://w3.scripts.mit.edu/') + 'tabulator/'
-    [(H.css tab + 'tabbedtab'),
-     (H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
-     (H.js tab + 'js/mashup/mashlib'),
-"<script>
-jQuery(document).ready(function() {
+  View['tabulate'] = ->d,e { src = 'https://w3.scripts.mit.edu/tabulator/'
+    [(H.css src + 'tabbedtab'),(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),(H.js src + 'js/mashup/mashlib'),
+"<script>jQuery(document).ready(function() {
     var uri = window.location.href;
     window.document.title = uri;
     var kb = tabulator.kb;
@@ -68,7 +61,6 @@ jQuery(document).ready(function() {
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
-
 
   def triplrN3
     RDF::Reader.open(d, :format => :n3, :base_uri => stripDoc){|r|
