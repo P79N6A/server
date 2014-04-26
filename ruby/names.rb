@@ -48,8 +48,8 @@ class R
   def hierPart; path || '/' end
   def justPath; hierPart.R end
 
-  def basename suffix = nil
-    suffix ? (File.basename hierPart, suffix) : (File.basename hierPart) end
+  def basename s = nil
+    s ? (File.basename hierPart, s) : (File.basename hierPart) end
   def dirname; hostPart + (File.dirname hierPart) end
   def bare; basename suffix end
   alias_method :base, :basename
