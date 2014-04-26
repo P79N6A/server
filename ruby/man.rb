@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-  
+
   Man = -> e,r {
     manPath = '/usr/share/man'
 
@@ -96,5 +96,7 @@ class R
       end
     end
   }
+
+  #  GET['/man'] = Man
 
 end
