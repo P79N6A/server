@@ -30,7 +30,6 @@ class R
   end
 
   GREP_DIRS = []
-  VHosts = 'domain'
 
   def appendURI u; R uri + u.to_s end
   alias_method :a, :appendURI
@@ -60,6 +59,7 @@ class R
   def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
   def cascade;  [stripSlash].concat parents end
 
+  VHosts = 'domain'
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def pathPOSIXrel
     if h = host # vhost directories
