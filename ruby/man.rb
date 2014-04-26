@@ -70,7 +70,7 @@ class R
           
           # webize image paths
           body.css('img').map{|i|
-            p = (i.attr 'src').unpath
+            p = R.unPOSIX i.attr 'src'
             i.replace H[{_: :img, src: p}]}
 
           # inspect plaintext

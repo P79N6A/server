@@ -30,7 +30,7 @@ class R
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       [e,e.justPath].compact.select(&:e).map{|e|
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
-        lines.map{|l|l.chomp.unpath}}.compact.flatten}}
+        lines.map{|l|R.unPOSIX l.chomp}}.compact.flatten}}
 
   def glob a = ""
     (Pathname.glob pathPOSIX + a).map &:R
@@ -174,7 +174,9 @@ end
 
 class Pathname
 
-  def R; to_s.force_encoding('UTF-8').unpath end
+  def R
+    R.unPOSIX to_s#.force_encoding('UTF-8')
+  end
 
   def c
     return [] unless directory?

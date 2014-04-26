@@ -73,7 +73,7 @@ class R
           o.r
         end
       else # resource
-       R[n.to_s.unpath p.d.size]
+        R.unPOSIX n.to_s, p.d.size
       end}
   end
 

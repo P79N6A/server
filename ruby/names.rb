@@ -70,6 +70,10 @@ class R
     end
   end
 
+  def R.unPOSIX p, skip = R::BaseLen
+    p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
+  end
+
   def R.dive s
     s[0..2] + '/' + s[3..-1]
   end
@@ -78,13 +82,10 @@ end
 
 class String
 
-  def unpath skip = R::BaseLen
-    self[skip..-1].do{|p|
-      R[p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} ||
-        p]}
+  def R
+    R.new self
   end
 
-  def R; R.new self end
   def sh; Shellwords.escape self end
 
 end
