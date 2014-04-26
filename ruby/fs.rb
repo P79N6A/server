@@ -175,7 +175,7 @@ end
 class Pathname
 
   def R
-    R.unPOSIX to_s#.force_encoding('UTF-8')
+    R.unPOSIX to_s.force_encoding('UTF-8')
   end
 
   def c

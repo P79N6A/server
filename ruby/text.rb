@@ -124,11 +124,14 @@ ul.uris a:hover {background-color:#bf0}
 
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
-    yield uri,Content, CleanHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`] if size < 512e3
+    yield uri,Content, CleanHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`] if size < 32000
+  rescue
+    puts "source #{uri}"
+    nil
   end
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
- desktop diff d erlang errors flex fortran function glsl haskell haxe java
+ desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript
  key_string langdef latex ldap lisp logtalk lsm lua m4 makefile manifest nohilite
  number outlang oz pascal pc perl php prolog properties proto python ruby scala sh
  shellscript slang sml spec sql style symbols tcl texinfo todo vala vbscript}
