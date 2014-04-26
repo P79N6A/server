@@ -54,11 +54,11 @@ table {
     padding:.3em;
     margin:.3em;}
 
-.dir div:first-child .abbr{
+.dir a:first-child .abbr{
     display: none;
 }
 
-.dir div:first-child a{
+.dir a:first-child {
     float:left;
     font-weight: bold;
     font-size:1.8em;

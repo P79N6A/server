@@ -159,7 +159,7 @@ class R
     [(H.once e, 'stat', (H.css '/css/ls')),
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [{c: {_: :a, href: resource.uri.t, c: resource.abbr}},
+         c: [{_: :a, href: resource.uri.t, c: resource.abbr},
              r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
              r[LDP+'contains'].do{|c|c.map{|c| i = c.R
                  {_: :a, href: i, c: i.uri.sub(/.*\//,' ')}}}]}}]}
