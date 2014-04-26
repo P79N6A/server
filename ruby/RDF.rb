@@ -40,7 +40,7 @@ class R
   def rdfDoc pass = %w{atom e jsonld n3 nt owl rdf ttl} # narrow doc-types to those readable by RDF::Reader
     doc = self
     unless pass.member? ext # already an RDF doc
-      doc = R['/cache/RDF/' + uri.h.dive + '.e']
+      doc = R['/cache/RDF/' + (R.dive uri.h) + '.e']
       unless doc.e && doc.m > m # up-to-date?
         g = {} # doc graph
         [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize

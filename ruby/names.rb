@@ -70,11 +70,13 @@ class R
     end
   end
 
+  def R.dive s
+    s[0..2] + '/' + s[3..-1]
+  end
+
 end
 
 class String
-
-  def dive; self[0..2]+'/'+self[3..-1] end
 
   def unpath skip = R::BaseLen
     self[skip..-1].do{|p|

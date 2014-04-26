@@ -11,8 +11,7 @@ class R
     i = [t,t.justPath].compact.find(&:f)
     if i && i.size > 0
       stat = i.node.stat
-      id = [stat.ino,stat.mtime].h.dive
-      path = R['/cache/thumbnail/'+id+'.png']
+      path = R['/cache/thumbnail/' + (R.dive [stat.ino,stat.mtime].h) + '.png']
       if !path.e
         path.dir.mk
         if i.mimeP.match(/^video/)
