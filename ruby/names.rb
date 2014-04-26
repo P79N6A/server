@@ -35,7 +35,6 @@ class R
   alias_method :a, :+
   def descend; uri.t.R end
   def child u; descend + u.to_s end
-  alias_method :as, :child
 
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
@@ -58,7 +57,7 @@ class R
   def dir; dirname.R end
 
   def parent; R hostPart + Pathname.new(hierPart).parent.to_s end
-  def hierarchy; %w{. .. /}.member?(hierPart) ? [self] : [self].concat(parent.hierarchy) end
+  def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parent.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
   VHosts = 'domain'

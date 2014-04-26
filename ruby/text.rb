@@ -94,7 +94,7 @@ ul.uris a:hover {background-color:#bf0}
 
   def triplrPS
     yield uri, Type, (R MIMEtype+'application/postscript')
-    p = parent.as '.' + basename + '/'
+    p = dir.child '.' + basename + '/'
     unless p.e
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`

@@ -39,10 +39,10 @@ class R
 
         roff = man.R
         htmlBase = R['//' + r['SERVER_NAME'] + roff.dirname.sub(/.*\/share/,'')]
-        html = htmlBase.as roff.bare + '.html'
+        html = htmlBase.child roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
 
-        puts [name,section,acceptLang,lang,superLang,langSH,roff,htmlBase,html,cached]
+#        puts [name,section,acceptLang,lang,superLang,langSH,roff,htmlBase,html,cached]
         if !cached
 
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}

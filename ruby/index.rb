@@ -34,7 +34,7 @@ class R
   end
 
   def predicatePath p, s = true
-    as s ? p.R.shorten : p
+    child s ? p.R.shorten : p
   end
 
   def objectPath o
