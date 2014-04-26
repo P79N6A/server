@@ -114,10 +114,11 @@ class R
     uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
 
-  View['HTML']=->d,e{ # dispatch a HTML view based on RDF types
+  View['HTML']=->d,e{ # default, dispatch on RDF type
+    e[:Graph] = d
     d.map{|u,r|
       type = r[Type].justArray.find{|type| type.respond_to?(:uri) && View[type.uri]}
-      View[type ? type.uri : 'base'][{u => r},e]}} # domain-specific or fallback
+      View[type ? type.uri : 'base'][{u => r},e]}}
 
   View['base']=->d,e{[(d.values.map &:html), # boring view
                       H.once(e,'base',H.css('/css/html',true))]}
@@ -139,8 +140,7 @@ class R
 
   View[HTML]=->g,e{
     [H.once(e,'base',H.css('/css/html')),
-     g.map{|u,r|
-      {class: :HTML, c: r[Content]}}]}
+     g.map{|u,r| {class: :HTML, c: r[Content]}}]}
 
   CleanHTML = -> b {
     h = Nokogiri::HTML.fragment b
@@ -156,13 +156,16 @@ class R
        ([(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
   View[LDP+'BasicContainer'] = -> i,e {
-    [(H.once e, 'stat', (H.css '/css/ls')),
+    [(H.once e, 'ls', (H.css '/css/ls')),
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [{_: :a, href: resource.uri.t, c: resource.abbr},
+         c: [resource.descend.href(('' if resource == '#')),
              r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
-             r[LDP+'contains'].do{|c|c.map{|c| i = c.R
-                 {_: :a, href: i, c: i.uri.sub(/.*\//,' ')}}}]}}]}
+             r[LDP+'contains'].do{|c|c.map{|c|
+                 c = c.R
+                 label = e[:Graph][c.uri].do{|r|r[Label]}
+                 c.href label
+               }}]}}]}
 
   Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact

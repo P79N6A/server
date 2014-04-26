@@ -1,6 +1,6 @@
-body{
-    font-family:sans-serif;
-}
+body{ font-family:sans-serif;}
+
+.abbr{display:none}
 a {text-decoration: none}
 
 table {
@@ -23,7 +23,6 @@ table {
       border-radius:0 0 .3em .3em;
       }
 
-.ls .abbr{display:none}
 .ls td.label a {
     padding: .18em 0 0 0;
     background-color:#f00;
@@ -52,10 +51,7 @@ table {
     float:left;
     border-radius:0 1em 1em 1em;
     padding:.3em;
-    margin:.3em;}
-
-.dir a:first-child .abbr{
-    display: none;
+    margin:.3em;
 }
 
 .dir a:first-child {
@@ -93,10 +89,6 @@ table {
 .File > a:first-child {
     margin: -.2em;
     color: #000;
-}
-
-.File > a:first-child > .abbr{
-    display: none;
 }
 
 .File > a:first-child > .frag{

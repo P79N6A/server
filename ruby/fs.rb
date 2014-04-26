@@ -41,7 +41,7 @@ class R
     p[0] }
 
   View[Stat+'File'] = -> i,e {
-    [(H.once e, 'stat', (H.css '/css/ls')),
+    [(H.once e, 'ls', (H.css '/css/ls')),
      i.map{|u,r|
        r[Stat+'size'].do{|s|
          {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u.R.abbr+' '},
