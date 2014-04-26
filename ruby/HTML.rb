@@ -1,3 +1,4 @@
+# -*- coding: undecided -*-
 #watch __FILE__
 
 def H _
@@ -152,6 +153,15 @@ class R
       [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;',style: 'color:#fff;background-color:#000;font-size:2.4em;float:left'}},
        u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;',style: 'color:#000;background-color:#fff;font-size:2.4em;float:right'}},
        ([(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}} # (n)ext (p)rev
+
+  View[LDP+'BasicContainer'] = -> i,e {
+    [(H.once e, 'stat', (H.css '/css/ls')),
+     i.map{|u,r| resource = r.R
+       {class: :dir, style: "background-color: #{R.cs}",
+         c: [{c: {_: :a, href: resource.uri.t, c: resource.abbr}},
+             r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
+             r[LDP+'contains'].do{|c|c.map{|c| i = c.R
+                 {_: :a, href: i, c: i.uri.sub(/.*\//,' ')}}}]}}]}
 
   Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact

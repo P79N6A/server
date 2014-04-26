@@ -47,16 +47,7 @@ class R
          {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u.R.abbr+' '},
                             r[Content]]}}}]}
 
-  View[Stat+'Directory'] = -> i,e {
-    [(H.once e, 'stat', (H.css '/css/ls')),
-     i.map{|u,r| resource = r.R
-       {class: :dir, style: "background-color: #{R.cs}",
-         c: [{c: {_: :a, href: resource.uri.t, c: resource.abbr}},
-             r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
-             r[LDP+'contains'].do{|c|c.map{|c| i = c.R
-                 {_: :a, href: i, c: i.uri.sub(/.*\//,' ')}}}]}}]}
-
-  View[LDP+'BasicContainer'] = View[Stat+'Directory']
+  View[Stat+'Directory'] = View[LDP+'BasicContainer']
 
   View['ls'] = -> i,e {
     dir = e[:Response]['URI'].R
