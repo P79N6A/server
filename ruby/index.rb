@@ -1,6 +1,9 @@
 #watch __FILE__
 class R
 
+  def == u;     to_s == u.to_s end
+  def <=> c;    to_s <=> c.to_s end
+
   FileSet['page'] = -> d,r,m {
     p = d.e ? d : (d.justPath.e ? d.justPath : d) # prefer host-specific index
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
@@ -137,6 +140,31 @@ class R
   end
 
   GET['/cache'] = E404
+  GET['/domain'] = E404
   GET['/index'] = E404
+
+  def expand;   uri.expand.R end
+  def shorten;  uri.shorten.R end
+
+end
+
+class String
+
+  Expand={}
+  def expand
+   (Expand.has_key? self) ?
+    Expand[self] :
+   (Expand[self] =
+     match(/([^:]+):([^\/].*)/).do{|e|
+      ( R::Prefix[e[1]] || e[1]+':' )+e[2]} || 
+     gsub('|','/'))
+  end
+
+  def shorten
+    R::Prefix.map{|p,f|
+      return p + ':' + self[f.size..-1]  if (index f) == 0
+    }
+    gsub('/','|')
+  end
 
 end

@@ -2,8 +2,9 @@
 class R
 
   def aclURI
-    if justPath == '/'
-      '//' + @r['SERVER_NAME'] + '/.acl'
+    path = justPath
+    if !path || path == '/'
+      hostPart + '/.acl'
     elsif basename.index('.acl') == 0
       self
     else
@@ -123,8 +124,16 @@ COPY / STEAL
 
 =end
 
+  WAC  = ENV['WAC']
+
   def can
+#    return true unless WAC
+    # domain owner
+    R['//'+@r['SERVER_NAME']]
+
     true
+
+
   end
 
 end

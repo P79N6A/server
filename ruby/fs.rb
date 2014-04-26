@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 #watch __FILE__
 class R
+  
+  def node
+    Pathname.new pathPOSIX
+  end
 
   FileSet['default'] = -> e,q,g {
     s = []
@@ -17,6 +21,8 @@ class R
     s
   }
 
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end
+
   FileSet['find'] = -> e,q,m,x='' {
     q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
@@ -25,6 +31,10 @@ class R
       [e,e.justPath].compact.select(&:e).map{|e|
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
         lines.map{|l|l.chomp.unpath}}.compact.flatten}}
+
+  def glob a = ""
+    (Pathname.glob pathPOSIX + a).map &:R
+  end
 
   FileSet['glob'] = -> d,e=nil,_=nil {
     p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
@@ -107,19 +117,24 @@ class R
   end
 
   def ln t, y=:link
-    t = t.R
-    t = t.uri[0..-2].R if t.uri[-1] == '/'
+    t = t.R.stripSlash
     if !t.e
       t.dirname.mk
       FileUtils.send y, node, t.node
     end
   end
+  def ln_s t;   ln t, :symlink end
 
+  def children; node.c.map &:R end
+  alias_method :c, :children
+  alias_method :d, :pathPOSIX
   def delete;   node.deleteNode if e; self end
   def exist?;   node.exist? end
   def file?;    node.file? end
-  def ln_s t; ln t, :symlink end
   def mtime;    node.stat.mtime if e end
+  def realpath; node.realpath rescue nil end
+  def sh;       d.force_encoding('UTF-8').sh end
+  def size;     node.size end
   def touch;    FileUtils.touch node; self end
 
   def mk

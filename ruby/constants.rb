@@ -92,4 +92,8 @@ WAC
 who
 }.map{|r|require_relative r}
 
+  alias_method :maybeURI, :to_s
+  alias_method :url, :to_s
+  alias_method :uri, :to_s
+
 end

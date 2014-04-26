@@ -1,18 +1,3 @@
-class FalseClass
-  def do; false end
-end
-
-class NilClass
-  def do; nil end
-end
-
-class Object
-  def id; self end
-  def do; yield self end
-  def maybeURI; nil end
-  def justArray; [self] end
-end
-
 def watch f
   R::Watch[f]=File.mtime f
   puts 'dev '+f end
@@ -48,46 +33,34 @@ class R
   VHosts = 'domain'
 
   def appendURI u; R uri + u.to_s end
-  def appendSlashURI u; R uri.t + u.to_s end
-  def barename; basename.sub(/\.#{ext}$/,'') rescue basename end
-  def basename; File.basename path end
-  def cascade;  [stripSlash].concat parents end
-  def children; node.c.map &:R end
-  def <=> c;    to_s <=> c.to_s end
-  def descend;  R uri.t end
-  def docroot;  stripFrag.stripDoc.stripSlash end
-  def dirname;  node.dirname.do{|d| d.to_s.size <= BaseLen ? '/' : d }.R end
-  def expand;   uri.expand.R end
-  def ext;      File.extname(uri).tail||'' end
-  def glob p=""; (Pathname.glob d + p).map &:R end
-  def inside;   node.expand_path.to_s.index(FSbase) == 0 end
-  def node;     Pathname.new FSbase + '/' + pathPOSIXrel end
-  def parent;   R Pathname.new(uri).parent end
-  def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
-  def pathPOSIX; node.to_s end
-  def pathURI;  R[path] end
-  def realpath; node.realpath rescue nil end
-  def sh;       d.force_encoding('UTF-8').sh end
-  def shorten;  uri.shorten.R end
-  def size;     node.size end
-  def stripDoc; R[uri.sub(/\.(atom|e|html|json(ld)?|n3|nt|rdf|ttl|txt)$/,"")] end
+  alias_method :a, :appendURI
+  alias_method :+, :appendURI
+  def as u; descend + u.to_s end
+  def descend; R uri.t end
+
+  def ext; (File.extname uri).tail || '' end
+  def suffix; '.' + ext end
+  def stripDoc;  R[uri.sub(/\.(atom|e|html|json(ld)?|n3|nt|rdf|ttl|txt)$/,"")] end
   def stripFrag; R[uri.split(/#/)[0]] end
   def stripSlash; uri[-1] == '/' ? R[uri[0..-2]] : self end
-  def == u;     to_s == u.to_s end
-  
-  alias_method :+, :appendURI
-  alias_method :a, :appendURI
-  alias_method :as, :appendSlashURI
-  alias_method :base, :basename
-  alias_method :bare, :barename
-  alias_method :c, :children
-  alias_method :d, :pathPOSIX
-  alias_method :dir, :dirname
-  alias_method :justPath, :pathURI
-  alias_method :maybeURI, :to_s
-  alias_method :url, :to_s
-  alias_method :uri, :to_s
+  def docroot; stripFrag.stripDoc.stripSlash end
 
+  def hostPart; host ? '//' + host : '' end
+  def pathPart; path || '/' end
+  def justPath; pathPart.R end
+
+  def basename suffix = nil
+    suffix ? (File.basename to_s, suffix) : (File.basename to_s) end
+  def dirname; hostPart + (path.do{|p|File.dirname p} || '/') end
+  def bare; basename suffix end
+  alias_method :base, :basename
+  alias_method :dir,  :dirname
+
+  def parent;   R Pathname.new(uri).parent end
+  def parents;  parent.do{|p|p.uri.match(/^[.\/]+$/) ? [p] : [p].concat(p.parents)} end
+  def cascade;  [stripSlash].concat parents end
+
+  def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def pathPOSIXrel
     if h = host # vhost directories
       VHosts + '/' + h + (path ? path : '') + (query ? '?'+query : '')
@@ -98,6 +71,10 @@ class R
 
 end
 
+class FalseClass
+  def do; false end
+end
+
 class Hash
   def R; R.new uri end
   def uri; self["uri"]||"" end
@@ -105,30 +82,22 @@ class Hash
   alias_method :maybeURI, :uri
 end
 
+class NilClass
+  def do; nil end
+end
+
+class Object
+  def id; self end
+  def do; yield self end
+  def maybeURI; nil end
+  def justArray; [self] end
+end
+
 class String
 
   def dive; self[0..2]+'/'+self[3..-1] end
 
-  # expand possibly CURIE entryname
-  Expand={}
-  def expand
-   (Expand.has_key? self) ?
-    Expand[self] :
-   (Expand[self] =
-     match(/([^:]+):([^\/].*)/).do{|e|
-      ( R::Prefix[e[1]] || e[1]+':' )+e[2]} || 
-     gsub('|','/'))
-  end
-
-  # shrink to entryname, CURIE if possible
-  def shorten
-    R::Prefix.map{|p,f|
-      return p + ':' + self[f.size..-1]  if (index f) == 0
-    }
-    gsub('/','|')
-  end
-
-  def unpath skip = R::BaseLen # POSIX path -> URI
+  def unpath skip = R::BaseLen
     self[skip..-1].do{|p|
       R[p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} ||
         p]}
