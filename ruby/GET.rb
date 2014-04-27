@@ -3,14 +3,14 @@ class R
 
   def GET
     i = 'index.html' # files at host-specific + global paths
-    if file = [self,justPath,*(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f) # most-specific wins
-      a = @r.accept.values.flatten # Accept header
-      accepted = a.empty? || (a.member? file.mimeP) || (a.member? '*/*') # server or client might want transcode to acceptable MIME
-      return file.setEnv(@r).fileGET unless !accepted || (MIMEcook[file.mimeP] && !(q.has_key? 'raw')) # accepted
-    end            # conneg-hint paths
-    uri = stripDoc # doc-format in extension
+    [self,
+     justPath,
+     *(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f).do{|file|
+      a = @r.accept.values.flatten; puts a
+      return file.setEnv(@r).fileGET if a.empty? || (a.member? file.mimeP) || (a.member? '*/*')} 
+    uri = stripDoc # format-variant suffix
     uri = uri.parent.descend if uri.to_s.match(/\/index$/) # index
-    uri.setEnv(@r).resourceGET # generic-resource
+    uri.setEnv(@r).resourceGET # generic resource
   end
 
   def HEAD

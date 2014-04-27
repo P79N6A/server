@@ -138,11 +138,9 @@ ul.uris a:hover {background-color:#bf0}
     .map{|l|# ls /usr/share/source-highlight/*.lang | xargs -i basename {} .lang | tr "\n" " "
     ma = 'application/' + l
     mt = 'text/x-' + l
-    MIME[l.to_sym] ||= ma # extension -> MIME
+    MIME[l.to_sym] ||= ma # suffix -> MIME
     [ma,mt].map{|m| # MIME -> triplr
-      MIMEsource[m] ||= [:triplrSourceCode]
-      MIMEcook[m] = true
-    }}
+      MIMEsource[m] ||= [:triplrSourceCode]}}
 
   MIMEsource['text/css'] ||= [:triplrSourceCode]
 

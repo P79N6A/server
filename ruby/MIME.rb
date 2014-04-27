@@ -134,22 +134,6 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  # prefer triplr->model->view over direct file response
-  MIMEcook={
-    'application/json+rdf' => true,
-    'application/org' => true,
-    'application/postscript' => true,
-    'message/rfc822'=> true,
-    'text/csv' => true,
-    'text/html-part'=>true,
-    'text/log'=>true,
-    'text/man'=>true,
-    'text/markdown' => true,
-    'text/nfo'=>true,
-    'text/rtf'=>true,
-    'text/x-tex'=>true,
-  }
-
   def triplrMIME &b
     mimeP.do{|mime|
       (MIMEsource[mime]||
