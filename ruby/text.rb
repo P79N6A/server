@@ -75,13 +75,6 @@ ul.uris a:hover {background-color:#bf0}
     yield uri, Content, ::Redcarpet::Markdown.new(Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
-  Render['text/markdown'] = -> d,e {
-    require 'reverse_markdown'
-    html = Render['text/html'][d,e]
-    md = ReverseMarkdown.convert html
-    md
-  }
-
   def triplrOrg
     require 'org-ruby'
     r.do{|r|
@@ -143,20 +136,5 @@ ul.uris a:hover {background-color:#bf0}
       MIMEsource[m] ||= [:triplrSourceCode]}}
 
   MIMEsource['text/css'] ||= [:triplrSourceCode]
-
-  Render['text/plain'] = -> d, _ = nil {
-    d.values.map{|r|
-      [(r.map{|k,v|
-        ["<",(k=='uri' ? '' : k),"> ", # predicate
-         v.justArray.map{|v|# each object
-           v.respond_to?(:uri) ? '<'+(v.uri||'')+'>' : # object-URI
-           v.to_s.                       # object-content
-           gsub(/<\/*(br|p|div)[^>]*>/,"\n").           # add linebreaks 
-           gsub(/<a.*?href="*([^'">\s]+)[^>]*>/,'<\1> '). # unwrap links
-           gsub(/<[^>]+>/,'').                          # remove HTML
-           gsub(/\n+/,"\n")}.                           # collapse empty space
-         intersperse(' '),"\n"]} if r.class==Hash),"\n"]}.join} # collate
-
-  Render['text/uri'] = -> d, _ = nil {d.keys.join "\n"}
 
 end

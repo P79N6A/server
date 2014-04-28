@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   FileSet['grep'] = -> e,q,m {
@@ -54,8 +54,8 @@ class R
 
        # each resource
        d.map{|u,r|
-         # model to text/plain
-         l = Render['text/plain'][{u => r},e].gsub(/<[^>]*>/,'').lines
+
+         l = r.values.flatten.select{|v|v.class==String}.map{|s|s.lines.to_a.map{|l|l.gsub(/<[^>]+>/,'')}}.flatten
 
          # try sequential match
          g = l.grep p

@@ -93,8 +93,6 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  Render['application/json'] = -> d, _ = nil { d.to_json }
-
 end
 
 class Hash
