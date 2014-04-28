@@ -28,6 +28,7 @@ class R < RDF::URI
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Deri     = 'http://vocab.deri.ie/'
+  Schema   = 'http://schema.org/'
   DC       = Purl + 'dc/terms/'
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'

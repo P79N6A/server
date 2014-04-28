@@ -59,7 +59,7 @@ class R
 
   GET['/404'] = -> e,r { 
     g = RDF::Graph.new
-    NotFound.map{|host,c| g << RDF::Statement.new(R['//'+host], R['#hits'], (RDF::Literal c))}
+    NotFound.map{|host,c| g << RDF::Statement.new(R['http://'+host], R[Schema+'UserPageVisits'], (RDF::Literal c))}
     [200,{'Content-Type'=> r.format},[g.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
   GET['/500'] = -> e,r { 
