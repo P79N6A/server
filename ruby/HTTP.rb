@@ -42,7 +42,7 @@ class R
     g ||= {} # graph
     s = g[e.uri] ||= {} # resource
     path = e.justPath
-    host = e.host
+    host = '//' + e.host
     NotFound[host] ||= 0; NotFound[host] += 1
     s[Title] = '404'
     s[RDFs+'seeAlso'] = [e.parent, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
@@ -61,9 +61,8 @@ class R
   GET['/404'] = -> e,r { 
     graph = {}
     NotFound.sort_by{|h,c|c}.reverse.map{|host,count|
-      graph[host] = {
-        'uri' => '//'+host,
-        '#hits' => [count]}}
+      graph[host] = {'uri' => host, '#hits' => [count]}}
+    r.q['view']||='table'
     [200,{'Content-Type'=> r.format}, [Render[r.format][graph, r]]]}
 
   GET['/500'] = -> e,r { 
