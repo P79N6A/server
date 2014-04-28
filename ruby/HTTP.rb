@@ -27,8 +27,8 @@ class R
     e[:Response] = {'URI' => resource.uri}
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
       puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q},
-            e['HTTP_ACCEPT'],
-#            h['Content-Type'],
+#            e['HTTP_ACCEPT'],
+            h['Content-Type'],
             e['HTTP_USER_AGENT'],
             e['HTTP_REFERER']].join ' ' unless [404,406].member?(s)
       [s,h,b]}
