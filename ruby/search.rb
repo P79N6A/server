@@ -29,7 +29,7 @@ class R
 
   View['grep'] = -> d,e {
     w = e.q['q']
-    if w
+    if w && w.size > 1
       # words supplied in query
       w = w.scan(/[\w]+/).map(&:downcase).uniq
 
