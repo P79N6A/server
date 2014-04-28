@@ -59,7 +59,12 @@ class R
   NotFound = {}
 
   GET['/404'] = -> e,r { 
-    [200,{'Content-Type'=> 'text/html'}, [Hash[NotFound.sort_by{|h,c|c}.reverse].html]]}
+    graph = {}
+    NotFound.sort_by{|h,c|c}.reverse.map{|host,count|
+      graph[host] = {
+        'uri' => '//'+host,
+        '#hits' => [count]}}
+    [200,{'Content-Type'=> r.format}, [Render[r.format][graph, r]]]}
 
   GET['/500'] = -> e,r { 
     r[:Response]['ETag'] = Errors.keys.sort.h
