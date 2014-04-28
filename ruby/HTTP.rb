@@ -42,6 +42,8 @@ class R
     g ||= {} # graph
     s = g[e.uri] ||= {} # resource
     path = e.justPath
+    host = e.host
+    NotFound[host] ||= 0; NotFound[host] += 1
     s[Title] = '404'
     s[RDFs+'seeAlso'] = [e.parent, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
@@ -54,6 +56,10 @@ class R
     [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
 
   Errors = {}
+  NotFound = {}
+
+  GET['/404'] = -> e,r { 
+    [200,{'Content-Type'=> 'text/html'}, [Hash[NotFound.sort_by{|h,c|c}.reverse].html]]}
 
   GET['/500'] = -> e,r { 
     r[:Response]['ETag'] = Errors.keys.sort.h

@@ -6,7 +6,7 @@ class R
     [self,
      justPath,
      *(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f).do{|file|
-      a = @r.accept.values.flatten; puts a
+      a = @r.accept.values.flatten
       return file.setEnv(@r).fileGET if a.empty? || (a.member? file.mimeP) || (a.member? '*/*')} 
     uri = stripDoc # format-variant suffix
     uri = uri.parent.descend if uri.to_s.match(/\/index$/) # index
