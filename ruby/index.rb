@@ -141,7 +141,7 @@ class R
 
   GET['/cache'] = E404
   GET['/index'] = E404
-  GET['/' + VHosts] = E404
+#  GET['/' + VHosts] = E404
 
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
