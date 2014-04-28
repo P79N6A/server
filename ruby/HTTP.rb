@@ -63,6 +63,7 @@ class R
     NotFound.sort_by{|h,c|c}.reverse.map{|host,count|
       graph[host] = {'uri' => host, '#hits' => [count]}}
     r.q['view']||='table'
+    puts :404,r.format
     [200,{'Content-Type'=> r.format}, [Render[r.format][graph, r]]]}
 
   GET['/500'] = -> e,r { 

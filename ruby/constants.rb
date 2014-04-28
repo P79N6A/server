@@ -86,6 +86,7 @@ man
 news
 POST
 RDF
+schema
 search
 text
 time
