@@ -42,8 +42,7 @@ class R
     g ||= {} # graph
     s = g[e.uri] ||= {} # resource
     path = e.justPath
-    host = '//' + e.host
-    NotFound[host] ||= 0; NotFound[host] += 1
+    NotFound[e.host] ||= 0; NotFound[e.host] += 1
     s[Title] = '404'
     s[RDFs+'seeAlso'] = [e.parent, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
@@ -59,12 +58,9 @@ class R
   NotFound = {}
 
   GET['/404'] = -> e,r { 
-    graph = {}
-    NotFound.sort_by{|h,c|c}.reverse.map{|host,count|
-      graph[host] = {'uri' => host, '#hits' => [count]}}
-    r.q['view']||='table'
-    puts :yakk404,r.format
-    [200,{'Content-Type'=> r.format}, [Render[r.format][graph, r]]]}
+    g = RDF::Graph.new
+    NotFound.map{|host,c| g << RDF::Statement.new(R['//'+host], R['#hits'], (RDF::Literal c))}
+    [200,{'Content-Type'=> r.format},[g.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
   GET['/500'] = -> e,r { 
     r[:Response]['ETag'] = Errors.keys.sort.h
