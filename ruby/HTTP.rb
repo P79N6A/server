@@ -127,7 +127,6 @@ module Th
 
     # explicit URI of format-variant
     {
-      '.atom' => 'application/atom+xml',
       '.html' => 'text/html',
       '.json' => 'application/json',
       '.jsonld' => 'application/ld+json',

@@ -200,26 +200,6 @@ class R
 
   GREP_DIRS.push /^\/news\/\d{4}/
 
-  Render['application/atom+xml'] = -> d,e {
-    id = '//' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
-    H(['<?xml version="1.0" encoding="utf-8"?>',
-       {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
-         c: [{_: :id, c: id},
-             {_: :title, c: id},
-             {_: :link, rel: :self, href: id},
-             {_: :updated, c: Time.now.iso8601},
-             d.map{|u,d|
-               d[Content] &&
-               {_: :entry,
-                 c: [{_: :id, c: u},
-                     {_: :link, href: d.url},
-                     d[Date].do{|d|{_: :updated, c: d[0]}},
-                     d[Title].do{|t|{_: :title, c: t}},
-                     d[Creator].do{|c|{_: :author, c: c[0]}},
-                     {_: :content, type: :xhtml,
-                       c: {xmlns:"http://www.w3.org/1999/xhtml",
-                         c: d[Content]}}].cr}}.cr]}])}
-
   def checkURIs
     r = uris.map{|u|
       c = [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u] # HEAD

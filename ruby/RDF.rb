@@ -37,7 +37,7 @@ class R
     g
   end
 
-  def rdfDoc pass = %w{atom e jsonld n3 nt owl rdf ttl} # narrow doc-types to those readable by RDF::Reader
+  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # narrow doc-types to those readable by RDF::Reader
     doc = self
     unless pass.member? ext # already an RDF doc
       doc = R['/cache/RDF/' + (R.dive uri.h) + '.e']
