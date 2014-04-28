@@ -66,8 +66,8 @@ class R
          !g.empty? &&                                       
          [# link to resource
           r.R.do{|e|{_: :a, href: e.url, c: e}}, '<br>',
-          # show 3 matches per resource
-          [g[-1*(g.size.max 3)..-1].map{|l|   
+          # max matches per resource
+          [g[-1*(g.size.max 6)..-1].map{|l|   
              # exerpt
              l[0..403].gsub(a){|g|
                H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
