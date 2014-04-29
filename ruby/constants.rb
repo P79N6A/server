@@ -22,8 +22,10 @@ class R < RDF::URI
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"
-  SIOC  = 'http://rdfs.org/sioc/ns#'
-  SIOCt = 'http://rdfs.org/sioc/types#'
+  RO    = 'http://rdfs.org/'
+  SIOC  = RO + 'sioc/ns#'
+  SIOCt = RO + 'sioc/types#'
+  VOID  = RO + 'ns/void#'
   Search   = 'http://sindice.com/vocab/search#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'

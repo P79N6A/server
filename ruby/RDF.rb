@@ -37,14 +37,14 @@ class R
     g
   end
 
-  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # narrow doc-types to those readable by RDF::Reader
+  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # doc-types readable by RDF::Reader
     doc = self
     unless pass.member? ext # already an RDF doc
       doc = R['/cache/RDF/' + (R.dive uri.h) + '.e']
       unless doc.e && doc.m > m # up-to-date?
         g = {} # doc graph
         [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
-        doc.w g, true # write doc
+        doc.w g, true # write
       end
     end
     doc

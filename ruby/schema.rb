@@ -15,14 +15,18 @@ class R
   end
 
   def cacheSchema prefix
-    if !n3.e
-      graph = RDF::Graph.load uri
-      size = graph.size
+    puts "cacheSchema <#{uri}>"
+    short = R['schema'].child prefix
+    if !short.e
+      terms = RDF::Graph.load uri
+      stats = RDF::Graph.new
+      size = terms.size
       if size > 0
         puts "<#{uri}> #{size} triples"
-        n3.w graph.dump(:n3)
-        n3.ln_s R['/schema'].child prefix
+        n3.w terms.dump(:n3)
+        n3.ln_s 
       end
+      
     end
   rescue Exception => x
     puts "ERROR #{uri} #{x}"
