@@ -19,12 +19,12 @@ class R
       graph = RDF::Graph.load uri
       puts "<#{uri}> #{graph.size} triples"
       n3.w graph.dump(:n3)
-      n3.ln_s '/schema'.R.child prefix
-    else
-      print "<#{uri}> "
+      n3.ln_s R['/schema'].child prefix
     end
   rescue Exception => x
-    puts x
+    puts "ERROR #{uri} #{x}"
   end
+
+  #  http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
 
 end
