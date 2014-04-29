@@ -64,20 +64,16 @@ class R
     end
 
     condResponse ->{
-      if (@r.format != 'text/html') && writer = (RDF::Writer.for :content_type => @r.format)
-        graph = RDF::Graph.new
-        set.map{|r|
-          doc = r.setEnv(@r).rdfDoc # resources
-          graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc if doc.e} # populate
-
-        m['#'].map{|p,o| o.justArray.map{|o| graph << RDF::Statement.new(@r[:Response]['URI'].R, p.R,
-                    [R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'} # current env -> RDF
-
-        @r[:Response][:Triples] = graph.size.to_s # size
-        graph.dump writer.to_sym # RDF
-      else
+      if @r.format == 'text/html' && !@r.q.has_key?('rdfa')
         set.map{|r|r.setEnv(@r).fileToGraph m}
         Render[@r.format][m, @r] # HTML
+      else
+        graph = RDF::Graph.new
+        set.map{|r|  doc = r.setEnv(@r).rdfDoc
+          graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc if doc.e}
+        m['#'].map{|p,o| o.justArray.map{|o| graph << RDF::Statement.new(@r[:Response]['URI'].R, p.R, [R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'}
+        @r[:Response][:Triples] = graph.size.to_s
+        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym
       end}
   end
   

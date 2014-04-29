@@ -10,9 +10,19 @@ class R
     table
   end
 
+  def R.cacheSchemas
+    R.schemas.map{|prefix,uri| uri.R.cacheSchema prefix }
+  end
+
   def cacheSchema prefix
-    graph = RDF::Graph.load uri
-    puts graph.size
+    if !n3.e
+      graph = RDF::Graph.load uri
+      puts "<#{uri}> #{graph.size} triples"
+      n3.w graph.dump(:n3)
+      n3.ln_s '/schema'.R.child prefix
+    else
+      print "<#{uri}> "
+    end
   end
 
 end
