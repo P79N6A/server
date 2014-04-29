@@ -23,6 +23,8 @@ class R
     else
       print "<#{uri}> "
     end
+  rescue Exception => x
+    puts x
   end
 
 end
