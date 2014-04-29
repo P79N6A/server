@@ -15,18 +15,24 @@ class R
   end
 
   def cacheSchema prefix
-    puts "cacheSchema <#{uri}>"
     short = R['schema'].child prefix
-    if !short.e
-      terms = RDF::Graph.load uri
-      stats = RDF::Graph.new
-      size = terms.size
-      if size > 0
-        puts "<#{uri}> #{size} triples"
-        n3.w terms.dump(:n3)
-        n3.ln_s 
+    if !short.n3.e
+      puts uri
+      stat = RDF::Graph.new
+      head = `curl -I #{uri.sh}`; puts head
+      stat << RDF::Statement.new(uri.R,R[HTTP+'header'],RDF::Literal(head))
+      size = head.lines.grep(/^Content-Length/)[0].do{|l|l.gsub(/\D/,'').to_i}
+      unless size && size > 640e3
+        terms = RDF::Graph.load uri
+        triples = terms.size
+        if triples > 0
+          puts "#{triples} triples"
+          stat << RDF::Statement.new(uri.R,R[VOID+'triples'],RDF::Literal(triples))
+          n3.w terms.dump(:n3)
+          n3.ln_s short
+        end
       end
-      
+      short.n3.w stat.dump(:n3)
     end
   rescue Exception => x
     puts "ERROR #{uri} #{x}"
