@@ -42,7 +42,8 @@ class R
     g ||= {} # graph
     s = g[e.uri] ||= {} # resource
     path = e.justPath
-    NotFound[e.host] ||= 0; NotFound[e.host] += 1
+    domain = e.host || '/'
+    NotFound[domain] ||= 0; NotFound[domain] += 1
     s[Title] = '404'
     s[RDFs+'seeAlso'] = [e.parent, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]

@@ -21,7 +21,7 @@ class R
       stat = RDF::Graph.new
       head = `curl -L --connect-timeout 6 -I #{uri.sh}`; puts head
       stat << RDF::Statement.new(uri.R,R[HTTP+'header'],RDF::Literal(head))
-      size = head.lines.grep(/^Content-Length/)[0].do{|l|l.gsub(/\D/,'').to_i}
+      size = head.lines.grep(/^Content-Length/)[-1].do{|l|l.gsub(/\D/,'').to_i}
       unless size && size > 640e3
         terms = RDF::Graph.load uri
         triples = terms.size
