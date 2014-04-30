@@ -13,6 +13,12 @@ class R
   def R.cacheSchemas
     R.schemas.map{|prefix,uri| uri.R.cacheSchema prefix }
   end
+  
+  def R.indexSchemas
+    c = R['schema'].c.select{|f|f.node.symlink?}
+    c.map{|s| s.roonga 'schema'}
+    nil
+  end
 
   def cacheSchema prefix
     short = R['schema'].child prefix
@@ -38,6 +44,6 @@ class R
     puts "ERROR #{uri} #{x}"
   end
 
-  #  http://gromgull.net/2010/09/btc2010data/predicates.2010.gz
+
 
 end

@@ -25,7 +25,7 @@ class R
 
   # recursively-dereferenced links
   def mimeP
-    @mime ||=
+    @mimeP ||=
       (p = realpath
        unless p
          nil
