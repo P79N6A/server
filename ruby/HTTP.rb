@@ -141,7 +141,7 @@ module Th
 
     accept.sort.reverse.map{|q,mimes| # descending q-values
       mimes.map{|mime|
-        return mime if R::Render[mime] || RDF::Writer.for(:content_type => mime)}}
+        return mime if RDF::Writer.for(:content_type => mime)}}
 
     'text/html'
   end

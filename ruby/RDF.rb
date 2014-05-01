@@ -17,7 +17,7 @@ class R
   
   [['application/ld+json',:jsonld],
    ['application/rdf+xml',:rdfxml],
-   ['text/ntriples',:ntriples],
+   ['text/plain',:ntriples],
    ['text/turtle',:turtle],
    ['text/n3',:n3]
   ].map{|mime|
