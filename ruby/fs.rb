@@ -63,8 +63,12 @@ class R
       yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
       yield dir, LDP+'firstPage', R[dir+'/?set=page&asc']
       c.map{|c|
-        i = c.node.symlink? && c.realpath.do{|p|p.R.do{|r|r.docroot}} || c # dereference children
-        yield dir, LDP+'contains', i }
+        if c.node.symlink? # follow
+          c.realpath.do{|p|p.R} # if target exists
+        else 
+          c
+        end}.compact.map(&:stripDoc).uniq.map{|c|
+        yield dir, LDP+'contains', c }
     else
       triplrStat &f unless node.symlink?
     end
