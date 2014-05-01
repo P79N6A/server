@@ -38,6 +38,10 @@ tr[property="uri"] > td.val > a{
     color:#777;
     font-weight: bold;}
 
+tr[property="http://www.w3.org/2011/http#header"] > td.val {
+    white-space: pre-wrap;
+}
+
 .HTML {
     background-color: #fff;
     color: #000;
