@@ -49,7 +49,7 @@ class R
 
   def fileResources
     [(self if e),
-     docroot.glob(".{e,jsonld,md,n3,nt,rdf,ttl,txt}"),
+     docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}"),
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
   end
