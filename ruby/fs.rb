@@ -41,29 +41,11 @@ class R
     p[0] }
 
   View[Stat+'File'] = -> i,e {
-    [(H.once e, 'ls', (H.css '/css/ls')),
+    [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r|
        r[Stat+'size'].do{|s|
          {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u.R.abbr+' '},
                             r[Content]]}}}]}
-
-  View[Stat+'Directory'] = View[LDP+'BasicContainer']
-
-  View['ls'] = -> i,e {
-    dir = e[:Response]['URI'].R
-    path = dir.justPath
-    up = (!path || path.uri == '/') ? '/' : dir.parent.url
-    i = i.dup
-    i.delete_if{|u,r|!r[Stat+'size']}
-    f = {}
-    ['uri', LDP+'contains', Type, Stat+'mtime', Stat+'size'].map{|p|f[p] = true}
-    i.values.map{|r|
-      r.class==Hash &&
-      r.delete_if{|p,o|!f[p]}}
-    [(H.css '/css/ls'),
-     {_: :a, class: :up, href: up+'?view=ls', c: '&uarr;'},
-     {class: :ls, c: View['table'][i,e]},'<br clear=all>',
-     {_: :a, class: :down, href: e[:Response]['URI'].R.url.t, c: '&darr;'}]}
 
   def fileResources
     [(self if e),

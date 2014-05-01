@@ -3,48 +3,6 @@ body{ font-family:sans-serif;}
 .abbr{display:none}
 a {text-decoration: none}
 
-table {
-    border-spacing:0;
-    float:left;
-}
-
-.up { font-size: 2em;
-      font-weight: bold;
-      padding:  0 1.4em 0 1.4em;
-      border-radius: .3em .3em 0 0;
-      background-color:#0f3;
-      color: #fff;
-      }
-.down { font-size: 2em;
-      font-weight: bold;
-      padding:  0 1.4em 0 1.4em;
-      background-color:#ddd;
-      color: #fff;
-      border-radius:0 0 .3em .3em;
-      }
-
-.ls td.label a {
-    padding: .18em 0 0 0;
-    background-color:#f00;
-    color:#fff;
-    font-weight:bold;
-    font-size:1.23em }
-.ls td {
-    border-style: dotted;
-    border-color: #ddd;
-    border-width: .1em .1em 0 0;
-    padding:.3em;
-}
-.ls td[property="uri"] {white-space:nowrap}
-
-.ls [property="http://www.w3.org/ns/posix/stat#mtime"] {white-space:nowrap}
-.ls td[property="http://www.w3.org/ns/posix/dir#child"] .frag {
-    font-weight: normal;
-    background-color: #ff0;
-    color: #000;
-    font-weight: bold;
-}
-
 .dir {
     max-width:64em;
     overflow:hidden;

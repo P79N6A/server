@@ -138,7 +138,7 @@ class R
     yield uri, Content, r
   end
 
-  View[HTML]=->g,e{
+  View[HTML]=->g,e{ # HTML fragment
     [H.once(e,'base',H.css('/css/html')),
      g.map{|u,r| {class: :HTML, c: r[Content]}}]}
 
@@ -156,7 +156,7 @@ class R
        ([(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
   View[LDP+'BasicContainer'] = -> i,e {
-    [(H.once e, 'ls', (H.css '/css/ls')),
+    [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
          c: [resource.descend.href(('' if resource == '#')),

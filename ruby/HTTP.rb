@@ -115,7 +115,7 @@ module Th
     self['HTTP_ACCEPT'+k].do{|k|
       (k.split /,/).map{|e| # each pair
         f,q = e.split /;/   # split MIME from q value
-        i = q && q.split(/=/)[1].to_f || 0.999 # explicit q=1 favor
+        i = q && q.split(/=/)[1].to_f || 0.999 # favor specified q.1
         d[i] ||= []; d[i].push f.strip}} # append
     d
   end
