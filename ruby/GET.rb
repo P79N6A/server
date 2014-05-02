@@ -64,11 +64,11 @@ class R
     end
 
     condResponse ->{
-      if @r.format == 'text/html' # && !@r.q.has_key?('rdfa')
+      if @r.format == 'text/html' && !@r.q.has_key?('rdfa')
         set.map{|r|r.setEnv(@r).fileToGraph m}
         Render[@r.format][m, @r] # HTML
       else
-        graph = RDF::Graph.new
+        graph = RDF::Graph.new   # RDF
         set.map{|r|
           r.setEnv(@r).rdfDoc.do{|doc|
             graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc}}
