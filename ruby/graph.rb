@@ -2,6 +2,8 @@
 class R
 
   # graph in memory as Hash and storage as JSON :: {uri => {property => val}}
+  # designed to minimize non-stdlib dependencies + indirection, and speed (C/native JSON-parse vs Ruby RDF-parse for large-requests). arbitrary JSON is roundtripped in the "object" position (of a triple) but no particular literal-datatype/language format is specified.
+  # a Reader is defined of this format for the RDF Class
 
   def fromStream m,*i
     send(*i) do |s,p,o|
@@ -22,7 +24,7 @@ class R
     graph.mergeGraph rdfDoc(%w{e}).r true
   end
 
-  # pass-thru triplr which adds missing resources to local cache
+  # pass-thru triplr w/ side-effect of add missing resources to store
   def addDocsJSON triplr, host, p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}

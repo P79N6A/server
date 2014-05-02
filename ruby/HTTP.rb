@@ -24,7 +24,7 @@ class R
     path = path + '/' if path[-1] != '/' && p.to_s[-1] == '/' # preserve trailing slash
     resource = R["http#{e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : ''}://" + e['SERVER_NAME'] + path]
     e[:Links] = []
-    e[:Response] = {'URI' => resource.uri}
+    e[:Response] = {}
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
       puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q},
 #            e['HTTP_ACCEPT'],
