@@ -103,10 +103,10 @@ class R
     m.in_reply_to.do{|r|                             # direct-reference predicate
       yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
 
-    parts = m.all_parts.push m                       # parts
+    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
 
-    parts.select{|p|                                 # text parts
-      (!p.mime_type || p.mime_type=='text/plain') &&
+    parts.select{|p|
+      (!p.mime_type || %w{message/rfc822 text/plain}.member?(p.mime_type)) &&
       Mail::Encodings.defined?(p.body.encoding)      # decodable?
     }.map{|p|
       yield e, Content,
@@ -119,7 +119,7 @@ class R
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 
     htmlCount = 0
-    parts.select{|p|p.mime_type=='text/html'}.map{|p| # HTML content
+    htmlFiles.map{|p| # HTML content
       html = attache[].child "page#{htmlCount}.html"  # name
       yield e, DC+'hasFormat', html                   # message -> HTML resource
       html.w p.decoded if !html.e                     # write content
