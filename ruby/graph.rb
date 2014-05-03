@@ -20,8 +20,8 @@ class R
   end
 
   def fileToGraph graph = {}
-    return graph unless e
-    graph.mergeGraph rdfDoc(%w{e}).r true
+    rdfDoc(%w{e}).do{|file|
+      graph.mergeGraph file.r true}
   end
 
   # pass-thru triplr w/ side-effect of add missing resources to store
@@ -46,44 +46,6 @@ class R
   end
 
   def jsonDoc; docroot.a '.e' end
-
-  module JSONGraph # Reader for JSON format as RDF
-
-    class Format < RDF::Format
-      content_type     'application/json+rdf', :extension => :e
-      content_encoding 'utf-8'
-      reader { R::JSONGraph::Reader }
-    end
-
-    class Reader < RDF::Reader
-      format Format
-
-      def initialize(input = $stdin, options = {}, &block)
-        @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
-        @host = options[:host] || 'localhost'
-        if block_given?
-          case block.arity
-          when 0 then instance_eval(&block)
-          else block.call(self)
-          end
-        end
-        nil
-      end
-
-      def each_statement &fn
-        @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R.bindHost(@host), p.R, o.class == Hash ? o.R.bindHost(@host) :
-                                     (l = RDF::Literal o
-                                      l.datatype=RDF.XMLLiteral if p == Content; l))}
-      end
-
-      def each_triple &block
-        each_statement{|s| block.call *s.to_triple}
-      end
-
-    end
-
-  end
 
   def triplrJSON
     yield uri, '/application/json', r(true) if e
