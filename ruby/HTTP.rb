@@ -28,7 +28,7 @@ class R
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
       puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q},
             h['Content-Type'],
-            e['HTTP_ACCEPT'],
+#            e['HTTP_ACCEPT'],
             e['HTTP_USER_AGENT'],
             e['HTTP_REFERER']].join ' ' unless s==404
       [s,h,b]}

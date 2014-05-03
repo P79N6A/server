@@ -16,7 +16,7 @@ class R
           group = '#' + name[0].downcase
           graph << RDF::Statement.new(group.R,R[RDFs+'member'],R['/man/'+section+'/'+name])}
       else
-        ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R,R[RDFs+'member'],R['/man/'+a+'/'])}
+        ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R,R[RDFs+'member'],R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
       end
       [200, {'Content-Type'=> r.format}, [graph.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]} # alpha index
