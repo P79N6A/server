@@ -2,27 +2,20 @@ watch __FILE__
 class R
 
   Man = -> e,r {
+    graph = RDF::Graph.new
     manPath = '/usr/share/man'
-
-    # eat selector
-    name = e.justPath.uri.sub('/man/','/').tail
-
-    # section prefix?
+    name = e.justPath.uri.sub('/man/','/').tail # eat selector
     section = nil
-    name.match(/^([0-9])(\/|$)/).do{|p|
+    name.match(/^([0-9])(\/|$)/).do{|p| # optional section
       section = p[1]
-      name = p.post_match }
-
+      name = p.post_match}
     if !name || name.empty? || name.match(/\//)
       if section
-        # enumerate section children
-     body = H [H.css('/css/man'),{_: :style, c: "a {background-color: #{R.cs}}"},
-            Pathname(manPath+'/man'+section).c.map{|p|
-              n = p.basename.to_s.sub /\.[0-9][a-z]*\...$/,''
-            }.group_by{|e|e[0].match(/[a-zA-Z]/) ? e[0].downcase : '0-9'}.sort.map{|g,m|
-              [{_: :h3, c: g},
-               m.map{|n|[{_: :a, href: '/man/'+section+'/'+n, c: n },' ']}]}]
-        [200, {'Content-Type'=>'text/html; charset=utf-8'}, [body]]
+        Pathname(manPath+'/man'+section).c.map{|p|
+          name = p.basename.to_s.sub /\.[0-9][a-z]*\...$/,''
+          group = '#' + name[0].downcase
+          graph << RDF::Statement.new(group.R,R[RDFs+'member'],R['/man/'+section+'/'+name])}
+        [200, {'Content-Type'=> r.format}, [graph.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]
       else
         E404[e,r]
       end
