@@ -44,16 +44,18 @@ class R
   end
 
   def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # doc-types readable by RDF::Reader
-    doc = self
-    unless pass.member? ext # already an RDF doc
-      doc = R['/cache/RDF/' + (R.dive uri.h) + '.e']
-      unless doc.e && doc.m > m # up-to-date?
-        g = {} # doc graph
-        [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
-        doc.w g, true # write
+    if e
+      doc = self
+      unless pass.member? ext
+        doc = R['/cache/RDF/' + (R.dive uri.h) + '.e']
+        unless doc.e && doc.m > m # up-to-date?
+          g = {} # doc graph
+          [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
+          doc.w g, true # write
+        end
       end
+      doc
     end
-    doc
   end
 
   def triplrN3
@@ -64,12 +66,12 @@ class R
 
   def n3; docroot.a '.n3' end
 
-  module JSONGraph
+  module Format
 
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
       content_encoding 'utf-8'
-      reader { R::JSONGraph::Reader }
+      reader { R::Format::Reader }
     end
 
     class Reader < RDF::Reader

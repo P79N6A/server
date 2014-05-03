@@ -22,6 +22,7 @@ class R
   def fileToGraph graph = {}
     rdfDoc(%w{e}).do{|file|
       graph.mergeGraph file.r true}
+    graph
   end
 
   # pass-thru triplr w/ side-effect of add missing resources to store
