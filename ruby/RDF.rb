@@ -1,6 +1,18 @@
 #watch __FILE__
 class R
 
+  Tabulate = -> d,e { e.q['view'] ||= 'tabulate' ; nil }
+  View['tabulate'] = ->d,e { src = 'https://w3.scripts.mit.edu/tabulator/'
+    [(H.css src + 'tabbedtab'),(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),(H.js src + 'js/mashup/mashlib'),
+"<script>jQuery(document).ready(function() {
+    var uri = window.location.href;
+    window.document.title = uri;
+    var kb = tabulator.kb;
+    var subject = kb.sym(uri);
+    tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
+});</script>",
+     {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
+
   def self.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
@@ -15,15 +27,9 @@ class R
       end}}
   end
   
-  [['application/ld+json',:jsonld],
-   ['application/rdf+xml',:rdfxml],
-   ['text/plain',:ntriples],
-   ['text/turtle',:turtle],
-   ['text/n3',:n3]
-  ].map{|mime|
-    Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
+  [['application/ld+json',:jsonld],['application/rdf+xml',:rdfxml],['text/plain',:ntriples],['text/turtle',:turtle],['text/n3',:n3]].map{|mime| Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  def addDocsRDF options = {}
+  def addDocsRDF options = {} # visit resource and cache locally
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?
@@ -49,18 +55,6 @@ class R
     end
     doc
   end
-
-  Tabulate = -> d,e { e.q['view'] ||= 'tabulate' ; nil }
-  View['tabulate'] = ->d,e { src = 'https://w3.scripts.mit.edu/tabulator/'
-    [(H.css src + 'tabbedtab'),(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),(H.js src + 'js/mashup/mashlib'),
-"<script>jQuery(document).ready(function() {
-    var uri = window.location.href;
-    window.document.title = uri;
-    var kb = tabulator.kb;
-    var subject = kb.sym(uri);
-    tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
-});</script>",
-     {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
   def triplrN3
     RDF::Reader.open(d, :format => :n3, :base_uri => stripDoc){|r|

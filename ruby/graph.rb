@@ -72,7 +72,7 @@ class R
 
       def each_statement &fn
         @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R, p.R, o.class == Hash ? o.R :
+          fn.call RDF::Statement.new(s.R.bindHost(@host), p.R, o.class == Hash ? o.R.bindHost(@host) :
                                      (l = RDF::Literal o
                                       l.datatype=RDF.XMLLiteral if p == Content; l))}
       end
