@@ -40,7 +40,7 @@ class R
   def suffix; '.' + ext end
   def stripDoc;  uri.sub(Doc,'').R end
   def stripFrag; uri.split(/#/)[0].R end
-  def stripSlash; uri[-1] == '/' ? uri[0..-2].R : self end
+  def stripSlash; (uri[-1] == '/' && path != '/') ? uri[0..-2].R : self end
   def docroot; stripFrag.stripDoc.stripSlash end
 
   def hostPart; host ? '//' + host : '' end
