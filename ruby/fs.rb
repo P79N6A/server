@@ -70,15 +70,16 @@ class R
         end}.compact.map(&:stripDoc).uniq.map{|c|
         yield dir, LDP+'contains', c }
     else
-      triplrStat &f unless node.symlink?
+      unless node.symlink?
+        yield uri, Type, R[Stat+'File']
+        triplrStat &f
+      end
     end
   end
 
   def triplrStat
-    s = node.stat
     yield uri, SIOC+'has_container', parent unless !path || path == '/'
-    [:size,:mtime].map{|p| yield uri, Stat+p.to_s, (s.send p)}
-    yield uri, Type, R[Stat + s.ftype.capitalize]
+    yield uri, Stat+'size', size
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
