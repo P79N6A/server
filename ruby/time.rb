@@ -18,7 +18,7 @@ end
 class R
 
   GET['/today'] = -> e,r {[303, {
-                             'Location'=> '//'+r['SERVER_NAME']+Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||''),
+                             'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||''),
                              'Access-Control-Allow-Origin' => r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'
                            }, []]}
 
