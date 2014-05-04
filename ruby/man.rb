@@ -9,22 +9,23 @@ class R
     name.match(/^([0-9])(\/|$)/).do{|p| # optional section
       section = p[1]
       name = p.post_match}
-    if !name || name.empty?
-      if section
+    pageName = -> path {
+      path.basename.to_s.sub /\.[0-9][a-z]*\...$/, '' }
+
+    if !name || name.empty? # toplevel indexes
+      if section # section index
         Pathname(manPath+'/man'+section).c.map{|p|
-          name = p.basename.to_s.sub /\.[0-9][a-z]*\...$/,''
-          group = '#' + name[0].downcase
-          graph << RDF::Statement.new(group.R,R[RDFs+'member'],R['/man/'+section+'/'+name])}
-      else
-        ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R,R[RDFs+'member'],R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
+         name = pageName[p]
+         graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
+      else # alpha index pointers
+        ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
       end
-      [200, {'Content-Type'=> r.format}, [graph.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]
+      r.graphResponse graph
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]} # alpha index
-      Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
-        page = a.basename.to_s.sub /\.[0-9][a-z]*\...$/,''
-        graph << RDF::Statement.new('#'.R,R[RDFs+'member'],R['/man/'+page])}
-      [200, {'Content-Type'=> r.format}, [graph.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]
+      Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['/man/' + pageName[a]])}
+      r.graphResponse graph
     else # page
+
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
       superLang = lang.do{|l| (l.split /[_-]/)[0] }
@@ -38,8 +39,8 @@ class R
         html = htmlBase.child roff.bare + '.html'
         cached = html.e && html.m > (Pathname man).stat.mtime
 #        puts [name,section,acceptLang,lang,superLang,langSH,roff,htmlBase,html,cached]
-        if !cached
 
+        if !cached
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
           localesAvail = locales.select{|l|
             File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}

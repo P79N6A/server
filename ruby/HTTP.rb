@@ -124,6 +124,12 @@ module Th
     @format ||= conneg
   end
 
+  def graphResponse graph
+    [200,
+     {'Content-Type'=> format},
+     [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
+  end
+
   def conneg
 
     # explicit URI of format-variant

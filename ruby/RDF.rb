@@ -50,7 +50,7 @@ class R
         doc = R['/cache/RDF/' + (R.dive uri.h) + '.e']
         unless doc.e && doc.m > m # up-to-date?
           g = {} # doc graph
-          [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
+          [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # RDF-ize
           doc.w g, true # write
         end
       end
