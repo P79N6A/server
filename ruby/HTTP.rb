@@ -50,8 +50,7 @@ class R
     s[Header+'accept'] = r.accept
     %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'accept-'+a.downcase] = r.accept_('_'+a)}
     r.map{|k,v|
-      s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)
-    }
+      s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)}
     r.q['view'] = 'HTML'
     [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
 
@@ -60,8 +59,8 @@ class R
 
   GET['/404'] = -> e,r { 
     g = RDF::Graph.new
-    NotFound.map{|host,c| g << RDF::Statement.new(R['http://'+host], R[Schema+'UserPageVisits'], (RDF::Literal c))}
-    [200,{'Content-Type'=> r.format},[g.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
+    NotFound.map{|host,c| g << RDF::Statement.new(R['//'+host+'/'], R[Schema+'UserPageVisits'], (RDF::Literal c))}
+    r.graphResponse g}
 
   GET['/500'] = -> e,r { 
     r[:Response]['ETag'] = Errors.keys.sort.h
@@ -158,7 +157,6 @@ end
 
 class Hash
 
-  # TODO move to R.qs
   def qs
    '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end
