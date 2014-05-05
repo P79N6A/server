@@ -4,7 +4,7 @@ class R
   Man = -> e,r {
     graph = RDF::Graph.new
     manPath = '/usr/share/man'
-    name = e.justPath.uri.sub('/man/','/').tail # eat selector
+    name = e.justPath.uri.sub(/^\/man/,'').tail || ''
     section = nil
     name.match(/^([0-9])(\/|$)/).do{|p| # optional section
       section = p[1]
@@ -12,12 +12,12 @@ class R
     pageName = -> path {
       path.basename.to_s.sub /\.[0-9][a-z]*\...$/, '' }
 
-    if !name || name.empty? # toplevel indexes
+    if name.empty? # top-level index
       if section # section index
         Pathname(manPath+'/man'+section).c.map{|p|
          name = pageName[p]
          graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
-      else # alpha index pointers
+      else # index pointers
         ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
       end
       r.graphResponse graph

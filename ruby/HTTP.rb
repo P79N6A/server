@@ -125,7 +125,10 @@ module Th
 
   def graphResponse graph
     [200,
-     {'Content-Type'=> format},
+     {'Content-Type' => format,
+      'Triples' => graph.size.to_s,
+       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
+     },
      [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
   end
 

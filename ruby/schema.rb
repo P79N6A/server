@@ -1,7 +1,7 @@
 watch __FILE__
 class R
 
-  def R.schemas # Table {prefix -> URI}
+  def R.schemaSources
     table = {}
     open('http://prefix.cc/popular/all.file.txt').each_line{|l|
       unless l.match /^#/
@@ -11,16 +11,30 @@ class R
     table
   end
 
-  SchemaCache = -> e, r {
+  def R.schemas
+    R['schema'].c.select{|f|f.node.symlink?}
+  end
+
+  GET['/schema'] = -> e,r {
     graph = RDF::Graph.new
-    q = e.justPath.uri.sub('/schema/','/').tail # eat selector
-    g = R.groonga
-    g.select{|r|(r['graph'] == 'schema') & r.match(q){|f|(f.uri * 6)|f.content}}
-    r.map{|r|puts [r.key.key,r.score].join ' '}
-  }
+    name = e.path.sub(/^\/schema/,'').tail || ''
+    if !name.empty? && (s = R['/schema/'+name]).e
+      s.setEnv(r).response
+    elsif name.empty?
+      R.schemas.sort.map{|s|
+        graph << RDF::Statement.new(R['#'], R[LDP+'contains'], R['/schema/'+s.basename])}
+      r.graphResponse graph
+    else
+      
+
+      R.groonga.select{|r|
+        (r['graph'] == 'schema') & r.match(q){|f|(f.uri * 6)|f.content}}.
+        map{|r|puts [r.key.key,r.score].join ' '}
+      nil
+    end}
 
   def R.cacheSchemas
-    R.schemas.map{|prefix,uri| uri.R.cacheSchema prefix }
+    R.schemaSources.map{|prefix,uri| uri.R.cacheSchema prefix }
   end
 
   def cacheSchema prefix
@@ -48,9 +62,7 @@ class R
   end
 
   def R.indexSchemas
-    c = R['schema'].c.select{|f|f.node.symlink?}
-    c.map{|s| puts s
-      s.roonga 'schema'}
+    R.schemas.map{|s| s.roonga 'schema' }
     nil
   end
 
