@@ -1,6 +1,7 @@
+watch __FILE__
 class R
 
-  def R.schemas
+  def R.schemas # Table[ prefix ] -> URI
     table = {}
     open('http://prefix.cc/popular/all.file.txt').each_line{|l|
       unless l.match /^#/
@@ -10,14 +11,14 @@ class R
     table
   end
 
+  SchemaCache = -> e, r {
+    graph = RDF::Graph.new
+    path = e.justPath.uri.sub('/schema/','/').tail # eat selector
+    puts path
+  }
+
   def R.cacheSchemas
     R.schemas.map{|prefix,uri| uri.R.cacheSchema prefix }
-  end
-  
-  def R.indexSchemas
-    c = R['schema'].c.select{|f|f.node.symlink?}
-    c.map{|s| s.roonga 'schema'}
-    nil
   end
 
   def cacheSchema prefix
@@ -44,6 +45,10 @@ class R
     puts "ERROR #{uri} #{x}"
   end
 
-
+  def R.indexSchemas
+    c = R['schema'].c.select{|f|f.node.symlink?}
+    c.map{|s| s.roonga 'schema'}
+    nil
+  end
 
 end
