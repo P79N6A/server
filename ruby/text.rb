@@ -115,6 +115,11 @@ ul.uris a:hover {background-color:#bf0}
     yield uri, Content, `cat #{sh} | tth -r`
   end
 
+  def triplrTextile
+    require 'redcloth'
+    yield uri, Content, RedCloth.new(r).to_html
+  end
+
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     yield uri,Content, CleanHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`] if size < 32000
