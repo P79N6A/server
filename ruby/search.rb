@@ -21,8 +21,8 @@ class R
       c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
       down = r.size > start+c                                        # prev
       up   = !(start<=0)                                             # next
-      r = r.sort(e.has_key?('best') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      r = r.map{|r|r['.uri'].R}                                      # URI field -> Resource
+      r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
+      r = r.map{|r|r.key.key.R}                                      # URI -> Resource
       m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pagination
       m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
       r }}
@@ -106,9 +106,9 @@ class R
         t.time "time" }
       s.create_table("Bigram",
                      :type => :patricia_trie,
-                     :key_normalize => true,
+                     :normalizer => :NormalizerAuto,
                      :default_tokenizer => "TokenBigram"){|t|
-                                  %w{graph content}.map{|c| t.index("R." + c) }}}
+                                  %w{uri graph content}.map{|c| t.index("R." + c) }}}
   end
   
   # add
