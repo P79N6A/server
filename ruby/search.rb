@@ -22,10 +22,9 @@ class R
       down = r.size > start+c                                        # prev
       up   = !(start<=0)                                             # next
       r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      r = r.map{|r|r.key.key.R}                                      # URI -> Resource
-      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pagination
+      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
       m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      r }}
+      r.map{|r|r.key.do{|k|k.key.R}}.compact }} # URI -> Resource
 
   View['grep'] = -> d,e {
     w = e.q['q']
