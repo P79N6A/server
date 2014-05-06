@@ -18,11 +18,11 @@ class R
   GET['/schema'] = -> e,r {
     graph = RDF::Graph.new
     name = e.path.sub(/^\/schema/,'').tail || ''
-    if !name.empty? && (s = R['/schema/'+name]).e
-      s.setEnv(r).response
+    res = R['/schema/' + name]
+    if !name.empty? && res.n3.e
+      res.setEnv(r).response
     elsif name.empty?
-      R.schemas.sort.map{|s|
-        graph << RDF::Statement.new(R['#'], R[LDP+'contains'], R['/schema/'+s.basename])}
+      R.schemas.sort.map{|s| graph << RDF::Statement.new(R['#'], R[LDP+'contains'], s.R.stripDoc)}
       r.graphResponse graph
     else
       
@@ -38,24 +38,20 @@ class R
   end
 
   def cacheSchema prefix
-    short = R['schema'].child prefix
-    if !short.n3.e
+    short = R['schema'].child(prefix).n3
+    if !short.e
       puts uri
-      stat = RDF::Graph.new
       head = `curl -L --connect-timeout 6 -I #{uri.sh}`; puts head
-      stat << RDF::Statement.new(uri.R,R[HTTP+'header'],RDF::Literal(head))
       size = head.lines.grep(/^Content-Length/)[-1].do{|l|l.gsub(/\D/,'').to_i}
-      unless size && size > 640e3
+      unless size && size > 720e3
         terms = RDF::Graph.load uri
         triples = terms.size
         if triples > 0
           puts "#{triples} triples"
-          stat << RDF::Statement.new(uri.R,R[VOID+'triples'],RDF::Literal(triples))
           n3.w terms.dump(:n3)
           n3.ln_s short
         end
       end
-      short.n3.w stat.dump(:n3)
     end
   rescue Exception => x
     puts "ERROR #{uri} #{x}"
