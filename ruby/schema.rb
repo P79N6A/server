@@ -20,6 +20,7 @@ class R
     name = e.path.sub(/^\/schema/,'').tail || ''
     res = R['/schema/' + name]
     if !name.empty? && res.n3.e
+      r.q['view'] = 'tabulate'
       res.setEnv(r).response
     elsif name.empty?
       R.schemas.sort.map{|s| graph << RDF::Statement.new(R['#'], R[LDP+'contains'], s.R.stripDoc)}

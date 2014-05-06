@@ -56,7 +56,6 @@ class R
         'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
         'Content-Type' => @r.format,
         'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
-        'MS-Author-Via' => 'SPARQL',
     })
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join # Link Header
 
