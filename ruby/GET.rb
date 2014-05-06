@@ -72,16 +72,10 @@ class R
         set.map{|r|
           r.setEnv(@r).rdfDoc.do{|doc|
             graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc}}
-        describeResponse m, graph
+        R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym
       end}
-  end
-
-  def describeResponse res, graph
-    res['#'].map{|p,o|
-      o.justArray.map{|o|
-        graph << RDF::Statement.new(self,p.R,[R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'}
   end
   
   def condResponse body

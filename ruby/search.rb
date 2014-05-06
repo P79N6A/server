@@ -117,7 +117,7 @@ class R
         r = g[u] || g.add(u) # create or load entry
         r.uri = u            # update data
         r.graph = graph.to_s
-        r.content = i.to_s
+        r.content = i.to_json
         r.time = i[R::Date].do{|t|t[0].to_time}
       }}
     self
