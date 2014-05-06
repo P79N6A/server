@@ -132,6 +132,10 @@ module Th
      [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
   end
 
+  def htmlResponse m
+    [200,{'Content-Type'=> 'text/html'},[R::Render['text/html'][m, self]]]
+  end
+
   def conneg
 
     # explicit URI of format-variant
