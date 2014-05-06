@@ -20,18 +20,21 @@ class R
     name = e.path.sub(/^\/schema/,'').tail || ''
     res = R['/schema/' + name]
     if !name.empty? && res.n3.e
-#      r.q['view'] = 'tabulate'
-#      r.q['rdfa'] = true
+      r.q['view'] = 'tabulate'
       res.setEnv(r).response
     elsif name.empty?
       R.schemas.sort.map{|s| graph << RDF::Statement.new(R['#'], R[LDP+'contains'], s.R.stripDoc)}
       r.graphResponse graph
     else
-      puts "Select"
-      R.groonga.select{|r|(r['graph'] == 'schema') & r.match(name){|f|(f.uri * 6)|f.content}}.map{|r|
-        R.resourceToGraph (JSON.parse r['content']), graph
-      }
-      r.graphResponse graph
+      s = R.groonga.select{|r|(r['graph'] == 'schema') & r.match(name){|f|(f.uri * 6)|f.content}}
+      s = s.sort([{:key => "_score", :order => "descending"}], :limit => 255)
+      if r.format == 'text/html' && !r.q.has_key?('rdfa')
+        m = Hash[s.map{|r|[r['.uri'], JSON.parse(r['content'])]}]
+        [200,{'Content-Type'=> 'text/html'},[Render[r.format][m, r]]]
+      else
+        s.map{|r| R.resourceToGraph (JSON.parse r['content']), graph }
+        r.graphResponse graph
+      end
     end}
 
   def R.cacheSchemas
@@ -59,7 +62,7 @@ class R
   end
 
   def R.indexSchemas
-    R.schemas.map{|s| s.roonga 'schema'; puts s }
+    R.schemas.map{|s| s.roonga 'schema'; puts s } # keyword index
     nil
   end
 
