@@ -17,7 +17,7 @@ class R
 
   GET['/schema'] = -> e,r {
     graph = RDF::Graph.new
-    name = e.path.sub(/^\/schema/,'').tail || ''
+    name = r.q['q'] || e.path.sub(/^\/schema/,'').tail || ''
     res = R['/schema/' + name]
     if !name.empty? && res.n3.e # schema found 
       r.q['view'] ||= 'tabulate'
@@ -25,7 +25,7 @@ class R
     elsif name.empty? # ontologies index
       schemas = R.schemas.sort.map{|s|s.R.stripDoc}
       if r.format == 'text/html'
-        m = {'#search' => {Type => R['#schemas']}, '#' => {LDP+'contains' => schemas}}
+        m = {'#s' => {Type => R['#schemas']}, '#' => {LDP+'contains' => schemas}}
         r.htmlResponse m
       else
         schemas.map{|s| graph << RDF::Statement.new(R['#'], R[LDP+'contains'], s)}
@@ -35,8 +35,8 @@ class R
       s = R.groonga.select{|r|(r['graph'] == 'schema') & r.match(name){|f|(f.uri * 6)|f.content}}
       s = s.sort([{:key => "_score", :order => "descending"}], :limit => 255)
       if r.format == 'text/html' && !r.q.has_key?('rdfa')
-        m = Hash[s.map{|r|[r['.uri'], JSON.parse(r['content'])]}]
-        m['#search'] = {Type => R['#schemas']}
+        m = {'#s' => {Type => R['#schemas']}}
+        s.map{|r| m[r['.uri']] = (JSON.parse r['content'])}
         r.htmlResponse m
       else
         s.map{|r| R.resourceToGraph (JSON.parse r['content']), graph }
