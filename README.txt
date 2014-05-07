@@ -13,4 +13,5 @@ DAEMON
 
 REQUISITES cd ruby && bundle install
 
-GIT <https://github.com/hallwaykid/ww> <https://gitorious.org/element/www>
+GIT git://repo.or.cz/www.git            http://repo.or.cz/w/www.git
+    git://gitorious.org/element/www.git http://gitorious.org/element
