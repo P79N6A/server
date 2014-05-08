@@ -6,14 +6,17 @@ class R
   GET['/ch'] = -> r,e {
     path = r.justPath.uri.sub(/^\/(board|ch|forum)\/*/,'/').tail
     if path.match(/^[^\/]*\/?$/)
-      if path.empty? # toplevel index
+      if path.empty? # chan/forum list
         e.q['view'] ||= 'title'
         r.descend.setEnv(e).response
-      else # sub index
-        puts "sub #{path}"
+      else # paged posts of (sub)forum
+        r.q['c'] ||= 16
+        r.q['set']  ||= 'page'
+        r.q['view'] ||= 'threads'
+        nil
       end
     else # post
-
+      
     end}
 
   POST['/ch'] = -> d,e{
@@ -45,26 +48,11 @@ class R
       [303,{'Location' => d.uri},[]]
     end}
 
-  View[SIOCt+'BoardPost'] = -> d,e {
-    posts = d.resourcesOfType SIOCt+'BoardPost'
-    posts.map{|post|
-      {class: :boardPost, style: 'float: right; border: .1em dotted #ccc',
-        c: [post[Title].do{|t|{_: :h3, c: t}},
-            post[Content]
-           ]}}}
-
-  View['board'] = -> d,e {
-    br = '<br>'
-    post = {_: :form, method: :POST, enctype: "multipart/form-data",
-      c: [{_: :input, title: :title, name: :title, size: 32},br,
-          {_: :textarea, rows: 8, cols: 32, name: :content},br,
+  View['board_post_form'] = -> d,e {
+    {_: :form, method: :POST, enctype: "multipart/form-data",
+      c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
+          {_: :textarea, rows: 8, cols: 32, name: :content},'<br>',
           {_: :input, type: :file, name: :file},
-          {_: :input, type: :submit, value: 'post '}
-         ]}
-
-    [post]
-  }
-
-  
+          {_: :input, type: :submit, value: 'post '}]}}
 
 end
