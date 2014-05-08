@@ -34,7 +34,7 @@ class R
 
   def mail; Mail.read node if f end
 
-  def triplrMail
+  def triplrMail &b
     m = mail          ; return unless m              # mail
     id = m.message_id ; return unless id             # message-ID
     e = MessagePath[id]                              # message URI
@@ -105,12 +105,11 @@ class R
 
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
 
-    parts.select{|p|
-      (!p.mime_type || %w{message/rfc822 text/plain}.member?(p.mime_type)) &&
+    parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') &&
       Mail::Encodings.defined?(p.body.encoding)      # decodable?
     }.map{|p|
       yield e, Content,
-      H([{_: :pre, class: :mail, style: 'white-space: pre-wrap', # wrap body
+      H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
            c: p.decoded.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted*empty lines
              l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ?        # quoted?
              {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quotes
@@ -124,8 +123,15 @@ class R
       yield e, DC+'hasFormat', html                   # message -> HTML resource
       html.w p.decoded if !html.e                     # write content
       htmlCount += 1 }
-                                                      # attached
-    m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
+
+    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive inline-mail (digests + forwards)
+      f = attache[].child 'msg.' + rand.to_s.h
+      f.w m.body.decoded if !f.e
+      f.triplrMail &b
+    }
+
+    m.attachments.                                    # attached
+      select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
       file = attache[].child name                     # name
       file.w p.body.decoded if !file.e                # write
