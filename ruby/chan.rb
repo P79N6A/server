@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   RecentPosts = {}
@@ -15,6 +15,9 @@ class R
         r.q['view'] ||= 'threads'
         nil
       end
+    elsif path.match /\/post$/# new
+      e.q['view'] = 'board_post_form'
+      e.htmlResponse({})
     else # post
       
     end}
