@@ -32,7 +32,7 @@ class R
         r.graphResponse graph        
       end
     else # search
-      s = R.groonga.select{|r|(r['graph'] == 'schema') & r.match(name){|f|(f.uri * 6)|f.content}}
+      s = R.groonga.select{|r|(r['graph'] == 'schema') & r.match(name.gsub /\W+/,' '){|f|(f.uri * 6)|f.content}}
       s = s.sort([{:key => "_score", :order => "descending"}], :limit => 255)
       if r.format == 'text/html' && !r.q.has_key?('rdfa')
         m = {'#s' => {Type => R['#schemas']}}
