@@ -39,11 +39,9 @@ class R
   def q; @r.q end
 
   E404 = -> e,r,g=nil {
-    g ||= {} # graph
+    g ||= {}            # graph
     s = g[e.uri] ||= {} # resource
     path = e.justPath
-    domain = e.host || '/'
-    NotFound[domain] ||= 0; NotFound[domain] += 1
     s[Title] = '404'
     s[RDFs+'seeAlso'] = [e.parent, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
@@ -55,12 +53,6 @@ class R
     [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
 
   Errors = {}
-  NotFound = {}
-
-  GET['/404'] = -> e,r { 
-    g = RDF::Graph.new
-    NotFound.map{|host,c| g << RDF::Statement.new(R['//'+host+'/'], R[Schema+'UserPageVisits'], (RDF::Literal c))}
-    r.graphResponse g}
 
   GET['/500'] = -> e,r { 
     r[:Response]['ETag'] = Errors.keys.sort.h
@@ -100,7 +92,7 @@ module Th
     @q ||=
       (if q = self['QUERY_STRING']
          h = {}
-         q.split(/&/).map{|e| k,v = e.split(/=/,2).map{|x| CGI.unescape x }
+         q.split(/&/).map{|e| k, v = e.split(/=/,2).map{|x| CGI.unescape x }
                               h[k] = v }
          h
        else
@@ -108,35 +100,11 @@ module Th
        end)
   end
 
-  # Accept -> Hash
-  def accept_ k=''
-    d={}
-    self['HTTP_ACCEPT'+k].do{|k|
-      (k.split /,/).map{|e| # each pair
-        f,q = e.split /;/   # split MIME from q value
-        i = q && q.split(/=/)[1].to_f || 0.999 # favor specified q.1
-        d[i] ||= []; d[i].push f.strip}} # append
-    d
-  end
-
   def format
-    @format ||= conneg
+    @format ||= selectFormat
   end
 
-  def graphResponse graph
-    [200,
-     {'Content-Type' => format,
-      'Triples' => graph.size.to_s,
-       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
-     },
-     [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
-  end
-
-  def htmlResponse m
-    [200,{'Content-Type'=> 'text/html'},[R::Render['text/html'][m, self]]]
-  end
-
-  def conneg
+  def selectFormat
 
     # explicit URI of format-variant
     {
@@ -159,6 +127,29 @@ module Th
   end
 
   def accept; @accept ||= accept_ end
+
+  def accept_ k=''
+    d={}
+    self['HTTP_ACCEPT'+k].do{|k|
+      (k.split /,/).map{|e| # each pair
+        f,q = e.split /;/   # split MIME from q value
+        i = q && q.split(/=/)[1].to_f || 0.999 # favor specified q.1
+        d[i] ||= []; d[i].push f.strip}} # append
+    d
+  end
+
+  def graphResponse graph
+    [200,
+     {'Content-Type' => format,
+      'Triples' => graph.size.to_s,
+       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
+     },
+     [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
+  end
+
+  def htmlResponse m
+    [200,{'Content-Type'=> 'text/html'},[R::Render['text/html'][m, self]]]
+  end
 
 end
 
