@@ -4,7 +4,7 @@ class R
   GET['/ch'] = -> r,e {
     path = r.justPath.uri.sub(/^\/ch\/*/,'/').tail
     if path.match(/^[^\/]*\/?$/) # root or child thereof
-      if path.empty? # show subs
+      if path.empty? # sub index
         e.q['view'] ||= 'title'
         r.descend.setEnv(e).response
       else # sub
@@ -12,8 +12,8 @@ class R
         e['sub'] = path
         nil
       end
-    elsif p = path.match(/([^\/]+)\/post$/) # new
-      e.q['view'] = 'boardPost-form'
+    elsif p = path.match(/([^\/]+)\/post$/) # create
+      e.q['view'] = 'newBoardPost'
       e['sub'] = p[1]
       e.htmlResponse({})
     else # post
@@ -22,7 +22,9 @@ class R
 
   FileSet['ch'] = ->d,e,m{
     m['#new'] = {Type => R['newBoardPost']}
-    FileSet['page'][d,e,m]}
+    e['c'] ||= 32
+    FileSet['page'][d,e,m]
+  }
 
   POST['/ch'] = -> d,e{
     path = d.justPath.uri.sub(/^\/ch\/*/,'/').tail
@@ -32,9 +34,9 @@ class R
 
     if content && !content.empty?
 
-      uri = '//' + e['SERVER_NAME'] + '/' + sub + '/' +
-        Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' +
-        ( p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3] )
+      name = p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3]
+
+      uri = '//' + e['SERVER_NAME'] + '/' + sub + '/' + Time.now.iso8601[0..7].gsub(/-/,'/') + name
 
       post = {'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
@@ -48,6 +50,7 @@ class R
 
       doc = uri.R.jsonDoc
       doc.w({uri=>post},true) # save
+      doc.ln_s R['//' + e['SERVER_NAME'] + '/ch/' + sub + '/' + Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' + name]
 
       [303,{'Location' => uri},[]]
     else
@@ -55,8 +58,7 @@ class R
     end}
 
   View[SIOCt+'BoardPost'] = -> d,e {
-    posts = d.resourcesOfType SIOCt+'BoardPost'
-    posts.map{|post|
+    d.resourcesOfType(SIOCt+'BoardPost').map{|post|
       {class: :boardPost, style: 'float: left',
         c: [post[Title].do{|t|{_: :a, href: post.uri, c: {_: :h3, c: t}}},
             post[Content]
