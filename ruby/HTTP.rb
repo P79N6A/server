@@ -59,9 +59,9 @@ class R
     e.condResponse ->{Render['text/html'][Errors, r]}}
 
   E500 = -> x,e {
-    where = e['SERVER_NAME'] + e['REQUEST_URI']
-    $stderr.puts [500, where, x.class, x.message].join ' '
-    Errors[where] ||= {'uri' => '//'+where, Content => [x.class, x.message,x.backtrace[0..2]].flatten.join('<br>')}
+    uri = e['SERVER_NAME']+e['REQUEST_URI']
+    dump = [500, uri, x.class, x.message, e.format, e['HTTP_ACCEPT'], x.backtrace[0..6]].flatten.map(&:to_s)
+    Errors[uri] ||= {'uri' => '//'+uri, Content => dump.map(&:hrefs).join('<br>')}; $stderr.puts dump
 
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
