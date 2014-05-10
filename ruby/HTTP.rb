@@ -60,7 +60,7 @@ class R
 
   E500 = -> x,e {
     uri = e['SERVER_NAME']+e['REQUEST_URI']
-    dump = [500, uri, x.class, x.message, e.format, e['HTTP_ACCEPT'], x.backtrace[0..6]].flatten.map(&:to_s)
+    dump = [500, uri, x.class, x.message, x.backtrace[0..6]].flatten.map(&:to_s)
     Errors[uri] ||= {'uri' => '//'+uri, Content => dump.map(&:hrefs).join('<br>')}; $stderr.puts dump
 
     [500,{'Content-Type'=>'text/html'},
@@ -111,7 +111,7 @@ module Th
       '.html' => 'text/html',
       '.json' => 'application/json',
       '.jsonld' => 'application/ld+json',
-      '.nt' => 'text/ntriples',
+      '.nt' => 'text/plain',
       '.n3' => 'text/n3',
       '.rdf' => 'application/rdf+xml',
       '.ttl' => 'text/turtle',
