@@ -4,9 +4,9 @@ class R
   RecentPosts = {}
 
   GET['/ch'] = -> r,e {
-    path = r.justPath.uri.sub(/^\/(board|ch|forum)\/*/,'/').tail
-    if path.match(/^[^\/]*\/?$/) # root-level or child
-      if path.empty? # list subs
+    path = r.justPath.uri.sub(/^\/ch\/*/,'/').tail
+    if path.match(/^[^\/]*\/?$/) # root or child thereof
+      if path.empty? # show subs
         e.q['view'] ||= 'title'
         r.descend.setEnv(e).response
       else # sub
@@ -27,26 +27,29 @@ class R
     FileSet['page'][d,e,m]}
 
   POST['/ch'] = -> d,e{
-    p = (Rack::Request.new d.env).params # parse input
+    path = d.justPath.uri.sub(/^\/ch\/*/,'/').tail
+    sub = path.match(/[^\/]+/)[0]
+    p = (Rack::Request.new d.env).params
     content = p['content']
+
     if content && !content.empty?
-      uri = '//' + e['SERVER_NAME'] + '/' +
+
+      uri = '//' + e['SERVER_NAME'] + '/' + sub + '/' +
         Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' +
-        ( p['title'].do{|t|t.gsub /[?#\s\/]/,'_'} || rand.to_s.h[0..3] )
+        ( p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3] )
 
       post = {'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
+        Title => (p['title']||'').hrefs,
         Content => CleanHTML[content]}
 
-      p['title'].do{|t| post[Title] = t.hrefs}
-
-      # optional attachment
-      file = p['file']
+      file = p['file'] # optional attachment
       if file && file[:type].match(/^image/)
         basename = file[:filename]
       end
 
-      R[uri].jsonDoc.w({uri=>post},true) # save
+      doc = uri.R.jsonDoc
+      doc.w({uri=>post},true) # save
 
       [303,{'Location' => uri},[]]
     else
