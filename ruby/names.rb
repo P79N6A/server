@@ -45,8 +45,10 @@ class R
 
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
-  def justPath; hierPart.R end
+  def fragPart; fragment ? '#' + fragment : '' end
   def queryPart; query ? '?' + query : '' end
+
+  def justPath; hierPart.R end
 
   def basename suffix = nil
     suffix ? (File.basename hierPart, suffix) : (File.basename hierPart)
@@ -60,10 +62,10 @@ class R
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parent.hierarchy) end
   def cascade; stripSlash.hierarchy end
   def bindHost h
-    if host
+    if host || !hierPart.match(/^\//)
       self
     else
-      R['//' + h + hierPart + queryPart]
+      R['//' + h + hierPart + queryPart + fragPart]
     end
   end
 
