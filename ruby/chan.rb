@@ -1,8 +1,6 @@
 watch __FILE__
 class R
 
-  RecentPosts = {}
-
   GET['/ch'] = -> r,e {
     path = r.justPath.uri.sub(/^\/ch\/*/,'/').tail
     if path.match(/^[^\/]*\/?$/) # root or child thereof
@@ -55,6 +53,14 @@ class R
     else
       [303,{'Location' => d.uri},[]]
     end}
+
+  View[SIOCt+'BoardPost'] = -> d,e {
+    posts = d.resourcesOfType SIOCt+'BoardPost'
+    posts.map{|post|
+      {class: :boardPost, style: 'float: left',
+        c: [post[Title].do{|t|{_: :a, href: post.uri, c: {_: :h3, c: t}}},
+            post[Content]
+           ]}}}
 
   View['newBoardPost'] = -> d,e {
     ['post on ',{_: :b, c: e['sub'].hrefs},
