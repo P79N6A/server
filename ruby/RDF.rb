@@ -13,7 +13,14 @@ class R
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  def self.renderRDF d,f,e
+  def R.resourceToGraph r, graph # Hash/JSON Resource to RDF::Graph
+    uri = r.R
+    r.map{|p,o|
+      o.justArray.map{|o|
+        graph << RDF::Statement.new(uri,p.R,[R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'}
+  end
+
+  def R.renderRDF d,f,e # Hash/JSON Graph to RDF serialization
     (RDF::Writer.for f).buffer{|w|
       d.triples{|s,p,o|
       if s && p && o
@@ -27,9 +34,13 @@ class R
       end}}
   end
   
-  [['application/ld+json',:jsonld],['application/rdf+xml',:rdfxml],['text/plain',:ntriples],['text/turtle',:turtle],['text/n3',:n3]].map{|mime| Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
+  [['application/ld+json',:jsonld],
+   ['application/rdf+xml',:rdfxml],
+   ['text/plain',:ntriples],
+   ['text/turtle',:turtle],
+   ['text/n3',:n3]].map{|mime| Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  def addDocsRDF options = {} # visit resource and cache locally
+  def addDocsRDF options = {} # load resource and cache locally
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?
@@ -43,7 +54,7 @@ class R
     g
   end
 
-  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # doc-types readable by RDF::Reader
+  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # transcode docs unreadable by RDF::Reader
     if e
       doc = self
       unless pass.member? ext

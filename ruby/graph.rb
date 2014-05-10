@@ -58,13 +58,6 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  def R.resourceToGraph r, graph # Hash Resource to RDF::Graph
-    uri = r.R
-    r.map{|p,o|
-      o.justArray.map{|o|
-        graph << RDF::Statement.new(uri,p.R,[R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'}
-  end
-
 end
 
 class Hash
