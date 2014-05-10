@@ -69,9 +69,8 @@ class R
         Render[@r.format][m, @r] # HTML
       else
         graph = RDF::Graph.new   # RDF
-        set.map{|r|
-          r.setEnv(@r).rdfDoc.do{|doc|
-            graph.load doc.d, :host => @r['SERVER_NAME'], :base_uri => doc.stripDoc}}
+        set.map{|r|(r.setEnv @r).justRDF.do{|doc|
+            graph.load doc.pathPOSIX, :base_uri => doc.base}}
         R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym

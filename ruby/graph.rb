@@ -20,7 +20,7 @@ class R
   end
 
   def fileToGraph graph = {}
-    rdfDoc(%w{e}).do{|file|
+    justRDF(%w{e}).do{|file|
       graph.mergeGraph file.r true}
     graph
   end

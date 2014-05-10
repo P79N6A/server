@@ -19,17 +19,15 @@ class R
     dev         # check watched source
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
+    e['SCHEME'] = "http" + (e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : '')
     p = Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding 'UTF-8'
-    path = p.expand_path.to_s                                 # interpret path component
-    path = path + '/' if path[-1] != '/' && p.to_s[-1] == '/' # preserve trailing slash
-    resource = R["http#{e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : ''}://" + e['SERVER_NAME'] + path]
-    e[:Links] = []
-    e[:Response] = {}
+    path = p.expand_path.to_s # interpret path
+    path += '/' if path[-1] != '/' && p.to_s[-1] == '/' # preserve trailing-slash
+    resource = R[e['SCHEME'] + "://" + e['SERVER_NAME'] + path]
+    e[:Links] = []; e[:Response] = {}
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
       puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q},
-            h['Content-Type'],
-            e['HTTP_ACCEPT'],
-            e['HTTP_USER_AGENT'],
+            h['Content-Type'], e['HTTP_ACCEPT'], e['HTTP_USER_AGENT'],
             e['HTTP_REFERER']].join ' ' unless s==404
       [s,h,b]}
   rescue Exception => x

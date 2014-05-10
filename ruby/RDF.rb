@@ -54,11 +54,11 @@ class R
     g
   end
 
-  def rdfDoc pass = %w{e jsonld n3 nt owl rdf ttl} # transcode docs unreadable by RDF::Reader
+  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # just RDF docs
     if e
       doc = self
       unless pass.member? ext
-        doc = R['/cache/RDF/' + (R.dive uri.h) + '.e']
+        doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r
         unless doc.e && doc.m > m # up-to-date?
           g = {} # doc graph
           [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # RDF-ize
@@ -90,7 +90,7 @@ class R
 
       def initialize(input = $stdin, options = {}, &block)
         @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
-        @host = options[:host] || 'localhost'
+        @env = options[:base_uri].env
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -102,7 +102,7 @@ class R
 
       def each_statement &fn
         @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R.bindHost(@host), p.R, o.class == Hash ? o.R.bindHost(@host) :
+          fn.call RDF::Statement.new(s.R.setEnv(@env).bindHost, p.R, o.class == Hash ? o.R.setEnv(@env).bindHost :
                                      (l = RDF::Literal o
                                       l.datatype=RDF.XMLLiteral if p == Content; l))}
       end
