@@ -131,6 +131,7 @@ class R
 
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive inline-mail (digests + forwards)
       f = attache[].child 'msg.' + rand.to_s.h
+#      yield e, LDP+'contains', f
       f.w m.body.decoded if !f.e
       f.triplrMail &b
     }
