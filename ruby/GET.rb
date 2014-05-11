@@ -42,6 +42,7 @@ class R
 
     # File  directly-mapped filesystem resources
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
+    puts "fileFn #{fileFn}"
     fileFn[self,q,m].do{|files| set.concat files }
 
     # Resource  custom generic-resource set (search / index handlers)
@@ -70,11 +71,10 @@ class R
       else
         graph = RDF::Graph.new   # RDF
         set.map{|r|(r.setEnv @r).justRDF.do{|doc|
-            puts "adding #{doc} to graph at #{doc.base}"
             graph.load doc.pathPOSIX, :base_uri => doc.base}}
         R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s
-        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym
+        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => uri
       end}
   end
   

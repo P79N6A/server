@@ -1,10 +1,6 @@
-R::Watch = {}
-
 def watch f
   R::Watch[f] = File.mtime f
   puts 'dev '+f end
-
-watch __FILE__
 
 def R uri
   R.new uri
@@ -22,6 +18,7 @@ class R
   FileSet = {}
   ResourceSet = {}
   Render = {}
+  Watch = {}
   GET = {}
   POST = {}
 
@@ -71,7 +68,7 @@ class R
   end
 
   def base
-    bindHost.stripDoc
+    bindHost.stripDoc.setEnv @r
   end
 
   VHosts = 'domain'
