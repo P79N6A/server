@@ -45,9 +45,7 @@ class R
 
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
-  def fragPart; fragment ? '#' + fragment : '' end
   def queryPart; query ? '?' + query : '' end
-
   def justPath; hierPart.R end
 
   def basename suffix = nil
@@ -62,9 +60,10 @@ class R
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parent.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
+  def lateHost; R[@r['SCHEME']+'://'+@r['SERVER_NAME']] end
   def bindHost
     return self if !hierPart.match(/^\//)
-    R[R[@r['SCHEME']+'://'+@r['SERVER_NAME']].join(uri).to_s]
+    R[(lateHost.join uri).to_s]
   end
 
   def base
