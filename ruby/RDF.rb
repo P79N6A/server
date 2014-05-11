@@ -60,7 +60,7 @@ class R
       unless pass.member? ext
         doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r
         unless doc.e && doc.m > m # up-to-date?
-          g = {} # doc graph
+          g = {} # doc-graph
           [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
           doc.w g, true # cache
         end
@@ -102,17 +102,13 @@ class R
 
       def each_statement &fn
         @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R.setEnv(@env).bindHost, p.R, o.class == Hash ? o.R.setEnv(@env).bindHost :
-                                     (l = RDF::Literal o
-                                      l.datatype=RDF.XMLLiteral if p == Content; l))}
+          fn.call RDF::Statement.new(s.R.setEnv(@env).bindHost, p.R,
+            o.class == Hash ? o.R.setEnv(@env).bindHost : (l = RDF::Literal o; l.datatype=RDF.XMLLiteral if p == Content; l))}
       end
 
       def each_triple &block
         each_statement{|s| block.call *s.to_triple}
       end
-
     end
-
   end
-
 end

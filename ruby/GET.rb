@@ -42,7 +42,6 @@ class R
 
     # File  directly-mapped filesystem resources
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
-    puts "fileFn #{fileFn}"
     fileFn[self,q,m].do{|files| set.concat files }
 
     # Resource  custom generic-resource set (search / index handlers)

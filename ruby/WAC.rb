@@ -11,7 +11,7 @@ class R
     end
   end
 =begin
-COPY / STEAL
+ldphp:
 
    // check if we are the domain owner
         if (is_file($this->_root_path.'.acl')) {
