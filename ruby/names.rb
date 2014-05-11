@@ -60,7 +60,6 @@ class R
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parent.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
-  def lateHost; R[@r['SCHEME']+'://'+@r['SERVER_NAME']] end
   def bindHost
     return self if !hierPart.match(/^\//)
     R[(lateHost.join uri).to_s]

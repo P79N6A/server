@@ -14,6 +14,8 @@ class R
   end
   alias_method :env, :getEnv
 
+  def lateHost; R[@r['SCHEME']+'://'+@r['SERVER_NAME']+'/'] end
+
   def R.call e
     e.extend Th # add HTTP utility functions
     dev         # check watched source
