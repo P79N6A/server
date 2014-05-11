@@ -13,13 +13,18 @@ class R
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
     return [406,{},[]] unless Render[r.format]
-    m['#'] = {'uri' => '#',
-      Type => [R[LDP+'BasicContainer'],R[SIOC+'Thread']],
+
+    m['#'] = {
+      'uri' => e.uri,
+      Type => [R[LDP+'BasicContainer'],
+               R[SIOC+'Thread']],
       LDP+'contains' => m.keys.map(&:R)}
+
     v = r.q['view'] ||= "timegraph"
     r[:Response]['Access-Control-Allow-Origin'] = r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'
     r[:Response]['Content-Type'] = r.format
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
+
     e.condResponse ->{Render[r.format][m, r]}}
 
   GET['/m'] = -> e,r{

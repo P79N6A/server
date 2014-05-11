@@ -40,7 +40,7 @@ class R
    ['text/turtle',:turtle],
    ['text/n3',:n3]].map{|mime| Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  def addDocsRDF options = {} # load resource and cache locally
+  def addDocsRDF options = {} # group into docs and cache unseen/missing
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?
@@ -61,8 +61,8 @@ class R
         doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r
         unless doc.e && doc.m > m # up-to-date?
           g = {} # doc graph
-          [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # RDF-ize
-          doc.w g, true # write
+          [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
+          doc.w g, true # cache
         end
       end
       doc

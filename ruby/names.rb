@@ -61,12 +61,14 @@ class R
   def parent; R hostPart + Pathname.new(hierPart).parent.to_s end
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parent.hierarchy) end
   def cascade; stripSlash.hierarchy end
-  def bindHost h
-    if host || !hierPart.match(/^\//)
-      self
-    else
-      R['//' + h + hierPart + queryPart + fragPart]
-    end
+
+  def bindHost
+    return self if host || !hierPart.match(/^\//)
+    R[@r['SCHEME'] + '://' + @r['SERVER_NAME'] + hierPart + queryPart + fragPart]
+  end
+
+  def base
+    bindHost.stripDoc.setEnv @r
   end
 
   VHosts = 'domain'
