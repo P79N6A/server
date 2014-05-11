@@ -1,6 +1,10 @@
+R::Watch = {}
+
 def watch f
-  R::Watch[f]=File.mtime f
+  R::Watch[f] = File.mtime f
   puts 'dev '+f end
+
+watch __FILE__
 
 def R uri
   R.new uri
@@ -21,7 +25,6 @@ class R
   GET = {}
   POST = {}
 
-  Watch = {}
   def self.dev
     Watch.each{|f,ts|
       if ts < File.mtime(f)
@@ -63,12 +66,12 @@ class R
   def cascade; stripSlash.hierarchy end
 
   def bindHost
-    return self if host || !hierPart.match(/^\//)
-    R[@r['SCHEME'] + '://' + @r['SERVER_NAME'] + hierPart + queryPart + fragPart]
+    return self if !hierPart.match(/^\//)
+    R[R[@r['SCHEME']+'://'+@r['SERVER_NAME']].join(uri).to_s]
   end
 
   def base
-    bindHost.stripDoc.setEnv @r
+    bindHost.stripDoc
   end
 
   VHosts = 'domain'

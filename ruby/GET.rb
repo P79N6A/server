@@ -70,6 +70,7 @@ class R
       else
         graph = RDF::Graph.new   # RDF
         set.map{|r|(r.setEnv @r).justRDF.do{|doc|
+            puts "adding #{doc} to graph at #{doc.base}"
             graph.load doc.pathPOSIX, :base_uri => doc.base}}
         R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s

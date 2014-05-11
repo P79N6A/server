@@ -90,7 +90,6 @@ class R
 
       def initialize(input = $stdin, options = {}, &block)
         @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
-        @env = options[:base_uri].env
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -102,7 +101,7 @@ class R
 
       def each_statement &fn
         @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(s.R.setEnv(@env).bindHost, p.R, o.class == Hash ? o.R.setEnv(@env).bindHost :
+          fn.call RDF::Statement.new(R[s], R[p], o.class == Hash ? R[o] :
                                      (l = RDF::Literal o
                                       l.datatype=RDF.XMLLiteral if p == Content; l))}
       end

@@ -8,11 +8,11 @@ td.message {
  color:#fff;
  white-space: pre-wrap;
  }
-
-a, td.path {
+.abbr {font-size:.9em}
+a, td.path { white-space: nowrap;
     text-align:right;
     background-color:#000;
-    color:#fff}
+    color:#fff;}
 td.index {
     text-align:right;
     background-color:#eee;

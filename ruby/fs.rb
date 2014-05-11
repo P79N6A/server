@@ -18,8 +18,7 @@ class R
         qs = q['view'].do{|v|'?view='+v} || ''
         g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
         g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e }}
-    s
-  }
+    s}
 
   def inside; node.expand_path.to_s.index(FSbase) == 0 end
 
