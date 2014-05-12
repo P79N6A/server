@@ -3,16 +3,10 @@ a {text-decoration:none}
 pre {white-space: pre-wrap}
 .abbr,.scheme {display: none}
 
-table.html {
-    display: inline;
-    max-width: 90ex;
-    border-radius:.62em;
-    padding:.18em;
-    margin:.18em;
+td.key {
+    vertical-align:top;
+    text-align:right;
 }
-
-
-td.key {vertical-align:top;text-align:right}
 
 td.key > a > .frag {
     font-weight:bold;
@@ -33,8 +27,7 @@ td.val > a > .frag:hover {
     background-color: #fff;
 }
 
-tr[property="uri"] > td.val {max-width: 80ex; overflow: hidden}
-tr[property="uri"] > td.val > a:hover{background-color:#35f;color:#fff}
+td.val {max-width: 88ex; }
 tr[property="uri"] > td.val > a{
     color:#777;
     font-weight: bold;}
