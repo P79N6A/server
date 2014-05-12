@@ -27,7 +27,9 @@ td.val > a > .frag:hover {
     background-color: #fff;
 }
 
-td.val {max-width: 88ex; }
+table.html {float: right}
+
+td.val {max-width: 88ex; overflow: hidden}
 tr[property="uri"] > td.val > a{
     color:#777;
     font-weight: bold;}
