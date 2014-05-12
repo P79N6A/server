@@ -68,6 +68,12 @@ class R < RDF::URI
     "stat" => Stat,
   }
 
+  # configuration for RDF::Writer
+  Prefixes = {
+    :ldp => RDF::URI(LDP),
+    :stat => RDF::URI(Stat),
+  }
+
 %w{
 MIME
 names

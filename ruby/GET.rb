@@ -73,7 +73,8 @@ class R
             graph.load doc.pathPOSIX, :base_uri => doc.base}}
         R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s
-        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost
+        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
+
       end}
   end
   
