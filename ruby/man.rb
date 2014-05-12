@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  Man = -> e,r {
+  GET['/man'] = -> e,r {
     graph = RDF::Graph.new
     manPath = '/usr/share/man'
     name = e.justPath.uri.sub(/^\/man/,'').tail || ''
