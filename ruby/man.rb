@@ -1,6 +1,9 @@
 #watch __FILE__
 class R
 
+  # mount man-handler on /man or / (optional hostname):
+  # GET['hostname/'] = Man
+
   Man = -> e,r {
     graph = RDF::Graph.new
     manPath = '/usr/share/man'
