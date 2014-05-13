@@ -85,7 +85,7 @@ class R
   def R.groonga
     @groonga ||= # gem install rroonga
       (begin require 'groonga'
-         R['/cache/groonga'].groonga
+         R['/index/groonga'].groonga
          Groonga["R"]
        rescue LoadError => e
          puts e
