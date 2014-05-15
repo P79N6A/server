@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -153,29 +153,43 @@ class R
 
   IndexMail = ->doc, graph, host {
     graph.map{|u,r|
-      a = [] # address references
+      a = [] # address list
       r[Creator].do{|c|a.concat c}
       r[To].do{|t|a.concat t}
       r[Date].do{|t|
-        st = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e'
-        a.map{|rel|
-          doc.ln_s R[rel.uri.split('#')[0]+st]}}}}
+        st = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e' # date-order path
+        a.map{|rel| doc.ln R[rel.uri.split('#')[0]+st]}}}} # link msg + address
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOC+'Post'
-    threads = posts.group_by{|r| # group threads
+
+    weight = {}
+    posts.map{|p| p[To].justArray.map(&:maybeURI).map{|a|
+        weight[a] ||= 0
+        weight[a] += 1}}
+
+    threads = posts.group_by{|r|
       r[Title].do{|t|t[0].sub(/^[rR][eE][^A-Za-z]./,'').gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')} ||
       r[Content]}
+
+    groups = threads.group_by{|_,posts|
+      score = {}
+      posts.map{|post|
+        post[To].justArray.map(&:maybeURI).map{|a|
+          score[a] ||= 0
+          score[a] += weight[a] || 1}}
+      score.invert.max[1]}
+
     [View[LDP+'Resource'][d,env],
-     {_: :table, c: threads.group_by{|r,k| # group recipients
-         k[0].do{|k|k[To].do{|o|o[0].uri}}}.map{|group,threads|
-         c = R.cs
-         {_: :tr, c: [{_: :td, # each group
+     {_: :table, c: groups.map{|group,threads| # each group
+         color = 'background-color:' + R.cs
+         {_: :tr, c: [{_: :td,
            c: threads.map{|title,msgs| # each thread
              [{_: :a, class: 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.basename, c: title},
-              msgs.map{|s| s[Creator].select(&:maybeURI).map{|cr| # each author
-                  [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri,class: 'sender', style: 'background-color:'+c, c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
-               group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: 'background-color:'+c, c: g.R.abbr, href: g}}}]}}}, # group name
+              msgs.map{|s| s[Creator].select(&:maybeURI).map{|cr| # each message
+                  [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: color,
+                     c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
+               group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: color, c: g.R.abbr, href: g}}}]}}}, # group Identity
      (H.css '/css/threads', true)]}
 
 end
