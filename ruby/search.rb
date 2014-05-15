@@ -42,14 +42,13 @@ class R
       # sequential pattern
       p = /#{w.join '.*'}/i
 
-      [{_: :style, c: c.values.map{|i|
-           # word color
-           b = rand(16777216)
-           # keep text contrasty
-           f = b > 8388608 ? :black : :white
-
-           # word CSS
-           ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
+      [{_: :style,
+         c: [c.values.map{|i|
+               b = rand(16777216)                # word color
+               f = b > 8388608 ? :black : :white # contrasty
+               ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"},
+             "a {text-decoration: none; color:#777; font-weight: bold;}\n"
+            ]},
 
        # each resource
        d.map{|u,r|
