@@ -10,13 +10,19 @@ class String
     # ,. only match mid-URI
     (partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
       u = p[1].gsub('&','&amp;') # URI
-      p[0].gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # escape text
-      (p[1].empty?&&''||'<a rel="untyped" href="'+u+'">' +
+      p[0].noHTML +
+     (p[1].empty? && '' || '<a rel="untyped" href="'+u+'">' +
        ( i && u.match(/(gif|jpe?g|png|tiff)$/i) && "<img src='#{u}'>" || u ) + '</a>') +
-      (p[2].empty?&&''||p[2].hrefs) # again on post-match tail
+     (p[2].empty? && '' || p[2].hrefs) # again on any post-match tail
     }
   rescue
     self
+  end
+
+  def noHTML
+    gsub('&','&amp;').
+    gsub('<','&lt;').
+    gsub('>','&gt;')
   end
 
   def tail; self[1..-1] end

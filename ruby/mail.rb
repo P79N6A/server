@@ -161,7 +161,7 @@ class R
         a.map{|rel| doc.ln R[rel.uri.split('#')[0]+st]}}}} # link msg + address
 
   View['threads'] = -> d,env {
-    posts = d.resourcesOfType SIOC+'Post'
+    posts = d.resourcesOfType SIOCt+'MailMessage'
 
     weight = {}
     posts.map{|p| p[To].justArray.map(&:maybeURI).map{|a|
@@ -169,8 +169,10 @@ class R
         weight[a] += 1}}
 
     threads = posts.group_by{|r|
-      r[Title].do{|t|t[0].sub(/^[rR][eE][^A-Za-z]./,'').gsub(/[<>]/,'_').gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>')} ||
-      r[Content]}
+      r[Title].do{|t|
+        t[0].noHTML.
+        gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>').
+        sub(/\b[rR][eE]: /,'')}}
 
     groups = threads.group_by{|_,posts|
       score = {}
@@ -186,7 +188,7 @@ class R
          {_: :tr, c: [{_: :td,
            c: threads.map{|title,msgs| # each thread
              [{_: :a, class: 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.basename, c: title},
-              msgs.map{|s| s[Creator].select(&:maybeURI).map{|cr| # each message
+              msgs.map{|s| s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
                   [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: color,
                      c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
                group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: color, c: g.R.abbr, href: g}}}]}}}, # group Identity
