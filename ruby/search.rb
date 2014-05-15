@@ -7,7 +7,7 @@ class R
       path = e.justPath
       GREP_DIRS.find{|p|path.uri.match p}.do{|_|
         [e,path].compact.select(&:e).map{|e|
-          `grep -irl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|R.unPOSIX r.chomp}}.flatten
+          `grep -iRl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|R.unPOSIX r.chomp}}.flatten
       }}}
 
   ResourceSet['groonga'] = ->d,e,m{

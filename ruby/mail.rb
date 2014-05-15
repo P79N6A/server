@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -158,7 +158,7 @@ class R
       r[To].do{|t|a.concat t}
       r[Date].do{|t|
         st = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e' # date-order path
-        a.map{|rel| doc.ln R[rel.uri.split('#')[0]+st]}}}} # link msg + address
+        a.map{|rel| doc.ln_s R[rel.uri.split('#')[0]+st]}}}} # link msg + address
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOCt+'MailMessage'
