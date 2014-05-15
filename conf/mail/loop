@@ -3,6 +3,6 @@ while true; do
 date
 getmail
 rsync -avz ~/.mail p:
-R `date +/%Y/%m/%d/` HEAD # index, optional - visiting messages via /today or /2016?set=depth "inbox" will index on-demand 
+R `date +/%Y/%m/%d/` HEAD # index, optional - visiting /today or /2016?set=page "inbox" indexes on first-seen
 sleep 1600
 done
