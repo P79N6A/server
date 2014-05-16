@@ -197,13 +197,8 @@ class R
   GREP_DIRS.push /^\/news\/\d{4}/
 
   def checkURIs
-    r = uris.map{|u|
-      c = [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u] # HEAD
-      puts c.join ' ' 
-      c } # status, uri tuple
-    puts "\n\n"
-    r.map{|c| # inspect anomalies
-      puts c.join(' ') unless c[0] == 200 }
+    uris.map{|u|
+      puts [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u].join ' '}
   end
 
 end
