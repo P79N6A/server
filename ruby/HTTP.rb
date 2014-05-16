@@ -122,8 +122,8 @@ module Th
     accept.sort.reverse.map{|q,mimes| # descending q-values
       mimes.map{|mime|
         return mime if RDF::Writer.for(:content_type => mime)}}
-    'text/html'
-#    'text/n3'
+
+    'text/n3'
   end
 
   def accept; @accept ||= accept_ end
