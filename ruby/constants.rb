@@ -79,10 +79,10 @@ MIME
 names
 audio
 blog
-chan
 csv
 edit
 facets
+forum
 fs
 GET
 graph

@@ -152,7 +152,7 @@ class R
   end
 
   IndexMail = ->doc, graph, host {
-    graph.map{|u,r|      a = []
+    graph.map{|u,r| a = []
    r[Creator].do{|c|a.concat c}
         r[To].do{|t|a.concat t}
       r[Date].do{|t| x = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e'
