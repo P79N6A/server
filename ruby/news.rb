@@ -2,12 +2,8 @@ class R
 
   GET['/news'] = -> d,e {
     if %w{/news /news/}.member? d.justPath
-      if !e.q['set']
-        e.q['set'] = 'page' # forward to first page
-        e[:Status] = 333    # w/o a redirect
-        e[:Response]['Location'] = '/news/?set=page'
-        e.q['c'] ||= 32
-      end
+      e.q['set'] ||= 'page'
+      e.q['c'] ||= 32 if e.format == 'text/html'
       nil
     end}
 
@@ -15,7 +11,7 @@ class R
     addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
     self
   rescue Exception => e
-#    puts "#{uri} #{e} #{e.backtrace.join "\n"}"
+    puts "feed #{uri} #{e}"
   end
   def getFeeds h='localhost'
     uris.map{|u| u.R.getFeed h}
