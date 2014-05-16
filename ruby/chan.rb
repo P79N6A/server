@@ -40,8 +40,8 @@ class R
 
       post = {'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
-        Title => (p['title']||'').hrefs,
         Content => CleanHTML[content]}
+      p['title'].do{|t|post[Title] = t.hrefs}
 
       file = p['file'] # optional attachment
       if file && file[:type].match(/^image/)
@@ -59,16 +59,16 @@ class R
 
   View[SIOCt+'BoardPost'] = -> d,e {
     d.resourcesOfType(SIOCt+'BoardPost').map{|post|
+      t = post[Title] || '#'
       {class: :boardPost, style: 'float: left',
-        c: [post[Title].do{|t|{_: :a, href: post.uri, c: {_: :h3, c: t}}},
-            post[Content]
+        c: [{_: :a, href: post.uri, c: {_: :h3, c: t}}, post[Content]
            ]}}}
 
   View['newBoardPost'] = -> d,e {
     ['post on ',{_: :b, c: e['sub'].hrefs},
      {_: :form, method: :POST, enctype: "multipart/form-data",
        c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
-           {_: :textarea, rows: 8, cols: 32, name: :content},'<br>',
+           {_: :textarea, rows: 12, cols: 48, name: :content},'<br>',
            {_: :input, type: :file, name: :file},
            {_: :input, type: :submit, value: 'post '}]}]}
 
