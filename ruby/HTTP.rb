@@ -123,7 +123,7 @@ module Th
       mimes.map{|mime|
         return mime if RDF::Writer.for(:content_type => mime)}}
 
-    'text/n3'
+    'text/html'
   end
 
   def accept; @accept ||= accept_ end
