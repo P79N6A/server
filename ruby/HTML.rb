@@ -126,9 +126,8 @@ class R
   View['base']=->d,e{[(d.values.map &:html), # boring view
                       H.once(e,'base',H.css('/css/html',true))]}
 
-  View['title'] = -> g,e {
-    g.map{|u,r|
-      {_: :b, c: {_: :a, href: u, c: r[Title] || u}}}}
+  View['title'] = -> g,e {[{_: :style, c: "a {text-decoration: none; border: .1em dotted #aaf; float: left; margin:.1em; font-size: 1.4em}"},
+                           g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}]}
 
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap',
