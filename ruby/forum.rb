@@ -1,15 +1,15 @@
 watch __FILE__
 class R
 
-  GET['/ch'] = -> r,e {
-    path = r.justPath.uri.sub(/^\/ch\/*/,'/').tail
-    if path.match(/^[^\/]*\/?$/) # at root or child thereof
+  GET['/forum'] = -> r,e {
+    path = r.justPath.uri.sub(/^\/forum\/*/,'/').tail
+    if path.match(/^[^\/]*\/?$/) # root or child thereof
       if path.empty? # sub index
         e.q['view'] ||= 'table'
         r.descend.setEnv(e).response
       else # sub
-        r.q['set'] = 'ch'
-        e['sub'] = path
+        r.q['set'] = 'forum'
+        e['name'] = path
         nil
       end
     elsif p = path.match(/([^\/]+)\/post$/) # create
@@ -20,14 +20,16 @@ class R
       
     end}
 
-  FileSet['ch'] = ->d,e,m{
-    m['#new'] = {Type => R['newBoardPost']}
-    e['c'] ||= 32
-    FileSet['page'][d,e,m]
-  }
+  FileSet['forum'] = ->d,e,m{
 
-  POST['/ch'] = -> d,e{
-    path = d.justPath.uri.sub(/^\/ch\/*/,'/').tail
+    m['#new'] = {Type => R['newBoardPost']}
+
+    e['c'] ||= 32
+
+    FileSet['page'][d,e,m]}
+
+  POST['/forum'] = -> d,e{
+    path = d.justPath.uri.sub(/^\/forum\/*/,'/').tail
     sub = path.match(/[^\/]+/)[0]
     p = (Rack::Request.new d.env).params
     content = p['content']
@@ -50,7 +52,7 @@ class R
 
       doc = uri.R.jsonDoc
       doc.w({uri=>post},true) # save
-      doc.ln_s R['//' + e['SERVER_NAME'] + '/ch/' + sub + '/' + Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' + name]
+      doc.ln_s R['//' + e['SERVER_NAME'] + '/forum/' + sub + '/' + Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' + name]
 
       [303,{'Location' => uri},[]]
     else
