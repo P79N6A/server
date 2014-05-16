@@ -53,7 +53,7 @@ class R
   end
   def bare; basename suffix end
 
-  def dirname; hostPart + (File.dirname hierPart) end
+  def dirname; hostPart + (File.dirname hierPart + queryPart) end
   def dir; dirname.R end
 
   def parent; R hostPart + Pathname.new(hierPart).parent.to_s end
