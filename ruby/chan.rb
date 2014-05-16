@@ -3,9 +3,9 @@ class R
 
   GET['/ch'] = -> r,e {
     path = r.justPath.uri.sub(/^\/ch\/*/,'/').tail
-    if path.match(/^[^\/]*\/?$/) # root or child thereof
+    if path.match(/^[^\/]*\/?$/) # at root or child thereof
       if path.empty? # sub index
-        e.q['view'] ||= 'title'
+        e.q['view'] ||= 'table'
         r.descend.setEnv(e).response
       else # sub
         r.q['set'] = 'ch'

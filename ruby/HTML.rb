@@ -127,7 +127,8 @@ class R
                       H.once(e,'base',H.css('/css/html',true))]}
 
   View['title'] = -> g,e {
-    g.map{|u,r| {_: :h4, c: {_: :a, href: u, c: r[Title]||u.R.basename}}}}
+    g.map{|u,r|
+      {_: :b, c: {_: :a, href: u, c: r[Title] || u}}}}
 
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap',
