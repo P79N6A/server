@@ -26,11 +26,14 @@ a {
 
 .posts {
     margin-bottom: .5em;
-    padding: .1em 0 .3em 0;
+    padding-bottom: .2em;
     max-width: 100ex;
 }
 
-.posts .post {float: right}
+.posts .post {
+    float: right;
+    margin-bottom: .08em;
+}
 
 .posts .g {
     float:left;color:#fff;
@@ -62,7 +65,7 @@ a {
     float: left;
     background-color:#000;
     color:#fff;
-    margin-left: .14em;
+    margin-left: .25em;
 }
 
 .thread:hover, .thread:hover:visited {background-color:#f04}
