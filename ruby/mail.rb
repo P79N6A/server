@@ -192,15 +192,13 @@ class R
                   c: threads.map{|title,msgs| # each thread
                     size = title.to_s.unHTML.size
                     scale = if size > 72
-                              0.8
-                            elsif size > 56
                               0.9
                             elsif size < 16
-                              1.2
+                              1.05
                             elsif size < 24
-                              1.1
+                              1.15
                             else
-                              1.0
+                              1
                             end
                     [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"},
                      (if (c = msgs.size) > 2
