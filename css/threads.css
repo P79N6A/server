@@ -10,7 +10,7 @@ a {
 
 .group, .posts {float: right}
 
-.group {min-width: 8em}
+.group {min-width: 7em}
 
 .group .to {
     font-weight: bold;
