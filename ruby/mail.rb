@@ -201,15 +201,17 @@ class R
                     else
                       1
                     end
-            [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"},
-             (if (c = msgs.size) > 2
-                {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
-              else
-                msgs.map{|s|
-                  s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
-                    [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: style,
-                       c: cr.R.mailUID}]}}
-              end),'<br>']}}]},
+            maker = if (c = msgs.size) > 2
+                      {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
+                    else
+                      msgs.map{|s|
+                        s[Creator].justArray.select(&:maybeURI).map{|cr|
+                     [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: style, c: cr.R.mailUID}]}}
+                    end
+            name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
+
+            [{class: :maker, c: maker}, name,'<br>']
+          }}]},
      (H.css '/css/threads', true)]}
 
 end
