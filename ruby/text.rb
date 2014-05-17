@@ -25,6 +25,10 @@ class String
     gsub('>','&gt;')
   end
 
+  def unHTML
+    gsub(/<[^>]+>/,'')
+  end
+
   def tail; self[1..-1] end
   def to_utf8
     encode('UTF-8', undef: :replace)

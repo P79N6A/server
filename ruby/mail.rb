@@ -190,7 +190,7 @@ class R
          [{_: :tr,
             c: [{_: :td, class: :posts, style: style,
                   c: threads.map{|title,msgs| # each thread
-                    size = title.to_s.size
+                    size = title.to_s.unHTML.size
                     scale = if size > 70
                               0.8
                             elsif size > 50
