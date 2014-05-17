@@ -35,9 +35,9 @@ a {
 }
 
 .posts .g {
-    float:left;color:#fff;
+    color:#fff;
     background-color:#000;
-    margin-right: .14em;
+    padding: 0 .2em 0 .2em;
 }
 
 .posts .g:first-child {
@@ -64,7 +64,6 @@ a {
     float: left;
     background-color:#000;
     color:#fff;
-    margin-left: .25em;
 }
 
 .thread:hover, .thread:hover:visited {background-color:#f04}
