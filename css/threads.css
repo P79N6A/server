@@ -37,7 +37,13 @@ td.posts {
 }
 
 td.posts .g {
-    float:left;color:#000;
+    float:left;color:#fff;
+    background-color:#000;
+    margin-right: .14em;
+}
+
+td.posts .g:first-child {
+               color:#000;
     background-color:#fff;
 }
 

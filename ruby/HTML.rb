@@ -152,14 +152,20 @@ class R
     h.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless %w{alt class color href rel src title type}.member? a.name}}
     h.to_xhtml}
 
+  def offset # human-readable
+    (query_values.do{|q|
+      q['offset'].do{|o|
+       R[o].stripDoc.uri}} || hierPart).split('/').join(' ')
+  end
+
   View[LDP+'Resource'] = -> d,e {
     d['#'].do{|u|
       [u[Prev].do{|p|
          {_: :a, rel: :prev, href: p.uri,
-           c: [{class: :arrow, c: '&larr; '},{class: :uri, c: p.R.offset.split('/').join(' ')}]}},
+           c: [{class: :arrow, c: '&larr;'},{class: :uri, c: p.R.offset}]}},
        u[Next].do{|n|
          {_: :a, rel: :next, href: n.uri,
-           c: [{class: :uri, c: n.R.offset.split('/').join(' ')},{class: :arrow, c: '&rarr; '}]}},
+           c: [{class: :uri, c: n.R.offset},{class: :arrow, c: '&rarr;'}]}},
        ([(H.css '/css/page', true), (H.js '/js/pager'), (H.once e,:mu,(H.js '/js/mu'))
         ] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
