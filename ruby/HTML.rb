@@ -31,7 +31,7 @@ class H
 
   def H.css a,inline=false
     p = a + '.css'
-    inline ? {_: :style, c: p.R.r} :
+    inline ? {_: :style, href: p, c: p.R.r} :
     {_: :link, href: p, rel: :stylesheet, type: R::MIME[:css]}
   end
 
