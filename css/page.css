@@ -4,8 +4,7 @@ a[rel=next] { float:right }
 a[rel=prev] div, a[rel=next] div { display: inline }
 
 a[rel=prev] .uri, a[rel=next] .uri {
-               color: #888;
-    background-color: #000;
+    color: #888;
     font-size: .8em;
     white-space: nowrap;
 }

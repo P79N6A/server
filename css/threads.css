@@ -8,19 +8,11 @@ a {
     text-decoration:none;
 }
 
-table {
-    margin: .3em .16em 0 0;
-    border-spacing: 0;
-    float: right;
-}
+.group, .posts {float: right}
 
-tr.space {height: .5em}
+.group {min-width: 10em}
 
-td.group {
-    vertical-align:top;
-}
-
-td.group .to {
+.group .to {
     font-weight: bold;
     white-space: nowrap;
     border-width: .1em .1em .1em 0;
@@ -28,32 +20,34 @@ td.group .to {
     padding: 0 .1em 0 0;
 }
 
-td.group .to:hover {
+.group .to:hover {
     background-color:#fff;
 }
 
-td.posts {
+.posts {
     text-align:right;
+    margin-bottom: .5em;
+    padding-bottom: .4em
 }
 
-td.posts .g {
+.posts .g {
     float:left;color:#fff;
     background-color:#000;
     margin-right: .14em;
 }
 
-td.posts .g:first-child {
+.posts .g:first-child {
                color:#000;
     background-color:#fff;
 }
 
-td.posts .count {
+.posts .count {
     font-weight: bold;
     padding: .2em;
     color: #000;
 }
 
-td.posts .count:hover {
+.posts .count:hover {
     background-color:#fff;
 }
 

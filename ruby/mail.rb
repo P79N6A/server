@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -184,36 +184,35 @@ class R
       score.invert.max[1]}
 
     [View[LDP+'Resource'][d,env],
-     {_: :table, c: groups.map{|group,threads| # each group
-         color = cs
-         style = 'background-color:' + color
-         [{_: :tr,
-            c: [{_: :td, class: :posts, style: style,
-                  c: threads.map{|title,msgs| # each thread
-                    size = title.to_s.unHTML.size
-                    scale = if size > 72
-                              0.9
-                            elsif size < 16
-                              1.05
-                            elsif size < 24
-                              1.15
-                            else
-                              1
-                            end
-                    [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"},
-                     (if (c = msgs.size) > 2
-                        {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
-                      else
-                        msgs.map{|s|
-                          s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
-                            [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
-                               c: cr.R.mailUID}]}}                        
-                      end
-                      ),'<br>']}},
-                group.do{|g|
-                  {_: :td, class: :group,
-                    c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}}]},
-          {_: :tr, class: :space}]}},
+     groups.map{|group,threads| # each group
+       color = cs
+       style = 'background-color:' + color
+       [(group||'').do{|g| {class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
+        {class: :posts, style: style,
+          c: threads.map{|title,msgs| # each thread
+            size = title.to_s.unHTML.size
+            scale = if size > 72
+                      0.88
+                    elsif size < 16
+                      1.16
+                    elsif size < 24
+                      1.08
+                    else
+                      1
+                    end
+            [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"},
+             (if (c = msgs.size) > 2
+                {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
+              else
+                msgs.map{|s|
+                  s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
+                    [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
+                       c: cr.R.mailUID}]}}
+              end),
+             '<br>'
+            ]}},
+        '<br clear=all>'
+       ]},
      (H.css '/css/threads', true)]}
-  
+
 end
