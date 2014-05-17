@@ -11,6 +11,7 @@ a[rel=prev] .uri, a[rel=next] .uri {
     position: absolute;
     white-space: nowrap;
     top: 0;
+    z-index: -1;
 }
 
 a[rel=next] .uri {

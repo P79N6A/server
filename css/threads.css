@@ -1,5 +1,6 @@
 body {
     background-color:#000;
+    margin:0;
 }
 
 a {
@@ -18,8 +19,12 @@ td.group {
 td.group .to {
     font-weight: bold;
     white-space: nowrap;
-    border-width: 0.1em 0 0 0;
+    border-width: .1em .1em .1em 0;
     border-style: dashed;
+}
+
+td.group .to:hover {
+    background-color:#fff;
 }
 
 td.posts {
