@@ -16,7 +16,8 @@ a {
     font-weight: bold;
     white-space: nowrap;
     border: .1em dashed;
-    padding: 0 .1em 0 0;
+    padding: 0 .1em 0 .1em;
+    margin: 0 0 0 -.08em;
 }
 
 .group .to:hover {
@@ -24,6 +25,7 @@ a {
 }
 
 .posts {
+    margin-top: -.08em;
     margin-bottom: .5em;
     padding: .1em 0 .2em 0;
     max-width: 100ex;
