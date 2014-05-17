@@ -8,7 +8,11 @@ a {
     text-decoration:none;
 }
 
-table {border-spacing: 0;float: right}
+table {
+    margin: .3em .16em 0 0;
+    border-spacing: 0;
+    float: right;
+}
 
 tr.space {height: .5em}
 
@@ -21,6 +25,7 @@ td.group .to {
     white-space: nowrap;
     border-width: .1em .1em .1em 0;
     border-style: dashed;
+    padding: 0 .1em 0 0;
 }
 
 td.group .to:hover {

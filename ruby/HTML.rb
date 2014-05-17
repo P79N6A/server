@@ -156,10 +156,10 @@ class R
     d['#'].do{|u|
       [u[Prev].do{|p|
          {_: :a, rel: :prev, href: p.uri,
-           c: [{class: :arrow, c: '&larr; '},{class: :uri, c: p.R.hierPart}]}},
+           c: [{class: :arrow, c: '&larr; '},{class: :uri, c: p.R.offset.split('/').join(' ')}]}},
        u[Next].do{|n|
          {_: :a, rel: :next, href: n.uri,
-           c: [{class: :arrow, c: '&rarr; '},{class: :uri, c: n.R.hierPart}]}},
+           c: [{class: :uri, c: n.R.offset.split('/').join(' ')},{class: :arrow, c: '&rarr; '}]}},
        ([(H.css '/css/page', true), (H.js '/js/pager'), (H.once e,:mu,(H.js '/js/mu'))
         ] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 

@@ -36,7 +36,9 @@ class R
     E500[x,e]
   end
 
-  def q; @r.q end
+  def q
+    @r.q # if q not otherwise bound it's a single-char shortcut to query-string Hash
+  end
 
   E404 = -> e,r,g=nil {
     g ||= {}            # graph

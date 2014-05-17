@@ -125,6 +125,10 @@ class R
     indexPath.predicate o, false
   end
 
+  def offset
+    query_values.do{|q|q['offset']} || hierPart
+  end
+
   def indexPath
     R['/index/'+shorten.uri]
   end
