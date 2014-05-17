@@ -151,6 +151,10 @@ class R
     addDocsJSON :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
   end
 
+  def mailUID
+    fragment.do{|f| f.split('@')[0] }
+  end
+
   IndexMail = ->doc, graph, host {
     graph.map{|u,r| a = []
    r[Creator].do{|c|a.concat c}
@@ -178,10 +182,6 @@ class R
           score[a] ||= 0
           score[a] += weight[a] || 1}}
       score.invert.max[1]}
-
-    def mailUID
-      fragment.do{|f| f.split('@')[0] }
-    end
 
     [View[LDP+'Resource'][d,env],
      {_: :table, c: groups.map{|group,threads| # each group
