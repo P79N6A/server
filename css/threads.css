@@ -26,7 +26,7 @@ a {
 
 .posts {
     margin-bottom: .5em;
-    padding: 1em 0 .3em 0;
+    padding: .1em 0 .3em 0;
     max-width: 100ex;
 }
 
@@ -41,18 +41,15 @@ a {
     background-color:#fff;
 }
 
-.maker {position: relative; float: right}
-
 .count {
     font-weight: bold;
     padding: .2em;
 }
 
 .count, .sender {
-    position: absolute;
-    left: 0;
     color: #000;
     white-space: nowrap;
+    float: right;
 }
 
 .count:hover {
@@ -63,6 +60,7 @@ a {
     float: right;
     background-color:#000;
     color:#fff;
+    margin-left: .14em;
 }
 
 .thread:hover, .thread:hover:visited {background-color:#f04}
