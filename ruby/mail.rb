@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -182,14 +182,20 @@ class R
 
     [View[LDP+'Resource'][d,env],
      {_: :table, c: groups.map{|group,threads| # each group
-         color = 'background-color:' + R.cs
-         {_: :tr, c: [{_: :td,
-           c: threads.map{|title,msgs| # each thread
-             [{_: :a, class: 'thread', style: "border-color:#{c}", href: '/thread/'+msgs[0].R.basename, c: title},
-              msgs.map{|s| s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
-                  [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: color,
-                     c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>']}},
-               group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: color, c: g.R.abbr, href: g}}}]}}}, # group Identity
+         color = cs
+         style = 'background-color:' + color
+         [{_: :tr,
+            c: [{_: :td, class: :posts, style: style,
+                  c: threads.map{|title,msgs| # each thread
+                    [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title},
+                     msgs.map{|s|
+                       s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
+                         [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
+                            c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>',
+                    ]}},
+                group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: "color: #{color}", c: g.R.abbr, href: g}}}]},
+          {_: :tr, class: :space},
+         ]}},
      (H.css '/css/threads', true)]}
-
+  
 end
