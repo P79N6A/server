@@ -210,7 +210,7 @@ class R
                     end
             name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
 
-            [maker, name,'<br clear=all>']
+            [{class: :post, c: [name, maker]},'<br clear=all>']
           }}]},
      (H.css '/css/threads', true)]}
 

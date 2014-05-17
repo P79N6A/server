@@ -30,6 +30,8 @@ a {
     max-width: 100ex;
 }
 
+.posts .post {float: right}
+
 .posts .g {
     float:left;color:#fff;
     background-color:#000;
@@ -49,7 +51,7 @@ a {
 .count, .sender {
     color: #000;
     white-space: nowrap;
-    float: right;
+    float: left;
 }
 
 .count:hover {
@@ -57,7 +59,7 @@ a {
 }
 
 .thread {
-    float: right;
+    float: left;
     background-color:#000;
     color:#fff;
     margin-left: .14em;
