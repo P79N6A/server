@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 def H _
   case _
@@ -154,9 +154,14 @@ class R
 
   View[LDP+'Resource'] = -> d,e {
     d['#'].do{|u|
-      [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;',style: 'color:#fff;background-color:#000;font-size:2.4em;float:left'}},
-       u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;',style: 'color:#000;background-color:#fff;font-size:2.4em;float:right'}},
-       ([(H.js '/js/pager'),(H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}} # (n)ext (p)rev
+      [u[Prev].do{|p|
+         {_: :a, rel: :prev, href: p.uri,
+           c: [{class: :arrow, c: '&larr; '},{class: :uri, c: p.R.hierPart}]}},
+       u[Next].do{|n|
+         {_: :a, rel: :next, href: n.uri,
+           c: [{class: :arrow, c: '&rarr; '},{class: :uri, c: n.R.hierPart}]}},
+       ([(H.css '/css/page', true), (H.js '/js/pager'), (H.once e,:mu,(H.js '/js/mu'))
+        ] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),

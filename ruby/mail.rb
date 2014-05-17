@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -179,6 +179,10 @@ class R
           score[a] += weight[a] || 1}}
       score.invert.max[1]}
 
+    def mailUID
+      fragment.do{|f| f.split('@')[0] }
+    end
+
     [View[LDP+'Resource'][d,env],
      {_: :table, c: groups.map{|group,threads| # each group
          color = cs
@@ -190,9 +194,9 @@ class R
                      msgs.map{|s|
                        s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
                          [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
-                            c: cr.R.fragment.do{|f| f.split('@')[0] } || cr.uri}]}},'<br>',
+                            c: cr.R.mailUID}]}},'<br>',
                     ]}},
-                group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: "color: #{color}", c: g.R.abbr, href: g}}}]},
+                group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: "color: #{color}", c: g.R.mailUID, href: g}}}]},
           {_: :tr, class: :space},
          ]}},
      (H.css '/css/threads', true)]}

@@ -1,0 +1,29 @@
+a[rel=prev] { float:left }
+a[rel=next] { float:right }
+
+a[rel=prev], a[rel=next] { position: relative }
+a[rel=prev] div, a[rel=next] div { display: inline }
+
+a[rel=prev] .uri, a[rel=next] .uri {
+    color: #aaa;
+    background-color: #0;
+    font-size: .8em;
+    position: absolute;
+    white-space: nowrap;
+    top: 0;
+}
+
+a[rel=next] .uri {
+    right: 3em;
+}
+a[rel=prev] .uri {
+    left: 3em;
+}
+
+a[rel=prev] .arrow, a[rel=next] .arrow {
+    color: #ccc;
+    background-color: #444;
+    font-size:2.4em;
+}
+
+

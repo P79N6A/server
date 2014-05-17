@@ -13,7 +13,7 @@ tr.space {height: .5em}
 
 td.group {vertical-align:top; padding: 0 0 0 .16em}
 
-td.group .to {font-weight: bold}
+td.group .to {font-weight: bold; white-space: nowrap}
 
 td.posts {
     text-align:right;
