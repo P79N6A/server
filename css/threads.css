@@ -23,11 +23,6 @@ td.posts {
 td.posts .g {
     float:left;color:#000;
     background-color:#fff;
-    margin: 0;
-}
-
-.sender {
-    margin: 0;
 }
 
 .thread {

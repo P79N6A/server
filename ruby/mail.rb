@@ -167,8 +167,7 @@ class R
         weight[a] += 1}}
 
     threads = posts.group_by{|r|
-      r[Title].do{|t|
-        t[0].noHTML.
+      r[Title].do{|t|t[0].
         gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>').
         sub(/\b[rR][eE]: /,'')}}
 
