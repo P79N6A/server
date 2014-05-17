@@ -207,7 +207,7 @@ class R
               else
                 msgs.map{|s|
                   s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
-                    [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
+                    [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: style,
                        c: cr.R.mailUID}]}}
               end),'<br>']}}]},
      (H.css '/css/threads', true)]}
