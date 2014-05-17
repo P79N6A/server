@@ -191,14 +191,19 @@ class R
             c: [{_: :td, class: :posts, style: style,
                   c: threads.map{|title,msgs| # each thread
                     [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title},
-                     msgs.map{|s|
-                       s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
-                         [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
-                            c: cr.R.mailUID}]}},'<br>',
-                    ]}},
-                group.do{|g|{_: :td, class: :group, c: {_: :a, :class => :to, style: "color: #{color}", c: g.R.mailUID, href: g}}}]},
-          {_: :tr, class: :space},
-         ]}},
+                     (if (c = msgs.size) > 2
+                        {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
+                      else
+                        msgs.map{|s|
+                          s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
+                            [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
+                               c: cr.R.mailUID}]}}                        
+                      end
+                      ),'<br>']}},
+                group.do{|g|
+                  {_: :td, class: :group,
+                    c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}}]},
+          {_: :tr, class: :space}]}},
      (H.css '/css/threads', true)]}
   
 end
