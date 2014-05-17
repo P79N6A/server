@@ -190,7 +190,15 @@ class R
          [{_: :tr,
             c: [{_: :td, class: :posts, style: style,
                   c: threads.map{|title,msgs| # each thread
-                    [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title},
+                    size = title.to_s.size
+                    scale = if size > 70
+                              0.8
+                            elsif size > 50
+                              0.9
+                            else
+                              1.0
+                            end
+                    [{_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"},
                      (if (c = msgs.size) > 2
                         {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
                       else
