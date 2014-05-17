@@ -10,7 +10,7 @@ a {
 
 .group, .posts {float: right}
 
-.group {min-width: 10em}
+.group {min-width: 8em}
 
 .group .to {
     font-weight: bold;
@@ -27,7 +27,8 @@ a {
 .posts {
     text-align:right;
     margin-bottom: .5em;
-    padding-bottom: .4em
+    padding: .25em 0 .2em 0;
+    max-width: 100ex;
 }
 
 .posts .g {

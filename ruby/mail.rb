@@ -187,7 +187,8 @@ class R
      groups.map{|group,threads| # each group
        color = cs
        style = 'background-color:' + color
-       [(group||'').do{|g| {class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
+       ['<br clear=all>',
+        (group||'').do{|g| {class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
         {class: :posts, style: style,
           c: threads.map{|title,msgs| # each thread
             size = title.to_s.unHTML.size
@@ -208,11 +209,7 @@ class R
                   s[Creator].justArray.select(&:maybeURI).map{|cr| # each message
                     [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: 'sender', style: style,
                        c: cr.R.mailUID}]}}
-              end),
-             '<br>'
-            ]}},
-        '<br clear=all>'
-       ]},
+              end),'<br>']}}]},
      (H.css '/css/threads', true)]}
 
 end
