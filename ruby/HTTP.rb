@@ -108,24 +108,21 @@ module Th
 
   def selectFormat
 
-    # explicit URI of format-variant
-    {
-      '.html' => 'text/html',
+    { '.html' => 'text/html',         # format-variant URI suffix
       '.json' => 'application/json',
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/plain',
       '.n3' => 'text/n3',
       '.rdf' => 'application/rdf+xml',
       '.ttl' => 'text/turtle',
-      '.txt' => 'text/plain',
     }[File.extname(self['REQUEST_PATH'])].do{|mime|
       return mime}
 
-    accept.sort.reverse.map{|q,mimes| # descending q-values
+    accept.sort.reverse.map{|q,mimes| # Accept q-values descending
       mimes.map{|mime|
         return mime if RDF::Writer.for(:content_type => mime)}}
 
-    'text/html'
+    'text/n3'                         # default
   end
 
   def accept; @accept ||= accept_ end
