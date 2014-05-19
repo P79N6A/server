@@ -148,7 +148,7 @@ class R
   end
 
   def triplrMailMessage &f
-    addDocsJSON :triplrMail, @r['SERVER_NAME'], [SIOC+'reply_of'], IndexMail, &f
+    addDocsJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}||'localhost', [SIOC+'reply_of'], IndexMail, &f
   end
 
   def mailUID
