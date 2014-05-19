@@ -112,7 +112,7 @@ class R
                 also.push link
                 b.replace " <a href='#{linkPath}'><b>#{name}</b>(#{s})</a>"}}}
 
-          graph[uri][Content] = body.inner_html
+          graph[uri][Content] = body.children.to_xhtml
           doc.w graph, true
         end
 
