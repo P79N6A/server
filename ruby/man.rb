@@ -94,7 +94,7 @@ class R
           body.css('font').map{|f|f.remove_attribute 'color'}
 
           body.xpath('//text()').map{|a| # HTMLize plain-text links       bare command-refs to HTML
-            a.replace a.to_s.gsub('&gt;','>').gsub('&lt;','<').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
+            a.replace a.to_s.gsub('&amp;','&').gsub('&gt;','>').gsub('&lt;','<').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
 
           body.css('a').map{|a| # inspect links
             a.attr('href').do{|href|
