@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   # mount man-handler on /man or / (optional hostname):
@@ -60,7 +60,9 @@ class R
               Type => R[Purl+'ontology/bibo/Manual'],
               DC+'language' => lang,
               RDFs+'seeAlso' => [],
+              SIOC+'has_container' => [R['/man/'+name[0]+'/']],
             }}
+          graph[uri][SIOC+'has_container'].push R['/man/'+section] if section
           also = graph[uri][RDFs+'seeAlso']
 
           locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
@@ -91,7 +93,7 @@ class R
             i.replace H[{_: :img, src: p}]}
           body.css('font').map{|f|f.remove_attribute 'color'}
 
-          body.xpath('//text()').map{|a| #  HTMLize hyperlinks
+          body.xpath('//text()').map{|a| # HTMLize plain-text links       bare command-refs to HTML
             a.replace a.to_s.gsub('&gt;','>').gsub('&lt;','<').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
 
           body.css('a').map{|a| # inspect links
@@ -106,7 +108,7 @@ class R
                 name, s = b.inner_text, section[1]
                 n.replace section[2]
                 linkPath = "/man/#{s}/#{name}#{qs}"
-                link = linkPath.R.setEnv(r).lateHost
+                link = linkPath.R.setEnv(r).bindHost
                 also.push link
                 b.replace " <a href='#{linkPath}'><b>#{name}</b>(#{s})</a>"}}}
 
