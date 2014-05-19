@@ -40,8 +40,10 @@ class R
   def mail; Mail.read node if f end
 
   def triplrMail &b
-    m = mail          ; return unless m              # mail
-    id = m.message_id ; return unless id             # message-ID
+    m = mail; return unless m                        # mail
+    id = m.message_id || m.resent_message_id         # message-ID
+    return unless id
+    puts "id: #{id}"
     e = MessagePath[id]                              # message URI
 
     yield e, DC+'identifier', id                     # origin-domain ID
