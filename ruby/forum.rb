@@ -38,7 +38,7 @@ class R
 
       name = p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3]
 
-      uri = '//' + e['SERVER_NAME'] + '/' + sub + '/' + Time.now.iso8601[0..7].gsub(/-/,'/') + name
+      uri = '//' + e['SERVER_NAME'] + '/forum/' + sub + '/' + Time.now.iso8601[0..10].gsub(/[-T]/,'/') + name
 
       post = {'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
@@ -54,7 +54,6 @@ class R
 
       doc = uri.R.jsonDoc
       doc.w({uri=>post},true) # save
-      doc.ln_s R['//' + e['SERVER_NAME'] + '/forum/' + sub + '/' + Time.now.iso8601[0..18].gsub(/[-T]/,'/') + '.' + name]
 
       [303,{'Location' => uri},[]]
     else
