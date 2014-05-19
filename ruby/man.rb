@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   # to mount man-handler on / (optionally with hostname)

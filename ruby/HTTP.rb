@@ -110,7 +110,6 @@ module Th
 
     { '.html' => 'text/html',         # format-variant URI suffix
       '.json' => 'application/json',
-      '.jsonld' => 'application/ld+json',
       '.nt' => 'text/plain',
       '.n3' => 'text/n3',
       '.rdf' => 'application/rdf+xml',
