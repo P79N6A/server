@@ -4,8 +4,9 @@ body {
 
 a { font-size:1.1em;
     color:#000;
+    background-color: #fff
     padding-left:.1em;
-    border-radius:.2em .08em .08em .2em;
+    border-radius:.2em;
     border-style:dotted;
     border-width:.1em;
     text-decoration:none;
@@ -15,14 +16,4 @@ a:hover {
     background-color: #000;
 }
 
-img {background-color: #fff}
-
-a.lang {
-    float: right;
-    background-color: #444;
-    color: #eee;
-    margin:.08em;
-    border-width:0;
-    padding:.08em;
-}
-a.lang:hover{background-color:#888}
+a.lang {float: right}

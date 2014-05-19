@@ -4,8 +4,8 @@ class R
   # mount man-handler on /man or / (optional hostname):
   # GET['hostname/'] = Man
 
-  Man = -> e,r {
-#  GET['/man'] = -> e,r {
+#  Man = -> e,r {
+  GET['/man'] = -> e,r {
     graph = RDF::Graph.new
     manPath = '/usr/share/man'
     name = e.justPath.uri.sub(/^\/man/,'').tail || ''
