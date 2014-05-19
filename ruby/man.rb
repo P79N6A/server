@@ -58,14 +58,15 @@ class R
               Title => name,
               Type => R[Purl+'ontology/bibo/Manual'],
               DC+'language' => lang,
+              DC+'locale' => [],
               RDFs+'seeAlso' => [],
               SIOC+'has_container' => [R['/man/'+name[0]+'/']],
             }}
           graph[uri][SIOC+'has_container'].push R['/man/'+section] if section
+          locales = graph[uri][DC+'locale']
           also = graph[uri][RDFs+'seeAlso']
 
-          locales = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b| !b.match(/^man/) && !b.match(/\./) }}.map{|p|File.basename p}
-          localesAvail = locales.select{|l|
+          localesAvail = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b|!b.match(/^man/) && !b.match(/\./)}}.map{|p|File.basename p}.select{|l|
             File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}
 
           imagePath = dir.d + '/images'
@@ -79,14 +80,6 @@ class R
           # add CSS link
           body.add_child H H.css('/css/man')
           
-          # add localization links
-          (body.css('h1')[0] ||
-           body.css('p')[0]
-           ).add_previous_sibling H localesAvail.map{|l|
-            {_: :a, class: :lang, href: r['REQUEST_PATH']+'?lang='+l, c: l}}
-
-          also.push r['REQUEST_PATH'].R unless localesAvail.empty?
-          
           # webize image paths
           body.css('img').map{|i|
             p = R.unPOSIX i.attr 'src'
@@ -99,6 +92,15 @@ class R
           body.css('a').map{|a| # inspect links
             a.attr('href').do{|href|
               also.push R[href] unless href.match(/^#/)}}
+
+          # add localization links
+          locales.push r['REQUEST_PATH'].R unless localesAvail.empty?
+          (body.css('h1')[0] ||
+           body.css('p')[0]
+           ).add_previous_sibling H localesAvail.map{|l|
+            locale = r['REQUEST_PATH']+'?lang='+l
+            locales.push R[locale]
+            {_: :a, class: :lang, href: locale, c: l}}
 
           # RDF + HTML command-refs
           qs = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
