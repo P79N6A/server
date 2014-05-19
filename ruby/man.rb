@@ -1,11 +1,8 @@
 watch __FILE__
 class R
 
-  # mount man-handler on /man or / (optional hostname):
-  # GET['hostname/'] = Man
-
-#  Man = -> e,r {
-  GET['/man'] = -> e,r {
+  # to mount man-handler on / (optionally with hostname)
+  Man = -> e,r { # GET['host/'] = Man
     graph = RDF::Graph.new
     manPath = '/usr/share/man'
     name = e.justPath.uri.sub(/^\/man/,'').tail || ''
@@ -22,6 +19,7 @@ class R
         Pathname(manPath+'/man'+section).c.map{|p|
          name = pageName[p]
          graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
+         graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
 
       else # alpha-index pointers
         ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
@@ -31,6 +29,7 @@ class R
       # alpha-index
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
       Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['/man/' + pageName[a]])}
+      graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
       r.graphResponse graph
 
     else # page
@@ -74,9 +73,8 @@ class R
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
           pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
-          page = `#{pageCmd}`#.to_utf8
-          page = Nokogiri::HTML.fragment page
-          body = page.css('body')[0]
+          page = `#{pageCmd}`.to_utf8
+          body = Nokogiri::HTML.parse(page).css('body')[0]
           
           # add CSS link
           body.add_child H H.css('/css/man')
@@ -114,8 +112,7 @@ class R
                 also.push link
                 b.replace " <a href='#{linkPath}'><b>#{name}</b>(#{s})</a>"}}}
 
-          graph[uri][Content] = page.to_s
-#          puts [name,section,acceptLang,lang,superLang,langSH,roff,dir,doc,pageCmd]
+          graph[uri][Content] = body.inner_html
           doc.w graph, true
         end
 
