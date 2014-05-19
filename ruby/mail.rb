@@ -43,7 +43,7 @@ class R
     m = mail; return unless m                        # mail
     id = m.message_id || m.resent_message_id         # message-ID
     return unless id
-    puts "id: #{id}"
+
     e = MessagePath[id]                              # message URI
 
     yield e, DC+'identifier', id                     # origin-domain ID
