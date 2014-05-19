@@ -18,11 +18,13 @@ td.key > a > .frag {
 }
 
 td.val > a > .frag {
-    border-radius: .3em;
-    border: .1em dotted #e8e8e8;
     color: #000;
-    background-color:#e7e7e7;
+    background-color:#f5f5f5;
+    border-radius: .1em .2em .15em .1em;
+    padding: 0 .15em .08em .15em
 }
+
+td.val > a > .frag:hover {background-color: #ff0}
 
 td.val {max-width: 80ex; overflow: hidden}
 
