@@ -52,7 +52,7 @@ class R
         cached = doc.e && doc.m > (Pathname man).stat.mtime
 
         if !cached
-          uri = res + '#'
+          uri = e.uri + '#'
           graph = {
             uri => {
               'uri' => uri,
