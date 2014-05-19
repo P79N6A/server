@@ -139,7 +139,7 @@ module Th
 
   def graphResponse graph
     [200,
-     {'Content-Type' => format,
+     {'Content-Type' => format + '; charset=UTF-8',
       'Triples' => graph.size.to_s,
        'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
      },
@@ -147,7 +147,7 @@ module Th
   end
 
   def htmlResponse m
-    [200,{'Content-Type'=> 'text/html'},[R::Render['text/html'][m, self]]]
+    [200,{'Content-Type'=> 'text/html; charset=UTF-8'},[R::Render['text/html'][m, self]]]
   end
 
 end
