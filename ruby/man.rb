@@ -23,12 +23,12 @@ class R
          name = pageName[p]
          graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
 
-      else       # alpha-index pointers
+      else # alpha-index pointers
         ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
       end
       r.graphResponse graph
 
-                 # alpha-index
+      # alpha-index
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
       Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['/man/' + pageName[a]])}
       r.graphResponse graph
@@ -86,6 +86,8 @@ class R
            body.css('p')[0]
            ).add_previous_sibling H localesAvail.map{|l|
             {_: :a, class: :lang, href: r['REQUEST_PATH']+'?lang='+l, c: l}}
+
+          also.push r['REQUEST_PATH'].R unless localesAvail.empty?
           
           # webize image paths
           body.css('img').map{|i|
