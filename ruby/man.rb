@@ -134,7 +134,7 @@ class R
           doc.w graph, true
         end
 
-        doc.setEnv(r).response
+        res.setEnv(r).response
       end
     end
   }
