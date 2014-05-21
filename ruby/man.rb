@@ -1,9 +1,7 @@
 watch __FILE__
 class R
 
-  GET['/man'] =
-#  Man =
-    -> e,r {
+  GET['/man'] = -> e,r {
 
     graph = RDF::Graph.new
 
