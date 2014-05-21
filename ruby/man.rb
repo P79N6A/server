@@ -89,7 +89,7 @@ class R
             args}
 
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
-          `#{pageCmd['utf8',"-P -u -P -b"]} > #{txt.sh}`
+          `#{pageCmd['utf8',"-t -P -u -P -b"]} > #{txt.sh}`
 
           body = Nokogiri::HTML.parse(page).css('body')[0]
           
