@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
 #  GET['/man'] =
@@ -85,7 +85,7 @@ class R
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
           pageCmd = -> format,opts="" {
             args = "zcat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"
-            puts args
+#            puts args
             args}
 
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
