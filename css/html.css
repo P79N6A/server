@@ -20,8 +20,8 @@ td.key > a > .frag {
 td.val > a > .frag {
     color: #fff;
     background-color:#122;
-    border-radius: .1em;
-    padding: 0 .1em .08em .1em
+    border-radius: .2em;
+    padding: .1em
 }
 
 td.val > a > .frag:hover {
