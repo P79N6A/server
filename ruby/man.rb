@@ -1,8 +1,8 @@
 #watch __FILE__
 class R
 
-  GET['/man'] =
-#  Man =
+#  GET['/man'] =
+  Man =
     -> e,r {
 
     graph = RDF::Graph.new
@@ -53,12 +53,13 @@ class R
         dir = R['//' + r['SERVER_NAME'] + roff.dirname.sub(/.*\/share/,'')]
         res = dir.child roff.bare
         doc = res + '.e'
-        html = res + '.html'
-        txt = res + '.txt'
         cached = doc.e && doc.m > (Pathname man).stat.mtime
 
         if !cached
           uri = e.uri + '#'
+          txt = res + '.txt'
+          html = res + '.html'
+
           graph = {
             uri => {
               'uri' => uri,
@@ -69,8 +70,8 @@ class R
               RDFs+'seeAlso' => [],
               DC+'hasFormat' => [html, txt],
               SIOC+'has_container' => [R['/man/'+name[0]+'/']],
-              Content => H({_: :iframe, seamless: :seamless, style: "", src: html}),
             }}
+
           graph[uri][SIOC+'has_container'].push R['/man/'+section] if section
           locales = graph[uri][DC+'locale']
           also = graph[uri][RDFs+'seeAlso']
@@ -83,7 +84,7 @@ class R
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
           pageCmd = -> format,opts="" {"zcat #{man} | groff #{preconv} -T #{format} -man #{opts}"}
-          puts pageCmd
+#          puts pageCmd['utf8']
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
            txt.w `#{pageCmd['utf8']}`.to_utf8
 
