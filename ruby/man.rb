@@ -1,8 +1,8 @@
-#watch __FILE__
+watch __FILE__
 class R
 
-#  GET['/man'] =
-  Man =
+  GET['/man'] =
+#  Man =
     -> e,r {
 
     graph = RDF::Graph.new
@@ -83,10 +83,13 @@ class R
           FileUtils.mkdir_p imagePath unless File.exist? imagePath
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
-          pageCmd = -> format,opts="" {"zcat #{man} | groff #{preconv} -T #{format} -man #{opts}"}
-#          puts pageCmd['utf8']
+          pageCmd = -> format,opts="" {
+            args = "zcat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"
+            puts args
+            args}
+
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
-           txt.w `#{pageCmd['utf8']}`.to_utf8
+          `#{pageCmd['utf8',"-P -u -P -b"]} > #{txt.sh}`
 
           body = Nokogiri::HTML.parse(page).css('body')[0]
           

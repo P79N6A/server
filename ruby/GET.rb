@@ -3,11 +3,9 @@ class R
 
   def GET
     i = 'index.html' # files at host-specific + global paths
-    [self,
-     justPath,
+    [self, justPath,
      *(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f).do{|file|
-      a = @r.accept.values.flatten
-      return file.setEnv(@r).fileGET if a.empty? || (a.member? file.mimeP) || (a.member? '*/*')} 
+      return file.setEnv(@r).fileGET}
     uri = stripDoc # format-variant suffix
     uri = uri.parent.descend if uri.to_s.match(/\/index$/) # index
     uri.setEnv(@r).resourceGET # generic resource
