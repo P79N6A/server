@@ -1,9 +1,12 @@
 #watch __FILE__
 class R
 
-  # to mount man-handler on / (optionally with hostname)
-  Man = -> e,r { # GET['host/'] = Man
+  GET['/man'] =
+#  Man =
+    -> e,r {
+
     graph = RDF::Graph.new
+
     manPath = '/usr/share/man'
     name = e.justPath.uri.sub(/^\/man/,'').tail || ''
     section = nil
@@ -21,8 +24,10 @@ class R
          graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
          graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
 
-      else # alpha-index pointers
+      else # pointers to indexes
         ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
+         graph << RDF::Statement.new(R['/man'], R['http://purl.org/linked-data/api/vocab#viewer'], R['/man?view=tabulate'])
+
       end
       r.graphResponse graph
 
@@ -48,6 +53,8 @@ class R
         dir = R['//' + r['SERVER_NAME'] + roff.dirname.sub(/.*\/share/,'')]
         res = dir.child roff.bare
         doc = res + '.e'
+        html = res + '.html'
+        txt = res + '.txt'
         cached = doc.e && doc.m > (Pathname man).stat.mtime
 
         if !cached
@@ -60,7 +67,9 @@ class R
               DC+'language' => lang,
               DC+'locale' => [],
               RDFs+'seeAlso' => [],
+              DC+'hasFormat' => [html, txt],
               SIOC+'has_container' => [R['/man/'+name[0]+'/']],
+              Content => H({_: :iframe, seamless: :true, style: "width: 100%; height: 100%", src: html}),
             }}
           graph[uri][SIOC+'has_container'].push R['/man/'+section] if section
           locales = graph[uri][DC+'locale']
@@ -73,11 +82,14 @@ class R
           FileUtils.mkdir_p imagePath unless File.exist? imagePath
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
-          pageCmd = "zcat #{man} | groff #{preconv} -T html -man -P -D -P #{imagePath}"
-          page = `#{pageCmd}`.to_utf8
+          pageCmd = -> format,opts="" {"zcat #{man} | groff #{preconv} -T #{format} -man #{opts}"}
+          puts pageCmd
+          page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
+           txt.w `#{pageCmd['utf8']}`.to_utf8
+
           body = Nokogiri::HTML.parse(page).css('body')[0]
           
-          # add CSS link
+          # CSS
           body.add_child H H.css('/css/man')
           
           # webize image paths
@@ -93,7 +105,7 @@ class R
             a.attr('href').do{|href|
               also.push R[href] unless href.match(/^#/)}}
 
-          # add localization links
+          # localization links
           locales.push r['REQUEST_PATH'].R unless localesAvail.empty?
           (body.css('h1')[0] ||
            body.css('p')[0]
@@ -114,7 +126,7 @@ class R
                 also.push link
                 b.replace " <a href='#{linkPath}'><b>#{name}</b>(#{s})</a>"}}}
 
-          graph[uri][Content] = body.children.to_xhtml
+          html.w body.children.to_xhtml
           doc.w graph, true
         end
 
