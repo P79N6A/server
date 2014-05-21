@@ -142,7 +142,9 @@ module Th
       'Triples' => graph.size.to_s,
        'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
      },
-     [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
+     [(format == 'text/html' &&
+    q['view'] == 'tabulate') ? H[R::View['tabulate'][]] :
+      graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
   end
 
   def htmlResponse m

@@ -69,7 +69,7 @@ class R
               RDFs+'seeAlso' => [],
               DC+'hasFormat' => [html, txt],
               SIOC+'has_container' => [R['/man/'+name[0]+'/']],
-              Content => H({_: :iframe, seamless: :true, style: "width: 100%; height: 100%", src: html}),
+              Content => H({_: :iframe, seamless: :seamless, style: "", src: html}),
             }}
           graph[uri][SIOC+'has_container'].push R['/man/'+section] if section
           locales = graph[uri][DC+'locale']
@@ -130,7 +130,7 @@ class R
           doc.w graph, true
         end
 
-        res.R.setEnv(r).response
+        doc.setEnv(r).response
       end
     end
   }

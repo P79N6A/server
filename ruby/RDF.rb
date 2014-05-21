@@ -2,7 +2,8 @@
 class R
 
   Tabulate = -> d,e { e.q['view'] ||= 'tabulate' ; nil }
-  View['tabulate'] = ->d,e { src = 'https://w3.scripts.mit.edu/tabulator/'
+  View['tabulate'] = ->d=nil,e=nil {
+    src = 'https://w3.scripts.mit.edu/tabulator/'
     [(H.css src + 'tabbedtab'),(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),(H.js src + 'js/mashup/mashlib'),
 "<script>jQuery(document).ready(function() {
     var uri = window.location.href;
