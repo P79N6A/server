@@ -51,13 +51,16 @@ class R
     R.schemaSources.map{|prefix,uri| uri.R.cacheSchema prefix }
   end
 
+  # add schema.org
+  # sh$ R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
+
   def cacheSchema prefix
     short = R['schema'].child(prefix).n3
     if !short.e
       puts uri
       head = `curl -L --connect-timeout 6 -I #{uri.sh}`; puts head
       size = head.lines.grep(/^Content-Length/)[-1].do{|l|l.gsub(/\D/,'').to_i}
-      unless size && size > 720e3
+      unless size && size > 1024e3
         terms = RDF::Graph.load uri
         triples = terms.size
         if triples > 0
