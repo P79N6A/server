@@ -15,7 +15,7 @@ pre.mail a[rel=untyped] {
     font-weight: bold;
 }
 
-tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"],tr[property="http://purl.org/dc/terms/identifier"],tr[property="http://rdfs.org/sioc/ns#reply_of"] {display:none}
+tr[property="http://www.w3.org/ns/rdf#type"],tr[property="http://www.w3.org/ns/rdfs#label"],tr[property="http://purl.org/dc/terms/identifier"],tr[property="http://rdfs.org/sioc/ns#reply_of"] {display:none}
 
 pre.mail .q {background-color:#00f;color:#fff;display:block}
 pre.mail .q[depth="1"] {background-color:#016;color:#fff}
