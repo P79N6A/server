@@ -38,10 +38,6 @@ class R
 
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
-  def stripDoc;  uri.sub(Doc,'').R end
-  def stripFrag; uri.split(/#/)[0].R end
-  def stripSlash; (uri[-1] == '/' && path != '/') ? uri[0..-2].R : self end
-  def docroot; stripFrag.stripDoc.stripSlash end
 
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
@@ -85,6 +81,22 @@ class R
 
   def R.dive s
     s[0..2] + '/' + s[3..-1]
+  end
+
+  def docroot; stripFrag.stripDoc.stripSlash end
+
+  def stripDoc;  uri.sub(Doc,'').R end
+  def stripFrag; uri.split(/#/)[0].R end
+  def stripSlash
+    if uri[-1] == '/'
+      if path == '/'
+        R[hostPart + '/index']
+      else
+        uri[0..-2].R
+      end
+    else
+      self
+    end
   end
 
 end

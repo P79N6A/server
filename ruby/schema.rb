@@ -52,7 +52,7 @@ class R
   end
 
   # add schema.org
-  # sh$ R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
+  # $ R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
 
   def cacheSchema prefix
     short = R['schema'].child(prefix).n3
