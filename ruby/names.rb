@@ -83,14 +83,27 @@ class R
     s[0..2] + '/' + s[3..-1]
   end
 
-  def docroot; stripFrag.stripDoc.stripSlash end
+  def docroot # -frag -ext -slash
+    stripFrag.stripDoc.stripSlash.do{|u|
+      if u.path == '/'
+        u + 'index'
+      else
+        u
+      end}
+  end
 
-  def stripDoc;  uri.sub(Doc,'').R end
-  def stripFrag; uri.split(/#/)[0].R end
+  def stripFrag
+    R uri.split(/#/)[0]
+  end
+
+  def stripDoc
+    R uri.sub Doc, ''
+  end
+
   def stripSlash
     if uri[-1] == '/'
       if path == '/'
-        R[hostPart + '/index']
+        self
       else
         uri[0..-2].R
       end
