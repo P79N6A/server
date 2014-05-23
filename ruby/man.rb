@@ -68,13 +68,13 @@ class R
               DC+'language' => lang,
               DC+'locale' => [],
               RDFs+'seeAlso' => [],
+              SKOS+'related' => [],
               DC+'hasFormat' => [html, txt],
               SIOC+'has_container' => [R['/man/'+name[0]+'/']],
             }}
 
           graph[uri][SIOC+'has_container'].push R['/man/'+section] if section
           locales = graph[uri][DC+'locale']
-          also = graph[uri][RDFs+'seeAlso']
 
           localesAvail = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b|!b.match(/^man/) && !b.match(/\./)}}.map{|p|File.basename p}.select{|l|
             File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}
@@ -102,12 +102,12 @@ class R
             i.replace H[{_: :img, src: p}]}
           body.css('font').map{|f|f.remove_attribute 'color'}
 
-          body.xpath('//text()').map{|a| # HTMLize plain-text links       bare command-refs to HTML
+          body.xpath('//text()').map{|a| # HTMLize plain-text links                          <b> wrap bare commandrefs
             a.replace a.to_s.gsub('&amp;','&').gsub('&gt;','>').gsub('&lt;','<').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
 
           body.css('a').map{|a| # inspect links
             a.attr('href').do{|href|
-              also.push R[href] unless href.match(/^#/)}}
+              graph[uri][RDFs+'seeAlso'].push R[href] unless href.match(/^#/)}}
 
           # localization links
           locales.push r['REQUEST_PATH'].R unless localesAvail.empty?
@@ -127,7 +127,7 @@ class R
                 n.replace section[2]
                 linkPath = "/man/#{s}/#{name}#{qs}"
                 link = linkPath.R.setEnv(r).bindHost
-                also.push link
+                graph[uri][SKOS+'related'].push link
                 b.replace " <a href='#{linkPath}'><b>#{name}</b>(#{s})</a>"}}}
 
           html.w body.children.to_xhtml

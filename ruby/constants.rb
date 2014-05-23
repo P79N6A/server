@@ -46,6 +46,7 @@ class R < RDF::URI
   Stat     = W3   + 'ns/posix/stat#'
   CSV      = W3   + 'ns/csv#'
   EXIF     = W3   + '2003/12/exif/ns#'
+  SKOS     = W3   + '2004/02/skos/core#'
   Atom     = W3   + '2005/Atom'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
