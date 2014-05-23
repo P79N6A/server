@@ -119,13 +119,12 @@ class R
             {_: :a, class: :lang, href: locale, c: l}}
 
           # RDF + HTML command-refs
-          qs = r['QUERY_STRING'].do{|q| q.empty? ? '' : '?' + q}
           body.css('b').map{|b|
             b.next.do{|n|
               n.to_s.match(/\(([0-9])\)(.*)/).do{|section|
                 name, s = b.inner_text, section[1]
                 n.replace section[2]
-                linkPath = "/man/#{s}/#{name}#{qs}"
+                linkPath = "/man/#{s}/#{name}"
                 link = linkPath.R.setEnv(r).bindHost
                 graph[uri][SKOS+'related'].push link
                 b.replace " <a href='#{linkPath}'><b>#{name}</b>(#{s})</a>"}}}
