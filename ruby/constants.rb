@@ -70,6 +70,7 @@ class R < RDF::URI
   # configuration for RDF::Writer
   Prefixes = {
     :ldp => RDF::URI(LDP),
+    :rdf => RDF::URI(RDFns),
     :stat => RDF::URI(Stat),
   }
 

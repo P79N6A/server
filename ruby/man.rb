@@ -83,10 +83,7 @@ class R
           FileUtils.mkdir_p imagePath unless File.exist? imagePath
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
-          pageCmd = -> format,opts="" {
-            args = "zcat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"
-#            puts args
-            args}
+          pageCmd = -> format,opts="" {"zcat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
 
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
           `#{pageCmd['utf8',"-t -P -u -P -b"]} > #{txt.sh}`
@@ -102,7 +99,7 @@ class R
             i.replace H[{_: :img, src: p}]}
           body.css('font').map{|f|f.remove_attribute 'color'}
 
-          body.xpath('//text()').map{|a| # HTMLize plain-text links                          <b> wrap bare commandrefs
+          body.xpath('//text()').map{|a| # HTMLize plain-text                                <b> wrapped command-refs
             a.replace a.to_s.gsub('&amp;','&').gsub('&gt;','>').gsub('&lt;','<').hrefs.gsub /\b([^<>\s(]+)\(/mi, '<b>\1</b>('}
 
           body.css('a').map{|a| # inspect links

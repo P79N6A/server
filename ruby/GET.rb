@@ -17,7 +17,7 @@ class R
 
   def fileGET
     @r[:Response].update({
-      'Content-Type' => mimeP,
+      'Content-Type' => mimeP + '; charset=UTF-8',
       'ETag' => [m,size].h,
     })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mimeP.match /^(audio|image|video)/
