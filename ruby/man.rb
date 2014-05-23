@@ -73,7 +73,6 @@ class R
               SIOC+'has_container' => [R['/man/'+name[0]+'/']],
             }}
 
-          graph[uri][SIOC+'has_container'].push R['/man/'+section] if section
           locales = graph[uri][DC+'locale']
 
           localesAvail = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b|!b.match(/^man/) && !b.match(/\./)}}.map{|p|File.basename p}.select{|l|
