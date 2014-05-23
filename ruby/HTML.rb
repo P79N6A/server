@@ -175,11 +175,9 @@ class R
        {class: :dir, style: "background-color: #{R.cs}",
          c: [resource.descend.href(('' if resource == '#')),
              r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
-             r[LDP+'contains'].do{|c|c.map{|c|
-                 c = c.R
+             r[LDP+'contains'].do{|c|c.map{|c|c = c.R
                  label = e[:Graph][c.uri].do{|r|r[Label]}
-                 c.href label
-               }}]}}]}
+                 [(c.href label),' ']}}]}}]}
 
   Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
