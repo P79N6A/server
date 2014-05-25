@@ -1,20 +1,20 @@
 a[rel=prev] { float:left }
 a[rel=next] { float:right }
 
-a[rel=prev] div, a[rel=next] div { display: inline }
+a[rel=next], a[rel=prev]{
+    text-decoration: none;
+}
+
+a[rel=prev] div, a[rel=next] div {
+    display: inline;
+}
 
 a[rel=prev] .uri, a[rel=next] .uri {
-    color: #ccc;
-    background-color: #000;
-    font-size: .8em;
+    font-size: .88em;
     white-space: nowrap;
 }
 
-a[rel=prev] .uri:hover, a[rel=next] .uri:hover { color:#fff}
-
 a[rel=prev] .arrow, a[rel=next] .arrow {
-               color: #fff;
-    background-color: #000;
     font-size:2.4em;
 }
 
