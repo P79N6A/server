@@ -8,43 +8,33 @@ class R
         e.q['view'] ||= 'table'
         r.descend.setEnv(e).response
       else # sub
-        r.q['set'] = 'forum'
-        e['name'] = path
+        r.q['set'] = 'page'
+        r.q['view'] ||= 'subforum'
+        r.q['forum'] = path
         nil
       end
-    elsif p = path.match(/([^\/]+)\/post$/) # create
-      e.q['view'] = 'newBoardPost'
-      e['sub'] = p[1]
-      e.htmlResponse({})
-    else # post
-      
+    else
+      nil
     end}
-
-  FileSet['forum'] = ->d,e,m{
-    m['#new'] = {Type => R['newBoardPost']} # quick-post to this sub
-    e['c'] ||= 12
-    FileSet['page'][d,e,m] # merge with recently-bumped threads (fs sort is created order), ie recent-symlinks dir or RAM references
-  }
 
   POST['/forum'] = -> d,e{
     ps = d.path.sub(/^\/forum/,'').tail.split '/'
     sub = ps[0]
-    puts ps,ps.size
     p = (Rack::Request.new d.env).params
     title = p['title']
     content = p['content']
     if sub && content && !content.empty?
-
+      date = Time.now.iso8601
       if ps.size == 1 # new thread
         name = p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3]
-        loc = Time.now.iso8601[0..10].gsub(/[-T]/,'/') + name
+        loc = date[0..10].gsub(/[-T]/,'/') + name
       else
-        
+        puts ps,ps.size
       end
 
       uri = '//' + e['SERVER_NAME'] + '/forum/' + sub + '/' + loc
 
-      post = {'uri' => uri,
+      post = {'uri' => uri, Date => date,
         Type => R[SIOCt+'BoardPost'],
         Content => CleanHTML[content]}
 
@@ -73,8 +63,16 @@ class R
         c: [{_: :a, href: post.uri, c: {_: :h3, c: t}}, post[Content]
            ]}}}
 
-  View['newBoardPost'] = -> d,e {
-    ['post on ',{_: :b, c: e['name'].hrefs},
+  View['subforum'] = -> d,e {
+    [d.resourcesOfType(SIOCt+'BoardPost').map{|post|
+       
+     },
+     View['makepost'][d,e]
+    ]
+  }
+
+  View['makepost'] = -> d,e {
+    ['post on ',{_: :b, c: e.q['forum'].hrefs},
      {_: :form, method: :POST, enctype: "multipart/form-data",
        c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
            {_: :textarea, rows: 12, cols: 48, name: :content},'<br>',
