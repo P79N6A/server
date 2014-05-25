@@ -41,3 +41,5 @@ a {text-decoration:none}
 }
 
 td.val {background-color:#fff;color:#000}
+
+a[rel=next] .uri,a[rel=prev] .uri{color:#fff;}
