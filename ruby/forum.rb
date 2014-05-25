@@ -30,20 +30,17 @@ class R
     ps = d.path.sub(/^\/forum/,'').tail.split '/'
     sub = ps[0]
     puts ps,ps.size
-
-    if ps.size == 1 # new thread
-      name = p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3]
-      loc = Time.now.iso8601[0..10].gsub(/[-T]/,'/') + name
-    else # reply
-
-    end
-
     p = (Rack::Request.new d.env).params
+    title = p['title']
     content = p['content']
+    if sub && content && !content.empty?
 
-    if content && !content.empty?
-
-
+      if ps.size == 1 # new thread
+        name = p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3]
+        loc = Time.now.iso8601[0..10].gsub(/[-T]/,'/') + name
+      else
+        
+      end
 
       uri = '//' + e['SERVER_NAME'] + '/forum/' + sub + '/' + loc
 
@@ -51,8 +48,7 @@ class R
         Type => R[SIOCt+'BoardPost'],
         Content => CleanHTML[content]}
 
-      p['title'].do{|t|
-        post[Title] = t.hrefs if !t.empty?}
+      post[Title] = title.hrefs if title && !title.empty?
 
       file = p['file'] # optional attachment
       if file && file[:type].match(/^image/)

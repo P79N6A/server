@@ -3,7 +3,7 @@ class R
 
   # graph in memory as Hash and storage as JSON :: {uri => {property => val}}
   # designed to minimize non-stdlib dependencies + indirection, and speed (C/native JSON-parse vs Ruby RDF-parse). arbitrary JSON is roundtripped in the "object" position of a triple
-  # a Reader is defined of this format for the RDF Class
+  # the RDF::Reader for this format is in RDF.rb
 
   def fromStream m,*i
     send(*i) do |s,p,o|
