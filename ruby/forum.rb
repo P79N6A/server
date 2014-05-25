@@ -75,11 +75,12 @@ class R
   }
 
   View['makepost'] = -> d,e {
-    ['post on ',{_: :b, c: e.q['forum'].hrefs},
-     {_: :form, method: :POST, enctype: "multipart/form-data",
-       c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
-           {_: :textarea, rows: 12, cols: 48, name: :content},'<br>',
-           {_: :input, type: :file, name: :file},
-           {_: :input, type: :submit, value: 'post '}]}]}
+    {class: :makepost,
+      c: ['post to ',{_: :b, c: e.q['forum'].hrefs},
+          {_: :form, method: :POST, enctype: "multipart/form-data",
+            c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
+                {_: :textarea, rows: 12, cols: 48, name: :content},'<br>',
+                {_: :input, type: :file, name: :file},
+                {_: :input, type: :submit, value: 'post '}]}]}}
 
 end
