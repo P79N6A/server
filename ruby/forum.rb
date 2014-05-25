@@ -21,24 +21,31 @@ class R
     end}
 
   FileSet['forum'] = ->d,e,m{
-
-    m['#new'] = {Type => R['newBoardPost']}
-
-    e['c'] ||= 32
-
-    FileSet['page'][d,e,m]}
+    m['#new'] = {Type => R['newBoardPost']} # quick-post to this sub
+    e['c'] ||= 12
+    FileSet['page'][d,e,m] # merge with recently-bumped threads (fs sort is created order), ie recent-symlinks dir or RAM references
+  }
 
   POST['/forum'] = -> d,e{
-    path = d.justPath.uri.sub(/^\/forum\/*/,'/').tail
-    sub = path.match(/[^\/]+/)[0]
+    ps = d.path.sub(/^\/forum/,'').tail.split '/'
+    sub = ps[0]
+    puts ps,ps.size
+
+    if ps.size == 1 # new thread
+      name = p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3]
+      loc = Time.now.iso8601[0..10].gsub(/[-T]/,'/') + name
+    else # reply
+
+    end
+
     p = (Rack::Request.new d.env).params
     content = p['content']
 
     if content && !content.empty?
 
-      name = p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3]
 
-      uri = '//' + e['SERVER_NAME'] + '/forum/' + sub + '/' + Time.now.iso8601[0..10].gsub(/[-T]/,'/') + name
+
+      uri = '//' + e['SERVER_NAME'] + '/forum/' + sub + '/' + loc
 
       post = {'uri' => uri,
         Type => R[SIOCt+'BoardPost'],
@@ -58,7 +65,9 @@ class R
       [303,{'Location' => uri},[]]
     else
       [303,{'Location' => d.uri},[]]
-    end}
+    end
+
+  }
 
   View[SIOCt+'BoardPost'] = -> d,e {
     d.resourcesOfType(SIOCt+'BoardPost').map{|post|
