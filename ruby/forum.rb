@@ -58,14 +58,17 @@ class R
   View[SIOCt+'BoardPost'] = -> d,e {
     d.resourcesOfType(SIOCt+'BoardPost').map{|post|
       t = post[Title] || '#'
-      puts "titlr",t
       {class: :boardPost, style: 'float: left',
         c: [{_: :a, href: post.uri, c: {_: :h3, c: t}}, post[Content]
            ]}}}
 
   View['subforum'] = -> d,e {
-    [d.resourcesOfType(SIOCt+'BoardPost').map{|post|
-       
+    [H.css('/css/forum', true),
+     d.resourcesOfType(SIOCt+'BoardPost').map{|post|
+       {class: :post_info,
+         c: [{_: :a, href: post.uri, c: {_: :h2, c: post[Title]}},
+             {class: :time, c: post[Date]},
+            ]}
      },
      View['makepost'][d,e]
     ]
