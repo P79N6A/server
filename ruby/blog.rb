@@ -37,7 +37,7 @@ class R
     }}
 
   View[SIOCt+'MicroblogPost'] = -> d,e {
-    [(H.once e,'chat',(H.css '/css/tw'),{_: :style, c: "body {background-color: #{R.c}}"}),
+    [(H.once e,'chat',(H.css '/css/tw', true),{_: :style, c: "body {background-color: #{R.c}}"}),
      d.map{|u,r|
        r[Content] && r[Date]
        [r[Date].justArray[0].match(/T([0-9:]{5})/).do{|m|m[1]},

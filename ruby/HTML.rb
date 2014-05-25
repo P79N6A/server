@@ -166,7 +166,7 @@ class R
        u[Next].do{|n|
          {_: :a, rel: :next, href: n.uri,
            c: [{class: :uri, c: n.R.offset},{class: :arrow, c: '&rarr;'}]}},
-       ([(H.css '/css/page', true), (H.js '/js/pager'), (H.once e,:mu,(H.js '/js/mu'))
+       ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))
         ] if u[Next]||u[Prev])]}} # (n)ext (p)rev
 
   View[LDP+'BasicContainer'] = -> i,e {
