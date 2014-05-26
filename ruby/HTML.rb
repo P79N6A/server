@@ -153,9 +153,8 @@ class R
     h.to_xhtml}
 
   def offset # human-readable
-    (query_values.do{|q|
-      q['offset'].do{|o|
-       R[o].stripDoc.uri}} || hierPart).split('/').join(' ')
+    (query_values.do{|q| q['offset'].do{|o| o.R.stripDoc}} ||
+     self).hierPart.split('/').join(' ')
   end
 
   View[LDP+'Resource'] = -> d,e {

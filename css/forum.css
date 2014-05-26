@@ -1,17 +1,28 @@
+a {text-decoration: none}
+
 .post_info {
     max-width: 40em;
     margin: auto;
+    padding-top:.5em;
+    clear:both;
     border-width: 0 0 .1em 0;
     border-style: dotted;
     border-color:#000;
 }
 
-.post_info .time {
-    float: right;
-    color: #555;
+.post_info .title {
+    font-size: 1.2em;
 }
 
-.makepost {
-    margin: auto;
+.post_info .time {
+    font-size: .95em;
     float: right;
+    color: #666;
+}
+
+a.makepost {
+    color: #fff;
+    background-color:#4f4;
+    padding: .2em;
+    border-radius: .5em;
 }

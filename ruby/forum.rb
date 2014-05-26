@@ -8,9 +8,9 @@ class R
         e.q['view'] ||= 'table'
         r.descend.setEnv(e).response
       else # sub
-        r.q['set'] = 'page'
-        r.q['view'] ||= 'subforum'
-        r.q['forum'] = path
+        e.q['set'] = 'page'
+        e.q['view'] ||= 'subforum'
+        e['forum'] = path
         nil
       end
     else
@@ -63,24 +63,24 @@ class R
            ]}}}
 
   View['subforum'] = -> d,e {
-    [H.css('/css/forum', true),
+    [H.css('/css/forum', true),View[LDP+'Resource'][d,e],
      d.resourcesOfType(SIOCt+'BoardPost').map{|post|
        {class: :post_info,
-         c: [{_: :a, href: post.uri, c: {_: :h2, c: post[Title]}},
+         c: [{_: :a, class: :title, href: post.uri, c: post[Title]},
              {class: :time, c: post[Date]},
             ]}
      },
-     View['makepost'][d,e]
+     {_: :a, href: '?view=makepost', class: :makepost, c: 'create'}
+#     View['makepost'][d,e]
     ]
   }
 
   View['makepost'] = -> d,e {
-    {class: :makepost,
-      c: ['post to ',{_: :b, c: e.q['forum'].hrefs},
-          {_: :form, method: :POST, enctype: "multipart/form-data",
-            c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
-                {_: :textarea, rows: 12, cols: 48, name: :content},'<br>',
-                {_: :input, type: :file, name: :file},
-                {_: :input, type: :submit, value: 'post '}]}]}}
+    ['post to ',{_: :b, c: e['forum'].hrefs},
+     {_: :form, method: :POST, enctype: "multipart/form-data",
+       c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
+           {_: :textarea, rows: 12, cols: 48, name: :content},'<br>',
+           {_: :input, type: :file, name: :file},
+           {_: :input, type: :submit, value: 'post '}]}]}
 
 end
