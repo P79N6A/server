@@ -41,8 +41,8 @@ class R
 
   def triplrMail &b
     m = mail; return unless m                        # mail
-    id = m.message_id || m.resent_message_id         # message-ID
-    return unless id
+    id = m.message_id || m.resent_message_id rescue nil
+    return unless id                                 # message-ID
 
     e = MessagePath[id]                              # message URI
 
