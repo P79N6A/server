@@ -13,6 +13,10 @@ class R
         e['forum'] = path
         nil
       end
+    elsif n = path.match(/^[^\/]+\/\d{4}\/\d\d\/\d\d\/([^\/]+)\/?$/) # thread
+      e.q['set'] = 'page'
+      e.q['view'] ||= 'timegraph'
+      r.descend.child('.p').setEnv(e).response # paginated osts
     else
       nil
     end}
