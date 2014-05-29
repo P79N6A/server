@@ -11,7 +11,7 @@ class R
     (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # find page
       u = m['#'] # RDF of current page
       u[Type] = R[LDP+'Resource']
-      if head = s[0]
+      if r['offset'] && head = s[0]
         uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
         u[Prev] = {'uri' => uri}                # prev RDF
         d.env[:Links].push "<#{uri}>; rel=prev" # prev Link
