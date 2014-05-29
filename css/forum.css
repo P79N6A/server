@@ -20,6 +20,11 @@ a {text-decoration: none}
     color: #666;
 }
 
+.post.date {
+    font-size: .9em;
+    float: right;
+}
+
 a.makepost {
     color: #fff;
     background-color:#4f4;

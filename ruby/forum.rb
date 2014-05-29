@@ -83,21 +83,20 @@ content = CleanHTML[p['content']]
 
 
   View[SIOC+'Thread'] = -> d,e {
-    d.values.map{|thread|
+    [H.css('/css/forum'),
+     d.values.map{|thread|
       thread[SIOC+'has_container'].do{|c|
         c = c[0].R
-        {_: :a, c: c.basename, href: c.uri, style: 'border: .1em dotted #888;text-decoration: none'}}}}
+        {_: :a, c: c.basename, href: c.uri, style: 'border: .1em dotted #888;text-decoration: none'}}}]}
 
   View[SIOCt+'BoardPost'] = -> d,e {
     d.values.map{|post|
-      thread = post[SIOC+'has_discussion'].do{|t|
-        {_: :a, c: '&uarr;', href: t[0].uri}}
-
-      {class: :boardPost,
-        c: [thread,
-            {_: :a, href: post.uri, c: {_: :b, c: post[Title]||'#'}},'<br>',
-            post[Content],'<br>'
-           ]}}}
+      {class: :post,
+        c: [post[SIOC+'has_discussion'].do{|t|{_: :a, c: '&uarr;', href: t[0].uri}},
+            {_: :a, href: post.uri,
+              c: [{_: :b, c: post[Title]||'#'},' ',
+                  {_: :span, class: :date, c: post[Date]}]},'<br>',
+            post[Content]]}}}
 
   View['subforum'] = -> d,e {
     [H.css('/css/forum', true),View[LDP+'Resource'][d,e],
