@@ -14,17 +14,12 @@ class R
         nil
       end
     elsif n = path.match(/^[^\/]+\/\d{4}\/\d\d\/\d\d\/([^\/]+)\/?$/) # thread
-      e.q['set'] = SIOCt+'BoardPost'
+      e.q['set'] = SIOC+'Thread'
       e.q['view'] ||= 'timegraph'
       r.descend.child('.p').setEnv(e).response # paginated posts
     else
       nil
     end}
-
-  FileSet[SIOCt+'BoardPost'] = -> d,r,m { # thread-overview and current-page
-    puts "thread #{d.uri}"
-    FileSet['page'][d,r,m].push d.parent.jsonDoc
-  }
 
   POST['/forum'] = -> d,e{
     p = (Rack::Request.new d.env).params
@@ -64,7 +59,7 @@ content = CleanHTML[p['content']]
           'uri' => uri,
           Date => date,
           Type => R[SIOCt+'BoardPost'],
-          SIOC+'has_container' => R[thread],
+          SIOC+'has_discussion' => R[thread],
           Content => content}
         post[Title] = title if title
 
@@ -80,14 +75,21 @@ content = CleanHTML[p['content']]
     else # content empty, skip
       [303,{'Location' => d.uri},[]]
     end}
-=begin
+
+  FileSet[SIOC+'Thread'] = -> d,r,m {# thread-overview and current-page
+    FileSet['page'][d,r,m].push d.parent.jsonDoc}
+
   View[SIOCt+'BoardPost'] = -> d,e {
-    d.resourcesOfType(SIOCt+'BoardPost').map{|post|
-      t = post[Title] || '#'
+    d.values.map{|post|
+      
+      thread = post[SIOC+'has_discussion'].do{|t|
+        {_: :a, c: '&uarr; ', href: t[0].uri}}
+
       {class: :boardPost, style: 'float: left',
-        c: [{_: :a, href: post.uri, c: {_: :h3, c: t}}, post[Content]
-           ]}}}
-=end
+        c: [thread,
+            {_: :a, href: post.uri, c: {_: :b, c: post[Title]||'#'}},'<br>',
+            post[Content]]}}}
+
   View['subforum'] = -> d,e {
     [H.css('/css/forum', true),View[LDP+'Resource'][d,e],
      d.resourcesOfType(SIOC+'Thread').map{|post|
