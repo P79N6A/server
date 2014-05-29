@@ -10,7 +10,6 @@ class R
       else # sub
         e.q['set'] = 'page'
         e.q['view'] ||= 'subforum'
-        e['forum'] = path
         nil
       end
     elsif n = path.match(/^[^\/]+\/\d{4}\/\d\d\/\d\d\/([^\/]+)\/?$/) # thread
@@ -76,25 +75,29 @@ content = CleanHTML[p['content']]
       [303,{'Location' => d.uri},[]]
     end}
 
-  FileSet[SIOC+'Thread'] = -> d,r,m {# current-page + thread info
-    FileSet['page'][d,r,m].push d.parent.jsonDoc}
+  FileSet[SIOC+'Thread'] = -> d,r,m {
+    m['#post'] = {Type => 'newpost'.R}
+    set = FileSet['page'][d,r,m] # current-page
+    set.unshift d.parent.jsonDoc # thread container
+  }
+
 
   View[SIOC+'Thread'] = -> d,e {
     d.values.map{|thread|
       thread[SIOC+'has_container'].do{|c|
         c = c[0].R
-        {_: :a, c: '&uarr;'+ c.basename, href: c.uri}
-      }}}
+        {_: :a, c: c.basename, href: c.uri, style: 'border: .1em dotted #888;text-decoration: none'}}}}
 
   View[SIOCt+'BoardPost'] = -> d,e {
     d.values.map{|post|
       thread = post[SIOC+'has_discussion'].do{|t|
         {_: :a, c: '&uarr;', href: t[0].uri}}
 
-      {class: :boardPost, style: 'float: left',
+      {class: :boardPost,
         c: [thread,
             {_: :a, href: post.uri, c: {_: :b, c: post[Title]||'#'}},'<br>',
-            post[Content]]}}}
+            post[Content],'<br>'
+           ]}}}
 
   View['subforum'] = -> d,e {
     [H.css('/css/forum', true),View[LDP+'Resource'][d,e],
@@ -104,17 +107,16 @@ content = CleanHTML[p['content']]
              {class: :time, c: post[Date]},
             ]}
      },
-     {_: :a, href: '?view=makepost', class: :makepost, c: 'create'}
+     {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}
 #     View['makepost'][d,e]
     ]
   }
 
-  View['makepost'] = -> d,e {
-    ['post to ',{_: :b, c: e['forum'].hrefs},
-     {_: :form, method: :POST, enctype: "multipart/form-data",
-       c: [{_: :input, title: :title, name: :title, size: 32},'<br>',
-           {_: :textarea, rows: 12, cols: 48, name: :content},'<br>',
-           {_: :input, type: :file, name: :file},
-           {_: :input, type: :submit, value: 'post '}]}]}
+  View['newpost'] = -> d,e {
+    {_: :form, method: :POST, enctype: "multipart/form-data",
+      c: [{_: :input, title: :title, name: :title, size: 48},'<br>',
+          {_: :textarea, rows: 8, cols: 48, name: :content},'<br>',
+          {_: :input, type: :file, name: :file},
+          {_: :input, type: :submit, value: 'post '}]}}
 
 end
