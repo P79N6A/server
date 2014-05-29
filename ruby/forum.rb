@@ -52,7 +52,7 @@ content = CleanHTML[p['content']]
       posts = thread + '/.p/'
 
       if !R[posts+'*'+sig+'.e'].glob.empty? # duplicate
-        puts "duplicate post"
+#        puts "duplicate post"
       else
         uri = posts + date.gsub(/\D/,'.') + sig
         post = {
@@ -68,12 +68,11 @@ content = CleanHTML[p['content']]
           basename = file[:filename]
         end
 
-        doc = post.R.jsonDoc
-        doc.w({uri=>post},true)
+        post.R.jsonDoc.w({uri=>post},true)
       end
 
       [303,{'Location' => thread},[]]
-    else # content empty, abort
+    else # content empty, skip
       [303,{'Location' => d.uri},[]]
     end}
 =begin
