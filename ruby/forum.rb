@@ -76,14 +76,20 @@ content = CleanHTML[p['content']]
       [303,{'Location' => d.uri},[]]
     end}
 
-  FileSet[SIOC+'Thread'] = -> d,r,m {# thread-overview and current-page
+  FileSet[SIOC+'Thread'] = -> d,r,m {# current-page + thread info
     FileSet['page'][d,r,m].push d.parent.jsonDoc}
+
+  View[SIOC+'Thread'] = -> d,e {
+    d.values.map{|thread|
+      thread[SIOC+'has_container'].do{|c|
+        c = c[0].R
+        {_: :a, c: '&uarr;'+ c.basename, href: c.uri}
+      }}}
 
   View[SIOCt+'BoardPost'] = -> d,e {
     d.values.map{|post|
-      
       thread = post[SIOC+'has_discussion'].do{|t|
-        {_: :a, c: '&uarr; ', href: t[0].uri}}
+        {_: :a, c: '&uarr;', href: t[0].uri}}
 
       {class: :boardPost, style: 'float: left',
         c: [thread,
