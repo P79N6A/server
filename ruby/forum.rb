@@ -14,12 +14,17 @@ class R
         nil
       end
     elsif n = path.match(/^[^\/]+\/\d{4}\/\d\d\/\d\d\/([^\/]+)\/?$/) # thread
-      e.q['set'] = 'page'
+      e.q['set'] = SIOCt+'BoardPost'
       e.q['view'] ||= 'timegraph'
       r.descend.child('.p').setEnv(e).response # paginated posts
     else
       nil
     end}
+
+  FileSet[SIOCt+'BoardPost'] = -> d,r,m { # thread-overview and current-page
+    puts "thread #{d.uri}"
+    FileSet['page'][d,r,m].push d.parent.jsonDoc
+  }
 
   POST['/forum'] = -> d,e{
     p = (Rack::Request.new d.env).params
