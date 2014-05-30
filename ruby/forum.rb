@@ -27,10 +27,11 @@ class R
   title = p['title'].hrefs
 content = CleanHTML[p['content']]
    date = Time.now.iso8601
+   file = p['file']
 
     if segs.size == 1 # new thread
 
-      thread = sub + '/' + date[0..10].gsub(/[-T]/,'/') + (p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3])
+      thread = sub + '/' + date[0..10].gsub(/[-T]/,'/') + (p['title'].empty? ? date : p['title']).gsub(/\W+/,'_')
       info = {
         'uri' => thread,
         Date => date,
@@ -38,7 +39,7 @@ content = CleanHTML[p['content']]
         Title => title,
         SIOC+'has_container' => R[sub]}
 
-      info.R.jsonDoc.do{|d| d.w({thread => info},true) unless d.e || title.empty?}
+      info.R.jsonDoc.do{|d| d.w({thread => info},true) unless d.e || (!file && title.empty?)}
 
     else
       thread = sub + '/' + segs[1..4].join('/')
@@ -57,8 +58,7 @@ content = CleanHTML[p['content']]
         Content => content}
       post[Title] = title if title
 
-      file = p['file'] # optional attachment
-      if file && file[:type].match(/^image/)
+      if file && file[:type].match(/^image/) # optional attachment
         f = file[:tempfile]
         attachment = R[thread+'/.i'].mk.child file[:filename]
         FileUtils.cp f, attachment.pathPOSIX
@@ -101,8 +101,7 @@ content = CleanHTML[p['content']]
     [H.css('/css/forum', true),View[LDP+'Resource'][d,e],
      d.resourcesOfType(SIOC+'Thread').map{|post|
        {class: :thread,
-         c: [{_: :a, class: :title, href: post.uri, c: post[Title]},
-             {class: :time, c: post[Date]}]}},
+         c: {_: :a, href: post.uri, c: [{class: :title, c: post[Title]}, {class: :time, c: post[Date]}]}}},
      {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}]}
 
   View['#newpost'] = -> d,e {
