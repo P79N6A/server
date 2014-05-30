@@ -21,63 +21,58 @@ class R
 
   POST['/forum'] = -> d,e{
     p = (Rack::Request.new d.env).params
-    pathSegs = d.path.sub(/^\/forum/,'').tail.split '/'
+    segs = d.path.sub(/^\/forum/,'').tail.split '/'
 
-    sub = '//' + e['SERVER_NAME'] + '/forum/' + pathSegs[0]
+    sub = '//' + e['SERVER_NAME'] + '/forum/' + segs[0]
   title = p['title'].do{|t| !t.empty? && t.hrefs}
 content = CleanHTML[p['content']]
    date = Time.now.iso8601
 
-    if sub && content && !content.empty?
+    if segs.size == 1 # post to subforum
 
-      if pathSegs.size == 1 # post thread to subforum container
+      thread = sub + '/' + date[0..10].gsub(/[-T]/,'/') + (p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3])
+      info = {
+        'uri' => thread,
+        Date => date,
+        Type => R[SIOC+'Thread'],
+        Title => title,
+        SIOC+'has_container' => R[sub]}
 
-        thread = sub + '/' + date[0..10].gsub(/[-T]/,'/') + (p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3])
-        info = {
-          'uri' => thread,
-          Date => date,
-          Type => R[SIOC+'Thread'],
-          Title => title||'untitled',
-          SIOC+'has_container' => R[sub]}
+      info.R.jsonDoc.do{|d| d.w({thread => info},true) unless d.e || title.empty?}
 
-        info.R.jsonDoc.do{|d| d.w({thread => info},true) unless d.e}
+    else # post to thread
+      thread = sub + '/' + segs[1..4].join('/')
+    end
 
-      else # thread container
-        thread = sub + '/' + pathSegs[1..4].join('/')
+    sig = content.h[0..8]
+    posts = thread + '/.p/'
+
+    if R[posts+'*'+sig+'.e'].glob.empty? # dupe-check
+      uri = posts + date.gsub(/\D/,'.') + sig
+      post = {
+        'uri' => uri,
+        Date => date,
+        Type => R[SIOCt+'BoardPost'],
+        SIOC+'has_discussion' => R[thread],
+        Content => content}
+      post[Title] = title if title
+
+      file = p['file'] # optional attachment
+      if file && file[:type].match(/^image/)
+        f = file[:tempfile]
+        FileUtils.cp f, R[thread+'/.i'].mk.child(file[:filename]).pathPOSIX
+        f.unlink
       end
 
-      sig = content.h[0..8]
-      posts = thread + '/.p/'
+      post.R.jsonDoc.w({uri=>post},true) unless !file && content.empty?
+    end
 
-      if R[posts+'*'+sig+'.e'].glob.empty? # non-duplicate
-        uri = posts + date.gsub(/\D/,'.') + sig
-        post = {
-          'uri' => uri,
-          Date => date,
-          Type => R[SIOCt+'BoardPost'],
-          SIOC+'has_discussion' => R[thread],
-          Content => content}
-        post[Title] = title if title
-
-        file = p['file'] # optional attachment
-        if file && file[:type].match(/^image/)
-          f = file[:tempfile]
-          FileUtils.cp f, posts.R.child(file[:filename]).pathPOSIX
-          f.unlink
-        end
-
-        post.R.jsonDoc.w({uri=>post},true)
-      end
-
-      [303,{'Location' => thread},[]]
-    else # content empty, skip
-      [303,{'Location' => d.uri},[]]
-    end}
+    [303,{'Location' => thread},[]]}
 
   FileSet[SIOC+'Thread'] = -> d,r,m {
-    set = FileSet['page'][d,r,m] # page of posts in thread
+    set = FileSet['page'][d,r,m] # current page of posts
     unless set.empty?
-      set.unshift d.parent.jsonDoc # thread container
+      set.unshift d.parent.jsonDoc # thread info
       m['#post'] = {Type => 'newpost'.R} # blank post
     end
     set}
