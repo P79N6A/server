@@ -62,7 +62,9 @@ content = CleanHTML[p['content']]
 
         file = p['file'] # optional attachment
         if file && file[:type].match(/^image/)
-          basename = file[:filename]
+          name = file[:filename]
+          FileUtils.cp file[:tempfile],posts.R.child(name).pathPOSIX
+          puts "attachment #{file}"          
         end
 
         post.R.jsonDoc.w({uri=>post},true)
