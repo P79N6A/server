@@ -50,9 +50,7 @@ content = CleanHTML[p['content']]
       sig = content.h[0..8]
       posts = thread + '/.p/'
 
-      if !R[posts+'*'+sig+'.e'].glob.empty? # duplicate
-#        puts "duplicate post"
-      else
+      if R[posts+'*'+sig+'.e'].glob.empty? # non-duplicate
         uri = posts + date.gsub(/\D/,'.') + sig
         post = {
           'uri' => uri,
