@@ -3,9 +3,17 @@ body {
     color: #000;
 }
 
-a {text-decoration: none}
+a {
+    text-decoration: none;
+}
 
-.post_info {
+a.forum {
+    float: left;
+    border: .1em dotted #888;
+    text-decoration: none;
+}
+
+.thread {
     max-width: 40em;
     margin: auto;
     padding-top:.5em;
@@ -15,11 +23,11 @@ a {text-decoration: none}
     border-color:#000;
 }
 
-.post_info .title {
+.thread .title {
     font-size: 1.2em;
 }
 
-.post_info .time {
+.thread .time {
     font-size: .95em;
     float: right;
     color: #666;
@@ -28,6 +36,7 @@ a {text-decoration: none}
 .post {
     background-color:#fff;
     max-width: 80ex;
+    margin: .3em;
 }
 
 .post .date {

@@ -26,8 +26,9 @@ class R
     end}
   
   View[DC+'Image'] = -> i,e{
-    i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) &&
-      {_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}}
+    i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) && ShowImage[u]}}
+
+  ShowImage = -> u {{_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}
 
   View['imgs'] = -> m,e { seen = {} # unique images found
 

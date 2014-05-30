@@ -60,8 +60,10 @@ content = CleanHTML[p['content']]
       file = p['file'] # optional attachment
       if file && file[:type].match(/^image/)
         f = file[:tempfile]
-        FileUtils.cp f, R[thread+'/.i'].mk.child(file[:filename]).pathPOSIX
+        attachment = R[thread+'/.i'].mk.child file[:filename]
+        FileUtils.cp f, attachment.pathPOSIX
         f.unlink
+        post[SIOC+'attachment'] = attachment
       end
 
       post.R.jsonDoc.w({uri=>post},true) unless !file && content.empty?
@@ -73,17 +75,16 @@ content = CleanHTML[p['content']]
     set = FileSet['page'][d,r,m] # current page of posts
     unless set.empty?
       set.unshift d.parent.jsonDoc # thread info
-      m['#post'] = {Type => 'newpost'.R} # blank post
+      m['#new'] = {Type => '#newpost'.R} # post skeleton
     end
     set}
-
 
   View[SIOC+'Thread'] = -> d,e {
     [H.css('/css/forum'),
      d.values.map{|thread|
       thread[SIOC+'has_container'].do{|c|
         c = c[0].R
-        {_: :a, c: c.basename, href: c.uri, style: 'border: .1em dotted #888;text-decoration: none'}}}]}
+        {_: :a, class: :forum, c: c.basename, href: c.uri}}}]}
 
   View[SIOCt+'BoardPost'] = -> d,e {
     d.values.map{|post|
@@ -92,21 +93,23 @@ content = CleanHTML[p['content']]
             {_: :a, href: post.uri,
               c: [{_: :b, c: post[Title]||'#'},' ',
                   {_: :span, class: :date, c: post[Date]}]},'<br>',
+            post[SIOC+'attachment'].do{|a|ShowImage[a[0].uri]},
             post[Content]]}}}
 
   View['subforum'] = -> d,e {
     [H.css('/css/forum', true),View[LDP+'Resource'][d,e],
      d.resourcesOfType(SIOC+'Thread').map{|post|
-       {class: :post_info,
+       {class: :thread,
          c: [{_: :a, class: :title, href: post.uri, c: post[Title]},
              {class: :time, c: post[Date]}]}},
      {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}]}
 
-  View['newpost'] = -> d,e {
+  View['#newpost'] = -> d,e {
     {_: :form, method: :POST, enctype: "multipart/form-data",
       c: [{_: :input, title: :title, name: :title, size: 48},'<br>',
           {_: :textarea, rows: 8, cols: 48, name: :content},'<br>',
           {_: :input, type: :file, name: :file},
           {_: :input, type: :submit, value: 'post '}]}}
+  View['newpost'] = View['#newpost']
 
 end
