@@ -24,7 +24,7 @@ class R
     segs = d.path.sub(/^\/forum/,'').tail.split '/'
 
     sub = '//' + e['SERVER_NAME'] + '/forum/' + segs[0]
-  title = p['title'].do{|t| !t.empty? && t.hrefs}
+  title = p['title'].hrefs
 content = CleanHTML[p['content']]
    date = Time.now.iso8601
 
@@ -64,6 +64,7 @@ content = CleanHTML[p['content']]
         FileUtils.cp f, attachment.pathPOSIX
         f.unlink
         post[SIOC+'attachment'] = attachment
+        puts "img <http:#{attachment}>"
       end
 
       post.R.jsonDoc.w({uri=>post},true) unless !file && content.empty?
