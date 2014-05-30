@@ -14,7 +14,6 @@ class R
       end
     elsif n = path.match(/^[^\/]+\/\d{4}\/\d\d\/\d\d\/([^\/]+)\/?$/) # thread
       e.q['set'] = SIOC+'Thread'
-      e.q['view'] ||= 'timegraph'
       r.descend.child('.p').setEnv(e).response # paginated posts
     else
       nil
@@ -62,9 +61,9 @@ content = CleanHTML[p['content']]
 
         file = p['file'] # optional attachment
         if file && file[:type].match(/^image/)
-          name = file[:filename]
-          FileUtils.cp file[:tempfile],posts.R.child(name).pathPOSIX
-          puts "attachment #{file}"          
+          f = file[:tempfile]
+          FileUtils.cp f, posts.R.child(file[:filename]).pathPOSIX
+          f.unlink
         end
 
         post.R.jsonDoc.w({uri=>post},true)
@@ -76,10 +75,12 @@ content = CleanHTML[p['content']]
     end}
 
   FileSet[SIOC+'Thread'] = -> d,r,m {
-    m['#post'] = {Type => 'newpost'.R}
-    set = FileSet['page'][d,r,m] # current-page
-    set.unshift d.parent.jsonDoc # thread container
-  }
+    set = FileSet['page'][d,r,m] # page of posts in thread
+    unless set.empty?
+      set.unshift d.parent.jsonDoc # thread container
+      m['#post'] = {Type => 'newpost'.R} # blank post
+    end
+    set}
 
 
   View[SIOC+'Thread'] = -> d,e {
@@ -103,13 +104,8 @@ content = CleanHTML[p['content']]
      d.resourcesOfType(SIOC+'Thread').map{|post|
        {class: :post_info,
          c: [{_: :a, class: :title, href: post.uri, c: post[Title]},
-             {class: :time, c: post[Date]},
-            ]}
-     },
-     {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}
-#     View['makepost'][d,e]
-    ]
-  }
+             {class: :time, c: post[Date]}]}},
+     {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}]}
 
   View['newpost'] = -> d,e {
     {_: :form, method: :POST, enctype: "multipart/form-data",
