@@ -28,7 +28,7 @@ class R
 content = CleanHTML[p['content']]
    date = Time.now.iso8601
 
-    if segs.size == 1 # post to subforum
+    if segs.size == 1 # new thread
 
       thread = sub + '/' + date[0..10].gsub(/[-T]/,'/') + (p['title'].do{|t|t.gsub /[?#\s\.\/]+/,'_'} || rand.to_s.h[0..3])
       info = {
@@ -40,7 +40,7 @@ content = CleanHTML[p['content']]
 
       info.R.jsonDoc.do{|d| d.w({thread => info},true) unless d.e || title.empty?}
 
-    else # post to thread
+    else
       thread = sub + '/' + segs[1..4].join('/')
     end
 
