@@ -7,6 +7,11 @@ a {
     text-decoration: none;
 }
 
+img {
+    float: left;
+    margin-right: .25em;
+}
+
 a.forum {
     float: left;
     border: .1em dotted #888;
@@ -35,8 +40,10 @@ a.forum {
 
 .post {
     background-color:#fff;
+    min-width: 40ex;
     max-width: 80ex;
     margin: .3em;
+    display: inline-block;
 }
 
 .post .date {

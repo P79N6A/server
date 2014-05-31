@@ -2,17 +2,13 @@ watch __FILE__
 class R
 
   GET['/forum'] = -> r,e {
-    path = r.justPath.uri.sub(/^\/forum\/*/,'/').tail
-    if path.match(/^[^\/]*\/?$/) # root or child thereof
-      if path.empty? # sub index
-        e.q['view'] ||= 'table'
-        r.descend.setEnv(e).response
-      else # sub
-        e.q['set'] = 'page'
-        e.q['view'] ||= 'subforum'
-        nil
-      end
-    elsif n = path.match(/^[^\/]+\/\d{4}\/\d\d\/\d\d\/([^\/]+)\/?$/) # thread
+    s = r.path.tail.split '/'
+    s.shift if s[0] == 'forum'
+    if s.size == 1 # sub
+      e.q['set'] = 'page'
+      e.q['view'] ||= 'subforum'
+      nil
+    elsif s.size == 5 # thread
       e.q['set'] = SIOC+'Thread'
       r.descend.child('.p').setEnv(e).response # paginated posts
     else
@@ -21,15 +17,16 @@ class R
 
   POST['/forum'] = -> d,e{
     p = (Rack::Request.new d.env).params
-    segs = d.path.sub(/^\/forum/,'').tail.split '/'
+    s = d.path.tail.split '/'
+    prefix = '/' + s.shift if s[0] == 'forum'
 
-    sub = '//' + e['SERVER_NAME'] + '/forum/' + segs[0]
+    sub = '//' + e['SERVER_NAME'] + (prefix || '') + '/' + s[0]
   title = p['title'].hrefs
 content = CleanHTML[p['content']]
    date = Time.now.iso8601
    file = p['file']
 
-    if segs.size == 1 # new thread
+    if s.size == 1 # subforum level - posting a new thread
 
       thread = sub + '/' + date[0..10].gsub(/[-T]/,'/') + (p['title'].empty? ? date : p['title']).gsub(/\W+/,'_')
       info = {
@@ -42,7 +39,7 @@ content = CleanHTML[p['content']]
       info.R.jsonDoc.do{|d| d.w({thread => info},true) unless d.e || (!file && title.empty?)}
 
     else
-      thread = sub + '/' + segs[1..4].join('/')
+      thread = sub + '/' + s[1..4].join('/')
     end
 
     sig = content.h[0..8]
