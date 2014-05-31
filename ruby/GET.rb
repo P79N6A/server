@@ -50,10 +50,11 @@ class R
             set.concat resource.fileResources}}}}
 
     @r[:Links].push "<#{aclURI}>; rel=acl" # WAC
-    @r[:Response].update({
-        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-        'Content-Type' => @r.format + '; charset=UTF-8',
-        'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
+    @r[:Response].
+      update({ 'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
+               'Access-Control-Allow-Credentials' => 'true',
+               'Content-Type' => @r.format + '; charset=UTF-8',
+               'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
     })
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join # Link Header
 
