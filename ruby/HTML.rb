@@ -52,6 +52,7 @@ class Array
   end
   def tail; self[1..-1] end
   def justArray; self end
+  def values; self end
 end
 
 class Object
