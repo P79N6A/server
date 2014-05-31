@@ -40,11 +40,9 @@ a.forum {
 
 .post {
     background-color:#fff;
-    min-width: 40ex;
     max-width: 80ex;
     margin: .3em;
     padding-right: .25em;
-/*    float: left; */
 }
 
 .post .date {

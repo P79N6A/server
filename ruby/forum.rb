@@ -29,11 +29,12 @@ class R
     prefix = '/' + s.shift if s[0] == 'forum'
 
     sub = '//' + e['SERVER_NAME'] + (prefix || '') + '/' + s[0]
-  title = p['title'].hrefs
+  title = p['title'][0..127].hrefs
 content = CleanHTML[p['content']]
    date = Time.now.iso8601
    file = p['file']
 
+    content = "" if content.size > 65535
     if s.size == 1 # subforum level - posting a new thread
 
       thread = sub + '/' + date[0..10].gsub(/[-T]/,'/') + (p['title'].empty? ? date : p['title']).gsub(/\W+/,'_')
@@ -86,19 +87,22 @@ content = CleanHTML[p['content']]
 
   View[SIOCt+'BoardPost'] = -> d,e {
     d.values.map{|post|
+      thread = post[SIOC+'has_discussion'].do{|t|t[0].uri} || '#'
       {class: :post,
-        c: [post[SIOC+'has_discussion'].do{|t|{_: :a, c: '&uarr;', href: t[0].uri}},
-            {_: :a, href: post.uri,
+        c: [{_: :a, c: '&uarr;', href: post.uri},
+            {_: :a, href: thread,
               c: [{_: :b, c: post[Title]||'#'},' ',
                   {_: :span, class: :date, c: post[Date]}]},'<br>',
             post[SIOC+'attachment'].do{|a|ShowImage[a[0].uri]},
             post[Content]]}}}
 
   View['subforum'] = -> d,e {
-    [H.css('/css/forum', true),View[LDP+'Resource'][d,e],
+    [H.css('/css/forum', true), # CSS
+     View[LDP+'Resource'][d,e], # pagination arrows
      d.resourcesOfType(SIOC+'Thread').map{|post|
        {class: :thread,
-         c: {_: :a, href: post.uri, c: [{class: :title, c: post[Title]}, {class: :time, c: post[Date]}]}}},
+         c: {_: :a, href: post.uri, c: [{class: :title, c: post[Title]}, {class: :time, c: post[Date]}]}}
+     },
      {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}]}
 
   View['#newpost'] = -> d,e {
