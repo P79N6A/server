@@ -38,11 +38,17 @@ a.forum {
     color: #666;
 }
 
+.subforum .post {
+    float: right;
+    clear: both;
+}
+
 .post {
     background-color:#fff;
     max-width: 80ex;
     margin: .3em;
     padding-right: .25em;
+    white-space: pre-wrap;
 }
 
 .post .date {

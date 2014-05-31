@@ -1,6 +1,8 @@
 watch __FILE__
 class R
 
+  Posts = '.p'
+
   GET['/forum'] = -> r,e {
     s = r.path.tail.split '/'
     s.shift if s[0] == 'forum'
@@ -10,7 +12,7 @@ class R
       nil
     elsif s.size == 5 # thread
       e.q['set'] = SIOC+'Thread'
-      r.descend.child('.p').setEnv(e).response # paginated posts
+      r.descend.child(Posts).setEnv(e).response # paginated posts
     else
       nil
     end}
@@ -52,7 +54,7 @@ content = CleanHTML[p['content']]
     end
 
     sig = content.h[0..8]
-    posts = thread + '/.p/'
+    posts = thread + '/' + Posts + '/'
 
     if R[posts+'*'+sig+'.e'].glob.empty? # dupe-check
       uri = posts + date.gsub(/\D/,'.') + sig
@@ -98,11 +100,12 @@ content = CleanHTML[p['content']]
 
   View['subforum'] = -> d,e {
     [H.css('/css/forum', true), # CSS
-     View[LDP+'Resource'][d,e], # pagination arrows
-     d.resourcesOfType(SIOC+'Thread').map{|post|
-       {class: :thread,
-         c: {_: :a, href: post.uri, c: [{class: :title, c: post[Title]}, {class: :time, c: post[Date]}]}}
-     },
+     View[LDP+'Resource'][d,e], # pager
+     {class: :subforum, 
+       c: d.resourcesOfType(SIOC+'Thread').map{|thread|
+         preview = {}
+         thread.R.child(Posts).take(2,:asc).map{|p| p.fileToGraph preview}
+         [View[SIOCt+'BoardPost'][preview, e],'<br clear=all><hr>']}},
      {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}]}
 
   View['#newpost'] = -> d,e {
