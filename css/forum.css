@@ -43,13 +43,15 @@ a.forum {
     min-width: 40ex;
     max-width: 80ex;
     margin: .3em;
-    display: inline-block;
+    padding-right: .25em;
+    float: left;
 }
 
 .post .date {
     font-size: .9em;
     float: right;
     color: #aaa;
+    margin-right: -.2em;
 }
 
 a.makepost {
