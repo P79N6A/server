@@ -15,6 +15,14 @@ class R
       nil
     end}
 
+  FileSet[SIOC+'Thread'] = -> d,r,m {
+    set = FileSet['page'][d,r,m] # current page of posts
+    unless set.empty?
+      set.unshift d.parent.jsonDoc # thread info
+      m['#new'] = {Type => '#newpost'.R} # post skeleton
+    end
+    set}
+
   POST['/forum'] = -> d,e{
     p = (Rack::Request.new d.env).params
     s = d.path.tail.split '/'
@@ -68,14 +76,6 @@ content = CleanHTML[p['content']]
     end
 
     [303,{'Location' => thread},[]]}
-
-  FileSet[SIOC+'Thread'] = -> d,r,m {
-    set = FileSet['page'][d,r,m] # current page of posts
-    unless set.empty?
-      set.unshift d.parent.jsonDoc # thread info
-      m['#new'] = {Type => '#newpost'.R} # post skeleton
-    end
-    set}
 
   View[SIOC+'Thread'] = -> d,e {
     [H.css('/css/forum'),
