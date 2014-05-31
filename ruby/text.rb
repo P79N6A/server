@@ -39,6 +39,28 @@ class String
 
 end
 
+begin require 'redcarpet'
+  module Redcarpet
+    module Render
+      class Pygment < HTML
+        def block_code(code, lang)
+          if lang
+            IO.popen("pygmentize -l #{lang.downcase.sh} -f html",'r+'){|p|
+              p.puts code
+              p.close_write
+              p.read
+            }
+          else
+            code
+          end
+        end
+      end
+    end
+  end
+rescue LoadError => e
+  puts e
+end
+
 class R
 
   def triplrUriList
@@ -67,23 +89,8 @@ ul.uris a:hover {background-color:#bf0}
     graph.keys.select{|u|u.match /^http/}
   end
 
-  class Pygment < ::Redcarpet::Render::HTML
-    def block_code(code, lang)
-      if lang
-        IO.popen("pygmentize -l #{lang.downcase.sh} -f html",'r+'){|p|
-          p.puts code
-          p.close_write
-          p.read
-        }
-      else
-        code
-      end
-    end
-  end
-
   def triplrMarkdown
-    require 'redcarpet'
-    yield uri, Content, ::Redcarpet::Markdown.new(Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
+    yield uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
   def triplrOrg
