@@ -39,6 +39,7 @@ class R
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
 
+  def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
   def queryPart; query ? '?' + query : '' end
@@ -49,10 +50,10 @@ class R
   end
   def bare; basename suffix end
 
-  def dirname; hostPart + (File.dirname hierPart + queryPart) end
+  def dirname; schemePart + hostPart + (File.dirname hierPart + queryPart) end
   def dir; dirname.R end
 
-  def parent; R hostPart + Pathname.new(hierPart).parent.to_s end
+  def parent; R schemePart + hostPart + Pathname.new(hierPart).parent.to_s end
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parent.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
