@@ -10,7 +10,6 @@ nokogiri
 open-uri
 pathname
 rack
-redcarpet
 shellwords}.map{|r|require r}
 
 class R < RDF::URI

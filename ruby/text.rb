@@ -82,6 +82,7 @@ ul.uris a:hover {background-color:#bf0}
   end
 
   def triplrMarkdown
+    require 'redcarpet'
     yield uri, Content, ::Redcarpet::Markdown.new(Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
