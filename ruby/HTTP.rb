@@ -77,19 +77,6 @@ class R
                               c: [{_: :td, class: :path, c: p[0].R.abbr},
                                   {_: :td, class: :index, c: p[1]},
                                   {_: :td, class: :context, c: (p[2]||'').hrefs}].cr}}.cr]}]}]}]]]}
-  def OPTIONS
-#    @r.map{|k,v|puts [k,v].join(' ')}
-    methods = 'GET, PUT, POST, OPTIONS, HEAD, MKCOL, DELETE, PATCH'
-    h = {
-      'Access-Control-Allow-Methods' => @r['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] || methods,
-      'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
-      'Access-Control-Allow-Credentials' => 'true',
-      'Allow' => methods,
-      'Accept-Patch' => 'application/json',
-      'Accept-Post' => 'text/turtle, text/n3, application/json'}
-    @r['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'].do{|r|h['Access-Control-Allow-Headers'] = r}
-    [200,h,[]]
-  end
 
 end
 

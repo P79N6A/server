@@ -1,7 +1,21 @@
 watch __FILE__
 class R
 
+  def OPTIONS
+    methods = 'GET, PUT, POST, OPTIONS, HEAD, MKCOL, DELETE, PATCH'
+    h = {
+      'Allow' => methods,
+      'Access-Control-Allow-Credentials' => 'true',
+      'Access-Control-Allow-Methods' => @r['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] || methods,
+      'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
+      'Accept-Patch' => 'application/json',
+      'Accept-Post' => 'text/turtle, text/n3, application/json'}
+    @r['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'].do{|r|h['Access-Control-Allow-Headers'] = r}
+    [200,h,[]]
+  end
+
   def POST
+#    @r.map{|k,v|puts [k,v].join(' ')}
     lambdas = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
@@ -13,8 +27,7 @@ class R
     when /^text\/(n3|turtle)/
       rdfPOST
     else
-      puts "POST #{uri} #{@r['CONTENT_TYPE']}"
-      [303,{'Location'=>uri},[]]
+      [200,{'Location'=>uri},[]]
     end
   end
 
@@ -42,10 +55,8 @@ class R
     changed = false
     params = (Rack::Request.new @r).params
     params.map{|k,v|
-      # original triple in this field
       s, p, o = JSON.parse CGI.unescape k rescue JSON::ParserError
-
-      if s # parse successful?
+      if s
         s = s.R # subject URI
         pp = s.predicatePath p # subject+predicate URI
         object = v.match(HTTP_URI) ? v.R : CleanHTML[v] # object Literal | URI
