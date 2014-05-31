@@ -49,7 +49,8 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
-    @r[:Links].push "<#{aclURI}>; rel=acl" # WAC
+    @r[:Links].push "<#{aclURI}>; rel=acl"
+    @r[:Links].push "<#{docroot}>; rel=meta"
     @r[:Response].
       update({ 'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
                'Access-Control-Allow-Credentials' => 'true',

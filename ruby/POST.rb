@@ -30,7 +30,7 @@ class R
 
   def rdfPOST
     data = @r['rack.input'].read
-#    puts @r,data
+    puts @r, data
     response
   end
 
