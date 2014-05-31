@@ -81,9 +81,10 @@ class R
     [200,
      {'Access-Control-Allow-Methods' => 'GET, PUT, POST, OPTIONS, HEAD, MKCOL, DELETE, PATCH',
        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
+       'Access-Control-Allow-Credentials' => 'true',
        'Allow' => 'GET, PUT, POST, OPTIONS, HEAD, MKCOL, DELETE, PATCH',
        'Accept-Patch' => 'application/json',
-       'Accept-Post' => 'text/turtle;charset=utf-8,text/n3;charset=utf-8,text/nt;charset=utf-8,text/css;charset=utf-8,text/html;charset=utf-8,text/javascript;charset=utf-8,text/plain;charset=utf-8,application/rdf+xml;charset=utf-8,application/json;charset=utf-8,image/jpeg,image/jpeg,image/png,image/gif,font/otf'},[]]
+       'Accept-Post' => 'text/turtle,text/n3,application/json'},[]]
   end
 
 end
