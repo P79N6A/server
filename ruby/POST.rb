@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -31,13 +31,13 @@ class R
   def rdfPOST
     data = @r['rack.input'].read
     puts @r,data
-    [303,{'Location'=>uri},[]]
+    [200,{},[]]
   end
 
   def sparqlPOST
     data = @r['rack.input'].read
     puts @r,data
-    [303,{'Location'=>uri},[]]
+    [200,{},[]]
   end
 
   def formPOST
