@@ -102,7 +102,7 @@ WAC
 who
 }.map{|r|require_relative r}
 
-  NonRDF = %w{text/html application/atom+xml}
+  NonRDF = %w{text/html application/atom+xml application/json}
 
   alias_method :maybeURI, :to_s
   alias_method :url, :to_s

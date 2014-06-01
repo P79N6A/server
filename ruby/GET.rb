@@ -38,43 +38,37 @@ class R
     set = []
     m = {'#' => {'uri' => uri, Type => R[LDP+'Resource']}}
 
-    # File  directly-mapped filesystem resources
+    # File set
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
     fileFn[self,q,m].do{|files| set.concat files }
 
-    # Resource  custom generic-resource set (search / index handlers)
+    # Resource set
     q['set'].do{|s|
       ResourceSet[s].do{|resFn|
         resFn[self,q,m].do{|resources|
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
-    @r[:Links].push "<#{aclURI}>; rel=acl"
-    @r[:Links].push "<#{docroot}>; rel=meta"
+    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
     @r[:Response].
       update({ 'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
                'Access-Control-Allow-Credentials' => 'true',
                'Content-Type' => @r.format + '; charset=UTF-8',
-               'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h,
-    })
-    @r[:Response]['Link'] = @r[:Links].intersperse(', ').join # Link Header
+               'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h})
+    @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
-    if set.empty?
-      return E404[self,@r,m]
-    end
+    return E404[self,@r,m] if set.empty?
 
     condResponse ->{
-      if NonRDF.member?(@r.format) && !@r.q.has_key?('rdfa')
-        set.map{|r|r.setEnv(@r).fileToGraph m} unless @r.q['view'] == 'tabulate'
+      if NonRDF.member?(@r.format) && !@r.q.has_key?('rdf')
+        set.map{|r|r.setEnv(@r).fileToGraph m} unless %w{tabulate vowl}.member? @r.q['view']
         Render[@r.format][m, @r]
       else
-        graph = RDF::Graph.new   # RDF
-        set.map{|r|(r.setEnv @r).justRDF.do{|doc|
-            graph.load doc.pathPOSIX, :base_uri => doc.base}}
+        graph = RDF::Graph.new # RDF Model->View
+        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => doc.base}}
         R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
-
       end}
   end
   
