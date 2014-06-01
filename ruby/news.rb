@@ -1,15 +1,16 @@
 class R
 
   GET['/news'] = -> d,e {
-    if %w{/news /news/}.member? d.justPath
+    if d.path.tail.split('/').size == 1 # if not in a subdir, suggest a paged view
       e.q['set'] ||= 'page'
-      e.q['c'] ||= 32 if e.format == 'text/html'
+      e.q['c'] ||= 32
       nil
     end}
 
   GET['/feed'] = -> d,e {
     e['HTTP_ACCEPT'] = 'application/atom+xml'
     e.q['set'] = 'page'
+    e.q['c'] ||= 16
     d.dir.child('news').setEnv(e).response}
 
   def getFeed h='localhost'
