@@ -64,9 +64,9 @@ class R
     end
 
     condResponse ->{
-      if @r.format == 'text/html' && !@r.q.has_key?('rdfa')
+      if NonRDF.member?(@r.format) && !@r.q.has_key?('rdfa')
         set.map{|r|r.setEnv(@r).fileToGraph m} unless @r.q['view'] == 'tabulate'
-        Render[@r.format][m, @r] # HTML
+        Render[@r.format][m, @r]
       else
         graph = RDF::Graph.new   # RDF
         set.map{|r|(r.setEnv @r).justRDF.do{|doc|

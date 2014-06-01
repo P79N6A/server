@@ -37,7 +37,7 @@ class R
   end
 
   def q
-    @r.q # if q not otherwise bound it's a single-char shortcut to query-string Hash
+    @r.q # query Hash
   end
 
   E404 = -> e,r,g=nil {
@@ -98,9 +98,9 @@ module Th
     @format ||= selectFormat
   end
 
-  def selectFormat
-
-    { '.html' => 'text/html',         # format-variant URI suffix
+  def selectFormat # format-variant suffixes
+    { '.atom' => 'application/atom+xml',
+      '.html' => 'text/html',
       '.json' => 'application/json',
       '.nt' => 'text/plain',
       '.n3' => 'text/n3',
@@ -109,9 +109,9 @@ module Th
     }[File.extname(self['REQUEST_PATH'])].do{|mime|
       return mime}
 
-    accept.sort.reverse.map{|q,mimes| # Accept q-values descending
+    accept.sort.reverse.map{|q,mimes| # Accept by descending q-value
       mimes.map{|mime|
-        return mime if RDF::Writer.for(:content_type => mime)}}
+        return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
 
 #    'text/n3'
     'text/html'
