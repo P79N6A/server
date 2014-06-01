@@ -10,7 +10,15 @@ class R
     ]}
 
   JSONview['vowl'] = -> d,e {
-    ['asd']
-  }
+    n = []
+    l = []
+    d.triples{|s,p,o|
+      
+    }
+    { 'info' => [{ 'title' => 'vowl',
+                   'url' => e['REQUEST_PATH']}],
+      'nodes' => n,
+      'links' => l,
+    }}
 
 end
