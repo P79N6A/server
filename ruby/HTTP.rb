@@ -99,8 +99,7 @@ module Th
   end
 
   def selectFormat # format-variant suffixes
-    { '.atom' => 'application/atom+xml',
-      '.html' => 'text/html',
+    { '.html' => 'text/html',
       '.json' => 'application/json',
       '.nt' => 'text/plain',
       '.n3' => 'text/n3',

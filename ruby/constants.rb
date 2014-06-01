@@ -98,6 +98,7 @@ schema
 search
 text
 time
+vis
 WAC
 who
 }.map{|r|require_relative r}

@@ -14,10 +14,11 @@ class R
 
   def R.[] uri; R.new uri end
 
-  View = {}
   FileSet = {}
   ResourceSet = {}
   Render = {}
+  View = {}
+  JSONview = {}
   Watch = {}
   GET = {}
   POST = {}

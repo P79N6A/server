@@ -54,7 +54,7 @@ class R
       update({ 'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
                'Access-Control-Allow-Credentials' => 'true',
                'Content-Type' => @r.format + '; charset=UTF-8',
-               'ETag' => [q['view'].do{|v|View[v] && v}, set.sort.map{|r|[r, r.m]}, @r.format].h})
+               'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
     return E404[self,@r,m] if set.empty?

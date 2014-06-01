@@ -60,6 +60,8 @@ class R
     {'uri' => uri}.to_json *a
   end
 
+  Render['application/json'] = -> d,e { JSONview[e.q['view']].do{|f|f[d,e]} || d.to_json }
+
 end
 
 class Hash
