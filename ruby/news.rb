@@ -7,12 +7,6 @@ class R
       nil
     end}
 
-  GET['/feed'] = -> d,e {
-    e['HTTP_ACCEPT'] = 'application/atom+xml'
-    e.q['set'] = 'page'
-    e.q['c'] ||= 16
-    d.dir.child('news').setEnv(e).response}
-
   def getFeed h='localhost'
     addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
     self
@@ -201,6 +195,12 @@ class R
       doc.ln_s R["//#{host}/news/#{time}#{base}n3"]}}
 
   GREP_DIRS.push /^\/news\/\d{4}/
+
+  GET['/feed'] = -> d,e {
+    e['HTTP_ACCEPT'] = 'application/atom+xml'
+    e.q['set'] ||= 'page'
+    e.q['c'] ||= 16
+    d.dir.child('news').setEnv(e).response}
 
   Render['application/atom+xml'] = -> d,e {
     id = '//' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
