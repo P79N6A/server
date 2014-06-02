@@ -100,7 +100,7 @@ text
 time
 vis
 WAC
-who
+WebID
 }.map{|r|require_relative r}
 
   NonRDF = %w{text/html application/atom+xml application/json}
