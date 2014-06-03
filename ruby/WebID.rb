@@ -2,13 +2,19 @@ watch __FILE__
 class R
 
   GET['/whoami'] = -> d,e {e.webID.do{|id|[303,{'Location'=>id},[]]}}
+  GET['/login'] = -> d,e {e.webID.do{|id|[303,{'Location'=>id},[]]}}
 
 end
 
 module Th
 
   def user # user URI
-
+    if cert = cert
+      user = R['/cache/webID'+cert.h.dive]
+      webID.do{|id| user.w id} if !user.e
+      return user.r.R if user.e
+    end
+    nil
   end
 
   def webID pem = cert # match cert with web claim
