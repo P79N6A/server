@@ -101,6 +101,7 @@ time
 vis
 WAC
 WebID
+wiki
 }.map{|r|require_relative r}
 
   NonRDF = %w{text/html application/atom+xml application/json}
