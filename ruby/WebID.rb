@@ -7,8 +7,12 @@ end
 
 module Th
 
-  def webID
-    cert.do{|pem|
+  def user # user URI
+
+  end
+
+  def webID pem = cert # match cert with web claim
+    if pem
       OpenSSL::X509::Certificate.new(pem).do{|x509| # parse
         x509.extensions.find{|x|x.oid == 'subjectAltName'}.do{|user|
           user = user.value.sub /^URI./, ''
@@ -16,11 +20,12 @@ module Th
           query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{user}> :key [ :modulus ?m; :exponent ?e; ] . }"
           SPARQL.execute query, graph do |result|
             return user if x509.public_key.n.to_i == result[:m].value.to_i(16)
-          end}}}
+          end}}
+    end
     nil
   end
 
-  def cert
+  def cert # peel cert out of request, unmunge linebreaks
     self['HTTP_SSL_CLIENT_CERT'].do{|v|
       p = v.split /[\s\n]/
       return [p[0..1].join(' '), p[2..-3], p[-2..-1].join(' ')].join "\n" unless p.size < 5}
