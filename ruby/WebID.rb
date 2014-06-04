@@ -25,10 +25,13 @@ module Th
         x509.extensions.find{|x|x.oid == 'subjectAltName'}.do{|user|
           user = user.value.sub /^URI./, ''
           graph = RDF::Repository.load user
-          puts "lookup #{user}"
           query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{user}> :key [ :modulus ?m; :exponent ?e; ] . }"
           SPARQL.execute query, graph do |result|
-            return user if x509.public_key.n.to_i == result[:m].value.to_i(16)
+            if x509.public_key.n.to_i == result[:m].value.to_i(16)
+              return user
+            else
+              puts "signature doesn't match for #{user}"
+            end
           end}}
     end
     nil
