@@ -79,6 +79,7 @@ names
 audio
 blog
 csv
+DELETE
 edit
 facets
 forum
@@ -92,7 +93,9 @@ index
 mail
 man
 news
+OPTIONS
 POST
+PUT
 RDF
 schema
 search

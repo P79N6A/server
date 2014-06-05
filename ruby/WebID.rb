@@ -4,7 +4,10 @@ class R
   GET['/whoami'] = -> d,e { # redirect to your URI
     e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
 
-  GET['/login'] = -> d,e {e.webID.do{|id|[303,{'Location'=>id},[]]}}
+  GET['/login'] = -> d,e { 
+    e.user.do{|id|
+      
+    }}
 
 end
 
