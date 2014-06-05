@@ -1,13 +1,8 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   GET['/whoami'] = -> d,e { # redirect to your URI
     e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
-
-  GET['/login'] = -> d,e { 
-    e.user.do{|id|
-      
-    }}
 
 end
 
@@ -33,7 +28,7 @@ module Th
             if x509.public_key.n.to_i == result[:m].value.to_i(16)
               return user
             else
-              puts "signature doesn't match for #{user}"
+              puts "modulus mismatch for #{user}"
             end
           end}}
     end
