@@ -77,7 +77,7 @@ class R
   end
 
   def triplrStat
-    yield uri, SIOC+'has_container', parent unless !path || path == '/'
+    yield uri, SIOC+'has_container', parentURI unless path == '/'
     yield uri, Stat+'size', size
   end
 
@@ -173,7 +173,7 @@ class Pathname
   
   def deleteNode
     FileUtils.send (file?||symlink?) ? :rm : :rmdir, self
-    parent.deleteNode if parent.c.empty?
+    parent.deleteNode if parent.c.empty? # GC empty container
   end
 
   def take count=1000, direction=:desc, offset=nil

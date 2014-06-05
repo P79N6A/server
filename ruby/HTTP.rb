@@ -45,7 +45,7 @@ class R
     s = g[e.uri] ||= {} # resource
     path = e.justPath
     s[Title] = '404'
-    s[RDFs+'seeAlso'] = [e.parent, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
+    s[RDFs+'seeAlso'] = [e.parentURI, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
     s[Header+'accept'] = r.accept
     %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'accept-'+a.downcase] = r.accept_('_'+a)}

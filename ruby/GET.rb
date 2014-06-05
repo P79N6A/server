@@ -7,7 +7,7 @@ class R
      *(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f).do{|file|
       return file.setEnv(@r).fileGET}
     uri = stripDoc # format-variant suffix
-    uri = uri.parent.descend if uri.to_s.match(/\/index$/) # index
+    uri = uri.parentURI.descend if uri.to_s.match(/\/index$/) # index
     uri.setEnv(@r).resourceGET # generic resource
   end
 
@@ -68,7 +68,9 @@ class R
         set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => doc.base}}
         R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s
+#        set_trace_func proc { |event, file, line, id, binding, classname| printf "%8s %s:%-2d %10s %8s\n", event, file, line, id, classname }
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
+#        set_trace_func proc nil
       end}
   end
   

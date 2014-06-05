@@ -54,8 +54,8 @@ class R
   def dirname; schemePart + hostPart + (File.dirname hierPart + queryPart) end
   def dir; dirname.R end
 
-  def parent; R schemePart + hostPart + Pathname.new(hierPart).parent.to_s end
-  def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parent.hierarchy) end
+  def parentURI; R schemePart + hostPart + Pathname.new(hierPart).parent.to_s end
+  def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
   def bindHost

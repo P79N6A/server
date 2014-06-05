@@ -20,7 +20,7 @@ class R
   FileSet[SIOC+'Thread'] = -> d,r,m {
     set = FileSet['page'][d,r,m] # current page of posts
     unless set.empty?
-      set.unshift d.parent.jsonDoc # thread info
+      set.unshift d.parentURI.jsonDoc # thread info
       m['#new'] = {Type => '#newpost'.R} # post skeleton
     end
     set}
