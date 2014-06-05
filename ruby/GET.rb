@@ -2,9 +2,8 @@
 class R
 
   def GET
-    i = 'index.html' # files at host-specific + global paths
-    [self, justPath,
-     *(uri[-1]=='/' ? [a(i),justPath.a(i)] : [])].compact.find(&:f).do{|file|
+    ix = 'index.html'
+    [self, justPath, *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : [])].compact.find(&:f).do{|file|
       return file.setEnv(@r).fileGET}
     uri = stripDoc # format-variant suffix
     uri = uri.parentURI.descend if uri.to_s.match(/\/index$/) # index
@@ -50,6 +49,7 @@ class R
             set.concat resource.fileResources}}}}
 
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
+    @r[:Links].push "<#{LDP+'BasicContainer'}>; rel=type" if uri[-1]=='/'
     @r[:Response].
       update({ 'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
                'Access-Control-Allow-Credentials' => 'true',
