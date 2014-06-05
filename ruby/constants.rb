@@ -76,6 +76,7 @@ class R < RDF::URI
 %w{
 MIME
 names
+acl
 audio
 blog
 csv
@@ -102,7 +103,6 @@ search
 text
 time
 vis
-WAC
 WebID
 wiki
 }.map{|r|require_relative r}

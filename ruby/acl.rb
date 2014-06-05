@@ -10,6 +10,16 @@ class R
       dir.child '.acl.' + basename
     end
   end
+
+  def allowAppend
+  end
+
+  def allowRead
+  end
+
+  def allowWrite
+  end
+
 =begin
 ldphp:
 
