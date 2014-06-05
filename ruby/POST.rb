@@ -26,10 +26,8 @@ class R
   end
 
   def rdfPOST
-    puts :POST
-    @r.map{|k,v|puts [k,v].join(' ')}
+    puts "POST #{uri}"
     data = @r['rack.input'].read
-    puts data
     [201,{
        'Location' => uri,
        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',

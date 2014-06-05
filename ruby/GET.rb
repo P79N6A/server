@@ -64,6 +64,8 @@ class R
 
     return E404[self,@r,m] if set.empty?
 
+    puts "GET #{uri}"
+    puts "  e #{@r[:Response]['ETag']}"
     condResponse ->{
       if NonRDF.member?(@r.format) && !@r.q.has_key?('rdf')
         set.map{|r|r.setEnv(@r).fileToGraph m} unless %w{tabulate vowl}.member? @r.q['view']

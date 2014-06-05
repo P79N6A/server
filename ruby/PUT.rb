@@ -1,6 +1,11 @@
 watch __FILE__
 class R
   def PUT
+    etag = @r['HTTP_IF_MATCH']
+    puts "PUT #{uri}"
+    puts "  e #{etag}"
+    puts "cur #{response[1]['ETag']}"
+#    return [412,{},[]] if etag && ()
     mime = @r['CONTENT_TYPE'].split(';')[0]
     ext = '.' + MIME.invert[mime].to_s
     versions = docroot.child('.v')
