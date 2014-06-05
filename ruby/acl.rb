@@ -12,12 +12,15 @@ class R
   end
 
   def allowAppend
+    true
   end
 
   def allowRead
+    true
   end
 
   def allowWrite
+    true
   end
 
 =begin

@@ -26,13 +26,7 @@ class R
   end
 
   def rdfPOST
-    puts "POST #{uri}"
-    data = @r['rack.input'].read
-    [201,{
-       'Location' => uri,
-       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-       'Access-Control-Allow-Credentials' => 'true',
-    },[]]
+    self.PUT
   end
 
   def formPOST
