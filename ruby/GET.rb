@@ -51,9 +51,13 @@ class R
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
     @r[:Links].push "<#{LDP+'BasicContainer'}>; rel=type" if uri[-1]=='/'
     @r[:Response].
-      update({ 'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
+      update({ 'Accept-Patch' => 'application/json',
+               'Accept-Post' => 'text/turtle, text/n3, application/json',
+               'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
                'Access-Control-Allow-Credentials' => 'true',
-               'Content-Type' => @r.format + '; charset=UTF-8',
+               'Allow' => Allow,
+               'Content-Type' => @r.format,
+#               'Content-Type' => @r.format + '; charset=UTF-8',
                'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
