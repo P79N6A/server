@@ -1,10 +1,6 @@
 #watch __FILE__
 class R
 
-  # if anyone uses CSV, check out..
-  # https://github.com/gkellogg/csv-ld
-
-  # CSV -> tripleStream
   def triplrCSV d
     d = @r.q['delim']||d
     open(node).readlines.map{|l|l.chomp.split(d) rescue []}.do{|lines|

@@ -1,8 +1,33 @@
 #watch __FILE__
+
+module Th
+
+  def selectFormat # format-variant suffixes
+    {# '.csvld' => 'application/ld+csv',
+      '.html' => 'text/html',
+      '.json' => 'application/json',
+      '.jsonld' => 'application/ld+json',
+      '.nt' => 'text/plain',
+      '.n3' => 'text/n3',
+      '.rdf' => 'application/rdf+xml',
+      '.ttl' => 'text/turtle',
+    }[File.extname(self['REQUEST_PATH'])].do{|mime|
+      return mime}
+
+    accept.sort.reverse.map{|q,mimes| # Accept by descending q-value
+      mimes.map{|mime|
+        return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
+
+#    'text/n3'
+    'text/html'
+  end
+
+end
+
+
 class R
 
-  # no link-follow
-  def mime
+  def mime # no link-following
     @mime ||=
       (t = ext.downcase.to_sym
 
@@ -23,8 +48,7 @@ class R
        end)
   end
 
-  # recursively-dereferenced links
-  def mimeP
+  def mimeP  # recursively-dereference links
     @mimeP ||=
       (p = realpath
        unless p
@@ -142,29 +166,6 @@ class R
        MIMEsource[mime.split(/\//)[0]]).do{|s|
 #        puts "triplr #{s}"
         send *s,&b }} #|| puts("triplr undefined for #{mime}")
-  end
-
-end
-
-module Th
-
-  def selectFormat # format-variant suffixes
-    { '.html' => 'text/html',
-      '.json' => 'application/json',
-      '.jsonld' => 'application/ld+json',
-      '.nt' => 'text/plain',
-      '.n3' => 'text/n3',
-      '.rdf' => 'application/rdf+xml',
-      '.ttl' => 'text/turtle',
-    }[File.extname(self['REQUEST_PATH'])].do{|mime|
-      return mime}
-
-    accept.sort.reverse.map{|q,mimes| # Accept by descending q-value
-      mimes.map{|mime|
-        return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
-
-#    'text/n3'
-    'text/html'
   end
 
 end
