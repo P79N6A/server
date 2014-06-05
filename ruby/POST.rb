@@ -1,8 +1,7 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
-#    @r.map{|k,v|puts [k,v].join(' ')}
     lambdas = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
@@ -27,8 +26,10 @@ class R
   end
 
   def rdfPOST
+    puts :POST
+    @r.map{|k,v|puts [k,v].join(' ')}
     data = @r['rack.input'].read
-#    puts @r, data
+    puts data
     [201,{
        'Location' => uri,
        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
