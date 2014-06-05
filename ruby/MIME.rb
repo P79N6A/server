@@ -145,3 +145,26 @@ class R
   end
 
 end
+
+module Th
+
+  def selectFormat # format-variant suffixes
+    { '.html' => 'text/html',
+      '.json' => 'application/json',
+      '.jsonld' => 'application/ld+json',
+      '.nt' => 'text/plain',
+      '.n3' => 'text/n3',
+      '.rdf' => 'application/rdf+xml',
+      '.ttl' => 'text/turtle',
+    }[File.extname(self['REQUEST_PATH'])].do{|mime|
+      return mime}
+
+    accept.sort.reverse.map{|q,mimes| # Accept by descending q-value
+      mimes.map{|mime|
+        return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
+
+#    'text/n3'
+    'text/html'
+  end
+
+end
