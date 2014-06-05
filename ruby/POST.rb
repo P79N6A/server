@@ -7,8 +7,6 @@ class R
     [@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
     case @r['CONTENT_TYPE']
-#    when /^application\/sparql-update/
-#      sparqlPOST
     when /^application\/x-www-form-urlencoded/
       formPOST
     when /^text\/(n3|turtle)/
@@ -30,7 +28,7 @@ class R
 
   def rdfPOST
     data = @r['rack.input'].read
-    puts @r, data
+#    puts @r, data
     [201,{
        'Location' => uri,
        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',

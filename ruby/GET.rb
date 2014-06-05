@@ -50,6 +50,7 @@ class R
 
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
     @r[:Links].push "<#{LDP+'BasicContainer'}>; rel=type" if uri[-1]=='/'
+    @r[:Links].push "<#{LDP+'Resource'}>; rel=type"
     @r[:Response].
       update({ 'Accept-Patch' => 'application/json',
                'Accept-Post' => 'text/turtle, text/n3, application/json',
