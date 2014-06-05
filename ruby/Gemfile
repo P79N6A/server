@@ -1,6 +1,6 @@
 source "https://rubygems.org/"
 
-gem 'groonga'
+#gem 'groonga'
 gem 'linkeddata'
 gem 'mail'
 gem 'nokogiri'
