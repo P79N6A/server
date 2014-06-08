@@ -1,8 +1,7 @@
 #watch __FILE__
 class R
 
-  # graph in memory as Hash and storage as JSON :: {uri => {property => val}}
-  # designed to minimize non-stdlib dependencies + indirection, and speed (C/native JSON-parse vs Ruby RDF-parse). arbitrary JSON is roundtripped in the "object" position of a triple
+  # an alternative to RDF library in Hash/JSON :: {uri => {property => val}}
   # the RDF::Reader for this format is in RDF.rb
 
   def fromStream m,*i
@@ -21,9 +20,7 @@ class R
 
   def fileToGraph graph = {}
     justRDF(%w{e}).do{|file|
-     graph.mergeGraph file.r true
-#      graph.merge! file.r true # not really any faster
-    }
+     graph.mergeGraph file.r true}
     graph
   end
 
@@ -48,7 +45,7 @@ class R
   # cacheJSON as side-effect of a triplr
   def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr)    # collect triples
-    R.cacheJSON graph, host, p, hook # cache documents
+    R.cacheJSON graph, host, p, hook # cache
     graph.triples &b if b            # emit triples
     self
   end
@@ -56,7 +53,7 @@ class R
   def jsonDoc; docroot.a '.e' end
 
   def triplrJSON
-    yield uri, '/application/json', r(true) if e
+    yield uri, RDFns + 'JSON', r(true) if e
   rescue Exception => e
     puts "triplrJSON #{e}"
   end
