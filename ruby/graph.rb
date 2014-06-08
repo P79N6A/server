@@ -27,8 +27,8 @@ class R
     graph
   end
 
-  # pass-thru triplr w/ side-effect of add missing resources to store
-  def addDocsJSON triplr, host, p=nil, hook=nil, &b
+  # "cache unseen resources" side-effect triplr-wrapper
+  def triplrCacheJSON triplr, host='localhost', p=nil, hook=nil, &b
     graph = fromStream({},triplr)
     docs = {}
     graph.map{|u,r|

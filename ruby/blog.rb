@@ -73,7 +73,7 @@ class R
 
   def tw g
     node.readlines.shuffle.each_slice(22){|s|
-      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].addDocsJSON :triplrTwMsg, g, nil, FeedArchiverJSON}
+      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].triplrCacheJSON :triplrTwMsg, g, nil, FeedArchiverJSON}
   end
 
   def triplrTwUser
