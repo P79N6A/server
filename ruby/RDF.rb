@@ -41,7 +41,7 @@ class R
    ['text/turtle',:turtle],
    ['text/n3',:n3]].map{|mime| Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  def addDocsRDF options = {} # group into docs and cache unseen/missing
+  def cacheRDF options = {} # group into docs and cache on local-fs
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?

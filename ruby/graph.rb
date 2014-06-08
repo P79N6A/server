@@ -27,24 +27,29 @@ class R
     graph
   end
 
-  # "cache unseen resources" side-effect triplr-wrapper
-  def triplrCacheJSON triplr, host='localhost', p=nil, hook=nil, &b
-    graph = fromStream({},triplr)
-    docs = {}
-    graph.map{|u,r|
-      e = u.R                 # resource
-      doc = e.jsonDoc         # doc
-      doc.e ||                # exists - we're nondestructive here
-      (docs[doc.uri] ||= {}   # init doc-graph
-       docs[doc.uri][u] = r   # add to graph
-       p && p.map{|p|         # index predicate
-         r[p].do{|v|v.map{|o| # values exist?
-             e.index p,o}}})} # index triple
-    docs.map{|d,g|            # resources in docs
+  def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil
+    docs = {} # document bin
+    graph.map{|u,r| # each resource
+      e = u.R                 # resource URI
+      doc = e.jsonDoc         # doc URI
+      doc.e ||                # cache hit ||
+      (docs[doc.uri] ||= {}   # doc graph
+       docs[doc.uri][u] = r   # resource -> graph
+       p && p.map{|p|         # index-predicates list
+         r[p].do{|v|v.map{|o| # objects exist?
+             e.index p,o}}})} # index triples
+
+    docs.map{|d,g|            # each doc
       d = d.R; puts "<#{d.docroot}>"
-      d.w g,true              # write
-      hook[d,g,host] if hook} # insert-hook
-    graph.triples &b if b     # emit triples
+      d.w g,true              # cache
+      hook[d,g,host] if hook} # write-hook
+  end
+
+  # cacheJSON as side-effect of a triplr
+  def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
+    graph = fromStream({},triplr)    # collect triples
+    R.cacheJSON graph, host, p, hook # cache documents
+    graph.triples &b if b            # emit triples
     self
   end
 

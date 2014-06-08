@@ -8,7 +8,7 @@ class R
     end}
 
   def getFeed h='localhost'
-    addDocsRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
+    cacheRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
     self
   rescue Exception => e
     puts "feed #{uri} #{e} #{e.message}"#, e.backtrace
