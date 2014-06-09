@@ -24,7 +24,7 @@ class R
     graph
   end
 
-  def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil
+  def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil # group into docs and cache on local-fs
     docs = {} # document bin
     graph.map{|u,r| # each resource
       e = u.R                 # resource URI
