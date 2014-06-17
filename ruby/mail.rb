@@ -185,7 +185,7 @@ class R
           score[a] += weight[a] || 1}}
       score.invert.max[1]}
 
-    [View[LDP+'Resource'][d,env],
+    [View[LDP+'Resource'][d,env], (H.css '/css/threads', true),
      groups.map{|group,threads| # each group
        color = cs
        ['<br clear=all>',
@@ -208,9 +208,6 @@ class R
                      [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: "color: #{color}",c: cr.R.mailUID}]}}
                     end
             name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
-
-            [{class: :post, c: [name, maker]},'<br clear=all>']
-          }}]},
-     (H.css '/css/threads', true)]}
+            {class: :post, c: [name, maker]}}}]}]}
 
 end

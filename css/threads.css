@@ -9,7 +9,6 @@ a {
 
 .group .to {
     font-weight: bold;
-    white-space: nowrap;
     border: .1em dashed;
     padding: 0 .1em 0 .1em;
 }
@@ -21,7 +20,12 @@ a {
 .posts {
     margin-bottom: .5em;
     padding: .1em 0 .2em 0;
-    max-width: 100ex;
+    max-width: 110ex;
+}
+
+.posts .post {
+    display: block;
+    clear: both;
 }
 
 .posts .g {
@@ -42,7 +46,7 @@ a {
 
 .count, .sender {
               color: #000;
-    background-color:#eee;
+    background-color:#f3f3f3;
     float: right;
     margin-left: .2em; 
 }
