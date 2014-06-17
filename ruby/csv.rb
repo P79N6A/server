@@ -7,7 +7,7 @@ class R
       lines[0].do{|fields| # ok, we have at least one line..
         yield uri+'#', Type, R[CSVns+'Table']
         yield uri+'#', CSVns+'rowCount', lines.size
-        yield uri+'#', COGS+'View', R[uri+'?view=csv']
+        yield uri+'#', COGS+'View', R[uri + '.html?view=csv']
         lines[1..-1].each_with_index{|row,line|
           row.each_with_index{|field,i|
             id = uri + '#row:' + line.to_s
