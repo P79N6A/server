@@ -188,8 +188,7 @@ class R
     [View[LDP+'Resource'][d,env], (H.css '/css/threads', true),
      groups.map{|group,threads| # each group
        color = cs
-       ['<br clear=all>',
-        (group||'').do{|g| {class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
+       [group.do{|g|{class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
         {class: :posts, style: 'background-color:' + color,
           c: threads.map{|title,msgs| # each thread
             size = title.to_s.unHTML.size
