@@ -1,6 +1,5 @@
 body {
     background-color:#000;
-    margin:0;
 }
 
 a {
@@ -8,16 +7,11 @@ a {
     text-decoration:none;
 }
 
-.group, .posts {float: right}
-
-.group {min-width: 7.3em}
-
 .group .to {
     font-weight: bold;
     white-space: nowrap;
     border: .1em dashed;
     padding: 0 .1em 0 .1em;
-    margin: 0 0 0 -.1em;
 }
 
 .group .to:hover {
@@ -25,15 +19,9 @@ a {
 }
 
 .posts {
-    margin-top: -.1em;
     margin-bottom: .5em;
     padding: .1em 0 .2em 0;
     max-width: 100ex;
-}
-
-.posts .post {
-    float: right;
-    margin-bottom: .08em;
 }
 
 .posts .g {
@@ -54,8 +42,8 @@ a {
 
 .count, .sender {
     color: #000;
-    white-space: nowrap;
-    float: left;
+    float: right;
+    margin-left: .2em; 
 }
 
 .count:hover {
@@ -69,6 +57,8 @@ a {
 }
 
 .thread:hover, .thread:hover:visited {background-color:#f04}
+
+a[rel=next],a[rel=prev] {color: #f8f8f8}
 
 .thread:visited {
     background-color:#fff;
