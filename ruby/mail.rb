@@ -190,7 +190,7 @@ class R
        color = cs
        [group.do{|g|{class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
         {class: :posts, style: 'background-color:' + color,
-          c: threads.map{|title,msgs| # each thread
+          c: threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
             size = title.to_s.unHTML.size
             scale = if size < 16
                       1.16
