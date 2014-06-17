@@ -188,10 +188,9 @@ class R
     [View[LDP+'Resource'][d,env],
      groups.map{|group,threads| # each group
        color = cs
-       style = 'background-color:' + color
        ['<br clear=all>',
         (group||'').do{|g| {class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
-        {class: :posts, style: style,
+        {class: :posts, style: 'background-color:' + color,
           c: threads.map{|title,msgs| # each thread
             size = title.to_s.unHTML.size
             scale = if size < 16
@@ -206,7 +205,7 @@ class R
                     else
                       msgs.map{|s|
                         s[Creator].justArray.select(&:maybeURI).map{|cr|
-                     [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: style, c: cr.R.mailUID}]}}
+                     [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: "color: #{color}",c: cr.R.mailUID}]}}
                     end
             name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
 

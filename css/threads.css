@@ -41,7 +41,8 @@ a {
 }
 
 .count, .sender {
-    color: #000;
+              color: #000;
+    background-color:#eee;
     float: right;
     margin-left: .2em; 
 }
