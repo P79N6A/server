@@ -1,5 +1,6 @@
 %w{
 cgi
+csv
 date
 digest/sha1
 fileutils
@@ -43,7 +44,7 @@ class R < RDF::URI
   ACL      = W3   + 'ns/auth/acl#'
   LDP      = W3   + 'ns/ldp#'
   Stat     = W3   + 'ns/posix/stat#'
-  CSV      = W3   + 'ns/csv#'
+  CSVns    = W3   + 'ns/csv#'
   EXIF     = W3   + '2003/12/exif/ns#'
   SKOS     = W3   + '2004/02/skos/core#'
   Atom     = W3   + '2005/Atom'

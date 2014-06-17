@@ -1,29 +1,9 @@
-table th {
-    color: #999}
 .scheme,.abbr { display: none; }
-.frag {font-weight:bold;}
+a {text-decoration: none}
+table td {
+    white-space: nowrap;
+    border-width: 0 0 .1em 0;
+    border-style: dotted;
+    border-color: #bbb;
+}
 
-#properties .n {
-                 text-decoration:none;
-                 padding:.1em;
-                 font-weight:bold;
-                 margin:0;
-                 background-color:#bbb;
-                 color:#000
-                 }
-
-#showP {
-         padding:.3em;
-         font-weight:bold;
-         font-size:1.3em;
-         background-color:#dfd;
-         color:#0f0;
-         }
-
-#hideP {
-         padding:.3em;
-         font-weight:bold;
-         font-size:1.3em;
-         background-color:#fdd;
-         color:#f00;
-         }

@@ -29,7 +29,7 @@ class R
 
   GET['/m'] = -> e,r{
     if m = e.justPath.uri.match(/^\/m\/([^\/]+)\/$/)
-      r.q['c'] ||= 16
+      r.q['c'] ||= 20
       r.q['set']  ||= 'page'
       r.q['view'] ||= 'threads'
       nil

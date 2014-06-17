@@ -82,7 +82,7 @@ class R
       u = 'https://twitter.com/' + l.chomp
       yield uri, '/rel', u.R
       yield u, '/rev', self
-      yield u, Type, R[CSV+'Row']}
+      yield u, Type, R[CSVns+'Row']}
   end
 
   def triplrTwMsg

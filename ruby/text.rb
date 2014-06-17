@@ -69,7 +69,7 @@ class R
       l = l.chomp
       yield uri, '/rel', l.R
       yield l, '/rev', self
-      yield l, Type, R[CSV+'Row']
+      yield l, Type, R[CSVns+'Row']
     }
   end
 
