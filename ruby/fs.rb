@@ -144,6 +144,9 @@ class R
     File.open(d,'w'){|f|
       f << (s ? o.to_json : o)}
     self
+  rescue Exception => x
+    puts x
+    self
   end
 
   alias_method :e, :exist?
