@@ -7,7 +7,7 @@ class R
     SIOCt+'WikiArticle' => [Title, Content],
   }
 
-  View['edit'] = -> g,e {
+  View['edit'] = -> g,e { # HTML <form> RDF editor
 
     # lambda to render a triple
     triple = ->s,p,o{
