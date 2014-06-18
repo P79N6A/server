@@ -57,8 +57,7 @@ class R
                'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
                'Access-Control-Allow-Credentials' => 'true',
                'Allow' => Allow,
-               'Content-Type' => @r.format,
-#               'Content-Type' => @r.format + '; charset=UTF-8',
+               'Content-Type' => @r.format + '; charset=UTF-8',
                'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
