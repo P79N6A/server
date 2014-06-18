@@ -22,7 +22,7 @@ class R
 
     v = r.q['view'] ||= "timegraph"
     r[:Response]['Access-Control-Allow-Origin'] = r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'
-    r[:Response]['Content-Type'] = r.format
+    r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
 
     e.condResponse ->{Render[r.format][m, r]}}
