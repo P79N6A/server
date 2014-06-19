@@ -23,11 +23,7 @@ a {
     max-width: 110ex;
 }
 
-.posts .post {
-    display: block;
-    clear: both;
-    min-height: 1em;
-}
+.posts .post {clear: both}
 
 .posts .g {
     color:#fff;
@@ -46,7 +42,7 @@ a {
 }
 
 .count, .sender {
-              color: #000;
+    color: #000;
     background-color:#f3f3f3;
     float: right;
     margin-left: .2em; 
@@ -57,7 +53,6 @@ a {
 }
 
 .thread {
-    float: left;
     background-color:#000;
     color:#fff;
 }

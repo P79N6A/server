@@ -192,7 +192,7 @@ class R
         {class: :posts, style: 'background-color:' + color,
           c: threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
             size = title.to_s.unHTML.size
-            scale = if size < 16
+            scale = if msgs.size > 5 || size < 16
                       1.16
                     elsif size < 24
                       1.08
