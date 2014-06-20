@@ -13,6 +13,8 @@ a {
 
 .abbr, .invisible, .scheme, s {display: none}
 
+td.val {background-color:#000;color:#fff}
+
 img {max-width:100%}
 
 span.nick {
