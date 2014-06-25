@@ -70,13 +70,13 @@ class R
       end
     end
 
-    condResponse ->{
-      if NonRDF.member?(@r.format) && !q.has_key?('rdf')
-        set.map{|r|r.setEnv(@r).fileToGraph m} unless %w{tabulate vowl}.member? q['view']
+    condResponse ->{ # Model -> View
+      if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash
+        set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view']
         Render[@r.format][m, @r]
       else
-        graph = RDF::Graph.new # RDF Model->View
-        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => uri}}
+        graph = RDF::Graph.new # RDF
+        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}}
         R.resourceToGraph m['#'], graph
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
