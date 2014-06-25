@@ -158,27 +158,6 @@ class R
      self).hierPart.split('/').join(' ')
   end
 
-  View[LDP+'Resource'] = -> d,e {
-    d['#'].do{|u|
-      [u[Prev].do{|p|
-         {_: :a, rel: :prev, href: p.uri,
-           c: [{class: :arrow, c: '&larr;'},{class: :uri, c: p.R.offset}]}},
-       u[Next].do{|n|
-         {_: :a, rel: :next, href: n.uri,
-           c: [{class: :uri, c: n.R.offset},{class: :arrow, c: '&rarr;'}]}},
-       ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))
-        ] if u[Next]||u[Prev])]}} # (n)ext (p)rev
-
-  View[LDP+'BasicContainer'] = -> i,e {
-    [(H.once e, 'container', (H.css '/css/container')),
-     i.map{|u,r| resource = r.R
-       {class: :dir, style: "background-color: #{R.cs}",
-         c: [resource.descend.href(('' if resource == '#')),
-             r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
-             r[LDP+'contains'].do{|c|c.map{|c|c = c.R
-                 label = e[:Graph][c.uri].do{|r|r[Label]}
-                 [(c.href label),' ']}}]}}]}
-
   Render['text/html'] = -> d,e { u = d['#']||{}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class==String}
     H ['<!DOCTYPE html>',{_: :html,

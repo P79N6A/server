@@ -94,4 +94,15 @@ class R
       [@r[:Status],@r[:Response],[body]]}
   end
 
+  View[LDP+'Resource'] = -> d,e {
+    d['#'].do{|u|
+      [u[Prev].do{|p|
+         {_: :a, rel: :prev, href: p.uri,
+           c: [{class: :arrow, c: '&larr;'},{class: :uri, c: p.R.offset}]}},
+       u[Next].do{|n|
+         {_: :a, rel: :next, href: n.uri,
+           c: [{class: :uri, c: n.R.offset},{class: :arrow, c: '&rarr;'}]}},
+       ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))
+        ] if u[Next]||u[Prev])]}} # (n)ext (p)rev
+
 end

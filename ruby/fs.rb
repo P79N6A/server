@@ -46,6 +46,16 @@ class R
          {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u.R.abbr+' '},
                             r[Content]]}}}]}
 
+  View[LDP+'BasicContainer'] = -> i,e {
+    [(H.once e, 'container', (H.css '/css/container')),
+     i.map{|u,r| resource = r.R
+       {class: :dir, style: "background-color: #{R.cs}",
+         c: [resource.descend.href(('' if resource == '#')),
+             r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
+             r[LDP+'contains'].do{|c|c.map{|c|c = c.R
+                 label = e[:Graph][c.uri].do{|r|r[Label]}
+                 [(c.href label),' ']}}]}}]}
+
   def fileResources
     [(self if e),
      docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}"),
