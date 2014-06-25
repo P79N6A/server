@@ -101,7 +101,10 @@ class R
       if undo
         t.delete if t.e  # remove 
       else
-        t.w literal unless t.e # write
+        unless t.e # exists?
+          t.dir.mk # init container
+          t.w literal # write literal
+        end
       end
     end
   end

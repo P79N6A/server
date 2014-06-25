@@ -8,7 +8,7 @@ end
 
 class R
 
-  # constructors
+  # constructor
   def R uri = nil
     uri ? (R.new uri) : self
   end
@@ -33,7 +33,7 @@ class R
   # parent/child relationships in hierPart
   def descend; uri.t.R end
   def child u; descend + u.to_s end
-  def dirname; schemePart + hostPart + (File.dirname hierPart + queryPart) end
+  def dirname; schemePart + hostPart + (File.dirname hierPart + queryPart + fragPart) end
   def dir; dirname.R end
   def parentURI; R schemePart + hostPart + Pathname.new(hierPart).parent.to_s end
 

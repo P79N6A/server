@@ -145,7 +145,7 @@ class R
       f << (s ? o.to_json : o)}
     self
   rescue Exception => x
-    puts x
+    puts caller[0..2],x
     self
   end
 
