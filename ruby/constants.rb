@@ -82,7 +82,6 @@ audio
 blog
 csv
 DELETE
-edit
 facets
 forum
 fs
