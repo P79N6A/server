@@ -48,7 +48,7 @@ class R
            else
              literal o
            end)
-    [(descend o), v] # (s,p,o) URI + literal
+    [(child o), v] # (s,p,o) URI + literal
   end
 
   def literal o

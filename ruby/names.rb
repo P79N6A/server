@@ -18,7 +18,7 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # nil -> String casted URI parts for construction
+  # URI-parts as strings
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
@@ -30,7 +30,7 @@ class R
     suffix ? (File.basename hierPart, suffix) : (File.basename hierPart) end
   def bare; basename suffix end
 
-  # parent/child in context of hierPart
+  # parent/child relationships in hierPart
   def descend; uri.t.R end
   def child u; descend + u.to_s end
   def dirname; schemePart + hostPart + (File.dirname hierPart + queryPart) end
@@ -41,13 +41,13 @@ class R
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
-  # URI <> POSIX-path
+  # URI <> POSIX-paths
   VHosts = 'domain'
   def justPath; hierPart.R end
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def pathPOSIXrel
     if h = host
-      VHosts + '/' + h + hierPart + queryPart
+      VHosts + '/' + h + hierPart + queryPart + fragPart
     else
       uri[0] == '/' ? uri.tail : uri
     end
