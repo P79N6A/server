@@ -118,15 +118,14 @@ class R
     p.R.indexPath.setFs o,self,false,false
   end
 
-  # reachable graph along named predicate
   def walk p, g={}, v={}
-    graph g       # (accumulative) graph
-    v[uri] = true # visited-mark
-    rel = g[uri].do{|s|s[p]} ||[]
-    rev = (p.R.po self) ||[]
+    graph g       # resource-graph
+    v[uri] = true # mark visited
+    rel = g[uri].do{|s|s[p]} ||[] # outgoing from resource-graph
+    rev = p.R.po(self) || [] # incoming arcs from index
     rel.concat(rev).map{|r|
-      v[r.uri] || (r.R.walk p,g,v)}
-    g
+      v[r.uri] || (r.R.walk p,g,v)} # walk unvisited
+    g # accumulated graph
   end
 
   def po o
