@@ -189,11 +189,4 @@ class R
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: (View[e.q['view']] || View['HTML'])[d,e]}]}]}
 
-  View['table'] = -> g,e {
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    [H.css('/css/table'),
-     {_: :table,:class => :tab,
-       c: [{_: :tr, c: keys.map{|k|{_: :th, class: :label, property: k, c: k.R.abbr}}},
-           g.values.map{|e|{_: :tr, about: e.uri, c: keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
-
 end
