@@ -180,10 +180,10 @@ class R
                  [(c.href label),' ']}}]}}]}
 
   Render['text/html'] = -> d,e { u = d['#']||{}
-    titles = d.map{|u,r| r[Title] if r.class==Hash }.flatten.compact
+    titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class==String}
     H ['<!DOCTYPE html>',{_: :html,
          c: [{_: :head, c: ['<meta charset="utf-8" />',
-                   {_: :title, c: titles.size==1 ? titles[0] : e.uri},
+                  ({_: :title, c: titles.head} if titles.size==1),
                    {_: :link, rel: :icon, href:'/css/misc/favicon.ico'},
      u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
