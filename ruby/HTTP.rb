@@ -14,11 +14,22 @@ class R
   end
   alias_method :env, :getEnv
 
+  def R.dev # scan watched-files for changes
+    Watch.each{|f,ts|
+      if ts < File.mtime(f)
+        load f
+      end }
+  end
+
+  def bindHost # bind host to path
+    return self if !hierPart.match(/^\//)
+    R[(lateHost.join uri).to_s]
+  end
   def lateHost; R[@r['SCHEME']+'://'+@r['SERVER_NAME']+'/'] end
 
   def R.call e
-    e.extend Th # add HTTP utility functions
-    dev         # check watched source
+    e.extend Th # environment-scoped functions
+    dev
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
     e['SCHEME'] = "http" + (e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : '')

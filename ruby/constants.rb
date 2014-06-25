@@ -74,6 +74,17 @@ class R < RDF::URI
     :stat => RDF::URI(Stat),
   }
 
+  FileSet = {} # named-lambda containers
+  ResourceSet = {}
+  Render = {}
+  View = {}
+  JSONview = {}
+  Watch = {}
+  GET = {}
+  POST = {}
+
+  GREP_DIRS = []
+
 %w{
 MIME
 names

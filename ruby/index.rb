@@ -1,6 +1,11 @@
 #watch __FILE__
 class R
 
+  # balanced hash-prefix containers
+  def R.dive s
+    s[0..2] + '/' + s[3..-1]
+  end
+
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
 
@@ -38,12 +43,12 @@ class R
   end
 
   def objectPath o
-    p,v = (if o.respond_to? :uri
-             [R[o.uri].path, nil]
+    o,v = (if o.respond_to? :uri
+             [o.uri.R.pathPOSIXrel, nil]
            else
              literal o
            end)
-    [(a p), v]
+    [(descend o), v] # (s,p,o) URI + literal
   end
 
   def literal o
@@ -54,7 +59,7 @@ class R
     else
       str = o.to_json; ext='.json'
     end
-    ['/'+str.h+ext, str]
+    [str.h + ext, str]
   end
 
   def predicates
