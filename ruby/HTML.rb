@@ -226,7 +226,7 @@ class R
        c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=addProperty&new'}, # add predicate
           g.map{|s,r| {_: :table, class: :html, # each resource
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: s}}}, # subject URI
-                   r.keys.concat(ps).uniq.map{|p| # each predicate
+                   r.keys.except('uri').concat(ps).uniq.map{|p| # each predicate
                      {_: :tr,
                        c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}}, # predicate URI
                            {_: :td, c: [r[p].do{|o|       # object(s)
