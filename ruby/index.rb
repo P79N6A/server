@@ -138,7 +138,7 @@ class R
   end
 
   def triplrDoc &f
-      docroot.glob('#*').map{|s|
+    docroot.glob('#*').map{|s|
       s.triplrResource &f}
   end
 
@@ -149,7 +149,6 @@ class R
 
   GET['/cache'] = E404
   GET['/index'] = E404
-#  GET['/' + VHosts] = E404
 
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end

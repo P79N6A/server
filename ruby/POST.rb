@@ -16,6 +16,7 @@ class R
   end
 
   def snapshot
+    puts "snapshot #{uri}"
     g = {} # graph
     fromStream g, :triplrDoc
     if g.empty? # 0 triples

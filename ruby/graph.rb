@@ -66,6 +66,12 @@ class R
 
 end
 
+class Array
+  def except el
+    self.- el.justArray
+  end
+end
+
 class Hash
 
   def except *ks
