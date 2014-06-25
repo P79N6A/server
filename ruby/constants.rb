@@ -104,6 +104,7 @@ image
 index
 mail
 man
+msg
 news
 OPTIONS
 POST

@@ -97,9 +97,9 @@ class R
   View[LDP+'Resource'] = -> d,e {
     d['#'].do{|u| # Response Header
       [u[Prev].do{|p| # prev page
-         {_: :a, rel: :prev, href: p.uri, c: [{class: :arrow, c: '&larr;'},{class: :uri, c: p.R.offset}]}},
+         {_: :a, rel: :prev, href: p.uri, c: [{class: :arrow, c: '&larr;'}, {class: :uri, c: p.R.offset}]}},
        u[Next].do{|n| # next page
-         {_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset},{class: :arrow, c: '&rarr;'}]}},
+         {_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, {class: :arrow, c: '&rarr;'}]}},
        ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}}
 
 end
