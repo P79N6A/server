@@ -61,11 +61,18 @@ class R
                'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
-    return E404[self,@r,m] if set.empty?
+    if set.empty? # nothing found
+      if q.has_key? 'new' # initialize
+        m[uri+'#'] ||= {} # editable resource
+        q['view'] ||= 'edit' # editable-view
+      else
+        return E404[self,@r,m] # 404
+      end
+    end
 
     condResponse ->{
-      if NonRDF.member?(@r.format) && !@r.q.has_key?('rdf')
-        set.map{|r|r.setEnv(@r).fileToGraph m} unless %w{tabulate vowl}.member? @r.q['view']
+      if NonRDF.member?(@r.format) && !q.has_key?('rdf')
+        set.map{|r|r.setEnv(@r).fileToGraph m} unless %w{tabulate vowl}.member? q['view']
         Render[@r.format][m, @r]
       else
         graph = RDF::Graph.new # RDF Model->View

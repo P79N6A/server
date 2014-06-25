@@ -40,6 +40,7 @@ class R
         object = v.match(HTTP_URI) ? v.R : CleanHTML[v] # object Literal | URI
         o_ = pp.objectPath(object)[0]
         if o.to_s != o_.to_s # changed?
+          puts "edit #{o} -> #{o_}"
           o && o.R.do{|t| t.delete if t.e } # -triple
           s[p] = object unless object.class==String && object.empty? # +triple
           changed = true
