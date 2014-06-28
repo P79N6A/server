@@ -7,8 +7,6 @@ body {
 a {
     text-decoration:none;
     font-weight: bold;
-    color:#000;
-    background-color:#0f0;
 }
 
 .abbr, .invisible, .scheme, s {display: none}

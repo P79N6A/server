@@ -1,7 +1,8 @@
 class R
 
   View[SIOCt+'MicroblogPost'] = -> d,e {
-    [(H.once e,'chat',(H.css '/css/tw'),{_: :style,c: "a,b {background-color: #{R.c}}"}),
+    c = R.c # color
+    [(H.once e,'chat',(H.css '/css/tw'),{_: :style,c: "b {background-color: #{c}}\n a {color: #{c}}"}),
      d.map{|u,r|
        r[Content] && r[Date]
        [r[Date].justArray[0].match(/T([0-9:]{5})/).do{|m|m[1]},
