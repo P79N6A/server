@@ -2,34 +2,17 @@
 class R
 
   def POST
-    lambdas = justPath.cascade
-    [@r['SERVER_NAME'],""].map{|h| lambdas.map{|p|
+
+    # POST handler at URI
+    [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
+
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
-    when /^text\/(n3|turtle)/
-      rdfPOST
     else
-      [200,{'Location'=>uri},[]]
+      rdfPOST
     end
-  end
-
-  def snapshot
-    puts "snapshot #{uri}"
-    g = {} # graph
-    fromStream g, :triplrDoc
-    if g.empty? # 0 triples
-      jsonDoc.delete
-    else # graph -> doc
-      jsonDoc.w g, true
-    end
-  end
-
-  def rdfPOST
-    return [403,{},[]] if !allowWrite
-    puts "POST #{uri} #{@r['CONTENT_TYPE']}"
-    inPUT
   end
 
   def formPOST
@@ -51,6 +34,12 @@ class R
       end}
     snapshot if changed # new doc
     [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
+  end
+
+  def rdfPOST
+    return [403,{},[]] if !allowWrite
+    puts "POST #{uri} #{@r['CONTENT_TYPE']}"
+    inPUT
   end
 
 end
