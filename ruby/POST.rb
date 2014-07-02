@@ -27,7 +27,9 @@ class R
   end
 
   def rdfPOST
-    self.PUT
+    return [403,{},[]] if !allowWrite
+    puts "POST #{uri} #{@r['CONTENT_TYPE']}"
+    inPUT
   end
 
   def formPOST
