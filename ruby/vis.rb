@@ -9,6 +9,15 @@ class R
      {id: :graph, data: e['REQUEST_PATH']+'.json?format=vowl'},'VOWL',
     ]}
 
+  View['d3'] = -> d,e {
+
+
+  }
+
+  JSONview['d3'] = -> d,e {
+    
+  }
+
   JSONview['vowl'] = -> d,e {
     n = []
     l = []
