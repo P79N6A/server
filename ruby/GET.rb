@@ -71,14 +71,20 @@ class R
     end
 
     condResponse ->{ # Model -> View
-      if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash
-        set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view']
+      if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash model
+        set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view'] # payload
         Render[@r.format][m, @r]
-      else
-        graph = RDF::Graph.new # RDF
-        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}}
+
+      else # RDF model
+        graph = RDF::Graph.new
+        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # payload
+
+        # response-metadata to graph
         R.resourceToGraph m['#'], graph
+
+        # graph size
         @r[:Response][:Triples] = graph.size.to_s
+
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
       end}
   end
