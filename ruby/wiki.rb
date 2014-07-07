@@ -1,6 +1,6 @@
 class R
 
-  Prototypes = { # suggested predicates for resource
+  Prototypes = { # suggested properties of resource
     SIOCt+'MicroblogPost' => [Content],
     SIOCt+'BlogPost' => [Title, Content],
     SIOCt+'WikiArticle' => [Title, Content]}
