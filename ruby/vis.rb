@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   View['vowl'] = -> d,e {
@@ -10,9 +10,10 @@ class R
     ]}
 
   View['d3'] = -> d,e {
-
-
-  }
+    [(H.js '//d3js.org/d3.v2'),
+     (H.css '/css/d3'),
+     (H.js '/js/d3')
+    ]}
 
   JSONview['d3'] = -> d,e {
     
