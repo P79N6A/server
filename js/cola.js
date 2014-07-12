@@ -1,7 +1,6 @@
 
 var nodes = {};
 
-// find the nodes implied by the links
 links.forEach(function(link) {
   link.source = nodes[link.source] || (nodes[link.source] = {name: (link.name||link.source)});
   link.target = nodes[link.target] || (nodes[link.target] = {name: (link.name||link.target)});
@@ -10,12 +9,11 @@ links.forEach(function(link) {
 var width = 960,
     height = 500;
 
-var force = d3.layout.force()
+var force = cola.d3adaptor()
     .nodes(d3.values(nodes))
     .links(links)
     .size([width, height])
     .linkDistance(60)
-    .charge(-300)
     .on("tick", tick)
     .start();
 
