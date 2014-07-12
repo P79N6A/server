@@ -10,9 +10,17 @@ class R
     ]}
 
   View['d3'] = -> d,e {
-    [(H.js '//d3js.org/d3.v2'),
+    links = []
+    d.triples{|s,p,o|
+      if o.respond_to? :uri
+        links.push({source: s, target: o.uri})
+      end
+    }
+    [
      (H.css '/css/d3'),
-     (H.js '/js/d3')
+     (H.js '//d3js.org/d3.v2'),
+     {_: :script, c: "var links = #{links.to_json};"},
+     (H.js '/js/d3'),
     ]}
 
   JSONview['d3'] = -> d,e {
