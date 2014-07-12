@@ -60,6 +60,7 @@ class R < RDF::URI
   Prefix={
     "dc" => DC,
     "foaf" => FOAF,
+    "ldp" => LDP,
     "rdf" => RDFns,
     "rdfs" => RDFs,
     "sioc" => SIOC,
