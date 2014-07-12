@@ -3,8 +3,8 @@ var nodes = {};
 
 // Compute the distinct nodes from the links.
 links.forEach(function(link) {
-  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
-  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.name});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.name});
 });
 
 var width = 960,

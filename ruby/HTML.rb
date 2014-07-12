@@ -109,7 +109,7 @@ end
 
 class R
 
-  LazyView = %w{tabulate vowl} # views which will lazily-load graph data
+  LazyView = %w{tabulate} # views which will lazily-load graph data
 
   def href name = nil
     H({_: :a, href: uri, c: name || abbr})

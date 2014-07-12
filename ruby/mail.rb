@@ -157,6 +157,14 @@ class R
     fragment.do{|f| f.split('@')[0] }
   end
 
+  def R.mailName l
+    if l.respond_to? :uri
+      l.uri.split(/[\/#]/)[-1].split('@')[0]
+    else
+      l.to_s
+    end
+  end
+
   IndexMail = ->doc, graph, host {
     graph.map{|u,r| a = []
    r[Creator].do{|c|a.concat c}

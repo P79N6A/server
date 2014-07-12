@@ -39,7 +39,7 @@ class R
 
     # on resources w x-axis field
     if r[x.q['x'] || Date]
-      label = r[x.q['label'].do{|l|l.expand}||Creator].justArray[0].do{|l|l.respond_to?(:uri) ? l.uri.split(/[\/#]/)[-1].split('@')[0] : l.to_s} || '#'
+      label = r[x.q['label'].do{|l|l.expand}||Creator].justArray[0].do{|l| R.mailName l } || '#'
       lc = x[:group][label] ||= R.c
       arc = x.q['arc'].do{|a| a.expand } || (SIOC+'has_parent')
 
