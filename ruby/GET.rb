@@ -93,6 +93,7 @@ class R
     @r['HTTP_IF_NONE_MATCH'].do{|m|m.strip.split(/\s*,\s*/).include?(@r[:Response]['ETag']) && [304,{},[]]} ||
     body.call.do{|body|
       @r[:Status] ||= 200
+      @r[:Response]['Content-Length'] ||= body.size.to_s
       body.class == R ? (Nginx ? [@r[:Status],@r[:Response].update({'X-Accel-Redirect' => '/fs/' + body.pathPOSIXrel}),[]] : # Nginx
                         Apache ? [@r[:Status],@r[:Response].update({'X-Sendfile' => body.d}),[]] : # Apache
                          (f = Rack::File.new nil; f.instance_variable_set '@path', body.d # Rack
