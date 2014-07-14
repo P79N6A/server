@@ -5,8 +5,8 @@ class R
     defaultType = SIOC + 'has_parent'
     links = []
     linkType = e.q['link'].do{|a|a.expand} || defaultType # link-type
-    d.triples{|s,p,o| # find links
-      if p == linkType && o.respond_to?(:uri) # is target a resource?
+    d.triples{|s,p,o|
+      if (p == linkType || linkType == '*') && o.respond_to?(:uri) # collect links
         link = {source: s, target: o.uri}
         d[s][Creator].justArray[0].do{|l| link[:name] = R.mailName l } # human-readable name
         links.push link
@@ -21,7 +21,7 @@ class R
     links = []
     linkType = e.q['link'].do{|a|a.expand} || defaultType # link-type
     d.triples{|s,p,o| # find links
-      if p == linkType && o.respond_to?(:uri) # is target a resource?
+      if (p == linkType || linkType == '*') && o.respond_to?(:uri)
         link = {source: s, target: o.uri}
         d[s][Creator].justArray[0].do{|l| link[:name] = R.mailName l } # human-readable name
         links.push link

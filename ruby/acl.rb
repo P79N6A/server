@@ -20,7 +20,7 @@ class R
   end
 
   def allowWrite
-    return false 
+    return false
   end
 
 end
