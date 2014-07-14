@@ -12,17 +12,15 @@ class R
   end
 
   def allowAppend
-    return true unless WAC
+    return allowWrite
   end
 
   def allowRead
-    return true unless WAC
+    return true
   end
 
   def allowWrite
-    return true unless WAC
+    return false 
   end
-
-  WAC  = ENV['WAC']
 
 end
