@@ -3,8 +3,8 @@ var nodes = {};
 
 // find the nodes implied by the links
 links.forEach(function(link) {
-  link.source = nodes[link.source] || (nodes[link.source] = {name: (link.name||link.source)});
-  link.target = nodes[link.target] || (nodes[link.target] = {name: (link.name||link.target)});
+  link.source = nodes[link.source] || (nodes[link.source] = {uri: link.source, name: (link.name||link.source)});
+  link.target = nodes[link.target] || (nodes[link.target] = {uri: link.target, name: (link.name||link.target)});
 });
 
 var width = 960,
@@ -34,6 +34,7 @@ var node = svg.selectAll(".node")
     .attr("class", "node")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
+    .on("click", click)
     .call(force.drag);
 
 node.append("circle")
@@ -65,4 +66,8 @@ function mouseout() {
   d3.select(this).select("circle").transition()
       .duration(750)
       .attr("r", 8);
+}
+
+function click(d) {
+    document.location.href = d.uri
 }
