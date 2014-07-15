@@ -117,7 +117,7 @@ class R
     }.map{|p|
       yield e, Content,
       H([{_: :pre, class: :mail, style: 'white-space: pre-wrap',
-           c: p.decoded.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted*empty lines
+           c: p.decoded.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted empty lines
              l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ?        # quoted?
              {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quotes
            }},(H.css '/css/mail')])}
