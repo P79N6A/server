@@ -10,8 +10,11 @@ class R
     linkType = e.q['link'].do{|a|a.expand} || defaultType
     d.triples{|s,p,o| # visit each triple
       if (p == linkType || linkType == '*') && o.respond_to?(:uri) # include links of specific type + wildcard
-        link = {source: s, target: o.uri}
-        d[s][Creator].justArray[0].do{|l| link[:name] = R.mailName l } # human-readable name
+        source = s
+        target = o.uri
+        link = {source: source, target: target}
+        d[source][Creator].justArray[0].do{|l| link[:sourceName] = R.mailName l } # human-readable name
+        d[target][Creator].justArray[0].do{|l| link[:targetName] = R.mailName l }
         links.push link
       end}
 

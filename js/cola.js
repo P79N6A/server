@@ -2,8 +2,8 @@
 var nodes = {};
 
 links.forEach(function(link) {
-  link.source = nodes[link.source] || (nodes[link.source] = {uri: link.source, name: (link.name||link.source)});
-  link.target = nodes[link.target] || (nodes[link.target] = {uri: link.target, name: (link.name||link.target)});
+  link.source = nodes[link.source] || (nodes[link.source] = {uri: link.source, name: (link.sourceName||link.source)});
+  link.target = nodes[link.target] || (nodes[link.target] = {uri: link.target, name: (link.targetName||link.target)});
 });
 
 var width = 960,
