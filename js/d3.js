@@ -4,11 +4,11 @@ links.forEach(function(link) {
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
-			    name: (link.sourceName||link.source)});
+			    name:  link.sourceName});
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
-			    name: (link.targetName||link.target)});
+			    name:  link.targetName});
 });
 
 var width = 480,
@@ -60,7 +60,7 @@ node.append("circle")
 node.append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
-    .text(function(d) { return d.name; });
+    .text(function(d) { return d.name || d.uri.slice(-8); });
 
 function tick() {
   link
