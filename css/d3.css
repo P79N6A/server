@@ -1,4 +1,6 @@
-svg {}
+svg {
+    position: fixed;
+}
 
 .link {
   fill: none;

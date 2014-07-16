@@ -49,6 +49,7 @@ var node = svg.selectAll(".node")
     .data(force.nodes())
     .enter().append("g")
     .attr("class", "node")
+    .on("mouseover", mouseover)
     .on("click", click)
     .call(force.drag);
 
@@ -73,5 +74,9 @@ function tick() {
 }
 
 function click(d) {
+    window.location = d.uri
+}
+
+function mouseover(d) {
     window.location.hash = d.uri
 }
