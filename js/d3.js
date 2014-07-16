@@ -12,7 +12,7 @@ links.forEach(function(link) {
 });
 
 var width = 480,
-    height = 480;
+    height = 720;
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
