@@ -28,10 +28,8 @@ var link = svg.selectAll(".link")
 
 var node = svg.selectAll(".node")
     .data(force.nodes())
-  .enter().append("g")
+    .enter().append("g")
     .attr("class", "node")
-    .on("mouseover", mouseover)
-    .on("mouseout", mouseout)
     .on("click", click)
     .call(force.drag);
 
@@ -54,18 +52,6 @@ function tick() {
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function mouseover() {
-  d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 16);
-}
-
-function mouseout() {
-  d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 8);
-}
-
 function click(d) {
-    document.location.href = d.uri
+    window.location.hash = d.uri
 }
