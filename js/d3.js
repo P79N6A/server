@@ -1,12 +1,18 @@
 var nodes = {};
 
 links.forEach(function(link) {
-  link.source = nodes[link.source] || (nodes[link.source] = {uri: link.source, name: (link.sourceName||link.source)});
-  link.target = nodes[link.target] || (nodes[link.target] = {uri: link.target, name: (link.targetName||link.target)});
+  link.source = nodes[link.source] || (
+      nodes[link.source] = {uri: link.source,
+			    color: link.sourceColor,
+			    name: (link.sourceName||link.source)});
+  link.target = nodes[link.target] || (
+      nodes[link.target] = {uri: link.target,
+			    color: link.targetColor,
+			    name: (link.targetName||link.target)});
 });
 
 var width = 960,
-    height = 500;
+    height = 480;
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
@@ -34,7 +40,8 @@ var node = svg.selectAll(".node")
     .call(force.drag);
 
 node.append("circle")
-    .attr("r", 8);
+    .style("fill", function(d) { return d.color; })
+    .attr("r", 9);
 
 node.append("text")
     .attr("x", 12)

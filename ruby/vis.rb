@@ -3,6 +3,7 @@ class R
 
   View['d3'] = -> d,e {
     links = []
+    colors = {}
     defaultType = SIOC + 'has_parent'
     linkType = e.q['link'].do{|a|a.expand} || defaultType
     d.triples{|s,p,o| # visit each triple in graph
@@ -10,8 +11,16 @@ class R
         source = s
         target = o.uri
         link = {source: source, target: target}
-        d[source].do{|s|s[Creator].justArray[0].do{|l|link[:sourceName] = R.mailName l}}
-        d[target].do{|t|t[Creator].justArray[0].do{|l|link[:targetName] = R.mailName l}}
+        d[source].do{|s|s[Creator].justArray[0].do{|l|
+            name = R.mailName l
+            link[:sourceName] = name
+            link[:sourceColor] = colors[name] ||= cs
+         }}
+        d[target].do{|t|t[Creator].justArray[0].do{|l|
+            name = R.mailName l
+            link[:targetName] = name
+            link[:targetColor] = colors[name] ||= cs
+          }}
         links.push link
       end}
 
