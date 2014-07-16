@@ -1,25 +1,30 @@
 watch __FILE__
 class R
 
-  View['d3']  = -> d,e {View['force'][d,e].push H.js('/js/d3')}
-  View['cola']= -> d,e {View['force'][d,e].concat [(H.js '//marvl.infotech.monash.edu/webcola/cola.v3.min'), (H.js '/js/cola')]}
+  View['d3']  = -> d,e {
+    View['force'][d,e].
+    concat [H.css('/css/d3'), H.js('/js/d3')]}
+
+  View['cola']= -> d,e {
+    View['force'][d,e].
+    concat [(H.js '//marvl.infotech.monash.edu/webcola/cola.v3.min'),
+            (H.js '/js/cola'), H.css('/css/cola'),
+            View['HTML'][d,e]]}
 
   View['force'] = -> d,e {
-    defaultType = SIOC + 'has_parent'
     links = []
+    defaultType = SIOC + 'has_parent'
     linkType = e.q['link'].do{|a|a.expand} || defaultType
-    d.triples{|s,p,o| # visit each triple
-      if (p == linkType || linkType == '*') && o.respond_to?(:uri) # include links of specific type + wildcard
+    d.triples{|s,p,o| # visit each triple in graph
+      if (p == linkType || linkType == '*') && o.respond_to?(:uri) # matches specific type or wildcard
         source = s
         target = o.uri
         link = {source: source, target: target}
-        d[source][Creator].justArray[0].do{|l| link[:sourceName] = R.mailName l } # human-readable name
+        d[source][Creator].justArray[0].do{|l| link[:sourceName] = R.mailName l } # human-readable node-names
         d[target][Creator].justArray[0].do{|l| link[:targetName] = R.mailName l }
         links.push link
       end}
 
-    [(H.css '/css/d3'),
-     (H.js '//d3js.org/d3.v2'),
-     {_: :script, c: "var links = #{links.to_json};"}]}
+    [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"}]}
 
 end

@@ -6,16 +6,18 @@ links.forEach(function(link) {
   link.target = nodes[link.target] || (nodes[link.target] = {uri: link.target, name: (link.targetName||link.target)});
 });
 
-var width = 960,
-    height = 500;
+var width = 320,
+    height = 720;
 
 var force = cola.d3adaptor()
+    .avoidOverlaps(true)
     .nodes(d3.values(nodes))
     .links(links)
     .size([width, height])
-    .linkDistance(60)
+    .flowLayout("y", 33)
+    .symmetricDiffLinkLengths(24)
     .on("tick", tick)
-    .start();
+    .start(10,20,20);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -30,8 +32,6 @@ var node = svg.selectAll(".node")
     .data(force.nodes())
   .enter().append("g")
     .attr("class", "node")
-    .on("mouseover", mouseover)
-    .on("mouseout", mouseout)
     .on("click", click)
     .call(force.drag);
 
@@ -54,18 +54,6 @@ function tick() {
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function mouseover() {
-  d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 16);
-}
-
-function mouseout() {
-  d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 8);
-}
-
 function click(d) {
-    document.location.href = d.uri
+    window.location.hash = d.uri
 }

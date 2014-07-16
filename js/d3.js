@@ -1,7 +1,5 @@
-
 var nodes = {};
 
-// find the nodes implied by the links
 links.forEach(function(link) {
   link.source = nodes[link.source] || (nodes[link.source] = {uri: link.source, name: (link.sourceName||link.source)});
   link.target = nodes[link.target] || (nodes[link.target] = {uri: link.target, name: (link.targetName||link.target)});
