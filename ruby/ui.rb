@@ -20,5 +20,4 @@ class R
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-
 end

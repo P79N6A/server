@@ -115,6 +115,7 @@ schema
 search
 text
 time
+ui
 vis
 WebID
 wiki
