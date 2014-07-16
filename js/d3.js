@@ -27,10 +27,15 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var link = svg.selectAll(".link")
-    .data(force.links())
-  .enter().append("line")
-    .attr("class", "link");
+svg.append('svg:defs').append('svg:marker')
+    .attr('id', 'end-arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('markerWidth', 4)
+    .attr('markerHeight', 4)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', '#fff');
 
 var node = svg.selectAll(".node")
     .data(force.nodes())
@@ -47,6 +52,12 @@ node.append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
     .text(function(d) { return d.name; });
+
+var link = svg.selectAll(".link")
+    .data(force.links())
+    .enter().append("line")
+    .attr("class", "link")
+    .style('marker-end', 'url(#end-arrow)');
 
 function tick() {
   link
