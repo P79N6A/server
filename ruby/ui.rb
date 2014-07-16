@@ -1,12 +1,14 @@
 class R
 
-=begin third-party UIs
+=begin  third-party UIs
 
- set a default view for a subtree:
+ as default view on a subtree,
 
  GET['/'] = -> d,e { e.q['view'] ||= 'tabulate'; nil }
 
 =end
+
+  # https://github.com/linkeddata/tabulator
 
   View['tabulate'] = ->d=nil,e=nil {
     src = 'https://w3.scripts.mit.edu/tabulator/'
@@ -19,5 +21,11 @@ class R
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
+
+  # https://github.com/linkeddata/ldphp
+
+  View['fm'] = ->d=nil,e=nil {
+    
+  }
 
 end
