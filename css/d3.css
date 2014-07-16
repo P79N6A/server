@@ -1,5 +1,12 @@
 svg {
     position: fixed;
+    top: 0;
+    left: 0;
+}
+
+table.html {
+    clear: both;
+    float:right;
 }
 
 .link {
@@ -9,7 +16,7 @@ svg {
 }
 
 .node circle {
-  fill: #ccc;
+  fill: #777;
 }
 
 text {
