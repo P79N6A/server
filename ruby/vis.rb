@@ -20,8 +20,8 @@ class R
         source = s
         target = o.uri
         link = {source: source, target: target}
-        d[source][Creator].justArray[0].do{|l| link[:sourceName] = R.mailName l } # human-readable node-names
-        d[target][Creator].justArray[0].do{|l| link[:targetName] = R.mailName l }
+        d[source].do{|s|s[Creator].justArray[0].do{|l|link[:sourceName] = R.mailName l}}
+        d[target].do{|t|t[Creator].justArray[0].do{|l|link[:targetName] = R.mailName l}}
         links.push link
       end}
 
