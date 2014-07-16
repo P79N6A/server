@@ -11,7 +11,7 @@ links.forEach(function(link) {
 			    name:  link.targetName});
 });
 
-var width = 480,
+var width = 400,
     height = 720;
 
 var force = d3.layout.force()
