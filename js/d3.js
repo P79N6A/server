@@ -74,7 +74,11 @@ function tick() {
 }
 
 function click(d) {
-    window.location = d.uri
+    if(window.location.hash == d.uri) {
+	window.location = d.uri
+    } else {
+	window.location.hash = d.uri
+    }
 }
 
 function mouseover(d) {

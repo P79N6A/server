@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class R
 
@@ -26,6 +26,10 @@ class R
        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
        'Access-Control-Allow-Credentials' => 'true',
     },[]]
+  end
+
+  def MKCOL
+
   end
 
 end
