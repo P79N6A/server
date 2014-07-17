@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
 =begin  third-party UIs
@@ -9,7 +10,7 @@ class R
 =end
 
   # https://github.com/linkeddata/tabulator
-
+  # generic data-browser
   View['tabulate'] = ->d=nil,e=nil {
     src = 'https://w3.scripts.mit.edu/tabulator/'
     [(H.css src + 'tabbedtab'),(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),(H.js src + 'js/mashup/mashlib'),
@@ -23,9 +24,12 @@ class R
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
   # https://github.com/linkeddata/ldphp
-
+  # directory viewer and ACL-editor
   View['fm'] = ->d=nil,e=nil {
-    
-  }
+    [
+     {class: :editor, id: :editor},
+     {class: 'wac-editor', id: 'wac-editor'},
+     {class: :cloudactions},
+    ]}
 
 end
