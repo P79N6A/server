@@ -28,8 +28,4 @@ class R
     },[]]
   end
 
-  def MKCOL
-
-  end
-
 end

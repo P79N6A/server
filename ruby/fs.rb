@@ -117,6 +117,7 @@ class R
   alias_method :d, :pathPOSIX
   def delete;   node.deleteNode if e; self end
   def exist?;   node.exist? end
+  def directory?; node.directory? end
   def file?;    node.file? end
   def mtime;    node.stat.mtime if e end
   def realpath; node.realpath rescue nil end
@@ -130,6 +131,14 @@ class R
   rescue Exception => x
     puts x
     self
+  end
+
+  def MKCOL
+    return [409, {}, ["parent not found"]] unless dir.exist?
+    return [409, {}, ["file exists"]] if file?
+    return [405, {}, ["collection exists"]] if directory?
+    mk
+    [200, {}, []]
   end
 
   def readFile parseJSON=false
