@@ -137,6 +137,8 @@ class R
     return [409, {}, ["parent not found"]] unless dir.exist?
     return [409, {}, ["file exists"]] if file?
     return [405, {}, ["collection exists"]] if directory?
+    return [401, {}, ["Forbidden"]] unless @r.user
+    return [403, {}, ["Forbidden"]] unless allowWrite
     mk
     [200, {}, []]
   end
