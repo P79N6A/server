@@ -74,7 +74,7 @@ function tick() {
 }
 
 function click(d) {
-    if(window.location.hash == d.uri) {
+    if(window.location.hash.slice(1) == d.uri) {
 	window.location = d.uri
     } else {
 	window.location.hash = d.uri
