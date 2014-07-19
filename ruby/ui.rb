@@ -20,16 +20,16 @@ class R
 
   # ported from https://github.com/linkeddata/ldphp
   View['fm'] = ->d=nil,e=nil {
-    i = "/common/images/"
+    i = "//src.whats-your.name/ldphp/www/root/common/images/"
     [%w{
 //cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min
 //cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min
 //cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min
 //cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min
 //w3.scripts.mit.edu/rdflib.js/dist/rdflib
-/common/js/prototype
-/common/js/common
-/js/fm
+//src.whats-your.name/ldphp/www/root/common/js/prototype
+//src.whats-your.name/ldphp/www/root/common/js/common
+//src.whats-your.name/ldphp/www/root/common/js/fm
 }.map{|s| H.js s},
      {_: :script, c: "cloud.init({request_base:'#{e['SCHEME']+"://"+e['SERVER_NAME']}',request_url:'#{e['REQUEST_PATH']}',user:'#{e.user}'});"},
      {class: :editor, id: :editor, c: "editor"},
