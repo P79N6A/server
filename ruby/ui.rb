@@ -18,8 +18,9 @@ class R
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  # https://github.com/linkeddata/ldphp
+  # ported from https://github.com/linkeddata/ldphp
   View['fm'] = ->d=nil,e=nil {
+    i = "/common/images/"
     [%w{
 //cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min
 //cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min
@@ -32,7 +33,21 @@ class R
 }.map{|s| H.js s},
      {class: :editor, id: :editor, c: "editor"},
      {class: 'wac-editor', id: 'wac-editor', c: "wac-edit"},
-     {class: :cloudactions},
+     {class: :cloudactions,
+       c: [
+           {_: :img, src: i + "refresh.png", title: :refresh},
+           {_: :img, src: i + "home.png", title: "top level"},
+           {_: :img, src: i + "images.png", title: "upload an image"},
+           {_: :img, src: i + "add_folder.png", title: "create a folder", onclick: 'showCloudNew("dir");'},
+           {_: :img, src: i + "add_file.png", title: "new file"},
+           {_: :input, id: 'create-item', class: :item, type: :text, name: "", onclick: 'cloudListen(event);', style: "display:none;"},
+           {_: :img, id: 'submit-item', src: i + "ok.png", title: :create},
+           {_: :img, id: 'cancel-item', src: i + "cancel.png", title: :cancel},
+           {_: :form, id: :imageform, name: :imageform, method: "post", enctype: "multipart/form-data", 
+           c: {_: :input, type: :file, id: :addimage, name: :image}},
+           {_: :img, id: 'submit-image', src: i + "upload.png", title: :upload},
+           {_: :img, id: 'cancel-image', src: i + "cancel.png", title: :upload},
+          ]},
     ]}
 
 end
