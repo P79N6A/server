@@ -31,6 +31,7 @@ class R
 /common/js/common
 /js/fm
 }.map{|s| H.js s},
+     {_: :script, c: "cloud.init({request_base:'#{e['SCHEME']+"://"+e['SERVER_NAME']}',request_url:'#{e['REQUEST_PATH']}',user:'#{e.user}'});"},
      {class: :editor, id: :editor, c: "editor"},
      {class: 'wac-editor', id: 'wac-editor', c: "wac-edit"},
      {class: :cloudactions,
@@ -40,7 +41,7 @@ class R
            {_: :img, src: i + "images.png", title: "upload an image"},
            {_: :img, src: i + "add_folder.png", title: "create a folder", onclick: 'showCloudNew("dir");'},
            {_: :img, src: i + "add_file.png", title: "new file"},
-           {_: :input, id: 'create-item', class: :item, type: :text, name: "", onclick: 'cloudListen(event);', style: "display:none;"},
+           {_: :input, id: 'create-item', class: :item, type: :text, name: "", onkeypress: 'cloudListen(event);', style: "display:none;"},
            {_: :img, id: 'submit-item', src: i + "ok.png", title: :create},
            {_: :img, id: 'cancel-item', src: i + "cancel.png", title: :cancel},
            {_: :form, id: :imageform, name: :imageform, method: "post", enctype: "multipart/form-data", 
