@@ -25,7 +25,10 @@ var force = d3.layout.force()
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .on("click", function(e){
+	this.style.zIndex = 2
+    });
 
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
