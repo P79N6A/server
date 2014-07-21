@@ -11,28 +11,34 @@ links.forEach(function(link) {
 			    name:  link.targetName});
 });
 
-var width = 400,
+var width = 480,
     height = 720;
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
     .size([width, height])
-    .linkDistance(60)
+    .linkDistance(18)
     .charge(-300)
     .on("tick", tick)
     .start();
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .on("click", function(e){
+	this.style.zIndex = 2
+	this.style.width = 1024
+	this.style.height = 768
+	force.size([896, 768])
+    });
 
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
-    .attr("refX", 20)
-    .attr('markerWidth', 5)
-    .attr('markerHeight', 5)
+    .attr("refX", 24)
+    .attr('markerWidth', 4)
+    .attr('markerHeight', 4)
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')
