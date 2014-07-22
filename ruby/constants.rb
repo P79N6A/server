@@ -92,6 +92,7 @@ names
 acl
 audio
 blog
+cal
 csv
 DELETE
 facets

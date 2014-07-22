@@ -29,8 +29,8 @@ module Rack
     end
     def self.load _
       Rack::Builder.new {
-        use Rack::Deflater
-        run R
+        use Rack::Deflater # gzip
+        run R # requests to Resource#call in HTTP.rb
       }.to_app
     end
   end

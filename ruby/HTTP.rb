@@ -30,19 +30,17 @@ class R
   def R.call e
     e.extend Th # environment-scoped functions
     dev
-    e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
-    e['SCHEME'] = "http" + (e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : '')
-    p = Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding 'UTF-8'
-    path = p.expand_path.to_s # interpret path
-    path += '/' if path[-1] != '/' && p.to_s[-1] == '/' # preserve trailing-slash
-    resource = R[e['SCHEME'] + "://" + e['SERVER_NAME'] + path]
-    e[:Links] = []; e[:Response] = {}
-    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
-      puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q},
-            h['Content-Type'], e['HTTP_ACCEPT'], e['HTTP_USER_AGENT'],
-            e['HTTP_REFERER']].join ' ' unless s==404
-      [s,h,b]}
+    e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }                   # restore original hostname
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'                    # remove .. and / from hostname
+    e['SCHEME'] = "http" + (e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : '') # set scheme attribute in environment
+    p = Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding 'UTF-8'     # instantiate Path
+    path = p.expand_path.to_s                                                  # interpret path-segment
+    path += '/' if path[-1] != '/' && p.to_s[-1] == '/'                        # restore trailing-slash
+    resource = R[e['SCHEME'] + "://" + e['SERVER_NAME'] + path]                # init Resource
+    e[:Links] = []; e[:Response] = {}                                          # init Response-header
+    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|                    # call HTTP method
+     puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q}, h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404
+      [s,h,b]} # Response
   rescue Exception => x
     E500[x,e]
   end
