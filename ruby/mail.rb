@@ -87,7 +87,7 @@ class R
       yield author, SIOC+'has_container', dir.R
     }
 
-    yield e, Date, m.date.iso8601 if m.date          # date
+    yield e, Date, m.date.to_time.utc.iso8601 if m.date
 
     m.subject.do{|s| # subject
       s = s.to_utf8.hrefs
