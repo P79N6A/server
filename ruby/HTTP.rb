@@ -49,44 +49,6 @@ class R
     @r.q # query Hash
   end
 
-  E404 = -> e,r,g=nil {
-    g ||= {}            # graph
-    s = g[e.uri] ||= {} # resource
-    path = e.justPath
-    s[Title] = '404'
-    s[RDFs+'seeAlso'] = [e.parentURI, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
-    s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
-    s[Header+'accept'] = r.accept
-    %w{CHARSET LANGUAGE ENCODING}.map{|a| s[Header+'accept-'+a.downcase] = r.accept_('_'+a)}
-    r.map{|k,v|
-      s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)}
-    r.q['view'] = 'HTML'
-    [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
-
-  Errors = {}
-
-  GET['/500'] = -> e,r { 
-    r[:Response]['ETag'] = Errors.keys.sort.h
-    e.condResponse ->{Render['text/html'][Errors, r]}}
-
-  E500 = -> x,e {
-    uri = e['SERVER_NAME']+e['REQUEST_URI']
-    dump = [500, uri, x.class, x.message, x.backtrace[0..6]].flatten.map(&:to_s)
-    Errors[uri] ||= {'uri' => '//'+uri, Content => dump.map(&:hrefs).join('<br>')}; $stderr.puts dump
-
-    [500,{'Content-Type'=>'text/html'},
-     [H[{_: :html,
-          c: [{_: :head,c: [{_: :title, c: 500},(H.css '/css/500')]},
-              {_: :body,
-                c: [{_: :h1, c: 500},
-                    {_: :table,
-                      c: [{_: :tr,c: [{_: :td, c: {_: :b, c: x.class}},{_: :td, class: :message, colspan: 2, c: x.message.hrefs}]},
-                          x.backtrace.map{|f| p = f.split /:/, 3
-                            {_: :tr,
-                              c: [{_: :td, class: :path, c: p[0].R.abbr},
-                                  {_: :td, class: :index, c: p[1]},
-                                  {_: :td, class: :context, c: (p[2]||'').hrefs}].cr}}.cr]}]}]}]]]}
-
 end
 
 module Th

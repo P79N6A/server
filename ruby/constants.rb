@@ -75,11 +75,12 @@ class R < RDF::URI
     :stat => RDF::URI(Stat),
   }
 
-  FileSet = {} # named-lambda containers
+  FileSet = {}
   ResourceSet = {}
   Render = {}
   View = {}
   JSONview = {}
+  Errors = {}
   Watch = {}
   GET = {}
   POST = {}
@@ -102,6 +103,8 @@ GET
 graph
 HTML
 HTTP
+404
+500
 image
 index
 mail
