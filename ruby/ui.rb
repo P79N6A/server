@@ -52,12 +52,23 @@ class R
            {_: :img, id: 'submit-image', src: img + "upload.png", title: :upload, style: "display: none"},
            {_: :img, id: 'cancel-image', src: img + "cancel.png", title: :cancel, style: "display: none"},
           ]},
-     H.css('/css/table'),
      {_: :table,:class => :tab,
        c: [{_: :tr, c: keys.map{|k|
                {_: :th, class: :label, property: k, c: k.R.abbr}}},
            d.values.map{|e|
-             {_: :tr, about: e.uri, c: keys.map{|k|
-                 {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}]}
+             isDir = e[Type].justArray.map(&:maybeURI).member? LDP+'BasicContainer'
+             {_: :tr, about: e.uri,
+               c: [keys.map{|k| {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}},
+                   {_: :td,
+                     c: [({_: :a, href: '#', onclick: 'cloud.edit("")',
+                            c: {_: :img, src: img + "22/edit.png", title: :edit}} unless isDir),
+                         {_: :a, href: '#', onclick: 'wac.edit("")',
+                           c: {_: :img, src: img + "22/acl.png", title: "Access Control"}},
+                         ({_: :a, href: '#', onclick: 'cloud.rm("")',
+                           c: {_: :img, src: img + "22/delete.png", title: "Delete"}} unless isDir),
+                        ]}
+                  ]}}]},
+     H.css('/css/table'),
+    ]}
   
 end

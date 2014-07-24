@@ -142,7 +142,6 @@ ul.uris a:hover {background-color:#bf0}
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     yield uri,Content, CleanHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`] if size < 1e5
   rescue
-    puts "source #{uri}"
     nil
   end
 
