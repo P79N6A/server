@@ -1,5 +1,3 @@
-a general-purpose webserver, focused on minimal-dependency and linked-data
-
 USAGE   thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
 
 INSTALL ruby ruby/install

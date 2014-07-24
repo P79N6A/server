@@ -30,7 +30,7 @@ var svg = d3.select("body").append("svg")
 	this.style.zIndex = 2
 	this.style.width = 1024
 	this.style.height = 768
-	force.size([896, 768])
+//	force.size([896, 768])
     });
 
 svg.append('svg:defs').append('svg:marker')
