@@ -131,7 +131,7 @@ class R
       html.w p.decoded if !html.e                     # write content
       htmlCount += 1 }
 
-    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive inline-mail (digests + forwards)
+    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-container (digests + forwards)
       f = attache[].child 'msg.' + rand.to_s.h
 #      yield e, LDP+'contains', f
       f.w m.body.decoded if !f.e
