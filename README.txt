@@ -11,7 +11,7 @@ DAEMON
 
 TIPS
  more options in thin --help, and via Rack interface
- if launching outside checkout-dir, symlink {css,js} to use default UI
+ if launching outside checkout-dir, symlink {css,js} for default UI
 
 REQUISITES cd ruby && bundle install
 

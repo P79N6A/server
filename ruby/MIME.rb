@@ -3,7 +3,7 @@
 module Th
 
   def selectFormat # format-variant suffixes
-    {# '.csvld' => 'application/ld+csv',
+    {
       '.html' => 'text/html',
       '.json' => 'application/json',
       '.jsonld' => 'application/ld+json',
@@ -18,7 +18,6 @@ module Th
       mimes.map{|mime|
         return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
 
-#    'text/n3'
     'text/html'
   end
 
@@ -27,7 +26,7 @@ end
 
 class R
 
-  def mime # no link-following
+  def mime # no link dereferencing
     @mime ||=
       (t = ext.downcase.to_sym
 
