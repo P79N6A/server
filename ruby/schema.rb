@@ -18,11 +18,7 @@ class R
   GET['/schema'] = -> e,r {
     graph = RDF::Graph.new
     name = r.q['q'] || e.path.sub(/^\/schema/,'').tail || ''
-    res = R['/schema/' + name]
-    if !name.empty? && res.n3.e # schema found 
-      r.q['view'] ||= 'tabulate'
-      res.setEnv(r).response
-    elsif name.empty? # ontologies index
+    if name.empty?
       schemas = R.schemas.sort.map{|s|s.R.stripDoc}
       if r.format == 'text/html'
         m = {'#s' => {Type => R['#schemas']}, '#' => {LDP+'contains' => schemas}}
