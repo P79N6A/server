@@ -47,9 +47,8 @@ class R
     R.schemaSources.map{|prefix,uri| uri.R.cacheSchema prefix }
   end
 
-  # add schema.org
-  # $ R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
-
+  # usage (sh)
+  # R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
   def cacheSchema prefix
     short = R['schema'].child(prefix).n3
     if !short.e

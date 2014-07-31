@@ -14,8 +14,7 @@ class R
       View['editResource'][g,e]
     end}
 
-  View['editResource'] = -> g,e {# <form> RDF-editor
-
+  View['editResource'] = -> g,e {
     triple = ->s,p,o{ # triple -> <input>
       obj = o && s.R.predicatePath(p).objectPath(o)[0].uri # object URI
       t = CGI.escape [s,p,obj].to_json # s,p,o -> key
@@ -29,14 +28,12 @@ class R
           {_: :input, name: t, value: o.respond_to?(:uri) ? o.uri : o, size: 54} # <input> - URIs and plaintext 
         end),"<br>\n"]}
 
-    ps = [] # editable predicates
-    e.q['prototype'].do{|pr| pr = pr.expand
-      Prototypes[pr].do{|v|ps.concat v }} # suggested predicates
+    ps = [] # predicates
+    e.q['prototype'].do{|p| Prototypes[p.expand].do{|v| ps.concat v }} # suggested predicates
     e.q['p'].do{|p|ps.push p } # explicit predicate
-    mono = e.q.has_key? 'mono' # one val per key
-
+    mono = e.q.has_key? 'mono' # max(1) val-per-key
     [H.css('/css/html'), {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'], # <form>
-       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=edit&predicate'}, # add predicate
+       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=edit&predicate'}, # link to add predicate
           g.values.select{|r|r.uri.match /#/}.map{|r|
              s = r.uri # subject-URI
              {_: :table, class: :html, # resource

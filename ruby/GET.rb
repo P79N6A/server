@@ -62,8 +62,10 @@ class R
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
     if set.empty? # nothing found
-      if q['view'] == 'edit'
-        (uri + '#').do{|u| m[u] ||= {'uri' => u}} # editable resource
+      if q['view'] == 'edit' # editable resource
+        (uri + '#').do{|u|
+          m[u] ||= {'uri' => u,
+            Type => SIOCt+'WikiArticle'}}
       else
         return E404[self,@r,m] # 404
       end
