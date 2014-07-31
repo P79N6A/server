@@ -62,8 +62,11 @@ class R
            {_: :input, type: :hidden, name: :view, value: :edit},
            {_: :input, type: :submit, value: 'property'}]}]}
 
-  View[SIOCt+'WikiArticle'] = -> g,e {puts "view"
-    g.map{|u,r| {class: :wiki, c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}}, r[Content]]}}}
-  View['wiki'] = View[SIOCt+'WikiArticle']
+  View[SIOCt+'WikiArticle'] = -> g,e {
+    g.map{|u,r|
+      {class: :wiki, style: 'border: 1px dotted #888;padding: .5em',
+        c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
+            {_: :a, href: u + '?view=edit', c: '[edit]', style: 'float: right'},
+            r[Content]]}}}
 
 end
