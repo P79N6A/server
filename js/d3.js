@@ -11,8 +11,8 @@ links.forEach(function(link) {
 			    name:  link.targetName});
 });
 
-var width = 480,
-    height = 720;
+var width = 440,
+    height = 730;
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
@@ -25,13 +25,7 @@ var force = d3.layout.force()
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height)
-    .on("click", function(e){
-	this.style.zIndex = 2
-	this.style.width = 1024
-	this.style.height = 768
-//	force.size([896, 768])
-    });
+    .attr("height", height);
 
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')

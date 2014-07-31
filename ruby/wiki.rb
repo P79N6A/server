@@ -6,7 +6,15 @@ class R
     SIOCt+'BlogPost' => [Title, Content],
     SIOCt+'WikiArticle' => [Title, Content]}
 
-  View['edit'] = -> g,e {# <form> RDF-editor
+
+  View['edit'] = -> g,e {
+    if e.q.has_key? 'predicate'
+      View['editPredicate'][g,e]
+    else
+      View['editResource'][g,e]
+    end}
+
+  View['editResource'] = -> g,e {# <form> RDF-editor
 
     triple = ->s,p,o{ # triple -> <input>
       obj = o && s.R.predicatePath(p).objectPath(o)[0].uri # object URI
@@ -23,12 +31,12 @@ class R
 
     ps = [] # editable predicates
     e.q['prototype'].do{|pr| pr = pr.expand
-      Prototypes[pr].do{|v|ps.concat v }} # prototype-resource predicates
-    e.q['predicate'].do{|p|ps.push p }    # explicit predicate
+      Prototypes[pr].do{|v|ps.concat v }} # suggested predicates
+    e.q['p'].do{|p|ps.push p } # explicit predicate
     mono = e.q.has_key? 'mono' # one val per key
 
     [H.css('/css/html'), {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'], # <form>
-       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=addProperty'}, # add predicate
+       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=edit&predicate'}, # add predicate
           g.values.select{|r|r.uri.match /#/}.map{|r|
              s = r.uri # subject-URI
              {_: :table, class: :html, # resource
@@ -44,12 +52,12 @@ class R
           ({_: :input, type: :hidden, name: :mono, value: :true} if mono),
            {_: :input, type: :submit, value: 'save'}]}]}
 
-  View['addProperty'] = -> g,e {
+  View['editPredicate'] = -> g,e {
     [[Date,Title,Creator,Content,Label].map{|p| # common predicates
-       [{_: :a, href: e['REQUEST_PATH']+{'predicate' => p, 'view' => 'edit'}.qs, c: p},
+       [{_: :a, href: e['REQUEST_PATH']+{'p' => p, 'view' => 'edit'}.qs, c: p},
         '<br>']},
      {_: :form, action: e['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, name: :predicate, pattern: '^http.*$', size: 64},
+       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 64},
            {_: :input, type: :hidden, name: :view, value: :edit},
            {_: :input, type: :submit, value: 'property'}]}]}
 
