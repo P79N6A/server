@@ -21,11 +21,11 @@ class R
   def formPOST
     params = (Rack::Request.new @r).params
     params.map{|k,v|
-      s, p, t = JSON.parse CGI.unescape k # s, p, triple (origin) URI
-      o = v.match(HTTP_URI) ? v.R : CleanHTML[v] # object URI or Literal
+      s, p, t = JSON.parse CGI.unescape k rescue JSON::ParserError # triple (origin) URI
+     (o = v.match(HTTP_URI) ? v.R : CleanHTML[v] # object URI or Literal
       t_ = s.R.predicatePath(p).objectPath(o)[0] # triple (current) URI
       t.R.delete if t && t != t_.to_s # delete obsolete triple
-      s.R[p] = o unless o.class==String && o.empty?} # add triple
+      s.R[p] = o unless o.class==String && o.empty?) if s&&p} # add triple
     snapshot
     [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
   end
