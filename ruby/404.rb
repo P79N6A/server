@@ -3,8 +3,9 @@ class R
   E404 = -> e,r,g=nil {
     g ||= {}            # graph
     s = g[e.uri] ||= {} # resource
-    path = e.justPath
-    s[Title] = '404'
+    path = e.justPath   # path
+    s[Title] = '404'    # title
+    s[Edit] = R[e.docroot+'?view=edit']
     s[RDFs+'seeAlso'] = [e.parentURI, path.a('*').glob, e.a('*').glob] unless path.to_s == '/'
     s['#query'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
     s[Header+'accept'] = r.accept

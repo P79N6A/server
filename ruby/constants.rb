@@ -28,6 +28,7 @@ class R < RDF::URI
   VOID  = RO + 'ns/void#'
   Search   = 'http://sindice.com/vocab/search#'
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
+  Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Deri     = 'http://vocab.deri.ie/'
   Schema   = 'http://schema.org/'

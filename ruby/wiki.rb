@@ -4,7 +4,7 @@ class R
   Prototypes = { # suggest properties for resource
     SIOCt+'MicroblogPost' => [Content],
     SIOCt+'BlogPost' => [Title, Content],
-    SIOCt+'WikiArticle' => [Title, Content]}
+    SIOCt+'WikiArticlePart' => [Title, Content]}
 
 
   View['edit'] = -> g,e {
@@ -62,11 +62,11 @@ class R
            {_: :input, type: :hidden, name: :view, value: :edit},
            {_: :input, type: :submit, value: 'property'}]}]}
 
-  View[SIOCt+'WikiArticle'] = -> g,e {
+  View[SIOCt+'WikiArticlePart'] = -> g,e {
     g.map{|u,r|
-      {class: :wiki, style: 'border: 1px dotted #888;padding: .5em',
+      {class: :wiki, style: 'border: .1em solid #eee; border-radius: .5em; padding: .5em',
         c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
-            {_: :a, href: u + '?view=edit', c: '[edit]', style: 'float: right'},
+            {_: :a, href: u.R.docroot + '?view=edit', c: '[edit]', style: 'float: right'},
             r[Content]]}}}
 
 end
