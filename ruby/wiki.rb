@@ -29,16 +29,18 @@ class R
         end),"<br>\n"]}
 
     ps = [] # predicates
-    e.q['prototype'].do{|p| Prototypes[p.expand].do{|v| ps.concat v }} # suggested predicates
+    e.q['type'].do{|p| Prototypes[p.expand].do{|v| ps.concat v }} # predicates via explicit type-class
     e.q['p'].do{|p|ps.push p } # explicit predicate
     mono = e.q.has_key? 'mono' # max(1) val-per-key
     [H.css('/css/html'), {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'], # <form>
        c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=edit&predicate'}, # link to add predicate
           g.values.select{|r|r.uri.match /#/}.map{|r|
              s = r.uri # subject-URI
+             predicates = r.keys.except('uri').concat ps # existing and requested predicates 
+             r[Type].justArray.map{|p| Prototypes[p.expand].do{|v| predicates.concat v}} # predicates via type-class
              {_: :table, class: :html, # resource
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: s}}}, # subject
-                   r.keys.except('uri').concat(ps).uniq.map{|p| # each predicate
+                   predicates.uniq.map{|p| # each predicate
                      {_: :tr,
                        c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}}, # predicate
                            {_: :td, c: [r[p].do{|o|       # object(s)
