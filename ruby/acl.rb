@@ -16,11 +16,12 @@ class R
   end
 
   def allowRead
-    return true
+    true
   end
 
   def allowWrite
-    return false
+#   false
+    true
   end
 
 end

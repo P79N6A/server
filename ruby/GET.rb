@@ -64,8 +64,7 @@ class R
     if set.empty? # nothing found
       if q['view'] == 'edit' # editable resource
         (uri + '#').do{|u|
-          m[u] ||= {'uri' => u,
-            Type => SIOCt+'WikiArticle'}}
+          m[u] ||= {'uri' => u, Type => R[SIOCt+'WikiArticle']}}
       else
         return E404[self,@r,m] # 404
       end

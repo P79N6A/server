@@ -120,17 +120,15 @@ class R
     uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
 
-  View['HTML']=->d,e{ # default, dispatch on RDF type
+  View['HTML']=->d,e{ # default HTML view - dispatch to RDF-type specific per-resource
     e[:Graph] = d
     d.map{|u,r|
-      type = r[Type].justArray.find{|type| type.respond_to?(:uri) && View[type.uri]}
-      View[type ? type.uri : 'base'][{u => r},e]}}
+      type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
+      View[type ? type.to_s : 'base'][{u => r},e]}}
 
-  View['base']=->d,e{[(d.values.map &:html), # boring view
-                      H.once(e,'base',H.css('/css/html',true))]}
+  View['base']=->d,e{[d.values.map(&:html), H.once(e,'base',H.css('/css/html',true))]}
 
-  View['title'] = -> g,e {[{_: :style, c: "a {text-decoration: none; border: .1em dotted #aaf; float: left; margin:.1em; font-size: 1.4em}"},
-                           g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}]}
+  View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
 
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap',
@@ -144,9 +142,9 @@ class R
     yield uri, Content, r
   end
 
-  View[HTML]=->g,e{ # HTML fragment
-    [H.once(e,'base',H.css('/css/html')),
-     g.map{|u,r| {class: :HTML, c: r[Content]}}]}
+  View[HTML]=->g,e{ # HTML fragment, typed in RDF as <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML>
+    [H.once(e,'base',H.css('/css/html')), # actually, using XSD:XMLLiteral for now until more tools recognize this datatype
+     g.map{|u,r| {class: :HTML, c: r[Content]}}]} # <http://www.w3.org/TR/rdf11-concepts/#section-html>
 
   CleanHTML = -> b {
     h = Nokogiri::HTML.fragment b

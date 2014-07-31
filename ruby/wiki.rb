@@ -32,12 +32,14 @@ class R
     e.q['type'].do{|p| Prototypes[p.expand].do{|v| ps.concat v }} # predicates via explicit type-class
     e.q['p'].do{|p|ps.push p } # explicit predicate
     mono = e.q.has_key? 'mono' # max(1) val-per-key
+
     [H.css('/css/html'), {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'], # <form>
        c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=edit&predicate'}, # link to add predicate
           g.values.select{|r|r.uri.match /#/}.map{|r|
-             s = r.uri # subject-URI
-             predicates = r.keys.except('uri').concat ps # existing and requested predicates 
-             r[Type].justArray.map{|p| Prototypes[p.expand].do{|v| predicates.concat v}} # predicates via type-class
+             s = r.uri # subject URI
+             predicates = r.keys.except('uri').concat ps # predicates via resource-state
+             r[Type].justArray.compact.map{|p| Prototypes[p.uri].do{|v| predicates.concat v}} # predicates via type-class
+
              {_: :table, class: :html, # resource
                c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: s}}}, # subject
                    predicates.uniq.map{|p| # each predicate
@@ -59,5 +61,9 @@ class R
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 64},
            {_: :input, type: :hidden, name: :view, value: :edit},
            {_: :input, type: :submit, value: 'property'}]}]}
+
+  View[SIOCt+'WikiArticle'] = -> g,e {puts "view"
+    g.map{|u,r| {class: :wiki, c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}}, r[Content]]}}}
+  View['wiki'] = View[SIOCt+'WikiArticle']
 
 end
