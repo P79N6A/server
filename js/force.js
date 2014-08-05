@@ -40,7 +40,6 @@ svg.append('svg:defs').append('svg:marker')
     .attr('d', 'M0,-5L10,0L0,5')
     .attr('fill', '#fff');
 
-
 var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
@@ -55,22 +54,20 @@ var node = svg.selectAll(".node")
     .on("click", click)
     .call(force.drag);
 
-node.append("circle")
-    .style("fill", function(d) { return d.color; })
-    .attr("r", 9);
-
 node.append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
     .text(function(d) { return d.name || d.uri.slice(-8); });
 
 node.insert("rect","text").each(function(){
-    var box = this.nextSibling.getBBox()
-    this.setAttribute("width", box.width)
-    this.setAttribute("height", box.height)
-    this.setAttribute("x", box.x)
-    this.setAttribute("y", box.y)
-})
+    this.setAttribute("width", this.nextSibling.getBBox().width)
+    this.setAttribute("height", 10)
+    this.setAttribute("x", 12)
+    this.setAttribute("y", -5)})
+
+node.append("circle")
+    .style("fill", function(d) { return d.color; })
+    .attr("r", 9);
 
 function tick() {
   link.attr("x1", function(d) { return d.source.x; })
