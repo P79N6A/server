@@ -64,15 +64,19 @@ node.append("text")
     .attr("dy", ".35em")
     .text(function(d) { return d.name || d.uri.slice(-8); });
 
+node.insert("rect","text")
+    .attr("x", 12)
+    .attr("y",-4)
+    .attr("width", 36)
+    .attr("height", 10)
+
 function tick() {
-  link
-      .attr("x1", function(d) { return d.source.x; })
+  link.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
 
-  node
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
 function click(d) {

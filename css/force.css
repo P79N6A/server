@@ -11,13 +11,17 @@ table.html {
 }
 
 .link {
-  fill: none;
-  stroke: #ddd;
-  stroke-width: .1em;
+    fill: none;
+    stroke: #ddd;
+    stroke-width: .1em;
 }
 
 .node circle {
-  fill: #bbb;
+    fill: #bbb;
+}
+
+.node rect {
+    fill: #000;
 }
 
 text {
