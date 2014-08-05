@@ -14,7 +14,7 @@ links.forEach(function(link) {
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([420,768]) // center on left-edge to start, so plausibly visible 
+    .size([420,768])
     .linkDistance(18)
     .charge(-300)
     .on("tick", tick)
@@ -25,7 +25,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", 768)
     .on("click", function(e){
 	this.style.zIndex = 2
-	force.size([1024, 768])
+	force.size([768, 768])
 	document.querySelector('#backdrop').scrollIntoView()
     });
 
