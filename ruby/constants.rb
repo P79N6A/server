@@ -73,6 +73,8 @@ class R < RDF::URI
   Prefixes = {
     :ldp => RDF::URI(LDP),
     :rdf => RDF::URI(RDFns),
+    :rdfs => RDF::URI(RDFs),
+    :sioct => RDF::URI(SIOCt),
     :stat => RDF::URI(Stat),
   }
 

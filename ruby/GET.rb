@@ -35,7 +35,7 @@ class R
 
   def response # default handler
     set = []
-    m = {'#' => {'uri' => uri, Type => R[LDP+'Resource']}}
+    m = {'#' => {'uri' => uri, Type => R[RDFs+'Resource']}} # shorthand identifier for current request-context in Hash graph-model. expands to full request URI when merged into RDF-graph
 
     # File set
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
@@ -49,8 +49,9 @@ class R
             set.concat resource.fileResources}}}}
 
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
-    @r[:Links].push "<#{LDP+'BasicContainer'}>; rel=type" if uri[-1]=='/'
-    @r[:Links].push "<#{LDP+'Resource'}>; rel=type"
+#    @r[:Links].push "<#{LDP+'BasicContainer'}>; rel=type" if uri[-1]=='/'
+#    @r[:Links].push "<#{LDP+'Resource'}>; rel=type"
+
     @r[:Response].
       update({ 'Accept-Patch' => 'application/json',
                'Accept-Post' => 'text/turtle, text/n3, application/json',
@@ -101,7 +102,7 @@ class R
       [@r[:Status],@r[:Response],[body]]}
   end
 
-  View[LDP+'Resource'] = -> d,e {
+  View[RDFs+'Resource'] = -> d,e {
     d['#'].do{|u| # Response Header
       [u[Prev].do{|p| # prev page
          {_: :a, rel: :prev, href: p.uri, c: [{class: :arrow, c: '&larr;'}, {class: :uri, c: p.R.offset}]}},

@@ -39,6 +39,14 @@ class R
     p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
 
+  View['ls'] = ->d=nil,e=nil {
+    keys = ['uri',Stat+'size',Type,Date,Title]
+    [{_: :table,
+       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+           d.values.map{|e|
+             {_: :tr, c: keys.map{|k| {_: :td, c: k=='uri' ? e.R.html : e[k].html}}}}]},
+     H.css('/css/table')]}
+
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r|
@@ -137,7 +145,7 @@ class R
   def MKCOL
 #    return [401, {}, ["Unauthorized"]]     unless @r.user
 #    return [403, {}, ["Forbidden"]]        unless allowWrite
-    return [409, {}, ["parent not found"]] unless dir.exist?
+    return [409, {}, ["parent not found"]]  unless dir.exist?
     return [405, {}, ["file exists"]]       if file?
     return [405, {}, ["collection exists"]] if directory?
     mk
