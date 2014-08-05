@@ -64,11 +64,13 @@ node.append("text")
     .attr("dy", ".35em")
     .text(function(d) { return d.name || d.uri.slice(-8); });
 
-node.insert("rect","text")
-    .attr("x", 12)
-    .attr("y",-4)
-    .attr("width", 36)
-    .attr("height", 10)
+node.insert("rect","text").each(function(){
+    var box = this.nextSibling.getBBox()
+    this.setAttribute("width", box.width)
+    this.setAttribute("height", box.height)
+    this.setAttribute("x", box.x)
+    this.setAttribute("y", box.y)
+})
 
 function tick() {
   link.attr("x1", function(d) { return d.source.x; })
