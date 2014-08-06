@@ -46,8 +46,8 @@ class R
         thing = R['/man/' + pageName[a]]
         graph << RDF::Statement.new(uri, R[RDFs+'member'], thing)
         graph << RDF::Statement.new(thing, R[Type], R[Stat+'File'])
-        graph << RDF::Statement.new(thing, R[Stat+'mtime'], ts)
-        graph << RDF::Statement.new(thing, R[Stat+'size'], 1)
+        graph << RDF::Statement.new(thing, R[Stat+'mtime'], a.mtime.to_i)
+        graph << RDF::Statement.new(thing, R[Stat+'size'], a.size)
       }
       graph << RDF::Statement.new(uri, R[SIOC+'has_container'], R['/man'])
       r.graphResponse graph
