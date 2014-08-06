@@ -1,8 +1,7 @@
 watch __FILE__
 class R
 
-#  Man = -> e,r {
-  GET['/man'] = -> e,r {
+  Man = -> e,r {
     graph = RDF::Graph.new
 
     uri = R['//'+r['SERVER_NAME']+r['REQUEST_URI']]
@@ -149,5 +148,7 @@ class R
       end
     end
   }
+
+  GET['/man'] = Man # mount man-handler
 
 end
