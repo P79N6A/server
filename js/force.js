@@ -26,7 +26,6 @@ var svg = d3.select("body").append("svg")
     .on("click", function(e){
 	this.style.zIndex = 2
 	force.size([720, 768])
-	document.querySelector('#backdrop').scrollIntoView()
     });
 
 svg.append('svg:defs').append('svg:marker')

@@ -1,10 +1,11 @@
-#watch __FILE__
+watch __FILE__
 
 class R
 
   def PUT
     return [403,{},[]] if !allowWrite
     puts "PUT #{uri} #{@r['CONTENT_TYPE']}"
+    @r.map{|k,v|puts k,v}
     inPUT
   end
 
@@ -15,7 +16,10 @@ class R
 
     # identifier for current version
     doc = versions.child Time.now.iso8601.gsub(/\W/,'') + ext 
-    doc.w @r['rack.input'].read # create version
+
+    body = @r['rack.input'].read
+    puts body
+    doc.w body # create version
 
     cur = stripDoc.a(ext) # resource URI
 
