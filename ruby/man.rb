@@ -1,10 +1,11 @@
 watch __FILE__
 class R
 
-  Man = -> e,r {
-
+#  Man = -> e,r {
+  GET['/man'] = -> e,r {
     graph = RDF::Graph.new
 
+    uri = R['//'+r['SERVER_NAME']+r['REQUEST_URI']]
     manPath = '/usr/share/man'
     name = e.justPath.uri.sub(/^\/man/,'').tail || ''
     section = nil
@@ -13,6 +14,7 @@ class R
       name = p.post_match}
     pageName = -> path {
       path.basename.to_s.sub /\.[0-9][a-z]*\...$/, '' }
+    ts = Time.now.to_i
 
     if name.empty?
 
@@ -23,7 +25,17 @@ class R
          graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
 
       else # pointers to indexes
-        ('a'..'z').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['//'+r['SERVER_NAME']+'/man/'+a+'/'])}
+        [Stat+'Directory',RDFs+'Resource',LDP+'BasicContainer'].map{|t|
+          graph << RDF::Statement.new(uri, R[Type], t.R)}
+        graph << RDF::Statement.new(uri, R[Stat+'mtime'], Time.now.to_i)
+
+        ('a'..'z').map{|a|
+          alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
+          graph << RDF::Statement.new(uri, R[RDFs+'member'], alpha)
+          graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
+          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)
+          graph << RDF::Statement.new(alpha, R[Stat+'size'], 0)
+        }
          graph << RDF::Statement.new(R['/man'], R['http://purl.org/linked-data/api/vocab#viewer'], R['/man?view=tabulate'])
 
       end
@@ -31,8 +43,14 @@ class R
 
       # alpha-index
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
-      Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a| graph << RDF::Statement.new('#'.R, R[LDP+'contains'], R['/man/' + pageName[a]])}
-      graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
+      Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
+        thing = R['/man/' + pageName[a]]
+        graph << RDF::Statement.new(uri, R[RDFs+'member'], thing)
+        graph << RDF::Statement.new(thing, R[Type], R[Stat+'File'])
+        graph << RDF::Statement.new(thing, R[Stat+'mtime'], ts)
+        graph << RDF::Statement.new(thing, R[Stat+'size'], 1)
+      }
+      graph << RDF::Statement.new(uri, R[SIOC+'has_container'], R['/man'])
       r.graphResponse graph
 
     else # page
@@ -131,5 +149,5 @@ class R
       end
     end
   }
-#  GET['localhost/man'] = Man
+
 end

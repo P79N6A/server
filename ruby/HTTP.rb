@@ -85,7 +85,8 @@ module Th
     [200,
      {'Content-Type' => format + '; charset=UTF-8',
       'Triples' => graph.size.to_s,
-       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
+       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o} || '*',
+       'Access-Control-Allow-Credentials' => 'true',
      },
      [(format == 'text/html' &&
     q['view'] == 'tabulate') ? H[R::View['tabulate'][]] :
