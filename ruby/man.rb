@@ -1,9 +1,7 @@
-#watch __FILE__
+watch __FILE__
 class R
 
-#  GET['/man'] =
-  Man =
-    -> e,r {
+  Man = -> e,r {
 
     graph = RDF::Graph.new
 
@@ -133,7 +131,5 @@ class R
       end
     end
   }
-
-  #  GET['/man'] = Man
-
+#  GET['localhost/man'] = Man
 end

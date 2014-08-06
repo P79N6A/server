@@ -80,7 +80,7 @@ class R
       yield dir, Type, R[Stat+'Directory']
       yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
       yield dir, LDP+'lastPage', R[dir+'/?set=page&asc']
-      c.map{|c|
+      c.map{|c| # child nodes
         if c.node.symlink? # symlink?
           c.realpath.do{|p|p.R} # follow
         else 
@@ -98,11 +98,11 @@ class R
   end
 
   def triplrStat
+    yield uri, SIOC+'has_container', parentURI unless path == '/'
+    yield uri, Stat+'size', size
     ts = mtime
     yield uri, Date, ts.iso8601
     yield uri, Stat+'mtime', ts.to_i
-    yield uri, SIOC+'has_container', parentURI unless path == '/'
-    yield uri, Stat+'size', size
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
@@ -148,13 +148,12 @@ class R
   end
 
   def MKCOL
-#    return [401, {}, ["Unauthorized"]]     unless @r.user
-#    return [403, {}, ["Forbidden"]]        unless allowWrite
-    return [409, {}, ["parent not found"]]  unless dir.exist?
-    return [405, {}, ["file exists"]]       if file?
-    return [405, {}, ["collection exists"]] if directory?
-    mk
-    [200, {}, []]
+#    return [401, {}, ["Unauthorized"]]     unless @r.user # require webID login
+    return [403, {}, ["Forbidden"]]        unless allowWrite
+    return [409, {}, ["parent not found"]] unless dir.exist?
+    return [405, {}, ["file exists"]]      if file?
+    return [405, {}, ["dir exists"]]       if directory?
+    mk;    [200, {}, []]
   end
 
   def readFile parseJSON=false

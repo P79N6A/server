@@ -163,8 +163,8 @@ class R
     mimeP.do{|mime|
       (MIMEsource[mime]||
        MIMEsource[mime.split(/\//)[0]]).do{|s|
-#        puts "triplr #{s}"
-        send *s,&b }} #|| puts("triplr undefined for #{mime}")
+#        puts "triplr #{uri} #{s}"
+        send *s,&b }}
   end
 
 end
