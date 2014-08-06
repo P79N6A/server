@@ -60,7 +60,7 @@ class R
        {class: :dir, style: "background-color: #{R.cs}",
          c: [resource.descend.href(('' if resource == '#')),
              r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
-             r[LDP+'contains'].do{|c|c.map{|c|c = c.R
+             r[RDFs+'member'].do{|c|c.map{|c|c = c.R
                  label = e[:Graph][c.uri].do{|r|r[Label]}
                  [(c.href label),' ']}}]}}]}
 
@@ -77,15 +77,18 @@ class R
       dir.triplrStat &f
       dir = dir.uri
       yield dir, Type, R[LDP+'BasicContainer']
+      yield dir, Type, R[Stat+'Directory']
       yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
-      yield dir, LDP+'firstPage', R[dir+'/?set=page&asc']
+      yield dir, LDP+'lastPage', R[dir+'/?set=page&asc']
       c.map{|c|
-        if c.node.symlink? # follow
-          c.realpath.do{|p|p.R} # if target exists
+        if c.node.symlink? # symlink?
+          c.realpath.do{|p|p.R} # follow
         else 
           c
         end}.compact.map(&:stripDoc).uniq.map{|c|
-        yield dir, LDP+'contains', c }
+        yield c.uri, Type, R[RDFs+'Resource']
+        yield dir, RDFs+'member', c
+      }
     else
       unless node.symlink?
         yield uri, Type, R[Stat+'File']
@@ -95,7 +98,9 @@ class R
   end
 
   def triplrStat
-    yield uri, Date, mtime
+    ts = mtime
+    yield uri, Date, ts.iso8601
+    yield uri, Stat+'mtime', ts.to_i
     yield uri, SIOC+'has_container', parentURI unless path == '/'
     yield uri, Stat+'size', size
   end

@@ -18,7 +18,7 @@ class R
       'uri' => e.uri,
       Type => [R[LDP+'BasicContainer'],
                R[SIOC+'Thread']],
-      LDP+'contains' => m.keys.map(&:R)}
+      RDFs+'member' => m.keys.map(&:R)}
 
     v = r.q['view'] ||= 'force'
     r[:Response]['Access-Control-Allow-Origin'] = r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'
@@ -133,7 +133,6 @@ class R
 
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-container (digests + forwards)
       f = attache[].child 'msg.' + rand.to_s.h
-#      yield e, LDP+'contains', f
       f.w m.body.decoded if !f.e
       f.triplrMail &b
     }

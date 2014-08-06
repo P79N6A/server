@@ -16,7 +16,7 @@ var force = d3.layout.force()
     .links(links)
     .size([420,768])
     .linkDistance(18)
-    .charge(-300)
+    .charge(-250)
     .on("tick", tick)
     .start();
 
@@ -25,7 +25,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", 768)
     .on("click", function(e){
 	this.style.zIndex = 2
-	force.size([768, 768])
+	force.size([720, 768])
 	document.querySelector('#backdrop').scrollIntoView()
     });
 
