@@ -80,20 +80,11 @@ class R
       yield dir, Type, R[Stat+'Directory']
       yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
       yield dir, LDP+'lastPage', R[dir+'/?set=page&asc']
-      c.map{|c| # child nodes
-        if c.node.symlink? # symlink?
-          c.realpath.do{|p|p.R} # follow
-        else 
-          c
-        end}.compact.map(&:stripDoc).uniq.map{|c|
-        yield c.uri, Type, R[RDFs+'Resource']
-        yield dir, RDFs+'member', c
-      }
+      children = c.map{|c| c.node.symlink? ? c.realpath.do{|p|p.R} : c }.compact # dir may contain resources at unrelated URI via symlink
+      children.uniq.map{|c| yield dir, RDFs+'member', c }
     else
-      unless node.symlink?
-        yield uri, Type, R[Stat+'File']
-        triplrStat &f
-      end
+      yield uri, Type, R[Stat+'File'] unless node.symlink?
+      triplrStat &f
     end
   end
 
