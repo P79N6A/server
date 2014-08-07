@@ -24,7 +24,11 @@ var svg = d3.select("body").append("svg")
     .attr("width", 1024)
     .attr("height", 768)
     .on("click", function(e){
-	this.style.zIndex = 2
+	if(this.style.zIndex == 2){
+	    this.style.zIndex = -2
+	} else {
+	    this.style.zIndex = 2
+	}
 	force.size([720, 768])
     });
 

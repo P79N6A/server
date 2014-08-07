@@ -17,7 +17,7 @@ pre.mail a[rel=untyped] {
 
 tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"],tr[property="http://www.w3.org/ns/rdf#type"],tr[property="http://www.w3.org/ns/rdfs#label"],tr[property="http://purl.org/dc/terms/identifier"],tr[property="http://rdfs.org/sioc/ns#reply_of"] {display:none}
 
-pre.mail .q {background-color:#00f;color:#fff;display:block}
+pre.mail .q {background-color:#fff;color:#000;display:block}
 pre.mail .q[depth="1"] {background-color:#016;color:#fff}
 pre.mail .q[depth="2"] {background-color:#06f;color:#fff}
 pre.mail .q[depth="3"] {background-color:#4b02b8;color:#fff}

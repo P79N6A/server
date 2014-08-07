@@ -23,7 +23,7 @@ class R
          graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
          graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
 
-      else # pointers to indexes
+      else # directory of indexes
         [Stat+'Directory',RDFs+'Resource',LDP+'BasicContainer'].map{|t|
           graph << RDF::Statement.new(uri, R[Type], t.R)}
         graph << RDF::Statement.new(uri, R[Stat+'mtime'], Time.now.to_i)
