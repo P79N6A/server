@@ -2,6 +2,35 @@
 #watch __FILE__
 class R
   
+  def triplrInode &f
+    stat = node.stat
+    if stat.directory?
+      dir = stripSlash
+      dir.triplrStat &f
+      dir = dir.uri
+      yield dir, Type, R[LDP+'BasicContainer']
+      yield dir, Type, R[Stat+'Directory']
+      yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
+      yield dir, LDP+'lastPage', R[dir+'/?set=page&asc']
+      # directory containers can have arbitrary-URI children. this is done by symbolic-linking the URI's path to current dir
+      children = c.map{|c| c.node.symlink? ? c.realpath.do{|p|p.R.stripDoc} : c }.compact
+      children.uniq.map{|c| yield dir, RDFs+'member', c }
+    elsif stat.symlink?
+      triplrStat &f
+    else
+      yield uri, Type, R[Stat+'File']
+      triplrStat &f
+    end
+  end
+
+  def triplrStat
+    yield uri, SIOC+'has_container', parentURI unless path == '/'
+    yield uri, Stat+'size', size
+    ts = mtime
+    yield uri, Date, ts.iso8601
+    yield uri, Stat+'mtime', ts.to_i
+  end
+
   def node
     Pathname.new pathPOSIX
   end
@@ -69,31 +98,6 @@ class R
      docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}"),
      ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
     ].flatten.compact
-  end
-
-  def triplrInode &f
-    if node.directory?
-      dir = stripSlash
-      dir.triplrStat &f
-      dir = dir.uri
-      yield dir, Type, R[LDP+'BasicContainer']
-      yield dir, Type, R[Stat+'Directory']
-      yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
-      yield dir, LDP+'lastPage', R[dir+'/?set=page&asc']
-      children = c.map{|c| c.node.symlink? ? c.realpath.do{|p|p.R.stripDoc} : c }.compact # dir may contain resources at unrelated URI via symlink
-      children.uniq.map{|c| yield dir, RDFs+'member', c }
-    else
-      yield uri, Type, R[Stat+'File'] unless node.symlink?
-      triplrStat &f
-    end
-  end
-
-  def triplrStat
-    yield uri, SIOC+'has_container', parentURI unless path == '/'
-    yield uri, Stat+'size', size
-    ts = mtime
-    yield uri, Date, ts.iso8601
-    yield uri, Stat+'mtime', ts.to_i
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
@@ -201,7 +205,7 @@ class Pathname
   
   def deleteNode
     FileUtils.send (file?||symlink?) ? :rm : :rmdir, self
-    parent.deleteNode if parent.c.empty? # GC empty container
+    parent.deleteNode if parent.c.empty? # GC empty-container(s)
   end
 
   def take count=1000, direction=:desc, offset=nil

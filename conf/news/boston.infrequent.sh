@@ -1,2 +1,2 @@
 #!/bin/sh
-R /news/boston.u getFeeds $1
+R /news/boston.infrequent.u getFeeds $1
