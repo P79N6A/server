@@ -65,7 +65,7 @@ class R
     if set.empty? # nothing found
       if q['view'] == 'edit' # editor requested
         (uri + '#').do{|u| # add a blank resource
-          m[u] ||= {'uri' => u, Type => R[SIOCt+'WikiArticlePart']}}
+          m[u] ||= {'uri' => u, Type => []}}
       else
         return E404[self,@r,m] # 404
       end
