@@ -15,6 +15,7 @@ TIPS
 
 REQUISITES cd ruby && bundle install
 
- git://repo.or.cz/www.git            http://repo.or.cz/w/www.git
- git://gitorious.org/element/www.git https://gitorious.org/element/www
-                                     https://github.com/hallwaykid/pw
+REPOSITORY                           WWW
+git://repo.or.cz/www.git             http://repo.or.cz/w/www.git
+git://gitorious.org/element/www.git  https://gitorious.org/element/www
+https://github.com/hallwaykid/pw.git https://github.com/hallwaykid/pw
