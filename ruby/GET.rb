@@ -35,7 +35,7 @@ class R
 
   def response # default handler
     set = []
-    m = {'#' => {'uri' => uri, Type => R[RDFs+'Resource']}} # shorthand identifier for current request-context in Hash graph-model. expands to full request URI when merged into RDF-graph
+    m = {'#' => {'uri' => uri}} # this resource in Hash-graph, for adding any metadata - merges into RDF-graph at resource URI
 
     # File set
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
@@ -49,8 +49,6 @@ class R
             set.concat resource.fileResources}}}}
 
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
-#    @r[:Links].push "<#{LDP+'BasicContainer'}>; rel=type" if uri[-1]=='/'
-#    @r[:Links].push "<#{LDP+'Resource'}>; rel=type"
 
     @r[:Response].
       update({ 'Accept-Patch' => 'application/json',

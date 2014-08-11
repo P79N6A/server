@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
   
   def triplrInode &f
     stat = node.stat
     if stat.directory?
-      dir = stripSlash
+
+      dir = stripSlash.a('/')
       dir.triplrStat &f
-      dir = dir.uri
-      yield dir, Type, R[LDP+'BasicContainer']
-      yield dir, Type, R[Stat+'Directory']
-      yield dir, LDP+'firstPage', R[dir+'/?set=page&desc']
-      yield dir, LDP+'lastPage', R[dir+'/?set=page&asc']
-      # directory containers can have arbitrary-URI children. this is done by symbolic-linking the URI's path to current dir
-      children = c.map{|c| c.node.symlink? ? c.realpath.do{|p|p.R.stripDoc} : c }.compact
-      children.uniq.map{|c| yield dir, RDFs+'member', c }
+      u = dir.uri
+
+      [R[Stat+'Directory'],
+       R[LDP+'BasicContainer']].map{|type|yield u, Type, type}
+
+      yield u, LDP+'firstPage', R[u+'?set=page&desc']
+      yield u, LDP+'lastPage', R[u+'?set=page&asc']
+
     elsif stat.symlink?
-      triplrStat &f
-    else
+      # triplrStat &f # URI of source path
+      realpath.do{|p|yield p.R.stripDoc.uri, Type, R[RDFs+'Resource']} # URI of target path
+
+    else # File
       yield uri, Type, R[Stat+'File']
       triplrStat &f
     end
