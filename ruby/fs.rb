@@ -27,7 +27,7 @@ class R
   end
 
   def triplrStat
-    yield uri, SIOC+'has_container', parentURI unless path == '/'
+    yield uri, SIOC+'has_container', parentURI.a('/') unless path == '/'
     yield uri, Stat+'size', size
     ts = mtime
     yield uri, Date, ts.iso8601
