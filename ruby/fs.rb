@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
   
   def triplrInode &f
     stat = node.stat
     if stat.directory?
-
-      dir = stripSlash.a('/')
+      dir = descend
       dir.triplrStat &f
       u = dir.uri
 
@@ -27,7 +26,7 @@ class R
   end
 
   def triplrStat
-    yield uri, SIOC+'has_container', parentURI.a('/') unless path == '/'
+    yield uri, SIOC+'has_container', parentURI.descend unless path == '/'
     yield uri, Stat+'size', size
     ts = mtime
     yield uri, Date, ts.iso8601
@@ -92,7 +91,7 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [resource.descend.href(('' if resource == '#')),
+         c: [resource.href,
              r[LDP+'firstPage'].do{|p|p[0].R.href '⌦'},
              r[RDFs+'member'].do{|c|c.map{|c|c = c.R
                  label = e[:Graph][c.uri].do{|r|r[Label]}
