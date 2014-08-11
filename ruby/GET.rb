@@ -3,8 +3,12 @@ class R
 
   def GET
     ix = 'index.html'
-    [self, justPath, *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : [])].compact.find(&:f).do{|file|
-      return file.setEnv(@r).fileGET}
+    [self,     # file at (host-specific) URI
+     justPath, # file at (all hosts) path
+     *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : []) # index file
+    ].compact.find(&:f).do{|file| # exists?
+      return file.setEnv(@r).fileGET} # file-backed response
+    return [303,{'Location'=>@r['SCHEME']+'://linkeddata.github.io/warp/#list/'+@r['SCHEME']+'/'+@r['SERVER_NAME']+@r['REQUEST_PATH']},[]] if @r.q.has_key? 'warp' # file-UI
     uri = stripDoc # format-variant suffix
     uri = uri.parentURI.descend if uri.to_s.match(/\/index$/) # index
     uri.setEnv(@r).resourceGET # generic resource
