@@ -49,7 +49,9 @@ class R
     yield e, DC+'identifier', id                     # origin-domain ID
 
     [R[SIOCt+'MailMessage'],                         # SIOC types
-     R[SIOC+'Post']].map{|t|yield e, Type, t}        # RDF types
+     R[SIOC+'Post'],
+     R[RDFs+'Resource']].                            # RDF types
+      map{|t|yield e, Type, t}
 
     list = m['List-Post'].do{|l|l.decoded[8..-2]}    # list ID
     m['List-Id'].do{|name|
@@ -87,7 +89,13 @@ class R
       yield author, SIOC+'has_container', dir.R
     }
 
-    yield e, Date, m.date.to_time.utc.iso8601 if m.date
+    if m.date
+      date = m.date.to_time
+      yield e, Date, date.utc.iso8601 
+      yield e, Stat+'mtime', date.to_i
+    end
+
+    yield e, Stat+'size', size
 
     m.subject.do{|s| # subject
       s = s.to_utf8.hrefs

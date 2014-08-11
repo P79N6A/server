@@ -66,6 +66,10 @@ class String
   end
 end
 
+class Bignum
+  def html; to_s end
+end
+
 class Fixnum
   def html; to_s end
   def max i; i > self ? self : i end
