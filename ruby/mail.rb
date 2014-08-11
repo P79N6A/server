@@ -62,7 +62,7 @@ class R
       yield group, FOAF+'mbox', R['mailto:'+list]    # list address
      (yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
             ) unless name[1..-2] == list
-      yield group, SIOC+'has_container', dir.R
+      yield group, SIOC+'has_container', dir.R.descend
     } if list
 
     m.from.do{|f|                                    # any authors?
@@ -86,7 +86,7 @@ class R
       yield author, Type, R[FOAF+'Person']
       yield author, FOAF+'mbox', R['mailto:'+addr]
       yield author, SIOC+'name', name
-      yield author, SIOC+'has_container', dir.R
+      yield author, SIOC+'has_container', dir.R.descend
     }
 
     if m.date
