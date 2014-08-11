@@ -192,7 +192,7 @@ class R
           score[a] += weight[a] || 1}}
       score.invert.max[1]}
 
-    [View[RDFs+'Resource'][d,env], (H.css '/css/threads', true),'<br clear=all>',
+    [View[HTTP+'Response'][d,env], (H.css '/css/threads', true),'<br clear=all>',
      groups.map{|group,threads| # each group
        color = cs
        [group.do{|g|{class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},

@@ -15,7 +15,7 @@ class R
     o = r.has_key?('asc') ? :asc : :desc            # direction
     (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # find page
       u = m['#'] # RDF of current page
-      u[Type] = R[RDFs+'Resource']
+      u[Type] = R[HTTP+'Response']
       if r['offset'] && head = s[0]
         uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
         u[Prev] = {'uri' => uri}                # prev RDF

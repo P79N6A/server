@@ -100,7 +100,7 @@ class R
       [@r[:Status],@r[:Response],[body]]}
   end
 
-  View[RDFs+'Resource'] = -> d,e {
+  View[HTTP+'Response'] = -> d,e {
     d['#'].do{|u| # Response Header
       [u[Prev].do{|p| # prev page
          {_: :a, rel: :prev, href: p.uri, c: [{class: :arrow, c: '&larr;'}, {class: :uri, c: p.R.offset}]}},

@@ -100,7 +100,7 @@ content = CleanHTML[p['content']]
 
   View['subforum'] = -> d,e {
     [H.css('/css/forum', true),  # CSS
-     View[RDFs+'Resource'][d,e], # pagination
+     View[HTTP+'Response'][d,e], # pagination
      {class: :subforum, 
        c: d.resourcesOfType(SIOC+'Thread').map{|thread|
          preview = {}
