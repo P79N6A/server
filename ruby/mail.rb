@@ -50,7 +50,7 @@ class R
 
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post'],
-     R[RDFs+'Resource']].                            # RDF types
+     R[Stat+'Resource']].
       map{|t|yield e, Type, t}
 
     list = m['List-Post'].do{|l|l.decoded[8..-2]}    # list ID

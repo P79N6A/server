@@ -49,7 +49,9 @@ class R
         np = (t+1).strftime('/%Y/%m/%d/') # next day
         qs = q['view'].do{|v|'?view='+v} || ''
         g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
-        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e }}
+        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
+        g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]
+      }}
     s}
 
   def inside; node.expand_path.to_s.index(FSbase) == 0 end
