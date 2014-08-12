@@ -13,7 +13,6 @@ class R
     pageName = -> path {
       path.basename.to_s.sub(/\.gz$/,'').sub /\.[0-9][a-z]*$/, '' }
     ts = Time.now.to_i
-    browser=[303,{'Location' => '/man?warp'},[]]
 
     if name.empty?
 
@@ -26,7 +25,7 @@ class R
 
       else # top index
         if r.format == 'text/html'
-          browser
+          [303,{'Location' => '/man?warp'},[]]
         else
           [Stat+'Directory',RDFs+'Resource',LDP+'BasicContainer'].map{|t|
             graph << RDF::Statement.new(uri, R[Type], t.R)}
@@ -43,7 +42,7 @@ class R
       # alpha-narrowing
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
       if r.format == 'text/html'
-        browser
+        [303,{'Location' => "/man/#{alpha}/?warp"},[]]
       else
         Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
           thing = R['/man/' + pageName[a]]
