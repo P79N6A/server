@@ -81,7 +81,7 @@ class R
       name = a.display_name || a.name               # author name
       dir = '/m/'+addr                              # author Container
       author = dir+'#'+addr                         # author URI
-      yield author, DC+'identifier', addr
+#      yield author, DC+'identifier', addr
       yield author, Type, R[FOAF+'Person']
 #      yield author, FOAF+'mbox', R['mailto:'+addr]
       yield author, SIOC+'name', name

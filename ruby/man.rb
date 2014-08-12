@@ -1,6 +1,6 @@
 watch __FILE__
 class R
-
+  ManGzip ||= false
   Man = -> e,r {
     graph = RDF::Graph.new
 
@@ -58,7 +58,11 @@ class R
       lang = r.q['lang'] || acceptLang
       superLang = lang.do{|l| (l.split /[_-]/)[0] }
       langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
-      man = `man #{langSH} -w #{section} #{name.sh}`.chomp      
+
+      findman = "man #{langSH} -w #{section} #{name.sh}"
+
+#      puts findman
+      man = `#{findman}`.chomp      
 
       if man.empty?
         E404[e,r]
@@ -97,7 +101,7 @@ class R
           FileUtils.mkdir_p imagePath unless File.exist? imagePath
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
-          pageCmd = -> format,opts="" {"zcat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
+          pageCmd = -> format,opts="" {"#{ManGzip ? 'z' : ''}cat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
 
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
           `#{pageCmd['utf8',"-t -P -u -P -b"]} > #{txt.sh}`
@@ -123,11 +127,12 @@ class R
           # localization links
           locales.push r['REQUEST_PATH'].R unless localesAvail.empty?
           (body.css('h1')[0] ||
-           body.css('p')[0]
-           ).add_previous_sibling H localesAvail.map{|l|
-            locale = r['REQUEST_PATH']+'?lang='+l
-            locales.push R[locale]
-            {_: :a, class: :lang, href: locale, c: l}}
+           body.css('p')[0]).
+            do{|top|
+              top.add_previous_sibling H localesAvail.map{|l|
+                locale = r['REQUEST_PATH']+'?lang='+l
+                locales.push R[locale]
+                {_: :a, class: :lang, href: locale, c: l}}}
 
           # RDF + HTML command-refs
           body.css('b').map{|b|
