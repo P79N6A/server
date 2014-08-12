@@ -3,7 +3,6 @@ class R
   ManGzip ||= false
   Man = -> e,r {
     graph = RDF::Graph.new
-
     uri = R['//'+r['SERVER_NAME']+r['REQUEST_URI']]
     manPath = '/usr/share/man'
     name = e.justPath.uri.sub(/^\/man/,'').tail || ''
@@ -14,6 +13,7 @@ class R
     pageName = -> path {
       path.basename.to_s.sub(/\.gz$/,'').sub /\.[0-9][a-z]*$/, '' }
     ts = Time.now.to_i
+    browser=[303,{'Location' => '/man?warp'},[]]
 
     if name.empty?
 
@@ -26,7 +26,7 @@ class R
 
       else # top index
         if r.format == 'text/html'
-          [303,{'Location' => '/man?warp'},[]]
+          browser
         else
           [Stat+'Directory',RDFs+'Resource',LDP+'BasicContainer'].map{|t|
             graph << RDF::Statement.new(uri, R[Type], t.R)}
@@ -42,16 +42,19 @@ class R
       end
       # alpha-narrowing
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
-      Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
-        thing = R['/man/' + pageName[a]]
-        graph << RDF::Statement.new(uri, R[RDFs+'member'], thing)
-        graph << RDF::Statement.new(thing, R[Type], R[Stat+'File'])
-        graph << RDF::Statement.new(thing, R[Stat+'mtime'], a.mtime.to_i)
-        graph << RDF::Statement.new(thing, R[Stat+'size'], a.size)
-      }
-      graph << RDF::Statement.new(uri, R[SIOC+'has_container'], R['/man'])
-      r.graphResponse graph
-
+      if r.format == 'text/html'
+        browser
+      else
+        Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
+          thing = R['/man/' + pageName[a]]
+          graph << RDF::Statement.new(uri, R[RDFs+'member'], thing)
+          graph << RDF::Statement.new(thing, R[Type], R[Stat+'File'])
+          graph << RDF::Statement.new(thing, R[Stat+'mtime'], a.mtime.to_i)
+          graph << RDF::Statement.new(thing, R[Stat+'size'], a.size)}
+        graph << RDF::Statement.new(uri, R[SIOC+'has_container'], R['/man'])
+        r.graphResponse graph
+      end
+      
     else # page
 
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
