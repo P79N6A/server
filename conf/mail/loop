@@ -3,6 +3,5 @@ while true; do
 date
 getmail
 rsync -avz ~/.mail p:
-R `date +/%Y/%m/%d/` HEAD # optional - see also /today or /2016?set=page "inbox"
 sleep 1600
 done

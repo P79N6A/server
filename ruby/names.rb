@@ -74,7 +74,7 @@ class R
   def docroot # strip frag, suffix + slash
     stripFrag.stripDoc.stripSlash.do{|u|
       if u.path == '/'
-        u + 'index' # doc-name for root-path
+        u + 'index' # directory-index name
       else
         u
       end}

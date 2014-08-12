@@ -14,7 +14,7 @@ links.forEach(function(link) {
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([420,768])
+    .size([420,768]) // center on left-edge to start, so plausibly visible
     .linkDistance(18)
     .charge(-250)
     .on("tick", tick)
