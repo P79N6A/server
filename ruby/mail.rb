@@ -27,14 +27,6 @@ class R
 
     e.condResponse ->{Render[r.format][m, r]}}
 
-  GET['/m'] = -> e,r{
-    if m = e.justPath.uri.match(/^\/m\/([^\/]+)\/$/)
-      r.q['c'] ||= 20
-      r.q['set']  ||= 'page'
-      r.q['view'] ||= 'threads'
-      nil
-    end}
-
   GREP_DIRS.push /^\/m\/[^\/]+\//
 
   def mail; Mail.read node if f end
