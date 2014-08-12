@@ -113,7 +113,7 @@ end
 
 class R
 
-  LazyView = %w{tabulate} # views which will lazily-load graph data
+  LazyView = %w{tabulate} # views which lazily-load graph data
 
   def href name = nil
     H({_: :a, href: uri, c: name || abbr})
@@ -133,6 +133,16 @@ class R
   View['base']=->d,e{[d.values.map(&:html), H.once(e,'base',H.css('/css/html',true))]}
 
   View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
+
+  View[LDP+'BasicContainer'] = -> i,e {
+    [(H.once e, 'container', (H.css '/css/container')),
+     i.map{|u,r| resource = r.R
+       {class: :dir, style: "background-color: #{R.cs}",
+         c: [resource.href,
+             resource.a('?warp').href('⌦'), # link to interactive-UI
+             r[RDFs+'member'].do{|c|c.map{|c|c = c.R
+                 label = e[:Graph][c.uri].do{|r|r[Label]}
+                 [(c.href label),' ']}}]}}]}
 
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap',
