@@ -17,30 +17,30 @@ class R
 
     if name.empty?
 
-      if section # section-index
+      if section # section index
         Pathname(manPath+'/man'+section).c.map{|p|
          name = pageName[p]
          graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
          graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
+        r.graphResponse graph
 
-      else # directory of indexes
-        [Stat+'Directory',RDFs+'Resource',LDP+'BasicContainer'].map{|t|
-          graph << RDF::Statement.new(uri, R[Type], t.R)}
-        graph << RDF::Statement.new(uri, R[Stat+'mtime'], Time.now.to_i)
-
-        ('a'..'z').map{|a|
-          alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
-          graph << RDF::Statement.new(uri, R[RDFs+'member'], alpha)
-          graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
-          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)
-          graph << RDF::Statement.new(alpha, R[Stat+'size'], 0)
-        }
-         graph << RDF::Statement.new(R['/man'], R['http://purl.org/linked-data/api/vocab#viewer'], R['/man?view=tabulate'])
-
+      else # top index
+        if r.format == 'text/html'
+          [303,{'Location' => '/man?warp'},[]]
+        else
+          [Stat+'Directory',RDFs+'Resource',LDP+'BasicContainer'].map{|t|
+            graph << RDF::Statement.new(uri, R[Type], t.R)}
+          graph << RDF::Statement.new(uri, R[Stat+'mtime'], Time.now.to_i)
+          ('a'..'z').map{|a|
+            alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
+            graph << RDF::Statement.new(uri, R[RDFs+'member'], alpha)
+            graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
+            graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)
+            graph << RDF::Statement.new(alpha, R[Stat+'size'], 0)}
+          r.graphResponse graph
+        end
       end
-      r.graphResponse graph
-
-      # alpha-index
+      # alpha-narrowing
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
       Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
         thing = R['/man/' + pageName[a]]
