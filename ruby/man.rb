@@ -12,7 +12,7 @@ class R
       section = p[1]
       name = p.post_match}
     pageName = -> path {
-      path.basename.to_s.sub /\.[0-9][a-z]*\...$/, '' }
+      path.basename.to_s.sub(/\.gz$/,'').sub /\.[0-9][a-z]*$/, '' }
     ts = Time.now.to_i
 
     if name.empty?
