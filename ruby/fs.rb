@@ -13,7 +13,12 @@ class R
       yield u, LDP+'firstPage', R[u+'?set=page&desc']
       yield u, LDP+'lastPage', R[u+'?set=page&asc']
 
-      c.map{|c| c.triplrInode false, &f} if children
+      c.map{|c|
+        if c.exist?
+          c.triplrInode false, &f
+        else
+          yield c.uri, Type, R[RDFs+'Resource']
+        end} if children
 
     elsif stat.symlink?
       yield uri, Type, R[RDFs+'Resource']
@@ -111,7 +116,7 @@ class R
 
   def ln t, y=:link
     t = t.R.stripSlash
-    if !t.e
+    unless t.e || t.symlink?
       t.dir.mk
       FileUtils.send y, node, t.node
     end

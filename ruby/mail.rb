@@ -169,9 +169,9 @@ class R
         r[To].do{|to|addresses.concat to}
       r[Date].do{|date|
         r[Title].do{|title|
-          name = '/' + date[0][0..7].gsub('-','/') + title[0].gsub(/\W+/,' ').strip
+          name = '/' + date[0][0..7].gsub('-','/') + title[0].sub(/\b[rR][eE]: /,'').gsub(/\W+/,' ').strip
           addresses.map{|address|
-            doc.ln_s R[address.uri.split('#')[0] + name]}}}}} # link message to address
+            R['/thread/'+u.R.basename].ln_s R[address.uri.split('#')[0] + name]}}}}} # link discussion to address
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOCt+'MailMessage'
