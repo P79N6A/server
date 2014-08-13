@@ -1,6 +1,6 @@
 watch __FILE__
 class R
-  ManGzip ||= false
+
   Man = -> e,r {
     graph = RDF::Graph.new
     uri = R['//'+r['SERVER_NAME']+r['REQUEST_URI']]
@@ -15,46 +15,27 @@ class R
     ts = Time.now.to_i
 
     if name.empty?
+      if r.format == 'text/html' # deliver browser
+        [303,{'Location' => '/man?warp'},[]]
 
-      if section # section index
-        Pathname(manPath+'/man'+section).c.map{|p|
-         name = pageName[p]
-         graph << RDF::Statement.new(R['#'+name[0].downcase], R[LDP+'contains'], R['/man/'+section+'/'+name])}
-         graph << RDF::Statement.new(R['#'], R[SIOC+'has_container'], R['/man'])
+      else # alpha index
+        ('a'..'z').map{|a|
+          alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
+          graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
+          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)
+        }
         r.graphResponse graph
 
-      else # top index
-        if r.format == 'text/html'
-          [303,{'Location' => '/man?warp'},[]]
-        else
-          [Stat+'Directory',RDFs+'Resource',LDP+'BasicContainer'].map{|t|
-            graph << RDF::Statement.new(uri, R[Type], t.R)}
-          graph << RDF::Statement.new(uri, R[Stat+'mtime'], Time.now.to_i)
-          ('a'..'z').map{|a|
-            alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
-            graph << RDF::Statement.new(uri, R[RDFs+'member'], alpha)
-            graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
-            graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)
-            graph << RDF::Statement.new(alpha, R[Stat+'size'], 0)}
-          r.graphResponse graph
-        end
-      end
-      # alpha-narrowing
+      end # alpha narrowing      
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
-      if r.format == 'text/html'
-        [303,{'Location' => "/man/#{alpha}/?warp"},[]]
-      else
-        Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
-          thing = R['/man/' + pageName[a]]
-          graph << RDF::Statement.new(uri, R[RDFs+'member'], thing)
-          graph << RDF::Statement.new(thing, R[Type], R[Stat+'File'])
-          graph << RDF::Statement.new(thing, R[Stat+'mtime'], a.mtime.to_i)
-          graph << RDF::Statement.new(thing, R[Stat+'size'], a.size)}
-        graph << RDF::Statement.new(uri, R[SIOC+'has_container'], R['/man'])
-        r.graphResponse graph
-      end
-      
-    else # page
+      Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
+        thing = R['/man/' + pageName[a]]
+        graph << RDF::Statement.new(thing, R[Type], R[Stat+'File'])
+        graph << RDF::Statement.new(thing, R[Stat+'mtime'], a.mtime.to_i)
+        graph << RDF::Statement.new(thing, R[Stat+'size'], a.size)}
+      r.graphResponse graph
+
+    else # manpage
 
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
@@ -62,8 +43,6 @@ class R
       langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
 
       findman = "man #{langSH} -w #{section} #{name.sh}"
-
-#      puts findman
       man = `#{findman}`.chomp      
 
       if man.empty?
@@ -103,7 +82,9 @@ class R
           FileUtils.mkdir_p imagePath unless File.exist? imagePath
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
-          pageCmd = -> format,opts="" {"#{ManGzip ? 'z' : ''}cat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
+          gzipped = man.match /\.gz$/
+
+          pageCmd = -> format,opts="" {"#{gzipped ? 'z' : ''}cat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
 
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
           `#{pageCmd['utf8',"-t -P -u -P -b"]} > #{txt.sh}`
