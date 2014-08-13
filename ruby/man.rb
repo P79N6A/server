@@ -30,9 +30,10 @@ class R
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
       Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
         thing = R['/man/' + pageName[a]]
-        graph << RDF::Statement.new(thing, R[Type], R[Stat+'File'])
-        graph << RDF::Statement.new(thing, R[Stat+'mtime'], a.mtime.to_i)
-        graph << RDF::Statement.new(thing, R[Stat+'size'], a.size)}
+        stat = a.stat
+        graph << RDF::Statement.new(thing, R[Type], R[RDFs+'Resource'])
+        graph << RDF::Statement.new(thing, R[Stat+'mtime'], stat.mtime.to_i)
+        graph << RDF::Statement.new(thing, R[Stat+'size'], stat.size)}
       r.graphResponse graph
 
     else # manpage
