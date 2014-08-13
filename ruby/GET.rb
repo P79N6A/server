@@ -6,10 +6,10 @@ class R
     [self,                                         # file at host-specific URI
      justPath,                                     # file at path
      *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : []) # directory-index file
-    ].compact.find{|a| # check for candidate files
-      return [303,{'Location' => a.readlink.R.uri},[]] if a.symlink?
-      a.file?
-    }.do{|f| return f.setEnv(@r).fileGET} # file-backed response
+    ].compact.map{|a| # check for candidate inodes
+      a.readlink.R.do{|t|
+        return [303,{'Location' => t.uri},[]]} if a.symlink? # redirect to target URI
+      return a.setEnv(@r).fileGET if a.file? } # respond with file
 
     return [303,{'Location'=>@r['SCHEME']+'://linkeddata.github.io/warp/#/list/'+@r['SCHEME']+'/'+@r['SERVER_NAME']+@r['REQUEST_PATH']},[]] if @r.q.has_key? 'warp' # directory-UI
 

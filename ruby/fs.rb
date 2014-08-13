@@ -18,6 +18,8 @@ class R
           c.triplrInode false, &f
         else
           yield c.uri, Type, R[RDFs+'Resource']
+          yield c.uri, Stat+'mtime', Time.now.to_i
+          yield c.uri, Stat+'size', 2
         end} if children
 
     elsif stat.symlink?
