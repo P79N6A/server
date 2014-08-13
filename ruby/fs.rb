@@ -125,6 +125,7 @@ class R
   def exist?;   node.exist? end
   def directory?; node.directory? end
   def file?;    node.file? end
+  def symlink?; node.symlink? end
   def mtime;    node.stat.mtime if e end
   def realpath; node.realpath rescue nil end
   def sh;       d.force_encoding('UTF-8').sh end

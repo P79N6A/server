@@ -6,7 +6,8 @@ class R
     [self,                                         # file at host-specific URI
      justPath,                                     # file at host-unbound path
      *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : []) # directory-index files
-    ].compact.find(&:f).do{|file| # exists?
+    ].compact.find{|f| f.f && !f.symlink?}.
+      do{|file| # exists
       return file.setEnv(@r).fileGET} # file-backed response
 
     return [303,{'Location'=>@r['SCHEME']+'://linkeddata.github.io/warp/#/list/'+@r['SCHEME']+'/'+@r['SERVER_NAME']+@r['REQUEST_PATH']},[]] if @r.q.has_key? 'warp' # file-UI
