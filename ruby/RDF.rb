@@ -42,10 +42,10 @@ class R
     g
   end
 
-  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # just RDF docs
+  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # non-RDF as RDF-doc using our triplrs
     if e
       doc = self
-      unless pass.member? ext
+      unless pass.member? realpath.do{|p|p.extname.tail}
         doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r
         unless doc.e && doc.m > m # up-to-date?
           g = {} # doc-graph
