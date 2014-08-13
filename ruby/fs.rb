@@ -16,8 +16,8 @@ class R
       yield u, LDP+'lastPage', R[u+'?set=page&asc']
 
     elsif stat.symlink?
-      # triplrStat &f # URI of source path
-      realpath.do{|p|yield p.R.stripDoc.uri, Type, R[RDFs+'Resource']} # URI of target path
+      yield uri, Type, R[RDFs+'Resource']
+      triplrStat &f
 
     else # File
       yield uri, Type, R[Stat+'File']

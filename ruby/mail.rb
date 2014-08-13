@@ -163,11 +163,15 @@ class R
   end
 
   IndexMail = ->doc, graph, host {
-    graph.map{|u,r| a = []
-   r[Creator].do{|c|a.concat c}
-        r[To].do{|t|a.concat t}
-      r[Date].do{|t| x = '/' + t[0][0..18].gsub('-','/').sub('T','.') + '.' + u.h[0..1] + '.e'
-        a.map{|rel| doc.ln_s R[rel.uri.split('#')[0]+x]}}}} # link msg <> address
+    graph.map{|u,r|
+      addresses = []
+   r[Creator].do{|from|addresses.concat from}
+        r[To].do{|to|addresses.concat to}
+      r[Date].do{|date|
+        r[Title].do{|title|
+          name = '/' + date[0][0..7].gsub('-','/') + title[0].gsub(/\W+/,' ') + '.e'
+          addresses.map{|address|
+            doc.ln_s R[address.uri.split('#')[0] + name]}}}}} # link message to address
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOCt+'MailMessage'
