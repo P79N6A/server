@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -34,11 +34,12 @@ class R
 
   def triplrMail &b
     m = mail; return unless m                        # mail
+    addr = '/address/'
     id = m.message_id || m.resent_message_id rescue nil
     return unless id                                 # message-ID
 
     e = MessagePath[id]                              # message URI
-#    yield e, DC+'identifier', id                     # origin-domain ID
+#   yield e, DC+'identifier', id                     # origin-domain ID
 
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post'],
@@ -48,10 +49,9 @@ class R
     list = m['List-Post'].do{|l|l.decoded[8..-2]}    # list ID
     m['List-Id'].do{|name|
       name = name.decoded
-      dir = '/m/' + list                             # list Container
+      dir = addr + list                              # list Container
       group = dir + '#' + list                       # list URI
       yield group, Type, R[FOAF+'Group']             # list class
-#      yield group, FOAF+'mbox', R['mailto:'+list]    # list address
      (yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
             ) unless name[1..-2] == list
       yield group, SIOC+'has_container', dir.R.descend
@@ -60,7 +60,7 @@ class R
     m.from.do{|f|                                    # any authors?
       f.justArray.map{|f|                            # each author
         f = f.to_utf8
-        creator = '/m/'+f+'#'+f                      # author URI
+        creator = addr + f + '#' + f                 # author URI
         yield e, Creator, R[creator]                 # message -> author
                                                      # reply target
         r2 = list ||                                 #  List
@@ -70,13 +70,11 @@ class R
         R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
     m[:from].addrs.head.do{|a|                      # author address
-      addr = a.address                              # author ID
+      from = a.address                              # author ID
       name = a.display_name || a.name               # author name
-      dir = '/m/'+addr                              # author Container
-      author = dir+'#'+addr                         # author URI
-#      yield author, DC+'identifier', addr
+      dir = addr + from                             # author Container
+      author = dir + '#' + from                     # author URI
       yield author, Type, R[FOAF+'Person']
-#      yield author, FOAF+'mbox', R['mailto:'+addr]
       yield author, SIOC+'name', name
       yield author, SIOC+'has_container', dir.R.descend
     }
@@ -101,7 +99,7 @@ class R
         to.justArray.map{|to|                        # each recipient
           to.do{|to|                                 # non-nil? 
             to = to.to_utf8                          # UTF-8
-            yield e, To, R['/m/'+to+'#'+to]}}}}      # recipient URI
+            yield e, To, R[addr+to+'#'+to]}}}}       # recipient URI
 
     %w{in_reply_to references}.map{|ref|             # reference predicates
      m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
