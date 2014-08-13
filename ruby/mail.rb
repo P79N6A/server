@@ -49,7 +49,7 @@ class R
     list = m['List-Post'].do{|l|l.decoded[8..-2]}    # list ID
     m['List-Id'].do{|name|
       name = name.decoded
-      dir = addr + list                              # list Container
+      dir = addr + list[0] + '/' + list              # list Container
       group = dir + '#' + list                       # list URI
       yield group, Type, R[FOAF+'Group']             # list class
      (yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
@@ -60,7 +60,7 @@ class R
     m.from.do{|f|                                    # any authors?
       f.justArray.map{|f|                            # each author
         f = f.to_utf8
-        creator = addr + f + '#' + f                 # author URI
+        creator = addr + f[0] + '/' + f + '#' + f    # author URI
         yield e, Creator, R[creator]                 # message -> author
                                                      # reply target
         r2 = list ||                                 #  List
@@ -72,7 +72,7 @@ class R
     m[:from].addrs.head.do{|a|                      # author address
       from = a.address                              # author ID
       name = a.display_name || a.name               # author name
-      dir = addr + from                             # author Container
+      dir = addr + from[0] + '/' + from             # author Container
       author = dir + '#' + from                     # author URI
       yield author, Type, R[FOAF+'Person']
       yield author, SIOC+'name', name
@@ -95,11 +95,11 @@ class R
     yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
 
     %w{to cc bcc}.map{|to|                           # reciever fields
-      m.send(to).do{|to|                             # has field?
-        to.justArray.map{|to|                        # each recipient
-          to.do{|to|                                 # non-nil? 
-            to = to.to_utf8                          # UTF-8
-            yield e, To, R[addr+to+'#'+to]}}}}       # recipient URI
+     m.send(to).do{|to|                              # has field?
+      to.justArray.map{|to|                          # each recipient
+       to.do{|to|                                    # non-nil? 
+        to = to.to_utf8                              # UTF-8
+        yield e, To, R[addr+to[0]+'/'+to+'#'+to]}}}} # recipient URI
 
     %w{in_reply_to references}.map{|ref|             # reference predicates
      m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
