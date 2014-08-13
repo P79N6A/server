@@ -6,11 +6,11 @@ class R
     [self,                                         # file at host-specific URI
      justPath,                                     # file at host-unbound path
      *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : []) # directory-index files
-    ].compact.find{|f| f.f && !f.symlink?}.
+    ].compact.find{|f| f.f && !f.symlink?}. # find candidate files
       do{|file| # exists
       return file.setEnv(@r).fileGET} # file-backed response
 
-    return [303,{'Location'=>@r['SCHEME']+'://linkeddata.github.io/warp/#/list/'+@r['SCHEME']+'/'+@r['SERVER_NAME']+@r['REQUEST_PATH']},[]] if @r.q.has_key? 'warp' # file-UI
+    return [303,{'Location'=>@r['SCHEME']+'://linkeddata.github.io/warp/#/list/'+@r['SCHEME']+'/'+@r['SERVER_NAME']+@r['REQUEST_PATH']},[]] if @r.q.has_key? 'warp' # directory-UI
 
     uri = stripDoc # format-variant suffix
     uri = uri.parentURI.descend if uri.to_s.match(/\/index$/) # index
@@ -23,10 +23,10 @@ class R
 
   def fileGET
     @r[:Response].update({
-      'Content-Type' => mimeP + '; charset=UTF-8',
+      'Content-Type' => mime + '; charset=UTF-8',
       'ETag' => [m,size].h,
     })
-    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mimeP.match /^(audio|image|video)/
+    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     condResponse ->{ self }
   end
 

@@ -26,29 +26,8 @@ end
 
 class R
 
-  def mime # no link dereferencing
+  def mime # determine MIME-type of file
     @mime ||=
-      (t = ext.downcase.to_sym
-
-       if node.symlink?
-         "inode/symlink"
-       elsif node.directory?
-         "inode/directory"
-       elsif basename.index('msg.')==0 # how to set procmail file suffix?
-         "message/rfc822"
-       elsif MIME[t]
-         MIME[t]
-       elsif Rack::Mime::MIME_TYPES[t='.'+t.to_s]
-         Rack::Mime::MIME_TYPES[t]
-       elsif e
-         `file --mime-type -b #{sh}`.chomp
-       else
-         "application/octet-stream"
-       end)
-  end
-
-  def mimeP  # recursively-dereference links
-    @mimeP ||=
       (p = realpath
        unless p
          nil
@@ -63,6 +42,7 @@ class R
          elsif Rack::Mime::MIME_TYPES[t='.'+t.to_s]
            Rack::Mime::MIME_TYPES[t]
          else
+           puts "unknown MIME #{p}"
            `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
          end
        end )
@@ -160,7 +140,7 @@ class R
   }
 
   def triplrMIME &b
-    mimeP.do{|mime|
+    mime.do{|mime|
       (MIMEsource[mime]||
        MIMEsource[mime.split(/\//)[0]]).do{|s|
 #        puts "triplr #{uri} #{s}"

@@ -14,7 +14,7 @@ class R
       path = R['/cache/thumbnail/' + (R.dive [stat.ino,stat.mtime].h) + '.png']
       if !path.e
         path.dir.mk
-        if i.mimeP.match(/^video/)
+        if i.mime.match(/^video/)
           `ffmpegthumbnailer -s 256 -i #{i.sh} -o #{path.sh}`
         else
           `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`

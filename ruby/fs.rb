@@ -98,7 +98,7 @@ class R
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
-   yield uri, Type, (R MIMEtype+mimeP)
+   yield uri, Type, (R MIMEtype+mime)
    `#{e} #{a}|grep :`.each_line{|i|
    begin
      i = i.split /:/
