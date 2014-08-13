@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{
@@ -169,7 +169,7 @@ class R
         r[To].do{|to|addresses.concat to}
       r[Date].do{|date|
         r[Title].do{|title|
-          name = '/' + date[0][0..7].gsub('-','/') + title[0].gsub(/\W+/,' ') + '.e'
+          name = '/' + date[0][0..7].gsub('-','/') + title[0].gsub(/[^\w\[\]:]+/,' ').strip
           addresses.map{|address|
             doc.ln_s R[address.uri.split('#')[0] + name]}}}}} # link message to address
 

@@ -2,18 +2,18 @@
 #watch __FILE__
 class R
   
-  def triplrInode &f
+  def triplrInode children=true, &f
     stat = node.stat
     if stat.directory?
       dir = descend
       dir.triplrStat &f
       u = dir.uri
 
-      [R[Stat+'Directory'],
-       R[LDP+'BasicContainer']].map{|type|yield u, Type, type}
-
+      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|yield u, Type, type}
       yield u, LDP+'firstPage', R[u+'?set=page&desc']
       yield u, LDP+'lastPage', R[u+'?set=page&asc']
+
+      c.map{|c| c.triplrInode false, &f} if children
 
     elsif stat.symlink?
       yield uri, Type, R[RDFs+'Resource']
@@ -40,7 +40,7 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources # host-specific
-    e.justPath.do{|p| s.concat p.fileResources unless p.uri == '/'} # global
+    e.justPath.do{|p| s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
     e.env['REQUEST_PATH'].do{|path|
       path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
@@ -88,10 +88,8 @@ class R
                             r[Content]]}}}]}
 
   def fileResources
-    [(self if e),
-     docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}"),
-     ((node.directory? && uri[-1]=='/') ? c : []) # trailing slash -> children
-    ].flatten.compact
+    docs = docroot.glob ".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}"
+    [(self if e), docs].flatten.compact
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
