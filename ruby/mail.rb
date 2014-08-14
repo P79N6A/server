@@ -6,6 +6,10 @@ class R
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
+  AddrPath = ->addr{
+    
+  }
+
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response}
 
   GET['/thread'] = -> e, r {
@@ -37,17 +41,16 @@ class R
     addr = '/address/'
     id = m.message_id || m.resent_message_id rescue nil
     return unless id                                 # message-ID
+#   yield e, DC+'identifier', id                     # message-ID
 
     e = MessagePath[id]                              # message URI
-#   yield e, DC+'identifier', id                     # origin-domain ID
 
     [R[SIOCt+'MailMessage'],                         # SIOC types
      R[SIOC+'Post'],
      R[RDFs+'Resource']].                            # RDF types
       map{|t|yield e, Type, t}
 
-    list = m['List-Post'].do{|l|                     # list ID
-             l.decoded[8..-2]}.downcase
+    list = m['List-Post'].do{|l|l.decoded[8..-2].downcase}
 
     m['List-Id'].do{|name|
       name = name.decoded

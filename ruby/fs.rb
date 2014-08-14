@@ -3,28 +3,22 @@
 class R
   
   def triplrInode children=true, &f
-    stat = node.stat
-    if stat.directory?
+    if directory?
       dir = descend
       dir.triplrStat &f
-      u = dir.uri
+      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield dir.uri, Type, type}
+      c.map{|c|  c.triplrInode false, &f} if children
 
-      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|yield u, Type, type}
-      yield u, LDP+'firstPage', R[u+'?set=page&desc']
-      yield u, LDP+'lastPage', R[u+'?set=page&asc']
-
-      c.map{|c|
-        if c.exist?
-          c.triplrInode false, &f
-        else
-          yield c.uri, Type, R[RDFs+'Resource']
-          yield c.uri, Stat+'mtime', Time.now.to_i
-          yield c.uri, Stat+'size', 2
-        end} if children
-
-    elsif stat.symlink?
+    elsif symlink?
       yield uri, Type, R[RDFs+'Resource']
-      triplrStat &f
+      yield uri, Stat+'mtime', Time.now.to_i
+      yield uri, Stat+'size', 0
+=begin # link-destination resource
+      readlink.do{|t|
+        yield t.uri, Type, R[RDFs+'Resource']
+        yield t.uri, Stat+'size', 0
+        yield t.uri, Stat+'mtime', Time.now.to_i}
+=end
 
     else # File
       yield uri, Type, R[Stat+'File']
@@ -35,9 +29,7 @@ class R
   def triplrStat
     yield uri, SIOC+'has_container', parentURI.descend unless path == '/'
     yield uri, Stat+'size', size
-    ts = mtime
-    yield uri, Date, ts.iso8601
-    yield uri, Stat+'mtime', ts.to_i
+    yield uri, Stat+'mtime', mtime.to_i
   end
 
   def node
@@ -116,6 +108,8 @@ class R
    end}
   end
 
+  def readlink; node.readlink.R end
+
   def ln t, y=:link
     t = t.R.stripSlash
     unless t.e || t.symlink?
@@ -134,7 +128,6 @@ class R
   def file?;    node.file? end
   def symlink?; node.symlink? end
   def mtime;    node.stat.mtime if e end
-  def readlink; node.readlink end
   def realpath; node.realpath rescue nil end
   def sh;       d.force_encoding('UTF-8').sh end
   def size;     node.size end

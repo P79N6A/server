@@ -7,7 +7,7 @@ class R
      justPath,                                     # file at path
      *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : []) # directory-index file
     ].compact.map{|a| # check for candidate inodes
-      a.readlink.R.do{|t|
+      a.readlink.do{|t|
         return [303,{'Location' => t.uri},[]]} if a.symlink? # redirect to target URI
       return a.setEnv(@r).fileGET if a.file? } # respond with file
 
