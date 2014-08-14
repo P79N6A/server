@@ -46,10 +46,12 @@ class R
      R[RDFs+'Resource']].                            # RDF types
       map{|t|yield e, Type, t}
 
-    list = m['List-Post'].do{|l|l.decoded[8..-2]}    # list ID
+    list = m['List-Post'].do{|l|                     # list ID
+             l.decoded[8..-2]}.downcase
+
     m['List-Id'].do{|name|
       name = name.decoded
-      dir = addr + list[0].downcase + '/' + list     # list Container
+      dir = addr + list[0] + '/' + list     # list Container
       group = dir + '#' + list                       # list URI
       yield group, Type, R[FOAF+'Group']             # list class
      (yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
@@ -59,8 +61,8 @@ class R
 
     m.from.do{|f|                                    # any authors?
       f.justArray.map{|f|                            # each author
-        f = f.to_utf8
-        creator = addr+f[0].downcase+'/'+f+'#'+f     # author URI
+        f = f.to_utf8.downcase
+        creator = addr + f[0] + '/' + f + '#' + f    # author URI
         yield e, Creator, R[creator]                 # message -> author
                                                      # reply target
         r2 = list ||                                 #  List
@@ -70,9 +72,9 @@ class R
         R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
     m[:from].addrs.head.do{|a|                      # author address
-      from = a.address                              # author ID
+      from = a.address.downcase                     # author ID
       name = a.display_name || a.name               # author name
-      dir = addr + from[0].downcase + '/' + from    # author Container
+      dir = addr + from[0] + '/' + from             # author Container
       author = dir + '#' + from                     # author URI
       yield author, Type, R[FOAF+'Person']
       yield author, SIOC+'name', name
@@ -98,8 +100,8 @@ class R
      m.send(to).do{|to|                              # has field?
       to.justArray.map{|to|                          # each recipient
        to.do{|to|                                    # non-nil? 
-        to = to.to_utf8                              # UTF-8
-        yield e, To, R[addr+to[0].downcase+'/'+to+'#'+to]}}}} # recipient URI
+        to = to.to_utf8.downcase                     # UTF-8 address
+        yield e, To, R[addr+to[0]+'/'+to+'#'+to]}}}} # recipient URI
 
     %w{in_reply_to references}.map{|ref|             # reference predicates
      m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
