@@ -4,10 +4,10 @@ class R
   
   def triplrInode children=true, &f
     if directory?
-      uri = descend.uri
-      yield uri, Stat+'size', size
-      yield uri, Stat+'mtime', mtime.to_i
-      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield uri, Type, type}
+      d = descend.uri
+      yield d, Stat+'size', size
+      yield d, Stat+'mtime', mtime.to_i
+      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield d, Type, type}
       c.map{|c|c.triplrInode false, &f} if children
 
     elsif symlink?
