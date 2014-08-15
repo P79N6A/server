@@ -5,6 +5,12 @@ class R
     r.q['view'] ||= 'tabulate'
     nil }
 
+  def warp
+    [303,
+     {'Location' => @r['SCHEME']+'://linkeddata.github.io/warp/#/list/'+
+                    @r['SCHEME']+'/'+@r['SERVER_NAME']+@r['REQUEST_PATH']},[]]
+  end
+
   # generic data-browser
   # https://github.com/linkeddata/tabulator
   View['tabulate'] = ->d=nil,e=nil {

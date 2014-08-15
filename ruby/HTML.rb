@@ -139,10 +139,9 @@ class R
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
          c: [resource.href,
-             resource.a('?warp').href('⌦'), # link to interactive-UI
              r[RDFs+'member'].do{|c|c.map{|c|c = c.R
-                 label = e[:Graph][c.uri].do{|r|r[Label]}
-                 [(c.href label),' ']}}]}}]}
+                 label = e[:Graph][c.uri].do{|r|r[Label]} # resource label if exists
+                 [(c.href label),' ']}}]}}]} # link
 
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap',
