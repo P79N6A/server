@@ -16,7 +16,7 @@ class R
 
     if name.empty?
       if r.format == 'text/html' # deliver browser
-        [303,{'Location' => '/man?warp'},[]]
+        e.warp
 
       else # alpha index
         ('a'..'z').map{|a|

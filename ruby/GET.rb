@@ -11,8 +11,6 @@ class R
         return [303,{'Location' => t.uri},[]]} if a.symlink? # redirect to target URI
       return a.setEnv(@r).fileGET if a.file? } # respond with file
 
-    return warp if @r.q.has_key? 'warp' # UI
-
     uri = stripDoc # format-variant suffix
     uri = uri.parentURI.descend if uri.to_s.match(/\/index$/) # index
     uri.setEnv(@r).resourceGET # generic resource
