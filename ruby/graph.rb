@@ -27,14 +27,14 @@ class R
   def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
-      e = u.R                 # resource URI
+     (e = u.R                 # resource URI
       doc = e.jsonDoc         # doc URI
       doc.e ||                # cache hit ||
       (docs[doc.uri] ||= {}   # doc graph
        docs[doc.uri][u] = r   # resource -> graph
-       p && p.map{|p|         # index-predicates list
+       p && p.map{|p|         # index predicates
          r[p].do{|v|v.map{|o| # objects exist?
-             e.index p,o}}})} # index triples
+             e.index p,o}}})) if u} # index
 
     docs.map{|d,g|            # each doc
       d = d.R; puts "<#{d.docroot}>"

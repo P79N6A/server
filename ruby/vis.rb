@@ -12,12 +12,12 @@ class R
         target = o.uri
         link = {source: source, target: target}
         d[source].do{|s|s[Creator].justArray[0].do{|l|
-            name = R.mailName l
+            name = l.R.fragment
             link[:sourceName] = name
             link[:sourceColor] = colors[name] ||= cs
          }}
         d[target].do{|t|t[Creator].justArray[0].do{|l|
-            name = R.mailName l
+            name = l.R.fragment
             link[:targetName] = name
             link[:targetColor] = colors[name] ||= cs
           }}

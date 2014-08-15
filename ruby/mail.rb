@@ -6,9 +6,10 @@ class R
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
-  AddrPath = ->addr{
-    
-  }
+  AddrPath = ->address{
+    a = address.downcase
+    name = a.split('@')[0]
+    '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
 
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response}
 
@@ -38,7 +39,6 @@ class R
 
   def triplrMail &b
     m = mail; return unless m                        # mail
-    addr = '/address/'
     id = m.message_id || m.resent_message_id rescue nil
     return unless id                                 # message-ID
 #   yield e, DC+'identifier', id                     # message-ID
@@ -54,34 +54,27 @@ class R
 
     m['List-Id'].do{|name|
       name = name.decoded
-      dir = addr + list[0] + '/' + list     # list Container
-      group = dir + '#' + list                       # list URI
+      group = AddrPath[list]                         # list URI
       yield group, Type, R[FOAF+'Group']             # list class
-     (yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
-            ) unless name[1..-2] == list
-      yield group, SIOC+'has_container', dir.R.descend
+      yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
     } if list
 
     m.from.do{|f|                                    # any authors?
       f.justArray.map{|f|                            # each author
-        f = f.to_utf8.downcase
-        creator = addr + f[0] + '/' + f + '#' + f    # author URI
-        yield e, Creator, R[creator]                 # message -> author
-                                                     # reply target
-        r2 = list ||                                 #  List
-             m.reply_to.do{|t|t[0]} ||               #  Reply-To
-             f                                       #  From
-        yield e, SIOC+'reply_to',                    # reply URI
+        f = f.to_utf8.downcase        # author address
+        creator = AddrPath[f]         # author URI
+        yield e, Creator, R[creator]  # message -> author
+                                      # reply target:
+        r2 = list ||                   # List
+             m.reply_to.do{|t|t[0]} || # Reply-To
+             f                         # Creator
+        yield e, SIOC+'reply_to',     # reply URI
         R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
-    m[:from].addrs.head.do{|a|                      # author address
-      from = a.address.downcase                     # author ID
-      name = a.display_name || a.name               # author name
-      dir = addr + from[0] + '/' + from             # author Container
-      author = dir + '#' + from                     # author URI
+    m[:from].addrs.head.do{|a|
+      author = AddrPath[a.address]         # author URI
       yield author, Type, R[FOAF+'Person']
-      yield author, SIOC+'name', name
-      yield author, SIOC+'has_container', dir.R.descend
+      yield author, SIOC+'name', (a.display_name || a.name)
     }
 
     if m.date
@@ -99,12 +92,11 @@ class R
 
     yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
 
-    %w{to cc bcc}.map{|to|                           # reciever fields
-     m.send(to).do{|to|                              # has field?
-      to.justArray.map{|to|                          # each recipient
-       to.do{|to|                                    # non-nil? 
-        to = to.to_utf8.downcase                     # UTF-8 address
-        yield e, To, R[addr+to[0]+'/'+to+'#'+to]}}}} # recipient URI
+    %w{to cc bcc}.map{|to|                      # reciever fields
+     m.send(to).do{|to|                         # has field?
+      to.justArray.map{|to|                     # each recipient
+       to.do{|to|                               # non-nil?
+        yield e, To, AddrPath[to.to_utf8].R}}}} # recipient URI
 
     %w{in_reply_to references}.map{|ref|             # reference predicates
      m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
@@ -155,18 +147,6 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  def mailUID
-    fragment.do{|f| f.split('@')[0] }
-  end
-
-  def R.mailName l
-    if l.respond_to? :uri
-      l.uri.split(/[\/#]/)[-1].split('@')[0]
-    else
-      l.to_s
-    end
-  end
-
   IndexMail = ->doc, graph, host {
     graph.map{|u,r|
       addresses = []
@@ -176,7 +156,7 @@ class R
         r[Title].do{|title|
           name = '/' + date[0][0..7].gsub('-','/') + title[0].sub(/\b[rR][eE]: /,'').gsub(/\W+/,' ').strip
           addresses.map{|address|
-            R['/thread/'+u.R.basename].ln_s R[address.uri.split('#')[0] + name]}}}}} # link discussion to address
+            R['/thread/'+u.R.basename].ln_s R[address.R.dirname + name]}}}}} # link discussion to address
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOCt+'MailMessage'
@@ -202,7 +182,7 @@ class R
     [View[HTTP+'Response'][d,env], (H.css '/css/threads', true),'<br clear=all>',
      groups.map{|group,threads| # each group
        color = cs
-       [group.do{|g|{class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.mailUID, href: g}}},
+       [group.do{|g|{class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.fragment, href: g}}},
         {class: :posts, style: 'background-color:' + color,
           c: threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
             size = title.to_s.unHTML.size
@@ -218,7 +198,7 @@ class R
                     else
                       msgs.map{|s|
                         s[Creator].justArray.select(&:maybeURI).map{|cr|
-                     [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: "color: #{color}",c: cr.R.mailUID}]}}
+                     [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: "color: #{color}",c: cr.R.fragment}]}}
                     end
             name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
             {class: :post, c: [name, maker]}}}]}]}

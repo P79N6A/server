@@ -4,32 +4,24 @@ class R
   
   def triplrInode children=true, &f
     if directory?
-      dir = descend
-      dir.triplrStat &f
-      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield dir.uri, Type, type}
-      c.map{|c|  c.triplrInode false, &f} if children
+      uri = descend.uri
+      yield uri, Stat+'size', size
+      yield uri, Stat+'mtime', mtime.to_i
+      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield uri, Type, type}
+      c.map{|c|c.triplrInode false, &f} if children
 
     elsif symlink?
       yield uri, Type, R[RDFs+'Resource']
       yield uri, Stat+'mtime', Time.now.to_i
       yield uri, Stat+'size', 0
-=begin # link-destination resource
       readlink.do{|t|
-        yield t.uri, Type, R[RDFs+'Resource']
-        yield t.uri, Stat+'size', 0
-        yield t.uri, Stat+'mtime', Time.now.to_i}
-=end
+        yield t.uri, Type, R[RDFs+'Resource']}
 
     else # File
       yield uri, Type, R[Stat+'File']
-      triplrStat &f
+      yield uri, Stat+'size', size
+      yield uri, Stat+'mtime', mtime.to_i
     end
-  end
-
-  def triplrStat
-    yield uri, SIOC+'has_container', parentURI.descend unless path == '/'
-    yield uri, Stat+'size', size
-    yield uri, Stat+'mtime', mtime.to_i
   end
 
   def node
