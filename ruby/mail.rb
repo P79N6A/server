@@ -51,15 +51,14 @@ class R
      R[RDFs+'Resource']].                            # RDF types
       map{|t|yield e, Type, t}
 
-    list = m['List-Post'].do{|l|l.decoded[8..-2].downcase}
+    list = m['List-Post'].do{|l|l.decoded.sub(/^<?mailto:/,'').sub(/>$/,'').downcase}
 
-    m['List-Id'].do{|name|
+    list && m['List-Id'].do{|name|
       name = name.decoded
       group = AddrPath[list]                         # list URI
       yield group, Type, R[FOAF+'Group']             # list class
       yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
-      yield group, SIOC+'has_container', group.R.parentURI.descend
-    } if list
+      yield group, SIOC+'has_container', group.R.parentURI.descend}
 
     m.from.do{|f|                                    # any authors?
       f.justArray.map{|f|                            # each author
