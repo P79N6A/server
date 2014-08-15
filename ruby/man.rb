@@ -10,32 +10,30 @@ class R
     name.match(/^([0-9])(\/|$)/).do{|p| # optional section
       section = p[1]
       name = p.post_match}
-    pageName = -> path {
-      path.basename.to_s.sub(/\.gz$/,'').sub /\.[0-9][a-z]*$/, '' }
     ts = Time.now.to_i
 
     if name.empty?
-      if r.format == 'text/html' # deliver browser
-        e.warp
-
-      else # alpha index
+      if r.format == 'text/html'
+        e.warp # deliver browser
+      else # alpha-index graph
         ('a'..'z').map{|a|
           alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
           graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
-          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)
-        }
+          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)}
         r.graphResponse graph
-
-      end # alpha narrowing      
+      end
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
-      Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
-        thing = R['/man/' + pageName[a]]
-        stat = a.stat
-        graph << RDF::Statement.new(thing, R[Type], R[RDFs+'Resource'])
-        graph << RDF::Statement.new(thing, R[Stat+'mtime'], stat.mtime.to_i)
-        graph << RDF::Statement.new(thing, R[Stat+'size'], stat.size)}
-      r.graphResponse graph
-
+      if r.format == 'text/html'
+        e.warp
+      else # alpha-prefix bound
+        Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
+          thing = R['/man/' + CGI.escape(a.basename.to_s.sub(/\.gz$/,'').sub(/\.[0-9][a-z]*$/,''))]
+          stat = a.stat
+          graph << RDF::Statement.new(thing, R[Type], R[RDFs+'Resource'])
+          graph << RDF::Statement.new(thing, R[Stat+'mtime'], stat.mtime.to_i)
+          graph << RDF::Statement.new(thing, R[Stat+'size'], stat.size)}
+        r.graphResponse graph
+      end
     else # manpage
 
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}

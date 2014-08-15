@@ -11,7 +11,7 @@ class R
 
   def inPUT
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
-    return [406,{},[]] unless %q{gif html jpg json jsonld pdf png n3 ttl txt}.member? ext
+    return [406,{},[]] unless %q{gif html jpg json jsonld png n3 ttl}.member? ext
 
     # container for states
     versions = docroot.child '.v'
