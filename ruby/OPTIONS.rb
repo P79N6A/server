@@ -1,6 +1,7 @@
 class R
 
-  Allow = 'GET, PUT, POST, OPTIONS, HEAD, MKCOL, DELETE, PATCH'
+  AllowMethods = %w{GET PUT POST OPTIONS HEAD MKCOL DELETE PATCH}
+  Allow = AllowMethods.join ', '
 
   def OPTIONS
     h = {
