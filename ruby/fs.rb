@@ -35,9 +35,14 @@ class R
     s = []
     s.concat e.fileResources # host-specific
     e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
-    e.env['REQUEST_PATH'].do{|path|
-      s.concat e.c if path == '/' # include children of directory at /
-      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
+    s.concat e.c if e.env['REQUEST_PATH'] == '/' # include children of directory at /
+    s}
+
+  FileSet['directory'] = -> e,q,g {
+    c = e.c
+    e.justPath.do{|path| c.concat path.c unless path=='/'}
+    e.env['REQUEST_PATH'].do{|path| # pagination on date-dirs 
+      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
         pp = (t-1).strftime('/%Y/%m/%d/') # prev day
         np = (t+1).strftime('/%Y/%m/%d/') # next day
@@ -46,11 +51,6 @@ class R
         g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
         g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]
       }}
-    s}
-
-  FileSet['directory'] = -> e,q,g {
-    c = e.c
-    e.justPath.do{|path| c.concat path.c unless path=='/'}
     c }
   FileSet['dir'] = FileSet['directory']
 
