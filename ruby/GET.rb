@@ -2,14 +2,15 @@
 class R
 
   def GET
-    ix = 'index.html'
     [self,                                         # file at host-specific URI
      justPath,                                     # file at path
-     *(uri[-1]=='/' ? [a(ix),justPath.a(ix)] : []) # directory-index file
+     (uri[-1]=='/' ? a('index.html') : nil)
     ].compact.map{|a| # check for candidate inodes
-      a.readlink.do{|t|
-        return [303,{'Location' => t.uri},[]]} if a.symlink? # redirect to target URI
-      return a.setEnv(@r).fileGET if a.file? } # respond with file
+      if a.file?
+        return a.setEnv(@r).fileGET # found
+      elsif a.symlink?
+        a.readlink.do{|t| return t.setEnv(@r).resourceGET} # goto target URI
+      end}
 
     stripDoc.setEnv(@r).resourceGET # file not found, goto generic-resource
   end
