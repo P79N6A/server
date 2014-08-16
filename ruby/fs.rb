@@ -34,7 +34,7 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources # host-specific
-    e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources} # path
+    e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
     e.env['REQUEST_PATH'].do{|path|
       path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
