@@ -124,13 +124,20 @@ class R
     uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
 
-  View['HTML']=->d,e{ # default HTML view - dispatch to RDF-type specific per-resource
+  View['HTML']=->d,e{ # default render - dispatch on RDF-type
     e[:Graph] = d
     d.map{|u,r|
       type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
       View[type ? type.to_s : 'base'][{u => r},e]}}
 
-  View['base']=->d,e{[d.values.map(&:html), H.once(e,'base',H.css('/css/html',true))]}
+  View['base']=->d,e{
+    [d.values.map{|v|
+       if v.uri.match(/(gif|jpe?g|png|tiff)$/i)
+         ShowImage[v.uri]
+       else
+         v.html
+       end
+     }, H.once(e,'base',H.css('/css/html',true))]}
 
   View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
 

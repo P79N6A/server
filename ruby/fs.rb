@@ -82,13 +82,7 @@ class R
                             r[Content]]}}}]}
 
   def fileResources
-    docs = docroot.glob ".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}"
-    children = (if node.directory? && uri[-1]=='/' && @r.format == 'text/html' # if inside dir (trailing-slash)
-                  c
-                else
-                  nil
-                end)
-    [(self if e), docs, children].flatten.compact
+    [(self if e), docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}")].flatten.compact
   end
 
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
