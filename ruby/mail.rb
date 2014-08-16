@@ -11,10 +11,11 @@ class R
     name = a.split('@')[0]
     '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
 
-  GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response}
-  GET['/address'] = -> e,r{e.warp if r.format=='text/html' && e.uri[-1]=='/'}
+GET['/address'] = -> e,r{e.warp if r.format=='text/html' && e.uri[-1]=='/'}
+    GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response}
+    GET['/msg'] = -> e,r{E404[e,r] if e.path.size < 10}
+ GET['/thread'] = -> e, r {
 
-  GET['/thread'] = -> e, r {
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
