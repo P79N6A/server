@@ -46,7 +46,7 @@ class R
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
         pp = (t-1).strftime('/%Y/%m/%d/') # prev day
         np = (t+1).strftime('/%Y/%m/%d/') # next day
-        qs = q['view'].do{|v|'?view='+v} || ''
+        qs = "?set=dir&view=#{q['view']}"
         g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
         g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
         g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]
