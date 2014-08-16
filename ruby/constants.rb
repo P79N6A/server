@@ -55,9 +55,9 @@ class R < RDF::URI
   Header   = W3   + '2011/http-headers#'
   Next     = LDP  + 'nextPage'
   Prev     = LDP  + 'prevPage'
-  Type     = RDFns+ "type"
+  Type     = RDFns+ 'type'
   COGS     = Deri + 'cogs#'
-  HTML     = RDFns + "HTML"
+  HTML     = RDFns + 'HTML'
   Label    = RDFs + 'label'
 
   Prefix={
@@ -131,6 +131,7 @@ wiki
 }.map{|r|require_relative r}
 
   NonRDF = %w{text/html application/atom+xml application/json}
+  Resource = R[RDFs+'Resource']
 
   alias_method :maybeURI, :to_s
   alias_method :url, :to_s
