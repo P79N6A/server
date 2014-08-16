@@ -28,7 +28,7 @@ class R
     condResponse ->{ self }
   end
 
-  def resourceGET # lookup handler. cascading up paths, first with host then without
+  def resourceGET # lookup handler: cascading up paths, first with host, then without
     paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
       paths.map{|p|
@@ -75,6 +75,8 @@ class R
     end
 
     condResponse ->{ # Model -> View
+#      puts "set",set
+
       if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash model
         set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view'] # payload
         Render[@r.format][m, @r]
@@ -83,7 +85,7 @@ class R
         graph = RDF::Graph.new
         set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # payload
 
-        # response-metadata to graph
+        # response metadata in Hash to RDF-graph
         R.resourceToGraph m['#'], graph
 
         # graph size

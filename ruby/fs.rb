@@ -47,7 +47,10 @@ class R
       }}
     s}
 
-  FileSet['directory'] = -> e,q,g {e.c.concat e.justPath.c}
+  FileSet['directory'] = -> e,q,g {
+    c = e.c
+    e.justPath.do{|path| c.concat path.c unless path=='/'}
+    c }
   FileSet['dir'] = FileSet['directory']
 
   FileSet['find'] = -> e,q,m,x='' {
