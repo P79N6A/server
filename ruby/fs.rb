@@ -15,6 +15,7 @@ class R
       yield uri, Stat+'mtime', Time.now.to_i
       yield uri, Stat+'size', 0
       readlink.do{|t|
+        t = t.stripDoc # target resource
         yield uri, Stat+'target', t
         yield t.uri, Type, Resource}
 
