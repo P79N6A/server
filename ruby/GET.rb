@@ -2,16 +2,17 @@
 class R
 
   def GET
+    directory = uri[-1] == '/'
     [self,                                         # file at host-specific URI
      justPath,                                     # file at path
-     (uri[-1]=='/' ? a('index.html') : nil)
+     (directory ? a('index.html') : nil)
     ].compact.map{|a| # check for candidate inodes
       if a.file?
         return a.setEnv(@r).fileGET # found
       elsif a.symlink?
         a.readlink.do{|t| return t.setEnv(@r).resourceGET} # goto target URI
       end}
-
+    return warp if directory && q.has_key?('warp') # goto browser-UI
     stripDoc.setEnv(@r).resourceGET # file not found, goto generic-resource
   end
 
