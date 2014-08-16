@@ -36,6 +36,7 @@ class R
     s.concat e.fileResources # host-specific
     e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
     e.env['REQUEST_PATH'].do{|path|
+      s.concat e.c if path == '/' # include children of directory at /
       path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
         pp = (t-1).strftime('/%Y/%m/%d/') # prev day
