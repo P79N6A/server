@@ -11,9 +11,7 @@ class R
         return [303,{'Location' => t.uri},[]]} if a.symlink? # redirect to target URI
       return a.setEnv(@r).fileGET if a.file? } # respond with file
 
-    uri = stripDoc # format-variant suffix
-    uri = uri.parentURI.descend if uri.to_s.match(/\/index$/) # index
-    uri.setEnv(@r).resourceGET # generic resource
+    stripDoc.setEnv(@r).resourceGET # file not found, goto generic-resource
   end
 
   def HEAD
@@ -29,7 +27,7 @@ class R
     condResponse ->{ self }
   end
 
-  def resourceGET
+  def resourceGET # lookup handler. cascading up paths, first with host then without
     paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
       paths.map{|p|
@@ -41,7 +39,7 @@ class R
 
   def response # default handler
     set = []
-    m = {'#' => {'uri' => uri}} # this resource in Hash-graph, for adding any metadata - merges into RDF-graph at resource URI
+    m = {'#' => {'uri' => uri}}
 
     # File set
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']

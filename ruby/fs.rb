@@ -34,7 +34,7 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources # host-specific
-    e.justPath.do{|p| s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
+    e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources} # path
     e.env['REQUEST_PATH'].do{|path|
       path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m| # path a day-dir
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
@@ -47,7 +47,8 @@ class R
       }}
     s}
 
-  def inside; node.expand_path.to_s.index(FSbase) == 0 end
+  FileSet['directory'] = -> e,q,g {e.c.concat e.justPath.c}
+  FileSet['dir'] = FileSet['directory']
 
   FileSet['find'] = -> e,q,m,x='' {
     q['q'].do{|q|

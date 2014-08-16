@@ -56,6 +56,7 @@ class R
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end
 
   # strip variant-suffixes -> base-URI
   def stripFrag; R uri.split(/#/)[0] end
