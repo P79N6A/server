@@ -1,6 +1,10 @@
 #watch __FILE__
 class R
 
+  def reindex graph = "localhost"
+    visit{|resource| resource.roonga graph}
+  end
+
   FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       q['view'] ||= 'grep'
