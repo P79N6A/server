@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  def reindex graph = "localhost"
+  def reindex graph = host
     visit{|resource|
       puts "index #{resource}"
       resource.roonga graph}
