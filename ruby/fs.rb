@@ -182,6 +182,13 @@ class R
     node.take(*a).map &:R
   end
 
+  def visit &f
+    children.map{|child|
+      yield child
+      child.visit &f}
+    nil
+  end
+
 end
 
 class Pathname

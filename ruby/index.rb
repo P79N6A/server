@@ -126,8 +126,8 @@ class R
   def walk p, g={}, v={}
     graph g       # resource-graph
     v[uri] = true # mark visited
-    rel = g[uri].do{|s|s[p]} ||[] # outgoing from resource-graph
-    rev = p.R.po(self) || [] # incoming arcs from index
+    rel = g[uri].do{|s|s[p]} ||[] # outgoing from resource
+    rev = p.R.po(self) || [] # incoming arcs via index
     rel.concat(rev).map{|r|
       v[r.uri] || (r.R.walk p,g,v)} # walk unvisited
     g # accumulated graph
