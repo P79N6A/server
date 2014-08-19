@@ -1,7 +1,9 @@
 #watch __FILE__
 class R
 
-  # balanced hash-prefix containers
+  # filesystem graph-store, index functions
+
+  # balanced hash-derived-prefix container-names
   def R.dive s
     s[0..2] + '/' + s[3..-1]
   end
@@ -9,6 +11,7 @@ class R
   def == u;     to_s == u.to_s end
   def <=> c;    to_s <=> c.to_s end
 
+  # depth-first, sorted subtree in page chunks
   FileSet['page'] = -> d,r,m {
     p = d.e ? d : (d.justPath.e ? d.justPath : d) # prefer host-specific index
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
@@ -18,10 +21,10 @@ class R
       u[Type] = R[HTTP+'Response']
       if r['offset'] && head = s[0]
         uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-        u[Prev] = {'uri' => uri}                # prev RDF
-        d.env[:Links].push "<#{uri}>; rel=prev" # prev Link
+        u[Prev] = {'uri' => uri}                # prev RDF  (body)
+        d.env[:Links].push "<#{uri}>; rel=prev" # prev Link (HTTP header)
       end
-      if edge = s.size >= c && s.pop # more?
+      if edge = s.size >= c && s.pop # further results exist
         uri = d.uri + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
         u[Next] = {'uri' => uri}                # next RDF
         d.env[:Links].push "<#{uri}>; rel=next" # next Link
@@ -37,6 +40,8 @@ class R
         unsetFs p,o}
     end
   end
+
+  # build up URI for a triple..
 
   def predicatePath p, s = true
     child s ? p.R.shorten : p
@@ -93,7 +98,7 @@ class R
           if o.f    # file?
             o.ln t  # link
           else
-            t.mk    # dirent
+            t.mk    # create dirent
           end
         end
       end
@@ -163,7 +168,7 @@ class String
    (Expand[self] =
      match(/([^:]+):([^\/].*)/).do{|e|
       ( R::Prefix[e[1]] || e[1]+':' )+e[2]} || 
-     gsub('|','/'))
+     gsub('|','/')) # no prefix found, just squash predicate to a basename
   end
 
   def shorten
