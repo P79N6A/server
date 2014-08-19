@@ -2,7 +2,9 @@
 class R
 
   def reindex graph = "localhost"
-    visit{|resource| resource.roonga graph}
+    visit{|resource|
+      puts "index #{resource}"
+      resource.roonga graph}
   end
 
   FileSet['grep'] = -> e,q,m {
