@@ -41,7 +41,7 @@ class R
 
   def response # default handler
     set = []
-    m = {'#' => {'uri' => uri}}
+    m = {'#' => {'uri' => uri}} # = this
 
     # File set
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
@@ -54,9 +54,9 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
-    m.delete('#') if m['#'].keys.size==1 
+    m.delete('#') if m['#'].keys.size==1 # wipe unused metadata-resource
 
-    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
+    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"] # Link headers
 
     @r[:Response].
       update({ 'Accept-Patch' => 'application/json',
