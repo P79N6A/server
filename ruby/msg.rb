@@ -2,13 +2,14 @@ class R
 
   View[SIOCt+'MicroblogPost'] = -> d,e {
     c = R.c # color
-    [(H.once e,'chat',(H.css '/css/tw'),{_: :style,c: "body {background-color: #{c}}"}),
+    [(H.once e,'chat',(H.css '/css/tw'),
+      {_: :style,c: "a {color: #{c}}"}),
      d.map{|u,r|
        r[Content] && r[Date]
        [r[Date].justArray[0].match(/T([0-9:]{5})/).do{|m|m[1]},
         {_: :a, class: :author, href: r.uri, c: r[Creator].do{|c|
             c[0].respond_to?(:uri) ? c[0].R.abbr : c[0].to_s}},' ',
-        {class: :tw, c: r[Content]},"<br>\n"]}]}
+        {c: r[Content]},"<br clear=all>\n"]}]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost']
 

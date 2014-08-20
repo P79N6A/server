@@ -1,11 +1,10 @@
 .abbr, .invisible, .scheme, s {display: none}
-
-body {color: #fff}
-a {text-decoration: none;background-color: #000;color:#fff}
+body {background-color: #000; color: #fff}
+div {float: left}
+a {text-decoration: none}
 img {max-width:100%}
-.tw {background-color: #fff; color: #000;}
-
 a.author {
+    color: #555;
     min-width:15ex;
     text-align:right;
     float: left;
