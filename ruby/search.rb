@@ -18,6 +18,7 @@ class R
 
   ResourceSet['groonga'] = ->d,e,m{
     m['/search#'] = {Type => R[Search]}
+    m['#'][Type] = R[HTTP+'Response']
     R.groonga.do{|ga|
       q = e['q']                               # search expression
       g = e["context"] || d.env['SERVER_NAME'] # context
