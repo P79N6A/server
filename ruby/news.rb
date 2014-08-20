@@ -48,7 +48,7 @@ class R
         dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
-                                                                             R::CleanHTML[o]
+                                                                             R::StripHTML[o]
                                                                            else
                                                                              o.gsub(/[&<>]+/,' ')
                                                                            end)

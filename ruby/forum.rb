@@ -32,7 +32,7 @@ class R
 
     sub = '//' + e['SERVER_NAME'] + (prefix || '') + '/' + s[0]
   title = p['title'][0..127].hrefs
-content = CleanHTML[p['content']]
+content = StripHTML[p['content']]
    date = Time.now.iso8601
    file = p['file']
 

@@ -166,13 +166,10 @@ class R
     [H.once(e,'base',H.css('/css/html')), # actually, using XSD:XMLLiteral for now until more tools recognize this datatype
      g.map{|u,r| {class: :HTML, c: r[Content]}}]} # <http://www.w3.org/TR/rdf11-concepts/#section-html>
 
-  CleanHTML = -> b {
-    html = Nokogiri::HTML.fragment b
-    loseTags = %w{iframe script style}
-    keepAttr = %w{alt href rel src title type}
-    loseTags.map{|tag| html.css(tag).remove }
-    html.traverse{|e| e.attribute_nodes.map{|a|
-        a.unlink unless keepAttr.member? a.name}}
+  StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
+    html = Nokogiri::HTML.fragment body
+    loseTags.map{|tag| html.css(tag).remove } if loseTags
+    html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
   def offset # human-readable

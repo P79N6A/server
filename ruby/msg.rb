@@ -64,7 +64,7 @@ class R
       content.css('a').map{|a| # resolve from base-URI
         u = a.attr 'href'
         a.set_attribute('href',base + u) if u.match /^\//}
-      yield s, Content, CleanHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
+      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
     }
   end
 
