@@ -167,11 +167,13 @@ class R
      g.map{|u,r| {class: :HTML, c: r[Content]}}]} # <http://www.w3.org/TR/rdf11-concepts/#section-html>
 
   CleanHTML = -> b {
-    h = Nokogiri::HTML.fragment b
-    h.css('iframe').remove
-    h.css('script').remove
-    h.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless %w{alt class color href rel src title type}.member? a.name}}
-    h.to_xhtml}
+    html = Nokogiri::HTML.fragment b
+    loseTags = %w{iframe script style}
+    keepAttr = %w{alt href rel src title type}
+    loseTags.map{|tag| html.css(tag).remove }
+    html.traverse{|e| e.attribute_nodes.map{|a|
+        a.unlink unless keepAttr.member? a.name}}
+    html.to_xhtml}
 
   def offset # human-readable
     (query_values.do{|q| q['offset'].do{|o| o.R.stripDoc}} ||
