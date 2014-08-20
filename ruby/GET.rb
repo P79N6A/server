@@ -54,6 +54,8 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
+    m.delete('#') if m['#'].keys.size==1 
+
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
 
     @r[:Response].
@@ -76,7 +78,6 @@ class R
     end
 
     condResponse ->{ # Model -> View
-#      puts "set",set
 
       if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash model
         set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view'] # payload
