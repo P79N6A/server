@@ -17,7 +17,8 @@ class R
       readlink.do{|t|
         t = t.stripDoc # target resource
         yield uri, Stat+'target', t
-        yield t.uri, Type, Resource}
+        yield t.uri, Type, Resource
+      }
 
     else
       u = deep ? uri : stripDoc.uri
@@ -86,6 +87,10 @@ class R
        r[Stat+'size'].do{|s|
          {class: :File, c: [{_: :a, href: u, title: "#{u}  #{s[0]} bytes", c: '☁'+u.R.abbr+' '},
                             r[Content]]}}}]}
+
+  View[Stat+'Link'] = -> i,e {
+    i.map{|u,r| r[Stat+'target'].do{|t|
+        {_: :a, href: t[0].uri, c: t[0].uri}}}}
 
   def fileResources
     [(self if e), docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}")].flatten.compact
