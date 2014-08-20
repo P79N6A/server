@@ -87,8 +87,10 @@ class R
     [{_: :form, action: '/search', c: {_: :input, name: :q, style: 'font-size:2em'}},
      (H.js '/js/search')]}
 
+  # https://github.com/groonga/groonga
+  # https://github.com/ranguba/rroonga
   def R.groonga
-    @groonga ||= # gem install rroonga
+    @groonga ||=
       (begin require 'groonga'
          R['/index/groonga'].groonga
          Groonga["R"]
