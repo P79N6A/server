@@ -84,7 +84,7 @@ class R
     nil}
 
   View[Search] = -> d,e {
-    [{_: :form, action: '/search', c: {_: :input, name: :q, style: 'font-size:2em'}},
+    [{_: :form, action: '/search', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
      (H.js '/js/search')]}
 
   # https://github.com/groonga/groonga
