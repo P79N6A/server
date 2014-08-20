@@ -35,12 +35,12 @@ class R
          t = ((File.extname p).tail || '').downcase.to_sym
          if p.directory?
            "inode/directory"
-         elsif (File.basename p).index('msg.')==0
-           "message/rfc822"
          elsif MIME[t]
            MIME[t]
          elsif Rack::Mime::MIME_TYPES[t='.'+t.to_s]
            Rack::Mime::MIME_TYPES[t]
+         elsif (File.basename p).index('msg.')==0 # how do you .procmailrc a suffix?
+           "message/rfc822"
          else
            puts "unknown MIME #{p}"
            `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
