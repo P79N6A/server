@@ -14,11 +14,7 @@ class R
       [R[Stat+'Link'], Resource].map{|type| yield uri, Type, type}
       yield uri, Stat+'mtime', Time.now.to_i
       yield uri, Stat+'size', 0
-      readlink.do{|t|
-        t = t.stripDoc # target resource
-        yield uri, Stat+'target', t
-        yield t.uri, Type, Resource
-      }
+      readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
 
     else
       u = deep ? uri : stripDoc.uri
