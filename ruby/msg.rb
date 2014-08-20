@@ -5,8 +5,7 @@ class R
     [(H.once e,'chat',(H.css '/css/tw'),
       {_: :style,c: "a {color: #{c}}"}),
      d.map{|u,r|
-       r[Content] && r[Date]
-       [r[Date].justArray[0].match(/T([0-9:]{5})/).do{|m|m[1]},
+       [r[Date][0].split('T')[1][0..4],
         {_: :a, class: :author, href: r.uri, c: r[Creator].do{|c|
             c[0].respond_to?(:uri) ? c[0].R.abbr : c[0].to_s}},' ',
         {c: r[Content]},"<br clear=all>\n"]}]}
