@@ -79,21 +79,16 @@ class R
 
     condResponse ->{ # Model -> View
 
-      if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash model
-        set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view'] # payload
-        Render[@r.format][m, @r]
+      if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash
+        set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view'] # construct model
+        Render[@r.format][m, @r] # view
 
-      else # RDF model
-        graph = RDF::Graph.new
-        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # payload
-
-        # response metadata in Hash to RDF-graph
-        R.resourceToGraph m['#'], graph
-
-        # graph size
-        @r[:Response][:Triples] = graph.size.to_s
-
-        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
+      else # RDF
+        graph = RDF::Graph.new # model
+        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # construct model
+        m['#'].do{|re| R.resourceToGraph re, graph} # request meta
+        @r[:Response][:Triples] = graph.size.to_s   # size
+        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes # view
       end}
   end
   
