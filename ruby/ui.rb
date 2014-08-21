@@ -1,10 +1,7 @@
 #watch __FILE__
 class R
 
-  GET['/domain'] = -> e,r {
-    r.q['view'] ||= 'tabulate'
-    nil }
-
+  # file-browser
   def warp
     [303,
      {'Location' => @r['SCHEME']+'://linkeddata.github.io/warp/#/list/'+

@@ -2,13 +2,13 @@
 #watch __FILE__
 class R
   
-  def triplrInode deep=true, &f
+  def triplrInode dirChildren=true, &f
     if directory?
       d = descend.uri
       yield d, Stat+'size', size
       yield d, Stat+'mtime', mtime.to_i
       [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield d, Type, type}
-      c.map{|c|c.triplrInode false, &f} if deep
+      c.map{|c|c.triplrInode false, &f} if dirChildren
 
     elsif symlink?
       [R[Stat+'Link'], Resource].map{|type| yield uri, Type, type}
@@ -17,11 +17,9 @@ class R
       readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
 
     else
-      u = deep ? uri : stripDoc.uri
-      yield u, Type, R[Stat+'File'] if deep
-      yield u, Type, Resource
-      yield u, Stat+'size', size
-      yield u, Stat+'mtime', mtime.to_i
+      yield uri, Type, R[Stat+'File']
+      yield uri, Stat+'size', size
+      yield uri, Stat+'mtime', mtime.to_i
     end
   end
 
