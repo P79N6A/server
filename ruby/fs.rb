@@ -79,9 +79,9 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r|
        r[Stat+'size'].do{|s|
-         {class: :File,
-           c: [{_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: '☁'},
-               {_: :a, class: :file, href: u, title: "#{u}  #{s[0]} bytes", c: u.R.abbr},
+         {class: :File, title: "#{u}  #{s[0]} bytes",
+           c: [{_: :a, class: :file, href: u, c: '☁'},
+               {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr},
                r[Content]]}}}]}
 
   View[Stat+'Link'] = -> i,e {
