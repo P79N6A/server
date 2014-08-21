@@ -162,9 +162,8 @@ class R
     yield uri, Content, r
   end
 
-  View[HTML]=->g,e{ # HTML fragment, typed in RDF as <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML>
-    [H.once(e,'base',H.css('/css/html')), # actually, using XSD:XMLLiteral for now until more tools recognize this datatype
-     g.map{|u,r| {class: :HTML, c: r[Content]}}]} # <http://www.w3.org/TR/rdf11-concepts/#section-html>
+  # HTML fragment, RDF type <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML>
+  View[HTML] = -> g,e {g.map{|u,r|r[Content]}} # <http://www.w3.org/TR/rdf11-concepts/#section-html>
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body

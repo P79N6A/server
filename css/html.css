@@ -1,12 +1,8 @@
-body {font-family: sans-serif}
 a {text-decoration:none}
 pre {white-space: pre-wrap}
 .abbr,.scheme {display: none}
 
-td.key {
-    vertical-align:top;
-    text-align:right;
-}
+td.key {text-align:right}
 
 td.key > a > .frag {
     font-weight:bold;
@@ -22,23 +18,4 @@ td.val > a > .frag {
     background-color:#122;
     border-radius: .2em;
     padding: .1em
-}
-
-td.val > a > .frag:hover {
-    background-color: #ff4;
-    color: #000;
-}
-
-td.val {max-width: 80ex; overflow: hidden}
-
-tr[property="http://www.w3.org/2011/http#header"] > td.val, tr[property="http://www.w3.org/2000/01/rdf-schema#comment"] > td.val, tr[property="http://purl.org/dc/elements/1.1/description"] > td.val {
-    white-space: pre-wrap;
-}
-
-.HTML {
-    background-color: #fff;
-    color: #000;
-    float: left;
-    border-radius: .5em;
-    padding: .3em;
 }
