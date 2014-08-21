@@ -80,9 +80,9 @@ class R
      i.map{|u,r|
        r[Stat+'size'].do{|s|
          {class: :File, title: "#{u}  #{s[0]} bytes",
-           c: [{_: :a, class: :file, href: u, c: '☁'},
-               {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr},
-               r[Content]]}}}]}
+           c: ["\n", {_: :a, class: :file, href: u, c: '☁'},
+               "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr},
+               "\n", r[Content], "\n"]}}}]}
 
   View[Stat+'Link'] = -> i,e {
     i.map{|u,r| r[Stat+'target'].do{|t|
