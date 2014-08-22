@@ -22,22 +22,23 @@ class R
     params = (Rack::Request.new @r).params
     params.map{|k,v|
 
-      # triple (original pre-edit)
+      # triple (pre-edit)
       s, p, t = JSON.parse CGI.unescape k rescue JSON::ParserError
 
-      # post-edit value -> URI or literal
+      # <input> value -> URI or literal
      (o = v.match(HTTP_URI) ? v.R : StripHTML[v]
 
       # triple (post-edit)
       t_ = s.R.predicatePath(p).objectPath(o)[0]
 
-      # remove obsolete triple if edited (lives on in snapshot archive)
+      # remove original triple if changed
       t.R.delete if t && t != t_.to_s
 
       # add new triple
       s.R[p] = o unless o.class==String && o.empty?) if s && p
     }
-    snapshot
+    snapshot # save current fs-store state to doc
+    # continue editing
     [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
   end
 
