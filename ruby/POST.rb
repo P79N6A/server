@@ -3,7 +3,7 @@ class R
 
   def POST
 
-    # POST handler at URI
+    # custom POST handler on URI
     [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
@@ -14,7 +14,7 @@ class R
     when /^application\/x-www-form-urlencoded/
       formPOST
     else
-      rdfPOST
+      putDoc
     end
   end
 
@@ -40,10 +40,6 @@ class R
     snapshot # save current fs-store state to doc
     # continue editing
     [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
-  end
-
-  def rdfPOST
-    inPUT
   end
 
 end

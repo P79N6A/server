@@ -6,10 +6,10 @@ class R
     return [403,{},[]] if !allowWrite
     puts "PUT #{uri} #{@r['CONTENT_TYPE']}"
     @r.map{|k,v|puts k,v}
-    inPUT
+    putDoc
   end
 
-  def inPUT
+  def putDoc
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
     return [406,{},[]] unless %w{gif html jpg json jsonld png n3 ttl}.member? ext
 
@@ -20,12 +20,12 @@ class R
     doc = versions.child Time.now.iso8601.gsub(/\W/,'') + '.' + ext 
 
     body = @r['rack.input'].read
-#    puts body
+
     doc.w body # create version
 
-    cur = stripDoc.a('.' + ext)
+    cur = stripDoc.a('.' + ext) # URI of "always current"
 
-    cur.delete if cur.e # unlink obsolete-version
+    cur.delete if cur.e # unlink prior
     doc.ln_s cur        # link current
 
     [201,{
