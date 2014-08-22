@@ -21,11 +21,22 @@ class R
   def formPOST
     params = (Rack::Request.new @r).params
     params.map{|k,v|
-      s, p, t = JSON.parse CGI.unescape k rescue JSON::ParserError # triple (origin) URI
-     (o = v.match(HTTP_URI) ? v.R : StripHTML[v] # object URI or Literal
-      t_ = s.R.predicatePath(p).objectPath(o)[0] # triple (current) URI
-      t.R.delete if t && t != t_.to_s # delete obsolete triple
-      s.R[p] = o unless o.class==String && o.empty?) if s&&p} # add triple
+
+      # triple (original pre-edit)
+      s, p, t = JSON.parse CGI.unescape k rescue JSON::ParserError
+
+      # post-edit value -> URI or literal
+     (o = v.match(HTTP_URI) ? v.R : StripHTML[v]
+
+      # triple (post-edit)
+      t_ = s.R.predicatePath(p).objectPath(o)[0]
+
+      # remove obsolete triple if edited (lives on in snapshot archive)
+      t.R.delete if t && t != t_.to_s
+
+      # add new triple
+      s.R[p] = o unless o.class==String && o.empty?) if s && p
+    }
     snapshot
     [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
   end
