@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class R
 
@@ -6,7 +6,7 @@ class R
     return [403,{},[]] if !allowWrite
     puts "PUT #{uri} #{@r['CONTENT_TYPE']}"
     @r.map{|k,v|puts k,v}
-    putDoc
+#    putDoc
   end
 
   def putDoc
@@ -19,14 +19,13 @@ class R
     # identifier for current version
     doc = versions.child Time.now.iso8601.gsub(/\W/,'') + '.' + ext 
 
-    body = @r['rack.input'].read
+    # store version
+    doc.w @r['rack.input'].read
 
-    doc.w body # create version
+    main = stripDoc.a('.' + ext)
 
-    cur = stripDoc.a('.' + ext) # URI of "always current"
-
-    cur.delete if cur.e # unlink prior
-    doc.ln_s cur        # link current
+    main.delete if main.e # unlink prior
+    doc.ln_s main         # link current
 
     [201,{
        'Location' => uri,
