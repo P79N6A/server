@@ -1,21 +1,17 @@
+
+
 USAGE   thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
 
-INSTALL ruby ruby/install
-        cp ruby/bin/{R,ww} ~/bin
+INSTALL ./ruby/install
+        bundle install (if needed)
+        cp ruby/bin/{R,ww} ~/bin (optional)
 
-DAEMON
- ww        # standalone (port 80)
- ww apache # backend to apache (port 3000)
- ww nginx  # backend to nginx (port 3000)
- ww local  # listen only on 127.0.0.1:80
+DAEMON       host          port
+ ww        # 0.0.0.0      :80
+ ww local  # 127.0.0.1    :80
+ ww apache # with apache  :3000
+ ww nginx  # with nginx   :3000
 
 TIPS
  more options in thin --help, and via Rack interface
  if launching outside checkout-dir, symlink {css,js} for default UI
-
-REQUISITES cd ruby && bundle install
-
-REPOSITORY                           WWW
-git://repo.or.cz/www.git             http://repo.or.cz/w/www.git
-git://gitorious.org/element/www.git  https://gitorious.org/element/www
-https://github.com/hallwaykid/pw.git https://github.com/hallwaykid/pw
