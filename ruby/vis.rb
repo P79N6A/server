@@ -26,8 +26,7 @@ class R
 
     [(H.js '//d3js.org/d3.v2'), # D3 library
      {_: :script, c: "var links = #{links.to_json};"}, # graph-arcs as JSON
-     H.js('/js/force'),   # force-directed layout initializer
-     H.css('/css/force'), # CSS
+     H.js('/js/force'), H.css('/css/force'), H.css('/css/mail'),
      View['HTML'][Hash[d.sort_by{|u,r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse],e], # graph-resources sorted reverse-chrono
      {id: :backdrop},  # backdrop for graph-render
     ]}
