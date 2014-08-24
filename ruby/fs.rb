@@ -209,11 +209,6 @@ class Pathname
       []
   end
   
-  def deleteNode
-    FileUtils.send (file?||symlink?) ? :rm : :rmdir, self
-    parent.deleteNode if parent.c.empty? # GC empty-container(s)
-  end
-
   def take count=1000, direction=:desc, offset=nil
     offset = offset.d if offset
 
