@@ -29,7 +29,7 @@ var svg = d3.select("body").append("svg")
 	} else {
 	    this.style.zIndex = 2
 	}
-	force.size([720, 768])
+//	force.size([720, 768])
     });
 
 svg.append('svg:defs').append('svg:marker')
