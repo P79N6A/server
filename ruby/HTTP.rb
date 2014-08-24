@@ -71,6 +71,23 @@ module Th
     @format ||= selectFormat
   end
 
+  def linkHeader
+    lh = {}
+    self['HTTP_LINK'].do{|links|
+      links.split(', ').map{|link|
+        uri,rel = nil
+        link.split(';').map{|a|
+          a = a.strip
+          if a[0] == '<' && a[-1] == '>'
+            uri = a[1..-2]
+          else
+            rel = a.match(/\s*rel="?([^"]+)"?/)[1]
+          end
+        }
+        lh[rel] = uri }}
+    lh
+  end
+
   def accept; @accept ||= accept_ end
 
   def accept_ k=''

@@ -5,8 +5,11 @@ class R
   def PUT
     return [403,{},[]] if !allowWrite
     puts "PUT #{uri} #{@r['CONTENT_TYPE']}"
-    @r.map{|k,v|puts k,v}
-#    putDoc
+    if @r.linkHeader['type'] == LDP+'BasicContainer'
+      self.MKCOL
+    else
+      putDoc
+    end
   end
 
   def putDoc
