@@ -143,7 +143,11 @@ class R
     return [409, {}, ["parent not found"]] unless dir.exist?
     return [405, {}, ["file exists"]]      if file?
     return [405, {}, ["dir exists"]]       if directory?
-    mk;    [200, {}, []]
+    mk
+    [200,{
+       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
+       'Access-Control-Allow-Credentials' => 'true',
+    },[]]
   end
 
   def readFile parseJSON=false
