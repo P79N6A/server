@@ -22,7 +22,7 @@ class R
     # store version
     doc.w @r['rack.input'].read
 
-    main = stripDoc.a('.' + ext)
+    main = stripDoc.a('.' + ext) # always the current doc
 
     main.delete if main.e # unlink prior
     doc.ln_s main         # link current
