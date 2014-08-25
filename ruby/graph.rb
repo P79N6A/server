@@ -1,8 +1,8 @@
 #watch __FILE__
 class R
 
-  # a simple alternative to RDF library in Hash/JSON :: {uri => {property => val}}
-  # an RDF::Reader for this format is in RDF.rb
+  # a simple alternative to RDF.rb
+  # Hash/JSON :: {uri => {property => val}}
 
   def fromStream m,*i
     send(*i) do |s,p,o|
