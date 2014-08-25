@@ -12,21 +12,20 @@ a {text-decoration: none}
     margin:.3em;
 }
 
-.dir a:first-child {
+.dir a {
     float:left;
     font-weight: bold;
     font-size:1.8em;
     background-color:#000;
     color:#fff;
-    white-space:nowrap;
-    margin-right:.016em}
+}
 
-.dir a {
-    font-weight: bold;
+.dir a.member {
+    font-size: 1em;
     background-color:#fff;
     color:#000;
     float:right;
-    margin:.05em}
+}
 
 .dir a:hover {
     background-color:#000;

@@ -181,10 +181,11 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
-         c: [resource.href,
-             r[RDFs+'member'].do{|c|c.map{|c|c = c.R
-                 label = e[:Graph][c.uri].do{|r|r[Label]} # resource label if exists
-                 [(c.href label),' ']}}]}}]} # link
+        c: [resource.href, (resource.a('?set=dir').href('/') if resource.uri[-1] == '/'),
+            r[RDFs+'member'].do{|c| c.map{|c|
+                c = c.R
+            label = e[:Graph][c.uri].do{|r|r[Label]} # prefer RDF label over URI
+           [{_: :a, href: c.uri, class: :member, c: label || c.abbr},' ']}}]}}]} # item
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
