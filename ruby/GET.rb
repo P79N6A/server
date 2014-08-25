@@ -133,22 +133,6 @@ class R
     s.concat e.c if e.env['REQUEST_PATH'] == '/' # fully include children of /, not just directory-metadata via <host/>
     s}
 
-  FileSet['directory'] = -> e,q,g {
-    c = e.c
-    e.justPath.do{|path| c.concat path.c unless path=='/'}
-    e.env['REQUEST_PATH'].do{|path| # pagination on date-dirs 
-      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
-        t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
-        pp = (t-1).strftime('/%Y/%m/%d/') # prev day
-        np = (t+1).strftime('/%Y/%m/%d/') # next day
-        qs = "?set=dir&view=#{q['view']}"
-        g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
-        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
-        g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]
-      }}
-    c }
-  FileSet['dir'] = FileSet['directory']
-
   View[HTTP+'Response'] = -> d,e {
     d['#'].do{|u| # Response Header
       [u[Prev].do{|p| # prev page
