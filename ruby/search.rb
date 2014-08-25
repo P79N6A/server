@@ -1,12 +1,6 @@
 #watch __FILE__
 class R
 
-  def reindex graph = host
-    visit{|resource|
-      puts "index #{resource}"
-      resource.roonga graph}
-  end
-
   FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       q['view'] ||= 'grep'
@@ -132,17 +126,8 @@ class R
 
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga
-  def R.groonga
-    @groonga ||=
-      (begin require 'groonga'
-         R['/index/groonga'].groonga
-         Groonga["R"]
-       rescue LoadError => e
-         puts e
-       end)
-  end
 
-  # URI -> groonga DB
+  # load groonga DB at URI
   def groonga
     return Groonga::Database.open d if e # open db
     dir.mk                               # create containing dir
@@ -159,8 +144,19 @@ class R
                      :default_tokenizer => "TokenBigram"){|t|
                                   %w{uri graph content}.map{|c| t.index("R." + c) }}}
   end
+
+  # load default groonga DB
+  def R.groonga
+    @groonga ||=
+      (begin require 'groonga'
+         R['/index/groonga'].groonga
+         Groonga["R"]
+       rescue LoadError => e
+         puts e
+       end)
+  end
   
-  # add
+  # index resource
   def roonga graph="localhost", m = self.graph
     R.groonga.do{|g|
       m.map{|u,i|
@@ -173,10 +169,17 @@ class R
     self
   end
   
-  # remove
+  # unindex resource
   def unroonga
     g = R.groonga
     graph.keys.push(uri).map{|u|g[u].delete}
+  end
+
+  # index recursive-children
+  def reindex graph = host
+    visit{|resource|
+      puts "index #{resource}"
+      resource.roonga graph}
   end
 
 end
