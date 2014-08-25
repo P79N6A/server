@@ -96,7 +96,6 @@ class R < RDF::URI
 MIME
 names
 acl
-audio
 blog
 csv
 DELETE
