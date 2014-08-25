@@ -16,6 +16,19 @@ class R
           `grep -iRl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|R.unPOSIX r.chomp}}.flatten
       }}}
 
+  FileSet['find'] = -> e,q,m,x='' {
+    q['q'].do{|q|
+      r = '-iregex ' + ('.*' + q + '.*' + x).sh
+      s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+      t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+      [e,e.justPath].compact.select(&:e).map{|e|
+        `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
+        lines.map{|l|R.unPOSIX l.chomp}}.compact.flatten}}
+
+  FileSet['glob'] = -> d,e=nil,_=nil {
+    p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
+    p[0] }
+
   ResourceSet['groonga'] = ->d,e,m{
     m['/search#'] = {Type => R[Search]}
     m['#'][Type] = R[HTTP+'Response']
@@ -87,6 +100,19 @@ class R
   View[Search] = -> d,e {
     [{_: :form, action: '/search', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
      (H.js '/js/search')]}
+
+  
+  def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
+   yield uri, Type, (R MIMEtype+mime)
+   `#{e} #{a}|grep :`.each_line{|i|
+   begin
+     i = i.split /:/
+    yield uri, (f + (i[0].match(g)||[0,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')),
+      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : (v.match(HTTP_URI) ? v.R : v.hrefs)}
+   rescue
+    puts "#{uri} skipped: #{i}"
+   end}
+  end
 
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga

@@ -104,6 +104,51 @@ class R
       [@r[:Status],@r[:Response],[body]]}
   end
 
+  def readFile parseJSON=false
+    if f
+      if parseJSON
+        begin
+          JSON.parse File.open(d).read
+        rescue Exception => x
+          puts "error reading JSON: #{caller} #{uri} #{x}"
+          {}
+        end
+      else
+        File.open(d).read
+      end
+    else
+      nil
+    end
+  end
+  alias_method :r, :readFile
+
+  def fileResources
+    [(self if e), docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}")].flatten.compact
+  end
+
+  FileSet['default'] = -> e,q,g {
+    s = []
+    s.concat e.fileResources # host-specific
+    e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
+    s.concat e.c if e.env['REQUEST_PATH'] == '/' # fully include children of /, not just directory-metadata via <host/>
+    s}
+
+  FileSet['directory'] = -> e,q,g {
+    c = e.c
+    e.justPath.do{|path| c.concat path.c unless path=='/'}
+    e.env['REQUEST_PATH'].do{|path| # pagination on date-dirs 
+      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
+        t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
+        pp = (t-1).strftime('/%Y/%m/%d/') # prev day
+        np = (t+1).strftime('/%Y/%m/%d/') # next day
+        qs = "?set=dir&view=#{q['view']}"
+        g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
+        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
+        g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]
+      }}
+    c }
+  FileSet['dir'] = FileSet['directory']
+
   View[HTTP+'Response'] = -> d,e {
     d['#'].do{|u| # Response Header
       [u[Prev].do{|p| # prev page

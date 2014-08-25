@@ -41,6 +41,17 @@ class R
     end
   end
 
+  def readlink; node.readlink.R end
+
+  def ln t, y=:link
+    t = t.R.stripSlash
+    unless t.e || t.symlink?
+      t.dir.mk
+      FileUtils.send y, node, t.node
+    end
+  end
+  def ln_s t;   ln t, :symlink end
+
   # build up URI for a triple..
 
   def predicatePath p, s = true
@@ -157,6 +168,17 @@ class R
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
 
+  def take *a
+    node.take(*a).map &:R
+  end
+
+  def visit &f
+    children.map{|child|
+      yield child
+      child.visit &f}
+    nil
+  end
+
 end
 
 class String
@@ -176,6 +198,49 @@ class String
       return p + ':' + self[f.size..-1]  if (index f) == 0
     }
     gsub('/','|')
+  end
+
+end
+
+class Pathname
+
+  def R
+    R.unPOSIX to_s.force_encoding('UTF-8')
+  end
+
+  def c
+    return [] unless directory?
+    children.delete_if{|n| n.basename.to_s.match /^\./}
+    rescue
+      []
+  end
+  
+  def take count=1000, direction=:desc, offset=nil
+    offset = offset.d if offset
+
+    ok = false    # in-range mark
+    set=[]
+    v,m={asc:      [:id,:>=],
+        desc: [:reverse,:<=]}[direction]
+
+    visit=->nodes{
+      nodes.sort_by(&:to_s).send(v).each{|n|
+        ns = n.to_s
+        return if 0 >= count
+        (ok || # already in-range
+         !offset || # no offset required
+         (sz = [ns,offset].map(&:size).min
+          ns[0..sz-1].send(m,offset[0..sz-1]))) &&
+        (if !(c = n.c).empty? # has children?
+           visit.(c)          # visit children
+         else
+           count = count - 1 # decrement nodes-left count
+           set.push n        # add node to result-set
+           ok = true         # mark iterator as within range
+        end )}}
+
+    visit.(c)
+    set
   end
 
 end

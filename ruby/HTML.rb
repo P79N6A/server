@@ -186,4 +186,25 @@ class R
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: (View[e.q['view']] || View['HTML'])[d,e]}]}]}
 
+  View['ls'] = ->d=nil,e=nil {
+    keys = ['uri',Stat+'size',Type,Date,Title]
+    [{_: :table,
+       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+           d.values.map{|e|
+             {_: :tr, c: keys.map{|k| {_: :td, c: k=='uri' ? e.R.html : e[k].html}}}}]},
+     H.css('/css/table')]}
+
+  View[Stat+'File'] = -> i,e {
+    [(H.once e, 'container', (H.css '/css/container')),
+     i.map{|u,r|
+       r[Stat+'size'].do{|s|
+         {class: :File, title: "#{u}  #{s[0]} bytes",
+           c: ["\n", {_: :a, class: :file, href: u, c: '☁'},
+               "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr},
+               "\n", r[Content], "\n"]}}}]}
+
+  View[Stat+'Link'] = -> i,e {
+    i.map{|u,r| r[Stat+'target'].do{|t|
+        {_: :a, href: t[0].uri, c: t[0].uri}}}}
+
 end

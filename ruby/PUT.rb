@@ -12,6 +12,26 @@ class R
     end
   end
 
+  def MKCOL
+    return [403, {}, ["Forbidden"]]        unless allowWrite
+    return [409, {}, ["parent not found"]] unless dir.exist?
+    return [405, {}, ["file exists"]]      if file?
+    return [405, {}, ["dir exists"]]       if directory?
+    mk
+    [200,{
+       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
+       'Access-Control-Allow-Credentials' => 'true',
+    },[]]
+  end
+
+  def mk
+    e || FileUtils.mkdir_p(d)
+    self
+  rescue Exception => x
+    puts x
+    self
+  end
+
   def putDoc
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
     return [406,{},[]] unless %w{gif html jpg json jsonld png n3 ttl}.member? ext
@@ -36,5 +56,16 @@ class R
        'Access-Control-Allow-Credentials' => 'true',
     },[]]
   end
+
+  def writeFile o,s=false
+    dir.mk
+    File.open(d,'w'){|f|
+      f << (s ? o.to_json : o)}
+    self
+  rescue Exception => x
+    puts caller[0..2],x
+    self
+  end
+  alias_method :w, :writeFile
 
 end

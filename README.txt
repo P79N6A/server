@@ -3,9 +3,9 @@ pw(1)
 USAGE   thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
 
 INSTALL cd ruby
-        bundle install
-	sh install
-        cp ruby/bin/{R,ww} ~/bin
+        bundle install # dependencies (Rack, RDF)
+	sh install     # link source to library-path
+        cp ruby/bin/{R,ww} ~/bin # instance-method shell-wrapper + daemon script
 
 DAEMON       host          port
  ww        # 0.0.0.0      :80
