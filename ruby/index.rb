@@ -162,6 +162,14 @@ class R
       self[p].map{|o| yield uri, p.uri, o}}
   end
 
+  View['ls'] = ->d=nil,e=nil {
+    keys = ['uri',Stat+'size',Type,Date,Title]
+    [{_: :table,
+       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+           d.values.map{|e|
+             {_: :tr, c: keys.map{|k| {_: :td, c: k=='uri' ? e.R.html : e[k].html}}}}]},
+     H.css('/css/table')]}
+
   GET['/cache'] = E404
   GET['/index'] = E404
 

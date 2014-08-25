@@ -139,17 +139,6 @@ class R
        end
      }, H.once(e,'base',H.css('/css/html',true))]}
 
-  View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
-
-  View[LDP+'BasicContainer'] = -> i,e {
-    [(H.once e, 'container', (H.css '/css/container')),
-     i.map{|u,r| resource = r.R
-       {class: :dir, style: "background-color: #{R.cs}",
-         c: [resource.href,
-             r[RDFs+'member'].do{|c|c.map{|c|c = c.R
-                 label = e[:Graph][c.uri].do{|r|r[Label]} # resource label if exists
-                 [(c.href label),' ']}}]}}]} # link
-
   def triplrHref enc=nil
     yield uri, Content, H({_: :pre, style: 'white-space: pre-wrap',
                             c: open(d).read.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
@@ -176,7 +165,7 @@ class R
      self).hierPart.split('/').join(' ')
   end
 
-  Render['text/html'] = -> d,e { u = d['#']||{}
+  Render['text/html'] = -> d,e { u = d['#'] || {}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class==String}
     H ['<!DOCTYPE html>',{_: :html,
          c: [{_: :head, c: ['<meta charset="utf-8" />',
@@ -186,13 +175,16 @@ class R
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: (View[e.q['view']] || View['HTML'])[d,e]}]}]}
 
-  View['ls'] = ->d=nil,e=nil {
-    keys = ['uri',Stat+'size',Type,Date,Title]
-    [{_: :table,
-       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
-           d.values.map{|e|
-             {_: :tr, c: keys.map{|k| {_: :td, c: k=='uri' ? e.R.html : e[k].html}}}}]},
-     H.css('/css/table')]}
+  View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
+
+  View[LDP+'BasicContainer'] = -> i,e {
+    [(H.once e, 'container', (H.css '/css/container')),
+     i.map{|u,r| resource = r.R
+       {class: :dir, style: "background-color: #{R.cs}",
+         c: [resource.href,
+             r[RDFs+'member'].do{|c|c.map{|c|c = c.R
+                 label = e[:Graph][c.uri].do{|r|r[Label]} # resource label if exists
+                 [(c.href label),' ']}}]}}]} # link
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
