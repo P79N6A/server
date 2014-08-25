@@ -107,7 +107,7 @@ class R
       yield d, Stat+'size', size
       yield d, Stat+'mtime', mtime.to_i
       [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield d, Type, type}
-      c.map{|c|c.triplrInode false, &f} if dirChildren
+      c.sort.map{|c|c.triplrInode false, &f} if dirChildren
 
     elsif symlink?
       [R[Stat+'Link'], Resource].map{|type| yield uri, Type, type}
