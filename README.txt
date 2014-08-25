@@ -1,10 +1,11 @@
-
+pw(1)
 
 USAGE   thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
 
-INSTALL ./ruby/install
-        bundle install (if needed)
-        cp ruby/bin/{R,ww} ~/bin (optional)
+INSTALL cd ruby
+        bundle install
+	sh install
+        cp ruby/bin/{R,ww} ~/bin
 
 DAEMON       host          port
  ww        # 0.0.0.0      :80
@@ -14,4 +15,4 @@ DAEMON       host          port
 
 TIPS
  more options in thin --help, and via Rack interface
- if launching outside checkout-dir, symlink {css,js} for default UI
+ if launching outside this dir, symlink {css,js} for default UI
