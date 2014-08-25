@@ -131,7 +131,7 @@ class R
     s.concat e.fileResources # host-specific
     e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
     s.concat e.c if e.env['REQUEST_PATH'] == '/' # fully include children of /, not just directory-metadata via <host/>
-    s}
+    s }
 
   View[HTTP+'Response'] = -> d,e {
     d['#'].do{|u| # Response Header
