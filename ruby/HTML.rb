@@ -200,6 +200,14 @@ class R
     i.map{|u,r| r[Stat+'target'].do{|t|
         {_: :a, href: t[0].uri, c: t[0].uri}}}}
 
+  View['ls'] = ->d=nil,e=nil {
+    keys = ['uri',Stat+'size',Type,Date,Title]
+    [{_: :table,
+       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+           d.values.map{|e|
+             {_: :tr, c: keys.map{|k| {_: :td, c: k=='uri' ? e.R.html : e[k].html}}}}]},
+     H.css('/css/table')]}
+
   View['audio'] = ->d,e {
     [(H.once e, :audio,
       (H.js '/js/audio'), (H.css '/css/audio'),

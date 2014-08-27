@@ -42,12 +42,22 @@ class R
       hook[d,g,host] if hook} # write-hook
   end
 
-  # cacheJSON as side-effect of a triplr
+  # cache JSON on triple-stream
   def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr)    # collect triples
     R.cacheJSON graph, host, p, hook # cache
     graph.triples &b if b            # emit triples
     self
+  end
+
+  def triplrDoc &f
+    docroot.glob('#*').map{|s|
+      s.triplrResource &f}
+  end
+
+  def triplrResource # from fs-store
+    predicates.map{|p|
+      self[p].map{|o| yield uri, p.uri, o}}
   end
 
   def jsonDoc; docroot.a '.e' end

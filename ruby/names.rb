@@ -63,10 +63,10 @@ class R
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
-  def inside; node.expand_path.to_s.index(FSbase) == 0 end
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end # inside site-root check
   alias_method :d, :pathPOSIX
 
-  # strip variant-suffixes -> base-URI
+  # strip variant-suffixes
   def stripFrag; R uri.split(/#/)[0] end
   def stripDoc;  R uri.sub Doc, '' end
   def stripSlash
@@ -127,12 +127,33 @@ class R
     s[0..2] + '/' + s[3..-1]
   end
 
+  # squash names to prefix:basename
+  def expand;   uri.expand.R end
+  def shorten;  uri.shorten.R end
+
 end
 
 class String
 
   def R
     R.new self
+  end
+
+  Expand={}
+  def expand
+   (Expand.has_key? self) ?
+    Expand[self] :
+   (Expand[self] =
+     match(/([^:]+):([^\/].*)/).do{|e|
+      ( R::Prefix[e[1]] || e[1]+':' )+e[2]} ||
+     gsub('|','/')) # no prefix found, just squash predicate to a basename
+  end
+
+  def shorten
+    R::Prefix.map{|p,f|
+      return p + ':' + self[f.size..-1]  if (index f) == 0
+    }
+    gsub('/','|')
   end
 
   def sh; Shellwords.escape self end

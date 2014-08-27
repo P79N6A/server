@@ -24,7 +24,7 @@ class R
   end
   def ln_s t;   ln t, :symlink end
 
-  # build up URI for a triple..
+  # build up URI for a triple
 
   def predicatePath p, s = true
     child s ? p.R.shorten : p
@@ -106,6 +106,18 @@ class R
     p.R.indexPath.setFs o,self,false,false
   end
 
+  def po o
+    indexPath.predicate o, false
+  end
+
+  def indexPath
+    R['/index/'+shorten.uri]
+  end
+
+  GET['/cache'] = E404
+  GET['/index'] = E404
+
+  # return related (bidirectional) RDF-resources
   def walk p, g={}, v={}
     graph g       # resource-graph
     v[uri] = true # mark visited
@@ -116,68 +128,17 @@ class R
     g # accumulated graph
   end
 
-  def po o
-    indexPath.predicate o, false
-  end
-
-  def indexPath
-    R['/index/'+shorten.uri]
-  end
-
-  def triplrDoc &f
-    docroot.glob('#*').map{|s|
-      s.triplrResource &f}
-  end
-
-  def triplrResource
-    predicates.map{|p|
-      self[p].map{|o| yield uri, p.uri, o}}
-  end
-
-  View['ls'] = ->d=nil,e=nil {
-    keys = ['uri',Stat+'size',Type,Date,Title]
-    [{_: :table,
-       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
-           d.values.map{|e|
-             {_: :tr, c: keys.map{|k| {_: :td, c: k=='uri' ? e.R.html : e[k].html}}}}]},
-     H.css('/css/table')]}
-
-  GET['/cache'] = E404
-  GET['/index'] = E404
-
-  def expand;   uri.expand.R end
-  def shorten;  uri.shorten.R end
-
+  # return child-nodes
   def take *a
     node.take(*a).map &:R
   end
 
+  # apply lambda to child-nodes
   def visit &f
     children.map{|child|
       yield child
       child.visit &f}
     nil
-  end
-
-end
-
-class String
-
-  Expand={}
-  def expand
-   (Expand.has_key? self) ?
-    Expand[self] :
-   (Expand[self] =
-     match(/([^:]+):([^\/].*)/).do{|e|
-      ( R::Prefix[e[1]] || e[1]+':' )+e[2]} || 
-     gsub('|','/')) # no prefix found, just squash predicate to a basename
-  end
-
-  def shorten
-    R::Prefix.map{|p,f|
-      return p + ':' + self[f.size..-1]  if (index f) == 0
-    }
-    gsub('/','|')
   end
 
 end
