@@ -39,7 +39,7 @@ class R
     }
     snapshot # save current fs-store state to doc
     # continue editing
-    [303,{'Location'=>uri+'?view=edit'+(params['mono'] ? '&mono' : '')},[]]
+    [303,{'Location'=>uri+'?edit'+(params['mono'] ? '&mono' : '')},[]]
   end
 
 end

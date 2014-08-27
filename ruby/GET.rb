@@ -69,9 +69,10 @@ class R
     @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
 
     if set.empty? # nothing found
-      if q['view'] == 'edit' # editor requested
+      if q.has_key? 'edit' # editor requested
         (uri + '#').do{|u| # add a blank resource
           m[u] ||= {'uri' => u, Type => []}}
+        q['view'] ||= 'edit'
       else
         return E404[self,@r,m] # 404
       end
