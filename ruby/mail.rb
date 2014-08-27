@@ -43,7 +43,6 @@ GET['/address'] = -> e,r{e.warp if r.format=='text/html' && e.uri[-1]=='/'}
     m = mail; return unless m                        # mail
     id = m.message_id || m.resent_message_id rescue nil
     return unless id                                 # message-ID
-#   yield e, DC+'identifier', id                     # message-ID
 
     e = MessagePath[id]                              # message URI
 

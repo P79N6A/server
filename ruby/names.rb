@@ -14,6 +14,10 @@ class R
   end
   def R.[] uri; R.new uri end
 
+  # equality / comparison operators
+  def == u;     to_s == u.to_s end
+  def <=> c;    to_s <=> c.to_s end
+
   # append operators
   def + u; R uri + u.to_s end
   alias_method :a, :+
@@ -97,10 +101,6 @@ class R
   alias_method :f, :file?
   alias_method :m, :mtime
 
-  def glob a = ""
-    (Pathname.glob pathPOSIX + a).map &:R
-  end
-
   def triplrInode dirChildren=true, &f
     if directory?
       d = descend.uri
@@ -120,6 +120,11 @@ class R
       yield uri, Stat+'size', size
       yield uri, Stat+'mtime', mtime.to_i
     end
+  end
+
+  # balanced-prefixes container-names
+  def R.dive s
+    s[0..2] + '/' + s[3..-1]
   end
 
 end

@@ -1,6 +1,23 @@
 #watch __FILE__
 class R
 
+  FileSet['directory'] = -> e,q,g {
+    c = e.c
+    e.justPath.do{|path| c.concat path.c unless path=='/'}
+    e.env['REQUEST_PATH'].do{|path| # pagination on date-dirs 
+      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
+        t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
+        pp = (t-1).strftime('/%Y/%m/%d/') # prev day
+        np = (t+1).strftime('/%Y/%m/%d/') # next day
+        qs = "?set=dir&view=#{q['view']}"
+        g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
+        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
+        g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]
+      }}
+    c }
+
+  FileSet['dir'] = FileSet['directory']
+
   FileSet['find'] = -> e,q,m,x='' {
     q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
@@ -10,8 +27,13 @@ class R
         `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
         lines.map{|l|R.unPOSIX l.chomp}}.compact.flatten}}
 
+  def glob a = ""
+    (Pathname.glob pathPOSIX + a).map &:R
+  end
+
   FileSet['glob'] = -> d,e=nil,_=nil {
-    p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
+    p = [d, d.justPath]. # search host-specific and global path
+    compact.map(&:glob).flatten[0..4e2].compact.partition &:inside # cap at 400 results and bound paths
     p[0] }
 
   FileSet['grep'] = -> e,q,m {
@@ -39,6 +61,26 @@ class R
       m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
       m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
       r.map{|r|r['.uri'].R}}} # URI -> Resource
+
+  # depth-first sorted subtree in page-chunks
+  FileSet['page'] = -> d,r,m {
+    p = d.e ? d : (d.justPath.e ? d.justPath : d) # prefer host-specific index
+    c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
+    o = r.has_key?('asc') ? :asc : :desc            # direction
+    (p.take c, o, r['offset'].do{|o|o.R}).do{|s| # find page
+      u = m['#'] # RDF of current page
+      u[Type] = R[HTTP+'Response']
+      if r['offset'] && head = s[0]
+        uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
+        u[Prev] = {'uri' => uri}                # prev RDF  (body)
+        d.env[:Links].push "<#{uri}>; rel=prev" # prev Link (HTTP header)
+      end
+      if edge = s.size >= c && s.pop # further results exist
+        uri = d.uri + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
+        u[Next] = {'uri' => uri}                # next RDF
+        d.env[:Links].push "<#{uri}>; rel=next" # next Link
+      end
+      s}}
 
   View['grep'] = -> d,e {
     w = e.q['q']
