@@ -1,18 +1,18 @@
-pw(1)
+pw(1)   a webserver
 
 USAGE   thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
 
 INSTALL cd ruby
-        bundle install           # Ruby libs (Rack, RDF)
-	sh install               # link source to library-path
-        cp ruby/bin/{R,ww} ~/bin # instance-method shell-wrapper and daemon
+        bundle install # install Ruby libraries (Rack, RDF)
+	sh install     # link source to Ruby-library-path
+        cp bin/* ~/bin # instance-method shell-wrapper and daemon
 
-DAEMON       host          port
- ww        # 0.0.0.0      :80
- ww local  # 127.0.0.1    :80
- ww apache # with apache  :3000
- ww nginx  # with nginx   :3000
+DAEMON       host         port
+ pw        # 0.0.0.0      80
+ pw local  # 127.0.0.1    80
+ pw apache # with apache  3000
+ pw nginx  # with nginx   3000
 
 TIPS
- more options in thin --help, and via Rack interface
+ more daemon options: thin --help
  if launching outside this dir, symlink {css,js} for default UI
