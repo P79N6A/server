@@ -42,7 +42,7 @@ class R
       hook[d,g,host] if hook} # write-hook
   end
 
-  # cache JSON on triple-stream
+  # cache JSON docs of resources from triple-stream
   def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr)    # collect triples
     R.cacheJSON graph, host, p, hook # cache
@@ -50,14 +50,35 @@ class R
     self
   end
 
-  def triplrDoc &f
+  def triplrDoc &f # triples in fs-store at subject URIs within doc - suitable for serializing to a document (file)
     docroot.glob('#*').map{|s|
       s.triplrResource &f}
   end
 
-  def triplrResource # from fs-store
+  def triplrResource # triples in fs-store at subject URI
     predicates.map{|p|
       self[p].map{|o| yield uri, p.uri, o}}
+  end
+
+  def triplrInode dirChildren=true, &f
+    if directory?
+      d = descend.uri
+      yield d, Stat+'size', size
+      yield d, Stat+'mtime', mtime.to_i
+      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield d, Type, type}
+      c.sort.map{|c|c.triplrInode false, &f} if dirChildren
+
+    elsif symlink?
+      [R[Stat+'Link'], Resource].map{|type| yield uri, Type, type}
+      yield uri, Stat+'mtime', Time.now.to_i
+      yield uri, Stat+'size', 0
+      readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
+
+    else
+      yield uri, Type, R[Stat+'File']
+      yield uri, Stat+'size', size
+      yield uri, Stat+'mtime', mtime.to_i
+    end
   end
 
   def jsonDoc; docroot.a '.e' end

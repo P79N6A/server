@@ -103,27 +103,6 @@ class R
   alias_method :f, :file?
   alias_method :m, :mtime
 
-  def triplrInode dirChildren=true, &f
-    if directory?
-      d = descend.uri
-      yield d, Stat+'size', size
-      yield d, Stat+'mtime', mtime.to_i
-      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield d, Type, type}
-      c.sort.map{|c|c.triplrInode false, &f} if dirChildren
-
-    elsif symlink?
-      [R[Stat+'Link'], Resource].map{|type| yield uri, Type, type}
-      yield uri, Stat+'mtime', Time.now.to_i
-      yield uri, Stat+'size', 0
-      readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
-
-    else
-      yield uri, Type, R[Stat+'File']
-      yield uri, Stat+'size', size
-      yield uri, Stat+'mtime', mtime.to_i
-    end
-  end
-
   # balanced-prefixes container-names
   def R.dive s
     s[0..2] + '/' + s[3..-1]
