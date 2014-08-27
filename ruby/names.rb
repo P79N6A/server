@@ -22,7 +22,7 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # URI-parts with nil -> empty-string
+  # URI-parts with nil mapped to empty-string (for null-derefence-free concatenation)
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
@@ -35,7 +35,7 @@ class R
     suffix ? (File.basename pathPart, suffix) : (File.basename pathPart) end
   def bare; basename suffix end
 
-  # parent/child relationships in hierPart
+  # parent/child relationships within hierPart
   def descend; uri.t.R end
   def child u; descend + u.to_s end
   def dirname; schemePart + hostPart + (File.dirname pathPart) end
@@ -146,7 +146,7 @@ class String
    (Expand[self] =
      match(/([^:]+):([^\/].*)/).do{|e|
       ( R::Prefix[e[1]] || e[1]+':' )+e[2]} ||
-     gsub('|','/')) # no prefix found, just squash predicate to a basename
+     gsub('|','/')) # no prefix found, squash URI to basename
   end
 
   def shorten
