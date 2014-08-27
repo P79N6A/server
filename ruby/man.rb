@@ -28,10 +28,12 @@ class R
       else # alpha-prefix bound
         Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
           thing = R['/man/' + CGI.escape(a.basename.to_s.sub(/\.gz$/,'').sub(/\.[0-9][a-z]*$/,''))]
-          stat = a.stat
-          graph << RDF::Statement.new(thing, R[Type], R[RDFs+'Resource'])
-          graph << RDF::Statement.new(thing, R[Stat+'mtime'], stat.mtime.to_i)
-          graph << RDF::Statement.new(thing, R[Stat+'size'], stat.size)}
+          if a.exist?
+            stat = a.stat
+            graph << RDF::Statement.new(thing, R[Type], R[RDFs+'Resource'])
+            graph << RDF::Statement.new(thing, R[Stat+'mtime'], stat.mtime.to_i)
+            graph << RDF::Statement.new(thing, R[Stat+'size'], stat.size)
+          end}
         r.graphResponse graph
       end
     else # manpage

@@ -1,15 +1,6 @@
 #watch __FILE__
 class R
 
-  FileSet['grep'] = -> e,q,m {
-    q['q'].do{|query|
-      q['view'] ||= 'grep'
-      path = e.justPath
-      GREP_DIRS.find{|p|path.uri.match p}.do{|_|
-        [e,path].compact.select(&:e).map{|e|
-          `grep -iRl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|R.unPOSIX r.chomp}}.flatten
-      }}}
-
   FileSet['find'] = -> e,q,m,x='' {
     q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
@@ -22,6 +13,15 @@ class R
   FileSet['glob'] = -> d,e=nil,_=nil {
     p = [d,d.justPath].compact.map(&:glob).flatten[0..4e2].compact.partition &:inside
     p[0] }
+
+  FileSet['grep'] = -> e,q,m {
+    q['q'].do{|query|
+      q['view'] ||= 'grep'
+      path = e.justPath
+      GREP_DIRS.find{|p|path.uri.match p}.do{|_|
+        [e,path].compact.select(&:e).map{|e|
+          `grep -iRl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|R.unPOSIX r.chomp}}.flatten
+      }}}
 
   ResourceSet['groonga'] = ->d,e,m{
     m['/search#'] = {Type => R[Search]}
@@ -94,19 +94,21 @@ class R
   View[Search] = -> d,e {
     [{_: :form, action: '/search', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
      (H.js '/js/search')]}
-
   
+  # key: val output to RDF
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
    yield uri, Type, (R MIMEtype+mime)
    `#{e} #{a}|grep :`.each_line{|i|
    begin
      i = i.split /:/
-    yield uri, (f + (i[0].match(g)||[0,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')),
-      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : (v.match(HTTP_URI) ? v.R : v.hrefs)}
+    yield uri, (f + (i[0].match(g)||[0,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # subject URI, predicate URI
+      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : (v.match(HTTP_URI) ? v.R : v.hrefs)} # object String | Float | URI
    rescue
     puts "#{uri} skipped: #{i}"
    end}
   end
+
+  # Groonga - ruby text-search and column-store
 
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga
