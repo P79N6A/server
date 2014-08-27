@@ -59,7 +59,6 @@ class R
       uri[0] == '/' ? uri.tail : uri
     end
   end
-  def node; Pathname.new pathPOSIX end
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
@@ -89,6 +88,8 @@ class R
       end}
   end
 
+  # mapped fs-node methods
+  def node;    Pathname.new pathPOSIX end
   def exist?;   node.exist? end
   def directory?; node.directory? end
   def file?;    node.file? end
