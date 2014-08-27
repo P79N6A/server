@@ -75,6 +75,7 @@ class R
       readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
 
     else
+      yield stripDoc.uri, Type, Resource
       yield uri, Type, R[Stat+'File']
       yield uri, Stat+'size', size
       yield uri, Stat+'mtime', mtime.to_i
