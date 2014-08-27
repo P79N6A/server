@@ -2,19 +2,22 @@
 #watch __FILE__
 class R
 
-  MessagePath = ->id{
+  MessagePath = ->id{ # message-ID -> path
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
-  AddrPath = ->address{
+  AddrPath = ->address{ # address -> path
     a = address.downcase
     name = a.split('@')[0]
     '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
 
-GET['/address'] = -> e,r{e.warp if r.format=='text/html' && e.uri[-1]=='/'}
-    GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response}
-    GET['/msg'] = -> e,r{E404[e,r] if e.path.size < 10}
- GET['/thread'] = -> e, r {
+  GET['/address'] = -> e,r{ # address subtree
+    r.q['view'] ||= 'warp' if e.uri[-1]=='/' # set a default-view on directories
+    nil}
+
+  GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID on the web
+  GET['/msg'] = -> e,r{E404[e,r] if e.path.size <= 9} # keep creepy-crawlies out of large container dirs
+  GET['/thread'] = -> e, r {
 
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
