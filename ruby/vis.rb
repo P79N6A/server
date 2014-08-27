@@ -1,12 +1,12 @@
 #watch __FILE__
 class R
 
-  View['force'] = -> d,e { # force-directed view
+  View['force'] = -> d,e { # force-directed layout
     links = []
     colors = {}
     defaultType = SIOC + 'has_parent'
     linkType = e.q['link'].do{|a|a.expand} || defaultType
-    d.triples{|s,p,o| # visit each triple in graph
+    d.triples{|s,p,o| # each triple in graph
       if (p == linkType || linkType == '*') && o.respond_to?(:uri) # matches specific type or wildcard
         source = s
         target = o.uri
@@ -25,10 +25,11 @@ class R
       end}
 
     [(H.js '//d3js.org/d3.v2'), # D3 library
-     {_: :script, c: "var links = #{links.to_json};"}, # graph-arcs as JSON
-     H.js('/js/force'), H.css('/css/force'), H.css('/css/mail'),
-     View['HTML'][Hash[d.sort_by{|u,r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse],e], # graph-resources sorted reverse-chrono
-     {id: :backdrop},  # backdrop for graph-render
-    ]}
+     {_: :script, c: "var links = #{links.to_json};"}, # graph-arcs to JSON
+     H.js('/js/force'),
+     H.css('/css/force'),
+     H.css('/css/mail'),
+     View['HTML'][Hash[d.sort_by{|u,r| # sort graph by date before rendering
+                       r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse],e]]}
 
 end
