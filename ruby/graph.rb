@@ -50,7 +50,7 @@ class R
     self
   end
 
-  def triplrDoc &f # triples in fs-store at subject URIs within doc - suitable for serializing to a document (file)
+  def triplrDoc &f # triples in fs-store at URIs within doc - suitable for serializing to a document (file)
     docroot.glob('#*').map{|s|
       s.triplrResource &f}
   end

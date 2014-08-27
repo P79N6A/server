@@ -202,11 +202,13 @@ class R
 
   View['ls'] = ->d=nil,e=nil {
     keys = ['uri',Stat+'size',Type,Date,Title]
-    [{_: :table,
-       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
-           d.values.map{|e|
-             {_: :tr, c: keys.map{|k| {_: :td, c: k=='uri' ? e.R.html : e[k].html}}}}]},
-     H.css('/css/table')]}
+    {_: :table,
+      c: [{_: :style, c: ".scheme,.abbr {display: none}"},
+          {_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+          d.values.map{|e|
+            {_: :tr, c: keys.map{|k|
+                {_: :td, c: k=='uri' ? e.R.a(e.uri[-1]=='/' ? '?view=ls' : '').href(e.R.abbr) : e[k].html}
+              }}}]}}
 
   View['audio'] = ->d,e {
     [(H.once e, :audio,

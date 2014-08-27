@@ -28,7 +28,7 @@ class R
 
   View['table'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    [H.css('/css/table'),
+    [{_: :style, c: ".scheme,.abbr {display: none}"},
      {_: :table,:class => :tab,
        c: [{_: :tr, c: keys.map{|k|
                {_: :th, class: :label, property: k, c: k.R.abbr}}},
