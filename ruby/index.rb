@@ -13,8 +13,6 @@ class R
     end
   end
 
-  def readlink; node.readlink.R end
-
   def ln t, y=:link
     t = t.R.stripSlash
     unless t.e || t.symlink?

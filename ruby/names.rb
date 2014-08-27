@@ -94,6 +94,7 @@ class R
   def directory?; node.directory? end
   def file?;    node.file? end
   def symlink?; node.symlink? end
+  def readlink; node.readlink.R end
   def mtime;    node.stat.mtime if e end
   def realpath; node.realpath rescue nil end
   def sh;       d.force_encoding('UTF-8').sh end # shell-escaped POSIX path
