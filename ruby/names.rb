@@ -15,8 +15,8 @@ class R
   def R.[] uri; R.new uri end
 
   # equality / comparison operators
-  def == u;     to_s == u.to_s end
-  def <=> c;    to_s <=> c.to_s end
+  def ==  u; to_s == u.to_s end
+  def <=> c; to_s <=> c.to_s end
 
   # append operators
   def + u; R uri + u.to_s end
@@ -88,7 +88,7 @@ class R
       end}
   end
 
-  # mapped fs-node methods
+  # fs-node
   def node;    Pathname.new pathPOSIX end
   def exist?;   node.exist? end
   def directory?; node.directory? end

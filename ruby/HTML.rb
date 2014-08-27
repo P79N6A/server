@@ -113,7 +113,7 @@ end
 
 class R
 
-  LazyView = %w{tabulate warp}
+  LazyView = %w{tabulate}
 
   def href name = nil
     H({_: :a, href: uri, c: name || abbr})

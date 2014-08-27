@@ -3,10 +3,17 @@ class R
 
   # directory-browser and editor
   def warp
-    [303,
-     {'Location' => @r['SCHEME']+'://linkeddata.github.io/warp/#/list/'+
-                    @r['SCHEME']+'/'+@r['SERVER_NAME']+@r['REQUEST_PATH']},[]]
+    [303, {'Location' => R.warp(@r)}, []]
   end
+
+  def R.warp env
+    env['SCHEME']+'://linkeddata.github.io/warp/#/list/'+
+    env['SCHEME']+'/'+env['SERVER_NAME']+env['REQUEST_PATH']
+  end
+
+  View['warp'] = ->d,e {
+    [{_: :script, c: "document.location.href = '#{R.warp e}';"}, # JS
+     View['ls'][d,e]]} # !JS
 
   # generic data-browser and editor
   # https://github.com/linkeddata/tabulator
