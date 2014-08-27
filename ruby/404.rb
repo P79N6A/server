@@ -13,12 +13,12 @@ class R
   %w{CHARSET LANGUAGE ENCODING}.map{|a|
     s[Header+'accept-'+a.downcase] = r.accept_('_'+a)}
 
-  r.map{|k,v|
+  r.map{|k,v| # add header fields
     s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)}
 
     %w{path-info referer request-path request-uri}.map{|p|
        k = Header + p
-    s[k] = R[s[k]] if s[k]}
+    s[k] = R[s[k]] if s[k]} # URI-ize header-strings
 
     r.q['view'] = 'HTML'
     [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
