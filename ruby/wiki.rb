@@ -11,10 +11,10 @@ class R
     if e.q.has_key? 'predicate'
       View['editPredicate'][g,e]
     else
-      View['editResource'][g,e]
+      View['editor'][g,e]
     end}
 
-  View['editResource'] = -> g,e { # HTML (no-JS) RDF editor
+  View['editor'] = -> g,e { # HTML (no-JS) RDF editor
 
     # render a triple
     triple = ->s,p,o{

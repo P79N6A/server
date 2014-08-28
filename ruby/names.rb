@@ -79,10 +79,10 @@ class R
       self
     end
   end
-  def docroot # strip frag, suffix + slash
+  def docroot
     stripFrag.stripDoc.stripSlash.do{|u|
       if u.path == '/'
-        u + 'index' # directory-index name
+        u + (host ? host.split('.')[0] : 'base')
       else
         u
       end}
