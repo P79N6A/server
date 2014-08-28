@@ -8,6 +8,7 @@ class R
 
 
   View['edit'] = -> g,e {
+    # sub-view select
     if e.q.has_key? 'predicate'
       View['editPredicate'][g,e]
     else
