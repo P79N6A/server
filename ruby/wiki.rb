@@ -1,11 +1,10 @@
 watch __FILE__
 class R
 
-  Prototypes = { # suggest properties for resource
+  Prototypes = { # suggested predicates
     SIOCt+'MicroblogPost' => [Content],
     SIOCt+'BlogPost' => [Title, Content],
     SIOCt+'WikiArticle' => [Title, Content]}
-
 
   View['edit'] = -> g,e {
     # sub-view select
@@ -15,8 +14,10 @@ class R
       View['editResource'][g,e]
     end}
 
-  View['editResource'] = -> g,e {
-    triple = ->s,p,o{ # triple -> <input>
+  View['editResource'] = -> g,e { # HTML (no-JS) RDF editor
+
+    # render a triple
+    triple = ->s,p,o{
       obj = o && s.R.predicatePath(p).objectPath(o)[0].uri # object URI
       t = CGI.escape [s,p,obj].to_json # s,p,o -> key
       [(case p.R.uri
