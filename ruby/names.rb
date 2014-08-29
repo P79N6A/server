@@ -35,7 +35,8 @@ class R
     suffix ? (File.basename pathPart, suffix) : (File.basename pathPart) end
   def bare; basename suffix end
 
-  # parent/child relationships within hierPart
+  # relativities within hierPart
+  def justPath; hierPart.R end
   def descend; uri.t.R end
   def child u; descend + u.to_s end
   def dirname; schemePart + hostPart + (File.dirname pathPart) end
@@ -50,8 +51,6 @@ class R
 
   # URI <> POSIX-path
   VHosts = 'domain'
-  def justPath; hierPart.R end
-  def node; Pathname.new pathPOSIX end
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def pathPOSIXrel
     if h = host

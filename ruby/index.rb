@@ -139,6 +139,7 @@ class R
     nil
   end
 
+  def node; Pathname.new pathPOSIX end
   def exist?;   node.exist? end
   def directory?; node.directory? end
   def file?;    node.file? end
