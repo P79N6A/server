@@ -79,7 +79,7 @@ class R
           localesAvail = Pathname(manPath).c.select{|p|p.basename.to_s.do{|b|!b.match(/^man/) && !b.match(/\./)}}.map{|p|File.basename p}.select{|l|
             File.exist? manPath + '/' + l + '/' + roff.uri.split('/')[-2..-1].join('/')}
 
-          imagePath = dir.d + '/images'
+          imagePath = dir.pathPOSIX + '/images'
           FileUtils.mkdir_p imagePath unless File.exist? imagePath
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"

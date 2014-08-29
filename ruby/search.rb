@@ -157,10 +157,10 @@ class R
 
   # load groonga DB at URI
   def groonga
-    return Groonga::Database.open d if e # open db
-    dir.mk                               # create containing dir
-    Groonga::Database.create(:path => d) # create db
-    Groonga::Schema.define{|s|           # create schema
+    return Groonga::Database.open pathPOSIX if e # exists, return
+    dir.mk                                       # create
+    Groonga::Database.create(:path => pathPOSIX)
+    Groonga::Schema.define{|s|
       s.create_table("R",:type => :hash,:key_type => "ShortText"){|t|
         t.short_text "uri"
         t.short_text "graph"

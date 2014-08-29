@@ -51,6 +51,7 @@ class R
   # URI <> POSIX-path
   VHosts = 'domain'
   def justPath; hierPart.R end
+  def node; Pathname.new pathPOSIX end
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def pathPOSIXrel
     if h = host
@@ -62,8 +63,8 @@ class R
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
-  def inside; node.expand_path.to_s.index(FSbase) == 0 end # inside site-root check
-  alias_method :d, :pathPOSIX
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end # jailed path
+  def sh; pathPOSIX.force_encoding('UTF-8').sh end # shell-escaped path
 
   # strip variant-suffixes
   def stripFrag; R uri.split(/#/)[0] end
@@ -87,21 +88,6 @@ class R
         u
       end}
   end
-
-  # fs-node
-  def node;    Pathname.new pathPOSIX end
-  def exist?;   node.exist? end
-  def directory?; node.directory? end
-  def file?;    node.file? end
-  def symlink?; node.symlink? end
-  def readlink; node.readlink.R end
-  def mtime;    node.stat.mtime if e end
-  def realpath; node.realpath rescue nil end
-  def sh;       d.force_encoding('UTF-8').sh end # shell-escaped POSIX path
-  def size;     node.size end
-  alias_method :e, :exist?
-  alias_method :f, :file?
-  alias_method :m, :mtime
 
   # balanced-prefixes container-names
   def R.dive s

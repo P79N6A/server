@@ -65,7 +65,7 @@ class R
 
   def triplrUriList
     yield uri, Type, R[COGS+'UriList']
-    open(d).readlines.grep(/^[^#]/).map{|l|
+    open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
       l = l.chomp
       yield uri, '/rel', l.R
       yield l, '/rev', self

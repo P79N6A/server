@@ -171,7 +171,7 @@ class R
   end
 
   def triplrFeed
-    RDF::Reader.open(d, :format => :feed){|r|
+    RDF::Reader.open(pathPOSIX, :format => :feed){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s, o.class == R ? o : o.value}}
   end

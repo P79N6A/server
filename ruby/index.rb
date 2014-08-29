@@ -22,7 +22,7 @@ class R
   end
   def ln_s t;   ln t, :symlink end
 
-  # build up URI for a triple
+  # construct URI from triple
 
   def predicatePath p, s = true
     child s ? p.R.shorten : p
@@ -64,7 +64,7 @@ class R
           o.r
         end
       else # resource
-        R.unPOSIX n.to_s, p.d.size
+        R.unPOSIX n.to_s, p.pathPOSIX.size
       end}
   end
 
@@ -139,6 +139,18 @@ class R
     nil
   end
 
+  def exist?;   node.exist? end
+  def directory?; node.directory? end
+  def file?;    node.file? end
+  def symlink?; node.symlink? end
+  def readlink; node.readlink.R end
+  def mtime;    node.stat.mtime if e end
+  def realpath; node.realpath rescue nil end
+  def size;     node.size end
+  alias_method :e, :exist?
+  alias_method :f, :file?
+  alias_method :m, :mtime
+
 end
 
 class Pathname
@@ -155,7 +167,7 @@ class Pathname
   end
   
   def take count=1000, direction=:desc, offset=nil
-    offset = offset.d if offset
+    offset = offset.pathPOSIX if offset
 
     ok = false    # in-range mark
     set=[]
@@ -168,8 +180,8 @@ class Pathname
         return if 0 >= count
         (ok || # already in-range
          !offset || # no offset required
-         (sz = [ns,offset].map(&:size).min
-          ns[0..sz-1].send(m,offset[0..sz-1]))) &&
+         (sz = [ns,offset].map(&:size).min # size of compared region
+          ns[0..sz-1].send(m,offset[0..sz-1]))) && # path-compare
         (if !(c = n.c).empty? # has children?
            visit.(c)          # visit children
          else

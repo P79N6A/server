@@ -99,8 +99,8 @@ class R
       @r[:Status] ||= 200
       @r[:Response]['Content-Length'] ||= body.size.to_s
       body.class == R ? (Nginx ? [@r[:Status],@r[:Response].update({'X-Accel-Redirect' => '/fs/' + body.pathPOSIXrel}),[]] : # Nginx
-                        Apache ? [@r[:Status],@r[:Response].update({'X-Sendfile' => body.d}),[]] : # Apache
-                         (f = Rack::File.new nil; f.instance_variable_set '@path', body.d # Rack
+                        Apache ? [@r[:Status],@r[:Response].update({'X-Sendfile' => body.pathPOSIX}),[]] : # Apache
+                         (f = Rack::File.new nil; f.instance_variable_set '@path', body.pathPOSIX # Rack
                           f.serving(@r).do{|s,h,b|[s,h.update(@r[:Response]),b]})) :
       [@r[:Status],@r[:Response],[body]]}
   end
@@ -109,13 +109,13 @@ class R
     if f
       if parseJSON
         begin
-          JSON.parse File.open(d).read
+          JSON.parse File.open(pathPOSIX).read
         rescue Exception => x
           puts "error reading JSON: #{caller} #{uri} #{x}"
           {}
         end
       else
-        File.open(d).read
+        File.open(pathPOSIX).read
       end
     else
       nil
