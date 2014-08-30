@@ -8,7 +8,7 @@ class R
     if e.q.has_key? 'predicate'
       View['editPredicate'][g,e]
     else
-      View['editResource'][g,e]
+      View['editor'][g,e]
     end}
 
   View['editResource'] = -> g,e {
@@ -17,6 +17,7 @@ class R
     triple = ->s,p,o{
       obj = o && s.R.predicatePath(p).objectPath(o)[0].uri # construct URI of triple
       t = CGI.escape [s,p,obj].to_json # id -> <input> name
+
       [(case p.R.uri
         when Content
           [{_: :textarea, name: t, c: o, rows: 16, cols: 80}, # <textarea>

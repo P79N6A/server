@@ -25,7 +25,7 @@ class R
   end
 
   def mk
-    e || FileUtils.mkdir_p(d)
+    e || FileUtils.mkdir_p(pathPOSIX)
     self
   rescue Exception => x
     puts x
@@ -59,7 +59,7 @@ class R
 
   def writeFile o,s=false
     dir.mk
-    File.open(d,'w'){|f|
+    File.open(pathPOSIX,'w'){|f|
       f << (s ? o.to_json : o)}
     self
   rescue Exception => x

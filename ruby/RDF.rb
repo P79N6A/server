@@ -35,7 +35,7 @@ class R
         doc = graph.name.n3
         unless doc.e
           doc.dir.mk
-          RDF::Writer.open(doc.d){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
@@ -58,7 +58,7 @@ class R
   end
 
   def triplrN3
-    RDF::Reader.open(d, :format => :n3, :base_uri => stripDoc){|r|
+    RDF::Reader.open(pathPOSIX, :format => :n3, :base_uri => stripDoc){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
   end
