@@ -108,19 +108,7 @@ class R
 
 end
 
-class Array
-  def except el
-    self.- el.justArray
-  end
-end
-
 class Hash
-
-  def except *ks
-    clone.do{|h|
-      ks.map{|k|h.delete k}
-      h}
-  end
 
   def graph g
     g.merge!({uri=>self})

@@ -1,65 +1,38 @@
 watch __FILE__
 class R
 
-  View['edit'] = -> g,e {
+  View['edit'] = -> graph, e {
 
-    if e.q.has_key? 'predicate'
-      View['editPredicate'][g,e]
-    else
-      View['editor'][g,e]
-    end}
-
-  View['editor'] = -> g,e {
-
-    # render a triple to <form> <input>-elements
-    triple = ->s,p,o{
-      obj = o && s.R.predicatePath(p).objectPath(o)[0].uri # construct URI of triple
-      t = CGI.escape [s,p,obj].to_json # id -> <input> name
-
-      [(case p.R.uri
-        when Content
-          [{_: :textarea, name: t, c: o, rows: 16, cols: 80}, # <textarea>
-           '<br>',o]
-        when Date
-          {_: :input, name: t, type: :datetime, value: !o || o.empty? && Time.now.iso8601 || o} # <input type=datetime>
-        else
-          {_: :input, name: t, value: o.respond_to?(:uri) ? o.uri : o, size: 54} # <input> - URIs and plaintext 
-        end),"<br>\n"]}
-
-    ps = [] # predicates
-    e.q['type'].do{|p| Prototypes[p.expand].do{|v| ps.concat v }} # predicates via type-arg
-    e.q['p'].do{|p|ps.push p } # predicate via predicate-arg
-
+    type = e.q['type'] || SIOCt+'WikiArticle'
+    section = e.q['section'] || ''
+    s = e.uri + '#' + section # subject URI
+    model = graph[s] || {'uri' => s, Type => type}
+    Prototypes[type].do{|proto|
+      proto.map{|p|
+        model[p] ||= "" # blank field
+      }}
+    
     [H.css('/css/html'),
-     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'], # <form>
-       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?edit&predicate'}, # link to add predicate
-          g.values.select{|r|
-             r.uri.match /##{e.q['section']||''}/}.map{|r|
-             s = r.uri # subject URI
-             predicates = r.keys.except('uri').concat ps # predicates via resource-state
-             r[Type].justArray.compact.map{|p| Prototypes[p.uri].do{|v| predicates.concat v}} # predicates via type-class
-
-             {_: :table, class: :html, # resource
-               c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, id: s, c: s, href: s}}}, # subject
-                   predicates.uniq.map{|p| # each predicate
-                     {_: :tr,
-                       c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}}, # predicate
-                           {_: :td, c: [r[p].do{|o|       # object(s)
-                                   o.justArray.map{|o|    # each object
-                                     triple[s,p,o]}},     # editable triple
-                                 (triple[s,p,nil] unless r[p]) # new field
-                                ]}]}}]} unless s=='#'},
-#           {_: :input, type: :hidden, name: :mono, value: :true},
-           {_: :input, type: :submit, value: 'save'}]}]}
-
-  View['editPredicate'] = -> g,e {
-    [[Date,Title,Creator,Content,Label].map{|p| # common predicates
-       [{_: :a, href: e['REQUEST_PATH']+{'p' => p, 'edit' => 'edit'}.qs, c: p},
-        '<br>']},
-     {_: :form, action: e['REQUEST_PATH'], method: :GET,
-       c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 64},
-           {_: :input, type: :hidden, name: :view, value: :edit},
-           {_: :input, type: :submit, value: 'property'}]}]}
+     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
+       c: [{_: :table, class: :html,
+             c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, c: (model[Title] || s), href: s}}},
+                 model.keys.-(['uri',Type]).map{|p|
+                   puts "p"
+                   {_: :tr,
+                     c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}}, # predicate
+                         {_: :td, c: model[p].do{|o|
+                             o.justArray.map{|o|
+                               case p
+                               when Content
+                                 {_: :textarea, name: p, c: o, rows: 16, cols: 80}
+                               when Date
+                                 {_: :input, name: p, type: :datetime, value: !o || o.empty? && Time.now.iso8601 || o}
+                               else
+                                 {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
+                               end }}}]}}]},
+           {_: :input, type: :hidden, name: Type, value: type},
+           {_: :input, type: :hidden, name: :section, value: section},
+           {_: :input, type: :submit, value: 'write'}]}]}
 
   View[SIOCt+'WikiArticle'] = -> g,e {
     g.map{|u,r|
