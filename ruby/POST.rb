@@ -24,6 +24,7 @@ class R
     return [400,{},[]] unless section
     s = uri + '#' + section.gsub(/\W+/,'_')
     graph = {'uri' => s}
+
     form.keys.-(['section']).map{|p|
       o = form[p]
       o = if o.match HTTP_URI
@@ -33,8 +34,10 @@ class R
           else
             o
           end
-      graph[p] = o unless o.class==String && o.empty?
+      graph[p] ||= []
+      graph[p].push o unless o.class==String && o.empty?
     }
+
     puts graph
     [303,{'Location'=>uri+'?edit'},[]]
   end
