@@ -28,7 +28,7 @@ class R
     post[Title] = title              # add Title
     post.snapshot                    # doc
     base.jsonDoc.ln_s R[host + '/blog/' + Time.now.iso8601[0..18].gsub('-','/') + '.e'] # datetime-index
-    [303,{'Location' => (base+"?type=sioct:BlogPost&edit&mono").uri},[]]}
+    [303,{'Location' => (base+"?type=sioct:BlogPost&edit").uri},[]]}
 
   View[SIOCt+'BlogPost'] = -> g,e { g.map{|u,r| {class: :blogpost, c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}}, r[Content]]}}}
 

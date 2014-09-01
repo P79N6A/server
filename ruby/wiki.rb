@@ -1,8 +1,6 @@
 watch __FILE__
 class R
 
-  # TODO provide a one-subject-per-form render (simplified key-naming)
-
   View['edit'] = -> g,e {
 
     if e.q.has_key? 'predicate'
@@ -11,7 +9,7 @@ class R
       View['editor'][g,e]
     end}
 
-  View['editResource'] = -> g,e {
+  View['editor'] = -> g,e {
 
     # render a triple to <form> <input>-elements
     triple = ->s,p,o{
@@ -31,11 +29,10 @@ class R
     ps = [] # predicates
     e.q['type'].do{|p| Prototypes[p.expand].do{|v| ps.concat v }} # predicates via type-arg
     e.q['p'].do{|p|ps.push p } # predicate via predicate-arg
-    mono = e.q.has_key? 'mono'
 
     [H.css('/css/html'),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'], # <form>
-       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?view=edit&predicate'}, # link to add predicate
+       c: [{_: :a, class: :edit, c: 'add predicate', href: e['REQUEST_PATH']+'?edit&predicate'}, # link to add predicate
           g.values.select{|r|
              r.uri.match /##{e.q['section']||''}/}.map{|r|
              s = r.uri # subject URI
@@ -50,14 +47,14 @@ class R
                            {_: :td, c: [r[p].do{|o|       # object(s)
                                    o.justArray.map{|o|    # each object
                                      triple[s,p,o]}},     # editable triple
-                                 (triple[s,p,nil] unless mono && r[p]) # create a triple
+                                 (triple[s,p,nil] unless r[p]) # new field
                                 ]}]}}]} unless s=='#'},
-          ({_: :input, type: :hidden, name: :mono, value: :true} if mono),
+#           {_: :input, type: :hidden, name: :mono, value: :true},
            {_: :input, type: :submit, value: 'save'}]}]}
 
   View['editPredicate'] = -> g,e {
     [[Date,Title,Creator,Content,Label].map{|p| # common predicates
-       [{_: :a, href: e['REQUEST_PATH']+{'p' => p, 'view' => 'edit'}.qs, c: p},
+       [{_: :a, href: e['REQUEST_PATH']+{'p' => p, 'edit' => 'edit'}.qs, c: p},
         '<br>']},
      {_: :form, action: e['REQUEST_PATH'], method: :GET,
        c: [{_: :input, type: :url, name: :p, pattern: '^http.*$', size: 64},
@@ -68,7 +65,7 @@ class R
     g.map{|u,r|
       {class: :wiki, style: 'border: .1em solid #eee; border-radius: .5em; padding: .5em',
         c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
-            {_: :a, href: u.R.docroot + '?view=edit&mono', c: '[edit]', style: 'float: right'},
+            {_: :a, href: u.R.docroot + '?view=edit', c: '[edit]', style: 'float: right'},
             r[Content]]}}}
 
   Prototypes = {
