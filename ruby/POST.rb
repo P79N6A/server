@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -19,7 +19,11 @@ class R
   end
 
   def formPOST
-    params = (Rack::Request.new @r).params
+    params = Rack::Request.new(@r).params
+    type = params['type']
+    section = params['section']
+    return [403,{},[]] unless type && section
+    s = uri + '#' + section.gsub(/\W+/,'_')
     params.map{|k,v|
 
       # triple (pre-edit)

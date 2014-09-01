@@ -3,21 +3,17 @@ class R
 
   View['edit'] = -> graph, e {
 
-    type = e.q['type'] || SIOCt+'WikiArticle'
-    section = e.q['section'] || ''
+    section = e.q['section'].do{|s|s.gsub(/\W+/,'_')} || ''
     s = e.uri + '#' + section # subject URI
-    model = graph[s] || {'uri' => s, Type => type}
-    Prototypes[type].do{|proto|
-      proto.map{|p|
-        model[p] ||= "" # blank field
-      }}
-    
+    model = graph[s] || {'uri' => s}
+    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticle'
+    Prototypes[type].do{|ps| ps.map{|p| model[p] ||= "" }}
+
     [H.css('/css/html'),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, c: (model[Title] || s), href: s}}},
                  model.keys.-(['uri',Type]).map{|p|
-                   puts "p"
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}}, # predicate
                          {_: :td, c: model[p].do{|o|
