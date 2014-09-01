@@ -19,30 +19,23 @@ class R
   end
 
   def formPOST
-    params = Rack::Request.new(@r).params
-    type = params['type']
-    section = params['section']
-    return [403,{},[]] unless type && section
+    form = Rack::Request.new(@r).params
+    section = form['section']
+    return [400,{},[]] unless section
     s = uri + '#' + section.gsub(/\W+/,'_')
-    params.map{|k,v|
-
-      # triple (pre-edit)
-      s, p, t = JSON.parse CGI.unescape k rescue JSON::ParserError
-
-      # <input> value -> URI or literal
-     (o = v.match(HTTP_URI) ? v.R : StripHTML[v]
-
-      # triple (post-edit)
-      t_ = s.R.predicatePath(p).objectPath(o)[0]
-
-      # remove original triple if changed
-      t.R.delete if t && t != t_.to_s
-
-      # add new triple
-      s.R[p] = o unless o.class==String && o.empty?) if s && p
+    graph = {'uri' => s}
+    form.keys.-(['section']).map{|p|
+      o = form[p]
+      o = if o.match HTTP_URI
+            o.R
+          elsif p == Content
+            StripHTML[o]
+          else
+            o
+          end
+      graph[p] = o unless o.class==String && o.empty?
     }
-    snapshot # save current fs-store state to doc
-    # continue editing
+    puts graph
     [303,{'Location'=>uri+'?edit'},[]]
   end
 
