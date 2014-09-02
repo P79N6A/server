@@ -103,24 +103,6 @@ class R
       [@r[:Status],@r[:Response],[body]]}
   end
 
-  def readFile parseJSON=false
-    if f
-      if parseJSON
-        begin
-          JSON.parse File.open(pathPOSIX).read
-        rescue Exception => x
-          puts "error reading JSON: #{caller} #{uri} #{x}"
-          {}
-        end
-      else
-        File.open(pathPOSIX).read
-      end
-    else
-      nil
-    end
-  end
-  alias_method :r, :readFile
-
   def fileResources
     [(self if e), docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}")].flatten.compact
   end

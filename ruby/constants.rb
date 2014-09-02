@@ -101,6 +101,7 @@ csv
 DELETE
 facets
 forum
+fs
 GET
 graph
 HTML

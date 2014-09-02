@@ -57,15 +57,4 @@ class R
     },[]]
   end
 
-  def writeFile o,s=false
-    dir.mk
-    File.open(pathPOSIX,'w'){|f|
-      f << (s ? o.to_json : o)}
-    self
-  rescue Exception => x
-    puts caller[0..2],x
-    self
-  end
-  alias_method :w, :writeFile
-
 end
