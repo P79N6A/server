@@ -15,7 +15,7 @@ class R
       readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
 
     else
-      yield stripDoc.uri, Type, Resource
+      yield stripDoc.uri, Type, Resource # generic-resource implied by suffixed-file
       yield uri, Type, R[Stat+'File']
       yield uri, Stat+'size', size
       yield uri, Stat+'mtime', mtime.to_i

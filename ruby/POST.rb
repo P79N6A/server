@@ -3,27 +3,30 @@ class R
 
   def POST
 
-    # add-on POST handler
+    # bespoke POST handler for path
     [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
     return [403,{},[]] if !allowWrite
+
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
     else
       putDoc
     end
+
   end
 
   def formPOST
     form = Rack::Request.new(@r).params
-    fragment = form['fragment']
-    return [400,{},['fragment-argument required']] unless fragment
+    return [400,{},['fragment-argument required']] unless form['fragment']
 
-    subject = uri + '#' + fragment.slugify
-    graph = {'uri' => subject}
+    fragment = form['fragment'].slugify
+    subject = s = uri + '#' + fragment
+    graph = {s => {'uri' => s}}
 
+    # form data to graph
     form.keys.-(['fragment']).map{|p|
       o = form[p]
       o = if o.match HTTP_URI
@@ -33,9 +36,11 @@ class R
           else
             o
           end
-      graph[p] ||= []
-      graph[p].push o unless o.class==String && o.empty?
-    }
+      graph[s][p] ||= []
+      graph[s][p].push o unless o.class==String && o.empty?}
+
+    # store graph
+    s.R.a('.e').w graph, true
 
     [303,{'Location'=>uri+'?edit'},[]]
   end

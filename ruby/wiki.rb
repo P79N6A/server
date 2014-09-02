@@ -4,7 +4,7 @@ class R
   View['edit'] = -> graph, e { # edit a RDF resource using a HTML <form>
 
     fragment = e.q['fragment'].do{|s|s.slugify} || '' # repeat fragment in QS so it makes it to the server
-    subject = e.uri + '#' + fragment
+    subject = s = e.uri + '#' + fragment
     model = graph[subject] || {'uri' => subject}
     type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticle' # existing, parametric, or default resource-type
     Predicates[type].do{|ps| ps.map{|p| model[p] ||= "" }} # suggest some predicates based on instance-class

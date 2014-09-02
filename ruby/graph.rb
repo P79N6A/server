@@ -48,8 +48,7 @@ class R
        p && p.map{|p|         # index predicates
          r[p].do{|v|v.map{|o| # objects exist?
              e.index p,o}}})) if u} # index
-
-    docs.map{|d,g|            # each doc
+    docs.map{|d,g| # each doc
       d = d.R; puts "<#{d.docroot}>"
       d.w g,true              # cache
       hook[d,g,host] if hook} # write-hook
@@ -80,10 +79,6 @@ class R
 end
 
 class Hash
-
-  def graph g
-    g.merge!({uri=>self})
-  end
 
   def mergeGraph g
     g.triples{|s,p,o|
