@@ -94,16 +94,6 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  def snapshot
-    g = {} # graph
-    fromStream g, :triplrDoc
-    if g.empty? # 0 triples
-      jsonDoc.delete
-    else # graph -> doc
-      jsonDoc.w g, true
-    end
-  end
-
   Render['application/json'] = -> d,e { JSONview[e.q['view']].do{|f|f[d,e]} || d.to_json }
 
 end

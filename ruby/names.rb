@@ -105,6 +105,10 @@ class String
     R.new self
   end
 
+  def slugify
+    gsub /\W+/,'_'
+  end
+
   Expand={}
   def expand
    (Expand.has_key? self) ?
