@@ -6,8 +6,8 @@ class R
     fragment = e.q['fragment'].do{|s|s.slugify} || '' # repeat fragment in QS so it makes it to the server
     subject = s = e.uri + '#' + fragment
     model = graph[subject] || {'uri' => subject}
-    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticle' # existing, parametric, or default resource-type
-    Predicates[type].do{|ps| ps.map{|p| model[p] ||= "" }} # suggest some predicates based on instance-class
+    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticle' # on-resource, parametric, or default RDF-type for suggest
+    Predicates[type].do{|ps| ps.map{|p| model[p] ||= "" }} # suggest predicates for instance
 
     [H.css('/css/html'),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
@@ -31,10 +31,10 @@ class R
            {_: :input, type: :submit, value: 'write'}]}]}
 
   View[SIOCt+'WikiArticle'] = -> g,e {
-    g.map{|u,r|
+    g.map{|u,r| i = u.R
       {class: :wiki, style: 'border: .1em solid #eee; border-radius: .5em; padding: .5em',
         c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
-            {_: :a, href: u.R.docroot + '?view=edit', c: '[edit]', style: 'float: right'},
+            {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, c: '[edit]', style: 'float: right'},
             r[Content]]}}}
 
   Predicates = {
