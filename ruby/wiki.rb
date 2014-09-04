@@ -3,11 +3,13 @@ class R
 
   View['edit'] = -> graph, e { # edit a RDF resource using a HTML <form>
 
-    fragment = e.q['fragment'].do{|s|s.slugify} || '' # repeat fragment in QS so it makes it to the server
+    fragment = e.q['fragment'].do{|s|s.slugify} || '' # repeat fragment in QS for section selection
     subject = s = e.uri + '#' + fragment
     model = graph[subject] || {'uri' => subject}
-    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticle' # on-resource, parametric, or default RDF-type for suggest
-    Predicates[type].do{|ps| ps.map{|p| model[p] ||= "" }} # suggest predicates for instance
+
+    # on-resource, parametric, or default RDF-type for predicate-suggest
+    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticleSection'
+    Predicates[type].do{|ps| ps.map{|p| model[p] ||= "" }} # suggest predicates
 
     [H.css('/css/html'),
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
@@ -25,12 +27,12 @@ class R
                                  {_: :input, name: p, type: :datetime, value: !o || o.empty? && Time.now.iso8601 || o}
                                else
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
-                               end }}}]}}]},
+                               end }}}].cr}}].cr},
            {_: :input, type: :hidden, name: Type, value: type},
            {_: :input, type: :hidden, name: :fragment, value: fragment},
            {_: :input, type: :submit, value: 'write'}]}]}
 
-  View[SIOCt+'WikiArticle'] = -> g,e {
+  View[SIOCt+'WikiArticleSection'] = -> g,e {
     g.map{|u,r| i = u.R
       {class: :wiki, style: 'border: .1em solid #eee; border-radius: .5em; padding: .5em',
         c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
@@ -40,6 +42,6 @@ class R
   Predicates = {
     SIOCt+'MicroblogPost' => [Content],
     SIOCt+'BlogPost' => [Title, Content],
-    SIOCt+'WikiArticle' => [Title, Content]}
+    SIOCt+'WikiArticleSection' => [Title, Content]}
 
 end
