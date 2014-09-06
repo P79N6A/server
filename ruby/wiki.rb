@@ -8,7 +8,7 @@ class R
     model = graph[subject] || {'uri' => subject}
 
     # on-resource, parametric, or default RDF-type for predicate-suggest
-    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticle'
+    type = model[Type].do{|t|t[0].uri} || e.q['type'].do{|t|t.expand} || SIOCt+'WikiArticle'
     Predicates[type].do{|ps| ps.map{|p| model[p] ||= "" }} # suggest predicates
 
     [H.css('/css/html'),
@@ -36,7 +36,8 @@ class R
     g.map{|u,r|
       i = u.R
       [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
-       {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, c: '+', class: :create, title: 'add section'},
+       {_: :a, href: i.docroot +  '?type=sioct:WikiArticleSection&view=edit',
+         c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'},
        H.css('/css/wiki')]}}
 
   View[SIOCt+'WikiArticleSection'] = -> g,e {
@@ -44,7 +45,7 @@ class R
       i = u.R
       {class: :section,
         c: [{_: :a, href: u, c: {_: :h2, c: r[Title]}},
-            {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, c: '[edit]'},
+            {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, class: :edit, c: :edit},
             r[Content]]}}}
 
   Predicates = {
