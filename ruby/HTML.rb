@@ -183,7 +183,7 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r| resource = r.R
        {class: :dir, style: "background-color: #{R.cs}",
-        c: [resource.href, (resource.a('?set=dir').href('/') if resource.uri[-1] == '/'),
+        c: [resource.href, #(resource.a('?set=dir').href('/') if resource.uri[-1] == '/'),
             r[RDFs+'member'].do{|c| c.map{|c|
                 c = c.R
             label = e[:Graph][c.uri].do{|r|r[Label]} # prefer RDF label over URI
