@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def POST
@@ -20,10 +20,12 @@ class R
 
   def formPOST
     form = Rack::Request.new(@r).params
-    return [400,{},['fragment-argument required']] unless form['fragment']
+    frag = form['fragment']
+    return [400,{},['fragment-argument required']] unless frag
+    frag = form[Title] if frag.empty? && form[Title]
+    frag = frag.slugify
 
-    fragment = form['fragment'].slugify
-    subject = s = uri + '#' + fragment
+    subject = s = uri + '#' + frag
     graph = {s => {'uri' => s}}
 
     # form data to graph
@@ -40,7 +42,9 @@ class R
       graph[s][p].push o unless o.class==String && o.empty?}
 
     # store graph
-    s.R.a('.e').w graph, true
+    r = s.R
+    doc = r.docroot.a('.'+r.fragment+'.e')
+    doc.w graph, true
 
     [303,{'Location'=>uri+'?edit'},[]]
   end

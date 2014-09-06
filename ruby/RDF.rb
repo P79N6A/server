@@ -65,7 +65,7 @@ class R
 
   def n3; docroot.a '.n3' end
 
-  module Format
+  module Format # Reader class for .e JSON format
 
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e

@@ -55,7 +55,7 @@ class R
 
 
   def fileResources
-    [(self if e), docroot.glob("[#.]*{e,ht,md,n3,ttl,txt}")].flatten.compact
+    [(self if e), docroot.glob(".*{e,md,n3,ttl,txt}")].flatten.compact
   end
 
   FileSet['default'] = -> e,q,g {
