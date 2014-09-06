@@ -2,15 +2,6 @@ a {text-decoration:none}
 pre {white-space: pre-wrap}
 .abbr,.scheme {display: none}
 
-table.html {
-    border-radius: 1em .2em .2em 1em;
-    background-color: #eee;
-    color: #000;
-}
-
-td.key {text-align:right}
-td.val {background-color: #fff}
-
 td.key > a > .frag {
     font-weight:bold;
     background-color: #111;
