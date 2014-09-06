@@ -1,7 +1,7 @@
 a {text-decoration:none}
 pre {white-space: pre-wrap}
 .abbr,.scheme {display: none}
-
+td.key {text-align:right}
 td.key > a > .frag {
     font-weight:bold;
     background-color: #111;
@@ -10,7 +10,6 @@ td.key > a > .frag {
     padding-left:.2em;
     padding-right:.08em;
 }
-
 td.val > a > .frag {
     color: #fff;
     background-color:#122;
