@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   View['edit'] = -> graph, e { # edit a RDF resource using a HTML <form>
@@ -8,7 +8,7 @@ class R
     model = graph[subject] || {'uri' => subject}
 
     # on-resource, parametric, or default RDF-type for predicate-suggest
-    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticleSection'
+    type = model[Type].do{|t|t[0].uri} || e.q['type'] || SIOCt+'WikiArticle'
     Predicates[type].do{|ps| ps.map{|p| model[p] ||= "" }} # suggest predicates
 
     [H.css('/css/html'),
@@ -32,16 +32,26 @@ class R
            {_: :input, type: :hidden, name: :fragment, value: fragment},
            {_: :input, type: :submit, value: 'write'}]}]}
 
+  View[SIOCt+'WikiArticle'] = -> g,e {
+    g.map{|u,r|
+      i = u.R
+      [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
+       {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, c: '+', class: :create, title: 'add section'},
+       H.css('/css/wiki')]}}
+
   View[SIOCt+'WikiArticleSection'] = -> g,e {
-    g.map{|u,r| i = u.R
-      {class: :wiki, style: 'border: .1em solid #eee; border-radius: .5em; padding: .5em',
-        c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
-            {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, c: '[edit]', style: 'float: right'},
+    g.map{|u,r|
+      i = u.R
+      {class: :section,
+        c: [{_: :a, href: u, c: {_: :h2, c: r[Title]}},
+            {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, c: '[edit]'},
             r[Content]]}}}
 
   Predicates = {
     SIOCt+'MicroblogPost' => [Content],
     SIOCt+'BlogPost' => [Title, Content],
-    SIOCt+'WikiArticleSection' => [Title, Content]}
+    SIOCt+'WikiArticle' => [Title],
+    SIOCt+'WikiArticleSection' => [Title, Content],
+  }
 
 end

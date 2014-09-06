@@ -1,0 +1,7 @@
+a {text-decoration:none}
+a > h1, a > h2 {background-color:#fff;color:#000}
+.section {border: .1em solid #eee; border-radius: .5em; padding: .5em; margin:.5em}
+.create {
+    font-size: 2em;
+    float: right;
+}
