@@ -3,12 +3,11 @@ class R
 
   def POST
 
-    # custom POST handler on URI
+    # bespoke POST handler for path
     [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
     return [403,{},[]] if !allowWrite
-    puts "POST #{uri} #{@r['CONTENT_TYPE']}"
 
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
@@ -16,30 +15,38 @@ class R
     else
       putDoc
     end
+
   end
 
   def formPOST
-    params = (Rack::Request.new @r).params
-    params.map{|k,v|
+    form = Rack::Request.new(@r).params
+    frag = form['fragment']
+    return [400,{},['fragment-argument required']] unless frag
+    frag = form[Title] if frag.empty? && form[Title]
+    frag = frag.slugify
 
-      # triple (pre-edit)
-      s, p, t = JSON.parse CGI.unescape k rescue JSON::ParserError
+    subject = s = uri + '#' + frag
+    graph = {s => {'uri' => s}}
 
-      # <input> value -> URI or literal
-     (o = v.match(HTTP_URI) ? v.R : StripHTML[v]
+    # form data to graph
+    form.keys.-(['fragment']).map{|p|
+      o = form[p]
+      o = if o.match HTTP_URI
+            o.R
+          elsif p == Content
+            StripHTML[o]
+          else
+            o
+          end
+      graph[s][p] ||= []
+      graph[s][p].push o unless o.class==String && o.empty?}
 
-      # triple (post-edit)
-      t_ = s.R.predicatePath(p).objectPath(o)[0]
+    # store graph
+    r = s.R
+    doc = r.docroot.a('.'+r.fragment+'.e')
+    doc.w graph, true
 
-      # remove original triple if changed
-      t.R.delete if t && t != t_.to_s
-
-      # add new triple
-      s.R[p] = o unless o.class==String && o.empty?) if s && p
-    }
-    snapshot # save current fs-store state to doc
-    # continue editing
-    [303,{'Location'=>uri+'?edit'+(params['mono'] ? '&mono' : '')},[]]
+    [303,{'Location'=>uri+'?edit'},[]]
   end
 
 end

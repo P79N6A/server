@@ -70,8 +70,6 @@ class R
 
     if set.empty? # nothing found
       if q.has_key? 'edit' # editor requested
-        (uri + '#').do{|u| # add a blank resource
-          m[u] ||= {'uri' => u, Type => []}}
         q['view'] ||= 'edit'
       else
         return E404[self,@r,m] # 404
@@ -104,35 +102,6 @@ class R
                           f.serving(@r).do{|s,h,b|[s,h.update(@r[:Response]),b]})) :
       [@r[:Status],@r[:Response],[body]]}
   end
-
-  def readFile parseJSON=false
-    if f
-      if parseJSON
-        begin
-          JSON.parse File.open(pathPOSIX).read
-        rescue Exception => x
-          puts "error reading JSON: #{caller} #{uri} #{x}"
-          {}
-        end
-      else
-        File.open(pathPOSIX).read
-      end
-    else
-      nil
-    end
-  end
-  alias_method :r, :readFile
-
-  def fileResources
-    [(self if e), docroot.glob(".{e,ht,jsonld,md,n3,nt,rdf,ttl,txt}")].flatten.compact
-  end
-
-  FileSet['default'] = -> e,q,g {
-    s = []
-    s.concat e.fileResources # host-specific
-    e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
-    s.concat e.c if e.env['REQUEST_PATH'] == '/' # fully include children of /, not just directory-metadata via <host/>
-    s }
 
   View[HTTP+'Response'] = -> d,e {
     d['#'].do{|u| # Response Header

@@ -16,7 +16,7 @@ class R
   r.map{|k,v| # add header fields
     s[Header+k.to_s.sub(/^HTTP_/,'').downcase.gsub('_','-')] = v unless [:Links,:Response].member?(k)}
 
-    %w{path-info referer request-path request-uri}.map{|p|
+    %w{uri path-info referer request-path request-uri}.map{|p|
        k = Header + p
     s[k] = R[s[k]] if s[k]} # URI-ize header-strings
 

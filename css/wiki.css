@@ -1,0 +1,21 @@
+a {text-decoration:none}
+a > h1, a > h2 {background-color:#fff;color:#000}
+.section {border: .1em dotted #fff; border-radius: .5em; padding: .5em; margin:.5em}
+.section:hover {border-color: #ccc;}
+
+.create {
+    border-radius:.2em;
+    background-color:#eee;
+    color:#000;
+}
+
+.create .icon {font-size: 1.6em; background-color:#0f0}
+
+.edit {
+    color: #777;
+    border-width: 0 .1em 0 .1em;
+    border-style: solid;
+    border-color: #0f0;
+}
+
+.create, .edit {float: right}

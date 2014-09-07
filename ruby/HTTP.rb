@@ -31,17 +31,18 @@ class R
     method = e['REQUEST_METHOD']
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
     e.extend Th # add environment functionality
-    dev         # dev-mode source-check
+    dev         # dev-mode checks
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }                   # find hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'                    # remove path-chars from hostname
     e['SCHEME'] = "http" + (e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : '') # add scheme attribute to environment
     p = Pathname.new CGI.unescape e['REQUEST_PATH'].force_encoding 'UTF-8'     # create path
     path = p.expand_path.to_s                                                  # interpret path
     path += '/' if path[-1] != '/' && p.to_s[-1] == '/'                        # restore trailing-slash
-    resource = R[e['SCHEME'] + "://" + e['SERVER_NAME'] + path]                # create resource
-    e[:Links] = []; e[:Response] = {}                                          # init response-header
-    resource.setEnv(e).send(method).do{|s,h,b|                                 # call HTTP function
-     puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q}, h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # basic logging
+    resource = R[e['SCHEME'] + "://" + e['SERVER_NAME'] + path]                # resource
+    e['uri'] = resource.uri                                                    # request URI
+    e[:Links] = []; e[:Response] = {}                                          # response headers
+    resource.setEnv(e).send(method).do{|s,h,b|                                 # HTTP function
+     puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q}, h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # log request
       [s,h,b]} # Response
   rescue Exception => x
     E500[x,e]
