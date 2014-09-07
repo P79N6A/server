@@ -43,8 +43,11 @@ class R
 
     # store graph
     r = s.R
-    doc = r.docroot.a('.'+r.fragment+'.e')
+    doc = r.dir.a '.' + r.docroot.basename + '/' + r.fragment + '.' + Time.now.iso8601.gsub(/\W/,'') + '.e'
+    main = r.docroot.a '.' + r.fragment + '.e'
     doc.w graph, true
+    main.delete if main.e
+    doc.ln_s main
 
     [303,{'Location'=>uri+'?edit'},[]]
   end
