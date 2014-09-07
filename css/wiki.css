@@ -1,7 +1,13 @@
 a {text-decoration:none}
 a > h1, a > h2 {background-color:#fff;color:#000}
-.section {border: .1em dotted #fff; border-radius: .5em; padding: .5em; margin:.5em}
-.section:hover {border-color: #ccc;}
+.section {
+    border: .1em dotted #fff;
+    border-radius: .5em;
+    padding: .5em;
+    margin:.5em;
+    float: left;
+}
+.section:hover {border-color: #ccc;background-color: #fafafa}
 
 .create {
     border-radius:.2em;
@@ -11,11 +17,7 @@ a > h1, a > h2 {background-color:#fff;color:#000}
 
 .create .icon {font-size: 1.6em; background-color:#0f0}
 
-.edit {
-    color: #777;
-    border-width: 0 .1em 0 .1em;
-    border-style: solid;
-    border-color: #0f0;
-}
+.edit { color: #777 }
+.edit:hover { color: #7f7 }
 
 .create, .edit {float: right}
