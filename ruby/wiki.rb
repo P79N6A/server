@@ -1,11 +1,6 @@
 watch __FILE__
 class R
 
-  Prototypes = { # suggested predicates
-    SIOCt+'MicroblogPost' => [Content],
-    SIOCt+'BlogPost' => [Title, Content],
-    SIOCt+'WikiArticle' => [Title, Content]}
-
   View['edit'] = -> g,e {
     # sub-view select
     if e.q.has_key? 'predicate'

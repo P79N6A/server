@@ -80,6 +80,11 @@ class R < RDF::URI
     :stat => RDF::URI(Stat),
   }
 
+  Prototypes = { # suggested user-editable predicates
+    SIOCt+'MicroblogPost' => [Content],
+    SIOCt+'BlogPost' => [Title, Content],
+    SIOCt+'WikiArticle' => [Title, Content]}
+
   FileSet = {}
   ResourceSet = {}
   Render = {}
