@@ -4,8 +4,9 @@ class R
   View['edit'] = -> graph, e { # edit a RDF resource using a HTML <form>
 
     fragment = e.q['fragment'].do{|s|s.slugify} || '' # repeat fragment in QS for section selection
-    subject = s = e.uri + '#' + fragment
-    model = graph[subject] || {'uri' => subject}
+    subject = s = e.uri + '#' + fragment # construct URI
+    model = graph[subject] || {'uri' => subject} # Hashtable of state
+    e.q['title'].do{|t|model[Title]||=t} # assimilate title argument to graph
 
     # on-resource, parametric, or default RDF-type for predicate-suggest
     type = model[Type].do{|t|t[0].uri} || e.q['type'].do{|t|t.expand} || SIOCt+'WikiArticle'
