@@ -148,14 +148,6 @@ class R
 
   def nokogiri;  Nokogiri::HTML.parse (open uri).read end
 
-  def triplrHTML
-    yield uri, Type, R[HTML]
-    yield uri, Content, r
-  end
-
-  # HTML fragment, RDF type <http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML>
-  View[HTML] = -> g,e {g.map{|u,r|r[Content]}} # <http://www.w3.org/TR/rdf11-concepts/#section-html>
-
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
     loseTags.map{|tag| html.css(tag).remove } if loseTags

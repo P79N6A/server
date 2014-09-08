@@ -44,7 +44,7 @@ class R
       graph[s][p].push o unless o.class==String && o.empty?}
 
     # store graph
-    doc = r.dir.a '.' + r.docroot.basename + '/' + r.fragment + '.' + Time.now.iso8601.gsub(/\W/,'') + '.e'
+    doc = r.docroot + '/' + r.fragment + '.' + Time.now.iso8601.gsub(/\W/,'') + '.e'
     doc.w graph, true
     main.delete if main.e
     doc.ln_s main
