@@ -56,7 +56,9 @@ class R
 
 
   def fileResources
-    [(self if e), # exact match
+    [(if e
+        self unless directory? && uri[-1] != '/'
+      end), # exact match
      docroot.glob(".*{e,md,n3,ttl,txt}") # docs relative to base
     ].flatten.compact
   end
@@ -73,8 +75,8 @@ class R
      i.map{|u,r|
        r[Stat+'size'].do{|s|
          {class: :File, title: "#{u}  #{s[0]} bytes",
-           c: ["\n", {_: :a, class: :file, href: u, c: '☁'}, # link to actual file (download)
-               "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr}, # HTML representation of file (via RDF)
+           c: ["\n", {_: :a, class: :file, href: u, c: '☁'}, # link to file ("download", original MIME)
+               "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr}, # link HTML representation of file
                "\n", r[Content], "\n"]}}}]}
 
   View[Stat+'Link'] = -> i,e {
