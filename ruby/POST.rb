@@ -26,7 +26,9 @@ class R
     frag = frag.slugify
 
     subject = s = uri + '#' + frag
+    r = s.R
     graph = {s => {'uri' => s}}
+    main = r.docroot.a '.' + r.fragment + '.e'
 
     # form data to graph
     form.keys.-(['fragment']).map{|p|
@@ -42,9 +44,7 @@ class R
       graph[s][p].push o unless o.class==String && o.empty?}
 
     # store graph
-    r = s.R
     doc = r.dir.a '.' + r.docroot.basename + '/' + r.fragment + '.' + Time.now.iso8601.gsub(/\W/,'') + '.e'
-    main = r.docroot.a '.' + r.fragment + '.e'
     doc.w graph, true
     main.delete if main.e
     doc.ln_s main
