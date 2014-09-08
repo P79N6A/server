@@ -17,7 +17,7 @@ a > h1, a > h2 {background-color:#fff;color:#000}
 
 .create .icon {font-size: 1.6em; background-color:#0f0}
 
-.edit { color: #777 }
+.edit { color: #777; padding-left: .3em }
 .edit:hover { color: #7f7 }
 
 .create, .edit {float: right}
