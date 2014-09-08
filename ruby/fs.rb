@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class R
 
   def triplrInode dirChildren=true, &f
@@ -63,8 +64,32 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources # host-specific paths
-    e.justPath.do{|p|
-      s.concat p.fileResources} # global paths
+    e.justPath.do{|p|        # global paths
+      s.concat p.fileResources unless p.uri == '/'}
     s }
+
+  View[Stat+'File'] = -> i,e {
+    [(H.once e, 'container', (H.css '/css/container')),
+     i.map{|u,r|
+       r[Stat+'size'].do{|s|
+         {class: :File, title: "#{u}  #{s[0]} bytes",
+           c: ["\n", {_: :a, class: :file, href: u, c: '☁'}, # link to actual file (download)
+               "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr}, # HTML representation of file (via RDF)
+               "\n", r[Content], "\n"]}}}]}
+
+  View[Stat+'Link'] = -> i,e {
+    i.map{|u,r|
+      r[Stat+'target'].do{|t|
+        {_: :a, href: t[0].uri, c: t[0].uri}}}}
+
+  View['ls'] = ->d=nil,e=nil {
+    keys = ['uri',Stat+'size',Type,Date,Title]
+    {_: :table,
+      c: [{_: :style, c: ".scheme,.abbr {display: none}"},
+          {_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+          d.values.map{|e|
+            {_: :tr, c: keys.map{|k|
+                {_: :td, c: k=='uri' ? e.R.a(e.uri[-1]=='/' ? '?view=ls' : '').href(e.R.abbr) : e[k].html}
+              }}}]}}
 
 end

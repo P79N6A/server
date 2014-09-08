@@ -189,29 +189,6 @@ class R
             label = e[:Graph][c.uri].do{|r|r[Label]} # prefer RDF label over URI
            [{_: :a, href: c.uri, class: :member, c: label || c.abbr},' ']}}]}}]} # item
 
-  View[Stat+'File'] = -> i,e {
-    [(H.once e, 'container', (H.css '/css/container')),
-     i.map{|u,r|
-       r[Stat+'size'].do{|s|
-         {class: :File, title: "#{u}  #{s[0]} bytes",
-           c: ["\n", {_: :a, class: :file, href: u, c: '☁'},
-               "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr},
-               "\n", r[Content], "\n"]}}}]}
-
-  View[Stat+'Link'] = -> i,e {
-    i.map{|u,r| r[Stat+'target'].do{|t|
-        {_: :a, href: t[0].uri, c: t[0].uri}}}}
-
-  View['ls'] = ->d=nil,e=nil {
-    keys = ['uri',Stat+'size',Type,Date,Title]
-    {_: :table,
-      c: [{_: :style, c: ".scheme,.abbr {display: none}"},
-          {_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
-          d.values.map{|e|
-            {_: :tr, c: keys.map{|k|
-                {_: :td, c: k=='uri' ? e.R.a(e.uri[-1]=='/' ? '?view=ls' : '').href(e.R.abbr) : e[k].html}
-              }}}]}}
-
   View['audio'] = ->d,e {
     [(H.once e, :audio,
       (H.js '/js/audio'), (H.css '/css/audio'),
