@@ -55,14 +55,16 @@ class R
 
 
   def fileResources
-    [(self if e), docroot.glob(".*{e,md,n3,ttl,txt}")].flatten.compact
+    [(self if e), # exact match
+     docroot.glob(".*{e,md,n3,ttl,txt}") # docs relative to base
+    ].flatten.compact
   end
 
   FileSet['default'] = -> e,q,g {
     s = []
-    s.concat e.fileResources # host-specific
-    e.justPath.do{|p|s.concat p.setEnv(e.env).fileResources unless p.uri == '/'} # path
-    s.concat e.c if e.env['REQUEST_PATH'] == '/' # fully include children of /, not just directory-metadata via <host/>
+    s.concat e.fileResources # host-specific paths
+    e.justPath.do{|p|
+      s.concat p.fileResources} # global paths
     s }
 
 end

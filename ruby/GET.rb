@@ -3,21 +3,16 @@ class R
 
   def GET
     directory = uri[-1] == '/'
-    [self,                                         # file at host-specific URI
-     justPath,                                     # file at path
-     (directory ? a('index.html') : nil)
-    ].compact.map{|a| # check for candidate inodes
+    [self, justPath, # host-specific and global path (more-specific first)
+     (directory ? a('index.html') : nil) # HTML directory-index (could add other MIMEs..)
+    ].compact.map{|a| # check for exact-file matches
       if a.file?
         return a.setEnv(@r).fileGET # found
       elsif a.symlink?
-        a.readlink.do{|t| return t.setEnv(@r).resourceGET} # goto target URI
+        a.readlink.do{|t|return t.setEnv(@r).resourceGET} # goto target URI
       end}
     return warp if directory && q.has_key?('warp') # goto browser-UI
     stripDoc.setEnv(@r).resourceGET # file not found, goto generic-resource
-  end
-
-  def HEAD
-    self.GET.do{|s,h,b|[s,h,[]]}
   end
 
   def fileGET
@@ -26,7 +21,7 @@ class R
       'ETag' => [m,size].h,
     })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    condResponse ->{ self }
+    condResponse ->{ self } # continuation if uncached
   end
 
   def resourceGET # lookup handler: cascading up paths, first with host, then without

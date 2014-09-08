@@ -109,6 +109,7 @@ forum
 fs
 GET
 graph
+HEAD
 HTML
 HTTP
 404
