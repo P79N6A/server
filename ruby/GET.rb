@@ -12,7 +12,7 @@ class R
         a.readlink.do{|t|return t.setEnv(@r).resourceGET} # goto target URI
       end}
     return warp if directory && q.has_key?('warp') # goto browser-UI
-    stripDoc.setEnv(@r).resourceGET # file not found, goto generic-resource
+    stripDoc.setEnv(@r).resourceGET # goto generic-resource
   end
 
   def fileGET
@@ -49,7 +49,7 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
-    m.delete('#') if m['#'].keys.size==1 # wipe unused metadata-resource
+    m.delete('#') if m['#'].keys.size==1 # empty request-meta
 
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"] # Link headers
 

@@ -1,8 +1,14 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   GET['/whoami'] = -> d,e { # redirect to your URI
     e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
+
+  View['login'] = -> d,e {
+    {_: :form, action: '/login', method: :POST,
+      c: [{_: :input, name: :user, placeholder: :username},
+          {_: :input, name: :passwd, type: :password, placeholder: :password}
+         ]}}
 
 end
 
