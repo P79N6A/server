@@ -4,6 +4,10 @@ class R
   GET['/whoami'] = -> d,e { # redirect to your URI
     e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
 
+  GET['/login'] = -> e,r {
+    r[:Response]['ETag'] = '1'
+    e.condResponse ->{View['login'][nil,nil]}}
+
   View['login'] = -> d,e {
     {_: :form, action: '/login', method: :POST,
       c: [{_: :input, name: :user, placeholder: :username},
