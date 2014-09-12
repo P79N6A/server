@@ -1,25 +1,28 @@
 #watch __FILE__
 class R
 
-  def R.resourceToGraph r, graph # Hash/JSON Resource to RDF::Graph
+  def R.resourceToGraph r, graph # Hash/JSON::Resource to RDF::Graph
     uri = r.R
     r.map{|p,o|
       o.justArray.map{|o|
         graph << RDF::Statement.new(uri,p.R,[R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'}
   end
 
-  def R.renderRDF d,f,e # Hash/JSON Graph to RDF serialization
-    (RDF::Writer.for f).buffer{|w|
-      d.triples{|s,p,o|
-      if s && p && o
-        s = RDF::URI s == '#' ? e['REQUEST_URI'] : s
-        p = RDF::URI p
-        o = ([R,Hash].member?(o.class) ? (RDF::URI o.uri) :
-             (l = RDF::Literal o
-              l.datatype=RDF.XMLLiteral if p == Content
-              l)) rescue nil
-        (w << (RDF::Statement.new s,p,o) if o ) rescue nil
-      end}}
+  def R.renderRDF d,f,e # Hash/JSON::Graph to RDF::Writer
+    (RDF::Writer.for f).buffer{|w| # init writer
+      d.triples{|s,p,o|            # structural triples of Hash::Graph
+        s && p && o &&             # with all fields non-nil
+        (s = e['REQUEST_URI'] if s == '#' # "this" shorthand-URI
+         s = RDF::URI s            # subject-URI
+         p = RDF::URI p            # predicate-URI
+         o = (if [R,Hash].member? o.class
+                RDF::URI o.uri     # object URI ||
+              else                 # object Literal
+                l = RDF::Literal o
+                l.datatype=RDF.XMLLiteral if p == Content
+                l
+              end) rescue nil
+         (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
   end
   
   [['application/ld+json',:jsonld],
@@ -28,7 +31,7 @@ class R
    ['text/turtle',:turtle],
    ['text/n3',:n3]].map{|mime| Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
-  def cacheRDF options = {} # group into docs and cache on local-fs
+  def cacheRDF options = {} # write doc-graphs to fs
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?
@@ -42,7 +45,7 @@ class R
     g
   end
 
-  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # non-RDF as RDF-doc using our triplrs
+  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # recode non-RDF file as RDF-doc using our triplrs
     if e
       doc = self
       unless pass.member? realpath.do{|p|p.extname.tail}

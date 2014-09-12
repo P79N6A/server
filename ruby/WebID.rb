@@ -5,20 +5,28 @@ class R
     e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
 
   GET['/login'] = -> e,r {
+    graph = RDF::Graph.new
     r[:Response]['ETag'] = '1'
     e.condResponse ->{View['login'][nil,nil]}}
 
   View['login'] = -> d,e {
     {_: :form, action: '/login', method: :POST,
       c: [{_: :input, name: :user, placeholder: :username},
-          {_: :input, name: :passwd, type: :password, placeholder: :password}
-         ]}}
+          {_: :input, name: :passwd, type: :password, placeholder: :password}]}}
 
 end
 
 module Th
 
-  def user # user URI
+  def user # URI || nil
+    user_webid || user_basic || nil
+  end
+
+  def user_basic
+    
+  end
+
+  def user_webid
     if c = cert
       u = ('/cache/uid/' + (R.dive c.h)).R
       webID.do{|id| u.w id} if !u.e

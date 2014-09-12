@@ -11,6 +11,7 @@ nokogiri
 open-uri
 pathname
 rack
+securerandom
 shellwords}.map{|r|require r}
 
 class R < RDF::URI
