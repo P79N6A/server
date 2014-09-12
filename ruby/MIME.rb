@@ -63,6 +63,7 @@ class R
     gemspec: 'application/ruby',
     gif: 'image/gif',
     go: 'text/x-c',
+    haml: 'application/haml',
     hs: 'application/haskell',
     html: 'text/html',
     ico: 'image/x-ico',
