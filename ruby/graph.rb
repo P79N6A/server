@@ -3,14 +3,12 @@ class R
 =begin
  methods to enable usage of inbuilt Hash and JSON classes/methods for a subset of RDF (no blank-nodes, typed-literals are limited to JSON datatypes + HTML/XMLLiteral)
 
-  {subjURI => {predURI => object}}
-
-  subject + predicate are strings containing URIs
+  {subjURI => {predURI => object}}, where key-names are strings containing URIs
 
   object varies, can be:
    RDF::URI  (URI-identified resource)
    R (our sub-class of RDF::URI with additional POSIX-oriented name-functionality)
-   Hash, in format {'uri' => objURI}
+   Hash, in format {'uri' => objectURI}
    Literal RDF::Literal or plain string
 
  non-RDF triplr "streams" are emitted with: yield subjURI, predURI, object
