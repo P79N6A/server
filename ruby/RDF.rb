@@ -1,34 +1,10 @@
 #watch __FILE__
 class R
 
-  def R.resourceToGraph r, graph # Hash/JSON::Resource to RDF::Graph
-    uri = r.R
-    r.map{|p,o|
-      o.justArray.map{|o|
-        graph << RDF::Statement.new(uri,p.R,[R,Hash].member?(o.class) ? o.R : RDF::Literal(o))} unless p=='uri'}
-  end
-
-  def R.renderRDF d,f,e # Hash/JSON::Graph to RDF::Writer
-    (RDF::Writer.for f).buffer{|w| # init writer
-      d.triples{|s,p,o|            # structural triples of Hash::Graph
-        s && p && o &&             # with all fields non-nil
-        (s = e['REQUEST_URI'] if s == '#' # "this" shorthand-URI
-         s = RDF::URI s            # subject-URI
-         p = RDF::URI p            # predicate-URI
-         o = (if [R,Hash].member? o.class
-                RDF::URI o.uri     # object URI ||
-              else                 # object Literal
-                l = RDF::Literal o
-                l.datatype=RDF.XMLLiteral if p == Content
-                l
-              end) rescue nil
-         (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
-  end
-  
-  def graphResponse graph # RDF::Graph to HTTP::Response
+  def graphResponse graph # RDF::Graph -> HTTP::Response
     [200,
      {'Content-Type' => format + '; charset=UTF-8',
-      'Triples' => graph.size.to_s,
+       'Triples' => graph.size.to_s,
        'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o} || '*',
        'Access-Control-Allow-Credentials' => 'true',
      },
@@ -36,12 +12,6 @@ class R
     q['view'] == 'tabulate') ? H[R::View['tabulate'][]] :
       graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
   end
-
-  [['application/ld+json',:jsonld],
-   ['application/rdf+xml',:rdfxml],
-   ['text/plain',:ntriples],
-   ['text/turtle',:turtle],
-   ['text/n3',:n3]].map{|mime| Render[mime[0]] = ->d,e{R.renderRDF d, mime[1], e}}
 
   def cacheRDF options = {} # write doc-graphs to fs
     g = RDF::Repository.load self, options
@@ -57,7 +27,7 @@ class R
     g
   end
 
-  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # recode non-RDF file as RDF-doc using our triplrs
+  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # transcode non-RDF file to RDF-doc, return URI reference
     if e
       doc = self
       unless pass.member? realpath.do{|p|p.extname.tail}

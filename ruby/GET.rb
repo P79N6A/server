@@ -80,7 +80,6 @@ class R
       else # RDF
         graph = RDF::Graph.new # model
         set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # construct model
-        m['#'].do{|re| R.resourceToGraph re, graph} # request meta
         @r[:Response][:Triples] = graph.size.to_s   # size
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes # view
       end}
