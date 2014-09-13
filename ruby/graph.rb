@@ -1,24 +1,23 @@
 #watch __FILE__
 class R
 =begin
- a simple alternative to RDF.rb and its cornucopia of serializations/APIs (which is nice but this is massively simpler and fast)
+ methods to enable usage of inbuilt Hash and JSON classes/methods for a subset of RDF (no blank-nodes, typed-literals are limited to JSON datatypes + HTML/XMLLiteral)
 
- graphs are stored in RAM as as Hash and serialized as JSON:
   {subjURI => {predURI => object}}
-
- triple "streams" are emitted with: yield subjURI, predURI, object
 
   subject + predicate are strings containing URIs
 
-  object, varies, can be:
+  object varies, can be:
    RDF::URI  (URI-identified resource)
    R (our sub-class of RDF::URI with additional POSIX-oriented name-functionality)
    Hash, in format {'uri' => objURI}
    Literal RDF::Literal or plain string
 
+ non-RDF triplr "streams" are emitted with: yield subjURI, predURI, object
+
 =end
 
-  def fromStream m,*i # store a triple-stream's output in a graph
+  def fromStream m,*i # collect a triplestream's output into a Hash::Graph
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
       m[s][p] ||= []
