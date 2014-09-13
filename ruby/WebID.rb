@@ -1,13 +1,15 @@
 watch __FILE__
 class R
 
-  GET['/whoami'] = -> d,e { # redirect to your URI
-    e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
+  GET['/whoami'] = -> d,e {
+    e.user.do{|u|[303,{'Location'=>u.uri},[]]}} # direct to user URI
 
   GET['/login'] = -> e,r {
     graph = RDF::Graph.new
-    r[:Response]['ETag'] = '1'
-    e.condResponse ->{View['login'][nil,nil]}}
+    form = H View['login'][nil,nil]
+    puts form
+    e.condResponse ->{}
+  }
 
   View['login'] = -> d,e {
     {_: :form, action: '/login', method: :POST,
@@ -28,9 +30,9 @@ module Th
 
   def user_webid
     if c = cert
-      u = ('/cache/uid/' + (R.dive c.h)).R
-      webID.do{|id| u.w id} if !u.e
-      return u.r.R if u.e
+      u = ('/cache/uid/' + (R.dive c.h)).R # cache URI
+      webID.do{|id| u.w id} if !u.e # check cert
+      return u.r.R if u.e # user URI if found
     end
     nil
   end
