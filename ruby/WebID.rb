@@ -18,7 +18,7 @@ end
 
 module Th
 
-  def user # URI || nil
+  def user # URI | nil
     user_webid || user_basic || nil
   end
 
