@@ -159,6 +159,10 @@ class R
      self).hierPart.split('/').join(' ')
   end
 
+  def htmlResponse m
+    [200,{'Content-Type'=> 'text/html; charset=UTF-8'},[R::Render['text/html'][m, self]]]
+  end
+
   Render['text/html'] = -> d,e { u = d['#'] || {}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class==String}
     H ['<!DOCTYPE html>',{_: :html,

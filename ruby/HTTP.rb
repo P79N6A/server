@@ -101,22 +101,6 @@ module Th
     d
   end
 
-  def graphResponse graph
-    [200,
-     {'Content-Type' => format + '; charset=UTF-8',
-      'Triples' => graph.size.to_s,
-       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o} || '*',
-       'Access-Control-Allow-Credentials' => 'true',
-     },
-     [(format == 'text/html' &&
-    q['view'] == 'tabulate') ? H[R::View['tabulate'][]] :
-      graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
-  end
-
-  def htmlResponse m
-    [200,{'Content-Type'=> 'text/html; charset=UTF-8'},[R::Render['text/html'][m, self]]]
-  end
-
 end
 
 class Hash

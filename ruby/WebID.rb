@@ -8,6 +8,7 @@ class R
     graph = RDF::Graph.new
     form = H View['login'][nil,nil]
     puts form
+# Rack::Utils.set_cookie_header!(headers, "foo", {:value => "bar", :path => "/"})
     e.condResponse ->{}
   }
 
