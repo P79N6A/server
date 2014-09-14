@@ -69,11 +69,11 @@ class R
     e.justPath.do{|p|        # global paths
       s.concat p.fileResources unless p.uri == '/'}
     s }
-
+=begin
   View[RDFs+'Resource'] = -> i,e {
     i.map{|u,r|
       {_: :a, href: u, c: u}}}
-
+=end
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r|
