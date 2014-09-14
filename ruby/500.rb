@@ -1,6 +1,6 @@
 class R
 
-  GET['/500'] = -> e,r { # show error-log
+  GET['/500'] = -> e,r { # show errors
     r[:Response]['ETag'] = Errors.keys.sort.h
     e.condResponse ->{Render['text/html'][Errors, r]}}
 
@@ -20,7 +20,6 @@ class R
                             {_: :tr,
                               c: [{_: :td, class: :path, c: p[0].R.abbr},
                                   {_: :td, class: :index, c: p[1]},
-                                  {_: :td, class: :context, c: (p[2]||'').hrefs}].cr
-                            }}.cr ]}]}]}]]]}
+                                  {_: :td, class: :context, c: (p[2]||'').hrefs}]}}]}]}]}]]]}
 
 end
