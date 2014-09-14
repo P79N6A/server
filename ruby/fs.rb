@@ -16,8 +16,8 @@ class R
       readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
 
     else
-      yield stripDoc.uri, Type, Resource # generic-resource implied by suffixed-file
       yield uri, Type, R[Stat+'File']
+      yield stripDoc.uri, Type, Resource # generic-resource implied by suffixed-file
       yield uri, Stat+'size', size
       yield uri, Stat+'mtime', mtime.to_i
     end
@@ -69,6 +69,10 @@ class R
     e.justPath.do{|p|        # global paths
       s.concat p.fileResources unless p.uri == '/'}
     s }
+
+  View[RDFs+'Resource'] = -> i,e {
+    i.map{|u,r|
+      {_: :a, href: u, c: u}}}
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
