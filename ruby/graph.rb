@@ -96,12 +96,6 @@ class R
         yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
   end
 
-  def triplrJSON
-    yield uri, RDFns+'JSON', r(true) if e
-  rescue Exception => e
-    puts "triplrJSON #{e}"
-  end
-
   # graph -> MIME-format
   def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer
@@ -126,12 +120,6 @@ class R
    ['text/n3',:n3]].map{|mime|
     Render[mime[0]] = ->d,e{
       R.renderRDF d, mime[1], e}}
-
-  def to_json *a
-    {'uri' => uri}.to_json *a
-  end
-
-  Render['application/json'] = -> d,e { JSONview[e.q['view']].do{|f|f[d,e]} || d.to_json }
 
 end
 

@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
   module Format # Reader class for JSON format
@@ -36,5 +37,28 @@ class R
     end
 
   end
+
+  def triplrJSON
+    yield uri, Type, R[MIMEtype + 'application/json']
+    yield uri, Content, r(true) if e
+  rescue Exception => e
+    puts e
+  end
+
+  def to_json *a
+    {'uri' => uri}.to_json *a
+  end
+
+  View[MIMEtype+'application/json'] = ->d,e{
+    [d.values.map{|v|
+       v[Content].justArray.map &:html
+     }, H.once(e,'base',H.css('/css/html',true))]}
+
+
+  Render['application/json'] = -> d,e {
+    JSONview[e.q['view']].do{|f|
+      f[d,e]
+    } ||
+    d.to_json }
 
 end

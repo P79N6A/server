@@ -175,6 +175,11 @@ class R
 
   View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
 
+=begin
+  View[RDFs+'Resource'] = -> i,e {
+    i.map{|u,r|{_: :a, href: u, c: u}}}
+=end
+
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r| resource = r.R
