@@ -1,21 +1,21 @@
 #watch __FILE__
 class R
 =begin
- methods to enable usage of inbuilt Hash and JSON classes/methods for a subset of RDF (no blank-nodes, typed-literals are limited to JSON datatypes + HTML/XMLLiteral)
+ inbuilt Hash and JSON classes as a subset of RDF (no blank-nodes, typed-literals are limited to JSON datatypes + HTML/XMLLiteral)
 
-  {subjURI => {predURI => object}}, where key-names are strings containing URIs
+  {subjURI => {predURI => object}}, where key-names are URI strings
 
   object varies, can be:
-   RDF::URI  (URI-identified resource)
-   R (our sub-class of RDF::URI with additional POSIX-oriented name-functionality)
-   Hash, in format {'uri' => objectURI}
+   RDF::URI (URI-identified resource)
+   R (this subclass of RDF::URI)
+   Hash with 'uri' key
    Literal RDF::Literal or plain string
 
- non-RDF triplr "streams" are emitted with: yield subjURI, predURI, object
+ RDF triplr streams, emit with: yield subjURI, predURI, object
 
 =end
 
-  def fromStream m,*i # collect a triplestream's output into a Hash::Graph
+  def fromStream m,*i # triplr -> graph
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
       m[s][p] ||= []
@@ -23,17 +23,18 @@ class R
     end; m
   end
 
-  def graph graph = {} # load resource to graph
+  def graph graph = {} # file(s) -> graph
     fileResources.map{|d| d.fileToGraph graph}
     graph
   end
 
-  def fileToGraph graph = {} # load file to graph
+  def fileToGraph graph = {} # file -> graph
     justRDF(%w{e}).do{|file|
      graph.mergeGraph file.r true}
     graph
   end
 
+  # graph -> file(s)
   def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -51,7 +52,7 @@ class R
       hook[d,g,host] if hook} # write-hook
   end
 
-  # save JSON docs of resources in triple-stream
+  # triplr -> file(s)
   def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr)    # collect triples
     R.cacheJSON graph, host, p, hook # cache
@@ -67,7 +68,7 @@ class R
     puts "triplrJSON #{e}"
   end
 
-  def R.renderRDF d,f,e # Hash::Graph -> RDF::Serialization
+  def R.renderRDF d,f,e # graph -> RDF::Serialization
     (RDF::Writer.for f).buffer{|w| # init writer
       d.triples{|s,p,o|            # structural triples of Hash::Graph
         s && p && o &&             # all fields non-nil

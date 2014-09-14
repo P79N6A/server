@@ -2,14 +2,15 @@ watch __FILE__
 
 class R
 
-  GET['/whoami'] = -> d,e {
-    e.user.do{|u|[303,{'Location'=>u.uri},[]]}} # direct to user URI
+  GET['/whoami'] = -> d,e { # direct to user URI
+    e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
 
   GET['/login'] = -> e,r {
     graph = RDF::Graph.new
     form = H View['login'][nil,nil]
     puts form
-# Rack::Utils.set_cookie_header!(headers, "foo", {:value => "bar", :path => "/"})
+    h = {}
+    Rack::Utils.set_cookie_header!(h, "user", {:value => "asdf", :path => "/"})
     e.condResponse ->{}
   }
 
