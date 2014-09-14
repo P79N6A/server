@@ -11,12 +11,15 @@ class R
           {_: :input, name: :passwd, type: :password, placeholder: :password},
           {_: :input, type: :submit, value: :login}]}
     graph = {e.uri => {'uri' => e.uri, Content => H(form)}}
+    [200, {'Content-Type' => r.format + '; charset=UTF-8'},
+     [Render[r.format][graph,r]]]}
+
+  POST['/login'] = -> e,r {
+    puts "hi"
     h = {}
     Rack::Utils.set_cookie_header!(h, "user", {:value => "asdf", :path => "/"})
-    e.condResponse ->{}
-    [200,
-     {'Content-Type' => r.format + '; charset=UTF-8'},
-     [Render[r.format][graph,r]]]}
+    [200,h,[]]
+  }
 
 end
 
