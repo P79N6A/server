@@ -59,7 +59,7 @@ class R
     [(if e
         self unless directory? && uri[-1] != '/'
       end), # exact match
-     docroot.glob(".*{e,md,n3,ttl,txt}") # docs relative to base
+     docroot.glob(".*{e,n3,ttl,txt}") # data docs relative to base
     ].flatten.compact
   end
 

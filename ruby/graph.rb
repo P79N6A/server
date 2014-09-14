@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 =begin
- inbuilt Hash and JSON classes as a subset of RDF (no blank-nodes, typed-literals are limited to JSON datatypes + HTML/XMLLiteral)
+ inbuilt Hash and JSON classes act as a subset of RDF (no blank-nodes, typed-literals are limited to JSON datatypes + HTML/XMLLiteral)
 
   {subjURI => {predURI => object}}, where key-names are URI strings
 
@@ -60,15 +60,50 @@ class R
     self
   end
 
-  def jsonDoc; docroot.a '.e' end
+  # RDF::Repository -> file(s)
+  def cacheRDF options = {}
+    g = RDF::Repository.load self, options
+    g.each_graph.map{|graph|
+      if graph.named?
+        doc = graph.name.n3
+        unless doc.e
+          doc.dir.mk
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
+          options[:hook][doc,graph,options[:hostname]] if options[:hook]
+        end
+      end}
+    g
+  end
+
+  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # transcode non-RDF file to RDF-doc using our triplrs
+    if e                                            # takes and returns references to the files
+      doc = self
+      unless pass.member? realpath.do{|p|p.extname.tail}
+        doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r
+        unless doc.e && doc.m > m # up-to-date?
+          g = {} # doc-graph
+          [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
+          doc.w g, true # cache
+        end
+      end
+      doc
+    end
+  end
+
+  def triplrN3
+    RDF::Reader.open(pathPOSIX, :format => :n3, :base_uri => stripDoc){|r|
+      r.each_triple{|s,p,o|
+        yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
+  end
 
   def triplrJSON
-    yield uri, RDFns + 'JSON', r(true) if e
+    yield uri, RDFns+'JSON', r(true) if e
   rescue Exception => e
     puts "triplrJSON #{e}"
   end
 
-  def R.renderRDF d,f,e # graph -> RDF::Serialization
+  # graph -> MIME-format
+  def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer
       d.triples{|s,p,o|            # structural triples of Hash::Graph
         s && p && o &&             # all fields non-nil
@@ -84,7 +119,7 @@ class R
          (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
   end
 
-  [['application/ld+json',:jsonld], # per-MIME render lambdas
+  [['application/ld+json',:jsonld], # per-MIME renderer-lambdas
    ['application/rdf+xml',:rdfxml],
    ['text/plain',:ntriples],
    ['text/turtle',:turtle],

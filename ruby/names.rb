@@ -65,9 +65,8 @@ class R
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jailed path
   def sh; pathPOSIX.force_encoding('UTF-8').sh end # shell-escaped path
 
-  # strip variant-suffixes
   def stripFrag; R uri.split(/#/)[0] end
-  def stripDoc;  R uri.sub Doc, '' end
+  def stripDoc;  R uri.sub /\.(e|html|n3|ttl|txt)$/, '' end
   def stripSlash
     if uri[-1] == '/'
       if path == '/'
@@ -79,6 +78,7 @@ class R
       self
     end
   end
+
   def docroot
     stripFrag.stripDoc.stripSlash.do{|u|
       if u.path == '/'
@@ -96,6 +96,9 @@ class R
   # squash names to prefix:basename
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
+
+  def n3; docroot.a '.n3' end
+  def jsonDoc; docroot.a '.e' end
 
 end
 

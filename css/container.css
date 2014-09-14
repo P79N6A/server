@@ -6,7 +6,7 @@ a {text-decoration: none}
 .dir {
     max-width:64em;
     overflow:hidden;
-    float:left;
+    float: left;
     border-radius:0 1em 1em 1em;
     padding:.3em;
     margin:.3em;
@@ -32,7 +32,6 @@ a {text-decoration: none}
 
 .File {
     display: inline-block;
-    float: right;
     background-color: #fff;
     color: #000;
     border: .13em dotted #ddd;

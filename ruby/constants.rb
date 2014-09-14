@@ -18,7 +18,6 @@ class R < RDF::URI
 
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
   HTTP_URI = /\A(\/|http)[\S]+\Z/
-  Doc = /\.(e|html|json(ld)?|n3|ttl|txt)$/
 
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
@@ -113,6 +112,7 @@ graph
 HEAD
 HTML
 HTTP
+JSON
 404
 500
 image
@@ -124,7 +124,6 @@ news
 OPTIONS
 POST
 PUT
-RDF
 schema
 search
 text
