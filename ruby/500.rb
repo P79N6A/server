@@ -1,6 +1,6 @@
 class R
 
-  GET['/500'] = -> e,r { # show errors
+  GET['/500'] = -> e,r {
     r[:Response]['ETag'] = Errors.keys.sort.h
     e.condResponse ->{Render['text/html'][Errors, r]}}
 
@@ -11,11 +11,14 @@ class R
 
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,
-          c: [{_: :head,c: [{_: :title, c: 500},(H.css '/css/500')]},
+          c: [{_: :head,
+                c: [{_: :title, c: 500},(H.css '/css/500')]},
               {_: :body,
                 c: [{_: :h1, c: 500},
                     {_: :table,
-                      c: [{_: :tr,c: [{_: :td, c: {_: :b, c: x.class}},{_: :td, class: :message, colspan: 2, c: x.message.hrefs}]},
+                      c: [{_: :tr,
+                            c: [{_: :td, c: {_: :b, c: x.class}},
+                                {_: :td, class: :message, colspan: 2, c: x.message.hrefs}]},
                           x.backtrace.map{|f| p = f.split /:/, 3
                             {_: :tr,
                               c: [{_: :td, class: :path, c: p[0].R.abbr},
