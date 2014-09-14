@@ -124,21 +124,6 @@ class R
     uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
   end
 
-  View['HTML']=->d,e{ # default render - dispatch on RDF-type
-    e[:Graph] = d
-    d.map{|u,r|
-      type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
-      View[type ? type.to_s : 'base'][{u => r},e]}}
-
-  View['base']=->d,e{
-    [d.values.map{|v|
-       if v.uri.match(/(gif|jpe?g|png|tiff)$/i)
-         ShowImage[v.uri]
-       else
-         v.html
-       end
-     }, H.once(e,'base',H.css('/css/html',true))]}
-
   def triplrHref enc=nil
     yield uri, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
@@ -159,10 +144,6 @@ class R
      self).hierPart.split('/').join(' ')
   end
 
-  def htmlResponse m
-    [200,{'Content-Type'=> 'text/html; charset=UTF-8'},[R::Render['text/html'][m, self]]]
-  end
-
   Render['text/html'] = -> d,e { u = d['#'] || {}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class==String}
     H ['<!DOCTYPE html>',{_: :html,
@@ -173,7 +154,22 @@ class R
      u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: (View[e.q['view']] || View['HTML'])[d,e]}]}]}
 
+  View['HTML']=->d,e{ # default render - dispatch on RDF-type
+    e[:Graph] = d
+    d.map{|u,r|
+      type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
+      View[type ? type.to_s : 'base'][{u => r},e]}}
+
   View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
+
+  View['base']=->d,e{
+    [d.values.map{|v|
+       if v.uri.match(/(gif|jpe?g|png|tiff)$/i)
+         ShowImage[v.uri]
+       else
+         v.html
+       end
+     }, H.once(e,'base',H.css('/css/html',true))]}
 
 =begin
   View[RDFs+'Resource'] = -> i,e {
