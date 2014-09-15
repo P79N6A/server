@@ -16,12 +16,11 @@ class R
      [Render[r.format][graph,r]]]}
 
   POST['/login'] = -> e,r {
-    # if an account is previously unknown, create it with supplied passwd
-    # otherwise, check validity of password
-    h = {}
-    Rack::Utils.set_cookie_header!(h, "user", {:value => "asdf", :path => "/"})
-    [200,h,[]]
-  }
+    headers = {}
+    user = r.user
+    puts "user #{user}"
+    Rack::Utils.set_cookie_header!(headers, "user", {:value => "", :path => "/"})
+    [200,headers,[]]}
 
 end
 
@@ -32,8 +31,12 @@ module Th
   end
 
   def user_basic
+    puts "webID cert missing/invalid, trying POSTed credentials"
+    # account is previously unknown, create it with supplied passwd
 
-    
+    # check password
+
+    puts qs
     
   end
 
