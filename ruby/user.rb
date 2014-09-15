@@ -16,7 +16,8 @@ class R
      [Render[r.format][graph,r]]]}
 
   POST['/login'] = -> e,r {
-    puts "hi"
+    # if an account is previously unknown, create it with supplied passwd
+    # otherwise, check validity of password
     h = {}
     Rack::Utils.set_cookie_header!(h, "user", {:value => "asdf", :path => "/"})
     [200,h,[]]
