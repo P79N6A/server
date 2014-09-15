@@ -32,8 +32,10 @@ module Th
 
   def user_basic
     puts "webID cert missing/invalid, trying POSTed credentials"
+    form = Rack::Request.new(self).params
+    name = form['name']
     # account is previously unknown, create it with supplied passwd
-
+puts form, name
     # check password
 
     puts qs
