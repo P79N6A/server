@@ -26,20 +26,27 @@ end
 
 module Th
 
-  def user # URI | nil
-    user_webid || user_basic || nil
+  def user
+    user_webid || # user-identifying certificate
+    user_basic || # webID cert missing or invalid, fallback to POSTed user/pass
+    nil
   end
 
   def user_basic
-    puts "webID cert missing/invalid, trying POSTed credentials"
+    encrypt = -> p {p.crypt 'salt'}
     form = Rack::Request.new(self).params
-    name = form['name']
-    # account is previously unknown, create it with supplied passwd
-puts form, name
-    # check password
+    name = form['user'].slugify
+    user = R['/user/'+name]
 
-    puts qs
-    
+    pass = encrypt[form['passwd']]
+    crypt = user['passwd'][0]
+
+    if !crypt # account is previously unknown, create it with supplied passwd
+      user['passwd'] = pass
+    else
+      puts "pass"
+    end
+    nil
   end
 
 end
