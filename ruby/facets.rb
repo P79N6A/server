@@ -3,7 +3,8 @@ class R
   # facet-filtering - dynamic CSS edition
 
   View['facets'] = -> m,e {
-    a = Hash[(e.q['a'].split ',').map{|a|[a.expand,{}]}]
+    a = Hash[((e.q['a']||'sioct:ChatChannel').split ',').map{|a|
+               [a.expand,{}]}]
 
     # statistics
     m.map{|s,r| a.map{|p,_|
