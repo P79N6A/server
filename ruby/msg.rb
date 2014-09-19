@@ -9,7 +9,7 @@ class R
         {_: :a, class: :author, href: r.uri,
           c: r[Creator].do{|c|
             c[0].respond_to?(:uri) ? c[0].R.abbr : c[0].to_s}}, " ",
-        r[Content]]}]}
+        r[Content],"<br>\n"]}]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost']
 
