@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 #watch __FILE__
 
-def H _
+def H _ # HTML as Ruby literal-values
   case _
   when Hash
-#    void = [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr].member? _[:_]
-    void = [:img, :input, :link].member? _[:_]
-    '<' + (_[:_] || :div).to_s + # name
-      (_.keys - [:_,:c]).map{|a| # attributes
-      ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|{"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join + # values
-      (void ? '/' : '') + '>' + # opener
-      (_[:c] ? (H _[:c]) : '') + # child nodes
-      (void ? '' : ('</'+(_[:_]||:div).to_s+'>')) # closer
+    void = [:img, :input, :link, :meta].member? _[:_]
+#          [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr].member? _[:_]
+
+    '<' + (_[:_] || :div).to_s +                                     # name
+      (_.keys - [:_,:c]).map{|a|                                     # attributes
+      ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|
+        {"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join + # values
+      (void ? '/' : '') + '>' +                                      # void-el closer
+      (_[:c] ? (H _[:c]) : '') +                                     # children
+      (void ? '' : ('</'+(_[:_]||:div).to_s+'>'))                    # full-el closer
   when Array
     _.map{|n|H n}.join
   else
@@ -23,21 +25,21 @@ class H
 
   def H.[] h; H h end
 
-  def H.js a,inline=false
+  def H.js a,inline=false # script tag
     p = a + '.js'
     inline ? {_: :script, c: p.R.r} :
     {_: :script, type: "text/javascript", src: p}
   end
 
-  def H.css a,inline=false
+  def H.css a,inline=false # stylesheet
     p = a + '.css'
     inline ? {_: :style, href: p, c: p.R.r} :
     {_: :link, href: p, rel: :stylesheet, type: R::MIME[:css]}
   end
 
-  def H.once e,n,*h
-    return if e[n]
-    e[n]=true
+  def H.once env, name, *h
+    return if env[name]
+    env[name] = true
     h
   end
 end
@@ -144,17 +146,32 @@ class R
      self).hierPart.split('/').join(' ')
   end
 
-  Render['text/html'] = -> d,e { u = d['#'] || {}
-    titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class==String}
-    H ['<!DOCTYPE html>',{_: :html,
-         c: [{_: :head, c: ['<meta charset="utf-8" />',
-                  ({_: :title, c: titles.head} if titles.size==1),
-                   {_: :link, rel: :icon, href:'/css/misc/favicon.ico'},
-     u[Next].do{|n|{_: :link, rel: :next, href: n.uri}},
-     u[Prev].do{|p|{_: :link, rel: :prev, href: p.uri}}]},
-             {_: :body, c: (View[e.q['view']] || View['HTML'])[d,e]}]}]}
+  Render['text/html'] = -> d,e {
+    u = d['#'] || {}
+    titles = d.map{|u,r|
+      r[Title] if r.class==Hash}.flatten.select{|t|t.class == String }
 
-  View['HTML']=->d,e{ # default render - dispatch on RDF-type
+    H ['<!DOCTYPE html>', "\n",
+       {_: :html,
+         c: ["\n",
+             {_: :head,
+               c: ["\n",
+                   {_: :meta, charset: 'utf-8'}, "\n",
+                   {_: :title, c: titles.size==1 ? titles.head : e.uri}, "\n",
+                   {_: :link, rel: :icon, href:'/css/misc/favicon.ico'}, "\n",
+                   u[Next].do{|n|
+                     [{_: :link, rel: :next, href: n.uri}, "\n"]},
+                   u[Prev].do{|p|
+                     [{_: :link, rel: :prev, href: p.uri}, "\n"]}]
+             }, "\n",
+             {_: :body,
+               c: ["\n",
+                   (View[e.q['view']] || View['HTML'])[d,e],
+                   u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;', style: 'float: left'}},
+                   u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;', style: 'float: right'}},
+                  ]}]}]}
+
+  View['HTML']=->d,e{ # default view - dispatch on RDF-type
     e[:Graph] = d
     d.map{|u,r|
       type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
@@ -170,11 +187,6 @@ class R
          v.html
        end
      }, H.once(e,'base',H.css('/css/html',true))]}
-
-=begin
-  View[RDFs+'Resource'] = -> i,e {
-    i.map{|u,r|{_: :a, href: u, c: u}}}
-=end
 
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
