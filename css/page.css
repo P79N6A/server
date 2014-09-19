@@ -3,6 +3,7 @@ a[rel=next] { float:right }
 
 a[rel=next], a[rel=prev]{
     text-decoration: none;
+    font-size:2em;
 }
 
 a[rel=prev] div, a[rel=next] div {
@@ -10,12 +11,6 @@ a[rel=prev] div, a[rel=next] div {
 }
 
 a[rel=prev] .uri, a[rel=next] .uri {
-    font-size: .88em;
+    font-size: .4em;
     white-space: nowrap;
 }
-
-a[rel=prev] .arrow, a[rel=next] .arrow {
-    font-size:2.4em;
-}
-
-
