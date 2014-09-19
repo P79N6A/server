@@ -28,8 +28,8 @@ module Th
 
   def user
     user_webid || # user-identifying certificate
-    user_basic || # webID cert missing or invalid, fallback to POSTed user/pass
-    nil
+    user_basic || # conventional username / password
+    user_ambient
   end
 
   def user_basic

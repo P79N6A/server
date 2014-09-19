@@ -4,7 +4,7 @@ module Th
     if c = cert
       u = ('/cache/uid/' + (R.dive c.h)).R # cache URI
       webID.do{|id| u.w id} if !u.e # check cert
-      return u.r.R if u.e # user URI if found
+      return u.r.R if u.e           # user URI
     end
     nil
   end

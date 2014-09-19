@@ -35,8 +35,9 @@ class R
               n[o.to_s] # identifier
             }}].join ' '
        }.do{|f|
-         [f.map{|o|'<div class="'+o+'">'}, # facet wrapper
-          View['HTML'][{u => r},e], # resource
-          (0..f.size-1).map{|c|'</div>'}]}}]}
+         [f.map{|o| '<div class="' + o + '">' }, # open wrapper
+          View['HTML'][{u => r},e],              # render resource
+          (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
+         ]}}]}
 
 end

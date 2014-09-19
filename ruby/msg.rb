@@ -5,9 +5,10 @@ class R
     [(H.once e,'chat',(H.css '/css/tw'),
       {_: :style,c: "a {color: #fff; background-color: #{c}}"}),
      d.map{|u,r|
-       ["\n<br clear=all>\n",
-        r[Date][0].split('T')[1][0..4]," \n",
-        {_: :a, class: :author, href: r.uri, c: r[Creator].do{|c| c[0].respond_to?(:uri) ? c[0].R.abbr : c[0].to_s}}," \n",
+       [r[Date][0].split('T')[1][0..4], " ",
+        {_: :a, class: :author, href: r.uri,
+          c: r[Creator].do{|c|
+            c[0].respond_to?(:uri) ? c[0].R.abbr : c[0].to_s}}, " ",
         r[Content]]}]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost']

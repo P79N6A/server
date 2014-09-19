@@ -56,9 +56,7 @@ class R
 
 
   def fileResources
-    [(if e
-        self unless directory? && uri[-1] != '/'
-      end), # exact match
+    [(self if e), # exact match
      docroot.glob(".*{e,n3,ttl,txt}") # data docs relative to base
     ].flatten.compact
   end
