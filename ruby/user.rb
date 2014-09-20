@@ -2,8 +2,8 @@ watch __FILE__
 
 class R
 
-  GET['/whoami'] = -> d,e { # direct to user URI
-    e.user.do{|u|[303,{'Location'=>u.uri},[]]}}
+  GET['/whoami'] = -> d,e {
+    [303,{'Location' => e.user.uri},[]]}
 
   LoginForm = {_: :form, action: '/login', method: :POST,
       c: [{_: :input, name: :user, placeholder: :username},

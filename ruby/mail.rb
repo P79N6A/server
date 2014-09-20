@@ -11,34 +11,29 @@ class R
     name = a.split('@')[0]
     '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
 
-  GET['/address'] = -> e,r{ # address subtree
-    r.q['view'] ||= 'warp' if e.uri[-1]=='/' # set a default-view on directories
-    nil}
+  GET['/address'] = -> e,r{r.q['view'] = 'warp' if e.uri[-1]=='/'; nil } # dir-browse UI
+  GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
 
-  GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID on the web
-  GET['/msg'] = -> e,r{E404[e,r] if e.path.size <= 9} # keep creepy-crawlies out of large container dirs
   GET['/thread'] = -> e, r {
+    m = {} # model
 
-    m = {}
-    R[MessagePath[e.basename]].walk SIOC+'reply_of', m
-    return E404[e,r] if m.empty?
-    return [406,{},[]] unless Render[r.format]
+    R[MessagePath[e.basename]].walk SIOC+'reply_of', m # find thread
+    return E404[e,r] if m.empty?               # empty model -> 404
+    return [406,{},[]] unless Render[r.format] # asked for unrenderable MIME
 
-    m['#'] = {
-      'uri' => e.uri,
-      Type => [R[LDP+'BasicContainer'],
-               R[SIOC+'Thread']],
+    m['#'] = { 'uri' => e.uri, # thread metadata
+      Type => [R[LDP+'BasicContainer'], R[SIOC+'Thread']],
       RDFs+'member' => m.keys.map(&:R)}
 
-    v = r.q['view'] ||= 'force'
+    v = r.q['view'] ||= 'force' # visualize thread
     r[:Response]['Access-Control-Allow-Origin'] = r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'
     r[:Response]['Access-Control-Allow-Credentials'] = 'true'
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
-    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
+    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h # view id
 
     e.condResponse ->{Render[r.format][m, r]}}
 
-  GREP_DIRS.push /^\/m\/[^\/]+\//
+  GREP_DIRS.push /^\/msg\//
 
   def mail; Mail.read node if f end
 
@@ -49,13 +44,11 @@ class R
 
     e = MessagePath[id]                              # message URI
 
-    [R[SIOCt+'MailMessage'],                         # SIOC types
-     R[SIOC+'Post'],
+    [R[SIOCt+'MailMessage'], R[SIOC+'Post'],         # SIOC types
      R[RDFs+'Resource']].                            # RDF types
       map{|t|yield e, Type, t}
 
     list = m['List-Post'].do{|l|l.decoded.sub(/^<?mailto:/,'').sub(/>$/,'').downcase}
-
     list && m['List-Id'].do{|name|
       name = name.decoded
       group = AddrPath[list]                         # list URI
