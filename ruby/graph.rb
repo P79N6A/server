@@ -1,9 +1,9 @@
 #watch __FILE__
 class R
 =begin
- inbuilt Hash and JSON classes act as a subset of RDF (no blank-nodes, typed-literals are limited to JSON datatypes + HTML/XMLLiteral)
+ use inbuilt Hash and JSON classes for a subset of RDF - literal types are limited to JSON , RDF:HTML
 
-  {subjURI => {predURI => object}}, where key-names are URI strings
+  {subjURI => {predURI => object}},  key-names are URI strings
 
   object varies, can be:
    RDF::URI (URI-identified resource)
@@ -11,7 +11,7 @@ class R
    Hash with 'uri' key
    Literal RDF::Literal or plain string
 
- RDF triplr streams, emit with: yield subjURI, predURI, object
+ emit triple-streams: yield subjURI, predURI, object
 
 =end
 
@@ -75,19 +75,19 @@ class R
     g
   end
 
-  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl} # transcode non-RDF file to RDF-doc using our triplrs
-    if e                                            # takes and returns references to the files
-      doc = self
-      unless pass.member? realpath.do{|p|p.extname.tail}
-        doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r
-        unless doc.e && doc.m > m # up-to-date?
-          g = {} # doc-graph
-          [:triplrMIME,:triplrInode].map{|t| fromStream g, t} # triplize
-          doc.w g, true # cache
-        end
+  # replace non-RDF fs-references w/ RDF::Reader readable - long-tail for MIMEs w/o a Reader class
+  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}            # RDF suffixes
+    return unless e                                            # check that source exists
+    doc = self                                                 # output doc
+    unless pass.member? realpath.do{|p|p.extname.tail}         # already a good MIME?
+      doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r # derived RDF file
+      unless doc.e && doc.m > m                                # up-to-date?
+        g = {}                                                 # blank graph
+        [:triplrMIME,:triplrInode].map{|t| fromStream g, t}    # triples -> graph
+        doc.w g, true                                          # write
       end
-      doc
     end
+    doc
   end
 
   def triplrN3
