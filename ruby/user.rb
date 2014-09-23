@@ -23,12 +23,14 @@ class R
   POST['/login'] = -> e,r {
     hdr = {}
     args = Rack::Request.new(r).params
-    user = R['/user/' + args['user'].slugify]
+    name = args['user'].slugify[0..32]
+    user = R['/user/' + name.h[0..2] + '/' + name + '#' + name]
     shadow = R['/index' + user.uri]
     pwI = args['passwd'].crypt 'sel'      # claimed
     pwR = shadow['passwd'][0]             # actual
     unless pwR                            # new user
-      user[DC+'created'] = Time.now.iso8601
+      user.jsonDoc.
+        w({user.uri => {DC+'created' => Time.now.iso8601}},true)
       shadow['passwd'] = pwR = pwI
     end
     if pwI == pwR                         # passwd valid?
