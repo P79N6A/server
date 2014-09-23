@@ -21,7 +21,7 @@ class R
     [303, {Location: '/'}, []]}
 
   POST['/login'] = -> e,r {
-    hdr = {}
+    hdr = {Location: '/whoami'}
     args = Rack::Request.new(r).params
     name = args['user'].slugify[0..32]
     user = R['/user/' + name.h[0..2] + '/' + name + '#' + name]
@@ -40,7 +40,7 @@ class R
         Session[s]['user'] = user # link to user URI
       end
     end
-    [200,hdr,[]]}
+    [303,hdr,[]]}
 
   Session = -> id {R['/cache/session/' + (R.dive id)]}
 
