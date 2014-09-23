@@ -24,10 +24,9 @@ class R
     hdr = {}
     args = Rack::Request.new(r).params
     user = R['/user/' + args['user'].slugify]
-    passwd = args['passwd']
-    pwI = passwd.crypt 'sel'              # claimed
-    pwR = user['passwd'][0]               # actual
-    user['passwd'] = pwR = pwI unless pwR # fill crypt
+    pwI = args['passwd'].crypt 'sel'      # claimed
+    pwR = user['.crypt'][0]               # actual
+    user['.crypt'] = pwR = pwI unless pwR # fill crypt
     if pwI == pwR                         # passwd valid
       unless user == r.user_basic         # session exists
         s = rand.to_s.h                   # session-ID
