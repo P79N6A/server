@@ -14,7 +14,7 @@ links.forEach(function(link) {
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([420,768]) // center on left-edge to start, so plausibly visible
+    .size([360,768]) // center on left-edge to start, so plausibly visible
     .linkDistance(18)
     .charge(-250)
     .on("tick", tick)
@@ -23,13 +23,12 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("width", 1024)
     .attr("height", 768)
-    .on("click", function(e){
+    .on("click", function(e){ // tap forward from background
 	if(this.style.zIndex == 2){
 	    this.style.zIndex = -2
 	} else {
 	    this.style.zIndex = 2
 	}
-//	force.size([720, 768])
     });
 
 svg.append('svg:defs').append('svg:marker')

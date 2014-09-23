@@ -17,9 +17,24 @@ class R
 
   POST['/login'] = -> e,r {
     headers = {}
-    user = r.user
-    puts "user #{user}"
-    Rack::Utils.set_cookie_header!(headers, "user", {:value => "", :path => "/"})
+    salt = 'sel'
+
+    arg = Rack::Request.new(r).params
+    username = arg['username']
+    passwd = arg['passwd']
+    user = R['/user/' + name.slugify]
+
+    pwI = passwd.crypt salt
+    pwR = user['passwd'][0]
+
+    user['passwd'] = pwR = pwI unless pwR # account previously unseen, claim it
+
+    if pwI == pwR
+      puts "match"
+    else
+      puts "fail"
+    end
+    Rack::Utils.set_cookie_header!(headers, "session", {:value => "", :path => "/"})
     [200,headers,[]]}
 
 end
@@ -27,25 +42,13 @@ end
 module Th
 
   def user
-    user_webid || # user-identifying certificate
-    user_basic || # conventional username / password
+    user_webid ||
+    user_basic ||
     user_ambient
   end
 
   def user_basic
-    encrypt = -> p {p.crypt 'salt'}
-    form = Rack::Request.new(self).params
-    name = form['user'].slugify
-    user = R['/user/'+name]
-
-    pass = encrypt[form['passwd']]
-    crypt = user['passwd'][0]
-
-    if !crypt # account is previously unknown, create it with supplied passwd
-      user['passwd'] = pass
-    else
-      puts "pass"
-    end
+    # cookie UUID -> user URI
     nil
   end
 
