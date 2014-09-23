@@ -17,19 +17,16 @@ class R
 
   POST['/login'] = -> e,r {
     headers = {}
-    salt = 'sel'
-    req = Rack::Request.new r
-    session = req.cookies['session'].do{|s|Session[s]}
-    args = req.params
+    args = Rack::Request.new(r).params
     username = args['user']
     passwd = args['passwd']
     user = R['/user/' + username.slugify]
-    pwI = passwd.crypt salt
+    pwI = passwd.crypt 'sel'
     pwR = user['passwd'][0]
-    user['passwd'] = pwR = pwI unless pwR # fill crypt
+    user['passwd'] = pwR = pwI unless pwR
     if pwI == pwR # passwd match
       puts "login successful"
-      unless session && session['user'][0] == user
+      unless user == r.user_basic
         puts "init session"
         s = rand.to_s.h
         Rack::Utils.set_cookie_header!(headers, "session", {:value => s, :path => "/"})
