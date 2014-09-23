@@ -24,12 +24,16 @@ class R
     hdr = {}
     args = Rack::Request.new(r).params
     user = R['/user/' + args['user'].slugify]
+    shadow = R['/index' + user.uri]
     pwI = args['passwd'].crypt 'sel'      # claimed
-    pwR = user['.crypt'][0]               # actual
-    user['.crypt'] = pwR = pwI unless pwR # fill crypt
-    if pwI == pwR                         # passwd valid
+    pwR = shadow['passwd'][0]             # actual
+    unless pwR                            # new user
+      user[DC+'created'] = Time.now.iso8601
+      shadow['passwd'] = pwR = pwI
+    end
+    if pwI == pwR                         # passwd valid?
       unless user == r.user_basic         # session exists
-        s = rand.to_s.h                   # session-ID
+        s = rand.to_s.h                   # new session-ID
         Rack::Utils.set_cookie_header!(hdr, "session", {:value => s, :path => "/"}) # return session-ID
         Session[s]['user'] = user # link to user URI
       end
