@@ -18,23 +18,22 @@ class R
   POST['/login'] = -> e,r {
     headers = {}
     salt = 'sel'
-
-    arg = Rack::Request.new(r).params
+    sessionURI = -> id {R['/cache/session/' + (R.dive id)]}
+    req = Rack::Request.new r
+    arg = req.params
+    session = req.cookies['session'].do{|s|sessionURI[s]}
     username = arg['user']
     passwd = arg['passwd']
     user = R['/user/' + username.slugify]
-
     pwI = passwd.crypt salt
     pwR = user['passwd'][0]
-
-    user['passwd'] = pwR = pwI unless pwR # account previously unseen, claim it
-
-    if pwI == pwR # match
-      s = R['/cache/session/' + (R.dive rand.to_s.h)] # session URI
-      s['username'] = user
-      Rack::Utils.set_cookie_header!(headers, "session", {:value => s.uri, :path => "/"})
-    else
-      # fail
+    user['passwd'] = pwR = pwI unless pwR # fill crypt
+    if pwI == pwR # passwd match
+      unless session && session['user'][0] == user
+        s = rand.to_s.h
+        Rack::Utils.set_cookie_header!(headers, "session", {:value => s, :path => "/"})
+        sessionURI[s]['user'] = user # session URI -> user URI        
+      end
     end
     [200,headers,[]]}
 
