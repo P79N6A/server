@@ -18,24 +18,29 @@ class R
   POST['/login'] = -> e,r {
     headers = {}
     salt = 'sel'
-    sessionURI = -> id {R['/cache/session/' + (R.dive id)]}
     req = Rack::Request.new r
-    arg = req.params
-    session = req.cookies['session'].do{|s|sessionURI[s]}
-    username = arg['user']
-    passwd = arg['passwd']
+    session = req.cookies['session'].do{|s|Session[s]}
+    args = req.params
+    username = args['user']
+    passwd = args['passwd']
     user = R['/user/' + username.slugify]
     pwI = passwd.crypt salt
     pwR = user['passwd'][0]
     user['passwd'] = pwR = pwI unless pwR # fill crypt
     if pwI == pwR # passwd match
+      puts "login successful"
       unless session && session['user'][0] == user
+        puts "init session"
         s = rand.to_s.h
         Rack::Utils.set_cookie_header!(headers, "session", {:value => s, :path => "/"})
-        sessionURI[s]['user'] = user # session URI -> user URI        
+        Session[s]['user'] = user # session URI -> user URI
       end
+    else
+      puts "bad password"
     end
     [200,headers,[]]}
+
+  Session = -> id {R['/cache/session/' + (R.dive id)]}
 
 end
 
@@ -48,8 +53,12 @@ module Th
   end
 
   def user_basic
-    # cookie UUID -> user URI
-    nil
+    (Rack::Request.new self).cookies['session'].do{|sid|
+      R::Session[sid]['user'][0]}
+  end
+
+  def user_ambient
+    R['dns:' + ( self['HTTP_ORIGIN_ADDR'] || self['REMOTE_ADDR'] )]
   end
 
 end

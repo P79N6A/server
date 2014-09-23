@@ -40,7 +40,7 @@ class R
     path += '/' if path[-1] != '/' && p.to_s[-1] == '/'                        # restore trailing-slash
     resource = R[e['SCHEME'] + "://" + e['SERVER_NAME'] + path]                # resource
     e['uri'] = resource.uri                                                    # request URI
-    e[:Links] = []; e[:Response] = {}                                          # response headers
+    e[:Links] = []; e[:Response] = {User: e.user.uri}                          # response headers
     resource.setEnv(e).send(method).do{|s,h,b|                                 # HTTP function
      puts [s,resource+e['QUERY_STRING'].do{|q|q.empty? ? '' : '?'+q}, h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # log request
       [s,h,b]} # Response

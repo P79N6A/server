@@ -5,6 +5,7 @@ class R
     s = g[e.uri] ||= {} # request-resource
 
     s[Title] = '404'
+    s['User'] = r.user
     s[Edit] = R[e.docroot+'?edit&title='+e.basename]
     s[RDFs+'seeAlso'] = e.parentURI unless e.justPath.to_s == '/'
     s[Header+'query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
