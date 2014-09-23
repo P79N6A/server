@@ -56,6 +56,10 @@ end
 
 module Th
 
+  def cookies
+    (Rack::Request.new self).cookies
+  end
+
   def q
     @q ||=
       (if q = self['QUERY_STRING']

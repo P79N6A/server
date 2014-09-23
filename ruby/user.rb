@@ -15,27 +15,27 @@ class R
     [200, {'Content-Type' => r.format + '; charset=UTF-8'},
      [Render[r.format][graph,r]]]}
 
+  GET['/logout'] = -> e,r {
+    r.session.do{|s|
+      s['user'] = nil}
+    [303, {Location: '/'}, []]}
+
   POST['/login'] = -> e,r {
-    headers = {}
+    hdr = {}
     args = Rack::Request.new(r).params
-    username = args['user']
+    user = R['/user/' + args['user'].slugify]
     passwd = args['passwd']
-    user = R['/user/' + username.slugify]
-    pwI = passwd.crypt 'sel'
-    pwR = user['passwd'][0]
-    user['passwd'] = pwR = pwI unless pwR
-    if pwI == pwR # passwd match
-      puts "login successful"
-      unless user == r.user_basic
-        puts "init session"
-        s = rand.to_s.h
-        Rack::Utils.set_cookie_header!(headers, "session", {:value => s, :path => "/"})
-        Session[s]['user'] = user # session URI -> user URI
+    pwI = passwd.crypt 'sel'              # claimed
+    pwR = user['passwd'][0]               # actual
+    user['passwd'] = pwR = pwI unless pwR # fill crypt
+    if pwI == pwR                         # passwd valid
+      unless user == r.user_basic         # session exists
+        s = rand.to_s.h                   # session-ID
+        Rack::Utils.set_cookie_header!(hdr, "session", {:value => s, :path => "/"}) # return session-ID
+        Session[s]['user'] = user # link to user URI
       end
-    else
-      puts "bad password"
     end
-    [200,headers,[]]}
+    [200,hdr,[]]}
 
   Session = -> id {R['/cache/session/' + (R.dive id)]}
 
@@ -49,9 +49,13 @@ module Th
     user_ambient
   end
 
+  def session
+    cookies['session'].do{|s|
+      R::Session[s]}
+  end
+
   def user_basic
-    (Rack::Request.new self).cookies['session'].do{|sid|
-      R::Session[sid]['user'][0]}
+    session.do{|s|s['user'][0]}
   end
 
   def user_ambient
