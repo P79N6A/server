@@ -25,17 +25,17 @@ class R
     method = e['REQUEST_METHOD']
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
     e.extend Th # environment
-    dev         # watch source-code
+    dev         # watch sourcecode
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME'] = h }                   # use original hostname
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'                    # strip path-chars from hostname
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'                    # host
     e['SCHEME'] = "http" + (e['HTTP_X_FORWARDED_PROTO'] == 'https' ? 's' : '') # scheme
     p = Pathname.new URI.unescape e['REQUEST_PATH'].force_encoding 'UTF-8'     # path
     path = p.expand_path.to_s                                                  # interpret path
     path += '/' if path[-1] != '/' && p.to_s[-1] == '/'                        # preserve trailing-slash
     resource = R[e['SCHEME'] + "://" + e['SERVER_NAME'] + path]                # resource
-    e['uri'] = resource.uri
     e[:Links] = []
     e[:Response] = {User: e.user.uri}                                          # response Header
+    e['uri'] = resource.uri
     resource.setEnv(e).send(method).do{|s,h,b|                                 # method
      puts [s, , h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # log
       [s,h,b]} # Response
