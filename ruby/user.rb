@@ -64,7 +64,7 @@ module Th
   end
 
   def user_ambient
-    R['dns:' + ( self['HTTP_ORIGIN_ADDR'] || self['REMOTE_ADDR'] )]
+    R['dns:' + ( self['HTTP_ORIGIN_ADDR'] || self['REMOTE_ADDR'] || '0.0.0.0')]
   end
 
 end
