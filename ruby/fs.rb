@@ -2,28 +2,31 @@
 class R
 
   def triplrInode dirChildren=true, &f
+    file = URI.escape uri
+
     if directory?
-      d = descend.uri
+      d = descend.uri # add trailing-slash
+      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|
+        yield d, Type, type}
       yield d, Stat+'size', size
       yield d, Stat+'mtime', mtime.to_i
-      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type| yield d, Type, type}
       c.sort.map{|c|c.triplrInode false, &f} if dirChildren
 
     elsif symlink?
-      [R[Stat+'Link'], Resource].map{|type| yield uri, Type, type}
-      yield uri, Stat+'mtime', Time.now.to_i
-      yield uri, Stat+'size', 0
-      readlink.do{|t| yield uri, Stat+'target', t.stripDoc}
+      [R[Stat+'Link'], Resource].map{|type|
+        yield file, Type, type}
+      yield file, Stat+'mtime', Time.now.to_i
+      yield file, Stat+'size', 0
+      readlink.do{|t|
+        yield file, Stat+'target', t.stripDoc}
 
     else
-      yield uri, Type, R[Stat+'File']
-      yield stripDoc.uri, Type, Resource # generic-resource implied by suffixed-file
-      yield uri, Stat+'size', size
-      yield uri, Stat+'mtime', mtime.to_i
+      yield file, Type, R[Stat+'File']
+      yield file, Stat+'size', size
+      yield file, Stat+'mtime', mtime.to_i
     end
   end
 
-  # provide an arg for exceedingly-common case we're reading JSON to return parsed values
   def readFile parseJSON=false
     if f
       if parseJSON

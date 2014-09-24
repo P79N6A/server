@@ -206,7 +206,7 @@ class R
       {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true},
       {id: :jump, c: '&rarr;'}, {id: :rand, c: :rand, on: 1}),
      d.map{|u,_|
-       {_: :a, class: :track, href: URI.escape(u), c: u.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}}]}
+       {_: :a, class: :track, href: u, c: u.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}}]}
 
   %w{aif wav mpeg mp4}.map{|a|
     View[MIMEtype+'audio/'+a]=View['audio']}
