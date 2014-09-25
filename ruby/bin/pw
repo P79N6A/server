@@ -1,17 +1,29 @@
 #!/usr/bin/env ruby
+=begin
+ the first argument is ours, and expands. full args are passed along to thin
+ this script is just a convenience. for unicorn[1], or whatever server see <file:httpd.ru>, or try:
+
+  $ echo run R > config.ru
+
+1. <http://unicorn.bogomips.org/>
+
+=end
 case ARGV[0]
 when 'varnish'
   ARGV.shift
   ARGV.unshift *%w{-p 8080 -a 127.0.0.1}
 when 'apache'
   ARGV.shift
-  ENV['apache']='y'
+  ENV['apache']='y' # apache-specific sendfile response
 when /^(lo|local)$/
   ARGV.shift
   ARGV.unshift *%w{-p 80 -a 127.0.0.1}
 when 'nginx'
   ARGV.shift
-  ENV['nginx']='y'
+  ENV['nginx']='y' # nginx-specific file response
+when 'ssl'
+  ARGV.shift
+  ARGV.unshift *%w{--ssl -p 443 --ssl-key-file /etc/ssl/localcerts/server.key --ssl-cert-file /etc/ssl/localcerts/server.crt}
 else
   ARGV.unshift *%w{-p 80}
 end
@@ -29,8 +41,8 @@ module Rack
     end
     def self.load _
       Rack::Builder.new {
-        use Rack::Deflater # gzip
-        run R # requests to Resource#call in HTTP.rb
+        use Rack::Deflater
+        run R
       }.to_app
     end
   end

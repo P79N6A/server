@@ -139,6 +139,6 @@ class R
     end
   }
 
-#  GET['/man'] = Man # mount man-handler
+  GET['/man'] = Man # mount man-handler on /man
 
 end
