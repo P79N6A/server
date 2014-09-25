@@ -27,6 +27,7 @@ class R
       if r.format == 'text/html'
         e.warp
       else # alpha-prefix bound
+        graph << RDF::Statement.new(R['..'], R[Type], R[RDFs+'Resource'])
         Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
           thing = R['/man/' + CGI.escape(a.basename.to_s.sub(/\.gz$/,'').sub(/\.[0-9][a-z]*$/,''))]
           if a.exist?
