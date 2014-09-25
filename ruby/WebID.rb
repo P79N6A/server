@@ -31,7 +31,9 @@ module Th
     (self['HTTP_SSL_CLIENT_CERT']||
      self['rack.peer_cert']).do{|v|
       p = v.split /[\s\n]/
-      return [p[0..1].join(' '), p[2..-3], p[-2..-1].join(' ')].join "\n" unless p.size < 5}
+      return [p[0..1].join(' '),
+              p[2..-3],
+              p[-2..-1].join(' ')].join "\n" unless p.size < 5 }
     nil
   end
 

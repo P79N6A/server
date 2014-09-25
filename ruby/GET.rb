@@ -97,18 +97,6 @@ class R
       [@r[:Status],@r[:Response],[body]]}
   end
 
-  def graphResponse graph # RDF::Graph -> HTTP::Response
-    [200,
-     {'Content-Type' => format + '; charset=UTF-8',
-       'Triples' => graph.size.to_s,
-       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o} || '*',
-       'Access-Control-Allow-Credentials' => 'true',
-     },
-     [(format == 'text/html' &&
-    q['view'] == 'tabulate') ? H[R::View['tabulate'][]] :
-      graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
-  end
-
   View[HTTP+'Response'] = -> d,e {
     d['#'].do{|u| # Response Header
       [u[Prev].do{|p| # prev page

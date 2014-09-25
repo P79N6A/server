@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 =begin
- use inbuilt Hash and JSON classes for a subset of RDF - literal types are limited to JSON , RDF:HTML
+ to use inbuilt Hash and JSON classes for a subset of RDF,
 
   {subjURI => {predURI => object}},  key-names are URI strings
 
@@ -11,24 +11,18 @@ class R
    Hash with 'uri' key
    Literal RDF::Literal or plain string
 
- emit triple-streams: yield subjURI, predURI, object
+ to emit triples: yield subjURI, predURI, object
 
 =end
 
-  def fromStream m,*i # triplr -> graph
-    send(*i) do |s,p,o|
-      m[s] = {'uri' => s} unless m[s].class == Hash 
-      m[s][p] ||= []
-      m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
-    end; m
-  end
-
-  def graph graph = {} # file(s) -> graph
+  # file(s) -> graph
+  def graph graph = {}
     fileResources.map{|d| d.fileToGraph graph}
     graph
   end
 
-  def fileToGraph graph = {} # file -> graph
+  # file -> graph
+  def fileToGraph graph = {}
     justRDF(%w{e}).do{|file|
      graph.mergeGraph file.r true}
     graph
@@ -50,6 +44,15 @@ class R
       d = d.R; puts "<#{d.docroot}>"
       d.w g,true              # cache
       hook[d,g,host] if hook} # write-hook
+  end
+
+  # triplr -> graph
+  def fromStream m,*i
+    send(*i) do |s,p,o|
+      m[s] = {'uri' => s} unless m[s].class == Hash 
+      m[s][p] ||= []
+      m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
+    end; m
   end
 
   # triplr -> file(s)
@@ -75,11 +78,11 @@ class R
     g
   end
 
-  # replace non-RDF fs-references w/ RDF::Reader readable - long-tail for MIMEs w/o a Reader class
+  # swap non-RDF files w/ a RDF::Reader proxy - for long-tail MIMEs w/o a Reader
   def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}            # RDF suffixes
     return unless e                                            # check that source exists
     doc = self                                                 # output doc
-    unless pass.member? realpath.do{|p|p.extname.tail}         # already a good MIME?
+    unless pass.member? realpath.do{|p|p.extname.tail}         # already readable MIME?
       doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r # derived RDF file
       unless doc.e && doc.m > m                                # up-to-date?
         g = {}                                                 # blank graph
@@ -96,7 +99,6 @@ class R
         yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
   end
 
-  # graph -> MIME-format
   def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer
       d.triples{|s,p,o|            # structural triples of Hash::Graph
