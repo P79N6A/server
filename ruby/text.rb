@@ -30,11 +30,17 @@ class String
   end
 
   def tail; self[1..-1] end
+
   def to_utf8
     encode('UTF-8', undef: :replace)
   rescue Encoding::InvalidByteSequenceError
     ""
   end
+
+  def utf8
+    force_encoding 'UTF-8'
+  end
+
   def t; match(/\/$/) ? self : self+'/' end
 
 end

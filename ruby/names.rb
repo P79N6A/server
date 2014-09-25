@@ -63,7 +63,7 @@ class R
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jailed path
-  def sh; pathPOSIX.force_encoding('UTF-8').sh end # shell-escaped path
+  def sh; pathPOSIX.utf8.sh end # shell-escaped path
 
   def stripFrag; R uri.split(/#/)[0] end
   def stripDoc;  R uri.sub /\.(e|html|n3|ttl|txt)$/, '' end
