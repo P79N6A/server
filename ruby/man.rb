@@ -11,7 +11,6 @@ class R
     name.match(/^([0-9])(\/|$)/).do{|p| # optional section
       section = p[1]
       name = p.post_match}
-    ts = Time.now.to_i
 
     if name.empty?
       if r.format == 'text/html'
@@ -20,7 +19,7 @@ class R
         ('a'..'z').map{|a|
           alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
           graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
-          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], ts)}
+          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], 0)}
         r.graphResponse graph
       end
     elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
