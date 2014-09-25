@@ -5,7 +5,7 @@ def H _ # HTML as Ruby literal-values
   case _
   when Hash
     void = [:img, :input, :link, :meta].member? _[:_]
-#          [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr].member? _[:_]
+# [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr] # void els
 
     '<' + (_[:_] || :div).to_s +                                     # name
       (_.keys - [:_,:c]).map{|a|                                     # attributes
@@ -13,7 +13,7 @@ def H _ # HTML as Ruby literal-values
         {"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join + # values
       (void ? '/' : '') + '>' +                                      # void-el closer
       (_[:c] ? (H _[:c]) : '') +                                     # children
-      (void ? '' : ('</'+(_[:_]||:div).to_s+'>'))                    # full-el closer
+      (void ? '' : ('</'+(_[:_]||:div).to_s+'>'))                    # closer
   when Array
     _.map{|n|H n}.join
   else
@@ -168,8 +168,7 @@ class R
                c: ["\n",
                    (View[e.q['view']] || View['HTML'])[d,e],
                    u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;', style: 'float: left'}},
-                   u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;', style: 'float: right'}},
-                  ]}]}]}
+                   u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;', style: 'float: right'}}]}]}]}
 
   View['HTML']=->d,e{ # default view - dispatch on RDF-type
     e[:Graph] = d
@@ -190,13 +189,17 @@ class R
 
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
-     i.map{|u,r| resource = r.R
-       {class: :dir, style: "background-color: #{R.cs}",
-        c: [resource.href, #(resource.a('?set=dir').href('/') if resource.uri[-1] == '/'),
+     i.map{|u,r|
+       resource = r.R
+       currentDir = u == e.uri
+       {class: 'dir ' + (currentDir ? 'thisdir' : ''),
+         style: "background-color: #{R.cs}",
+        c: [resource.href,
             r[RDFs+'member'].do{|c| c.map{|c|
                 c = c.R
-            label = e[:Graph][c.uri].do{|r|r[Label]} # prefer RDF label over URI
-           [{_: :a, href: c.uri, class: :member, c: label || c.abbr},' ']}}]}}]} # item
+                label = e[:Graph][c.uri].do{|r|r[Label]}
+                {_: :a, href: c.uri, class: :member, c: label || c.abbr}}},
+           ]}}]}
 
   View['audio'] = ->d,e {
     [(H.once e, :audio,

@@ -12,6 +12,10 @@ a {text-decoration: none}
     margin:.3em;
 }
 
+.dir.thisdir a {
+    font-size: 1.8em;
+}
+
 .dir a {
     float:left;
     font-weight: bold;
