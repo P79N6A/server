@@ -21,7 +21,7 @@ class R
       end }
   end
 
-  def R.call e
+  def R.call e # clean up the environment a bit then run the request
     method = e['REQUEST_METHOD']
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
     e.extend Th # environment
