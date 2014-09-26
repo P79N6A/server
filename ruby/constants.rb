@@ -101,7 +101,6 @@ class R < RDF::URI
 MIME
 names
 acl
-blog
 csv
 DELETE
 facets

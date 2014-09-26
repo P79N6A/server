@@ -49,6 +49,12 @@ class R
             {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, class: :edit, c: :edit},
             r[Content]]}}}
 
+  View[SIOCt+'BlogPost'] = -> g,e {
+    g.map{|u,r|
+      {class: :blogpost,
+        c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
+            r[Content]]}}}
+
   Predicates = {
     SIOCt+'MicroblogPost' => [Content],
     SIOCt+'BlogPost' => [Title, Content],
