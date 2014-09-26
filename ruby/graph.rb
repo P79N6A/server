@@ -15,6 +15,15 @@ class R
 
 =end
 
+  # triplr -> graph
+  def fromStream m,*i
+    send(*i) do |s,p,o|
+      m[s] = {'uri' => s} unless m[s].class == Hash 
+      m[s][p] ||= []
+      m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
+    end; m
+  end
+
   # file(s) -> graph
   def graph graph = {}
     fileResources.map{|d| d.fileToGraph graph}
@@ -26,6 +35,14 @@ class R
     justRDF(%w{e}).do{|file|
      graph.mergeGraph file.r true}
     graph
+  end
+
+  # triplr -> file(s)
+  def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
+    graph = fromStream({},triplr)    # collect triples
+    R.cacheJSON graph, host, p, hook # cache
+    graph.triples &b if b            # emit triples
+    self
   end
 
   # graph -> file(s)
@@ -46,24 +63,7 @@ class R
       hook[d,g,host] if hook} # write-hook
   end
 
-  # triplr -> graph
-  def fromStream m,*i
-    send(*i) do |s,p,o|
-      m[s] = {'uri' => s} unless m[s].class == Hash 
-      m[s][p] ||= []
-      m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
-    end; m
-  end
-
-  # triplr -> file(s)
-  def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
-    graph = fromStream({},triplr)    # collect triples
-    R.cacheJSON graph, host, p, hook # cache
-    graph.triples &b if b            # emit triples
-    self
-  end
-
-  # RDF::Repository -> file(s)
+  # Repository -> file(s)
   def cacheRDF options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -78,7 +78,7 @@ class R
     g
   end
 
-  # cached transcode of Non-RDF to RDF. retval URI of new (or same) RDF-file
+  # file -> file (cached transcode) Non-RDF to RDF
   def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}            # RDF suffixes
     return unless e                                            # check that source exists
     doc = self                                                 # output doc
@@ -92,30 +92,6 @@ class R
     end
     doc
   end
-
-  def R.renderRDF d,f,e
-    (RDF::Writer.for f).buffer{|w| # init writer
-      d.triples{|s,p,o|            # structural triples of Hash::Graph
-        s && p && o &&             # all fields non-nil
-        (s = RDF::URI s            # subject-URI
-         p = RDF::URI p            # predicate-URI
-         o = (if [R,Hash].member? o.class
-                RDF::URI o.uri     # object URI ||
-              else                 # object Literal
-                l = RDF::Literal o
-                l.datatype=RDF.XMLLiteral if p == Content
-                l
-              end) rescue nil
-         (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
-  end
-
-  [['application/ld+json',:jsonld], # per-MIME renderer-lambdas
-   ['application/rdf+xml',:rdfxml],
-   ['text/plain',:ntriples],
-   ['text/turtle',:turtle],
-   ['text/n3',:n3]].map{|mime|
-    Render[mime[0]] = ->d,e{
-      R.renderRDF d, mime[1], e}}
 
 end
 
