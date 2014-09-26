@@ -88,15 +88,28 @@ class R
   end
   
   def condResponse body
-    @r['HTTP_IF_NONE_MATCH'].do{|m|m.strip.split(/\s*,\s*/).include?(@r[:Response]['ETag']) && [304,{},[]]} ||
-    body.call.do{|body|
+    etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
+    if etags && (etags.include? @r[:Response]['ETag'])
+      [304, {}, []]
+    else
+      body = body.call
       @r[:Status] ||= 200
       @r[:Response]['Content-Length'] ||= body.size.to_s
-      body.class == R ? (Nginx ? [@r[:Status],@r[:Response].update({'X-Accel-Redirect' => '/fs/' + body.pathPOSIXrel}),[]] : # Nginx
-                        Apache ? [@r[:Status],@r[:Response].update({'X-Sendfile' => body.pathPOSIX}),[]] : # Apache
-                         (f = Rack::File.new nil; f.instance_variable_set '@path', body.pathPOSIX # Rack
-                          f.serving(@r).do{|s,h,b|[s,h.update(@r[:Response]),b]})) :
-      [@r[:Status],@r[:Response],[body]]}
+      if body.class == R
+        if Apache
+          [@r[:Status], @r[:Response].update({'X-Sendfile' => body.pathPOSIX}), []]
+        elsif Nginx
+          [@r[:Status], @r[:Response].update({'X-Accel-Redirect' => '/fs/' + body.pathPOSIXrel}), []]
+        else
+          f = Rack::File.new nil
+          f.instance_variable_set '@path', body.pathPOSIX
+          f.serving(@r).do{|s,h,b|
+            [s, h.update(@r[:Response]), b]}
+        end
+      else
+        [@r[:Status], @r[:Response], [body]]
+      end
+    end
   end
 
   View[HTTP+'Response'] = -> d,e {
