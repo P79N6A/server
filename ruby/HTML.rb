@@ -191,15 +191,11 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r|
        resource = r.R
-       currentDir = u == e.uri
-       {class: 'dir ' + (currentDir ? 'thisdir' : ''),
-         style: "background-color: #{R.cs}",
-        c: [resource.href,
-            r[RDFs+'member'].do{|c| c.map{|c|
-                c = c.R
-                label = e[:Graph][c.uri].do{|r|r[Label]}
-                {_: :a, href: c.uri, class: :member, c: label || c.abbr}}},
-           ]}}]}
+       currentDir = resource.justPath == e.R.justPath
+       {class: 'dir ' + (currentDir ? 'thisdir' : ''), style: "background-color: #{R.cs}",
+        c: [{_: :a, c: resource.abbr, href: resource.uri + (currentDir ? '?set=dir' : ''), rel: :nofollow},
+            r[RDFs+'member'].do{|c|c.map{|c| c = c.R
+                {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
 
   View['audio'] = ->d,e {
     [(H.once e, :audio,
