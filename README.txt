@@ -16,3 +16,6 @@ DAEMON       host         port
 TIPS
  more daemon options: thin --help
  if launching outside this dir, symlink {css,js} for default UI
+
+MIRRORS
+<https://github.com/hallwaykid/pw> <https://gitorious.org/element/www> <http://repo.or.cz/w/www.git>
