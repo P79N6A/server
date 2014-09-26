@@ -146,4 +146,10 @@ class R
         send *s,&b }}
   end
 
+  def triplrN3
+    RDF::Reader.open(pathPOSIX, :format => :n3, :base_uri => stripDoc){|r|
+      r.each_triple{|s,p,o|
+        yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
+  end
+
 end

@@ -1,13 +1,13 @@
 #watch __FILE__
 class R
 =begin
- to use inbuilt Hash and JSON classes for a subset of RDF,
+ to use Hash and JSON classes for a subset of RDF,
 
-  {subjURI => {predURI => object}},  key-names are URI strings
+  {subjURI => {predURI => object}}, keys are URI strings
 
   object varies, can be:
    RDF::URI (URI-identified resource)
-   R (this subclass of RDF::URI)
+   R (subclass of RDF::URI)
    Hash with 'uri' key
    Literal RDF::Literal or plain string
 
@@ -78,7 +78,7 @@ class R
     g
   end
 
-  # swap non-RDF files w/ a RDF::Reader proxy - for long-tail MIMEs w/o a Reader
+  # cached transcode of Non-RDF to RDF. retval URI of new (or same) RDF-file
   def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}            # RDF suffixes
     return unless e                                            # check that source exists
     doc = self                                                 # output doc
@@ -91,12 +91,6 @@ class R
       end
     end
     doc
-  end
-
-  def triplrN3
-    RDF::Reader.open(pathPOSIX, :format => :n3, :base_uri => stripDoc){|r|
-      r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
   end
 
   def R.renderRDF d,f,e
