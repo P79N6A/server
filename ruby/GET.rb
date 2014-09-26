@@ -71,16 +71,18 @@ class R
       end
     end
 
-    condResponse ->{ # Model -> View
+    # Model -> View  (lazy continuation)
+    condResponse ->{
 
-      if NonRDF.member?(@r.format) && !q.has_key?('rdf') # JSON/Hash
+      # Hash graph
+      if NonRDF.member?(@r.format) && !q.has_key?('rdfa')
         set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view'] # construct model
         Render[@r.format][m, @r] # view
 
-      else # RDF
+      else # RDF graph
         graph = RDF::Graph.new # model
         set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # construct model
-        @r[:Response][:Triples] = graph.size.to_s   # size
+        @r[:Response][:Triples] = graph.size.to_s # size
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes # view
       end}
   end
@@ -105,7 +107,7 @@ class R
          {_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
        ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}}
 
-  # graph -> RDF representation (generic)
+  # (Hash) graph -> RDF representation (generic)
   def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer
       d.triples{|s,p,o|            # structural triples of Hash::Graph
@@ -122,7 +124,7 @@ class R
          (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
   end
 
-  # graph -> RDF representation (MIME)
+  # (Hash) graph -> RDF representation (MIME)
   [['application/ld+json',:jsonld],['application/rdf+xml',:rdfxml],['text/plain',:ntriples],['text/turtle',:turtle],['text/n3',:n3]].
     map{|mime|
     Render[mime[0]] = ->d,e{ R.renderRDF d, mime[1], e}}
