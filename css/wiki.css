@@ -20,4 +20,4 @@ a > h1, a > h2 {background-color:#fff;color:#000}
 .edit { color: #777; padding-left: .3em }
 .edit:hover { color: #7f7 }
 
-.create, .edit {float: right}
+.create, .edit, .history {float: right}

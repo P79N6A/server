@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   View['edit'] = -> graph, e { # edit resource in a <form>
@@ -15,10 +15,13 @@ class R
     Predicates[type].do{|ps| # suggest predicates
       ps.map{|p| model[p] ||= "" }}
 
-    [H.css('/css/html'), # view
+    [H.css('/css/html'), H.css('/css/wiki'), # View
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
        c: [{_: :table, class: :html,
-             c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :a, class: :uri, c: (model[Title] || s), href: s}}},
+             c: [{_: :tr, c: {_: :td, colspan: 2,
+                     c: [{_: :a, class: :uri, c: (model[Title] || s), href: s},
+                         {_: :a, class: :history, c: 'history'}
+                        ]}},
                  model.keys.-(['uri',Type]).map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}},
