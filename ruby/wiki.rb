@@ -45,7 +45,7 @@ class R
       [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
        {_: :a, href: i.docroot +  '?type=sioct:WikiArticleSection&view=edit',
          c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'},
-       H.css('/css/wiki')]}}
+       H.once(e,:wiki,H.css('/css/wiki'))]}}
 
   View[SIOCt+'WikiArticleSection'] = -> g,e {
     g.map{|u,r|
@@ -53,7 +53,8 @@ class R
       {class: :section,
         c: [{_: :a, href: u, c: {_: :h2, c: r[Title]}},
             {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, class: :edit, c: :edit},
-            r[Content]]}}}
+            r[Content],
+            H.once(e,:wiki,H.css('/css/wiki'))]}}}
 
   View[SIOCt+'BlogPost'] = -> g,e {
     g.map{|u,r|
