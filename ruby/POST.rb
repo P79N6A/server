@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -44,7 +44,9 @@ class R
       graph[s][p].push o unless o.class==String && o.empty?}
 
     # store graph
-    doc = r.docroot + '/' + r.fragment + '.' + Time.now.iso8601.sub('-','.').sub('-','/').gsub(/[+:T]/,'.') + '.e'
+    ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, '.'
+    file = r.docroot
+    doc = file.dir + '/.' + file.basename + '/' + r.fragment + '.' + ts + '.e'
     doc.w graph, true
     main.delete if main.e
     doc.ln_s main
