@@ -75,8 +75,16 @@ class R
     condResponse ->{
 
       # Hash graph
-      if NonRDF.member?(@r.format) && !q.has_key?('rdfa')
-        set.map{|r|r.setEnv(@r).fileToGraph m} unless LazyView.member? q['view'] # construct model
+      if NonRDF.member? @r.format
+        if LazyView.member?(q['view']) || q.has_key?('empty') # skip model-generation
+          set.map{|f|
+            f.fromStream m, :triplrInode
+            rsrc = f.stripDoc
+            m[rsrc] ||= {'uri' => rsrc, Type => Resource}
+          }
+        else
+          set.map{|r|r.setEnv(@r).fileToGraph m} # construct model
+        end
         Render[@r.format][m, @r] # view
 
       else # RDF graph
@@ -120,7 +128,7 @@ class R
          {_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
        ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}}
 
-  # (Hash) graph -> RDF representation (generic)
+  # graph -> RDF representation (generic)
   def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer
       d.triples{|s,p,o|            # structural triples of Hash::Graph
@@ -137,7 +145,7 @@ class R
          (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
   end
 
-  # (Hash) graph -> RDF representation (MIME)
+  # graph -> RDF representation (MIME)
   [['application/ld+json',:jsonld],['application/rdf+xml',:rdfxml],['text/plain',:ntriples],['text/turtle',:turtle],['text/n3',:n3]].
     map{|mime|
     Render[mime[0]] = ->d,e{ R.renderRDF d, mime[1], e}}
