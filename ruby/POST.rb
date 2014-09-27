@@ -45,13 +45,17 @@ class R
 
     # store graph
     ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, '.'
-    file = r.docroot
-    doc = file.dir + '/.' + file.basename + '/' + r.fragment + '/' + ts + '.e'
+    doc = r.fragmentPath + '/' + ts + '.e'
     doc.w graph, true
     main.delete if main.e
     doc.ln_s main
 
     [303,{'Location'=>uri+'?edit'},[]]
+  end
+
+  def fragmentPath
+    doc = docroot
+    doc.dir + '/.' + doc.basename + '/' + fragment
   end
 
 end
