@@ -46,7 +46,7 @@ class R
     # store graph
     ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, '.'
     file = r.docroot
-    doc = file.dir + '/.' + file.basename + '/' + r.fragment + '.' + ts + '.e'
+    doc = file.dir + '/.' + file.basename + '/' + r.fragment + '/' + ts + '.e'
     doc.w graph, true
     main.delete if main.e
     doc.ln_s main

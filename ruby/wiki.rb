@@ -20,7 +20,7 @@ class R
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
                      c: [{_: :a, class: :uri, c: (model[Title] || s), href: s},
-                         {_: :a, class: :history, c: 'history'}
+                         {_: :a, class: :history, c: 'history', href: s+'?set=page&view=table'}
                         ]}},
                  model.keys.-(['uri',Type]).map{|p|
                    {_: :tr,
