@@ -11,7 +11,7 @@ class R
     name = a.split('@')[0]
     '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
 
-  GET['/address'] = -> e,r{r.q['view'] = 'warp' if e.uri[-1]=='/'; nil } # dir-browse UI
+  GET['/address'] = -> e,r{r.q['view'] ||= 'ls' if e.uri[-1]=='/'; nil }
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
 
   GET['/thread'] = -> e, r {
