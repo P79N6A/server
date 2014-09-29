@@ -1,9 +1,7 @@
 class R
 
   View[SIOCt+'MicroblogPost'] = -> d,e {
-    c = R.c # color
-    [(H.once e,'chat',(H.css '/css/tw'),
-      {_: :style,c: "a {color: #fff; background-color: #{c}}"}),
+    [(H.once e,'chat',(H.css '/css/tw')),
      d.map{|u,r|
        [r[Date][0].split('T')[1][0..4], " ",
         {_: :a, class: :author, href: r.uri,

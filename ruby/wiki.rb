@@ -22,7 +22,7 @@ class R
                      c: [{_: :a, class: :uri, c: (model[Title] || s), href: s},
                          {_: :a, class: :history, c: 'history', href: R[s].fragmentPath + '?set=page&view=table&empty'}
                         ]}},
-                 model.keys.-(['uri',Type]).map{|p|
+                 model.keys.-(['uri','format',Type]).map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}},
                          {_: :td, c: model[p].do{|o|
