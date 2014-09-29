@@ -17,10 +17,11 @@ class R
   def fileGET
     @r[:Response].update({
       'Content-Type' => mime + '; charset=UTF-8',
-      'ETag' => [m,size].h,
-    })
+      'ETag' => [m,size].h})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    condResponse ->{ self } # continuation if uncached
+    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"] # Link headers
+    @r.ldp
+    condResponse ->{ self } # continue if uncached
   end
 
   def resourceGET # lookup handler: cascading up paths, first with host, then without
@@ -51,16 +52,9 @@ class R
     m.delete('#') if m['#'].keys.size==1 # empty request-meta
 
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"] # Link headers
-
-    @r[:Response].
-      update({ 'Accept-Patch' => 'application/json',
-               'Accept-Post' => 'text/turtle, text/n3, application/json',
-               'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-               'Access-Control-Allow-Credentials' => 'true',
-               'Allow' => Allow,
-               'Content-Type' => @r.format + '; charset=UTF-8',
-               'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
-    @r[:Response]['Link'] = @r[:Links].intersperse(', ').join
+    @r.ldp # LDP headers
+    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',
+                           'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
 
     if set.empty? # nothing found
       if q.has_key? 'edit' # editor requested
@@ -80,7 +74,7 @@ class R
             f.fromStream m, :triplrInode
             f.stripDoc.do{|r| m[r] ||= {'uri' => r, Type => Resource}}}
         else
-          puts "set " + set.join(' ')
+#          puts "set " + set.join(' ')
           set.map{|r|r.setEnv(@r).fileToGraph m} # Model
         end
         Render[@r.format][m, @r] # View
