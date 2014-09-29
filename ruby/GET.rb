@@ -3,15 +3,14 @@ class R
 
   def GET
     directory = uri[-1] == '/'
-    [self, justPath, # host-specific and global path (more-specific first)
-     (directory ? a('index.html') : nil) # HTML directory-index (could add other MIMEs..)
-    ].compact.map{|a| # check for exact-file matches
+    [self, justPath, # host-specific and global-path files
+     (directory ? a('index.html') : nil) # HTML dir-index
+    ].compact.map{|a|
       if a.file?
-        return a.setEnv(@r).fileGET # found
+        return a.setEnv(@r).fileGET # goto file
       elsif a.symlink?
         a.readlink.do{|t|return t.setEnv(@r).resourceGET} # goto target URI
       end}
-    return warp if directory && q.has_key?('warp') # goto browser-UI
     stripDoc.setEnv(@r).resourceGET # goto generic-resource
   end
 
@@ -36,13 +35,13 @@ class R
 
   def response # default handler
     set = []
-    m = {'#' => {'uri' => uri}} # = this
+    m = {'#' => {'uri' => uri}} # request-meta
 
-    # File set
+    # File(s)
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
     fileFn[self,q,m].do{|files| set.concat files }
 
-    # Resource set
+    # Resource(s)
     q['set'].do{|s|
       ResourceSet[s].do{|resFn|
         resFn[self,q,m].do{|resources|
@@ -71,27 +70,26 @@ class R
       end
     end
 
-    # Model -> View  (lazy continuation)
+    # Model -> View , lazy continuation
     condResponse ->{
 
       # Hash graph
       if NonRDF.member? @r.format
-        if LazyView.member?(q['view']) || q.has_key?('empty') # skip model-generation
+        if LazyView.member?(q['view']) || q.has_key?('empty') # identifiers only
           set.map{|f|
             f.fromStream m, :triplrInode
-            rsrc = f.stripDoc
-            m[rsrc] ||= {'uri' => rsrc, Type => Resource}
-          }
+            f.stripDoc.do{|r| m[r] ||= {'uri' => r, Type => Resource}}}
         else
-          set.map{|r|r.setEnv(@r).fileToGraph m} # construct model
+          puts "set " + set.join(' ')
+          set.map{|r|r.setEnv(@r).fileToGraph m} # Model
         end
-        Render[@r.format][m, @r] # view
+        Render[@r.format][m, @r] # View
 
       else # RDF graph
-        graph = RDF::Graph.new # model
+        graph = RDF::Graph.new # Model
         set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # construct model
-        @r[:Response][:Triples] = graph.size.to_s # size
-        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes # view
+        @r[:Response][:Triples] = graph.size.to_s
+        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes # View
       end}
   end
   
@@ -121,7 +119,7 @@ class R
   end
 
   View[HTTP+'Response'] = -> d,e {
-    d['#'].do{|u| # Response Header
+    d['#'].do{|u|
       [u[Prev].do{|p| # prev page
          {_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
        u[Next].do{|n| # next page

@@ -29,8 +29,8 @@ class R
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME']=h }  # use original hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # host
     e['SCHEME'] = e['rack.url_scheme']                      # scheme
-    p = Pathname.new URI.unescape e['REQUEST_PATH'].utf8    # path
-    path = p.expand_path.to_s                               # interpret path
+    p = Pathname.new (URI.unescape e['REQUEST_PATH'].utf8).gsub /\/+/, '/'
+    path = p.expand_path.to_s                               # path
     path += '/' if path[-1] != '/' && p.to_s[-1] == '/'     # preserve trailing-slash
     resource = R[e['SCHEME']+"://"+e['SERVER_NAME'] + path] # resource
     e[:Links] = []

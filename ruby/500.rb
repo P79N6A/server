@@ -6,8 +6,9 @@ class R
 
   E500 = -> x,e {
     uri = e['SERVER_NAME']+e['REQUEST_URI']
-    out = [500, uri, x.class, x.message, x.backtrace[0..6]].flatten.map(&:to_s)
-    Errors[uri] ||= {'uri' => '//'+uri, Content => out.map(&:hrefs).join('<br>')}; $stderr.puts out
+    out = [500, uri, x.class, x.message, x.backtrace[0..5]].flatten.map(&:to_s)
+    Errors[uri] ||= {'uri' => '//'+uri, Content => out.map(&:hrefs).join('<br>')}
+    $stderr.puts out[0..3].join(' '), out[4..-1]
 
     [500,{'Content-Type'=>'text/html'},
      [H[{_: :html,

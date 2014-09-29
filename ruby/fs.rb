@@ -3,7 +3,7 @@ class R
 
   def triplrInode dirChildren=true, &f
     file = URI.escape uri
-
+    puts file
     if directory?
       d = descend.uri # add trailing-slash
       [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|
