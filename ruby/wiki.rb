@@ -29,7 +29,9 @@ class R
                              o.justArray.map{|o|
                                case p
                                when Content
-                                 {_: :textarea, name: p, c: o, rows: 16, cols: 80}
+                                 [{_: :textarea, name: p, c: o, rows: 16, cols: 80},
+                                  {_: :select, name: :format,
+                                    c: %w{HTML markdown}.map{|f|{_: :option, value: f, c: f}}}]
                                when Date
                                  {_: :input, name: p, type: :datetime, value: !o || o.empty? && Time.now.iso8601 || o}
                                else
