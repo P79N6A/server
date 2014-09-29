@@ -81,10 +81,8 @@ class R
                "\n", r[Content], "\n"]}}}]}
 
   View[Stat+'Link'] = -> i,e {
-    i.map{|u,r|
-      r[Stat+'target'].do{|t|
-#        {_: :a, href: t[0].uri, c: t[0].uri}
-      }}}
+#    i.map{|u,r| r[Stat+'target'].do{|t| {_: :a, href: t[0].uri, c: t[0].uri}}}
+  }
 
   View['ls'] = ->d=nil,e=nil {
     keys = ['uri',Stat+'size',Type,Date,Title]

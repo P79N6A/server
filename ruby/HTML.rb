@@ -170,15 +170,13 @@ class R
                    u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;', style: 'float: left'}},
                    u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;', style: 'float: right'}}]}]}]}
 
-  View['HTML']=->d,e{ # default view - dispatch on RDF-type
+  View['HTML']=->d,e{ # default view
     e[:Graph] = d
-    d.map{|u,r|
+    d.map{|u,r| # lookup RDF:type view
       type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
       View[type ? type.to_s : 'base'][{u => r},e]}}
 
-  View['title'] = -> g,e {g.map{|u,r| {_: :a, href: u, c: r[Title] || u}}}
-
-  View['base']=->d,e{
+  View['base']=->d,e{ # generic key/val view
     [d.values.map{|v|
        if v.uri.match(/(gif|jpe?g|png|tiff)$/i)
          ShowImage[v.uri]
@@ -191,11 +189,13 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r|
        resource = r.R
-       currentDir = resource.justPath == e.R.justPath
+       path = resource.justPath
+       currentDir = path == e.R.justPath
        {class: 'dir ' + (currentDir ? 'thisdir' : ''), style: "background-color: #{R.cs}",
-        c: [{_: :a, c: resource.abbr, href: resource.uri + (currentDir ? '?set=dir' : ''), rel: :nofollow},
-            r[RDFs+'member'].do{|c|c.map{|c| c = c.R
-                {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
+         c: [({_: :a, c: '&uarr;', href: path.parentURI} if currentDir && path != '/'),
+             {_: :a, c: resource.abbr, href: resource.uri + (currentDir ? '?set=dir' : ''), rel: :nofollow},
+             r[RDFs+'member'].do{|c|c.map{|c| c = c.R
+                 {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
 
   View['audio'] = ->d,e {
     [(H.once e, :audio,
