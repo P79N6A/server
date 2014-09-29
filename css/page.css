@@ -15,3 +15,4 @@ a[rel=prev] .uri, a[rel=next] .uri {
     white-space: nowrap;
 }
 .abbr,.scheme {display: none}
+a {text-decoration: none}
