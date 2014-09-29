@@ -91,6 +91,6 @@ class R
           d.values.map{|e|
             {_: :tr, c: keys.map{|k|
                 {_: :td, property: k, c: k=='uri' ? e.R.a(e.uri[-1]=='/' ? '?view=ls' : '').href(URI.unescape e.R.basename) : e[k].html}}}},
-          {_: :style, c: ".scheme,.abbr {display: none}\na {text-decoration: none}\ntd[property='uri'] {font-weight: bold}"}]}}
+          {_: :style, c: ".scheme,.abbr {display: none}\na {text-decoration: none}\ntd[property='uri'] {font-size: 1.2em}"}]}}
 
 end

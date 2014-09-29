@@ -3,7 +3,6 @@ class R
 
   Man = -> e,r {
     graph = RDF::Graph.new
-    e.q['view'] ||= 'tabulate'
     uri = R['//'+r['SERVER_NAME']+r['REQUEST_URI']]
     manPath = '/usr/share/man'
     name = e.justPath.uri.sub(/^\/man/,'').tail || ''
