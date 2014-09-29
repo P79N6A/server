@@ -85,13 +85,12 @@ class R
   }
 
   View['ls'] = ->d=nil,e=nil {
-    keys = ['uri',Stat+'size',Type,Date,Title]
+    keys = ['uri', Stat+'size', Type, Date, Title]
     {_: :table,
-      c: [{_: :style, c: ".scheme,.abbr {display: none}"},
-          {_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+      c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
           d.values.map{|e|
             {_: :tr, c: keys.map{|k|
-                {_: :td, c: k=='uri' ? e.R.a(e.uri[-1]=='/' ? '?view=ls' : '').href(e.R.abbr) : e[k].html}
-              }}}]}}
+                {_: :td, property: k, c: k=='uri' ? e.R.a(e.uri[-1]=='/' ? '?view=ls' : '').href(URI.unescape e.R.basename) : e[k].html}}}},
+          {_: :style, c: ".scheme,.abbr {display: none}\na {text-decoration: none}\ntd[property='uri'] {font-weight: bold}"}]}}
 
 end
