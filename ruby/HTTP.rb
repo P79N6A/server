@@ -4,14 +4,15 @@ class R
   Apache = ENV['apache'] # apache=true in shell-environment
   Nginx  = ENV['nginx']
 
-  def setEnv r # request environment - Hash of HTTP Headers from Rack
+  def setEnv r # set request-environment
     @r = r
     self
   end
 
-  def getEnv
+  def getEnv # get request-environment
     @r
   end
+
   alias_method :env, :getEnv
 
   def R.dev # scan watched-files for changes
@@ -24,8 +25,8 @@ class R
   def R.call e # clean up the environment a bit then run the request
     method = e['REQUEST_METHOD']
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
-    e.extend Th # environment
-    dev         # watch sourcecode
+    e.extend Th # add environment util-functions
+    dev         # check sourcecode
     e['HTTP_X_FORWARDED_HOST'].do{|h| e['SERVER_NAME']=h }  # use original hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # host
     e['SCHEME'] = e['rack.url_scheme']                      # scheme
@@ -33,12 +34,12 @@ class R
     path = p.expand_path.to_s                               # path
     path += '/' if path[-1] != '/' && p.to_s[-1] == '/'     # preserve trailing-slash
     resource = R[e['SCHEME']+"://"+e['SERVER_NAME'] + path] # resource
-    e[:Links] = []
+    e[:Links] = []                                          # response links
     e[:Response] = {}                                       # response headers
-    e['uri'] = resource.uri
-    resource.setEnv(e).send(method).do{|s,h,b| # inspect
-     puts [s, e['uri'], h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # log
-      [s,h,b]} # Response
+    e['uri'] = resource.uri                                 # response URI
+    resource.setEnv(e).send(method).do{|s,h,b| # inspect response
+     puts [s, e['uri'], h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # log response
+      [s,h,b]} # response
   rescue Exception => x
     E500[x,e]
   end
