@@ -99,6 +99,11 @@ class R
     s[0..2] + '/' + s[3..-1]
   end
 
+  def fragmentPath # unique path for fragment
+    doc = docroot
+    doc.dir + '/.' + doc.basename + '/' + fragment
+  end
+
   # squash names to prefix:basename
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
