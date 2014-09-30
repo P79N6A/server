@@ -197,6 +197,14 @@ class R
              r[RDFs+'member'].do{|c|c.map{|c| c = c.R
                  {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
 
+  View[HTTP+'Response'] = -> d,e {
+    d['#'].do{|u|
+      [u[Prev].do{|p| # prev page
+         {_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
+       u[Next].do{|n| # next page
+         {_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
+       ([(H.css '/css/page', true), (H.js '/js/pager'), (H.once e,:mu,(H.js '/js/mu'))] if u[Next]||u[Prev])]}}
+
   View['audio'] = ->d,e {
     [(H.once e, :audio,
       (H.js '/js/audio'), (H.css '/css/audio'),

@@ -54,9 +54,17 @@ class R
     self
   end
 
+  def mkdir
+    e || FileUtils.mkdir_p(pathPOSIX)
+    self
+  rescue Exception => x
+    puts x
+    self
+  end
+
   alias_method :r, :readFile
   alias_method :w, :writeFile
-
+  alias_method :mk, :mkdir
 
   def fileResources
     [(self if e), # exact match

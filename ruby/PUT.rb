@@ -24,14 +24,6 @@ class R
     },[]]
   end
 
-  def mk
-    e || FileUtils.mkdir_p(pathPOSIX)
-    self
-  rescue Exception => x
-    puts x
-    self
-  end
-
   def putDoc
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
     return [406,{},[]] unless %w{gif html jpg json jsonld png n3 ttl}.member? ext

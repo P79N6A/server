@@ -113,14 +113,6 @@ class R
     end
   end
 
-  View[HTTP+'Response'] = -> d,e {
-    d['#'].do{|u|
-      [u[Prev].do{|p| # prev page
-         {_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
-       u[Next].do{|n| # next page
-         {_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
-       ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}}
-
   # graph -> RDF representation (generic)
   def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer

@@ -3,9 +3,10 @@ class R
   View[SIOCt+'MicroblogPost'] = -> d,e {
     d.map{|u,r|
       [r[Date][0].split('T')[1][0..4], " ",
-       {_: :a, class: :author, href: r.uri,
-         c: r[Creator].do{|c|
-           c[0].respond_to?(:uri) ? c[0].R.abbr : c[0].to_s}}, " ",
+       r[Creator].do{|c|
+         {_: :a, href: r.uri,
+           c: c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s }},
+       " ",
        r[Content],"<br>\n"]}}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost']
