@@ -15,9 +15,10 @@ class R
   end
 
   def fileGET
-    @r[:Response].update({
-      'Content-Type' => mime + '; charset=UTF-8',
-      'ETag' => [m,size].h})
+    @r[:Response].
+      update({ 'Content-Type' => mime + '; charset=UTF-8',
+               'ETag' => [m,size].h,
+               'Last-Modified' => m.rfc2822 })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"] # Link headers
     @r.ldp
