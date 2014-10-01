@@ -2,23 +2,6 @@ watch __FILE__
 
 class R
 
-  def PUT
-    return [403,{},[]] if !allowWrite
-    path = self
-    @r['HTTP_SLUG'].do{|slug|
-      path = child(slug).setEnv @r}
-    if @r.linkHeader['type'] == LDP+'BasicContainer'
-      body = @r['rack.input'].read
-      if !body.empty?
-        path.n3.w body
-      end
-      path.MKCOL
-    else
-      path.putDoc
-    end
-
-  end
-
   def MKCOL
     return [403, {}, ["Forbidden"]] unless allowWrite
     return [405, {}, ["file exists"]] if file?
@@ -28,9 +11,9 @@ class R
     [201,@r[:Response].update({Location: uri}),[]]
   end
 
-  def putDoc
-    puts :putDoc,uri
+  def PUT
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
+    return [403,{},[]] if !allowWrite
     return [406,{},[]] unless %w{gif html jpg json jsonld png n3 ttl}.member? ext
 
     # container for states
