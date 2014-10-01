@@ -4,23 +4,22 @@ class R
 
   def PUT
     return [403,{},[]] if !allowWrite
-    dest = self
-    slug = @r['HTTP_SLUG']
-
-    if slug || directory?
-      dest = child(slug || rand.to_s.h[0..7]).setEnv @r
-    end
-
+    path = self
+    @r['HTTP_SLUG'].do{|slug|
+      path = child(slug).setEnv @r}
     if @r.linkHeader['type'] == LDP+'BasicContainer'
-      dest.MKCOL
+      body = @r['rack.input'].read
+      if !body.empty?
+        path.n3.w body
+      end
+      path.MKCOL
     else
-      dest.putDoc
+      path.putDoc
     end
 
   end
 
   def MKCOL
-    puts :mkcol,uri
     return [403, {}, ["Forbidden"]] unless allowWrite
     return [405, {}, ["file exists"]] if file?
     return [405, {}, ["dir exists"]] if directory?
