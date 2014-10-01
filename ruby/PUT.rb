@@ -4,17 +4,23 @@ class R
 
   def PUT
     return [403,{},[]] if !allowWrite
-    
-    if @r.linkHeader['type'] == LDP+'BasicContainer'
-      self.MKCOL
-    else
-      putDoc
+    dest = self
+
+    if directory?
+      name = @r['HTTP_SLUG'] || rand.to_s.h[0..7]
+      dest = child(name).setEnv @r
     end
+
+    if @r.linkHeader['type'] == LDP+'BasicContainer'
+      dest.MKCOL
+    else
+      dest.putDoc
+    end
+
   end
 
   def MKCOL
     return [403, {}, ["Forbidden"]]        unless allowWrite
-    return [409, {}, ["parent not found"]] unless dir.exist?
     return [405, {}, ["file exists"]]      if file?
     return [405, {}, ["dir exists"]]       if directory?
     mk

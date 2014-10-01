@@ -37,7 +37,7 @@ class R
     e[:Links] = []                                          # response links
     e[:Response] = {}                                       # response headers
     e['uri'] = resource.uri                                 # response URI
-    puts e.to_a.unshift([method,resource]).map{|r|r.join ' '} # log request
+#    puts e.to_a.unshift([method,resource]).map{|r|r.join ' '} # log request
     resource.setEnv(e).send(method).do{|s,h,b| # inspect response
      puts [s, e['uri'], h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # log response
       [s,h,b]} # response
