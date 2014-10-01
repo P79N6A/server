@@ -14,20 +14,14 @@ class R
 
     # LDP handler
 
-      dir = @r.linkHeader['type'] == LDP+'BasicContainer'
+      isDir = @r.linkHeader['type'] == LDP+'BasicContainer'
       slug = @r['HTTP_SLUG']
+      path = slug ? child(slug).setEnv(@r) : self
 
-      path = if slug
-               child slug
-             else
-               child rand.to_s.h[0..5]
-             end
-
-      path.setEnv @r
-
-      if dir
+      if isDir
         body = @r['rack.input'].read
-        puts body
+        path = child(rand.to_s.h[0..6]).setEnv(@r) unless slug
+
         if !body.empty?
           path.n3.w body
         end
