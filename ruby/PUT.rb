@@ -24,7 +24,7 @@ class R
     return [405, {}, ["file exists"]] if file?
     return [405, {}, ["dir exists"]] if directory?
     mk
-    @r.ldp
+    ldp
     [201,@r[:Response].update({Location: uri}),[]]
   end
 
@@ -46,7 +46,7 @@ class R
     main.delete if main.e # unlink prior
     doc.ln_s main         # link current
 
-    @r.ldp
+    ldp
     [201,@r[:Response].update({Location: uri}),[]]
   end
 

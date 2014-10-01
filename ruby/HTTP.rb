@@ -49,20 +49,22 @@ class R
     @r.q # query Hash
   end
 
+  def ldp
+    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
+    @r[:Response].
+      update({ 'Accept-Patch' => 'application/json',
+               'Accept-Post' => 'text/turtle, text/n3, application/json',
+               'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
+               'Access-Control-Allow-Credentials' => 'true',
+               'Access-Control-Expose-Headers' => "User, Triples, Location, Link, Vary, Last-Modified",
+               'Allow' => Allow,
+               'Link' => @r[:Links].intersperse(', ').join,
+             })
+  end
+
 end
 
 module Th
-
-  def ldp
-    self[:Response].
-      update({ 'Accept-Patch' => 'application/json',
-               'Accept-Post' => 'text/turtle, text/n3, application/json',
-               'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o } || '*',
-               'Access-Control-Allow-Credentials' => 'true',
-               'Allow' => R::Allow,
-               'Link' => self[:Links].intersperse(', ').join,
-             })
-  end
 
   def cookies
     (Rack::Request.new self).cookies

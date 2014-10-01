@@ -20,8 +20,7 @@ class R
                'ETag' => [m,size].h,
                'Last-Modified' => m.rfc2822 })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"] # Link headers
-    @r.ldp
+    ldp
     condResponse ->{ self } # continue if uncached
   end
 
@@ -51,9 +50,8 @@ class R
             set.concat resource.fileResources}}}}
 
     m.delete('#') if m['#'].keys.size==1 # empty request-meta
+    ldp # LDP headers
 
-    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"] # Link headers
-    @r.ldp # LDP headers
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',
                            'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
 
