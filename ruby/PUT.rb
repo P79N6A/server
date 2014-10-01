@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 
 class R
 
@@ -20,6 +20,7 @@ class R
   end
 
   def MKCOL
+    puts :mkcol,uri
     return [403, {}, ["Forbidden"]] unless allowWrite
     return [405, {}, ["file exists"]] if file?
     return [405, {}, ["dir exists"]] if directory?
@@ -29,6 +30,7 @@ class R
   end
 
   def putDoc
+    puts :putDoc,uri
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
     return [406,{},[]] unless %w{gif html jpg json jsonld png n3 ttl}.member? ext
 
