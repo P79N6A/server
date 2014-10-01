@@ -133,6 +133,7 @@ class R
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
     'text/textile'         => [:triplrTextile],
+    'text/turtle'          => [:triplrTurtle],
     'text/tw'              => [:triplrTwUserlist],
     'text/uris'            => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
@@ -146,8 +147,16 @@ class R
         send *s,&b }}
   end
 
-  def triplrN3
-    RDF::Reader.open(pathPOSIX, :format => :n3, :base_uri => stripDoc){|r|
+  def triplrN3 &b
+    triplrRDF :n3, &b
+  end
+
+  def triplrTurtle &b
+    triplrRDF :turtle, &b
+  end
+
+  def triplrRDF f
+    RDF::Reader.open(pathPOSIX, :format => f, :base_uri => stripDoc){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
   end
