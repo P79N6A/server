@@ -5,10 +5,10 @@ class R
   def PUT
     return [403,{},[]] if !allowWrite
     dest = self
+    slug = @r['HTTP_SLUG']
 
-    if directory?
-      name = @r['HTTP_SLUG'] || rand.to_s.h[0..7]
-      dest = child(name).setEnv @r
+    if slug || directory?
+      dest = child(slug || rand.to_s.h[0..7]).setEnv @r
     end
 
     if @r.linkHeader['type'] == LDP+'BasicContainer'
@@ -20,14 +20,12 @@ class R
   end
 
   def MKCOL
-    return [403, {}, ["Forbidden"]]        unless allowWrite
-    return [405, {}, ["file exists"]]      if file?
-    return [405, {}, ["dir exists"]]       if directory?
+    return [403, {}, ["Forbidden"]] unless allowWrite
+    return [405, {}, ["file exists"]] if file?
+    return [405, {}, ["dir exists"]] if directory?
     mk
-    [200,{
-       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-       'Access-Control-Allow-Credentials' => 'true',
-    },[]]
+    @r.ldp
+    [201,@r[:Response].update({Location: uri}),[]]
   end
 
   def putDoc
@@ -48,11 +46,8 @@ class R
     main.delete if main.e # unlink prior
     doc.ln_s main         # link current
 
-    [201,{
-       'Location' => uri,
-       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-       'Access-Control-Allow-Credentials' => 'true',
-    },[]]
+    @r.ldp
+    [201,@r[:Response].update({Location: uri}),[]]
   end
 
   def putForm
