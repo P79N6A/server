@@ -42,7 +42,7 @@ class R
       puts [ method,
              s,
              '<'+resource.uri+'>',
-             *(user ? ['<'+e.user+'>'] : []),
+             *(e.user ? ['<'+e.user+'>'] : []),
              e['HTTP_USER_AGENT'],
              e['HTTP_REFERER'
               ]].join ' '
