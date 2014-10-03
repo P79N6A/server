@@ -38,10 +38,8 @@ class R
     e[:Response] = {}                                       # response headers
     e['uri'] = resource.uri                                 # response URI
 
-#    puts e.to_a.unshift([method,resource]).map{|r|r.join ' '} # log request
-
     resource.setEnv(e).send(method).do{|s,h,b|
-      puts [method, s, '<'+resource.uri+'>', e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' '
+      puts [method, s, '<'+resource.uri+'>', '<'+e.user+'>', e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' '
       [s,h,b]
 
     } # response

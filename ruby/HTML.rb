@@ -115,8 +115,6 @@ end
 
 class R
 
-  LazyView = %w{tabulate}
-
   def href name = nil
     H({_: :a, href: uri, c: name || abbr})
   end
@@ -193,7 +191,7 @@ class R
        currentDir = path == e.R.justPath
        {class: 'dir ' + (currentDir ? 'thisdir' : ''), style: "background-color: #{R.cs}",
          c: [({_: :a, class: :up, c: '&uarr;', href: path.parentURI.descend} if currentDir && path != '/'),
-             {_: :a, c: resource.abbr, href: resource.uri + (currentDir ? '?set=dir' : ''), rel: :nofollow},
+             {_: :a, c: resource.abbr, href: resource.uri, rel: :nofollow},
              r[RDFs+'member'].do{|c|c.map{|c| c = c.R
                  {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
 

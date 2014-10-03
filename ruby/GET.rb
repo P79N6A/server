@@ -65,17 +65,11 @@ class R
 
     # Model -> View , lazy continuation
     condResponse ->{
+      puts "fs " + set.join(' ')
 
       # Hash graph
       if NonRDF.member? @r.format
-        if LazyView.member?(q['view']) || q.has_key?('empty') # identifiers only
-          set.map{|f|
-            f.fromStream m, :triplrInode
-            f.stripDoc.do{|r| m[r] ||= {'uri' => r, Type => Resource}}}
-        else
-#          puts "set " + set.join(' ')
-          set.map{|r|r.setEnv(@r).fileToGraph m} # Model
-        end
+        set.map{|r|r.setEnv(@r).fileToGraph m} # Model
         Render[@r.format][m, @r] # View
 
       else # RDF graph
