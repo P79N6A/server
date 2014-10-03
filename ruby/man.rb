@@ -12,31 +12,8 @@ class R
       name = p.post_match}
 
     if name.empty?
-      if r.format == 'text/html'
-        e.warp # deliver browser
-      else # alpha-index graph
-        ('a'..'z').map{|a|
-          alpha = R['//'+r['SERVER_NAME']+'/man/'+a+'/']
-          graph << RDF::Statement.new(alpha, R[Type], R[Stat+'Directory'])
-          graph << RDF::Statement.new(alpha, R[Stat+'mtime'], 0)}
-        r.graphResponse graph
-      end
-    elsif alpha = name.match(/^([a-z])\/$/).do{|a|a[1]}
-      if r.format == 'text/html'
-        e.warp
-      else # alpha-prefix bound
-        graph << RDF::Statement.new(R['..'], R[Type], R[RDFs+'Resource'])
-        Pathname.glob(manPath+'/man*/'+alpha+'*').map{|a|
-          thing = R['/man/' + CGI.escape(a.basename.to_s.sub(/\.gz$/,'').sub(/\.[0-9][a-z]*$/,''))]
-          if a.exist?
-            stat = a.stat
-            graph << RDF::Statement.new(thing, R[Type], R[RDFs+'Resource'])
-            graph << RDF::Statement.new(thing, R[Stat+'mtime'], stat.mtime.to_i)
-            graph << RDF::Statement.new(thing, R[Stat+'size'], stat.size)
-          end}
-        r.graphResponse graph
-      end
-    else # manpage
+      E404[e,r]
+    else
 
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang

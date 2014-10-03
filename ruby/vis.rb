@@ -1,7 +1,6 @@
 #watch __FILE__
 class R
 
-  # directory-browser and editor
   def warp
     [303, {'Location' => R.warp(@r)}, []]
   end

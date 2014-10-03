@@ -4,7 +4,7 @@ module Th
     cert.do{|c|
       cert = ('/cache/uid/' + (R.dive c.h)).R
       webID.do{|id| cert.w id } unless cert.exist?
-      return cert.r.R if cert.e
+      return cert.r.R if cert.exist?
     }
   end
 

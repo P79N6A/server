@@ -15,8 +15,8 @@ class R
     R['schema'].c.select{|f|f.node.symlink?}
   end
 
-  # shell usage:
-  # R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
+  # (sh)
+  #  R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
   def cacheSchema prefix
     short = R['schema'].child(prefix).n3
     if !short.e
