@@ -25,9 +25,7 @@ class R
       Type => [R[LDP+'BasicContainer'], R[SIOC+'Thread']],
       RDFs+'member' => m.keys.map(&:R)}
 
-    v = r.q['view'] ||= 'force' # visualize thread
-    r[:Response]['Access-Control-Allow-Origin'] = r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'
-    r[:Response]['Access-Control-Allow-Credentials'] = 'true'
+    v = r.q['view'] ||= 'force'
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h # view id
 

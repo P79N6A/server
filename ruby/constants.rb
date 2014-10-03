@@ -129,7 +129,6 @@ search
 text
 time
 ui
-user
 vis
 WebID
 wiki

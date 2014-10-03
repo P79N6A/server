@@ -1,17 +1,19 @@
 module Th
 
-  def user_webid
+  def user
     if c = cert
-      u = ('/cache/uid/' + (R.dive c.h)).R # cache URI
-      webID.do{|id| u.w id} if !u.e # check cert
-      return u.r.R if u.e           # user URI
+      session = ('/cache/uid/' + (R.dive c.h)).R
+      unless session.exist?
+        webID.do{|id| session.w id }
+      end
+      return session.r.R if session.e
     end
     nil
   end
 
-  def webID pem = cert # match cert with web claim
+  def webID pem = cert
     if pem
-      OpenSSL::X509::Certificate.new(pem).do{|x509| # parse
+      OpenSSL::X509::Certificate.new(pem).do{|x509|
         x509.extensions.find{|x|x.oid == 'subjectAltName'}.do{|user|
           user = user.value.sub /^URI./, ''
           graph = RDF::Repository.load user
@@ -27,7 +29,7 @@ module Th
     nil
   end
 
-  def cert # reformat cert
+  def cert
     (self['HTTP_SSL_CLIENT_CERT']||
      self['rack.peer_cert']).do{|v|
       p = v.split /[\s\n]/
