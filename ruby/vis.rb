@@ -1,15 +1,11 @@
 #watch __FILE__
 class R
 
-  def R.warp env
-    env['SCHEME']+'://linkeddata.github.io/warp/#/list/'+
-    env['SCHEME']+'/'+env['SERVER_NAME']+env['REQUEST_PATH']
-  end
-
   View['warp'] = ->graph, env {
     uri = env['SCHEME']+'://linkeddata.github.io/warp/#/list/'+env['SCHEME']+'/'+env['SERVER_NAME']+env['REQUEST_PATH']
-    [{_: :script, c: "document.location.href = '#{uri}';"},
-     View['ls'][graph, env]]}
+    [{_: :noscript, c: View['ls'][graph, env]},
+     {_: :script, c: "document.location.href = '#{uri}';"}
+    ]}
 
   View['tabulate'] = ->d=nil,e=nil {
     src = '//linkeddata.github.io/tabulator/'
