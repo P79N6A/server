@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class R
 
-  def triplrInode dirChildren=true, &f
+  def triplrInode &f
     file = URI.escape uri
 
     if directory?
@@ -10,7 +10,6 @@ class R
         yield d, Type, type}
       yield d, Stat+'size', size
       yield d, Stat+'mtime', mtime.to_i
-      c.sort.map{|c|c.triplrInode false, &f} if dirChildren
 
     elsif symlink?
       [R[Stat+'Link'], Resource].map{|type|
@@ -74,9 +73,12 @@ class R
 
   FileSet['default'] = -> e,q,g {
     s = []
-    s.concat e.fileResources # host-specific paths
-    e.justPath.do{|p|        # global paths
-      s.concat p.fileResources unless p.uri == '/'}
+    s.concat e.fileResources
+    s.concat p.justPath.fileResources
+    if e.directory?
+      s.concat e.c
+      s.concat e.justPath.c
+    end
     s }
 
   View[Stat+'File'] = -> i,e {
@@ -88,9 +90,7 @@ class R
                "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr}, # link HTML representation of file
                "\n", r[Content], "\n"]}}}]}
 
-  View[Stat+'Link'] = -> i,e {
-#    i.map{|u,r| r[Stat+'target'].do{|t| {_: :a, href: t[0].uri, c: t[0].uri}}}
-  }
+  View[Stat+'Link'] = -> i,e {}
 
   View['ls'] = ->d=nil,e=nil {
     keys = ['uri', Stat+'size', Type, Date, Title]

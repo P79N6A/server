@@ -114,7 +114,7 @@ class R
      [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
   end
 
-  # graph -> RDF representation (generic)
+  # graph -> RDF format
   def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer
       d.triples{|s,p,o|            # structural triples of Hash::Graph
@@ -131,7 +131,6 @@ class R
          (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
   end
 
-  # graph -> RDF representation (MIME)
   [['application/ld+json',:jsonld],['application/rdf+xml',:rdfxml],['text/plain',:ntriples],['text/turtle',:turtle],['text/n3',:n3]].
     map{|mime|
     Render[mime[0]] = ->d,e{ R.renderRDF d, mime[1], e}}

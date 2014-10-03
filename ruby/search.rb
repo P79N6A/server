@@ -1,23 +1,6 @@
 #watch __FILE__
 class R
 
-  FileSet['directory'] = -> e,q,g {
-    c = e.c
-    e.justPath.do{|path| c.concat path.c unless path=='/'}
-    e.env['REQUEST_PATH'].do{|path| # pagination on date-dirs 
-      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
-        t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # Date object
-        pp = (t-1).strftime('/%Y/%m/%d/') # prev day
-        np = (t+1).strftime('/%Y/%m/%d/') # next day
-        qs = "?set=dir&view=#{q['view']}"
-        g['#'][Prev] = {'uri' => pp + qs} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
-        g['#'][Next] = {'uri' => np + qs} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
-        g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]
-      }}
-    c }
-
-  FileSet['dir'] = FileSet['directory']
-
   FileSet['find'] = -> e,q,m,x='' {
     q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
@@ -30,11 +13,6 @@ class R
   def glob a = ""
     (Pathname.glob pathPOSIX + a).map &:R
   end
-
-  FileSet['glob'] = -> d,e=nil,_=nil {
-    p = [d, d.justPath]. # search host-specific and global path
-    compact.map(&:glob).flatten[0..4e2].compact.partition &:inside # cap at 400 results and bound paths
-    p[0] }
 
   FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
