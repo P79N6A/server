@@ -1,9 +1,8 @@
 class R
 
-  def HEAD # just header
-    self.GET.do{|s,h,b|
-      [s,h,[]]
-    }
+  def HEAD
+    self.GET.do{|s, h, b  |
+                 [s, h, [] ]}
   end
 
 end

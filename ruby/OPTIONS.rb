@@ -4,10 +4,11 @@ class R
   Allow = AllowMethods.join ', '
 
   def OPTIONS
+    m = @r['HTTP_ACCESS_CONTROL_REQUEST_METHOD']
     h = {
       'Allow' => Allow,
       'Access-Control-Allow-Credentials' => 'true',
-      'Access-Control-Allow-Methods' => @r['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] || methods,
+      'Access-Control-Allow-Methods' => (AllowMethods.member? m) ? m : Allow,
       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o} || '*',
       'Accept-Patch' => 'application/json',
       'Accept-Post' => 'text/turtle, text/n3, application/json',
