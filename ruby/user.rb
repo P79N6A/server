@@ -2,9 +2,6 @@
 
 class R
 
-  Whoami = GET['/whoami'] = -> d,e {
-    [303,{'Location' => e.user.uri},[]]}
-
   LoginForm = {_: :form, action: '/login', method: :POST,
       c: [{_: :input, name: :user, placeholder: :username},
           {_: :input, name: :passwd, type: :password, placeholder: :password},
@@ -21,26 +18,26 @@ class R
     [303, {Location: '/'}, []]}
 
   POST['/login'] = -> e,r {
-    hdr = {Location: '/whoami'}
+    head = {Location: '/'}
     args = Rack::Request.new(r).params
     name = args['user'].slugify[0..32]
     user = R['/user/' + name.h[0..2] + '/' + name + '#' + name]
     shadow = R['/index' + user.uri]
     pwI = args['passwd'].crypt 'sel'      # claimed
     pwR = shadow['passwd'][0]             # actual
-    unless pwR                            # new user
+    unless pwR                            # init user
       user.jsonDoc.
         w({user.uri => {DC+'created' => Time.now.iso8601}},true)
       shadow['passwd'] = pwR = pwI
     end
-    if pwI == pwR                         # passwd valid?
-      unless user == r.user_basic         # session exists
-        s = rand.to_s.h                   # new session-ID
-        Rack::Utils.set_cookie_header!(hdr, "session", {:value => s, :path => "/"}) # return session-ID
-        Session[s]['user'] = user # link to user URI
-      end
+    if pwI == pwR                       # passwd valid?
+      head[:Location] = user
+      session_id = rand.to_s.h
+      Session[session_id]['user'] = user
+      Rack::Utils.set_cookie_header!(head, "session", {:value => session_id, :path => "/"})
+      
     end
-    [303,hdr,[]]}
+    [303,head,[]]}
 
   Session = -> id {R['/cache/session/' + (R.dive id)]}
 
