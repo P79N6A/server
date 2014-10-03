@@ -74,10 +74,8 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources
-    s.concat p.justPath.fileResources
-    if e.directory?
+    if e.directory? && e.uri[-1]=='/'
       s.concat e.c
-      s.concat e.justPath.c
     end
     s }
 
