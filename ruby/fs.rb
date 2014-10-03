@@ -74,9 +74,7 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources
-    if e.directory? && e.uri[-1]=='/'
-      s.concat e.c
-    end
+    s.concat e.c if e.directory? && e.uri[-1]=='/'
     s }
 
   View[Stat+'File'] = -> i,e {

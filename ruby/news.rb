@@ -11,7 +11,7 @@ class R
     cacheRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
     self
   rescue Exception => e
-    puts "feed #{uri} #{e} #{e.message}"#, e.backtrace
+    puts [:feed, uri, e, e.message, e.backtrace]
   end
   def getFeeds h='localhost'
     uris.map{|u| u.R.getFeed h}
