@@ -2,7 +2,7 @@
 
 class R
 
-  GET['/whoami'] = -> d,e {
+  Whoami = GET['/whoami'] = -> d,e {
     [303,{'Location' => e.user.uri},[]]}
 
   LoginForm = {_: :form, action: '/login', method: :POST,

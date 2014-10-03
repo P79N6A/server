@@ -108,11 +108,12 @@ class R
     parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') &&
       Mail::Encodings.defined?(p.body.encoding)      # decodable?
     }.map{|p|
-      yield e, Content, H({_: :pre, class: :mail,
+      yield e, Content,
+      H({_: :pre, class: :mail,
           c: p.decoded.to_utf8.hrefs.gsub(/^\s*(&gt;)(&gt;|\s)*\n/,"").lines.to_a.map{|l| # skip quoted&empty lines
             l.match(/(^\s*(&gt;|On[^\n]+(said|wrote))[^\n]*)\n/) ?        # quoted?
             {_: :span, class: :q, depth: l.scan(/(&gt;)/).size, c: l} : l # wrap quoted-line
-          }})}
+                            }})}
     
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 
