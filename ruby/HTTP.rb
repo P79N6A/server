@@ -22,7 +22,7 @@ class R
       end }
   end
 
-  def R.call e # clean up the environment a bit then run the request
+  def R.call e
     method = e['REQUEST_METHOD']
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
     e.extend Th # add environment util-functions
@@ -37,10 +37,14 @@ class R
     e[:Links] = []                                          # response links
     e[:Response] = {}                                       # response headers
     e['uri'] = resource.uri                                 # response URI
+
 #    puts e.to_a.unshift([method,resource]).map{|r|r.join ' '} # log request
-    resource.setEnv(e).send(method).do{|s,h,b| # inspect response
-      puts [s, e['uri'], h['Content-Type'], e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404 # log response
-      [s,h,b]} # response
+
+    resource.setEnv(e).send(method).do{|s,h,b|
+      puts [method, '<'+resource.uri+'>', s, e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404
+      [s,h,b]
+
+    } # response
   rescue Exception => x
     E500[x,e]
   end
@@ -59,7 +63,8 @@ class R
       'Allow' => Allow,
       'Link' => @r[:Links].intersperse(', ').join,
     }
-    @r[:Links].concat ["<#{aclURI}>; rel=acl", "<#{docroot}>; rel=meta"]
+    @r[:Links].concat ["<#{aclURI}>; rel=acl",
+                       "<#{docroot}>; rel=meta"]
     @r[:Response].update headers
   end
 
@@ -121,11 +126,12 @@ module Th
      {'Content-Type' => format + '; charset=UTF-8',
        'Triples' => graph.size.to_s,
        'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o} || '*',
-       'Access-Control-Allow-Credentials' => 'true',
      },
-     [(format == 'text/html' &&
-    q['view'] == 'tabulate') ? H[R::View['tabulate'][]] :
-      graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
+     [
+      graph.dump(
+                 RDF::Writer.for(:content_type => format).to_sym
+                 )
+     ]]
   end
 
 end
