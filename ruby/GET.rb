@@ -65,7 +65,6 @@ class R
 
     # Model -> View , lazy continuation
     condResponse ->{
-      puts "fs " + set.join(' ')
 
       # Hash graph
       if NonRDF.member? @r.format
