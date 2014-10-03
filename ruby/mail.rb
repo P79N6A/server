@@ -11,7 +11,6 @@ class R
     name = a.split('@')[0]
     '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
 
-  GET['/address'] = -> e,r{r.q['view'] ||= 'ls' if e.uri[-1]=='/'; nil }
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
 
   GET['/thread'] = -> e, r {
@@ -146,13 +145,14 @@ class R
   IndexMail = ->doc, graph, host {
     graph.map{|u,r|
       addresses = []
-   r[Creator].do{|from|addresses.concat from}
-        r[To].do{|to|addresses.concat to}
+      r[Creator].do{|from|addresses.concat from}
+      r[To].do{|to|       addresses.concat to}
       r[Date].do{|date|
         r[Title].do{|title|
-          name = '/' + date[0][0..7].gsub('-','/') + title[0].sub(/\b[rR][eE]: /,'').gsub(/\W+/,' ').strip
+          name = 
           addresses.map{|address|
-            R['/thread/'+u.R.basename].ln_s R[address.R.dirname + name]}}}}} # link discussion to address
+            doc.ln_s R[address.R.dirname + '/' + date[0][0..7].gsub('-','/') + rand.to_s.h[0..5]]
+          }}}}}
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOCt+'MailMessage'
@@ -175,8 +175,8 @@ class R
           score[a] += weight[a] || 1}}
       score.invert.max[1]}
 
-    [View[HTTP+'Response'][d,env], (H.css '/css/threads', true),'<br clear=all>',
-     groups.map{|group,threads| # each group
+    [View[HTTP+'Response'][d,env], (H.css '/css/threads', true),
+     groups.map{|group,threads|
        color = cs
        [group.do{|g|{class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.fragment, href: g}}},
         {class: :posts, style: 'background-color:' + color,

@@ -60,7 +60,7 @@ class R
     docs.map{|d,g| # each doc
       d = d.R; puts "<#{d.docroot}>"
       d.w g,true              # cache
-      hook[d,g,host] if hook} # write-hook
+      hook[d,g,host] if hook} # indexer
   end
 
   # Repository -> file(s)

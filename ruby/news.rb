@@ -1,7 +1,7 @@
 class R
 
   GET['/news'] = -> d,e {
-    if d.path.tail.split('/').size == 1 # if not in a subdir, suggest a paged view
+    if d.path.tail.split('/').size == 1
       e.q['set'] ||= 'page'
       e.q['c'] ||= 32
       nil
@@ -181,9 +181,9 @@ class R
   FeedArchiverJSON = -> doc, graph, host {
     doc.roonga host
     graph.map{|u,r|
-      r[Date].do{|t| # link doc to date-index
-        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, '' # trim normalized timezones and non-unique symbols
-        b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean basename
+      r[Date].do{|t|
+        t = t[0].gsub(/[-T]/,'/').sub /(.00.00|Z)$/, ''
+        b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # derive basename
         doc.ln_s R["//#{host}/news/#{t}#{b}e"]}} # link to timeline
     doc}
 

@@ -5,7 +5,7 @@ class R
     file = URI.escape uri
 
     if directory?
-      d = descend.uri # add trailing-slash
+      d = descend.uri
       [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|
         yield d, Type, type}
       yield d, Stat+'size', size

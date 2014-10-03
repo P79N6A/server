@@ -63,7 +63,6 @@ class R
       end
     end
 
-    # Model -> View , lazy continuation
     condResponse ->{
 
       # Hash graph
@@ -73,7 +72,7 @@ class R
 
       else # RDF graph
         graph = RDF::Graph.new # Model
-        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}} # construct model
+        set.map{|r|(r.setEnv @r).justRDF.do{|doc| graph.load doc.pathPOSIX, :base_uri => self}}
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes # View
       end}
