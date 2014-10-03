@@ -1,22 +1,21 @@
 #watch __FILE__
 class R
 
-  def warp
-    [303, {'Location' => R.warp(@r)}, []]
-  end
-
   def R.warp env
     env['SCHEME']+'://linkeddata.github.io/warp/#/list/'+
     env['SCHEME']+'/'+env['SERVER_NAME']+env['REQUEST_PATH']
   end
 
-  View['warp'] = ->d,e {
-    [{_: :script, c: "document.location.href = '#{R.warp e}';"}, # JS
-     View['ls'][d,e]]} # !JS
+  View['warp'] = ->graph, env {
+    uri = env['SCHEME']+'://linkeddata.github.io/warp/#/list/'+env['SCHEME']+'/'+env['SERVER_NAME']+env['REQUEST_PATH']
+    [{_: :script, c: "document.location.href = '#{uri}';"},
+     View['ls'][graph, env]]}
 
   View['tabulate'] = ->d=nil,e=nil {
     src = '//linkeddata.github.io/tabulator/'
-    [(H.css src + 'tabbedtab'),(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),(H.js src + 'js/mashup/mashlib'),
+    [(H.css src + 'tabbedtab'),
+     (H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
+     (H.js src + 'js/mashup/mashlib'),
 "<script>jQuery(document).ready(function() {
     var uri = window.location.href;
     window.document.title = uri;
