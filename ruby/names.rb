@@ -65,8 +65,14 @@ class R
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jailed path
   def sh; pathPOSIX.utf8.sh end # shell-escaped path
 
+  def docroot
+    stripFrag.stripDoc
+  end
+
   def stripFrag; R uri.split(/#/)[0] end
+
   def stripDoc;  R uri.sub /\.(e|html|n3|ttl|txt)$/, '' end
+
   def stripSlash
     if uri[-1] == '/'
       if path == '/'
@@ -79,13 +85,8 @@ class R
     end
   end
 
-  def docroot
-    stripFrag.stripDoc.stripSlash.do{|u|
-      if u.path == '/'
-        u + (host ? host.split('.')[0] : 'base')
-      else
-        u
-      end}
+  def metaURI
+    docroot
   end
 
   def bindHost

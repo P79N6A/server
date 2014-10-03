@@ -41,7 +41,7 @@ class R
 #    puts e.to_a.unshift([method,resource]).map{|r|r.join ' '} # log request
 
     resource.setEnv(e).send(method).do{|s,h,b|
-      puts [method, '<'+resource.uri+'>', s, e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' ' unless s==404
+      puts [method, s, '<'+resource.uri+'>', e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' '
       [s,h,b]
 
     } # response
@@ -64,7 +64,7 @@ class R
       'Link' => @r[:Links].intersperse(', ').join,
     }
     @r[:Links].concat ["<#{aclURI}>; rel=acl",
-                       "<#{docroot}>; rel=meta"]
+                       "<#{metaURI}>; rel=meta"]
     @r[:Response].update headers
   end
 

@@ -1,9 +1,8 @@
 #watch __FILE__
 class R
 
-  # filesystem graph-store, index functions
-
   def [] p; predicate p end
+
   def []= p,o
     if o
       setFs p,o
