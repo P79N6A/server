@@ -128,9 +128,8 @@ schema
 search
 text
 time
-ui
+uid
 vis
-WebID
 wiki
 }.map{|r|require_relative r}
 

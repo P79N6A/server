@@ -105,6 +105,15 @@ class R
     end
   end
 
+  def graphResponse graph
+    [200,
+     {'Content-Type' => format + '; charset=UTF-8',
+       'Triples' => graph.size.to_s,
+       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o} || '*',
+     },
+     [graph.dump(RDF::Writer.for(:content_type => format).to_sym)]]
+  end
+
   # graph -> RDF representation (generic)
   def R.renderRDF d,f,e
     (RDF::Writer.for f).buffer{|w| # init writer

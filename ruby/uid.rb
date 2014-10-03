@@ -1,14 +1,11 @@
 module Th
 
   def user
-    if c = cert
-      session = ('/cache/uid/' + (R.dive c.h)).R
-      unless session.exist?
-        webID.do{|id| session.w id }
-      end
-      return session.r.R if session.e
-    end
-    nil
+    cert.do{|c|
+      cert = ('/cache/uid/' + (R.dive c.h)).R
+      webID.do{|id| cert.w id } unless cert.exist?
+      return cert.r.R if cert.e
+    }
   end
 
   def webID pem = cert

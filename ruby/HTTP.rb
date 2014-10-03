@@ -39,7 +39,13 @@ class R
     e['uri'] = resource.uri                                 # response URI
 
     resource.setEnv(e).send(method).do{|s,h,b|
-      puts [method, s, '<'+resource.uri+'>', '<'+e.user+'>', e['HTTP_USER_AGENT'], e['HTTP_REFERER']].join ' '
+      puts [ method,
+             s,
+             '<'+resource.uri+'>',
+             *(user ? ['<'+e.user+'>'] : []),
+             e['HTTP_USER_AGENT'],
+             e['HTTP_REFERER'
+              ]].join ' '
       [s,h,b]
 
     } # response
@@ -117,19 +123,6 @@ module Th
         i = q && q.split(/=/)[1].to_f || 1.0 # q || default
         d[i] ||= []; d[i].push f.strip}} # append
     d
-  end
-
-  def graphResponse graph # basic uncached response w/ RDF::Graph
-    [200,
-     {'Content-Type' => format + '; charset=UTF-8',
-       'Triples' => graph.size.to_s,
-       'Access-Control-Allow-Origin' => self['HTTP_ORIGIN'].do{|o|o.match(R::HTTP_URI) && o} || '*',
-     },
-     [
-      graph.dump(
-                 RDF::Writer.for(:content_type => format).to_sym
-                 )
-     ]]
   end
 
 end
