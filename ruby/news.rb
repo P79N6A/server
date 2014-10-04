@@ -194,8 +194,6 @@ class R
       base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
       doc.ln_s R["//#{host}/news/#{time}#{base}n3"]}}
 
-  GREP_DIRS.push /^\/news\/\d{4}/
-
   GET['/feed'] = -> d,e {
     e['HTTP_ACCEPT'] = 'application/atom+xml'
     e.q['set'] ||= 'page'
