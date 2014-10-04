@@ -164,24 +164,18 @@ class R
              }, "\n",
              {_: :body,
                c: ["\n",
-                   (View[e.q['view']] || View['HTML'])[d,e],
+                   (View[e.q['view']] || DefaultView)[d,e],
                    u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;', style: 'float: left'}},
                    u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;', style: 'float: right'}}]}]}]}
 
-  View['HTML']=->d,e{ # default view
+  DefaultView = -> d,e {
     e[:Graph] = d
     d.map{|u,r| # lookup RDF:type view
       type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
       View[type ? type.to_s : 'base'][{u => r},e]}}
 
-  View['base']=->d,e{ # generic key/val view
-    [d.values.map{|v|
-       if v.uri.match(/(gif|jpe?g|png|tiff)$/i)
-         ShowImage[v.uri]
-       else
-         v.html
-       end
-     }, H.once(e,'base',H.css('/css/html',true))]}
+  View['base']= -> d,e { # basic view
+    [d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
 
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),

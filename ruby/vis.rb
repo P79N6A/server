@@ -49,7 +49,7 @@ class R
      H.js('/js/force'),
      H.css('/css/force'),
      H.css('/css/mail'),
-     View['HTML'][Hash[d.sort_by{|u,r| # sort graph by date before rendering
+     DefaultView[Hash[d.sort_by{|u,r| # sort graph by date before rendering
                        r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse],e]]}
 
 end

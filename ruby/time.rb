@@ -30,7 +30,7 @@ class R
     e[:graph] = d
     e[:group] = {}
     [H.css('/css/timegraph', true),
-     View['HTML'][Hash[d.sort_by{|u,r| r.class==Hash && r[Date].do{|d|d.justArray[0].to_s} || ''}.reverse],e],
+     DefaultView[Hash[d.sort_by{|u,r| r.class==Hash && r[Date].do{|d|d.justArray[0].to_s} || ''}.reverse],e],
      {class: :timegraph,
        c: (View['timegraph/filter'][ e.q, d, nil]
            c.())}]}
