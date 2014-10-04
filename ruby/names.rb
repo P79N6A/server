@@ -66,7 +66,7 @@ class R
   def sh; pathPOSIX.utf8.sh end # shell-escaped path
 
   def docroot
-    stripFrag.stripDoc
+    stripFrag.stripDoc.stripSlash
   end
 
   def stripFrag; R uri.split(/#/)[0] end

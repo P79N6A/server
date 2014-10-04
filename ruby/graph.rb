@@ -71,7 +71,9 @@ class R
         doc = graph.name.n3
         unless doc.e
           doc.dir.mk
-          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
+          file = doc.pathPOSIX
+          puts "cache "+file
+          RDF::Writer.open(file){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
