@@ -39,13 +39,20 @@ class R
     e['uri'] = resource.uri                                 # response URI
 
     resource.setEnv(e).send(method).do{|s,h,b|
+      ua = e['HTTP_USER_AGENT']
+      Stats[:ua]||={}
+      Stats[:ua][ua]||={'uri' => '#'+ua.slugify, Title => ua}
+      Stats[:ua][ua][:c]||=0
+      Stats[:ua][ua][:c] +=1
+      Stats[:s]||={}
+      Stats[:s][s]||=0
+      Stats[:s][s] +=1
       puts [ method,
              s,
              '<'+resource.uri+'>',
              *(e.user ? ['<'+e.user+'>'] : []),
-             e['HTTP_USER_AGENT'],
-             e['HTTP_REFERER'
-              ]].join ' '
+             ua, e['HTTP_REFERER']
+           ].join ' '
       [s,h,b]
 
     } # response

@@ -92,6 +92,7 @@ class R < RDF::URI
   ViewGroup = {}
   JSONview = {}
   Errors = {}
+  Stats = {}
   Watch = {}
   GET = {}
   POST = {}
