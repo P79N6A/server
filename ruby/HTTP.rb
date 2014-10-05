@@ -40,7 +40,7 @@ class R
 
     resource.setEnv(e).send(method).do{|s,h,b|
       ua = e['HTTP_USER_AGENT']
-      uau= '#'+ua.slugify
+      uau= '#'+(ua||'').slugify
       Stats[:ua]||={}
       Stats[:ua][uau]||={Title => ua.hrefs}
       Stats[:ua][uau][:c]||=0
