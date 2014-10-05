@@ -89,6 +89,7 @@ class R < RDF::URI
   ResourceSet = {}
   Render = {}
   View = {}
+  ViewGroup = {}
   JSONview = {}
   Errors = {}
   Watch = {}

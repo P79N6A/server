@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   Posts = '.p'
@@ -24,6 +24,13 @@ class R
       m['#new'] = {Type => '#newpost'.R} # post skeleton
     end
     set}
+
+  ViewGroup[FOAF+'Person'] = -> d,e {
+    [{_: :style, c: "
+.people {float: left; background-color: #eee}
+.people > a {display: block; background-color:#fff; color: #00f; font-size: 1.25em; margin: .2em}
+"},
+     {class: :people, c: d.map{|uri, person|{_: :a, href: uri, c: person[Name]}}}]}
 
   POST['/forum'] = -> d,e{
     p = (Rack::Request.new d.env).params

@@ -170,9 +170,21 @@ class R
 
   DefaultView = -> d,e {
     e[:Graph] = d
-    d.map{|u,r| # lookup RDF:type view
-      type = r[Type].justArray.map(&:maybeURI).compact.map{|u|'http://'.R.join u}.find{|t|View[t.to_s]}
-      View[type ? type.to_s : 'base'][{u => r},e]}}
+    groups = {}
+    seen = {}
+    d.map{|u,r|
+      r.types.map{|type|
+        if ViewGroup[type]
+          groups[type] ||= {}
+          groups[type][u] = r
+          seen[u] = true
+        end}} if e.uri[-1]=='/'
+     [groups.map{|grp,graph|ViewGroup[grp][graph,e]},
+      d.map{|u,r|
+        if !seen[u]
+         type = r.types.find{|t|View[t]}
+         View[type ? type : 'base'][{u => r},e]
+        end}]}
 
   View['base']= -> d,e { # basic view
     [d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
