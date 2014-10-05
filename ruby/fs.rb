@@ -107,8 +107,10 @@ class R
                 {_: :td, property: k, c: k=='uri' ? e.R.href(URI.unescape e.R.basename) : e[k].html}}}},
           {_: :style, c: ".scheme,.abbr {display: none}\na {text-decoration: none}\ntd[property='uri'] {font-size: 1.18em}"}]}}
 
+=begin
   ViewGroup[Stat+'Directory'] = View['ls']
   ViewGroup[Stat+'File'] = View['ls']
   ViewGroup[Stat+'Link'] = View['ls']
+=end
 
 end
