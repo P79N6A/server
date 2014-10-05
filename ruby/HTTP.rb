@@ -35,7 +35,7 @@ class R
     path += '/' if path[-1] != '/' && p.to_s[-1] == '/'     # preserve trailing-slash
     resource = R[e['SCHEME']+"://"+e['SERVER_NAME'] + path] # resource
     e[:Links] = []                                          # response links
-    e[:Response] = {Server: 'https://github.com/hallwaykid/pw'} # response head
+    e[:Response] = {Daemon: 'https://github.com/hallwaykid/pw'} # response head
     e['uri'] = resource.uri                                 # response URI
 
     resource.setEnv(e).send(method).do{|s,h,b|
