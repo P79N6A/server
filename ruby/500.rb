@@ -4,10 +4,6 @@ class R
     r[:Response]['ETag'] = Errors.keys.sort.h
     e.condResponse ->{Render['text/html'][Errors, r]}}
 
-  GET['/stat'] = -> e,r {
-    r[:Response]['ETag'] = rand.to_s.h
-    e.condResponse ->{Render['text/html'][Stats, r]}}
-
   E500 = -> x,e {
     uri = e['SERVER_NAME']+e['REQUEST_URI']
     out = [500, uri, x.class, x.message, x.backtrace].flatten.map(&:to_s)

@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   Apache = ENV['apache'] # apache=true in shell-environment
@@ -42,7 +42,7 @@ class R
       ua = e['HTTP_USER_AGENT']
       uau= '#'+ua.slugify
       Stats[:ua]||={}
-      Stats[:ua][uau]||={'uri' => uau, Title => ua.hrefs}
+      Stats[:ua][uau]||={Title => ua.hrefs}
       Stats[:ua][uau][:c]||=0
       Stats[:ua][uau][:c] +=1
       Stats[:s]||={}
@@ -60,6 +60,13 @@ class R
   rescue Exception => x
     E500[x,e]
   end
+
+  GET['/stat'] = -> e,r {
+    b = {_: :table,
+      c: [Stats[:s].map{|s,c|{_: :tr, c: [{_: :td, c: s},{_: :td, c: c}]}},
+          Stats[:ua].values.sort_by{|a|a[:c]}.reverse[0..100].map{|a|{_: :tr, c: [{_: :td, c: a[:c]},{_: :td, c: a[Title]}]}}]}
+    [200, {'Content-Type'=>'text/html'}, [H(b)]]
+  }
 
   def q
     @r.q # query Hash
