@@ -164,9 +164,7 @@ class R
              }, "\n",
              {_: :body,
                c: ["\n",
-                   (View[e.q['view']] || DefaultView)[d,e],
-                   u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: '&larr;', style: 'float: left'}},
-                   u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: '&rarr;', style: 'float: right'}}]}]}]}
+                   (View[e.q['view']] || DefaultView)[d,e]]}]}]}
 
   DefaultView = -> d,e {
     e[:Graph] = d
