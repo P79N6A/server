@@ -6,9 +6,7 @@ class R
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-      [e,e.justPath].compact.select(&:e).map{|e|
-        `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.
-        lines.map{|l|R.unPOSIX l.chomp}}.compact.flatten}}
+      e.exist? && `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.lines.map{|l|R.unPOSIX l.chomp}}}
 
   def glob a = ""
     (Pathname.glob pathPOSIX + a).map &:R
