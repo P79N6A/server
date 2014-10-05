@@ -74,7 +74,17 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources
-    s.concat e.c if e.directory? && e.uri[-1]=='/'
+    if e.directory? && e.uri[-1]=='/' # inside directory
+      s.concat e.c # child resources
+      e.env['REQUEST_PATH'].do{|path| # pagination on date-dirs 
+        path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
+          t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
+          pp = (t-1).strftime('/%Y/%m/%d/') # prev day
+          np = (t+1).strftime('/%Y/%m/%d/') # next day
+          g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
+          g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
+          g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]}}
+    end
     s }
 
   View[Stat+'File'] = -> i,e {
