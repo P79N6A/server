@@ -194,7 +194,7 @@ class R
                     else
                       msgs.map{|s|
                         s[Creator].justArray.select(&:maybeURI).map{|cr|
-                     [' ',{_: :a, href: '/thread/'+s.R.basename+'#'+s.uri, class: :sender, style: "color: #{color}",c: cr.R.fragment}]}}
+                     [' ',{_: :a, href: s.uri, class: :sender, style: "color: #{color}",c: cr.R.fragment}]}}
                     end
             name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
             {class: :post, c: [name, maker]}}}]}]}
