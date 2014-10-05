@@ -151,7 +151,7 @@ class R
         r[Title].do{|title|
           name = 
           addresses.map{|address|
-            doc.ln_s R[address.R.dirname + '/' + date[0][0..7].gsub('-','/') + rand.to_s.h[0..5]]
+            doc.ln_s R[address.R.dirname + '/' + date[0][0..7].gsub('-','/') + rand.to_s.h[0..5] + '.e']
           }}}}}
 
   View['threads'] = -> d,env {
