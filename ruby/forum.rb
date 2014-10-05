@@ -27,10 +27,15 @@ class R
 
   ViewGroup[FOAF+'Person'] = -> d,e {
     [{_: :style, c: "
-.people {float: left; background-color: #eee}
+.people {float: left; background-color: #eee; max-width: 18em}
 .people > a {display: block; background-color:#fff; color: #00f; font-size: 1.25em; margin: .2em}
-"},
-     {class: :people, c: d.map{|uri, person|{_: :a, href: uri, c: person[Name]}}}]}
+"}, {class: :people, c: d.map{|uri, person|{_: :a, href: uri, c: person[Name]}}}]}
+
+  ViewGroup[FOAF+'Group'] = -> d,e {
+    [{_: :style, c: "
+.foaf {float: right; background-color: #111; color: #ccc}
+.foaf > a {background-color:#000; color: #fff; font-size: 1.25em; margin: .2em}
+"}, {class: :foaf, c: d.map{|id, group|[{_: :a, href: id, c: group.R.fragment}, group[Name], '<br>']}}]}
 
   POST['/forum'] = -> d,e{
     p = (Rack::Request.new d.env).params
