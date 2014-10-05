@@ -174,12 +174,12 @@ class R
     seen = {}
     d.map{|u,r|
       r.types.map{|type|
-        if ViewGroup[type]
-          groups[type] ||= {}
-          groups[type][u] = r
+        if v = ViewGroup[type]
+          groups[v] ||= {}
+          groups[v][u] = r
           seen[u] = true
         end}} if e.uri[-1]=='/'
-     [groups.map{|grp,graph|ViewGroup[grp][graph,e]},
+     [groups.map{|view,graph|view[graph,e]},
       d.map{|u,r|
         if !seen[u]
          type = r.types.find{|t|View[t]}

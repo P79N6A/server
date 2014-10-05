@@ -99,12 +99,16 @@ class R
   View[Stat+'Link'] = -> i,e {}
 
   View['ls'] = ->d=nil,e=nil {
-    keys = ['uri', Stat+'size', Type, Date, Title]
-    {_: :table,
+    keys = ['uri', Stat+'size', Type, Stat+'mtime', Title]
+    {_: :table, style: 'color: #000; background-color: #fff; margin: .3em',
       c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
-          d.values.map{|e|
+          d.values.sort_by{|v|v[Stat+'mtime'].justArray[0]||0}.reverse.map{|e|
             {_: :tr, c: keys.map{|k|
-                {_: :td, property: k, c: k=='uri' ? e.R.a(e.uri[-1]=='/' ? '?view=ls' : '').href(URI.unescape e.R.basename) : e[k].html}}}},
+                {_: :td, property: k, c: k=='uri' ? e.R.href(URI.unescape e.R.basename) : e[k].html}}}},
           {_: :style, c: ".scheme,.abbr {display: none}\na {text-decoration: none}\ntd[property='uri'] {font-size: 1.18em}"}]}}
+
+  ViewGroup[Stat+'Directory'] = View['ls']
+  ViewGroup[Stat+'File'] = View['ls']
+  ViewGroup[Stat+'Link'] = View['ls']
 
 end
