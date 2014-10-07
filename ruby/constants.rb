@@ -30,6 +30,7 @@ class R < RDF::URI
   Audio    = 'http://www.semanticdesktop.org/ontologies/nid3/#'
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
+  Daemon   = 'https://github.com/hallwaykid/pw'
   Deri     = 'http://vocab.deri.ie/'
   Schema   = 'http://schema.org/'
   DC       = Purl + 'dc/terms/'
