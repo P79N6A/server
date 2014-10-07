@@ -14,8 +14,7 @@ a {
 }
 
 .posts {
-    margin-bottom: .8em;
-    padding: .1em 0 .2em 0;
+    margin: .3em;
     max-width: 110ex;
 }
 
@@ -24,7 +23,6 @@ a {
 .posts .g {
     color:#fff;
     background-color:#000;
-    padding: 0 .2em 0 .2em;
 }
 
 .posts .g:first-child {
