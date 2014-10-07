@@ -56,6 +56,11 @@ class R
       Stats[:host][host] ||= 0
       Stats[:host][host] += 1
 
+      mime = h['Content-Type'].do{|t|t.split(';')[0]}
+      Stats[:format] ||= {}
+      Stats[:format][mime] ||= 0
+      Stats[:format][mime] += 1
+
       puts [ method, s, '<'+resource.uri+'>',
              *(e.user ? ['<'+e.user+'>'] : []), ua, e['HTTP_REFERER']
            ].join ' '
@@ -67,18 +72,22 @@ class R
 
   GET['/stat'] = -> e,r {
     b = {_: :table,
-      c: [{_: :tr, class: :head, c: {_: :td, colspan: 2, c: :domain}},
-
-          Stats[:host].sort_by{|_,c|-c}.map{|host, count|
-            {_: :tr, c: [{_: :td, class: :count, c: count},
-                         {_: :td, c: {_: :a, href: '//'+host, c: host}}]}},
-          {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :status}},
-
+      c: [{_: :tr, class: :head, c: {_: :td, colspan: 2, c: :status}},
           Stats[:status].sort_by{|_,c|-c}.map{|status, count|
             {_: :tr, c: [{_: :td, c: status},
                          {_: :td, class: :count, c: count}]}},
-          {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :agent}},
 
+          {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :domain}},
+          Stats[:host].sort_by{|_,c|-c}.map{|host, count|
+            {_: :tr, c: [{_: :td, class: :count, c: count},
+                         {_: :td, c: {_: :a, href: '//'+host, c: host}}]}},
+
+          {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :MIME}},
+          Stats[:format].sort_by{|_,c|-c}.map{|mime, count|
+            {_: :tr, c: [{_: :td, class: :count, c: count},
+                         {_: :td, c: mime}]}},
+
+          {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :agent}},
           Stats[:agent].values.sort_by{|a|-a[:count]}[0..48].map{|a|
             {_: :tr, c: [{_: :td, class: :count, c: a[:count]},
                          {_: :td, c: a[Title]}]}},
