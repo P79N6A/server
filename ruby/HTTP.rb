@@ -38,33 +38,43 @@ class R
     e[:Response] = {Daemon: 'https://github.com/hallwaykid/pw'} # response head
     e['uri'] = resource.uri                                 # response URI
 
-    resource.setEnv(e).send(method).do{|s,h,b|
-      ua = e['HTTP_USER_AGENT']
-      uau= '#'+(ua||'').slugify
-      Stats[:ua]||={}
-      Stats[:ua][uau]||={Title => ua.hrefs}
-      Stats[:ua][uau][:c]||=0
-      Stats[:ua][uau][:c] +=1
-      Stats[:s]||={}
-      Stats[:s][s]||=0
-      Stats[:s][s] +=1
-      puts [ method,
-             s,
-             '<'+resource.uri+'>',
-             *(e.user ? ['<'+e.user+'>'] : []),
-             ua, e['HTTP_REFERER']
-           ].join ' '
-      [s,h,b]
+    resource.setEnv(e).send(method).do{|s,h,b| # call and inspect
 
-    } # response
+      ua = e['HTTP_USER_AGENT']
+      u = '#'+(ua||'').slugify
+      Stats[:agent] ||= {}
+      Stats[:agent][u] ||= {Title => ua.hrefs}
+      Stats[:agent][u][:count] ||= 0
+      Stats[:agent][u][:count] += 1
+
+      Stats[:status] ||= {}
+      Stats[:status][s] ||= 0
+      Stats[:status][s] += 1
+
+      host = e['SERVER_NAME']
+      Stats[:host] ||= {}
+      Stats[:host][host] ||= 0
+      Stats[:host][host] += 1
+
+      puts [ method, s, '<'+resource.uri+'>',
+             *(e.user ? ['<'+e.user+'>'] : []), ua, e['HTTP_REFERER']
+           ].join ' '
+
+      [s,h,b] } # response
   rescue Exception => x
     E500[x,e]
   end
 
   GET['/stat'] = -> e,r {
     b = {_: :table,
-      c: [Stats[:s].map{|s,c|{_: :tr, c: [{_: :td, c: s},{_: :td, c: c}]}},
-          Stats[:ua].values.sort_by{|a|a[:c]}.reverse[0..100].map{|a|{_: :tr, c: [{_: :td, c: a[:c]},{_: :td, c: a[Title]}]}}]}
+      c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :domain}}},
+          Stats[:host].map{|host,count|{_: :tr, c: [{_: :td, class: :count, c: count},{_: :td, c: host}]}},
+          {_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :Status}}},
+          Stats[:status].map{|s,count|{_: :tr, c: [{_: :td, c: s},{_: :td, class: :count, c: count}]}},
+          {_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :agent}}},
+          Stats[:agent].values.sort_by{|a|-a[:count]}[0..48].map{|a|{_: :tr, c: [{_: :td, class: :count, c: a[:c]},{_: :td, c: a[Title]}]}},
+          {_: :style, c: ".count {font-weight: bold}"},
+         ]}
     [200, {'Content-Type'=>'text/html'}, [H(b)]]
   }
 
