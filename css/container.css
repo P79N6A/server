@@ -2,6 +2,7 @@
 a {text-decoration: none}
 
 .dir {
+    font-family: sans-serif;
     float: left;
     border-radius:0 1em 1em 1em;
     padding: .3em;

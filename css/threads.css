@@ -1,7 +1,3 @@
-body {
-    background-color:#000;
-}
-
 a {
     font-family:sans-serif;    
     text-decoration:none;
@@ -43,25 +39,17 @@ a {
 
 .count, .sender {
     color: #000;
-    background-color:#f3f3f3;
+    background-color:#fff;
     float: right;
     margin-left: .2em; 
 }
 
-.count:hover {
-    background-color:#fff;
-}
-
-.thread {
+.thread:visited {
     background-color:#000;
     color:#fff;
 }
 
-.thread:hover, .thread:hover:visited {background-color:#f04}
-
-a[rel=next],a[rel=prev] {color: #f8f8f8}
-
-.thread:visited {
+.thread {
     background-color:#fff;
     color:#000;
 }
