@@ -69,13 +69,13 @@ class R
     b = {_: :table,
       c: [{_: :tr, class: :head, c: {_: :td, colspan: 2, c: :domain}},
 
-          Stats[:host].sort_by{|_,c|-c}.map{|host,count|
+          Stats[:host].sort_by{|_,c|-c}.map{|host, count|
             {_: :tr, c: [{_: :td, class: :count, c: count},
                          {_: :td, c: {_: :a, href: '//'+host, c: host}}]}},
           {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :status}},
 
-          Stats[:status].map{|s,count|
-            {_: :tr, c: [{_: :td, c: s},
+          Stats[:status].sort_by{|_,c|-c}.map{|status, count|
+            {_: :tr, c: [{_: :td, c: status},
                          {_: :td, class: :count, c: count}]}},
           {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :agent}},
 
