@@ -5,20 +5,17 @@ a {
 
 .group .to {
     font-weight: bold;
-    border: .1em dashed;
-    padding: 0 .1em 0 .1em;
-}
-
-.group .to:hover {
-    background-color:#fff;
 }
 
 .posts {
-    margin: .5em;
+    margin-bottom: .8em;
     max-width: 110ex;
 }
 
-.posts .post {clear: both}
+.posts .post {
+    margin: .1em;
+    clear: both;
+}
 
 .posts .g {
     color:#fff;
