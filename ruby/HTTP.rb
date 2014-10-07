@@ -38,6 +38,8 @@ class R
     e[:Response] = {Daemon: Daemon}                         # response head
     e['uri'] = resource.uri                                 # response URI
 
+#    puts e.map{|k,v| [k,v].join ' '}
+
     resource.setEnv(e).send(method).do{|s,h,b| # call and inspect
 
       ua = e['HTTP_USER_AGENT'] || ''
