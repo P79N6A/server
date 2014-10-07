@@ -183,11 +183,11 @@ class R
           c: threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
             size = title.to_s.unHTML.size
             scale = if msgs.size > 5 || size < 16
-                      1.16
+                      1.25
                     elsif size < 24
-                      1.08
+                      1.15
                     else
-                      1
+                      1.05
                     end
             maker = if (c = msgs.size) > 2
                       {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
