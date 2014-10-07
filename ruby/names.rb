@@ -100,9 +100,9 @@ class R
     s[0..2] + '/' + s[3..-1]
   end
 
-  def fragmentPath # unique path for fragment
+  def fragmentPath # fragment-per-file path
     doc = docroot
-    doc.dir + '/.' + doc.basename + '/' + fragment
+    doc.dir.child '.' + doc.basename + '/' + fragment
   end
 
   # squash names to prefix:basename
