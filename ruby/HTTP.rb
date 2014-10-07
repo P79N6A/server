@@ -72,7 +72,7 @@ class R
           {_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :Status}}},
           Stats[:status].map{|s,count|{_: :tr, c: [{_: :td, c: s},{_: :td, class: :count, c: count}]}},
           {_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :agent}}},
-          Stats[:agent].values.sort_by{|a|-a[:count]}[0..48].map{|a|{_: :tr, c: [{_: :td, class: :count, c: a[:c]},{_: :td, c: a[Title]}]}},
+          Stats[:agent].values.sort_by{|a|-a[:count]}[0..48].map{|a|{_: :tr, c: [{_: :td, class: :count, c: a[:count]},{_: :td, c: a[Title]}]}},
           {_: :style, c: ".count {font-weight: bold}"},
          ]}
     [200, {'Content-Type'=>'text/html'}, [H(b)]]
