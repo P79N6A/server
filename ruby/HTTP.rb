@@ -67,13 +67,16 @@ class R
 
   GET['/stat'] = -> e,r {
     b = {_: :table,
-      c: [{_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :domain}}},
+      c: [{_: :tr, class: :head, c: {_: :td, colspan: 2, c: :domain}},
           Stats[:host].map{|host,count|{_: :tr, c: [{_: :td, class: :count, c: count},{_: :td, c: host}]}},
-          {_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :Status}}},
+          {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :status}},
           Stats[:status].map{|s,count|{_: :tr, c: [{_: :td, c: s},{_: :td, class: :count, c: count}]}},
-          {_: :tr, c: {_: :td, colspan: 2, c: {_: :h2, c: :agent}}},
+          {_: :tr, clasS: :head, c: {_: :td, colspan: 2, c: :agent}},
           Stats[:agent].values.sort_by{|a|-a[:count]}[0..48].map{|a|{_: :tr, c: [{_: :td, class: :count, c: a[:count]},{_: :td, c: a[Title]}]}},
-          {_: :style, c: ".count {font-weight: bold}"},
+          {_: :style, c: "
+.count {font-weight: bold}
+tr.head > td {font-weight: bold; font-size: 1.6em; padding-top: .5em}
+"},
          ]}
     [200, {'Content-Type'=>'text/html'}, [H(b)]]
   }
