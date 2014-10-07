@@ -193,8 +193,8 @@ class R
                       {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
                     else
                       msgs.map{|s|
-                        s[Creator].justArray.select(&:maybeURI).map{|cr|
-                     [' ',{_: :a, href: s.uri, class: :sender, style: "color: #{color}",c: cr.R.fragment}]}}
+                       s[Creator].justArray.select(&:maybeURI).map{|cr|
+                        [' ',{_: :a, href: s.uri, class: :sender, c: cr.R.fragment}]}}
                     end
             name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
             {class: :post, c: [name, maker]}}}]}]}
