@@ -8,7 +8,7 @@ class R
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
     # <form> handler
-    if @r['CONTENT_TYPE'] == /^application\/x-www-form-urlencoded/
+    if @r['CONTENT_TYPE'] == 'application/x-www-form-urlencoded'
       putForm
     else
 
