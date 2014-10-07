@@ -40,8 +40,8 @@ class R
 
     resource.setEnv(e).send(method).do{|s,h,b| # call and inspect
 
-      ua = e['HTTP_USER_AGENT']
-      u = '#'+(ua||'').slugify
+      ua = e['HTTP_USER_AGENT'] || ''
+      u = '#' + ua.slugify
       Stats[:agent] ||= {}
       Stats[:agent][u] ||= {Title => ua.hrefs}
       Stats[:agent][u][:count] ||= 0
