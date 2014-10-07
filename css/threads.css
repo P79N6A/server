@@ -30,12 +30,15 @@ a {
 .count {
     font-weight: bold;
     padding: .2em;
+    background-color: #fff;
+    color: #444;
 }
 
-.count, .sender {
+.sender {
     color: #f6f6f6;
-    float: right;
 }
+
+.count, .sender {float: right;}
 
 .thread:visited {
     background-color:#000;
