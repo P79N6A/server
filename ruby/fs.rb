@@ -12,10 +12,7 @@ class R
       yield d, Stat+'mtime', mtime.to_i
 
     elsif symlink?
-      [R[Stat+'Link'], Resource].map{|type|
-        yield file, Type, type}
-      yield file, Stat+'mtime', Time.now.to_i
-      yield file, Stat+'size', 0
+      yield file, Type, R[Stat+'Link']
       readlink.do{|t|
         t = t.stripDoc
         yield t.uri, Type, Resource
