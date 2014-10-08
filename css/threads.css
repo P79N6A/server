@@ -10,6 +10,8 @@ a {
 
 .posts > a:first-child {
     color:#fff;
+    font-weight: bold;
+    padding-left: .1em;
 }
 
 .posts .post {
