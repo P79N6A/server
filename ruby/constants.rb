@@ -19,6 +19,9 @@ class R < RDF::URI
   FSbase = `pwd`.chomp ;  BaseLen = FSbase.size
   HTTP_URI = /\A(\/|http)[\S]+\Z/
 
+  Apache = ENV['apache']
+  Nginx  = ENV['nginx']
+
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"
