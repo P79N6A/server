@@ -15,7 +15,7 @@ class R
         mtime = t.mtime.to_i
         yield file, Type, R[Stat+'File']
         yield file, Stat+'mtime', mtime
-        yield file, Stat+'size', t.size
+        yield file, Stat+'size', 0
         t = t.stripDoc
         yield t.uri, Type, Resource
         yield t.uri, Stat+'mtime', mtime
