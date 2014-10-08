@@ -74,9 +74,9 @@ class R
   FileSet['default'] = -> e,q,g {
     s = []
     s.concat e.fileResources
-    if e.directory? && e.uri[-1]=='/' # inside directory
-      s.concat e.c # child resources
-      e.env['REQUEST_PATH'].do{|path| # pagination on date-dirs 
+    if e.directory?
+      s.concat e.c # contained resources
+      e.env['REQUEST_PATH'].do{|path| # pagination on day-dirs 
         path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
           t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
           pp = (t-1).strftime('/%Y/%m/%d/') # prev day
