@@ -26,11 +26,12 @@ class R
       if resource ||= uri
         yield resource, Type, Resource
         yield resource, Stat+'mtime', mtime.to_i
-        yield resource, Stat+'size', 0
+        yield resource, Stat+'size', size
+      else
+        yield file, Type, R[Stat+'File']
+        yield file, Stat+'mtime', mtime.to_i
+        yield file, Stat+'size', size
       end
-      yield file, Type, R[Stat+'File']
-      yield file, Stat+'size', size
-      yield file, Stat+'mtime', mtime.to_i
     end
   end
 
