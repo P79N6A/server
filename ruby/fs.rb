@@ -17,7 +17,12 @@ class R
       yield file, Stat+'mtime', Time.now.to_i
       yield file, Stat+'size', 0
       readlink.do{|t|
-        yield file, Stat+'target', t.stripDoc}
+        t = t.stripDoc
+        yield file, Stat+'target', t
+        yield t.uri, Type, Resource
+        yield t.uri, Stat+'size', 0
+        yield t.uri, Time.now.to_i
+      }
 
     else
       resource = stripDoc.uri
