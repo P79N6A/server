@@ -116,7 +116,7 @@ class R
       c: [{_: :tr, c: keys.map{|k| # header
               {_: :th, c: {_: :a, href: e['REQUEST_PATH']+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
           d.values.sort_by{|v| # sortable
-            (v[sort].justArray[0] || 0).send sortType}.send(rev ? :id : :reverse).map{|e|
+            (v[sort].justArray[0] || 0).send sortType}.send(rev ? :reverse : :id).map{|e|
             {_: :tr, c: keys.map{|k| # body
                 {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
           {_: :style, c: "
