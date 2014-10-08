@@ -114,10 +114,11 @@ class R
             {_: :tr, c: keys.map{|k|
                 {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
           {_: :style, c: "
-table.ls {background-color: #111; color: #fff; border: .4em solid #bbb; padding: .4em; margin: .4em}
+table.ls {background-color: #{cs}; color: #000; padding: .3em; margin: .4em}
 table.ls td[property='uri'] {font-size: 1.1em; max-width: 56ex; overflow: hidden}
 .scheme,.abbr {display: none}
-table.ls a {text-decoration: none; color: #{cs}}
+table.ls a {text-decoration: none; color: #fff}
+table.ls tr:hover {background-color: #000}
 "}]}}
 
 
