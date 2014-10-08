@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+watch __FILE__
 class R
 
   def triplrInode &f
@@ -108,13 +109,15 @@ class R
 
   View['ls'] = ->d=nil,e=nil {
     keys = ['uri', Stat+'size', Type, Stat+'mtime']
+    rev = e.q.has_key? 'rev'
     {_: :table, class: :ls,
-      c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
-          d.values.sort_by(&:uri).map{|e|
+      c: [{_: :tr, c: keys.map{|k|{_: :th, c: {_: :a, href: e['REQUEST_PATH']+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev'), c: k.R.abbr}}}},
+          d.values.sort_by{|v|
+          ( v[e.q['sort']] || v.uri ).justArray[0].do{|a|a.to_s} || ''}.send(rev ? :id : :reverse).map{|e|
             {_: :tr, c: keys.map{|k|
                 {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
           {_: :style, c: "
-table.ls {background-color: #{cs}; color: #000; padding: .3em; margin: .4em}
+table.ls {background-color: #{cs}; color: #000; padding: .3em; margin: .4em;}
 table.ls td { white-space: nowrap }
 table.ls td[property='uri'] {float: right; font-size: 1.1em; max-width: 32em; overflow: hidden}
 .scheme,.abbr {display: none}

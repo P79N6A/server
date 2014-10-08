@@ -37,6 +37,7 @@ class R
   def response # default handler
     set = []
     m = {'#' => {'uri' => uri}} # request-meta
+    notRDF = NonRDF.member? @r.format
 
     # File(s)
     fileFn = q['set'].do{|s| FileSet[s]} || FileSet['default']
@@ -51,9 +52,9 @@ class R
 
     m.delete('#') if m['#'].keys.size==1 # empty request-meta
     ldp # LDP headers
-
+    etagX = notRDF ? [q['rev'], q['sort'], q['view']] : []
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',
-                           'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, q['view']].h})
+                           'ETag' => [set.sort.map{|r|[r, r.m]}, @r.format, etagX].h})
 
     if set.empty? # nothing found
       if q.has_key? 'edit' # editor requested
@@ -64,8 +65,8 @@ class R
     end
 
     condResponse ->{
-      if NonRDF.member? @r.format
-        set.map{|r|r.setEnv(@r).fileToGraph m} # simple-RDF Hash
+      if notRDF # simplified RDF (Hash)
+        set.map{|r|r.setEnv(@r).fileToGraph m}
         set.map{|f|f.fromStream m, :triplrInode} if @r[:directory]
         Render[@r.format][m, @r]
 
