@@ -111,7 +111,7 @@ class R
     keys = ['uri', Stat+'size', Type, Stat+'mtime']
     rev = e.q.has_key? 'rev'
     {_: :table, class: :ls,
-      c: [{_: :tr, c: keys.map{|k|{_: :th, c: {_: :a, href: e['REQUEST_PATH']+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev'), c: k.R.abbr}}}},
+      c: [{_: :tr, c: keys.map{|k|{_: :th, c: {_: :a, href: e['REQUEST_PATH']+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
           d.values.sort_by{|v|
           ( v[e.q['sort']] || v.uri ).justArray[0].do{|a|a.to_s} || ''}.send(rev ? :id : :reverse).map{|e|
             {_: :tr, c: keys.map{|k|
