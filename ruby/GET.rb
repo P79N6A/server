@@ -65,13 +65,13 @@ class R
 
     condResponse ->{
       if NonRDF.member? @r.format
-        set.map{|r|r.setEnv(@r).fileToGraph m} # simple-RDF in Hash
+        set.map{|r|r.setEnv(@r).fileToGraph m} # simple-RDF Hash
         set.map{|f|f.fromStream m, :triplrInode} if uri[-1]=='/'
         Render[@r.format][m, @r]
 
       else # full RDF
         graph = RDF::Graph.new
-        set.map{|r|(r.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
+        set.map{|r|(r.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}} unless uri[-1]=='/'
         set.map{|f|f.streamToRDF graph, :triplrInode} if uri[-1]=='/'
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
