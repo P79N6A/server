@@ -3,6 +3,8 @@ a {
     text-decoration:none;
 }
 
+.threads {background-color: #f3f3f3}
+
 .group .to {
     font-weight: bold;
 }
