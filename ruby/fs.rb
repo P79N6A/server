@@ -107,9 +107,10 @@ class R
                "\n", r[Content], "\n"]}}}]}
 
   View['ls'] = ->d=nil,e=nil {
-    keys = ['uri', Stat+'size', Type, Stat+'mtime', Title]
-    {_: :table, style: 'color: #000; background-color: #fff; margin: .3em',
-      c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+    keys = ['uri', Stat+'size', Type, Stat+'mtime']
+    {_: :table,
+      c: [{_: :style, c: "td[property='uri'] {max-width: 48ex; overflow: hidden}"},
+          {_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
           d.values.sort_by{|v|v[Stat+'mtime'].justArray[0]||0}.reverse.map{|e|
             {_: :tr, c: keys.map{|k|
                 {_: :td, property: k, c: k=='uri' ? e.R.href(URI.unescape e.R.basename) : e[k].html}}}},
