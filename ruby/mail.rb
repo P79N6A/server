@@ -175,7 +175,8 @@ class R
           score[a] += weight[a] || 1}}
       score.invert.max[1]}
 
-    [groups.map{|group,threads|
+    [H.css('/css/threads',true),
+     groups.map{|group,threads|
        {class: :posts, style: 'background-color:' + cs,
          c: [group.do{|g|{_: :a, c: g.R.fragment, href: g}},
              threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
@@ -195,8 +196,7 @@ class R
                      [' ',{_: :a, href: s.uri, class: :sender, c: cr.R.fragment}]}}
                        end
                name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
-               {class: :post, c: [name, maker]}}]}},
-     H.css('/css/threads',true)]}
+               {class: :post, c: [name, maker]}}]}}]}
   
   ViewGroup[SIOCt+'MailMessage'] = View['threads']
 
