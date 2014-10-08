@@ -3,7 +3,6 @@ class R
 
   def triplrInode &f
     file = URI.escape uri
-
     if directory?
       d = descend.uri
       [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|
@@ -12,14 +11,15 @@ class R
       yield d, Stat+'mtime', mtime.to_i
 
     elsif symlink?
-#      yield file, Type, R[Stat+'Link']
       readlink.do{|t|
+        mtime = t.mtime.to_i
+        yield file, Type, R[Stat+'File']
+        yield file, Stat+'mtime', mtime
+        yield file, Stat+'size', t.size
         t = t.stripDoc
         yield t.uri, Type, Resource
-        yield t.uri, Stat+'mtime', Time.now.to_i
-        yield t.uri, Stat+'size', 0
-#        yield file, Stat+'target', t
-      }
+        yield t.uri, Stat+'mtime', mtime
+        yield t.uri, Stat+'size', 0}
 
     else
       resource = stripDoc.uri
@@ -83,6 +83,7 @@ class R
     s = []
     s.concat e.fileResources
     if e.directory?
+      e.env[:directory] = true
       s.concat e.c # contained resources
       e.env['REQUEST_PATH'].do{|path| # pagination on day-dirs 
         path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
@@ -104,8 +105,6 @@ class R
                "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr}, # link HTML representation of file
                "\n", r[Content], "\n"]}}}]}
 
-  View[Stat+'Link'] = -> i,e {}
-
   View['ls'] = ->d=nil,e=nil {
     keys = ['uri', Stat+'size', Type, Stat+'mtime', Title]
     {_: :table, style: 'color: #000; background-color: #fff; margin: .3em',
@@ -115,10 +114,10 @@ class R
                 {_: :td, property: k, c: k=='uri' ? e.R.href(URI.unescape e.R.basename) : e[k].html}}}},
           {_: :style, c: ".scheme,.abbr {display: none}\na {text-decoration: none}\ntd[property='uri'] {font-size: 1.18em}"}]}}
 
-=begin
+
   ViewGroup[Stat+'Directory'] = View['ls']
-  ViewGroup[Stat+'File'] = View['ls']
-  ViewGroup[Stat+'Link'] = View['ls']
-=end
+  ViewGroup[Stat+'File']      = View['ls']
+  ViewGroup[RDFs+'Resource']  = View['ls']
+
 
 end
