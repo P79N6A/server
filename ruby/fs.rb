@@ -109,24 +109,18 @@ class R
 
   View['ls'] = ->d=nil,e=nil {
     keys = ['uri', Stat+'size', Type, Stat+'mtime']
+    path = e['REQUEST_PATH']
     rev = e.q.has_key? 'rev'
     sort = e.q['sort'].do{|p|p.expand} || 'uri'
     sortType = ['uri',Type].member?(sort) ? :to_s : :to_i
     {_: :table, class: :ls,
       c: [{_: :tr, c: keys.map{|k| # header
-              {_: :th, c: {_: :a, href: e['REQUEST_PATH']+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
+              {_: :th, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
           d.values.sort_by{|v| # sortable
             (v[sort].justArray[0] || 0).send sortType}.send(rev ? :reverse : :id).map{|e|
-            {_: :tr, c: keys.map{|k| # body
+            {_: :tr, class: (e.R.path==path ? 'this' : 'row'), c: keys.map{|k| # body
                 {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
-          {_: :style, c: "
-table.ls {background-color: #{cs}; color: #000; padding: .3em; margin: .4em;}
-table.ls td { white-space: nowrap }
-table.ls td[property='uri'] {float: right; font-size: 1.1em; max-width: 32em; overflow: hidden}
-.scheme,.abbr {display: none}
-table.ls a {text-decoration: none; color: #fff}
-table.ls tr:hover {background-color: #000}
-"}]}}
+          {_: :style, c: "table.ls {background-color: #{cs}}"},H.css('/css/ls')]}}
 
 
   ViewGroup[Stat+'Directory'] = View['ls']
