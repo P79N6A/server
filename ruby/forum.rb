@@ -26,7 +26,7 @@ class R
     set}
 
   ViewGroup[FOAF+'Person'] = -> d,e {
-    [{_: :style, c: ".person {float: right; background-color:#aaa; color: #fff; border-radius: .3em;padding: 0 .1em 0 .1em; margin: .1em}"},
+    [{_: :style, c: ".person {float: left; background-color:#bbb; color: #fff; margin: .1em}"},
      d.map{|uri, person|{_: :a, class: :person, href: uri, c: person[Name]}}]}
 
   ViewGroup[FOAF+'Group'] = -> d,e {
