@@ -32,7 +32,7 @@ a {text-decoration: none}
 }
 
 .File {
-    display: inline-block;
+    float: left;
     background-color: #fff;
     color: #000;
     margin: .15em;
