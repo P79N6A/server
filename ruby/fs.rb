@@ -20,6 +20,12 @@ class R
         yield file, Stat+'target', t.stripDoc}
 
     else
+      resource = stripDoc
+      if resource.uri ||= uri
+        yield resource, Type, Resource
+        yield resource, Stat+'mtime', mtime.to_i
+        yield resource, Stat+'size', 0
+      end
       yield file, Type, R[Stat+'File']
       yield file, Stat+'size', size
       yield file, Stat+'mtime', mtime.to_i
