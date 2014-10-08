@@ -175,31 +175,29 @@ class R
           score[a] += weight[a] || 1}}
       score.invert.max[1]}
 
-    [{class: :threads, c: groups.map{|group,threads|
-       color = cs
-       [group.do{|g|{class: :group, c: {_: :a, :class => :to, style: "color: #{color}; border-color: #{color}", c: g.R.fragment, href: g}}},
-        {class: :posts, style: 'background-color:' + color,
-          c: threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
-            size = title.to_s.unHTML.size
-            scale = if msgs.size > 5 || size < 16
-                      1.25
-                    elsif size < 24
-                      1.15
-                    else
-                      1.05
-                    end
-            maker = if (c = msgs.size) > 2
-                      {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
-                    else
-                      msgs.map{|s|
-                       s[Creator].justArray.select(&:maybeURI).map{|cr|
-                        [' ',{_: :a, href: s.uri, class: :sender, c: cr.R.fragment}]}}
-                    end
-            name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
-            {class: :post, c: [name, maker]}}}]}},
-     H.css('/css/threads',true)
-    ]}
-
+    [groups.map{|group,threads|
+       {class: :posts, style: 'background-color:' + cs,
+         c: [group.do{|g|{_: :a, c: g.R.fragment, href: g}},
+             threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
+               size = title.to_s.unHTML.size
+               scale = if msgs.size > 5 || size < 16
+                         1.25
+                       elsif size < 24
+                         1.15
+                       else
+                         1.05
+                       end
+               maker = if (c = msgs.size) > 2
+                         {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
+                       else
+                         msgs.map{|s|
+                   s[Creator].justArray.select(&:maybeURI).map{|cr|
+                     [' ',{_: :a, href: s.uri, class: :sender, c: cr.R.fragment}]}}
+                       end
+               name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
+               {class: :post, c: [name, maker]}}]}},
+     H.css('/css/threads',true)]}
+  
   ViewGroup[SIOCt+'MailMessage'] = View['threads']
 
 end

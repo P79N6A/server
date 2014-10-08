@@ -81,15 +81,15 @@ class R
   end
 
   # file -> file (cached transcode) Non-RDF to RDF
-  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}            # RDF suffixes
-    return unless e                                            # check that source exists
-    doc = self                                                 # output doc
-    unless pass.member? realpath.do{|p|p.extname.tail}         # already readable MIME?
-      doc = R['/cache/RDF/' + (R.dive uri.h) + '.e'].setEnv @r # derived RDF file
-      unless doc.e && doc.m > m                                # up-to-date?
-        g = {}                                                 # blank graph
-        [:triplrMIME,:triplrInode].map{|t| fromStream g, t}    # triples -> graph
-        doc.w g, true                                          # write
+  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}       # RDF suffixes
+    return unless e                                       # check that source exists
+    doc = self                                            # output doc
+    unless pass.member? realpath.do{|p|p.extname.tail}    # already readable MIME?
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # derived RDF file
+      unless doc.e && doc.m > m                           # up-to-date?
+        g = {}                                            # blank graph
+        fromStream g, :triplrMIME                         # triples -> graph
+        doc.w g, true                                     # write
       end
     end
     doc

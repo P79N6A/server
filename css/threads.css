@@ -3,35 +3,23 @@ a {
     text-decoration:none;
 }
 
-.threads {background-color: #f3f3f3}
-
-.group .to {
-    font-weight: bold;
+.posts {
+    margin: .4em;
+    float: left;
 }
 
-.posts {
-    margin-bottom: .8em;
-    max-width: 110ex;
+.posts > a:first-child {
+    color:#fff;
 }
 
 .posts .post {
-    margin: .1em;
+    margin: .14em;
     clear: both;
-}
-
-.posts .g {
-    color:#fff;
-    background-color:#000;
-}
-
-.posts .g:first-child {
-               color:#000;
-    background-color:#fff;
 }
 
 .count {
     font-weight: bold;
-    padding: .2em;
+    padding: .15em;
     background-color: #fff;
     color: #444;
 }
