@@ -12,13 +12,14 @@ class R
       yield d, Stat+'mtime', mtime.to_i
 
     elsif symlink?
-      yield file, Type, R[Stat+'Link']
+#      yield file, Type, R[Stat+'Link']
       readlink.do{|t|
         t = t.stripDoc
         yield t.uri, Type, Resource
         yield t.uri, Stat+'mtime', Time.now.to_i
         yield t.uri, Stat+'size', 0
-        yield file, Stat+'target', t}
+#        yield file, Stat+'target', t
+      }
 
     else
       resource = stripDoc.uri
