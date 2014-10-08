@@ -72,6 +72,7 @@ class R
       else # full RDF
         graph = RDF::Graph.new
         set.map{|r|(r.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
+        set.map{|f|f.streamToRDF graph, :triplrInode} if uri[-1]=='/'
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
       end}

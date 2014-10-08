@@ -31,7 +31,7 @@ class R
 
   ViewGroup[FOAF+'Group'] = -> d,e {
     [{_: :style, c: "
-.foaf {float: right; background-color: #111; color: #ccc}
+.foaf {float: right; background-color: #111; color: #ccc; margin-bottom: .2em}
 .foaf > a {background-color:#000; color: #fff; font-size: 1.25em; margin: .2em}
 "}, {class: :foaf, c: d.map{|id, group|[{_: :a, href: id, c: group.R.fragment}, group[Name], '<br>']}}]}
 

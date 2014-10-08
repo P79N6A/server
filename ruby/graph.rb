@@ -15,13 +15,31 @@ class R
 
 =end
 
-  # triplr -> graph
+  # triplr -> graph (Hash)
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
       m[s][p] ||= []
       m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
-    end; m
+    end
+    m
+  end
+
+  # triplr -> graph (RDF)
+  def streamToRDF g, *i
+    send(*i) do |s,p,o|
+      s = RDF::URI s           # subject-URI
+      p = RDF::URI p           # predicate-URI
+      o = if [R,Hash].member? o.class
+            RDF::URI o.uri     # object URI ||
+          else                 # object Literal
+            l = RDF::Literal o
+            l.datatype=RDF.XMLLiteral if p == Content
+            l
+          end
+      g << (RDF::Statement.new s,p,o)
+    end
+    g
   end
 
   # file(s) -> graph
