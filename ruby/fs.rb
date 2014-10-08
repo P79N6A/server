@@ -108,13 +108,17 @@ class R
 
   View['ls'] = ->d=nil,e=nil {
     keys = ['uri', Stat+'size', Type, Stat+'mtime']
-    {_: :table,
-      c: [{_: :style, c: "td[property='uri'] {max-width: 48ex; overflow: hidden}"},
-          {_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
+    {_: :table, class: :ls,
+      c: [{_: :tr, c: keys.map{|k|{_: :th, c: k.R.abbr}}},
           d.values.sort_by{|v|v[Stat+'mtime'].justArray[0]||0}.reverse.map{|e|
             {_: :tr, c: keys.map{|k|
-                {_: :td, property: k, c: k=='uri' ? e.R.href(URI.unescape e.R.basename) : e[k].html}}}},
-          {_: :style, c: ".scheme,.abbr {display: none}\na {text-decoration: none}\ntd[property='uri'] {font-size: 1.18em}"}]}}
+                {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
+          {_: :style, c: "
+table.ls {background-color: #111; color: #fff; border: .4em solid #999; padding: .4em; margin: .4em}
+table.ls td[property='uri'] {font-size: 1.1em; max-width: 56ex; overflow: hidden}
+.scheme,.abbr {display: none}
+table.ls a {text-decoration: none; color: #{cs}}
+"}]}}
 
 
   ViewGroup[Stat+'Directory'] = View['ls']
