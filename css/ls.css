@@ -20,7 +20,8 @@ table.ls {
     margin: .4em;
     border-spacing: 0;
     float: left;
-    border: .1em dotted #222;
+    border: .1em dotted #ddd;
+    border-radius: 0 0 .7em .7em;
 }
 
 table.ls td {
@@ -28,7 +29,7 @@ table.ls td {
     padding: .1em;
 }
 
-table.ls td[property='uri'] {
+table.ls td[property='uri'], table.ls th[property='uri'] {
     float: right;
     max-width: 32em;
     overflow: hidden;
@@ -46,7 +47,8 @@ table.ls a, .warp {
 }
 
 table.ls tr.this, table.ls tr.this:hover {
-    background-color: #0f0;
+    background-color: #000;
+    color: #fff;
 }
 
 table.ls th {

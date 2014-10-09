@@ -115,7 +115,7 @@ class R
     sortType = ['uri',Type].member?(sort) ? :to_s : :to_i
     [{_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k| # header
-               {_: :th, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
+               {_: :th, property: k, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
            d.values.sort_by{|v| # sortable
              (v[sort].justArray[0] || 0).send sortType}.send(rev ? :reverse : :id).map{|e| # subjects
              {_: :tr, class: (e.R.path == path ? 'this' : 'row'),

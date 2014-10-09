@@ -6,12 +6,13 @@ a {
 .posts {
     margin: .4em;
     float: left;
+    padding: .2em;
 }
 
 .posts > a:first-child {
     color:#fff;
     font-weight: bold;
-    padding-left: .1em;
+    font-size: 1.1em;
 }
 
 .posts .post {
