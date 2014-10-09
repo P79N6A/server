@@ -33,11 +33,14 @@ table.ls td[property='uri'], table.ls th[property='uri'] {
     overflow: hidden;
 }
 
+table.ls th a {
+    color: #888;
+}
 
 table.ls tr td a {
-    color: #000;
-    background-color: #fff;
-    border: .1em dotted;
+    color: #fff;
+    background-color: #aaa;
+    border: .1em dotted #bbb;
 }
 
 table.ls a, .warp {
@@ -54,12 +57,12 @@ table.ls tr.this, table.ls tr.this:hover {
 }
 
 table.ls tr.this td {
-    font-size: 1.16em;
+    font-size: 1.12em;
     padding: .2em;
 }
 
 table.ls th {
-    font-size:1.1em;
+    font-size:1.2em;
     padding-bottom: .2em;
 }
 
