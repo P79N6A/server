@@ -122,6 +122,7 @@ JSON
 500
 image
 index
+ls
 mail
 man
 msg
