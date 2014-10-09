@@ -41,7 +41,7 @@ class R
   # depth-first sorted subtree in page-chunks
   FileSet['page'] = -> d,r,m {
     u = m['#']
-    d.env[:directory] = true
+    d.env[:container] = true
     p = d.e ? d : (d.justPath.e ? d.justPath : d) # prefer host-specific index
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
     o = r.has_key?('asc') ? :asc : :desc                  # direction

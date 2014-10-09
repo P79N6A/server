@@ -2,14 +2,21 @@ watch __FILE__
 class R
 
   View['chat'] = -> d,e {
-    puts "mbt"
-    d.map{|u,r|
-      [r[Date][0].split('T')[1][0..4], " ",
-       r[Creator].do{|c|
-         {_: :a, class: :creator, href: r.uri,
-           c: c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s }},
-       " ",
-       r[Content],"<br>\n"]}}
+    label = {}
+    count = 0
+    [d.map{|u,r|
+       [r[Date][0].split('T')[1][0..4], " ",
+        r[Creator].do{|c|
+          name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
+          label[name] ||= {c: 0, id: (count += 1).to_s}
+          label[name][:c] += 1
+          {_: :a, class: 'creator l'+label[name][:id], href: r.uri, c: name }},
+        " ",
+        r[Content],"<br>\n"]},
+     label.map{|n,l|
+       {_: :style, c: ".creator.l#{l[:id]} {background-color: #{cs}; color: #fff}"} if l[:c] > 1},
+     {_: :style, c: '.creator {color: #444}'}
+    ]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = View['chat']
 
@@ -21,10 +28,8 @@ class R
     doc = uri.gsub '#','%23'
     channel = bare
     r.lines.map{|l|
-=begin sample
-19:10 [    kludge] _abc_: because people discovered that APL was totally unmaintainable.  People wrote code and then went to lunch and when they came back they couldn't figure out what the hell they had done.
-19:10 [     _abc_] Sounds like Perl
-=end
+#19:10 [    kludge] _abc_: because people discovered that APL was totally unmaintainable.  People wrote code and then went to lunch and when they came back they couldn't figure out what the hell they had done.
+#19:10 [     _abc_] Sounds like Perl
       l.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
         s = doc + '#' + doc + ':' + (i+=1).to_s
         yield s, Date,                day+'T'+m[0]+':'+m[1]+':00'
