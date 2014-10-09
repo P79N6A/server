@@ -10,7 +10,7 @@ class R
     s[Header+'accept-'+a.downcase] = r.accept_('_'+a)}
 
   r.map{|k,v| # header fields
-    s[Header+k] = v unless [:Links,:Response].member?(k)}
+    s[Header+k.to_s] = v unless [:Links,:Response].member?(k)}
 
     r.q['view'] = 'HTML'
     [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
