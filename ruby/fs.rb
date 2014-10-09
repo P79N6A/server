@@ -113,14 +113,16 @@ class R
     rev = e.q.has_key? 'rev'
     sort = e.q['sort'].do{|p|p.expand} || 'uri'
     sortType = ['uri',Type].member?(sort) ? :to_s : :to_i
-    {_: :table, class: :ls,
-      c: [{_: :tr, c: keys.map{|k| # header
-              {_: :th, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
-          d.values.sort_by{|v| # sortable
-            (v[sort].justArray[0] || 0).send sortType}.send(rev ? :reverse : :id).map{|e|
-            {_: :tr, class: (e.R.path==path ? 'this' : 'row'), c: keys.map{|k| # body
-                {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
-          {_: :style, c: "table.ls {background-color: #{cs}}"},H.css('/css/ls')]}}
+    [{_: :table, class: :ls,
+       c: [{_: :tr, c: keys.map{|k| # header
+               {_: :th, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(rev ? '' : '&rev=rev'), c: k.R.abbr}}}},
+           d.values.sort_by{|v| # sortable
+             (v[sort].justArray[0] || 0).send sortType}.send(rev ? :reverse : :id).map{|e| # subjects
+             {_: :tr, class: (e.R.path == path ? 'this' : 'row'),
+               c: keys.map{|k| # predicates
+                 {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
+           {_: :style, c: "table.ls {background-color: #{cs}}"},H.css('/css/ls')]},
+    {class: :warp, _: :a, href: e.warp, c: :warp}]}
 
 
   ViewGroup[Stat+'Directory'] = View['ls']
