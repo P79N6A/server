@@ -46,7 +46,7 @@ class R
     Stats[:format][mime] ||= 0
     Stats[:format][mime] += 1
 
-    puts [ e['REQUEST_METHOD'], s, '<'+e.uri+'>', ua, '<'+e.user+'>', e['HTTP_REFERER']
+    puts [ e['REQUEST_METHOD'], s, '<'+e.uri+'>', ua, '<'+e.user+'>', e['HTTP_REFERER'], mime
          ].join ' '
 
   end
