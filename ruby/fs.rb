@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   def triplrInode &f
@@ -14,11 +14,11 @@ class R
     elsif symlink?
       readlink.do{|t|
         mtime = t.mtime.to_i
-        yield file, Type, R[Stat+'File']
-        yield file, Stat+'mtime', mtime
-        yield file, Stat+'size', 0
+#        yield file, Type, R[Stat+'File'] # source triples
+#        yield file, Stat+'mtime', mtime
+#        yield file, Stat+'size', 0
         t = t.stripDoc
-        yield t.uri, Type, Resource
+        yield t.uri, Type, Resource      # target triples
         yield t.uri, Stat+'mtime', mtime
         yield t.uri, Stat+'size', 0}
 
