@@ -1,15 +1,17 @@
+watch __FILE__
 class R
 
-  View[SIOCt+'MicroblogPost'] = -> d,e {
+  View['chat'] = -> d,e {
+    puts "mbt"
     d.map{|u,r|
       [r[Date][0].split('T')[1][0..4], " ",
        r[Creator].do{|c|
-         {_: :a, href: r.uri,
+         {_: :a, class: :creator, href: r.uri,
            c: c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s }},
        " ",
        r[Content],"<br>\n"]}}
 
-  View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost']
+  View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = View['chat']
 
   def triplrIRC &f
     i=-1
@@ -66,5 +68,8 @@ class R
       yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
     }
   end
+
+  ViewGroup[SIOCt+'InstantMessage'] = View['chat']
+  ViewGroup[SIOCt+'MicroblogPost'] = View['chat']
 
 end

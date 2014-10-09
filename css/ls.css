@@ -38,8 +38,9 @@ table.ls th a {
 }
 
 table.ls tr td a {
+    font-size: 1.08em;
     color: #fff;
-    background-color: #aaa;
+    background-color: #888;
     border: .1em dotted #bbb;
 }
 
