@@ -1,28 +1,31 @@
 .warp {
     background-color: orange;
+    color: #fff;
     float: left;
-    font-size: 2.4em;
+    font-size: 2em;
+    padding: .2em;
     margin-top: .2em;
     border-radius: 0 1em 1em 1em;
 }
 .warp:hover {
   color: orange;
-  background-color: #fff;
+  background-color: #f6f6f6;
 }
 
 
 table.ls {
     color: #000;
+    background-color:#fff;
     padding: .3em;
     margin: .4em;
     border-spacing: 0;
     float: left;
+    border: .1em dotted #222;
 }
 
 table.ls td {
     white-space: nowrap;
     padding: .1em;
-    font-size: 1.1em;
 }
 
 table.ls td[property='uri'] {
@@ -31,13 +34,25 @@ table.ls td[property='uri'] {
     overflow: hidden;
 }
 
-table.ls a, .warp {
-    text-decoration: none;
-    color: #fff;
+
+table.ls a {
+    color: #000;
+    background-color: #fff;
+    border: .1em dotted;
 }
 
-table.ls tr.this, table.ls tr.this:hover {background-color: #aaa}
+table.ls a, .warp {
+    text-decoration: none;
+}
 
-table.ls tr:hover {background-color: #000}
+table.ls tr.this, table.ls tr.this:hover {
+    background-color: #0f0;
+}
+
+table.ls th {
+    font-size:1.2em;
+    padding-bottom: .2em;
+}
+table.ls tr:hover {background-color: #f05}
 
 .scheme,.abbr {display: none}

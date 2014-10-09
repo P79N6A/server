@@ -108,7 +108,7 @@ class R
                "\n", r[Content], "\n"]}}}]}
 
   View['ls'] = ->d=nil,e=nil {
-    keys = ['uri', Stat+'size', Type, Stat+'mtime']
+    keys = [ Stat+'size',Type, 'uri', Stat+'mtime']
     path = e['REQUEST_PATH']
     rev = e.q.has_key? 'rev'
     sort = e.q['sort'].do{|p|p.expand} || 'uri'
@@ -121,7 +121,7 @@ class R
              {_: :tr, class: (e.R.path == path ? 'this' : 'row'),
                c: keys.map{|k| # predicates
                  {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
-           {_: :style, c: "table.ls {background-color: #{cs}}"},H.css('/css/ls')]},
+           H.css('/css/ls')]},
     {class: :warp, _: :a, href: e.warp, c: :warp}]}
 
 
