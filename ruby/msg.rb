@@ -15,7 +15,7 @@ class R
         r[Content],"<br>\n"]},
      label.map{|n,l|
        {_: :style, c: ".creator.l#{l[:id]} {background-color: #{cs}; color: #fff}"} if l[:c] > 1},
-     {_: :style, c: '.creator {color: #444}'}
+     {_: :style, c: '.creator {color: #555}'}
     ]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = View['chat']
