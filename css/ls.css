@@ -49,11 +49,11 @@ table.ls a, .warp {
 }
 
 table.ls tr:nth-child(even)  {
-    background-color: #f6f6f6;
+    background-color: #eee;
 }
 
 table.ls tr.this, table.ls tr.this:hover {
-    background-color: #000;
+    background-color: #222;
     color: #fff;
 }
 

@@ -140,17 +140,20 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  IndexMail = ->doc, graph, host {
+  IndexMail = ->doc,graph,host {
     graph.map{|u,r|
       addresses = []
       r[Creator].do{|from|addresses.concat from}
       r[To].do{|to|       addresses.concat to}
       r[Date].do{|date|
         r[Title].do{|title|
-          name = 
+          name = title[0].slugify
+          month = date[0][0..7].gsub('-','/')
           addresses.map{|address|
-            doc.ln_s R[address.R.dirname + '/' + date[0][0..7].gsub('-','/') + rand.to_s.h[0..5] + '.e']
-          }}}}}
+            container = address.R.dirname + '/' + month
+            target = R[container + name + '.e']
+            target = R[container + name + rand.to_s.h[0..2] + '.e'] if target.e
+            doc.ln target }}}}}
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOCt+'MailMessage'
