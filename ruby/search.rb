@@ -12,6 +12,8 @@ class R
     (Pathname.glob pathPOSIX + a).map &:R
   end
 
+  GREP_DIRS.push /^\/\d{4}\//
+
   FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       q['view'] ||= 'grep'

@@ -47,9 +47,7 @@ class R
               DC+'locale' => [],
               RDFs+'seeAlso' => [],
               SKOS+'related' => [],
-              DC+'hasFormat' => [html, txt],
-              SIOC+'has_container' => [R['/man/'+name[0].downcase+'/']],
-            }}
+              DC+'hasFormat' => [html, txt]}}
 
           locales = graph[uri][DC+'locale']
 

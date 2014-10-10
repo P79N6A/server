@@ -30,8 +30,6 @@ class R
 
     e.condResponse ->{Render[r.format][m, r]}}
 
-  GREP_DIRS.push /^\/msg\//
-
   def mail; Mail.read node if f end
 
   def triplrMail &b
