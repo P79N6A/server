@@ -37,7 +37,7 @@ class R
   def response
     set = []                        # result set
     m = {'#' => {'uri' => uri}}     # request meta
-    rdf = !NonRDF.member? @r.format # model type
+    rdf = !(NonRDF.member? @r.format) # model type
 
     # File(s)
     (q['set'].do{|s|FileSet[s]} || FileSet['default'])[self,q,m].do{|files| set.concat files }
