@@ -22,6 +22,7 @@ class R
       }}}
 
   ResourceSet['groonga'] = ->d,e,m{
+    d.env[:container] = true
     m['/search#'] = {Type => R[Search]}
     m['#'][Type] = R[HTTP+'Response']
     R.groonga.do{|ga|
