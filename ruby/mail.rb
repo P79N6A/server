@@ -147,7 +147,7 @@ class R
       r[To].do{|to|       addresses.concat to}
       r[Date].do{|date|
         r[Title].do{|title|
-          name = title[0].gsub /\W+/, ' '
+          name = title[0].gsub(/\W+/,' ').strip
           month = date[0][0..7].gsub '-','/'
           addresses.map{|address|
             container = address.R.dirname + '/' + month
