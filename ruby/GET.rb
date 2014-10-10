@@ -24,13 +24,10 @@ class R
     condResponse ->{ self } # continue if uncached
   end
 
-  def resourceGET # lookup handler: cascading up paths, first with host, then without
+  def resourceGET
     paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
-      paths.map{|p|
-        GET[h + p].do{|fn|
-#          puts "#{h}#{p} handling"
-          fn[self,@r].do{|r|return r}}}}
+      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| return r }}}} # handler bound
     response
   end
 

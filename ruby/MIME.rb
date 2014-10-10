@@ -26,10 +26,10 @@ end
 
 class R
 
-  def mime # determine MIME-type of file
+  def mime # MIME-type from file. take suffixes at face-value
     @mime ||=
-      (p = realpath
-       unless p
+      (p = realpath # dereference final location
+       unless p     # deref failed
          nil
        else
          t = ((File.extname p).tail || '').downcase.to_sym
@@ -39,7 +39,7 @@ class R
            MIME[t]
          elsif Rack::Mime::MIME_TYPES[t='.'+t.to_s]
            Rack::Mime::MIME_TYPES[t]
-         elsif (File.basename p).index('msg.')==0 # how do you .procmailrc a suffix?
+         elsif (File.basename p).index('msg.')==0
            "message/rfc822"
          else
            puts "unknown MIME #{p}"
