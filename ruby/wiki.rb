@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   View['edit'] = -> graph, e { # edit resource in a <form>
@@ -6,9 +6,8 @@ class R
     fragment = e.q['fragment'].do{|s|s.slugify} || '' # fragment-id
     subject = s = e.uri + '#' + fragment              # URI
     model = graph[subject] || {'uri' => subject}      # resource state
-    e.q['title'].do{|t| model[Title] ||= t }          # title
 
-    type = model[Type].do{|t|t[0].uri} ||             # type
+    type = model[Type].do{|t|t[0].uri} ||             # bind resource-type
            e.q['type'].do{|t|t.expand} ||
            SIOCt+'WikiArticle'
 
@@ -19,19 +18,17 @@ class R
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
-                     c: [{_: :a, class: :uri, c: (model[Title] || s), href: s},
+                     c: [{_: :a, class: :uri, c: s, href: s},
                          {_: :a, class: :history, c: 'history', href: R[s].fragmentPath + '?set=page&view=table&empty'}
                         ]}},
-                 model.keys.-(['uri','format',Type]).map{|p|
+                 model.keys.-(['uri',Type]).map{|p|
                    {_: :tr,
-                     c: [{_: :td, class: :key, c: {_: :a, title: p, href: p, c: p.R.abbr}},
+                     c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.abbr}},
                          {_: :td, c: model[p].do{|o|
                              o.justArray.map{|o|
                                case p
                                when Content
-                                 [{_: :textarea, name: p, c: o, rows: 16, cols: 80},
-                                  {_: :select, name: :format,
-                                    c: %w{HTML markdown}.map{|f|{_: :option, value: f, c: f}}}]
+                                 {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when Date
                                  {_: :input, name: p, type: :datetime, value: !o || o.empty? && Time.now.iso8601 || o}
                                else
