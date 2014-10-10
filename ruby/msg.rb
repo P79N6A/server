@@ -5,7 +5,7 @@ class R
     label = {}
     count = 0
     [d.map{|u,r|
-       [r[Date][0].split('T')[1][0..4], " ",
+       [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
         r[Creator].do{|c|
           name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
           label[name] ||= {c: 0, id: (count += 1).to_s}
@@ -15,8 +15,11 @@ class R
         r[Content],"<br>\n"]},
      label.map{|n,l|
        {_: :style, c: ".creator.l#{l[:id]} {background-color: #{cs}; color: #fff}"} if l[:c] > 1},
-     {_: :style, c: '.creator {color: #555}'}
-    ]}
+     {_: :style,
+       c: ".creator {color: #888;background-color: #fff}
+a {background-color: #555; color: #fff}
+.date {color: #888}
+"}]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = View['chat']
 

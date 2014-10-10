@@ -14,7 +14,7 @@ module Th
     }[File.extname(self['REQUEST_PATH'])].do{|mime|
       return mime}
 
-    accept.sort.reverse.map{|q,mimes| # Accept by descending q-value
+    accept.sort.reverse.map{|q,mimes| # by descending q-value
       mimes.map{|mime|
         return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
 
