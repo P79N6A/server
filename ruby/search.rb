@@ -60,7 +60,6 @@ class R
         u[Next] = {'uri' => uri}                # next RDF
         d.env[:Links].push "<#{uri}>; rel=next" # next Link
       end
-      s.concat d.fileResources
       s }}
 
   View['grep'] = -> d,e {
