@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   Posts = '.p'
@@ -6,13 +6,13 @@ class R
   GET['/forum'] = -> r,e {
     s = r.path.tail.split '/'
     s.shift if s[0] == 'forum'
-    if s.size == 1 # sub
+    if s.size == 1 # subforum list
       e.q['set'] = 'page'
       e.q['view'] ||= 'subforum'
       nil
-    elsif s.size == 5 # thread
+    elsif s.size == 5 # depth 5 : thread
       e.q['set'] = SIOC+'Thread'
-      r.descend.child(Posts).setEnv(e).response # paginated posts
+      r.descend.child(Posts).setEnv(e).response
     else
       nil
     end}
@@ -106,7 +106,7 @@ content = StripHTML[p['content']]
          preview = {}
          thread.R.child(Posts).take(2,:asc).map{|p| p.fileToGraph preview}
          [View[SIOCt+'BoardPost'][preview, e],'<br clear=all><hr>']}},
-     {_: :a, href: '?view=newpost', class: :makepost, c: 'create'}]}
+     {_: :a, href: '?view=newpost', class: :makepost, c: 'new post'}]}
 
   View['#newpost'] = -> d,e {
     {_: :form, method: :POST, enctype: "multipart/form-data",
