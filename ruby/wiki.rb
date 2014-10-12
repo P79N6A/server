@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   View['edit'] = -> graph, e { # edit resource in a <form>

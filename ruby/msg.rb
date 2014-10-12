@@ -11,15 +11,8 @@ class R
           label[name] ||= {c: 0, id: (count += 1).to_s}
           label[name][:c] += 1
           {_: :a, class: 'creator l'+label[name][:id], href: r.uri, c: name }},
-        " ",
-        r[Content],"<br>\n"]},
-     label.map{|n,l|
-       {_: :style, c: ".creator.l#{l[:id]} {background-color: #{cs}; color: #fff}"} if l[:c] > 1},
-     {_: :style,
-       c: ".creator {color: #888;background-color: #fff}
-a {background-color: #555; color: #fff}
-.date {color: #888}
-"}]}
+        " ", r[Content],"<br>\n"]},
+     {_: :style, c: label.map{|n,l| ".creator.l#{l[:id]} {background-color: #{cs}; color: #fff}" if l[:c] > 1}.cr }]}
 
   View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = View['chat']
 

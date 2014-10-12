@@ -65,7 +65,7 @@ class R
         set.map{|f|f.streamToRDF graph, :triplrInode} if @r[:directory]
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
-      else # Hash model
+      else # Hash graph
         set.map{|r|r.setEnv(@r).fileToGraph m}
         set.map{|f|f.fromStream m, :triplrInode} if @r[:directory]
         Render[@r.format][m, @r]
