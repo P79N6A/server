@@ -22,8 +22,8 @@ graph = RDF::Graph.load ARGV[0]
   types.map{|t|
     graph.query([nil, RDF.type, t]){|s,p,o|
       unless results.member? s
-        results.push [Time.at(graph.first_object([s, mtime, nil])).iso8601,
-                      graph.first_object([s, size, nil]),
+        results.push [graph.first_object([s, size, nil]),
+                      (Time.at graph.first_object([s, mtime, nil])).iso8601,
                       s]
       end}}}
 
