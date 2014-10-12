@@ -3,6 +3,7 @@ require 'linkeddata'
 
 stat = "http://www.w3.org/ns/posix/stat#"
 ldp = "http://www.w3.org/ns/ldp#"
+mtime, size = RDF::URI(stat+'mtime'), RDF::URI(stat+'size')
 
 ftypes = [RDF::RDFS.Resource,
           RDF::URI(stat+'File')]
@@ -18,7 +19,14 @@ graph = RDF::Graph.load ARGV[0]
 [[ftypes, resources],
  [dtypes, containers]].
   map{|types,results|
-  types.map{|t| graph.query([nil, RDF.type, t]){|s,p,o| results << s unless results.member? s}}}
+  types.map{|t|
+    graph.query([nil, RDF.type, t]){|s,p,o|
+      unless results.member? s
+        results.push [Time.at(graph.first_object([s, mtime, nil])).iso8601,
+                      graph.first_object([s, size, nil]),
+                      s]
+      end}}}
 
-puts containers
-puts resources
+[containers,resources].map{|items|
+  puts items.map{|t|t.join "\t"}
+}
