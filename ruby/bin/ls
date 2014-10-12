@@ -5,15 +5,12 @@ stat = "http://www.w3.org/ns/posix/stat#"
 ldp = "http://www.w3.org/ns/ldp#"
 mtime, size = RDF::URI(stat+'mtime'), RDF::URI(stat+'size')
 
-ftypes = [RDF::RDFS.Resource,
-          RDF::URI(stat+'File')]
+ftypes = [RDF::RDFS.Resource, RDF::URI(stat+'File')]
 
-dtypes = [RDF::URI(ldp+'BasicContainer'),
-          RDF::URI(stat+'Directory')]
+dtypes = [RDF::URI(ldp+'BasicContainer'), RDF::URI(stat+'Directory')]
 
 resources = []
 containers = []
-
 graph = RDF::Graph.load ARGV[0]
 
 [[ftypes, resources],
@@ -24,9 +21,8 @@ graph = RDF::Graph.load ARGV[0]
       unless results.member? s
         results.push [graph.first_object([s, size, nil]),
                       (Time.at graph.first_object([s, mtime, nil])).iso8601,
-                      s]
+                      '<'+s+'>']
       end}}}
 
 [containers,resources].map{|items|
-  puts items.map{|t|t.join "\t"}
-}
+  puts items.map{|t|t.join "\t"}}
