@@ -23,8 +23,8 @@ class R
         yield t.uri, Stat+'size', 0}
 
     else
-      resource = stripDoc.uri
-      if resource ||= uri
+      resource = URI.escape stripDoc.uri
+      if resource ||= file
         yield resource, Type, Resource
         yield resource, Stat+'mtime', mtime.to_i
         yield resource, Stat+'size', size
