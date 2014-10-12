@@ -6,7 +6,7 @@ class R
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-      e.exist? && `find #{e.sh} #{t} #{s} #{r} | head -n 1000`.lines.map{|l|R.unPOSIX l.chomp}}}
+      e.exist? && `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
   def glob a = ""
     (Pathname.glob pathPOSIX + a).map &:R
@@ -17,12 +17,10 @@ class R
   FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       q['view'] ||= 'grep'
-      path = e.justPath
-      GREP_DIRS.find{|p|path.uri.match p}.do{|_|
-        [e,path].compact.select(&:e).map{|e|
-          `grep -iRl #{query.sh} #{e.sh} | head -n 200`}.map{|r|r.lines.to_a.map{|r|R.unPOSIX r.chomp}}.flatten
-      }}}
+      GREP_DIRS.find{|p|e.justPath.uri.match p}.do{|_|
+        e.exist? && `grep -iRl #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}}
 
+  # full-text search
   ResourceSet['groonga'] = ->d,e,m{
     d.env[:container] = true
     m['/search#'] = {Type => R[Search]}
