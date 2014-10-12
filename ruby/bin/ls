@@ -15,8 +15,10 @@ containers = []
 
 graph = RDF::Graph.load ARGV[0]
 
-ftypes.map{|ft| graph.query([nil, RDF.type, ft]){|s,p,o| resources << s unless resources.member? s}}
-dtypes.map{|dt| graph.query([nil, RDF.type, dt]){|s,p,o| containers << s unless containers.member? s }}
+[[ftypes, resources],
+ [dtypes, containers]].
+  map{|types,results|
+  types.map{|t| graph.query([nil, RDF.type, t]){|s,p,o| results << s unless results.member? s}}}
 
 puts containers
 puts resources
