@@ -191,4 +191,28 @@ class R
       resource.roonga graph}
   end
 
+  def q # query-string
+    @r.q
+  end
+
+end
+
+module Th
+  def q # parse query-string
+    @q ||=
+      (if q = self['QUERY_STRING']
+         h = {}
+         q.split(/&/).map{|e| k, v = e.split(/=/,2).map{|x| CGI.unescape x }
+                              h[k] = v }
+         h
+       else
+         {}
+       end)
+  end
+end
+
+class Hash
+  def qs # serialize to query-string
+   '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
+  end
 end

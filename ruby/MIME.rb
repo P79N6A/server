@@ -2,6 +2,10 @@
 
 module Th
 
+  def format # memoized selectFormat
+    @format ||= selectFormat
+  end
+
   def selectFormat # format-variant suffixes
     {
       '.html' => 'text/html',
@@ -26,7 +30,7 @@ end
 
 class R
 
-  def mime # MIME-type from file. take suffixes at face-value
+  def mime # MIME-type of associated fs node
     @mime ||=
       (p = realpath # dereference final location
        unless p     # deref failed
