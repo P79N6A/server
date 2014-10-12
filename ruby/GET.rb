@@ -61,8 +61,9 @@ class R
     condResponse ->{
       if rdf
         graph = RDF::Graph.new
-        set.map{|r|(r.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}} unless @r[:directory]
-        set.map{|f|f.streamToRDF graph, :triplrInode} if @r[:directory]
+        puts self
+        set.map{|f|(f.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}} unless @r[:directory]
+        set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode} if @r[:directory]
         @r[:Response][:Triples] = graph.size.to_s
         graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
       else # Hash graph

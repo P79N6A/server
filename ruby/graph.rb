@@ -28,8 +28,8 @@ class R
   # triplr -> graph (RDF)
   def streamToRDF g, *i
     send(*i) do |s,p,o|
-      s = RDF::URI s           # subject-URI
-      p = RDF::URI p           # predicate-URI
+      s = R[(lateHost.join s).to_s] # subject
+      p = RDF::URI p                # predicate
       o = if [R,Hash].member? o.class
             RDF::URI o.uri     # object URI ||
           else                 # object Literal
@@ -42,13 +42,13 @@ class R
     g
   end
 
-  # file(s) -> graph
+  # file(s) -> graph (Hash)
   def graph graph = {}
     fileResources.map{|d| d.fileToGraph graph}
     graph
   end
 
-  # file -> graph
+  # file -> graph (Hash)
   def fileToGraph graph = {}
     justRDF(%w{e}).do{|file|
      graph.mergeGraph file.r true}
@@ -63,7 +63,7 @@ class R
     self
   end
 
-  # graph -> file(s)
+  # graph (Hash) -> file(s)
   def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -81,7 +81,7 @@ class R
       hook[d,g,host] if hook} # indexer
   end
 
-  # Repository -> file(s)
+  # Repository (RDF) -> file(s)
   def cacheRDF options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -90,7 +90,6 @@ class R
         unless doc.e
           doc.dir.mk
           file = doc.pathPOSIX
-#          puts "cache "+file
           RDF::Writer.open(file){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
@@ -98,7 +97,7 @@ class R
     g
   end
 
-  # file -> file (cached transcode) Non-RDF to RDF
+  # file -> file (Non-RDF -> RDF)
   def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}       # RDF suffixes
     return unless e                                       # check that source exists
     doc = self                                            # output doc
