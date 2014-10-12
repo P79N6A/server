@@ -4,16 +4,19 @@ require 'linkeddata'
 stat = "http://www.w3.org/ns/posix/stat#"
 ldp = "http://www.w3.org/ns/ldp#"
 
+ftypes = [RDF::RDFS.Resource,
+          RDF::URI(stat+'File')]
+
+dtypes = [RDF::URI(ldp+'BasicContainer'),
+          RDF::URI(stat+'Directory')]
+
 resources = []
 containers = []
 
 graph = RDF::Graph.load ARGV[0]
 
-[RDF::RDFS.Resource,RDF::URI(stat+'File'),].map{|file|
-  graph.query([nil, RDF.type, file]){|s,p,o| resources << s }}
-
-[RDF::URI(ldp+'BasicContainer'), RDF::URI(stat+'Directory')].map{|dir|
-  graph.query([nil, RDF.type, dir]){|s,p,o| containers << s }}
+ftypes.map{|ft| graph.query([nil, RDF.type, ft]){|s,p,o| resources << s unless resources.member? s}}
+dtypes.map{|dt| graph.query([nil, RDF.type, dt]){|s,p,o| containers << s unless containers.member? s }}
 
 puts containers
 puts resources
