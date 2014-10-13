@@ -3,9 +3,13 @@ class R
 
   Posts = '.p'
 
+  GET['/chan'] = -> r,e {
+    e.q['forumstyle'] = 'chan'
+    GET['/forum'][r,e]}
+
   GET['/forum'] = -> r,e {
     s = r.path.tail.split '/'
-    s.shift if s[0] == 'forum'
+    s.shift if %w{chan forum}.member?(s[0])
     if s.size == 1 # subforum list
       e.q['set'] = 'page'
       e.q['view'] ||= 'subforum'
@@ -103,9 +107,13 @@ content = StripHTML[p['content']]
      View[HTTP+'Response'][d,e], # pagination
      {class: :subforum, 
        c: d.resourcesOfType(SIOC+'Thread').map{|thread|
-         preview = {}
-         thread.R.child(Posts).take(2,:asc).map{|p| p.fileToGraph preview}
-         [View[SIOCt+'BoardPost'][preview, e],'<br clear=all><hr>']}},
+         [if e.q['forumstyle'] == 'chan' # inline thread preview
+            preview = {}
+            thread.R.child(Posts).take(2,:asc).map{|p|p.fileToGraph preview}
+            View[SIOCt+'BoardPost'][preview,e]
+          else
+            {_: :a, href: thread.uri, c: thread[Title]||thread.uri}
+          end,'<br clear=all><hr>']}},
      {_: :a, href: '?view=newpost', class: :makepost, c: 'new post'}]}
 
   View['#newpost'] = -> d,e {
