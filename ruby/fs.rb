@@ -87,15 +87,15 @@ class R
     if e.directory?
       e.env[:directory] = true
       s.concat e.c # contained resources
-      e.env['REQUEST_PATH'].do{|path| # pagination on day-dirs 
-        path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/$/).do{|m|
-          t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
-          pp = (t-1).strftime('/%Y/%m/%d/') # prev day
-          np = (t+1).strftime('/%Y/%m/%d/') # next day
-          g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
-          g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
-          g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]}}
     end
+    e.env['REQUEST_PATH'].do{|path| # auto-paginate day-dirs 
+      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m|
+        t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
+        pp = (t-1).strftime('/%Y/%m/%d/') # prev day
+        np = (t+1).strftime('/%Y/%m/%d/') # next day
+        g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
+        g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
+        g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]}}
     s }
 
   View[Stat+'File'] = -> i,e {
