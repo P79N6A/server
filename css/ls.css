@@ -39,9 +39,6 @@ table.ls td {
 table.ls td[property='uri'] {
     max-width: 32em;
     overflow: hidden;
-    border: .1em dotted #bbb;
-    color: #fff;
-    background-color: #888;
 }
 
 table.ls *[property='uri'] {

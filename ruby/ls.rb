@@ -10,23 +10,29 @@ class R
     sortType = ['uri',Type].member?(sort) ? :to_s : :to_i
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
     entries.unshift({'uri' => '..'}) unless e['REQUEST_PATH']=='/'
+
     [{_: :table, class: :ls,
-       c: [{_: :tr, c: keys.map{|k| # header
+       c: [{_: :tr, c: keys.map{|k| # header row
                {_: :th, property: k, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
-           entries.map{|e|
+           entries.map{|e| # body rows
              types = e.types
+             directory = types.include?(Stat+'Directory')
+             file = types.include?(Stat+'File')
+
              {_: :tr, class: (e.R.path == path ? 'this' : 'row'),
                c: keys.map{|k| # predicates
                  {_: :td, property: k,
                    c: case k
                       when 'uri'
-                        e.R.href(e[Title] || URI.unescape(e.R.basename))
+                        a = e.R
+                        a = a.stripDoc.a('.html') if file
+                        a.href(e[Title] || URI.unescape(e.R.basename))
                       when mtime
                         e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                       when Type
-                        if types.include?(Stat+'Directory')
+                        if directory
                           {_: :a, class: :dir, href: e.uri}
-                        elsif types.include?(Stat+'File')
+                        elsif file
                           {_: :a, class: :file, href: e.uri}
                         elsif types.include?(DC+'Image')
                           ShowImage[e.uri]
