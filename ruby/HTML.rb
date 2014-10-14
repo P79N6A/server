@@ -176,7 +176,7 @@ class R
           groups[v] ||= {}
           groups[v][u] = r
           seen[u] = true
-        end}} if (e[:directory] || e[:container]) && e['REQUEST_PATH'] != '/'
+        end}} if e[:directory] || e[:container]
      [groups.map{|view,graph|view[graph,e]},
       d.map{|u,r|
         if !seen[u]

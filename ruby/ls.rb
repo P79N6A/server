@@ -20,7 +20,7 @@ class R
                       when 'uri'
                         e.R.href(e[Title] || URI.unescape(e.R.basename))
                       when mtime
-                        Time.at(e[k][0]).iso8601.sub /\+00:00$/,''
+                        e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                       else
                         e[k].html
                       end}}}}, H.css('/css/ls')]},

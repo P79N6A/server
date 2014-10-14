@@ -21,6 +21,7 @@ table.ls {
     padding: .3em;
     border-spacing: 0;
     float: left;
+    font-size: 1.1em;
 }
 
 table.ls td {
@@ -33,34 +34,17 @@ table.ls td[property='uri'], table.ls th[property='uri'] {
     max-width: 32em;
     overflow: hidden;
 }
-
-table.ls th a {
-    color: #888;
-}
+table.ls th {text-align: left}
+table.ls th a { color: #888 }
+table.ls a, .warp { text-decoration: none }
+table.ls tr.this { background-color: #444 }
+table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #06c6ff }
+table.ls tr:nth-child(even) { background-color: #111 }
 
 table.ls tr td a {
-    font-size: 1.08em;
     color: #fff;
     background-color: #888;
     border: .1em dotted #bbb;
-}
-
-table.ls a, .warp {
-    text-decoration: none;
-}
-
-table.ls tr:nth-child(even)  {
-    background-color: #111;
-}
-
-table.ls tr.this, table.ls tr.this:hover {
-    background-color: #222;
-    color: #fff;
-}
-
-table.ls tr.this td {
-    font-size: 1.08em;
-    padding: .2em;
 }
 
 table.ls th {
