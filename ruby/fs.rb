@@ -24,7 +24,7 @@ class R
 
     else
       resource = URI.escape stripDoc.uri
-      if resource ||= file
+      if resource != file
         yield resource, Type, Resource
         yield resource, Stat+'mtime', mtime.to_i
         yield resource, Stat+'size', size

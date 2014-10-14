@@ -26,6 +26,8 @@ class R
                       when Type
                         if types.include?(Stat+'Directory')
                           {_: :a, class: :dir, href: e.uri}
+                        elsif types.include?(Stat+'File')
+                          {_: :a, class: :file, href: e.uri}
                         elsif types.include?(DC+'Image')
                           ShowImage[e.uri]
                         else
