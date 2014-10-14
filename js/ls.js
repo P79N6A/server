@@ -1,4 +1,8 @@
 var ls = function(){
+    var table = document.querySelector('table.ls')
+    if(table) {
+	console.log('hi')
+    }
     document.addEventListener("keydown",function(e){
 
 	if(e.keyCode == 38){
@@ -9,6 +13,7 @@ var ls = function(){
 
 	}
     }, false);
+
 }
 document.addEventListener("DOMContentLoaded", ls, false);
 

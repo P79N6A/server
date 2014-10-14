@@ -6,7 +6,7 @@
 }
 body {margin: 0;padding:0}
 .warp:before {
-    background-color: orange;
+    background-color: #02f;
     color: #fff;
     float: left;
     padding: .1em;

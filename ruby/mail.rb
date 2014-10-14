@@ -39,8 +39,7 @@ class R
 
     e = MessagePath[id]                              # message URI
 
-    [R[SIOCt+'MailMessage'], R[SIOC+'Post'],         # SIOC types
-     R[RDFs+'Resource']].                            # RDF types
+    [R[SIOCt+'MailMessage'], R[SIOC+'Post']].        # SIOC types
       map{|t|yield e, Type, t}
 
     list = m['List-Post'].do{|l|l.decoded.sub(/^<?mailto:/,'').sub(/>$/,'').downcase}
