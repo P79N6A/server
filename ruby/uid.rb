@@ -3,7 +3,7 @@ watch __FILE__
 module Th
 
   def user
-    @user ||= (user_WebID || user_word || user_DNS)
+    @user ||= (user_WebID || user_words || user_DNS)
   end
 
   # http://www.w3.org/wiki/WebID
@@ -50,7 +50,7 @@ module Th
     cookies['session-id'].do{|s|R::Session[s]}
   end
 
-  def user_word
+  def user_words
     session.do{|s|s['user'][0]}
   end
 
@@ -69,9 +69,15 @@ class R
           {_: :input, type: :submit, value: :login}]}
 
   GET['/login'] = -> e,r {
-    graph = {e.uri => {'uri' => e.uri, Content => H(LoginForm)}}
-    [200, {'Content-Type' => r.format + '; charset=UTF-8'},
-     [Render[r.format][graph,r]]]}
+    uid = r.user.uri
+    content = if uid.match /^dns:/
+                LoginForm
+              else 
+                [{_: :h3, c: {_: :a, href: uid, c: uid }}, ' ',
+                 {_: :a, href: '/logout', c: 'log out', style: 'border: .1em dotted; padding: .2em; font-size: 1.1em'}]
+              end
+    graph = {e.uri => {'uri' => e.uri, Content => H(content)}}
+    [200, {'Content-Type' => r.format + '; charset=UTF-8'}, [Render[r.format][graph,r]]]}
 
   GET['/logout'] = -> e,r {
     r.session.do{|s|
@@ -103,7 +109,7 @@ class R
     [303,head,[]]}
 
   ViewGroup[FOAF+'Person'] = -> d,e {
-    d.map{|uri, person|{_: :a, class: :person, href: uri, c: person[Name]}}}
+    d.map{|uri, person|{_: :a, class: :person, href: uri, c: [person[Name],' ']}}}
 
   ViewGroup[FOAF+'Group'] = -> d,e {
     [{_: :style, c: "
