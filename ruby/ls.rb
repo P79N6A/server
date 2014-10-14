@@ -13,7 +13,7 @@ class R
        c: [{_: :tr, c: keys.map{|k| # header
                {_: :th, property: k, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
            d.values.sort_by{|v| # sort subjects
-             (v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse).map{|e| # subjects
+             (v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse).unshift({'uri' => '..'}).map{|e| # entries
              types = e.types
              {_: :tr, class: (e.R.path == path ? 'this' : 'row'),
                c: keys.map{|k| # predicates
