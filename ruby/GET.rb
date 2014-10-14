@@ -46,9 +46,6 @@ class R
           resources.map{|resource|
             set.concat resource.fileResources}}}}
 
-    etagX = rdf ? [] : [q['rev'], q['sort'], q['view']]
-    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8', 'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format, etagX].h})
-
     if set.empty? # nothing found
       if q.has_key? 'edit' # editor
         q['view'] ||= 'edit'
@@ -57,11 +54,14 @@ class R
       end
     end
 
-    ldp
+    etagX = rdf ? [] : [q['rev'], q['sort'], q['view']]              # representation-variant components
+    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',           # output MIME
+                           'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format, etagX].h}) # representation id
+    ldp # capability headers
+
     condResponse ->{
       if rdf
         graph = RDF::Graph.new
-        puts self
         set.map{|f|(f.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}} unless @r[:directory]
         set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode} if @r[:directory]
         @r[:Response][:Triples] = graph.size.to_s

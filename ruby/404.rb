@@ -10,6 +10,6 @@ class R
     r.map{|k,v| s[Header+k.to_s] = v}
 
     r.q.delete 'view'
-    [404,{'Content-Type'=> 'text/html'},[Render['text/html'][g,r]]]}
+    [404, r[:Response].update({'Content-Type'=>'text/html'}), [Render['text/html'][g,r]]]}
 
 end

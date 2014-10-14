@@ -3,24 +3,22 @@ require 'linkeddata'
 
 stat = "http://www.w3.org/ns/posix/stat#"
 ldp = "http://www.w3.org/ns/ldp#"
-mtime, size = RDF::URI(stat+'mtime'), RDF::URI(stat+'size')
+mtime = RDF::URI(stat+'mtime')
+size  = RDF::URI(stat+'size')
 
-ftypes = [RDF::RDFS.Resource, RDF::URI(stat+'File')]
+ftypes = [RDF::RDFS.Resource, RDF::URI(stat+'File')],                   resources = []
+dtypes = [RDF::URI(ldp+'BasicContainer'), RDF::URI(stat+'Directory')], containers = []
 
-dtypes = [RDF::URI(ldp+'BasicContainer'), RDF::URI(stat+'Directory')]
-
-resources = []
-containers = []
 graph = RDF::Graph.load ARGV[0]
 
-[[ftypes, resources],
- [dtypes, containers]].
-  map{|types,results|
-  types.map{|t|
+[[ftypes, resources], [dtypes, containers]].
+  map{|types,values|
+       types.map{|t|
+ 
     graph.query([nil, RDF.type, t]){|s,p,o|
-      unless results.member? s
-        results.push [graph.first_object([s, size, nil]),
-                      (Time.at graph.first_object([s, mtime, nil])).iso8601,
+      unless values.member? s
+        values.push [graph.first_object([s, size, nil]),
+            (Time.at graph.first_object([s, mtime, nil])).iso8601,
                       '<'+s+'>']
       end}}}
 
