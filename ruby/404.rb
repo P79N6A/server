@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   E404 = -> e,r,g=nil {

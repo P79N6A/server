@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
   View['ls'] = ->d=nil,e=nil {
@@ -21,6 +22,12 @@ class R
                         e.R.href(e[Title] || URI.unescape(e.R.basename))
                       when mtime
                         e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
+                      when Type
+                        if e.types.include?(Stat+'Directory')
+                          {_: :a, class: :dir, href: e.R.uri}
+                        else
+                          e[k].html
+                        end
                       else
                         e[k].html
                       end}}}}, H.css('/css/ls')]},
