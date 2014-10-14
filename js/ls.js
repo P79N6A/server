@@ -1,19 +1,14 @@
 var ls = function(){
     var table = document.querySelector('table.ls')
     if(table) {
-	console.log('hi')
+	table.addEventListener("click",function(e){
+	    var row = e.target.parentNode
+	    var uri = row.getAttribute('uri')
+	    if(uri) {
+		document.location.href = uri;
+	    }
+	}, false);
     }
-    document.addEventListener("keydown",function(e){
-
-	if(e.keyCode == 38){
-	    console.log('up')
-	    
-	} else if (e.keyCode==40) {
-	    console.log('down')
-
-	}
-    }, false);
-
 }
 document.addEventListener("DOMContentLoaded", ls, false);
 

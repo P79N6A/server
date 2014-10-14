@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   View['ls'] = ->d=nil,e=nil {
@@ -18,15 +18,13 @@ class R
              types = e.types
              directory = types.include?(Stat+'Directory')
              file = types.include?(Stat+'File')
-
-             {_: :tr, class: (e.R.path == path ? 'this' : 'row'),
+             re = file ? e.R.stripDoc.a('.html') : e.R
+             {_: :tr, uri: re.uri, class: (e.R.path == path ? 'this' : 'row'),
                c: keys.map{|k| # predicates
                  {_: :td, property: k,
                    c: case k
                       when 'uri'
-                        a = e.R
-                        a = a.stripDoc.a('.html') if file
-                        a.href(e[Title] || URI.unescape(e.R.basename))
+                        (file ? re : e.R).href(e[Title] || URI.unescape(e.R.basename))
                       when mtime
                         e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                       when Type

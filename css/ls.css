@@ -46,7 +46,7 @@ table.ls *[property='uri'] {
 }
 table.ls th {text-align: left}
 table.ls th a { color: #888 }
-table.ls a, .warp { text-decoration: none }
+table.ls a { color: #0ef; text-decoration: none }
 table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #444 }
 table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #06c6ff }
 table.ls tr:nth-child(even) { background-color: #111 }
