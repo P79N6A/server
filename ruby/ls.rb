@@ -1,10 +1,11 @@
 class R
 
   View['ls'] = ->d=nil,e=nil {
-    keys = [ Stat+'size', Type, 'uri', Stat+'mtime' ]
+    mtime = Stat+'mtime'
+    keys = [ Stat+'size', Type, 'uri', mtime ]
     path = e['REQUEST_PATH']
     asc = e.q.has_key? 'asc'
-    sort = e.q['sort'].do{|p|p.expand} || (Stat+'mtime')
+    sort = e.q['sort'].do{|p|p.expand} || mtime
     sortType = ['uri',Type].member?(sort) ? :to_s : :to_i
 
     [{_: :table, class: :ls,
@@ -14,8 +15,15 @@ class R
              (v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse).map{|e| # subjects
              {_: :tr, class: (e.R.path == path ? 'this' : 'row'),
                c: keys.map{|k| # predicates
-                 {_: :td, property: k, c: k=='uri' ? e.R.href(e[Title] || URI.unescape(e.R.basename)) : e[k].html}}}},
-           H.css('/css/ls')]},
+                 {_: :td, property: k,
+                   c: case k
+                      when 'uri'
+                        e.R.href(e[Title] || URI.unescape(e.R.basename))
+                      when mtime
+                        Time.at(e[k][0]).iso8601.sub /\+00:00$/,''
+                      else
+                        e[k].html
+                      end}}}}, H.css('/css/ls')]},
     {class: :warp, _: :a, href: e.warp, c: :warp}]}
 
 
