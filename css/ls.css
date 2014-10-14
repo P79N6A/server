@@ -5,14 +5,14 @@
     src: url('/css/misc/icons.ttf')  format('truetype');
 }
 body {margin: 0;padding:0}
-.warp {
+.warp:before {
     background-color: orange;
     color: #fff;
     float: left;
-    font-size: 2em;
-    padding: .2em;
-    margin-top: .2em;
-    border-radius: 0 1em 1em 1em;
+    padding: .1em;
+    font-size: 2.8em;
+    font-family: icons;
+    content:"\f085";
 }
 .warp:hover {
   color: orange;

@@ -35,7 +35,7 @@ class R
                         e[k].html
                       end}}}
            }, H.css('/css/ls')]},
-    {class: :warp, _: :a, href: e.warp, c: :warp}]}
+    {class: :warp, _: :a, href: e.warp}]}
 
 
   ViewGroup[Stat+'Directory'] = View['ls']
