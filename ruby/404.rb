@@ -10,6 +10,7 @@ class R
     r.map{|k,v| s['#'+k.to_s] = v}
     s['#SERVER_NAME'] = R['//'+s['#SERVER_NAME']]
     s['#uri'] = R[s['#uri']]
+    s['#HTTP_REFERER'].do{|r|s['#HTTP_REFERER']=R[r]}
     r.q.delete 'view'
     [404, r[:Response].update({'Content-Type'=>'text/html'}), [Render['text/html'][g,r]]]}
 

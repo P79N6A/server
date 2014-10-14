@@ -10,7 +10,7 @@ module Th
   def user_WebID
     x509cert.do{|c|
       cert = ('/cache/uid/' + (R.dive c.h)).R
-      webIDverify.do{|id| cert.w id } unless cert.exist?
+      verifyWebID.do{|id| cert.w id } unless cert.exist?
       return cert.r.R if cert.exist?} 
   end
 
@@ -51,7 +51,7 @@ module Th
   end
 
   def user_word
-    
+    session.do{|s|s['user'][0]}
   end
 
   def user_DNS
@@ -103,8 +103,7 @@ class R
     [303,head,[]]}
 
   ViewGroup[FOAF+'Person'] = -> d,e {
-    [{_: :style, c: ".person {float: left; background-color:#bbb; color: #fff; margin: .1em}"},
-     d.map{|uri, person|{_: :a, class: :person, href: uri, c: person[Name]}}]}
+    d.map{|uri, person|{_: :a, class: :person, href: uri, c: person[Name]}}}
 
   ViewGroup[FOAF+'Group'] = -> d,e {
     [{_: :style, c: "
