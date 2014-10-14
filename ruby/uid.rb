@@ -76,12 +76,12 @@ class R
   GET['/logout'] = -> e,r {
     r.session.do{|s|
       s['user'] = nil}
-    [303, {Location: '/'}, []]}
+    [303, {'Location' => '/'}, []]}
 
   Session = -> id {R['/cache/session/' + (R.dive id)]}
 
   POST['/login'] = -> e,r {
-    head = {Location: '/'}
+    head = {'Location' => '/'}
     args = Rack::Request.new(r).params
     name = args['user'].slugify[0..32]
     user = R['/user/' + name.h[0..2] + '/' + name + '#' + name]
@@ -94,7 +94,7 @@ class R
       shadow['passwd'] = pwR = pwI
     end
     if pwI == pwR                       # passwd valid?
-      head[:Location] = user.uri
+      head['Location'] = user.uri
       session_id = rand.to_s.h
       Session[session_id]['user'] = user
       Rack::Utils.set_cookie_header!(head, "session-id", {:value => session_id, :path => "/"})
