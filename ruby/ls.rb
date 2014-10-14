@@ -30,10 +30,10 @@ class R
                       when Type
                         if directory
                           {_: :a, class: :dir, href: e.uri}
-                        elsif file
-                          {_: :a, class: :file, href: e.uri}
                         elsif types.include?(DC+'Image')
                           ShowImage[e.uri]
+                        elsif file
+                          {_: :a, class: :file, href: e.uri}
                         else
                           e[k].html
                         end
