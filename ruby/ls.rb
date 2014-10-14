@@ -14,6 +14,7 @@ class R
                {_: :th, property: k, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
            d.values.sort_by{|v| # sort subjects
              (v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse).map{|e| # subjects
+             types = e.types
              {_: :tr, class: (e.R.path == path ? 'this' : 'row'),
                c: keys.map{|k| # predicates
                  {_: :td, property: k,
@@ -23,14 +24,17 @@ class R
                       when mtime
                         e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                       when Type
-                        if e.types.include?(Stat+'Directory')
-                          {_: :a, class: :dir, href: e.R.uri}
+                        if types.include?(Stat+'Directory')
+                          {_: :a, class: :dir, href: e.uri}
+                        elsif types.include?(DC+'Image')
+                          ShowImage[e.uri]
                         else
                           e[k].html
                         end
                       else
                         e[k].html
-                      end}}}}, H.css('/css/ls')]},
+                      end}}}
+           }, H.css('/css/ls')]},
     {class: :warp, _: :a, href: e.warp, c: :warp}]}
 
 
