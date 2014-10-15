@@ -55,7 +55,7 @@ class R
             r[Content],
             H.once(e,:wiki,H.css('/css/wiki'))]}}}
 
-  View[SIOCt+'BlogPost'] = -> g,e {
+  View['blogpost'] = -> g,e {
     g.map{|u,r|
       {class: :blogpost,
         c: [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
