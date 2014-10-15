@@ -62,15 +62,21 @@ class R
     condResponse ->{
       if rdf
         graph = RDF::Graph.new
-        set.map{|f|(f.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}} unless @r[:directory]
-        set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode} if @r[:directory]
-        @r[:Response][:Triples] = graph.size.to_s
-        graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
-      else # Hash graph
+        if set.size==1 && @r.format == set[0].mime # no merge or transcode requested
+          set[0]
+        else
+          if @r[:directory] # enumerate entries
+            set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode}
+          else # really load the model
+            set.map{|f|(f.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
+          end
+          @r[:Response][:Triples] = graph.size.to_s
+          graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
+        end
+      else # Hash
         set.map{|r|r.setEnv(@r).fileToGraph m}
         set.map{|f|f.fromStream m, :triplrInode} if @r[:directory]
         Render[@r.format][m, @r]
-
       end}
   end
   
