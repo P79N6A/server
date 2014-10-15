@@ -41,9 +41,6 @@ table.ls td[property='uri'] {
     overflow: hidden;
 }
 
-table.ls *[property='uri'] {
-    float: right;
-}
 table.ls th {text-align: left}
 table.ls th a { color: #888 }
 table.ls a { color: #0ef; text-decoration: none }

@@ -91,8 +91,9 @@ class R
       end
 
       def rawFeedTriples
-        x={} #XMLns prefix table
-        @doc.match(/<(rdf|rss|feed)([^>]+)/i)[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|x[m[0]]=m[1]}
+        x = {} # build XML name-prefix table
+        head = @doc.match(/<(rdf|rss|feed)([^>]+)/i)
+        head && head[2] && head[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|x[m[0]]=m[1]}
 
         # resources
         @doc.scan(%r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi){|m|

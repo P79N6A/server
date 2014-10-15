@@ -111,6 +111,7 @@ class R
     wav: 'audio/wav',
     wmv: 'video/wmv',
     xlsx: 'application/excel',
+    xml: 'application/atom+xml',
   }
 
   
