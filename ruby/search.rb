@@ -24,7 +24,6 @@ class R
   ResourceSet['groonga'] = ->d,e,m{
     d.env[:container] = true
     m['/search#'] = {Type => R[Search]}
-    m['#'][Type] = R[HTTP+'Response']
     R.groonga.do{|ga|
       q = e['q']                               # search expression
       g = e["context"] || d.env['SERVER_NAME'] # context
@@ -47,7 +46,6 @@ class R
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
     o = r.has_key?('asc') ? :asc : :desc                  # direction
     (p.take c, o, r['offset'].do{|o|o.R}).do{|s|          # bind page
-      u[Type] = R[HTTP+'Response']
       if r['offset'] && head = s[0]
         uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
         u[Prev] = {'uri' => uri}                # prev RDF  (body)

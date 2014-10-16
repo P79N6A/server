@@ -95,7 +95,7 @@ class R
         np = (t+1).strftime('/%Y/%m/%d/') # next day
         g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
         g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e
-        g['#'][Type] = R[HTTP+'Response'] if g['#'][Next] || g['#'][Prev]}}
+      }}
     s }
 
   View[Stat+'File'] = -> i,e {

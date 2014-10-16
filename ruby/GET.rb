@@ -32,8 +32,8 @@ class R
   end
 
   def response
-    set = []                        # result set
-    m = {'#' => {'uri' => uri}}     # request meta
+    set = [] # result set
+    m = {'#' => {'uri' => uri, Type => R[HTTP+'Response']}}
     rdf = !(NonRDF.member? @r.format) # model type
 
     # File(s)
@@ -54,7 +54,7 @@ class R
       end
     end
 
-    etagX = rdf ? [] : [q['rev'], q['sort'], q['view']]              # representation-variant components
+    etagX = rdf ? [] : [q['rev'], q['sort'], q['view']] # representation-varying input
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',           # output MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format, etagX].h}) # representation id
     ldp # capability headers
@@ -62,12 +62,12 @@ class R
     condResponse ->{
       if rdf
         graph = RDF::Graph.new
-        if set.size==1 && @r.format == set[0].mime # no merge or transcode requested
+        if set.size==1 && @r.format == set[0].mime # no merge or transcode needed
           set[0]
         else
-          if @r[:directory] # enumerate entries
+          if @r[:directory] # add metadata on contained-resources
             set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode}
-          else # really load the model
+          else # expand model-thunks (resource URIs) to graph
             set.map{|f|(f.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
           end
           @r[:Response][:Triples] = graph.size.to_s
