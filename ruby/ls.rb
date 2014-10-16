@@ -9,7 +9,7 @@ class R
     sort = e.q['sort'].do{|p|p.expand} || mtime
     sortType = ['uri',Type].member?(sort) ? :to_s : :to_i
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
-    entries.unshift({'uri' => '..'}) unless e['REQUEST_PATH']=='/'
+    entries.unshift({'uri' => '../'}) unless e['REQUEST_PATH']=='/'
 
     [{_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k| # header row

@@ -6,10 +6,7 @@
 }
 body {margin: 0;padding:0}
 .warp:before {
-    background-color: #02f;
-    color: #fff;
-    float: left;
-    padding: .1em;
+    color: #888;
     font-size: 2.8em;
     font-family: icons;
     content:"\f085";
