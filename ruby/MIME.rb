@@ -6,9 +6,8 @@ module Th
     @format ||= selectFormat
   end
 
-  def selectFormat # format-variant suffixes
-    {
-      '.html' => 'text/html',
+  def selectFormat
+    { '.html' => 'text/html',
       '.json' => 'application/json',
       '.jsonld' => 'application/ld+json',
       '.nt' => 'text/plain',
@@ -18,7 +17,7 @@ module Th
     }[File.extname(self['REQUEST_PATH'])].do{|mime|
       return mime}
 
-    accept.sort.reverse.map{|q,mimes| # by descending q-value
+    accept.sort.reverse.map{|q,mimes| # Accept in descending q-value
       mimes.map{|mime|
         return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
 
@@ -33,7 +32,7 @@ class R
   def mime # MIME-type of associated fs node
     @mime ||=
       (p = realpath # dereference final location
-       unless p     # deref failed
+       unless p     # deref failed?
          nil
        else
          t = ((File.extname p).tail || '').downcase.to_sym

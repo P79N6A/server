@@ -77,7 +77,7 @@ class R
 
   def fileResources
     [(self if e), # exact match
-     docroot.glob(".*{e,n3,ttl,txt}") # data docs relative to base
+     docroot.glob(".*{e,md,n3,ttl,txt}") # data docs relative to base
     ].flatten.compact
   end
 
