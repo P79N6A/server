@@ -1,11 +1,9 @@
-body, pre.mail, div.dataContentPane {
+body, pre.mail {
     background-color:#000;
     color:#fff;
 }
 
-pre.mail {
-    max-width: 80em; overflow: hidden;
-}
+pre.mail { max-width: 80em }
 
 pre.mail a[rel=untyped] {
     color:#fff;

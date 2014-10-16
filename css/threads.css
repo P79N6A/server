@@ -43,3 +43,5 @@ a {
     background-color:#fff;
     color:#000;
 }
+
+.thread > span {color: #888}

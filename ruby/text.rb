@@ -5,7 +5,7 @@ class String
 
   def h; Digest::SHA1.hexdigest self end
 
-  def hrefs i=false
+  def hrefs i=false # HTTP URIs in plain-text
     #  ) only matches with an opener
     # ,. only match mid-URI
     (partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
@@ -23,10 +23,6 @@ class String
     gsub('&','&amp;').
     gsub('<','&lt;').
     gsub('>','&gt;')
-  end
-
-  def unHTML
-    gsub(/<[^>]+>/,'')
   end
 
   def tail; self[1..-1] end

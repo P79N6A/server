@@ -163,9 +163,7 @@ class R
         weight[a] += 1}}
 
     threads = posts.group_by{|r|
-      r[Title].do{|t|t[0].
-        gsub(/\[([a-z\-A-Z0-9]+)\]/,'<span class=g>\1</span>').
-        sub(/\b[rR][eE]: /,'')}}
+      r[Title].do{|t|t[0].sub(/\b[rR][eE]: /,'')}}
 
     groups = threads.group_by{|_,posts|
       score = {}
@@ -180,7 +178,7 @@ class R
        {class: :posts, style: 'background-color:' + cs,
          c: [group.do{|g|{_: :a, c: g.R.fragment, href: g}},
              threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
-               size = title.to_s.unHTML.size
+               size = title.to_s.size
                scale = if msgs.size > 5 || size < 16
                          1.25
                        elsif size < 24
@@ -195,7 +193,10 @@ class R
                    s[Creator].justArray.select(&:maybeURI).map{|cr|
                      [' ',{_: :a, href: s.uri, class: :sender, c: cr.R.fragment}]}}
                        end
-               name = {_: :a, class: 'thread', href: '/thread/'+msgs[0].R.basename, c: title, style: "font-size:#{scale}em"}
+               name = {_: :a, class: 'thread',
+                 href: '/thread/'+msgs[0].R.basename,
+                 c: title.gsub(/\[(\w+)\]/,'<span>\1</span>'),
+                 style: "font-size:#{scale}em"}
                {class: :post, c: [name, maker]}}]}}]}
   
   ViewGroup[SIOCt+'MailMessage'] = View['threads']
