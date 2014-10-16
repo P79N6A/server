@@ -40,7 +40,7 @@ class R
                       else
                         e[k].html
                       end}}}
-           }, H.css('/css/ls'),(H.js '/js/ls')
+           }, H.css('/css/ls',true),(H.js '/js/ls',true)
           ]},
     {class: :warp, _: :a, href: e.warp}]}
 

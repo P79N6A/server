@@ -96,13 +96,16 @@ ul.uris a:hover {background-color:#bf0}
   end
 
   def triplrMarkdown
+    yield uri, Type, R[SIOCt+'Markdown']
     yield uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
+  View[SIOCt+'Markdown'] = -> m,_ {
+    m.values.map{|r|r[Content]}}
+
   def triplrOrg
     require 'org-ruby'
-    r.do{|r|
-      yield uri,Content,Orgmode::Parser.new(r).to_html}
+    yield uri, Content, Orgmode::Parser.new(r).to_html
   end
 
   def triplrPDF &f
