@@ -12,7 +12,7 @@ class R
     (Pathname.glob pathPOSIX + a).map &:R
   end
 
-  GREP_DIRS.push /^\/\d{4}\//
+  GREP_DIRS.concat [/^\/\d{4}\//,/^\/address\//]
 
   FileSet['grep'] = -> e,q,m {
     e.exist? && q['q'].do{|query|
