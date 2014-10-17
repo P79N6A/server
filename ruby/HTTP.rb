@@ -23,7 +23,7 @@ class R
     e[:Links] = []                                         # response links
     e[:Response] = {Daemon: [R[Daemon]]}                   # response head
     e['uri'] = resource.uri                                # response URI
-    puts e.map{|k,v| [k,v].join ' '} # log request
+#    puts e.map{|k,v| [k,v].join ' '} # log request
     resource.setEnv(e).send(method).do{|s,h,b| 
       R.log e,s,h,b # log response
       [s,h,b] } # response
