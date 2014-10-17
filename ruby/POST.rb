@@ -3,7 +3,7 @@ class R
 
   def POST
 
-    # custom handler
+    # bespoke handler mounted on URI
     [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
