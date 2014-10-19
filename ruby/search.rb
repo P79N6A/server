@@ -113,7 +113,7 @@ class R
 
   View[Search] = -> d,e {
     [{_: :form, action: '/search', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
-     (H.js '/js/search')]}
+     (H.js '/js/search',true)]}
   
   # key: val output to RDF
   def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
