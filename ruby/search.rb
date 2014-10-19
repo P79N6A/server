@@ -21,6 +21,8 @@ class R
         `grep -iRl #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}}
 
   # full-text search
+  # https://github.com/groonga/groonga
+  # https://github.com/ranguba/rroonga
   ResourceSet['groonga'] = ->d,e,m{
     d.env[:container] = true
     m['/search#'] = {Type => R[Search]}
