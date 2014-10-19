@@ -7,11 +7,11 @@ class R
      (directory ? a('index.html') : nil) # HTML dir-index
     ].compact.map{|a|
       if a.file?
-        return a.setEnv(@r).fileGET # goto file
+        return a.setEnv(@r).fileGET                       # goto static-file
       elsif a.symlink?
         a.readlink.do{|t|return t.setEnv(@r).resourceGET} # goto target URI
       end}
-    stripDoc.setEnv(@r).resourceGET # goto generic-resource
+    stripDoc.setEnv(@r).resourceGET                       # goto generic-resource
   end
 
   def fileGET
@@ -21,20 +21,20 @@ class R
              })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     ldp
-    condResponse ->{ self } # continue if uncached
+    condResponse ->{ self }
   end
 
   def resourceGET
     paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
-      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| return r }}}} # handler bound
-    response
+      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| return r }}}} # handler-lookup cascade
+    response # default handler
   end
 
   def response
     set = [] # result set
     m = {'#' => {'uri' => uri, Type => R[HTTP+'Response']}}
-    rdf = !(NonRDF.member? @r.format) # model type
+    rdf = !(NonRDF.member? @r.format) # graph type
 
     # File(s)
     (q['set'].do{|s|FileSet[s]} || FileSet['default'])[self,q,m].do{|files| set.concat files }
@@ -47,14 +47,14 @@ class R
             set.concat resource.fileResources}}}}
 
     if set.empty? # nothing found
-      if q.has_key? 'edit' # editor
+      if q.has_key? 'edit' # init editor
         q['view'] ||= 'edit'
       else
         return E404[self,@r,m]
       end
     end
 
-    etagX = rdf ? [] : [q['rev'], q['sort'], q['view']] # representation-varying input
+    etagX = rdf ? [] : [q['rev'], q['sort'], q['view']] # representation-varying inputs
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',           # output MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format, etagX].h}) # representation id
     ldp # capability headers
@@ -63,7 +63,7 @@ class R
       if rdf
         graph = RDF::Graph.new
         if set.size==1 && @r.format == set[0].mime # no merge or transcode needed
-          set[0]
+          set[0] # file
         else
           if @r[:directory] # add metadata on contained-resources
             set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode}

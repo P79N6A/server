@@ -51,7 +51,8 @@ class R
       up = child name
       FileUtils.cp t, up.pathPOSIX
       t.unlink
-      File.open(POST_log[].a('.txt').pathPOSIX, 'a'){|l|l.write "upload #{URI.escape up.uri} #{@r.user} #{@r['HTTP_USER_AGENT']}\n"} if '/stat'.R.e
+      File.open(POST_log[].a('.txt').pathPOSIX, 'a'){|l|
+        l.write "upload #{URI.escape up.uri} #{@r.user} #{@r['HTTP_USER_AGENT']}\n"} if '/stat'.R.e
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
     end
