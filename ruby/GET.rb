@@ -65,10 +65,12 @@ class R
         if set.size==1 && @r.format == set[0].mime # no merge or transcode needed
           set[0] # file
         else
-          if @r[:directory] # add metadata on contained-resources
+          if @r[:directory] # describe contained-resources
             set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode}
-          else # expand model-thunks (resource URIs) to graph
-            set.map{|f|(f.setEnv @r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
+          else # resource-set to graph
+            set.map{|f|
+              f.setEnv(@r).justRDF.do{|doc| # convert to RDF (if required)
+                graph.load doc.pathPOSIX, :base_uri => self}} # resource -> graph
           end
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
