@@ -59,7 +59,7 @@ class R
   end
 
   GET['/stat'] = -> e,r {
-    unless e.path.match(/^\/stat\/?$/)
+    unless e.path.match(/^\/stat\/*$/)
       nil # pass through child paths
     else
     b = {_: :table,
