@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   Posts = '.p'
@@ -11,7 +11,7 @@ class R
     s = r.path.tail.split '/'
     s.shift if %w{chan forum}.member?(s[0])
     if s.size == 1 # subforum list
-      e.q['set'] = 'page'
+      e.q['set'] ||= 'page'
       e.q['view'] ||= 'subforum'
       nil
     elsif s.size == 5 # depth 5 : thread

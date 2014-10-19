@@ -6,7 +6,6 @@ module Th
     @user ||= (user_WebID || user_words || user_DNS)
   end
 
-  # http://www.w3.org/wiki/WebID
   def user_WebID
     x509cert.do{|c|
       cert = ('/cache/uid/' + (R.dive c.h)).R
