@@ -60,33 +60,26 @@ class R
 
   GET['/stat'] = -> e,r {
     unless e.path.match(/^\/stat\/?$/)
-      nil
+      nil # pass through child paths
     else
     b = {_: :table,
       c: [{_: :tr, class: :head, c: {_: :td, colspan: 2, c: :status}},
           Stats[:status].sort_by{|_,c|-c}.map{|status, count|
-            {_: :tr, c: [{_: :td, c: status},
-                         {_: :td, class: :count, c: count}]}},
+            {_: :tr, c: [{_: :td, c: status}, {_: :td, class: :count, c: count}]}},
 
           {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :domain}},
           Stats[:host].sort_by{|_,c|-c}.map{|host, count|
-            {_: :tr, c: [{_: :td, class: :count, c: count},
-                         {_: :td, c: {_: :a, href: '//'+host, c: host}}]}},
+            {_: :tr, c: [{_: :td, class: :count, c: count}, {_: :td, c: {_: :a, href: '//'+host, c: host}}]}},
 
           {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :MIME}},
           Stats[:format].sort_by{|_,c|-c}.map{|mime, count|
-            {_: :tr, c: [{_: :td, class: :count, c: count},
-                         {_: :td, c: mime}]}},
+            {_: :tr, c: [{_: :td, class: :count, c: count}, {_: :td, c: mime}]}},
 
           {_: :tr, class: :head, c: {_: :td, colspan: 2, c: :agent}},
           Stats[:agent].values.sort_by{|a|-a[:count]}[0..48].map{|a|
-            {_: :tr, c: [{_: :td, class: :count, c: a[:count]},
-                         {_: :td, c: a[Title]}]}},
+            {_: :tr, c: [{_: :td, class: :count, c: a[:count]}, {_: :td, c: a[Title]}]}},
 
-          {_: :style, c: "
-a {text-decoration: none; font-size: 1.1em}
-.count {font-weight: bold}
-tr.head > td {font-weight: bold; font-size: 1.6em; padding-top: .3em}"}]}
+          {_: :style, c: ".count, tr.head > td {font-weight: bold}"}]}
 
     [200, {'Content-Type'=>'text/html'}, [H(b)]]
     end}
