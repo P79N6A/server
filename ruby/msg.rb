@@ -61,9 +61,6 @@ class R
   def triplrTwMsg
     base = 'https://twitter.com'
     nokogiri.css('div.tweet').map{|t|
-      puts "OK"
-#      puts t
-      puts t.css('js-permalink')
       s = base + t.css('.js-permalink').attr('href') # subject URI
       yield s, Type, R[SIOCt+'MicroblogPost']
       yield s, Type, R[SIOC+'Post']
