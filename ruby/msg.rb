@@ -40,7 +40,13 @@ class R
 
   def tw g # GET messages, cache RDF representations
     node.readlines.shuffle.each_slice(22){|s|
-      R['https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].triplrCacheJSON :triplrTwMsg, g, nil, FeedArchiverJSON}
+      u = 'https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
+#      puts u
+      u.R.twGET g}
+  end
+
+  def twGET g
+    triplrCacheJSON :triplrTwMsg, g, nil, FeedArchiverJSON
   end
 
   def triplrTwUserlist
@@ -55,7 +61,10 @@ class R
   def triplrTwMsg
     base = 'https://twitter.com'
     nokogiri.css('div.tweet').map{|t|
-      s = base + t.css('a.details').attr('href') # subject URI
+      puts "OK"
+#      puts t
+      puts t.css('js-permalink')
+      s = base + t.css('.js-permalink').attr('href') # subject URI
       yield s, Type, R[SIOCt+'MicroblogPost']
       yield s, Type, R[SIOC+'Post']
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
