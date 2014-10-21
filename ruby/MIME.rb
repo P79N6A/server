@@ -21,7 +21,7 @@ module Th
       mimes.map{|mime|
         return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
 
-    'text/turtle'
+    'text/html'
   end
 
 end
