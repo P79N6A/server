@@ -2,23 +2,25 @@
 class R
 
   def GET
-    directory = uri[-1] == '/'
-    [self, justPath, # host-specific and global-path files
-     (directory ? a('index.html') : nil) # HTML dir-index
-    ].compact.map{|a|
-      if a.file?
-        return a.setEnv(@r).fileGET                       # goto static-file
-      elsif a.symlink?
-        a.readlink.do{|t|return t.setEnv(@r).resourceGET} # goto target URI
-      end}
-    stripDoc.setEnv(@r).resourceGET                       # goto generic-resource
+    if file?
+      fileGET
+    elsif justPath.file?
+      justPath.setEnv(@r).fileGET
+    elsif directory?
+      if uri[-1] == '/'
+        resourceGET
+      else
+        [301, {'Location' => uri + '/'}, []]
+      end
+    else
+      stripDoc.setEnv(@r).resourceGET
+    end
   end
 
   def fileGET
     @r[:Response].
       update({ 'Content-Type' => mime + '; charset=UTF-8',
-               'ETag' => [m,size].h,
-             })
+               'ETag' => [m,size].h })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     ldp
     condResponse ->{ self }
