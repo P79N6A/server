@@ -1,3 +1,7 @@
 #!/usr/bin/env ruby
-src = File.expand_path File.dirname __FILE__
-puts `ln -svT "#{src}" #{RbConfig::CONFIG["sitelibdir"]}/ww`
+require 'fileutils'
+
+ src = File.expand_path File.dirname __FILE__
+dest = RbConfig::CONFIG["sitelibdir"] + '/ww'
+
+FileUtils.ln_s src, dest, :verbose => true
