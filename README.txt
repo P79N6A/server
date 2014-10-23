@@ -12,8 +12,11 @@ DAEMON       host         port
  pw apache # with apache  3000
  pw nginx  # with nginx   3000
 
-WEBSITES  if you've left a bug/complaint on one of these sites and crickets, try emailing <_@whats-your.name> and we'll try to check it
+WEBSITES
 http://src.whats-your.name/pw
 https://gitorious.org/element/www
 https://github.com/hallwaykid/pw
 http://repo.or.cz/w/www.git
+
+EMAIL
+<mailto:carmen@whats-your.name>
