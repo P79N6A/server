@@ -12,7 +12,7 @@ class R
     when 'application/x-www-form-urlencoded'
       formPOST
     when /^multipart\/form-data/
-      multiPOST
+      dataPOST
     else
 
       #LDPC
@@ -43,7 +43,7 @@ class R
 
   GET['/stat/up'] = -> e,r {[303, {'Location'=> POST_log[].a('.html').uri}, []]}
 
-  def multiPOST
+  def dataPOST
     p = (Rack::Request.new env).params
     if file = p['file']
       t = file[:tempfile]
