@@ -14,11 +14,18 @@ class R
 
   alias_method :env, :getEnv
 
+  def cors
+    headers = {
+      'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
+    }
+    @r[:Response].update headers
+  end
+
   def ldp
+    cors
     headers = {
       'Accept-Patch' => 'application/ld+patch',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
-      'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
       'Access-Control-Allow-Credentials' => 'true',
       'Access-Control-Expose-Headers' => "User, Triples, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
