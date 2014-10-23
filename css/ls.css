@@ -5,17 +5,15 @@
     src: url('/css/misc/icons.ttf')  format('truetype');
 }
 body {margin: 0;padding:0}
-.warp:before {
-    color: #888;
-    font-size: 2.8em;
-    font-family: icons;
-    content:"\f085";
-}
-.warp:hover {
-  color: orange;
-  background-color: #f6f6f6;
-}
 
+.warp {text-decoration: none}
+.warp:before {
+    color: #FF3C1F;
+    font-size: 3em;
+    font-family: icons;
+    content:"\f135";
+    margin-right: .2em;
+}
 
 table.ls {
     font-family: sans-serif;
