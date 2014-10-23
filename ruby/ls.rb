@@ -42,7 +42,9 @@ class R
                       end}}}
            }, H.css('/css/ls',true),(H.js '/js/ls',true)
           ]},
-    {class: :warp, _: :a, href: e.warp}]}
+     {class: :warp, _: :a, href: e.warp},
+     {_: :a, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}}
+    ]}
 
 
   ViewGroup[Stat+'Directory'] = View['ls']
