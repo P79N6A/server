@@ -34,11 +34,6 @@ a {
 
 .count, .sender {float: right;}
 
-.thread:visited {
-    background-color:#000;
-    color:#fff;
-}
-
 .thread {
     background-color:#fff;
     color:#000;
