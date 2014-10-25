@@ -19,7 +19,7 @@ class R
 
   def status
     uris.map{|u|
-      puts [`curl -IsA pw "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u].join ' '}
+      puts [`curl -I -m 8 -A pw "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u].join ' '}
   end
   
 end
