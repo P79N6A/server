@@ -1,6 +1,4 @@
-pw(1)   a webserver
-
-USAGE   thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
+USE     thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
 
 INSTALL cd ruby
         bundle install # depchain
