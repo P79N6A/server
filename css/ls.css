@@ -18,18 +18,16 @@ body {margin: 0;padding:0}
 table.ls {
     font-family: sans-serif;
     width: 100%;
-    color: #fff;
-    background-color:#000;
     padding: .3em;
     border-spacing: 0;
-    float: left;
-    font-size: 1.1em;
 }
 
 table.ls td {
     white-space: nowrap;
-    vertical-align: top;
-    padding: .1em;
+    padding: 0;
+    border-width: 0 0 0.1em 0;
+    border-style: dotted;
+    border-color: #ABC9FF;
 }
 
 table.ls td[property='uri'] {
@@ -39,20 +37,20 @@ table.ls td[property='uri'] {
 
 table.ls th {text-align: left}
 table.ls th a { color: #888 }
-table.ls a { color: #FF0061; text-decoration: none }
+table.ls a { color: #2763CF; font-size: 1.13em; font-weight: bold; text-decoration: none }
 
-table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #444 }
-table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #0638FF }
-table.ls tr:nth-child(even) { background-color: #111 }
+table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #DBEFF2 }
+table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #ef0 }
+table.ls tr:nth-child(even) { background-color: #f8f8ff; color: #000 }
 
 table.ls a.dir:before {
-    color: #fff;
+    color: #333;
     content:"\f07c";
     font-family: icons;
     font-size: 1.3em;
 }
 table.ls a.file:before {
-    color: #fff;
+    color: #000;
     content:"\f15b";
     font-family: icons;
     font-size: 1.3em;

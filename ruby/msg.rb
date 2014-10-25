@@ -1,21 +1,6 @@
 #watch __FILE__
 class R
 
-  View['chat'] = -> d,e {
-    label = {}
-    count = 0
-    [d.map{|u,r|
-       [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
-        r[Creator].do{|c|
-          name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
-          label[name] ||= {c: 0, id: (count += 1).to_s}
-          label[name][:c] += 1
-          {_: :a, class: 'creator l'+label[name][:id], href: r.uri, c: name }},
-        " ", r[Content],"<br>\n"]},
-     {_: :style, c: label.map{|n,l| ".creator.l#{l[:id]} {background-color: #{cs}; color: #fff}" if l[:c] > 1}.cr }]}
-
-  View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = View['chat']
-
   def triplrIRC &f
     i=-1
     day = dirname.split('/')[-3..-1].do{|dp|
@@ -76,7 +61,34 @@ class R
     }
   end
 
-  ViewGroup[SIOCt+'InstantMessage'] = View['chat']
-  ViewGroup[SIOCt+'MicroblogPost'] = View['chat']
+  # singleton message <span>
+  View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = -> d,e {
+    label = {}
+    count = 0
+    [d.map{|u,r|
+       [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
+        r[Creator].do{|c|
+          name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
+          label[name] ||= {c: 0, id: (count += 1).to_s}
+          label[name][:c] += 1
+          {_: :a, class: 'creator l'+label[name][:id], href: r.uri, c: name }},
+        " ", r[Content],"<br>\n"]},
+     {_: :style, c: label.map{|n,l| ".creator.l#{l[:id]} {background-color: #{cs}}" if l[:c] > 1}.cr }]}
 
+  # message group <table>
+  ViewGroup[SIOCt+'InstantMessage'] = ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
+    label = {}
+    count = 0
+    [{_: :table, class: :chat, c: d.map{|u,r|
+        {_: :tr,
+         c: [{_: :td, class: :date, c: r[Date][0].split('T')[1][0..4]},
+             r[Creator].do{|c|
+               name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
+               label[name] ||= {c: 0, id: (count += 1).to_s}
+               label[name][:c] += 1
+               {_: :td, class: 'creator l'+label[name][:id], c: {_: :a, href: r.uri, c: name }}} || {_: :td},
+             {_: :td, class: :body, c: r[Content]}]}}.cr },
+     {_: :style, c: label.map{|n,l| "table.chat td.creator.l#{l[:id]} {background-color: #{cs}}" if l[:c] > 1}.cr },
+     H.css('/css/chat',true)]}
+  
 end
