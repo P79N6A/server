@@ -6,7 +6,28 @@
 }
 body {margin: 0;padding:0}
 
-.warp {text-decoration: none}
+table.ls {
+    border: .6em solid #eef;
+    font-family: sans-serif;
+    padding: 0;
+    border-spacing: 0;
+}
+table.ls th {font-size:1.13em}
+table.ls th, table.ls td { text-align: left; }
+table.ls td {
+    white-space: nowrap;
+    padding: 0;
+    border-width: 0 0 0.16em 0;
+    border-style: dotted;
+    border-color: rgb(81, 255, 235) ;
+}
+
+table.ls a { color: #102F66; font-size: 1.2em; }
+
+table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #DFE8FF }
+table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #ef0 }
+table.ls tr:nth-child(even) { background-color: #f7f7f7; color: #000 }
+
 .warp:before {
     color: #FF3C1F;
     font-size: 3em;
@@ -15,51 +36,18 @@ body {margin: 0;padding:0}
     margin-right: .2em;
 }
 
-table.ls {
-    font-family: sans-serif;
-    width: 100%;
-    padding: .3em;
-    border-spacing: 0;
-}
-
-table.ls td {
-    white-space: nowrap;
-    padding: 0;
-    border-width: 0 0 0.1em 0;
-    border-style: dotted;
-    border-color: #ABC9FF;
-}
-
-table.ls td[property='uri'] {
-    max-width: 32em;
-    overflow: hidden;
-}
-
-table.ls th {text-align: left}
-table.ls th a { color: #888 }
-table.ls a { color: #2763CF; font-size: 1.13em; font-weight: bold; text-decoration: none }
-
-table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #DBEFF2 }
-table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #ef0 }
-table.ls tr:nth-child(even) { background-color: #f8f8ff; color: #000 }
-
 table.ls a.dir:before {
     color: #333;
     content:"\f07c";
     font-family: icons;
-    font-size: 1.3em;
-}
+    font-size: 1.3em;}
+
 table.ls a.file:before {
     color: #000;
     content:"\f15b";
     font-family: icons;
     font-size: 1.3em;
-    border-width: 0;
-}
+    border-width: 0;}
 
-table.ls th {
-    font-size:1.2em;
-    padding-bottom: .2em;
-}
-
+a {text-decoration: none}
 .scheme,.abbr {display: none}

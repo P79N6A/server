@@ -14,7 +14,7 @@ class R
     [{_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k| # header row
                {_: :th, property: k, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
-           entries.map{|e| # body rows
+           entries.map{|e| # entries
              types = e.types
              directory = types.include?(Stat+'Directory')
              file = types.include?(Stat+'File')
@@ -39,12 +39,13 @@ class R
                         end
                       else
                         e[k].html
-                      end}}}
-           }, H.css('/css/ls',true),(H.js '/js/ls',true)
-          ]},
+                      end}}}}]},
+     (H.css '/css/ls',true),
+     (H.js '/js/ls', true),
+     ({_: :style, c: "table.ls {width: 100%}"} if e.q['view']=='ls'),
      {class: :warp, _: :a, href: e.warp},
-     {_: :a, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}}
-    ]}
+     {_: :a, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'},
+     }]}
 
 
   ViewGroup[Stat+'Directory'] = View['ls']
