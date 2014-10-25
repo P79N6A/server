@@ -76,8 +76,9 @@ class R
   alias_method :mk, :mkdir
 
   def fileResources
-    [(self if e), # exact match
-     docroot.glob(".*{e,md,n3,ttl,txt}") # data docs relative to base
+    r = []
+    r.push self if e
+     docroot.glob(".*{e,html,md,n3,ttl,txt}") # docs relative to base
     ].flatten.compact
   end
 

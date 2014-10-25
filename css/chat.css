@@ -5,5 +5,5 @@ table.chat td {padding: 0; vertical-align: top}
 table.chat td.date {background-color: #ccc; color: #fff}
 table.chat td.creator {text-align: right; background-color: #ddd}
 table.chat td.creator a {color: #fff}
-table.chat td.body {padding: 0 0 .1em .3em}
+table.chat td.body {padding: 0 0 .1em .3em; border-width: 0 0 .1em 0; border-style: solid; border-color: #ddd}
 table.chat td.body a {background-color: #777; color: #fff}
