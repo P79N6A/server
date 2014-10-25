@@ -155,10 +155,7 @@ class R
             doc.ln target }}}}}
 
   View['unread'] = -> d,e {
-    [
-      View['threads'][d,e],
-      {_: :style, c: "\n.thread:visited {background-color:#222}\n"},
-    ]}
+    [View['threads'][d,e], {_: :style, c: "\n.thread:visited {background-color:#222}\n"}]}
 
   View['threads'] = -> d,env {
     posts = d.resourcesOfType SIOCt+'MailMessage'

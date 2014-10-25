@@ -221,9 +221,4 @@ class R
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                          c: d[Content]}}].cr}}.cr]}])}
 
-  def checkURIs
-    uris.map{|u|
-      puts [`curl -IsA 404? "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u].join ' '}
-  end
-
 end

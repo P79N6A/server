@@ -17,4 +17,9 @@ class R
     r.q.delete 'view'
     [404, r[:Response], [Render['text/html'][g,r]]]}
 
+  def status
+    uris.map{|u|
+      puts [`curl -IsA pw "#{u}"`.lines.to_a[0].match(/\d{3}/)[0].to_i,u].join ' '}
+  end
+  
 end
