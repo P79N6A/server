@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def GET
@@ -8,6 +8,7 @@ class R
       justPath.setEnv(@r).fileGET
     elsif directory?
       if uri[-1] == '/'
+        @r[:directory] = true
         resourceGET
       else
         [301, {'Location' => uri + '/'}, []]

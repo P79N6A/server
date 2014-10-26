@@ -12,22 +12,26 @@ table.ls {
     padding: 0;
     border-spacing: 0;
 }
-table.ls th {font-size:1.1em}
+table.ls th {font-size:1.1em;}
 table.ls th, table.ls td { text-align: left; }
 table.ls td {
     white-space: nowrap;
     vertical-align: top;
-    border-width: 0 0 0.16em 0;
+    border-width: 0 0 0.15em 0;
     border-style: dotted;
-    border-color: rgb(81, 255, 235) ;
+    border-color: rgb(124,175,190) ;
 }
 
 table.ls a { color: #102F66; font-size: 1.2em; }
 
-table.ls th.this {background-color: #888; padding-left: .25em;}
+table.ls th.this {background-color: #888; padding-left: .2em}
+table.ls th.that {padding-right: .2em}
+table.ls th.that a {color: #888}
 table.ls th.this a {color: #fff}
+table.ls th:hover {background-color: #ccc}
+
 table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #DFE8FF }
-table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #ef0 }
+table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #bbb; color: #fff }
 table.ls tr:nth-child(even) { background-color: #f7f7f7; color: #000 }
 
 table.ls a.resource img {max-width: 1.4em;}

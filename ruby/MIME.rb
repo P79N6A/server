@@ -127,6 +127,7 @@ class R
     'image'                => [:triplrImage],
     'message/rfc822'       => [:triplrMailMessage],
     'text/csv'             => [:triplrCSV,/,/],
+    'text/html'            => [:triplrInode],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
     'text/markdown'        => [:triplrMarkdown],
