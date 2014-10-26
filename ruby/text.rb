@@ -144,7 +144,7 @@ ul.uris a:hover {background-color:#bf0}
 
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
-    yield uri,Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] if size < 1e5
+    yield uri+'#',Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] if size < 1e5
   rescue
     nil
   end
