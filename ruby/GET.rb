@@ -8,7 +8,7 @@ class R
       justPath.setEnv(@r).fileGET
     elsif directory?
       if uri[-1] == '/'
-        @r[:directory] = true
+        @r[:container] = true
         resourceGET
       else
         [301, {'Location' => uri + '/'}, []]
@@ -68,7 +68,7 @@ class R
       else
         if rdf
           graph = RDF::Graph.new
-          if @r[:directory] # describe contained-resources
+          if @r[:container] # describe contained-resources
             set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode}
           else # resource-set to graph
             set.map{|f|
@@ -79,7 +79,7 @@ class R
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
         else # Hash
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          set.map{|f|f.fromStream m, :triplrInode} if @r[:directory]
+          set.map{|f|f.fromStream m, :triplrInode} if @r[:container]
           Render[@r.format][m, @r]
         end
       end}

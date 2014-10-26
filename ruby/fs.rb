@@ -14,7 +14,7 @@ class R
     elsif symlink?
       readlink.do{|t|
         mtime = t.mtime.to_i
-#        yield file, Type, R[Stat+'File'] # source triples
+#        yield file, Type, R[Stat+'Link'] # source triples
 #        yield file, Stat+'mtime', mtime
 #        yield file, Stat+'size', 0
         t = t.stripDoc
@@ -92,7 +92,7 @@ class R
         np = (t+1).strftime('/%Y/%m/%d/') # next day
         g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
         g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}}
-    e.env[:directory] ? e.c : e.fileResources }
+    e.env[:container] ? e.c : e.fileResources }
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),

@@ -170,15 +170,14 @@ class R
     e[:Graph] = d
     groups = {}
     seen = {}
-    d.map{|u,r|
-      r.types.map{|type|
+    d.map{|u,r| r.types.map{|type|
         if v = ViewGroup[type]
           groups[v] ||= {}
           groups[v][u] = r
           seen[u] = true
-        end}} if e[:directory] || e[:container]
-     [groups.map{|view,graph|view[graph,e]},
-      d.map{|u,r|
+        end}} if e[:container]
+     [groups.map{|view,graph|view[graph,e]}, # grouped
+      d.map{|u,r|                            # singleton
         if !seen[u]
          type = r.types.find{|t|View[t]}
          View[type ? type : 'base'][{u => r},e]
