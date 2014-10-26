@@ -85,6 +85,7 @@ class R
   end
 
   FileSet['default'] = -> e,q,g {
+    e.env[:filemeta] = true
     e.env['REQUEST_PATH'].do{|path| # page-meta of day-dir
       path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m|
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"

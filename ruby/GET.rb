@@ -79,7 +79,7 @@ class R
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
         else # Hash
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          set.map{|f|f.fromStream m, :triplrInode} if @r[:container]
+          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
           Render[@r.format][m, @r]
         end
       end}
