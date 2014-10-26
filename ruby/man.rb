@@ -5,7 +5,7 @@ class R
     graph = RDF::Graph.new
     uri = R['//'+r['SERVER_NAME']+r['REQUEST_URI']]
     manPath = '/usr/share/man'
-    name = e.justPath.uri.sub(/^\/man/,'').tail || ''
+    name = e.justPath.stripSlash.uri.sub(/^\/man/,'').tail || ''
     section = nil
     name.match(/^([0-9])(\/|$)/).do{|p| # optional section
       section = p[1]
@@ -28,6 +28,7 @@ class R
       else
 
         roff = man.R
+        R['//' + r['SERVER_NAME'] + '/' + name[0].downcase +  c]
         dir = R['//' + r['SERVER_NAME'] + roff.dirname.sub(/.*\/share/,'')]
         res = dir.child roff.bare
         doc = res + '.e'

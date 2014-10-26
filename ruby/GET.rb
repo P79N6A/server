@@ -62,11 +62,11 @@ class R
     ldp # capability headers
 
     condResponse ->{
-      if rdf
-        graph = RDF::Graph.new
-        if set.size==1 && @r.format == set[0].mime # no merge or transcode needed
-          set[0] # file
-        else
+      if set.size==1 && @r.format == set[0].mime
+        set[0] # direct pass-through
+      else
+        if rdf
+          graph = RDF::Graph.new
           if @r[:directory] # describe contained-resources
             set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode}
           else # resource-set to graph
@@ -76,11 +76,11 @@ class R
           end
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
+        else # Hash
+          set.map{|r|r.setEnv(@r).fileToGraph m}
+          set.map{|f|f.fromStream m, :triplrInode} if @r[:directory]
+          Render[@r.format][m, @r]
         end
-      else # Hash
-        set.map{|r|r.setEnv(@r).fileToGraph m}
-        set.map{|f|f.fromStream m, :triplrInode} if @r[:directory]
-        Render[@r.format][m, @r]
       end}
   end
   

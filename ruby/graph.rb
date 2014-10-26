@@ -98,7 +98,7 @@ class R
   end
 
   # file -> file (Non-RDF -> RDF)
-  def justRDF pass = %w{e jsonld n3 nt owl rdf ttl}       # RDF suffixes
+  def justRDF pass = %w{e html jsonld n3 nt owl rdf ttl}  # RDF suffixes
     return unless e                                       # check that source exists
     doc = self                                            # output doc
     unless pass.member? realpath.do{|p|p.extname.tail}    # already readable MIME?

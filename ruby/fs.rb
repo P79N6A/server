@@ -77,9 +77,11 @@ class R
 
   def fileResources
     r = []
-    r.push self if e
-     docroot.glob(".*{e,html,md,n3,ttl,txt}") # docs relative to base
-    ].flatten.compact
+    %w{e html md n3 ttl txt}.map{|suffix|
+      doc = docroot.a '.' + suffix
+      r.push doc if doc.e } # related thru docbase
+    r.push self if e # exact path
+    r
   end
 
   FileSet['default'] = -> e,q,g {

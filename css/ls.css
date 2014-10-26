@@ -17,7 +17,6 @@ table.ls th, table.ls td { text-align: left; }
 table.ls td {
     white-space: nowrap;
     vertical-align: top;
-    padding: .1em;
     border-width: 0 0 0.16em 0;
     border-style: dotted;
     border-color: rgb(81, 255, 235) ;
@@ -28,6 +27,8 @@ table.ls a { color: #102F66; font-size: 1.2em; }
 table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #DFE8FF }
 table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #ef0 }
 table.ls tr:nth-child(even) { background-color: #f7f7f7; color: #000 }
+
+table.ls a.resource img {max-width: 1.4em;}
 
 .warp:before {
     color: #FF3C1F;

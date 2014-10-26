@@ -32,6 +32,8 @@ class R
                           {_: :a, class: :dir, href: e.uri}
                         elsif types.include?(DC+'Image')
                           ShowImage[e.uri]
+                        elsif types.size==1 && types[0]==RDFs+'Resource'
+                          {_: :a, class: :resource, href: e.uri, c: {_: :img, src: '/css/misc/flyer.gif'}}
                         elsif file
                           {_: :a, class: :file, href: e.uri}
                         else
@@ -40,7 +42,7 @@ class R
                       else
                         e[k].html
                       end}}}}]},
-     (H.css '/css/ls',true),
+     (H.css '/css/ls', true),
      (H.js '/js/ls', true),
      ({_: :style, c: "table.ls {width: 100%}"} if e.q['view']=='ls'),
      {class: :warp, _: :a, href: e.warp},
