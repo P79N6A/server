@@ -28,7 +28,7 @@ table.ls th.this {background-color: #888; padding-left: .2em}
 table.ls th.that {padding-right: .2em}
 table.ls th.that a {color: #888}
 table.ls th.this a {color: #fff}
-table.ls th:hover {background-color: #ccc}
+table.ls th:hover {background-color: #eee}
 
 table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #DFE8FF }
 table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #bbb; color: #fff }

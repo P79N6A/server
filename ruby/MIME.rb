@@ -108,6 +108,7 @@ class R
     u: 'text/uris',
     url: 'text/plain',
     wav: 'audio/wav',
+    webp: 'image/webp',
     wmv: 'video/wmv',
     xlsx: 'application/excel',
     xml: 'application/atom+xml',

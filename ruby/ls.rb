@@ -34,7 +34,7 @@ class R
                         elsif types.include?(DC+'Image')
                           ShowImage[e.uri]
                         elsif types.size==1 && types[0]==RDFs+'Resource'
-                          {_: :a, class: :resource, href: e.uri, c: {_: :img, src: '/css/misc/flyer.gif'}}
+                          {_: :a, class: :resource, href: e.uri, c: {_: :img, src: '/css/misc/graph.png'}}
                         elsif file
                           {_: :a, class: :file, href: e.uri}
                         else
