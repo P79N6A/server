@@ -39,15 +39,13 @@ class R
     m = {'#' => {'uri' => uri, Type => R[HTTP+'Response']}}
     rdf = !(NonRDF.member? @r.format) # graph type
 
-    # File(s)
-    (q['set'].do{|s|FileSet[s]} || FileSet['default'])[self,q,m].do{|files| set.concat files }
+    s = q['set']
+    rs = ResourceSet[s]
+    fs = FileSet[s]
 
-    # Resource(s)
-    q['set'].do{|s|
-      ResourceSet[s].do{|resFn|
-        resFn[self,q,m].do{|resources|
-          resources.map{|resource|
-            set.concat resource.fileResources}}}}
+    FileSet['default'][self,q,m].do{|f|set.concat f} unless rs||fs
+    fs[self,q,m].do{|files|set.concat files} if fs
+    rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
     if set.empty? # nothing found
       if q.has_key? 'edit' # init editor

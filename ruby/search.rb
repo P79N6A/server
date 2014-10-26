@@ -105,7 +105,6 @@ class R
 
   GET['/search'] = -> d,e {
     e.q['set'] = 'groonga'
-    e.q.delete 'view' if e.q['view'] == 'ls'
     nil}
 
   View[Search] = -> d,e {
