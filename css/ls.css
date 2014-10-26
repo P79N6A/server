@@ -24,6 +24,8 @@ table.ls td {
 
 table.ls a { color: #102F66; font-size: 1.2em; }
 
+table.ls th.this {background-color: #888; padding-left: .25em;}
+table.ls th.this a {color: #fff}
 table.ls tr.this, table.ls tr.this:nth-child(even) { background-color: #DFE8FF }
 table.ls tr:hover, table.ls tr:nth-child(even):hover { background-color: #ef0 }
 table.ls tr:nth-child(even) { background-color: #f7f7f7; color: #000 }
