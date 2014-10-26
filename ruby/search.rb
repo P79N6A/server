@@ -35,8 +35,8 @@ class R
       down = r.size > start+c                                        # prev
       up   = !(start<=0)                                             # next
       r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      m['#'][Prev]={'uri' => '/search' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
-      m['#'][Next]={'uri' => '/search' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
+      m['#'][Prev]={'uri' => '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
+      m['#'][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
       r.map{|r|r['.uri'].R}}} # URI -> Resource
 
   # depth-first sorted subtree in page-chunks
