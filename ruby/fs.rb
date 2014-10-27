@@ -85,15 +85,19 @@ class R
   end
 
   FileSet['default'] = -> e,q,g {
-    e.env[:filemeta] = true
-    e.env['REQUEST_PATH'].do{|path| # page-meta of day-dir
-      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m|
+    e.env['REQUEST_PATH'].do{|path|
+      path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # day-dir
         t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
-        pp = (t-1).strftime('/%Y/%m/%d/') # prev day
-        np = (t+1).strftime('/%Y/%m/%d/') # next day
+        pp = (t-1).strftime('/%Y/%m/%d/') # prev-day page
+        np = (t+1).strftime('/%Y/%m/%d/') # next-day page
         g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
         g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}}
-    e.env[:container] ? e.c : e.fileResources }
+    if e.env[:container]
+      e.env[:filemeta] = true
+      e.c # directly-contained resource(s)
+    else
+      e.fileResources # native data-docs
+    end}
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
