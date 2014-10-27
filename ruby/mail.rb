@@ -14,21 +14,16 @@ class R
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
 
   GET['/thread'] = -> e, r {
-    m = {} # model
-
-    R[MessagePath[e.basename]].walk SIOC+'reply_of', m # find thread
-    return E404[e,r] if m.empty?               # empty model -> 404
-    return [406,{},[]] unless Render[r.format] # asked for unrenderable MIME
-
-    m['#'] = { 'uri' => e.uri, # thread metadata
-      Type => [R[LDP+'BasicContainer'], R[SIOC+'Thread']],
-      RDFs+'member' => m.keys.map(&:R)}
-
-    v = r.q['view'] ||= 'force'
+    return [406,{},[]] unless Render[r.format]
+    m = {} # graph
+    R[MessagePath[e.basename]].walk SIOC+'reply_of', m # find graph
+    return E404[e,r] if m.empty?
+    m['#'] = { 'uri' => e.uri, # thread-meta
+      Type => [R[LDP+'BasicContainer'], R[SIOC+'Thread']], RDFs+'member' => m.keys.map(&:R)}
+    v = r.q['view'] ||= 'force'  # visualize references
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
-    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h # view id
-
-    e.condResponse ->{Render[r.format][m, r]}}
+    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
+    e.condResponse ->{Render[r.format][m,r]}}
 
   def mail; Mail.read node if f end
 
