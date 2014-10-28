@@ -11,7 +11,7 @@ class R
         @r[:container] = true
         resourceGET
       else
-        [301, {'Location' => uri + '/'}, []]
+        [301, {'Location' => uri + '/?' + @r['QUERY_STRING']}, []]
       end
     else
       stripDoc.setEnv(@r).resourceGET
