@@ -1,6 +1,7 @@
 a {text-decoration:none}
 pre {white-space: pre-wrap}
 .abbr,.scheme {display: none}
+img {max-width: 100%}
 td.key {text-align:right}
 td.key > a > .frag {
     font-weight:bold;
