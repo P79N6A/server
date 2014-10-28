@@ -8,10 +8,6 @@ class R
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  def glob a = ""
-    (Pathname.glob pathPOSIX + a).map &:R
-  end
-
   GREP_DIRS.concat [/^\/\d{4}\//,/^\/address\//]
 
   FileSet['grep'] = -> e,q,m {

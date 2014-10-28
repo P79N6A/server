@@ -115,7 +115,7 @@ ul.uris a:hover {background-color:#bf0}
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
     end
-    p.a('*.png').glob.map{|i|yield uri, DC+'Image', i}
+    p.children.map{|i|yield uri, DC+'Image', i}
   end
 
   View[MIMEtype+'application/postscript']=->r,e{
