@@ -99,7 +99,7 @@ class R
     }.map{|p|
       yield e, Content,
       H({_: :pre, class: :mail,
-          c: p.decoded.to_utf8.gsub(/^(>\s*)+\n/,"").lines.to_a.map{|l| # nuke empty quotes
+          c: p.decoded.to_utf8.gsub(/^(\s*>)+\n/,"").lines.to_a.map{|l| # nuke empty quotes
            if qp = l.match(/^(\s*>)+/) # quote
              {_: :span, class: :q, depth: qp[0].scan(/>/).size, c: l.hrefs}
            else
