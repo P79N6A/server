@@ -69,9 +69,7 @@ class R
     yield uri, Type, R[COGS+'UriList']
     open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
       l = l.chomp
-      yield uri, '/rel', l.R
-      yield l, '/rev', self
-      yield l, Type, R[CSVns+'Row']
+      yield l, Type, Resource
     }
   end
 
