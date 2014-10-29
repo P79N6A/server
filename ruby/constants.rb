@@ -22,6 +22,8 @@ class R < RDF::URI
   Apache = ENV['apache']
   Nginx  = ENV['nginx']
 
+  Verbose  = ENV['VERBOSE']
+
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"

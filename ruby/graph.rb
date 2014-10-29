@@ -108,8 +108,8 @@ class R
     doc
   end
 
-  # graph -> RDF format
-  def R.renderRDF d,f,e
+  # graph -> RDF format (generic)
+  def R.renderRDF d,f
     (RDF::Writer.for f).buffer{|w| # init writer
       d.triples{|s,p,o|            # structural triples of Hash::Graph
         s && p && o &&             # all fields non-nil
@@ -122,12 +122,17 @@ class R
                 l.datatype=RDF.XMLLiteral if p == Content
                 l
               end) rescue nil
-         (w << (RDF::Statement.new s,p,o) if o) rescue nil )}}
+         (w << (RDF::Statement.new s,p,o) if o) rescue nil)}}
   end
 
-  [['application/ld+json',:jsonld],['application/rdf+xml',:rdfxml],['text/plain',:ntriples],['text/turtle',:turtle],['text/n3',:n3]].
+  # graph -> RDF format (MIME)
+  [['application/ld+json',:jsonld],
+   ['application/rdf+xml',:rdfxml],
+   ['text/plain',:ntriples],
+   ['text/turtle',:turtle],
+   ['text/n3',:n3]].
     map{|mime|
-    Render[mime[0]] = ->d,e{ R.renderRDF d, mime[1], e}}
+    Render[mime[0]] = ->graph,env{R.renderRDF graph, mime[1]}}
 
 end
 
