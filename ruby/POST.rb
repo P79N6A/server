@@ -56,6 +56,8 @@ class R
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
     end
+  rescue
+    [400,{},[]]
   end
 
   def formPOST
