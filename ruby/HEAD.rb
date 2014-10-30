@@ -23,6 +23,10 @@ class R
 
   def ldp
     cors
+    @r[:Links].concat ["<#{uri}>; rel=canonical",
+                       "<#{aclURI}>; rel=acl",
+                       "<#{metaURI}>; rel=meta",
+                       "<#{uri}>; rel=timegate"]
     headers = {
       'Accept-Patch' => 'application/ld+patch',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
@@ -31,8 +35,6 @@ class R
       'Allow' => Allow,
       'Link' => @r[:Links].intersperse(', ').join,
     }
-    @r[:Links].concat ["<#{aclURI}>; rel=acl",
-                       "<#{metaURI}>; rel=meta"]
     @r[:Response].update headers
   end
 
