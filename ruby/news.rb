@@ -1,9 +1,10 @@
 class R
 
   GET['/news'] = -> d,e {
-    if d.path.tail.split('/').size == 1
+    if d.path == '/news/'
       e.q['set'] ||= 'page'
       e.q['c'] ||= 32
+      e[:Links].push "<#{d.uri}>; rel=timegate"
       nil
     end}
 
