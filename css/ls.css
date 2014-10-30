@@ -13,10 +13,11 @@ table.ls {
     padding: 0;
     border-spacing: 0;
 }
+table.ls th {padding-right: .2em}
 table.ls th, table.ls td { text-align: left; }
 table.ls td {
     white-space: nowrap;
-    max-width: 52em;
+    max-width: 48em;
     overflow: hidden;
     vertical-align: top;
     border-style: dotted; border-width: 0 .1em .1em .1em; border-color: #eee;
@@ -27,9 +28,8 @@ table.ls a { color: #102F66; font-size: 1.2em; }
 table.ls th.this {background-color: #888; padding-left: .2em; border-radius: .35em .45em 0 0}
 table.ls td.this {border-style: dotted; border-width: 0 .1em .1em .1em; border-color: #A6F9FF}
 table.ls th.this a {color: #fff}
-table.ls td.this a {color: #003DFF; font-weight: normal}
-table.ls th.that {padding-right: .2em}
 table.ls th.that a {color: #888}
+table.ls td.this a {color: #003DFF; font-weight: normal}
 table.ls th:hover {background-color: #eee}
 
 table.ls tr:hover, table.ls tr:nth-child(even):hover  { background-color: #84ECFF }

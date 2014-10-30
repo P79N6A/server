@@ -67,6 +67,12 @@ class R
           {_: :input, name: :passwd, type: :password, placeholder: :password},
           {_: :input, type: :submit, value: :login}]}
 
+  GET['/whoami'] = -> e,r {
+    u = r.user.uri
+    m = {u => {'uri' => u, Type => R[FOAF+'Person']}}
+    r[:Response]['ETag'] = u.h
+    e.condResponse ->{Render[r.format][m,r]}}
+
   GET['/login'] = -> e,r {
     uid = r.user.uri
     content = if uid.match /^dns:/
