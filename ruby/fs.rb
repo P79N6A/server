@@ -14,11 +14,8 @@ class R
     elsif symlink?
       readlink.do{|t|
         mtime = t.mtime.to_i
-#        yield file, Type, R[Stat+'Link'] # source triples
-#        yield file, Stat+'mtime', mtime
-#        yield file, Stat+'size', 0
         t = t.stripDoc
-        yield t.uri, Type, Resource      # target triples
+        yield t.uri, Type, Resource
         yield t.uri, Stat+'mtime', mtime
         yield t.uri, Stat+'size', 0}
 
@@ -94,7 +91,9 @@ class R
         g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}}
     if e.env[:container]
       e.env[:filemeta] = true
-      e.c # directly-contained resource(s)
+      c = e.c # directly-contained resource(s)
+      c.push e.ttl if e.ttl.e
+      c
     else
       e.fileResources # native data-docs
     end}
