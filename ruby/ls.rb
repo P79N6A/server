@@ -20,9 +20,9 @@ class R
              directory = types.include?(Stat+'Directory')
              file = types.include?(Stat+'File')
              re = file ? e.R.stripDoc.a('.html') : e.R
-             {_: :tr, uri: re.uri, class: (e.R.path == path ? 'this' : 'row'),
+             {_: :tr, uri: re.uri,
                c: keys.map{|k| # predicates
-                 {_: :td, property: k,
+                 {_: :td, property: k, class: (k == sort ? 'this' : ''),
                    c: case k
                       when 'uri'
                         (file ? re : e.R).href(e[Title] || URI.unescape(e.R.basename))
