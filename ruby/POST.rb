@@ -90,7 +90,7 @@ class R
     doc = r.fragmentPath + '/' + ts + '.e'
     doc.w graph, true
     main.delete if main.e
-    doc.ln_s main
+    doc.ln main
 
     [303,{'Location'=>uri+'?edit'},[]]
   end

@@ -18,7 +18,7 @@ class R
     main = stripDoc.a('.' + ext) # always the current doc
 
     main.delete if main.e # unlink prior
-    doc.ln_s main         # link current
+    doc.ln main           # link current
 
     ldp
     [201,@r[:Response].update({Location: uri}),[]]

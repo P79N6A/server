@@ -110,6 +110,7 @@ class R
   def shorten;  uri.shorten.R end
 
   def n3; docroot.a '.n3' end
+  def ttl; docroot.a '.ttl' end
   def jsonDoc; docroot.a '.e' end
 
 end
