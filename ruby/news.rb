@@ -4,6 +4,7 @@ class R
     if d.path == '/news/'
       e.q['set'] ||= 'page'
       e.q['c'] ||= 32
+      e[:Links].push "<#{d.uri}>; rel=canonical"
       e[:Links].push "<#{d.uri}>; rel=timegate"
       e['HTTP_ACCEPT_DATETIME'].do{|dt|
         t = Time.httpdate dt
