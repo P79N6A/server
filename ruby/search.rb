@@ -51,6 +51,8 @@ class R
         u[Next] = {'uri' => uri}                # next RDF
         d.env[:Links].push "<#{uri}>; rel=next" # next Link
       end
+      d.env[:Links].push "<#{d.uri+'?set=page&asc'}>; rel=first"
+      d.env[:Links].push "<#{d.uri+'?set=page&desc'}>; rel=last"
       s }}
 
   View['grep'] = -> d,e {

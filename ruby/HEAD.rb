@@ -26,7 +26,11 @@ class R
     @r[:Links].concat ["<#{uri}>; rel=canonical",
                        "<#{aclURI}>; rel=acl",
                        "<#{metaURI}>; rel=meta",
-                       "<#{uri}>; rel=timegate"]
+                       "<#{uri}>; rel=timegate",
+                       "<http://www.w3.org/ns/ldp#Resource>; rel=type",
+                      ]
+    @r[:Links].push "<http://www.w3.org/ns/ldp#BasicContainer>; rel=type" if @r[:container]
+
     headers = {
       'Accept-Patch' => 'application/ld+patch',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
@@ -36,6 +40,7 @@ class R
       'Link' => @r[:Links].intersperse(', ').join,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
     }
+
     @r[:Response].update headers
   end
 
