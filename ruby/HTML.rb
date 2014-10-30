@@ -186,6 +186,8 @@ class R
   View['base']= -> d,e { # basic view
     [d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
 
+  View['content']= -> d,e {d.values.map{|r|r[Content].do{|c|{_: :p, c: c}}}}
+
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
      i.map{|u,r|
