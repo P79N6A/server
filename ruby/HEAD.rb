@@ -34,6 +34,7 @@ class R
       'Access-Control-Expose-Headers' => "User, Triples, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
       'Link' => @r[:Links].intersperse(', ').join,
+      'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
     }
     @r[:Response].update headers
   end

@@ -5,7 +5,8 @@ class R
       e.q['set'] ||= 'page'
       e.q['c'] ||= 32
       e['HTTP_ACCEPT_DATETIME'].do{|dt|
-        t = Time.httpdate dt
+        t = Time.parse dt
+        e[:Response]['Memento-Datetime'] = dt
         e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s
       }
       nil
