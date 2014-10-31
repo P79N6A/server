@@ -175,8 +175,8 @@ class R
 
     [H.css('/css/threads',true),
      groups.map{|group,threads|
-       {class: :posts, style: 'background-color:' + cs,
-         c: [group.do{|g|{_: :a, c: g.R.fragment, href: g}},
+      {_: :p, c: {class: :posts, style: 'background-color:' + cs,
+        c: [group.do{|g|{_: :a, c: g.R.fragment, href: g}},
              threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
                size = title.to_s.size
                scale = if msgs.size > 5 || size < 16
@@ -197,7 +197,9 @@ class R
                  href: '/thread/'+msgs[0].R.basename,
                  c: title.gsub(/\[(\w+)\]/,'<span>\1</span>'),
                  style: "font-size:#{scale}em"}
-               {class: :post, c: [name, maker]}}]}}]}
+               {class: :post, c: [name, maker]}}
+           ]}}
+     }]}
   
   ViewGroup[SIOCt+'MailMessage'] = View['threads']
 
