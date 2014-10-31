@@ -5,8 +5,8 @@ a {
 
 .posts {
     margin: .4em;
-    float: left;
     padding: .2em;
+    display: inline-block;
 }
 
 .posts > a:first-child {
