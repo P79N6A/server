@@ -7,17 +7,20 @@ class R
   end
 
   GET['/thumbnail'] = -> e,r {
-    t = R['//'+r['SERVER_NAME']+e.justPath.to_s.sub(/^.thumbnail/,'')]
-    i = [t,t.justPath].compact.find(&:f)
-    if i && i.size > 0
-      stat = i.node.stat
-      path = R['/cache/thumbnail/' + (R.dive [stat.ino,stat.mtime].h) + '.png']
-      if !path.e
-        path.dir.mk
-        if i.mime.match(/^video/)
-          `ffmpegthumbnailer -s 256 -i #{i.sh} -o #{path.sh}`
-        else
-          `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`
+    i = R['//'+r['SERVER_NAME']+e.path.sub(/^.thumbnail/,'')]
+    if i.file? && i.size > 0
+      if i.ext.match /SVG/i
+        path = i
+      else
+        stat = i.node.stat
+        path = R['/cache/thumbnail/' + (R.dive [stat.ino,stat.mtime].h) + '.png']
+        if !path.e
+          path.dir.mk
+          if i.mime.match(/^video/)
+            `ffmpegthumbnailer -s 256 -i #{i.sh} -o #{path.sh}`
+          else
+            `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`
+          end
         end
       end
       path.e ? path.setEnv(r).fileGET : E404[e,r]
