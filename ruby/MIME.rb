@@ -32,18 +32,18 @@ class R
   def mime # MIME-type of associated fs node
     @mime ||=
       (p = realpath # dereference final location
-       unless p     # deref failed?
+       unless p     # deref failed
          nil
        else
          t = ((File.extname p).tail || '').downcase.to_sym
          if p.directory?
            "inode/directory"
+         elsif (File.basename p).index('msg.')==0
+           "message/rfc822"
          elsif MIME[t]
            MIME[t]
          elsif Rack::Mime::MIME_TYPES[t='.'+t.to_s]
            Rack::Mime::MIME_TYPES[t]
-         elsif (File.basename p).index('msg.')==0
-           "message/rfc822"
          else
            puts "unknown MIME #{p}"
            `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
