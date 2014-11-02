@@ -8,9 +8,10 @@ class R
       d = descend.uri
       [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|
         yield d, Type, type}
-      yield d, Stat+'size', size
       yield d, Stat+'mtime', mtime.to_i
-      c.map{|c| yield d, LDP+'contains', R[c.dir.basename+'/'+c.basename]}
+      contained = c
+      yield d, Stat+'size', contained.size
+      contained.map{|c| yield d, LDP+'contains', R[c.dir.basename+'/'+c.basename]} if contained.size <= 128
 
     elsif symlink?
       readlink.do{|t|
