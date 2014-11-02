@@ -41,6 +41,12 @@ class R
                         else
                           e[k].html
                         end
+                      when LDP+'contains'
+                        e[k].justArray.map(&:maybeURI).map{|r|
+                          r && [
+                            (r.size > 32 ? '<br>' : ''),
+                            r.R.href,' ',
+                           ]}
                       else
                         e[k].html
                       end}}}}]},
