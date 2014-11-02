@@ -10,7 +10,7 @@ class R
         yield d, Type, type}
       yield d, Stat+'size', size
       yield d, Stat+'mtime', mtime.to_i
-      c.map{|child| yield d, LDP+'contains', child}
+      c.map{|child| yield d, LDP+'contains', R[child.basename]}
 
     elsif symlink?
       readlink.do{|t|
