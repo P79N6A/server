@@ -4,11 +4,11 @@ pre {white-space: pre-wrap}
 img {max-width: 100%}
 td.key {text-align:right}
 td.key > a {
-    background-color: #000;
-    color:#fff;
-    padding: .11em;
+    color:#000;
+    background-color:#fff;
+    font-weight: bold;
 }
 td.val > a {
-    color: #000;
-    background-color:#FFF;
+    font-size: 1.08em;
+    background-color: #0f4; color: #000;
 }
