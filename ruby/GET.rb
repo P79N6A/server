@@ -67,9 +67,9 @@ class R
       else
         if rdf
           graph = RDF::Graph.new
-          if @r[:container] # describe contained-resources
-            set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode}
-          else # resource-set to graph
+          if @r[:container]
+            set.map{|f|(f.setEnv @r).streamToRDF graph, :triplrInode} if @r[:filemeta]
+          else
             set.map{|f|
               f.setEnv(@r).justRDF.do{|doc| # convert to RDF (if required)
                 graph.load doc.pathPOSIX, :base_uri => self}} # resource -> graph
