@@ -18,7 +18,7 @@ table.ls th {padding-right: .2em}
 table.ls th, table.ls td { text-align: left; }
 table.ls th[property='uri'], table.ls td[property='uri'], table.ls td[property='http://www.w3.org/ns/posix/stat#size'] {
     text-align: right;
-    
+    max-width: 18em;
 }
 table.ls td[property='uri'] a {background-color:#000; color: #fff}
 table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'],table.ls td[property='uri'] {white-space:nowrap}
