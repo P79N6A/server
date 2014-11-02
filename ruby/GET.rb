@@ -71,7 +71,8 @@ class R
           set.map{|f|
             f = f.setEnv(@r)
             f.fromStreamRDF graph, :triplrInode if @r[:container]
-            f.justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
+            f.justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self} unless @r['HTTP_REFERER']==Warp
+          }
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
         else # Hash

@@ -38,6 +38,7 @@ class R < RDF::URI
   Daemon   = 'http://src.whats-your.name/pw/'
   Deri     = 'http://vocab.deri.ie/'
   Schema   = 'http://schema.org/'
+  Warp     = 'http://linkeddata.github.io/warp/'
   DC       = Purl + 'dc/terms/'
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
