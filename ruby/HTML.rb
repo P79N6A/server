@@ -202,7 +202,7 @@ class R
              r[RDFs+'member'].do{|c|c.map{|c| c = c.R
                  {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
 
-  View[HTTP+'Response'] = -> d,e {
+  View[LDP+'Resource'] = -> d,e {
     d['#'].do{|u|
       [u[Prev].do{|p| # prev page
          {_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
