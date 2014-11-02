@@ -31,8 +31,9 @@ table.ls a { color: #102F66; font-size: 1.2em; }
 
 table.ls th.this {background-color: #aaa; padding-left: .2em}
 table.ls td.this {border-style: solid; border-width: 0 0 .1em .1em; border-color: #ddd}
+th { font-weight: normal }
 table.ls th.this a {color: #fff}
-table.ls th.that a {color: #000}
+table.ls th.that a {color: #888; font-size: .88em}
 table.ls td.this a {color: #fff; background-color: #00f; font-weight: normal}
 table.ls th:hover {background-color: #3f3}
 
