@@ -26,7 +26,7 @@ class R
   end
 
   # triplr -> graph (RDF)
-  def streamToRDF g, *i
+  def fromStreamRDF g, *i
     send(*i) do |s,p,o|
       s = R[(lateHost.join s).to_s] # subject
       p = RDF::URI p                # predicate
