@@ -105,7 +105,9 @@ class Hash
             [{_: :tr, property: k, c:
               [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
                ["\n",
-                {_: :td, c: (k == 'uri' ? {} : {_: :a, name: k, href: (k.class==Symbol ? '#'+k.to_s : k), c: R[k.to_s].fragment}), class: :key},"\n",
+                {_: :td,
+                 c: (k == 'uri' ? {} : {_: :a, href: k,
+                                        c: k.R.fragment||k.R.basename}), class: :key},"\n",
                 {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u.fragment, href: u.url, c: u.fragment}} : v.html, class: :val}]]},
              "\n"]}},
          "\n"]
@@ -116,7 +118,7 @@ end
 class R
 
   def href name = nil
-    H({_: :a, href: uri, c: name || basename})
+    H({_: :a, href: uri, c: name || fragment || basename})
   end
   alias_method :html, :href
 
