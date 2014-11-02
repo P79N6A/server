@@ -12,7 +12,8 @@ class R
     '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
 
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
-
+  GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil}
+  
   GET['/thread'] = -> e, r {
     return [406,{},[]] unless Render[r.format]
     m = {} # graph
