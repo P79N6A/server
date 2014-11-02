@@ -106,7 +106,7 @@ class Hash
               [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
                ["\n",
                 {_: :td, c: (k == 'uri' ? {} : {_: :a, name: k, href: (k.class==Symbol ? '#'+k.to_s : k), c: R[k.to_s].basename}), class: :key},"\n",
-                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u.fragment, href: u.url, c: v}} : v.html, class: :val}]]},
+                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u.fragment, href: u.url, c: u.fragment}} : v.html, class: :val}]]},
              "\n"]}},
          "\n"]
     end
