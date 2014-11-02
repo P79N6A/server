@@ -1,9 +1,10 @@
+# coding: utf-8
 #watch __FILE__
 class R
 
   View['ls'] = ->d=nil,e=nil {
     mtime = Stat+'mtime'
-    keys = [ Stat+'size', Type, 'uri', mtime, LDP+'contains' ]
+    keys = [ Stat+'size', 'uri', Type, mtime, LDP+'contains' ]
     path = e['REQUEST_PATH']
     asc = e.q.has_key? 'asc'
     sort = e.q['sort'].do{|p|p.expand} || mtime
@@ -30,7 +31,7 @@ class R
                         e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                       when Type
                         if directory
-                          {_: :a, class: :dir, href: e.uri}
+                          {_: :a, class: :dir, href: e.uri, c: '►'}
                         elsif types.include?(DC+'Image')
                           ShowImage[e.uri]
                         elsif types.size==1 && types[0]==RDFs+'Resource'
@@ -46,7 +47,7 @@ class R
      (H.css '/css/ls', true),
      (H.js '/js/ls', true),
      ({_: :style, c: "table.ls {width: 100%}"} if e.q['view']=='ls'),
-     {class: :warp, _: :a, href: e.warp},
+     {class: :warp, _: :a, href: e.warp, c: '/'},
      {_: :a, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'},
      }]}
 
