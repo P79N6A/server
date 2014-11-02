@@ -11,7 +11,9 @@ class R
       yield d, Stat+'mtime', mtime.to_i
       contained = c
       yield d, Stat+'size', contained.size
-      contained.map{|c| yield d, LDP+'contains', R[c.dir.basename+'/'+c.stripDoc.basename]} if contained.size <= 16
+      contained.map{|c|
+        yield d, LDP+'contains', c
+      } if contained.size < 27
 
     elsif symlink?
       readlink.do{|t|
