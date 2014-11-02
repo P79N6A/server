@@ -69,13 +69,13 @@ class R
           graph = RDF::Graph.new
           set.map{|f|
             f = f.setEnv(@r)
-            f.fromStreamRDF graph, :triplrInode if @r[:filemeta]
+            f.fromStreamRDF graph, :triplrInode if @r[:container]
             f.justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
         else # Hash
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
+          set.map{|f|f.fromStream m, :triplrInode} if @r[:container]
           Render[@r.format][m, @r]
         end
       end}
