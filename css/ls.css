@@ -20,7 +20,7 @@ table.ls th[property='uri'], table.ls td[property='uri'], table.ls td[property='
     
 }
 table.ls td[property='uri'] a {background-color:#000; color: #fff}
-table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'] {white-space:nowrap}
+table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'],table.ls td[property='uri'] {white-space:nowrap}
 table.ls td {
     max-width: 48em;
     overflow: hidden;
