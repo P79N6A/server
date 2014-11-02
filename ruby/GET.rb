@@ -36,8 +36,8 @@ class R
   end
 
   def response
-    set = [] # result set
-    m = {'#' => {'uri' => uri, Type => R[HTTP+'Response']}}
+    set = [] # files
+    m = {'#' => {'uri' => uri}} # Hash graph
     rdf = !(NonRDF.member? @r.format) # graph-type
 
     s = q['set']
