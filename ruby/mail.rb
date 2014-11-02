@@ -200,7 +200,8 @@ class R
                  style: "font-size:#{scale}em"}
                {class: :post, c: [name, maker]}}
            ]}}
-     }]}
+     },'<br clear=all>',
+     {_: :a, class: :expand, href: env.uri+'?view=base', c: '▼'}]}
   
   ViewGroup[SIOCt+'MailMessage'] = View['threads']
 

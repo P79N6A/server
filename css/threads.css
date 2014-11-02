@@ -42,3 +42,5 @@ p {float: left}
 }
 
 .thread > span {color: #888}
+
+a.expand {font-size: 2em;padding:.4em}
