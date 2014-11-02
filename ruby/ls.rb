@@ -25,7 +25,7 @@ class R
                  {_: :td, property: k, class: (k == sort ? 'this' : 'that'),
                    c: case k
                       when 'uri'
-                        (file ? re : e.R).href(e[Title] || e.R.basename.do{|b| b == '/' ? e.R.host : b})
+                        (file ? re : e.R).href(e[Title] || e.R.basename.do{|b| b == '/' ? e.R.host : URI.unescape(b)})
                       when mtime
                         e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                       when Type
