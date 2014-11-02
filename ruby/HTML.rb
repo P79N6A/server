@@ -102,12 +102,12 @@ class Hash
       self.R.href
     else
       H [{_: :table, class: :html, c: map{|k,v|
+            r = k.to_s.R
             [{_: :tr, property: k, c:
               [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
                ["\n",
                 {_: :td,
-                 c: (k == 'uri' ? {} : {_: :a, href: k,
-                                        c: k.R.fragment||k.R.basename}), class: :key},"\n",
+                 c: (k == 'uri' ? {} : {_: :a, href: k, c: r.fragment||r.basename}), class: :key},"\n",
                 {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u.fragment, href: u.url, c: u.fragment}} : v.html, class: :val}]]},
              "\n"]}},
          "\n"]
