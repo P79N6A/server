@@ -15,7 +15,7 @@ class R
     [{_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k| # header row
               {_: :th, class: (k == sort ? 'this' : 'that'),
-               property: k, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.basename}}}},
+               property: k, c: {_: :a, href: path+'?view=ls&sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.fragment}}}},
            entries.map{|e| # entries
              types = e.types
              directory = types.include?(Stat+'Directory')
