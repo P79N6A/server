@@ -37,7 +37,7 @@ class R
   def response
     set = [] # result set
     m = {'#' => {'uri' => uri, Type => R[HTTP+'Response']}}
-    rdf = !(NonRDF.member? @r.format) # graph type
+    rdf = !(NonRDF.member? @r.format) # graph-type
 
     s = q['set']
     rs = ResourceSet[s]
