@@ -4,6 +4,7 @@
     src: url('/css/misc/icons.woff') format('woff');
     src: url('/css/misc/icons.ttf')  format('truetype');
 }
+
 body {margin: 0;padding:0}
 
 table.ls {
@@ -13,10 +14,10 @@ table.ls {
     padding: 0;
     border-spacing: 0;
 }
+
 table.ls th {padding-right: .2em}
 table.ls th, table.ls td { text-align: left; }
 table.ls td {
-    white-space: nowrap;
     max-width: 48em;
     overflow: hidden;
     vertical-align: top;

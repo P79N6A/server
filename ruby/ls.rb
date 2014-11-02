@@ -3,7 +3,7 @@ class R
 
   View['ls'] = ->d=nil,e=nil {
     mtime = Stat+'mtime'
-    keys = [ Stat+'size', Type, 'uri', mtime ]
+    keys = [ Stat+'size', Type, 'uri', mtime, LDP+'contains' ]
     path = e['REQUEST_PATH']
     asc = e.q.has_key? 'asc'
     sort = e.q['sort'].do{|p|p.expand} || mtime
@@ -21,8 +21,8 @@ class R
              file = types.include?(Stat+'File')
              re = file ? e.R.stripDoc.a('.html') : e.R
              {_: :tr, uri: re.uri,
-               c: keys.map{|k| # predicates
-                 {_: :td, property: k, class: (k == sort ? 'this' : ''),
+               c: keys.map{|k|
+                 {_: :td, property: k, class: (k == sort ? 'this' : 'that'),
                    c: case k
                       when 'uri'
                         (file ? re : e.R).href(e[Title] || URI.unescape(e.R.basename))

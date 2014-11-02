@@ -30,8 +30,9 @@ class R
   def resourceGET
     paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
-      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| return r }}}} # handler-lookup cascade
-    response # default handler
+      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| return r }}}} # search for handlers
+
+    response
   end
 
   def response
