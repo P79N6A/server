@@ -21,7 +21,7 @@ class R
     path += '/' if path[-1] != '/' && p.to_s[-1] == '/'    # preserve trailing-slash
     resource = R[e['SCHEME']+"://"+e['SERVER_NAME']+path]  # resource
     e[:Links] = []                                         # response links
-    e[:Response] = {Daemon: [R[Daemon]]}                   # response head
+    e[:Response] = {}                                      # response head
     e['uri'] = resource.uri                                # response URI
     puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} if Verbose # log request
     resource.setEnv(e).send(method).do{|s,h,b|
