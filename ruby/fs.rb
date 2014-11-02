@@ -91,8 +91,7 @@ class R
         np = (t+1).strftime('/%Y/%m/%d/') # next-day page
         g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
         g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}}
-    
-    e.fileResources.concat(e.env[:container] ? e.c : [])}
+    e.env[:container] ? e.c : e.fileResources}
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
