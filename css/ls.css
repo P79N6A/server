@@ -11,6 +11,7 @@ table.ls {
     font-family: sans-serif;
     padding: 0;
     border-spacing: 0;
+    float: right;
 }
 
 table.ls th {padding-right: .2em}
