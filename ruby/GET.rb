@@ -67,17 +67,17 @@ class R
       else
         if rdf
           graph = RDF::Graph.new
+          graph << (RDF::Statement.new R['..'],Type,R[Stat+'Directory']) if @r[:container] && path != '/'
           set.map{|f|
             f = f.setEnv(@r)
             f.fromStreamRDF graph, :triplrInode if @r[:container]
             f.justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
-          graph << (RDF::Statement.new R['..'],Type,R[Stat+'Directory']) unless path=='/'
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => lateHost, :standard_prefixes => true, :prefixes => Prefixes
         else # Hash
+          m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:container] && path != '/'
           set.map{|r|r.setEnv(@r).fileToGraph m}
           set.map{|f|f.fromStream m, :triplrInode} if @r[:container]
-          m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} unless path=='/'
           Render[@r.format][m, @r]
         end
       end}
