@@ -108,7 +108,7 @@ class Hash
                ["\n",
                 {_: :td,
                  c: (k == 'uri' ? {} : {_: :a, href: k, c: r.fragment||r.basename}), class: :key},"\n",
-                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: u.fragment, href: u.url, c: u.fragment}} : v.html, class: :val}]]},
+                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: (u.fragment||u.basename), href: u.url, c: u.fragment||u.basename}} : v.html, class: :val}]]},
              "\n"]}},
          "\n"]
     end
