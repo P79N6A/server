@@ -3,17 +3,12 @@ pre {white-space: pre-wrap}
 .abbr,.scheme {display: none}
 img {max-width: 100%}
 td.key {text-align:right}
-td.key > a > .frag {
-    font-weight:bold;
-    background-color: #111;
+td.key > a {
+    background-color: #000;
     color:#fff;
-    border-radius:.36em .08em .08em .36em;
-    padding-left:.2em;
-    padding-right:.08em;
+    padding: .11em;
 }
-td.val > a > .frag {
+td.val > a {
     color: #fff;
     background-color:#122;
-    border-radius: .2em;
-    padding: .1em
 }
