@@ -1,14 +1,12 @@
 a {text-decoration:none}
 pre {white-space: pre-wrap}
-.abbr,.scheme {display: none}
 img {max-width: 100%}
 td.key {text-align:right}
-td.key > a {
-    color:#000;
-    background-color:#fff;
+td.key > a {font-weight: bold}
+td.val > a , td.val a[rel=untyped] {
+    color:#fff;
+    background-color: #222;
+    padding:.1em;
     font-weight: bold;
 }
-td.val a {
-    font-size: 1.08em;
-    background-color: #00ecff; color: #000;
-}
+td.val a[rel=untyped] { font-size:1.1em; }
