@@ -11,7 +11,7 @@ table.ls {
     font-family: sans-serif;
     padding: 0;
     border-spacing: 0;
-    display: inline-block;
+    float:left;
 }
 
 table.ls th {padding-right: .2em}
@@ -27,7 +27,7 @@ table.ls td {
     overflow: hidden;
     vertical-align: bottom;
 }
-table.ls td[property='http://www.w3.org/ns/ldp#contains'] {max-width: 21.22em;font-size:.89em}
+table.ls td[property='http://www.w3.org/ns/ldp#contains'] {font-size:.89em}
 table.ls a { color: #102F66; font-size: 1.2em; }
 
 table.ls th.this {background-color: #aaa; padding-left: .2em}
@@ -44,12 +44,12 @@ table.ls a.resource img {max-width: 1.4em;}
 .warp {
     color: #FF3C1F;
     font-size: 3em;
-    padding: .8em;
+    padding: .2em;
+    float:left;
 }
-
-.warp, .tabulate {float: left}
+.tabulate {margin:.3em;float:left}
 table.ls a.dir {
-    color: #333;
+    color: #000;
     font-size: 1.3em;}
 
 table.ls a.file {
