@@ -123,7 +123,7 @@ class R
   alias_method :html, :href
 
   def abbr
-    uri.sub /(?<scheme>[a-z]+:\/\/)?(?<abbr>.*?)(?<frag>[^#\/]+)\/?$/,'<span class="abbr"><span class="scheme">\k<scheme></span>\k<abbr></span><span class="frag">\k<frag></span>'
+    fragment || basename
   end
 
   def triplrHref enc=nil
