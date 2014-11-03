@@ -179,7 +179,7 @@ class R
           groups[v][u] = r
           seen[u] = true
         end}} if e[:container]
-    [groups.map{|view,graph|view[graph,e]}.reverse, # groups
+    [groups.map{|view,graph|view[graph,e]}, # groups
      d.map{|u,r|                            # singleton
        if !seen[u]
          type = r.types.find{|t|View[t]}

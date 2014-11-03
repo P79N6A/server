@@ -11,7 +11,7 @@ table.ls {
     font-family: sans-serif;
     padding: 0;
     border-spacing: 0;
-    float: left;
+    display: inline-block;
 }
 
 table.ls th {padding-right: .2em}
@@ -47,6 +47,7 @@ table.ls a.resource img {max-width: 1.4em;}
     padding: .8em;
 }
 
+.warp, .tabulate {float: left}
 table.ls a.dir {
     color: #333;
     font-size: 1.3em;}
