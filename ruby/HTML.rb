@@ -172,18 +172,19 @@ class R
     e[:Graph] = d
     groups = {}
     seen = {}
-    d.map{|u,r| r.types.map{|type|
+    d.map{|u,r|
+      r.types.map{|type|
         if v = ViewGroup[type]
           groups[v] ||= {}
           groups[v][u] = r
           seen[u] = true
         end}} if e[:container]
-     [groups.map{|view,graph|view[graph,e]}, # grouped
-      d.map{|u,r|                            # singleton
-        if !seen[u]
+    [groups.map{|view,graph|view[graph,e]}.reverse, # groups
+     d.map{|u,r|                            # singleton
+       if !seen[u]
          type = r.types.find{|t|View[t]}
          View[type ? type : 'base'][{u => r},e]
-        end}]}
+       end}]}
 
   View['base']= -> d,e { # basic view
     [d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
