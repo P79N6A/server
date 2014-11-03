@@ -188,7 +188,7 @@ class R
                          1.05
                        end
                maker = if (c = msgs.size) > 2
-                         {_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}
+                         [' ',{_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}]
                        else
                          msgs.map{|s|
                    s[Creator].justArray.select(&:maybeURI).map{|cr|
