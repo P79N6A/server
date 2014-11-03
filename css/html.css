@@ -1,6 +1,7 @@
 a {text-decoration:none}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
+table.html {float: left}
 td.key {text-align:right}
 td.key > a {font-weight: bold}
 td.val > a , td.val a[rel=untyped] {
