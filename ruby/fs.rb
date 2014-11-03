@@ -10,7 +10,7 @@ class R
       yield uri, Stat+'mtime', mtime.to_i
       contained = c
       yield uri, Stat+'size', contained.size
-      contained.map{|c| yield uri, LDP+'contains', c.stripDoc} if contained.size < 27
+      contained.map{|c| yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc} if contained.size < 27
 
     elsif symlink?
       readlink.do{|t|
@@ -90,7 +90,7 @@ class R
         np = (t+1).strftime('/%Y/%m/%d/') # next-day page
         g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
         g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}}
-    e.env[:container] ? e.c : e.fileResources}
+    e.env[:container] ? e.c.map{|c|c.setEnv(e.env).bindHost} : e.fileResources}
 
   View[Stat+'File'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
