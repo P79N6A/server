@@ -5,13 +5,12 @@ class R
   def triplrInode &f
     file = URI.escape uri
     if directory?
-      d = descend.uri
       [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|
-        yield d, Type, type}
-      yield d, Stat+'mtime', mtime.to_i
+        yield uri, Type, type}
+      yield uri, Stat+'mtime', mtime.to_i
       contained = c
-      yield d, Stat+'size', contained.size
-      contained.map{|c| yield d, LDP+'contains', c.stripDoc} if contained.size < 27
+      yield uri, Stat+'size', contained.size
+      contained.map{|c| yield uri, LDP+'contains', c.stripDoc} if contained.size < 27
 
     elsif symlink?
       readlink.do{|t|

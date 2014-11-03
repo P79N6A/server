@@ -52,12 +52,9 @@ table.ls a.dir {
     color: #333;
     font-size: 1.3em;}
 
-table.ls a.file:before {
+table.ls a.file {
     color: #000;
-    content:"\f15b";
-    font-family: icons;
-    font-size: 1.3em;
-    border-width: 0;}
+    font-size: 1.3em;}
 
 a {text-decoration: none}
 .scheme,.abbr {display: none}

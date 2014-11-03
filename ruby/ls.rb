@@ -36,7 +36,7 @@ class R
                         elsif types.size==1 && types[0]==RDFs+'Resource'
                           {_: :a, class: :resource, href: e.uri, c: '■'}
                         elsif file
-                          {_: :a, class: :file, href: e.uri}
+                          {_: :a, class: :file, href: e.uri, c: '█'}
                         else
                           e[k].html
                         end
