@@ -48,10 +48,7 @@ class R
      (H.css '/css/ls', true),
      (H.js '/js/ls', true),
      ({_: :style, c: "table.ls {width: 100%}"} if e.q['view']=='ls'),
-     {_: :a, class: :warp, href: e.warp, c: '/'},
-     {_: :a, class: :tabulate, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'},
-     }]}
-
+     {_: :a, class: :warp, href: e.warp, c: '/'}]}
 
   ViewGroup[Stat+'Directory'] = View['ls']
   ViewGroup[Stat+'File']      = View['ls']

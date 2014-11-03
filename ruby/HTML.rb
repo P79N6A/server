@@ -172,15 +172,17 @@ class R
     e[:Graph] = d
     groups = {}
     seen = {}
-    d.map{|u,r|
+    d.map{|u,r| # group resources on RDF class
       r.types.map{|type|
         if v = ViewGroup[type]
           groups[v] ||= {}
           groups[v][u] = r
           seen[u] = true
         end}} if e[:container]
-    [groups.map{|view,graph|view[graph,e]}, # groups
-     d.map{|u,r|                            # singleton
+    ls = View['ls']
+    [groups.map{|view,graph|view[graph,e] if view!=ls}, # groups
+     groups[ls].do{|g|ls[g,e]},
+     d.map{|u,r|
        if !seen[u]
          type = r.types.find{|t|View[t]}
          View[type ? type : 'base'][{u => r},e]
@@ -205,11 +207,11 @@ class R
 
   View[LDP+'Resource'] = -> d,e {
     d['#'].do{|u|
-      [u[Prev].do{|p| # prev page
-         {_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
-       u[Next].do{|n| # next page
-         {_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
-       ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}}
+      [{_: :a, class: :tabulate, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}},
+       u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
+       u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
+       ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])
+      ]}}
 
   View['audio'] = ->d,e {
     [(H.once e, :audio,
