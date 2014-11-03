@@ -11,7 +11,7 @@ table.ls {
     font-family: sans-serif;
     padding: 0;
     border-spacing: 0;
-    float: right;
+    float: left;
 }
 
 table.ls th {padding-right: .2em}
@@ -31,13 +31,12 @@ table.ls td[property='http://www.w3.org/ns/ldp#contains'] {max-width: 21.22em;fo
 table.ls a { color: #102F66; font-size: 1.2em; }
 
 table.ls th.this {background-color: #aaa; padding-left: .2em}
-table.ls td.this {border-style: solid; border-width: 0 .1em .1em .1em; border-color: #ddd}
+table.ls td.this {text-align: left; border-style: solid; border-width: 0 .1em .1em .1em; border-color: #ddd}
+table.ls td.this[property='uri'] {color: #fff;background-color: #000;}
 th { font-weight: normal }
 table.ls th.this a {color: #fff}
 table.ls th.that a {color: #888; font-size: .88em}
-table.ls td.this a {color: #fff; background-color: #00f; font-weight: normal}
 table.ls th:hover {background-color: #3f3}
-
 table.ls tr:hover { background-color: #0f0 }
 
 table.ls a.resource img {max-width: 1.4em;}
