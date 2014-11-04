@@ -203,17 +203,14 @@ class R
 
   ViewA[SIOC+'Content'] = -> r,e {r[Content].do{|c|{_: :p, c: c}}}
 
-  View[LDP+'BasicContainer'] = -> i,e {
+  ViewA[LDP+'BasicContainer'] = -> r,e {
+    re = r.R
     [(H.once e, 'container', (H.css '/css/container')),
-     i.map{|u,r|
-       resource = r.R
-       path = resource.justPath
-       currentDir = path == e.R.justPath
-       {class: 'dir ' + (currentDir ? 'thisdir' : ''), style: "background-color: #{R.cs}",
-         c: [({_: :a, class: :up, c: '&uarr;', href: path.parentURI.descend} if currentDir && path != '/'),
-             {_: :a, c: resource.abbr, href: resource.uri},
-             r[RDFs+'member'].do{|c|c.map{|c| c = c.R
-                 {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
+     {class: 'dir', style: "background-color: #{R.cs}",
+      c: [({_: :a, class: :up, c: '&uarr;', href: re.parentURI.descend} if re.path != '/'),
+          {_: :a, c: re.abbr, href: r.uri},
+          r[RDFs+'member'].do{|c|c.map{|c| c = c.R
+                                {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [{_: :a, class: :tabulate, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}},

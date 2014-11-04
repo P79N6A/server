@@ -9,14 +9,6 @@ a {text-decoration: none}
     margin: .3em;
 }
 
-.dir.thisdir a {
-    font-size: 1.8em;
-    color: #fff;
-}
-.dir.thisdir a.up {
-    color: #ddd;
-}
-
 .dir a {
     float:left;
     font-weight: bold;
