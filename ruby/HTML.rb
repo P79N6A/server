@@ -193,12 +193,12 @@ class R
      groups[ls].do{|g|ls[g,e]},
      d.map{|u,r|
        if !seen[u]
-         type = r.types.find{|t|View[t]}
-         View[type ? type : 'base'][{u => r},e]
+         type = r.types.find{|t|ViewA[t]}
+         ViewA[type ? type : 'base'][r,e]
        end}]}
 
-  View['base']= -> d,e { # basic view
-    [d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
+  View['base']= -> d,e {[d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
+ ViewA['base']= -> r,e {[r.html, H.once(e, 'base', H.css('/css/html',true))]}
 
   View[SIOC+'Content'] = View['content']= -> d,e {d.values.map{|r|r[Content].do{|c|{_: :p, c: c}}}}
 

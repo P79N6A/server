@@ -61,19 +61,11 @@ class R
     }
   end
 
-  # singleton message <span>
-  View[SIOCt+'InstantMessage'] = View[SIOCt+'MicroblogPost'] = -> d,e {
-    label = {}
-    count = 0
-    [d.map{|u,r|
-       [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
-        r[Creator].do{|c|
-          name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
-          label[name] ||= {c: 0, id: (count += 1).to_s}
-          label[name][:c] += 1
-          {_: :a, class: 'creator l'+label[name][:id], href: r.uri, c: name }},
-        " ", r[Content],"<br>\n"]},
-     {_: :style, c: label.map{|n,l| ".creator.l#{l[:id]} {background-color: #{cs}}" if l[:c] > 1}.cr }]}
+  ViewA[SIOCt+'InstantMessage'] = ViewA[SIOCt+'MicroblogPost'] = -> r,e {
+    [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
+     r[Creator].do{|c|
+       name = c[0].respond_to?(:uri) ? (c[0].R.fragment || c[0].R.basename) : c[0].to_s
+       {_: :a, href: r.uri, c: name }}," ", r[Content],"<br>\n"]}
 
   # message group <table>
   ViewGroup[SIOCt+'InstantMessage'] = ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
