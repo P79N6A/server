@@ -16,6 +16,7 @@ class R
       s['#HTTP_REFERER'].do{|r|s['#HTTP_REFERER']=R[r]}
       s['#Response'].do{|r|r.delete 'Content-Type'}
       r.q.delete 'view'
+      g.delete '#'
       [404, r[:Response], [Render['text/html'][g,r]]]
     else
       [404, r[:Response], []]
