@@ -130,6 +130,11 @@ class R
     fragment || basename
   end
 
+  def triplrContent
+    yield uri+'#', Content, r
+    yield uri+'#', Type, R[SIOC+'Content']
+  end
+
   def triplrHref enc=nil
     yield uri, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
@@ -195,7 +200,7 @@ class R
   View['base']= -> d,e { # basic view
     [d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
 
-  View['content']= -> d,e {d.values.map{|r|r[Content].do{|c|{_: :p, c: c}}}}
+  View[SIOC+'Content'] = View['content']= -> d,e {d.values.map{|r|r[Content].do{|c|{_: :p, c: c}}}}
 
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
