@@ -83,7 +83,7 @@ class R
 
     # store graph
     ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, ''
-    doc = r.fragmentPath + '/' + ts + '.e'
+    doc = r.fragmentPath + '/.version/' + ts + '.e'
     doc.w graph, true
     main.delete if main.e
     doc.ln main

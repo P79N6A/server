@@ -5,6 +5,7 @@ class R
     SIOC+'Forum' => [Title],
     SIOCt+'MicroblogPost' => [Content],
     SIOCt+'BlogPost' => [Title, Content],
+    SIOCt+'BoardPost' => [Title, Content],
     SIOCt+'WikiArticle' => [Title],
     SIOCt+'WikiArticleSection' => [Title, Content],
   }

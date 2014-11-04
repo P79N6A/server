@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrIRC &f
@@ -56,6 +56,10 @@ class R
       yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
     }
   end
+
+  ViewA[SIOC+'Forum'] = -> r,e {
+    {_: :a, href: r.R.stripFrag.uri + '?view=edit&type=sioct:BoardPost', c: 'new post'}
+  }
 
   ViewA[SIOCt+'InstantMessage'] = ViewA[SIOCt+'MicroblogPost'] = -> r,e {
     [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
