@@ -28,8 +28,7 @@ class R
       E404[e,r]
     end}
   
-  View[DC+'Image'] = -> i,e{
-    i.map{|u,i| u && u.match(/(gif|jpe?g|png|tiff)$/i) && ShowImage[u]}}
+  ViewA[DC+'Image'] = ->i,e{ShowImage[i.uri]}
 
   ShowImage = -> u {{_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}
 
