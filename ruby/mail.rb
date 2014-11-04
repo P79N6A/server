@@ -7,9 +7,10 @@ class R
     '/msg/' + id.h[0..2] + '/' + id}
 
   AddrPath = ->address{ # address -> path
-    a = address.downcase
-    name = a.split('@')[0]
-    '/address/' + a[0] + '/' + a + '/' + name + '#' + name}
+    address = address.downcase
+    name = address.split('@')[0]
+    alpha = address[0].match(/[<0-9]/) ? '_' : address[0]
+    '/address/' + alpha + '/' + address + '/' + name + '#' + name}
 
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
   GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil}
