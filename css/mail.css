@@ -13,7 +13,7 @@ pre.mail a[rel=untyped] {
     font-weight: bold;
 }
 
-tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"],tr[property="http://www.w3.org/ns/rdf#type"],tr[property="http://www.w3.org/ns/rdfs#label"],tr[property= "http://www.w3.org/ns/posix/stat#mtime"],tr[property="http://www.w3.org/ns/posix/stat#size"],tr[property="http://purl.org/dc/terms/identifier"],tr[property="http://rdfs.org/sioc/ns#has_parent"],tr[property="http://rdfs.org/sioc/ns#reply_of"] {display:none}
+tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"],tr[property="http://www.w3.org/ns/rdf#type"],tr[property="http://www.w3.org/ns/rdfs#label"],tr[property= "http://www.w3.org/ns/posix/stat#mtime"],tr[property="http://www.w3.org/ns/posix/stat#size"],tr[property="http://purl.org/dc/terms/identifier"],tr[property="http://rdfs.org/sioc/ns#has_parent"],tr[property="http://rdfs.org/sioc/ns#reply_of"], tr[property="http://purl.org/dc/terms/title"] {display:none}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width: 80ex}
 
 pre.mail .q {background-color:#f3f3f3;color:#888;display:block}

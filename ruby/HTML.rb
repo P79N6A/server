@@ -108,7 +108,13 @@ class Hash
                ["\n",
                 {_: :td,
                  c: (k == 'uri' ? {} : {_: :a, href: k, c: r.abbr}), class: :key},"\n",
-                {_: :td, c: k == 'uri' ? v.R.do{|u| {_: :a, id: (u.fragment||u.uri), href: u.url, c: u.abbr.empty? ? u.basename : u.abbr}} : v.html, class: :val}]]},
+                {_: :td,
+                 c: k == 'uri' ? v.R.do{|u|
+                                   {_: :a,
+                                    id: (u.fragment||u.uri),
+                                    href: u.url,
+                                    c: (self[R::Label]||self[R::Title]).justArray[0].to_s.noHTML || u.abbr
+                                   }} : v.html, class: :val}]]},
              "\n"]}},
          "\n"]
     end
