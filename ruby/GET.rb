@@ -49,8 +49,10 @@ class R
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
     if set.empty? # nothing found
-      if q.has_key? 'edit' # init editor
-        q['view'] ||= 'edit'
+      if q.has_key? 'new' # create
+        q['view'] = 'new'
+      elsif q.has_key? 'edit'
+        q['view'] = 'edit'
       else
         return E404[self,@r,m]
       end

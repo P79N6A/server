@@ -1,5 +1,17 @@
-#watch __FILE__
+watch __FILE__
 class R
+
+  Predicates = {
+    SIOC+'Forum' => [Title],
+    SIOCt+'MicroblogPost' => [Content],
+    SIOCt+'BlogPost' => [Title, Content],
+    SIOCt+'WikiArticle' => [Title],
+    SIOCt+'WikiArticleSection' => [Title, Content],
+  }
+
+  View['new'] = -> graph, e {
+    Predicates.keys.map{|p|
+      {_: :a, style: 'font-size: 2em; display:block', c: p.R.fragment, href: e['REQUEST_PATH']+'?edit&type='+p.shorten}}}
 
   View['edit'] = -> graph, e { # edit resource in a <form>
 
@@ -50,12 +62,5 @@ class R
          {_: :a, href: r.R.docroot +  '?view=edit&fragment=' + r.R.fragment, class: :edit, c: :edit},
          r[Content],
          H.once(e,:wiki,H.css('/css/wiki'))]}}
-
-  Predicates = {
-    SIOCt+'MicroblogPost' => [Content],
-    SIOCt+'BlogPost' => [Title, Content],
-    SIOCt+'WikiArticle' => [Title],
-    SIOCt+'WikiArticleSection' => [Title, Content],
-  }
 
 end
