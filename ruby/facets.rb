@@ -16,7 +16,7 @@ class R
     i = {}
     c = 0
     n = ->o{i[o] ||= 'f'+(c+=1).to_s}
-
+    e[:container] = false
     [(H.css'/css/facets'),(H.js'/js/facets'),(H.js'/js/mu'),
 
      # facet selection
