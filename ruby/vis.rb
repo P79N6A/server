@@ -49,7 +49,7 @@ class R
           }}
         links.push link
       end}
-
+    e[:container] = false # don't summarize/reduce content-render
     [(H.js '//d3js.org/d3.v2'), # D3 library
      {_: :script, c: "var links = #{links.to_json};"}, # graph-arcs to JSON
      H.js('/js/force'),
