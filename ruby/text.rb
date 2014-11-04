@@ -135,6 +135,10 @@ ul.uris a:hover {background-color:#bf0}
     yield uri, Content, `cat #{sh} | tth -r`
   end
 
+  def triplrContent
+    yield uri+'#', Content, r
+  end
+
   def triplrTextile
     require 'redcloth'
     yield uri, Content, RedCloth.new(r).to_html
