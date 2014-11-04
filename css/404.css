@@ -1,6 +1,4 @@
 body > table {margin:auto}
-body > table > tbody > tr > td > a > span.abbr {display:inline}
-.scheme, .abbr {display: none}
 
 a {text-decoration:none;
    color:#000;

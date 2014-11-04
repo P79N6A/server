@@ -8,7 +8,6 @@ td.message {
  color:#fff;
  white-space: pre-wrap;
  }
-.abbr {font-size:.9em}
 a, td.path { white-space: nowrap;
     text-align:right;
     background-color:#000;
