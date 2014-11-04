@@ -107,25 +107,24 @@ ul.uris a:hover {background-color:#bf0}
   end
 
   def triplrPS
-    yield uri, Type, (R MIMEtype+'application/postscript')
+    yield uri+'#', Type, (R MIMEtype+'application/postscript')
     p = dir.child '.' + basename + '/'
     unless p.e
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
     end
-    p.children.map{|i|yield uri, DC+'Image', i}
+    p.children.map{|i|yield uri+'#', DC+'Image', i}
   end
 
-  View[MIMEtype+'application/postscript']=->r,e{
+  ViewA[MIMEtype+'application/postscript']=->d,e{
     [(H.once e, :mu,   (H.js '/js/mu')),(H.once e, :book, (H.js '/js/book')),
      {_: :style, c: 'div[type="book"] a {background-color:#ccc;color:#fff;float:left;margin:.16em}'},
-     r.values.map{|d|
-      d[DC+'Image'].do{|is|
-        is = is.sort_by(&:uri)
-        {type: :book,
-          c: [{_: :img, style:'float:left;max-width:100%', src: is[0].url},
-              {name: :pages,
-                c: is.map{|i|{_: :a,href: i.url, c: i.R.bare}}}]}}}]}
+     d[DC+'Image'].do{|is|
+       is = is.sort_by(&:uri)
+       {type: :book,
+        c: [{_: :img, style:'float:left;max-width:100%', src: is[0].url},
+            {name: :pages,
+             c: is.map{|i|{_: :a,href: i.url, c: i.R.bare}}}]}}]}
 
   def triplrRTF
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs
