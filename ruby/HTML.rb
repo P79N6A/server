@@ -113,7 +113,7 @@ class Hash
                                    {_: :a,
                                     id: (u.fragment||u.uri),
                                     href: u.url,
-                                    c: (self[R::Label]||self[R::Title]).justArray[0].to_s.noHTML || u.abbr
+                                    c: (self[R::Label]||self[R::Title]).html || u.abbr
                                    }} : v.html, class: :val}]]},
              "\n"]}},
          "\n"]
