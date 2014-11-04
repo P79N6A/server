@@ -136,7 +136,6 @@ PUT
 schema
 search
 text
-time
 uid
 vis
 wiki
@@ -170,4 +169,12 @@ class Object
   def id; self end
   def do; yield self end
   def maybeURI; nil end
+  def time?
+    (self.class == Time) || (self.class == DateTime)
+  end
+  def to_time
+    time? ? self : Time.parse(self)
+  rescue
+    nil
+  end
 end

@@ -105,6 +105,9 @@ class R
     e.q['set'] = 'groonga'
     nil}
 
+  GET['/today'] = -> e,r {[303, {'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||''),
+                                 'Access-Control-Allow-Origin' => r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'}, []]}
+
   View[Search] = -> d,e {
     [{_: :form, action: '/search/', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
      (H.js '/js/search',true)]}

@@ -115,6 +115,10 @@ class Hash
   end
 end
 
+class Time
+  def html; H({_: :time, datetime: iso8601, c: to_s}) end
+end
+
 class R
 
   def href name = nil
