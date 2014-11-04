@@ -7,7 +7,9 @@ td.key > a {font-weight: bold}
 td.val > a , td.val a[rel=untyped] {
     color:#fff;
     background-color: #222;
-    padding:.1em;
     font-weight: bold;
 }
+tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width: 80ex}
+tr[property="uri"] > td.val { white-space: nowrap;}
 td.val a[rel=untyped] { font-size:1.1em; }
+.tabulate {float: left}
