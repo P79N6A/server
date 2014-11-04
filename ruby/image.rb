@@ -32,7 +32,7 @@ class R
 
   ShowImage = -> u {{_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}
 
-  View['imgs'] = -> m,e { seen = {} # unique images found
+  View['imgs'] = -> m,e { seen = {} # find images throughout the loaded graph
 
     x = ->i{i && i.match(/(jpe?g|gif|png)$/i) && i } # extension match
 

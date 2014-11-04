@@ -35,12 +35,8 @@ class R
   end
 
   def triplrTwUserlist
-    yield uri, Type, R[COGS+'UriList']
     open(pathPOSIX).readlines.map{|l|
-      u = 'https://twitter.com/' + l.chomp
-      yield uri, '/rel', u.R
-      yield u, '/rev', self
-      yield u, Type, R[CSVns+'Row']}
+      yield 'https://twitter.com/'+l.chomp, Type, Resource}
   end
 
   def triplrTwMsg
