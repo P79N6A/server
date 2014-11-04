@@ -3,14 +3,27 @@ pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block}
 td.key {text-align:right}
-td.key > a {font-weight: bold}
-td.val > a , td.val a[rel=untyped] {
+td.key > a {
+    font-weight: bold;
+    border-radius: .4em 0 0 .4em;
+    padding-left: .18em;
+}
+td.val > a {
+    color: #fff;
+    background-color: #444;
+}
+td.val > a[id] {background-color: #f7f7f7; color: #000}
+td.val a[rel=untyped] {
     color:#fff;
     background-color: #222;
     font-weight: bold;
+}
+td.val > a, td.val a[rel=untyped] {
+    border: .1em dotted #808080;
+    padding: 0 .15em 0 .15em;
 }
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width: 80ex}
 tr[property="uri"] > td.val { white-space: nowrap;}
 td.val a[rel=untyped] { font-size:1.1em; }
 .tabulate {float: left}
-.q { background-color: #eee;color: #000}
+.q { background-color: #cff;color: #000}

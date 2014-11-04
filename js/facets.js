@@ -1,8 +1,8 @@
-var e = function(){
+var facets = function(){
     qa('div[facet] > div[facet]').click(function(e){
 
-	var poN = this   	// predicate,object
-	var pN = poN.parentNode	// predicate
+	var poN = this   	// (predicate,object) node
+	var pN = poN.parentNode	//         predicate  node
 
 	// facet identifiers
 	var p = pN.attr('facet')
@@ -19,7 +19,7 @@ var e = function(){
 	    poN.style.color='#fff';
 	}
 
-	q('style.'+p) && q('style.'+p).remove()
+	q('style.'+p) && q('style.'+p).remove() // GC obsolete CSS
 
 	// selection rules
 	var s = [], on = pN.querySelectorAll('[on=true]')
@@ -30,4 +30,4 @@ var e = function(){
 	    q('body').append(el('style').attr('class',p).txt(s.join('\n')))}})
 };
 
-document.addEventListener("DOMContentLoaded", e, false);
+document.addEventListener("DOMContentLoaded", facets, false);
