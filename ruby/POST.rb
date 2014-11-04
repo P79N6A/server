@@ -39,10 +39,6 @@ class R
     end
   end
 
-  POST_log = -> {R['/stat/POST.'+Time.now.strftime('%Y%m%d')]}
-
-  GET['/stat/up'] = -> e,r {[303, {'Location'=> POST_log[].a('.html').uri}, []]}
-
   def dataPOST
     p = (Rack::Request.new env).params
     if file = p['file']
@@ -51,7 +47,7 @@ class R
       up = child name
       FileUtils.cp t, up.pathPOSIX
       t.unlink
-      File.open(POST_log[].a('.txt').pathPOSIX, 'a'){|l|
+      File.open(R[Time.now.strftime('/stat/POST.%Y%m%d.txt')].pathPOSIX, 'a'){|l|
         l.write "upload #{URI.escape up.uri} #{@r.user} #{@r['HTTP_USER_AGENT']}\n"} if '/stat'.R.e
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
@@ -63,14 +59,14 @@ class R
   def formPOST
     form = Rack::Request.new(@r).params
     frag = form['fragment']
-    return [400,{},['fragment-argument required']] unless frag
+    return [400,{},['fragment-identifier missing']] unless frag
     frag = form[Title] if frag.empty? && form[Title]
     frag = frag.slugify
 
     subject = s = uri + '#' + frag
     r = s.R
     graph = {s => {'uri' => s}}
-    main = r.docroot.a '.' + r.fragment + '.e'
+    main = r.docroot.a '/' + r.fragment + '.e'
 
     # form data to graph
     form.keys.-(['fragment']).map{|p|
