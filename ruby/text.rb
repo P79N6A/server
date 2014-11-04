@@ -66,24 +66,9 @@ end
 class R
 
   def triplrUriList
-    yield uri, Type, R[COGS+'UriList']
     open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
-      l = l.chomp
-      yield l, Type, Resource
-    }
+      yield l.chomp, Type, Resource }
   end
-
-  View[COGS+'UriList'] = -> g,e {
-    [{_: :style, c: "
-ul.uris {background-color:#000;color:#fff;padding:.8em;float:left}
-ul.uris a {background-color:#0f0;color:#000;text-decoration:none}
-ul.uris a:hover {background-color:#bf0}
-"},
-     {_: :ul, class: :uris, c:
-       g.map{|u,r|
-         r['/rel'].do{|uris|
-           uris.map{|u|
-             {_: :li, c: {_: :a, hreF: u.uri, c: u.uri}}}}}}]}
 
   def uris
     graph.keys.select{|u|u.match /^http/}
