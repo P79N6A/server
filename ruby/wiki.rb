@@ -38,22 +38,18 @@ class R
            {_: :input, type: :hidden, name: :fragment, value: fragment},
            {_: :input, type: :submit, value: 'write'}]}]}
 
-  View[SIOCt+'WikiArticle'] = -> g,e {
-    g.map{|u,r|
-      i = u.R
-      [{_: :a, href: u, c: {_: :h1, c: r[Title]}},
-       {_: :a, href: i.docroot +  '?type=sioct:WikiArticleSection&view=edit',
-         c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'},
-       H.once(e,:wiki,H.css('/css/wiki'))]}}
+  ViewA[SIOCt+'WikiArticle'] = -> r,e {
+    [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
+     {_: :a, href: r.R.docroot +  '?type=sioct:WikiArticleSection&view=edit',
+      c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'},
+     H.once(e,:wiki,H.css('/css/wiki'))]}
 
-  View[SIOCt+'WikiArticleSection'] = -> g,e {
-    g.map{|u,r|
-      i = u.R
-      {class: :section,
-        c: [{_: :a, href: u, c: {_: :h2, c: r[Title]}},
-            {_: :a, href: i.docroot +  '?view=edit&fragment=' + i.fragment, class: :edit, c: :edit},
-            r[Content],
-            H.once(e,:wiki,H.css('/css/wiki'))]}}}
+  ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
+    {class: :section,
+     c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}},
+         {_: :a, href: r.R.docroot +  '?view=edit&fragment=' + r.R.fragment, class: :edit, c: :edit},
+         r[Content],
+         H.once(e,:wiki,H.css('/css/wiki'))]}}
 
   View['blogpost'] = -> g,e {
     g.map{|u,r|
