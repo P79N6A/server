@@ -40,6 +40,10 @@ p {float: left}
     background-color:#fff;
     color:#000;
 }
+.thread:visited {
+    background-color:#ababab;
+    color: #fff;
+}
 
 .thread > span {color: #888}
 

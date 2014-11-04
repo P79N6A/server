@@ -75,12 +75,8 @@ class R
   end
 
   def triplrMarkdown
-    yield uri, Type, R[SIOCt+'Markdown']
-    yield uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
+    yield uri+'#', Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
-
-  View[SIOCt+'Markdown'] = -> m,_ {
-    m.values.map{|r|r[Content]}}
 
   def triplrOrg
     require 'org-ruby'

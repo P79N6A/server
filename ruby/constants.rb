@@ -63,7 +63,6 @@ class R < RDF::URI
   Next     = LDP  + 'nextPage'
   Prev     = LDP  + 'prevPage'
   Type     = RDFns+ 'type'
-  COGS     = Deri + 'cogs#'
   HTML     = RDFns + 'HTML'
   Label    = RDFs + 'label'
 
