@@ -116,7 +116,7 @@ class R
   ViewGroup[FOAF+'Person'] = -> d,e {
     d.map{|uri, person|{_: :a, class: :person, href: uri, c: [person[Name],' ']}}}
 
-  ViewGroup[FOAF+'Group'] = -> d,e {
+  ViewGroup[SIOC+'Usergroup'] = -> d,e {
     [{_: :style, c: "
 .foaf {float: right; background-color: #111; color: #ccc; margin-bottom: .2em}
 .foaf > a {background-color:#000; color: #fff; font-size: 1.25em; margin: .2em}
