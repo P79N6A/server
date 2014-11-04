@@ -93,13 +93,4 @@ class R
     e.env[:filemeta] = true if e.env[:container]
     e.env[:container] ? e.c.map{|c|c.setEnv(e.env).bindHost} : e.fileResources}
 
-  View[Stat+'File'] = -> i,e {
-    [(H.once e, 'container', (H.css '/css/container')),
-     i.map{|u,r|
-       r[Stat+'size'].do{|s|
-         {class: :File, title: "#{u}  #{s[0]} bytes",
-           c: ["\n", {_: :a, class: :file, href: u, c: '☁'}, # link to file ("download", original MIME)
-               "\n", {_: :a, class: :view, href: u.R.stripDoc.a('.html'), c: u.R.abbr}, # link HTML representation of file
-               "\n", r[Content], "\n"]}}}]}
-
 end
