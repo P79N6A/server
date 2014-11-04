@@ -198,9 +198,10 @@ class R
        end}]}
 
   View['base']= -> d,e {[d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
- ViewA['base']= -> r,e {[r.html, H.once(e, 'base', H.css('/css/html',true))]}
 
-  View[SIOC+'Content'] = View['content']= -> d,e {d.values.map{|r|r[Content].do{|c|{_: :p, c: c}}}}
+  ViewA['base']= -> r,e {[r.html, H.once(e, 'base', H.css('/css/html',true))]}
+
+  ViewA[SIOC+'Content'] = -> r,e {r[Content].do{|c|{_: :p, c: c}}}
 
   View[LDP+'BasicContainer'] = -> i,e {
     [(H.once e, 'container', (H.css '/css/container')),
@@ -214,13 +215,11 @@ class R
              r[RDFs+'member'].do{|c|c.map{|c| c = c.R
                  {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}}]}
 
-  View[LDP+'Resource'] = -> d,e {
-    d['#'].do{|u|
-      [{_: :a, class: :tabulate, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}},
-       u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
-       u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
-       ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])
-      ]}}
+  ViewA[LDP+'Resource'] = -> u,e {
+    [{_: :a, class: :tabulate, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}},
+     u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
+     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
+     ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 
   View['audio'] = ->d,e {
     [(H.once e, :audio,
