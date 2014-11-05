@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   Predicates = {
@@ -12,7 +12,7 @@ class R
 
   View['new'] = -> graph, e {
     Predicates.keys.map{|p|
-      {_: :a, style: 'font-size: 2em; display:block', c: p.R.fragment, href: e['REQUEST_PATH']+'?edit&type='+p.shorten}}}
+      {_: :a, style: 'font-size: 2em; display:block', c: p.R.fragment, href: e['REQUEST_PATH']+'?new&view=edit&type='+p.shorten}}}
 
   View['edit'] = -> graph, e { # edit resource in a <form>
 

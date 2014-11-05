@@ -50,7 +50,7 @@ class R
 
     if set.empty? # nothing found
       if q.has_key? 'new' # create
-        q['view'] = 'new'
+        q['view'] ||= 'new'
       else
         return E404[self,@r,m]
       end
