@@ -11,18 +11,18 @@ td.key > a {
 }
 td.val > a {
     color: #fff;
-    background-color: #262628;
-    border-radius: .25em;
+    background-color: #333;
+    padding: .1em;
+    font-weight: bold;
 }
-td.val > a[id] {background-color: #fff; color: #000;}
+td.val > a[id] {
+    background-color: #fff;
+    color: #000;
+}
 td.val a[rel=untyped] {
     color:#fff;
     background-color: #222;
     font-weight: bold;
-}
-td.val > a, td.val a[rel=untyped] {
-    border: .1em dotted #808080;
-    padding: 0 .15em 0 .15em;
 }
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width: 80ex}
 tr[property="http://purl.org/dc/terms/title"] {display:none}
