@@ -153,54 +153,20 @@ class R
             target = R[container + name + rand.to_s.h[0..2] + '.e'] if target.e
             doc.ln target }}}}}
 
-  View['threads'] = -> d,env {
-    posts = d.resourcesOfType SIOCt+'MailMessage'
-
+  Filter[SIOCt+'MailMessage'] = -> graph, g {
+    threads = {}
     weight = {}
-    posts.map{|p| p[To].justArray.map(&:maybeURI).map{|a|
-        weight[a] ||= 0
-        weight[a] += 1}}
+    g.values.map{|p| # statistics
+      graph.delete p.uri
+      p[Title].do{|t|threads[t[0].sub(/\b[rR][eE]: /,'')] ||= p} # unique thread-titles
+      p[To].justArray.map(&:maybeURI).map{|a| # weigh target-addresses
+        weight[a] ||= 0; weight[a] += 1}}
 
-    threads = posts.group_by{|r|
-      r[Title].do{|t|t[0].sub(/\b[rR][eE]: /,'')}}
-
-    groups = threads.group_by{|_,posts|
-      score = {}
-      posts.map{|post|
-        post[To].justArray.map(&:maybeURI).map{|a|
-          score[a] ||= 0
-          score[a] += weight[a] || 1}}
-      score.invert.max[1]}
-
-    [H.css('/css/threads',true),
-     groups.map{|group,threads|
-      {_: :p, c: {class: :posts, style: 'background-color:' + cs,
-        c: [group.do{|g|{_: :a, c: g.R.fragment, href: g}},
-             threads.sort_by{|t,m| 0-m.size}.map{|title,msgs| # each thread
-               size = title.to_s.size
-               scale = if msgs.size > 5 || size < 16
-                         1.25
-                       elsif size < 24
-                         1.15
-                       else
-                         1.05
-                       end
-               maker = if (c = msgs.size) > 2
-                         [' ',{_: :a, href: '/thread/'+msgs[0].R.basename, c: c, class: :count}]
-                       else
-                         msgs.map{|s|
-                   s[Creator].justArray.select(&:maybeURI).map{|cr|
-                     [' ',{_: :a, href: s.uri, class: :sender, c: cr.R.fragment}]}}
-                       end
-               name = {_: :a, class: 'thread',
-                 href: '/thread/'+msgs[0].R.basename,
-                 c: title.gsub(/\[(\w+)\]/,'<span>\1</span>'),
-                 style: "font-size:#{scale}em"}
-               {class: :post, c: [name, maker]}}
-           ]}}
-     },'<br clear=all>',
-     {_: :a, class: :expand, href: env.uri+'?view=base', c: '▼'}]}
-  
-  ViewGroup[SIOCt+'MailMessage'] = View['threads']
+    threads.map{|title,post|
+      group = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1]
+      graph[group] ||= {'uri' => group}
+      graph[group][Type] = [R[LDP+'BasicContainer']]
+      graph[group][LDP+'contains'] ||= []
+      graph[group][LDP+'contains'].push({'uri' => post.uri, Title => post[Title]})}}
 
 end

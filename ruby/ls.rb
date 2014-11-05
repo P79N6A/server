@@ -15,7 +15,7 @@ class R
      {_: :table, class: :ls,
       c: [{_: :tr, c: keys.map{|k| # header row
              {_: :th, class: (k == sort ? 'this' : 'that'),
-              property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.fragment || k.R.basename}}}},
+              property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
           entries.map{|e| # entries
             types = e.types
             directory = types.include?(Stat+'Directory')
@@ -26,7 +26,7 @@ class R
                {_: :td, property: k, class: (k == sort ? 'this' : 'that'),
                 c: case k
                    when 'uri'
-                     (file ? re : e.R).href(e[Title] || e.R.basename.do{|b| b == '/' ? e.R.host : URI.unescape(b)})
+                     (file ? re : e.R).href(e[Title] || URI.unescape(e.R.abbr))
                    when mtime
                      e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                    when Type
@@ -42,7 +42,14 @@ class R
                        e[k].html
                      end
                    when LDP+'contains'
-                     e[k].justArray.map(&:maybeURI).map{|r|r && [r.R.href,' ']}
+                     e[k].justArray.map{|r|
+                       case r.class
+                       when R
+                         [r.href, ' ']
+                       when Hash
+                         puts r
+                         r.html
+                       end}
                    else
                      e[k].html
                    end}}}}]},

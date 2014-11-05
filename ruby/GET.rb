@@ -78,7 +78,7 @@ class R
           m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
           set.map{|r|r.setEnv(@r).fileToGraph m}
           set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
-          Filter[q['filter']].do{|f|f[m,@r]}
+          FilterGraph[m] if @r[:container]
           Render[@r.format][m, @r]
         end
       end}

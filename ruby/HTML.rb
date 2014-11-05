@@ -203,6 +203,16 @@ class R
          ViewA[type ? type : 'base'][r,e]
        end}]}
 
+  FilterGraph = -> g {
+    groups = {}
+    g.map{|u,r|
+      r.types.map{|type|
+        if v = Filter[type]
+          groups[v] ||= {}
+          groups[v][u] = r
+        end}}
+    groups.map{|fn,gr|fn[g,gr]}}
+
   View['base']= -> d,e {[d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
 
   ViewA['base']= -> r,e {[r.html, H.once(e, 'base', H.css('/css/html',true))]}
