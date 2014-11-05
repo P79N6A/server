@@ -159,14 +159,19 @@ class R
     g.values.map{|p| # statistics
       graph.delete p.uri
       p[Title].do{|t|threads[t[0].sub(/\b[rR][eE]: /,'')] ||= p} # unique thread-titles
+      p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
       p[To].justArray.map(&:maybeURI).map{|a| # weigh target-addresses
-        weight[a] ||= 0; weight[a] += 1}}
+        weight[a] ||= 0; weight[a] += 1
+        graph.delete a
+      }}
 
     threads.map{|title,post|
+      thread = '/thread/'+post.R.basename
       group = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1]
+      graph[thread] = {'uri' => thread, Title => title}
       graph[group] ||= {'uri' => group}
       graph[group][Type] = [R[LDP+'BasicContainer']]
       graph[group][LDP+'contains'] ||= []
-      graph[group][LDP+'contains'].push({'uri' => '/thread/'+post.R.basename, Title => title})}}
+      graph[group][LDP+'contains'].push({'uri' => thread, Title => title})}}
 
 end

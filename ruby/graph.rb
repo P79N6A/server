@@ -159,17 +159,17 @@ class Hash
   def to_RDF # graph (Hash) -> graph (RDF)
     graph = RDF::Graph.new
     triples{|s,p,o|
-      s && p && o &&             # all fields non-nil
-        (s = RDF::URI s            # subject-URI
-         p = RDF::URI p            # predicate-URI
-         o = (if [R,Hash].member? o.class
-              RDF::URI o.uri     # object URI ||
-             else                 # object Literal
-               l = RDF::Literal o
-               l.datatype=RDF.XMLLiteral if p == Content
-               l
-              end) rescue nil
-          (graph << (RDF::Statement.new s,p,o) if o) rescue nil)}
+      s = RDF::URI s
+      p = RDF::URI p
+      o = if [R,Hash].member? o.class
+            RDF::URI o.uri
+          else
+            l = RDF::Literal o
+            l.datatype=RDF.XMLLiteral if p == R::Content
+            l
+          end
+      graph << (RDF::Statement.new s,p,o)
+    }
     graph
   end
 
