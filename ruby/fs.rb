@@ -5,8 +5,7 @@ class R
   def triplrInode &f
     file = URI.escape uri
     if directory?
-      [R[Stat+'Directory'], R[LDP+'BasicContainer']].map{|type|
-        yield uri, Type, type}
+      yield uri, Type, R[Stat+'Directory']
       yield uri, Stat+'mtime', mtime.to_i
       contained = c
       yield uri, Stat+'size', contained.size
