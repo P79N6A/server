@@ -231,7 +231,7 @@ class R
               label = e[:Graph][c.uri].do{|r|r[Label]} ||
                       (r.class == Hash && (r[Label]||r[Title])) ||
                       c.abbr
-              [{_: :a, href: c.uri, class: :member, c: label},"<br>\n"]}]}]}]}
+              [{_: :a, href: c.uri, class: :member, c: label}, " "]}]}]}]}
 
   ViewGroup[LDP+'BasicContainer'] = -> r,e {r.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
 
