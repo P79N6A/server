@@ -18,6 +18,7 @@ td.val > a {
 td.val > a[id] {
     background-color: #fff;
     color: #000;
+    font-weight: normal;
 }
 td.val a[rel=untyped] {
     color:#fff;
