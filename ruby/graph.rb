@@ -81,7 +81,7 @@ class R
       hook[d,g,host] if hook} # indexer
   end
 
-  # Repository (RDF) -> file(s)
+  # graph (RDF) -> file(s)
   def cacheRDF options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -154,6 +154,23 @@ class Hash
 
   def types
     self[R::Type].justArray.map(&:maybeURI).compact
+  end
+
+  def to_RDF # graph (Hash) -> graph (RDF)
+    graph = RDF::Graph.new
+    triples{|s,p,o|
+      s && p && o &&             # all fields non-nil
+        (s = RDF::URI s            # subject-URI
+         p = RDF::URI p            # predicate-URI
+         o = (if [R,Hash].member? o.class
+              RDF::URI o.uri     # object URI ||
+             else                 # object Literal
+               l = RDF::Literal o
+               l.datatype=RDF.XMLLiteral if p == Content
+               l
+              end) rescue nil
+          (graph << (RDF::Statement.new s,p,o) if o) rescue nil)}
+    graph
   end
 
   def resourcesOfType type

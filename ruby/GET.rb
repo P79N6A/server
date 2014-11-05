@@ -65,20 +65,27 @@ class R
       if set.size==1 && @r.format == set[0].mime
         set[0] # direct pass-through
       else
+        hash_graph = -> {
+          m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
+          set.map{|r|r.setEnv(@r).fileToGraph m} # load graph
+          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
+          FilterGraph[m] if @r[:container]} # summarize/reduce data
         if rdf
-          graph = RDF::Graph.new
-          graph << (RDF::Statement.new R['..'],R[Type],R[Stat+'Directory']) if @r[:filemeta] && path != '/'
-          set.map{|f|
-            f = f.setEnv(@r)
-            f.fromStreamRDF graph, :triplrInode if @r[:filemeta]
-            f.justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
+          if @r[:container]
+            hash_graph[]
+            graph = m.to_RDF
+          else
+            graph = RDF::Graph.new
+            graph << (RDF::Statement.new R['..'],R[Type],R[Stat+'Directory']) if @r[:filemeta] && path != '/'
+            set.map{|f|f = f.setEnv(@r)
+              f.justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}
+              f.fromStreamRDF graph, :triplrInode if @r[:filemeta]
+            }
+          end
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => self, :standard_prefixes => true, :prefixes => Prefixes
         else # Hash
-          m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
-          set.map{|r|r.setEnv(@r).fileToGraph m}
-          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
-          FilterGraph[m] if @r[:container]
+          hash_graph[]
           Render[@r.format][m, @r]
         end
       end}

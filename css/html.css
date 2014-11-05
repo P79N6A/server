@@ -14,7 +14,7 @@ td.val > a {
     background-color: #262628;
     border-radius: .25em;
 }
-td.val > a[id] {background-color: #fff; color: #000;border-radius: .5em .5em .5em 0}
+td.val > a[id] {background-color: #fff; color: #000;}
 td.val a[rel=untyped] {
     color:#fff;
     background-color: #222;
