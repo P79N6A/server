@@ -75,7 +75,7 @@ class R
     yield e, Stat+'size', size
 
     m.subject.do{|s| # subject
-      s = s.to_utf8.hrefs
+      s = s.to_utf8
       yield e, Label, s
       yield e, Title, s}
 
@@ -153,7 +153,8 @@ class R
             target = R[container + name + rand.to_s.h[0..2] + '.e'] if target.e
             doc.ln target }}}}}
 
-  Filter[SIOCt+'MailMessage'] = -> graph, g {
+  Filter[SIOCt+'MailMessage'] = -> graph, g, e {
+    rdf = !(NonRDF.member? e.format)
     threads = {}
     weight = {}
     g.values.map{|p| # statistics
@@ -168,7 +169,7 @@ class R
     threads.map{|title,post|
       thread = '/thread/'+post.R.basename
       group = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1]
-      graph[thread] = {'uri' => thread, Title => title}
+      graph[thread] = {'uri' => thread, Label => title} if rdf
       graph[group] ||= {'uri' => group}
       graph[group][Type] = [R[LDP+'BasicContainer']]
       graph[group][LDP+'contains'] ||= []

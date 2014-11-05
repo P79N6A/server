@@ -113,7 +113,7 @@ class Hash
                                    {_: :a,
                                     id: (u.fragment||u.uri),
                                     href: u.url,
-                                    c: self[R::Label] || self[R::Title] || u.abbr,
+                                    c: (self[R::Label] || self[R::Title] || u.abbr).justArray[0].to_s.hrefs,
                                    }} : v.html, class: :val}]]},
              "\n"]}},
          "\n"]
@@ -163,8 +163,7 @@ class R
 
   Render['text/html'] = -> d,e {
     u = d['#'] || {}
-    titles = d.map{|u,r|
-      r[Title] if r.class==Hash}.flatten.select{|t|t.class == String }
+    titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
 
     H ['<!DOCTYPE html>', "\n",
        {_: :html,
@@ -205,7 +204,7 @@ class R
          ViewA[type ? type : 'base'][r,e]
        end}]}
 
-  FilterGraph = -> g {
+  FilterGraph = -> g,e {
     groups = {}
     g.map{|u,r|
       r.types.map{|type|
@@ -213,7 +212,7 @@ class R
           groups[v] ||= {}
           groups[v][u] = r
         end}}
-    groups.map{|fn,gr|fn[g,gr]}}
+    groups.map{|fn,gr|fn[g,gr,e]}}
 
   View['base']= -> d,e {[d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
 
@@ -231,7 +230,7 @@ class R
             ['<br>', c.map{|r| c = r.R
               label = e[:Graph][c.uri].do{|r|r[Label]} ||
                       (r.class == Hash && (r[Label]||r[Title]))
-              {_: :a, href: c.uri, class: :member, c: label ? [label,"<br>"] : [c.abbr, " "]}}]}]}]}
+              {_: :a, href: c.uri, class: :member, c: label ? [label.justArray[0].to_s.hrefs,"<br>"] : [c.abbr, " "]}}]}]}]}
 
   ViewGroup[LDP+'BasicContainer'] = -> r,e {r.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
 

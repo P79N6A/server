@@ -69,7 +69,7 @@ class R
           m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
           set.map{|r|r.setEnv(@r).fileToGraph m} # load graph
           set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
-          FilterGraph[m] if @r[:container]} # summarize/reduce data
+          FilterGraph[m,@r] if @r[:container]} # summarize/reduce data
         if rdf
           if @r[:container]
             hash_graph[]
