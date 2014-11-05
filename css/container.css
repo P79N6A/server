@@ -9,14 +9,12 @@ a {text-decoration: none}
 }
 
 .dir a {
-    float:left;
     font-weight: bold;
     font-size:1.3em;
     color:#000;
 }
 
 .dir a.member {
-    display: block;
     font-size: 1em;
     background-color:#fff;
     color:#000;

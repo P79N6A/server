@@ -165,7 +165,10 @@ class R
     threads.map{|title,post|
       group = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1]
       graph[group] ||= {'uri' => group}
-      graph[group][Type] = [R[LDP+'BasicContainer']]
+      graph[group][Type] = [
+        R[LDP+'BasicContainer'],
+        #R[LDP+'Container'],
+      ]
       graph[group][LDP+'contains'] ||= []
       graph[group][LDP+'contains'].push({'uri' => post.uri, Title => post[Title]})}}
 

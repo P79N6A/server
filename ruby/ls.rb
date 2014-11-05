@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   View['ls'] = ->d=nil,e=nil {
@@ -47,7 +47,6 @@ class R
                        when R
                          [r.href, ' ']
                        when Hash
-                         puts r
                          r.html
                        end}
                    else
@@ -57,6 +56,7 @@ class R
      (H.js '/js/ls', true),
      ({_: :style, c: "table.ls {width: 100%}"} if e.q['view']=='ls')]}
 
+#  ViewGroup[LDP+'BasicContainer'] = View['ls']
   ViewGroup[Stat+'Directory'] = View['ls']
   ViewGroup[Stat+'File']      = View['ls']
   ViewGroup[RDFs+'Resource']  = View['ls']

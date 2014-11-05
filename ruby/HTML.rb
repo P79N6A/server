@@ -225,8 +225,15 @@ class R
      {class: 'dir', style: "background-color: #{R.cs}",
       c: [({_: :a, class: :up, c: '&uarr;', href: re.parentURI.descend} if re.path != '/'),
           {_: :a, c: re.abbr, href: r.uri},
-          r[RDFs+'member'].do{|c|c.map{|c| c = c.R
-                                {_: :a, href: c.uri, class: :member, c: e[:Graph][c.uri].do{|r|r[Label]} || c.abbr}}}]}]}
+          (r[RDFs+'member']||r[LDP+'contains']).do{|c|
+            ['<br>',c.map{|r|
+              c = r.R
+              label = e[:Graph][c.uri].do{|r|r[Label]} ||
+                      (r.class == Hash && (r[Label]||r[Title])) ||
+                      c.abbr
+              [{_: :a, href: c.uri, class: :member, c: label},"<br>\n"]}]}]}]}
+
+  ViewGroup[LDP+'BasicContainer'] = -> r,e {r.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [{_: :a, class: :tabulate, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}},
