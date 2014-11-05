@@ -167,6 +167,6 @@ class R
       graph[group] ||= {'uri' => group}
       graph[group][Type] = [R[LDP+'BasicContainer']]
       graph[group][LDP+'contains'] ||= []
-      graph[group][LDP+'contains'].push({'uri' => '/thread/'+post.R.basename, Title => post[Title]})}}
+      graph[group][LDP+'contains'].push({'uri' => '/thread/'+post.R.basename, Title => title})}}
 
 end
