@@ -1,6 +1,6 @@
 a {text-decoration: none}
 
-.dir {
+.basicC {
     font-family: sans-serif;
     display: inline-block;
     border-radius:0 1em 1em 1em;
@@ -8,13 +8,13 @@ a {text-decoration: none}
     margin: .3em;
 }
 
-.dir a {
+.basicC a {
     font-weight: bold;
     font-size:1.3em;
     color:#000;
 }
 
-.dir a.member {
+.basicC a.member {
     font-size: 1em;
     background-color:#fff;
     color:#000;

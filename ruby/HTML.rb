@@ -222,7 +222,7 @@ class R
   ViewA[LDP+'BasicContainer'] = -> r,e {
     re = r.R
     [(H.once e, 'container', (H.css '/css/container')),
-     {class: 'dir', style: "background-color: #{R.cs}",
+     {class: 'basicC', style: "background-color: #{R.cs}",
       c: [({_: :a, class: :up, c: '&uarr;', href: re.parentURI.descend} if re.path != '/'),
           {_: :a, c: re.abbr, href: r.uri},
           (r[RDFs+'member']||r[LDP+'contains']).do{|c|

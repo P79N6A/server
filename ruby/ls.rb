@@ -42,13 +42,7 @@ class R
                        e[k].html
                      end
                    when LDP+'contains'
-                     e[k].justArray.map{|r|
-                       case r.class
-                       when R
-                         [r.href, ' ']
-                       when Hash
-                         r.html
-                       end}
+                     e[k].justArray.map(&:html).intersperse " "
                    else
                      e[k].html
                    end}}}}]},
