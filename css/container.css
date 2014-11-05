@@ -2,7 +2,7 @@ a {text-decoration: none}
 
 .dir {
     font-family: sans-serif;
-    float: left;
+    display: inline-block;
     border-radius:0 1em 1em 1em;
     padding: .3em;
     margin: .3em;
