@@ -56,7 +56,7 @@ class R
       end
     end
 
-    etagX = rdf ? [] : [q['rev'], q['sort'], q['view']] # representation-varying inputs
+    etagX = rdf ? [] : [q['rev'], q['sort'], q['filter'], q['view']] # representation-varying inputs
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',           # output MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format, etagX].h}) # representation id
     ldp # capability headers
@@ -78,6 +78,7 @@ class R
           m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
           set.map{|r|r.setEnv(@r).fileToGraph m}
           set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
+          Filter[q['filter']].do{|f|f[m,@r]}
           Render[@r.format][m, @r]
         end
       end}

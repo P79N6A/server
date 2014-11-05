@@ -7,12 +7,14 @@ td.key > a {
     font-weight: bold;
     border-radius: .4em 0 0 .4em;
     padding-left: .18em;
+    border: .1em dotted #a8a8a8;
+    background-color:#fbfbfb; color: #000;
 }
 td.val > a {
     color: #fff;
-    background-color: #444;
+    background-color: #556;
 }
-td.val > a[id] {background-color: #fbfbfb; color: #000}
+td.val > a[id] {background-color: #fff; color: #000;border-radius: .5em .5em .5em 0}
 td.val a[rel=untyped] {
     color:#fff;
     background-color: #222;
