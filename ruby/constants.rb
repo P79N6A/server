@@ -93,6 +93,7 @@ class R < RDF::URI
 
   FileSet = {}
   ResourceSet = {}
+  Filter = {}
   Render = {}
   View = {}
   ViewA = {}
