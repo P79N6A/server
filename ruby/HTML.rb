@@ -226,12 +226,10 @@ class R
       c: [({_: :a, class: :up, c: '&uarr;', href: re.parentURI.descend} if re.path != '/'),
           {_: :a, c: re.abbr, href: r.uri},
           (r[RDFs+'member']||r[LDP+'contains']).do{|c|
-            ['<br>',c.map{|r|
-              c = r.R
+            ['<br>', c.map{|r| c = r.R
               label = e[:Graph][c.uri].do{|r|r[Label]} ||
-                      (r.class == Hash && (r[Label]||r[Title])) ||
-                      c.abbr
-              [{_: :a, href: c.uri, class: :member, c: label}, " "]}]}]}]}
+                      (r.class == Hash && (r[Label]||r[Title]))
+              {_: :a, href: c.uri, class: :member, c: label ? [label,"<br>"] : [c.abbr, " "]}}]}]}]}
 
   ViewGroup[LDP+'BasicContainer'] = -> r,e {r.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
 
