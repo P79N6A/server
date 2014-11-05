@@ -181,7 +181,9 @@ class R
              }, "\n",
              {_: :body,
                c: ["\n",
-                   (View[e.q['view']] || DefaultView)[d,e]]}]}]}
+                   (View[e.q['view']] || DefaultView)[d,e]]}]},
+       "\n"
+      ]}
 
   DefaultView = -> d,e {
     e[:Graph] = d
@@ -234,8 +236,7 @@ class R
   ViewGroup[LDP+'BasicContainer'] = -> r,e {r.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
 
   ViewA[LDP+'Resource'] = -> u,e {
-    [{_: :a, class: :tabulate, href: e.uri + '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}},
-     u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
+    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
      u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 

@@ -12,6 +12,7 @@ class R
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
 
     [{_: :a, class: :warp, href: e.warp, c: '/'},
+     {_: :a, class: :tabulate, href: '?view=tabulate', c: {_: :img, src: '/css/misc/cube.png'}},
      {_: :table, class: :ls,
       c: [{_: :tr, c: keys.map{|k| # header row
              {_: :th, class: (k == sort ? 'this' : 'that'),

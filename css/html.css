@@ -28,5 +28,4 @@ tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width: 80ex}
 tr[property="http://purl.org/dc/terms/title"] {display:none}
 tr[property="uri"] > td.val { white-space: nowrap;}
 td.val a[rel=untyped] { font-size:1.1em; }
-.tabulate {float: left}
 .q { background-color: #cff;color: #000}

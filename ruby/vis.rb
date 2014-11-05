@@ -19,10 +19,8 @@ class R
      (H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js src + 'js/mashup/mashlib'),
 "<script>jQuery(document).ready(function() {
-    var uri = window.location.href;
-    window.document.title = uri;
     var kb = tabulator.kb;
-    var subject = kb.sym(uri);
+    var subject = kb.sym('#{e.uri}');
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
 });</script>",
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
