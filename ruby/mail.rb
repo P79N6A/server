@@ -159,17 +159,14 @@ class R
     weight = {}
     g.values.map{|p| # statistics
       graph.delete p.uri
-      p[Title].do{|t|threads[t[0].sub(/\b[rR][eE]: /,'')] ||= p} # unique thread-titles
+      p[Title].do{|t|threads[t[0].sub(/\b[rR][eE]: /,'')] ||= p} # unique subjects
       p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
       p[To].justArray.map(&:maybeURI).map{|a| # weigh target-addresses
-        weight[a] ||= 0; weight[a] += 1
-        graph.delete a
-      }}
-
-    threads.map{|title,post|
+        weight[a] ||= 0; weight[a] += 1; graph.delete a}}
+    threads.map{|title,post| # cluster
       thread = '/thread/'+post.R.basename
       group = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1]
-      graph[thread] = {'uri' => thread, Label => title} if rdf
+#      graph[thread] = {'uri' => thread, Label => title} if rdf
       graph[group] ||= {'uri' => group}
       graph[group][Type] = [R[LDP+'BasicContainer']]
       graph[group][LDP+'contains'] ||= []
