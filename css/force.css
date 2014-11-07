@@ -12,7 +12,7 @@ table.html {
 
 .link {
     fill: none;
-    stroke: #ddd;
+    stroke: #333;
     stroke-width: .1em;
 }
 
@@ -21,11 +21,11 @@ table.html {
 }
 
 .node rect {
-    fill: #000;
+    fill: #fff;
 }
 
 text {
-    fill: #fff;
-    font: .8em sans-serif;
+    fill: #000;
+    font: .88em sans-serif;
     pointer-events: none;
 }

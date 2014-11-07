@@ -22,25 +22,29 @@ var force = d3.layout.force()
 
 var svg = d3.select("body").append("svg")
     .attr("width", 1024)
-    .attr("height", 768)
-    .on("click", function(e){ // tap forward from background
-	if(this.style.zIndex == 2){
-	    this.style.zIndex = -2
-	} else {
-	    this.style.zIndex = 2
-	}
-    });
+    .attr("height", 768);
+
+d3.select("body").on("click", function(e){
+    var s = document.querySelector('svg')
+    if(s.style.zIndex == 2){
+        s.style.zIndex = -1
+    } else {
+        s.style.zIndex = 2
+    }
+});
+
+
 
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
-    .attr("refX", 24)
-    .attr('markerWidth', 4)
-    .attr('markerHeight', 4)
+    .attr("refX", 36)
+    .attr('markerWidth', 5)
+    .attr('markerHeight', 5)
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#fff');
+    .attr('fill', '#999');
 
 var link = svg.selectAll(".link")
     .data(force.links())
