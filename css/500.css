@@ -1,6 +1,4 @@
-
-body {margin:0; font-family: monospace; background-color:#000; color:#fff}
-table {border-spacing:0;margin:0}
+body {font-family: monospace; background-color:#000; color:#fff}
 b,.frag {background-color:#fff;color:#000}
 a {text-decoration:none}
 td.message {

@@ -10,7 +10,7 @@ td.key > a, td.val > a[id] {
     background-color: #fff;
     border-width: 0 0 .1em 0;
     border-style: solid;
-    border-color: #0bf;
+    border-color: #8df;
     padding-right: .1em;
 }
 td.val > a, td.val a[rel=untyped] {

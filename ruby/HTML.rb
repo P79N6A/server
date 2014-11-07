@@ -204,7 +204,7 @@ class R
          ViewA[type ? type : 'base'][r,e]
        end}]}
 
-  FilterGraph = -> g,e {
+  Summarize = -> g,e { # data-reduction functions per RDF type
     groups = {}
     g.map{|u,r|
       r.types.map{|type|

@@ -106,7 +106,7 @@ class R
     ttl: 'text/turtle',
     txt: 'text/plain',
     tw: 'text/tw',
-    u: 'text/uris',
+    u: 'text/uri-list',
     url: 'text/plain',
     wav: 'audio/wav',
     webp: 'image/webp',
@@ -142,7 +142,7 @@ class R
     'text/textile'         => [:triplrTextile],
     'text/turtle'          => [:triplrTurtle],
     'text/tw'              => [:triplrTwUserlist],
-    'text/uris'            => [:triplrUriList],
+    'text/uri-list'        => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
   }
 
