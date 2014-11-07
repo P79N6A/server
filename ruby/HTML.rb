@@ -225,7 +225,7 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      {class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, c: e[:Graph][re.uri].do{|r|r[Label]} || re.abbr, href: r.uri},
-          r[LDP+'contains'].do{|c|puts "Ccccccccunt",c
+          r[LDP+'contains'].do{|c|
             ['<br>', c.map{|r| c = r.R
               label = e[:Graph][c.uri].do{|r|r[Label]} ||
                       (r.class == Hash && (r[Label]||r[Title]))
