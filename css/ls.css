@@ -28,7 +28,12 @@ table.ls td {
     overflow: hidden;
     vertical-align: bottom;
 }
-table.ls td[property='http://www.w3.org/ns/ldp#contains'] {font-size:.89em}
+table.ls td[property='http://www.w3.org/ns/ldp#contains'] > a {
+    background-color: #102F66;
+    color: #fff;
+    padding: 0 .16em 0 .16em;
+    border-radius: .18em;
+}
 table.ls a { color: #102F66; font-size: 1.2em; }
 
 table.ls th.this {background-color: #aaa; padding-left: .2em}
