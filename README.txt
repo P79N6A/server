@@ -16,5 +16,9 @@ https://gitorious.org/element/www
 https://github.com/hallwaykid/pw
 http://repo.or.cz/w/www.git
 
+EXAMPLE
+mail http://m.whats-your.name/today/
+news http://b.whats-your.name/news/
+
 EMAIL
 <mailto:carmen@whats-your.name>
