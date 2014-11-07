@@ -9,6 +9,9 @@
 .basicC a {
     text-decoration: none;
     font-size:1.27em;
+    padding: 0 .48em 0 .48em;
+    background-color: #333;
+    color: #fff;
 }
 
 .basicC a.member {

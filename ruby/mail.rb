@@ -138,7 +138,7 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  IndexMail = ->doc,graph,host {
+  IndexMail = ->doc,graph,host { # link message to address index(es)
     graph.map{|u,r|
       addresses = []
       r[Creator].do{|from|addresses.concat from}
@@ -150,10 +150,10 @@ class R
           addresses.map{|address|
             container = address.R.dirname + '/' + month
             target = R[container + name + '.e']
-            target = R[container + name + rand.to_s.h[0..2] + '.e'] if target.e
+            target = R[container + name + ' ' + rand.to_s.h[0..2] + '.e'] if target.e
             doc.ln target }}}}}
 
-  Filter[SIOCt+'MailMessage'] = -> graph, g, e {
+  Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     rdf = !(NonRDF.member? e.format)
     threads = {}
     weight = {}
