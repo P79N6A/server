@@ -19,5 +19,5 @@ td.key > a, td.val > a[id] {
     color: #000;
 }
 tr > td.val {max-width: 80ex}
-tr[property="http://purl.org/dc/terms/title"] {display:none}
+tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
 .q { background-color: #000;color: #fff; padding:.1em}
