@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 def H _ # HTML as Ruby literal-values
   case _
@@ -225,7 +225,7 @@ class R
     [(H.once e, 'container', (H.css '/css/container')),
      {class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, c: e[:Graph][re.uri].do{|r|r[Label]} || re.abbr, href: r.uri},
-          (r[RDFs+'member']||r[LDP+'contains']).do{|c|
+          r[LDP+'contains'].do{|c|puts "Ccccccccunt",c
             ['<br>', c.map{|r| c = r.R
               label = e[:Graph][c.uri].do{|r|r[Label]} ||
                       (r.class == Hash && (r[Label]||r[Title]))

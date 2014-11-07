@@ -21,7 +21,7 @@ class R
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m # find graph
     return E404[e,r] if m.empty?
     m['#'] = { 'uri' => e.uri, # thread-meta
-      Type => [R[LDP+'BasicContainer'], R[SIOC+'Thread']], RDFs+'member' => m.keys.map(&:R)}
+      Type => [R[LDP+'BasicContainer'], R[SIOC+'Thread']], LDP+'contains' => m.keys.map(&:R)}
     v = r.q['view'] ||= 'force'  # visualize references
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
@@ -167,12 +167,11 @@ class R
       thread = '/thread/'+post.R.basename
       tfrag = post[Date][0][0..6].sub('-','/')
       addr = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].R
-      puts addr.fragment
       c = addr.dir.child(tfrag).uri
       graph[thread] = {'uri' => thread, Label => title} if rdf
-      graph[c] = {'uri' => c, Label => addr.fragment}
-      graph[c][Type] = [R[LDP+'BasicContainer']]
+      graph[c] ||= {'uri' => c, Type => R[LDP+'BasicContainer'], Label => addr.fragment}
       graph[c][LDP+'contains'] ||= []
-      graph[c][LDP+'contains'].push({'uri' => thread, Title => title})}}
+      graph[c][LDP+'contains'].push({'uri' => thread, Title => title})
+    }}
 
 end
