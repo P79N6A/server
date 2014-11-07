@@ -226,7 +226,7 @@ class R
      {class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, c: e[:Graph][re.uri].do{|r|r[Label]} || re.abbr, href: r.uri},
           r[LDP+'contains'].do{|c|
-            ['<br>', c.map{|r| c = r.R
+            ['<br>', c.sort.map{|r| c = r.R
               label = e[:Graph][c.uri].do{|r|r[Label]} ||
                       (r.class == Hash && (r[Label]||r[Title]))
               {_: :a, href: c.uri, class: :member, c: label ? [label.justArray[0].to_s.hrefs,"<br>"] : [c.abbr, " "]}}]}]}]}
