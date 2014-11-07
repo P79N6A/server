@@ -7,16 +7,20 @@ td.val > a, td.val a[rel=untyped] {
     font-weight: normal;
     color: #fff;
     background-color: #071D1F ;
-    border-width: 0 0 .1em 0;
-    box-shadow:  .1em .3em .2em #ccc;
-    border-style: solid;
-    border-color: #03f;
+    box-shadow:  .1em .2em .2em #ccc;
+    border-radius: .16em;
     padding: .05em .18em .05em .18em;
 }
 td.key > a, td.val > a[id] {
     font-weight: bold;
     background-color: #fff;
     color: #000;
+}
+td.val > a[id] {
+    border-width:0;
+    font-weight: normal;
+    background-color: #4478FF;
+    color: #fff;
 }
 tr > td.val {max-width: 80ex}
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
