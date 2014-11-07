@@ -163,14 +163,16 @@ class R
       p[To].justArray.map(&:maybeURI).map{|a| # weigh target-addresses
         weight[a] ||= 0; weight[a] += 1; graph.delete a}}
     threads.map{|title,post| # cluster
-      thread = '/thread/'+post.R.basename
-      tfrag = post[Date][0][0..6].sub('-','/')
-      addr = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].R
-      c = addr.dir.child(tfrag).uri
-      graph[thread] = {'uri' => thread, Label => title} if rdf
-      graph[c] ||= {'uri' => c, Type => R[LDP+'BasicContainer'], Label => addr.fragment}
-      graph[c][LDP+'contains'] ||= []
-      graph[c][LDP+'contains'].push({'uri' => thread, Title => title})
-    }}
+      post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].do{|a|
+        addr = a.R
+        # thread
+        thread = '/thread/'+post.R.basename
+        graph[thread] = {'uri' => thread, Label => title} if rdf
+        # thread container
+        c = addr.dir.child(post[Date][0][0..6].sub('-','/')).uri
+        graph[c] ||= {'uri' => c, Type => R[LDP+'BasicContainer'], Label => addr.fragment}
+        graph[c][LDP+'contains'] ||= []
+        graph[c][LDP+'contains'].push({'uri' => thread, Title => title})
+      }}}
 
 end
