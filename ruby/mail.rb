@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -165,11 +165,14 @@ class R
         weight[a] ||= 0; weight[a] += 1; graph.delete a}}
     threads.map{|title,post| # cluster
       thread = '/thread/'+post.R.basename
-      group = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1]
+      tfrag = post[Date][0][0..6].sub('-','/')
+      addr = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].R
+      puts addr.fragment
+      c = addr.dir.child(tfrag).uri
       graph[thread] = {'uri' => thread, Label => title} if rdf
-      graph[group] ||= {'uri' => group}
-      graph[group][Type] = [R[LDP+'BasicContainer']]
-      graph[group][LDP+'contains'] ||= []
-      graph[group][LDP+'contains'].push({'uri' => thread, Title => title})}}
+      graph[c] = {'uri' => c, Label => addr.fragment}
+      graph[c][Type] = [R[LDP+'BasicContainer']]
+      graph[c][LDP+'contains'] ||= []
+      graph[c][LDP+'contains'].push({'uri' => thread, Title => title})}}
 
 end
