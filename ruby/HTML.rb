@@ -115,7 +115,7 @@ class Hash
                                     href: u.url,
                                     c: (self[R::Label] || self[R::Title] || u.abbr).justArray[0].to_s.hrefs,
                                    }} : v.html, class: :val}]]},
-             "\n"]}},
+             "\n"] if k && v}},
          "\n"]
     end
   end
