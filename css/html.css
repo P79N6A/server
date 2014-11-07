@@ -1,32 +1,24 @@
-a {text-decoration:none}
+a {text-decoration: none}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block}
+table.html a {box-shadow:  .1em .1em #ccc}
 td.key {text-align:right}
-td.key > a {
-    font-weight: bold;
-    border-radius: .4em 0 0 .4em;
-    padding-left: .18em;
-    background-color:#000; color: #fff;
-}
-td.val > a {
-    color: #fff;
-    background-color: #333;
-    padding: .1em;
-    font-weight: bold;
-}
-td.val > a[id] {
-    background-color: #fff;
-    color: #000;
+td.key > a, td.val > a[id] {
     font-weight: normal;
+    color: #000;
+    background-color: #fff;
+    border-width: 0 0 .1em 0;
+    border-style: solid;
+    border-color: #0bf;
+    padding-right: .1em;
 }
-td.val a[rel=untyped] {
-    color:#fff;
-    background-color: #222;
+td.val > a, td.val a[rel=untyped] {
     font-weight: bold;
+    padding: 0 .15em 0 .15em;
+    background-color: #000072;
+    color: #fff;
 }
-tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width: 80ex}
+tr > td.val {max-width: 80ex}
 tr[property="http://purl.org/dc/terms/title"] {display:none}
-tr[property="uri"] > td.val { white-space: nowrap;}
-td.val a[rel=untyped] { font-size:1.1em; }
-.q { background-color: #cff;color: #000}
+.q { background-color: #000;color: #fff; padding:.1em}
