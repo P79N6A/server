@@ -48,10 +48,13 @@ class R
     Stats[:host][host] ||= 0
     Stats[:host][host] += 1
 
-    mime = h['Content-Type'].do{|t|t.split(';')[0]}
-    Stats[:format] ||= {}
-    Stats[:format][mime] ||= 0
-    Stats[:format][mime] += 1
+    mime = nil
+    h['Content-Type'].do{|ct|
+      mime = ct.split(';')[0]
+      Stats[:format] ||= {}
+      Stats[:format][mime] ||= 0
+      Stats[:format][mime] += 1
+    }
 
     puts [ e['REQUEST_METHOD'], s, '<'+e.uri+'>', h['Location'], '<'+e.user+'>', e['HTTP_REFERER'], mime
          ].compact.map(&:to_s).map(&:to_utf8).join ' '
