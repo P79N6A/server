@@ -20,8 +20,7 @@ class R
     m = {} # graph
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m # find graph
     return E404[e,r] if m.empty?
-    m['#'] = { 'uri' => e.uri, # thread-meta
-      Type => [R[LDP+'BasicContainer'], R[SIOC+'Thread']], LDP+'contains' => m.keys.map(&:R)}
+    m['#'] = { 'uri' => e.uri, Type => R[SIOC+'Thread']}
     v = r.q['view'] ||= 'force'  # visualize references
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
