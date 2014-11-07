@@ -2,22 +2,21 @@ a {text-decoration: none}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block}
-table.html a {box-shadow:  .1em .1em #ccc}
 td.key {text-align:right}
-td.key > a, td.val > a[id] {
+td.val > a, td.val a[rel=untyped] {
     font-weight: normal;
-    color: #000;
-    background-color: #fff;
+    color: #fff;
+    background-color: #006E77;
     border-width: 0 0 .1em 0;
+    box-shadow:  .1em .3em .2em #ccc;
     border-style: solid;
     border-color: #8df;
     padding-right: .1em;
 }
-td.val > a, td.val a[rel=untyped] {
+td.key > a, td.val > a[id] {
     font-weight: bold;
-    padding: 0 .15em 0 .15em;
-    background-color: #000072;
-    color: #fff;
+    background-color: #fff;
+    color: #000;
 }
 tr > td.val {max-width: 80ex}
 tr[property="http://purl.org/dc/terms/title"] {display:none}
