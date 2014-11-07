@@ -1,7 +1,7 @@
 a {text-decoration: none}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
-table.html {display: inline-block;margin-bottom: .5em}
+table.html {display: inline-block;margin-bottom: .38em}
 td.key {text-align:right}
 td.val > a, td.val a[rel=untyped] {
     font-weight: normal;
@@ -10,8 +10,8 @@ td.val > a, td.val a[rel=untyped] {
     border-width: 0 0 .1em 0;
     box-shadow:  .1em .3em .2em #ccc;
     border-style: solid;
-    border-color: #8df;
-    padding-right: .1em;
+    border-color: #03f;
+    padding: .05em .18em .05em .18em;
 }
 td.key > a, td.val > a[id] {
     font-weight: bold;

@@ -166,7 +166,7 @@ class R
     threads.map{|title,post| # cluster
       thread = '/thread/'+post.R.basename
       group = post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1]
-#      graph[thread] = {'uri' => thread, Label => title} if rdf
+      graph[thread] = {'uri' => thread, Label => title} if rdf
       graph[group] ||= {'uri' => group}
       graph[group][Type] = [R[LDP+'BasicContainer']]
       graph[group][LDP+'contains'] ||= []
