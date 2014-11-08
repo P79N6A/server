@@ -218,6 +218,7 @@ class R
   View['base']= -> d,e {[d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
 
   ViewA['base']= -> r,e {[r.html, H.once(e, 'base', H.css('/css/html',true))]}
+  ViewGroup['base'] = -> g,e {g.map{|u,r|ViewA['base'][r,e]}}
 
   ViewA[SIOC+'Content'] = -> r,e {r[Content].do{|c|{_: :p, c: c}}}
 

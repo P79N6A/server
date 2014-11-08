@@ -122,10 +122,12 @@ class R
 
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
-    yield uri+'#',Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] if size < 1e5
+    yield uri, Type, R[SIOCt+'SourceCode']
+    yield uri,Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] if size < 1e5
   rescue
     nil
   end
+  ViewGroup[SIOCt+'SourceCode'] = ViewGroup['base']
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
  desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript
