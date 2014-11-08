@@ -43,7 +43,7 @@ class R
                        e[k].html
                      end
                    when LDP+'contains'
-                     e[k].justArray.sort.map(&:html).intersperse " "
+                     e[k].justArray.sort_by(&:maybeURI).map(&:html).intersperse " "
                    else
                      e[k].html
                    end}}}}]},
