@@ -22,6 +22,6 @@ td.val > a[id] {
     background-color: #4478FF;
     color: #fff;
 }
-tr > td.val {max-width: 80ex}
+tr > td.val {max-width: 127ex;overflow:hidden}
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
 .q { background-color: #000;color: #fff; padding:.1em}
