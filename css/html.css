@@ -3,6 +3,17 @@ pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block;margin-bottom: .38em}
 td.key {text-align:right}
+td.key > a {
+    font-weight: bold;
+    background-color: #fff;
+    color: #000;
+}
+td.val > a[id] {
+    border-width:0;
+    font-weight: normal;
+    background-color: #000;
+    color: #fff;
+}
 td.val > a, td.val a[rel=untyped] {
     font-weight: normal;
     color: #fff;
@@ -11,17 +22,6 @@ td.val > a, td.val a[rel=untyped] {
     border-radius: .16em;
     padding: .05em .18em .05em .18em;
 }
-td.key > a, td.val > a[id] {
-    font-weight: bold;
-    background-color: #fff;
-    color: #000;
-}
-td.val > a[id] {
-    border-width:0;
-    font-weight: normal;
-    background-color: #4478FF;
-    color: #fff;
-}
-tr > td.val {max-width: 127ex;overflow:hidden}
+tr > td.val {max-width: 80ex}
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
 .q { background-color: #000;color: #fff; padding:.1em}

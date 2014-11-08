@@ -4,12 +4,8 @@ svg {
     left: 0;
     z-index: -1;
 }
-
-table.html {
-    clear: both;
-    float:right;
-}
-
+body {text-align:right}
+table.html {text-align:left}
 .link {
     fill: none;
     stroke: #333;
