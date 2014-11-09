@@ -130,7 +130,7 @@ class Hash
     self[R::Type].justArray.map(&:maybeURI).compact
   end
 
-  def to_RDF # graph (Hash) -> graph (RDF)
+  def toRDF # graph (Hash) -> graph (RDF)
     graph = RDF::Graph.new
     triples{|s,p,o|
       s = RDF::URI s

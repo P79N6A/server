@@ -74,7 +74,7 @@ class R
         if rdf
           if @r[:container]
             hash_graph[]
-            graph = m.to_RDF
+            graph = m.toRDF
           else
             graph = RDF::Graph.new
             graph << (RDF::Statement.new R['..'],R[Type],R[Stat+'Directory']) if @r[:filemeta] && path != '/'

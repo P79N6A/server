@@ -23,11 +23,7 @@ class R
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
     e.condResponse ->{
-      if Render[r.format]
-        Render[r.format][m,r]
-      else
-        m.to_RDF.dump (RDF::Writer.for :content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes
-      end}}
+      Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   def mail; Mail.read node if f end
 
