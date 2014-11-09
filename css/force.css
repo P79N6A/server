@@ -32,3 +32,5 @@ text {
     font: .88em sans-serif;
     pointer-events: none;
 }
+
+tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://rdfs.org/sioc/ns#has_parent"],tr[property="http://rdfs.org/sioc/ns#reply_of"], tr[property="http://purl.org/dc/terms/hasFormat"] {display:none}

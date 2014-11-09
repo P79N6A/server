@@ -1,8 +1,4 @@
-pre.mail { max-width: 80em }
-
-tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"],tr[property= "http://www.w3.org/ns/posix/stat#mtime"],tr[property="http://www.w3.org/ns/posix/stat#size"],tr[property="http://purl.org/dc/terms/identifier"],tr[property="http://rdfs.org/sioc/ns#has_parent"],tr[property="http://rdfs.org/sioc/ns#reply_of"], tr[property="http://purl.org/dc/terms/hasFormat"], tr[property="http://purl.org/dc/terms/title"] {display:none}
-tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width: 80ex}
-
+pre.mail {background-color:#fff;color:#000}
 pre.mail .q[depth="1"] {background-color:#000;color:#fff}
 pre.mail .q[depth="2"] {background-color:#016;color:#fff}
 pre.mail .q[depth="3"] {background-color:#06f;color:#fff}
@@ -12,6 +8,3 @@ pre.mail .q[depth="6"] {background-color:#0ff;color:#000}
 pre.mail .q[depth="7"] {background-color:#8ff;color:#000}
 pre.mail .q[depth="8"] {background-color:#fff500;color:#000}
 pre.mail .q[depth="9"] {background-color:#4fc;color:#000}
-
-pre.mail a{background-color:#ef3}
-img {max-width:100%}
