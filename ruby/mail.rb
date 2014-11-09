@@ -69,10 +69,7 @@ class R
     if m.date
       date = m.date.to_time
       yield e, Date, date.utc.iso8601 
-      yield e, Stat+'mtime', date.to_i
     end
-
-    yield e, Stat+'size', size
 
     m.subject.do{|s| # subject
       s = s.to_utf8
