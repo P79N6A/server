@@ -19,17 +19,10 @@ class R
         yield t.uri, Stat+'mtime', mtime
         yield t.uri, Stat+'size', 0}
 
-    else
-      resource = URI.escape stripDoc.uri
-      if resource != file
-        yield resource, Type, Resource
-        yield resource, Stat+'mtime', mtime.to_i
-        yield resource, Stat+'size', size
-      else
-        yield file, Type, R[Stat+'File']
-        yield file, Stat+'mtime', mtime.to_i
-        yield file, Stat+'size', size
-      end
+    elsif URI.escape(stripDoc.uri) == file
+      yield file, Type, R[Stat+'File']
+      yield file, Stat+'mtime', mtime.to_i
+      yield file, Stat+'size', size
     end
   end
 
