@@ -135,7 +135,7 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['base'][r,e],
+  ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e],
                                         H.once(e, 'mail', H.css('/css/mail',true))]}
 
   IndexMail = ->doc,graph,host { # link message to address index(es)

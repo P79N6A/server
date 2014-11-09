@@ -186,7 +186,6 @@ class R
       ]}
 
   DefaultView = -> d,e {
-    e[:Graph] = d
     groups = {}
     seen = {}
     d.map{|u,r| # group resources on RDF class
@@ -196,13 +195,11 @@ class R
           groups[v][u] = r
           seen[u] = true
         end}} if e[:container]
-    ls = View['ls']
-    [groups.map{|view,graph|view[graph,e] if view!=ls}, # groups
-     groups[ls].do{|g|ls[g,e]},
+    [groups.map{|view,graph|view[graph,e]}, # groups
      d.map{|u,r|
        if !seen[u]
          type = r.types.find{|t|ViewA[t]}
-         ViewA[type ? type : 'base'][r,e]
+         ViewA[type ? type : 'default'][r,e]
        end}]}
 
   Summarize = -> g,e { # data-reduction functions per RDF type
@@ -215,25 +212,21 @@ class R
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}}
 
-  View['base']= -> d,e {[d.values.map(&:html), H.once(e, 'base', H.css('/css/html',true))]}
+  ViewA['default']= -> r,e {[r.html, H.once(e, 'default', H.css('/css/html',true))]}
 
-  ViewA['base']= -> r,e {[r.html, H.once(e, 'base', H.css('/css/html',true))]}
-  ViewGroup['base'] = -> g,e {g.map{|u,r|ViewA['base'][r,e]}}
+  ViewGroup['default'] = -> g,e {g.map{|u,r|ViewA['default'][r,e]}}
 
-  ViewA[SIOC+'Content'] = -> r,e {r[Content].do{|c|{_: :p, c: c}}}
+  ViewA[SIOC+'Content'] = -> r,e {r[Content]}
 
   ViewA[LDP+'BasicContainer'] = -> r,e {
     re = r.R
     [(H.once e, 'container', (H.css '/css/container')),
      {class: 'basicC', style: "background-color: #{R.cs}",
-      c: [{_: :a, c: e[:Graph][re.uri].do{|r|r[Label]} || re.abbr, href: r.uri},
+      c: [{_: :a, c: r[Label] || re.abbr, href: re.uri},
           r[LDP+'contains'].do{|c|
-            ['<br>', c.map{|r| c = r.R
-              label = e[:Graph][c.uri].do{|r|r[Label]} ||
-                      (r.class == Hash && (r[Label]||r[Title]))
-              {_: :a, href: c.uri, class: :member, c: label ? [label.justArray[0].to_s.hrefs,"<br>"] : [c.abbr, " "]}}]}]}]}
-
-  ViewGroup[LDP+'BasicContainer'] = -> r,e {r.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
+            c.map{|r|
+              label = r.class == Hash && (r[Label] || r[Title])
+              {_: :a, href: r.R.uri, class: :member, c: label ? [label.justArray[0].to_s.hrefs,"<br>"] : [r.R.abbr, " "]}}}]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},

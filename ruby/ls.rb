@@ -4,7 +4,7 @@ class R
 
   View['ls'] = ->d=nil,e=nil {
     mtime = Stat+'mtime'
-    keys = [ Stat+'size', 'uri', Type, mtime, LDP+'contains' ]
+    keys = [Stat+'size', 'uri', Type, mtime, LDP+'contains']
     path = e['REQUEST_PATH']
     asc = e.q.has_key? 'asc'
     sort = e.q['sort'].do{|p|p.expand} || mtime
@@ -19,6 +19,7 @@ class R
               property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
           entries.map{|e| # entries
             types = e.types
+            container = types.include?(LDP+'BasicContainer')
             directory = types.include?(Stat+'Directory')
             file = types.include?(Stat+'File')
             re = file ? e.R.stripDoc.a('.html') : e.R
@@ -27,11 +28,11 @@ class R
                {_: :td, property: k, class: (k == sort ? 'this' : 'that'),
                 c: case k
                    when 'uri'
-                     (file ? re : e.R).href(e[Title] || URI.unescape(e.R.abbr))
+                     (file ? re : e.R).href(e[Label] || e[Title] || URI.unescape(e.R.abbr))
                    when mtime
                      e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                    when Type
-                     if directory
+                     if directory || container
                        {_: :a, class: :dir, href: e.uri, c: '►'}
                      elsif types.include?(DC+'Image')
                        ShowImage[e.uri]

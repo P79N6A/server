@@ -127,7 +127,8 @@ class R
   rescue
     nil
   end
-  ViewGroup[SIOCt+'SourceCode'] = ViewGroup['base']
+
+  ViewGroup[SIOCt+'SourceCode'] = ViewGroup['default']
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
  desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript
