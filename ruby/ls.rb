@@ -11,7 +11,8 @@ class R
     sortType = [mtime,Stat+'size'].member?(sort) ? :to_i : :to_s
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
 
-    entries.size==1 && entries[0].uri=='..' && {_: :a, href: '..', style: 'float: left;font-size: 3.3em;text-decoration: none', c: '&uarr;'} ||
+    entries.size==1 && entries[0].uri=='..' &&
+    {_: :a, href: '..', style: 'background-color:#000;color:#fff;margin: 0 .2em .2em 0;float: left;font-size: 2.8em;text-decoration: none', c: '&uarr;'} ||
     [{_: :a, class: :warp, href: e.warp, c: '/'},
      {_: :a, class: :tabulate, href: '?view=tabulate', c: {_: :img, style: 'margin:.4em',src: '/css/misc/cube.png'}},
      {_: :table, class: :ls,
