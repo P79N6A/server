@@ -50,6 +50,6 @@ class R
                    end}}}}]},
      (H.css '/css/ls', true),
      (H.js '/js/ls', true),
-     ({_: :style, c: "table.ls {width: 100%}"} if e.q['view']=='ls')]}
+    ]}
 
 end

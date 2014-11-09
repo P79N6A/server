@@ -9,10 +9,6 @@ end
 
 class R
 
-  View['warp'] = ->graph, env {
-    [{_: :noscript, c: View['ls'][graph, env]},
-     {_: :script, c: "document.location.href = '#{env.warp}';"}]}
-
   View['tabulate'] = ->d=nil,e=nil {
     src = '//linkeddata.github.io/tabulator/'
     [(H.css src + 'tabbedtab'),
