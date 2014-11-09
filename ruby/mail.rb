@@ -157,19 +157,23 @@ class R
     weight = {}
     g.values.map{|p| # statistics
       graph.delete p.uri
-      p[Title].do{|t|threads[t[0].sub(/\b[rR][eE]: /,'')] ||= p} # unique subjects
+      p[Title].do{|t|
+        title = t[0].sub /\b[rR][eE]: /, ''
+        threads[title] ||= p
+        threads[title][:size] ||= 0
+        threads[title][:size]  += 1
+      }
       p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
       p[To].justArray.map(&:maybeURI).map{|a| # weigh target-addresses
         weight[a] ||= 0; weight[a] += 1; graph.delete a}}
     threads.map{|title,post| # cluster
-      post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].do{|a|
-        addr = a.R
+      post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].do{|a| addr = a.R
         thread = '/thread/'+post.R.basename                      # thread
         graph[thread] = {'uri' => thread, Label => title} if rdf
         c = addr.dir.child(post[Date][0][0..6].sub('-','/')).uri # thread container
         graph[c] ||= {'uri' => c, Type => R[LDP+'BasicContainer'], Label => addr.fragment}
         graph[c][LDP+'contains'] ||= []
-        graph[c][LDP+'contains'].push({'uri' => thread, Title => title})
+        graph[c][LDP+'contains'].push({'uri' => thread, Title => title, Stat+'size' => post[:size] })
       }}}
 
 end

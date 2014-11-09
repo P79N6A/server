@@ -222,11 +222,17 @@ class R
     re = r.R
     [(H.once e, 'container', (H.css '/css/container')),
      {class: 'basicC', style: "background-color: #{R.cs}",
-      c: [{_: :a, c: r[Label] || re.abbr, href: re.uri},
+      c: [{_: :a, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
-            c.map{|r|
-              label = r.class == Hash && (r[Label] || r[Title])
-              {_: :a, href: r.R.uri, class: :member, c: label ? [label.justArray[0].to_s.hrefs,"<br>"] : [r.R.abbr, " "]}}}]}]}
+            [c.size > 1 && '<br>',
+             c.sort_by{|i|i.class == Hash && i[Stat+'size'] || 0}.reverse.map{|r|
+               label = r.class == Hash && (r[Label] || r[Title])
+               {_: :a, href: r.R.uri,
+                class: :member,
+                c: [r.class == Hash && r[Stat+'size'].do{|s|
+                      s > 1 && {_: :b, c: [s,' ']}},
+                    label ? [label.justArray[0].to_s.hrefs,"<br>"] : [r.R.abbr, " "]]}}]
+          }]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
