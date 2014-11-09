@@ -174,6 +174,8 @@ class R
         graph[c] ||= {'uri' => c, Type => R[LDP+'BasicContainer'], Label => addr.fragment}
         graph[c][LDP+'contains'] ||= []
         graph[c][LDP+'contains'].push({'uri' => thread, Title => title, Stat+'size' => post[:size] })
-      }}}
+      }}
+    e[:filemeta] = false
+  }
 
 end

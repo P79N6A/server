@@ -67,21 +67,17 @@ class R
       else
         hash_graph = -> {
           m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
-          set.map{|r|r.setEnv(@r).fileToGraph m} # load graph
-          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
-          Summarize[m,@r] if @r[:container]}
-
+          set.map{|r|r.setEnv(@r).fileToGraph m}
+          Summarize[m,@r] if @r[:container]
+          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]}
         if rdf
           if @r[:container]
             hash_graph[]
             graph = m.toRDF
           else
             graph = RDF::Graph.new
-            graph << (RDF::Statement.new R['..'],R[Type],R[Stat+'Directory']) if @r[:filemeta] && path != '/'
-            set.map{|f|f = f.setEnv(@r)
-              f.justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}
-              f.fromStreamRDF graph, :triplrInode if @r[:filemeta]
-            }
+            set.map{|f|
+              f.setEnv(@r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
           end
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => self, :standard_prefixes => true, :prefixes => Prefixes
