@@ -9,17 +9,14 @@ module Th
   def selectFormat
     { '.html' => 'text/html',
       '.json' => 'application/json',
-      '.jsonld' => 'application/ld+json',
       '.nt' => 'text/plain',
       '.n3' => 'text/n3',
-      '.rdf' => 'application/rdf+xml',
       '.ttl' => 'text/turtle',
-    }[File.extname(self['REQUEST_PATH'])].do{|mime|
-      return mime}
+    }[File.extname(self['REQUEST_PATH'])].do{|mime| return mime}
 
-    accept.sort.reverse.map{|q,mimes| # Accept in descending q-value
+    accept.sort.reverse.map{|q,mimes| # MIMES by descending q-value
       mimes.map{|mime|
-        return mime if RDF::Writer.for(:content_type => mime) || R::Render[mime]}}
+        return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}}
 
     'text/html'
   end

@@ -108,32 +108,6 @@ class R
     doc
   end
 
-  # graph -> RDF format (generic)
-  def R.renderRDF d,f
-    (RDF::Writer.for f).buffer{|w| # init writer
-      d.triples{|s,p,o|            # structural triples of Hash::Graph
-        s && p && o &&             # all fields non-nil
-        (s = RDF::URI s            # subject-URI
-         p = RDF::URI p            # predicate-URI
-         o = (if [R,Hash].member? o.class
-                RDF::URI o.uri     # object URI ||
-              else                 # object Literal
-                l = RDF::Literal o
-                l.datatype=RDF.XMLLiteral if p == Content
-                l
-              end) rescue nil
-         (w << (RDF::Statement.new s,p,o) if o) rescue nil)}}
-  end
-
-  # graph -> RDF format (MIME)
-  [['application/ld+json',:jsonld],
-   ['application/rdf+xml',:rdfxml],
-   ['text/plain',:ntriples],
-   ['text/turtle',:turtle],
-   ['text/n3',:n3]].
-    map{|mime|
-    Render[mime[0]] = ->graph,env{R.renderRDF graph, mime[1]}}
-
 end
 
 class Hash

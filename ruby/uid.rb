@@ -71,7 +71,12 @@ class R
     u = r.user.uri
     m = {u => {'uri' => u, Type => R[FOAF+'Person']}}
     r[:Response]['ETag'] = u.h
-    e.condResponse ->{Render[r.format][m,r]}}
+    e.condResponse ->{
+      if Render[r.format]
+        Render[r.format][m,r]
+      else
+        m.to_RDF.dump (RDF::Writer.for :content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes
+      end}}
 
   GET['/login'] = -> e,r {
     uid = r.user.uri

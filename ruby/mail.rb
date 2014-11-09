@@ -16,16 +16,18 @@ class R
   GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil}
   
   GET['/thread'] = -> e,r {
-    puts 'thread',r.format,r['HTTP_ACCEPT']
-    return [406,{},[]] unless Render[r.format]
-    m = {} # graph
-    R[MessagePath[e.basename]].walk SIOC+'reply_of', m # find graph
+    m = {}
+    R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
-    m['#'] = { 'uri' => e.uri, Type => R[SIOC+'Thread']}
     v = r.q['view'] ||= 'force'  # visualize references
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
-    e.condResponse ->{Render[r.format][m,r]}}
+    e.condResponse ->{
+      if Render[r.format]
+        Render[r.format][m,r]
+      else
+        m.to_RDF.dump (RDF::Writer.for :content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes
+      end}}
 
   def mail; Mail.read node if f end
 
