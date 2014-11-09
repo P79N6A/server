@@ -1,5 +1,6 @@
 a {text-decoration: none}
 pre {white-space: pre-wrap}
+pre, tr > td.val {max-width: 80ex}
 img {max-width: 100%}
 table.html {display: inline-block;margin-bottom: .38em}
 td.key {text-align:right}
@@ -22,6 +23,5 @@ td.val > a, td.val a[rel=untyped] {
     border-radius: .16em;
     padding: .05em .18em .05em .18em;
 }
-tr > td.val {max-width: 80ex}
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
-.q { background-color: #000;color: #fff; padding:.1em}
+

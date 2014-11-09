@@ -1,11 +1,18 @@
+body {
+    text-align:right;
+}
+
+table.html {
+    text-align:left;
+}
+
 svg {
     position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
 }
-body {text-align:right}
-table.html {text-align:left}
+
 .link {
     fill: none;
     stroke: #333;
