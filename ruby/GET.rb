@@ -2,7 +2,6 @@
 class R
 
   def GET
-    1 / 0
     if file?
       fileGET
     elsif justPath.file?

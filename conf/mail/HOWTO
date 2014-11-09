@@ -1,0 +1,8 @@
+locally paths are used, for host-agnosticity and shorter names,
+
+so these paths must be linked into a hostname's space to be made live:
+
+cd domain/localhost/
+ln -s ../../address ../../msg .
+
+message/rfc822 files can go where you want (browse them to parse/index)
