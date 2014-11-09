@@ -233,17 +233,13 @@ class R
      u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;']}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 
-  View['audio'] = ->d,e {
-    [(H.once e, :audio,
-      (H.js '/js/audio'), (H.css '/css/audio'),
-      (H.once e, :mu, (H.js '/js/mu')),
+  %w{aif wav mpeg mp3 mp4}.map{|a|
+    ViewA[MIMEtype+'audio/'+a] = ->r,e {
+    [(H.once e, :audio, (H.js '/js/audio'), (H.css '/css/audio'),
+     (H.once e, :mu, (H.js '/js/mu')),
       {id: :info, target: :_blank, _: :a},
       {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true},
       {id: :jump, c: '&rarr;'}, {id: :rand, c: :rand, on: 1}),
-     d.map{|u,_|
-       {_: :a, class: :track, href: u, c: u.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}}]}
-
-  %w{aif wav mpeg mp4}.map{|a|
-    ViewGroup[MIMEtype+'audio/'+a]=View['audio']}
+     {_: :a, class: :track, href: r.uri, c: r.uri.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}]}}
 
 end
