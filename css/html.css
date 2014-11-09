@@ -1,6 +1,5 @@
 a {text-decoration: none}
 pre {white-space: pre-wrap}
-pre, tr > td.val {max-width: 80ex}
 img {max-width: 100%}
 table.html {display: inline-block;margin-bottom: .38em}
 td.key {text-align:right}

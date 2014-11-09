@@ -166,11 +166,9 @@ class R
     threads.map{|title,post| # cluster
       post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].do{|a|
         addr = a.R
-        # thread
-        thread = '/thread/'+post.R.basename
+        thread = '/thread/'+post.R.basename                      # thread
         graph[thread] = {'uri' => thread, Label => title} if rdf
-        # thread container
-        c = addr.dir.child(post[Date][0][0..6].sub('-','/')).uri
+        c = addr.dir.child(post[Date][0][0..6].sub('-','/')).uri # thread container
         graph[c] ||= {'uri' => c, Type => R[LDP+'BasicContainer'], Label => addr.fragment}
         graph[c][LDP+'contains'] ||= []
         graph[c][LDP+'contains'].push({'uri' => thread, Title => title})
