@@ -2,7 +2,7 @@
 #watch __FILE__
 class R
 
-  View['ls'] = ->d=nil,e=nil {
+  ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = ->d=nil,e=nil {
     mtime = Stat+'mtime'
     keys = [Stat+'size', 'uri', Type, mtime, LDP+'contains']
     path = e['REQUEST_PATH']
@@ -51,9 +51,5 @@ class R
      (H.css '/css/ls', true),
      (H.js '/js/ls', true),
      ({_: :style, c: "table.ls {width: 100%}"} if e.q['view']=='ls')]}
-
-  ViewGroup[Stat+'Directory'] = View['ls']
-  ViewGroup[Stat+'File']      = View['ls']
-  ViewGroup[RDFs+'Resource']  = View['ls']
 
 end
