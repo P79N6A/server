@@ -10,16 +10,14 @@ class R
     sort = e.q['sort'].do{|p|p.expand} || mtime
     sortType = [mtime,Stat+'size'].member?(sort) ? :to_i : :to_s
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
-
-    entries.size==1 && entries[0].uri=='..' &&
-    {_: :a, href: '..', style: 'background-color:#000;color:#fff;margin: 0 .2em .2em 0;padding:0 .11em 0 .11em;float: left;font-size: 2.8em;text-decoration: none', c: '&uarr;'} ||
-    [{_: :a, class: :warp, href: e.warp, c: '/'},
-     {_: :a, class: :tabulate, href: '?view=tabulate', c: {_: :img, style: 'margin:.4em',src: '/css/misc/cube.png'}},
-     {_: :table, class: :ls,
-      c: [{_: :tr, c: keys.map{|k| # header row
+    up = {_: :a, href: '..', c: '&uarr;', style: 'background-color:#000;color:#fff;margin: 0 .2em .2em 0;padding:0 .11em 0 .11em;float: left;font-size: 2.8em;text-decoration: none'}
+    justUp = entries.size == 1 && entries[0].uri == '..'
+    justUp && up ||
+      [{_: :table, class: :ls,
+        c: [{_: :tr, c: keys.map{|k| # header-row
              {_: :th, class: (k == sort ? 'this' : 'that'),
               property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
-          entries.map{|e| # entries
+          entries.map{|e|
             types = e.types
             container = types.include?(LDP+'BasicContainer')
             directory = types.include?(Stat+'Directory')
@@ -50,8 +48,6 @@ class R
                    else
                      e[k].html
                    end}}}}]},
-     (H.css '/css/ls', true),
-     (H.js '/js/ls', true),
-    ]}
+     (H.css '/css/ls',true), (H.js '/js/ls',true)]}
 
 end
