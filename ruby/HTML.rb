@@ -221,7 +221,7 @@ class R
   ViewA[LDP+'BasicContainer'] = -> r,e {
     re = r.R
     [(H.once e, 'container', (H.css '/css/container')),
-     {class: 'basicC', style: "background-color: #{R.cs}",
+     {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             [c.size > 1 && '<br>',
