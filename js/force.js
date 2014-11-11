@@ -24,7 +24,8 @@ var svg = d3.select("body").append("svg")
     .attr("width", 1024)
     .attr("height", 768);
 
-d3.select("body").on("click", function(e){
+/*
+d3.select("body").on("click", function(e){ // toggle SVG focus
     var s = document.querySelector('svg')
     if(s.style.zIndex == 2){
         s.style.zIndex = -1
@@ -32,7 +33,7 @@ d3.select("body").on("click", function(e){
         s.style.zIndex = 2
     }
 });
-
+*/
 
 
 svg.append('svg:defs').append('svg:marker')
