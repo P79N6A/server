@@ -29,10 +29,13 @@ class R
 
   def triplrMail &b
     m = mail; return unless m                        # mail
-    id = m.message_id || m.resent_message_id rescue nil
-    return unless id                                 # message-ID
+    id = m.message_id || m.resent_message_id
+    unless id
+      puts "warning: no Message-ID field in #{uri}"
+      id = rand.to_s.h
+    end
 
-    e = MessagePath[id]                              # message URI
+    e = MessagePath[id]                              # message-ID -> URI
 
     [R[SIOCt+'MailMessage'], R[SIOC+'Post']].        # SIOC types
       map{|t|yield e, Type, t}
