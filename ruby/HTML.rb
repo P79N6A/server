@@ -225,10 +225,10 @@ class R
     sortType = [size].member?(sort) ? :to_i : :to_s
     [(H.once e, 'container', (H.css '/css/container')),
      {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
-      c: [{_: :a, c: r[Label] || re.abbr, href: re.uri}, ' ',
+      c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             [c.size > 1 &&
-             [c.size > 2 && {_: :a, style: 'float: right', c: '↨', href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')},
+             [c.size > 2 && {_: :a, class: :sort, style: 'float: right', c: '↨', href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')},
               '<br>'],
              c.sort_by{|i|(i.class == Hash && i[sort].justArray[0] || 0).send sortType}.reverse.map{|r|
                label = r.class == Hash && (r[Label] || r[Title])
