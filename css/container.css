@@ -42,3 +42,8 @@
     background-color: #fff;
     color: #000;
 }
+
+.basicC a.member:visited {
+    color: #fff;
+    background-color: #bbb;
+}
