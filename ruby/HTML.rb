@@ -247,9 +247,10 @@ class R
                 class: :member,
                 c: [r.class == Hash && r[size].do{|s|
                       s > 1 && {_: :b, c: [s,' ']}},
-                    label ? [label.justArray[0].to_s.hrefs,
-#                             {_: :span, style: 'color: #fff;float: right',c: r[Date]},
-                             "<br>"] : [r.R.abbr, " "]]}}]}]}]}
+                    label ? [
+                      ([r[Date],' '] if sort==Date),
+                      label.justArray[0].to_s.hrefs,
+                      "<br>"] : [r.R.abbr, " "]]}}]}]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
