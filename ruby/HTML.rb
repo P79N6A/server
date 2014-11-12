@@ -220,12 +220,14 @@ class R
 
   ViewA[LDP+'BasicContainer'] = -> r,e {
     re = r.R
+    sort = e.q['sort'].do{|p|p.expand} || (Stat+'size')
+    sortType = [Stat+'size'].member?(sort) ? :to_i : :to_s
     [(H.once e, 'container', (H.css '/css/container')),
      {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             [c.size > 1 && '<br>',
-             c.sort_by{|i|i.class == Hash && i[Stat+'size'] || 0}.reverse.map{|r|
+             c.sort_by{|i|(i.class == Hash && i[sort].justArray[0] || 0).send sortType}.reverse.map{|r|
                label = r.class == Hash && (r[Label] || r[Title])
                {_: :a, href: r.R.uri,
                 class: :member,
