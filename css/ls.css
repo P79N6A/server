@@ -20,8 +20,6 @@ table.ls th[property='uri'], table.ls td[property='uri'], table.ls td[property='
 }
 
 table.ls td {
-    max-width: 48em;
-    overflow: hidden;
     vertical-align: bottom;
 }
 

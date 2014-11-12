@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 
 def H _ # HTML as Ruby literal-values
   case _

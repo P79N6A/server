@@ -1,3 +1,4 @@
+
 .basicC {
     font-family: sans-serif;
     display: inline-block;
@@ -17,12 +18,16 @@
     background-color: #333;
     color: #fff;
 }
+
 .basicC a.sort {
     font-size: 1.2em;
-    color: #888;
+    color: #777;
     background-color: #fff;
     border-radius: .1em;
 }
+
+.basicC a.sort:hover { color: #000; }
+
 .basicC a.member {
     white-space: nowrap;
     background-color: #fff;
