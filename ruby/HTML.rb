@@ -238,7 +238,7 @@ class R
             sized = c.find{|r|r.class == Hash && r[size].do{|s|s > 1}}
             [c.size > 1 &&
              [c.size > 2 && H.once(e,:sort,{_: :a, class: :sort,
-                                            style: 'float: right', c: sort.shorten + ' ↨',
+                                            style: 'float: right', c: sort.shorten.split(':')[-1] + ' ↨',
                                             href: re.uri+'?sort=' + sort_, title: sort_}),'<br>'],
              c.sort_by{|i|
                (i.class == Hash && i[sort].justArray[0] || 0).send sortType}.
