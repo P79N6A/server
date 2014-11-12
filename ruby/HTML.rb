@@ -228,9 +228,9 @@ class R
       c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             [c.size > 1 &&
-             [c.size > 2 && {_: :a, class: :sort,
+             [c.size > 2 && H.once(e,:sort,{_: :a, class: :sort,
                              style: 'float: right', c: sort.shorten + ' ↨',
-                             href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')},
+                             href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')}),
               '<br>'],
              c.sort_by{|i|(i.class == Hash && i[sort].justArray[0] || 0).send sortType}.reverse.map{|r|
                label = r.class == Hash && (r[Label] || r[Title])
