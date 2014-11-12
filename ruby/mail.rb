@@ -157,7 +157,6 @@ class R
             doc.ln target }}}}}
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
-    rdf = !(NonRDF.member? e.format)
     threads = {}
     weight = {}
     g.values.map{|p| # statistics
@@ -172,13 +171,21 @@ class R
       p[To].justArray.map(&:maybeURI).map{|a| # weigh target-addresses
         weight[a] ||= 0; weight[a] += 1; graph.delete a}}
     threads.map{|title,post| # cluster
-      post[To].justArray.map(&:maybeURI).sort_by{|a|weight[a]}[-1].do{|a| addr = a.R
-        thread = '/thread/'+post.R.basename                      # thread
-        graph[thread] = {'uri' => thread, Label => title} if rdf
-        c = addr.dir.child(post[Date][0][0..6].sub('-','/')).uri # thread container
-        graph[c] ||= {'uri' => c, Type => R[LDP+'BasicContainer'], Label => addr.fragment}
+      post[To].justArray.select(&:maybeURI).
+        sort_by{|a|weight[a.uri]}[-1].do{|a| addr = a.R
+        thread = '/thread/'+post.R.basename                      # thread URI
+        c = addr.dir.child(post[Date][0][0..6].sub('-','/')).uri # container URI
+        graph[c] ||= {'uri' => c,                                # container Resource
+                      Type => R[LDP+'BasicContainer'],
+                      Label => addr.fragment}
+
+        item = {'uri' => thread,                                 # contained Resource
+                Title => title,
+                Stat+'size' => post[:size]}
+        post[Date].justArray[0].do{|date| item[Date] = date}
+
         graph[c][LDP+'contains'] ||= []
-        graph[c][LDP+'contains'].push({'uri' => thread, Title => title, Stat+'size' => post[:size] })
+        graph[c][LDP+'contains'].push item
       }}
     e[:filemeta] = false
   }

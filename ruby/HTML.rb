@@ -229,8 +229,8 @@ class R
           r[LDP+'contains'].do{|c|
             [c.size > 1 &&
              [c.size > 2 && H.once(e,:sort,{_: :a, class: :sort,
-                             style: 'float: right', c: sort.shorten + ' ↨',
-                             href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')}),
+                                            style: 'float: right', c: sort.shorten + ' ↨',
+                                            href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')}),
               '<br>'],
              c.sort_by{|i|(i.class == Hash && i[sort].justArray[0] || 0).send sortType}.reverse.map{|r|
                label = r.class == Hash && (r[Label] || r[Title])
@@ -238,7 +238,9 @@ class R
                 class: :member,
                 c: [r.class == Hash && r[size].do{|s|
                       s > 1 && {_: :b, c: [s,' ']}},
-                    label ? [label.justArray[0].to_s.hrefs,"<br>"] : [r.R.abbr, " "]]}}]
+                    label ? [label.justArray[0].to_s.hrefs,
+                             {_: :span, style: 'color: #fff;float: right',c: r[Date]},
+                             "<br>"] : [r.R.abbr, " "]]}}]
           }]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
