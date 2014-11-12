@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 def H _ # HTML as Ruby literal-values
   case _
@@ -220,18 +220,21 @@ class R
 
   ViewA[LDP+'BasicContainer'] = -> r,e {
     re = r.R
-    sort = e.q['sort'].do{|p|p.expand} || (Stat+'size')
-    sortType = [Stat+'size'].member?(sort) ? :to_i : :to_s
+    size = Stat + 'size'
+    sort = e.q['sort'].do{|p|p.expand} || size
+    sortType = [size].member?(sort) ? :to_i : :to_s
     [(H.once e, 'container', (H.css '/css/container')),
      {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
-            [c.size > 1 && '<br>',
+            [c.size > 1 &&
+             [c.size > 2 && {_: :a, style: 'float: right', c: '↨', href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')},
+              '<br>'],
              c.sort_by{|i|(i.class == Hash && i[sort].justArray[0] || 0).send sortType}.reverse.map{|r|
                label = r.class == Hash && (r[Label] || r[Title])
                {_: :a, href: r.R.uri,
                 class: :member,
-                c: [r.class == Hash && r[Stat+'size'].do{|s|
+                c: [r.class == Hash && r[size].do{|s|
                       s > 1 && {_: :b, c: [s,' ']}},
                     label ? [label.justArray[0].to_s.hrefs,"<br>"] : [r.R.abbr, " "]]}}]
           }]}]}

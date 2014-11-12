@@ -4,6 +4,7 @@
     border-radius:0 1em .8em .6em;
     padding: .3em;
     margin: .3em;
+    max-width: 100%;
 }
 
 .basicC a {
