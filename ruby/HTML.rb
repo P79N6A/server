@@ -223,6 +223,14 @@ class R
     size = Stat + 'size'
     sort = e.q['sort'].do{|p|p.expand} || size
     sortType = [size].member?(sort) ? :to_i : :to_s
+    sort_ = case sort
+            when size
+              'dc:title'
+            when Title
+              'dc:date'
+            else
+              'stat:size'
+            end
     [(H.once e, 'container', (H.css '/css/container')),
      {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
@@ -230,18 +238,18 @@ class R
             [c.size > 1 &&
              [c.size > 2 && H.once(e,:sort,{_: :a, class: :sort,
                                             style: 'float: right', c: sort.shorten + ' ↨',
-                                            href: re.uri+'?sort=' + (sort==size ? 'dc:title' : 'stat:size')}),
-              '<br>'],
-             c.sort_by{|i|(i.class == Hash && i[sort].justArray[0] || 0).send sortType}.reverse.map{|r|
+                                            href: re.uri+'?sort=' + sort_}),'<br>'],
+             c.sort_by{|i|
+               (i.class == Hash && i[sort].justArray[0] || 0).send sortType}.
+               reverse.map{|r|
                label = r.class == Hash && (r[Label] || r[Title])
                {_: :a, href: r.R.uri,
                 class: :member,
                 c: [r.class == Hash && r[size].do{|s|
                       s > 1 && {_: :b, c: [s,' ']}},
                     label ? [label.justArray[0].to_s.hrefs,
-                             {_: :span, style: 'color: #fff;float: right',c: r[Date]},
-                             "<br>"] : [r.R.abbr, " "]]}}]
-          }]}]}
+#                             {_: :span, style: 'color: #fff;float: right',c: r[Date]},
+                             "<br>"] : [r.R.abbr, " "]]}}]}]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}]}},
