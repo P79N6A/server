@@ -182,7 +182,7 @@ class R
         item = {'uri' => thread,                                 # contained Resource
                 Title => title,
                 Stat+'size' => post[:size]}
-        post[Date].justArray[0].do{|date| item[Date] = date}
+        post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
 
         graph[c][LDP+'contains'] ||= []
         graph[c][LDP+'contains'].push item

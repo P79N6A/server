@@ -10,6 +10,8 @@ body {margin: 0;padding:0}
 table.ls {
     font-family: sans-serif;
     float:left;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 table.ls th {padding-right: .2em}
@@ -23,6 +25,8 @@ table.ls td {
     vertical-align: bottom;
 }
 
+.nowrap {white-space: nowrap}
+
 table.ls td[property='uri'] {
     background-color:#282828;
     color: #fff;
@@ -34,12 +38,13 @@ table.ls td[property='uri'] {
 table.ls td[property='uri'] a {color: #fff}
 table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'],table.ls td[property='uri'] {white-space:nowrap}
 
-table.ls td[property='http://www.w3.org/ns/ldp#contains'] > a {
+table.ls td[property='http://www.w3.org/ns/ldp#contains'] a {
     background-color: #102F66;
     color: #fff;
     padding: 0 .16em 0 .16em;
     border-radius: .18em;
 }
+table.ls td[property='http://www.w3.org/ns/ldp#contains'] a:hover {background-color: #fff; color: #102F66 }
 
 table.ls a { color: #102F66; font-size: 1.2em; }
 table.ls th.this {background-color: #aaa; border-radius: .2em .2em 0 0; padding-left: .2em}

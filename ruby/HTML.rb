@@ -235,18 +235,19 @@ class R
      {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
+            sized = c.find{|r|r.class == Hash && r[size].do{|s|s > 1}}
             [c.size > 1 &&
              [c.size > 2 && H.once(e,:sort,{_: :a, class: :sort,
                                             style: 'float: right', c: sort.shorten + ' ↨',
-                                            href: re.uri+'?sort=' + sort_}),'<br>'],
+                                            href: re.uri+'?sort=' + sort_, title: sort_}),'<br>'],
              c.sort_by{|i|
                (i.class == Hash && i[sort].justArray[0] || 0).send sortType}.
                reverse.map{|r|
                label = r.class == Hash && (r[Label] || r[Title])
                {_: :a, href: r.R.uri,
                 class: :member,
-                c: [r.class == Hash && r[size].do{|s|
-                      s > 1 && {_: :b, c: [s,' ']}},
+                c: [(r[size].do{|s|
+                      {_: :b, class: :size, c: [s > 1 ? {_: :span, class: :int, c: '%2d' % s} : '  ',' ']}} if sized),
                     label ? [
                       ([r[Date],' '] if sort==Date),
                       label.justArray[0].to_s.hrefs,
