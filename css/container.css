@@ -19,7 +19,8 @@
     font-size: 1.3em;
 }
 .basicC b.size > .int {
-    background-color: #000; color: #fff;
+    background-color: #b0b0b0;
+    color: #fff;
 }
 
 .basicC a.uri {
@@ -45,5 +46,5 @@
 
 .basicC a.member:visited {
     color: #fff;
-    background-color: #bbb;
+    background-color: #999;
 }
