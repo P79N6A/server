@@ -31,7 +31,7 @@ class R
     m = mail; return unless m                        # mail
     id = m.message_id || m.resent_message_id
     unless id
-      puts "warning: no Message-ID field in #{uri}"
+      puts "WARNING no Message-ID? #{uri}"
       id = rand.to_s.h
     end
 
@@ -130,6 +130,8 @@ class R
       if p.main_type=='image'                         # image reference in HTML
         yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
       end }
+  rescue Exception => x
+    puts ["WARNING",uri,x,x.backtrace[0..2]].join(' ')
   end
 
   def triplrMailMessage &f
