@@ -15,7 +15,6 @@
 .basicC b.size {
     font-family: monospace;
     white-space: pre-wrap;
-    font-size: 1.3em;
 }
 .basicC b.size > .int {
     background-color: #b0b0b0;
