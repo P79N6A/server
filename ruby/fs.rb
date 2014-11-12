@@ -9,7 +9,7 @@ class R
       yield uri, Stat+'mtime', mtime.to_i
       contained = c
       yield uri, Stat+'size', contained.size
-      contained.map{|c| yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc} if contained.size < 27
+      contained.map{|c| yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc} if contained.size < 27 || @r.q.has_key?('c')
 
     elsif symlink?
       readlink.do{|t|

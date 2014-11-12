@@ -45,7 +45,7 @@ class R
                      end
                    when LDP+'contains'
                      e[k].justArray.select(&:maybeURI).sort_by{|r|r.uri}.map{|r|
-                       [('<br>' if r.uri.size > 8),
+                       [('<br>' if r.R.basename.size>16 || (r.class == Hash && r[Title])),
                         r.html
                        ]}.intersperse " "
                    else
