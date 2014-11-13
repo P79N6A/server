@@ -14,7 +14,6 @@ a.up, a.paged {
     padding:0 .11em 0 .11em;
     font-size: 2.8em;
     text-decoration: none;
-    border-radius: 0 0 .1em 0;
 }
 
 a.up:hover, a.paged:hover {
@@ -22,8 +21,13 @@ a.up:hover, a.paged:hover {
     color:#fff;
 }
 
-a.up {float: left;}
-a.paged {float: right;}
+a.up {
+    float: left;
+    border-radius: 0 0 .1em 0;
+}
+a.paged {
+    float: right;
+}
 
 table.ls {
     font-family: sans-serif;
