@@ -17,6 +17,7 @@
 }
 
 .basicC b.size {
+    display: inline-block;
     font-family: monospace;
     white-space: pre-wrap;
 }
@@ -36,6 +37,7 @@
     color: #555;
     background-color: #fff;
     border-radius: .1em;
+    float: right;
 }
 
 .basicC a.sort:hover { color: #000; }
