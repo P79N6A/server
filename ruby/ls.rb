@@ -9,11 +9,14 @@ class R
     asc = e.q.has_key? 'asc'
     sort = e.q['sort'].do{|p|p.expand} || mtime
     sortType = [mtime,Stat+'size'].member?(sort) ? :to_i : :to_s
+    if d['..']
+      d.delete '..'
+      up = true
+    end
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
-    up = {_: :a, href: '..', c: '&uarr;', style: 'background-color:#fff;color:#000;margin: 0 .2em .2em 0;padding:0 .11em 0 .11em;float: left;font-size: 2.8em;text-decoration: none'}
-    justUp = entries.size == 1 && entries[0].uri == '..'
-    justUp && up ||
-      [{_: :table, class: :ls,
+
+    [({_: :a, href: '..', title: Pathname.new(e.R.path).parent.basename, c: '&uarr;', style: 'background-color:#fff;color:#000;margin: 0 .2em .2em 0;padding:0 .11em 0 .11em;float: left;font-size: 2.8em;text-decoration: none'} if up),
+     {_: :table, class: :ls,
         c: [{_: :tr, c: keys.map{|k| # header-row
              {_: :th, class: (k == sort ? 'this' : 'that'),
               property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
