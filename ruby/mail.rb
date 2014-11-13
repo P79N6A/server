@@ -179,7 +179,7 @@ class R
                       Type => R[LDP+'BasicContainer'],
                       Label => addr.fragment}
         item = {'uri' => thread,                                 # contained Resource
-                Label => title.noHTML,
+                Title => title.noHTML,
                 Stat+'size' => post[:size]}
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
         graph[c][LDP+'contains'] ||= []

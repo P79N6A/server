@@ -246,7 +246,7 @@ class R
                 c: [(r[size].do{|s|
                        {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if sizes), ' ',
                     ([r[Date],' '] if sort==Date),
-                    r[Label] ? r[Label] : r.R.abbr,
+                    r[Title] ? r[Title] : r.R.abbr,
                     "<br>"]
                }}.cr
             ]}]},
