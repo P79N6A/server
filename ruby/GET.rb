@@ -36,10 +36,8 @@ class R
   end
 
   def response
-    set = [] # files
-    m = {'' => {'uri' => uri, Type => R[LDP+'Resource']}} # Hash graph
-    rdf = !(NonRDF.member? @r.format) # graph-type
-
+    set = []
+    m = {'' => {'uri' => uri, Type => [R[LDP+'Resource']]}}
     s = q['set']
     rs = ResourceSet[s]
     fs = FileSet[s]
@@ -56,9 +54,8 @@ class R
       end
     end
 
-    etagX = rdf ? [] : [q['q'], q['sort'], q['view']] # representation-varying inputs
-    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',           # output MIME
-                           'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format, etagX].h}) # representation id
+    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
+                           'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
     ldp # capability headers
 
     condResponse ->{
@@ -68,9 +65,16 @@ class R
         hash_graph = -> {
           m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          Summarize[m,@r] if @r[:container]
+          if @r[:container]
+            m[''][Type].push R[LDP+'BasicContainer']
+            Summarize[m,@r]
+          end
           set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]}
-        if rdf
+
+        if NonRDF.member? @r.format
+          hash_graph[]
+          Render[@r.format][m, @r]
+        else
           if @r[:container]
             hash_graph[]
             graph = m.toRDF
@@ -81,9 +85,6 @@ class R
           end
           @r[:Response][:Triples] = graph.size.to_s
           graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => self, :standard_prefixes => true, :prefixes => Prefixes
-        else # Hash
-          hash_graph[]
-          Render[@r.format][m, @r]
         end
       end}
   end

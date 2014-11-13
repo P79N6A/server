@@ -213,7 +213,6 @@ class R
     groups.map{|fn,gr|fn[g,gr,e]}}
 
   ViewA['default']= -> r,e {[r.html, H.once(e, 'default', H.css('/css/html',true))]}
-
   ViewGroup['default'] = -> g,e {g.map{|u,r|ViewA['default'][r,e]}}
 
   ViewA[SIOC+'Content'] = -> r,e {r[Content]}
@@ -255,6 +254,7 @@ class R
          ]},{_: :p, style: 'display: inline'},
      (H.once e, 'container', (H.css '/css/container',true)),
     ]}
+  ViewGroup[LDP+'BasicContainer'] = -> g,e {g.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}], title: '← prev page'}},

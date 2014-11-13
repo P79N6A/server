@@ -8,7 +8,8 @@ class R
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  GREP_DIRS.concat [/^\/\d{4}\//,/^\/address\//]
+  GREP_DIRS.concat [/^\/\d{4}\/\d{2}/,
+                    /^\/address\/.\/[^\/]+\/\d{4}/]
 
   FileSet['grep'] = -> e,q,m {
     e.exist? && q['q'].do{|query|
