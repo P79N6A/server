@@ -16,12 +16,12 @@
     padding: 0 .48em 0 .48em;
 }
 
-.basicC b.size {
+.basicC b {
     display: inline-block;
     font-family: monospace;
     white-space: pre-wrap;
 }
-.basicC b.size > .int {
+.basicC b.size {
     background-color: #b0b0b0;
     color: #fff;
 }

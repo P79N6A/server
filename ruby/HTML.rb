@@ -223,29 +223,29 @@ class R
     size = Stat + 'size'
     sort = e.q['sort'].do{|p|p.expand} || size
     sortType = [size].member?(sort) ? :to_i : :to_s
-    sort_ = case sort
-            when size
-              'dc:title'
-            when Title
-              'dc:date'
-            else
-              'stat:size'
-            end
+    sortLabel = sort.shorten.split(':')[-1] + ' ↨'
+    s_ = case sort
+         when size
+           'dc:title'
+         when Title
+           'dc:date'
+         else
+           'stat:size'
+         end
     [{_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
-            sized = c.find{|r|r.class == Hash && r[size].do{|s|s > 1}}
-            [c.size > 1 &&
-             [c.size > 2 && H.once(e,:sort,{_: :a, class: :sort, c: sort.shorten.split(':')[-1] + ' ↨',
-                                            href: re.uri+'?sort=' + sort_, title: sort_}),'<br>'],
+            sizes = c.find{|r|r.class == Hash && r[size].do{|s|s > 1}}
+            [(H.once(e,:sort,{_: :a, class: :sort, c: sortLabel, href: re.uri+'?sort='+s_, title: s_}) if c.size > 2),
+             ('<br>' if c.size > 1),
              c.sort_by{|i|
-               (i.class == Hash && i[sort].justArray[0] || 0).send sortType}.
+               (i[sort].justArray[0]||0).send sortType}.
                reverse.map{|r|
-               label = r.class == Hash && (r[Label] || r[Title])
+               label = r[Label] || r[Title]
                {_: :a, href: r.R.uri,
                 class: :member,
                 c: [(r[size].do{|s|
-                      {_: :b, class: :size, c: [s > 1 ? {_: :span, class: :int, c: '%2d' % s} : '  ',' ']}} if sized),
+                      {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if sizes),' ',
                     label ? [
                       ([r[Date],' '] if sort==Date),
                       label.justArray[0].to_s.noHTML,
