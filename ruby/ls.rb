@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = ->d=nil,e=nil {
@@ -15,8 +15,8 @@ class R
     end
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
 
-    [({_: :a, href: '..', title: Pathname.new(e.R.path).parent.basename, c: '&uarr;', style: 'background-color:#fff;color:#000;margin: 0 .2em .2em 0;padding:0 .11em 0 .11em;float: left;font-size: 2.8em;text-decoration: none'} if up),
-     {_: :table, class: :ls,
+    [({_: :a, class: :up, href: '..', title: Pathname.new(e.R.path).parent.basename, c: '&uarr;'} if up),
+     !entries.empty? && {_: :table, class: :ls,
         c: [{_: :tr, c: keys.map{|k| # header-row
              {_: :th, class: (k == sort ? 'this' : 'that'),
               property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
