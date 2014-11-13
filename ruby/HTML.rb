@@ -241,15 +241,13 @@ class R
              c.sort_by{|i|
                (i[sort].justArray[0]||0).send sortType}.
                reverse.map{|r|
-               label = r[Label] || r[Title]
                {_: :a, href: r.R.uri,
                 class: :member,
                 c: [(r[size].do{|s|
-                      {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if sizes),' ',
-                    label ? [
-                      ([r[Date],' '] if sort==Date),
-                      label.justArray[0].to_s.noHTML,
-                      "<br>"] : [r.R.abbr, " "]]
+                       {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if sizes), ' ',
+                    ([r[Date],' '] if sort==Date),
+                    r[Label] ? r[Label] : r.R.abbr,
+                    "<br>"]
                }}.cr
             ]}]},
      (H.once e, 'container', (H.css '/css/container',true)),
