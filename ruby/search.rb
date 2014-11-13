@@ -38,7 +38,7 @@ class R
   # depth-first sorted subtree in page-chunks
   FileSet['page'] = -> d,r,m {
     u = m['']
-    c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
+    c = ((r['c'].do{|c|c.to_i} || 31) + 1).max(1024).min 2 # count
     o = r.has_key?('asc') ? :asc : :desc                  # direction
     (d.take c, o, r['offset'].do{|o|o.R}).do{|s|          # bind page
       if r['offset'] && head = s[0]
