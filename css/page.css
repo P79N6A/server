@@ -1,5 +1,5 @@
-a[rel=prev] { float:left; clear: both }
-a[rel=next] { float:right; clear: both }
+a[rel=prev] { float:left }
+a[rel=next] { float:right }
 
 a[rel=next], a[rel=prev]{
     text-decoration: none;
