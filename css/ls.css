@@ -7,21 +7,23 @@
 
 body {margin: 0;padding:0}
 
-a.up {
+a.up, a.paged {
     background-color:#fff;
     color:#000;
     margin: 0 .2em .2em 0;
     padding:0 .11em 0 .11em;
-    float: left;
     font-size: 2.8em;
     text-decoration: none;
     border-radius: 0 0 .1em 0;
 }
 
-a.up:hover {
+a.up:hover, a.paged:hover {
     background-color:#000;
     color:#fff;
 }
+
+a.up {float: left;}
+a.paged {float: right;}
 
 table.ls {
     font-family: sans-serif;

@@ -16,6 +16,7 @@ class R
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
 
     [({_: :a, class: :up, href: '..', title: Pathname.new(e.R.path).parent.basename, c: '&uarr;'} if up),
+     {_: :a, class: :paged, href: '?set=page&c=32', c: '&rarr;'},
      !entries.empty? && {_: :table, class: :ls,
         c: [{_: :tr, c: keys.map{|k| # header-row
              {_: :th, class: (k == sort ? 'this' : 'that'),
