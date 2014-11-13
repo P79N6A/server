@@ -31,13 +31,13 @@ class R
       down = r.size > start+c                                        # prev
       up   = !(start<=0)                                             # next
       r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      m['#'][Prev]={'uri' => '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
-      m['#'][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
+      m[''][Prev]={'uri' => '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
+      m[''][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
       r.map{|r|r['.uri'].R}}} # URI -> Resource
 
   # depth-first sorted subtree in page-chunks
   FileSet['page'] = -> d,r,m {
-    u = m['#']
+    u = m['']
     c = ((r['c'].do{|c|c.to_i} || 8) + 1).max(1024).min 2 # count
     o = r.has_key?('asc') ? :asc : :desc                  # direction
     (d.take c, o, r['offset'].do{|o|o.R}).do{|s|          # bind page

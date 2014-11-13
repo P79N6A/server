@@ -163,7 +163,7 @@ class R
   end
 
   Render['text/html'] = -> d,e {
-    u = d['#'] || {}
+    u = d[''] || {}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
 
     H ['<!DOCTYPE html>', "\n",

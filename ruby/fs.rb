@@ -79,8 +79,8 @@ class R
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
       pp = (t-1).strftime('/%Y/%m/%d/') # prev-day
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
-      g['#'][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
-      g['#'][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
+      g[''][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
+      g[''][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
     e.env[:filemeta] = true if e.env[:container]
     e.env[:container] ? e.c.map{|c|c.setEnv(e.env).bindHost} : e.fileResources}
 

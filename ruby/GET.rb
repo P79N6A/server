@@ -37,7 +37,7 @@ class R
 
   def response
     set = [] # files
-    m = {'#' => {'uri' => uri, Type => R[LDP+'Resource']}} # Hash graph
+    m = {'' => {'uri' => uri, Type => R[LDP+'Resource']}} # Hash graph
     rdf = !(NonRDF.member? @r.format) # graph-type
 
     s = q['set']
