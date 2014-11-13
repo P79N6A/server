@@ -220,6 +220,7 @@ class R
 
   ViewA[LDP+'BasicContainer'] = -> r,e {
     re = r.R
+    path = re.path.t
     size = Stat + 'size'
     sort = e.q['sort'].do{|p|p.expand} || size
     sortType = [size].member?(sort) ? :to_i : :to_s
@@ -232,7 +233,7 @@ class R
          else
            'stat:size'
          end
-    [{_: :p, class: 'basicC', style: "background-color: #{R.cs}",
+    [{class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             sizes = c.find{|r|r.class == Hash && r[size].do{|s|s > 1}}
@@ -249,7 +250,9 @@ class R
                     r[Title] ? r[Title] : r.R.abbr,
                     "<br>"]
                }}.cr
-            ]}]},
+            ]},
+          ({_: :form, c: [{_: :input, name: :q},{_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p} )
+         ]},{_: :p, style: 'display: inline'},
      (H.once e, 'container', (H.css '/css/container',true)),
     ]}
 

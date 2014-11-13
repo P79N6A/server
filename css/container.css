@@ -6,6 +6,8 @@
     margin: .3em;
 }
 
+.basicC form, .basicC input {display: inline-block}
+
 .basicC, .basicC a.member {
     max-width: 100%;
     overflow: hidden;

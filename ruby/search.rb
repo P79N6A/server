@@ -13,7 +13,9 @@ class R
   FileSet['grep'] = -> e,q,m {
     e.exist? && q['q'].do{|query|
       q['view'] ||= 'grep'
-      GREP_DIRS.find{|p|e.justPath.uri.match p}.do{|_|
+      GREP_DIRS.find{|p|e.path.match p}.do{|_|
+#        puts "grep -iRl #{query.sh} #{e.sh} | head -n 255"
+        e.env[:container] = false
         `grep -iRl #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}}
 
   # full-text search

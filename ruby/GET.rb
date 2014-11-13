@@ -56,7 +56,7 @@ class R
       end
     end
 
-    etagX = rdf ? [] : [q['rev'], q['sort'], q['filter'], q['view']] # representation-varying inputs
+    etagX = rdf ? [] : [q['q'], q['sort'], q['view']] # representation-varying inputs
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',           # output MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format, etagX].h}) # representation id
     ldp # capability headers
