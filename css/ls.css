@@ -9,7 +9,6 @@ body {margin: 0;padding:0}
 
 a.up, a.paged {
     background-color:#fff;
-    color:#000;
     margin: 0 .2em .2em 0;
     padding:0 .11em 0 .11em;
     font-size: 2.8em;
@@ -22,10 +21,12 @@ a.up:hover, a.paged:hover {
 }
 
 a.up {
+    color:#000;
     float: left;
     border-radius: 0 0 .1em 0;
 }
 a.paged {
+    color: #333;
     float: right;
 }
 
@@ -78,13 +79,6 @@ table.ls th:hover {background-color: #3f3}
 table.ls tr:hover { background-color: #0f0 }
 
 table.ls a.resource img {max-width: 1.4em;}
-
-.warp {
-    color: #FF3C1F;
-    font-size: 3em;
-    padding: .2em;
-    float:left;
-}
 
 table.ls a.dir {
     color: #333;

@@ -231,8 +231,7 @@ class R
             else
               'stat:size'
             end
-    [(H.once e, 'container', (H.css '/css/container',true)),
-     {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
+    [{_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             sized = c.find{|r|r.class == Hash && r[size].do{|s|s > 1}}
@@ -250,8 +249,12 @@ class R
                       {_: :b, class: :size, c: [s > 1 ? {_: :span, class: :int, c: '%2d' % s} : '  ',' ']}} if sized),
                     label ? [
                       ([r[Date],' '] if sort==Date),
-                      label.justArray[0].to_s.hrefs,
-                      "<br>"] : [r.R.abbr, " "]]}}]}]}]}
+                      label.justArray[0].to_s.noHTML,
+                      "<br>"] : [r.R.abbr, " "]]
+               }}.cr
+            ]}]},
+     (H.once e, 'container', (H.css '/css/container',true)),
+    ]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}], title: '← prev page'}},
