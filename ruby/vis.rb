@@ -46,9 +46,7 @@ class R
     e[:container] = false # don't summarize/reduce content-render
     [(H.js '//d3js.org/d3.v2'), # D3 library
      {_: :script, c: "var links = #{links.to_json};"}, # graph-arcs to JSON
-     H.js('/js/force'),
-     H.css('/css/force'),
-     H.css('/css/mail'),
+     H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
      DefaultView[Hash[d.sort_by{|u,r| # sort graph by date before rendering
                        r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse],e]]}
 

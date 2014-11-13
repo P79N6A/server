@@ -231,7 +231,7 @@ class R
             else
               'stat:size'
             end
-    [(H.once e, 'container', (H.css '/css/container')),
+    [(H.once e, 'container', (H.css '/css/container',true)),
      {_: :p, class: 'basicC', style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
