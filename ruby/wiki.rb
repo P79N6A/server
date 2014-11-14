@@ -24,8 +24,8 @@ class R
            e.q['type'].do{|t|t.expand} ||
            SIOCt+'WikiArticle'
 
-    Predicates[type].do{|ps| # suggest predicates
-      ps.map{|p| model[p] ||= "" }}
+    Predicates[type].do{|ps| # suggested predicates
+      ps.map{|p| model[p] ||= p == Title ? e.R.basename : "" }}
 
     [H.css('/css/html'), H.css('/css/wiki'), # View
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
