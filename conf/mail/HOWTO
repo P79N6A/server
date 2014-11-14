@@ -1,9 +1,9 @@
 HOWTO: browse to email files in a browser
 
 two paths will accumulate content:
-address/  an index-tree of addresses
-msg/      permanent location for messages
+address/  an index
+msg/      permanent storage for message at Message-ID-derived location
 
-these paths aren't live until explicitly-linked to a host (for "localhost", cd domain/localhost)
+to enable a hostname (for localhost, cd domain/localhost),
 
 ln -s ../../address ../../msg .
