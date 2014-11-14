@@ -159,28 +159,24 @@ class R
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
-    g.values.map{|p| # statistics
-      graph.delete p.uri
+    g.values.map{|p| # inspect message
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
         threads[title] ||= p
         threads[title][:size] ||= 0
-        threads[title][:size]  += 1
-      }
+        threads[title][:size]  += 1 }
       p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
-      p[To].justArray.map(&:maybeURI).map{|a| # weigh target-addresses
-        weight[a] ||= 0; weight[a] += 1; graph.delete a}}
-    threads.map{|title,post| # cluster
-      post[To].justArray.select(&:maybeURI).
-        sort_by{|a|weight[a.uri]}[-1].do{|a|
-        thread = '/thread/' + post.R.basename
-        addr = a.R; c = addr.dir.uri
-        graph[c] ||= {'uri' => c.R.child(post[Date][0][0..6].sub('-','/')),         # container Resource
+      p[To].justArray.map(&:maybeURI).map{|a| weight[a] ||= 0; weight[a] += 1;graph.delete a} # weigh target-addresses
+    }
+    threads.map{|title,post| # inspect thread
+      post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a|              # select cluster
+        addr = a.R; dir = addr.dir; container = dir.uri
+        graph[container] ||= {'uri' => dir.child(post[Date][0][0..6].sub('-','/')),           # cluster (container) Resource
                       Type => R[LDP+'BasicContainer'], Label => addr.fragment}
-        item = {'uri' => thread, Title => title.noHTML, Stat+'size' => post[:size]} # contained Resource
+        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # contained Resource
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-        graph[c][LDP+'contains'] ||= []
-        graph[c][LDP+'contains'].push item
+        graph[container][LDP+'contains'] ||= []
+        graph[container][LDP+'contains'].push item
       }}
     e[:filemeta] = false
   }

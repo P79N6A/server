@@ -4,6 +4,7 @@
     display: inline-block;
     padding: .3em;
     margin: .3em;
+    border-radius: .3em;
 }
 
 .basicC form, .basicC input {display: inline-block}

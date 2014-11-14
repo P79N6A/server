@@ -147,8 +147,4 @@ class Hash
     graph
   end
 
-  def resourcesOfType type
-    values.select{|resource| resource.types.member? type }
-  end
-
 end
