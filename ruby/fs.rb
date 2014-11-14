@@ -67,10 +67,10 @@ class R
 
   def fileResources
     r = []
+    r.push self if e # exact match
     %w{e html md n3 ttl txt}.map{|suffix|
       doc = docroot.a '.' + suffix
       r.push doc if doc.e } # related thru docbase
-    r.push self if e # exact path
     r
   end
 
@@ -81,7 +81,11 @@ class R
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
       g[''][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
       g[''][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
-    e.env[:filemeta] = true if e.env[:container]
-    e.env[:container] ? e.c.map{|c|c.setEnv(e.env).bindHost} : e.fileResources}
+    if e.env[:container]
+      e.env[:filemeta] = true
+      e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
+    else
+      e.fileResources
+    end}
 
 end
