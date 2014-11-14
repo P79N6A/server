@@ -40,7 +40,7 @@ class R
     [R[SIOCt+'MailMessage'], R[SIOC+'Post']].        # SIOC types
       map{|t|yield e, Type, t}
 
-    list = m['List-Post'].do{|l|l.decoded.sub(/^<?mailto:/,'').sub(/>$/,'').downcase}
+    list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase}
     list && m['List-Id'].do{|name|
       name = name.decoded
       group = AddrPath[list]                         # list URI
@@ -171,9 +171,9 @@ class R
     threads.map{|title,post| # inspect thread
       post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a|              # select cluster
         addr = a.R; dir = addr.dir; container = dir.uri
-        graph[container] ||= {'uri' => dir.child(post[Date][0][0..6].sub('-','/')),           # cluster (container) Resource
+        graph[container] ||= {'uri' => dir.child(post[Date][0][0..6].sub('-','/')),           # cluster container
                       Type => R[LDP+'BasicContainer'], Label => addr.fragment}
-        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # contained Resource
+        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # contained thread
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
         graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item
