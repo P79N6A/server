@@ -1,8 +1,9 @@
-locally paths are used, for host-agnosticity and shorter names,
+HOWTO: browse to email files in a browser
 
-so these paths must be linked into a hostname's space to be made live:
+two paths will accumulate content:
+address/  an index-tree of addresses
+msg/      permanent location for messages
 
-cd domain/localhost/
+these paths aren't live until explicitly-linked to a host (for "localhost", cd domain/localhost)
+
 ln -s ../../address ../../msg .
-
-message/rfc822 files can go where you want (browse them to parse/index)
