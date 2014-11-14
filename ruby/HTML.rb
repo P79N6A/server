@@ -233,7 +233,7 @@ class R
            'stat:size'
          end
     [{class: 'basicC', style: "background-color: #{R.cs}",
-      c: [{_: :a, class: :uri, c: r[Label] || re.abbr, href: re.uri}, ' ',
+      c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             sizes = c.find{|r|r.class == Hash && r[size].do{|s|s > 1}}
             [(H.once(e,:sort,{_: :a, class: :sort, c: sortLabel, href: re.uri+'?sort='+s_, title: s_}) if c.size > 2),
