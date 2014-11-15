@@ -49,7 +49,7 @@ class R
                                end }}}].cr}}].cr},
            {_: :input, type: :hidden, name: Type, value: type},
            {_: :input, type: :hidden, name: :fragment, value: fragment},
-           {_: :input, type: :submit, value: 'write'}]}]}
+           {_: :input, type: :submit, value: 'write'}].cr}]}
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},

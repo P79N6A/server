@@ -74,6 +74,10 @@ class R
     r
   end
 
+  def glob
+    (Pathname.glob pathPOSIX).map &:R
+  end
+
   FileSet['default'] = -> e,q,g {
     e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # day-dir
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"

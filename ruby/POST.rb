@@ -3,7 +3,7 @@ class R
 
   def POST
 
-    # bespoke handler mounted on URI
+    # bespoke handler in path cascade
     [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
@@ -11,11 +11,12 @@ class R
     case @r['CONTENT_TYPE']
     when 'application/x-www-form-urlencoded'
       formPOST
+
+    # file upload
     when /^multipart\/form-data/
       dataPOST
-    else
 
-      #LDPC
+    else # LDP Container POST
       isDir = @r.linkHeader['type'] == LDP+'BasicContainer'
       slug = @r['HTTP_SLUG']
       path = slug ? child(slug).setEnv(@r) : self
@@ -66,7 +67,6 @@ class R
     subject = s = uri + '#' + frag
     r = s.R
     graph = {s => {'uri' => s}}
-    main = r.docroot.a '/' + r.fragment + '.e'
 
     # form data to graph
     form.keys.-(['fragment']).map{|p|
@@ -81,16 +81,26 @@ class R
       graph[s][p] ||= []
       graph[s][p].push o unless o.class==String && o.empty?}
 
-    # store graph
+    # store doc-fragment
     ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, ''
-    doc = r.fragmentPath + '/.version/' + ts + '.e'
-    doc.w graph, true
-    main.delete if main.e
-    doc.ln main
+    fragPath = r.fragmentPath
+    fragDoc = fragPath + '/' + ts + '.e' # frag-storage URI
+    fragDoc.w graph, true # store fragment
+    cur = fragPath.a '.e' # canonical frag-URI
+    cur.delete if cur.e   # unlink obsolete version
+    fragDoc.ln cur        # link current version
+
+    buildDoc
 
     [303,{'Location'=>uri+'?edit'},[]]
   end
 
+  def buildDoc
+    graph = {}
+    fragments.map{|f| f.fileToGraph graph}
+    jsonDoc.w graph, true
+  end
+  
   def MKCOL
     return [403, {}, ["Forbidden"]] unless allowWrite
     return [405, {}, ["file exists"]] if file?

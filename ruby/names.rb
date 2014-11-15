@@ -101,9 +101,13 @@ class R
   end
 
   def fragmentPath
-    docroot + '/' + fragment
+    docroot + '/.' + fragment
   end
 
+  def fragments
+    docroot.a('/.*e').glob
+  end
+  
   # squash names to prefix:basename
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
