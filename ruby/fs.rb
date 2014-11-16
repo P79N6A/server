@@ -95,4 +95,10 @@ class R
       e.fileResources
     end}
 
+  def buildDoc
+    graph = {}
+    fragments.map{|f| f.fileToGraph graph}
+    jsonDoc.w graph, true
+  end
+
 end

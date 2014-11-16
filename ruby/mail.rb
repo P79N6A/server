@@ -40,7 +40,7 @@ class R
     [R[SIOCt+'MailMessage'], R[SIOC+'Post']].        # SIOC types
       map{|t|yield e, Type, t}
 
-    list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase}
+    list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
     list && m['List-Id'].do{|name|
       name = name.decoded
       group = AddrPath[list]                         # list URI

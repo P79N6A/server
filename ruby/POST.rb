@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -7,40 +7,33 @@ class R
     [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
-    # <form>
     case @r['CONTENT_TYPE']
-    when 'application/x-www-form-urlencoded'
+    when /^application\/x-www-form-urlencoded/
       formPOST
 
-    # file upload
     when /^multipart\/form-data/
-      dataPOST
+      uploadPOST
 
-    else # LDP Container POST
-      isDir = @r.linkHeader['type'] == LDP+'BasicContainer'
-      slug = @r['HTTP_SLUG']
-      path = slug ? child(slug).setEnv(@r) : self
+    when /^text\/(n3|turtle)/
+      ldpPOST
+    end
 
-      if isDir
-        body = @r['rack.input'].read
-        path = child(rand.to_s.h[0..6]).setEnv(@r) unless slug
+  else
+    [406,{'Accept-Post' => 'appplication/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
+  end
 
-        if !body.empty?
-          path.n3.w body
-        end
-        if !path.e
-          path.MKCOL
-        else
-          [200,@r[:Response].update({Location: path.uri}),[]]
-        end
-
-      else
-        path.PUT
-      end
+  def ldpPOST
+    if @r.linkHeader['type'] == LDP+'BasicContainer' # create container
+      body = @r['rack.input'].read
+      path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
+      path.n3.w body unless body.empty?
+      path.e ? [200,@r[:Response].update({Location: path.uri}),[]] : path.MKCOL
+    else
+      self.PUT
     end
   end
 
-  def dataPOST
+    def uploadPOST
     p = (Rack::Request.new env).params
     if file = p['file']
       t = file[:tempfile]
@@ -93,12 +86,6 @@ class R
     buildDoc
 
     [303,{'Location'=>uri+'?edit'},[]]
-  end
-
-  def buildDoc
-    graph = {}
-    fragments.map{|f| f.fileToGraph graph}
-    jsonDoc.w graph, true
   end
   
   def MKCOL
