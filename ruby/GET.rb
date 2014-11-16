@@ -30,7 +30,8 @@ class R
   def resourceGET
     paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
-      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| return r }}}} # search for handlers
+      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| # search for handlers
+        return r }}}} # bespoke handler found
 
     response
   end
@@ -58,33 +59,30 @@ class R
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
     ldp # capability headers
 
-    condResponse ->{
-      if set.size==1 && @r.format == set[0].mime
-        set[0] # direct pass-through
+    condResponse ->{ # lazy response-finish
+
+      if set.size==1 && @r.format == set[0].mime # direct pass-through of file
+        set[0]
       else
-        hash_graph = -> {
-          m['..'] = {'uri' => '..', Type => R[Stat+'Directory']} if @r[:filemeta] && path != '/'
+
+        graph = -> {
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          if @r[:container]
-            m[''][Type].push R[LDP+'BasicContainer']
-            Summarize[m,@r]
-          end
-          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]}
+          Summarize[m,@r] if @r[:container]
+          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
+          m}
 
         if NonRDF.member? @r.format
-          hash_graph[]
-          Render[@r.format][m, @r]
+          Render[@r.format][graph[], @r]
         else
           if @r[:container]
-            hash_graph[]
-            graph = m.toRDF
+            g = graph[].toRDF
           else
-            graph = RDF::Graph.new
+            g = RDF::Graph.new
             set.map{|f|
-              f.setEnv(@r).justRDF.do{|doc|graph.load doc.pathPOSIX, :base_uri => self}}
+              f.setEnv(@r).justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end
-          @r[:Response][:Triples] = graph.size.to_s
-          graph.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => self, :standard_prefixes => true, :prefixes => Prefixes
+          @r[:Response][:Triples] = g.size.to_s
+          g.dump (RDF::Writer.for :content_type => @r.format).to_sym,:base_uri => self,:standard_prefixes => true,:prefixes => Prefixes
         end
       end}
   end

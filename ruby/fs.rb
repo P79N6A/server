@@ -79,14 +79,17 @@ class R
   end
 
   FileSet['default'] = -> e,q,g {
+    this = g['']
     e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # day-dir
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
       pp = (t-1).strftime('/%Y/%m/%d/') # prev-day
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
-      g[''][Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
-      g[''][Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
+      this[Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
+      this[Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
     if e.env[:container]
       e.env[:filemeta] = true
+      g['..'] = {'uri' => '..', Type => R[Stat+'Directory']} unless e.path == '/'
+      this[Type].push R[LDP+'BasicContainer']
       e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
     else
       e.fileResources
