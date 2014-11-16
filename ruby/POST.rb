@@ -16,10 +16,10 @@ class R
 
     when /^text\/(n3|turtle)/
       ldpPOST
-    end
 
-  else
-    [406,{'Accept-Post' => 'appplication/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
+    else
+      [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
+    end
   end
 
   def ldpPOST
