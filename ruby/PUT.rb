@@ -9,17 +9,25 @@ class R
     # container for states
     versions = docroot.child '.v'
 
-    # identifier for current version
+    # version URI
     doc = versions.child Time.now.iso8601.gsub(/\W/,'') + '.' + ext 
-
-    # store version
-    doc.w @r['rack.input'].read
+    body = @r['rack.input'].read
+    doc.w body unless body.empty
 
     main = stripDoc.a('.' + ext) # canonical doc-URI
 
     main.delete if main.e # unlink prior
     doc.ln main           # link current
 
+    ldp
+    [201,@r[:Response].update({Location: uri}),[]]
+  end
+
+  def MKCOL
+    return [403, {}, ["Forbidden"]] unless allowWrite
+    return [405, {}, ["file exists"]] if file?
+    return [405, {}, ["dir exists"]] if directory?
+    mk
     ldp
     [201,@r[:Response].update({Location: uri}),[]]
   end

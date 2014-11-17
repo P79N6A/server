@@ -2,8 +2,10 @@ watch __FILE__
 class R
 
   def POST
+    return [403,{},[]] if !allowWrite
+    @r[:container] = true if directory?
 
-    # bespoke handler in path cascade
+    # bespoke handler
     [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
@@ -24,16 +26,19 @@ class R
 
   def ldpPOST
     if @r.linkHeader['type'] == LDP+'BasicContainer' # create container
-      body = @r['rack.input'].read
       path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
-      path.n3.w body unless body.empty?
-      path.e ? [200,@r[:Response].update({Location: path.uri}),[]] : path.MKCOL
+      path.PUT
+      if path.e
+        [200,@r[:Response].update({Location: path.uri}),[]]
+      else
+        path.MKCOL
+      end
     else
       self.PUT
     end
   end
 
-    def uploadPOST
+  def uploadPOST
     p = (Rack::Request.new env).params
     if file = p['file']
       t = file[:tempfile]
@@ -56,8 +61,11 @@ class R
     return [400,{},['fragment-identifier missing']] unless frag
     frag = form[Title] if frag.empty? && form[Title]
     frag = frag.slugify
-
-    subject = s = uri + '#' + frag
+    
+    if @r[:container]
+    else
+      subject = s = uri + '#' + frag
+    end
     r = s.R
     graph = {s => {'uri' => s}}
 
@@ -86,15 +94,6 @@ class R
     buildDoc
 
     [303,{'Location'=>uri+'?edit'},[]]
-  end
-  
-  def MKCOL
-    return [403, {}, ["Forbidden"]] unless allowWrite
-    return [405, {}, ["file exists"]] if file?
-    return [405, {}, ["dir exists"]] if directory?
-    mk
-    ldp
-    [201,@r[:Response].update({Location: uri}),[]]
   end
 
 end

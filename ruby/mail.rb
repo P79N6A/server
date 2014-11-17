@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -170,8 +170,10 @@ class R
     }
     threads.map{|title,post| # inspect thread
       post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a|              # select cluster
-        addr = a.R; dir = addr.dir; container = dir.uri
-        graph[container] ||= {'uri' => dir.child(post[Date][0][0..6].sub('-','/')),           # cluster container
+        addr = a.R
+        dir = addr.dir
+        container = dir.uri
+        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/')), # container
                       Type => R[LDP+'BasicContainer'], Label => addr.fragment}
         item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # contained thread
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
