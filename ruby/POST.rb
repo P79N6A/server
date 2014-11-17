@@ -14,17 +14,17 @@ class R
       formPOST
 
     when /^multipart\/form-data/
-      uploadPOST
+      filePOST
 
     when /^text\/(n3|turtle)/
-      ldpPOST
+      dataPOST
 
     else
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
   end
 
-  def ldpPOST
+  def dataPOST
     if @r.linkHeader['type'] == LDP+'BasicContainer' # create container
       path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
       path.PUT
@@ -38,16 +38,11 @@ class R
     end
   end
 
-  def uploadPOST
+  def filePOST
     p = (Rack::Request.new env).params
     if file = p['file']
-      t = file[:tempfile]
-      name = file[:filename]
-      up = child name
-      FileUtils.cp t, up.pathPOSIX
-      t.unlink
-      File.open(R[Time.now.strftime('/stat/POST.%Y%m%d.txt')].pathPOSIX, 'a'){|l|
-        l.write "upload #{URI.escape up.uri} #{@r.user} #{@r['HTTP_USER_AGENT']}\n"} if '/stat'.R.e
+      FileUtils.cp file[:tempfile], child(file[:filename]).pathPOSIX
+      file[:tempfile].unlink # free tmpfile
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
     end
@@ -57,14 +52,20 @@ class R
 
   def formPOST
     form = Rack::Request.new(@r).params
-    frag = form['fragment']
-    return [400,{},['fragment-identifier missing']] unless frag
-    frag = form[Title] if frag.empty? && form[Title]
-    frag = frag.slugify
-    
-    if @r[:container]
+
+    return [400,{},['fragment field missing']] unless form['fragment']
+    frag = form['fragment'].slugify
+
+    if @r[:container] # POST to a container - mint contained-resource URI
+      prefix = Time.now.iso8601.sub('-','/')
+      slug = if form[Title] && !form[Title].empty?
+               form[Title].slugify
+             else
+               rand.to_s.h[0..7]
+             end
+      s = uri + prefix + '/' + slug
     else
-      subject = s = uri + '#' + frag
+      s = uri + '#' + frag
     end
     r = s.R
     graph = {s => {'uri' => s}}
