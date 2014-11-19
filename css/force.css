@@ -4,6 +4,8 @@ body {
 
 table.html {
     text-align:left;
+    float: right;
+    clear:both;
 }
 
 svg {
@@ -15,7 +17,7 @@ svg {
 
 .link {
     fill: none;
-    stroke: #333;
+    stroke: #777;
     stroke-width: .1em;
 }
 

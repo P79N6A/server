@@ -2,6 +2,7 @@ pre.mail {
     background-color:#fff;
     color:#000;
     max-width: 115ex;}
+
 pre.mail .q {display: block}
 pre.mail .q[depth="1"] {background-color:#222;color:#fff}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}

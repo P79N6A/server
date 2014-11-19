@@ -21,12 +21,10 @@ var force = d3.layout.force()
     .start();
 
 var svg = d3.select("body").append("svg")
-    .attr("width", 1024)
+    .attr("width", 480)
     .attr("height", 768);
 
-
 document.querySelector("body").addEventListener("click", function(e){ // toggle SVG focus
-    console.log(e.target.nodeName)
     if (e.target.nodeName=='BODY'||e.target.nodeName=='svg'){
 	var s = document.querySelector('svg')
 	s.style.zIndex = s.style.zIndex == 2 ? -1 : 2
@@ -61,6 +59,7 @@ var node = svg.selectAll(".node")
 node.append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
+    .style("fill", function(d) { return d.color; })
     .text(function(d) { return d.name; });
 
 node.insert("rect","text").each(function(){
