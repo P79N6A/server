@@ -56,7 +56,7 @@ class R
     return [400,{},['fragment field missing']] unless form['fragment']
     frag = form['fragment'].slugify
 
-    if @r[:container] # POST to a container - mint contained-resource URI
+    if @r[:container] # POST to container - mint contained-resource URI
       prefix = Time.now.iso8601.sub('-','/')
       slug = if form[Title] && !form[Title].empty?
                form[Title].slugify
@@ -83,9 +83,8 @@ class R
       graph[s][p] ||= []
       graph[s][p].push o unless o.class==String && o.empty?}
 
-    # store doc-fragment
-    ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, ''
-    fragPath = r.fragmentPath
+    ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, '' # timestamp
+    fragPath = r.fragmentPath            # frag-storage container
     fragDoc = fragPath + '/' + ts + '.e' # frag-storage URI
     fragDoc.w graph, true # store fragment
     cur = fragPath.a '.e' # canonical frag-URI

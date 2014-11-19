@@ -27,18 +27,18 @@ class R
     defaultType = SIOC + 'has_parent'
     linkType = e.q['link'].do{|a|a.expand} || defaultType
     d.triples{|s,p,o| # each triple in graph
-      if (p == linkType || linkType == '*') && o.respond_to?(:uri) # matches specific type or wildcard
+      if p == linkType && o.respond_to?(:uri)
         source = s
         target = o.uri
         link = {source: source, target: target}
         d[source].do{|s|s[Creator].justArray[0].do{|l|
             name = l.R.fragment
-            link[:sourceName] = name
+            link[:sourceName] = name unless colors[name]
             link[:sourceColor] = colors[name] ||= cs
          }}
         d[target].do{|t|t[Creator].justArray[0].do{|l|
             name = l.R.fragment
-            link[:targetName] = name
+            link[:targetName] = name unless colors[name]
             link[:targetColor] = colors[name] ||= cs
           }}
         links.push link

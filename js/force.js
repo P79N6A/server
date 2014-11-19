@@ -1,6 +1,6 @@
 var nodes = {};
 
-links.forEach(function(link) {
+links.forEach(function(link) { // unique nodes from arc-list
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
@@ -14,7 +14,7 @@ links.forEach(function(link) {
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([360,768]) // center on left-edge to start, so plausibly visible
+    .size([360,768])
     .linkDistance(18)
     .charge(-250)
     .on("tick", tick)
@@ -24,17 +24,14 @@ var svg = d3.select("body").append("svg")
     .attr("width", 1024)
     .attr("height", 768);
 
-/*
-d3.select("body").on("click", function(e){ // toggle SVG focus
-    var s = document.querySelector('svg')
-    if(s.style.zIndex == 2){
-        s.style.zIndex = -1
-    } else {
-        s.style.zIndex = 2
-    }
-});
-*/
 
+document.querySelector("body").addEventListener("click", function(e){ // toggle SVG focus
+    console.log(e.target.nodeName)
+    if (e.target.nodeName=='BODY'||e.target.nodeName=='svg'){
+	var s = document.querySelector('svg')
+	s.style.zIndex = s.style.zIndex == 2 ? -1 : 2
+    }
+},false);
 
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
@@ -64,7 +61,7 @@ var node = svg.selectAll(".node")
 node.append("text")
     .attr("x", 12)
     .attr("dy", ".35em")
-    .text(function(d) { return d.name || d.uri.slice(-8); });
+    .text(function(d) { return d.name; });
 
 node.insert("rect","text").each(function(){
     this.setAttribute("width", this.nextSibling.getBBox().width)
