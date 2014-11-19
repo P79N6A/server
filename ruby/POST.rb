@@ -5,17 +5,14 @@ class R
     return [403,{},[]] if !allowWrite
     @r[:container] = true if directory?
 
-    # bespoke handler
-    [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p|
+    [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p| # bespoke handler
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
-
     when /^multipart\/form-data/
       filePOST
-
     when /^text\/(n3|turtle)/
       dataPOST
 
@@ -52,26 +49,12 @@ class R
 
   def formPOST
     form = Rack::Request.new(@r).params
-
     return [400,{},['fragment field missing']] unless form['fragment']
-    frag = form['fragment'].slugify
-
-    if @r[:container] # POST to container - mint contained-resource URI
-      prefix = Time.now.iso8601.sub('-','/')
-      slug = if form[Title] && !form[Title].empty?
-               form[Title].slugify
-             else
-               rand.to_s.h[0..7]
-             end
-      s = uri + prefix + '/' + slug
-    else
-      s = uri + '#' + frag
-    end
-    r = s.R
-    graph = {s => {'uri' => s}}
-
-    # form data to graph
-    form.keys.-(['fragment']).map{|p|
+    t = form[Title]
+    doc = @r[:container] ? ( uri.t + Time.now.iso8601.sub('-','/')+'/'+(t && !t.empty? && t.slugify || rand.to_s.h[0..7])) : uri
+    s = doc + '#' + form['fragment'].slugify # subject URI
+    graph = {s => {'uri' => s}}              # Hash graph
+    form.keys.-(['fragment']).map{|p| # form-fields to graph
       o = form[p]
       o = if o.match HTTP_URI
             o.R
@@ -82,17 +65,14 @@ class R
           end
       graph[s][p] ||= []
       graph[s][p].push o unless o.class==String && o.empty?}
-
-    ts = Time.now.iso8601.sub('-','.').sub('-','/').gsub /[+:T]/, '' # timestamp
-    fragPath = r.fragmentPath            # frag-storage container
-    fragDoc = fragPath + '/' + ts + '.e' # frag-storage URI
-    fragDoc.w graph, true # store fragment
-    cur = fragPath.a '.e' # canonical frag-URI
-    cur.delete if cur.e   # unlink obsolete version
-    fragDoc.ln cur        # link current version
-
-    buildDoc
-
+    ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp
+    path = s.R.fragmentPath      # storage path
+    doc = path + '/' + ts + '.e' # storage URI
+    doc.w graph, true            # store
+    cur = path.a '.e'            # canonical URI
+    cur.delete if cur.e          # unlink obsolete
+    doc.ln cur                   # link current
+    buildDoc                     # update doc
     [303,{'Location'=>uri+'?edit'},[]]
   end
 

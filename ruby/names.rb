@@ -22,7 +22,7 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # URI-parts with nil mapped to empty-string (for null-derefence-free concatenation)
+  # URI-parts with nil mapped to empty-string - null-derefence-free concatenation
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
@@ -45,7 +45,7 @@ class R
   def children; node.c.map &:R end
   alias_method :c, :children
 
-  # recursive paths up to root
+  # recursive paths up to /
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
@@ -62,8 +62,8 @@ class R
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
-  def inside; node.expand_path.to_s.index(FSbase) == 0 end # jailed path
-  def sh; pathPOSIX.utf8.sh end # shell-escaped path
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
+  def sh; pathPOSIX.utf8.sh end # shell-escape path
 
   def docroot
     @docroot ||= stripFrag.stripDoc.stripSlash
@@ -95,13 +95,13 @@ class R
   end
   def lateHost; R[@r['SCHEME']+'://'+@r['SERVER_NAME']+'/'] end
 
-  # balanced-prefixes container-names
+  # balanced-prefix container-names
   def R.dive s
     s[0..2] + '/' + s[3..-1]
   end
 
   def fragmentPath
-    docroot + '/.' + fragment
+    docroot + '/.' + (!fragment || fragment.empty? && '_' || fragment)
   end
 
   def fragments
