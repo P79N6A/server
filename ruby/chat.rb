@@ -18,7 +18,6 @@ class R
         yield s, Creator,             m[2]
         yield s, Content,             m[3].hrefs(true)
         yield s, Type,                R[SIOCt+'InstantMessage']
-        yield s, Type,                R[SIOC+'Post']
       } rescue nil
     }
   end
