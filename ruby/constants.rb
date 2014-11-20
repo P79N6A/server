@@ -106,6 +106,7 @@ class R < RDF::URI
 MIME
 names
 acl
+chat
 csv
 DELETE
 facets
@@ -123,7 +124,6 @@ index
 ls
 mail
 man
-msg
 news
 OPTIONS
 PATCH
