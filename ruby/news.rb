@@ -3,7 +3,7 @@ class R
   GET['/news'] = -> d,e {
     if d.path == '/news/'
       e.q['set'] ||= 'page'
-      e.q['c'] ||= 32
+      e.q['c'] ||= 28
       e['HTTP_ACCEPT_DATETIME'].do{|dt|
         t = Time.parse dt
         e[:Response]['Memento-Datetime'] = dt

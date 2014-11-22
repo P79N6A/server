@@ -159,6 +159,8 @@ class R
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
+    ls = e.q.has_key? 'ls'
+    e.q['sort'] = 'dc:date' if ls
     g.values.map{|p| # inspect message
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
@@ -168,15 +170,14 @@ class R
       p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
       p[To].justArray.map(&:maybeURI).map{|a| weight[a] ||= 0; weight[a] += 1;graph.delete a} # weigh target-addresses
     }
-    threads.map{|title,post| # inspect thread
-      post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a|              # select cluster
-        addr = a.R
-        dir = addr.dir
-        container = dir.uri
-        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/')), # container
-                      Type => R[LDP+'BasicContainer'], Label => addr.fragment}
-        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # contained thread
+    threads.map{|title,post| # inspect posts
+      post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
+        addr = a.R; dir = addr.dir
+        container = ls ?  '' : dir.uri
+        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
+        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/')),
+                              Type => R[LDP+'BasicContainer'], Label => addr.fragment}
         graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item
       }}
