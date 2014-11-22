@@ -161,6 +161,7 @@ class R
     weight = {}
     ls = e.q.has_key? 'ls'
     e.q['sort'] = 'dc:date' if ls
+    graph['?ls'] = {'uri' => '?ls', Type => R['href'], Title => e.R.path, Label => '&#9776;'}
     g.values.map{|p| # inspect message
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
