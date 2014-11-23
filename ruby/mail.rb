@@ -161,7 +161,6 @@ class R
     weight = {}
     ls = e.q.has_key? 'ls'
     e.q['sort'] = 'dc:date' if ls
-    graph['?ls'] = {'uri' => '?ls', Type => R['href'], Title => e.R.path, Label => '&#9776;'}
     g.values.map{|p| # inspect message
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
@@ -182,6 +181,11 @@ class R
         graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item
       }}
+    unless ls
+      graph[''] ||= {}
+      graph[''][LDP+'contains'] ||= []
+      graph[''][LDP+'contains'].push({'uri' => '?ls', Title => '☰', Stat+'size' => threads.size})
+    end
     e[:filemeta] = false
   }
 
