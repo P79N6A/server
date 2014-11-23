@@ -165,7 +165,7 @@ class R
   Render['text/html'] = -> d,e {
     u = d[''] || {}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
-
+    e.q['view'] ||= 'tabulate' if e.q.has_key? '?'
     H ['<!DOCTYPE html>', "\n",
        {_: :html,
          c: ["\n",
