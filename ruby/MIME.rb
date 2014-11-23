@@ -7,6 +7,7 @@ module Th
   end
 
   def selectFormat
+    return 'text/turtle' if q.has_key? '?'
     { '.html' => 'text/html',
       '.json' => 'application/json',
       '.nt' => 'text/plain',
