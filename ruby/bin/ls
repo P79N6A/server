@@ -7,7 +7,7 @@ mtime = RDF::URI(stat+'mtime')
 size  = RDF::URI(stat+'size')
 
 ftypes = [RDF::RDFS.Resource, RDF::URI(stat+'File')],                   resources = []
-dtypes = [RDF::URI(ldp+'BasicContainer'), RDF::URI(stat+'Directory')], containers = []
+dtypes = [RDF::URI(ldp+'Container'), RDF::URI(ldp+'BasicContainer'), RDF::URI(stat+'Directory')], containers = []
 
 graph = RDF::Graph.load ARGV[0]
 

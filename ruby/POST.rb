@@ -22,7 +22,7 @@ class R
   end
 
   def dataPOST
-    if @r.linkHeader['type'] == LDP+'BasicContainer' # create container
+    if @r.linkHeader['type'] == Container
       path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
       path.PUT
       if path.e

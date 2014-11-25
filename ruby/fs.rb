@@ -89,7 +89,7 @@ class R
     if e.env[:container]
       e.env[:filemeta] = true
       g['..'] = {'uri' => '..', Type => R[Stat+'Directory']} unless e.path == '/'
-      this[Type].push R[LDP+'BasicContainer']
+      this[Type].push R[Container]
       e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
     else
       e.fileResources

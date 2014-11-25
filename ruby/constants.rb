@@ -60,6 +60,7 @@ class R < RDF::URI
   Type     = RDFns+ 'type'
   HTML     = RDFns + 'HTML'
   Label    = RDFs + 'label'
+  Container = LDP + 'Container'
 
   Prefix={
     "dc" => DC,

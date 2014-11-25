@@ -176,8 +176,7 @@ class R
         container = ls ?  '' : dir.uri
         item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/')),
-                              Type => R[LDP+'BasicContainer'], Label => addr.fragment}
+        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/')),Type => R[Container], Label => addr.fragment}
         graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item
       }}

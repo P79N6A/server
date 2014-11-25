@@ -22,7 +22,7 @@ class R
               property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
           entries.map{|e|
             types = e.types
-            container = types.include?(LDP+'BasicContainer')
+            container = types.include?(Container)
             directory = types.include?(Stat+'Directory')
             file = types.include?(Stat+'File')
             re = file ? e.R.stripDoc.a('.html') : e.R

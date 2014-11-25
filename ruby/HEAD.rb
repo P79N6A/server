@@ -29,7 +29,7 @@ class R
                        "<#{uri}>; rel=timegate",
                        "<http://www.w3.org/ns/ldp#Resource>; rel=type",
                       ]
-    @r[:Links].push "<http://www.w3.org/ns/ldp#BasicContainer>; rel=type" if @r[:container]
+    @r[:Links].push "<#{Container}>; rel=type" if @r[:container]
 
     headers = {
       'Accept-Patch' => 'application/ld+patch',

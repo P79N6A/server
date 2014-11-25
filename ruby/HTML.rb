@@ -220,7 +220,7 @@ class R
 
   ViewA[SIOC+'Content'] = -> r,e {r[Content]}
 
-  ViewA[LDP+'BasicContainer'] = -> r,e {
+  ViewA[Container] = -> r,e {
     re = r.R
     path = re.path.t
     size = Stat + 'size'
@@ -263,7 +263,7 @@ class R
      u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;'], title: '→ next page'}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 
-  ViewGroup[LDP+'BasicContainer'] = -> g,e {g.map{|u,r|ViewA[LDP+'BasicContainer'][r,e]}}
+  ViewGroup[Container] = -> g,e {g.map{|u,r|ViewA[Container][r,e]}}
   ViewGroup[LDP+'Resource'] = -> g,e {g.map{|u,r|ViewA[LDP+'Resource'][r,e]}}
 
   %w{aif wav mpeg mp3 mp4}.map{|a|
