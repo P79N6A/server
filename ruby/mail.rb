@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -13,8 +13,11 @@ class R
     '/address/' + alpha + '/' + address + '/' + name + '#' + name}
 
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
-  GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil}
-  
+  GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil} # hide top-level msg-dir
+  GET['/address'] = -> e,r {
+    r.q['set'] ||= 'sample' if e.path.split('/').size == 4
+    nil}
+
   GET['/thread'] = -> e,r {
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
@@ -172,8 +175,7 @@ tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
         threads[title] ||= p
         threads[title][:size] ||= 0
         threads[title][:size]  += 1 }
-      p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
-      p[To].justArray.map(&:maybeURI).map{|a| weight[a] ||= 0; weight[a] += 1;graph.delete a} # weigh target-addresses
+      p[To].justArray.map(&:maybeURI).map{|a| weight[a] ||= 0; weight[a] += 1} # weigh target-addresses
     }
     threads.map{|title,post| # inspect posts
       post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster

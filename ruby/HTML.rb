@@ -209,6 +209,7 @@ class R
         if v = Abstract[type]
           groups[v] ||= {}
           groups[v][u] = r
+          #puts "summarizing #{u}"
           g.delete u
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}}

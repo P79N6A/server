@@ -58,6 +58,9 @@ class R
       d.env[:Links].push "<#{d.uri+'?set=page&desc'}>; rel=last"
       s }}
 
+  FileSet['sample'] = -> a,b,c {
+    FileSet['default'][a,b,c].concat FileSet['page'][a,b,c]}
+
   View['grep'] = -> d,e {
     w = e.q['q']
     if w && w.size > 1
