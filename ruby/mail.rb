@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -155,6 +155,7 @@ tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
 "},View['force'][g,e]]}
 
   View['addresses'] = -> d,e {
+    e.q['sort'] = 'uri'
     g = {}
     d.map{|u,r|
       parts = r.R.basename.split '@'
