@@ -50,15 +50,14 @@ table.ls td {
 
 .nowrap {white-space: nowrap}
 
-table.ls td[property='uri'] {
+table.ls td[property='uri'] a {
     background-color:#282828;
     color: #fff;
     font-size: 1.18em;
     border-radius: .2em;
-    padding: 0 .18em 0 .2em;
+    padding: .2em;
 }
 
-table.ls td[property='uri'] a {color: #fff}
 table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'],table.ls td[property='uri'] {white-space:nowrap}
 
 table.ls td[property='http://www.w3.org/ns/ldp#contains'] a {
