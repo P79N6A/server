@@ -23,6 +23,7 @@ class R
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
     e.condResponse ->{
+      m['?view=unquoted'] = {'uri' => '?view=unquoted', Type => R['href'], Title => 'hide quotes', Label => '&lt;'}
       Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   def mail; Mail.read node if f end
@@ -31,7 +32,7 @@ class R
     m = mail; return unless m                        # mail
     id = m.message_id || m.resent_message_id
     unless id
-      puts "WARNING no Message-ID? #{uri}"
+      puts "missing Message-ID in #{uri}"
       id = rand.to_s.h
     end
 
@@ -138,8 +139,10 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e],
-                                        H.once(e, 'mail', H.css('/css/mail',true))]}
+  ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e], H.once(e, 'mail', H.css('/css/mail',true))]} # add quote-styling CSS
+  View['unquoted'] = -> g,e {
+    [{_: :style, c: "body span.q {display: none}\na {background-color: #000; color: #fff; font-size: 1.2em; font-weight: bold;text-decoration:none;padding: 0 .2em 0 .2em}\n a:hover {background-color: #0f0}"},
+     g.map{|u,r|r[Content].do{|c|[c,{_: :hr}]}}]}
 
   IndexMail = ->doc,graph,host { # link message to address index(es)
     graph.map{|u,r|

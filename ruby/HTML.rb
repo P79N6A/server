@@ -139,7 +139,7 @@ class R
 
   def triplrContent
     yield uri+'#', Content, r
-    yield uri+'#', Type, R[SIOC+'Content']
+    yield uri+'#', Type, R[Content]
   end
 
   def triplrHref enc=nil
@@ -214,11 +214,12 @@ class R
     groups.map{|fn,gr|fn[g,gr,e]}}
 
   ViewA['default']= -> r,e {[r.html, H.once(e, 'default', H.css('/css/html',true))]}
-  ViewA['href']= -> r,e {{_: :a, href: r.uri, c: r[Label], title: r[Title], style: 'font-size: 1.5em'}}
+
+  ViewA['href']= -> r,e {{_: :a, href: r.uri, c: r[Label], title: r[Title], style: 'font-size: 3em; color: #777'}}
 
   ViewGroup['default'] = -> g,e {g.map{|u,r|ViewA['default'][r,e]}}
 
-  ViewA[SIOC+'Content'] = -> r,e {r[Content]}
+  ViewA[Content] = -> r,e {r[Content]}
 
   ViewA[Container] = -> r,e {
     re = r.R
