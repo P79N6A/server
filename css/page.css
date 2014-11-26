@@ -1,12 +1,13 @@
-a[rel=prev] { float:left }
-a[rel=next] { float:right }
+a[rel=prev] { float:left;  border-width: 0 .1em .1em 0; }
+a[rel=next] { float:right; border-width: 0 0 .1em .1em; }
 
 a[rel=next], a[rel=prev]{
     text-decoration: none;
     background-color: #bbb;
                color: #fff;
     padding: .2em;
-    border: .1em dotted #eee;
+    border-style: dotted;
+    border-color: #ddd;
     white-space: nowrap;
 }
 
