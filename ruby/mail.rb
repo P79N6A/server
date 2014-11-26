@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -23,7 +23,6 @@ class R
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
     e.condResponse ->{
-      m['?view=unquoted'] = {'uri' => '?view=unquoted', Type => R['href'], Title => 'hide quotes', Label => '&lt;'}
       Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   def mail; Mail.read node if f end
@@ -140,9 +139,11 @@ class R
   end
 
   ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e], H.once(e, 'mail', H.css('/css/mail',true))]} # add quote-styling CSS
-  View['unquoted'] = -> g,e {
-    [{_: :style, c: "body span.q {display: none}\na {background-color: #000; color: #fff; font-size: 1.2em; font-weight: bold;text-decoration:none;padding: 0 .2em 0 .2em}\n a:hover {background-color: #0f0}"},
-     g.map{|u,r|r[Content].do{|c|[c,{_: :hr}]}}]}
+  View['unquoted'] = -> g,e {[{_: :style, c: "
+tr[property] {display: none}
+tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: block}
+tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
+"},View['force'][g,e]]}
 
   IndexMail = ->doc,graph,host { # link message to address index(es)
     graph.map{|u,r|
