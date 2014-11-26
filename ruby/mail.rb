@@ -140,8 +140,9 @@ class R
 
   ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e], H.once(e, 'mail', H.css('/css/mail',true))]} # add quote-styling CSS
   View['unquoted'] = -> g,e {[{_: :style, c: "
+body table.html {margin-bottom: 0}
 tr[property] {display: none}
-tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: block}
+tr[property=uri],tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: inline}
 tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
 "},View['force'][g,e]]}
 
