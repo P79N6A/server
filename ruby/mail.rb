@@ -160,7 +160,8 @@ tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
     d.map{|u,r|
       parts = r.R.basename.split '@'
       if parts.size==2
-        domain = '#' + parts[-1].sub(/\.com$/,'')
+        domain = '#' + parts[1].sub(/\.com$/,'')
+        r[Title] = parts[0]
         g[domain] ||= {'uri' => domain, Type => Container, LDP+'contains' => []}
         g[domain][LDP+'contains'].push r
       end
