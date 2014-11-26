@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -175,7 +175,16 @@ tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
         threads[title] ||= p
         threads[title][:size] ||= 0
         threads[title][:size]  += 1 }
-      p[To].justArray.map(&:maybeURI).map{|a| weight[a] ||= 0; weight[a] += 1} # weigh target-addresses
+      p[Creator].justArray.map(&:maybeURI).map{|a|
+        graph.delete a
+#        puts "hiding user-meta on #{a}"
+      }
+      p[To].justArray.map(&:maybeURI).map{|a|
+        weight[a] ||= 0
+        weight[a] += 1
+        graph.delete a
+#        puts "hiding user-meta on #{a}"
+      } # weigh target-addresses
     }
     threads.map{|title,post| # inspect posts
       post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
