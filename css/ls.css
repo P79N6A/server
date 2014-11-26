@@ -50,18 +50,16 @@ table.ls td {
 table.ls td[property='uri'] a {
     background-color:#282828;
     color: #fff;
-    font-size: 1.18em;
-    border-radius: .2em;
-    padding: .2em;
+    font-size: 1.2em;
+    padding: .1em;
 }
 
 table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'],table.ls td[property='uri'] {white-space:nowrap}
 
 table.ls td[property='http://www.w3.org/ns/ldp#contains'] a {
-    background-color: #102F66;
+    background-color: #222;
     color: #fff;
     padding: 0 .16em 0 .16em;
-    border-radius: .18em;
 }
 table.ls td[property='http://www.w3.org/ns/ldp#contains'] a:hover {background-color: #fff; color: #102F66 }
 

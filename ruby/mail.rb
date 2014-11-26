@@ -170,8 +170,6 @@ tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
-    ls = e.q.has_key? 'ls'
-    e.q['sort'] = 'dc:date' if ls
     g.values.map{|p| # inspect message
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
@@ -192,18 +190,12 @@ tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
     threads.map{|title,post| # inspect posts
       post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
         addr = a.R; dir = addr.dir
-        container = ls ?  '' : dir.uri
+        container = dir.uri
         item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
         graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/')),Type => R[Container], Label => addr.fragment}
         graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item
-      }}
-    unless ls
-      graph[''] ||= {}
-      graph[''][LDP+'contains'] ||= []
-      graph[''][LDP+'contains'].push({'uri' => '?ls', Title => '☰', Stat+'size' => threads.size})
-    end
-  }
+      }}}
 
 end
