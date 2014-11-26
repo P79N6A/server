@@ -15,7 +15,10 @@ class R
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
   GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil} # hide top-level msg-dir
   GET['/address'] = -> e,r {
-    r.q['set'] ||= 'sample' if e.path.split('/').size == 4
+    case e.path.split('/').size
+    when 4
+      r.q['set'] ||= 'sample'
+    end
     nil}
 
   GET['/thread'] = -> e,r {
@@ -201,7 +204,6 @@ tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
       graph[''][LDP+'contains'] ||= []
       graph[''][LDP+'contains'].push({'uri' => '?ls', Title => '☰', Stat+'size' => threads.size})
     end
-    e[:filemeta] = false
   }
 
 end

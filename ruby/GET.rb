@@ -70,7 +70,7 @@ class R
 #          puts :set,set,'_'*38
           set.map{|r|r.setEnv(@r).fileToGraph m}
           Summarize[m,@r] if @r[:container]
-          set.map{|f|f.fromStream m, :triplrInode} if @r[:filemeta]
+          set.map{|f|f.fromStream m, :triplrInode}
           m}
 
         if NonRDF.member? @r.format
