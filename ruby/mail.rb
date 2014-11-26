@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -16,6 +16,8 @@ class R
   GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil} # hide top-level msg-dir
   GET['/address'] = -> e,r {
     case e.path.split('/').size
+    when 3
+      r.q['view'] ||= 'addresses'
     when 4
       r.q['set'] ||= 'sample'
     end
@@ -151,6 +153,19 @@ tr[property] {display: none}
 tr[property=uri],tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: inline}
 tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
 "},View['force'][g,e]]}
+
+  View['addresses'] = -> d,e {
+    g = {}
+    d.map{|u,r|
+      parts = r.R.basename.split '@'
+      if parts.size==2
+        domain = '#' + parts[-1]
+        g[domain] ||= {'uri' => domain, Type => Container, LDP+'contains' => []}
+        g[domain][LDP+'contains'].push r
+      end
+    }
+    ViewGroup[Container][g,e]
+  }
 
   IndexMail = ->doc,graph,host { # link message to address index(es)
     graph.map{|u,r|
