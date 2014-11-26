@@ -260,8 +260,8 @@ class R
     ]}
 
   ViewA[LDP+'Resource'] = -> u,e {
-    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr;', {class: :uri, c: p.R.offset}], title: '← prev page'}},
-     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [{class: :uri, c: n.R.offset}, '&rarr;'], title: '→ next page'}},
+    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['&larr; ', p.R.offset], title: '← prev page'}},
+     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [n.R.offset, ' &rarr;'], title: '→ next page'}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 
   ViewGroup[Container] = -> g,e {g.map{|u,r|ViewA[Container][r,e]}}

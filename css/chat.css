@@ -1,5 +1,5 @@
 body {margin:0}
-table.chat {border-spacing:0;margin:0}
+table.chat {border-spacing:0;margin:0; clear: both}
 table.chat a {text-decoration: none}
 table.chat td {padding: 0; vertical-align: top}
 table.chat td.date {background-color: #ccc; color: #fff}

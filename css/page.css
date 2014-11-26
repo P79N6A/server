@@ -3,22 +3,13 @@ a[rel=next] { float:right }
 
 a[rel=next], a[rel=prev]{
     text-decoration: none;
-    font-size:2em;
-    background-color: #fff;
-    color: #000;
-    padding: 0 .1em 0 .2em;
+    background-color: #bbb;
+               color: #fff;
+    padding: .2em;
+    border: .1em dotted #eee;
+    white-space: nowrap;
 }
 
 a[rel=next]:hover, a[rel=prev]:hover{
     background-color: #ff0;
 }
-
-a[rel=prev] div, a[rel=next] div {
-    display: inline;
-}
-
-a[rel=prev] .uri, a[rel=next] .uri {
-    font-size: .4em;
-    white-space: nowrap;
-}
-a {text-decoration: none}
