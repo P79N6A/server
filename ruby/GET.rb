@@ -14,7 +14,6 @@ class R
         [301, {'Location' => uri + '/?' + @r['QUERY_STRING']}, []]
       end
     else
-      @r[:container] = true if ext=='html' # use extension-free (conneg) URI for unsummarized HTML
       stripDoc.setEnv(@r).resourceGET
     end
   end
