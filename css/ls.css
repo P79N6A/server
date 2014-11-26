@@ -39,10 +39,7 @@ table.ls {
 
 table.ls th {padding-right: .2em}
 table.ls th, table.ls td { text-align: left; }
-table.ls th[property='uri'], table.ls td[property='uri'], table.ls td[property='http://www.w3.org/ns/posix/stat#size'] {
-    max-width: 18em;
-    text-align: right;
-}
+table.ls [property='uri'], table.ls [property='http://www.w3.org/ns/posix/stat#size'] {text-align: right}
 
 table.ls td {
     vertical-align: bottom;
