@@ -147,12 +147,26 @@ class R
   end
 
   ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e], H.once(e, 'mail', H.css('/css/mail',true))]} # add quote-styling CSS
-  View['unquoted'] = -> g,e {[{_: :style, c: "
+
+  # hide quoted-material
+  # client-side
+  View['unquote'] = -> g,e {[{_: :style, c: "
 body table.html {margin-bottom: 0}
-tr[property] {display: none}
-tr[property=uri],tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: inline}
-tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
+tr[property], tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
+tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: inline}
 "},View['force'][g,e]]}
+
+  # server-side
+  View['noquote'] = -> g,e {
+    g.map{|u,r|
+      r.map{|p,o|
+        r.delete p unless ['uri',Content].member? p
+        r[Content].justArray[0].do{|c|
+          Nokogiri::HTML.fragment(c).do{|c|
+            c.css('span.q').remove
+            r[Content] = c.to_xhtml }}}}
+    [{_: :a, href: '?', c: '&gt;', title: "show quotes", style: 'position: fixed; top: .2em; right: .2em; z-index: 2; border-radius: .1em; font-size: 2.3em; color: #bbb; background-color: #fff; border: .05em dotted #bbb'},{_: :style, c: 'body table.html {display: block}'},
+     DefaultView[g,e]]}
 
   View['addresses'] = -> d,e {
     e.q['sort'] = 'uri'

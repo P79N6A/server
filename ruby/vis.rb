@@ -44,11 +44,11 @@ class R
         links.push link
       end}
     e[:container] = false # don't summarize/reduce content-render
-    hide = e.q['view'] == 'unquoted'
+    hide = e.q['view'] == 'unquote'
     [(H.js '//d3js.org/d3.v2'), # D3 library
      {_: :script, c: "var links = #{links.to_json};"}, # graph-arcs to JSON
      H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
-     {_: :a, href: hide ? '?' : '?view=unquoted', c: hide ? '&gt;' : '&lt;', title: "#{hide ? 'show' : 'hide'} quotes", style: 'position: fixed; top: .2em; right: .2em; z-index: 2; border-radius: .1em; font-size: 2.3em; color: #bbb; background-color: #fff; border: .05em dotted #bbb'},
+     {_: :a, href: hide ? '?' : '?view=noquote', c: hide ? '&gt;' : '&lt;', title: "#{hide ? 'show' : 'hide'} quotes", style: 'position: fixed; top: .2em; right: .2em; z-index: 2; border-radius: .1em; font-size: 2.3em; color: #bbb; background-color: #fff; border: .05em dotted #bbb'},
      DefaultView[Hash[d.sort_by{|u,r| # sort graph by date before rendering
                        r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse],e]]}
 
