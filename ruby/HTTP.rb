@@ -23,9 +23,9 @@ class R
     e[:Links] = []                                         # response links
     e[:Response] = {}                                      # response head
     e['uri'] = resource.uri                                # response URI
-    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} if Verbose # log request
+    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # log request
     resource.setEnv(e).send(method).do{|s,h,b|
-      R.log e,s,h,b if Verbose || s!=404 # log response
+      R.log e,s,h,b # log response
       [s,h,b] } # response
   rescue Exception => x
     E500[x,e]
