@@ -160,6 +160,7 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
 
   # server-side
   View['noquote'] = -> g,e {
+    g = Hash[g.sort_by{|u,r| r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse]
     g.map{|u,r|
       r.map{|p,o|
         r.delete p unless ['uri',Content].member? p
