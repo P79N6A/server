@@ -110,6 +110,8 @@ class R
           c: p.decoded.to_utf8.gsub(/^(\s*>)+\n/,"").lines.to_a.map{|l| # nuke empty quotes
            if qp = l.match(/^(\s*>)+/) # quote
              {_: :span, class: :q, depth: qp[0].scan(/>/).size, c: l.hrefs}
+           elsif l.match(/^(At|On)\b.*wrote:$/)
+             {_: :span, class: :q, depth: 1, c: l.hrefs}
            else
              l.hrefs
            end }})}
