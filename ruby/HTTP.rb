@@ -72,7 +72,7 @@ class R
                        Title => key,
                        Stat+'size' => count
                       }}}}
-      r.q['sort'] ||= 'stat:size'
+      r.q['sort'] = 'stat:size'
       [200, {'Content-Type'=>'text/html'}, [Render['text/html'][g,r]]]
     end}
 
