@@ -179,12 +179,13 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
       if parts.size==2
         domain = '//' + parts[1]
         r[Title] = parts[0]
+        r.delete Stat+'size'
         g[domain] ||= {'uri' => domain, Label => parts[1].sub(/\.com$/,''), Type => Container, LDP+'contains' => []}
         g[domain][LDP+'contains'].push r
       end
     }
-    ViewGroup[Container][g,e]
-  }
+    [{_: :a, href: '..', c: '&uarr;'},
+     ViewGroup[Container][g,e]]}
 
   IndexMail = ->doc,graph,host { # link message to address index(es)
     graph.map{|u,r|
