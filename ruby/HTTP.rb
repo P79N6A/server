@@ -62,7 +62,7 @@ class R
 
   GET['/stat'] = -> e,r {
     unless e.path.match(/^\/stat\/*$/)
-      nil # pass-through child path
+      nil
     else
       g = {}
       Stats.map{|k,v|

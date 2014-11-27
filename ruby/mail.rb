@@ -222,8 +222,9 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
 #        puts "hiding user-meta on #{a}"
       } # weigh target-addresses
     }
+    group = e.q['group'].do{|t|t.expand} || To
     threads.map{|title,post| # inspect posts
-      post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
+      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
         addr = a.R; dir = addr.dir
         container = dir.uri
         item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
