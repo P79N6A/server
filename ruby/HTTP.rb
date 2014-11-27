@@ -33,10 +33,9 @@ class R
 
   def R.log e, s, h, b
     ua = e['HTTP_USER_AGENT'] || ''
-    u = '#' + ua.slugify
     Stats[:agent] ||= {}
-    Stats[:agent][u] ||= 0
-    Stats[:agent][u] += 1
+    Stats[:agent][ua] ||= 0
+    Stats[:agent][ua] += 1
 
     Stats[:status] ||= {}
     Stats[:status][s] ||= 0
@@ -66,8 +65,13 @@ class R
     else
       g = {}
       Stats.map{|k,v|
-        
-      }
+        group = '#' + k.to_s
+        g[group] = {'uri' => group, Type => R[Container],
+                    LDP+'contains' => v.map{|key,count|
+                      {'uri' => '#' + rand.to_s.h,
+                       Title => key,
+                       Stat+'size' => count
+                      }}}}
       [200, {'Content-Type'=>'text/html'}, [Render['text/html'][g,r]]]
     end}
 
