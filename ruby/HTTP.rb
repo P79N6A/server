@@ -63,16 +63,22 @@ class R
     unless e.path.match(/^\/stat\/*$/)
       nil
     else
+      r.q['sort'] = 'stat:size'
       g = {}
       Stats.map{|k,v|
         group = '#' + k.to_s
         g[group] = {'uri' => group, Type => R[Container],
                     LDP+'contains' => v.map{|key,count|
-                      {'uri' => '#' + rand.to_s.h,
+                      uri = case k
+                            when :host
+                              '//' + key + '/'
+                            else
+                              '#' + rand.to_s.h
+                            end
+                      {'uri' => uri,
                        Title => key,
                        Stat+'size' => count
                       }}}}
-      r.q['sort'] = 'stat:size'
       [200, {'Content-Type'=>'text/html'}, [Render['text/html'][g,r]]]
     end}
 
