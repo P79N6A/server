@@ -70,6 +70,11 @@ class R
       yield l.chomp, Type, Resource }
   end
 
+  Render['text/uri-list'] = -> g,env {
+    g.map{|subjURI,resource|
+      resource[LDP+'contains'].justArray.map &:maybeURI
+    }.flatten.compact.join "\n"}
+
   def uris
     graph.keys.select{|u|u.match /^http/}
   end

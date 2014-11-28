@@ -136,7 +136,7 @@ vis
 wiki
 }.map{|r|require_relative r}
 
-  NonRDF = %w{text/html application/atom+xml application/json}
+  NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
   Resource = R[RDFs+'Resource']
 
   alias_method :maybeURI, :to_s
