@@ -12,8 +12,8 @@ class R
   View['tabulate'] = ->d=nil,e=nil {
     src = '//linkeddata.github.io/tabulator/'
     [(H.css src + 'tabbedtab'),
-     (H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
-     (H.js src + 'js/mashup/mashlib'),
+     (H.js  src + 'js/mashup/mashlib'),
+     (H.js  '/js/m'),
 "<script>jQuery(document).ready(function() {
     var kb = tabulator.kb;
     var subject = kb.sym('#{e.uri}');
@@ -31,20 +31,24 @@ class R
         source = s
         target = o.uri
         link = {source: source, target: target}
-        d[source].do{|s|s[Creator].justArray[0].do{|l|
+        d[source].do{|s|
+          s[Creator].justArray[0].do{|l|
             name = l.R.fragment
             link[:sourceName] = name unless colors[name]
             link[:sourceColor] = colors[name] ||= cs
          }}
-        d[target].do{|t|t[Creator].justArray[0].do{|l|
+        d[target].do{|t|
+          t[Creator].justArray[0].do{|l|
             name = l.R.fragment
             link[:targetName] = name unless colors[name]
             link[:targetColor] = colors[name] ||= cs
           }}
         links.push link
       end}
-    e[:container] = false # don't summarize/reduce content-render
+    
+    e[:container] = false # don't summarize/reduce content
     hide = e.q['view'] == 'unquote'
+
     [(H.js '//d3js.org/d3.v2'), # D3 library
      {_: :script, c: "var links = #{links.to_json};"}, # graph-arcs to JSON
      H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
