@@ -9,3 +9,7 @@ DAEMON       host         port
  pw local  # 127.0.0.1    80
  pw apache # with apache  3000
  pw nginx  # with nginx   3000
+
+cleanup
+  rm -rf cache index
+

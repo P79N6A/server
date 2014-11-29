@@ -2,13 +2,16 @@ class R
 
   GET['/news'] = -> d,e {
     if d.path == '/news/'
-      e.q['set'] ||= 'page'
       e.q['c'] ||= 28
-      e['HTTP_ACCEPT_DATETIME'].do{|dt|
+      if e.q.has_key?('q')
+        e.q['set'] ||= 'groonga'
+      else
+        e.q['set'] ||= 'page'
+        e['HTTP_ACCEPT_DATETIME'].do{|dt|
         t = Time.parse dt
         e[:Response]['Memento-Datetime'] = dt
-        e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s
-      }
+        e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
+      end
       nil
     end}
 
