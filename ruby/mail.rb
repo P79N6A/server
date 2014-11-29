@@ -43,7 +43,8 @@ class R
       id = rand.to_s.h
     end
 
-    e = MessagePath[id]                              # message-ID -> URI
+    e = MessagePath[id]
+    yield e, DC+'identifier', id
 
     [R[SIOCt+'MailMessage'], R[SIOC+'Post']].        # SIOC types
       map{|t|yield e, Type, t}
