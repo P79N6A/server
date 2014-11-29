@@ -158,6 +158,7 @@ tr[property], tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: 
 tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: inline}
 "},View['force'][g,e]]}
 
+  # hide quoted-material
   # server-side
   View['noquote'] = -> g,e {
     g = Hash[g.sort_by{|u,r| r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse]
@@ -205,7 +206,7 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
-    g.values.map{|p| # inspect message
+    g.values.map{|p| # inspect messages
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
         threads[title] ||= p
@@ -220,7 +221,7 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
         weight[a] += 1
         graph.delete a
 #        puts "hiding user-meta on #{a}"
-      } # weigh target-addresses
+      }
     }
     group = e.q['group'].do{|t|t.expand} || To
     threads.map{|title,post| # inspect posts
