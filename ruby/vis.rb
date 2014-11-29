@@ -11,14 +11,10 @@ class R
 
   View['tabulate'] = ->d=nil,e=nil {
     src = '//linkeddata.github.io/tabulator/'
-    [(H.css src + 'tabbedtab'),
+    [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
-     (H.js  '/js/m'),
-"<script>jQuery(document).ready(function() {
-    var kb = tabulator.kb;
-    var subject = kb.sym('#{e.uri}');
-    tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
-});</script>",
+     (H.js  '/js/tabr'),
+     (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
   View['force'] = -> d,e { # D3.force-directed layout
