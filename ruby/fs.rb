@@ -9,7 +9,11 @@ class R
       yield uri, Stat+'mtime', mtime.to_i
       contained = c
       yield uri, Stat+'size', contained.size
-      contained.map{|c| yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc} if contained.size < 18 || @r.q.has_key?('c')
+
+      if contained.size <= 32
+        contained.map{|c|
+          yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc}
+      end
 
     elsif symlink?
       readlink.do{|t|
@@ -93,11 +97,5 @@ class R
     else
       e.fileResources
     end}
-
-  def buildDoc
-    graph = {}
-    fragments.map{|f| f.fileToGraph graph}
-    jsonDoc.w graph, true
-  end
 
 end

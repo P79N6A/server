@@ -1,6 +1,12 @@
 #watch __FILE__
 class R
 
+  def buildDoc
+    graph = {}
+    fragments.map{|f| f.fileToGraph graph}
+    jsonDoc.w graph, true
+  end
+
   Predicates = {
     SIOC+'Forum' => [Title],
     SIOCt+'MicroblogPost' => [Content],

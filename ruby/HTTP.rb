@@ -65,17 +65,16 @@ class R
 
     Stats.map{|k,v|
       group = '#' + k.to_s
-      g[group] = {'uri' => group, Type => R[Container], LDP+'contains' => v.map{|key,count|
+      g[group] = {'uri' => group, Type => R[Container],
+                                  LDP+'contains' => v.map{|key,count|
                     uri = case k
                           when :host
                             '//' + key + '/'
                           else
                             '#' + rand.to_s.h
                           end
-                    {'uri' => uri,
-                     Title => key,
-                     Stat+'size' => count
-                    }}}}
+                    {'uri' => uri, Title => key,
+                     Stat+'size' => count }}}}
     
     [200, {'Content-Type'=>'text/html'}, [Render['text/html'][g,r]]]}
 
