@@ -1,5 +1,7 @@
 class R
 
+  GREP_DIRS.push(/^\/news\/\d{4}\/\d{2}/)
+
   GET['/news'] = -> d,e {
     if d.path == '/news/'
       if e.q.has_key?('q')
