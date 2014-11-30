@@ -4,7 +4,7 @@ pre.mail {
     max-width: 115ex;}
 
 pre.mail .q {display: block}
-pre.mail .q[depth="1"] {background-color:#222;color:#fff}
+pre.mail .q[depth="1"] {background-color:#000;color:#fff}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
 pre.mail .q[depth="3"] {background-color:#244D8B;color:#fff}
 pre.mail .q[depth="4"] {background-color:#3F0F86;color:#fff}
@@ -14,10 +14,18 @@ pre.mail .q[depth="7"] {background-color:#8ff;color:#000}
 pre.mail .q[depth="8"] {background-color:#fff500;color:#000}
 pre.mail .q[depth="9"] {background-color:#4fc;color:#000}
 
-td.val .q a[rel=untyped] {
-    background-color: #3f3;
-    color: #000;
+td.val a[rel=untyped] {
+    background-color: #000;
+    color: #3f3;
+    border: .1em dotted #0f0;
     box-shadow: 0 0 0;
+    padding: 0;
     font-size: 1.18em;
     font-weight: bold;
+}
+
+td.val a[rel=untyped]:hover {
+    background-color: #3f3;
+    color: #000;
+    border-color: #000;
 }
