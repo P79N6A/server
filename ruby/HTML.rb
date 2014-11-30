@@ -241,7 +241,7 @@ class R
       c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
             sizes = c.find{|r|r.class == Hash && r[size].do{|s|s.justArray[0].to_i > 1}}
-            [(H.once(e,:sort,{_: :a, class: :sort, c: sortLabel, href: re.uri+'?sort='+s_, title: s_}) if c.size > 2),
+            [(H.once(e,:sort,{_: :a, class: :sort, c: sortLabel, href: re.uri+'?sort='+s_, title: s_}) if c.size > 2 && (re.host==e['HTTP_HOST'] || !re.host)),
              ('<br>' if c.size > 1),
              c.sort_by{|i|
                (i.class==Hash && i[sort].justArray[0]||0).send sortType}.
