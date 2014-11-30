@@ -39,10 +39,7 @@ class R
   end
 
   def triplrJSON
-    if e
-      yield uri+'#', Type, R[MIMEtype + 'application/json']
-      yield uri+'#', Content, r(true)
-    end
+    yield uri+'#'+basename, Content, r(true).html if e
   rescue Exception => e
     puts e
   end
@@ -50,9 +47,6 @@ class R
   def to_json *a
     {'uri' => uri}.to_json *a
   end
-
-  ViewA[MIMEtype+'application/json'] = ->v,e{
-    [v[Content].justArray.map(&:html), H.once(e,'base',H.css('/css/html',true))]}
 
   Render['application/json'] = -> d,e {
     JSONview[e.q['view']].do{|f|
