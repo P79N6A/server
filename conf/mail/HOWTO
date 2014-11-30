@@ -1,9 +1,13 @@
-HOWTO: browse to email files in a browser
+HOWTO: browse to email files on HTTP
 
-two paths will accumulate content:
-address/  an index
-msg/      permanent storage for message at Message-ID-derived location
+http://localhost/today
 
-to enable a hostname (for localhost, cd domain/localhost),
+two dirs accumulate content, rm -rf at your leisure:
+address/  an index relating addresses and messages
+msg/      storage of messages at Message-ID-derived location
 
+these dirs and message are not linked to a server by default
+
+cd domain/localhost
+ln -s ~/.mail/ .
 ln -s ../../address ../../msg .
