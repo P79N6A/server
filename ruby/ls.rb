@@ -32,14 +32,12 @@ class R
                 c: case k
                    when 'uri'
                      href = file ? re : e.R
-                     {_: :a, href: href.uri,
-                      c: e[Label] || e[Title] || (URI.unescape e.R.abbr),
-                      style: path==href.path ? "background-color: #bbb" : nil} unless e[LDP+'contains']
+                     {_: :a, href: href.uri, c: e[Label]||e[Title]||URI.unescape(e.R.abbr)} unless e[LDP+'contains']
                    when mtime
                      e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                    when Type
                      if directory || container
-                       {_: :a, class: :dir, href: e.uri, c: '►', style: path==e.R.path ? "color: #bbb" : nil}
+                       {_: :a, class: :dir, href: e.uri, c: '►'}
                      elsif types.include?(DC+'Image')
                        ShowImage[e.uri]
                      elsif types.size==1 && types[0]==RDFs+'Resource'
@@ -55,7 +53,8 @@ class R
                      e[Stat+'size'] unless e[LDP+'contains']
                    else
                      e[k].html
-                   end}}}}]},
+                   end}}} unless path==e.R.path
+            }]},
      (H.css '/css/ls',true), (H.js '/js/ls',true)]}
 
 end
