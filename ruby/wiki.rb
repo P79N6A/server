@@ -7,18 +7,18 @@ class R
     jsonDoc.w graph, true
   end
  
-  Predicates = {
-    SIOC+'Forum' => [Title],
-    SIOCt+'MicroblogPost' => [Content],
-    SIOCt+'BlogPost' => [Title, Content],
-    SIOCt+'BoardPost' => [Title, Content],
-    SIOCt+'WikiArticle' => [Title],
-    SIOCt+'WikiArticleSection' => [Title, Content],
-  }
+  Creatable = [
+    SIOC+'Forum',
+    SIOCt+'MicroblogPost',
+    SIOCt+'BlogPost',
+    SIOCt+'BoardPost',
+    SIOCt+'WikiArticle',
+    SIOCt+'WikiArticleSection',
+  ]
 
   View['new'] = -> graph, e {
-    Predicates.keys.map{|p|
-      {_: :a, style: 'font-size: 2em; display:block', c: p.R.fragment, href: e['REQUEST_PATH']+'?new&view=edit&type='+p.shorten}}}
+    Creatable.map{|c|
+      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&view=edit&type='+c.shorten}}}
 
   View['edit'] = -> graph, e { # edit resource in a <form>
 
@@ -30,8 +30,7 @@ class R
            e.q['type'].do{|t|t.expand} ||
            SIOCt+'WikiArticle'
 
-    Predicates[type].do{|ps| # suggested predicates
-      ps.map{|p| model[p] ||= p == Title ? e.R.basename : "" }}
+    [Title,Content].map{|p| model[p] ||= p == Title ? e.R.basename : "" }
 
     [H.css('/css/html'), H.css('/css/wiki'), # View
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
