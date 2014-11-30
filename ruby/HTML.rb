@@ -238,6 +238,8 @@ class R
            'dc:date'
          when Date
            'stat:size'
+         else
+           'stat:size'
          end
     [{class: :container, style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri}, ' ',
