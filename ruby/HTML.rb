@@ -253,7 +253,7 @@ class R
                        s = s.justArray[0]
                        {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if data && sizes), ' ',
                     ([r[Date],' '] if data && sort==Date),
-                    (data && r[Title]) ? r[Title] : r.R.abbr,
+                    (data && r[Title]) ? r[Title] : r.R.abbr[0..64],
                     ("<br>" if data)]
                }}.cr
             ]},

@@ -51,6 +51,8 @@ class R
                      end
                    when LDP+'contains'
                      ViewA[Container][e,env] if e.has_key? LDP+'contains'
+                   when Stat+'size'
+                     e[Stat+'size'] unless e[LDP+'contains']
                    else
                      e[k].html
                    end}}}}]},

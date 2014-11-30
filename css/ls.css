@@ -33,17 +33,12 @@ a.paged {
 table.ls {
     font-family: sans-serif;
     float:left;
-    max-width: 100%;
-    overflow: hidden;
+    border-spacing:0;
 }
 
 table.ls th {padding-right: .2em}
 table.ls th, table.ls td { text-align: left; }
 table.ls [property='uri'], table.ls [property='http://www.w3.org/ns/posix/stat#size'] {text-align: right}
-
-table.ls td {
-    vertical-align: bottom;
-}
 
 .nowrap {white-space: nowrap}
 

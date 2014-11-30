@@ -8,11 +8,6 @@
 
 .container form, .container input {display: inline-block}
 
-.container, .container a.member {
-    max-width: 100%;
-    overflow: hidden;
-}
-
 .container a {text-decoration: none;}
 
 .container b {
@@ -41,7 +36,6 @@
 .container a.sort:hover { color: #000; }
 
 .container a.member {
-    white-space: nowrap;
     background-color: #fff;
     color: #000;
 }
