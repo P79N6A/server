@@ -231,12 +231,12 @@ class R
     sortLabel = sort.shorten.split(':')[-1] + ' ↨'
     s_ = case sort
          when size
-           'dc:title'
-         when Title
            'uri'
          when 'uri'
+           'dc:title'
+         when Title
            'dc:date'
-         else
+         when Date
            'stat:size'
          end
     [{class: :container, style: "background-color: #{R.cs}",
