@@ -64,7 +64,7 @@ th { font-weight: normal }
 table.ls th.this a {color: #fff}
 table.ls th.that a {color: #888; font-size: .88em}
 table.ls th:hover {background-color: #3f3}
-table.ls tr:hover { background-color: #0f0 }
+table.ls tr:hover { background-color: #5f0 }
 table.ls td.this {text-align: left; border-style: solid; border-width: 0 .1em .1em .1em; border-color: #ddd}
 table.ls td.that {border-style: dashed; border-width: 0 0 .1em 0; border-color: #ddd }
 

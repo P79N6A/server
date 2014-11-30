@@ -80,7 +80,7 @@ class R
   end
 
   def triplrMarkdown
-    yield uri+'#', Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
+    yield uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
   def triplrOrg
