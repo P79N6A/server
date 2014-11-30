@@ -50,7 +50,7 @@ class R
                        e[k].html
                      end
                    when LDP+'contains'
-                     ViewA[Container][e,env]
+                     ViewA[Container][e,env] if e.has_key? LDP+'contains'
                    else
                      e[k].html
                    end}}}}]},
