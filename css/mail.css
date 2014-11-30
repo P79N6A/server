@@ -29,3 +29,5 @@ td.val a[rel=untyped]:hover {
     color: #000;
     border-color: #000;
 }
+
+tr[property="http://purl.org/dc/terms/identifier"] {display:none}
