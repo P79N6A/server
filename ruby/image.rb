@@ -19,7 +19,7 @@ class R
           if i.mime.match(/^video/)
             `ffmpegthumbnailer -s 256 -i #{i.sh} -o #{path.sh}`
           else
-            `gm convert #{i.sh} -thumbnail "256x256" #{path.sh}`
+            `gm convert #{i.ext.match(/^jpg/) ? 'jpg:' : ''}#{i.sh} -thumbnail "256x256" #{path.sh}`
           end
         end
       end

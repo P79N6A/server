@@ -60,7 +60,7 @@ class R
   end
 
   ServerInfo = -> e,r {
-    r.q['sort'] = 'stat:size'
+    r.q['sort'] ||= 'stat:size'
     g = {}
 
     Stats.map{|k,v|
