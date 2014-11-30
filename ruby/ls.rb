@@ -4,7 +4,7 @@ class R
 
   ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = ->d,env {
     mtime = Stat+'mtime'
-    keys = [Stat+'size', 'uri', Type, mtime, LDP+'contains']
+    keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
     path = env['REQUEST_PATH']
     asc = env.q.has_key? 'asc'
     sort = env.q['sort'].do{|p|p.expand} || mtime
@@ -34,7 +34,7 @@ class R
                      href = file ? re : e.R
                      {_: :a, href: href.uri,
                       c: e[Label] || e[Title] || (URI.unescape e.R.abbr),
-                      style: path==href.path ? "background-color: #bbb" : nil}
+                      style: path==href.path ? "background-color: #bbb" : nil} unless e[LDP+'contains']
                    when mtime
                      e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                    when Type
@@ -50,10 +50,7 @@ class R
                        e[k].html
                      end
                    when LDP+'contains'
-                     e[k].justArray.select(&:maybeURI).sort_by{|r|r.uri}.map{|r|
-                       large = r.R.basename.size>16 || (r.class == Hash && r[Title])
-                       large ? {class: :nowrap, c: r.html} : r.html
-                     }.intersperse " "
+                     ViewA[Container][e,env]
                    else
                      e[k].html
                    end}}}}]},

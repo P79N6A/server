@@ -1,4 +1,4 @@
-.basicC {
+.container {
     font-family: sans-serif;
     display: inline-block;
     padding: .3em;
@@ -6,31 +6,31 @@
     border-radius: .3em;
 }
 
-.basicC form, .basicC input {display: inline-block}
+.container form, .container input {display: inline-block}
 
-.basicC, .basicC a.member {
+.container, .container a.member {
     max-width: 100%;
     overflow: hidden;
 }
 
-.basicC a {text-decoration: none;}
+.container a {text-decoration: none;}
 
-.basicC b {
+.container b {
     display: inline-block;
     font-family: monospace;
     white-space: pre-wrap;
 }
 
-.basicC b.size {color: #777;}
-.basicC a.member:visited b.size {color: #fff;}
+.container b.size {color: #777;}
+.container a.member:visited b.size {color: #fff;}
 
-.basicC a.uri {
+.container a.uri {
     font-size: 1.3em;
     background-color: #fff;
     color: #000;
 }
 
-.basicC a.sort {
+.container a.sort {
     font-size: 1.2em;
     color: #555;
     background-color: #fff;
@@ -38,20 +38,20 @@
     float: right;
 }
 
-.basicC a.sort:hover { color: #000; }
+.container a.sort:hover { color: #000; }
 
-.basicC a.member {
+.container a.member {
     white-space: nowrap;
     background-color: #fff;
     color: #000;
 }
 
-.basicC a.member:hover {
+.container a.member:hover {
    background-color: #000;
    color: #fff;
 }
 
-.basicC a.member:visited {
+.container a.member:visited {
     color: #fff;
     background-color: #999;
 }

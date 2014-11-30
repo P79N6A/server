@@ -237,23 +237,24 @@ class R
          else
            'stat:size'
          end
-    [{class: 'basicC', style: "background-color: #{R.cs}",
+    [{class: :container, style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri}, ' ',
           r[LDP+'contains'].do{|c|
-            sizes = c.find{|r|r.class == Hash && r[size].do{|s|s.justArray[0] > 1}}
+            sizes = c.find{|r|r.class == Hash && r[size].do{|s|s.justArray[0].to_i > 1}}
             [(H.once(e,:sort,{_: :a, class: :sort, c: sortLabel, href: re.uri+'?sort='+s_, title: s_}) if c.size > 2),
              ('<br>' if c.size > 1),
              c.sort_by{|i|
-               (i[sort].justArray[0]||0).send sortType}.
+               (i.class==Hash && i[sort].justArray[0]||0).send sortType}.
                reverse.map{|r|
+               data = r.class == Hash # accessible content or just identifier
                {_: :a, href: r.R.uri,
                 class: :member,
                 c: [(r[size].do{|s|
                        s = s.justArray[0]
-                       {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if sizes), ' ',
-                    ([r[Date],' '] if sort==Date),
-                    r[Title] ? r[Title] : r.R.abbr,
-                    "<br>"]
+                       {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if data && sizes), ' ',
+                    ([r[Date],' '] if data && sort==Date),
+                    (data && r[Title]) ? r[Title] : r.R.abbr,
+                    ("<br>" if data)]
                }}.cr
             ]},
           ({_: :form, c: [{_: :input, name: :q},{_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p} )
