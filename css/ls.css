@@ -60,12 +60,14 @@ table.ls td[property='http://www.w3.org/ns/ldp#contains'] a:hover {background-co
 
 table.ls a { color: #102F66; font-size: 1.2em; }
 table.ls th.this {background-color: #aaa; border-radius: .2em .2em 0 0; padding-left: .2em}
-table.ls td.this {text-align: left; border-style: solid; border-width: 0 .1em .1em .1em; border-color: #ddd}
 th { font-weight: normal }
 table.ls th.this a {color: #fff}
 table.ls th.that a {color: #888; font-size: .88em}
 table.ls th:hover {background-color: #3f3}
 table.ls tr:hover { background-color: #0f0 }
+table.ls td.this {text-align: left; border-style: solid; border-width: 0 .1em .1em .1em; border-color: #ddd}
+table.ls td.that {border-style: dashed; border-width: 0 0 .1em 0; border-color: #ddd }
+
 
 table.ls a.resource img {max-width: 1.4em;}
 

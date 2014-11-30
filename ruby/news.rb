@@ -6,7 +6,7 @@ class R
       if e.q.has_key?('q')
         e.q['set'] ||= 'groonga'
       else
-        e.q['set'] ||= 'page'
+        e.q['set'] ||= 'sample'
         e['HTTP_ACCEPT_DATETIME'].do{|dt|
         t = Time.parse dt
         e[:Response]['Memento-Datetime'] = dt
