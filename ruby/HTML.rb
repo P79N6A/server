@@ -233,6 +233,8 @@ class R
          when size
            'dc:title'
          when Title
+           'uri'
+         when 'uri'
            'dc:date'
          else
            'stat:size'
