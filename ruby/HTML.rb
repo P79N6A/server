@@ -264,7 +264,7 @@ class R
 
   ViewA[LDP+'Resource'] = -> u,e {
     offset = -> r {
-      (r.R.query_values.do{|q| q['offset'].do{|o| o.R.stripDoc}} || r).path}
+      (r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path}
     [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['↩ ', offset[p]], title: '↩ previous page'}},
      u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [offset[n], ' →'], title: '→ next page'}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
