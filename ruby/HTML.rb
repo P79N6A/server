@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 #watch __FILE__
 
-def H _ # HTML as Ruby literal-values
-  case _
+def H _ # HTML in Ruby, {} as DOM node, _: typetag
+  case _#                               c: children
   when Hash
+    #void = [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr].member? _[:_]
     void = [:img, :input, :link, :meta].member? _[:_]
-# [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr] # void els
-
     '<' + (_[:_] || :div).to_s +                                     # name
       (_.keys - [:_,:c]).map{|a|                                     # attributes
       ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|
@@ -39,7 +38,7 @@ class H
 
   def H.once env, name, *h
     return if env[name]
-    env[name] = true
+    env[name] ||= true
     h
   end
 end
@@ -209,11 +208,11 @@ class R
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}}
 
-  ViewA['default']= -> r,e {[r.html, H.once(e, 'default', H.css('/css/html',true))]}
+  ViewA['default'] = -> r,e {[r.html,
+                              H.once(e, 'default', (H.css '/css/html', true))]}
 
-  ViewA['href']= -> r,e {{_: :a, href: r.uri, c: r[Label], title: r[Title], style: 'font-size: 3em; color: #777'}}
-
-  ViewGroup['default'] = -> g,e {g.map{|u,r|ViewA['default'][r,e]}}
+  ViewGroup['default'] = -> g,e {g.map{|u,r|
+                                   ViewA['default'][r,e]}}
 
   ViewA[Content] = -> r,e {r[Content]}
 
