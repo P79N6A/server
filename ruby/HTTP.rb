@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def R.dev # scan watched-files for changes
@@ -58,6 +58,12 @@ class R
          ].compact.map(&:to_s).map(&:to_utf8).join ' '
 
   end
+
+  WebCache = -> e,r {
+    puts :huui
+
+  }
+  GET['cache/'] = WebCache
 
   ServerInfo = -> e,r {
     r.q['sort'] ||= 'stat:size'
