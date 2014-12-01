@@ -11,7 +11,6 @@ nokogiri
 open-uri
 pathname
 rack
-securerandom
 shellwords}.map{|r|require r}
 
 class R < RDF::URI
@@ -71,19 +70,13 @@ class R < RDF::URI
     "stat" => Stat,
   }
 
-  # configuration for RDF::Writer
-  Prefixes = {
+  Prefixes = { # for RDF::Writer
     :ldp => RDF::URI(LDP),
     :rdf => RDF::URI(RDFns),
     :rdfs => RDF::URI(RDFs),
     :sioct => RDF::URI(SIOCt),
     :stat => RDF::URI(Stat),
   }
-
-  Prototypes = { # suggested user-editable predicates
-    SIOCt+'MicroblogPost' => [Content],
-    SIOCt+'BlogPost' => [Title, Content],
-    SIOCt+'WikiArticle' => [Title, Content]}
 
   FileSet = {}
   ResourceSet = {}
