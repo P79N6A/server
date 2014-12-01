@@ -22,7 +22,7 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # URI-parts with nil mapped to empty-string - null-derefence-free concatenation
+  # URI-components nil to empty-string for hassle-free concatenation
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
@@ -85,10 +85,6 @@ class R
     end
   end
 
-  def metaURI
-    docroot
-  end
-
   def bindHost
     return self if !hierPart.match(/^\//)
     R[(lateHost.join uri).to_s]
@@ -113,7 +109,6 @@ class R
   def shorten;  uri.shorten.R end
 
   def n3; docroot.a '.n3' end
-  def ttl; docroot.a '.ttl' end
   def jsonDoc; docroot.a '.e' end
 
 end

@@ -25,7 +25,7 @@ class R
     cors
     @r[:Links].concat ["<#{uri}>; rel=canonical",
                        "<#{aclURI}>; rel=acl",
-                       "<#{metaURI}>; rel=meta",
+                       "<#{docroot}>; rel=meta",
                        "<#{uri}>; rel=timegate",
                        "<http://www.w3.org/ns/ldp#Resource>; rel=type",
                       ]
