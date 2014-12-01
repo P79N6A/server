@@ -21,6 +21,7 @@ td.val a[rel=untyped] {
     background-color: #000;
     color: #3f3;
     border: .1em dotted #0f0;
+    border-radius: .2em;
     padding: 0;
     font-size: 1.18em;
     font-weight: bold;

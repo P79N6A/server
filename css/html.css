@@ -8,18 +8,12 @@ td.key > a {
     background-color: #000;
     color: #fff;
 }
-td.val > a[id] {
-    border-width:0;
-    font-weight: normal;
-    background-color: #000;
-    color: #fff;
-}
-td.val > a, td.val a[rel=untyped] {
+td.val > a {
+    padding: .1em;
     font-weight: normal;
     color: #fff;
     background-color: #071D1F ;
     border-radius: .16em;
-    padding: .05em .18em .05em .18em;
 }
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
 
