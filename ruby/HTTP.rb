@@ -60,9 +60,14 @@ class R
   end
 
   WebCache = -> e,r {
-    puts :huui
+    r[:container] = true if e.justPath.e
+    r.q['set'] = 'cache'
+    nil}
 
-  }
+  FileSet['cache'] = -> re,q,g {
+    FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
+      r.host ? R['/domain/' + r.host + (r.path||'')].setEnv(re.env) : r }}
+
   GET['cache/'] = WebCache
 
   ServerInfo = -> e,r {

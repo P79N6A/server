@@ -93,7 +93,7 @@ class R
     if e.env[:container]
       g['..'] = {'uri' => '..', Type => R[Stat+'Directory']} unless e.path == '/'
       this[Type].push R[Container]
-      e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
+      e.fileResources.concat e.c.map{|c|c.setEnv e.env}
     else
       e.fileResources
     end}

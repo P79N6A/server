@@ -66,7 +66,7 @@ class R
       else
 
         graph = -> {
-#          puts :set,set,'_'*38
+          #puts set
           set.map{|r|r.setEnv(@r).fileToGraph m}
           Summarize[m,@r] if @r[:container]
           set.map{|f|f.fromStream m, :triplrInode}
