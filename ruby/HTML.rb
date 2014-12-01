@@ -157,11 +157,6 @@ class R
     html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
-  def offset # human-readable
-    (query_values.do{|q| q['offset'].do{|o| o.R.stripDoc}} ||
-     self).hierPart.split('/').join(' ')
-  end
-
   Render['text/html'] = -> d,e {
     u = d[''] || {}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
@@ -268,8 +263,10 @@ class R
     ]}
 
   ViewA[LDP+'Resource'] = -> u,e {
-    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['↩ ', p.R.offset], title: '↩ previous page'}},
-     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [n.R.offset, ' →'], title: '→ next page'}},
+    offset = -> r {
+      (r.R.query_values.do{|q| q['offset'].do{|o| o.R.stripDoc}} || r).path}
+    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['↩ ', offset[p]], title: '↩ previous page'}},
+     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [offset[n], ' →'], title: '→ next page'}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 
   ViewGroup[Container] = -> g,e {g.map{|u,r|ViewA[Container][r,e]}}
