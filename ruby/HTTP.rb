@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def R.dev # scan watched-files for changes
@@ -67,8 +67,6 @@ class R
   FileSet['cache'] = -> re,q,g {
     FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
       r.host ? R['/domain/' + r.host + (r.path||'')].setEnv(re.env) : r }}
-
-  GET['cache/'] = WebCache
 
   ServerInfo = -> e,r {
     r.q['sort'] ||= 'stat:size'
