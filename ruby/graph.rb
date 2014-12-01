@@ -1,15 +1,19 @@
 #watch __FILE__
 class R
 =begin
- to use Hash and JSON classes for a subset of RDF,
+ Hash/JSON for a subset of RDF,
 
-  {subjURI => {predURI => object}}, keys are URI strings
+  {subjURI => {predURI => object}}
 
-  object varies, can be:
+  subj/predURI: String
+
+  object:
+   Array [object1, object2]
    RDF::URI (URI-identified resource)
-   R (subclass of RDF::URI)
-   Hash with 'uri' key
-   Literal RDF::Literal or plain string
+   R (our enhanced subclass of RDF::URI)
+   Hash with a key named 'uri'
+   RDF::Literal
+   String
 
  to emit triples: yield subjURI, predURI, object
 
