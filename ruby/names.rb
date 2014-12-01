@@ -18,11 +18,11 @@ class R
   def ==  u; to_s == u.to_s end
   def <=> c; to_s <=> c.to_s end
 
-  # append operators
+  # append operator
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # URI-components nil to empty-string for hassle-free concatenation
+  # URI-component nil to empty-string for unexceptional concatenation
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
