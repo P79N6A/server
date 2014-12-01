@@ -9,11 +9,14 @@ td.key > a {
     color: #fff;
 }
 td.val > a {
-    padding: .1em;
     font-weight: normal;
     color: #fff;
-    background-color: #071D1F ;
+    background-color: #122 ;
     border-radius: .16em;
+}
+td.val > a:hover {
+    background-color: #3f3;
+    color: #000;
 }
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
 
