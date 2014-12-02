@@ -35,7 +35,7 @@ class R
                 c: case k
                    when 'uri'
                      href = file ? re : e.R
-                     {_: :a, href: href.uri, c: e[Label]||e[Title]||URI.unescape(e.R.abbr)} unless e[LDP+'contains']
+                     {_: :a, href: href.uri, c: e[Label]||e[Title]||URI.unescape(e.R.abbr)} unless container || directory
                    when mtime
                      e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                    when Type
@@ -51,7 +51,7 @@ class R
                        e[k].html
                      end
                    when LDP+'contains'
-                     ViewA[Container][e,env] if e.has_key? LDP+'contains'
+                     ViewA[Container][e,env] if container || directory
                    when Stat+'size'
                      e[Stat+'size'] unless e[LDP+'contains']
                    else

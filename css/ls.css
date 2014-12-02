@@ -51,14 +51,9 @@ table.ls td[property='uri'] a {
 
 table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'],table.ls td[property='uri'] {white-space:nowrap}
 
-table.ls td[property='http://www.w3.org/ns/ldp#contains'] a {
-    background-color: #222;
-    color: #fff;
-    padding: 0 .16em 0 .16em;
-}
-table.ls td[property='http://www.w3.org/ns/ldp#contains'] a:hover {background-color: #fff; color: #102F66 }
-
 table.ls a { color: #102F66; font-size: 1.2em; }
+table.ls td[property='http://www.w3.org/ns/ldp#contains'] a { background-color: #000; color: #fff }
+table.ls td[property='http://www.w3.org/ns/ldp#contains'] a.uri { background-color: #fff; color: #000 }
 table.ls th.this {background-color: #aaa; border-radius: .2em .2em 0 0; padding-left: .2em}
 th { font-weight: normal }
 table.ls th.this a {color: #fff}
