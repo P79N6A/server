@@ -1,11 +1,9 @@
-HOWTO:
-
-0) link rfc822-messages and index-trees to servable path
- $ ln -s ~/.mail domain/localhost
- $ ln -sr {address,msg} domain/localhost
+0) link messages and index-dirs to servable path
+ $ ln -s ~/.mail domain/mail
+ $ ln -sr {address,msg} domain/mail
 
 1) browse email files over HTTP
-GET http://localhost/today
+ $ firefox mail/today
 
 N) cleanup
   $ rm -rf address msg index
