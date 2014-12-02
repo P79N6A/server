@@ -233,9 +233,10 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
         post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
           dir = a.R.dir
           container = dir.uri.t
+          cLoc = e.q['group'] ? '?' : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
           item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
           post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-          graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t),Type => R[Container], Label => a.R.fragment}
+          graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
           graph[container][LDP+'contains'] ||= []
           graph[container][LDP+'contains'].push item }}
     end
