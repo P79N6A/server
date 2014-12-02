@@ -225,10 +225,10 @@ class R
          when size
            'uri'
          when 'uri'
-           'dc:title'
-         when Title
            'dc:date'
          when Date
+           'dc:title'
+         when Title
            'stat:size'
          else
            'stat:size'

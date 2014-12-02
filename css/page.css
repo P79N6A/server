@@ -4,6 +4,8 @@ a[rel=next] { float:right }
 a[rel=next], a[rel=prev]{
     text-decoration: none;
     padding: 0 0 1em 0;
+    background-color: #000;
+    color: #fff;
 }
 
 a[rel=next]:hover, a[rel=prev]:hover{

@@ -7,7 +7,9 @@ class R
     keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
     path = env['REQUEST_PATH']
     asc = env.q.has_key? 'asc'
-    sort = env.q['sort'].do{|p|p.expand} || mtime
+    env.q['sort'] ||= 'dc:date'
+    sort = env.q['sort'].expand
+    sort = mtime if sort == Date
     sortType = [mtime,Stat+'size'].member?(sort) ? :to_i : :to_s
     if d['..']
       d.delete '..'
