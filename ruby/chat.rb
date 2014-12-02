@@ -70,7 +70,10 @@ class R
   ViewGroup[SIOCt+'InstantMessage'] = ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
     label = {}
     count = 0
-    [{_: :table, class: :chat, c: d.map{|u,r|
+    sort = e.q['sort'].do{|p|p.expand} || Date
+    sortType = [Stat+'mtime',Stat+'size'].member?(sort) ? :to_i : :to_s
+    [{_: :table, class: :chat, c: d.values.sort_by{|i|
+        (i.class==Hash && i[sort].justArray[0]||0).send sortType}.map{|r|
         {_: :tr,
          c: [{_: :td, class: :date, c: r[Date][0].split('T')[1][0..4]},
              r[Creator].do{|c|
