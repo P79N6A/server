@@ -59,6 +59,10 @@ class R
                   LDP+'contains' => table.map{|key, count|
 
                     uri = case sym
+                          when :agent
+                            if u = key.match(Href)
+                              u[0]
+                            end
                           when :host
                             '//' + key + '/'
                           when :error

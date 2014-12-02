@@ -239,7 +239,7 @@ class R
           H.once(e,:sortButton,{_: :a, class: :sort, c: sortLabel, href: '?sort='+s_, title: s_}),
           r[LDP+'contains'].do{|c|
             sizes = c.find{|r|r.class == Hash && r[size].do{|s|s.justArray[0].to_i > 1}}
-            [('<br>' if c.size > 8),
+            [('<br>' if c.size > 4),
              c.sort_by{|i|
                ((i.class==Hash ? i[sort] : i.uri).justArray[0]||0).send sortType}.
                reverse.map{|r|

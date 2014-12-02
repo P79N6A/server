@@ -8,7 +8,7 @@ class String
   def hrefs i=false # HTTP URIs in plain-text
     #  ) only matches with an opener
     # ,. only match mid-URI
-    (partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/).do{|p|
+    (partition R::Href).do{|p|
       u = p[1].gsub('&','&amp;') # URI
       p[0].noHTML +
      (p[1].empty? && '' || '<a rel="untyped" href="'+u+'">' +
@@ -64,6 +64,8 @@ rescue LoadError => e
 end
 
 class R
+
+  Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
 
   def triplrUriList
     open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
