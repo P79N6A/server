@@ -218,6 +218,7 @@ class R
     re = r.R
     path = (re.path||'').t
     size = Stat + 'size'
+    group = e.q['group']
     sort = e.q['sort'].do{|p|p.expand} || size
     sortType = [size].member?(sort) ? :to_i : :to_s
     sortLabel = sort.shorten.split(':')[-1] + ' ↨'
@@ -233,13 +234,15 @@ class R
          else
            'stat:size'
          end
+    sortQ  = '?sort='+s_
+    sortQ += "&group=#{group}" if group && %w{rdf:type}.member?(group)
 
     [{class: :container, style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri}, ' ',
-          H.once(e,:sortButton,{_: :a, class: :sort, c: sortLabel, href: '?sort='+s_, title: s_}),
+          H.once(e,:sortButton,{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_}),
           r[LDP+'contains'].do{|c|
             sizes = c.find{|r|r.class == Hash && r[size].do{|s|s.justArray[0].to_i > 1}}
-            [('<br>' if c.size > 4),
+            [('<br>' if c.size > 3),
              c.sort_by{|i|
                ((i.class==Hash ? i[sort] : i.uri).justArray[0]||0).send sortType}.
                reverse.map{|r|

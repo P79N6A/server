@@ -225,7 +225,10 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
           weight[a] += 1
           graph.delete a}}
 
-      group = e.q['group'].do{|t|t.expand} || To
+      listURI = '?group=rdf:type&sort=dc:date'
+      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
+
+        group = e.q['group'].do{|t|t.expand} || To
       threads.map{|title,post| # pass 2 cluster stuff
         post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
           dir = a.R.dir
