@@ -254,7 +254,9 @@ class R
                     ("<br>" if data)]
                }}.cr
             ]},
-          ({_: :form, c: [{_: :input, name: :q},{_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p} )
+          ({_: :form,
+            c: [{_: :input, name: :q},
+                {_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p})
          ]},{_: :p, style: 'display: inline'},
      (H.once e, 'container', (H.css '/css/container',true)),
     ]}

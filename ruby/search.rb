@@ -1,5 +1,6 @@
 #watch __FILE__
 class R
+  GREP_DIRS.push(/^\/\d{4}\/\d{2}/)
 
   FileSet['find'] = -> e,q,m,x='' {
     e.exist? && q['q'].do{|q|

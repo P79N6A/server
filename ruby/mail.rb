@@ -2,8 +2,7 @@
 #watch __FILE__
 class R
 
-  GREP_DIRS.concat [/^\/\d{4}\/\d{2}/,
-                    /^\/address\/.\/[^\/]+\/\d{4}/]
+  GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
   MessagePath = ->id{ # message-ID -> path
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
