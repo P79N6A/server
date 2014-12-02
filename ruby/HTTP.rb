@@ -48,15 +48,6 @@ class R
 
   end
 
-  GET['/domain'] = -> e,r {
-    r[:container] = true if e.justPath.e
-    r.q['set'] = 'local-ref'
-    nil}
-
-  FileSet['local-ref'] = -> re,q,g {
-    FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
-      r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
-
   ServerInfo = -> e,r {
     r.q['sort'] ||= 'stat:size'
     g = {}

@@ -8,9 +8,6 @@ class R
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  GREP_DIRS.concat [/^\/\d{4}\/\d{2}/,
-                    /^\/address\/.\/[^\/]+\/\d{4}/]
-
   FileSet['grep'] = -> e,q,m {
     e.exist? && q['q'].do{|query|
       q['view'] ||= 'grep'
@@ -62,6 +59,10 @@ class R
   FileSet['sample'] = -> a,b,c {
     FileSet['default'][a,b,c].concat FileSet['page'][a,b,c]}
 
+  FileSet['local-ref'] = -> re,q,g {
+    FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
+      r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
+
   View['grep'] = -> d,e {
     w = e.q['q']
     if w && w.size > 1
@@ -107,6 +108,11 @@ class R
                H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
            },"<br>"]]}]
     end }
+
+  GET['/domain'] = -> e,r {
+    r[:container] = true if e.justPath.e
+    r.q['set'] = 'local-ref'
+    nil}
 
   GET['/search'] = -> d,e {
     e.q['set'] = 'groonga'
