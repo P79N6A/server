@@ -74,6 +74,8 @@ class R
                     title = case sym
                             when :error
                               key[Title]
+                            when :agent
+                              key.sub(Href,'')
                             else
                               key
                             end
