@@ -62,6 +62,8 @@ class R
                           when :agent
                             if u = key.match(Href)
                               u[0]
+                            else
+                              '#' + rand.to_s.h
                             end
                           when :host
                             '//' + key + '/'
