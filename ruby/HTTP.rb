@@ -84,10 +84,10 @@ class R
                             end
 
                     {'uri' => uri,
-                     Title => title,
+                     Label => title,
                      Stat+'size' => count }}}}
 
-    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,e]} ||
+    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
 end
