@@ -241,7 +241,7 @@ class R
             sizes = c.find{|r|r.class == Hash && r[size].do{|s|s.justArray[0].to_i > 1}}
             [('<br>' if c.size > 1),
              c.sort_by{|i|
-               (i.class==Hash && i[sort].justArray[0]||0).send sortType}.
+               ((i.class==Hash ? i[sort] : i.uri).justArray[0]||0).send sortType}.
                reverse.map{|r|
                data = r.class == Hash # accessible content or just identifier
                {_: :a, href: r.R.uri,
