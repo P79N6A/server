@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   MessagePath = ->id{ # message-ID -> path
@@ -221,6 +221,7 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
         weight[a] ||= 0
         weight[a] += 1
         graph.delete a}}
+    graph.delete e.uri
 
     group = e.q['group'].do{|t|t.expand} || To
     threads.map{|title,post| # pass 2 cluster stuff

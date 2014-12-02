@@ -14,7 +14,6 @@ class R
       up = true
     end
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
-
     [({_: :a, class: :up, href: '..', title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
      !entries.empty? && {_: :table, class: :ls,
         c: [{_: :tr, c: keys.map{|k| # header-row
@@ -53,8 +52,7 @@ class R
                      e[Stat+'size'] unless e[LDP+'contains']
                    else
                      e[k].html
-                   end}}} unless path==e.R.path
-            }]},
+                   end}}}}]},
      (H.css '/css/ls',true), (H.js '/js/ls',true)]}
 
 end
