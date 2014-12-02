@@ -68,8 +68,8 @@ class R
         graph = -> {
           #puts set
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          set.map{|f|f.fromStream m, :triplrInode}
           Summarize[m,@r] if @r[:container]
+          set.map{|f|f.fromStream m, :triplrInode} unless @r[:nostat]
           m}
 
         if NonRDF.member? @r.format

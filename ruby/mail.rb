@@ -206,33 +206,33 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     unless e.q.has_key? 'view'
-    threads = {}
-    weight = {}
+      e[:nostat] = true
+      threads = {}
+      weight = {}
 
-    g.map{|u,p| # pass 1 generate statistics and prune graph
-      graph.delete u
-      p[Title].do{|t|
-        title = t[0].sub /\b[rR][eE]: /, ''
-        threads[title] ||= p
-        threads[title][:size] ||= 0
-        threads[title][:size]  += 1 }
-      p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
-      p[To].justArray.map(&:maybeURI).map{|a|
-        weight[a] ||= 0
-        weight[a] += 1
-        graph.delete a}}
-    graph.delete e.uri
+      g.map{|u,p| # pass 1 generate statistics and prune graph
+        graph.delete u
+        p[Title].do{|t|
+          title = t[0].sub /\b[rR][eE]: /, ''
+          threads[title] ||= p
+          threads[title][:size] ||= 0
+          threads[title][:size]  += 1 }
+        p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
+        p[To].justArray.map(&:maybeURI).map{|a|
+          weight[a] ||= 0
+          weight[a] += 1
+          graph.delete a}}
 
-    group = e.q['group'].do{|t|t.expand} || To
-    threads.map{|title,post| # pass 2 cluster stuff
-      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
-        dir = a.R.dir
-        container = dir.uri.t
-        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
-        post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t),Type => R[Container], Label => a.R.fragment}
-        graph[container][LDP+'contains'] ||= []
-        graph[container][LDP+'contains'].push item }}
+      group = e.q['group'].do{|t|t.expand} || To
+      threads.map{|title,post| # pass 2 cluster stuff
+        post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
+          dir = a.R.dir
+          container = dir.uri.t
+          item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
+          post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
+          graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t),Type => R[Container], Label => a.R.fragment}
+          graph[container][LDP+'contains'] ||= []
+          graph[container][LDP+'contains'].push item }}
     end
   }
 
