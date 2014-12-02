@@ -13,13 +13,15 @@ class R
       d.delete '..'
       up = true
     end
+    this = d.delete env.uri if d[env.uri]
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
     [({_: :a, class: :up, href: '..', title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
+     (ViewA[Container][this,env] if this),
      !entries.empty? && {_: :table, class: :ls,
         c: [{_: :tr, c: keys.map{|k| # header-row
              {_: :th, class: (k == sort ? 'this' : 'that'),
               property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
-          entries.map{|e|
+            entries.map{|e|
             types = e.types
             container = types.include?(Container)
             directory = types.include?(Stat+'Directory')

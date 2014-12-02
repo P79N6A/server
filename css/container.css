@@ -39,6 +39,7 @@
 .container a.member {
     background-color: #fff;
     color: #000;
+    padding: 0 .2em 0 .2em;
 }
 
 .container a.member:hover {
