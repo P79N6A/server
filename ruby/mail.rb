@@ -226,11 +226,11 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
     group = e.q['group'].do{|t|t.expand} || To
     threads.map{|title,post| # pass 2 cluster stuff
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
-        addr = a.R; dir = addr.dir
-        container = dir.uri
+        dir = a.R.dir
+        container = dir.uri.t
         item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/')),Type => R[Container], Label => addr.fragment}
+        graph[container] ||= {'uri' => dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t),Type => R[Container], Label => a.R.fragment}
         graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item }}
     end

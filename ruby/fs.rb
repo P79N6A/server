@@ -92,7 +92,6 @@ class R
       this[Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
     if e.env[:container]
       g['..'] = {'uri' => '..', Type => R[Stat+'Directory']} unless e.path == '/'
-      this[Type].push R[Container]
       e.fileResources.concat e.c.map{|c|c.setEnv e.env}
     else
       e.fileResources
