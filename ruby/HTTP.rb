@@ -65,10 +65,14 @@ class R
                             else
                               '#' + rand.to_s.h
                             end
-                          when :host
-                            '//' + key + '/'
                           when :error
                             key.uri
+                          when :host
+                            '//' + key + '/'
+                          when :format
+                            'http://www.iana.org/assignments/media-types/' + key
+                          when :status
+                            W3 + '2011/http-statusCodes#' + key.to_s
                           else
                             '#' + rand.to_s.h
                           end
