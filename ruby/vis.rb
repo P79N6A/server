@@ -1,12 +1,4 @@
 #watch __FILE__
-
-module Th
-  def warp
-    self['SCHEME']+'://linkeddata.github.io/warp/#/list/'+
-    self['SCHEME']+'/'+self['SERVER_NAME']+self['REQUEST_PATH']
-  end
-end
-
 class R
 
   View['tabulate'] = ->d=nil,e=nil {

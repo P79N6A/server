@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def R.dev # scan watched-files for changes
@@ -11,22 +11,20 @@ class R
   def R.call e
     method = e['REQUEST_METHOD']
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
-    e.extend Th # add environment util-functions
-    dev         # check sourcecode
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}   # use original hostname
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/,'.' # host
-    e['SCHEME'] = e['rack.url_scheme']                     # scheme
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/'
+    e.extend Th # add environment utils
+    dev         # check for updated-source
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}   # canonical hostname
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/,'.' # clean hostname
+    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/' # clean path
     path = Pathname.new(rawpath).expand_path.to_s          # interpret path
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'   # preserve trailing-slash
-    resource = R[e['SCHEME']+"://"+e['SERVER_NAME']+path]  # resource
-    e[:Links] = []                                         # response links
-    e[:Response] = {}                                      # response head
-    e['uri'] = resource.uri                                # response URI
+    resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # resource instance
+    e['uri'] = resource.uri                                # canonical URI to environment
+    e[:Links] = [] ; e[:Response] = {}                     # response metadata
 #    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # log request
-    resource.setEnv(e).send(method).do{|s,h,b|
+    resource.setEnv(e).send(method).do{|s,h,b| # run request and inspect response
       R.log e,s,h,b # log response
-      [s,h,b] } # response
+      [s,h,b] } # return response
   rescue Exception => x
     E500[x,e]
   end
@@ -89,6 +87,7 @@ class R
                      Title => title,
                      Stat+'size' => count }}}}
 
-    [200, {'Content-Type'=>'text/html'}, [Render['text/html'][g,r]]]}
+    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,e]} ||
+      g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
 end
