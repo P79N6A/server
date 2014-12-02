@@ -33,58 +33,62 @@ class R
 
   def R.log e, s, h, b
     ua = e['HTTP_USER_AGENT'] || ''
-    Stats[:agent] ||= {}
     Stats[:agent][ua] ||= 0
     Stats[:agent][ua] += 1
-
-    Stats[:status] ||= {}
     Stats[:status][s] ||= 0
     Stats[:status][s] += 1
-
     host = e['SERVER_NAME']
-    Stats[:host] ||= {}
     Stats[:host][host] ||= 0
     Stats[:host][host] += 1
-
     mime = nil
     h['Content-Type'].do{|ct|
       mime = ct.split(';')[0]
-      Stats[:format] ||= {}
       Stats[:format][mime] ||= 0
-      Stats[:format][mime] += 1
-    }
-
+      Stats[:format][mime] += 1}
     puts [ e['REQUEST_METHOD'], s, '<'+e.uri+'>', h['Location'], '<'+e.user+'>', e['HTTP_REFERER'], mime
          ].compact.map(&:to_s).map(&:to_utf8).join ' '
 
   end
 
-  WebCache = -> e,r {
+  GET['/domain'] = -> e,r {
     r[:container] = true if e.justPath.e
-    r.q['set'] = 'cache'
+    r.q['set'] = 'local-ref'
     nil}
 
-  FileSet['cache'] = -> re,q,g {
+  FileSet['local-ref'] = -> re,q,g {
     FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
-      r.host ? R['/domain/' + r.host + (r.path||'')].setEnv(re.env) : r }}
+      r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
 
   ServerInfo = -> e,r {
     r.q['sort'] ||= 'stat:size'
     g = {}
 
-    Stats.map{|k,v|
-      group = '#' + k.to_s
-      g[group] = {'uri' => group, Type => R[Container],
-                                  LDP+'contains' => v.map{|key,count|
-                    uri = case k
+    Stats.map{|sym, table|
+      group = '#' + sym.to_s
+      g[group] = {'uri' => group,
+                  Type => R[Container],
+                  LDP+'contains' => table.map{|key, count|
+
+                    uri = case sym
                           when :host
                             '//' + key + '/'
+                          when :error
+                            key.uri
                           else
                             '#' + rand.to_s.h
                           end
-                    {'uri' => uri, Title => key,
+
+                    title = case sym
+                            when :error
+                              key[Title]
+                            else
+                              key
+                            end
+
+                    {'uri' => uri,
+                     Title => title,
                      Stat+'size' => count }}}}
-    
+
     [200, {'Content-Type'=>'text/html'}, [Render['text/html'][g,r]]]}
 
 end

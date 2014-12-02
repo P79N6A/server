@@ -86,11 +86,15 @@ class R < RDF::URI
   ViewA = {}
   ViewGroup = {}
   JSONview = {}
-  Errors = {}
-  Stats = {}
   Watch = {}
   GET = {}
   POST = {}
+
+  Stats = {agent: {},
+           error: {},
+           format: {},
+           host: {},
+           status: {}}
 
   GREP_DIRS = []
 
