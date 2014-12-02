@@ -23,6 +23,7 @@ class R
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga
   ResourceSet['groonga'] = ->d,e,m{
+    d.env[:container] = true
     m['/search#'] = {Type => R[Search]}
     R.groonga.do{|ga|
       q = e['q']                               # search expression
