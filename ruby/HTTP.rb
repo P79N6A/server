@@ -85,7 +85,7 @@ class R
                           when :error
                             key.uri
                           when :host
-                            '//' + key + '/'
+                            r['rack.url_scheme'] + "://" + key + '/'
                           when :format
                             'http://www.iana.org/assignments/media-types/' + key
                           when :status
