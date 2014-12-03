@@ -241,22 +241,22 @@ class R
       c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri}, ' ',
           H.once(e,:sortButton,{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_}),
           r[LDP+'contains'].do{|c|
-            sizes = c.find{|r|r.class == Hash && r[size].do{|s|s.justArray[0].to_i > 1}}
+            sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
+            maxSize = sizes.max
+            sized = !sizes.empty? && maxSize > 1
+            width = maxSize.to_s.size
             [('<br>' if c.size > 3),
-             c.sort_by{|i|
-               ((i.class==Hash ? i[sort] : i.uri).justArray[0]||0).send sortType}.
-               reverse.map{|r|
-               data = r.class == Hash # accessible content or just identifier
-               {_: :a, href: r.R.uri,
-                class: :member,
-                c: [(r[size].do{|s|
-                       s = s.justArray[0]
-                       {_: :b, class: s > 1 ? :size : :space, c: s > 1 ? '%2d' % s : '  '}} if data && sizes), ' ',
+             c.sort_by{|i|((i.class==Hash ? i[sort] : i.uri).justArray[0]||0).send sortType}.reverse.map{|r|
+               data = r.class == Hash
+               {_: :a, href: r.R.uri, class: :member,
+                c: [(if data && sized && r[size]
+                     s = r[size].justArray[0]
+                     [{_: :span, class: :size, c: s > 1 ? "%#{width}d" % s : ' '*width}, ' ']
+                     end),
                     ([r[Date],' '] if data && sort==Date),
                     data && (r[Title] || r[Label]) || r.R.abbr[0..64],
-                    ("<br>" if data)]
-               }}.cr
-            ]},
+                    ('<br>' if sized)
+                   ]}}.cr]},
           ({_: :form,
             c: [{_: :input, name: :q},
                 {_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p})

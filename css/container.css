@@ -10,13 +10,12 @@
 
 .container a {text-decoration: none;}
 
-.container b {
-    display: inline-block;
+.container .size {
     font-family: monospace;
     white-space: pre-wrap;
+    color: #777;
 }
 
-.container b.size {color: #777;}
 .container a.member:visited b.size {color: #fff;}
 
 .container a.uri {
@@ -40,6 +39,7 @@
     background-color: #fff;
     color: #000;
     padding: 0 .2em 0 .2em;
+    white-space: nowrap;
 }
 
 .container a.member:hover {
