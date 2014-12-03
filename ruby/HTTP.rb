@@ -110,16 +110,16 @@ class R
 
   E404 = -> e,r,g=nil {
     g = {} # graph
-    s = g[e.uri] ||= {}
-    s['#query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
-    s['#accept'] = r.accept
-    %w{CHARSET LANGUAGE ENCODING}.map{|a|
-      s['#accept-'+a.downcase] = r.accept_('_'+a)}
-    r.map{|k,v| s['#'+k.to_s] = v.class==Hash ? v.dup : v}
-    s['#SERVER_NAME'] = R['//'+s['#SERVER_NAME']]
-    s['#uri'] = R[s['#uri']]
-    s['#HTTP_REFERER'].do{|r|s['#HTTP_REFERER']=R[r]}
     r.q.delete 'view'
+    [:Links,:Response].map{|p|r.delete p}
+    s = g[e.uri] ||= {}
+    if r.format=='text/html'
+      s['#query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
+      s['#accept'] = r.accept
+      %w{CHARSET LANGUAGE ENCODING}.map{|a|
+        s['#accept-'+a.downcase] = r.accept_('_'+a)}
+    end
+    r.map{|k,v| s[HTTP+k.to_s] = v.class==Hash ? v.dup : v}
     [404,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} || g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
 end
