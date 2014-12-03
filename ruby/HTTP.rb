@@ -70,7 +70,7 @@ class R
     g = {}
 
     Stats.map{|sym, table|
-      group = '#' + sym.to_s
+      group = e.uri + '#' + sym.to_s
       g[group] = {'uri' => group,
                   Type => R[Container],
                   LDP+'contains' => table.map{|key, count|
