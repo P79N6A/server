@@ -16,7 +16,7 @@
     color: #777;
 }
 
-.container a.member:visited b.size {color: #fff;}
+.container a.member:visited .size {color: #fff;}
 
 .container a.uri {
     font-size: 1.3em;
