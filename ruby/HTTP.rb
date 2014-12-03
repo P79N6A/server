@@ -86,9 +86,7 @@ class R
                               key
                             end
 
-                    {'uri' => uri,
-                     Label => title,
-                     Stat+'size' => count }}}}
+                    {'uri' => uri, Title => title, Stat+'size' => count }}}}
 
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}

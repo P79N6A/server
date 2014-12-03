@@ -260,8 +260,7 @@ class R
             c: [{_: :input, name: :q},
                 {_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p})
          ]},{_: :p, style: 'display: inline'},
-     (H.once e, 'container', (H.css '/css/container',true)),
-    ]}
+     (H.once e, 'container', (H.css '/css/container',true))]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     offset = -> r {
