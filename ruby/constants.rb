@@ -71,6 +71,7 @@ class R < RDF::URI
   }
 
   Prefixes = { # for RDF::Writer
+    :http => RDF::URI(HTTP),
     :ldp => RDF::URI(LDP),
     :rdf => RDF::URI(RDFns),
     :rdfs => RDF::URI(RDFs),

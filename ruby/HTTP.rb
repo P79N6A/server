@@ -119,7 +119,8 @@ class R
       %w{CHARSET LANGUAGE ENCODING}.map{|a|
         s['#accept-'+a.downcase] = r.accept_('_'+a)}
     end
-    r.map{|k,v| s[HTTP+k.to_s] = v.class==Hash ? v.dup : v}
-    [404,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} || g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
+    r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}
+    [404,{'Content-Type' => r.format},
+     [Render[r.format].do{|p|p[g,r]} || g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :prefixes => Prefixes)]]}
 
 end
