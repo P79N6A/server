@@ -12,7 +12,7 @@ class String
       u = p[1].gsub('&','&amp;') # URI
       p[0].noHTML +
      (p[1].empty? && '' || '<a rel="untyped" href="'+u+'">' +
-       ( i && u.match(/(gif|jpe?g|png|tiff)$/i) && "<img src='#{u}'>" || u ) + '</a>') +
+       ( i && u.match(/(gif|jpe?g|png|webp)$/i) && "<img src='#{u}'>" || u ) + '</a>') +
      (p[2].empty? && '' || p[2].hrefs) # again on any post-match tail
     }
   rescue
