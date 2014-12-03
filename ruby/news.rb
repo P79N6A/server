@@ -9,6 +9,7 @@ class R
       else
         e.q['set'] ||= 'sample'
         e.q['c'] ||= 28
+        e.q['sort'] ||= 'dc:date'
         e['HTTP_ACCEPT_DATETIME'].do{|dt|
           t = Time.parse dt
           e[:Response]['Memento-Datetime'] = dt
