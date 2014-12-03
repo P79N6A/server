@@ -110,7 +110,7 @@ class R
 
   E404 = -> e,r,graph=nil {
     g = {}
-    graph[""].do{|r|g[e.uri] = r} if graph
+    graph[""].do{|r|g[e.uri+'#'] = r} if graph
     r.q.delete 'view'
     [:Links,:Response].map{|p|r.delete p}
     s = g[e.uri] ||= {}
