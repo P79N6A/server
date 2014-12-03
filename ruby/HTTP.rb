@@ -72,7 +72,7 @@ class R
     Stats.map{|sym, table|
       group = e.uri + '#' + sym.to_s
       g[group] = {'uri' => group,
-                  Type => R[Container],
+                  Type => R[Container], Label => sym.to_s,
                   LDP+'contains' => table.map{|key, count|
 
                     uri = case sym
