@@ -238,25 +238,24 @@ class R
     sortQ += "&group=#{group}" if group && %w{rdf:type}.member?(group)
 
     [{class: :container, style: "background-color: #{R.cs}",
-      c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri}, ' ',
-          H.once(e,:sortButton,{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_}),
+      c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri},
+          H.once(e,:sortButton,{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_}), "<br>\n",
           r[LDP+'contains'].do{|c|
             sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
             maxSize = sizes.max
             sized = !sizes.empty? && maxSize > 1
             width = maxSize.to_s.size
-            [('<br>' if c.size > 3),
-             c.sort_by{|i|((i.class==Hash ? i[sort] : i.uri).justArray[0]||0).send sortType}.reverse.map{|r|
-               data = r.class == Hash
-               {_: :a, href: r.R.uri, class: :member,
-                c: [(if data && sized && r[size]
-                     s = r[size].justArray[0]
-                     [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
-                     end),
-                    ([r[Date],' '] if data && sort==Date),
-                    data && (r[Title] || r[Label]) || r.R.abbr[0..64],
-                    ('<br>' if sized)
-                   ]}}.cr]},
+            c.sort_by{|i|((i.class==Hash ? i[sort] : i.uri).justArray[0]||0).send sortType}.reverse.map{|r|
+              data = r.class == Hash
+              {_: :a, href: r.R.uri, class: :member,
+               c: [(if data && sized && r[size]
+                    s = r[size].justArray[0]
+                    [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
+                    end),
+                   ([r[Date],' '] if data && sort==Date),
+                   data && (r[Title] || r[Label]) || r.R.abbr[0..64],
+                   ("<br>\n" if data)
+                  ]}}.intersperse(" ")},
           ({_: :form,
             c: [{_: :input, name: :q},
                 {_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p})
