@@ -80,7 +80,7 @@ class R
                             if u = key.match(Href)
                               u[0]
                             else
-                              '#' + rand.to_s.h
+                              e.uri + '#' + rand.to_s.h
                             end
                           when :error
                             key.uri
@@ -91,7 +91,7 @@ class R
                           when :status
                             W3 + '2011/http-statusCodes#' + key.to_s
                           else
-                            '#' + rand.to_s.h
+                            e.uri + '#' + rand.to_s.h
                           end
 
                     title = case sym
@@ -108,8 +108,9 @@ class R
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
-  E404 = -> e,r,g=nil {
-    g = {} # graph
+  E404 = -> e,r,graph=nil {
+    g = {}
+    graph[""].do{|r|g[e.uri] = r} if graph
     r.q.delete 'view'
     [:Links,:Response].map{|p|r.delete p}
     s = g[e.uri] ||= {}
