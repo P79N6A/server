@@ -48,6 +48,23 @@ class R
 
   end
 
+  E500 = -> x,e {
+    error = {'uri' => e.uri,
+             Title => [x.class, x.message].join(' '),
+             Content => '<pre>' + x.backtrace.join("\n").noHTML + '<pre>'}
+    graph = {e.uri => error}
+
+    Stats[:status][500] ||= 0
+    Stats[:status][500]  += 1
+    Stats[:error][error]||= 0
+    Stats[:error][error] += 1
+
+    $stderr.puts [500, error[Title], x.backtrace]
+
+    [500,{'Content-Type' => e.format},
+     [Render[e.format].do{|p|p[graph,e]} ||
+      graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+
   ServerInfo = -> e,r {
     r.q['sort'] ||= 'stat:size'
     g = {}
@@ -90,5 +107,25 @@ class R
 
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
+
+  E404 = -> e,r,g=nil {
+    r[:Response].update({'Content-Type'=>r.format})
+    if r.format == 'text/html'
+      g||={} # graph
+      s = g[e.uri] ||= {} # resource
+      s['#query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
+      s['#accept'] = r.accept
+      %w{CHARSET LANGUAGE ENCODING}.map{|a|
+        s['#accept-'+a.downcase] = r.accept_('_'+a)}
+      r.map{|k,v| s['#'+k.to_s] = v.class==Hash ? v.dup : v}
+      s['#SERVER_NAME'] = R['//'+s['#SERVER_NAME']]
+      s['#uri'] = R[s['#uri']]
+      s['#HTTP_REFERER'].do{|r|s['#HTTP_REFERER']=R[r]}
+      s['#Response'].do{|r|r.delete 'Content-Type'}
+      r.q.delete 'view'
+      [404, r[:Response], [Render['text/html'][g,r]]]
+    else
+      [404, r[:Response], []]
+    end}
 
 end

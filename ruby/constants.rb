@@ -113,8 +113,6 @@ HEAD
 HTML
 HTTP
 JSON
-404
-500
 image
 index
 ls
