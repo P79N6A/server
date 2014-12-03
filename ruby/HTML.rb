@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 #watch __FILE__
 
-def H _ # HTML in Ruby, {} as DOM node, _: typetag
-  case _#                               c: children
+def H x # rewrite Ruby to HTML
+  case x
   when Hash
-    #void = [:area, :base, :br, :col, :embed, :hr, :img, :input, :keygen, :link, :meta, :param, :source, :track, :wbr].member? _[:_]
-    void = [:img, :input, :link, :meta].member? _[:_]
-    '<' + (_[:_] || :div).to_s +                                     # name
-      (_.keys - [:_,:c]).map{|a|                                     # attributes
-      ' ' + a.to_s + '=' + "'" + _[a].to_s.chars.map{|c|
-        {"'"=>'%27','>'=>'%3E','<'=>'%3C'}[c]||c}.join + "'"}.join + # values
-      (void ? '/' : '') + '>' +                                      # void-el closer
-      (_[:c] ? (H _[:c]) : '') +                                     # children
-      (void ? '' : ('</'+(_[:_]||:div).to_s+'>'))                    # closer
+    void = [:img, :input, :link, :meta].member? x[:_]
+    '<' + (x[:_] || 'div').to_s +                        # name
+      (x.keys - [:_,:c]).map{|a|                         # attribute name
+      ' ' + a.to_s + '=' + "'" + x[a].to_s.chars.map{|c| # attribute value
+        {"'"=>'%27',
+         '>'=>'%3E',
+         '<'=>'%3C'}[c]||c}.join + "'"}.join +
+      (void ? '/' : '') + '>' + (H x[:c]) +              # children or void
+      (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # closer
   when Array
-    _.map{|n|H n}.join
+    x.map{|n|H n}.join
   else
-    _.to_s if _
+    x.html
   end
 end
 
@@ -57,7 +57,7 @@ class Array
 end
 
 class Object
-  def html; self.class end
+  def html; self.class.to_s end
   def justArray; [self] end
 end
 
