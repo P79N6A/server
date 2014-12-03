@@ -251,7 +251,7 @@ class R
                {_: :a, href: r.R.uri, class: :member,
                 c: [(if data && sized && r[size]
                      s = r[size].justArray[0]
-                     [{_: :span, class: :size, c: s > 1 ? "%#{width}d" % s : ' '*width}, ' ']
+                     [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
                      end),
                     ([r[Date],' '] if data && sort==Date),
                     data && (r[Title] || r[Label]) || r.R.abbr[0..64],
