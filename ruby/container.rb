@@ -78,12 +78,18 @@ class R
     mtime = Stat+'mtime'
     keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
     path = env['REQUEST_PATH']
-    asc = env.q.has_key? 'asc'
+    ascending = env.q.has_key? 'ascending'
     env.q['sort'] ||= mtime
     sort = env.q['sort'].expand
     sort = mtime if sort == Date
     sort = 'uri' if sort == Title
     sortType = [mtime,Stat+'size'].member?(sort) ? :to_i : :to_s
+    qs = env.q
+    if ascending
+      qs.delete 'ascending'
+    else
+      qs['ascending'] = 'a'
+    end
 
     this = d.delete env.uri if d[env.uri]
     if d['..']
@@ -91,14 +97,14 @@ class R
       up = true
     end
 
-    entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(asc ? :id : :reverse)
+    entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(ascending ? :id : :reverse)
 
     [({_: :a, class: :up, href: '..', title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
      (ViewA[Container][this,env] if this),
      ({_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k|
               {_: :th, class: (k == sort ? 'this' : 'that'),
-               property: k, c: {_: :a, href: env.q.merge({'sort' => k.shorten}).qs, c: k.R.abbr}}}},
+               property: k, c: {_: :a, href: qs.merge({'sort' => k.shorten}).qs, c: k.R.abbr}}}},
 
            entries.map{|e|
              types = e.types

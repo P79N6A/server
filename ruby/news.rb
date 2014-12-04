@@ -3,20 +3,18 @@ class R
   GREP_DIRS.push(/^\/news\/\d{4}\/\d{2}/)
 
   GET['/news'] = -> d,e {
-    if d.path == '/news/'
-      if e.q.has_key?('q')
-        e.q['set'] ||= 'groonga'
-      else
-        e.q['set'] ||= 'page'
-        e.q['c'] ||= 28
-        e.q['sort'] ||= 'dc:date'
-        e['HTTP_ACCEPT_DATETIME'].do{|dt|
-          t = Time.parse dt
-          e[:Response]['Memento-Datetime'] = dt
-          e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
-      end
-      nil
-    end}
+    if e.q.has_key?('q')
+      e.q['set'] ||= 'groonga'
+    else
+      e.q['set'] ||= 'page'
+      e.q['c'] ||= 28
+      e.q['sort'] ||= 'dc:date'
+      d.path == '/news/' && e['HTTP_ACCEPT_DATETIME'].do{|dt|
+        t = Time.parse dt
+        e[:Response]['Memento-Datetime'] = dt
+        e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
+    end
+    nil}
 
   def getFeed h='localhost'
     cacheRDF :format => :feed, :hook => FeedArchiverRDF, :hostname => h
