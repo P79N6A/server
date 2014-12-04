@@ -127,8 +127,6 @@ class R
                     when Type
                       if containerType
                         {_: :a, class: :dir, href: e.uri, c: '►'}
-                      elsif types.include?(DC+'Image')
-                        ShowImage[e.uri]
                       elsif file
                         {_: :a, class: :file, href: e.uri, c: '█'}
                       elsif types.include?(RDFs+'Resource')
@@ -137,7 +135,11 @@ class R
                         e[k].html
                       end
                     when LDP+'contains'
-                      ViewA[Container][e,env] if containerType
+                      if containerType
+                        ViewA[Container][e,env]
+                      elsif types.include?(DC+'Image')
+                        ShowImage[e.uri]
+                      end
                     when Stat+'size'
                       e[Stat+'size'] unless e[LDP+'contains']
                     else
