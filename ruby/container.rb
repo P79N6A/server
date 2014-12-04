@@ -37,8 +37,10 @@ class R
     sortQ += "&group=#{group}" if group && %w{rdf:type}.member?(group)
 
     [{class: :container, style: "background-color: #{R.cs}",
-      c: [{_: :a, class: :uri, c: r[Label] || (re.path=='/' ? re.host : re.abbr), href: re.uri},
-          H.once(e,:sortButton,{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_}), "<br>\n",
+      c: [{_: :a, class: :uri, href: re.uri,
+           c: r[Label] || (re.path=='/' ? re.host : re.abbr)},
+          H.once(e,:sortButton,
+                 {_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_}), "<br>\n",
           r[LDP+'contains'].do{|c|
             sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
             maxSize = sizes.max
@@ -55,9 +57,11 @@ class R
                    data && (r[Title] || r[Label]) || r.R.abbr[0..64],
                    ("<br>\n" if data)
                   ]}}.intersperse(" ")},
-          ({_: :form,
+          (if e.R.path == path && GREP_DIRS.find{|p|path.match p}
+           {_: :form,
             c: [{_: :input, name: :q},
-                {_: :input, type: :hidden, name: :set, value: :grep}]} if e.R.path == path && GREP_DIRS.find{|p|path.match p})
+                {_: :input, type: :hidden, name: :set, value: :grep}]}
+           end)
          ]},{_: :p, style: 'display: inline'},
      (H.once e, 'container', (H.css '/css/container',true))]}
 
