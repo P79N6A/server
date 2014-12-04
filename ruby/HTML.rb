@@ -109,11 +109,8 @@ class Hash
                  c: (k == 'uri' ? {} : {_: :a, href: k, c: r.abbr}), class: :key},"\n",
                 {_: :td,
                  c: k == 'uri' ? v.R.do{|u|
-                                   {_: :a,
-                                    id: (u.fragment||u.uri),
-                                    href: u.url,
+                                   {_: :a, id: (u.fragment||u.uri), href: u.uri,
                                     c: (self[R::Label] || self[R::Title] || u.abbr).justArray[0].to_s.noHTML,
-                                    style: "background-color: #{R.cs}",
                                    }} : v.html, class: :val}]]},
              "\n"] if k && v}},
          "\n"]
