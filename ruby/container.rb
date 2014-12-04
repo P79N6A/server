@@ -121,10 +121,10 @@ class R
                     when Type
                       if containerType
                         {_: :a, class: :dir, href: e.uri, c: '►'}
-                      elsif file
-                        {_: :a, class: :file, href: e.uri, c: '█'}
                       elsif types.include?(DC+'Image')
                         ShowImage[e.uri]
+                      elsif file
+                        {_: :a, class: :file, href: e.uri, c: '█'}
                       elsif types.include?(RDFs+'Resource')
                         {_: :a, class: :resource, href: e.uri, c: '■'}
                       else
