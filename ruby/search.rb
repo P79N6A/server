@@ -37,7 +37,7 @@ class R
       m[''][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
       r.map{|r|r['.uri'].R}}} # URI -> Resource
 
-  # depth-first range in page-chunks
+  # depth-first subtree-range in page-chunks
   FileSet['page'] = -> d,r,m {
     u = m['']
     c = ((r['c'].do{|c|c.to_i} || 31) + 1).max(1024).min 2 # count
@@ -90,9 +90,9 @@ class R
 
          l = r.values.flatten.select{|v|v.class==String}.map{|s|s.lines.to_a.map{|l|l.gsub(/<[^>]+>/,'')}}.flatten
 
-         # try sequential match
+         # sequential match
          g = l.grep p
-         # try OR match
+         # OR match
          g = l.grep a if g.empty?                           
 
          # match?

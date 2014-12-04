@@ -72,6 +72,7 @@ class R
     count = 0
     e.q['sort'] ||= 'dc:date'
     sort = e.q['sort'].expand
+    sort = 'uri' if sort == Title
     sortType = [Stat+'mtime',Stat+'size'].member?(sort) ? :to_i : :to_s
     [{_: :table, class: :chat, c: d.values.sort_by{|i|
         (i.class==Hash && i[sort].justArray[0]||0).send sortType}.reverse.map{|r|

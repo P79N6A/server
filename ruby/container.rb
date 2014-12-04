@@ -33,8 +33,7 @@ class R
          else
            'stat:size'
          end
-    sortQ  = '?sort='+s_
-    sortQ += "&group=#{group}" if group && %w{rdf:type}.member?(group)
+    sortQ  = e.q.merge({'sort' => s_}).qs
 
     [{class: :container, style: "background-color: #{R.cs}",
       c: [{_: :a, class: :uri, href: re.uri,
@@ -99,7 +98,7 @@ class R
      ({_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k|
               {_: :th, class: (k == sort ? 'this' : 'that'),
-               property: k, c: {_: :a, href: path+'?sort='+k.shorten+(asc ? '' : '&asc=asc'), c: k.R.abbr}}}},
+               property: k, c: {_: :a, href: env.q.merge({'sort' => k.shorten}).qs, c: k.R.abbr}}}},
 
            entries.map{|e|
              types = e.types
