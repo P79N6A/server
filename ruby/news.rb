@@ -7,7 +7,7 @@ class R
       if e.q.has_key?('q')
         e.q['set'] ||= 'groonga'
       else
-        e.q['set'] ||= 'sample'
+        e.q['set'] ||= 'page'
         e.q['c'] ||= 28
         e.q['sort'] ||= 'dc:date'
         e['HTTP_ACCEPT_DATETIME'].do{|dt|

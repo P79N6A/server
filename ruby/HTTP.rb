@@ -110,17 +110,17 @@ class R
 
   E404 = -> e,r,graph=nil {
     g = {}
-    graph[""].do{|r|g[e.uri+'#'] = r} if graph
-    r.q.delete 'view'
+    graph[""].do{|r|g[e.uri+'#'] = r} if graph # keep resource-meta
+    r.q.delete 'view' # default HTML view
     [:Links,:Response].map{|p|r.delete p}
     s = g[e.uri] ||= {}
+    r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}
     if r.format=='text/html'
       s['#query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
       s['#accept'] = r.accept
       %w{CHARSET LANGUAGE ENCODING}.map{|a|
         s['#accept-'+a.downcase] = r.accept_('_'+a)}
     end
-    r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}
     [404,{'Content-Type' => r.format},
      [Render[r.format].do{|p|p[g,r]} || g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :prefixes => Prefixes)]]}
 

@@ -21,7 +21,7 @@ class R
     when 3
       r.q['view'] ||= 'addresses'
     when 4
-      r.q['set'] ||= 'sample'
+      r.q['set'] ||= 'page'
     end
     nil}
 

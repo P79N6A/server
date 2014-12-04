@@ -104,6 +104,7 @@ MIME
 names
 acl
 chat
+container
 csv
 DELETE
 facets
@@ -116,7 +117,6 @@ HTTP
 JSON
 image
 index
-ls
 mail
 man
 news

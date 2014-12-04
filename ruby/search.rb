@@ -55,12 +55,9 @@ class R
       end
       d.env[:Links].push "<#{d.uri+'?set=page&asc'}>; rel=first"
       d.env[:Links].push "<#{d.uri+'?set=page&desc'}>; rel=last"
-      s }}
+      s.concat FileSet['default'][d,r,m]}}
 
-  FileSet['sample'] = -> a,b,c {
-    FileSet['default'][a,b,c].concat FileSet['page'][a,b,c]}
-
-  FileSet['local-ref'] = -> re,q,g {
+  FileSet['localize'] = -> re,q,g {
     FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
       r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
 
@@ -112,7 +109,7 @@ class R
 
   GET['/domain'] = -> e,r {
     r[:container] = true if e.justPath.e
-    r.q['set'] = 'local-ref'
+    r.q['set'] = 'localize'
     nil}
 
   GET['/search'] = -> d,e {
