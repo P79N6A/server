@@ -19,7 +19,7 @@ class R
   GET['/address'] = -> e,r {
     case e.path.split('/').size
     when 3
-      r.q['view'] ||= 'addresses'
+      r[:filter] = :addrContainer
     when 4
       r.q['set'] ||= 'page'
     end

@@ -2,16 +2,6 @@
 #watch __FILE__
 class R
 
-  Summarize = -> g,e {
-    groups = {}
-    g.map{|u,r|
-      r.types.map{|type|
-        if v = Abstract[type]
-          groups[v] ||= {}
-          groups[v][u] = r
-        end}}
-    groups.map{|fn,gr|fn[g,gr,e]}}
-
   ViewA[Content] = -> r,e {r[Content]}
   ViewA['default'] = -> r,e {[r.html, H.once(e, 'default', (H.css '/css/html', true))]}
 

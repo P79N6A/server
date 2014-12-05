@@ -26,7 +26,7 @@ td.val a[rel=untyped] {
     font-weight: bold;
 }
 
-td.val a[rel=untyped]:hover {
+td.val a[rel=untyped]:hover, td.val a[rel=untyped]:visited {
     background-color: #3f3;
     color: #000;
     border-color: #000;

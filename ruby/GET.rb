@@ -62,7 +62,7 @@ class R
         graph = -> {
           #puts set
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          Summarize[m,@r] if @r[:container]
+          Summarize[m,@r]
           set.map{|f|f.fromStream m, :triplrInode} unless @r[:nostat]
           m}
 
@@ -81,7 +81,20 @@ class R
         end
       end}
   end
-  
+
+  Summarize = -> g,e {
+    
+    if e[:container]
+      groups = {}
+      g.map{|u,r|
+        r.types.map{|type|
+          if v = Abstract[type] # summarizer registered for type-class
+            groups[v] ||= {}
+            groups[v][u] = r
+          end}}
+      groups.map{|fn,gr|fn[g,gr,e]}
+    end}
+
   def condResponse body
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])

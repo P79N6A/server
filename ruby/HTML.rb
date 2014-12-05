@@ -93,6 +93,7 @@ end
 
 class NilClass
   def html; "" end
+  def justArray; [] end
 end
 
 class Hash
