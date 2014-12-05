@@ -47,13 +47,7 @@ class R
     fs[self,q,m].do{|files|set.concat files} if fs
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
-    if set.empty? # nothing found
-      if q.has_key? 'new' # create
-        q['view'] ||= 'new'
-      else
-        return E404[self,@r,m]
-      end
-    end
+    return E404[self,@r,m] if set.empty? && (!q.has_key? 'new')
 
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
