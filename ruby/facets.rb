@@ -36,7 +36,7 @@ class R
             }}].join ' '
        }.do{|f|
          [f.map{|o| '<div class="' + o + '">' }, # open wrapper
-          DefaultView[{u => r},e],               # render resource
+          HTMLr[{u => r},e],               # render resource
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 

@@ -110,9 +110,9 @@ class R
      d[DC+'Image'].do{|is|
        is = is.sort_by(&:uri)
        {type: :book,
-        c: [{_: :img, style:'float:left;max-width:100%', src: is[0].url},
+        c: [{_: :img, style:'float:left;max-width:100%', src: is[0].uri},
             {name: :pages,
-             c: is.map{|i|{_: :a,href: i.url, c: i.R.bare}}}]}}]}
+             c: is.map{|i|{_: :a,href: i.uri, c: i.R.bare}}}]}}]}
 
   def triplrRTF
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs

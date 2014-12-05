@@ -222,7 +222,7 @@ class R
                d[Content] &&
                {_: :entry,
                  c: [{_: :id, c: u},
-                     {_: :link, href: d.url},
+                     {_: :link, href: d.uri},
                      d[Date].do{|d|{_: :updated, c: d[0]}},
                      d[Title].do{|t|{_: :title, c: t}},
                      d[Creator].do{|c|{_: :author, c: c[0]}},

@@ -134,9 +134,8 @@ wiki
   NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
   Resource = R[RDFs+'Resource']
 
-  alias_method :maybeURI, :to_s
-  alias_method :url, :to_s
   alias_method :uri, :to_s
+  alias_method :maybeURI, :uri
 
 end
 
@@ -147,7 +146,6 @@ end
 class Hash
   def R; R.new uri end
   def uri; self["uri"]||"" end
-  alias_method :url, :uri
   alias_method :maybeURI, :uri
 end
 

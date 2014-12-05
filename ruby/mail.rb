@@ -29,16 +29,15 @@ class R
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
     return E404[e,r] if m.empty?
-    v = r.q['view'] ||= 'force'  # visualize references
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
-    r[:Response]['ETag'] = [(View[v] && v), m.keys.sort, r.format].h
+    r[:Response]['ETag'] = [m.keys.sort, r.format].h
     e.condResponse ->{
       Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   def mail; Mail.read node if f end
 
   def triplrMail &b
-    m = mail; return unless m                        # mail
+    m = mail; return unless m # parse
     id = m.message_id || m.resent_message_id
     unless id
       puts "missing Message-ID in #{uri}"
@@ -173,7 +172,7 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
             c.css('span.q').remove
             r[Content] = c.to_xhtml }}}}
     [{_: :a, href: '?', c: '&gt;', title: "show quotes", style: 'position: fixed; top: .2em; right: .2em; z-index: 2; border-radius: .1em; font-size: 2.3em; color: #bbb; background-color: #fff; border: .05em dotted #bbb'},{_: :style, c: 'body table.html {display: block}'},
-     DefaultView[g,e]]}
+     HTMLr[g,e]]}
 
   View['addresses'] = -> d,e {
     e.q['sort'] = 'uri'

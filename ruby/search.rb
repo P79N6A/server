@@ -61,7 +61,7 @@ class R
     FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
       r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
 
-  View['grep'] = -> d,e {
+  ViewGroup['#grepResult'] = -> d,e {
     w = e.q['q']
     if w && w.size > 1
       # words supplied in query
@@ -98,7 +98,7 @@ class R
          # match?
          !g.empty? &&                                       
          [# link to resource
-          r.R.do{|e|{_: :a, href: e.url, c: e}}, '<br>',
+          r.R.do{|e|{_: :a, href: e.uri, c: e}}, '<br>',
           # max matches per resource
           [g[-1*(g.size.max 6)..-1].map{|l|   
              # exerpt
