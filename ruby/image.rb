@@ -34,10 +34,9 @@ class R
 
   ShowImage = -> u {{_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}
 
-  View['imgs'] = -> m,e { seen = {} # find images throughout the loaded graph
-
+  ViewGroup['#ImageContent'] = -> m,e {
+    seen = {}
     x = ->i{i && i.match(/(jpe?g|gif|png)$/i) && i } # extension match
-
     m.values.map{|v|
        [[*v[Content]].map{|c| c.class == String &&
          (Nokogiri::HTML.parse(c).do{|c|              # CSS-selector search
@@ -47,10 +46,8 @@ class R
         x.(v.uri),                                    # subject URI w/ image extension
         (v.respond_to?(:values) &&                    # object URIs w/ image extension
          v.values.flatten.map(&:maybeURI).select(&x))
-
        ].flatten.uniq.compact.map{|s|
          {uri: s, c: "<a href='#{s}'><img style='float:left;height:255px' src='#{s}'></a>"}}}.flatten.map{|i|
-
        # show and mark as seen
        !seen[i[:uri]] &&
        (seen[i[:uri]] = true

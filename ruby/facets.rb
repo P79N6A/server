@@ -1,8 +1,6 @@
 class R
 
-  # facet-filtering - dynamic CSS edition
-
-  View['facets'] = -> m,e {
+  ViewGroup['#facetFilterable'] = -> m,e {
     a = Hash[((e.q['a']||'sioct:ChatChannel').split ',').map{|a|
                [a.expand,{}]}]
 

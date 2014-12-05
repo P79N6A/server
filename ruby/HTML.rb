@@ -166,9 +166,9 @@ class R
                      {_: :link, rel: :next, href: n.uri}},
                    u[Prev].do{|p|
                      {_: :link, rel: :prev, href: p.uri}}]},
-             {_: :body, c: View[d,e]}]}]}
+             {_: :body, c: HTMLr[d,e]}]}]}
 
-  View = -> d,e {
+  HTMLr = -> d,e {
     groups = {}
     seen = {}
     d.map{|u,r| # group resources on RDF class

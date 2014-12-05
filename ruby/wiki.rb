@@ -16,7 +16,7 @@ class R
     SIOCt+'WikiArticleSection',
   ]
 
-  View['new'] = -> graph, e {
+  ViewA['#newType'] = -> graph, e {
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&view=edit&type='+c.shorten}}}
 

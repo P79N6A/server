@@ -151,17 +151,7 @@ class R
   end
 
   ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e], H.once(e, 'mail', H.css('/css/mail',true))]} # add quote-styling CSS
-
-  # hide quoted-material
-  # client-side
-  View['unquote'] = -> g,e {[{_: :style, c: "
-body table.html {margin-bottom: 0}
-tr[property], tr[property=\"http://rdfs.org/sioc/ns#content\"] span.q {display: none}
-tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display: inline}
-"},View['force'][g,e]]}
-
-  # hide quoted-material
-  # server-side
+=begin
   View['noquote'] = -> g,e {
     g = Hash[g.sort_by{|u,r| r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse]
     g.map{|u,r|
@@ -173,8 +163,8 @@ tr[property=\"uri\"], tr[property=\"http://rdfs.org/sioc/ns#content\"] {display:
             r[Content] = c.to_xhtml }}}}
     [{_: :a, href: '?', c: '&gt;', title: "show quotes", style: 'position: fixed; top: .2em; right: .2em; z-index: 2; border-radius: .1em; font-size: 2.3em; color: #bbb; background-color: #fff; border: .05em dotted #bbb'},{_: :style, c: 'body table.html {display: block}'},
      HTMLr[g,e]]}
-
-  View['addresses'] = -> d,e {
+=end
+  Abstract['addresses'] = -> graph, d,e {
     e.q['sort'] = 'uri'
     g = {}
     d.map{|u,r|
