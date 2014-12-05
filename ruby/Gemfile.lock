@@ -74,6 +74,7 @@ GEM
       rdf (~> 1.1, >= 1.1.4)
     rdf-xsd (1.1.1)
       rdf (~> 1.1)
+    redcarpet (3.1.2)
     sparql (1.1.4)
       builder (~> 3.0)
       ebnf (~> 0.3, >= 0.3.5)
@@ -100,4 +101,5 @@ DEPENDENCIES
   mail
   nokogiri
   rack
+  redcarpet
   thin

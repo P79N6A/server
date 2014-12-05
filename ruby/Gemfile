@@ -6,4 +6,4 @@ gem 'nokogiri'
 gem 'rack'
 gem 'thin'
 gem 'redcarpet'
-gem 'groonga'
+
