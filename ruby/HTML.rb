@@ -156,27 +156,19 @@ class R
   Render['text/html'] = -> d,e {
     u = d[''] || {}
     titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
-    e.q['view'] ||= 'tabulate' if e.q.has_key? '?'
-    H ['<!DOCTYPE html>', "\n",
+    H ["<!DOCTYPE html>\n",
        {_: :html,
-         c: ["\n",
-             {_: :head,
-               c: ["\n",
-                   {_: :meta, charset: 'utf-8'}, "\n",
-                   {_: :title, c: titles.size==1 ? titles.head : e.uri}, "\n",
-                   {_: :link, rel: :icon, href:'/css/misc/favicon.ico'}, "\n",
+         c: [{_: :head,
+               c: [{_: :meta, charset: 'utf-8'},
+                   {_: :title, c: titles.size==1 ? titles.head : e.uri},
+                   {_: :link, rel: :icon, href: '/favicon.ico'},
                    u[Next].do{|n|
-                     [{_: :link, rel: :next, href: n.uri}, "\n"]},
+                     {_: :link, rel: :next, href: n.uri}},
                    u[Prev].do{|p|
-                     [{_: :link, rel: :prev, href: p.uri}, "\n"]}]
-             }, "\n",
-             {_: :body,
-               c: ["\n",
-                   (View[e.q['view']] || DefaultView)[d,e]]}]},
-       "\n"
-      ]}
+                     {_: :link, rel: :prev, href: p.uri}}]},
+             {_: :body, c: View[d,e]}]}]}
 
-  DefaultView = -> d,e {
+  View = -> d,e {
     groups = {}
     seen = {}
     d.map{|u,r| # group resources on RDF class

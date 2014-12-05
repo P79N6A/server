@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  View['tabulate'] = ->d=nil,e=nil {
+  ViewA['#tabulator'] = -> r,e {
     src = '//linkeddata.github.io/tabulator/'
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
@@ -9,7 +9,7 @@ class R
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  View['force'] = -> d,e { # D3.force-directed layout
+  ViewA['#d3_force'] = -> r,e {
     links = []
     colors = {}
     defaultType = SIOC + 'has_parent'
