@@ -82,6 +82,7 @@ class R < RDF::URI
   FileSet = {}
   ResourceSet = {}
   Abstract = {}
+  Filter = {}
   Render = {}
   ViewA = {}
   ViewGroup = {}

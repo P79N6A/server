@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def GET
@@ -60,10 +60,10 @@ class R
       else
 
         graph = -> {
-          #puts set
+#          puts set
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          Summarize[m,@r]
           set.map{|f|f.fromStream m, :triplrInode} unless @r[:nostat]
+          Summarize[m,@r]
           m}
 
         if NonRDF.member? @r.format
@@ -83,8 +83,11 @@ class R
   end
 
   Summarize = -> g,e {
-    
-    if e[:container]
+    e[:Filter].justArray.map{|f| # named-filter(s) found
+      Filter[f].do{|fn|          # function found
+        fn[g,e]}}                # run
+
+    if e[:container] # summarize container contents
       groups = {}
       g.map{|u,r|
         r.types.map{|type|
@@ -92,7 +95,7 @@ class R
             groups[v] ||= {}
             groups[v][u] = r
           end}}
-      groups.map{|fn,gr|fn[g,gr,e]}
+      groups.map{|fn,gr|fn[g,gr,e]} # req-graph, graph-to-summarize, env
     end}
 
   def condResponse body

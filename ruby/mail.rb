@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
@@ -19,7 +19,7 @@ class R
   GET['/address'] = -> e,r {
     case e.path.split('/').size
     when 3
-      r[:filter] = :addrContainer
+      r[:Filter] = :addrContainers
     when 4
       r.q['set'] ||= 'page'
     end
@@ -164,21 +164,25 @@ class R
     [{_: :a, href: '?', c: '&gt;', title: "show quotes", style: 'position: fixed; top: .2em; right: .2em; z-index: 2; border-radius: .1em; font-size: 2.3em; color: #bbb; background-color: #fff; border: .05em dotted #bbb'},{_: :style, c: 'body table.html {display: block}'},
      HTMLr[g,e]]}
 =end
-  Abstract['addresses'] = -> graph, d,e {
+
+  Filter[:addrContainers] = -> graph,e {
     e.q['sort'] = 'uri'
     g = {}
-    d.map{|u,r|
+    graph.delete e.uri
+    graph.map{|u,r|
       parts = r.R.basename.split '@'
       if parts.size==2
+        graph.delete u
         domain = '//' + parts[1]
         r[Title] = parts[0]
         r.delete Stat+'size'
-        g[domain] ||= {'uri' => domain, Label => parts[1].sub(/\.com$/,''), Type => Container, LDP+'contains' => []}
+        container = {'uri' => domain, Label => parts[1].sub(/\.com$/,''), Type => R[Container], LDP+'contains' => []}
+        g[domain] ||= container
         g[domain][LDP+'contains'].push r
       end
     }
-    [{_: :a, href: '..', c: '&uarr;'},
-     ViewGroup[Container][g,e]]}
+    graph.merge! g
+  }
 
   IndexMail = ->doc,graph,host { # link message to address index(es)
     graph.map{|u,r|
