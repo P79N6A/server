@@ -167,24 +167,29 @@ class R
                      {_: :link, rel: :next, href: n.uri}},
                    u[Prev].do{|p|
                      {_: :link, rel: :prev, href: p.uri}}]},
-             {_: :body, c: HTMLr[d,e]}]}]}
+             {_: :body, c: View[d,e]}]}]}
 
-  HTMLr = -> d,e {
-    groups = {}
-    seen = {}
-    d.map{|u,r|
-      r.types.map{|type|
-        if v = ViewGroup[type]
-          groups[v] ||= {}
-          groups[v][u] = r
-          seen[u] = true
-        end}}
-    [groups.map{|view,graph|view[graph,e]}, # groups
-     d.map{|u,r|
-       if !seen[u]
-         type = r.types.find{|t|ViewA[t]}
-         ViewA[type ? type : 'default'][r,e]
-       end}]}
+  View = -> d,e {
+    if e.q.has_key? 'facets'
+      e.q.delete 'facets'
+      Facets[d,e]
+    else
+      groups = {}
+      seen = {}
+      d.map{|u,r|
+        r.types.map{|type|
+          if v = ViewGroup[type]
+            groups[v] ||= {}
+            groups[v][u] = r
+            seen[u] = true
+          end}}
+      [groups.map{|view,graph|view[graph,e]}, # groups
+       d.map{|u,r|
+         if !seen[u]
+           type = r.types.find{|t|ViewA[t]}
+           ViewA[type ? type : 'default'][r,e]
+         end}]
+    end}
 
   %w{aif wav mpeg mp3 mp4}.map{|a|
     ViewA[MIMEtype+'audio/'+a] = ->r,e {

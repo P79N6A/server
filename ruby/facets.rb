@@ -1,6 +1,6 @@
 class R
 
-  ViewGroup['#facetFilterable'] = -> m,e {
+  Facets = -> m,e {
     a = Hash[((e.q['a']||'sioct:ChatChannel').split ',').map{|a|
                [a.expand,{}]}]
 
@@ -27,6 +27,7 @@ class R
                        {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.R.abbr : k.to_s)}]}}]}}},
 
      m.map{|u,r| # each resource
+       type = r.types.find{|t|ViewA[t]}
        a.map{|p,_| # each facet
          [n[p], r[p].do{|o| # value
             o.justArray.map{|o|
@@ -34,7 +35,7 @@ class R
             }}].join ' '
        }.do{|f|
          [f.map{|o| '<div class="' + o + '">' }, # open wrapper
-          HTMLr[{u => r},e],               # render resource
+          ViewA[type ? type : 'default'][r,e],   # render resource
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 
