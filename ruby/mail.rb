@@ -201,7 +201,6 @@ class R
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
-puts "ansm"
     g.map{|u,p| # pass 1 generate statistics and prune graph
       graph.delete u
       p[Title].do{|t|
@@ -231,7 +230,7 @@ puts "ansm"
         graph[container][LDP+'contains'].push item }}
   }
 
-  ViewGroup[SIOCt+'MailMessage'] = -> d,e {puts "VG"
+  ViewGroup[SIOCt+'MailMessage'] = -> d,e {
     links = []
     colors = {}
     defaultType = SIOC + 'has_parent'
@@ -243,21 +242,24 @@ puts "ansm"
         link = {source: source, target: target}
         d[source].do{|s|
           s[Creator].justArray[0].do{|l|
-            name = l.R.fragment
-            link[:sourceName] = name unless colors[name]
-            link[:sourceColor] = colors[name] ||= cs
+            l = l.R
+            link[:sourceName] = l.fragment unless colors[l.uri]
+            link[:sourceColor] = colors[l.uri] ||= cs
          }}
         d[target].do{|t|
           t[Creator].justArray[0].do{|l|
-            name = l.R.fragment
-            link[:targetName] = name unless colors[name]
-            link[:targetColor] = colors[name] ||= cs
+            l = l.R
+            link[:targetName] = l.fragment unless colors[l.uri]
+            link[:targetColor] = colors[l.uri] ||= cs
           }}
         links.push link
       end}
     [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"},
      H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
      {_: :a, href: '?noquote', c: '&lt;&lt;', title: "hide quotes", class: :noquote},
+     {_: :style, c: colors.map{|uri,color|
+        "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"
+      }},
      d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|
        ViewA['default'][r,e]
      }]}

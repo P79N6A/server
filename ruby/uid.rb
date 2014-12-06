@@ -115,9 +115,8 @@ class R
     [303,head,[]]}
 
   ViewGroup[SIOC+'Usergroup'] = -> d,e {
-    [{_: :style, c: "body {background-color: #000;color:#fff}
-.foaf {font-size: 2em;background-color: #111; color: #ccc}
-.foaf > a {background-color:#000; color: #fff; font-size: 1.25em}
-"}, {class: :foaf, c: d.map{|id, group|[{_: :a, href: group.R.dir.uri, c: group.R.fragment},' ', group[Name], '<br>']}}]}
+    [{_: :style, c: ".foaf {font-size: 2em;background-color: #111; color: #ccc; text-decoration: none}
+.foaf > span {background-color:#000; color: #fff; font-size: 1.25em; text-decoration: underline}
+"}, d.map{|id, group|{_: :a, class: :foaf, href: group.R.dir.uri, c: [{_: :span, c: group.R.fragment},' ', group[Name]]}}]}
 
 end
