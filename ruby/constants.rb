@@ -128,7 +128,6 @@ schema
 search
 text
 uid
-vis
 wiki
 }.map{|r|require_relative r}
 

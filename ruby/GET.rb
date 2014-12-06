@@ -62,7 +62,7 @@ class R
         graph = -> {
 #          puts set
           set.map{|r|r.setEnv(@r).fileToGraph m}
-          set.map{|f|f.fromStream m, :triplrInode} unless @r[:nostat]
+          set.map{|f|f.fromStream m, :triplrInode}
           Summarize[m,@r]
           m}
 
@@ -83,19 +83,19 @@ class R
   end
 
   Summarize = -> g,e {
-    e[:Filter].justArray.map{|f| # named-filter(s) found
-      Filter[f].do{|fn|          # function found
-        fn[g,e]}}                # run
+    e[:Filter].justArray.map{|f|  # named-filter(s) found
+      Filter[f].do{|fn| fn[g,e]}} # function found
 
-    if e[:container] # summarize container contents
+    if e[:container] # summarize contained
       groups = {}
       g.map{|u,r|
         r.types.map{|type|
-          if v = Abstract[type] # summarizer registered for type-class
+          if v = Abstract[type] # found for type
             groups[v] ||= {}
-            groups[v][u] = r
+            groups[v][u] = r # resource to group
           end}}
-      groups.map{|fn,gr|fn[g,gr,e]} # req-graph, graph-to-summarize, env
+      groups.map{|fn,gr| # each type
+        fn[g,gr,e]} # request-graph, summarize-this-graph, environment
     end}
 
   def condResponse body

@@ -172,13 +172,13 @@ class R
   HTMLr = -> d,e {
     groups = {}
     seen = {}
-    d.map{|u,r| # group resources on RDF class
+    d.map{|u,r|
       r.types.map{|type|
         if v = ViewGroup[type]
           groups[v] ||= {}
           groups[v][u] = r
           seen[u] = true
-        end}} if e[:container]
+        end}}
     [groups.map{|view,graph|view[graph,e]}, # groups
      d.map{|u,r|
        if !seen[u]

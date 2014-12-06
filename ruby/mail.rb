@@ -150,7 +150,6 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  ViewA[SIOCt+'MailMessage'] = -> r,e {[ViewA['default'][r,e], H.once(e, 'mail', H.css('/css/mail',true))]} # add quote-styling CSS
 =begin
   View['noquote'] = -> g,e {
     g = Hash[g.sort_by{|u,r| r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse]
@@ -200,39 +199,67 @@ class R
             doc.ln target }}}}}
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
-    unless e.q.has_key? 'view'
-      e[:nostat] = true
-      threads = {}
-      weight = {}
+    threads = {}
+    weight = {}
+puts "ansm"
+    g.map{|u,p| # pass 1 generate statistics and prune graph
+      graph.delete u
+      p[Title].do{|t|
+        title = t[0].sub /\b[rR][eE]: /, ''
+        threads[title] ||= p
+        threads[title][:size] ||= 0
+        threads[title][:size]  += 1 }
+      p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
+      p[To].justArray.map(&:maybeURI).map{|a|
+        weight[a] ||= 0
+        weight[a] += 1
+        graph.delete a}}
 
-      g.map{|u,p| # pass 1 generate statistics and prune graph
-        graph.delete u
-        p[Title].do{|t|
-          title = t[0].sub /\b[rR][eE]: /, ''
-          threads[title] ||= p
-          threads[title][:size] ||= 0
-          threads[title][:size]  += 1 }
-        p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
-        p[To].justArray.map(&:maybeURI).map{|a|
-          weight[a] ||= 0
-          weight[a] += 1
-          graph.delete a}}
+    listURI = '?group=rdf:type&sort=dc:date'
+    graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
 
-      listURI = '?group=rdf:type&sort=dc:date'
-      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
-
-        group = e.q['group'].do{|t|t.expand} || To
-      threads.map{|title,post| # pass 2 cluster stuff
-        post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
-          dir = a.R.dir
-          container = dir.uri.t
-          cLoc = e.q['group'] ? a.R : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
-          item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
-          post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-          graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
-          graph[container][LDP+'contains'] ||= []
-          graph[container][LDP+'contains'].push item }}
-    end
+    group = e.q['group'].do{|t|t.expand} || To
+    threads.map{|title,post| # pass 2 cluster stuff
+      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
+        dir = a.R.dir
+        container = dir.uri.t
+        cLoc = e.q['group'] ? a.R : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
+        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
+        post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
+        graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
+        graph[container][LDP+'contains'] ||= []
+        graph[container][LDP+'contains'].push item }}
   }
 
+  ViewGroup[SIOCt+'MailMessage'] = -> d,e {puts "VG"
+    links = []
+    colors = {}
+    defaultType = SIOC + 'has_parent'
+    linkType = e.q['link'].do{|a|a.expand} || defaultType
+    d.triples{|s,p,o| # each triple in graph
+      if p == linkType && o.respond_to?(:uri)
+        source = s
+        target = o.uri
+        link = {source: source, target: target}
+        d[source].do{|s|
+          s[Creator].justArray[0].do{|l|
+            name = l.R.fragment
+            link[:sourceName] = name unless colors[name]
+            link[:sourceColor] = colors[name] ||= cs
+         }}
+        d[target].do{|t|
+          t[Creator].justArray[0].do{|l|
+            name = l.R.fragment
+            link[:targetName] = name unless colors[name]
+            link[:targetColor] = colors[name] ||= cs
+          }}
+        links.push link
+      end}
+    [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"},
+     H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
+     {_: :a, href: '?noquote', c: '&lt;&lt;', title: "hide quotes", class: :noquote},
+     d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|
+       ViewA['default'][r,e]
+     }]}
+  
 end

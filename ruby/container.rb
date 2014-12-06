@@ -63,6 +63,14 @@ class R
      u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [offset[n], ' →'], title: '→ next page'}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 
+  ViewA['#tabulator'] = -> r,e {
+    src = '//linkeddata.github.io/tabulator/'
+    [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
+     (H.js  src + 'js/mashup/mashlib'),
+     (H.js  '/js/tabr'),
+     (H.css src + 'tabbedtab'),
+     {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
+
   # multiple types mapped to one view function - "ls" of files/dirs/generic-resources
   ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = -> d,env {
     mtime = Stat+'mtime'

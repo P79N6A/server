@@ -29,7 +29,17 @@ td.val a[rel=untyped] {
 td.val a[rel=untyped]:hover, td.val a[rel=untyped]:visited {
     background-color: #3f3;
     color: #000;
-    border-color: #000;
+    border-color: #3f3;
 }
 
 tr[property="http://purl.org/dc/terms/identifier"] {display:none}
+
+.noquote {
+    position: fixed;
+    top: .2em;
+    right: .2em;
+    z-index: 2;
+    border-radius: .1em;
+    font-size: 2.3em;
+    color: #fff;
+    background-color: #ddd;}
