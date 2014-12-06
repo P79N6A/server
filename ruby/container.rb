@@ -90,14 +90,13 @@ class R
     end
 
     this = d.delete env.uri if d[env.uri]
-    if d['..']
+    if up = d['..']
       d.delete '..'
-      up = true
     end
 
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(ascending ? :id : :reverse)
 
-    [({_: :a, class: :up, href: '..', title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
+    [({_: :a, class: :up, href: up.uri, title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
      (ViewA[Container][this,env] if this),
      ({_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k|

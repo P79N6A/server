@@ -110,8 +110,10 @@ class R
 
   E404 = -> e,r,graph=nil {
     g = {}
-    graph[""].do{|r|g[e.uri+'#'] = r} if graph # keep resource-meta
-    r.q.delete 'view' # default HTML view
+    if graph
+      graph[""].do{|r| g[e.uri+'#'] = r }
+      g['..'] = {'uri' => '.', Type => R[Stat+'Directory']} unless e.path == '/'
+    end
     [:Links,:Response].map{|p|r.delete p}
     s = g[e.uri] ||= {}
     r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}
