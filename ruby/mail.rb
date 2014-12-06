@@ -254,14 +254,11 @@ class R
           }}
         links.push link
       end}
-    [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"},
-     H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
+    [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"},H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
      {_: :a, href: '?noquote', c: '&lt;&lt;', title: "hide quotes", class: :noquote},
      {_: :style, c: colors.map{|uri,color|
-        "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"
-      }},
+        "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
      d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|
-       ViewA['default'][r,e]
-     }]}
+       ViewA['default'][r,e]}]}
   
 end
