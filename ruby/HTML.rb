@@ -101,20 +101,20 @@ class Hash
     if keys.size == 1 && has_key?('uri')
       self.R.href
     else
-      H [{_: :table, class: :html, c: map{|k,v|
-            r = k.to_s.R
-            [{_: :tr, property: k, c:
-              [k == R::Content ? {_: :td, class: :val, colspan: 2, c: v} :
-               ["\n",
-                {_: :td,
-                 c: (k == 'uri' ? {} : {_: :a, href: k, c: r.abbr}), class: :key},"\n",
-                {_: :td,
-                 c: k == 'uri' ? v.R.do{|u|
-                                   {_: :a, id: (u.fragment||u.uri), href: u.uri,
-                                    c: (self[R::Label] || self[R::Title] || u.abbr).justArray[0].to_s.noHTML,
-                                   }} : v.html, class: :val}]]},
-             "\n"] if k && v}},
-         "\n"]
+      H({_: :table, class: :html, c: map{|k,v|
+           {_: :tr, property: k,
+            c: case k
+               when 'uri'
+                 u = v.R
+                 {_: :td, class: :uri, colspan: 2,
+                  c: {_: :a, id: (u.fragment||u.uri), href: v,
+                      c: (self[R::Label] || self[R::Title] || u.abbr).justArray[0].to_s.noHTML}}
+               when R::Content
+                 {_: :td, class: :val, colspan: 2, c: v}
+               else
+                 [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
+                  {_: :td, c: v.html, class: :val}]
+               end}}})
     end
   end
 end

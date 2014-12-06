@@ -150,20 +150,6 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-=begin
-  View['noquote'] = -> g,e {
-    g = Hash[g.sort_by{|u,r| r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse]
-    g.map{|u,r|
-      r.map{|p,o|
-        r.delete p unless ['uri',Content].member? p
-        r[Content].justArray[0].do{|c|
-          Nokogiri::HTML.fragment(c).do{|c|
-            c.css('span.q').remove
-            r[Content] = c.to_xhtml }}}}
-    [{_: :a, href: '?', c: '&gt;', title: "show quotes", style: 'position: fixed; top: .2em; right: .2em; z-index: 2; border-radius: .1em; font-size: 2.3em; color: #bbb; background-color: #fff; border: .05em dotted #bbb'},{_: :style, c: 'body table.html {display: block}'},
-     HTMLr[g,e]]}
-=end
-
   Filter[:addrContainers] = -> graph,e {
     e.q['sort'] = 'uri'
     g = {}
@@ -254,11 +240,22 @@ class R
           }}
         links.push link
       end}
-    [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"},H.js('/js/force',true), H.css('/css/force',true), H.css('/css/mail',true),
-     {_: :a, href: '?noquote', c: '&lt;&lt;', title: "hide quotes", class: :noquote},
+
+    noquote = e.q.has_key?('noquote')
+
+    [(H.js '//d3js.org/d3.v2'),
+     {_: :script, c: "var links = #{links.to_json};"},
+     H.js('/js/force',true),
+     H.css('/css/force',true),
+     H.css('/css/mail',true),
+     {_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
      d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|
+       if noquote
+         r = {'uri' => r.uri, Content => r[Content].justArray[0].do{|c|
+                Nokogiri::HTML.fragment(c).do{|c| c.css('span.q').remove; c.to_xhtml}}}
+       end
        ViewA['default'][r,e]}]}
-  
+
 end
