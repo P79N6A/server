@@ -156,12 +156,12 @@ class R
 
   Render['text/html'] = -> d,e {
     u = d[''] || {}
-    titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
+    e[:title] = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
     H ["<!DOCTYPE html>\n",
        {_: :html,
          c: [{_: :head,
                c: [{_: :meta, charset: 'utf-8'},
-                   {_: :title, c: titles.size==1 ? titles.head : e.uri},
+                   {_: :title, c: e[:title].size==1 ? e[:title].head : e.uri},
                    {_: :link, rel: :icon, href: '/favicon.ico'},
                    u[Next].do{|n|
                      {_: :link, rel: :next, href: n.uri}},

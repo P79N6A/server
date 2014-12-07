@@ -32,8 +32,9 @@ td.val a[rel=untyped]:hover, td.val a[rel=untyped]:visited {
     border-color: #3f3;
 }
 
-tr[property="http://purl.org/dc/terms/identifier"] {display:none}
+tr[property="uri"], tr[property="http://purl.org/dc/terms/identifier"] {display:none}
 
+a.title {font-weight: bold; color: #fff; background-color: #000}
 .noquote {
     position: fixed;
     top: .2em;

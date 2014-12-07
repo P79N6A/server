@@ -251,6 +251,7 @@ class R
      {_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
+     {_: :a, class: :title, href: e.uri, c: e[:title][0]},
      d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|
        if noquote
          r = {'uri' => r.uri, Content => r[Content].justArray[0].do{|c|

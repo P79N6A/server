@@ -2,7 +2,6 @@ a {text-decoration: none}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block;margin-bottom: .38em}
-td.uri {text-align: center}
 td.uri a {
     background-color: #000;
     color:#ddd;
