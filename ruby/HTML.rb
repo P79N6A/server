@@ -173,6 +173,8 @@ class R
     if e.q.has_key? 'facets'
       e.q.delete 'facets'
       Facets[d,e]
+    elsif e.q.has_key? '?'
+      Tabulator[d,e]
     else
       groups = {}
       seen = {}

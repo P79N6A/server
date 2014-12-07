@@ -63,7 +63,7 @@ class R
      u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [offset[n], ' →'], title: '→ next page'}},
      ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
 
-  ViewA['#tabulator'] = -> r,e {
+  Tabulator = -> r,e {
     src = '//linkeddata.github.io/tabulator/'
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
