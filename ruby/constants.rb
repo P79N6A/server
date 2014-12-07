@@ -107,7 +107,6 @@ chat
 container
 csv
 DELETE
-facets
 fs
 GET
 graph
