@@ -153,7 +153,7 @@ class R
 
   Filter[:minimalMessage] = -> g,e {
     g.map{|u,r|
-      [SIOC+'reply_to', Date, SIOC+'has_discussion', To].map{|p| r.delete p}
+      [SIOC+'reply_to', SIOC+'has_discussion', To].map{|p| r.delete p}
       if content = r[Content].justArray[0]
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
@@ -258,7 +258,7 @@ class R
      H.css('/css/mail',true),
      (if e[:noquote]
       [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
-       noquote ? {_: :style, c: "tr[property='uri'] {display: none}"} : []]
+       noquote ? {_: :style, c: "tr[property='uri'], tr[property='http://purl.org/dc/terms/date'] {display: none}"} : []]
       end),
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
