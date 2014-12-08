@@ -5,7 +5,7 @@ class R
   ViewA[Content] = -> r,e {r[Content]}
   ViewA['default'] = -> r,e {[r.html, H.once(e, 'default', (H.css '/css/html', true))]}
 
-  ViewA[Container] = -> r,e {
+  ViewA[Container] = ViewA[Stat+'Directory'] = -> r,e {
     re = r.R
     path = (re.path||'').t
     size = Stat + 'size'
@@ -82,7 +82,7 @@ class R
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  # multiple types mapped to one view function - "ls" for files/dirs/generic-resources
+  # files+dirs+generic-resources combined in single listing
   ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = -> d,env {
     mtime = Stat+'mtime'
     keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
@@ -109,6 +109,11 @@ class R
 
     [({_: :a, class: :up, href: up.uri, title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
      (ViewA[Container][this,env] if this),
+     (if entries.size == 1
+      r = entries[0]
+      type = r.types.find{|t|ViewA[t]}
+      ViewA[type ? type : 'default'][r,env]
+      end),
      ({_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k|
               {_: :th, class: (k == sort ? 'this' : 'that'),
@@ -152,7 +157,7 @@ class R
                       e[Stat+'size'] unless e[LDP+'contains']
                     else
                       e[k].html
-                    end}}}}]} unless entries.empty?),
+                    end}}}}]} unless entries.size < 2),
      (H.css '/css/ls',true),
      (H.js '/js/ls',true)]}
 
