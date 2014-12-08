@@ -258,8 +258,7 @@ class R
      H.css('/css/mail',true),
      (if e[:noquote]
       [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
-       {_: :style, c: "tr[property='uri'] {display: none}"}
-      ]
+       noquote ? {_: :style, c: "tr[property='uri'] {display: none}"} : []]
       end),
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
