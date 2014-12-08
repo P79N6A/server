@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   Man = -> e,r {
@@ -18,10 +18,11 @@ class R
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
       lang = r.q['lang'] || acceptLang
       superLang = lang.do{|l| (l.split /[_-]/)[0] }
-      langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
+#      langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
+      langSH = "" # environment-only
 
       findman = "man #{langSH} -w #{section} #{name.sh}"
-      man = `#{findman}`.chomp      
+      man = `#{findman}`.lines[0].chomp
 
       if man.empty?
         E404[e,r]
@@ -32,7 +33,9 @@ class R
         dir = R['//' + r['SERVER_NAME'] + roff.dirname.sub(/.*\/share/,'')]
         res = dir.child roff.bare
         doc = res + '.e'
-        cached = doc.e && doc.m > (Pathname man).stat.mtime
+        path = Pathname man
+
+        cached = path.exist? && doc.e && doc.m > path.stat.mtime
 
         if !cached
           uri = e.uri + '#'
