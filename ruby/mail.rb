@@ -4,16 +4,6 @@ class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
-  MessagePath = ->id{ # message-ID -> path
-    id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
-    '/msg/' + id.h[0..2] + '/' + id}
-
-  AddrPath = ->address{ # address -> path
-    address = address.downcase
-    name = address.split('@')[0]
-    alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
-    '/address/' + alpha + '/' + address + '/' + name + '#' + name}
-
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
   GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil} # hide top-level msg-dir
   GET['/address'] = -> e,r {
@@ -21,7 +11,7 @@ class R
     when 3
       r[:Filter] = :addrContainers
     when 4
-      r.q['set'] ||= 'page'
+      r.q['set'] ||= 'first-page'
     end
     nil}
 
@@ -34,6 +24,16 @@ class R
     e.condResponse ->{
       Filter[:minimalMessage][m,r] if r.q.has_key?('noquote'); r[:noquote] = true
       Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
+
+  MessagePath = ->id{ # message-ID -> path
+    id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
+    '/msg/' + id.h[0..2] + '/' + id}
+
+  AddrPath = ->address{ # address -> path
+    address = address.downcase
+    name = address.split('@')[0]
+    alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
+    '/address/' + alpha + '/' + address + '/' + name + '#' + name}
 
   def mail; Mail.read node if f end
 
@@ -171,7 +171,7 @@ class R
         domain = '//' + parts[1]
         r[Title] = parts[0]
         r.delete Stat+'size'
-        container = {'uri' => domain, Label => parts[1].sub(/\.com$/,''), Type => R[Container], LDP+'contains' => []}
+        container = {'uri' => domain, Label => parts[1].sub(/\.(com|edu|net|org)$/,''), Type => R[Container], LDP+'contains' => []}
         g[domain] ||= container
         g[domain][LDP+'contains'].push r
       end
