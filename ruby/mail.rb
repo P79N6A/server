@@ -153,7 +153,12 @@ class R
 
   Filter[:minimalMessage] = -> g,e {
     g.map{|u,r|
-      [DC+'identifier',DC+'hasFormat',SIOC+'attachment', SIOC+'reply_of',SIOC+'reply_to', SIOC+'has_discussion', Label, To].map{|p| r.delete p}
+      [DC+'identifier',DC+'hasFormat',
+#       SIOC+'attachment',
+       SIOC+'reply_of',
+       SIOC+'reply_to',
+       SIOC+'has_discussion',
+       Label, To].map{|p| r.delete p}
       if content = r[Content].justArray[0]
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
