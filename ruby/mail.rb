@@ -154,16 +154,15 @@ class R
   Filter[:minimalMessage] = -> g,e {
     g.map{|u,r|
       [DC+'identifier',DC+'hasFormat',
-#       SIOC+'attachment',
+       SIOC+'attachment',
        SIOC+'reply_of',
        SIOC+'reply_to',
        SIOC+'has_discussion',
        Label, To].map{|p| r.delete p}
-      if content = r[Content].justArray[0]
+      r[Content] = r[Content].justArray.map{|content|
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
-        r[Content] = c.to_xhtml.gsub(/\n\n\n+/,"\n")
-      end}}
+        c.to_xhtml.gsub /\n\n\n+/, "\n" }}}
 
   Filter[:addrContainers] = -> graph,e { # group address-containers by domain-name
     e.q['sort'] = 'uri'
