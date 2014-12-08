@@ -32,6 +32,7 @@ class R
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     e.condResponse ->{
+      Filter[:minimalMessage][m,r] if r.q.has_key?('noquote'); r[:noquote] = true
       Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   def mail; Mail.read node if f end
@@ -150,7 +151,16 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  Filter[:addrContainers] = -> graph,e {
+  Filter[:minimalMessage] = -> g,e {
+    g.map{|u,r|
+      [SIOC+'reply_to', Date, SIOC+'has_discussion', To].map{|p| r.delete p}
+      if content = r[Content].justArray[0]
+        c = Nokogiri::HTML.fragment content
+        c.css('span.q').remove
+        r[Content] = c.to_xhtml
+      end}}
+
+  Filter[:addrContainers] = -> graph,e { # group address-containers by domain-name
     e.q['sort'] = 'uri'
     g = {}
     graph.delete e.uri
@@ -204,8 +214,8 @@ class R
     graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
 
     group = e.q['group'].do{|t|t.expand} || To
-    threads.map{|title,post| # pass 2 cluster stuff
-      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # put in heaviest address-cluster
+    threads.map{|title,post| # pass 2 cluster
+      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir
         container = dir.uri.t
         cLoc = e.q['group'] ? a.R : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
@@ -221,6 +231,7 @@ class R
     colors = {}
     defaultType = SIOC + 'has_parent'
     linkType = e.q['link'].do{|a|a.expand} || defaultType
+    noquote = e.q.has_key? 'noquote'
     d.triples{|s,p,o| # each triple in graph
       if p == linkType && o.respond_to?(:uri)
         source = s
@@ -240,23 +251,15 @@ class R
           }}
         links.push link
       end}
-
-    noquote = e.q.has_key?('noquote')
-
     [(H.js '//d3js.org/d3.v2'),
      {_: :script, c: "var links = #{links.to_json};"},
      H.js('/js/force',true),
      H.css('/css/force',true),
      H.css('/css/mail',true),
-     {_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
+     ({_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote} if e[:noquote]),
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
-     {_: :a, class: :title, href: e.uri, c: e[:title][0]},
      d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|
-       if noquote
-         r = {'uri' => r.uri, Content => r[Content].justArray[0].do{|c|
-                Nokogiri::HTML.fragment(c).do{|c| c.css('span.q').remove; c.to_xhtml}}}
-       end
        ViewA['default'][r,e]}]}
 
 end

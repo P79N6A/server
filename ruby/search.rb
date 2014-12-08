@@ -13,14 +13,12 @@ class R
     e.exist? && q['q'].do{|query|
       q['view'] ||= 'grep'
       GREP_DIRS.find{|p|e.path.match p}.do{|_|
-        e.env[:container] = false
         `grep -iRl #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}}
 
   # full-text search
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga
   ResourceSet['groonga'] = ->d,e,m{
-    d.env[:container] = true
     m['/search#'] = {Type => R[Search]}
     R.groonga.do{|ga|
       q = e['q']                               # search expression
@@ -139,7 +137,6 @@ class R
     i = {}
     c = 0
     n = ->o{i[o] ||= 'f'+(c+=1).to_s}
-    e[:container] = false
     [(H.css'/css/facets'),(H.js'/js/facets'),(H.js'/js/mu'),
 
      # facet selection
