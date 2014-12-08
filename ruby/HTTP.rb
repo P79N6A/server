@@ -110,9 +110,9 @@ class R
 
   E404 = -> e,r,graph=nil {
     g = {}
-    if graph
-      graph[""].do{|r| g[e.uri+'#'] = r }
-      g['..'] = {'uri' => '.', Type => R[Stat+'Directory']} unless e.path == '/'
+    if graph && r.format=='text/html' && e.path != '/'
+      g['..'] = {'uri' => '.', Type => R[Stat+'Directory']}
+      g[e.uri] = graph[""]
     end
     [:Links,:Response].map{|p|r.delete p}
     s = g[e.uri] ||= {}

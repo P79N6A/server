@@ -56,12 +56,18 @@ class R
          ]},
      (H.once e, 'container', (H.css '/css/container',true))]}
 
+  ViewGroup[LDP+'Resource'] = -> g,e {
+    [(H.css '/css/page', true),
+     (H.js '/js/pager', true),
+     (H.js '/js/mu', true),
+     g.map{|u,r|
+       ViewA[LDP+'Resource'][r,e]}]}
+
   ViewA[LDP+'Resource'] = -> u,e {
-    offset = -> r {
-      (r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
-    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['↩ ', offset[p]], title: '↩ previous page'}},
-     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [offset[n], ' →'], title: '→ next page'}},
-     ([(H.css '/css/page', true), (H.js '/js/pager', true), (H.once e,:mu,(H.js '/js/mu', true))] if u[Next]||u[Prev])]}
+    label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
+    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
+     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: '→ next page'}},
+     ViewA['default'][u,e]]}
 
   Tabulator = -> r,e {
     src = '//linkeddata.github.io/tabulator/'
@@ -145,7 +151,7 @@ class R
      (H.css '/css/ls',true),
      (H.js '/js/ls',true)]}
 
-  [Container, LDP+'Resource', 'default'].map{|type|
+  [Container, 'default'].map{|type|
     ViewGroup[type] = -> g,e {g.map{|u,r|ViewA[type][r,e]}}}
 
 end
