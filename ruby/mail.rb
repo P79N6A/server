@@ -157,7 +157,7 @@ class R
       if content = r[Content].justArray[0]
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
-        r[Content] = c.to_xhtml
+        r[Content] = c.to_xhtml.gsub(/\n\n\n+/,"\n")
       end}}
 
   Filter[:addrContainers] = -> graph,e { # group address-containers by domain-name
