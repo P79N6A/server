@@ -99,7 +99,8 @@ end
 class Hash
   def html
     if keys.size == 1 && has_key?('uri')
-      self.R.href
+      r = self.R
+      H({_: :a, href: uri, c: r.fragment || r.basename, style: 'font-size: 1.6em; color: #000; background-color: #fff'})
     else
       H({_: :table, class: :html, id: uri.do{|u|u.R.fragment||u.R.uri}||'#', c: map{|k,v|
            {_: :tr, property: k,
