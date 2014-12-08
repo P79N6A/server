@@ -162,7 +162,21 @@ class R
       r[Content] = r[Content].justArray.map{|content|
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
-        c.to_xhtml.gsub /\n\n\n+/, "\n" }}}
+        R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n" }}}
+
+  def R.trimLines text
+    text.lines.map{|l| R.blacklist[l.h] ? "" : l}.join
+  end
+
+  def R.blacklist
+    @blacklist ||=
+      (b = 'index/blacklist.txt'.R
+       if b.exist?
+         Hash[b.r.lines.map{|l|[l.h,true]}]
+       else
+         {}
+       end)
+  end
 
   Filter[:addrContainers] = -> graph,e { # group address-containers by domain-name
     e.q['sort'] = 'uri'
