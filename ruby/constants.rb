@@ -144,7 +144,7 @@ end
 
 class Hash
   def R; R.new uri end
-  def uri; self["uri"]||"" end
+  def uri; self["uri"] end
   alias_method :maybeURI, :uri
 end
 
