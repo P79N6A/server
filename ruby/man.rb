@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   Man = -> e,r {
@@ -22,12 +22,12 @@ class R
       langSH = "" # environment-only
 
       findman = "man #{langSH} -w #{section} #{name.sh}"
-      man = `#{findman}`.lines[0].chomp
+      man = `#{findman}`.lines[0]
 
-      if man.empty?
+      if !man || man.empty?
         E404[e,r]
       else
-
+        man = man.chomp
         roff = man.R
         R['//' + r['SERVER_NAME'] + '/' + name[0].downcase +  c]
         dir = R['//' + r['SERVER_NAME'] + roff.dirname.sub(/.*\/share/,'')]
