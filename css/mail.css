@@ -4,7 +4,9 @@ body {
 }
 
 pre.mail {
-    max-width: 115ex;}
+    max-width: 115ex;
+    margin: 0;
+}
 
 pre.mail .q {display: block}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}
