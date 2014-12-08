@@ -3,9 +3,15 @@ pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block;margin-bottom: .38em}
 td.uri a {
-    color:#999;
+    background-color:#fff;
+    color: #000;
+    border-width: 0 0 .1em 0;
+    border-style: dashed;
+    padding-left: 10%;
+    border-color: #ccc;
 }
-td.key {text-align:right}
+td.key {text-align:right;
+	width:10%}
 td.key > a {
     font-weight: bold;
     background-color: #000;
