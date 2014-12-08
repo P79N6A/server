@@ -3,8 +3,8 @@ pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block;margin-bottom: .38em}
 td.uri a {
-    background-color: #000;
-    color:#ddd;
+    background-color: #fff;
+    color:#000;
 }
 td.key {text-align:right}
 td.key > a {

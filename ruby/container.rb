@@ -65,8 +65,13 @@ class R
 
   ViewA[LDP+'Resource'] = -> u,e {
     label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
-    [u[Prev].do{|p|{_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
-     u[Next].do{|n|{_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: '→ next page'}},
+    prev = u[Prev]
+    nexd = u[Next]
+    [Prev,Next,Type].map{|p|u.delete p}
+    [prev.do{|p|
+       {_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
+     nexd.do{|n|
+       {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: '→ next page'}},
      ViewA['default'][u,e]]}
 
   Tabulator = -> r,e {
@@ -77,7 +82,7 @@ class R
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  # multiple types mapped to one view function - "ls" of files/dirs/generic-resources
+  # multiple types mapped to one view function - "ls" for files/dirs/generic-resources
   ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = -> d,env {
     mtime = Stat+'mtime'
     keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
@@ -129,7 +134,7 @@ class R
                       e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                     when Type
                       if containerType
-                        {_: :a, class: :dir, href: e.uri, c: '►'}
+                        {_: :a, class: :dir, href: e.uri+'?set=page', c: '►'}
                       elsif file
                         {_: :a, class: :file, href: e.uri, c: '█'}
                       elsif types.include?(RDFs+'Resource')
