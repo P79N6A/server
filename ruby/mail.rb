@@ -256,7 +256,11 @@ class R
      H.js('/js/force',true),
      H.css('/css/force',true),
      H.css('/css/mail',true),
-     ({_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote} if e[:noquote]),
+     (if e[:noquote]
+      [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
+       {_: :style, c: "tr[property='uri'] {display: none}"}
+      ]
+      end),
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
      d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|

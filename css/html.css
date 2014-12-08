@@ -14,8 +14,7 @@ td.uri a {
     padding-left: 10%;
     border-color: #ccc;
 }
-td.key {text-align:right;
-	width:10%}
+td.key {text-align:right}
 td.key > a {
     font-weight: bold;
     background-color: #000;
