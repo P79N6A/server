@@ -151,7 +151,7 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  Filter[:minimalMessage] = -> g,e {
+  Filter[:minimalMessage] = -> g,e { # trim the fat
     g.map{|u,r|
       [DC+'identifier',DC+'hasFormat',
        SIOC+'attachment',
@@ -163,20 +163,6 @@ class R
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
         R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n" }}}
-
-  def R.trimLines text
-    text.lines.map{|l| R.blacklist[l.h] ? "" : l}.join
-  end
-
-  def R.blacklist
-    @blacklist ||=
-      (b = 'index/blacklist.txt'.R
-       if b.exist?
-         Hash[b.r.lines.map{|l|[l.h,true]}]
-       else
-         {}
-       end)
-  end
 
   Filter[:addrContainers] = -> graph,e { # group address-containers by domain-name
     e.q['sort'] = 'uri'
@@ -192,10 +178,8 @@ class R
         container = {'uri' => domain, Label => parts[1].sub(/\.(com|edu|net|org)$/,''), Type => R[Container], LDP+'contains' => []}
         g[domain] ||= container
         g[domain][LDP+'contains'].push r
-      end
-    }
-    graph.merge! g
-  }
+      end}
+    graph.merge! g }
 
   IndexMail = ->doc,graph,host { # link message to address index(es)
     graph.map{|u,r|
@@ -215,7 +199,7 @@ class R
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
-    g.map{|u,p| # pass 1 generate statistics and prune graph
+    g.map{|u,p| # pass 1. generate statistics and prune graph
       graph.delete u
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
@@ -232,7 +216,7 @@ class R
     graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
 
     group = e.q['group'].do{|t|t.expand} || To
-    threads.map{|title,post| # pass 2 cluster
+    threads.map{|title,post| # pass 2. cluster
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir
         container = dir.uri.t
@@ -250,8 +234,8 @@ class R
     defaultType = SIOC + 'has_parent'
     linkType = e.q['link'].do{|a|a.expand} || defaultType
     noquote = e.q.has_key? 'noquote'
-    d.triples{|s,p,o| # each triple in graph
-      if p == linkType && o.respond_to?(:uri)
+    d.triples{|s,p,o| # each triple
+      if p == linkType && o.respond_to?(:uri) # selected arc to D3 JSON
         source = s
         target = o.uri
         link = {source: source, target: target}
@@ -269,6 +253,7 @@ class R
           }}
         links.push link
       end}
+
     [(H.js '//d3js.org/d3.v2'),
      {_: :script, c: "var links = #{links.to_json};"},
      H.js('/js/force',true),

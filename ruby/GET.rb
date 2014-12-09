@@ -63,7 +63,7 @@ class R
 #          puts set
           set.map{|r|r.setEnv(@r).fileToGraph m}
           set.map{|f|f.fromStream m, :triplrInode}
-          Summarize[m,@r]
+          Mutate[m,@r]
           m}
 
         if NonRDF.member? @r.format
@@ -81,22 +81,6 @@ class R
         end
       end}
   end
-
-  Summarize = -> g,e {
-    e[:Filter].justArray.map{|f|  # named-filter(s) found
-      Filter[f].do{|fn| fn[g,e]}} # function found
-
-    if e[:container] # summarize contained
-      groups = {}
-      g.map{|u,r|
-        r.types.map{|type|
-          if v = Abstract[type] # found for type
-            groups[v] ||= {}
-            groups[v][u] = r # resource to group
-          end}}
-      groups.map{|fn,gr| # each type
-        fn[g,gr,e]} # request-graph, summarize-this-graph, environment
-    end}
 
   def condResponse body
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }

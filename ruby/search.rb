@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
   GREP_DIRS.push(/^\/\d{4}\/\d{2}/)
 
@@ -8,31 +8,6 @@ class R
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
-
-  FileSet['grep'] = -> e,q,m {
-    e.exist? && q['q'].do{|query|
-      q['view'] ||= 'grep'
-      GREP_DIRS.find{|p|e.path.match p}.do{|_|
-        `grep -iRl #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}}
-
-  # full-text search
-  # https://github.com/groonga/groonga
-  # https://github.com/ranguba/rroonga
-  ResourceSet['groonga'] = ->d,e,m{
-    m['/search#'] = {Type => R[Search]}
-    R.groonga.do{|ga|
-      q = e['q']                               # search expression
-      g = e["context"] || d.env['SERVER_NAME'] # context
-      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
-      ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
-      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset
-      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
-      down = r.size > start+c                                        # prev
-      up   = !(start<=0)                                             # next
-      r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      m[''][Prev]={'uri' => '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
-      m[''][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      r.map{|r|r['.uri'].R}}} # URI -> Resource
 
   # depth-first subtree-range in page-chunks
   FileSet['page'] = -> d,r,m {
@@ -61,51 +36,60 @@ class R
     FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
       r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
 
-  ViewGroup['#grepResult'] = -> d,e {
+  # https://github.com/groonga/groonga
+  # https://github.com/ranguba/rroonga
+  ResourceSet['groonga'] = ->d,e,m{
+    m['/search#'] = {Type => R[Search]}
+    R.groonga.do{|ga|
+      q = e['q']                               # search expression
+      g = e["context"] || d.env['SERVER_NAME'] # context
+      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
+      ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
+      start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset
+      c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
+      down = r.size > start+c                                        # prev
+      up   = !(start<=0)                                             # next
+      r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
+      m[''][Prev]={'uri' => '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
+      m[''][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
+      r.map{|r|r['.uri'].R}}} # URI -> Resource
+
+  FileSet['grep'] = -> e,q,m { # matching files
+    e.exist? && q['q'].do{|query|
+      GREP_DIRS.find{|p|e.path.match p}.do{|_|
+        e.env[:Filter] = 'grep'
+        `grep -iRl #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}}
+
+  Filter['grep'] = -> d,e { # matching resources
     w = e.q['q']
-    if w && w.size > 1
-      # words supplied in query
-      w = w.scan(/[\w]+/).map(&:downcase).uniq
+    if w && w.size > 1 # query
+      e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i # to regular-expression
+      d.map{|u,r| # visit resources
+        if r.to_s.match e[:grep]
+          r[Type] = r[Type].justArray.push R['#grepResult'] # tag w/ RDF type
+        else
+          d.delete u
+        end}
+    end}
 
-      # word index
-      c={}
-      w.each_with_index{|w,i|
-        c[w] = i }
+  ViewGroup['#grepResult'] = -> g,e {
+    c = {}
+    w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
+    w.each_with_index{|w,i|c[w] = i} # enumerated words
+    a = /(#{w.join '|'})/i # highlight-pattern
 
-      # OR pattern
-      a = /(#{w.join '|'})/i
-      # sequential pattern
-      p = /#{w.join '.*'}/i
+    [{_: :style, c: c.values.map{|i| # word-color CSS
+        b = rand(16777216)                # word color
+        f = b > 8388608 ? :black : :white # keep contrasty
+        ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
 
-      [{_: :style,
-         c: [c.values.map{|i|
-               b = rand(16777216)                # word color
-               f = b > 8388608 ? :black : :white # contrasty
-               ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"},
-             "a {text-decoration: none; color:#777; font-weight: bold;}\n"
-            ]},
-
-       # each resource
-       d.map{|u,r|
-
-         l = r.values.flatten.select{|v|v.class==String}.map{|s|s.lines.to_a.map{|l|l.gsub(/<[^>]+>/,'')}}.flatten
-
-         # sequential match
-         g = l.grep p
-         # OR match
-         g = l.grep a if g.empty?                           
-
-         # match?
-         !g.empty? &&                                       
-         [# link to resource
-          r.R.do{|e|{_: :a, href: e.uri, c: e}}, '<br>',
-          # max matches per resource
-          [g[-1*(g.size.max 6)..-1].map{|l|   
-             # exerpt
-             l[0..403].gsub(a){|g|
-               H({_: :span, class: "w w#{c[g.downcase]}",c: g})}
-           },"<br>"]]}]
-    end }
+     g.map{|u,r|
+       r.values.flatten.select{|v|v.class==String}.map{|s|s.lines.to_a.map{|l|l.gsub(/<[^>]+>/,'')}}.flatten.grep(e[:grep]).do{|lines|
+         unless lines.empty?
+           ViewA['default'][{'uri' => u, Content => lines[0..5].map{|line|   
+                  line[0..400].gsub(a){|g|
+                    H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}},e]
+         end}}]}
 
   GET['/domain'] = -> e,r {
     r[:container] = true if e.justPath.e
@@ -122,6 +106,20 @@ class R
   ViewA[Search] = -> d,e {
     [{_: :form, action: '/search/', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
      (H.js '/js/search',true)]}
+
+  def R.trimLines text
+    text.lines.map{|l| R.blacklist[l.h] ? "" : l}.join
+  end
+
+  def R.blacklist
+    @blacklist ||=
+      (b = 'index/blacklist.txt'.R
+       if b.exist?
+         Hash[b.r.lines.map{|l|[l.h,true]}]
+       else
+         {}
+       end)
+  end
 
   Facets = -> m,e {
     a = Hash[((e.q['a']||'sioct:ChatChannel').split ',').map{|a|

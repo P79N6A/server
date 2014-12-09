@@ -112,6 +112,19 @@ class R
     doc
   end
 
+  Mutate = -> g,e {
+    e[:Filter].justArray.map{|f| Filter[f].do{|fn| fn[g,e]}} # named filters
+    if e[:container] # container-summarize
+      groups = {}
+      g.map{|u,r|
+        r.types.map{|type| # typed filters
+          if v = Abstract[type] # class-summarizer exists
+            groups[v] ||= {} # init type-group
+            groups[v][u] = r # resource to group
+          end}}
+      groups.map{|fn,gr|fn[g,gr,e]} # graph, summarize-subgraph, env
+    end}
+
 end
 
 class Hash
