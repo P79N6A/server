@@ -83,13 +83,14 @@ class R
         f = b > 8388608 ? :black : :white # keep contrasty
         ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
 
-     g.map{|u,r|
-       r.values.flatten.select{|v|v.class==String}.map{|s|s.lines.to_a.map{|l|l.gsub(/<[^>]+>/,'')}}.flatten.grep(e[:grep]).do{|lines|
-         unless lines.empty?
-           ViewA['default'][{'uri' => u, Content => lines[0..5].map{|line|   
-                  line[0..400].gsub(a){|g|
-                    H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}},e]
-         end}}]}
+     g.map{|u,r| # matching resources
+       r.values.flatten.select{|v|v.class==String}.map{|str| # string values
+         str.lines.map{|ls|ls.gsub(/<[^>]+>/,'')}}.flatten.  # lines within strings
+         grep(e[:grep]).do{|lines|                           # matching lines
+         ViewA['default'][{'uri' => u,                       # result resource
+                           Content => lines[0..5].map{|line| # HTML-render of matches
+                             line[0..400].gsub(a){|g| # wrap matches in CSS classnames
+                               H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}},e]}}]}
 
   GET['/domain'] = -> e,r {
     r[:container] = true if e.justPath.e
