@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
   GREP_DIRS.push(/^\/\d{4}\/\d{2}/)
 
@@ -64,33 +64,36 @@ class R
     w = e.q['q']
     if w && w.size > 1 # query
       e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i # to regular-expression
+      results = {}
       d.map{|u,r| # visit resources
         if r.to_s.match e[:grep]
-          r[Type] = r[Type].justArray.push R['#grepResult'] # tag w/ RDF type
+          id = '#' + rand.to_s.h
+          results[id] = r.merge({Type => R['#grepResult']})
         else
           d.delete u
         end}
+      d.merge! results
     end}
 
   ViewGroup['#grepResult'] = -> g,e {
     c = {}
     w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
     w.each_with_index{|w,i|c[w] = i} # enumerated words
-    a = /(#{w.join '|'})/i # highlight-pattern
+    a = /(#{w.join '|'})/i           # highlight-pattern
 
-    [{_: :style, c: c.values.map{|i| # word-color CSS
+    [{_: :style, c: c.values.map{|i| # stylesheet
         b = rand(16777216)                # word color
         f = b > 8388608 ? :black : :white # keep contrasty
-        ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}},
+        ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}}, # word-color CSS
 
      g.map{|u,r| # matching resources
        r.values.flatten.select{|v|v.class==String}.map{|str| # string values
          str.lines.map{|ls|ls.gsub(/<[^>]+>/,'')}}.flatten.  # lines within strings
          grep(e[:grep]).do{|lines|                           # matching lines
-         ViewA['default'][{'uri' => u,                       # result resource
-                           Content => lines[0..5].map{|line| # HTML-render of matches
-                             line[0..400].gsub(a){|g| # wrap matches in CSS classnames
-                               H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}},e]}}]}
+         ['<br>',r.R.href,'<br>', # match URI
+            lines[0..5].map{|line| # HTML-render of first 6 matching-lines
+              line[0..400].gsub(a){|g| # each word-match
+                H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match <span>
 
   GET['/domain'] = -> e,r {
     r[:container] = true if e.justPath.e
