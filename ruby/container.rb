@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   ViewA[Content] = -> r,e {r[Content]}
@@ -25,7 +25,7 @@ class R
          end
     sortQ  = e.q.merge({'sort' => s_}).qs
 
-    [{class: :container, style: "background-color: #{R.cs}",
+    [{class: :container, style: "background-color: #{R.cs}", id: re.fragment,
       c: [{_: :a, class: :uri, href: re.uri,
            c: r[Label] || (re.path=='/' ? re.host : re.abbr)},' ',
           H.once(e,:sortButton,
@@ -162,13 +162,16 @@ class R
   [Container, 'default'].map{|type|
     ViewGroup[type] = -> g,e {g.map{|u,r|ViewA[type][r,e]}}}
 
-  ViewGroup[MIMEtype+'audio/mp4'] = ViewGroup[MIMEtype+'audio/mpeg '] = ->r,e {
-    [(H.once e, :audio, (H.js '/js/audio'), (H.css '/css/audio'),
-             (H.once e, :mu, (H.js '/js/mu')),
-             {id: :info, target: :_blank, _: :a},
-             {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true},
-             {id: :jump, c: '&rarr;'}, {id: :rand, c: :rand, on: 1}),
-     {_: :a, class: :track, href: r.uri, c: r.uri.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}]}
+
+  def triplrAudio &f
+    uri = '#'  + URI.escape(path)
+    yield uri, Type, R[DC+'Sound']
+    yield uri, Title, basename
+  end
+   
+  ViewGroup[DC+'Sound'] = -> g,e {
+    [{_: :audio, id: :audio, style: 'width:100%', controls: true}, H.js('/js/audio'),
+     ViewA[Container][{'uri' => '#sounds', LDP+'contains' => g.values },e]]}
 
 
 end

@@ -3,7 +3,6 @@ class R
 
   def triplrImage &f
     yield uri,Type,R[DC+'Image']
-#    triplrStdOut 'exiftool', EXIF, &f # slow but detailed
   end
 
   GET['/thumbnail'] = -> e,r {

@@ -90,10 +90,6 @@ class R
     yield uri, Content, Orgmode::Parser.new(r).to_html
   end
 
-  def triplrPDF &f
-    triplrStdOut 'pdfinfo', &f
-  end
-
   def triplrPS
     yield uri+'#', Type, (R MIMEtype+'application/postscript')
     p = dir.child '.' + basename + '/'

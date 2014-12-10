@@ -163,24 +163,8 @@ class R
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 
-  # key: val output to RDF
-  def triplrStdOut e, f='/', g=/^\s*(.*?)\s*$/, a=sh
-   yield uri, Type, (R MIMEtype+mime)
-   `#{e} #{a}|grep :`.each_line{|i|
-   begin
-     i = i.split /:/
-    yield uri, (f + (i[0].match(g)||[0,i[0]])[1].gsub(/\s/,'_').gsub(/\//,'-').gsub(/[\(\)]+/,'')), # subject URI, predicate URI
-      i.tail.join(':').strip.do{|v|v.match(/^[0-9\.]+$/) ? v.to_f : (v.match(HTTP_URI) ? v.R : v.hrefs)} # object String | Float | URI
-   rescue
-    puts "#{uri} skipped: #{i}"
-   end}
-  end
-
-  # Groonga - ruby text-search and column-store
-
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga
-
   # load groonga DB at URI
   def groonga
     return Groonga::Database.open pathPOSIX if e # exists, return
