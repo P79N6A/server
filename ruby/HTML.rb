@@ -191,13 +191,4 @@ class R
          end}]
     end}
 
-  %w{aif wav mpeg mp3 mp4}.map{|a|
-    ViewA[MIMEtype+'audio/'+a] = ->r,e {
-    [(H.once e, :audio, (H.js '/js/audio'), (H.css '/css/audio'),
-     (H.once e, :mu, (H.js '/js/mu')),
-      {id: :info, target: :_blank, _: :a},
-      {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true},
-      {id: :jump, c: '&rarr;'}, {id: :rand, c: :rand, on: 1}),
-     {_: :a, class: :track, href: r.uri, c: r.uri.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}]}}
-
 end

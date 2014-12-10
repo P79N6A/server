@@ -49,7 +49,12 @@ table.ls td[property='uri'] a {
     padding: .1em;
 }
 
-table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'],table.ls td[property='uri'] {white-space:nowrap}
+table.ls td[property='http://www.w3.org/ns/posix/stat#mtime'] {white-space:nowrap;}
+
+table.ls td[property='uri'] {
+    max-width: 60ex;
+    overflow: hidden;
+}
 
 table.ls a { color: #102F66; font-size: 1.2em; }
 table.ls td[property='http://www.w3.org/ns/ldp#contains'] a { background-color: #000; color: #fff }

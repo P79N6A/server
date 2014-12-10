@@ -39,15 +39,14 @@ class R
               ((i.class==Hash && i[sort] || i.uri).justArray[0]||0).send sortType}.
               send((sized || sort==Date) ? :reverse : :id).map{|r|
               data = r.class == Hash
-              {_: :a, href: r.R.uri, class: :member,
-               c: [(if data && sized && r[size]
-                    s = r[size].justArray[0]
-                    [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
-                    end),
-                   ([r[Date],' '] if data && sort==Date),
-                   data && (r[Title] || r[Label]) || r.R.abbr[0..64],
-                   ("<br>\n" if data)
-                  ]}}.intersperse(" ")},
+              [{_: :a, href: r.R.uri, class: :member,
+                c: [(if data && sized && r[size]
+                     s = r[size].justArray[0]
+                     [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
+                     end),
+                    ([r[Date],' '] if data && sort==Date),
+                    data && (r[Title] || r[Label]) || r.R.abbr[0..64]
+                   ]}, data ? "<br>\n" : " "]}},
           (if e.R.path == path && GREP_DIRS.find{|p|path.match p}
            {_: :form,
             c: [{_: :input, name: :q},
@@ -82,7 +81,6 @@ class R
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  # files+dirs+generic-resources combined in single listing
   ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = -> d,env {
     mtime = Stat+'mtime'
     keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
@@ -163,5 +161,14 @@ class R
 
   [Container, 'default'].map{|type|
     ViewGroup[type] = -> g,e {g.map{|u,r|ViewA[type][r,e]}}}
+
+  ViewGroup[MIMEtype+'audio/mp4'] = ViewGroup[MIMEtype+'audio/mpeg '] = ->r,e {
+    [(H.once e, :audio, (H.js '/js/audio'), (H.css '/css/audio'),
+             (H.once e, :mu, (H.js '/js/mu')),
+             {id: :info, target: :_blank, _: :a},
+             {_: e.q.has_key?('video') ? :video : :audio, id: :media, controls: true},
+             {id: :jump, c: '&rarr;'}, {id: :rand, c: :rand, on: 1}),
+     {_: :a, class: :track, href: r.uri, c: r.uri.split(/\//)[-1].sub(/\.(flac|mp3|wav)$/,'')}]}
+
 
 end

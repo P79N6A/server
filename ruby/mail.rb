@@ -151,7 +151,7 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  Filter[:minimalMessage] = -> g,e { # trim the fat
+  Filter[:minimalMessage] = -> g,e { # trim the fat off a message
     g.map{|u,r|
       [DC+'identifier',DC+'hasFormat',
        SIOC+'attachment',
@@ -162,7 +162,7 @@ class R
       r[Content] = r[Content].justArray.map{|content|
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
-        R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n" }}}
+        R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n\n" }}}
 
   Filter[:addrContainers] = -> graph,e { # group address-containers by domain-name
     e.q['sort'] = 'uri'
@@ -181,7 +181,7 @@ class R
       end}
     graph.merge! g }
 
-  IndexMail = ->doc,graph,host { # link message to address index(es)
+  IndexMail = ->doc,graph,host { # link message to address containers
     graph.map{|u,r|
       addresses = []
       r[Creator].do{|from|addresses.concat from}
