@@ -183,7 +183,11 @@ class R
        d.map{|u,r|                            # show singletons
          if !seen[u]
            type = r.types.find{|t|ViewA[t]}
-           puts "missing view for #{r.types.join ' '}"
+           if r.types.empty?
+             puts "untyped <#{r.uri}>"
+           else
+             puts "ungrouped  #{r.types.join ' '}"
+           end
            ViewA[type ? type : Resource][r,e]
          end}]
     end}

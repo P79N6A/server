@@ -118,6 +118,7 @@ class R
     s = g[e.uri] ||= {}
     r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}
     if r.format=='text/html'
+      s[Type] = R[Resource]
       s['#query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
       s['#accept'] = r.accept
       %w{CHARSET LANGUAGE ENCODING}.map{|a|
