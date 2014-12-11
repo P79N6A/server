@@ -58,21 +58,15 @@ class R
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  # ls
-
-  ViewGroup[Container] = ViewGroup[Directory] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> d,env {
+  ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
     mtime = Stat+'mtime'
-    keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
     path = env['REQUEST_PATH']
-    ascending = env.q.has_key? 'ascending'
     env.q['sort'] ||= mtime
     sort = env.q['sort'].expand
-    sort = mtime if sort == Date
-    sort = 'uri' if sort == Title
-    sortType = [mtime,Stat+'size'].member?(sort) ? :to_i : :to_s
+    sortType = [mtime,Size].member?(sort) ? :to_i : :to_s
     sortLabel = sort.shorten.split(':')[-1] + ' ↨'
     s_ = case sort # next sort-predicate
-         when Stat+'size'
+         when Size
            'dc:date'
          when Date
            'dc:title'
@@ -82,68 +76,25 @@ class R
            'stat:size'
          end
     sortQ  = env.q.merge({'sort' => s_}).qs # querystring w/ next sort-order
-    qs = env.q
-    if ascending
-      qs.delete 'ascending'
-    else
-      qs['ascending'] = 'a'
-    end
 
-    if up = d['..']
-      d.delete '..'
-    end
+    [
+      if up = d['..']
+        d.delete '..'
+        {_: :a, class: :up, href: up.uri, title: Pathname.new(path).parent.basename, c: '&uarr;'}
+      end,  {_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
+      H.css('/css/container',true),
+      d.map{|u,r|
+        ViewA[Container][r,env]}
+    ]}
 
-    entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(ascending ? :id : :reverse)
-
-    [({_: :a, class: :up, href: up.uri, title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
-     {_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
-     {_: :table, class: :ls,
-       c: [{_: :tr, c: keys.map{|k|
-              {_: :th, class: (k == sort ? 'this' : 'that'),
-               property: k, c: {_: :a, href: qs.merge({'sort' => k.shorten}).qs, c: k.R.abbr}}}},
-
-           entries.map{|e|
-             types = e.types
-             container = types.include?(Container)
-             directory = types.include?(Directory)
-             isContainer = container || directory
-             file = types.include?(Stat+'File')
-
-             {_: :tr, uri: e.uri,
-              c: keys.map{|k|
-                {_: :td, property: k, class: (k == sort ? 'this' : 'that'),
-                 c: case k
-                    when 'uri'
-                      unless isContainer
-                        {_: :a, href: (file ? e.R.stripDoc.a('.html') : e).uri,
-                         c: e[Label]||e[Title]||URI.unescape(e.R.abbr)}
-                      end
-                    when mtime
-                      e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
-                    when Type
-                      if isContainer
-                        {_: :a, class: :dir, href: e.uri+'?set=page', c: '►'}
-                      elsif file
-                        {_: :a, class: :file, href: e.uri, c: '█'}
-                      elsif types.include?(Resource)
-                        {_: :a, class: :resource, href: e.uri, c: '■'}
-                      else
-                        e[k].html
-                      end
-                    when LDP+'contains'
-                      if isContainer
-                        ViewA[Container][e,env]
-                      elsif types.include?(DC+'Image')
-                        ShowImage[e.uri]
-                      end
-                    when Size
-                      e[Size] unless e[LDP+'contains']
-                    else
-                      e[k].html
-                    end}}}}]},
-     H.css('/css/ls',true),
-     H.css('/css/container',true),
-     (H.js '/js/ls',true)]}
+  ViewGroup[Stat+'File'] = -> g,e {
+    e.q['sort'] ||= Size
+    sort = e.q['sort'].expand == Size ? Size : Stat+'mtime'
+    {_: :table, style: 'float: right', c: g.values.sort_by{|i|i[sort][0]}.reverse.map{|r|
+       {_: :tr, c: [{_: :td, c: r[Size]},
+                    {_: :td, c: r.R.href},
+                    {_: :td, c: Time.at(r[Stat+'mtime'][0]).iso8601}
+                   ]}}}}
 
   def triplrAudio &f
     uri = '#'  + URI.escape(path)
