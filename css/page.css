@@ -2,11 +2,14 @@ a[rel=prev] { float:left }
 a[rel=next] { float:right }
 
 a[rel=next], a[rel=prev]{
+    font-size: 3em;
+    border: .03em dotted #000;
+    margin: .3em;
+    border-radius: .1em;
+    background-color: #fff;
+    color: #000;
     text-decoration: none;
-    padding: .3em;
-    background-color: #bbb;
-    color: #fff;
-    margin-bottom: .3em;
+    float: left;
 }
 
 a[rel=next]:hover, a[rel=prev]:hover{

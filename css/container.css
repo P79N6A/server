@@ -5,7 +5,7 @@
     margin: .3em;
     border-radius: .3em;
 }
-a.up {font-size: 3em; border: .03em dotted #000; margin: .8em; border-radius: .1em; background-color: #fff; color: #000; text-decoration: none; float: left}
+a.up {font-size: 3em; border: .03em dotted #000; margin: .3em; border-radius: .1em; background-color: #fff; color: #000; text-decoration: none; float: left}
 
 .container form, .container input {display: inline-block}
 
@@ -25,7 +25,7 @@ a.up {font-size: 3em; border: .03em dotted #000; margin: .8em; border-radius: .1
     color: #000;
 }
 
-.container a.sort {
+a.sort {
     font-size: 1.2em;
     color: #555;
     background-color: #fff;
@@ -33,7 +33,7 @@ a.up {font-size: 3em; border: .03em dotted #000; margin: .8em; border-radius: .1
     float: right;
 }
 
-.container a.sort:hover { color: #000; }
+a.sort:hover { color: #000; }
 
 .container a.member {
     background-color: #fff;

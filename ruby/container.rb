@@ -32,12 +32,13 @@ class R
                     data && (r[Title] || r[Label]) || r.R.abbr[0..64]
                    ]}, data ? "<br>" : " "]}}]}]}
 
-  ViewGroup[LDP+'Resource'] = -> g,e {
+  ViewGroup[LDP+'Resource'] = -> g,env {
     [(H.css '/css/page', true),
      (H.js '/js/pager', true),
      (H.js '/js/mu', true),
+     ({_: :a, class: :up, href: '..', title: Pathname.new(env['REQUEST_PATH']).parent.basename, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
      g.map{|u,r|
-       ViewA[LDP+'Resource'][r,e]}]}
+       ViewA[LDP+'Resource'][r,env]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
@@ -60,7 +61,6 @@ class R
 
   ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
     mtime = Stat+'mtime'
-    path = env['REQUEST_PATH']
     env.q['sort'] ||= mtime
     sort = env.q['sort'].expand
     sortType = [mtime,Size].member?(sort) ? :to_i : :to_s
@@ -77,23 +77,18 @@ class R
          end
     sortQ  = env.q.merge({'sort' => s_}).qs # querystring w/ next sort-order
 
-    [
-      if up = d['..']
-        d.delete '..'
-        {_: :a, class: :up, href: up.uri, title: Pathname.new(path).parent.basename, c: '&uarr;'}
-      end,  {_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
-      H.css('/css/container',true),
-      d.map{|u,r|
-        ViewA[Container][r,env]}
-    ]}
+    [{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
+     H.css('/css/container',true),
+     d.map{|u,r|
+       ViewA[Container][r,env]}]}
 
   ViewGroup[Stat+'File'] = -> g,e {
     e.q['sort'] ||= Size
     sort = e.q['sort'].expand == Size ? Size : Stat+'mtime'
     {_: :table, style: 'float: right', c: g.values.sort_by{|i|i[sort][0]}.reverse.map{|r|
        {_: :tr, c: [{_: :td, c: r[Size]},
+                    {_: :td, c: Time.at(r[Stat+'mtime'][0]).iso8601},
                     {_: :td, c: r.R.href},
-                    {_: :td, c: Time.at(r[Stat+'mtime'][0]).iso8601}
                    ]}}}}
 
   def triplrAudio &f

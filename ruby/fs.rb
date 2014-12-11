@@ -90,8 +90,7 @@ class R
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
       this[Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
       this[Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
-    if e.env[:container]
-      g['..'] = {'uri' => '..', Type => R[Directory]} unless e.path == '/'
+    if e.env[:container] # contained set
       e.fileResources.concat e.c.map{|c|c.setEnv e.env}
     else
       e.fileResources
