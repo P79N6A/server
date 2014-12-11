@@ -101,14 +101,19 @@ class R
   end
 
   ViewA[MIMEtype+'application/postscript']=->d,e{
-    [(H.once e, :mu,   (H.js '/js/mu')),(H.once e, :book, (H.js '/js/book')),
-     {_: :style, c: 'div[type="book"] a {background-color:#ccc;color:#fff;float:left;margin:.16em}'},
-     d[DC+'Image'].do{|is|
-       is = is.sort_by(&:uri)
-       {type: :book,
-        c: [{_: :img, style:'float:left;max-width:100%', src: is[0].uri},
-            {name: :pages,
-             c: is.map{|i|{_: :a,href: i.uri, c: i.R.bare}}}]}}]}
+    d[DC+'Image'].do{|is|
+      is = is.sort_by(&:uri)
+      {type: :book,
+       c: [{_: :img, style:'float:left;max-width:100%', src: is[0].uri},
+           {name: :pages,
+            c: is.map{|i|{_: :a,href: i.uri, c: i.R.bare}}}]}}}
+
+  ViewGroup[MIMEtype+'application/postscript']=->g,e{
+    [{_: :style, c: 'div[type="book"] a {background-color:#ccc;color:#fff;float:left;margin:.16em}'},
+     (H.js '/js/mu'),
+     (H.js '/js/book'),
+      g.map{|u,r|
+       ViewA[MIMEtype+'application/postscript'][r,e]}]}
 
   def triplrRTF
     yield uri, Content, `which catdoc && catdoc #{sh}`.hrefs
