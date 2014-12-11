@@ -36,11 +36,6 @@ class H
     {_: :link, href: p, rel: :stylesheet, type: R::MIME[:css]}
   end
 
-  def H.once env, name, *h
-    return if env[name]
-    env[name] ||= true
-    h
-  end
 end
 
 class Array
@@ -188,7 +183,8 @@ class R
          if !seen[u]
            type = r.types.find{|t|ViewA[t]}
            ViewA[type ? type : 'default'][r,e]
-         end}]
+         end},
+       (H.css '/css/html', true)]
     end}
 
 end

@@ -3,7 +3,7 @@ watch __FILE__
 class R
 
   ViewA[Content] = -> r,e {r[Content]}
-  ViewA['default'] = -> r,e {[r.html, H.once(e, 'default', (H.css '/css/html', true))]}
+  ViewA['default'] = -> r,e {r.html}
 
   ViewA[Container] = ViewA[Stat+'Directory'] = -> r,e {
     re = r.R
@@ -12,24 +12,9 @@ class R
     group = e.q['group']
     sort = e.q['sort'].do{|p|p.expand} || size
     sortType = [size].member?(sort) ? :to_i : :to_s
-    sortLabel = sort.shorten.split(':')[-1] + ' ↨'
-    s_ = case sort
-         when size
-           'dc:date'
-         when Date
-           'dc:title'
-         when Title
-           'stat:size'
-         else
-           'stat:size'
-         end
-    sortQ  = e.q.merge({'sort' => s_}).qs
-
     [{class: :container, style: "background-color: #{R.cs}", id: re.fragment,
       c: [{_: :a, class: :uri, href: re.uri,
-           c: r[Label] || (re.path=='/' ? re.host : re.abbr)},' ',
-          H.once(e,:sortButton,
-                 {_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_}), "<br>\n",
+           c: r[Label] || (re.path=='/' ? re.host : re.abbr)},"<br>\n",
           r[LDP+'contains'].do{|c|
             sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
             maxSize = sizes.max
@@ -52,8 +37,7 @@ class R
             c: [{_: :input, name: :q},
                 {_: :input, type: :hidden, name: :set, value: :grep}]}
            end)
-         ]},
-     (H.once e, 'container', (H.css '/css/container',true))]}
+         ]}]}
 
   ViewGroup[LDP+'Resource'] = -> g,e {
     [(H.css '/css/page', true),
@@ -91,6 +75,18 @@ class R
     sort = mtime if sort == Date
     sort = 'uri' if sort == Title
     sortType = [mtime,Stat+'size'].member?(sort) ? :to_i : :to_s
+    sortLabel = sort.shorten.split(':')[-1] + ' ↨'
+    s_ = case sort # next sort-predicate
+         when Stat+'size'
+           'dc:date'
+         when Date
+           'dc:title'
+         when Stat+'mtime'
+           'dc:title'
+         else
+           'stat:size'
+         end
+    sortQ  = env.q.merge({'sort' => s_}).qs # querystring w/ next sort-order
     qs = env.q
     if ascending
       qs.delete 'ascending'
@@ -107,7 +103,8 @@ class R
 
     [({_: :a, class: :up, href: up.uri, title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
      (ViewA[Container][this,env] if this),
-     (if entries.size == 1
+     {_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
+     (if entries.size == 1 # skip tabular view if only one
       r = entries[0]
       type = r.types.find{|t|ViewA[t]}
       ViewA[type ? type : 'default'][r,env]
@@ -157,6 +154,7 @@ class R
                       e[k].html
                     end}}}}]} unless entries.size < 2),
      (H.css '/css/ls',true),
+     (H.css '/css/container',true),
      (H.js '/js/ls',true)]}
 
   [Container, 'default'].map{|type|
