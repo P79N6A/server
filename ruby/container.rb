@@ -3,9 +3,8 @@ watch __FILE__
 class R
 
   ViewA[Content] = -> r,e {r[Content]}
-  ViewA['default'] = -> r,e {r.html}
 
-  ViewA[Container] = ViewA[Stat+'Directory'] = -> r,e {
+  ViewA[Container] = ViewA[Directory] = -> r,e {
     re = r.R
     path = (re.path||'').t
     size = Stat + 'size'
@@ -14,7 +13,7 @@ class R
     sortType = [size].member?(sort) ? :to_i : :to_s
     [{class: :container, style: "background-color: #{R.cs}", id: re.fragment,
       c: [{_: :a, class: :uri, href: re.uri,
-           c: r[Label] || (re.path=='/' ? re.host : re.abbr)},"<br>\n",
+           c: r[Label] || r.uri },"<br>\n",
           r[LDP+'contains'].do{|c|
             sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
             maxSize = sizes.max
@@ -31,13 +30,7 @@ class R
                      end),
                     ([r[Date],' '] if data && sort==Date),
                     data && (r[Title] || r[Label]) || r.R.abbr[0..64]
-                   ]}, data ? "<br>\n" : " "]}},
-          (if e.R.path == path && GREP_DIRS.find{|p|path.match p}
-           {_: :form,
-            c: [{_: :input, name: :q},
-                {_: :input, type: :hidden, name: :set, value: :grep}]}
-           end)
-         ]}]}
+                   ]}, data ? "<br>" : " "]}}]}]}
 
   ViewGroup[LDP+'Resource'] = -> g,e {
     [(H.css '/css/page', true),
@@ -55,7 +48,7 @@ class R
        {_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
      nexd.do{|n|
        {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: '→ next page'}},
-     ViewA['default'][u,e]]}
+     ViewA[Resource][u,e]]}
 
   Tabulator = -> r,e {
     src = '//linkeddata.github.io/tabulator/'
@@ -65,7 +58,9 @@ class R
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
-  ViewGroup[Stat+'Directory'] = ViewGroup[Stat+'File'] = ViewGroup[RDFs+'Resource'] = -> d,env {
+  # ls
+
+  ViewGroup[Container] = ViewGroup[Directory] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> d,env {
     mtime = Stat+'mtime'
     keys = [Stat+'size', 'uri', mtime, LDP+'contains', Type]
     path = env['REQUEST_PATH']
@@ -94,7 +89,6 @@ class R
       qs['ascending'] = 'a'
     end
 
-    this = d.delete env.uri if d[env.uri]
     if up = d['..']
       d.delete '..'
     end
@@ -102,14 +96,8 @@ class R
     entries = d.values.sort_by{|v|(v[sort].justArray[0] || 0).send sortType}.send(ascending ? :id : :reverse)
 
     [({_: :a, class: :up, href: up.uri, title: Pathname.new(path).parent.basename, c: '&uarr;'} if up),
-     (ViewA[Container][this,env] if this),
      {_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
-     (if entries.size == 1 # skip tabular view if only one
-      r = entries[0]
-      type = r.types.find{|t|ViewA[t]}
-      ViewA[type ? type : 'default'][r,env]
-      end),
-     ({_: :table, class: :ls,
+     {_: :table, class: :ls,
        c: [{_: :tr, c: keys.map{|k|
               {_: :th, class: (k == sort ? 'this' : 'that'),
                property: k, c: {_: :a, href: qs.merge({'sort' => k.shorten}).qs, c: k.R.abbr}}}},
@@ -117,8 +105,8 @@ class R
            entries.map{|e|
              types = e.types
              container = types.include?(Container)
-             directory = types.include?(Stat+'Directory')
-             containerType = container || directory
+             directory = types.include?(Directory)
+             isContainer = container || directory
              file = types.include?(Stat+'File')
 
              {_: :tr, uri: e.uri,
@@ -126,48 +114,44 @@ class R
                 {_: :td, property: k, class: (k == sort ? 'this' : 'that'),
                  c: case k
                     when 'uri'
-                      unless containerType
+                      unless isContainer
                         {_: :a, href: (file ? e.R.stripDoc.a('.html') : e).uri,
                          c: e[Label]||e[Title]||URI.unescape(e.R.abbr)}
                       end
                     when mtime
                       e[k].do{|t| Time.at(t[0]).iso8601.sub /\+00:00$/,''}
                     when Type
-                      if containerType
+                      if isContainer
                         {_: :a, class: :dir, href: e.uri+'?set=page', c: '►'}
                       elsif file
                         {_: :a, class: :file, href: e.uri, c: '█'}
-                      elsif types.include?(RDFs+'Resource')
+                      elsif types.include?(Resource)
                         {_: :a, class: :resource, href: e.uri, c: '■'}
                       else
                         e[k].html
                       end
                     when LDP+'contains'
-                      if containerType
+                      if isContainer
                         ViewA[Container][e,env]
                       elsif types.include?(DC+'Image')
                         ShowImage[e.uri]
                       end
-                    when Stat+'size'
-                      e[Stat+'size'] unless e[LDP+'contains']
+                    when Size
+                      e[Size] unless e[LDP+'contains']
                     else
                       e[k].html
-                    end}}}}]} unless entries.size < 2),
-     (H.css '/css/ls',true),
-     (H.css '/css/container',true),
+                    end}}}}]},
+     H.css('/css/ls',true),
+     H.css('/css/container',true),
      (H.js '/js/ls',true)]}
-
-  [Container, 'default'].map{|type|
-    ViewGroup[type] = -> g,e {g.map{|u,r|ViewA[type][r,e]}}}
-
 
   def triplrAudio &f
     uri = '#'  + URI.escape(path)
-    yield uri, Type, R[DC+'Sound']
+    yield uri, Type, R[Sound]
     yield uri, Title, basename
   end
    
-  ViewGroup[DC+'Sound'] = -> g,e {
+  ViewGroup[Sound] = -> g,e {
     [{_: :audio, id: :audio, style: 'width:100%', controls: true}, H.js('/js/audio'),
      ViewA[Container][{'uri' => '#sounds', LDP+'contains' => g.values },e]]}
 

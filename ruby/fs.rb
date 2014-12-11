@@ -5,7 +5,7 @@ class R
   def triplrInode &f
     file = URI.escape uri
     if directory?
-      yield uri, Type, R[Stat+'Directory']
+      yield uri, Type, R[Directory]
       yield uri, Stat+'mtime', mtime.to_i
       contained = c
       yield uri, Stat+'size', contained.size
@@ -19,7 +19,7 @@ class R
       readlink.do{|t|
         mtime = t.mtime.to_i
         t = t.stripDoc
-        yield t.uri, Type, Resource
+        yield t.uri, Type, R[Resource]
         yield t.uri, Stat+'mtime', mtime
         yield t.uri, Stat+'size', 0}
 
@@ -82,7 +82,7 @@ class R
     (Pathname.glob pathPOSIX).map &:R
   end
 
-  FileSet['default'] = -> e,q,g {
+  FileSet[Resource] = -> e,q,g {
     this = g['']
     e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # day-dir
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
@@ -91,7 +91,7 @@ class R
       this[Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
       this[Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
     if e.env[:container]
-      g['..'] = {'uri' => '..', Type => R[Stat+'Directory']} unless e.path == '/'
+      g['..'] = {'uri' => '..', Type => R[Directory]} unless e.path == '/'
       e.fileResources.concat e.c.map{|c|c.setEnv e.env}
     else
       e.fileResources

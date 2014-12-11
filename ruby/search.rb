@@ -30,10 +30,10 @@ class R
       s }}
 
   FileSet['first-page'] = -> d,r,m {
-    FileSet['page'][d,r,m].concat FileSet['default'][d,r,m]}
+    FileSet['page'][d,r,m].concat FileSet[Resource][d,r,m]}
 
   FileSet['localize'] = -> re,q,g {
-    FileSet['default'][re.justPath.setEnv(re.env),q,g].map{|r|
+    FileSet[Resource][re.justPath.setEnv(re.env),q,g].map{|r|
       r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
 
   # https://github.com/groonga/groonga
@@ -52,7 +52,8 @@ class R
       r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
       m[''][Prev]={'uri' => '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
       m[''][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
-      r.map{|r|r['.uri'].R}}} # URI -> Resource
+      r.map{|r|
+        R[r['.uri']]}}}
 
   FileSet['grep'] = -> e,q,m { # matching files
     e.exist? && q['q'].do{|query|
@@ -159,7 +160,7 @@ class R
             }}].join ' '
        }.do{|f|
          [f.map{|o| '<div class="' + o + '">' }, # open wrapper
-          ViewA[type ? type : 'default'][r,e],   # render resource
+          ViewA[type ? type : Resource][r,e],    # render resource
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 

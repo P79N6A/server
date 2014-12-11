@@ -69,7 +69,7 @@ class R
 
   def triplrUriList
     open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
-      yield l.chomp, Type, Resource }
+      yield l.chomp, Type, R[Resource] }
   end
 
   Render['text/uri-list'] = -> g,env {
@@ -136,7 +136,7 @@ class R
     nil
   end
 
-  ViewGroup[SIOCt+'SourceCode'] = ViewGroup['default']
+  ViewGroup[SIOCt+'SourceCode'] = ViewGroup[Resource]
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
  desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript

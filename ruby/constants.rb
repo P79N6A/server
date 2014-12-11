@@ -33,6 +33,8 @@ class R < RDF::URI
   Edit     = 'http://buzzword.org.uk/rdf/personal-link-types#edit'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Schema   = 'http://schema.org/'
+  Mu       = Purl + 'ontology/mo/'
+  Sound    = Mu + 'Sound'
   DC       = Purl + 'dc/terms/'
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
@@ -47,7 +49,6 @@ class R < RDF::URI
   CSVns    = W3   + 'ns/csv#'
   RDFns    = W3   + '1999/02/22-rdf-syntax-ns#'
   RDFs     = W3   + '2000/01/rdf-schema#'
-  EXIF     = W3   + '2003/12/exif/ns#'
   SKOS     = W3   + '2004/02/skos/core#'
   Atom     = W3   + '2005/Atom'
   HTTP     = W3   + '2011/http#'
@@ -55,9 +56,12 @@ class R < RDF::URI
   Next     = LDP  + 'nextPage'
   Prev     = LDP  + 'prevPage'
   Type     = RDFns+ 'type'
-  HTML     = RDFns + 'HTML'
+  HTML     = RDFns+ 'HTML'
+  Resource = RDFs + 'Resource'
   Label    = RDFs + 'label'
-  Container = LDP + 'Container'
+  Size     = Stat + 'size'
+  Directory= Stat + 'Directory'
+  Container= LDP + 'Container'
 
   Prefix={
     "dc" => DC,
@@ -131,7 +135,6 @@ wiki
 }.map{|r|require_relative r}
 
   NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
-  Resource = R[RDFs+'Resource']
 
   alias_method :uri, :to_s
   alias_method :maybeURI, :uri

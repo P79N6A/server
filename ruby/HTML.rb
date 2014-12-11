@@ -171,20 +171,28 @@ class R
     else
       groups = {}
       seen = {}
-      d.map{|u,r|
+      d.map{|u,r| # bin resources on RDF type
         r.types.map{|type|
           if v = ViewGroup[type]
             groups[v] ||= {}
             groups[v][u] = r
             seen[u] = true
           end}}
-      [groups.map{|view,graph|view[graph,e]}, # groups
-       d.map{|u,r|
+
+      [groups.map{|view,graph|view[graph,e]}, # show type-groups
+       d.map{|u,r|                            # show singletons
          if !seen[u]
            type = r.types.find{|t|ViewA[t]}
-           ViewA[type ? type : 'default'][r,e]
-         end},
-       (H.css '/css/html', true)]
+           puts "missing view for #{r.types.join ' '}"
+           ViewA[type ? type : Resource][r,e]
+         end}]
     end}
+
+  ViewA[Resource] = -> r,e {r.html}
+
+  ViewGroup[Resource] = -> g,e {
+    [H.css('/css/html',true),
+     g.map{|u,r|
+       ViewA[Resource][r,e]}]}
 
 end

@@ -35,7 +35,7 @@ class R
 
   def triplrTwUserlist
     open(pathPOSIX).readlines.map{|l|
-      yield 'https://twitter.com/'+l.chomp, Type, Resource}
+      yield 'https://twitter.com/'+l.chomp, Type, R[Resource]}
   end
 
   def triplrTwMsg

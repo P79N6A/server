@@ -43,7 +43,7 @@ class R
     rs = ResourceSet[s]
     fs = FileSet[s]
 
-    FileSet['default'][self,q,m].do{|f|set.concat f} unless rs||fs
+    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
     fs[self,q,m].do{|files|set.concat files} if fs
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 

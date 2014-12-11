@@ -265,7 +265,7 @@ class R
       end),
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
-     d.values.sort_by{|r|r.class==Hash ? r[Date].justArray[0].to_s : ''}.reverse.map{|r|
-       ViewA['default'][r,e]}]}
+     ViewGroup[Resource][d,e]
+    ]}
 
 end
