@@ -1,7 +1,12 @@
-a[rel=prev] { float:left }
-a[rel=next] { float:right }
+body > a.id {
+    font-size: 1.8em;
+    color: #222;
+    background-color: #fff;
+    text-decoration: none;
+    margin:.2em;
+}
 
-a[rel=next], a[rel=prev]{
+a.up {
     font-size: 3em;
     border: .03em dotted #000;
     margin: .3em;
@@ -9,7 +14,18 @@ a[rel=next], a[rel=prev]{
     background-color: #fff;
     color: #000;
     text-decoration: none;
-    float: left;
+    float: left;}
+
+a[rel=prev] { float:left }
+a[rel=next] { float:right }
+
+a[rel=next], a[rel=prev]{
+    font-size: 2em;
+    margin: .5em;
+    border-radius: .2em;
+    background-color: #eee;
+    color: #000;
+    text-decoration: none;
 }
 
 a[rel=next]:hover, a[rel=prev]:hover{

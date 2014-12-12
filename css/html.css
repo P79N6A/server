@@ -1,8 +1,4 @@
 a {text-decoration: none}
-body > a.id {
-    font-size: 1.8em;
-    color: #222;
-    background-color: #fff}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
 table.html {display: inline-block;margin-bottom: .38em}

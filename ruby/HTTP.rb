@@ -111,7 +111,7 @@ class R
   E404 = -> e,r,graph=nil {
     g = {}
     if graph && r.format=='text/html' && e.path != '/'
-      g['..'] = {'uri' => '..', Type => R[Directory]}
+      g['..'] = {Type => R[LDP+'Resource']}
       g[e.uri] = graph[""]
     end
     [:Links,:Response].map{|p|r.delete p}
