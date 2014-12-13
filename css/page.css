@@ -6,28 +6,26 @@ body > a.id {
     margin:.2em;
 }
 
-a.up {
-    font-size: 3em;
-    border: .03em dotted #000;
-    margin: .3em;
-    border-radius: .1em;
-    background-color: #fff;
-    color: #000;
+a.up, a[rel=next], a[rel=prev]{
+    margin: .2em;
+    border-radius: .16em;
+    background-color: #000;
+    color: #fff;
     text-decoration: none;
-    float: left;}
-
-a[rel=prev] { float:left }
-a[rel=next] { float:right }
-
-a[rel=next], a[rel=prev]{
-    font-size: 2em;
-    margin: .5em;
-    border-radius: .2em;
-    background-color: #eee;
-    color: #000;
-    text-decoration: none;
+    padding: .01em .03em 0 .03em;
 }
 
-a[rel=next]:hover, a[rel=prev]:hover{
-    background-color: #ff0;
+a.up {
+    float: left;
+    font-size: 2.2em;
+}
+
+a[rel=prev] {
+    float:left;
+    font-size: 1.5em;
+}
+
+a[rel=next] {
+    float:right;
+    font-size: 1.6em;
 }
