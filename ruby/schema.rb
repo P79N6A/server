@@ -1,7 +1,18 @@
-#watch __FILE__
+watch __FILE__
 class R
 
-  def R.schemaSources
+  ViewGroup[RDFClass] = -> g,e {
+    ['<br>',{_: :b, style: "font-size:1.6em", c: 'Class'}, ViewGroup[CSVns+'Row'][g,e]]}
+
+  ViewGroup[Property] = -> g,e {
+    ['<br>',{_: :b, style: "font-size:1.3em", c: 'Properties'}, ViewGroup[CSVns+'Row'][g,e]]}
+
+  ViewGroup[RDFs+'Datatype'] = -> g,e {
+    ['<br>',{_: :b, style: "font-size:1.3em", c: 'Datatypes'}, ViewGroup[CSVns+'Row'][g,e]]}
+
+  ViewGroup[OWL+'Ontology'] = ViewGroup[Resource]
+
+   def R.schemaSources
     table = {}
     open('http://prefix.cc/popular/all.file.txt').each_line{|l|
       unless l.match /^#/

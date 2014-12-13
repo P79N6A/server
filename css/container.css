@@ -19,8 +19,8 @@
 .container a.uri {
     font-size: 1.3em;
     color: #fff;
-    padding: 0 .23em 0 .23em;
-    border-radius: .15em;
+    padding: 0 .2em 0 .2em;
+    border-radius: 0em;
 }
 .container a.uri:hover {color: #000}
 a.sort {
