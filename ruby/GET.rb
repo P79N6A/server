@@ -38,7 +38,7 @@ class R
 
   def response
     set = []
-    m = {'' => {'uri' => uri, Type => [R[LDP+'Resource']]}}
+    m = {'' => {'uri' => uri, Type => R[LDP+'Resource']}}
     s = q['set']
     rs = ResourceSet[s]
     fs = FileSet[s]
