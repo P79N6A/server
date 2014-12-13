@@ -1,6 +1,7 @@
 .container {
     font-family: sans-serif;
     display: inline-block;
+    margin: 0 .2em .8em 0;
 }
 
 .container form, .container input {display: inline-block}
