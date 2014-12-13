@@ -1,0 +1,12 @@
+table.tab {
+    background-color: #eee;
+    color: #000;
+}
+table.tab td {
+    background-color: #fff;
+}
+table.tab td a {
+    background-color: #000;
+    color: #fff;
+    padding: .1em;
+}

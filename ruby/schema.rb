@@ -4,7 +4,11 @@ class R
   ViewGroup[RDFClass] =  ViewGroup[OWL+'Class'] = -> g,e {
     ['<br>',{_: :b, style: "font-size:1.6em", c: 'Class'}, ViewGroup[CSVns+'Row'][g,e]]}
 
-  ViewGroup[Property] = ViewGroup[OWL+'ObjectProperty'] = -> g,e {
+  ViewGroup[Property] =
+    ViewGroup[OWL+'ObjectProperty'] =
+    ViewGroup[OWL+'DatatypeProperty'] =
+    ViewGroup[OWL+'SymmetricProperty'] =
+    ViewGroup[OWL+'TransitiveProperty'] = -> g,e {
     ['<br>',{_: :b, style: "font-size:1.3em", c: 'Properties'}, ViewGroup[CSVns+'Row'][g,e]]}
 
   ViewGroup[RDFs+'Datatype'] = -> g,e {
