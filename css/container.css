@@ -26,10 +26,11 @@
 
 a.sort {
     font-size: 1.2em;
-    color: #555;
+    color: #777;
     background-color: #fff;
     border-radius: .1em;
     float: right;
+    text-decoration: none;
 }
 
 a.sort:hover { color: #000; }

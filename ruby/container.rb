@@ -92,7 +92,7 @@ class R
     sort = e.q['sort'].expand == Size ? Size : Stat+'mtime'
     {_: :table, style: 'float: right', c: g.values.sort_by{|i|i[sort][0]}.reverse.map{|r|
        {_: :tr, c: [{_: :td, c: r[Size]},
-                    {_: :td, c: Time.at(r[Stat+'mtime'][0]).iso8601},
+#                    {_: :td, c: Time.at(r[Stat+'mtime'][0]).iso8601},
                     {_: :td, c: r.R.href},
                    ]}}}}
 

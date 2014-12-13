@@ -154,7 +154,7 @@ class R
 
   Filter[:minimalMessage] = -> g,e { # trim the fat off a message
     g.map{|u,r|
-      [DC+'identifier',DC+'hasFormat',
+      [DC+'identifier',DC+'hasFormat',DC+'source',
        SIOC+'attachment',
        SIOC+'reply_of',
        SIOC+'reply_to',
