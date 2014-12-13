@@ -1,7 +1,7 @@
 watch __FILE__
 class R
 
-  ViewGroup[RDFClass] = -> g,e {
+  ViewGroup[RDFClass] =  ViewGroup[OWL+'Class'] = -> g,e {
     ['<br>',{_: :b, style: "font-size:1.6em", c: 'Class'}, ViewGroup[CSVns+'Row'][g,e]]}
 
   ViewGroup[Property] = -> g,e {
