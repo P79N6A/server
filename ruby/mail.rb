@@ -47,6 +47,7 @@ class R
 
     e = MessagePath[id]
     yield e, DC+'identifier', id
+    yield e, DC+'source', self
 
     [R[SIOCt+'MailMessage'], R[SIOC+'Post']].        # SIOC types
       map{|t|yield e, Type, t}
