@@ -230,6 +230,10 @@ class R
                      d[Creator].do{|c|{_: :author, c: c[0]}},
                      {_: :content, type: :xhtml,
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
-                         c: d[Content]}}].cr}}.cr]}])}
+                           c: d[Content]}}].cr}}.cr]}])}
+
+    ViewGroup[Post] = -> g,e {
+    [H.css('/css/post',true),
+     {class: :posts, c: g.map{|u,r| ViewA[Resource][r,e]}}]}
 
 end
