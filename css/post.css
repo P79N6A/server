@@ -1,0 +1,21 @@
+.posts a { text-decoration: none }
+.posts table {
+    border-spacing: 0;
+    margin-bottom: .4em;
+}
+.posts td {padding: .08em}
+.posts td.uri {background-color: #888}
+.posts td.uri a {
+    color: #fff;
+    padding-left: 10%;
+}
+.posts td.key {
+    text-align:right;
+    background-color: #7e7e7e;
+}
+.posts td.key > a {
+    font-weight: bold;
+    color: #fff;
+}
+
+.posts tr[property="http://purl.org/dc/terms/title"] {display:none}
