@@ -130,7 +130,6 @@ class R
 
   def triplrContent
     yield uri+'#', Content, r
-    yield uri+'#', Type, R[Content]
   end
 
   def triplrHref enc=nil
@@ -191,12 +190,5 @@ class R
            ViewA[type ? type : Resource][r,e]
          end}]
     end}
-
-  ViewA[Resource] = -> r,e {r.html}
-
-  ViewGroup[Resource] = -> g,e {
-    [H.css('/css/html',true),
-     g.map{|u,r|
-       ViewA[Resource][r,e]}]}
 
 end

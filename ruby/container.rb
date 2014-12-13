@@ -2,7 +2,12 @@
 watch __FILE__
 class R
 
-  ViewA[Content] = -> r,e {r[Content]}
+  ViewA[Resource] = -> r,e {r.html}
+
+  ViewGroup[Resource] = -> g,e {
+    [H.css('/css/html',true),
+     g.map{|u,r|
+       ViewA[Resource][r,e]}]}
 
   ViewA[Container] = ViewA[Directory] = -> r,e {
     re = r.R
