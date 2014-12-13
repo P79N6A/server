@@ -21,7 +21,7 @@ class R
     unless e[:seen][re.uri]
       e[:seen][re.uri] = true
     [{class: :container, id: re.fragment,
-      c: [{_: :a, class: :uri, href: re.uri, style: "color: #fff;background-color: #{R.cs}",
+      c: [{_: :a, class: :uri, href: re.uri, style: "background-color: #{R.cs}",
            c: r[Label] || re.fragment || re.basename },"<br>\n",
           r[LDP+'contains'].do{|c|
             sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact

@@ -3,7 +3,7 @@
     display: inline-block;
     margin: 0 .2em .8em 0;
 }
-
+.container .container:hover {background-color: #eee}
 .container form, .container input {display: inline-block}
 
 .container a {text-decoration: none;}
@@ -18,10 +18,11 @@
 
 .container a.uri {
     font-size: 1.3em;
-    background-color: #fff;
-    color: #000;
+    color: #fff;
+    padding: 0 .23em 0 .23em;
+    border-radius: .15em;
 }
-
+.container a.uri:hover {color: #000}
 a.sort {
     font-size: 1.2em;
     color: #777;
