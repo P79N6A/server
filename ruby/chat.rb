@@ -44,7 +44,6 @@ class R
     nokogiri.css('div.tweet').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
       yield s, Type, R[SIOCt+'MicroblogPost']
-      yield s, Type, R[SIOC+'Post']
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
       yield s, Name, t.css('.fullname')[0].inner_text
       yield s, Atom+"/link/image", R(t.css('.avatar')[0].attr('src'))

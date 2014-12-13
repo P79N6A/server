@@ -231,8 +231,9 @@ class R
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                            c: d[Content]}}].cr}}.cr]}])}
 
-    ViewGroup[SIOCt+'BlogPost'] = -> g,e {
+  ViewGroup[SIOCt+'BlogPost'] = -> g,e {
     [H.css('/css/post',true),
+     {_: :style, c: ".posts td.val a {background-color: #{R.c}}"},
      {class: :posts, c: g.map{|u,r| ViewA[Resource][r,e]}}]}
 
 end
