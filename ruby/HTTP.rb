@@ -111,12 +111,16 @@ class R
   E404 = -> e,r,g=nil {
     g ||= {}                                               # graph
     s = g[e.uri] ||= {'uri' => e.uri, Type => R[Resource]} # subject resource
-    r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}        # headers -> graph
     if r.format=='text/html'
       s['#query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}] # parsed qs
       s['#accept'] = r.accept
       %w{CHARSET LANGUAGE ENCODING}.map{|a| s['#accept-'+a.downcase] = r.accept_('_'+a)}
+    else
+      g.delete ''
+      r.delete :Links
+      r.delete :Response
     end
+    r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}        # headers -> graph
     [404,{'Content-Type' => r.format},[Render[r.format].do{|p|p[g,r]} ||
                                        g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :prefixes => Prefixes)]]}
 

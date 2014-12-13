@@ -9,4 +9,5 @@ table.tab td a {
     background-color: #000;
     color: #fff;
     padding: .1em;
+    text-decoration: none;
 }
