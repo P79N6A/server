@@ -91,7 +91,7 @@ class R
       this[Prev] = {'uri' => pp} if pp.R.e || R['//' + e.env['SERVER_NAME'] + pp].e
       this[Next] = {'uri' => np} if np.R.e || R['//' + e.env['SERVER_NAME'] + np].e}
     if e.env[:container] # contained set
-      e.fileResources.concat e.c.map{|c|c.setEnv e.env}
+      e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
     else
       e.fileResources
     end}
