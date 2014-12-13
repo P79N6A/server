@@ -53,7 +53,7 @@ class R
     [prev.do{|p|
        {_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
      nexd.do{|n|
-       {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: '→ next page'}},
+       {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
      ViewA[Resource][u,e]]}
 
   Tabulator = -> r,e {

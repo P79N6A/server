@@ -134,7 +134,7 @@ class R
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
     'text/textile'         => [:triplrTextile],
     'text/turtle'          => [:triplrTurtle],
-    'text/tw'              => [:triplrTwUserlist],
+    'text/tw'              => [:triplrTwUsers],
     'text/uri-list'        => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
   }

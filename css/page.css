@@ -7,6 +7,7 @@ body > a.id {
 }
 
 a.up, a[rel=next], a[rel=prev]{
+    font-size: 1.55em;
     margin: .2em;
     border-radius: .16em;
     background-color: #000;
@@ -20,12 +21,5 @@ a.up {
     font-size: 2.2em;
 }
 
-a[rel=prev] {
-    float:left;
-    font-size: 1.5em;
-}
-
-a[rel=next] {
-    float:right;
-    font-size: 1.6em;
-}
+a[rel=prev] {float:left}
+a[rel=next] {float:right}
