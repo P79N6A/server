@@ -1,17 +1,25 @@
 .posts a { text-decoration: none }
 .posts table {
-    border-spacing: 0;
-    margin-bottom: .4em;
+    margin: 0;
+    border: .3em solid #eee;
+    border-spacing: .1em;
+    background-color: #ccc;
 }
-.posts td {padding: .08em}
-.posts td.uri {background-color: #888}
+.posts table td {
+    background-color: #fff;
+    color: #000;
+}
+.posts td.uri {
+    border-radius: 1em 0 0 0;
+    background-color: #000;
+}
 .posts td.uri a {
     color: #fff;
     padding-left: 10%;
 }
 .posts td.key {
     text-align:right;
-    background-color: #7e7e7e;
+    background-color: #222;
 }
 .posts td.key > a {
     font-weight: bold;
