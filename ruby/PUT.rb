@@ -12,7 +12,7 @@ class R
     # version URI
     doc = versions.child Time.now.iso8601.gsub(/\W/,'') + '.' + ext 
     body = @r['rack.input'].read
-    doc.w body unless body.empty
+    doc.w body unless body.empty?
 
     main = stripDoc.a('.' + ext) # canonical doc-URI
 
