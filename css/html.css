@@ -4,7 +4,9 @@ img {max-width: 100%}
 table.html {
     display: inline-block;
     margin-bottom: .38em;
+    border-radius: .6em;
     background-color: #f6f6f6;
+    border-spacing: .1em;
 }
 td.uri {
     padding-left: 16%;
@@ -13,6 +15,7 @@ td.uri a {
     font-size: 1.05em;
     font-weight: bold;
     border-radius: .2em;
+    color: #000;
     background-color: #fff;
 }
 td.key {
@@ -20,7 +23,7 @@ td.key {
 }
 td.key > a {
     font-weight: bold;
-    color: #555;
+    color: #000;
     background-color: #fff;
 }
 td.val {
@@ -29,12 +32,9 @@ td.val {
 td.val > a {
     font-weight: normal;
     border: .1em dotted #aaa;
-    color: #000;
+    color: #fff;
+    background-color: #000;
     border-radius: .16em;
-}
-td.val > a:hover {
-    background-color: #3f3;
-    color: #000;
 }
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
 
