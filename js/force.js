@@ -61,13 +61,7 @@ node.append("text")
     .attr("dy", ".35em")
     .style("fill", function(d) { return d.color; })
     .text(function(d) { return d.name; });
-/*
-node.insert("rect","text").each(function(){
-    this.setAttribute("width", this.nextSibling.getBBox().width)
-    this.setAttribute("height", 10)
-    this.setAttribute("x", 12)
-    this.setAttribute("y", -5)})
-*/
+
 node.append("circle")
     .style("fill", function(d) { return d.color; })
     .attr("r", 9);
