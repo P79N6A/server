@@ -159,9 +159,13 @@ class R
       [groups.map{|view,graph|view[graph,e]}, # show type-groups
        d.map{|u,r|                            # show singletons
          if !seen[u]
-           type = r.types.find{|t|ViewA[t]}
-           puts "missing RDF type <#{r.uri}>" if r.types.empty?
-           puts "missing views for #{r.types.join ' '}"
+           types = r.types
+           type = types.find{|t|ViewA[t]}
+           if types.empty?
+             puts "untyped resource <#{r.uri}>"
+           else
+             puts "view undefined #{types.join ' '}"
+           end
            ViewA[type ? type : Resource][r,e]
          end}]
     end}

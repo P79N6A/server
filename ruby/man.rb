@@ -19,7 +19,7 @@ class R
       lang = r.q['lang'] || acceptLang
       superLang = lang.do{|l| (l.split /[_-]/)[0] }
 #      langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
-      langSH = "" # environment-only
+      langSH = ""
 
       findman = "man #{langSH} -w #{section} #{name.sh}"
       man = `#{findman}`.lines[0]
@@ -46,7 +46,7 @@ class R
             uri => {
               'uri' => uri,
               Title => name,
-              Type => R[Purl+'ontology/bibo/Manual'],
+              Type => [R[Purl+'ontology/bibo/Manual'],R[Resource]],
               DC+'language' => lang,
               DC+'locale' => [],
               RDFs+'seeAlso' => [],
