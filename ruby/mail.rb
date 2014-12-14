@@ -214,8 +214,10 @@ class R
         weight[a] += 1
         graph.delete a}}
 
-    listURI = '?group=rdf:type&sort=dc:date'
-    graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
+    if e.format == 'text/html'
+      listURI = '?group=rdf:type&sort=dc:date'
+      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
+    end
 
     group = e.q['group'].do{|t|t.expand} || To
     threads.map{|title,post| # pass 2. cluster

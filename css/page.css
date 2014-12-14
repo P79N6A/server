@@ -7,9 +7,11 @@ body > a.id {
 }
 
 a.up, a[rel=next], a[rel=prev]{
-    font-size: 1.55em;
+    font-size: 1.35em;
     margin: .2em;
     border-radius: .16em;
+    max-width: 46%;
+    overflow: hidden;
     background-color: #000;
     color: #fff;
     text-decoration: none;
