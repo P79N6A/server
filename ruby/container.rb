@@ -10,42 +10,44 @@ class R
        ViewA[Resource][r,e]}]}
 
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
-    graph ||= {}
     re = r.R
-    path = (re.path||'').t
-    size = Stat + 'size'
-    group = e.q['group']
-    sort = e.q['sort'].do{|p|p.expand} || size
-    sortType = [size].member?(sort) ? :to_i : :to_s
     e[:seen] ||= {}
     unless e[:seen][re.uri]
       e[:seen][re.uri] = true
-    [{class: :container, id: re.fragment,
-      c: [{_: :a, class: :uri, href: re.uri, style: "background-color: #{R.cs}",
-           c: r[Label] || re.fragment || re.basename },"<br>\n",
-          r[LDP+'contains'].do{|c|
-            sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
-            maxSize = sizes.max
-            sized = !sizes.empty? && maxSize > 1
-            width = maxSize.to_s.size
-            c.sort_by{|i|
-              ((i.class==Hash && i[sort] || i.uri).justArray[0]||0).send sortType}.
-              send((sized || sort==Date) ? :reverse : :id).map{|r|
-              data = r.class == Hash
-              if child = graph[r.uri]
-                ViewA[Container][child,e,graph]
-              else
-                [{_: :a, href: r.R.uri, class: :member,
-                  c: [(if data && sized && r[size]
-                       s = r[size].justArray[0]
-                       [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
-                     end),
-                      ([r[Date],' '] if data && sort==Date),
-                      data && (r[Title] || r[Label]) || r.R.abbr[0..64]
-                     ]}, data ? "<br>" : " "]
-              end
-            }}]}]
-    end  }
+      graph ||= {}
+      path = (re.path||'').t
+      size = Stat + 'size'
+      group = e.q['group']
+      sort = e.q['sort'].do{|p|p.expand} || size
+      sortType = [size].member?(sort) ? :to_i : :to_s
+
+      color = R.cs
+      {class: :container, id: re.fragment,
+       c: [{_: :a, class: :uri, href: re.uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",
+           r[LDP+'contains'].do{|c|
+             sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
+             maxSize = sizes.max
+             sized = !sizes.empty? && maxSize > 1
+             width = maxSize.to_s.size
+             c.sort_by{|i|
+               ((i.class==Hash && i[sort] || i.uri).justArray[0]||0).send sortType}.
+               send((sized || sort==Date) ? :reverse : :id).map{|r|
+               data = r.class == Hash
+               if child = graph[r.uri]
+                 ViewA[Container][child,e,graph]
+               else
+                 [{_: :a, href: r.R.uri, class: :member,
+                   c: [(if data && sized && r[size]
+                        s = r[size].justArray[0]
+                        [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
+                        end),
+                       ([r[Date],' '] if data && sort==Date),
+                       data && (r[Title] || r[Label]) || r.R.abbr[0..64]
+                      ]}, data ? "<br>" : " "]
+               end
+             }} ||
+           {_: :a, href: re.uri, class: :down, style: "color: #{color}", c: '&darr;' }]}
+    end}
 
   ViewGroup[LDP+'Resource'] = -> g,env {
     [(H.css '/css/page', true),

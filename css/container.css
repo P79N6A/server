@@ -3,7 +3,7 @@
     display: inline-block;
     margin: 0 .2em .8em 0;
 }
-.container .container:hover {background-color: #eee}
+
 .container form, .container input {display: inline-block}
 
 .container a {text-decoration: none;}
@@ -33,6 +33,8 @@ a.sort {
 }
 
 a.sort:hover { color: #000; }
+
+.container a.down {background-color: #f7f7f7;width: 100%}
 
 .container a.member {
     background-color: #fff;
