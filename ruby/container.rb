@@ -10,7 +10,7 @@ class R
        ViewA[Resource][r,e]}]}
 
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
-     re = r.R
+    re = r.R
     uri = re.uri
     e[:seen] ||= {}
     unless e[:seen][uri]
@@ -130,7 +130,6 @@ class Hash
       H({_: :table,
          class: :html,
          id: uri.do{|u|u.R.fragment||u.R.uri}||'#',
-         style: "background-color: #{R.cs}",
          c: map{|k,v|
            {_: :tr, property: k,
             c: case k

@@ -4,17 +4,12 @@ img {max-width: 100%}
 table.html {
     display: inline-block;
     margin-bottom: .38em;
-    border-radius: .6em;
-    background-color: #f6f6f6;
-    border-spacing: .1em;
 }
 td.uri {
     padding-left: 16%;
 }
 td.uri a {
-    font-size: 1.05em;
     font-weight: bold;
-    border-radius: .2em;
     color: #000;
     background-color: #fff;
 }
@@ -24,9 +19,6 @@ td.key {
 td.key > a {
     font-weight: bold;
     color: #000;
-    background-color: #fff;
-}
-td.val {
     background-color: #fff;
 }
 td.val > a {
