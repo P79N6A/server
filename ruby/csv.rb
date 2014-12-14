@@ -23,11 +23,14 @@ class R
 
   ViewGroup[CSVns+'Row'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+    sort = (e.q['sort']||'uri').expand
+    sortType = [Size,Stat+'mtime'].member?(sort) ? :to_i : :to_s
     {_: :table, :class => :tab,
      c: [H.css('/css/table'),
          {_: :tr, c: keys.map{|k|
             {_: :th, class: :label, property: k, c: k.R.abbr}}},
-         g.values.map{|e|
+         g.values.sort_by{|i|
+               ((i.class==Hash && i[sort] || i.uri).justArray[0]||0).send sortType}.map{|e|
            {_: :tr, about: e.uri, c: keys.map{|k|
               {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}}
 

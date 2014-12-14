@@ -97,11 +97,11 @@ class R
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
     end
-    p.children.map{|i|yield uri+'#', DC+'Image', i}
+    p.children.map{|i|yield uri+'#', Image, i}
   end
 
   ViewA[MIMEtype+'application/postscript']=->d,e{
-    d[DC+'Image'].do{|is|
+    d[Image].do{|is|
       is = is.sort_by(&:uri)
       {type: :book,
        c: [{_: :img, style:'float:left;max-width:100%', src: is[0].uri},

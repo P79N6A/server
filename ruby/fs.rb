@@ -82,6 +82,8 @@ class R
     (Pathname.glob pathPOSIX).map &:R
   end
 
+  ViewGroup[Stat+'File'] = ViewGroup[CSVns+'Row']
+
   FileSet[Resource] = -> e,q,g {
     this = g['']
     e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # day-dir

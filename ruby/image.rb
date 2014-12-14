@@ -2,7 +2,7 @@
 class R
 
   def triplrImage &f
-    yield uri,Type,R[DC+'Image']
+    yield uri, Type, R[Image]
   end
 
   GET['/thumbnail'] = -> e,r {
@@ -29,7 +29,10 @@ class R
       E404[e,r]
     end}
   
-  ViewA[DC+'Image'] = ->i,e{ShowImage[i.uri]}
+  ViewA[Image] = ->i,e{ShowImage[i.uri]}
+
+  ViewGroup[Image] = -> g,e {
+    g.map{|u,r| ViewA[Image][r,e]}}
 
   ShowImage = -> u {{_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}
 

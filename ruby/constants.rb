@@ -25,6 +25,7 @@ class R < RDF::URI
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"
   RO    = 'http://rdfs.org/'
+  DC    = Purl + 'dc/terms/'
   SIOC  = RO + 'sioc/ns#'
   SIOCt = RO + 'sioc/types#'
   VOID  = RO + 'ns/void#'
@@ -35,7 +36,7 @@ class R < RDF::URI
   Schema   = 'http://schema.org/'
   Mu       = Purl + 'ontology/mo/'
   Sound    = Mu + 'Sound'
-  DC       = Purl + 'dc/terms/'
+  Image    = DC + 'Image'
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'

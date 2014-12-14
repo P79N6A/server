@@ -98,15 +98,6 @@ class R
      d.map{|u,r|
        ViewA[Container][r,env,d]}]}
 
-  ViewGroup[Stat+'File'] = -> g,e {
-    e.q['sort'] ||= Size
-    sort = e.q['sort'].expand == Size ? Size : Stat+'mtime'
-    {_: :table, style: 'float: right', c: g.values.sort_by{|i|i[sort][0]}.reverse.map{|r|
-       {_: :tr, c: [{_: :td, c: r[Size]},
-#                    {_: :td, c: Time.at(r[Stat+'mtime'][0]).iso8601},
-                    {_: :td, c: r.R.href},
-                   ]}}}}
-
   def triplrAudio &f
     uri = '#'  + URI.escape(path)
     yield uri, Type, R[Sound]
