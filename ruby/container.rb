@@ -56,7 +56,9 @@ class R
      (H.js '/js/mu', true),
      ({_: :a, class: :up, href: '..', title: Pathname.new(env['REQUEST_PATH']).parent.basename, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
      g.map{|u,r|
-       ViewA[LDP+'Resource'][r,env]}]}
+       ViewA[LDP+'Resource'][r,env]},
+     {_: :a, href: '??', title: 'data browser', c: {_: :img, src: '/css/misc/cube.png'}, style: 'margin: .3em'},
+    ]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}

@@ -218,7 +218,7 @@ class R
       listURI = '?group=rdf:type&sort=dc:date'
       graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
     end
-
+    rdf = e.format != 'text/html'
     group = e.q['group'].do{|t|t.expand} || To
     threads.map{|title,post| # pass 2. cluster
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
@@ -226,6 +226,7 @@ class R
         container = dir.uri.t
         cLoc = e.q['group'] ? a.R : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
         item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
+        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if rdf
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
         graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
         graph[container][LDP+'contains'] ||= []
