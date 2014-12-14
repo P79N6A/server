@@ -115,9 +115,6 @@ class R
     [303,head,[]]}
 
   ViewGroup[FOAF+'Person'] = ViewGroup[Resource]
-
-  ViewGroup[SIOC+'Usergroup'] = -> d,e {
-    d.map{|id, group|
-      {_: :a, class: :foaf, href: group.R.dir.uri, c: [{_: :span, c: group.R.fragment},' ', group[Name]]}}}
+  ViewGroup[SIOC+'Usergroup'] = ViewGroup[CSVns+'Row']
 
 end

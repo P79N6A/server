@@ -1,6 +1,7 @@
 .container {
     font-family: sans-serif;
     display: inline-block;
+    vertical-align: top;
     margin: 0 .2em .8em 0;
 }
 
