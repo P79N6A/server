@@ -10,10 +10,11 @@ class R
        ViewA[Resource][r,e]}]}
 
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
-    re = r.R
+     re = r.R
+    uri = re.uri
     e[:seen] ||= {}
-    unless e[:seen][re.uri]
-      e[:seen][re.uri] = true
+    unless e[:seen][uri]
+      e[:seen][uri] = true
       graph ||= {}
       path = (re.path||'').t
       size = Stat + 'size'
@@ -23,7 +24,7 @@ class R
 
       color = R.cs
       {class: :container, id: re.fragment,
-       c: [{_: :a, class: :uri, href: re.uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",
+       c: [{_: :a, class: :uri, href: uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",
            r[LDP+'contains'].do{|c|
              sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
              maxSize = sizes.max
@@ -46,7 +47,7 @@ class R
                       ]}, data ? "<br>" : " "]
                end
              }} ||
-           {class: :down, c: {_: :a, href: re.uri, style: "color: #{color}", c: '&darr;' }}]}
+           ({class: :down, c: {_: :a, href: uri, style: "color: #{color}", c: '&darr;' }} unless uri == e.R.uri)]}
     end}
 
   ViewGroup[LDP+'Resource'] = -> g,env {
