@@ -17,16 +17,15 @@ class R
       e[:seen][uri] = true
       graph ||= {}
       path = (re.path||'').t
-      size = Stat + 'size'
       group = e.q['group']
-      sort = e.q['sort'].do{|p|p.expand} || size
-      sortType = [size].member?(sort) ? :to_i : :to_s
-
+      sort = e.q['sort']
+      sortType = sort == Size ? :to_i : :to_s
       color = R.cs
+
       {class: :container, id: re.fragment,
        c: [{_: :a, class: :uri, href: uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",
            r[LDP+'contains'].do{|c|
-             sizes = c.map{|r|r[size] if r.class == Hash}.flatten.compact
+             sizes = c.map{|r|r[Size] if r.class == Hash}.flatten.compact
              maxSize = sizes.max
              sized = !sizes.empty? && maxSize > 1
              width = maxSize.to_s.size
@@ -38,8 +37,8 @@ class R
                  ViewA[Container][child,e,graph]
                else
                  [{_: :a, href: r.R.uri, class: :member,
-                   c: [(if data && sized && r[size]
-                        s = r[size].justArray[0]
+                   c: [(if data && sized && r[Size]
+                        s = r[Size].justArray[0]
                         [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
                         end),
                        ([r[Date],' '] if data && sort==Date),
@@ -79,12 +78,10 @@ class R
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
   ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
-    mtime = Stat+'mtime'
-    env.q['sort'] ||= mtime
-    sort = env.q['sort'].expand
-    sortType = [mtime,Size].member?(sort) ? :to_i : :to_s
+    sort = env.q['sort'] = (env.q['sort']||Size).expand
+    sortType = [Stat+'mtime',Size].member?(sort) ? :to_i : :to_s
     sortLabel = sort.shorten.split(':')[-1] + ' ↨'
-    s_ = case sort # next sort-predicate
+    s_ = case sort # next sorting-predicate
          when Size
            'dc:date'
          when Date
