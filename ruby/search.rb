@@ -109,7 +109,7 @@ class R
     e.ldp
     [303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
 
-  ViewA[Search] = -> d,e {
+  ViewGroup[Search] = -> d,e {
     [{_: :form, action: '/search/', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
      (H.js '/js/search',true)]}
 
