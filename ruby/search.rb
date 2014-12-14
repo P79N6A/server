@@ -105,8 +105,9 @@ class R
     e.q['set'] = 'groonga'
     nil}
 
-  GET['/today'] = -> e,r {[303, {'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||''),
-                                 'Access-Control-Allow-Origin' => r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*'}, []]}
+  GET['/today'] = -> e,r {
+    e.ldp
+    [303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
 
   ViewA[Search] = -> d,e {
     [{_: :form, action: '/search/', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
