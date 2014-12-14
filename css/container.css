@@ -22,7 +22,6 @@
     padding: 0 .2em 0 .2em;
     border-radius: 0em;
 }
-.container a.uri:hover {color: #000}
 a.sort {
     font-size: 1.2em;
     color: #777;
@@ -34,7 +33,12 @@ a.sort {
 
 a.sort:hover { color: #000; }
 
-.container a.down {background-color: #f7f7f7;width: 100%}
+.container .down {
+    background-color: #f7f7f7;
+    width: 100%;
+    text-align:center;
+    border-radius: 0 0 .5em .5em;
+}
 
 .container a.member {
     background-color: #fff;

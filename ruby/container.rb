@@ -46,7 +46,7 @@ class R
                       ]}, data ? "<br>" : " "]
                end
              }} ||
-           {_: :a, href: re.uri, class: :down, style: "color: #{color}", c: '&darr;' }]}
+           {class: :down, c: {_: :a, href: re.uri, style: "color: #{color}", c: '&darr;' }}]}
     end}
 
   ViewGroup[LDP+'Resource'] = -> g,env {
