@@ -54,10 +54,9 @@ class R
     [(H.css '/css/page', true),
      (H.js '/js/pager', true),
      (H.js '/js/mu', true),
-     ({_: :a, class: :up, href: '..', title: Pathname.new(env['REQUEST_PATH']).parent.basename, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
-     g.map{|u,r|
-       ViewA[LDP+'Resource'][r,env]},
-     {_: :a, href: '??', title: 'data browser', c: {_: :img, src: '/css/misc/cube.png', style: "width:2.2em"}, style: 'margin: .3em'},
+     ({_: :a, class: :up, href: '..', title: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
+     g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
+     {_: :a, class: :cube, href: '??', title: 'data browser', c: {_: :img, src: '/css/misc/cube.png'}},
     ]}
 
   ViewA[LDP+'Resource'] = -> u,e {
