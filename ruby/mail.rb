@@ -53,7 +53,7 @@ class R
       map{|t|yield e, Type, t}
 
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
-    list && m['List-Id'].do{|name|
+    list && list.match(/@/) && m['List-Id'].do{|name|
       name = name.decoded
       group = AddrPath[list]                         # list URI
       yield group, Type, R[SIOC+'Usergroup']         # list class
@@ -91,7 +91,7 @@ class R
 
     yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
 
-    %w{to cc bcc}.map{|to|                      # reciever fields
+    %w{to cc bcc resent_to}.map{|to|            # reciever fields
      m.send(to).do{|to|                         # has field?
       to.justArray.map{|to|                     # each recipient
        to.do{|to|                               # non-nil?
