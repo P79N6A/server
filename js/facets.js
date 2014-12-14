@@ -1,5 +1,19 @@
+N = NodeList.prototype
+E = Element.prototype
+N.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a);return this}
+E.on = function(b,f){
+    this.addEventListener(b,f,false)
+    return this}
+E.click = function(f){
+    this.on('click',f)
+    return this}
+E.attr = function(a,v){
+    if(v){ this.setAttribute(a,String(v))
+	   return this
+  } else { return this.getAttribute(a)}}
+N.click = function(){return this.map(E.click,arguments)}
 var facets = function(){
-    qa('div[facet] > div[facet]').click(function(e){
+    document.querySelectorAll('div[facet] > div[facet]').click(function(e){
 
 	var poN = this   	// (predicate,object) node
 	var pN = poN.parentNode	//         predicate  node
@@ -18,7 +32,7 @@ var facets = function(){
 	    poN.style.backgroundColor='#0af';
 	    poN.style.color='#fff';
 	}
-	q('style.'+p) && q('style.'+p).remove() // GC obsolete rules
+	document.querySelector('style.'+p) && document.querySelector('style.'+p).remove() // GC obsolete rules
 	
 	// build selection-rules
 	var s = [], on = pN.querySelectorAll('[on=true]')
@@ -28,7 +42,10 @@ var facets = function(){
 		s.push('.'+p+'.'+this.attr('facet')+'{display:inline}')})
 
 	    // activate rules
-	    q('body').append(el('style').attr('class',p).txt(s.join('\n')))
+	    var style = document.createElement('style')
+	    style.attr('class',p)
+	    style.textContent = s.join('\n')
+	    document.querySelector('body').appendChild(style)
 	}
     })
 };

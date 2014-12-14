@@ -141,9 +141,7 @@ class R
     i = {}
     c = 0
     n = ->o{i[o] ||= 'f'+(c+=1).to_s}
-    [(H.css'/css/facets'),(H.js'/js/facets'),(H.js'/js/mu'),
-
-     # facet selection
+    [(H.css'/css/facets'),(H.js'/js/facets'),
      {class: :sidebar, c: a.map{|f,v|
          {class: :facet, facet: n[f], # predicate
            c: [{class: :predicate, c: f},
@@ -151,7 +149,6 @@ class R
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
                        {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.R.abbr : k.to_s)}]}}]}}},
-
      m.map{|u,r| # each resource
        type = r.types.find{|t|ViewA[t]}
        a.map{|p,_| # each facet
