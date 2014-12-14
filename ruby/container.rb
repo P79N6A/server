@@ -125,7 +125,7 @@ class Hash
   def html
     if keys.size == 1 && has_key?('uri')
       r = self.R
-      H({_: :a, href: uri, c: r.fragment || r.stripSlash.path.tail, class: :id})
+      H({_: :a, href: uri, c: r.fragment || r.basename, class: :id})
     else
       H({_: :table,
          class: :html,
