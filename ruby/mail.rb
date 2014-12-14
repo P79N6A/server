@@ -91,11 +91,11 @@ class R
 
     yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
 
-    %w{to cc bcc resent_to}.map{|to|            # reciever fields
-     m.send(to).do{|to|                         # has field?
-      to.justArray.map{|to|                     # each recipient
-       to.do{|to|                               # non-nil?
-        yield e, To, AddrPath[to.to_utf8].R}}}} # recipient URI
+    %w{to cc bcc resent_to}.map{|p|           # reciever fields
+      m.send(p).justArray.map{|to|            # each recipient
+        yield e, To, AddrPath[to.to_utf8].R}} # recipient URI
+    m['X-BeenThere'].justArray.map{|to|
+      yield e, To, AddrPath[to.to_s].R }
 
     %w{in_reply_to references}.map{|ref|             # reference predicates
      m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
