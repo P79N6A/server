@@ -131,7 +131,7 @@ class Hash
            {_: :tr, property: k,
             c: case k
                when 'uri'
-                 {_: :td, class: :uri, colspan: 2, c: {_: :a, href: v,
+                 {_: :td, class: :uri, colspan: 2, c: {_: :a, href: v, style: "color: #{R.cs}",
                       c: (self[R::Label] || self[R::Title] || v.R.abbr).justArray[0].to_s.noHTML}}
                when R::Content
                  {_: :td, class: :val, colspan: 2, c: v}

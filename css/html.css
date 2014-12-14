@@ -1,25 +1,35 @@
 a {text-decoration: none}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
-table.html {display: inline-block;margin-bottom: .38em}
-td.uri a {
-    background-color:#fff;
-    color: #000;
-    border-width: 0 0 .1em 0;
-    border-style: dashed;
-    padding-left: 10%;
-    border-color: #ccc;
+table.html {
+    display: inline-block;
+    margin-bottom: .38em;
+    background-color: #f6f6f6;
 }
-td.key {text-align:right}
+td.uri {
+    padding-left: 16%;
+}
+td.uri a {
+    font-size: 1.05em;
+    font-weight: bold;
+    border-radius: .2em;
+    background-color: #fff;
+}
+td.key {
+    text-align:right;
+}
 td.key > a {
     font-weight: bold;
-    background-color: #000;
-    color: #fff;
+    color: #555;
+    background-color: #fff;
+}
+td.val {
+    background-color: #fff;
 }
 td.val > a {
     font-weight: normal;
-    color: #fff;
-    background-color: #122 ;
+    border: .1em dotted #aaa;
+    color: #000;
     border-radius: .16em;
 }
 td.val > a:hover {
