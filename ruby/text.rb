@@ -110,7 +110,6 @@ class R
 
   ViewGroup[MIMEtype+'application/postscript']=->g,e{
     [{_: :style, c: 'div[type="book"] a {background-color:#ccc;color:#fff;float:left;margin:.16em}'},
-     (H.js '/js/mu'),
      (H.js '/js/book'),
       g.map{|u,r|
        ViewA[MIMEtype+'application/postscript'][r,e]}]}
