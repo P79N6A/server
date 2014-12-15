@@ -57,8 +57,7 @@ class R
       {_: :a, class: :up, href: parent, title: parent, c: '&uarr;'}
       end),
      g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
-     {_: :a, class: :cube, href: '??', title: 'data browser', c: {_: :img, src: '/css/misc/cube.png'}},
-    ]}
+     {_: :a, class: :cube, href: '??', title: 'data browser', c: {_: :img, src: '/css/misc/cube.png'}}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
@@ -98,7 +97,8 @@ class R
     [{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
      H.css('/css/container',true),
      d.map{|u,r|
-       ViewA[Container][r,env,d]}]}
+       [ViewA[Container][r,env,d],
+        {_: :p, class: :space}]}]}
 
   def triplrAudio &f
     uri = '#'  + URI.escape(path)

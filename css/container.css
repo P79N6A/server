@@ -56,3 +56,5 @@ a.sort:hover { color: #000; }
     color: #fff;
     background-color: #999;
 }
+
+p.space {float: left}

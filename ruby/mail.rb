@@ -145,7 +145,7 @@ class R
         yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
       end }
   rescue Exception => x
-    puts ["WARNING",uri,x,x.backtrace[0..2]].join(' ')
+    puts ["MAILERROR",uri,x,x.backtrace[0..2]].join(' ')
   end
 
   def triplrMailMessage &f
