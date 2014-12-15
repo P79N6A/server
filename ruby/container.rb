@@ -52,7 +52,10 @@ class R
   ViewGroup[LDP+'Resource'] = -> g,env {
     [(H.css '/css/page', true),
      (H.js '/js/pager', true),
-     ({_: :a, class: :up, href: '..', title: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
+     (if env['REQUEST_PATH'] != '/'
+      parent = Pathname.new(env['REQUEST_PATH']).parent
+      {_: :a, class: :up, href: parent, title: parent, c: '&uarr;'}
+      end),
      g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
      {_: :a, class: :cube, href: '??', title: 'data browser', c: {_: :img, src: '/css/misc/cube.png'}},
     ]}

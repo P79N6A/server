@@ -5,7 +5,7 @@ class R
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
   GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
-  GET['/msg'] = -> e,r{e.path=='/msg/' ? E404[e,r] : nil} # hide top-level msg-dir
+  GET['/msg'] = -> e,r{e.path=='/msg/' ? [303, {'Location' => '/'}, []] : nil}
   GET['/address'] = -> e,r {
     case e.path.split('/').size
     when 3
