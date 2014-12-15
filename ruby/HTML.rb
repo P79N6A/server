@@ -141,14 +141,12 @@ class R
              {_: :body, c: View[d,e]}]}]}
 
   View = -> d,e {
-    if e.q.has_key? 'facets'
-      Facets[d,e]
-    elsif e.q.has_key? '?'
+    if e.q.has_key? '?'
       Tabulator[d,e]
     else
       groups = {}
       seen = {}
-      d.map{|u,r| # bin resources on RDF type
+      d.map{|u,r| # group resources on RDF type
         r.types.map{|type|
           if v = ViewGroup[type]
             groups[v] ||= {}
@@ -156,8 +154,8 @@ class R
             seen[u] = true
           end}}
 
-      [groups.map{|view,graph|view[graph,e]}, # show type-groups
-       d.map{|u,r|                            # show singletons
+      [groups.map{|view,graph|view[graph,e]}, # type-groups
+       d.map{|u,r|                            # singletons
          if !seen[u]
            types = r.types
            type = types.find{|t|ViewA[t]}

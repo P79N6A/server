@@ -33,7 +33,7 @@ class R
       paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| # search for handlers
         return r }}}} # bespoke handler found
 
-    response
+    response # default handler
   end
 
   def response
