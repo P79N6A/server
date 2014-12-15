@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrIRC &f
@@ -24,7 +24,7 @@ class R
     }
   end
 
-  def tw g # GET messages, cache RDF representations
+  def tw g
     node.readlines.shuffle.each_slice(22){|s|
       u = 'https://twitter.com/search/realtime?q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
       u.R.twGET g}
@@ -49,11 +49,10 @@ class R
       yield s, Atom+"/link/image", R(t.css('.avatar')[0].attr('src'))
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # resolve from base-URI
+      content.css('a').map{|a| # bind hostname to paths
         u = a.attr 'href'
         a.set_attribute('href',base + u) if u.match /^\//}
-      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
-    }
+      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
   end
 
   ViewA[SIOC+'Forum'] = -> r,e {
@@ -64,10 +63,17 @@ class R
     [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
      r[Creator].do{|c|
        name = c[0].respond_to?(:uri) ? (c[0].R.fragment || c[0].R.basename) : c[0].to_s
-       {_: :a, href: r.uri, c: name }}," ", r[Content],"<br>\n"]}
+       e[:creators][name] = R.cs
+       {_: :a, href: r.uri, creator: name, c: name }}," ", r[Content],"<br>\n"]}
 
-  # message group <table>
-  ViewGroup[SIOCt+'InstantMessage'] = ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
+  ViewGroup[SIOCt+'InstantMessage'] = -> d,e {
+    e.q['a'] = 'sioct:ChatChannel,sioc:has_creator'
+    e[:creators] = {}
+    [Facets[d,e],
+     H.css('/css/chat',true),
+     {_: :style, c: e[:creators].map{|n,c|"a[creator='#{n}'] {color:#fff;background-color: #{c}}"}.cr}]}
+
+  ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
     label = {}
     count = 0
     e.q['sort'] ||= 'dc:date'
