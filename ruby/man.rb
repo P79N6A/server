@@ -42,7 +42,7 @@ class R
           [:dir,'<'+dir+'>'],
           [:doc,'<'+doc+'>'],
         ].map{|pair|pair.join "\t"}.join "\n"
-#        puts debug
+ #       puts debug
 
         cached = path.exist? && doc.e && doc.m > path.stat.mtime
         if !cached
@@ -125,6 +125,6 @@ class R
     end
   }
 
-#    GET['/man'] = Man
+ #   GET['/man'] = Man
 
 end

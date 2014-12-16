@@ -72,7 +72,7 @@ class R
        {_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
      nexd.do{|n|
        {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
-     ViewA[Resource][u,e]]}
+    (ViewA[Resource][u,e] unless u.keys.size==1)]}
 
   Tabulator = -> r,e {
     src = '//linkeddata.github.io/tabulator/'
