@@ -39,7 +39,7 @@ class R
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga
   ResourceSet['groonga'] = ->d,e,m{
-    m['/search#'] = {Type => R[Search]}
+    m['/search'] = {Type => R[Search+'Input']}
     R.groonga.do{|ga|
       q = e['q']                               # search expression
       g = e["context"] || d.env['SERVER_NAME'] # context
@@ -109,9 +109,13 @@ class R
     e.ldp
     [303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
 
-  ViewGroup[Search] = -> d,e {
-    [{_: :form, action: '/search/', c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}},
-     (H.js '/js/search',true)]}
+  ViewA[Search+'Input'] = -> r, e {
+    {_: :form, action: r.uri, c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}}}
+
+  ViewGroup[Search+'Input'] = -> d,e {
+    [H.js('/js/search',true),
+     d.values.map{|i|
+       ViewA[Search+'Input'][i,e]}]}
 
   def R.trimLines text
     text.lines.map{|l| R.blacklist[l.h] ? "" : l}.join

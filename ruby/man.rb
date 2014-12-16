@@ -10,9 +10,11 @@ class R
     name.match(/^([0-9])(\/|$)/).do{|p| # optional section
       section = p[1]
       name = p.post_match}
-
-    if name.empty?
-      E404[e,r]
+    if q = r.q['q']
+      [303,{'Location'=>'/man/'+q},[]]
+    elsif name.empty?
+      input = {Type => R[Search+'Input']}
+      [200,{'Content-Type' => 'text/html'},[Render['text/html'][{'/man' => input},r]]] 
     else
 
       acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
@@ -25,7 +27,7 @@ class R
       man = `#{findman}`.lines[0]
 
       if !man || man.empty?
-        E404[e,r]
+        [303,{'Location'=>'/man/'},[]]
       else
         man = man.chomp
         roff = man.R
@@ -34,9 +36,15 @@ class R
         res = dir.child roff.bare
         doc = res + '.e'
         path = Pathname man
+        debug =  [
+          [:name,name],
+          [:man,man],
+          [:dir,'<'+dir+'>'],
+          [:doc,'<'+doc+'>'],
+        ].map{|pair|pair.join "\t"}.join "\n"
+#        puts debug
 
         cached = path.exist? && doc.e && doc.m > path.stat.mtime
-
         if !cached
           uri = e.uri + '#'
           txt = res + '.txt'
@@ -116,5 +124,7 @@ class R
       end
     end
   }
+
+#    GET['/man'] = Man
 
 end
