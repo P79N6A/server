@@ -107,11 +107,12 @@ class R
   end
 
   def triplrContent
-    yield uri+'#', Type, R[Content]
-    yield uri+'#', Content, r
+    yield uri, Type, R[Content]
+    yield uri, Content, r
   end
 
   def triplrHref enc=nil
+    yield uri, Type, R[Content]
     yield uri, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: open(pathPOSIX).read.do{|r|
