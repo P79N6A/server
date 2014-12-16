@@ -107,6 +107,7 @@ class R
   end
 
   def triplrContent
+    yield uri+'#', Type, R[Content]
     yield uri+'#', Content, r
   end
 

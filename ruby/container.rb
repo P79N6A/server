@@ -9,6 +9,10 @@ class R
      g.map{|u,r|
        ViewA[Resource][r,e]}]}
 
+  ViewA[Content] = -> r,e {r[Content]}
+  ViewGroup[Content] = -> g,e {
+    g.map{|u,r|ViewA[Content][r,e]}}
+
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
     re = r.R
     uri = re.uri
