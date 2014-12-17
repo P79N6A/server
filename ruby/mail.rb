@@ -179,8 +179,7 @@ class R
         c.css('span.q').remove
         R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n\n" }}}
 
-  Filter[:addrContainers] = -> graph,e { # group address-containers by domain-name
-    e.q['sort'] = 'uri'
+  Filter[:addrContainers] = -> graph,e { # group address-containers by domain
     g = {}
     graph.delete e.uri
     graph.map{|u,r|
