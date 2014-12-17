@@ -4,7 +4,6 @@ class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
-  GET['/mid'] = -> e,r{R[MessagePath[e.basename]].setEnv(r).response} # message-ID lookup
   GET['/msg'] = -> e,r{e.path=='/msg/' ? [303, {'Location' => '/'}, []] : nil}
   GET['/address'] = -> e,r {
     case e.path.split('/').size
@@ -148,6 +147,21 @@ class R
     puts ["MAILERROR",uri,x,x.backtrace[0..2]].join(' ')
   end
 
+  IndexMail = ->doc,graph,host { # link to address-containers
+    graph.map{|u,r|
+      addresses = []
+      r[Creator].do{|from|addresses.concat from}
+      r[To].do{|to|       addresses.concat to}
+      r[Date].do{|date|
+        r[Title].do{|title|
+          name = title[0].gsub(/\W+/,' ').strip
+          month = date[0][0..7].gsub '-','/'
+          addresses.map{|address|
+            container = address.R.dirname + '/' + month
+            target = R[container + name + '.e']
+            target = R[container + name + ' ' + rand.to_s.h[0..2] + '.e'] if target.e
+            doc.ln target }}}}}
+
   def triplrMailMessage &f
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
@@ -182,21 +196,6 @@ class R
       end}
     graph.merge! g }
 
-  IndexMail = ->doc,graph,host { # link message to address containers
-    graph.map{|u,r|
-      addresses = []
-      r[Creator].do{|from|addresses.concat from}
-      r[To].do{|to|       addresses.concat to}
-      r[Date].do{|date|
-        r[Title].do{|title|
-          name = title[0].gsub(/\W+/,' ').strip
-          month = date[0][0..7].gsub '-','/'
-          addresses.map{|address|
-            container = address.R.dirname + '/' + month
-            target = R[container + name + '.e']
-            target = R[container + name + ' ' + rand.to_s.h[0..2] + '.e'] if target.e
-            doc.ln target }}}}}
-
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
@@ -220,6 +219,7 @@ class R
     end
     rdf = e.format != 'text/html'
     group = e.q['group'].do{|t|t.expand} || To
+    e.q['sort'] ||= Size
     threads.map{|title,post| # pass 2. cluster
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir
@@ -230,8 +230,7 @@ class R
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
         graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
         graph[container][LDP+'contains'] ||= []
-        graph[container][LDP+'contains'].push item }}
-  }
+        graph[container][LDP+'contains'].push item }}}
 
   ViewGroup[SIOCt+'MailMessage'] = -> d,e {
     links = []
@@ -259,18 +258,15 @@ class R
         links.push link
       end}
 
-    [(H.js '//d3js.org/d3.v2'),
-     {_: :script, c: "var links = #{links.to_json};"},
+    [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"},
      H.js('/js/force',true),
-     H.css('/css/force',true),
-     H.css('/css/mail',true),
+     H.css('/css/force',true), H.css('/css/mail',true),
      (if e[:noquote]
       [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
        noquote ? {_: :style, c: "tr[property='uri'], tr[property='http://purl.org/dc/terms/date'] {display: none}"} : []]
       end),
      {_: :style, c: colors.map{|uri,color|
         "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
-     ViewGroup[Resource][d,e]
-    ]}
+     ViewGroup[Resource][d,e]]}
 
 end

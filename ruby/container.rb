@@ -6,8 +6,7 @@ class R
 
   ViewGroup[Resource] = -> g,e {
     [H.css('/css/html',true),
-     g.map{|u,r|
-       ViewA[Resource][r,e]}]}
+     g.resources(e).reverse.map(&:html)]}
 
   ViewA[Content] = -> r,e {r[Content]}
   ViewGroup[Content] = -> g,e {
@@ -22,7 +21,7 @@ class R
       graph ||= {}
       path = (re.path||'').t
       group = e.q['group']
-      sort = e.q['sort']
+      sort = (e.q['sort']||'uri').expand
       color = R.cs
       {class: :container, id: re.fragment,
        c: [{_: :a, class: :uri, href: uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",

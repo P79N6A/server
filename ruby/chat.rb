@@ -76,7 +76,7 @@ class R
   ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
     label = {}
     count = 0
-    [{_: :table, class: :chat, c: d.resources.reverse.map{|r|
+    [{_: :table, class: :chat, c: d.resources(e).reverse.map{|r|
         {_: :tr,
          c: [{_: :td, class: :date, c: r[Date][0].split('T')[1][0..4]},
              r[Creator].do{|c|
