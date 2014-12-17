@@ -73,7 +73,7 @@ class R
      H.css('/css/chat',true),
      {_: :style, c: e[:creators].map{|n,c|"a[creator='#{n}'] {color:#fff;background-color: #{c}}"}.cr}]}
 
-  ViewGroup[SIOCt+'MicroblogPost'] = -> d,e { e.q['sort'] ||= 'dc:date'
+  ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
     label = {}
     count = 0
     [{_: :table, class: :chat, c: d.resources.reverse.map{|r|

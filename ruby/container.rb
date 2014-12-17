@@ -79,10 +79,9 @@ class R
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
   ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
-    sort = env.q['sort'] = (env.q['sort']||Size).expand
-    sortType = [Stat+'mtime',Size].member?(sort) ? :to_i : :to_s
+    sort = (env.q['sort']||Size).expand
     sortLabel = sort.shorten.split(':')[-1] + ' ↨'
-    s_ = case sort # next sorting-predicate
+    s_ = case sort # next sort-predicate
          when Size
            'dc:date'
          when Date
@@ -92,13 +91,10 @@ class R
          else
            'stat:size'
          end
-    sortQ  = env.q.merge({'sort' => s_}).qs # querystring w/ next sort-order
-
-    [{_: :a, class: :sort, c: sortLabel, href: sortQ, title: s_},
+    [{_: :a, class: :sort, c: sortLabel, href: env.q.merge({'sort' => s_}).qs, title: s_},
      H.css('/css/container',true),
      d.map{|u,r|
-       [ViewA[Container][r,env,d],
-        {_: :p, class: :space}]}]}
+       [ViewA[Container][r,env,d], {_: :p, class: :space}]}]}
 
   def triplrAudio &f
     uri = '#'  + URI.escape(path)

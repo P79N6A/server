@@ -65,10 +65,8 @@ class R
      [Render[e.format].do{|p|p[graph,e]} ||
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
-  ServerInfo = -> e,r {
+  ServerInfo = -> e,r{   g = {}
     r.q['sort'] ||= 'stat:size'
-    g = {}
-
     Stats.map{|sym, table|
       group = e.uri + '#' + sym.to_s
       g[group] = {'uri' => group,
