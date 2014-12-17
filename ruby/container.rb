@@ -23,9 +23,7 @@ class R
       path = (re.path||'').t
       group = e.q['group']
       sort = e.q['sort']
-      sortType = sort == Size ? :to_i : :to_s
       color = R.cs
-
       {class: :container, id: re.fragment,
        c: [{_: :a, class: :uri, href: uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",
            r[LDP+'contains'].do{|c|
@@ -33,9 +31,7 @@ class R
              maxSize = sizes.max
              sized = !sizes.empty? && maxSize > 1
              width = maxSize.to_s.size
-             c.sort_by{|i|
-               ((i.class==Hash && i[sort] || i.uri).justArray[0]||0).send sortType}.
-               send((sized || sort==Date) ? :reverse : :id).map{|r|
+             c.sortRDF(e).send((sized||sort==Date) ? :reverse : :id).map{|r|
                data = r.class == Hash
                if child = graph[r.uri]
                  ViewA[Container][child,e,graph]

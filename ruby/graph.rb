@@ -127,6 +127,17 @@ class R
 
 end
 
+class Array
+  def sortRDF env
+    sort = (env.q['sort'] || 'uri').expand
+    sortType = [R::Size,
+                R::Stat+'mtime'].member?(sort) ? :to_i : :to_s
+    sort_by{|i|
+      ((i.class==Hash && i[sort] || i.uri).justArray[0]||0).
+        send sortType}
+  end
+end
+
 class Hash
 
   def mergeGraph g
@@ -145,6 +156,10 @@ class Hash
 
   def types
     self[R::Type].justArray.map(&:maybeURI).compact
+  end
+
+  def resources env
+    values.sortRDF env
   end
 
   def toRDF # graph (Hash) -> graph (RDF)

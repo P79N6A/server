@@ -143,9 +143,13 @@ class R
   def directory?; node.directory? end
   def file?;    node.file? end
   def symlink?; node.symlink? end
-  def readlink; node.readlink.R end
   def mtime;    node.stat.mtime if e end
-  def realpath; node.realpath rescue nil end
+  def realpath
+    node.realpath
+  rescue Exception => x
+    puts x
+  end
+  def realURI; realpath.do{|p|p.R} end
   def size;     node.size end
   alias_method :e, :exist?
   alias_method :f, :file?

@@ -73,15 +73,10 @@ class R
      H.css('/css/chat',true),
      {_: :style, c: e[:creators].map{|n,c|"a[creator='#{n}'] {color:#fff;background-color: #{c}}"}.cr}]}
 
-  ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
+  ViewGroup[SIOCt+'MicroblogPost'] = -> d,e { e.q['sort'] ||= 'dc:date'
     label = {}
     count = 0
-    e.q['sort'] ||= 'dc:date'
-    sort = e.q['sort'].expand
-    sort = 'uri' if sort == Title
-    sortType = [Stat+'mtime',Stat+'size'].member?(sort) ? :to_i : :to_s
-    [{_: :table, class: :chat, c: d.values.sort_by{|i|
-        (i.class==Hash && i[sort].justArray[0]||0).send sortType}.reverse.map{|r|
+    [{_: :table, class: :chat, c: d.resources.reverse.map{|r|
         {_: :tr,
          c: [{_: :td, class: :date, c: r[Date][0].split('T')[1][0..4]},
              r[Creator].do{|c|

@@ -16,7 +16,7 @@ class R
       end
 
     elsif symlink?
-      readlink.do{|t|
+      realURI.do{|t|
         mtime = t.mtime.to_i
         t = t.stripDoc
         yield t.uri, Type, R[Resource]
