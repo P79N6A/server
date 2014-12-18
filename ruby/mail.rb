@@ -264,8 +264,8 @@ class R
       [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
        noquote ? {_: :style, c: "tr[property='uri'], tr[property='http://purl.org/dc/terms/date'] {display: none}"} : []]
       end),
-     {_: :style, c: colors.map{|uri,color|
-        "td.val a[href=\"#{uri}\"] {color: #{color};font-weight: bold;background-color: #000}\n"}},
+     {_: :style, c: colors.map{|uri,c|
+        "td.val a[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
      ViewGroup[Resource][d,e]]}
 
 end
