@@ -41,7 +41,7 @@ class R
                       ]}, data ? "<br>" : " "]
                end
              }} ||
-           ({class: :down, c: {_: :a, href: uri, style: "color: #{color}", c: '&darr;' }} unless uri == e.R.uri)]}
+           ({class: :down, c: {_: :a, href: uri, style: "color: #{color}", c: '&darr;' }} if uri != e.R.uri && r[Size].justArray[0].to_i>0)]}
     end}
 
   ViewGroup[LDP+'Resource'] = -> g,env {
