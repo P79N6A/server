@@ -95,14 +95,22 @@ class R
     yield uri, Type, R[Sound]
     yield uri, Title, bare
     yield uri, Size, size
+    yield uri, Date, mtime
   end
-   
-  ViewGroup[Sound] = -> g,e {
+
+  Abstract[Sound] = -> graph, g, e {
     c = '#sounds'
-    [{_: :audio, id: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio'),
-     ViewGroup[Container][{c => {'uri' => c,
-                                 LDP+'contains' => g.values.map{|s|
-                                   s.update({'uri' => '#'+URI.escape(s.R.path)})}}},e]]}
+    graph[c] = {'uri' => c, Type => R[Container],
+                LDP+'contains' => g.values.map{|s|
+                  graph.delete s.uri
+                  s.update({'uri' => '#'+URI.escape(s.R.path)})}}
+    graph['#audio'] = {Type => R[Sound+'Player']}
+    graph[e.uri].do{|c|c.delete(LDP+'contains')}
+  }
+
+  ViewGroup[Sound+'Player'] = -> g,e {
+    [{id: :trackInfo},
+     {id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio')]}
 
 end
 
