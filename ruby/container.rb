@@ -102,7 +102,7 @@ class R
   end
    
   ViewGroup[Sound] = -> g,e {
-    [{_: :audio, id: :audio, style: 'width:100%', controls: true}, H.js('/js/audio'),
+    [{_: :audio, id: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio'),
      ViewA[Container][{'uri' => '#sounds', LDP+'contains' => g.values },e]]}
 
 end

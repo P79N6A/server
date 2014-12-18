@@ -1,20 +1,17 @@
-var audio = function(){
+document.addEventListener("DOMContentLoaded", function(){
 
     var audio = document.querySelector('#audio')
-    var changeTrack = function(i){
-	audio.src = decodeURIComponent(i)
-	audio.load()}
-    audio.on('canplay',function(){audio.play()})
 
-    var hashChange = function(){
+    var select = function(){
 	var track = window.location.hash.slice(1)
-	if(audio.attr('src') != track) changeTrack(track)
+	if(audio.src != track) {
+	    audio.src = decodeURIComponent(track)
+	    audio.load()
+	}
     }
 
-    if(window.location.hash) hashChange()
-    window.onhashchange = hashChange
+    if(window.location.hash) select()
+    window.onhashchange = select
 
     
-}
-
-document.addEventListener("DOMContentLoaded", audio, false);
+}, false);
