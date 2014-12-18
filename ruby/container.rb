@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   ViewA[Resource] = -> r,e {r.html}
@@ -7,10 +7,6 @@ class R
   ViewGroup[Resource] = -> g,e {
     [H.css('/css/html',true),
      g.resources(e).reverse.map(&:html)]}
-
-  ViewA[Content] = -> r,e {r[Content]}
-  ViewGroup[Content] = -> g,e {
-    g.map{|u,r|ViewA[Content][r,e]}}
 
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
     re = r.R
@@ -96,14 +92,13 @@ class R
        [ViewA[Container][r,env,d], {_: :p, class: :space}]}]}
 
   def triplrAudio &f
-    uri = '#'  + URI.escape(path)
     yield uri, Type, R[Sound]
-    yield uri, Title, basename
+    yield uri, Title, bare
   end
    
   ViewGroup[Sound] = -> g,e {
     [{_: :audio, id: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio'),
-     ViewA[Container][{'uri' => '#sounds', LDP+'contains' => g.values },e]]}
+     ViewA[Container][{'uri' => '#sounds', LDP+'contains' => g.values.map{|s|s.update({'uri' => '#'+URI.escape(s.R.path)})}},e]]}
 
 end
 

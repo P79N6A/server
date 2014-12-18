@@ -29,6 +29,10 @@ class R
             {_: :th, class: :label, property: k, c: k.R.abbr}}},
          g.resources(e).map{|e|
            {_: :tr, about: e.uri, c: keys.map{|k|
-              {_: :td, property: k, c: k=='uri' ? e.R.html : e[k].html}}}}]}}
+              {_: :td, property: k,
+               c: k=='uri' ? e.R.do{|r|
+                               {_: :a, href: r.uri, c: e[Title]||e[Label]||r.basename}
+                             } : e[k].html}}}}.cr
+        ]}}
 
 end

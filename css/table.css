@@ -12,3 +12,4 @@ table.tab td a {
     text-decoration: none;
     white-space: nowrap;
 }
+table.tab td[property=uri] {max-width:42em;overflow:hidden}

@@ -29,12 +29,11 @@ class R
       E404[e,r]
     end}
   
-  ViewA[Image] = ->i,e{ShowImage[i.uri]}
+  ViewA[Image] = ->i,e{{_: :a, href: i.uri, c: {_: :img, class: :thumb, src: '/thumbnail' + i.R.path}}}
 
   ViewGroup[Image] = -> g,e {
-    g.map{|u,r| ViewA[Image][r,e]}}
-
-  ShowImage = -> u {{_: :a, href: u, c: {_: :img, src: '/thumbnail' + u.R.justPath}}}
+    [{_: :style, c: "img.thumb {max-width: 256px; max-height: 256px}"},
+     g.map{|u,r| ViewA[Image][r,e]}]}
 
   def R.c; '#%06x' % rand(16777216) end
   def R.cs

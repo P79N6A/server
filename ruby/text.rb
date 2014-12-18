@@ -67,6 +67,19 @@ class R
 
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
 
+  def triplrContent
+    yield uri+'#', Type, R[Resource]
+    yield uri+'#', Content, r
+  end
+
+  def triplrHref enc=nil
+    yield uri+'#', Type, R[Resource]
+    yield uri+'#', Content,
+    H({_: :pre, style: 'white-space: pre-wrap',
+        c: open(pathPOSIX).read.do{|r|
+          enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
+  end
+
   def triplrUriList
     open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
       yield l.chomp, Type, R[Resource] }

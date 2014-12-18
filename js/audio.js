@@ -1,17 +1,14 @@
 document.addEventListener("DOMContentLoaded", function(){
 
-    var audio = document.querySelector('#audio')
+    var a = document.querySelector('#audio')
+    a.addEventListener('canplay',a.play,false)
 
     var select = function(){
-	var track = window.location.hash.slice(1)
-	if(audio.src != track) {
-	    audio.src = decodeURIComponent(track)
-	    audio.load()
-	}
-    }
+	var s = window.location.hash.slice(1)
+	if(a.src != s)
+	    a.src = decodeURIComponent(s)}
 
     if(window.location.hash) select()
     window.onhashchange = select
 
-    
 }, false);
