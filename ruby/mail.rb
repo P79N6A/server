@@ -196,11 +196,11 @@ class R
     graph.merge! g }
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
+    graph[e.uri].delete(LDP+'contains')
     threads = {}
     weight = {}
     g.map{|u,p| # pass 1. generate statistics and prune graph
       graph.delete u
-      p[DC+'source'].do{|s|graph.delete s.justArray[0].uri}
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
         threads[title] ||= p
