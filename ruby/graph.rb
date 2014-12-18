@@ -46,14 +46,14 @@ class R
     g
   end
 
-  # file(s) -> graph (Hash)
+  # inode(s) -> graph (Hash)
   def graph graph = {}
-    fileResources.map{|d| d.fileToGraph graph}
+    fileResources.map{|d| d.nodeToGraph graph}
     graph
   end
 
-  # file -> graph (Hash)
-  def fileToGraph graph = {}
+  # inode -> graph (Hash)
+  def nodeToGraph graph = {}
     justRDF(%w{e}).do{|file|
      graph.mergeGraph file.r true}
     graph

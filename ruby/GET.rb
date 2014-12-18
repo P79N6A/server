@@ -61,8 +61,7 @@ class R
 
         graph = -> {
 #          puts set
-          set.map{|r|r.setEnv(@r).fileToGraph m}
-          set.map{|f|f.fromStream m, :triplrInode}
+          set.map{|r|r.setEnv(@r).nodeToGraph m}
           Mutate[m,@r]
           m}
 

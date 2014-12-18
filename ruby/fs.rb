@@ -2,31 +2,28 @@
 #watch __FILE__
 class R
 
-  def triplrInode &f
-    file = URI.escape uri
-    if directory?
-      yield uri, Type, R[Directory]
-      yield uri, Stat+'mtime', mtime.to_i
-      contained = c
-      yield uri, Stat+'size', contained.size
+  def triplrDir
+    yield uri, Type, R[Directory]
+    yield uri, Stat+'mtime', mtime.to_i
+    contained = c
+    yield uri, Size, contained.size
+    if contained.size <= 32
+      contained.map{|c|
+        yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc}
+    end
+  end
 
-      if contained.size <= 32
-        contained.map{|c|
-          yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc}
-      end
-
-    elsif symlink?
+  def triplrFile &f
+    if symlink?
       realURI.do{|t|
         mtime = t.mtime.to_i
         t = t.stripDoc
         yield t.uri, Type, R[Resource]
-        yield t.uri, Stat+'mtime', mtime
-        yield t.uri, Stat+'size', 0}
-
-    elsif URI.escape(stripDoc.uri) == file
-      yield file, Type, R[Stat+'File']
-      yield file, Stat+'mtime', mtime.to_i
-      yield file, Stat+'size', size
+        yield t.uri, Stat+'mtime', mtime}
+    else
+      yield uri, Type, R[Stat+'File']
+      yield uri, Stat+'mtime', mtime
+      yield uri, Size, size
     end
   end
 

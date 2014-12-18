@@ -120,6 +120,7 @@ class R
     'application/postscript'=> [:triplrPS],
     'audio/mpeg'           => [:triplrAudio],
     'image'                => [:triplrImage],
+    'inode/directory'      => [:triplrDir],
     'message/rfc822'       => [:triplrMailMessage],
     'text/csv'             => [:triplrCSV,/,/],
     'text/html-fragment'   => [:triplrContent],

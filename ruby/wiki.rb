@@ -3,7 +3,7 @@ class R
 
   def buildDoc
     graph = {}
-    fragments.map{|f| f.fileToGraph graph}
+    fragments.map{|f| f.nodeToGraph graph}
     jsonDoc.w graph, true
   end
  
