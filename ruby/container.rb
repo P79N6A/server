@@ -109,8 +109,7 @@ class R
   }
 
   ViewGroup[Sound+'Player'] = -> g,e {
-    [{id: :trackInfo},
-     {id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio')]}
+    [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio')]}
 
 end
 
