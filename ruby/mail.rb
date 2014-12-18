@@ -196,7 +196,7 @@ class R
     graph.merge! g }
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
-    graph[e.uri].delete(LDP+'contains')
+    graph[e.uri].do{|dir|dir.delete(LDP+'contains')}
     threads = {}
     weight = {}
     g.map{|u,p| # pass 1. generate statistics and prune graph
