@@ -11,18 +11,30 @@ pre.mail {
 pre.mail .q {display: block}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
-pre.mail .q[depth="3"] {background-color:#244D8B;color:#fff}
+pre.mail .q[depth="3"] {background-color:#033684;color:#fff}
 pre.mail .q[depth="4"] {background-color:#3F0F86;color:#fff}
-pre.mail .q[depth="5"] {background-color:#000;color:#78F5FD}
+pre.mail .q[depth="5"] {background-color:#000;color:#9ff}
 pre.mail .q[depth="6"] {background-color:#9ff;color:#000}
 pre.mail .q[depth="7"] {background-color:#8ff;color:#000}
 pre.mail .q[depth="8"] {background-color:#fff500;color:#000}
-pre.mail .q[depth="9"] {background-color:#4fc;color:#000}
+pre.mail .q[depth="9"] {background-color:#ffcb00;color:#000}
+pre.mail .q[depth="10"] {background-color:#dff;color:#000}
+pre.mail .q[depth="11"] {background-color:#eee;color:#000}
+pre.mail .q[depth="12"] {background-color:#fff;color:#000}
+pre.mail .q[depth="13"] {background-color:#f00;color:#fff}
+pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
+pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 
-td.val a[rel=untyped] {
-    background-color: #000;
-    color: #3f3;
-    border: .1em dotted #0f7;
+.q a[rel=untyped] {
+    color: #fff;
+    background-color:#000;
+    border: .1em dotted #fff;
+}
+
+a[rel=untyped] {
+    color: #0f0;
+    background-color:#000;
+    border: .1em dotted #0f0;
     border-radius: .16em;
     font-size: 1.18em;
     font-weight: bold;
