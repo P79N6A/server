@@ -1,3 +1,4 @@
+# coding: utf-8
 #watch __FILE__
 
 module Th
@@ -114,7 +115,17 @@ class R
     end
     [303,head,[]]}
 
-  ViewGroup[FOAF+'Person'] = ViewGroup[Resource]
+  ViewGroup[FOAF+'Person'] = -> g,env {
+    [{_: :style, c: 'a.person {font-size: 2.3em;color:#000;background-color:#fff;text-decoration:none}'},
+      g.map{|u,r|ViewA[FOAF+'Person'][r,env]}]}
+
+  ViewA[FOAF+'Person'] = -> u,e {
+    name = u[Name].justArray[0] || 'anonymous'
+    href = (u[SIOC+'has_container'].justArray[0]||u).uri
+    [Name,Type,SIOC+'has_container'].map{|p|u.delete p}
+    [{_: :a, class: :person, href: href, c: ['☺ ',name]},
+     (ViewA[Resource][u,e] unless u.keys.size==1)]}
+
   ViewGroup[SIOC+'Usergroup'] = ViewGroup[CSVns+'Row']
 
 end
