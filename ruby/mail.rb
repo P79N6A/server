@@ -257,7 +257,7 @@ class R
         links.push link
       end}
 
-    [(H.js '//d3js.org/d3.v2'), {_: :script, c: "var links = #{links.to_json};"},
+    [(H.js '/js/d3.v3.min'), {_: :script, c: "var links = #{links.to_json};"},
      H.js('/js/force',true),
      H.css('/css/force',true), H.css('/css/mail',true),
      (if e[:noquote]
