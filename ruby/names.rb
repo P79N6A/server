@@ -111,6 +111,18 @@ class R
   def n3; docroot.a '.n3' end
   def jsonDoc; docroot.a '.e' end
 
+  def abbr
+    if fragment
+      if fragment.empty?
+        basename[0..-2]
+      else
+        fragment
+      end
+    else
+      basename
+    end
+  end
+
 end
 
 class String

@@ -102,10 +102,6 @@ class R
   end
   alias_method :html, :href
 
-  def abbr
-    fragment || basename
-  end
-
   def nokogiri;  Nokogiri::HTML.parse (open uri).read end
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
