@@ -118,7 +118,7 @@ class R
          c: [{_: :head,
                c: [{_: :meta, charset: 'utf-8'},
                    {_: :title, c: e[:title].size==1 ? e[:title].head : e.uri},
-                   {_: :link, rel: :icon, href: '/favicon.ico'},
+                   {_: :link, rel: :icon, href: '/favicon.png'},
                    u[Next].do{|n|
                      {_: :link, rel: :next, href: n.uri}},
                    u[Prev].do{|p|

@@ -11,31 +11,27 @@ a.up, a[rel=next], a[rel=prev]{
     max-width: 46%;
     overflow: hidden;
     text-decoration: none;
-    padding: .01em .03em 0 .03em;
+    margin: .2em;
 }
 
 a.up {
     float: left;
     font-size: 2.2em;
     border-radius: .16em;
-    margin: 0 .2em .2em 0;
     background-color: #fff;
     color: #000;
-    border: .06em solid #888;
 }
 a.cube {float: right; margin: 0 .2em .3em .3em}
 
 a[rel=prev] {
     float:left;
     border-radius: .6em .22em .22em .6em;
-    margin: 0 .3em .3em 0;
     background-color: #000;
     color: #fff;
 }
 a[rel=next] {
     float:right;
     border-radius: .22em .6em .6em .22em;
-    margin: 0 0 .3em .2em;
     background-color: #000;
     color: #fff;
 }
