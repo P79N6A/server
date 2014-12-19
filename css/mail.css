@@ -7,7 +7,7 @@ pre.mail {
     max-width: 115ex;
     margin: 0;
 }
-
+a {text-decoration: none}
 pre.mail .q {display: block}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
@@ -25,13 +25,21 @@ pre.mail .q[depth="13"] {background-color:#f00;color:#fff}
 pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 
-.q a[rel=untyped] {
+td.key a, td.uri a {background-color: #000; color: #eee}
+
+td.val a{
     color: #fff;
-    background-color:#000;
-    border: .1em dotted #fff;
+    background-color: #000;
+    border-style: dashed;
+    border-color: #aaa;
+    border-width: 0 0 .1em 0;
 }
 
-a[rel=untyped] {
+td.val a:hover {
+    background-color: #ccc;
+}
+
+td.val a[rel=untyped] {
     color: #0f0;
     background-color:#000;
     border: .1em dotted #0f0;
@@ -40,15 +48,14 @@ a[rel=untyped] {
     font-weight: bold;
 }
 
-td.val a[rel=untyped]:hover, td.val a[rel=untyped]:visited {
-    background-color: #3f3;
-    color: #000;
-    border-color: #3f3;
+td.val .q a[rel=untyped] {
+    color: #fff;
+    background-color:#000;
+    border-color: #fff;
 }
 
 tr[property="http://purl.org/dc/terms/identifier"], tr[property="http://purl.org/dc/terms/source"] {display:none}
 
-a.title {font-weight: bold; color: #fff; background-color: #000}
 .noquote {
     position: fixed;
     top: .2em;

@@ -1,33 +1,6 @@
-a {text-decoration: none}
 pre {white-space: pre-wrap}
 img {max-width: 100%}
-table.html {
-    display: inline-block;
-    margin-bottom: .38em;
-}
-td.uri {
-    padding-left: 16%;
-}
-td.uri a {
-    font-weight: bold;
-    color: #000;
-    background-color: #fff;
-}
-td.key {
-    text-align:right;
-}
-td.key > a {
-    font-weight: bold;
-    color: #000;
-    background-color: #fff;
-}
-td.val > a {
-    font-weight: normal;
-    color: #fff;
-    background-color: #000;
-    border-color: #eee;
-    border-style: dashed;
-    border-width: 0 0 .1em 0;
-}
+table.html {display: inline-block}
+td.key {text-align:right}
 tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
 
