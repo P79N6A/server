@@ -21,7 +21,8 @@ class R
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     e.condResponse ->{
-      Filter[:minimalMessage][m,r] if r.q.has_key?('noquote'); r[:noquote] = true
+      r[:thread] = true
+      Filter[:minimalMessage][m,r] if r.q.has_key?('noquote')
       Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   MessagePath = ->id{ # message-ID -> path
@@ -260,9 +261,11 @@ class R
     [(H.js '/js/d3.v3.min'), {_: :script, c: "var links = #{links.to_json};"},
      H.js('/js/force',true),
      H.css('/css/force',true), H.css('/css/mail',true),
-     (if e[:noquote]
+     (if e[:thread]
       [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
-       noquote ? {_: :style, c: "tr[property='uri'], tr[property='http://purl.org/dc/terms/date'] {display: none}"} : []]
+       d.values[0][Title].do{|t|{class: :title, c: t}},
+       {_: :style, c: "tr[property='uri'], tr[property='http://rdfs.org/sioc/ns#has_discussion'] {display: none}"},
+       noquote ? {_: :style, c: "tr[property='http://purl.org/dc/terms/date'] {display: none}"} : []]
       end),
      {_: :style, c: colors.map{|uri,c|
         "td.val a[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
