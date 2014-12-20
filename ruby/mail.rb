@@ -265,8 +265,7 @@ class R
        noquote ? {_: :style, c: "tr[property='http://purl.org/dc/terms/date'] {display: none}"} : []]
       end),
      {_: :style, c: colors.map{|uri,c|
-        "td.val a[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
-     H.css('/css/force',true),
+        "body td.val a.id[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
      H.css('/css/mail',true),
      ViewGroup[Resource][d,e],
      H.js('/js/d3.v3.min'),
