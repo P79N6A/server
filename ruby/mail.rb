@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
@@ -233,7 +233,7 @@ class R
         graph[container][LDP+'contains'].push item }}}
 
   ViewGroup[SIOCt+'MailMessage'] = -> d,e {
-    links = []
+    arcs = []
     colors = {}
     q = e.q
     noquote = q.has_key? 'noquote'
@@ -243,26 +243,16 @@ class R
     else
       q['noquote'] = ''
     end
-    #SIOC+'has_parent'
-    d.triples{|s,p,o| # each triple
-      if p == linkType && o.respond_to?(:uri) # selected arc to D3 JSON
-        source = s
-        target = o.uri
-        link = {source: source, target: target}
-        d[source].do{|s|
-          s[Creator].justArray[0].do{|l|
-            l = l.R
-            link[:sourceName] = l.fragment unless colors[l.uri]
-            link[:sourceColor] = colors[l.uri] ||= cs
-         }}
-        d[target].do{|t|
-          t[Creator].justArray[0].do{|l|
-            l = l.R
-            link[:targetName] = l.fragment unless colors[l.uri]
-            link[:targetColor] = colors[l.uri] ||= cs
-          }}
-        links.push link
-      end}
+    d.values.map{|s|
+      ps = [SIOC+'has_parent']
+      ps.map{|p|
+        s[p].justArray.map{|o|
+          arc = {source: s.uri, target: o.uri}
+          author = s[Creator][0]
+          arc[:sourceName] = author.R.fragment unless colors[author.uri] # only show name once
+          arc[:sourceColor] = colors[author.uri] ||= cs
+          arcs.push arc
+        }}}
 
     [H.css('/css/mail',true),
     ({_: :style, c: "tr[property='uri'], tr[property='http://rdfs.org/sioc/ns#has_discussion'] {display: none}"} if e[:thread]),
@@ -271,7 +261,7 @@ class R
      {_: :a, href: q.qs, c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
      d.values[0][Title].do{|t|{class: :title, c: t}},
      ViewGroup[Resource][d,e],
-     H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{links.to_json};"},
+     H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}
 
 end
