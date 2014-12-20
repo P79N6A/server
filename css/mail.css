@@ -50,6 +50,16 @@ body td.val a[rel=untyped] {
     font-weight: bold;
 }
 
+body td.val a[rel=untyped]:hover, body td.val a[rel=untyped]:visited {
+    background-color: #0f0;
+    color: #000;
+    border-color: #0f0;}
+
+body td.val .q a[rel=untyped]:hover, body td.val .q a[rel=untyped]:visited {
+    background-color: #fff;
+    color: #000;
+    border-color: #fff;}
+
 body td.val .q a[rel=untyped] {
     color: #fff;
     background-color:#000;
