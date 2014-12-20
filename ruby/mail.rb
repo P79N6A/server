@@ -22,7 +22,6 @@ class R
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     e.condResponse ->{
       r[:thread] = true
-      Filter[:minimalMessage][m,r] if r.q.has_key?('noquote')
       Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   MessagePath = ->id{ # message-ID -> path
@@ -167,7 +166,7 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  Filter[:minimalMessage] = -> g,e { # trim the fat off a message
+  Filter[:minimizeMessage] = -> g,e {
     g.map{|u,r|
       [DC+'identifier',DC+'hasFormat',DC+'source',
        SIOC+'attachment',
@@ -180,7 +179,7 @@ class R
         c.css('span.q').remove
         R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n\n" }}}
 
-  Filter[:addrContainers] = -> graph,e { # group address-containers by domain
+  Filter[:addrContainers] = -> graph,e { # group addr-dirs by domain
     g = {}
     graph.delete e.uri
     graph.map{|u,r|
@@ -200,13 +199,14 @@ class R
     graph[e.uri].do{|dir|dir.delete(LDP+'contains')}
     threads = {}
     weight = {}
+    raw = e.q.has_key? 'raw'
     g.map{|u,p| # pass 1. generate statistics and prune graph
-      graph.delete u
+      graph.delete u unless raw
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
         threads[title] ||= p
-        threads[title][:size] ||= 0
-        threads[title][:size]  += 1 }
+        threads[title][Size] ||= 0
+        threads[title][Size]  += 1 }
       p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
       p[To].justArray.map(&:maybeURI).map{|a|
         weight[a] ||= 0
@@ -225,7 +225,7 @@ class R
         dir = a.R.dir
         container = dir.uri.t
         cLoc = e.q['group'] ? a.R : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
-        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[:size]} # thread
+        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[Size]} # thread
         graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if rdf
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
         graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
@@ -236,8 +236,15 @@ class R
     links = []
     colors = {}
     defaultType = SIOC + 'has_parent'
-    linkType = e.q['link'].do{|a|a.expand} || defaultType
-    noquote = e.q.has_key? 'noquote'
+    q = e.q
+    linkType = q['link'].do{|a|a.expand} || defaultType
+    noquote = q.has_key? 'noquote'
+    if noquote
+      q.delete 'noquote'
+      Filter[:minimizeMessage][d,e]
+    else
+      q['noquote'] = ''
+    end
     d.triples{|s,p,o| # each triple
       if p == linkType && o.respond_to?(:uri) # selected arc to D3 JSON
         source = s
@@ -258,19 +265,14 @@ class R
         links.push link
       end}
 
-    [(if e[:thread]
-      [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
-       d.values[0][Title].do{|t|{class: :title, c: t}},
-       {_: :style, c: "tr[property='uri'], tr[property='http://rdfs.org/sioc/ns#has_discussion'] {display: none}"},
-       noquote ? {_: :style, c: "tr[property='http://purl.org/dc/terms/date'] {display: none}"} : []]
-      end),
-     {_: :style, c: colors.map{|uri,c|
-        "body td.val a.id[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
-     H.css('/css/mail',true),
+    [H.css('/css/mail',true),
+    ({_: :style, c: "tr[property='uri'], tr[property='http://rdfs.org/sioc/ns#has_discussion'] {display: none}"} if e[:thread]),
+    ({_: :style, c: "tr[property='uri'], tr[property='http://purl.org/dc/terms/date'] {display: none}"} if noquote),
+     {_: :style, c: colors.map{|uri,c|"body td.val a.id[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
+     d.values[0][Title].do{|t|{class: :title, c: t}},
+     {_: :a, href: q.qs, c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
      ViewGroup[Resource][d,e],
-     H.js('/js/d3.v3.min'),
-     {_: :script, c: "var links = #{links.to_json};"},
-     H.js('/js/force',true),
-    ]}
+     H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{links.to_json};"},
+     H.js('/js/mail',true)]}
 
 end
