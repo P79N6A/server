@@ -269,8 +269,8 @@ class R
     ({_: :style, c: "tr[property='uri'], tr[property='http://rdfs.org/sioc/ns#has_discussion'] {display: none}"} if e[:thread]),
     ({_: :style, c: "tr[property='uri'], tr[property='http://purl.org/dc/terms/date'] {display: none}"} if noquote),
      {_: :style, c: colors.map{|uri,c|"body td.val a.id[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
-     d.values[0][Title].do{|t|{class: :title, c: t}},
      {_: :a, href: q.qs, c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
+     d.values[0][Title].do{|t|{class: :title, c: t}},
      ViewGroup[Resource][d,e],
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{links.to_json};"},
      H.js('/js/mail',true)]}

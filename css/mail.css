@@ -42,7 +42,7 @@ body td.val a:hover {
 }
 
 body td.val a[rel=untyped] {
-    color: #0f0;
+    color: #2f2;
     background-color:#000;
     border: .1em dotted #0f0;
     border-radius: .16em;
