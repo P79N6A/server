@@ -69,7 +69,7 @@ class R
   def fileResources
     r = []
     r.push self if e # exact match
-    %w{e html md n3 ttl txt}.map{|suffix|
+    %w{e ht html md n3 ttl txt}.map{|suffix|
       doc = docroot.a '.' + suffix
       r.push doc if doc.e } # related thru docbase
     r

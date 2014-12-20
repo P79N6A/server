@@ -258,10 +258,7 @@ class R
         links.push link
       end}
 
-    [(H.js '/js/d3.v3.min'), {_: :script, c: "var links = #{links.to_json};"},
-     H.js('/js/force',true),
-     H.css('/css/force',true), H.css('/css/mail',true),
-     (if e[:thread]
+    [(if e[:thread]
       [{_: :a, href: noquote ? '?' : '?noquote', c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote},
        d.values[0][Title].do{|t|{class: :title, c: t}},
        {_: :style, c: "tr[property='uri'], tr[property='http://rdfs.org/sioc/ns#has_discussion'] {display: none}"},
@@ -269,6 +266,12 @@ class R
       end),
      {_: :style, c: colors.map{|uri,c|
         "td.val a[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
-     ViewGroup[Resource][d,e]]}
+     H.css('/css/force',true),
+     H.css('/css/mail',true),
+     ViewGroup[Resource][d,e],
+     H.js('/js/d3.v3.min'),
+     {_: :script, c: "var links = #{links.to_json};"},
+     H.js('/js/force',true),
+    ]}
 
 end

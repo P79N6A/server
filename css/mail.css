@@ -70,6 +70,6 @@ tr[property="http://purl.org/dc/terms/identifier"], tr[property="http://purl.org
     border-radius: .1em;
     font-size: 2em;
     color: #ccc;
-    border: .1em solid #ccc;
+    border: .08em solid #ccc;
     background-color: #000;
 }
