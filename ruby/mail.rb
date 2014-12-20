@@ -235,9 +235,7 @@ class R
   ViewGroup[SIOCt+'MailMessage'] = -> d,e {
     links = []
     colors = {}
-    defaultType = SIOC + 'has_parent'
     q = e.q
-    linkType = q['link'].do{|a|a.expand} || defaultType
     noquote = q.has_key? 'noquote'
     if noquote
       q.delete 'noquote'
@@ -245,6 +243,7 @@ class R
     else
       q['noquote'] = ''
     end
+    #SIOC+'has_parent'
     d.triples{|s,p,o| # each triple
       if p == linkType && o.respond_to?(:uri) # selected arc to D3 JSON
         source = s

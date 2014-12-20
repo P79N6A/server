@@ -17,14 +17,9 @@ class R
       [200,{'Content-Type' => 'text/html'},[Render['text/html'][{'/man' => input},r]]] 
     else
 
-      acceptLang = r['HTTP_ACCEPT_LANGUAGE'].do{|a|a.split(/,/)[0]}
-      lang = r.q['lang'] || acceptLang
-      superLang = lang.do{|l| (l.split /[_-]/)[0] }
-#      langSH = lang.do{|l| '-L ' + l.sub('-','_').sh }
-      langSH = ""
-
-      findman = "man #{langSH} -w #{section} #{name.sh}"
-      man = `#{findman}`.lines[0]
+      superLang = r.q['lang'].do{|l| (l.split /[_-]/)[0] }
+      lang = r.q['lang'].do{|l|'-L ' + l.sub('-','_').sh }
+      man = `man #{lang} -w #{section} #{name.sh}`.lines[0]
 
       if !man || man.empty?
         [303,{'Location'=>'/man/'},[]]
@@ -36,13 +31,6 @@ class R
         res = dir.child roff.bare
         doc = res + '.e'
         path = Pathname man
-        debug =  [
-          [:name,name],
-          [:man,man],
-          [:dir,'<'+dir+'>'],
-          [:doc,'<'+doc+'>'],
-        ].map{|pair|pair.join "\t"}.join "\n"
- #       puts debug
 
         cached = path.exist? && doc.e && doc.m > path.stat.mtime
         if !cached
@@ -55,7 +43,6 @@ class R
               'uri' => uri,
               Title => name,
               Type => [R[Purl+'ontology/bibo/Manual'],R[Resource]],
-              DC+'language' => lang,
               DC+'locale' => [],
               RDFs+'seeAlso' => [],
               SKOS+'related' => [],
@@ -125,6 +112,6 @@ class R
     end
   }
 
- #   GET['/man'] = Man
+ #   GET['/man'] = Man # mount man-handler
 
 end
