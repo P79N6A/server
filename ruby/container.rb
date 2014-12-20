@@ -91,6 +91,9 @@ class R
      d.map{|u,r|
        [ViewA[Container][r,env,d], {_: :p, class: :space}]}]}
 
+  ViewGroup[Content+'Resource'] = -> d,env {
+    d.values.map{|r|r[Content]}}
+
   def triplrAudio &f
     yield uri, Type, R[Sound]
     yield uri, Title, bare
