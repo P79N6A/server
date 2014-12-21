@@ -196,11 +196,18 @@ class R
     graph.merge! g }
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
-    graph[e.uri].do{|dir|dir.delete(LDP+'contains')}
+    raw = e.q.has_key? 'raw' # keep unsummarized information?
+    graph[e.uri].do{|dir|dir.delete(LDP+'contains')} unless raw # hide filesystem meta
+    if e.format == 'text/html'
+      listURI = '?group=rdf:type&sort=dc:date' # link to basic list-view
+      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
+    end
+    e.q['sort'] ||= Size # weighting uses standard size-predicate
+    group = (e.q['group']||To).expand # GROUP BY
+    # Pass 1. statistics
     threads = {}
     weight = {}
-    raw = e.q.has_key? 'raw'
-    g.map{|u,p| # pass 1. generate statistics and prune graph
+    g.map{|u,p|
       graph.delete u unless raw
       p[Title].do{|t|
         title = t[0].sub /\b[rR][eE]: /, ''
@@ -212,21 +219,14 @@ class R
         weight[a] ||= 0
         weight[a] += 1
         graph.delete a}}
-
-    if e.format == 'text/html'
-      listURI = '?group=rdf:type&sort=dc:date'
-      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
-    end
-    rdf = e.format != 'text/html'
-    group = e.q['group'].do{|t|t.expand} || To
-    e.q['sort'] ||= Size
-    threads.map{|title,post| # pass 2. cluster
+    # Pass 2. cluster
+    threads.map{|title,post|
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir
-        container = dir.uri.t
+        container = dir.uri.t # container identity and location
         cLoc = e.q['group'] ? a.R : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
-        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Stat+'size' => post[Size]} # thread
-        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if rdf
+        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Size => post[Size]} # thread
+        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # add RDF labels
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
         graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
         graph[container][LDP+'contains'] ||= []
