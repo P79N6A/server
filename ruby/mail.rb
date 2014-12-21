@@ -203,7 +203,7 @@ class R
       listURI = '?group=rdf:type&sort=dc:date' # link to basic list-view
       fullURI = '?raw'
       graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'} unless e.q.has_key? 'group'
-      graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'} unless raw
+      graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'} if !raw && g.keys.size < 32
     end
     e.q['sort'] ||= Size # weighting uses standard size-predicate
     group = (e.q['group']||To).expand # GROUP BY
