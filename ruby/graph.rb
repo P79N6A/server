@@ -113,16 +113,16 @@ class R
   end
 
   Mutate = -> g,e {
-    e[:Filter].justArray.map{|f| Filter[f].do{|fn| fn[g,e]}} # named filters
-    if e[:container] # container-summarize
+    e[:Filter].justArray.map{|f|Filter[f].do{|fn| fn[g,e]}} # named filters
+    if e[:container] || e.q.has_key?('summary')
       groups = {}
       g.map{|u,r|
-        r.types.map{|type| # typed filters
+        r.types.map{|type| # RDF types
           if v = Abstract[type] # class-summarizer exists
             groups[v] ||= {} # init type-group
-            groups[v][u] = r # resource to group
+            groups[v][u] = r # resource to type-group
           end}}
-      groups.map{|fn,gr|fn[g,gr,e]} # graph, summarize-subgraph, env
+      groups.map{|fn,gr|fn[g,gr,e]} # per-type summarize
     end}
 
 end

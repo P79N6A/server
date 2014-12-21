@@ -88,8 +88,9 @@ class R
          end
     [{_: :a, class: :sort, c: sortLabel, href: env.q.merge({'sort' => s_}).qs, title: s_},
      H.css('/css/container',true),
-     d.map{|u,r|
-       [ViewA[Container][r,env,d], {_: :p, class: :space}]}]}
+     d.resources(env).map{|r|
+       [ViewA[Container][r,env,d],
+        {_: :p, class: :space}]}]}
 
   ViewGroup[Content+'Resource'] = -> d,env {
     d.values.map{|r|r[Content]}}
