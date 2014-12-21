@@ -246,11 +246,15 @@ class R
     d.values.map{|s|
       ps = [SIOC+'has_parent']
       ps.map{|p|
-        s[p].justArray.map{|o|
+        s[p].justArray.map{|o| # s,p,o arc
           arc = {source: s.uri, target: o.uri}
           author = s[Creator][0]
           arc[:sourceName] = author.R.fragment unless colors[author.uri] # only show name once
           arc[:sourceColor] = colors[author.uri] ||= cs
+          d[o.uri].do{|o| # target exists in loaded graph
+            author = o[Creator][0]
+            arc[:targetName] = author.R.fragment unless colors[author.uri]
+            arc[:targetColor] = colors[author.uri] ||= cs}
           arcs.push arc
         }}}
 
