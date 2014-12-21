@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
@@ -21,14 +21,16 @@ class R
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     e.condResponse ->{
-      r[:thread] = true
-      Render[r.format].do{|p|p[m,r]} || m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
+          r[:thread] = true
+      r.q['noquote'] = true if m.keys.size > 8
+      Render[r.format].do{|p|p[m,r]} ||
+      m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   MessagePath = ->id{ # message-ID -> path
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
-  AddrPath = ->address{ # address -> path
+  AddrPath = ->address{ # mail address -> path
     address = address.downcase
     name = address.split('@')[0]
     alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
