@@ -55,7 +55,7 @@ module Th
   end
 
   def user_DNS
-    addr = self['HTTP_ORIGIN_ADDR'] || self['REMOTE_ADDR']
+    addr = self['HTTP_ORIGIN_ADDR'] || self['REMOTE_ADDR'] || '0.0.0.0'
     R['dns:' + addr]
   end
 
