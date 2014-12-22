@@ -44,6 +44,27 @@ class R
            ({class: :down, c: {_: :a, href: uri, style: "color: #{color}", c: '&darr;' }} if uri != e.R.uri && r[Size].justArray[0].to_i>0)]}
     end}
 
+  ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
+    sort = (env.q['sort']||Size).expand
+    sortLabel = sort.shorten.split(':')[-1] + ' ↨'
+    s_ = case sort # next sort-predicate
+         when Size
+           'dc:date'
+         when Date
+           'dc:title'
+         when Stat+'mtime'
+           'dc:title'
+         else
+           'stat:size'
+         end
+    env[:color] ||= {}
+    [{_: :a, class: :sort, c: sortLabel, href: env.q.merge({'sort' => s_}).qs, title: s_},
+     H.css('/css/container',true),
+     d.resources(env).group_by{|r|r.R.path||env.R.path}.
+       map{|group,resources|
+       resources.map{|r|
+         [ViewA[Container][r,env,d], {_: :p, class: :space}]}}]}
+
   ViewGroup[LDP+'Resource'] = -> g,env {
     [(H.css '/css/page', true),
      (H.js '/js/pager', true),
@@ -72,26 +93,6 @@ class R
      (H.js  '/js/tabr'),
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
-
-  ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
-    sort = (env.q['sort']||Size).expand
-    sortLabel = sort.shorten.split(':')[-1] + ' ↨'
-    s_ = case sort # next sort-predicate
-         when Size
-           'dc:date'
-         when Date
-           'dc:title'
-         when Stat+'mtime'
-           'dc:title'
-         else
-           'stat:size'
-         end
-    env[:color] ||= {}
-    [{_: :a, class: :sort, c: sortLabel, href: env.q.merge({'sort' => s_}).qs, title: s_},
-     H.css('/css/container',true),
-     d.resources(env).map{|r|
-       [ViewA[Container][r,env,d],
-        {_: :p, class: :space}]}]}
 
   ViewGroup[Content+'Resource'] = -> d,env {
     d.values.map{|r|r[Content]}}
