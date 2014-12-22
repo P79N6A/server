@@ -45,8 +45,8 @@ class R
     end}
 
   ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
+    path = env.R.path
     sort = (env.q['sort']||Size).expand
-    sortLabel = sort.shorten.split(':')[-1] + ' ↨'
     s_ = case sort # next sort-predicate
          when Size
            'dc:date'
@@ -57,12 +57,13 @@ class R
          else
            'stat:size'
          end
-    env[:color] ||= {}
-    [{_: :a, class: :sort, c: sortLabel, href: env.q.merge({'sort' => s_}).qs, title: s_},
-     H.css('/css/container',true),
-     d.resources(env).group_by{|r|r.R.path||env.R.path}.
+    env[:color] ||= {path => '#000'}
+    q = env.q.merge({'sort' => s_}).qs
+    d[q] = {'uri' => q, Label => sort.shorten.split(':')[-1] + ' ↨'}
+    [H.css('/css/container',true),
+     d.resources(env).group_by{|r|r.R.path||path}.
        map{|group,resources|
-       resources.map{|r|
+        resources.map{|r|
          [ViewA[Container][r,env,d], {_: :p, class: :space}]}}]}
 
   ViewGroup[LDP+'Resource'] = -> g,env {

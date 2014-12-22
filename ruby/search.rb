@@ -223,9 +223,8 @@ class R
       resource.roonga graph}
   end
 
-  def q # query-string
-    @r.q
-  end
+  def q; @r.q end
+  def to_i; 0 end
 
 end
 

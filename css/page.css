@@ -12,26 +12,17 @@ a.up, a[rel=next], a[rel=prev]{
     overflow: hidden;
     text-decoration: none;
     margin: .2em;
+    background-color: #fff;
+    color: #000;
+    border-radius: .16em;
 }
-
+a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
 a.up {
     float: left;
     font-size: 2.2em;
-    border-radius: .16em;
-    background-color: #fff;
-    color: #000;
 }
+
 a.cube {float: right; margin: 0 .2em .3em .3em}
 
-a[rel=prev] {
-    float:left;
-    border-radius: .6em .22em .22em .6em;
-    background-color: #000;
-    color: #fff;
-}
-a[rel=next] {
-    float:right;
-    border-radius: .22em .6em .6em .22em;
-    background-color: #000;
-    color: #fff;
-}
+a[rel=prev] {float:left}
+a[rel=next] {float:right}
