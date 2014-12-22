@@ -18,7 +18,7 @@ class R
       path = (re.path||'').t
       group = e.q['group']
       sort = (e.q['sort']||'uri').expand
-      color = R.cs
+      color = e[:color][re.path||e.R.path] ||= R.cs
       {class: :container, id: re.fragment,
        c: [{_: :a, class: :uri, href: uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",
            r[LDP+'contains'].do{|c|
@@ -86,6 +86,7 @@ class R
          else
            'stat:size'
          end
+    env[:color] ||= {}
     [{_: :a, class: :sort, c: sortLabel, href: env.q.merge({'sort' => s_}).qs, title: s_},
      H.css('/css/container',true),
      d.resources(env).map{|r|

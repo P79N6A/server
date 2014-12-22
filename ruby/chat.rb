@@ -68,7 +68,7 @@ class R
 
   ViewGroup[SIOCt+'InstantMessage'] = -> d,e {
     e.q['a'] = 'sioct:ChatChannel,sioc:has_creator'
-    e[:creators] = {}
+    e[:creators] ||= {}
     [Facets[d,e],
      H.css('/css/chat',true),
      {_: :style, c: e[:creators].map{|n,c|"a[creator='#{n}'] {color:#fff;background-color: #{c}}"}.cr}]}
