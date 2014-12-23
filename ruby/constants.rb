@@ -129,7 +129,6 @@ mail
 man
 news
 OPTIONS
-PATCH
 POST
 PUT
 schema

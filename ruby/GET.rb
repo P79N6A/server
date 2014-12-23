@@ -47,12 +47,17 @@ class R
     fs[self,q,m].do{|files|set.concat files} if fs
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
-    return E404[self,@r,m] if set.empty? && (!q.has_key? 'new')
+    if set.empty?
+      if q.has_key? 'new'
+        @r[:new] = true
+      else
+        return E404[self,@r,m]
+      end
+    end
 
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
     ldp # capability headers
-
     condResponse ->{ # lazy response-finish
 
       if set.size==1 && @r.format == set[0].mime # direct pass-through of file
@@ -60,10 +65,8 @@ class R
       else
 
         graph = -> {
-#          puts set
           set.map{|r|r.setEnv(@r).nodeToGraph m}
-          Mutate[m,@r]
-          m}
+          Mutate[m,@r]; m}
 
         if NonRDF.member? @r.format
           Render[@r.format][graph[], @r]
