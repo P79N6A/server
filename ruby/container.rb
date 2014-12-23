@@ -57,10 +57,9 @@ class R
          else
            'stat:size'
          end
-    env[:color] ||= {path => '#000'}
-    q = env.q.merge({'sort' => s_}).qs
-    d[q] = {'uri' => q, Label => sort.shorten.split(':')[-1] + ' ↨'}
+    env[:color] ||= {path => '#222'}
     [H.css('/css/container',true),
+     {_: :a, class: :sort, href: env.q.merge({'sort' => s_}).qs, c: '↨' + sort.shorten.split(':')[-1]},
      d.resources(env).group_by{|r|r.R.path||path}.
        map{|group,resources|
         resources.map{|r|

@@ -23,12 +23,12 @@
     padding: 0 .2em 0 .2em;
     border-radius: 0em;
 }
+
 a.sort {
     font-size: 1.2em;
-    color: #777;
+    margin-right: .14em;
+    color: #000;
     background-color: #fff;
-    border-radius: .1em;
-    float: right;
     text-decoration: none;
 }
 
