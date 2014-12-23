@@ -18,7 +18,7 @@ class R
 
   ViewA['#newType'] = -> graph, e {
     Creatable.map{|c|
-      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&view=edit&type='+c.shorten}}}
+      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
   ViewA['#editable'] = -> graph, e { # edit resource in a <form>
 
@@ -37,7 +37,7 @@ class R
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
                      c: [{_: :a, class: :uri, c: s, href: s},
-                         {_: :a, class: :history, c: 'history', href: R[s].fragmentPath + '?set=page&view=table&empty'}
+                         {_: :a, class: :history, c: 'history', href: R[s].fragmentPath + '?set=page'}
                         ]}},
                  model.keys.-(['uri',Type]).map{|p|
                    {_: :tr,
@@ -58,7 +58,7 @@ class R
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
-     {_: :a, href: r.R.docroot +  '?type=sioct:WikiArticleSection&view=edit',
+     {_: :a, href: r.R.docroot +  '?type=sioct:WikiArticleSection',
       c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'}]}
 
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
@@ -69,7 +69,7 @@ class R
  ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
      c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}},
-         {_: :a, href: r.R.docroot +  '?view=edit&fragment=' + r.R.fragment, class: :edit, c: :edit},
+         {_: :a, href: r.R.docroot +  '?fragment=' + r.R.fragment, class: :edit, c: :edit},
          r[Content]]}}
 
 end

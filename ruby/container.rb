@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   ViewA[Resource] = -> r,e {r.html}
@@ -73,7 +73,7 @@ class R
      if !env.q.has_key?('type')
        ViewA['#newType'][g,env]
      else
-       
+       ViewA['#editable'][g,env]
      end
      end),
      g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
