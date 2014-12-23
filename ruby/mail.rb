@@ -4,16 +4,6 @@ class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
-  GET['/msg'] = -> e,r{e.path=='/msg/' ? [303, {'Location' => '/'}, []] : nil}
-  GET['/address'] = -> e,r {
-    case e.path.split('/').size
-    when 3
-      r[:Filter] = :addrContainers
-    when 4
-      r.q['set'] ||= 'first-page'
-    end
-    nil}
-
   GET['/thread'] = -> e,r {
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of', m
@@ -29,11 +19,17 @@ class R
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
+  GET['/msg'] = -> e,r{e.path=='/msg/' ? [303, {'Location' => '/'}, []] : nil}
+
   AddrPath = ->address{ # mail address -> path
     address = address.downcase
     name = address.split('@')[0]
     alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
     '/address/' + alpha + '/' + address + '/' + name + '#' + name}
+
+  GET['/address'] = -> e,r { # include first page at address container
+    r.q['set'] ||= 'first-page' if e.path.split('/').size == 4
+    nil}
 
   def mail; Mail.read node if f end
 
@@ -179,22 +175,6 @@ class R
         c = Nokogiri::HTML.fragment content
         c.css('span.q').remove
         R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n\n" }}}
-
-  Filter[:addrContainers] = -> graph,e { # group addr-dirs by domain
-    g = {}
-    graph.delete e.uri
-    graph.map{|u,r|
-      parts = r.R.basename.split '@'
-      if parts.size==2
-        graph.delete u
-        domain = '//' + parts[1]
-        r[Title] = parts[0]
-        r.delete Stat+'size'
-        container = {'uri' => domain, Label => parts[1].sub(/\.(com|edu|net|org)$/,''), Type => R[Container], LDP+'contains' => []}
-        g[domain] ||= container
-        g[domain][LDP+'contains'].push r
-      end}
-    graph.merge! g }
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     raw = e.q.has_key? 'raw' # keep unsummarized information?
