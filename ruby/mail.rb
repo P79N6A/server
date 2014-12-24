@@ -180,8 +180,8 @@ class R
     raw = e.q.has_key? 'raw' # keep unsummarized information?
     graph[e.uri].do{|dir|dir.delete(LDP+'contains')} unless raw # hide filesystem meta
     if e.format == 'text/html'
-      listURI = '?group=rdf:type&sort=dc:date'
-      fullURI = '?raw'
+      listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date'}).qs
+      fullURI = e.q.merge({'raw' => 'raw'}).qs
       size = g.keys.size
       graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'} if !e.q.has_key?('group') && size > 12
       graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'} if !raw && size < 24
