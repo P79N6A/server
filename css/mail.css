@@ -26,22 +26,7 @@ pre.mail .q[depth="13"] {background-color:#f00;color:#fff}
 pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 
-body td.key a, td.uri a {background-color: #000; color: #fff}
-body td.uri a {font-weight: bold}
-
-body td.val a.id{
-    color: #fff;
-    background-color: #000;
-    border-style: dashed;
-    border-color: #aaa;
-    border-width: 0 0 .1em 0;
-}
-
-body td.val a:hover {
-    background-color: #ccc;
-}
-
-body td.val a[rel=untyped] {
+.mail a[rel=untyped] {
     color: #2f2;
     background-color:#000;
     border: .1em dotted #0f0;
@@ -50,30 +35,21 @@ body td.val a[rel=untyped] {
     font-weight: bold;
 }
 
-body td.val a[rel=untyped]:hover, body td.val a[rel=untyped]:visited {
+.mail a[rel=untyped]:hover, .mail a[rel=untyped]:visited {
     background-color: #0f0;
     color: #000;
     border-color: #0f0;}
 
-body td.val .q a[rel=untyped]:hover, body td.val .q a[rel=untyped]:visited {
-    background-color: #fff;
-    color: #000;
-    border-color: #fff;}
-
-body td.val .q a[rel=untyped] {
+.mail .q a[rel=untyped] {
     color: #fff;
     background-color:#000;
     border-color: #fff;
 }
 
-tr[property="http://www.w3.org/ns/posix/stat#size"], tr[property="http://purl.org/dc/terms/identifier"], tr[property="http://purl.org/dc/terms/source"] {display:none}
-
-.title {
-    float: right;
-    font-size: 1.7em;
-    font-weight: bold;
-    margin-right: .1em;
-}
+.mail .q a[rel=untyped]:hover, .mail .q a[rel=untyped]:visited {
+    background-color: #fff;
+    color: #000;
+    border-color: #fff;}
 
 .noquote {
     float: right;
@@ -84,7 +60,7 @@ tr[property="http://www.w3.org/ns/posix/stat#size"], tr[property="http://purl.or
     background-color: #000;
 }
 
-body table.html {
+.mail {
     text-align:left;
     float: right;
     clear:both;
@@ -117,5 +93,3 @@ text {
     font: .88em sans-serif;
     pointer-events: none;
 }
-
-tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://rdfs.org/sioc/ns#has_parent"],tr[property="http://rdfs.org/sioc/ns#reply_of"], tr[property="http://purl.org/dc/terms/hasFormat"] {display:none}
