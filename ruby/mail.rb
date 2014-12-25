@@ -252,7 +252,7 @@ class R
             end
           }, '<br>',
           r[Creator].do{|c| author = c[0].R.fragment
-              {_: :a, name: author, href: c[0].uri, c: author}},
+              {_: :a, name: author, href: c[0].R.dirname, c: author}},
           r[SIOC+'has_parent'].do{|ps|
             [' &rarr; ',
              ps.map{|p| # replied-to message
