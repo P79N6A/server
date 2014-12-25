@@ -255,8 +255,10 @@ class R
 
   ViewA[SIOCt+'MailMessage'] = -> r,e {
     {class: :mail,
-     c: [r[To].justArray.map{|t|t.R.href}.intersperse(' '),
-         r[Title],
+     c: [
+       r[Title],'<br>',
+       r[Creator].do{|c|c[0].R.href},
+       r[To].do{|t|[' &rarr; ',t.map{|t|t.R.href}.intersperse(' ')]},
          r[Content]]}}
 
 end
