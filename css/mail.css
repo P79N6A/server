@@ -25,7 +25,7 @@ pre.mail .q[depth="12"] {background-color:#fff;color:#000}
 pre.mail .q[depth="13"] {background-color:#f00;color:#fff}
 pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
-.mail a[name] {font-weight: bold; color: #ccc; background-color: #000}
+a[name] {font-weight: bold; color: #ccc; background-color: #000}
 .mail a[rel=untyped] {
     color: #2f2;
     background-color:#000;
