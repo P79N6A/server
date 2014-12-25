@@ -28,7 +28,9 @@ class R
     '/address/' + alpha + '/' + address + '/' + name + '#' + name}
 
   GET['/address'] = -> e,r { # include first page at address container
-    r.q['set'] ||= 'first-page' if e.path.split('/').size == 4
+    depth = e.path.split('/').size
+    r[:ls] = true if depth == 3
+    r.q['set'] ||= 'first-page' if depth == 4
     nil}
 
   def mail; Mail.read node if f end
@@ -222,11 +224,11 @@ class R
     else
       q['noquote'] = ''
     end
-    d.values.map{|s|
+    d.values.map{|s| # find direct-reference arcs
       s[SIOC+'has_parent'].justArray.map{|o|
         arc = {source: s.uri, target: o.uri}
         author = s[Creator][0].R.fragment
-        arc[:sourceName] = author unless colors[author] # only show name once
+        arc[:sourceName] = author unless colors[author] # show each name once
         arc[:sourceColor] = colors[author] ||= cs
         d[o.uri].do{|o| # target exists in loaded graph
           author = o[Creator][0].R.fragment

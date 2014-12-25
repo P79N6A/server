@@ -60,10 +60,14 @@ class R
     env[:color] ||= {path => '#222'}
     [H.css('/css/container',true),
      {_: :a, class: :sort, href: env.q.merge({'sort' => s_}).qs, c: '↨' + sort.shorten.split(':')[-1]},
-     d.resources(env).group_by{|r|r.R.path||path}.
-       map{|group,resources|
+     if env[:ls]
+       ViewGroup[CSVns+'Row'][d,env]
+     else
+     d.resources(env).group_by{|r|r.R.path||path}.map{|group,resources|
         resources.map{|r|
-         [ViewA[Container][r,env,d], {_: :p, class: :space}]}}]}
+          [ViewA[Container][r,env,d], {_: :p, class: :space}]}}
+     end
+    ]}
 
   ViewGroup[LDP+'Resource'] = -> g,env {
     [H.css('/css/page', true),
