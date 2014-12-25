@@ -238,8 +238,8 @@ class R
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c|
-        "a[name=\"#{name}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
-     ({_: :a, href: q.qs, c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote} if !big),
+        "a[name=\"#{name}\"] {color: #{c}}\n"}},
+     ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
      d.resources(e).map{|r|
        {class: :mail, id: r.uri, c: [
           r[Title].do{|t|
@@ -251,10 +251,8 @@ class R
               {_: :a, class: :title, href: r.uri, c: title}
             end
           }, '<br>',
-          r[Creator].do{|c|
-            author = c[0].R.fragment
-            {_: :a, name: author, href: c[0].uri, c: author}
-          },
+          r[Creator].do{|c| author = c[0].R.fragment
+              {_: :a, name: author, href: c[0].uri, c: author}},
           r[SIOC+'has_parent'].do{|ps|
             [' &rarr; ',
              ps.map{|p| # replied-to message
@@ -262,7 +260,7 @@ class R
                  author = r[Creator][0].R.fragment
                  [{_: :a, name: author, href: '#'+p.uri, c: author},' ']}}]},' ',
           r[SIOC+'reply_to'].do{|c|
-            {_: :a, class: :create, href: c[0].uri, c: '&#x270e;'}},
+            {_: :a, class: :create, href: c[0].uri, c: '&#x270f;'}},
           r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0]}},
           '<br>',
           r[Content],
