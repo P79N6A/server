@@ -163,19 +163,6 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  Filter[:minimizeMessage] = -> g,e {
-    g.map{|u,r|
-      [DC+'identifier',DC+'hasFormat',DC+'source',
-       SIOC+'attachment',
-       SIOC+'reply_of',
-       SIOC+'reply_to',
-       SIOC+'has_discussion',
-       Label, To].map{|p| r.delete p}
-      r[Content] = r[Content].justArray.map{|content|
-        c = Nokogiri::HTML.fragment content
-        c.css('span.q').remove
-        R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n\n" }}}
-
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     raw = e.q.has_key? 'raw' # keep unsummarized information?
     graph[e.uri].do{|dir|dir.delete(LDP+'contains')} unless raw # hide filesystem meta
@@ -224,7 +211,11 @@ class R
     noquote = q.has_key?('noquote') || big
     if noquote
       q.delete 'noquote'
-      Filter[:minimizeMessage][d,e]
+      d.map{|u,r|
+        r[Content] = r[Content].justArray.map{|content|
+          c = Nokogiri::HTML.fragment content
+          c.css('span.q').remove
+          R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n\n" }}
     else
       q['noquote'] = ''
     end
@@ -253,13 +244,13 @@ class R
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}
 
-  ViewA[SIOCt+'MailMessage'] = -> r,e {
+  ViewA[SIOCt+'MailMessage'] = -> r, e, g = nil {
     {class: :mail, c: [
        r[Title], '<br>',
        r[Creator].do{|c|c[0].R.href},
        r[To].do{|t|[' &rarr; ',t.map{|t|[t.R.href,' ']}]},
        r[SIOC+'reply_to'].do{|c|c[0].R.href '&#x270e;'}, '<br>',
-       r[Content],'<br>','<br>',
+       r[Content],
      ]}}
 
 end
