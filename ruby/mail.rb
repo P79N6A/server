@@ -254,11 +254,12 @@ class R
      H.js('/js/mail',true)]}
 
   ViewA[SIOCt+'MailMessage'] = -> r,e {
-    {class: :mail,
-     c: [
-       r[Title],'<br>',
+    {class: :mail, c: [
+       r[Title], '<br>',
        r[Creator].do{|c|c[0].R.href},
-       r[To].do{|t|[' &rarr; ',t.map{|t|t.R.href}.intersperse(' ')]},
-         r[Content]]}}
+       r[To].do{|t|[' &rarr; ',t.map{|t|[t.R.href,' ']}]},
+       r[SIOC+'reply_to'].do{|c|c[0].R.href '&#x270e;'}, '<br>',
+       r[Content],'<br>','<br>',
+     ]}}
 
 end
