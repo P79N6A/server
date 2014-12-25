@@ -206,6 +206,7 @@ class R
   ViewGroup[SIOCt+'MailMessage'] = -> d,e {
     arcs = []
     colors = {}
+    titles = {}
     q = e.q
     big = d.keys.size > 8
     noquote = q.has_key?('noquote') || big
@@ -220,19 +221,17 @@ class R
       q['noquote'] = ''
     end
     d.values.map{|s|
-      ps = [SIOC+'has_parent']
-      ps.map{|p|
-        s[p].justArray.map{|o| # s,p,o arc
-          arc = {source: s.uri, target: o.uri}
-          author = s[Creator][0].R.fragment
-          arc[:sourceName] = author unless colors[author] # only show name once
-          arc[:sourceColor] = colors[author] ||= cs
-          d[o.uri].do{|o| # target exists in loaded graph
-            author = o[Creator][0].R.fragment
-            arc[:targetName] = author unless colors[author]
-            arc[:targetColor] = colors[author] ||= cs}
-          arcs.push arc
-        }}}
+      s[SIOC+'has_parent'].justArray.map{|o|
+        arc = {source: s.uri, target: o.uri}
+        author = s[Creator][0].R.fragment
+        arc[:sourceName] = author unless colors[author] # only show name once
+        arc[:sourceColor] = colors[author] ||= cs
+        d[o.uri].do{|o| # target exists in loaded graph
+          author = o[Creator][0].R.fragment
+          arc[:targetName] = author unless colors[author]
+          arc[:targetColor] = colors[author] ||= cs}
+        arcs.push arc
+      }}
 
     [H.css('/css/mail',true),
      {_: :style,
