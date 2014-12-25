@@ -248,11 +248,15 @@ class R
       c: colors.map{|uri,c|
         "body td.val a.id[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote} if !big),
-     ViewA[SIOCt+'MailMessage'][d,e],
+     d.resources(e).map{|r|
+       ViewA[SIOCt+'MailMessage'][r,e]},
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}
 
   ViewA[SIOCt+'MailMessage'] = -> r,e {
-    {}}
+    {class: :mail,
+     c: [
+       r[Title],
+       r[Content]]}}
 
 end
