@@ -68,6 +68,12 @@ pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
     background-color: #000;
 }
 
+.mail .discussion {
+    color: #fff;
+    background-color: #000;
+    float: right;
+}
+
 .noquote {
     float: right;
     font-size: 2em;

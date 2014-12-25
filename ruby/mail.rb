@@ -234,7 +234,7 @@ class R
           arc[:targetColor] = colors[author] ||= cs}
         arcs.push arc
       }}
-
+#'&#9993;'
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c|
@@ -262,6 +262,7 @@ class R
           r[SIOC+'reply_to'].do{|c|
             {_: :a, class: :create, href: c[0].uri, c: '&#x270f;'}},
           r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0]}},
+          r[SIOC+'has_discussion'].do{|d|{_: :a, class: :discussion, href: d[0].uri, c: '≡'} unless e[:thread]},
           '<br>',
           r[Content],
         ]}},
