@@ -164,8 +164,8 @@ class R
   end
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
-    raw = e.q.has_key? 'raw' # keep unsummarized information?
-    graph[e.uri].do{|dir|dir.delete(LDP+'contains')} unless raw # hide filesystem meta
+    raw = e.q.has_key? 'raw' # keep raw-msg
+    graph[e.uri].do{|dir|dir.delete(LDP+'contains')} unless raw # hide fs-meta
     if e.format == 'text/html'
       listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date'}).qs
       fullURI = e.q.merge({'raw' => 'raw'}).qs
@@ -224,33 +224,41 @@ class R
       ps.map{|p|
         s[p].justArray.map{|o| # s,p,o arc
           arc = {source: s.uri, target: o.uri}
-          author = s[Creator][0]
-          arc[:sourceName] = author.R.fragment unless colors[author.uri] # only show name once
-          arc[:sourceColor] = colors[author.uri] ||= cs
+          author = s[Creator][0].R.fragment
+          arc[:sourceName] = author unless colors[author] # only show name once
+          arc[:sourceColor] = colors[author] ||= cs
           d[o.uri].do{|o| # target exists in loaded graph
-            author = o[Creator][0]
-            arc[:targetName] = author.R.fragment unless colors[author.uri]
-            arc[:targetColor] = colors[author.uri] ||= cs}
+            author = o[Creator][0].R.fragment
+            arc[:targetName] = author unless colors[author]
+            arc[:targetColor] = colors[author] ||= cs}
           arcs.push arc
         }}}
 
     [H.css('/css/mail',true),
      {_: :style,
-      c: colors.map{|uri,c|
-        "a[href=\"#{uri}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
+      c: colors.map{|name,c|
+        "a[name=\"#{name}\"] {color: #{c};border-color: #{c};font-weight: bold;background-color: #000}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote} if !big),
      d.resources(e).map{|r|
-       ViewA[SIOCt+'MailMessage'][r,e]},
+       {class: :mail, id: r.uri, c: [
+          r[Title], '<br>',
+          r[Creator].do{|c|
+            author = c[0].R.fragment
+            {_: :a, name: author, href: c[0].uri, c: author}
+          },
+          r[SIOC+'has_parent'].do{|ps|
+            [' &rarr; ',
+             ps.map{|p| # replied-to message
+               d[p.uri].do{|r| # target message
+                 author = r[Creator][0].R.fragment
+                 [{_: :a, name: author, href: '#'+p.uri, c: author},' ']}}]},
+          r[SIOC+'reply_to'].do{|c|
+            {_: :a, class: :create, href: c[0].uri, c: '&#x270e;'}},
+          r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0]}},
+          '<br>',
+          r[Content],
+        ]}},
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}
-
-  ViewA[SIOCt+'MailMessage'] = -> r, e, g = nil {
-    {class: :mail, c: [
-       r[Title], '<br>',
-       r[Creator].do{|c|c[0].R.href},
-       r[To].do{|t|[' &rarr; ',t.map{|t|[t.R.href,' ']}]},
-       r[SIOC+'reply_to'].do{|c|c[0].R.href '&#x270e;'}, '<br>',
-       r[Content],
-     ]}}
 
 end

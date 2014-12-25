@@ -51,6 +51,18 @@ pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
     color: #000;
     border-color: #fff;}
 
+.mail .ts {
+    float: right;
+    color: #eee;
+    font-size:.9em;
+}
+
+.mail .create {
+    color: #fff;
+    background-color: #000;
+    font-size: 1em;
+}
+
 .noquote {
     float: right;
     border-radius: .1em;
