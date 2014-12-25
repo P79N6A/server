@@ -242,7 +242,7 @@ class R
       c: colors.map{|name,c|
         "a[name=\"#{name}\"] {color: #{c}}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
-     d.resources(e).map{|r|
+     d.resources(e).reverse.map{|r|
        {class: :mail, id: r.uri, c: [
           r[Title].do{|t|
             title = t[0].sub ReExpr, ''
@@ -265,7 +265,7 @@ class R
              }.intersperse(' ')]},' ',
           r[SIOC+'reply_to'].do{|c|
             {_: :a, class: :create, href: c[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]}},
-          r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0]}},
+          r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
           r[SIOC+'has_discussion'].do{|d|{_: :a, class: :discussion, href: d[0].uri, c: '≡'} unless e[:thread]},
           '<br>',
           r[Content],
