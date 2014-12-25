@@ -234,7 +234,7 @@ class R
           arc[:targetColor] = colors[author] ||= cs}
         arcs.push arc
       }}
-#'&#9993;'
+
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c|
@@ -258,9 +258,11 @@ class R
              ps.map{|p| # replied-to message
                d[p.uri].do{|r| # target message
                  author = r[Creator][0].R.fragment
-                 [{_: :a, name: author, href: '#'+p.uri, c: author},' ']}}]},' ',
+                 {_: :a, name: author, href: '#'+p.uri, c: author}} ||
+               {_: :a, href: p.uri, c: '&#9993;'}
+             }.intersperse(' ')]},' ',
           r[SIOC+'reply_to'].do{|c|
-            {_: :a, class: :create, href: c[0].uri, c: '&#x270f;'}},
+            {_: :a, class: :create, href: c[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]}},
           r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0]}},
           r[SIOC+'has_discussion'].do{|d|{_: :a, class: :discussion, href: d[0].uri, c: '≡'} unless e[:thread]},
           '<br>',
