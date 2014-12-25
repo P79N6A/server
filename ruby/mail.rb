@@ -163,6 +163,8 @@ class R
     triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
   end
 
+  ReExpr = /\b[rR][eE]: /
+
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     raw = e.q.has_key? 'raw' # keep raw-msg
     graph[e.uri].do{|dir|dir.delete(LDP+'contains')} unless raw # hide fs-meta
@@ -181,7 +183,7 @@ class R
     g.map{|u,p|
       graph.delete u unless raw
       p[Title].do{|t|
-        title = t[0].sub /\b[rR][eE]: /, ''
+        title = t[0].sub ReExpr, ''
         threads[title] ||= p
         threads[title][Size] ||= 0
         threads[title][Size]  += 1 }
@@ -240,7 +242,15 @@ class R
      ({_: :a, href: q.qs, c: noquote ? '&gt;' : '&lt;', title: "hide quotes", class: :noquote} if !big),
      d.resources(e).map{|r|
        {class: :mail, id: r.uri, c: [
-          r[Title], '<br>',
+          r[Title].do{|t|
+            title = t[0].sub ReExpr, ''
+            if titles[title]
+              nil
+            else
+              titles[title] = true
+              {_: :a, class: :title, href: r.uri, c: title}
+            end
+          }, '<br>',
           r[Creator].do{|c|
             author = c[0].R.fragment
             {_: :a, name: author, href: c[0].uri, c: author}
@@ -250,7 +260,7 @@ class R
              ps.map{|p| # replied-to message
                d[p.uri].do{|r| # target message
                  author = r[Creator][0].R.fragment
-                 [{_: :a, name: author, href: '#'+p.uri, c: author},' ']}}]},
+                 [{_: :a, name: author, href: '#'+p.uri, c: author},' ']}}]},' ',
           r[SIOC+'reply_to'].do{|c|
             {_: :a, class: :create, href: c[0].uri, c: '&#x270e;'}},
           r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0]}},

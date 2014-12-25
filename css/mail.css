@@ -51,6 +51,12 @@ pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
     color: #000;
     border-color: #fff;}
 
+.mail .title {
+    font-weight: bold;
+    background-color: #000;
+    color: #fff;
+}
+
 .mail .ts {
     float: right;
     color: #eee;
