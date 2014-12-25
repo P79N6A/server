@@ -21,7 +21,7 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  ViewGroup[CSVns+'Row'] = -> g,e {
+  TabularView = ViewGroup[CSVns+'Row'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     {_: :table, :class => :tab,
      c: [H.css('/css/table'),

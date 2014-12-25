@@ -126,6 +126,6 @@ class R
     [{_: :a, class: :person, href: href, c: ['☺ ',name]},
      (ViewA[Resource][u,e] unless u.keys.size==1)]}
 
-  ViewGroup[SIOC+'Usergroup'] = ViewGroup[CSVns+'Row']
+  ViewGroup[SIOC+'Usergroup'] = TabularView
 
 end

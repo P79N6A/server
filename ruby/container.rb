@@ -61,7 +61,7 @@ class R
     [H.css('/css/container',true),
      {_: :a, class: :sort, href: env.q.merge({'sort' => s_}).qs, c: '↨' + sort.shorten.split(':')[-1]},
      if env[:ls]
-       ViewGroup[CSVns+'Row'][d,env]
+       TabularView[d,env]
      else
      d.resources(env).group_by{|r|r.R.path||path}.map{|group,resources|
         resources.map{|r|
