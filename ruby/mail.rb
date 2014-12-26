@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
@@ -208,13 +208,13 @@ class R
         graph[container][LDP+'contains'].push item }}}
 
   ViewGroup[SIOCt+'MailMessage'] = -> d,e {
-    arcs = []
     colors = {}
     titles = {}
     q = e.q
     big = d.keys.size > 8
     noquote = q.has_key?('noquote') || big
-    if noquote
+
+    if noquote # toggle quoted-content
       q.delete 'noquote'
       d.map{|u,r|
         r[Content] = r[Content].justArray.map{|content|
@@ -224,6 +224,8 @@ class R
     else
       q['noquote'] = ''
     end
+
+    arcs = []
     d.values.map{|s| # find direct-reference arcs
       s[SIOC+'has_parent'].justArray.map{|o|
         arc = {source: s.uri, target: o.uri}
@@ -269,6 +271,9 @@ class R
           r[SIOC+'has_discussion'].do{|d|{_: :a, class: :discussion, href: d[0].uri, c: '≡'} unless e[:thread]},
           '<br>',
           r[Content],
+          [DC+'hasFormat', SIOC+'attachment'].map{|p|
+            r[p].justArray.map{|o|
+              {_: :a, href: o.uri, c: o.R.basename}}}
         ]}},
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}

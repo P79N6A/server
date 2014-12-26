@@ -50,6 +50,7 @@ class R
 
   MIME={
     'aif' => 'audio/aif',
+    'asc' => 'text/plain',
     'atom' => 'application/atom+xml',
     'avi' => 'video/avi',
     'e' => 'application/json+rdf',
