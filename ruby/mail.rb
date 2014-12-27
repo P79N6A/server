@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
@@ -21,16 +21,16 @@ class R
 
   GET['/msg'] = -> e,r{e.path=='/msg/' ? [303, {'Location' => '/'}, []] : nil}
 
-  AddrPath = ->address{ # mail address -> path
+  AddrPath = ->address{ # address -> path
     address = address.downcase
     name = address.split('@')[0]
     alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
     '/address/' + alpha + '/' + address + '/' + name + '#' + name}
 
-  GET['/address'] = -> e,r { # include first page at address container
+  GET['/address'] = -> e,r {
     depth = e.path.split('/').size
-    r[:ls] = true if depth == 3
-    r.q['set'] ||= 'first-page' if depth == 4
+    r[:ls] = true if depth == 3 # tabular view of alpha-prefix's addresses
+    r.q['set'] ||= 'first-page' if depth == 4 # include first page at container root
     nil}
 
   def mail; Mail.read node if f end
@@ -109,7 +109,7 @@ class R
     }.map{|p|
       yield e, Content,
       H({_: :pre, class: :mail,
-          c: p.decoded.to_utf8.gsub(/^(\s*>)+\n/,"").lines.to_a.map{|l| # nuke empty quotes
+          c: p.decoded.to_utf8.gsub(/^(\s*>)+\n/,"").lines.to_a.map{|l| # sweep empty quotes
            if qp = l.match(/^(\s*[>|])+/) # quote
              {_: :span, class: :q, depth: qp[0].scan(/[>|]/).size, c: l.hrefs}
            elsif l.match(/^(At|On)\b.*wrote:$/)
@@ -256,24 +256,23 @@ class R
             end
           }, '<br>',
           r[Creator].do{|c| author = c[0].R.fragment
-              {_: :a, name: author, href: c[0].R.dirname, c: author}},
+              {_: :a, name: author, href: c[0].R.dirname, c: author}},' &rarr; ',
           r[SIOC+'has_parent'].do{|ps|
-            [' &rarr; ',
-             ps.map{|p| # replied-to message
-               d[p.uri].do{|r| # target message
-                 author = r[Creator][0].R.fragment
-                 {_: :a, name: author, href: '#'+p.uri, c: author}} ||
-               {_: :a, href: p.uri, c: '&#9993;'}
-             }.intersperse(' ')]},' ',
+            ps.map{|p| # replied-to messages
+              d[p.uri].do{|r| # target msg
+                author = r[Creator][0].R.fragment
+                {_: :a, name: author, href: '#'+p.uri, c: author}} ||
+              {_: :a, href: p.uri, c: '&#9993;'}
+            }.intersperse(' ')}, ' ',
+          r[To].justArray.map{|o|{_: :a, class: :to, href: o.R.dirname, c: o.R.fragment}}.intersperse(' '), ' ',
           r[SIOC+'reply_to'].do{|c|
             {_: :a, class: :create, href: c[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]}},
           r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
           r[SIOC+'has_discussion'].do{|d|{_: :a, class: :discussion, href: d[0].uri, c: '≡'} unless e[:thread]},
-          '<br>',
-          r[Content],
+          '<br>', r[Content],
           [DC+'hasFormat', SIOC+'attachment'].map{|p|
             r[p].justArray.map{|o|
-              {_: :a, href: o.uri, c: o.R.basename}}}
+             {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}
         ]}},
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}

@@ -6,7 +6,6 @@ body {
 
 pre.mail {
     max-width: 115ex;
-    margin: 0;
     white-space: pre-wrap;
 }
 a {text-decoration: none}
@@ -26,7 +25,9 @@ pre.mail .q[depth="12"] {background-color:#fff;color:#000}
 pre.mail .q[depth="13"] {background-color:#f00;color:#fff}
 pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
-a[name] {font-weight: bold; color: #ccc; background-color: #000}
+
+a[name], a.to, a.attached {font-weight: bold; color: #ccc; background-color: #000}
+a.attached {float:right}
 .mail a[rel=untyped] {
     color: #2f2;
     background-color:#000;
