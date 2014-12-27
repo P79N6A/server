@@ -26,29 +26,28 @@ pre.mail .q[depth="13"] {background-color:#f00;color:#fff}
 pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 
-a[name], a.to, a.attached {font-weight: bold; color: #ccc; background-color: #000}
-a.attached {float: left;clear:both}
+a[name], a.to {font-weight: bold; color: #ccc; background-color: #000}
+
+a.attached {
+    float: right;
+    color: #000;
+    background-color: #fff;
+    border-radius: .2em;
+    padding: .05em .1em .05em .1em;
+    margin-bottom: .18em;
+}
+
 .mail a[rel=untyped] {
-    color: #2f2;
+    color: #fff;
     background-color:#000;
-    border: .1em dotted #0f0;
+    border-color: #fff;
+    border: .1em dotted #fff;
     border-radius: .16em;
     font-size: 1.18em;
     font-weight: bold;
 }
 
 .mail a[rel=untyped]:hover, .mail a[rel=untyped]:visited {
-    background-color: #0f0;
-    color: #000;
-    border-color: #0f0;}
-
-.mail .q a[rel=untyped] {
-    color: #fff;
-    background-color:#000;
-    border-color: #fff;
-}
-
-.mail .q a[rel=untyped]:hover, .mail .q a[rel=untyped]:visited {
     background-color: #fff;
     color: #000;
     border-color: #fff;}
@@ -84,7 +83,7 @@ a.attached {float: left;clear:both}
     margin: 0 .16em .16em .16em;
 }
 
-.mail {
+div.mail {
     text-align:left;
     float: right;
     clear:both;
