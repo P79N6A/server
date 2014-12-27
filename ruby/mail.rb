@@ -252,9 +252,9 @@ class R
               nil
             else
               titles[title] = true
-              {_: :a, class: :title, href: r.uri, c: title}
+              [{_: :a, class: :title, href: r.uri, c: title},'<br>']
             end
-          }, '<br>',
+          },
           r[Creator].do{|c| author = c[0].R.fragment
               {_: :a, name: author, href: c[0].R.dirname, c: author}},' &rarr; ',
           r[SIOC+'has_parent'].do{|ps|
@@ -264,7 +264,8 @@ class R
                 {_: :a, name: author, href: '#'+p.uri, c: author}} ||
               {_: :a, href: p.uri, c: '&#9993;'}
             }.intersperse(' ')}, ' ',
-          r[To].justArray.map{|o|{_: :a, class: :to, href: o.R.dirname, c: o.R.fragment}}.intersperse(' '), ' ',
+          r[To].justArray.map{|o|
+            {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
           r[SIOC+'reply_to'].do{|c|
             {_: :a, class: :create, href: c[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]}},
           r[Date].do{|d|{_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},

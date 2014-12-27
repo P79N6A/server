@@ -27,7 +27,7 @@ pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 
 a[name], a.to, a.attached {font-weight: bold; color: #ccc; background-color: #000}
-a.attached {float:right}
+a.attached {float: left;clear:both}
 .mail a[rel=untyped] {
     color: #2f2;
     background-color:#000;
