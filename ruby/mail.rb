@@ -226,7 +226,7 @@ class R
     end
 
     arcs = []
-    d.values.map{|s| # find direct-reference arcs
+    d.values.map{|s| # collect direct-reference arcs
       s[SIOC+'has_parent'].justArray.map{|o|
         arc = {source: s.uri, target: o.uri}
         author = s[Creator][0].R.fragment
@@ -262,7 +262,7 @@ class R
               d[p.uri].do{|r| # target msg
                 author = r[Creator][0].R.fragment
                 {_: :a, name: author, href: '#'+p.uri, c: author}} ||
-              {_: :a, href: p.uri, c: '&#9993;'}
+              {_: :a, class: :msg, href: p.uri, c: '&#9993;'}
             }.intersperse(' ')}, ' ',
           r[To].justArray.map{|o|
             {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
