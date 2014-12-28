@@ -26,7 +26,7 @@ class R
     {_: :table, :class => :tab,
      c: [H.css('/css/table'),
          {_: :tr, c: keys.map{|k|
-            {_: :th, class: :label, property: k, c: k.R.abbr}}},
+            {_: :th, class: :label, property: k, c:  k.R.abbr}}},
          g.resources(e).map{|e|
            {_: :tr, about: e.uri, c: keys.map{|k|
               {_: :td, property: k,

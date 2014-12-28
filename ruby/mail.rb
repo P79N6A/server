@@ -115,7 +115,7 @@ class R
            elsif l.match(/^(At|On)\b.*wrote:$/)
              {_: :span, class: :q, depth: 1, c: l.hrefs}
            else
-             l.hrefs
+             l.hrefs true
            end }})}
     
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
