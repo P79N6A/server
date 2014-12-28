@@ -30,9 +30,6 @@ class R
   end
 
   def R.log e, s, h, b
-    ua = e['HTTP_USER_AGENT'] || ''
-    Stats[:agent][ua] ||= 0
-    Stats[:agent][ua] += 1
     Stats[:status][s] ||= 0
     Stats[:status][s] += 1
     host = e['SERVER_NAME']
@@ -74,12 +71,6 @@ class R
                   LDP+'contains' => table.map{|key, count|
 
                     uri = case sym
-                          when :agent
-                            if u = key.match(Href)
-                              u[0]
-                            else
-                              e.uri + '#' + rand.to_s.h
-                            end
                           when :error
                             key.uri
                           when :host
@@ -95,8 +86,6 @@ class R
                     title = case sym
                             when :error
                               key[Title]
-                            when :agent
-                              key.sub(Href,'')
                             else
                               key
                             end

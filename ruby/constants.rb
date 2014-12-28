@@ -100,8 +100,7 @@ class R < RDF::URI
   GET = {}
   POST = {}
 
-  Stats = {agent: {},
-           error: {},
+  Stats = {error: {},
            format: {},
            host: {},
            status: {}}
