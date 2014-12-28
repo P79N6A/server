@@ -9,24 +9,21 @@ class R
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  # depth-first subtree-range in page-chunks
+  # depth-first tree-range in page-chunks
   FileSet['page'] = -> d,r,m {
-    u = m['']
     c = ((r['c'].do{|c|c.to_i} || 32) + 1).max(1024).min 2 # count
-    o = r.has_key?('asc') ? :asc : :desc                  # direction
-    (d.take c, o, r['offset'].do{|o|o.R}).do{|s|          # bind page
+    o = r.has_key?('asc') ? :asc : :desc                   # direction
+    (d.take c, o, r['offset'].do{|o|o.R}).do{|s|           # get page
       if r['offset'] && head = s[0]
         uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-        u[Prev] = {'uri' => uri}                # prev RDF
+        m[''][Prev] = {'uri' => uri}            # prev RDF
         d.env[:Links].push "<#{uri}>; rel=prev" # prev HTTP
       end
-      if edge = s.size >= c && s.pop            # next exist?
+      if edge = s.size >= c && s.pop            # further entries exist
         uri = d.uri + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
-        u[Next] = {'uri' => uri}                # next RDF
+        m[''][Next] = {'uri' => uri}            # next RDF
         d.env[:Links].push "<#{uri}>; rel=next" # next HTTP
       end
-      d.env[:Links].push "<#{d.uri+'?set=page&asc'}>; rel=first"
-      d.env[:Links].push "<#{d.uri+'?set=page&desc'}>; rel=last"
       s }}
 
   FileSet['first-page'] = -> d,r,m {

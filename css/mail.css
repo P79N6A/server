@@ -24,10 +24,10 @@ pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 .mail .title {font-weight: bold}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .noquote {font-size: 2em}
-.mail .title, .mail .create, .mail .discussion, .mail a.msg, .noquote {
+.mail .title, .mail .create, .mail .discussion, .mail a.msg, .noquote, .mail a.ts {
     color: #fff;
     background-color: #000;}
-a[name], a.to, .mail a.ts {
+a[name], a.to {
     font-weight: bold;
     color: #ddd;
     background-color: #000;}
