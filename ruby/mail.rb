@@ -19,7 +19,7 @@ class R
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
-  GET['/msg'] = -> e,r{e.path=='/msg/' ? [303, {'Location' => '/'}, []] : nil}
+  GET['/msg'] = -> e,r{e.path.split('/').size < 4 ? [303, {'Location' => '/'}, []] : nil}
 
   AddrPath = ->address{ # address -> path
     address = address.downcase
