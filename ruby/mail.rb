@@ -198,12 +198,11 @@ class R
     threads.map{|title,post|
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir
-        container = dir.uri.t # container identity and location
-        cLoc = e.q['group'] ? a.R : dir.child((post[Date].do{|d|d[0]}||Time.now.iso8601)[0..6].sub('-','/').t).uri
-        item = {'uri' => '/thread/'+post.R.basename, Title => title.noHTML, Size => post[Size]} # thread
+        container = dir.uri.t # container
+        item = {'uri' => '/thread/' + post.R.basename, Title => title.noHTML, Size => post[Size]} # thread
         graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # add RDF labels
         post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-        graph[container] ||= {'uri' => cLoc,Type => R[Container], Label => a.R.fragment}
+        graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment}
         graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item }}}
 
