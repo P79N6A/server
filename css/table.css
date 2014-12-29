@@ -1,10 +1,27 @@
-table.tab {
-    background-color: #eee;
+table.tab {border-spacing: 0;}
+table.tab th a {
+    display: block;
+    text-decoration: none;
+}
+
+table.tab th a.this {
+    background-color: #0f0;
+    color: #fff;
+}
+
+table.tab th a.that {
+    background-color: #fff;
     color: #000;
 }
-table.tab td {
-    background-color: #fff;
+table.tab td {padding: .2em}
+table.tab td.this {
+    border-color: #0ff;
+    border-style: dotted;
+    border-width: .0em .1em .1em .0em;
+    text-align: right;
 }
+table.tab tr:nth-child(odd) td.this {background-color: #eef}
+table.tab tr:nth-child(even) td.this {background-color: #eff}
 table.tab td a {
     background-color: #000;
     color: #fff;
@@ -12,4 +29,5 @@ table.tab td a {
     text-decoration: none;
     white-space: nowrap;
 }
+
 table.tab td[property=uri] {max-width:42em;overflow:hidden}

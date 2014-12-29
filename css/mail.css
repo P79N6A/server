@@ -7,7 +7,7 @@ div.container {float: left}
 div.mail, pre.mail {max-width: 100ex;}
 pre.mail {white-space: pre-wrap;}
 pre.mail .q {display: block}
-pre.mail .q[depth="1"] {background-color:#fff;color:#000}
+pre.mail .q[depth="1"] {background-color:#f0f0f0;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
 pre.mail .q[depth="3"] {background-color:#033684;color:#fff}
 pre.mail .q[depth="4"] {background-color:#3F0F86;color:#fff}

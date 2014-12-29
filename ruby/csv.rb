@@ -23,13 +23,27 @@ class R
 
   TabularView = ViewGroup[CSVns+'Row'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+    sort = (e.q['sort']||'uri').expand
+    order = e.q.has_key?('reverse') ? :reverse : :id
     {_: :table, :class => :tab,
      c: [H.css('/css/table'),
          {_: :tr, c: keys.map{|k|
-            {_: :th, class: :label, property: k, c: {_: :a, href: e.q.merge({'sort' => k.shorten}).qs, c: k.R.abbr}}}},
-         g.resources(e).map{|e|
+            this = sort == k
+            q = e.q.merge({'sort' => k.shorten})
+            if order == :reverse
+              q.delete 'reverse'
+            else
+              q['reverse'] = ''
+            end
+            {_: :th, class: :label, property: k,
+             c: {_: :a,
+                 class: this ? :this : :that,
+                  href: q.qs,
+                     c: k.R.abbr}}}},
+         g.resources(e).send(order).map{|e|
            {_: :tr, about: e.uri, c: keys.map{|k|
-              {_: :td, property: k,
+              this = sort == k
+              {_: :td, property: k, class: this ? :this : :that,
                c: k=='uri' ? e.R.do{|r|
                                {_: :a, href: r.uri, c: e[Title]||e[Label]||r.basename}
                              } : e[k].html}}}}.cr]}}
