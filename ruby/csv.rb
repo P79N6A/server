@@ -26,13 +26,12 @@ class R
     {_: :table, :class => :tab,
      c: [H.css('/css/table'),
          {_: :tr, c: keys.map{|k|
-            {_: :th, class: :label, property: k, c:  k.R.abbr}}},
+            {_: :th, class: :label, property: k, c: {_: :a, href: e.q.merge({'sort' => k.shorten}).qs, c: k.R.abbr}}}},
          g.resources(e).map{|e|
            {_: :tr, about: e.uri, c: keys.map{|k|
               {_: :td, property: k,
                c: k=='uri' ? e.R.do{|r|
                                {_: :a, href: r.uri, c: e[Title]||e[Label]||r.basename}
-                             } : e[k].html}}}}.cr
-        ]}}
+                             } : e[k].html}}}}.cr]}}
 
 end

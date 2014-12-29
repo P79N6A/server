@@ -4,7 +4,8 @@ body, pre.mail {
 div.mail, div.container {clear:both}
 div.mail {float: right}
 div.container {float: left}
-pre.mail {max-width: 115ex;white-space: pre-wrap;}
+div.mail, pre.mail {max-width: 100ex;}
+pre.mail {white-space: pre-wrap;}
 pre.mail .q {display: block}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
@@ -38,6 +39,7 @@ a[rel=untyped], a.create, a.msg, a.to, a.discussion, .noquote {
     background-color:#fff;
     font-size: 1.18em;
     font-weight: bold;}
+img {max-width: 100%}
 svg {
     position: fixed;
     top: 0;
