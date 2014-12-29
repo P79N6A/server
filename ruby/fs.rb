@@ -4,7 +4,7 @@ class R
 
   def triplrDir
     yield uri, Type, R[Directory]
-    yield uri, Stat+'mtime', mtime.to_i
+    yield uri, Date, mtime.iso8601
     contained = c
     yield uri, Size, contained.size
     if contained.size <= 32

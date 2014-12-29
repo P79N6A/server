@@ -20,8 +20,8 @@ table.tab td.this {
     border-width: .0em .1em .1em .0em;
     text-align: right;
 }
-table.tab tr:nth-child(odd) td.this {background-color: #eef}
-table.tab tr:nth-child(even) td.this {background-color: #eff}
+table.tab tr:nth-child(odd) td.this {background-color: #eef;color:#000}
+table.tab tr:nth-child(even) td.this {background-color: #fff;color:#000}
 table.tab td a {
     background-color: #000;
     color: #fff;
@@ -29,5 +29,5 @@ table.tab td a {
     text-decoration: none;
     white-space: nowrap;
 }
-
+table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property=uri] {max-width:42em;overflow:hidden}
