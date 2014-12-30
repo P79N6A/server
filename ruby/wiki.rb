@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   def buildDoc
@@ -21,7 +21,7 @@ class R
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
-  ViewGroup['#editor'] = -> graph, e { # edit resource in a <form>
+  ViewGroup['#newEntry'] = ViewGroup['#editor'] = -> graph, e { # edit resource in a <form>
 
     fragment = e.q['fragment'].do{|s|s.slugify} || '' # fragment-id
     subject = s = e.uri + '#' + fragment              # URI

@@ -37,7 +37,7 @@ class R
 
   def response
     set = []
-    m = {'' => {'uri' => uri, Type => R[LDP+'Resource']}}
+    m = {'' => {'uri' => uri, Type => [R[LDP+'Resource']]}}
     s = q['set']
     rs = ResourceSet[s]
     fs = FileSet[s]
@@ -62,11 +62,8 @@ class R
       if set.size==1 && @r.format == set[0].mime # direct pass-through of file
         set[0]
       else
-
-        graph = -> {
-          set.map{|r|r.setEnv(@r).nodeToGraph m}
+        graph = -> { set.map{|r|r.setEnv(@r).nodeToGraph m}
           Mutate[m,@r]; m}
-
         if NonRDF.member? @r.format
           Render[@r.format][graph[], @r]
         else
@@ -74,8 +71,7 @@ class R
             g = graph[].toRDF
           else
             g = RDF::Graph.new
-            set.map{|f|
-              f.setEnv(@r).justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
+            set.map{|f| f.setEnv(@r).justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end
           @r[:Response][:Triples] = g.size.to_s
           g.dump (RDF::Writer.for :content_type => @r.format).to_sym,:base_uri => self,:standard_prefixes => true,:prefixes => Prefixes

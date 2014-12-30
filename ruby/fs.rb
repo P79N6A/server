@@ -90,7 +90,8 @@ class R
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
       this[Prev] = {'uri' => pp+q} if R['//' + e.env['SERVER_NAME'] + pp].e
       this[Next] = {'uri' => np+q} if R['//' + e.env['SERVER_NAME'] + np].e}
-    if e.env[:container] # contained set
+    if e.env[:container]
+      this[Type].push R['#newEntry'] if q.has_key? 'new'
       e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
     else
       e.fileResources
