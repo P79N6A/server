@@ -51,10 +51,10 @@ class R
     form = Rack::Request.new(@r).params
     return [400,{},['fragment field missing']] unless form['fragment']
     t = form[Title]
-    doc = @r[:container] ? ( uri.t + Time.now.iso8601.sub('-','/')+'/'+(t && !t.empty? && t.slugify || rand.to_s.h[0..7])) : uri
-    s = doc + '#' + form['fragment'].slugify # subject URI
-    graph = {s => {'uri' => s}}              # Hash graph
-    form.keys.-(['fragment']).map{|p| # form-fields to graph
+    loc = @r[:container] ? ( uri.t + Time.now.iso8601.sub('-','/')+'/'+(t && !t.empty? && t.slugify || rand.to_s.h[0..7])) : uri
+    s = loc + '#' + form['fragment'].slugify # subject URI
+    graph = {s => {'uri' => s}}              # graph
+    form.keys.-(['fragment']).map{|p|        # form-data to graph
       o = form[p]
       o = if o.match HTTP_URI
             o.R
@@ -68,12 +68,12 @@ class R
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp
     path = s.R.fragmentPath      # storage path
     doc = path + '/' + ts + '.e' # storage URI
-    doc.w graph, true            # store
+    doc.w graph, true            # write
     cur = path.a '.e'            # canonical URI
     cur.delete if cur.e          # unlink obsolete
     doc.ln cur                   # link current
-    buildDoc                     # update doc
-    [303,{'Location'=>uri+'?edit'},[]]
+    buildDoc                     # update containing-doc
+    [303,{'Location' => loc},[]]
   end
 
 end
