@@ -31,8 +31,7 @@ class R
     paths = justPath.cascade
     [@r['SERVER_NAME'],""].map{|h|
       paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| # search for handlers
-        return r }}}} # bespoke handler found
-
+        return r }}}} # bespoke handler
     response # default handler
   end
 
@@ -49,7 +48,7 @@ class R
 
     if set.empty?
       if q.has_key? 'new'
-        @r[:new] = true
+        m['#'] = {Type => R[q.has_key?('type') ? '#editor' : '#typeSelector']}
       else
         return E404[self,@r,m]
       end

@@ -1,3 +1,4 @@
+# coding: utf-8
 #watch __FILE__
 class R
 
@@ -16,11 +17,11 @@ class R
     SIOCt+'WikiArticleSection',
   ]
 
-  ViewA['#newType'] = -> graph, e {
+  ViewGroup['#typeSelector'] = -> graph, e {
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
-  ViewA['#editable'] = -> graph, e { # edit resource in a <form>
+  ViewGroup['#editor'] = -> graph, e { # edit resource in a <form>
 
     fragment = e.q['fragment'].do{|s|s.slugify} || '' # fragment-id
     subject = s = e.uri + '#' + fragment              # URI

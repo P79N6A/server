@@ -86,7 +86,7 @@ class R
   end
 
   def bindHost
-    return self if !hierPart.match(/^\//)
+    return self if !@r || !hierPart.match(/^\//)
     R[(lateHost.join uri).to_s]
   end
   def lateHost; R[@r['rack.url_scheme']+'://'+@r['SERVER_NAME']+'/'] end

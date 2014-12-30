@@ -1,3 +1,4 @@
+# coding: utf-8
 #watch __FILE__
 class R
 
@@ -11,8 +12,8 @@ class R
   def R.call e
     method = e['REQUEST_METHOD']
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
-    e.extend Th # add environment utils
-    dev         # check for updated-source
+    e.extend Th # environment util-functions
+    dev         # check for updated source-code
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}   # canonical hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/,'.' # clean hostname
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/' # clean path
@@ -22,9 +23,9 @@ class R
     e['uri'] = resource.uri                                # canonical URI to environment
     e[:Links] = [] ; e[:Response] = {}                     # response metadata
 #    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # log request
-    resource.setEnv(e).send(method).do{|s,h,b| # run request and inspect response
+    resource.setEnv(e).send(method).do{|s,h,b| # call into request and inspect response
       R.log e,s,h,b # log response
-      [s,h,b] } # return response
+      [s,h,b]} # return response
   rescue Exception => x
     E500[x,e]
   end
@@ -42,7 +43,6 @@ class R
       Stats[:format][mime] += 1}
     puts [ e['REQUEST_METHOD'], s, '<'+e.uri+'>', h['Location'], '<'+e.user+'>', e['HTTP_REFERER'], mime
          ].compact.map(&:to_s).map(&:to_utf8).join ' '
-
   end
 
   E500 = -> x,e {
@@ -50,7 +50,6 @@ class R
              Title => [x.class, x.message].join(' '),
              Content => '<pre>' + x.backtrace.join("\n").noHTML + '<pre>'}
     graph = {e.uri => error}
-
     Stats[:status][500] ||= 0
     Stats[:status][500]  += 1
     Stats[:error][error]||= 0
@@ -61,6 +60,23 @@ class R
     [500,{'Content-Type' => e.format},
      [Render[e.format].do{|p|p[graph,e]} ||
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+
+  ViewGroup[LDP+'Resource'] = -> g,env {
+    [H.css('/css/page', true), H.js('/js/pager', true),
+    ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
+     {_: :a, class: :cube, href: '??', c: {_: :img, src: '/css/misc/cube.png'}},
+     g.map{|u,r|ViewA[LDP+'Resource'][r,env]}]}
+
+  ViewA[LDP+'Resource'] = -> u,e {
+    label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
+    prev = u[Prev]
+    nexd = u[Next]
+    [Prev,Next,Type].map{|p|u.delete p}
+    [prev.do{|p|
+       {_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
+     nexd.do{|n|
+       {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
+    (ViewA[Resource][u,e] unless u.keys.size==1)]}
 
   ServerInfo = -> e,r{   g = {}
     r.q['sort'] ||= 'stat:size'

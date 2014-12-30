@@ -69,31 +69,6 @@ class R
      end
     ]}
 
-  ViewGroup[LDP+'Resource'] = -> g,env {
-    [H.css('/css/page', true),
-     H.js('/js/pager', true),
-    ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
-    (if env[:new]
-     if !env.q.has_key?('type')
-       ViewA['#newType'][g,env]
-     else
-       ViewA['#editable'][g,env]
-     end
-     end),
-     g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
-     {_: :a, class: :cube, href: '??', c: {_: :img, src: '/css/misc/cube.png'}}]}
-
-  ViewA[LDP+'Resource'] = -> u,e {
-    label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
-    prev = u[Prev]
-    nexd = u[Next]
-    [Prev,Next,Type].map{|p|u.delete p}
-    [prev.do{|p|
-       {_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
-     nexd.do{|n|
-       {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
-    (ViewA[Resource][u,e] unless u.keys.size==1)]}
-
   Tabulator = -> r,e {
     src = '//linkeddata.github.io/tabulator/'
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
