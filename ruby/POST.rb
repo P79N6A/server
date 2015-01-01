@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -51,7 +51,8 @@ class R
     form = Rack::Request.new(@r).params
     return [400,{},['fragment field missing']] unless form['fragment']
     t = form[Title]
-    loc = @r[:container] ? ( uri.t + Time.now.iso8601.sub('-','/')+'/'+(t && !t.empty? && t.slugify || rand.to_s.h[0..7])) : uri
+    slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
+    loc = @r[:container] ? (uri.t + Time.now.iso8601.gsub('-','/')+'/'+slug) : uri
     s = loc + '#' + form['fragment'].slugify # subject URI
     graph = {s => {'uri' => s}}              # graph
     form.keys.-(['fragment']).map{|p|        # form-data to graph
