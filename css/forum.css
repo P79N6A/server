@@ -1,66 +1,11 @@
-body {
-    background-color:#eee;
-    color: #000;
+.forum {
+
 }
 
-a {
-    text-decoration: none;
-}
-
-img {
-    float: left;
-    margin-right: .25em;
-}
-
-a.forum {
-    float: left;
-    border: .1em dotted #888;
-    text-decoration: none;
-}
-
-.thread {
-    max-width: 40em;
-    margin: auto;
-    padding-top:.5em;
-    clear:both;
-    border-width: 0 0 .1em 0;
-    border-style: dotted;
-    border-color:#000;
-}
-
-.thread .title {
-    font-size: 1.2em;
-}
-
-.thread .time {
-    font-size: .95em;
-    float: right;
-    color: #666;
-}
-
-.subforum .post {
-    float: right;
-    clear: both;
-}
-
-.post {
-    background-color:#fff;
-    max-width: 80ex;
-    margin: .3em;
-    padding-right: .25em;
-    white-space: pre-wrap;
-}
-
-.post .date {
-    font-size: .9em;
-    float: right;
-    color: #aaa;
-    margin-right: -.2em;
-}
-
-a.makepost {
+.forum .new {
+    background-color: #0f0;
     color: #fff;
-    background-color:#4f4;
-    padding: .2em;
     border-radius: .5em;
+    padding: 0 .4em 0 .2em;
+    text-decoration: none;
 }
