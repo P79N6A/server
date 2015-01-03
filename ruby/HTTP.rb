@@ -80,6 +80,7 @@ class R
 
   ServerInfo = -> e,r{   g = {}
     r.q['sort'] ||= 'stat:size'
+
     Stats.map{|sym, table|
       group = e.uri + '#' + sym.to_s
       g[group] = {'uri' => group,
@@ -107,6 +108,12 @@ class R
                             end
 
                     {'uri' => uri, Title => title, Stat+'size' => count }}}}
+
+    g['#storage'] = {
+         Type => R[Resource],
+      Content => ['<pre>',
+                  `df -TBM -x tmpfs -x devtmpfs`,
+                  '</pre>']}
 
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
