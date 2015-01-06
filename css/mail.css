@@ -23,22 +23,17 @@ pre.mail .q[depth="13"] {background-color:#f00;color:#fff}
 pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 
-.mail .title {font-weight: bold}
+.mail .title, a[name], a.to {font-weight: bold}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .ts {
     color: #eee;
     font-size:.92em;
 }
-.noquote {font-size: 2em}
-body, .mail .title, .mail .create, .mail .discussion, .mail a.msg, .noquote {
+.noquote {font-size: 2em;margin: 0 .5em 0 .5em}
+body, .mail .title, .mail .create, .mail .discussion, .mail a.msg, a[name], a.to, .noquote {
     color: #fff;
     background-color: #000;}
-a[name], a.to {
-    font-weight: bold;
-    color: #ddd;
-    background-color: #000;}
-a[rel=untyped], a.create, a.msg, a.to, a.discussion, a.ts, .noquote {
-    text-decoration:none}
+a[rel=untyped], a.create, a.msg, a[name], a.to, a.discussion, a.ts, .noquote {text-decoration:none}
 .mail a[rel=untyped] {
     color: #000;
     background-color:#fff;
