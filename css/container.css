@@ -1,12 +1,12 @@
-.container {
+.containers {
     font-family: sans-serif;
-    display: inline-block;
-    vertical-align: top;
-    margin: 0 .2em .8em 0;
+    text-align: center;
 }
-
-.container form, .container input {display: inline-block}
-
+.container {
+    text-align: left;
+    vertical-align: top;
+    display: inline-block;
+}
 .container a {text-decoration: none;}
 
 .container .size {

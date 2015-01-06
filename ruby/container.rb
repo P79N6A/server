@@ -63,9 +63,10 @@ class R
      if env[:ls]
        TabularView[d,env]
      else
-     d.resources(env).group_by{|r|r.R.path||path}.map{|group,resources|
-        resources.map{|r|
-          [ViewA[Container][r,env,d], {_: :p, class: :space}]}}
+       {class: :containers,
+        c: d.resources(env).group_by{|r|r.R.path||path}.map{|group,resources|
+          resources.map{|r|
+            [ViewA[Container][r,env,d], {_: :p, class: :space}]}}}
      end
     ]}
 
