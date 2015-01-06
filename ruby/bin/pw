@@ -14,13 +14,13 @@ when 'varnish'
   ARGV.unshift *%w{-p 8080 -a 127.0.0.1}
 when 'apache'
   ARGV.shift
-  ENV['apache']='y' # apache-specific sendfile response
+  ENV['apache']='y' # apache-specific sendfile headers
 when /^(lo|local)$/
   ARGV.shift
   ARGV.unshift *%w{-p 80 -a 127.0.0.1}
 when 'nginx'
   ARGV.shift
-  ENV['nginx']='y' # nginx-specific file response
+  ENV['nginx']='y' # nginx-specific
 when 'ssl'
   ARGV.shift
   ARGV.unshift *%w{--ssl -p 443 --ssl-key-file /etc/ssl/localcerts/server.key --ssl-cert-file /etc/ssl/localcerts/server.crt}
