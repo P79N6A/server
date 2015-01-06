@@ -1,8 +1,5 @@
-body, pre.mail {
-    background-color:#000;
-    color:#fff; margin:0;}
 div.mail {margin: auto}
-div.mail, pre.mail {max-width: 100ex;}
+div.mail, pre.mail {max-width: 80em;}
 pre.mail {white-space: pre-wrap}
 pre.mail .q[depth="1"] {background-color:#f0f0f0;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
@@ -27,7 +24,7 @@ pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
     margin-right: 20%;
 }
 .noquote {font-size: 2em}
-.mail .title, .mail .create, .mail .discussion, .mail a.msg, .noquote {
+body, .mail .title, .mail .create, .mail .discussion, .mail a.msg, .noquote {
     color: #fff;
     background-color: #000;}
 a[name], a.to {
@@ -46,7 +43,7 @@ svg {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: -1;}
+}
 .link {
     fill: none;
     stroke: #777;

@@ -14,14 +14,14 @@ links.forEach(function(link) { // unique nodes from arc-list
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([360,768])
+    .size([387,768])
     .linkDistance(18)
     .charge(-250)
     .on("tick", tick)
     .start();
 
 var svg = d3.select("body").append("svg")
-    .attr("width", 480)
+    .attr("width", 512)
     .attr("height", 768);
 
 document.querySelector("body").addEventListener("click", function(e){ // toggle SVG focus
