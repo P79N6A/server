@@ -27,7 +27,7 @@ var svg = d3.select("body").append("svg")
 document.querySelector("body").addEventListener("click", function(e){ // toggle SVG focus
     if (e.target.nodeName=='BODY'||e.target.nodeName=='svg'){
 	var s = document.querySelector('svg')
-	s.style.zIndex = s.style.zIndex == 2 ? -1 : 2
+	s.style.zIndex = s.style.zIndex == -1 ? 2 : -1
     }
 },false);
 

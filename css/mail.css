@@ -1,5 +1,5 @@
 div.mail {margin: auto}
-div.mail, pre.mail {max-width: 80em;}
+div.mail, pre.mail {max-width: 64em;}
 pre.mail {white-space: pre-wrap}
 pre.mail .q[depth="1"] {background-color:#f0f0f0;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
