@@ -6,6 +6,7 @@
     text-align: left;
     vertical-align: top;
     display: inline-block;
+    margin-bottom: .5em;
 }
 .container a {text-decoration: none;}
 

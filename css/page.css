@@ -7,7 +7,6 @@ body > a.id {
 }
 
 a.up, a[rel=next], a[rel=prev]{
-    font-size: 1.35em;
     max-width: 46%;
     overflow: hidden;
     text-decoration: none;
