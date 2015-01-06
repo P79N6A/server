@@ -1,4 +1,7 @@
-table.tab {border-spacing: 0;}
+table.tab {
+    border-spacing: 0;
+    margin: auto;
+}
 table.tab th a {
     display: block;
     text-decoration: none;
@@ -14,12 +17,6 @@ table.tab th a.that {
     color: #000;
 }
 table.tab td {padding: .2em}
-table.tab td.this {
-    border-color: #0ff;
-    border-style: dotted;
-    border-width: .0em .1em .1em .0em;
-    text-align: right;
-}
 table.tab tr:nth-child(odd) td.this {background-color: #eef;color:#000}
 table.tab tr:nth-child(even) td.this {background-color: #fff;color:#000}
 table.tab td a {
