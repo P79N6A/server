@@ -26,12 +26,10 @@ class R
     fragment = e.q['fragment'].do{|s|s.slugify} || '' # fragment-id
     subject = s = e.uri + '#' + fragment              # URI
     model = graph[subject] || {'uri' => subject}      # resource state
-
-    type = model[Type].do{|t|t[0].uri} ||             # bind resource-type
-           e.q['type'].do{|t|t.expand} ||
-           SIOCt+'WikiArticle'
-
-    [Title,Content].map{|p| model[p] ||= p == Title ? e.R.basename : "" }
+    e.q['type'].do{|t|
+      model[Type] ||= t.expand.R}
+    model[Title] ||= ''
+    model[Content] ||= ''
 
     [H.css('/css/html'), H.css('/css/wiki'), # View
      {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
@@ -40,12 +38,14 @@ class R
                      c: [{_: :a, class: :uri, c: s, href: s},
                          {_: :a, class: :history, c: 'history', href: R[s].fragmentPath + '?set=page'}
                         ]}},
-                 model.keys.-(['uri',Type]).map{|p|
+                 model.keys.-(['uri']).map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.abbr}},
                          {_: :td, c: model[p].do{|o|
                              o.justArray.map{|o|
                                case p
+                               when Type
+                                 o.R.href
                                when Content
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when Date
@@ -53,7 +53,6 @@ class R
                                else
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
                                end }}}].cr}}].cr},
-           {_: :input, type: :hidden, name: Type, value: type},
            {_: :input, type: :hidden, name: :fragment, value: fragment},
            {_: :input, type: :submit, value: 'write'}].cr}]}
 

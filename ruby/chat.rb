@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def triplrIRC &f
@@ -62,7 +62,7 @@ class R
   ViewA[SIOC+'Forum'] = -> r,e {
     re = r.R.stripFrag
     {class: :forum, c: [{_: :h1, c: {_: :a, href: re.uri, c: r[Title]}},
-      {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post to #{re.basename}"}]}}
+      {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post on #{re.basename}"}]}}
 
   ViewA[SIOCt+'InstantMessage'] = ViewA[SIOCt+'MicroblogPost'] = -> r,e {
     [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
