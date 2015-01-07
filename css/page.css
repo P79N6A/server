@@ -12,9 +12,10 @@ a.up, a[rel=next], a[rel=prev]{
     text-decoration: none;
     margin: .2em;
     background-color: #fff;
+    color: #000;
 }
 a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
-a.up {float: left;font-size: 2.2em;color: #000;}
+a.up {float: left;font-size: 2.2em}
 a.cube {float: right; margin: .2em}
-a[rel=prev] {float:left; color: #888;}
-a[rel=next] {float:right;color: #444;}
+a[rel=prev] {float:left}
+a[rel=next] {float:right}
