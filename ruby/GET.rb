@@ -82,7 +82,7 @@ class R
   def condResponse body
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])
-      [304, @r[:Response], []]
+      [304, {}, []]
     else
       body = body.call
       @r[:Status] ||= 200
