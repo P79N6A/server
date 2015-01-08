@@ -1,4 +1,4 @@
-PW   serve a POSIX filesystem as RDF and HTML over HTTP
+PW   serve a POSIX filesystem as RDF+HTML using HTTP
 
 USAGE  thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
        unicorn -r./ruby/constants -p 80 ruby/httpd.ru
@@ -17,6 +17,7 @@ SETUP
  mkdir domain/localhost
 
 CLEANUP
-  rm -rf cache \ # cached RDF-transcodes and image-thumbnails
-         index \ # filesystem-based triple-index
-      address msg # browsable meta-paths for email
+  rm -rf cache # cached RDF-transcodes and image-thumbnails
+         index # filesystem-based triple-index
+         address msg # browsable meta-paths for email
+ 
