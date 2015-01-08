@@ -61,7 +61,8 @@ class R
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   ViewGroup[LDP+'Resource'] = -> g,env {
-    paged = g.values.find{|r|r[Next]||r[Prev]}
+    paged = g.values.find{|r| r[Next] ||
+                              r[Prev] }
     [H.css('/css/page', true),
      (H.js('/js/pager', true) if paged),
     ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
