@@ -62,7 +62,8 @@ class R
 
   ViewGroup[LDP+'Resource'] = -> g,env {
     paged = g.values.find{|r|r[Next]||r[Prev]}
-    [([H.css('/css/page', true), H.js('/js/pager', true)] if paged),
+    [H.css('/css/page', true),
+     (H.js('/js/pager', true) if paged),
     ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
      {_: :a, class: :cube, href: '??', c: {_: :img, src: '/css/misc/cube.png'}},
      g.map{|u,r|ViewA[LDP+'Resource'][r,env]}]}
