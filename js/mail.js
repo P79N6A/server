@@ -40,7 +40,7 @@ svg.append('svg:defs').append('svg:marker')
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#999');
+    .attr('fill', '#ccc');
 
 var link = svg.selectAll(".link")
     .data(force.links())

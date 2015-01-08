@@ -91,7 +91,6 @@ class R
       this[Prev] = {'uri' => pp+qs} if R['//' + e.env['SERVER_NAME'] + pp].e
       this[Next] = {'uri' => np+qs} if R['//' + e.env['SERVER_NAME'] + np].e}
     if e.env[:container]
-      this[Type].push R['#editor'] if q.has_key? 'new'
       e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
     else
       e.fileResources
