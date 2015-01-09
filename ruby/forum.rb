@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
   ViewGroup[SIOC+'Forum'] = -> g,e {
@@ -11,5 +12,13 @@ class R
      c: [{_: :a, class: :title, href: re.uri, c: title},' ',
          {_: :span, class: :desc, c: r[Content]},'<br>',
       {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post on #{title}"}]}}
+
+  ViewGroup[SIOCt+'BoardPost'] = -> g,e {
+    g.values.map{|r|ViewA[SIOCt+'BoardPost'][r,e]}
+  }
+  
+  ViewA[SIOCt+'BoardPost'] = -> r,e {
+    r.html
+  }
 
 end

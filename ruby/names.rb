@@ -97,7 +97,8 @@ class R
   end
 
   def fragmentPath
-    docroot + '/.' + (!fragment || fragment.empty? && '_' || fragment)
+    f = fragment
+    docroot + '/.' + ((!f || f.empty?) ? '-' : f)
   end
 
   def fragments
