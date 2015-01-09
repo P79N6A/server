@@ -45,7 +45,7 @@ class R
                              o.justArray.map{|o|
                                case p
                                when Type
-                                 o.R.href
+                                 [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]
                                when Content
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when Date

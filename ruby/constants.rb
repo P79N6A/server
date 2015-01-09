@@ -116,6 +116,7 @@ csv
 DELETE
 fs
 GET
+forum
 graph
 HEAD
 HTML
