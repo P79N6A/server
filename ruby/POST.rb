@@ -53,10 +53,16 @@ class R
     return [400,{},['fragment field missing']] unless form['fragment']
     t = form[Title]
     slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
-    loc = @r[:container] ? (uri.t + Time.now.iso8601.gsub('-','/').gsub(/[:+]/,'')+'/'+slug) : uri
-    puts "POST #{uri} -> #{loc}"
+    loc = if @r[:container]
+            uri.t + Time.now.iso8601.gsub('-','/').gsub(/[:+]/,'') + '/' + slug
+          else
+            uri
+          end
     s = loc + '#' + form['fragment'].slugify # subject URI
     graph = {s => {'uri' => s}}              # graph
+    if @r[:container]
+      graph[s][SIOC+'has_container'] = self
+    end
     form.keys.-(['fragment']).map{|p|        # form-data to graph
       o = form[p]
       o = if o.match HTTP_URI
