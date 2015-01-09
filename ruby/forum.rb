@@ -6,7 +6,10 @@ class R
 
   ViewA[SIOC+'Forum'] = -> r,e {
     re = r.R.stripFrag
-    {class: :forum, c: [{_: :h1, c: {_: :a, href: re.uri, c: r[Title]}},
-      {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post on #{re.basename}"}]}}
+    title = r[Title][0]
+    {class: :forum,
+     c: [{_: :a, class: :title, href: re.uri, c: title},' ',
+         {_: :span, class: :desc, c: r[Content]},'<br>',
+      {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post on #{title}"}]}}
 
 end

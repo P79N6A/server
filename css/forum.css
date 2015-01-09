@@ -1,11 +1,13 @@
 .forum {
 
 }
+.forum .title {font-size: 2em;color: #000;background-color:#fff}
 
 .forum .new {
-    background-color: #0f0;
+    background-color: #0c0;
     color: #fff;
     border-radius: .5em;
+    margin: .5em;
     padding: 0 .4em 0 .2em;
     text-decoration: none;
 }
