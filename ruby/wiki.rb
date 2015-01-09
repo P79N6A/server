@@ -5,7 +5,6 @@ class R
   def buildDoc
     graph = {}
     fragments.map{|f| f.nodeToGraph graph}
-    puts "buildoc #{uri} -> #{jsonDoc.uri}"
     jsonDoc.w graph, true
   end
  
