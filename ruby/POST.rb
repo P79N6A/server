@@ -5,7 +5,7 @@ class R
     return [403,{},[]] if !allowWrite
     @r[:container] = true if directory?
 
-    [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p| # bespoke handler
+    [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p| # bespoke POST handler
         POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
 
     case @r['CONTENT_TYPE']
@@ -14,14 +14,14 @@ class R
     when /^multipart\/form-data/
       filePOST
     when /^text\/(n3|turtle)/
-      dataPOST
+      rdfPOST
 
     else
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
   end
 
-  def dataPOST
+  def rdfPOST
     if @r.linkHeader['type'] == Container
       path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
       path.PUT
@@ -39,11 +39,12 @@ class R
     p = (Rack::Request.new env).params
     if file = p['file']
       FileUtils.cp file[:tempfile], child(file[:filename]).pathPOSIX
-      file[:tempfile].unlink # free tmpfile
+      file[:tempfile].unlink
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
     end
-  rescue
+  rescue Exception => x
+    puts x
     [400,{},[]]
   end
 
