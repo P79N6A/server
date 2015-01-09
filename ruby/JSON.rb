@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  module Format # Reader class for JSON format
+  module Format # RDF parser for our JSON format
 
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
@@ -48,10 +48,6 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  Render['application/json'] = -> d,e {
-    JSONview[e.q['view']].do{|f|
-      f[d,e]
-    } ||
-    d.to_json }
+  Render['application/json'] = -> d,e { d.to_json }
 
 end

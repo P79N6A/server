@@ -14,7 +14,7 @@ class R
 19:10 [     _abc_] Sounds like Perl
 =end
       l.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
-        s = doc + '#' + doc + ':' + (i+=1).to_s
+        s = doc + '#' + (i+=1).to_s
         yield s, Date,                day+'T'+m[0]+':'+m[1]+':00'
         yield s, SIOCt+'ChatChannel', channel
         yield s, Creator,             m[2]
@@ -67,9 +67,10 @@ class R
   ViewA[SIOCt+'InstantMessage'] = ViewA[SIOCt+'MicroblogPost'] = -> r,e {
     [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
      r[Creator].do{|c|
+       re = r.R
        name = c[0].respond_to?(:uri) ? (c[0].R.fragment || c[0].R.basename) : c[0].to_s
        e[:creators][name] = R.cs
-       {_: :a, href: r.uri, creator: name, c: name }}," ", r[Content],"<br>\n"]}
+       {_: :a, href: re.fragment.do{|f|'#'+f} || r.uri, id: re.fragment, creator: name, c: name }}," ", r[Content],"<br>\n"]}
 
   ViewGroup[SIOCt+'InstantMessage'] = -> d,e {
     e.q['a'] = 'sioct:ChatChannel,sioc:has_creator'

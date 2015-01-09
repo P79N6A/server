@@ -71,7 +71,7 @@ class R
 
   def stripFrag; R uri.split(/#/)[0] end
 
-  def stripDoc;  R uri.sub /\.(e|ht|html|md|n3|ttl|txt)$/, '' end
+  def stripDoc;  R uri.sub /\.(e|ht|html|json|md|n3|ttl|txt)$/, '' end
 
   def stripSlash
     if uri[-1] == '/'

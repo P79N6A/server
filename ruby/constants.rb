@@ -95,7 +95,6 @@ class R < RDF::URI
   Render = {}
   ViewA = {}
   ViewGroup = {}
-  JSONview = {}
   Watch = {}
   GET = {}
   POST = {}
