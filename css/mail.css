@@ -20,7 +20,8 @@ pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 .mail .title, a[name], a.to {font-weight: bold}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .ts {color: #eee;font-size:.92em;}
-.noquote {font-size: 2em;margin: 0 .5em 0 .5em}
+.noquote {font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em}
+.noquote:hover {background-color: #333}
 body, .mail .title, .mail .create, .mail .discussion, .mail a.msg, a[name], a.to, .noquote {font-family: sans-serif;color: #fff}
 a[rel=untyped], a.create, a.msg, a[name], a.to, a.discussion, a.ts, .noquote {text-decoration:none}
 .mail a[rel=untyped] {color: #000;background-color:#fff; font-size: 1.18em; font-weight: bold;}

@@ -109,14 +109,15 @@ class R
     }.map{|p|
       yield e, Content,
       H({_: :pre, class: :mail,
-          c: p.decoded.to_utf8.gsub(/^(\s*>)+\n/,"").lines.to_a.map{|l| # sweep empty quotes
-           if qp = l.match(/^(\s*[>|])+/) # quote
-             {_: :span, class: :q, depth: qp[0].scan(/[>|]/).size, c: l.hrefs}
+          c: p.decoded.to_utf8.gsub(/^(\s*>)+\n/,"").lines.to_a.map{|l|
+           l = l.chomp
+           [if qp = l.match(/^(\s*[>|])+/) # quote
+            {_: :span, class: :q, depth: qp[0].scan(/[>|]/).size, c: l.hrefs}
            elsif l.match(/^(At|On)\b.*wrote:$/)
              {_: :span, class: :q, depth: 1, c: l.hrefs}
            else
              {_: :span, class: :nq, c: l.hrefs(true)} # only show images in unquoted original content
-           end }})}
+           end,"\n"]}})}
     
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 
@@ -216,10 +217,8 @@ class R
     if noquote # toggle quoted-content
       q.delete 'noquote'
       d.map{|u,r|
-        r[Content] = r[Content].justArray.map{|content|
-          c = Nokogiri::HTML.fragment content
-          c.css('span.q').remove
-          R.trimLines c.to_xhtml.gsub /\n\n\n+/, "\n\n" }}
+        r[Content] = r[Content].justArray.map{|c|
+          c.lines.map{|l|l.match(/<span class='q'/) ? "" : l}.join}}
     else
       q['noquote'] = ''
     end

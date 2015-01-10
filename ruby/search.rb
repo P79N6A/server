@@ -114,20 +114,6 @@ class R
      d.values.map{|i|
        ViewA[Search+'Input'][i,e]}]}
 
-  def R.trimLines text
-    text.lines.map{|l| R.blacklist[l.h] ? "" : l}.join
-  end
-
-  def R.blacklist
-    @blacklist ||=
-      (b = 'index/blacklist.txt'.R
-       if b.exist?
-         Hash[b.r.lines.map{|l|[l.h,true]}]
-       else
-         {}
-       end)
-  end
-
   Facets = -> m,e {
     a = Hash[((e.q['a']||'sioct:ChatChannel').split ',').map{|a|
                [a.expand,{}]}]
