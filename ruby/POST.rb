@@ -63,7 +63,7 @@ class R
     if @r[:container]
       graph[s][SIOC+'has_container'] = self
     end
-    form.keys.-(['fragment']).map{|p|        # form-data to graph
+    form.keys.-(['contained','fragment']).map{|p| # add form-data to graph
       o = form[p]
       o = if o.match HTTP_URI
             o.R

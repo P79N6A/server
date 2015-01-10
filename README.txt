@@ -19,5 +19,4 @@ SETUP
 CLEANUP
   rm -rf cache # cached RDF-transcodes and image-thumbnails
          index # filesystem-based triple-index
-         address msg # browsable meta-paths for email
  
