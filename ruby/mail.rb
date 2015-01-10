@@ -115,7 +115,7 @@ class R
            elsif l.match(/^(At|On)\b.*wrote:$/)
              {_: :span, class: :q, depth: 1, c: l.hrefs}
            else
-             l.hrefs true
+             {_: :span, class: :nq, c: l.hrefs(true)} # only show images in unquoted original content
            end }})}
     
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
@@ -240,14 +240,14 @@ class R
 
     [H.css('/css/mail',true),
      {_: :style,
-      c: colors.map{|name,c|
-        "a[name=\"#{name}\"] {color: #{c}}\n"}},
+      c: colors.map{|name,c| "a[name=\"#{name}\"] {color: #{c}}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
-     d.resources(e).reverse.map{|r|
-       [{class: :mail, id: r.uri, c: [
+     d.resources(e).reverse.map{|r| # show message
+       [{class: :mail, id: r.uri,
+         c: [
           r[Title].do{|t|
             title = t[0].sub ReExpr, ''
-            if titles[title]
+            if titles[title] # only shop topic if changed
               nil
             else
               titles[title] = true
