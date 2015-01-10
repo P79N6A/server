@@ -17,6 +17,6 @@ SETUP
  mkdir domain/localhost
 
 CLEANUP
-  rm -rf cache # cached RDF-transcodes and image-thumbnails
-         index # filesystem-based triple-index
+  rm -rf cache # cached RDF and thumbnails
+         index # fs-backeded triple-index and/or other DB storage-files
  

@@ -9,16 +9,17 @@ class R
     re = r.R.stripFrag
     title = r[Title][0]
     {class: :forum,
-     c: [{_: :a, class: :title, href: re.uri, c: title},' ',
+     c: [{_: :a, class: :title, href: re.uri.t + '?set=page', c: title},' ',
          {_: :span, class: :desc, c: r[Content]},'<br>',
       {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post on #{title}"}]}}
 
+=begin
   ViewGroup[SIOCt+'BoardPost'] = -> g,e {
-    g.values.map{|r|ViewA[SIOCt+'BoardPost'][r,e]}
-  }
-  
-  ViewA[SIOCt+'BoardPost'] = -> r,e {
-    r.html
-  }
+    g.values.map{|r|ViewA[SIOCt+'BoardPost'][r,e]}}
 
+  ViewA[SIOCt+'BoardPost'] = -> r,e {
+    
+  }
+=end
+  ViewGroup[SIOCt+'BoardPost'] = ViewGroup[Resource] 
 end

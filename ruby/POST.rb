@@ -60,10 +60,7 @@ class R
           end
     s = loc + '#' + form['fragment'].slugify # subject URI
     graph = {s => {'uri' => s}}              # graph
-    if @r[:container]
-      graph[s][SIOC+'has_container'] = self
-    end
-    form.keys.-(['contained','fragment']).map{|p| # add form-data to graph
+    form.keys.-(['contained','fragment']).map{|p| # POST data to graph
       o = form[p]
       o = if o.match HTTP_URI
             o.R
@@ -74,7 +71,10 @@ class R
           end
       graph[s][p] ||= []
       graph[s][p].push o unless o.class==String && o.empty?}
-    ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp
+    graph[s][SIOC+'has_container'] ||= self if @r[:container]
+    ts = Time.now.iso8601
+    graph[s][Date] ||= ts
+    ts = ts.gsub /[-+:T]/, '' # timestamp
     path = s.R.fragmentPath      # storage path
     doc = path + '/' + ts + '.e' # storage URI
     doc.w graph, true            # write
