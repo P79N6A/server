@@ -107,17 +107,24 @@ class R
     parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') &&
       Mail::Encodings.defined?(p.body.encoding)      # decodable?
     }.map{|p|
+      lastEmpty = false
       yield e, Content,
       H({_: :pre, class: :mail,
-          c: p.decoded.to_utf8.gsub(/^(\s*>)+\n/,"").lines.to_a.map{|l|
+         c: ["\n",
+           p.decoded.to_utf8.lines.to_a.map{|l|
            l = l.chomp
-           [if qp = l.match(/^(\s*[>|])+/) # quote
-            {_: :span, class: :q, depth: qp[0].scan(/[>|]/).size, c: l.hrefs}
-           elsif l.match(/^(At|On)\b.*wrote:$/)
-             {_: :span, class: :q, depth: 1, c: l.hrefs}
+           if qp = l.match(/^(\s*[>|])+/) # quote
+             [{_: :span, class: :q, depth: qp[0].scan(/[>|]/).size, c: l.hrefs},"\n"]
+           elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z]+ mailing list)$/)
+             [{_: :span, class: :q, depth: 1, c: l.hrefs},"\n"]
            else
-             {_: :span, class: :nq, c: l.hrefs(true)} # only show images in unquoted original content
-           end,"\n"]}})}
+             if l.empty? && lastEmpty
+               nil
+             else
+               lastEmpty = l.empty?
+               [{_: :span, class: :nq, c: l.hrefs(true)},"\n"] # show images in unquoted original content
+             end
+           end}]})}
     
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 
@@ -218,7 +225,7 @@ class R
       q.delete 'noquote'
       d.map{|u,r|
         r[Content] = r[Content].justArray.map{|c|
-          c.lines.map{|l|l.match(/<span class='q'/) ? "" : l}.join}}
+          c.lines.map{|l|l.match(/^<span class='q'/) ? "" : l}.join}}
     else
       q['noquote'] = ''
     end
