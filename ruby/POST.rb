@@ -53,7 +53,7 @@ class R
     return [400,{},['fragment field missing']] unless form['fragment']
     t = form[Title]
     slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
-    loc = if @r[:container]
+    loc = if @r[:container] || form['contained']
             uri.t + Time.now.iso8601[0..-5].gsub(/[-T]/,'/').gsub(/[:+]/,'') + '.' + slug
           else
             uri
