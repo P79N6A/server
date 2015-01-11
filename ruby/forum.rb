@@ -13,13 +13,6 @@ class R
          {_: :span, class: :desc, c: r[Content]},'<br>',
       {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post on #{title}"}]}}
 
-=begin
-  ViewGroup[SIOCt+'BoardPost'] = -> g,e {
-    g.values.map{|r|ViewA[SIOCt+'BoardPost'][r,e]}}
+  ViewGroup[SIOCt+'BoardPost'] = ViewGroup[SIOCt+'MailMessage']
 
-  ViewA[SIOCt+'BoardPost'] = -> r,e {
-    
-  }
-=end
-  ViewGroup[SIOCt+'BoardPost'] = ViewGroup[Resource] 
 end
