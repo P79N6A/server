@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
@@ -78,9 +78,9 @@ class R
     }
 
     if m.date
-      date = m.date.to_time
-      yield e, Date, date.utc.iso8601
-      yield e, Stat+'mtime', mtime.to_i
+      date = m.date.to_time.utc
+      yield e, Date, date.iso8601
+      yield e, Mtime, date.to_i
     end
 
     m.subject.do{|s| # subject
@@ -232,18 +232,30 @@ class R
     end
 
     arcs = []
+    mtimes = d.values.map{|s|
+      s[Mtime]
+    }.flatten.compact.map(&:to_f)
+    min = mtimes.min
+    max = mtimes.max
+    range = (max - min).min(0.1)
     d.values.map{|s| # collect direct-reference arcs
       s[SIOC+'has_parent'].justArray.map{|o|
         arc = {source: s.uri, target: o.uri}
         author = s[Creator][0].R.fragment
         arc[:sourceName] = author unless colors[author] # show each name once
         arc[:sourceColor] = colors[author] ||= cs
-        s[Stat+'mtime'].do{|t| arc[:sourceTime] = t[0] }
+        s[Mtime].do{|t|
+          pos = (max - t[0].to_f) / range * 640
+          arc[:sourcePos] = pos
+        }
         d[o.uri].do{|o| # target exists in loaded graph
           author = o[Creator][0].R.fragment
           arc[:targetName] = author unless colors[author]
           arc[:targetColor] = colors[author] ||= cs
-          o[Stat+'mtime'].do{|t| arc[:targetTime] = t[0] }
+          o[Mtime].do{|t|
+            pos = (max - t[0].to_f) / range * 640
+            arc[:targetPos] = pos
+          }
         }
         arcs.push arc
       }}

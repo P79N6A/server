@@ -4,24 +4,28 @@ links.forEach(function(link) { // unique nodes from arc-list
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
-			    name:  link.sourceName});
+			    name:  link.sourceName,
+			    pos: link.sourcePos,
+			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
-			    name:  link.targetName});
+			    name:  link.targetName,
+			    pos: link.targetPos,
+			   });
 });
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([387,768])
-    .linkDistance(18)
-    .charge(-250)
+    .size([255,768])
+    .linkDistance(12)
+    .charge(-64)
     .on("tick", tick)
     .start();
 
 var svg = d3.select("body").append("svg")
-    .attr("width", 512)
+    .attr("width", 384)
     .attr("height", 768);
 
 document.querySelector("body").addEventListener("click", function(e){ // toggle SVG focus
@@ -68,11 +72,11 @@ node.append("circle")
 
 function tick() {
   link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
+      .attr("y1", function(d) { return d.source.pos; })
       .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
+      .attr("y2", function(d) { return d.target.pos; });
 
-  node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.pos + ")"; });
 }
 
 function click(d) {

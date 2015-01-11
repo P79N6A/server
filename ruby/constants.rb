@@ -66,6 +66,7 @@ class R < RDF::URI
   Label    = RDFs + 'label'
   Size     = Stat + 'size'
   Directory= Stat + 'Directory'
+  Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
 
   Prefix={
