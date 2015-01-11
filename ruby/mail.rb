@@ -79,7 +79,8 @@ class R
 
     if m.date
       date = m.date.to_time
-      yield e, Date, date.utc.iso8601 
+      yield e, Date, date.utc.iso8601
+      yield e, Stat+'mtime', mtime.to_i
     end
 
     m.subject.do{|s| # subject
@@ -237,10 +238,13 @@ class R
         author = s[Creator][0].R.fragment
         arc[:sourceName] = author unless colors[author] # show each name once
         arc[:sourceColor] = colors[author] ||= cs
+        s[Stat+'mtime'].do{|t| arc[:sourceTime] = t[0] }
         d[o.uri].do{|o| # target exists in loaded graph
           author = o[Creator][0].R.fragment
           arc[:targetName] = author unless colors[author]
-          arc[:targetColor] = colors[author] ||= cs}
+          arc[:targetColor] = colors[author] ||= cs
+          o[Stat+'mtime'].do{|t| arc[:targetTime] = t[0] }
+        }
         arcs.push arc
       }}
 
