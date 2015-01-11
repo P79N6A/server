@@ -235,8 +235,8 @@ class R
     mtimes = d.values.map{|s|
       s[Mtime]
     }.flatten.compact.map(&:to_f)
-    min = mtimes.min
-    max = mtimes.max
+    min = mtimes.min || 0
+    max = mtimes.max || 1
     range = (max - min).min(0.1)
     d.values.map{|s| # collect direct-reference arcs
       s[SIOC+'has_parent'].justArray.map{|o|

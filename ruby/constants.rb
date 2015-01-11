@@ -117,7 +117,6 @@ csv
 DELETE
 fs
 GET
-forum
 graph
 HEAD
 HTML
@@ -128,6 +127,7 @@ index
 mail
 man
 news
+forum
 OPTIONS
 POST
 PUT
