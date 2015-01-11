@@ -50,6 +50,9 @@ module Th
     cookies['session-id'].do{|s|R::Session[s]}
   end
 
+  # a very basic "name+password" user. must be whitelisted per-domain: cd domain/x && ln -s ../../user .
+  # TODO add /user handler to forward to actual user-path (bypass symlink requirement), as
+  # /user/admin is not actually there but inside a sharded subdir to keep dir-size in check..
   def user_words
     session.do{|s|s['user'][0]}
   end
