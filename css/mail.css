@@ -1,5 +1,5 @@
 body {text-align: center;background-color:#000;}
-div.mail {display: inline-block;text-align: left;}
+div.mail {text-align: left;float: right}
 pre.mail {max-width: 88em; white-space: pre-wrap;margin:0}
 pre.mail .nq {color: #fff; background-color:#000;}
 pre.mail .q[depth="1"] {background-color:#f0f0f0;color:#000}
@@ -26,8 +26,8 @@ body, .mail .title, .mail .create, .mail .discussion, .mail a.msg, a[name], a.to
 a[rel=untyped], a.create, a.msg, a[name], a.to, a.discussion, a.ts, .noquote {text-decoration:none}
 .mail a[rel=untyped] {color: #000;background-color:#fff; font-size: 1.18em; font-weight: bold;}
 img {max-width: 100%}
-svg {position: fixed;top: 0;left: 0;z-index: -1}
-.link {fill: none;stroke: #e3e3e3;stroke-width: .15em;}
+svg {position: fixed;top: 0;left: 0;z-index:-1}
+.link {fill: none;stroke: #ddd;stroke-width: .14em;}
 .node circle {fill: #bbb}
 .node rect {fill: #fff}
 text {fill: #000; font: .88em sans-serif;pointer-events: none;}

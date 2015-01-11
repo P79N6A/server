@@ -28,13 +28,6 @@ var svg = d3.select("body").append("svg")
     .attr("width", 384)
     .attr("height", 768);
 
-document.querySelector("body").addEventListener("click", function(e){ // toggle SVG focus
-    if (e.target.nodeName=='BODY'||e.target.nodeName=='svg'){
-	var s = document.querySelector('svg')
-	s.style.zIndex = s.style.zIndex == 2 ? -1 : 2
-    }
-},false);
-
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
