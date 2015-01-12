@@ -245,7 +245,7 @@ class R
         arc[:sourceName] = author unless colors[author] # show each name once
         arc[:sourceColor] = colors[author] ||= cs
         s[Mtime].do{|t|
-          pos = (max - t[0].to_f) / range * 640
+          pos = (max - t[0].to_f) / range
           arc[:sourcePos] = pos
         }
         d[o.uri].do{|o| # target exists in loaded graph
@@ -253,7 +253,7 @@ class R
           arc[:targetName] = author unless colors[author]
           arc[:targetColor] = colors[author] ||= cs
           o[Mtime].do{|t|
-            pos = (max - t[0].to_f) / range * 640
+            pos = (max - t[0].to_f) / range
             arc[:targetPos] = pos
           }
         }

@@ -1,24 +1,24 @@
 var nodes = {};
-
+var height = window.innerHeight
 links.forEach(function(link) { // unique nodes from arc-list
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
 			    name:  link.sourceName,
-			    pos: link.sourcePos,
+			    pos: link.sourcePos * height,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
-			    pos: link.targetPos,
+			    pos: link.targetPos * height,
 			   });
 });
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([255,768])
+    .size([320,height])
     .linkDistance(12)
     .charge(-64)
     .on("tick", tick)
@@ -26,7 +26,7 @@ var force = d3.layout.force()
 
 var svg = d3.select("body").append("svg")
     .attr("width", 384)
-    .attr("height", 768);
+    .attr("height", height);
 
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
