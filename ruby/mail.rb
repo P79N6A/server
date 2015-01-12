@@ -289,7 +289,7 @@ class R
           r[To].justArray.map{|o|
             {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
           r[SIOC+'reply_to'].do{|c|
-            [{_: :a, class: :create, href: c[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
+            [{_: :a, class: :create, href: c.justArray[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
           r[Date].do{|d|
             {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
           r[SIOC+'has_discussion'].do{|d|

@@ -115,6 +115,7 @@ chat
 container
 csv
 DELETE
+forum
 fs
 GET
 graph
@@ -127,7 +128,6 @@ index
 mail
 man
 news
-forum
 OPTIONS
 POST
 PUT
