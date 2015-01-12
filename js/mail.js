@@ -18,14 +18,14 @@ links.forEach(function(link) { // unique nodes from arc-list
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([320,height])
+    .size([360,height])
     .linkDistance(12)
     .charge(-64)
     .on("tick", tick)
     .start();
 
 var svg = d3.select("body").append("svg")
-    .attr("width", 384)
+    .attr("width", window.innerWidth)
     .attr("height", height);
 
 svg.append('svg:defs').append('svg:marker')
