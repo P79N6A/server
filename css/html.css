@@ -11,5 +11,3 @@ table.html {
 td.key {text-align:right;}
 td.uri a, td.key a, td.val a.id {background-color: #fff; color: #000;text-decoration: none}
 td.uri a, td.val a.id {font-weight: bold}
-tr[property="http://purl.org/dc/terms/title"],tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],tr[property="http://www.w3.org/2000/01/rdf-schema#label"] {display:none}
-

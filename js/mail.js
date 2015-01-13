@@ -18,7 +18,7 @@ links.forEach(function(link) { // unique nodes from arc-list
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([360,height])
+    .size([384,height])
     .linkDistance(12)
     .charge(-64)
     .on("tick", tick)
