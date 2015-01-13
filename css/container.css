@@ -55,7 +55,7 @@ a.sort:hover { color: #000; }
 
 .container a.member:visited {
     color: #fff;
-    background-color: #999;
+    background-color: #000;
 }
 
 p.space {float: left}
