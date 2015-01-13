@@ -5,12 +5,14 @@ links.forEach(function(link) { // unique nodes from arc-list
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
 			    name:  link.sourceName,
+			    size: (link.sourceSize || 17),
 			    pos: link.sourcePos * (height - 16) + 8,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
+			    size: 17,
 			    pos: link.targetPos * (height - 16) + 8,
 			   });
 });
@@ -64,7 +66,7 @@ node.append("text")
 
 node.append("rect")
     .style("fill", function(d) { return d.color; })
-    .attr("width", 17).attr("x",-7).attr("height", 9);
+    .attr("width", function(d) { return d.size; }).attr("x",function(d) { return d.size * -1 + 10; }).attr("height", 9);
 
 function tick() {
     link.attr("x1", function(d) { return d.source.x; })
