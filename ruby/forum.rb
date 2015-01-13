@@ -13,10 +13,4 @@ class R
          {_: :span, class: :desc, c: r[Content]},'<br>',
       {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post on #{title}"}]}}
 
-  ViewGroup[SIOCt+'BoardPost'] = -> g,e {
-    g.values.map{|r|
-      r[SIOC+'reply_to'] = R['#']
-    }
-    ViewGroup[SIOCt+'MailMessage'][g,e]}
-
 end
