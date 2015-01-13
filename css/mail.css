@@ -1,5 +1,5 @@
 body {margin: 0}
-div.mail {float: right;clear:both;background-color:#000}
+div.mail {float: right;clear:both;background-color:#000;color:#fff}
 pre.mail {max-width: 88em; white-space: pre-wrap;}
 pre.mail .nq {color: #fff; background-color:#000;margin-left: .2em}
 pre.mail .q {margin-left: -.8em}
