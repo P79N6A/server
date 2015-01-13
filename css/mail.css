@@ -2,6 +2,8 @@ body {margin: 0}
 div.mail {float: right;clear:both;background-color:#000}
 pre.mail {max-width: 88em; white-space: pre-wrap;}
 pre.mail .nq {color: #fff; background-color:#000;margin-left: .2em}
+pre.mail .q {margin-left: -.8em}
+pre.mail .q[depth="0"] {margin: 0}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
 pre.mail .q[depth="3"] {background-color:#033684;color:#fff}
@@ -22,9 +24,9 @@ pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .ts {color: #eee;font-size:.92em;}
 a.attached {float: right; color: #000; background-color: #fff; font-size:.9em}
-.noquote {font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em}
-.noquote:hover {background-color: #333}
-body, .mail .create, .mail .discussion, .mail a.msg, a[name], a.to, .noquote {font-family: sans-serif;color: #fff}
+.noquote {font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em;background-color:#fff;color:#444}
+.noquote:hover {background-color: #333;color:#eee}
+.mail .create, .mail .discussion, .mail a.msg, a[name], a.to {font-family: sans-serif;color: #fff}
 .mail .title, a[rel=untyped], a.create, a.msg, a[name], a.to, a.discussion, a.attached, a.ts, .noquote {text-decoration:none}
 .mail a[rel=untyped] {color: #000;background-color:#fff; font-size: 1.18em; font-weight: bold;}
 img {max-width: 100%}

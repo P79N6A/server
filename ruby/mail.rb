@@ -117,7 +117,7 @@ class R
            if qp = l.match(/^(\s*[>|])+/) # quote
              [{_: :span, class: :q, depth: qp[0].scan(/[>|]/).size, c: l.hrefs},"\n"]
            elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
-             [{_: :span, class: :q, depth: 1, c: l.hrefs},"\n"]
+             [{_: :span, class: :q, depth: 0, c: l.hrefs},"\n"]
            else
              if l.empty? && lastEmpty
                nil

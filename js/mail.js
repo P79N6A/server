@@ -5,13 +5,13 @@ links.forEach(function(link) { // unique nodes from arc-list
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
 			    name:  link.sourceName,
-			    pos: link.sourcePos * height,
+			    pos: link.sourcePos * (height - 16) + 8,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
-			    pos: link.targetPos * height,
+			    pos: link.targetPos * (height - 16) + 8,
 			   });
 });
 
