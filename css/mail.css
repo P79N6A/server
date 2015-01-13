@@ -1,5 +1,4 @@
-body {text-align: center;background-color:#000;}
-div.mail {text-align: left;float: right;clear:both}
+div.mail {float: right;clear:both;background-color:#000;border-radius: .3em 0 0 0}
 pre.mail {max-width: 88em; white-space: pre-wrap;margin:0}
 pre.mail .nq {color: #fff; background-color:#000;}
 pre.mail .q[depth="1"] {background-color:#f0f0f0;color:#000}
@@ -27,7 +26,7 @@ a[rel=untyped], a.create, a.msg, a[name], a.to, a.discussion, a.ts, .noquote {te
 .mail a[rel=untyped] {color: #000;background-color:#fff; font-size: 1.18em; font-weight: bold;}
 img {max-width: 100%}
 svg {position: fixed;top: 0;left: 0;z-index:-1}
-.link {fill: none;stroke: #ddd;stroke-width: .14em;}
+.link {fill: none;stroke: #ccc;stroke-width: .14em;}
 .node circle {fill: #bbb}
 .node rect {fill: #fff}
 text {fill: #000; font: .88em sans-serif;pointer-events: none;}
