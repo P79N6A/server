@@ -75,7 +75,7 @@ class R
     nexd = u[Next]
     [Prev,Next,Type].map{|p|u.delete p}
     [prev.do{|p|
-       {_: :a, rel: :prev, href: p.uri, c: ['↩ ', label[p]], title: '↩ previous page'}},
+       {_: :a, rel: :prev, href: p.uri, c: ['&larr; ', label[p]], title: '↩ previous page'}},
      nexd.do{|n|
        {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
     (ViewA[Resource][u,e] unless u.keys.size==1)]}
