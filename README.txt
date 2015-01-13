@@ -4,7 +4,7 @@ NOINSTALL thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
           unicorn -r./ruby/constants -p 80 ruby/httpd.ru
 
 INSTALL cd ruby
-        bundle install # install dependencies. Rack, RDFrb
+        bundle install # install dependencies, Rack, RDFrb
 	./install      # symlink checkout-path to library-path. rsync, cp or build a gem for "release" version
 
 DAEMON       host      port  notes
@@ -18,5 +18,5 @@ SETUP
 
 CLEANUP
   rm -rf cache # cached RDF and thumbnails
-         index # fs-backeded triple-index and/or other DB storage-files
+         index # fs-backed triple-index and/or other DB storage-files
  
