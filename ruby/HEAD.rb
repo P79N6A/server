@@ -39,7 +39,7 @@ class R
       'Allow' => Allow,
       'Link' => @r[:Links].intersperse(', ').join,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
-      'Server' => Daemon
+      'Daemon' => Daemon
     }
 
     @r[:Response].update headers
