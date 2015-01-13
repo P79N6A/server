@@ -1,4 +1,5 @@
 # coding: utf-8
+watch __FILE__
 class R
 
   ViewGroup[SIOCt+'BoardPost'] = ViewGroup[SIOCt+'MailMessage'] = -> d,e {
@@ -18,13 +19,32 @@ class R
     end
 
     arcs = []
+    days = {}
     mtimes = d.values.map{|s|
+      s[Date].justArray[0].do{|d|
+        day = d[0..9]
+        days[day] ||= day.to_time.to_f}
       s[Mtime]
     }.flatten.compact.map(&:to_f)
     min = mtimes.min || 0
     max = mtimes.max || 1
     range = (max - min).min(0.1)
-    d.values.map{|s| # collect direct-reference arcs
+    days = days.sort_by{|_,m|m}
+    yesterday = days[0]
+    days.map{|d,m|
+      arc = {source: '/'+d.gsub('-','/'),
+             target: '/'+yesterday[0].gsub('-','/'),
+             sourceName: d,
+             sourceColor: '#bbb',
+             targetColor: '#bbb',
+             arcColor: '#fafafa',
+             sourcePos: (max - m) / range,
+             targetPos: (max - yesterday[1]) / range,
+            }
+      yesterday = [d,m]
+      arcs.push arc
+    }
+    d.values.map{|s| # direct-reference arcs
       s[SIOC+'has_parent'].justArray.map{|o|
         arc = {source: s.uri, target: o.uri}
         author = s[Creator][0].R.fragment
@@ -34,7 +54,7 @@ class R
           pos = (max - t[0].to_f) / range
           arc[:sourcePos] = pos
         }
-        d[o.uri].do{|o| # target exists in loaded graph
+        d[o.uri].do{|o| # target also exists in loaded graph
           author = o[Creator][0].R.fragment
           arc[:targetName] = author unless colors[author]
           arc[:targetColor] = colors[author] ||= cs

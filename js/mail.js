@@ -37,12 +37,15 @@ svg.append('svg:defs').append('svg:marker')
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#ccc');
+    .attr('fill', '#ddd');
 
 var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
     .attr("class", "link")
+    .style('stroke', function(d){
+	return (d.arcColor || '#ccc')
+    })
     .style('marker-end', 'url(#end-arrow)');
 
 var node = svg.selectAll(".node")
@@ -64,12 +67,12 @@ node.append("rect")
     .attr("width", 17).attr("x",-7).attr("height", 9);
 
 function tick() {
-  link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.pos; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.pos; });
+    link.attr("x1", function(d) { return d.source.x; })
+	.attr("y1", function(d) { return (d.source.pos || 0); })
+	.attr("x2", function(d) { return d.target.x; })
+	.attr("y2", function(d) { return (d.target.pos || 0); });
 
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.pos + ")"; });
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + (d.pos || 0) + ")"; });
 }
 
 function click(d) {

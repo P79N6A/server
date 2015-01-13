@@ -1,8 +1,18 @@
 # -*- coding: utf-8 -*-
-watch __FILE__
+#watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
+
+  MessagePath = ->id{ # message-ID -> path
+    id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
+    '/msg/' + id.h[0..2] + '/' + id}
+
+  AddrPath = ->address{ # address -> path
+    address = address.downcase
+    name = address.split('@')[0]
+    alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
+    '/address/' + alpha + '/' + address + '/' + name + '#' + name}
 
   GET['/thread'] = -> e,r {
     m = {}
@@ -15,21 +25,11 @@ class R
       Render[r.format].do{|p|p[m,r]} ||
       m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
-  MessagePath = ->id{ # message-ID -> path
-    id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
-    '/msg/' + id.h[0..2] + '/' + id}
-
   GET['/msg'] = -> e,r{e.path.split('/').size < 4 ? [303, {'Location' => '/'}, []] : nil}
-
-  AddrPath = ->address{ # address -> path
-    address = address.downcase
-    name = address.split('@')[0]
-    alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
-    '/address/' + alpha + '/' + address + '/' + name + '#' + name}
 
   GET['/address'] = -> e,r {
     depth = e.path.split('/').size
-    r[:ls] = true if depth == 3 # tabular view of alpha-prefix's addresses
+    r[:ls] = true if depth == 3 # tabular view of alpha-prefixen
     r.q['set'] ||= 'first-page' if depth == 4 # include first page at container root
     nil}
 
