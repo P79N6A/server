@@ -1,6 +1,6 @@
 div.mail {float: right;clear:both;background-color:#000}
 pre.mail {max-width: 88em; white-space: pre-wrap;}
-pre.mail .nq {color: #fff; background-color:#000;margin-left: .25em}
+pre.mail .nq {color: #fff; background-color:#000;margin-left: .2em}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
 pre.mail .q[depth="3"] {background-color:#033684;color:#fff}

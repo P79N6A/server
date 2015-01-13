@@ -27,7 +27,6 @@ class R
     @r[:Links].concat ["<#{uri}>; rel=canonical",
                        "<#{aclURI}>; rel=acl",
                        "<#{docroot}>; rel=meta",
-                       "<#{uri}>; rel=timegate",
                        "<http://www.w3.org/ns/ldp#Resource>; rel=type",
                       ]
     @r[:Links].push "<#{Container}>; rel=type" if @r[:container]
@@ -40,6 +39,7 @@ class R
       'Allow' => Allow,
       'Link' => @r[:Links].intersperse(', ').join,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
+      'Server' => Daemon
     }
 
     @r[:Response].update headers
