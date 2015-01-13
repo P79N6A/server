@@ -28,6 +28,4 @@ body, .mail .create, .mail .discussion, .mail a.msg, a[name], a.to, .noquote {fo
 img {max-width: 100%}
 svg {position: fixed;top: 0;left: 0;z-index:-1}
 .link {fill: none;stroke: #ccc;stroke-width: .14em;}
-.node circle {fill: #bbb}
-.node rect {fill: #fff}
 text {fill: #000; font: .88em sans-serif;pointer-events: none;}

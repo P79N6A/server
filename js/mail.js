@@ -31,7 +31,7 @@ var svg = d3.select("body").append("svg")
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
-    .attr("refX", 25)
+    .attr("refX", 10)
     .attr('markerWidth', 3)
     .attr('markerHeight', 3)
     .attr('orient', 'auto')
@@ -59,9 +59,9 @@ node.append("text")
     .style("fill", function(d) { return d.color; })
     .text(function(d) { return d.name; });
 
-node.append("circle")
+node.append("rect")
     .style("fill", function(d) { return d.color; })
-    .attr("r", 9);
+    .attr("width", 17).attr("x",-7).attr("height", 9);
 
 function tick() {
   link.attr("x1", function(d) { return d.source.x; })

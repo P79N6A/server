@@ -11,7 +11,7 @@ a.up, a[rel=next], a[rel=prev]{
     overflow: hidden;
     text-decoration: none;
     margin: .2em;
-    background-color: #eee;
+    background-color: #f4f4f4;
     color: #000;
 }
 a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
