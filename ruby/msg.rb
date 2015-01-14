@@ -6,8 +6,8 @@ class R
     colors = {}
     titles = {}
     q = e.q
-    big = d.keys.size > 8 && !q.has_key?('raw')
-    noquote = q.has_key?('noquote') || big
+    tooBig = d.keys.size > 8 && !q.has_key?('raw')
+    noquote = q.has_key?('noquote') || tooBig
 
     if noquote # toggle quoted-content
       q.delete 'noquote'
