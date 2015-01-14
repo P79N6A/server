@@ -1,9 +1,11 @@
 body {margin: 0}
 .messages {float: right;}
 div.mail {clear:both;background-color:#333;color:#fff;}
-.mail .header {margin-left: -3em}
-.mail .body {background-color: pink;text-align:right}
-pre.mail {display: inline-block;text-align:left;max-width: 88em; white-space: pre-wrap;margin:0;background-color:#111}
+.mail .header {position:relative;}
+.mail .corner {position:absolute;top:0;left:0}
+.mail .author {position:absolute;top:.15em;right:.15em}
+.mail .body {padding-left:.8em}
+pre.mail {display: inline-block;max-width: 88em; white-space: pre-wrap;margin:0;background-color:#111}
 pre.mail .nq {color: #fff; background-color:#000;padding-left:.4em}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}
 pre.mail .q[depth="2"] {background-color:#0F1A51;color:#fff}
@@ -22,7 +24,6 @@ pre.mail .q[depth="14"] {background-color:#f06;color:#fff}
 pre.mail .q[depth="15"] {background-color:#fffc00;color:#000}
 .mail .title {background-color:#fff;color:#000;display:block}
 .mail .title, a[name], a.to {font-weight: bold}
-a[name] {background-color:#000;}
 .mail .ts, .mail .discussion, .noquote {float: right}
 a.attached {float: right; color: #000; background-color: #fff; font-size:.9em}
 .noquote {position:absolute;bottom:0;left:0;font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em;background-color:#fff;color:#888}

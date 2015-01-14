@@ -64,24 +64,25 @@ class R
           arcs.push arc }}}
     [H.css('/css/mail',true),
      {_: :style,
-      c: colors.map{|name,c| "a[name=\"#{name}\"] {color: #{c}}\n"}},
+      c: colors.map{|name,c| "[name=\"#{name}\"] {background-color: #{c}}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
         author = nil
         {class: :mail, id: r.uri,
-         c: [{class: :header,
-              c: [r[Title].do{|t|
-                    title = t[0].sub ReExpr, ''
-                    if titles[title] # only shop topic if changed
-                      nil
-                    else
-                      titles[title] = true
-                      {_: :a, class: :title, href: r.uri, c: title}
-                    end
-                  },' ',
-                  r[Creator].do{|c|
+         c: [r[Title].do{|t|
+               title = t[0].sub ReExpr, ''
+               if titles[title] # only shop topic if changed
+                 nil
+               else
+                 titles[title] = true
+                 {_: :a, class: :title, href: r.uri, c: title}
+               end},
+             {class: :header,
+              c: [r[Creator].do{|c|
                     author = c[0].R.fragment
-                    {_: :a, name: author, href: c[0].R.dirname, c: author}}, ' &rarr; ',
+                    {class: :corner, c: {_: :a, class: :author, name: author, href: c[0].R.dirname, c: author}}},
+                  r[To].justArray.map{|o|
+                    {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'has_parent'].do{|ps|
                     ps.map{|p| # replied-to messages
                       d[p.uri].do{|r| # target msg
@@ -89,15 +90,13 @@ class R
                         {_: :a, name: c, href: '#'+p.uri, c: c}} ||
                       {_: :a, class: :msg, href: p.uri, c: '&#9993;'}
                     }.intersperse(' ')}, ' ',
-                  r[To].justArray.map{|o|
-                    {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'reply_to'].do{|c|
                     [{_: :a, class: :create, href: c.justArray[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
                   r[Date].do{|d|
                     {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].do{|d|
                     {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡'} unless e[:thread]}]},
-             {class: :body, c: r[Content], style: "background-color: #{colors[author]}"},
+             {class: :body, c: r[Content], name: author},
              [DC+'hasFormat', SIOC+'attachment'].map{|p|
                r[p].justArray.map{|o|
                  {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}]}}},
