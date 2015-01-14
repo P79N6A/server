@@ -75,9 +75,9 @@ class R
               nil
             else
               titles[title] = true
-              [{_: :a, class: :title, href: r.uri, c: title},'<br>']
+              {_: :a, class: :title, href: r.uri, c: title}
             end
-          },
+          },' ',
           r[Creator].do{|c|
             author = c[0].R.fragment
             {_: :a, name: author, href: c[0].R.dirname, c: author}}, ' &rarr; ',
