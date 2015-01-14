@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   ViewGroup[SIOCt+'BoardPost'] = ViewGroup[SIOCt+'MailMessage'] = -> d,e {
@@ -66,40 +66,40 @@ class R
      {_: :style,
       c: colors.map{|name,c| "a[name=\"#{name}\"] {color: #{c}}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
-     {class: :messages, style: "background-color: #{R.cs}",c: d.resources(e).reverse.map{|r| # show message
-        [{class: :mail, id: r.uri,
-         c: [
-          r[Title].do{|t|
-            title = t[0].sub ReExpr, ''
-            if titles[title] # only shop topic if changed
-              nil
-            else
-              titles[title] = true
-              {_: :a, class: :title, href: r.uri, c: title}
-            end
-          },' ',
-          r[Creator].do{|c|
-            author = c[0].R.fragment
-            {_: :a, name: author, href: c[0].R.dirname, c: author}}, ' &rarr; ',
-          r[SIOC+'has_parent'].do{|ps|
-            ps.map{|p| # replied-to messages
-              d[p.uri].do{|r| # target msg
-                author = r[Creator][0].R.fragment
-                {_: :a, name: author, href: '#'+p.uri, c: author}} ||
-              {_: :a, class: :msg, href: p.uri, c: '&#9993;'}
-            }.intersperse(' ')}, ' ',
-          r[To].justArray.map{|o|
-            {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
-          r[SIOC+'reply_to'].do{|c|
-            [{_: :a, class: :create, href: c.justArray[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
-          r[Date].do{|d|
-            {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
-          r[SIOC+'has_discussion'].do{|d|
-            {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡'} unless e[:thread]},
-          '<br>', r[Content],
-          [DC+'hasFormat', SIOC+'attachment'].map{|p|
-            r[p].justArray.map{|o|
-              {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}]},'<br>']}},
+     {class: :messages, c: d.resources(e).reverse.map{|r| # show message
+        {class: :mail, id: r.uri,
+         c: [{class: :header,
+              c: [r[Title].do{|t|
+                    title = t[0].sub ReExpr, ''
+                    if titles[title] # only shop topic if changed
+                      nil
+                    else
+                      titles[title] = true
+                      {_: :a, class: :title, href: r.uri, c: title}
+                    end
+                  },' ',
+                  r[Creator].do{|c|
+                    author = c[0].R.fragment
+                    {_: :a, name: author, href: c[0].R.dirname, c: author}}, ' &rarr; ',
+                  r[SIOC+'has_parent'].do{|ps|
+                    ps.map{|p| # replied-to messages
+                      d[p.uri].do{|r| # target msg
+                        author = r[Creator][0].R.fragment
+                        {_: :a, name: author, href: '#'+p.uri, c: author}} ||
+                      {_: :a, class: :msg, href: p.uri, c: '&#9993;'}
+                    }.intersperse(' ')}, ' ',
+                  r[To].justArray.map{|o|
+                    {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
+                  r[SIOC+'reply_to'].do{|c|
+                    [{_: :a, class: :create, href: c.justArray[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
+                  r[Date].do{|d|
+                    {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
+                  r[SIOC+'has_discussion'].do{|d|
+                    {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡'} unless e[:thread]}]},
+             {class: :body, c: r[Content]},
+             [DC+'hasFormat', SIOC+'attachment'].map{|p|
+               r[p].justArray.map{|o|
+                 {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}]}}},
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}
 
