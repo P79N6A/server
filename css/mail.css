@@ -1,7 +1,8 @@
 body {margin: 0}
 .messages {float: right;}
-div.mail {clear:both;background-color:#333;color:#fff}
-.body {background-color: pink;text-align:right}
+div.mail {clear:both;background-color:#333;color:#fff;}
+.mail .header {margin-left: -3em}
+.mail .body {background-color: pink;text-align:right}
 pre.mail {display: inline-block;text-align:left;max-width: 88em; white-space: pre-wrap;margin:0;background-color:#111}
 pre.mail .nq {color: #fff; background-color:#000;padding-left:.4em}
 pre.mail .q[depth="1"] {background-color:#fff;color:#000}

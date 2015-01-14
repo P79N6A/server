@@ -66,7 +66,8 @@ class R
      {_: :style,
       c: colors.map{|name,c| "a[name=\"#{name}\"] {color: #{c}}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
-     {class: :messages, c: d.resources(e).reverse.map{|r| # show message
+     {class: :messages, c: d.resources(e).reverse.map{|r| # message
+        author = nil
         {class: :mail, id: r.uri,
          c: [{class: :header,
               c: [r[Title].do{|t|
@@ -84,8 +85,8 @@ class R
                   r[SIOC+'has_parent'].do{|ps|
                     ps.map{|p| # replied-to messages
                       d[p.uri].do{|r| # target msg
-                        author = r[Creator][0].R.fragment
-                        {_: :a, name: author, href: '#'+p.uri, c: author}} ||
+                        c = r[Creator][0].R.fragment
+                        {_: :a, name: c, href: '#'+p.uri, c: c}} ||
                       {_: :a, class: :msg, href: p.uri, c: '&#9993;'}
                     }.intersperse(' ')}, ' ',
                   r[To].justArray.map{|o|
@@ -96,7 +97,7 @@ class R
                     {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].do{|d|
                     {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡'} unless e[:thread]}]},
-             {class: :body, c: r[Content]},
+             {class: :body, c: r[Content], style: "background-color: #{colors[author]}"},
              [DC+'hasFormat', SIOC+'attachment'].map{|p|
                r[p].justArray.map{|o|
                  {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}]}}},
