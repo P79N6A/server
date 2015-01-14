@@ -1,4 +1,5 @@
 body {margin: 0}
+.messages {float: right;}
 div.mail {float: right;clear:both;background-color:#333;color:#fff}
 pre.mail {max-width: 88em; white-space: pre-wrap;margin:0;background-color:#111}
 pre.mail .nq {color: #fff; background-color:#000;padding-left:.4em}

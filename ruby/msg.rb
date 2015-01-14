@@ -66,8 +66,8 @@ class R
      {_: :style,
       c: colors.map{|name,c| "a[name=\"#{name}\"] {color: #{c}}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
-     d.resources(e).reverse.map{|r| # show message
-       [{class: :mail, id: r.uri,
+     {class: :messages, style: "background-color: #{R.cs}",c: d.resources(e).reverse.map{|r| # show message
+        [{class: :mail, id: r.uri,
          c: [
           r[Title].do{|t|
             title = t[0].sub ReExpr, ''
@@ -99,7 +99,7 @@ class R
           '<br>', r[Content],
           [DC+'hasFormat', SIOC+'attachment'].map{|p|
             r[p].justArray.map{|o|
-              {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}]},'<br>']},
+              {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}]},'<br>']}},
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/mail',true)]}
 
