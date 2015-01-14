@@ -114,7 +114,7 @@ class R
          c: ["\n",
            p.decoded.to_utf8.lines.to_a.map{|l|
            l = l.chomp
-           if qp = l.match(/^((\s*[>|])+)(.*)/) # quote
+           if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quote
              [{_: :span, class: :q, depth: qp[1].scan(/[>|]/).size, c: qp[3].hrefs},"\n"]
            elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
              [{_: :span, class: :q, depth: 0, c: l.hrefs},"\n"]
