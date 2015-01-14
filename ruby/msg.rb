@@ -1,23 +1,22 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   ViewGroup[SIOCt+'BoardPost'] = ViewGroup[SIOCt+'MailMessage'] = -> d,e {
     colors = {}
     titles = {}
     q = e.q
-    tooBig = d.keys.size > 8 && !q.has_key?('raw')
-    noquote = q.has_key?('noquote') || tooBig
-
-    if noquote # toggle quoted-content
-      q.delete 'noquote'
-      d.map{|u,r|
-        r[Content] = r[Content].justArray.map{|c|
-          c.lines.map{|l|l.match(/^<span class='q'/) ? "" : l}.join}}
-    else
-      q['noquote'] = ''
-    end
-
+    quotes = if q['quotes'] == "yes"
+               true
+             elsif q['quotes'] == "no"
+               false
+             elsif d.keys.size < 6
+               true
+             else
+               false
+             end
+    d.map{|u,r| r[Content] = r[Content].justArray.map{|c|
+      c.lines.map{|l|l.match(/^<span class='q'/) ? "" : l}.join}} unless quotes
     arcs = []
     days = {}
     mtimes = d.values.map{|s|
@@ -31,7 +30,7 @@ class R
     range = (max - min).min(0.1)
     days = days.sort_by{|_,m|m}
     yesterday = days[0]
-    days.map{|d,m|
+    days.map{|d,m| # temporal arcs
       arc = {source: '/'+d.gsub('-','/'),
              target: '/'+yesterday[0].gsub('-','/'),
              sourceName: d,
@@ -45,8 +44,8 @@ class R
       yesterday = [d,m]
       arcs.push arc
     }
-    d.values.map{|s|
-      s[SIOC+'has_parent'].justArray.map{|o| # source -> target
+    d.values.map{|s| # source
+      s[SIOC+'has_parent'].justArray.map{|o| # msg source -> target arcs
         d[o.uri].do{|t| # target
           arc = {source: s.uri, target: o.uri}
           author = s[Creator][0].R.fragment
@@ -65,12 +64,15 @@ class R
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c| "[name=\"#{name}\"] {background-color: #{c}}\n"}},
-     {_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote},
+     {_: :a, class: :noquote,
+      href: q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs,
+      c: quotes ? '&#x27ea;' : '&#x27eb;',
+      title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
         {class: :mail, id: r.uri,
          c: [r[Title].do{|t|
                title = t[0].sub ReExpr, ''
-               if titles[title] # only shop topic if changed
+               if titles[title]
                  nil
                else
                  titles[title] = true

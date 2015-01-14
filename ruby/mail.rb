@@ -177,14 +177,14 @@ class R
   ReExpr = /\b[rR][eE]: /
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
-    raw = e.q.has_key? 'raw' # keep raw-msg
-    graph[e.uri].do{|dir|dir.delete(LDP+'contains')} unless raw # hide fs-meta
+    bodies = e.q.has_key? 'bodies' # keep messages
+    graph[e.uri].do{|dir|dir.delete(LDP+'contains')}
     if e.format == 'text/html'
       listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date'}).qs
-      fullURI = e.q.merge({'raw' => 'raw'}).qs
+      fullURI = e.q.merge({'bodies' => ''}).qs
       size = g.keys.size
       graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'} if !e.q.has_key?('group') && size > 12
-      graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'} if !raw && size < 24
+      graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'} if !bodies && size < 24
     end
     e.q['sort'] ||= Size # weighting uses standard size-predicate
     group = (e.q['group']||To).expand # GROUP BY
@@ -192,7 +192,7 @@ class R
     threads = {}
     weight = {}
     g.map{|u,p|
-      graph.delete u unless raw
+      graph.delete u unless bodies
       p[Title].do{|t|
         title = t[0].sub ReExpr, ''
         threads[title] ||= p
