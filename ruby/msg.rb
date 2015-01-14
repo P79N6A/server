@@ -67,7 +67,6 @@ class R
       c: colors.map{|name,c| "[name=\"#{name}\"] {background-color: #{c}}\n"}},
      ({_: :a, href: q.qs, c: noquote ? '&#x27eb;' : '&#x27ea;', title: "hide quotes", class: :noquote} if !big),
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
-        author = nil
         {class: :mail, id: r.uri,
          c: [r[Title].do{|t|
                title = t[0].sub ReExpr, ''
@@ -96,7 +95,7 @@ class R
                     {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].do{|d|
                     {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡'} unless e[:thread]}]},
-             {class: :body, c: r[Content], name: author},
+             {class: :body, c: r[Content]},
              [DC+'hasFormat', SIOC+'attachment'].map{|p|
                r[p].justArray.map{|o|
                  {_: :a, class: :attached, href: o.uri, c: o.R.basename}}}]}}},
