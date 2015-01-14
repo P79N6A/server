@@ -1,12 +1,12 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 class R
 
   ViewGroup[SIOCt+'BoardPost'] = ViewGroup[SIOCt+'MailMessage'] = -> d,e {
     colors = {}
     titles = {}
     q = e.q
-    big = d.keys.size > 8
+    big = d.keys.size > 8 && !q.has_key?('raw')
     noquote = q.has_key?('noquote') || big
 
     if noquote # toggle quoted-content
