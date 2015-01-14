@@ -45,28 +45,23 @@ class R
       yesterday = [d,m]
       arcs.push arc
     }
-    d.values.map{|s| # direct-reference arcs
-      s[SIOC+'has_parent'].justArray.map{|o|
-        arc = {source: s.uri, target: o.uri}
-        author = s[Creator][0].R.fragment
-        arc[:sourceName] = author unless colors[author] # show each name once
-        arc[:sourceColor] = colors[author] ||= cs
-        s[Mtime].do{|t|
-          pos = (max - t[0].to_f) / range
-          arc[:sourcePos] = pos
-        }
-        d[o.uri].do{|o| # target also exists in loaded graph
-          author = o[Creator][0].R.fragment
+    d.values.map{|s|
+      s[SIOC+'has_parent'].justArray.map{|o| # source -> target
+        d[o.uri].do{|t| # target
+          arc = {source: s.uri, target: o.uri}
+          author = s[Creator][0].R.fragment
+          arc[:sourceName] = author unless colors[author]
+          arc[:sourceColor] = colors[author] ||= cs
+          author = t[Creator][0].R.fragment
           arc[:targetName] = author unless colors[author]
           arc[:targetColor] = colors[author] ||= cs
-          o[Mtime].do{|t|
-            pos = (max - t[0].to_f) / range
-            arc[:targetPos] = pos
-          }
-        }
-        arcs.push arc
-      }}
-
+          s[Mtime].do{|mt|
+            pos = (max - mt[0].to_f) / range
+            arc[:sourcePos] = pos}
+          t[Mtime].do{|mt|
+            pos = (max - mt[0].to_f) / range
+            arc[:targetPos] = pos}
+          arcs.push arc }}}
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c| "a[name=\"#{name}\"] {color: #{c}}\n"}},
