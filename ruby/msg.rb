@@ -16,7 +16,7 @@ class R
                false
              end
     d.map{|u,r| r[Content] = r[Content].justArray.map{|c|
-      c.lines.map{|l|l.match(/^<span class='q'/) ? "" : l}.join}} unless quotes
+      c.lines.map{|l|l.match(/^<div class='q'/) ? "" : l}.join}} unless quotes
     arcs = []
     days = {}
     mtimes = d.values.map{|s|
