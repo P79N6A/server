@@ -109,24 +109,21 @@ class R
       Mail::Encodings.defined?(p.body.encoding)      # decodable?
     }.map{|p|
       lastEmpty = false
-      yield e, Content,
-      H({_: :pre, class: :mail,
-         c: ["\n",
-           p.decoded.to_utf8.lines.to_a.map{|l|
-           l = l.chomp
-           if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quote
-             [{_: :span, class: :q, depth: qp[1].scan(/[>|]/).size, c: qp[3].hrefs},"\n"]
-           elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
-             [{_: :span, class: :q, depth: 0, c: l.hrefs},"\n"]
-           else
-             if l.empty? && lastEmpty
-               nil
-             else
-               lastEmpty = l.empty?
-               [{_: :span, class: :nq, c: l.hrefs(true)},"\n"] # show images in unquoted original content
-             end
-           end}]})}
-    
+      yield e, Content, H(p.decoded.to_utf8.lines.to_a.map{|l|
+        l = l.chomp
+        if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quote
+          {class: :q, depth: qp[1].scan(/[>|]/).size, c: qp[3].hrefs}
+        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
+          [{_: :span, class: :q, depth: 0, c: l.hrefs},"\n"]
+        else
+          if l.empty? && lastEmpty
+            nil
+          else
+            lastEmpty = l.empty?
+            [{_: :span, class: :nq, c: l.hrefs(true)},"\n"] # show images in unquoted original content
+          end
+        end})}
+
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 
     htmlCount = 0
