@@ -29,8 +29,8 @@ class R
 
   GET['/address'] = -> e,r {
     depth = e.path.split('/').size
-    r[:ls] = true if depth == 3 # tabular view of alpha-prefixen
-    r.q['set'] ||= 'first-page' if depth == 4 # include first page at container root
+    r[:ls] = true if depth == 3 # tabular listing of alphas
+    r.q['set'] ||= 'first-page' if depth == 4 # +first-page at container root
     nil}
 
   def mail; Mail.read node if f end
@@ -180,18 +180,21 @@ class R
     bodies = e.q.has_key? 'bodies' # keep messages
     graph[e.uri].do{|dir|dir.delete(LDP+'contains')}
     if e.format == 'text/html'
-      listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date'}).qs
-      fullURI = e.q.merge({'bodies' => ''}).qs
       size = g.keys.size
-      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'} if !e.q.has_key?('group') && size > 12
-      graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'} if !bodies && size < 24
+      if !e.q.has_key?('group') && size > 12
+        listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date'}).qs
+        graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
+      end
+      if !bodies && size < 24
+        fullURI = e.q.merge({'bodies' => ''}).qs
+        graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'}
+      end
     end
-    e.q['sort'] ||= Size # weighting uses standard size-predicate
-    group = (e.q['group']||To).expand # GROUP BY
-    # Pass 1. statistics
+    e.q['sort'] ||= Size
+    group = (e.q['group']||To).expand
     threads = {}
     weight = {}
-    g.map{|u,p|
+    g.map{|u,p| # statistics
       graph.delete u unless bodies
       p[Title].do{|t|
         title = t[0].sub ReExpr, ''
@@ -203,16 +206,14 @@ class R
         weight[a] ||= 0
         weight[a] += 1
         graph.delete a}}
-    # Pass 2. cluster
-    threads.map{|title,post|
+    threads.map{|title,post| # cluster
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
-        dir = a.R.dir
-        container = dir.uri.t # container
-        item = {'uri' => '/thread/' + post.R.basename, Title => title.noHTML, Size => post[Size]} # thread
-        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # add RDF labels
-        post[Date].justArray[0].do{|date| item[Date] = date[8..-1]}
-        graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment}
-        graph[container][LDP+'contains'] ||= []
-        graph[container][LDP+'contains'].push item }}}
+        dir = a.R.dir # address
+        container = dir.uri.t # container URI
+        item = {'uri' => '/thread/' + post.R.basename, Title => title.noHTML, Size => post[Size]} # thread resource
+        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # human-readable resource-labels
+        graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment} # container resource
+        graph[container][LDP+'contains'] ||= [] # containment triples
+        graph[container][LDP+'contains'].push item }}} # thread to container
 
 end
