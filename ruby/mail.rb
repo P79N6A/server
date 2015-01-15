@@ -210,7 +210,8 @@ class R
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir # address
         container = dir.uri.t # container URI
-        item = {'uri' => '/thread/' + post.R.basename, Title => title.noHTML, Size => post[Size]} # thread resource
+        item = {'uri' => '/thread/' + post.R.basename, Date => post[Date],
+                Title => title.noHTML, Size => post[Size]} # thread resource
         graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # human-readable resource-labels
         graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment} # container resource
         graph[container][LDP+'contains'] ||= [] # containment triples

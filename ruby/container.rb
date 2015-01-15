@@ -36,7 +36,7 @@ class R
                         s = r[Size].justArray[0]
                         [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
                         end),
-                       ([r[Date],' '] if data && sort==Date),
+                       ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
                        data && (r[Title] || r[Label]) || r.R.abbr[0..64]
                       ]}, data ? "<br>" : " "]
                end
