@@ -76,7 +76,7 @@ class R
                  nil
                else
                  titles[title] = true
-                 {_: :a, class: :title, href: r.uri, c: title}
+                 {_: :a, class: :title, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title}
                end},
              {class: :header,
               c: [r[Creator].do{|c|
@@ -88,9 +88,7 @@ class R
                     ps.map{|p| # replied-to messages
                       d[p.uri].do{|r| # target msg
                         c = r[Creator][0].R.fragment
-                        {_: :a, name: c, href: '#'+p.uri, c: c}} ||
-                      {_: :a, class: :msg, href: p.uri, c: '&#9993;'}
-                    }.intersperse(' ')}, ' ',
+                        {_: :a, name: c, href: '#'+p.uri, c: c}}}.intersperse(' ')}, ' ',
                   r[SIOC+'reply_to'].do{|c|
                     [{_: :a, class: :create, href: c.justArray[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
                   r[Date].do{|d|
