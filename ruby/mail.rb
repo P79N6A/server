@@ -110,13 +110,13 @@ class R
     }.map{|p|
       yield e, Content, H(p.decoded.to_utf8.lines.to_a.map{|l|
         l = l.chomp
-        [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
-         {class: :q, depth: qp[1].scan(/[>|]/).size, c: qp[3].hrefs}
+       [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
+          {class: :q, depth: qp[1].scan(/[>|]/).size, c: qp[3].hrefs}
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
           {class: :q, depth: 0, c: l.hrefs}
         else
-          l.empty? ? "<br>" : {class: :nq, c: l.hrefs(true)}
-         end,"\n"]})}
+          [l.hrefs(true), "<br>"]
+        end,"\n"]})}
 
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 

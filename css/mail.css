@@ -10,7 +10,6 @@ body {margin: 0}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .mail .ts {color:#fff;background-color: #ccc;font-size:.94em}
 .mail .body {font-family: monospace}
-.mail .nq {background-color:#fff;color:#000}
 .mail .q[depth] {border-radius: .13em}
 .mail .q[depth="1"] {background-color:#000;color:#fff;    margin-left:-.15em; padding-left:.15em}
 .mail .q[depth="2"] {background-color:#0F1A51;color:#fff; margin-left:-0.8em; padding-left:.15em}
