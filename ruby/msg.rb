@@ -49,10 +49,8 @@ class R
         d[o.uri].do{|t| # target
           arc = {source: s.uri, target: o.uri}
           author = s[Creator][0].R.fragment
-          arc[:sourceName] = author unless colors[author]
           arc[:sourceColor] = colors[author] ||= cs
           author = t[Creator][0].R.fragment
-          arc[:targetName] = author unless colors[author]
           arc[:targetColor] = colors[author] ||= cs
           s[Mtime].do{|mt|
             pos = (max - mt[0].to_f) / range

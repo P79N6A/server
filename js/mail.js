@@ -20,7 +20,7 @@ links.forEach(function(link) { // unique nodes from arc-list
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([360,height])
+    .size([333,height])
     .linkDistance(12)
     .charge(-64)
     .on("tick", tick)
@@ -59,8 +59,7 @@ var node = svg.selectAll(".node")
     .call(force.drag);
 
 node.append("text")
-    .attr("x", 12)
-    .attr("dy", ".35em")
+    .attr('y','-.2em')
     .style("fill", function(d) { return d.color; })
     .text(function(d) { return d.name; });
 
