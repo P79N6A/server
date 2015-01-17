@@ -37,7 +37,7 @@ class R
     contain = false
 
     [H.css('/css/html'), H.css('/css/wiki'), # View
-     {_: :form, name: :editor, method: :POST, action: e['REQUEST_PATH'],
+     {_: :form, method: :POST, action: e['REQUEST_PATH'],
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
                      c: [{_: :a, class: :uri, c: s, href: s},
