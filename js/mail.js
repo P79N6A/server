@@ -59,7 +59,7 @@ var node = svg.selectAll(".node")
     .call(force.drag);
 
 node.append("text")
-    .attr('y','-.2em')
+    .attr('y','-.2em').attr('x','-4.4em')
     .style("fill", function(d) { return d.color; })
     .text(function(d) { return d.name; });
 
