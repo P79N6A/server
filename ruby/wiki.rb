@@ -59,7 +59,7 @@ class R
                                else
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
                                end }}}].cr}}].cr},
-          ({_: :input, type: :hidden, name: :contain, value: true} if contain),
+          ({_: :input, type: :hidden, name: :contain, value: 'datetime'} if contain),
            {_: :input, type: :hidden, name: :fragment, value: fragment},
            {_: :input, type: :submit, value: 'write'}].cr}]}
 

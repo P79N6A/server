@@ -54,7 +54,14 @@ class R
     t = form[Title]
     slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
     loc = if @r[:container] || form['contain']
-            uri.t + Time.now.iso8601[0..-5].gsub(/[-T]/,'/').gsub(/[:+]/,'') + '.' + slug
+            if form['contain'] == 'datetime'
+            t = Time.now.iso8601[0..-5].gsub(/[-T]/,'/').gsub(/[:+]/,'')
+            uri.t + t + '.' + slug + '/' + slug
+            elsif form['contain'] == 'direct'
+              uri.t + slug
+            else
+              uri.t + slug
+            end
           else
             uri
           end
