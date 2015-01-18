@@ -1,6 +1,10 @@
 watch __FILE__
 class R
 
+  POST[SIOC+'Forum'] = -> d,e { # POSTing to Forum - create thread and OP (original post) in thread
+    
+  }
+
   Abstract[SIOCt+'BoardPost'] = -> graph, g, e {
     g.values.map{|p|
       p[SIOC+'reply_to'] = R[p.R.dirname + '?new&type=sioct:BoardPost']

@@ -96,7 +96,7 @@ class R
 
   Session = -> id {R['/cache/session/' + (R.dive id)]}
 
-  POST['/login'] = -> e,r {
+  Login = -> e,r {
     head = {'Location' => '/'}
     args = Rack::Request.new(r).params
     name = args['user'].slugify[0..32]

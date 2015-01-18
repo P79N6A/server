@@ -2,12 +2,9 @@
 class R
 
   def POST
+    return Login[self,@r] if path == '/login'
     return [403,{},[]] if !allowWrite
     @r[:container] = true if directory?
-
-    [@r['SERVER_NAME'],""].map{|h| justPath.cascade.map{|p| # bespoke POST handler
-        POST[h + p].do{|fn|fn[self,@r].do{|r| return r }}}}
-
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
@@ -15,7 +12,6 @@ class R
       filePOST
     when /^text\/(n3|turtle)/
       rdfPOST
-
     else
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
