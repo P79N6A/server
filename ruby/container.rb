@@ -2,6 +2,8 @@
 #watch __FILE__
 class R
 
+  Containers = [SIOC+'Forum', SIOC+'Thread']
+
   ViewA[Resource] = -> r,e {r.html}
 
   ViewGroup[Resource] = -> g,e {

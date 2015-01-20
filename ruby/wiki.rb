@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   def buildDoc
@@ -16,32 +16,24 @@ class R
     SIOCt+'WikiArticle',
     SIOCt+'WikiArticleSection',
   ]
-  
-  Contain = {
-    SIOCt+'BoardPost' => SIOC+'Forum',
-  }
 
   ViewGroup['#typeSelector'] = -> graph, e {
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
-  ViewGroup['#editor'] = -> graph, e { # <form> for basic resource-edits
-
-    fragment = e.q['fragment'].do{|s|s.slugify} || '' # fragment-id
-    subject = s = e.uri + '#' + fragment              # URI
+  ViewGroup['#editor'] = -> graph, e {
+    subject = graph.keys[0]
     model = graph[subject] || {'uri' => subject}      # resource state
     e.q['type'].do{|t|
       model[Type] ||= t.expand.R}
     model[Title] ||= ''
     model[Content] ||= ''
-    contain = false
-
     [H.css('/css/html'), H.css('/css/wiki'), # View
      {_: :form, method: :POST, action: e['REQUEST_PATH'],
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
-                     c: [{_: :a, class: :uri, c: s, href: s},
-                         {_: :a, class: :history, c: 'history', href: R[s].fragmentPath + '?set=page'}
+                     c: [{_: :a, class: :uri, c: subject, href: subject},
+                         {_: :a, class: :history, c: 'history', href: R[subject].fragmentPath + '?set=page'}
                         ]}},
                  model.keys.-(['uri']).map{|p|
                    {_: :tr,
@@ -50,7 +42,6 @@ class R
                              o.justArray.map{|o|
                                case p
                                when Type
-                                 contain = true if Contain[o.uri]
                                  [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]
                                when Content
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
@@ -59,8 +50,6 @@ class R
                                else
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
                                end }}}].cr}}].cr},
-          ({_: :input, type: :hidden, name: :contain, value: 'datetime'} if contain),
-           {_: :input, type: :hidden, name: :fragment, value: fragment},
            {_: :input, type: :submit, value: 'write'}].cr}]}
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {

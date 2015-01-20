@@ -1,10 +1,9 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
     return Login[self,@r] if path == '/login'
     return [403,{},[]] if !allowWrite
-    @r[:container] = true if directory?
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
@@ -45,47 +44,53 @@ class R
   end
 
   def formPOST
-    form = Rack::Request.new(@r).params
-    return [400,{},['fragment field missing']] unless form['fragment']
-    t = form[Title]
-    slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
-    loc = if @r[:container] || form['contain']
-            if form['contain'] == 'datetime'
-            t = Time.now.iso8601[0..-5].gsub(/[-T]/,'/').gsub(/[:+]/,'')
-            uri.t + t + '.' + slug + '/' + slug
-            elsif form['contain'] == 'direct'
-              uri.t + slug
-            else
-              uri.t + slug
-            end
-          else
-            uri
-          end
-    s = loc + '#' + form['fragment'].slugify # subject URI
-    graph = {s => {'uri' => s}}              # graph
-    form.keys.-(['contain','fragment']).map{|p| # POST data to graph
-      o = form[p]
-      o = if o.match HTTP_URI
+
+     data = Rack::Request.new(@r).params
+     type = data[Type]
+    title = data[Title]
+timestamp = Time.now.iso8601
+
+    return [400,{},['untyped resource']] unless type
+
+    @r[:container] = Containers.member?(type)
+
+    resource = {Date => timestamp}                          # source resource
+    target = @r[:container] ? descend : self                # target URI
+    targetResource = target.graph[target.uri] || {}         # target resource
+    targetType = targetResource[Type].justArray[0].maybeURI # RDF class of target
+
+    data.map{|p,o|
+      o = if o.empty?
+            nil
+          elsif o.match HTTP_URI # URI
             o.R
-          elsif p == Content
+          elsif p == Content # sanitized HTML
             StripHTML[o]
-          else
+          else # String
             o
           end
-      graph[s][p] ||= []
-      graph[s][p].push o unless o.class==String && o.empty?}
-    graph[s][SIOC+'has_container'] ||= self if @r[:container]
-    ts = Time.now.iso8601
-    graph[s][Date] ||= ts
-    ts = ts.gsub /[-+:T]/, '' # timestamp
-    path = s.R.fragmentPath      # storage path
-    doc = path + '/' + ts + '.e' # storage URI
-    doc.w graph, true            # write
+      resource[p] = o if o} # object to graph
+
+    POST[targetType].do{|handler| # domain-specific handler
+      handler[resource,targetResource]}
+
+    # mint URI if handler skips
+    s = resource.uri || (u = (@r[:container] ? (target.uri + (title && !title.empty? && title.slugify || rand.to_s.h[0..7])) : uri) + '#'
+                         resource['uri'] = u
+                         u)
+
+    graph = {s => resource}      # graph
+    ts = timestamp.gsub /[-+:T]/, '' # timestamp slug
+    path = s.R.fragmentPath      # fragment-version URI
+    doc = path + '/' + ts + '.e' # version storage-doc
+    doc.w graph, true            # write version
     cur = path.a '.e'            # canonical URI
-    cur.delete if cur.e          # unlink obsolete
-    doc.ln cur                   # link current
-    R[loc].buildDoc              # update containing-doc
-    [303,{'Location' => loc},[]]
+    cur.delete if cur.e          # unlink obsolete-version
+    doc.ln cur                   # link version
+    res = R[s].docroot           # containing resource
+    res.buildDoc                 # update doc
+
+  [303,{'Location'=>res.uri},[]] # done
   end
 
 end
