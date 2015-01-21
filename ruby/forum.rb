@@ -7,7 +7,7 @@ class R
 
   Abstract[SIOCt+'BoardPost'] = -> graph, g, e {
     g.values.map{|p|
-      p[SIOC+'reply_to'] = R[p.R.dirname + '?new&type=sioct:BoardPost']
+      p[SIOC+'reply_to'] = R[p.R.dirname + '?new']
     }
   }
 
@@ -21,6 +21,6 @@ class R
     {class: :forum,
      c: [{_: :a, class: :title, href: re.uri.t + '?set=first-page', c: title},' ',
          {_: :span, class: :desc, c: r[Content]},'<br>',
-      {_: :a, class: :new, href: re.uri + '?new&type=sioct:BoardPost', c: "+ post"}]}}
+      {_: :a, class: :new, href: re.uri.t + '?new', c: "+ post"}]}}
 
 end

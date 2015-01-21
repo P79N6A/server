@@ -36,7 +36,6 @@ class R
   end
 
   def response
-    init = q.has_key? 'new'
     set = []
     m = {'' => {'uri' => uri, Type => [R[LDP+'Resource']]}}
     s = q['set']
@@ -47,9 +46,14 @@ class R
     fs[self,q,m].do{|files|set.concat files} if fs
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
-    return E404[self,@r,m] if set.empty? && !init
+    if set.empty?
+      unless q.has_key? 'new'
+        return E404[self,@r,m]
+      end
+    end
 
-    m['#'] ||= {Type => R[q.has_key?('type') ? '#editor' : '#typeSelector']} if init
+    q['edit'] = true if q.has_key? 'new'
+    m['#editor'] = {Type => R['#editor']} if q.has_key? 'edit'
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
     ldp # capability headers
