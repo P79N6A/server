@@ -25,7 +25,7 @@ class R
     subject = graph.keys[0]
     model = graph[subject] || {'uri' => subject}      # resource state
     e.q['type'].do{|t|
-      model[Type] ||= t.expand.R}
+      model[Type] = t.expand.R}
     model[Title] ||= ''
     model[Content] ||= ''
     [H.css('/css/html'), H.css('/css/wiki'), # View
