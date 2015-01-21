@@ -71,11 +71,12 @@ class R
     s = if resource.uri # URI already exists or minted by handler
           resource.uri
         else
-          if e && uri[-1] == '/' # POST to existing container
+          if e && uri[-1] == '/' # POST to container
             title = resource[Title]
             slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
             uri + slug + '#'
-          elsif !e && (uri[-1]=='/' || Containers.member?(resource[Type].maybeURI)) # creating a container
+          elsif !e && (uri[-1]=='/' || Containers.member?(resource[Type].maybeURI)) # create container
+           #mk
             uri.t
           else # POST to doc - behave as PUT
             uri + '#'

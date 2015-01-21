@@ -123,8 +123,8 @@ class R
         else # type selector
           g['#new'] = {Type => R['#untyped']}
         end
-      else # exists, new POST
-        
+      else # new POST to container
+         g['#new'] = {Type => R['#editable']}
       end
     end
     if e.q.has_key? 'edit'

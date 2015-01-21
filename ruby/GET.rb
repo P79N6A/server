@@ -64,7 +64,7 @@ class R
       else
 
         graph = -> { # AlmostRDF™ (JSON / Hash)
-          set.map{|r|r.setEnv(@r).nodeToGraph m} # load
+          set.map{|r|r.setEnv(@r).nodeToGraph m} # fs->graph
           Mutate[m,@r] # arbitrary transform of graph
           m }
 
