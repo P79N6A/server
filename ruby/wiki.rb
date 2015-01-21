@@ -17,11 +17,11 @@ class R
     SIOCt+'WikiArticleSection',
   ]
 
-  ViewGroup['#typeSelector'] = -> graph, e {
+  ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
-  ViewGroup['#editor'] = -> graph, e {
+  ViewGroup['#editable'] = -> graph, e {
     subject = graph.keys[0]
     model = graph[subject] || {'uri' => subject}      # resource state
     e.q['type'].do{|t|

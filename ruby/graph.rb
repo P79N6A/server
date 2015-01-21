@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 =begin
  Hash/JSON for a subset of RDF,
@@ -113,8 +113,30 @@ class R
   end
 
   Mutate = -> g,e {
-    e[:Filter].justArray.map{|f|Filter[f].do{|fn| fn[g,e]}} # named filters
-    if e[:container] || e.q.has_key?('summary')
+
+    # add editor types requested
+    if e.q.has_key? 'new'
+      if e.q.has_key? 'type'
+        e.q['edit'] = true
+      else
+        g[e.uri] ||= {}
+        g[e.uri][Type] ||= []
+        g[e.uri][Type].push R['#untyped']
+      end
+    end
+    if e.q.has_key? 'edit'
+      g[e.uri] ||= {}
+      g[e.uri][Type] ||= []
+      g[e.uri][Type].push R['#editable']
+    end
+    
+    # named mutations
+    e[:Filter].justArray.map{|f|
+      Filter[f].do{|fn|
+        fn[g,e]}}
+
+    # per-type summarizers on containers
+    if e[:container]
       groups = {}
       g.map{|u,r|
         r.types.map{|type| # RDF types

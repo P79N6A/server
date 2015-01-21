@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
   def HEAD
@@ -16,21 +17,16 @@ class R
   alias_method :env, :getEnv
 
   def cors
-    headers = {
-      'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
-    }
+    headers = {'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*'}
     @r[:Response].update headers
   end
 
   def ldp
-    cors
     @r[:Links].concat ["<#{uri}>; rel=canonical",
                        "<#{aclURI}>; rel=acl",
                        "<#{docroot}>; rel=meta",
-                       "<http://www.w3.org/ns/ldp#Resource>; rel=type",
-                      ]
+                       "<http://www.w3.org/ns/ldp#Resource>; rel=type"]
     @r[:Links].push "<#{Container}>; rel=type" if @r[:container]
-
     headers = {
       'Accept-Patch' => 'application/ld+patch',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
@@ -39,10 +35,9 @@ class R
       'Allow' => Allow,
       'Link' => @r[:Links].intersperse(', ').join,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
-      'Daemon' => Daemon
-    }
-
+      'Daemon' => Daemon}
     @r[:Response].update headers
+    cors
   end
 
 end

@@ -68,15 +68,16 @@ class R
     # apply domain-specific handler
     POST[targetType].do{|h| h[resource,targetResource]}
 
-    # subject URI
-    s = if resource.uri # already exists, minted by handler
+    s = if resource.uri # URI already exists or minted by handler
           resource.uri
         else
-          if uri[-1] == '/' # POST to container
+          if e && uri[-1] == '/' # POST to existing container
             title = resource[Title]
             slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
             uri + slug + '#'
-          else # doc
+          elsif !e && (uri[-1]=='/' || Containers.member?(resource[Type].maybeURI)) # creating a container
+            uri.t
+          else # POST to doc - behave as PUT
             uri + '#'
           end
         end

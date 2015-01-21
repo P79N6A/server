@@ -38,13 +38,11 @@ class R
   def response
     set = []
     m = {'' => {'uri' => uri, Type => [R[LDP+'Resource']]}}
-    s = q['set']
-    rs = ResourceSet[s]
-    fs = FileSet[s]
-
-    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
-    fs[self,q,m].do{|files|set.concat files} if fs
+    rs = ResourceSet[q['set']]
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
+    fs = FileSet[q['set']]
+    fs[self,q,m].do{|files|set.concat files} if fs
+    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
     if set.empty?
       unless q.has_key? 'new'
@@ -52,25 +50,28 @@ class R
       end
     end
 
-    q['edit'] = true if q.has_key? 'new'
-    m['#editor'] = {Type => R['#editor']} if q.has_key? 'edit'
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
-    ldp # capability headers
-    condResponse ->{ # lazy response-finish
 
-      if set.size==1 && @r.format == set[0].mime # direct pass-through of file
+    ldp # resource life-cycle headers, for smart tools
+
+    condResponse ->{ # lazy response-finisher
+      if set.size==1 && @r.format == set[0].mime # direct to file
         set[0]
       else
-        graph = -> { set.map{|r|r.setEnv(@r).nodeToGraph m}
-          Mutate[m,@r]; m}
+
+        graph = -> {
+          set.map{|r|r.setEnv(@r).nodeToGraph m}
+          Mutate[m,@r]
+          m }
+
         if NonRDF.member? @r.format
           Render[@r.format][graph[], @r]
-        else
+        else # RDF
           if @r[:container]
-            g = graph[].toRDF
+            g = graph[].toRDF # NonRDF model w/ container-summarization/reduction
           else
-            g = RDF::Graph.new
+            g = RDF::Graph.new # full RDF-model
             set.map{|f| f.setEnv(@r).justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end
           @r[:Response][:Triples] = g.size.to_s
