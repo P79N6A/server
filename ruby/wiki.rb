@@ -10,11 +10,8 @@ class R
  
   Creatable = [
     SIOC+'Forum',
-    SIOCt+'MicroblogPost',
     SIOCt+'BlogPost',
-    SIOCt+'BoardPost',
     SIOCt+'WikiArticle',
-    SIOCt+'WikiArticleSection',
   ]
 
   ViewGroup['#untyped'] = -> graph, e {

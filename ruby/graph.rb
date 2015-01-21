@@ -116,12 +116,15 @@ class R
 
     # add editor types requested
     if e.q.has_key? 'new'
-      if e.q.has_key? 'type'
-        e.q['edit'] = true
-      else
-        g[e.uri] ||= {}
-        g[e.uri][Type] ||= []
-        g[e.uri][Type].push R['#untyped']
+      if e[404] # new resource
+        if e.q.has_key? 'type'
+          # type bound
+          e.q['edit'] = true
+        else # type selector
+          g['#new'] = {Type => R['#untyped']}
+        end
+      else # exists, new POST
+        
       end
     end
     if e.q.has_key? 'edit'

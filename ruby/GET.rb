@@ -1,3 +1,4 @@
+# coding: utf-8
 #watch __FILE__
 class R
 
@@ -45,7 +46,9 @@ class R
     FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
     if set.empty?
-      unless q.has_key? 'new'
+      if q.has_key? 'new'
+        @r[404] = true
+      else
         return E404[self,@r,m]
       end
     end
@@ -60,18 +63,18 @@ class R
         set[0]
       else
 
-        graph = -> {
-          set.map{|r|r.setEnv(@r).nodeToGraph m}
-          Mutate[m,@r]
+        graph = -> { # AlmostRDF™ (JSON / Hash)
+          set.map{|r|r.setEnv(@r).nodeToGraph m} # load
+          Mutate[m,@r] # arbitrary transform of graph
           m }
 
         if NonRDF.member? @r.format
           Render[@r.format][graph[], @r]
         else # RDF
           if @r[:container]
-            g = graph[].toRDF # NonRDF model w/ container-summarization/reduction
+            g = graph[].toRDF # almost RDF w/ container-summarization/reduction
           else
-            g = RDF::Graph.new # full RDF-model
+            g = RDF::Graph.new # full RDF
             set.map{|f| f.setEnv(@r).justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end
           @r[:Response][:Triples] = g.size.to_s
