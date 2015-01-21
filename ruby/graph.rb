@@ -114,7 +114,7 @@ class R
 
   Mutate = -> g,e {
 
-    # add editor types requested
+    # add editor types as requested
     if e.q.has_key? 'new'
       if e[404] # new resource
         if e.q.has_key? 'type'
@@ -123,8 +123,9 @@ class R
         else # type selector
           g['#new'] = {Type => R['#untyped']}
         end
-      else # new POST to container
-         g['#new'] = {Type => R['#editable']}
+      else # new post on container
+        type = g[e.uri][Type].justArray.map{|t|Containers[t.uri]}.compact[0] # lookup creatable type
+        g['#new'] = {Type => [R['#editable'], R[type]]} if type
       end
     end
     if e.q.has_key? 'edit'

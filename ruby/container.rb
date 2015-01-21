@@ -2,7 +2,11 @@
 #watch __FILE__
 class R
 
-  Containers = [SIOC+'Forum', SIOC+'Thread']
+  Containers = {
+    SIOC+'Forum' => SIOC+'Thread',
+    SIOC+'Thread' => SIOCt+'BoardPost',
+    SIOCt+'BoardPost' => SIOCt+'BoardPost',
+  }
 
   ViewA[Resource] = -> r,e {r.html}
 

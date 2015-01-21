@@ -75,7 +75,7 @@ class R
             title = resource[Title]
             slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
             uri + slug + '#'
-          elsif !e && (uri[-1]=='/' || Containers.member?(resource[Type].maybeURI)) # create container
+          elsif !e && (uri[-1]=='/' || Containers.keys.member?(resource[Type].maybeURI)) # create container
            #mk
             uri.t
           else # POST to doc - behave as PUT
