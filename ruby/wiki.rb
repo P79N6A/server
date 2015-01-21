@@ -26,7 +26,7 @@ class R
     model[Title] ||= ''
     model[Content] ||= ''
     [H.css('/css/html'), H.css('/css/wiki'), # View
-     {_: :form, method: :POST, action: e['REQUEST_PATH'],
+     {_: :form, method: :POST,
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
                      c: [{_: :a, class: :uri, c: subject, href: subject},
@@ -39,11 +39,15 @@ class R
                              o.justArray.map{|o|
                                case p
                                when Type
-                                 [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href] unless o.uri == '#editable'
+                                 unless ['#editable', Directory].member?(o.uri)
+                                   [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]
+                                 end
                                when Content
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when Date
-                                 {_: :input, name: p, type: :datetime, value: !o || o.empty? && Time.now.iso8601 || o}
+                                 {_: :b, c: [o,' ']}
+                               when Size
+                                 [o,' ']
                                else
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
                                end }}}].cr}}].cr},

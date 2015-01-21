@@ -52,7 +52,7 @@ class R
     targetType = targetResource[Type].justArray[0].maybeURI # RDF class of target
 
     data.map{|p,o|
-      o = if o.empty?
+      o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI # full URI
             o.R
