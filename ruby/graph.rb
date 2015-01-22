@@ -123,9 +123,9 @@ class R
         else # type selector
           g['#new'] = {Type => R['#untyped']}
         end
-      else # new post on container
-        type = g[e.uri][Type].justArray.map{|t|Containers[t.uri]}.compact[0] # lookup creatable type
-        g['#new'] = {Type => [R['#editable'], R[type]]} if type
+      else # new post
+        g[e.uri][Type].justArray.map{|t|Containers[t.uri]}.compact[0].do{|t| # find type
+          g['#new'] = {Type => [R['#editable'], R[t]]}}
       end
     end
     if e.q.has_key? 'edit'

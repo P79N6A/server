@@ -66,7 +66,7 @@ class R
     [H.css('/css/page', true),
      (H.js('/js/pager', true) if paged),
     ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
-     {_: :a, class: :cube, href: '??', c: {_: :img, src: '/css/misc/cube.png'}},
+#     {_: :a, class: :cube, href: '??', c: {_: :img, src: '/css/misc/cube.png'}},
      g.map{|u,r|ViewA[LDP+'Resource'][r,env]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {

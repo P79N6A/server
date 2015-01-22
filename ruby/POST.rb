@@ -71,15 +71,14 @@ class R
     s = if resource.uri # URI already exists or minted by handler
           resource.uri
         else
-          if e && uri[-1] == '/' # POST to container
+          if e # container exists
             title = resource[Title]
             slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
-            uri + slug + '#'
-          elsif !e && (uri[-1]=='/' || Containers.keys.member?(resource[Type].maybeURI)) # create container
-           #mk
-            uri.t
-          else # POST to doc - behave as PUT
-            uri + '#'
+            uri.t + slug + '#' # contained-resource URI
+          elsif Containers[resource[Type].maybeURI] # creating a container
+            uri.t # container URI
+          else
+            uri + '#' + (resource['fragment']||'') #  doc#frag
           end
         end
 

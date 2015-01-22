@@ -1,10 +1,8 @@
-body {margin:0}
-a {text-decoration: none}
-img {max-width: 100%}
-table.chat {border-spacing:0;margin:0; clear: both}
-table.chat td {font-family: sans-serif;padding: 0; vertical-align: top}
+table.chat a {text-decoration: none}
+table.chat img {max-width: 100%}
+table.chat td {border-radius: .18em}
 table.chat td.date {background-color: #ccc; color: #fff}
 table.chat td.creator {text-align: right; background-color: #ddd}
 table.chat td.creator a {color: #fff}
-table.chat td.body {padding: 0 0 .1em .3em; border-width: 0 0 .1em 0; border-style: solid; border-color: #ddd}
+table.chat td.body {border-width: 0 0 .1em 0; border-style: solid; border-color: #ddd}
 table.chat td.body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}

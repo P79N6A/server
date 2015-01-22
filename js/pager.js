@@ -1,13 +1,7 @@
-var pager = function(){
+document.addEventListener("DOMContentLoaded", function(){
     document.addEventListener("keydown",function(e){
-	if(e.keyCode == 78){
-	    e.preventDefault();
+	if(e.keyCode == 78)
 	    document.location.href = document.querySelector('a[rel=next]').href
-	} else if (e.keyCode==80) {
-	    e.preventDefault();
+	if (e.keyCode==80)
 	    document.location.href = document.querySelector('a[rel=prev]').href
-	}
-    }, false);
-}
-document.addEventListener("DOMContentLoaded", pager, false);
-
+    },false)}, false);

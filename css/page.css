@@ -1,7 +1,4 @@
-body > a.id {font-size: 1.8em; color: #222; background-color: #fff; text-decoration: none; margin:.2em;}
-a.up, a[rel=next], a[rel=prev]{max-width: 46%; text-decoration: none; background-color: #fff; color: #000;}
+a.up, a[rel=next], a[rel=prev]{max-width: 46%;font-size: 1.8em; border-radius: .16em; text-decoration: none; background-color: #ccc; color: #fff;margin-left:.06em}
 a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
-a.up {float: left;font-size: 2.2em}
-a.cube {float: right; margin: .2em}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
