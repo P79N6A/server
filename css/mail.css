@@ -1,5 +1,5 @@
 body {margin: 0}
-.messages {float: left;margin-left:18.8em}
+.messages {float: left;margin-left:21%}
 .mail {clear:both;max-width: 200ex}
 .mail .header {position:relative}
 .mail .create, .mail .discussion, .mail a.msg, [name], a.to {font-family: sans-serif;background-color:#000;color: #fff}
