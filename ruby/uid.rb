@@ -4,7 +4,7 @@
 module Th
 
   def user
-    @user ||= (user_WebID || user_words || user_DNS)
+    @user ||= (user_WebID || user_DNS)
   end
 
   def user_WebID
@@ -14,12 +14,13 @@ module Th
       return cert.r.R if cert.exist?} 
   end
 
-  def verifyWebID pem = cert
+  def verifyWebID pem = x509cert
     if pem
       OpenSSL::X509::Certificate.new(pem).do{|x509|
         x509.extensions.find{|x|x.oid == 'subjectAltName'}.do{|user|
           user = user.value.sub /^URI./, ''
-          graph = RDF::Repository.load user
+          puts "user #{user}"
+          graph = RDF::Repository.load user, headers: {'Accept' => 'text/turtle, text/n3, application/ld+json;q=0.8, application/rdf+xml;q=0.3'}
           query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{user}> :key [ :modulus ?m; :exponent ?e; ] . }"
           SPARQL.execute query, graph do |result|
             if x509.public_key.n.to_i == result[:m].value.to_i(16)
@@ -42,21 +43,6 @@ module Th
     nil
   end
 
-  def cookies
-    (Rack::Request.new self).cookies
-  end
-
-  def session
-    cookies['session-id'].do{|s|R::Session[s]}
-  end
-
-  # a very basic "name+password" user. must be whitelisted per-domain: cd domain/x && ln -s ../../user .
-  # TODO add /user handler to forward to actual user-path (bypass symlink requirement), as
-  # /user/admin is not actually there but inside a sharded subdir to keep dir-size in check..
-  def user_words
-    session.do{|s|s['user'][0]}
-  end
-
   def user_DNS
     addr = self['HTTP_ORIGIN_ADDR'] || self['REMOTE_ADDR'] || '0.0.0.0'
     R['dns:' + addr]
@@ -66,11 +52,6 @@ end
 
 class R
 
-  LoginForm = {_: :form, action: '/login', method: :POST,
-      c: [{_: :input, name: :user, placeholder: :username},
-          {_: :input, name: :passwd, type: :password, placeholder: :password},
-          {_: :input, type: :submit, value: :login}]}
-
   GET['/whoami'] = -> e,r {
     u = r.user.uri
     m = {u => {'uri' => u, Type => R[FOAF+'Person']}}
@@ -78,52 +59,12 @@ class R
     e.condResponse ->{
       Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
-  GET['/login'] = -> e,r {
-    uid = r.user.uri
-    content = if uid.match /^dns:/
-                LoginForm
-              else 
-                [{_: :h3, c: {_: :a, href: uid, c: uid }}, ' ',
-                 {_: :a, href: '/logout', c: 'log out', style: 'border: .1em dotted; padding: .2em; font-size: 1.1em'}]
-              end
-    graph = {e.uri => {'uri' => e.uri, Content => H(content)}}
-    [200, {'Content-Type' => r.format + '; charset=UTF-8'}, [Render[r.format][graph,r]]]}
-
-  GET['/logout'] = -> e,r {
-    r.session.do{|s|
-      s['user'] = nil}
-    [303, {'Location' => '/'}, []]}
-
-  Session = -> id {R['/cache/session/' + (R.dive id)]}
-
-  Login = -> e,r {
-    head = {'Location' => '/'}
-    args = Rack::Request.new(r).params
-    name = args['user'].slugify[0..32]
-    user = R['/user/' + name.h[0..2] + '/' + name + '#' + name]
-    shadow = R['/index' + user.uri]
-    pwI = args['passwd'].crypt 'sel'      # claimed
-    pwR = shadow['passwd'][0]             # actual
-    unless pwR                            # init user
-      user.jsonDoc.
-        w({user.uri => {DC+'created' => Time.now.iso8601}},true)
-      shadow['passwd'] = pwR = pwI
-    end
-    if pwI == pwR                       # passwd valid?
-      head['Location'] = user.uri
-      session_id = rand.to_s.h
-      Session[session_id]['user'] = user
-      Rack::Utils.set_cookie_header!(head, "session-id", {:value => session_id, :path => "/"})
-      
-    end
-    [303,head,[]]}
-
   ViewGroup[FOAF+'Person'] = -> g,env {
     [{_: :style, c: 'a.person {font-size: 2.3em;color:#000;background-color:#fff;text-decoration:none}'},
       g.map{|u,r|ViewA[FOAF+'Person'][r,env]}]}
 
   ViewA[FOAF+'Person'] = -> u,e {
-    name = u[Name].justArray[0] || 'anonymous'
+    name = u[Name].justArray[0] || u.uri
     href = (u[SIOC+'has_container'].justArray[0]||u).uri
     [Name,Type,SIOC+'has_container'].map{|p|u.delete p}
     [{_: :a, class: :person, href: href, c: ['☺ ',name]},

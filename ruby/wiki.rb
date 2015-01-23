@@ -32,12 +32,14 @@ class R
                      c: [{_: :a, class: :uri, c: subject, href: subject},
                          {_: :a, class: :history, c: 'history', href: R[subject].fragmentPath + '?set=page'}
                         ]}},
-                 model.keys.-(['uri']).map{|p|
+                 model.keys.map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.abbr}},
                          {_: :td, c: model[p].do{|o|
                              o.justArray.map{|o|
                                case p
+                               when 'uri'
+                                  [{_: :input, type: :hidden,  name: :uri, value: o}, o.R.href]
                                when Type
                                  unless ['#editable', Directory].member?(o.uri)
                                    [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]

@@ -68,15 +68,15 @@ class R
     # apply domain-specific handler
     POST[targetType].do{|h| h[resource,targetResource]}
 
-    s = if resource.uri # URI already exists or minted by handler
+    s = if resource.uri
           resource.uri
         else
-          if e # container exists
+          if e # POST to container
             title = resource[Title]
             slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
             uri.t + slug + '#' # contained-resource URI
-          elsif Containers[resource[Type].maybeURI] # creating a container
-            uri.t # container URI
+          elsif Containers[resource[Type].maybeURI] # create container
+            uri.t
           else
             uri + '#' + (resource['fragment']||'') #  doc#frag
           end

@@ -54,7 +54,7 @@ class R
     Stats[:error][error]||= 0
     Stats[:error][error] += 1
 
-    $stderr.puts [500, error[Title], x.backtrace]
+    $stderr.puts [500, error[Title]]
 
     [500,{'Content-Type' => e.format},
      [Render[e.format].do{|p|p[graph,e]} ||
