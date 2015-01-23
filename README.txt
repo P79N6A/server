@@ -1,17 +1,19 @@
-PW   serve a POSIX filesystem as RDF+HTML over HTTP
+pw  serve POSIX filesystem <> RDF+HTML <> HTTP
 
-NOINSTALL thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
-          unicorn -r./ruby/constants -p 80 ruby/httpd.ru
+RUN thin --threaded -r./ruby/constants -R ./ruby/httpd.ru -p 80 start
+    unicorn -r./ruby/constants -p 80 ruby/httpd.ru
 
 INSTALL cd ruby
         bundle install # install dependencies, Rack, RDFrb
-	./install      # symlink checkout-path to library-path. rsync, cp or build a gem for "release" version
+	./install      # symlink checkout-path to library-path. rsync, cp or build a gem for a "release" version..
 
 DAEMON       host      port  notes
  pw	     0.0.0.0   80    setcap cap_net_bind_service=+ep `which ruby`
  pw local    127.0.0.1 80    personal webserver
- pw apache   local     3000  see conf/apache.conf for WebID + sendfile config
- pw nginx    local     3000  conf/nginx.conf
+ pw apache   localhost 3000  conf/apache.conf
+ pw nginx    localhost 3000  conf/nginx.conf
+
+ unicorn -rww -p 80 /src/pw/ruby/httpd.ru
 
 SETUP
  mkdir domain/localhost

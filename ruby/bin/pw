@@ -1,13 +1,4 @@
 #!/usr/bin/env ruby
-=begin
- the first argument is ours, and expands. full args are passed along to thin
- this script is just a convenience. for unicorn[1], or whatever server see <file:httpd.ru>, or try:
-
-  $ echo run R > config.ru
-
-1. <http://unicorn.bogomips.org/>
-
-=end
 case ARGV[0]
 when 'varnish'
   ARGV.shift
