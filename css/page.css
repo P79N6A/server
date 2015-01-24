@@ -1,4 +1,4 @@
-a.up, a[rel=next], a[rel=prev]{max-width: 46%;font-size: 1.8em; border-radius: .16em; text-decoration: none; background-color: #ccc; color: #fff;margin-left:.06em}
+a.up, a[rel=next], a[rel=prev]{max-width: 46%;font-size: 1.5em; border-radius: .18em; text-decoration: none; background-color: #ccc; color: #fff;margin-right:.1em}
 a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
