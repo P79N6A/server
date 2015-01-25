@@ -57,7 +57,12 @@ class R
     e.ldp.condResponse ->{
       Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
-  ViewGroup[User] = -> g,env {g.map{|u,r|ViewA[User][r,env]}}
+  ViewGroup[User] = -> g,env {
+    if env.user.uri.match(/^http/)
+      g.map{|u,r|ViewA[User][r,env]}
+    else
+      {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
+    end}
 
   ViewA[User] = -> u,e {
     [{_: :h1, c: u[Name]},
