@@ -53,7 +53,8 @@ class R
     u = r.user.uri
     m = {u => {'uri' => u, Type => R[User]}}
     r[:Response]['ETag'] = u.h
-    e.condResponse ->{
+    r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
+    e.ldp.condResponse ->{
       Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   ViewGroup[User] = -> g,env {g.map{|u,r|ViewA[User][r,env]}}

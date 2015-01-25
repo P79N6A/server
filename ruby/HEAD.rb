@@ -19,6 +19,7 @@ class R
   def cors
     headers = {'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*'}
     @r[:Response].update headers
+    self
   end
 
   def ldp
@@ -33,11 +34,14 @@ class R
       'Access-Control-Allow-Credentials' => 'true',
       'Access-Control-Expose-Headers' => "User, Triples, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
+      'Daemon' => Daemon,
       'Link' => @r[:Links].intersperse(', ').join,
+      'User' => @r.user.uri,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
-      'Daemon' => Daemon}
+    }
     @r[:Response].update headers
     cors
+    self
   end
 
 end
