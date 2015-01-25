@@ -19,8 +19,8 @@ module Th
       OpenSSL::X509::Certificate.new(pem).do{|x509|
         x509.extensions.find{|x|x.oid == 'subjectAltName'}.do{|user|
           user = user.value.sub /^URI./, ''
-          puts "user #{user}"
-          graph = RDF::Repository.load user, headers: {'Accept' => 'text/turtle, text/n3, application/ld+json;q=0.8, application/rdf+xml;q=0.3'}
+          head = {'Accept' => 'text/turtle, text/n3, application/ld+json;q=0.8, text/html;q=0.5, application/rdf+xml;q=0.3'}
+          graph = RDF::Repository.load user, headers: head
           query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{user}> :key [ :modulus ?m; :exponent ?e; ] . }"
           SPARQL.execute query, graph do |result|
             if x509.public_key.n.to_i == result[:m].value.to_i(16)
