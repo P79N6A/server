@@ -9,9 +9,9 @@ module Th
 
   def user_WebID
     x509cert.do{|c|
-      cert = ('/cache/uid/' + (R.dive c.h)).R
+      cert = R['/cache/uid/' + R.dive(c.h)]
       verifyWebID.do{|id| cert.w id } unless cert.exist?
-      return cert.r.R if cert.exist?} 
+      return R[cert.r] if cert.exist?}
   end
 
   def verifyWebID pem = x509cert
@@ -59,16 +59,12 @@ class R
     e.condResponse ->{
       Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
-  ViewGroup[FOAF+'Person'] = -> g,env {
-    [{_: :style, c: 'a.person {font-size: 2.3em;color:#000;background-color:#fff;text-decoration:none}'},
-      g.map{|u,r|ViewA[FOAF+'Person'][r,env]}]}
+  ViewGroup[FOAF+'Person'] = -> g,env {g.map{|u,r|ViewA[FOAF+'Person'][r,env]}}
 
   ViewA[FOAF+'Person'] = -> u,e {
-    name = u[Name].justArray[0] || u.uri
-    href = (u[SIOC+'has_container'].justArray[0]||u).uri
-    [Name,Type,SIOC+'has_container'].map{|p|u.delete p}
-    [{_: :a, class: :person, href: href, c: ['☺ ',name]},
-     (ViewA[Resource][u,e] unless u.keys.size==1)]}
+    [{_: :h1, c: u[Name]},
+     {_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
+     ViewA[Resource][u,e]]}
 
   ViewGroup[SIOC+'Usergroup'] = TabularView
 
