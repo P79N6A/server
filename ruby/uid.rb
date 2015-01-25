@@ -1,6 +1,4 @@
 # coding: utf-8
-#watch __FILE__
-
 module Th
 
   def user
@@ -34,8 +32,7 @@ module Th
   end
 
   def x509cert
-    (self['HTTP_SSL_CLIENT_CERT']||
-     self['rack.peer_cert']).do{|v|
+    (self['HTTP_SSL_CLIENT_CERT']||self['rack.peer_cert']).do{|v|
       p = v.split /[\s\n]/
       return [p[0..1].join(' '),
               p[2..-3],
