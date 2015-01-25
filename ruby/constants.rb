@@ -39,6 +39,7 @@ class R < RDF::URI
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
+  User     = SIOC + 'UserAccount'
   Name     = SIOC + 'name'
   Post     = SIOC + 'Post'
   To       = SIOC + 'addressed_to'

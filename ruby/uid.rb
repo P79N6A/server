@@ -54,14 +54,14 @@ class R
 
   GET['/whoami'] = -> e,r {
     u = r.user.uri
-    m = {u => {'uri' => u, Type => R[FOAF+'Person']}}
+    m = {u => {'uri' => u, Type => R[User]}}
     r[:Response]['ETag'] = u.h
     e.condResponse ->{
       Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
-  ViewGroup[FOAF+'Person'] = -> g,env {g.map{|u,r|ViewA[FOAF+'Person'][r,env]}}
+  ViewGroup[User] = -> g,env {g.map{|u,r|ViewA[User][r,env]}}
 
-  ViewA[FOAF+'Person'] = -> u,e {
+  ViewA[User] = -> u,e {
     [{_: :h1, c: u[Name]},
      {_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
      ViewA[Resource][u,e]]}
