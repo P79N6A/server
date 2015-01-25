@@ -5,6 +5,10 @@ module Th
     @user ||= (user_WebID || user_DNS)
   end
 
+  def signedIn
+    user.uri.match /^http/
+  end
+
   def user_WebID
     x509cert.do{|c|
       cert = R['/cache/uid/' + R.dive(c.h)]
@@ -58,7 +62,7 @@ class R
       Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   ViewGroup[User] = -> g,env {
-    if env.user.uri.match(/^http/)
+    if env.signedIn
       g.map{|u,r|ViewA[User][r,env]}
     else
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
