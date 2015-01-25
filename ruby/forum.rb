@@ -21,6 +21,6 @@ class R
     {class: :forum,
      c: [{_: :a, class: :title, href: re.uri.t + '?set=first-page', c: title},' ',
          {_: :span, class: :desc, c: r[Content]},'<br>',
-      {_: :a, class: :new, href: re.uri.t + '?new', c: "+ post"}]}}
+         ({_: :a, class: :new, href: re.uri.t + '?new', c: "+ post"} if e.signedIn)]}}
 
 end
