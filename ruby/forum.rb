@@ -17,10 +17,11 @@ class R
      g.values.map{|r|ViewA[SIOC+'Forum'][r,e]}]}
 
   ViewA[SIOC+'Forum'] = -> r,e {
+    editing = e.q.has_key?('edit')
     {class: :forum,
      c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},' ',
          {_: :span, class: :desc, c: r[Content]},
-         ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑'} if e.signedIn),
-         ({_: :a, class: :new, href: r.uri + '?new', c: "+ post"} if e.signedIn)]}}
+         ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑'} if e.signedIn && !editing),
+         ({_: :a, class: :new, href: r.uri + '?new', c: "+ post"} if e.signedIn && !editing)]}}
 
 end
