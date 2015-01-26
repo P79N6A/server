@@ -79,7 +79,8 @@ class R
        {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
     (ViewA[Resource][u,e] unless u.keys.size==1)]}
 
-  ServerInfo = -> e,r{   g = {}
+  GET['/stat'] = -> e,r {
+    g = {}
     r.q['sort'] ||= 'stat:size'
 
     Stats.map{|sym, table|
