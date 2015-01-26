@@ -12,7 +12,7 @@ class R
     address = address.downcase
     name = address.split('@')[0]
     alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
-    '/address/' + alpha + '/' + address + '/' + name + '#' + name}
+    '/address/' + alpha + '/' + address.sub('@','.') + '/' + name + '#' + name}
 
   GET['/thread'] = -> e,r {
     m = {}
