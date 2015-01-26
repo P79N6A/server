@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   def R.dev # scan watched-files for changes
@@ -22,7 +22,7 @@ class R
     resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # resource instance
     e['uri'] = resource.uri                                # canonical URI to environment
     e[:Links] = [] ; e[:Response] = {}                     # response metadata
-#    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # log request
+#    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # verbose-log request
     resource.setEnv(e).send(method).do{|s,h,b| # call into request and inspect response
       R.log e,s,h,b # log response
       [s,h,b]} # return response
@@ -88,7 +88,6 @@ class R
       g[group] = {'uri' => group,
                   Type => R[Container], Label => sym.to_s,
                   LDP+'contains' => table.map{|key, count|
-
                     uri = case sym
                           when :error
                             key.uri
@@ -101,15 +100,27 @@ class R
                           else
                             e.uri + '#' + rand.to_s.h
                           end
+                  title = case sym
+                          when :error
+                            key[Title]
+                          else
+                            key
+                          end
+                  {'uri' => uri, Title => title, Stat+'size' => count }}
+                 }}
 
-                    title = case sym
-                            when :error
-                              key[Title]
-                            else
-                              key
-                            end
-
-                    {'uri' => uri, Title => title, Stat+'size' => count }}}}
+    https =  r['rack.url_scheme'][-1]=='s'
+    g['#scheme'] = {'uri' => '#scheme', Type => R[Container],
+                    LDP+'contains' => [
+                      {'uri' => r['rack.url_scheme'] + "://" + r['SERVER_NAME'] + '/stat',
+                       Title => r['rack.url_scheme'],
+                       Size => Stats[:status].values.inject(0){|s,v|s+v}
+                      },
+                      {'uri' => (https ? 'http' : 'https') + "://" + r['SERVER_NAME'] + '/stat',
+                       Title => https ? 'http' : 'https',
+                       Size => 0
+                      }
+                    ]}
 
     g['#storage'] = {
          Type => R[Resource],
