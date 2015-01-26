@@ -1,3 +1,4 @@
+# coding: utf-8
 watch __FILE__
 class R
 
@@ -16,11 +17,10 @@ class R
      g.values.map{|r|ViewA[SIOC+'Forum'][r,e]}]}
 
   ViewA[SIOC+'Forum'] = -> r,e {
-    re = r.R.stripFrag
-    title = r[Title][0]
     {class: :forum,
-     c: [{_: :a, class: :title, href: re.uri.t + '?set=first-page', c: title},' ',
-         {_: :span, class: :desc, c: r[Content]},'<br>',
-         ({_: :a, class: :new, href: re.uri.t + '?new', c: "+ post"} if e.signedIn)]}}
+     c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},' ',
+         {_: :span, class: :desc, c: r[Content]},
+         ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑'} if e.signedIn),
+         ({_: :a, class: :new, href: r.uri + '?new', c: "+ post"} if e.signedIn)]}}
 
 end
