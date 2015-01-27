@@ -1,7 +1,7 @@
 pw  serve POSIX filesystem <> RDF+HTML <> HTTP
 
 INSTALL cd ruby
-        bundle install # install missing dependencies
+        bundle install # dependencies
 	./install      # link source to library-path
         cp bin/pw /usr/local/bin # adjust path as appropriate
 
@@ -10,10 +10,8 @@ USAGE
  pw ssl        # https
  foreman start # http -> https, https
 
-SETUP
- mkdir domain/localhost
+HOST mkdir domain/hostname
 
 CLEANUP
   rm -rf cache # cached RDF and thumbnails
-         index # fs-backed triple-index and/or other DB storage-files
- 
+         index # fs-backed triple-index and/or other db-stores
