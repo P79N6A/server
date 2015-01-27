@@ -111,31 +111,29 @@ class R
     end
     doc
   end
-
+ 
   Mutate = -> g,e {
-
-    # add editor types as requested
     if e.q.has_key? 'new'
-      if e[404] # new resource
+      if e[404] # new standalone resource
         if e.q.has_key? 'type'
-          # type bound
           e.q['edit'] = true
-        else # type selector
+        else # bind type
           g['#new'] = {Type => R['#untyped']}
         end
-      else # new post
-        g[e.uri][Type].justArray.map{|t|Containers[t.uri]}.compact[0].do{|t| # find type
-          g['#new'] = {Type => [R['#editable'], R[t]]}}
+      else # post to container
+        g[e.uri][Type].justArray.map{|type|
+          Containers[type.uri]}.compact[0].do{|childType|
+          g['#new'] = {Type => [R['#editable'], R[childType]]}}
       end
     end
+
     if e.q.has_key? 'edit'
       g[e.uri] ||= {}
       g[e.uri][Type] ||= []
       g[e.uri][Type].push R['#editable']
     end
-    
-    # named mutations
-    e[:Filter].justArray.map{|f|
+
+    e[:Filter].justArray.map{|f| # bespoke mutation
       Filter[f].do{|fn|
         fn[g,e]}}
 
