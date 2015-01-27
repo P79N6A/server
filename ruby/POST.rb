@@ -50,7 +50,10 @@ class R
     resource = {Date => timestamp}                          # source resource
     targetResource = graph[uri] || {}                       # target resource
     targetType = targetResource[Type].justArray[0].maybeURI # RDF class of target
-
+    puts [[:uri,uri,],
+          [:target,targetResource],
+          [:targetType,targetType],
+         ].map{|r|r.join "\t"}
     data.map{|p,o|
       o = if !o || o.empty?
             nil
