@@ -21,3 +21,4 @@ a > h1, a > h2 {background-color:#fff;color:#000}
 .edit:hover { color: #7f7 }
 
 .create, .edit, .history {float: right}
+.cancel {border-radius:.2em; background-color:#f00; color: #fff; font-size:1.4em; margin-right: .2em;padding: .1em .3em .1em .3em}

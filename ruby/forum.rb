@@ -3,7 +3,7 @@ watch __FILE__
 class R
 
   POST[SIOC+'Forum'] = -> d,e { # POSTing to Forum - create thread and OP (original post) in thread
-    
+    puts "forum post"
   }
 
   Abstract[SIOCt+'BoardPost'] = -> graph, g, e {
@@ -17,7 +17,7 @@ class R
      g.values.map{|r|ViewA[SIOC+'Forum'][r,e]}]}
 
   ViewA[SIOC+'Forum'] = -> r,e {
-    editing = e.q.has_key?('edit')
+    editing = e.q.has_key?('new') || e.q.has_key?('edit')
     {class: :forum,
      c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},' ',
          {_: :span, class: :desc, c: r[Content]},

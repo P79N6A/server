@@ -53,6 +53,7 @@ class R
                                else
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
                                end }}}].cr}}].cr},
+           {_: :a, class: :cancel, href: e.uri, c: 'X'},
            {_: :input, type: :submit, value: 'write'}].cr}]}
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {

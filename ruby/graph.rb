@@ -121,8 +121,8 @@ class R
           g['#new'] = {Type => R['#untyped']}
         end
       else # post to container
-        g[e.uri][Type].justArray.map{|type|
-          Containers[type.uri]}.compact[0].do{|childType|
+        g[e.uri][Type].justArray.map{|type| Containers[type.uri]}.
+          compact[0].do{|childType|
           g['#new'] = {Type => [R['#editable'], R[childType]]}}
       end
     end
