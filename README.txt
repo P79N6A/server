@@ -1,4 +1,4 @@
-pw  serve POSIX filesystem <> RDF+HTML <> HTTP
+pw  POSIX filesystem <> RDF+HTML <> HTTP
 
 INSTALL cd ruby
         bundle install # dependencies
@@ -6,7 +6,7 @@ INSTALL cd ruby
         cp bin/pw /usr/local/bin
 
 USAGE
- pw            # http - setcap cap_net_bind_service=+ep `which ruby`
+ pw            # http
  pw ssl        # https
  foreman start # http -> https, https
 

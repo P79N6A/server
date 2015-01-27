@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def POST
@@ -53,7 +53,6 @@ class R
 
     [[:client, @r.user],
       [:uri,uri,],
-     [:target,targetResource],
      [:containers, containers],
     ].map{|r|
       puts r.join "\t"
