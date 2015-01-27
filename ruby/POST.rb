@@ -45,15 +45,20 @@ class R
 
   def formPOST
     data = Rack::Request.new(@r).params
-    return [400,{},['untyped resource']] unless data[Type] # a type of rdfs:resource will do
+    return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
     timestamp = Time.now.iso8601
     resource = {Date => timestamp}                          # source resource
     targetResource = graph[uri] || {}                       # target resource
-    targetType = targetResource[Type].justArray[0].maybeURI # RDF class of target
-    puts [[:uri,uri,],
-          [:target,targetResource],
-          [:targetType,targetType],
-         ].map{|r|r.join "\t"}
+    containers = targetResource[Type].justArray.map(&:maybeURI).compact
+
+    [[:client, @r.user],
+      [:uri,uri,],
+     [:target,targetResource],
+     [:containers, containers],
+    ].map{|r|
+      puts r.join "\t"
+    }
+
     data.map{|p,o|
       o = if !o || o.empty?
             nil
@@ -68,8 +73,8 @@ class R
           end
       resource[p] = o if o} # object to graph
 
-    # apply domain-specific handler
-    POST[targetType].do{|h| h[resource,targetResource]}
+    containers.map{|c| # apply container-specific handlers
+      POST[c].do{|h| h[resource,targetResource]}}
 
     s = if resource.uri
           resource.uri

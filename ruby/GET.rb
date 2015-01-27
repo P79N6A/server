@@ -92,16 +92,10 @@ class R
       @r[:Status] ||= 200
       @r[:Response]['Content-Length'] ||= body.size.to_s
       if body.class == R
-        if Apache
-          [@r[:Status], @r[:Response].update({'X-Sendfile' => body.pathPOSIX}), []]
-        elsif Nginx
-          [@r[:Status], @r[:Response].update({'X-Accel-Redirect' => '/fs/' + body.pathPOSIXrel}), []]
-        else
-          f = Rack::File.new nil
-          f.instance_variable_set '@path', body.pathPOSIX
-          f.serving(@r).do{|s,h,b|
-            [s, h.update(@r[:Response]), b]}
-        end
+        f = Rack::File.new nil
+        f.instance_variable_set '@path', body.pathPOSIX
+        f.serving(@r).do{|s,h,b|
+          [s, h.update(@r[:Response]), b]}
       else
         [@r[:Status], @r[:Response], [body]]
       end
