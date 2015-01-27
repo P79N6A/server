@@ -18,7 +18,7 @@ module Rack
 end
 
 case ARGV[0]
-when 'nossl'
+when 'to_ssl'
   ARGV.shift
   ARGV.unshift *%w{-p 80}
   R::GET['/'] = -> d,e {[301,{'Location' => "https://"+e['SERVER_NAME']+e['REQUEST_URI']},[]]}

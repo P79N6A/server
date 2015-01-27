@@ -1,2 +1,2 @@
-HTTP: pw nossl
+HTTP: pw to_ssl
 HTTPS: pw ssl
