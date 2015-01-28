@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   def buildDoc
@@ -20,7 +20,7 @@ class R
 
   ViewGroup['#editable'] = -> graph, e {
     subject = graph.keys[0]
-    model = graph[subject] || {'uri' => subject}      # resource state
+    model = graph[subject] || {'uri' => subject}
     e.q['type'].do{|t|
       model[Type] = t.expand.R}
     model[Title] ||= ''

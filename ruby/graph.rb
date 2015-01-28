@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 =begin
  Hash/JSON for a subset of RDF,
@@ -128,9 +128,10 @@ class R
     end
 
     if e.q.has_key? 'edit'
-      g[e.uri] ||= {}
-      g[e.uri][Type] ||= []
-      g[e.uri][Type].push R['#editable']
+      r = g[e.uri] ||= {}
+      r[Type] ||= []
+      r[Type].push R['#editable']
+      [LDP+'contains',Size].map{|p|r.delete p}
     end
 
     e[:Filter].justArray.map{|f| # bespoke mutation

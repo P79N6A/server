@@ -41,7 +41,7 @@ class R
       mime = ct.split(';')[0]
       Stats[:format][mime] ||= 0
       Stats[:format][mime] += 1}
-    puts [e.uri, '<'+e.user+'>', e['HTTP_REFERER']].compact.map(&:to_s).map(&:to_utf8).join ' '
+    puts [e['REQUEST_METHOD'], s, e.uri, '<'+e.user+'>', e['HTTP_REFERER']].compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
   E500 = -> x,e {

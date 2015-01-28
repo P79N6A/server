@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -44,48 +44,42 @@ class R
   end
 
   def formPOST
-    data = Rack::Request.new(@r).params
+    data = Rack::Request.new(@r).POST
     return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
     timestamp = Time.now.iso8601
     resource = {Date => timestamp}    # resource
     targetResource = graph[uri] || {} # POST target
-    containers = targetResource[Type].justArray.map(&:maybeURI).compact
-
-    [[:client, @r.user],
-      [:uri,uri,],
-     [:containers, containers],
-    ].map{|r|
-      puts r.join "\t"
-    }
-
-    data.map{|p,o|
+    containers = targetResource[Type].justArray.map(&:maybeURI).compact # container type(s)
+    data.map{|p,o| # form to graph
       o = if !o || o.empty?
             nil
-          elsif o.match HTTP_URI # full URI
-            o.R
-          elsif p == Type # expand prefix to URI
-            o.R.expand
-          elsif p == Content # sanitized HTML
-            StripHTML[o]
-          else # String
-            o
+          elsif o.match HTTP_URI
+            o.R # full URI
+          elsif p == Type
+            o.R.expand # expand prefixURI
+          elsif p == Content
+            StripHTML[o] # sanitizedHTML
+          else
+            o # String
           end
-      resource[p] = o if o} # object to graph
-
-    containers.map{|c| # apply container-specific handlers
-      POST[c].do{|h| h[resource,targetResource]}}
-
-    s = if resource.uri
-          resource.uri
+      resource[p] = o if o && p.match(HTTP_URI)}
+    s = if resource.uri # URI already bound
+          resource.uri  # subject URI
         else
           if e # POST to container
-            title = resource[Title]
-            slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
-            uri.t + slug + '#' # contained-resource URI
-          elsif Containers[resource[Type].maybeURI] # create container
+            containers.map{|c| # container-specific handler
+              POST[c].do{|h| h[resource,targetResource]}}
+            if resource.uri # URI bound by handler
+              resource.uri
+            else
+              title = resource[Title]
+              slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
+              uri.t + slug + '#'
+            end
+          elsif Containers[resource[Type].maybeURI] # creating a container, enforce trailing-slash for consistency
             uri.t
           else
-            uri + '#' + (resource['fragment']||'') #  doc#frag
+            uri + '#' + (resource['fragment']||'') # basic URI
           end
         end
 
