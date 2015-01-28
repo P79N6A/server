@@ -47,8 +47,8 @@ class R
     data = Rack::Request.new(@r).params
     return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
     timestamp = Time.now.iso8601
-    resource = {Date => timestamp}                          # source resource
-    targetResource = graph[uri] || {}                       # target resource
+    resource = {Date => timestamp}    # resource
+    targetResource = graph[uri] || {} # POST target
     containers = targetResource[Type].justArray.map(&:maybeURI).compact
 
     [[:client, @r.user],
@@ -96,8 +96,8 @@ class R
     doc = path + '/' + ts + '.e' # fragment-version-doc
     doc.w graph, true            # update fragment-version-doc
     cur = path.a '.e'            # fragment-doc URI
-    cur.delete if cur.e          # unlink obsolete fragment-version-doc
-    doc.ln cur                   # link current fragment-version-doc
+    cur.delete if cur.e          # unlink
+    doc.ln cur                   # link fragment-version-doc to fragment-doc
     res = R[s].docroot           # containing-doc URI
     res.buildDoc                 # update containing-doc
 
