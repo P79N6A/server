@@ -62,14 +62,15 @@ class R
     return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
     resource = {Date=>Time.now.iso8601} # resource
     targetResource = graph[uri] || {}   # POST-target resource
-    containers = targetResource[Type].justArray.map(&:maybeURI).compact # container type(s)
     R.formResource data, resource # parse form
     s = if data.uri # existing resource
           data.uri  # subject-URI
         else # new resource
           @r[:Status] = 201
           if e # POST to container
-            containers.map{|c| POST[c].do{|h| h[resource,targetResource]}} # type-handler
+            resource[SIOC+'has_container'] = R[uri.t] # containment triple
+            targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # type(s) of container
+              POST[c].do{|h| h[resource,targetResource]}} # container-specific behaviors
             if resource.uri # URI bound by handler
               resource.uri
             else # contained resource

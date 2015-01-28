@@ -2,8 +2,18 @@
 watch __FILE__
 class R
 
-  POST[SIOC+'Forum'] = -> d,e { # POSTing to Forum - create thread and OP (original post) in thread
-    puts "forum post"
+  POST[SIOC+'Forum'] = -> thread, forum {
+    time = Time.now.iso8601
+    title = thread[Title]
+    thread['uri'] = forum.uri + time[0..9].gsub(/[-T]/,'/') + title.slugify + '/'
+    op = {
+      'uri' => thread.uri + time.gsub(/[-+:T]/, ''),
+      Type => R[SIOCt+'BoardPost'],
+      Title => title,
+      Content => thread[Content],
+      SIOC+'has_container' => thread.R,
+    }
+    thread.delete Content
   }
 
   Abstract[SIOCt+'BoardPost'] = -> graph, g, e {

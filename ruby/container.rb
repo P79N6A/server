@@ -2,7 +2,7 @@
 #watch __FILE__
 class R
 
-  Containers = { # map container-type to child type
+  Containers = { # container -> contained types
     SIOC+'Forum' => SIOC+'Thread',
     SIOC+'Thread' => SIOCt+'BoardPost',
     SIOCt+'BoardPost' => SIOCt+'BoardPost',
