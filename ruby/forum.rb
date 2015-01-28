@@ -19,9 +19,9 @@ class R
   ViewA[SIOC+'Forum'] = -> r,e {
     editing = e.q.has_key?('new') || e.q.has_key?('edit')
     {class: :forum,
-     c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},' ',
-         {_: :span, class: :desc, c: r[Content]},
+     c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},
          ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑'} if e.signedIn && !editing),
-         ({_: :a, class: :new, href: r.uri + '?new', c: "+ post"} if e.signedIn && !editing)]}}
+         {_: :span, class: :desc, c: r[Content]},
+         ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if e.signedIn && !editing)]}}
 
 end

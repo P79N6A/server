@@ -17,11 +17,13 @@
     color: #aaa;
     margin:.1em;
 }
-.forum .new {
-    background-color: #0f0;
-    float: right;
-    color: #fff;
-    border-radius: .5em;
-    margin: .1em;
-    padding: 0 .4em 0 .2em;
+.forum .post {
+    background-color: #fff;
+    color: #000;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: .15em solid #333;
+    border-radius: .3em;
+    padding:.1em .2em .1em .1em;
+    margin: .2em;
 }
