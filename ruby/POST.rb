@@ -38,54 +38,47 @@ class R
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
     end
-  rescue Exception => x
-    puts x
-    [400,{},[]]
   end
 
   def formPOST
-    data = Rack::Request.new(@r).POST
+    data = Rack::Request.new(@r).POST # form-data
     return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
-    status = 200
-    timestamp = Time.now.iso8601
-    resource = {Date => timestamp}    # resource
-    targetResource = graph[uri] || {} # POST target
+    timestamp = Time.now.iso8601       # timestamp
+    resource = {Date => timestamp}     # resource
+    targetResource = graph[uri] || {}  # POST target
     containers = targetResource[Type].justArray.map(&:maybeURI).compact # container type(s)
-    data.map{|p,o| # form to resource
+    data.map{|p,o|                     # form-data to resource
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
-            o.R # full URI
+            o.R                        # normal URI
           elsif p == Type
-            o.R.expand # expand prefixURI
+            o.R.expand                 # expand prefix-URI
           elsif p == Content
-            StripHTML[o] # sanitizedHTML
+            StripHTML[o]               # sanitize HTML
           else
-            o # String
+            o                          # String
           end
       resource[p] = o if o && p.match(HTTP_URI)}
-    s = if data.uri # subject-URI exists
-          data.uri
-        else # unbound subject-URI
-          status = 201 # create resource
+    s = if data.uri # existing resource
+          data.uri  # subject-URI
+        else # new resource
+          @r[:Status] = 201
           if e # POST to container
-            print "container POST #{uri.t} ->"
-            containers.map{|c|
-              POST[c].do{|h| h[resource,targetResource]}} # type-handler
+            containers.map{|c| POST[c].do{|h| h[resource,targetResource]}} # type-handler
             if resource.uri # URI bound by handler
               resource.uri
-            else
-              title = resource[Title]
-              slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
+            else # contained resource
+              t = resource[Title]
+              slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
               uri.t + slug + '#'
             end
-          elsif Containers[resource[Type].maybeURI] # container
-            uri.t # trailing-slash
+          elsif Containers[resource[Type].maybeURI] # container URI
+            uri.t                                   # w/ trailing-slash
           else
-            uri + '#' # resource
+            uri + '#'                               # resource URI
           end
         end
-    puts s
     resource['uri'] ||= s        # identify resource
     graph = {s => resource}      # resource to graph
     ts = timestamp.gsub /[-+:T]/, '' # timestamp slug
@@ -97,7 +90,7 @@ class R
     doc.ln cur                   # link fragment-version-doc to fragment-doc
     res = R[s].docroot           # containing-doc URI
     res.buildDoc                 # update containing-doc
-    [status,{'Location'=>res.uri},[]] # response
+    res.stripFrag.setEnv(@r).response
   end
 
 end
