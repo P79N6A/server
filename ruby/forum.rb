@@ -25,7 +25,7 @@ class R
   }
 
   ViewGroup[SIOC+'Forum'] = -> g,e {
-    [H.css('/css/forum'),
+    [H.css('/css/forum',true),
      g.values.map{|r|ViewA[SIOC+'Forum'][r,e]}]}
 
   ViewA[SIOC+'Forum'] = -> r,e {
@@ -38,9 +38,12 @@ class R
          ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if editPtr)]}}
 
   ViewGroup[SIOC+'Thread'] = -> g,e {
-    [H.css('/css/forum'),
+    [H.css('/css/thread',true),
      g.values.map{|r|ViewA[SIOC+'Thread'][r,e]}]}
 
-  ViewA[SIOC+'Thread']= -> r,e {{_: :h2, c: {_: :a, href: r.uri, c: r[Title]}}}
+  ViewA[SIOC+'Thread']= -> r,e {
+    {_: :h2,
+     c: [{_: :a, class: :forum, href: r.uri, c: r[Title]},
+         {_: :a, class: :thread,href: r.uri, c: r[Title]}]}}
 
 end
