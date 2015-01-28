@@ -87,7 +87,8 @@ class R
     resource['uri'] ||= s        # identify resource
     R.writeResource resource     # write resource
     res = R[s].docroot.buildDoc  # update containing-doc
-    res.setEnv(@r).response      # return updated resource
+    [303,{'Location' => res.uri},[]] 
+    #res.setEnv(@r).response
   end
 
   def R.writeResource r

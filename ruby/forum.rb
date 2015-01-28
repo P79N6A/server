@@ -5,7 +5,7 @@ class R
   POST[SIOC+'Forum'] = -> thread, forum {
     time = Time.now.iso8601
     title = thread[Title]
-    thread['uri'] = forum.uri + time[0..9].gsub(/[-T]/,'/') + title.slugify + '/'
+    thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
     op = {
       'uri' => thread.uri + time.gsub(/[-+:T]/, ''),
       Type => R[SIOCt+'BoardPost'],
@@ -36,5 +36,11 @@ class R
          ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑'} if editPtr),
          {_: :span, class: :desc, c: r[Content]},
          ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if editPtr)]}}
+
+  ViewGroup[SIOC+'Thread'] = -> g,e {
+    [H.css('/css/forum'),
+     g.values.map{|r|ViewA[SIOC+'Thread'][r,e]}]}
+
+  ViewA[SIOC+'Thread']= -> r,e {{_: :h2, c: {_: :a, href: r.uri, c: r[Title]}}}
 
 end
