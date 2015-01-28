@@ -13,6 +13,8 @@ class R
       Content => thread[Content],
       SIOC+'has_container' => thread.R,
     }
+    R.writeResource op
+    op.R.buildDoc
     thread.delete Content
   }
 
