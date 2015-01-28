@@ -46,11 +46,12 @@ class R
   def formPOST
     data = Rack::Request.new(@r).POST
     return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
+    status = 200
     timestamp = Time.now.iso8601
     resource = {Date => timestamp}    # resource
     targetResource = graph[uri] || {} # POST target
     containers = targetResource[Type].justArray.map(&:maybeURI).compact # container type(s)
-    data.map{|p,o| # form to graph
+    data.map{|p,o| # form to resource
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
@@ -63,12 +64,14 @@ class R
             o # String
           end
       resource[p] = o if o && p.match(HTTP_URI)}
-    s = if resource.uri # URI already bound
-          resource.uri  # subject URI
-        else
+    s = if data.uri # subject-URI exists
+          data.uri
+        else # unbound subject-URI
+          status = 201 # create resource
           if e # POST to container
-            containers.map{|c| # container-specific handler
-              POST[c].do{|h| h[resource,targetResource]}}
+            print "container POST #{uri.t} ->"
+            containers.map{|c|
+              POST[c].do{|h| h[resource,targetResource]}} # type-handler
             if resource.uri # URI bound by handler
               resource.uri
             else
@@ -76,13 +79,13 @@ class R
               slug = title && !title.empty? && title.slugify || rand.to_s.h[0..7]
               uri.t + slug + '#'
             end
-          elsif Containers[resource[Type].maybeURI] # creating a container, enforce trailing-slash for consistency
-            uri.t
+          elsif Containers[resource[Type].maybeURI] # container
+            uri.t # trailing-slash
           else
-            uri + '#' + (resource['fragment']||'') # basic URI
+            uri + '#' # resource
           end
         end
-
+    puts s
     resource['uri'] ||= s        # identify resource
     graph = {s => resource}      # resource to graph
     ts = timestamp.gsub /[-+:T]/, '' # timestamp slug
@@ -94,8 +97,7 @@ class R
     doc.ln cur                   # link fragment-version-doc to fragment-doc
     res = R[s].docroot           # containing-doc URI
     res.buildDoc                 # update containing-doc
-
-  [303,{'Location'=>res.uri},[]] # done
+    [status,{'Location'=>res.uri},[]] # response
   end
 
 end
