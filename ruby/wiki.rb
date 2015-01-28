@@ -1,12 +1,6 @@
 # coding: utf-8
 watch __FILE__
 class R
-
-  def buildDoc
-    graph = {}
-    fragments.map{|f| f.nodeToGraph graph}
-    jsonDoc.w graph, true
-  end
  
   Creatable = [
     SIOC+'Forum',

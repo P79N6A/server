@@ -40,14 +40,8 @@ class R
     end
   end
 
-  def formPOST
-    data = Rack::Request.new(@r).POST # form-data
-    return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
-    timestamp = Time.now.iso8601       # timestamp
-    resource = {Date => timestamp}     # resource
-    targetResource = graph[uri] || {}  # POST target
-    containers = targetResource[Type].justArray.map(&:maybeURI).compact # container type(s)
-    data.map{|p,o|                     # form-data to resource
+  def R.formResource form, resource
+    form.map{|p,o|                      # form-data to resource
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
@@ -59,7 +53,17 @@ class R
           else
             o                          # String
           end
-      resource[p] = o if o && p.match(HTTP_URI)}
+      resource[p] = o if o && p.match(HTTP_URI)
+    }
+  end
+
+  def formPOST
+    data = Rack::Request.new(@r).POST   # form
+    return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
+    resource = {Date=>Time.now.iso8601} # resource
+    targetResource = graph[uri] || {}   # POST-target resource
+    containers = targetResource[Type].justArray.map(&:maybeURI).compact # container type(s)
+    R.formResource data, resource # parse form
     s = if data.uri # existing resource
           data.uri  # subject-URI
         else # new resource
@@ -80,17 +84,27 @@ class R
           end
         end
     resource['uri'] ||= s        # identify resource
-    graph = {s => resource}      # resource to graph
-    ts = timestamp.gsub /[-+:T]/, '' # timestamp slug
-    path = s.R.fragmentPath      # fragment-version URI
-    doc = path + '/' + ts + '.e' # fragment-version-doc
-    doc.w graph, true            # update fragment-version-doc
-    cur = path.a '.e'            # fragment-doc URI
-    cur.delete if cur.e          # unlink
-    doc.ln cur                   # link fragment-version-doc to fragment-doc
-    res = R[s].docroot           # containing-doc URI
-    res.buildDoc                 # update containing-doc
-    res.stripFrag.setEnv(@r).response
+    R.writeResource resource     # write resource
+    res = R[s].docroot.buildDoc  # update containing-doc
+    res.setEnv(@r).response      # return updated resource
+  end
+
+  def R.writeResource r
+    graph = {r.uri => r}         # resource to graph
+    ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
+    path = r.R.fragmentPath      # version base
+    doc = path + '/' + ts + '.e' # version
+    doc.w graph, true            # write version
+    cur = path.a '.e'            # live-resource
+    cur.delete if cur.e          # obsolete version
+    doc.ln cur                   # make version live
+  end
+
+  def buildDoc
+    graph = {}
+    fragments.map{|f| f.nodeToGraph graph}
+    jsonDoc.w graph, true
+    self
   end
 
 end
