@@ -2,26 +2,20 @@
 watch __FILE__
 class R
 
-  POST[SIOC+'Forum'] = -> thread, forum {
+  POST[SIOC+'Forum'] = -> thread, forum { # posting to a Forum creates a Thread and its first Post
     time = Time.now.iso8601
     title = thread[Title]
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
-    op = {
+    op = { # original post
       'uri' => thread.uri + time.gsub(/[-+:T]/, ''),
       Type => R[SIOCt+'BoardPost'],
       Title => title,
-      Content => thread[Content],
+      Content => (thread.delete Content),
       SIOC+'has_container' => thread.R,
+      SIOC+'reply_to' => thread.R + '?new',
     }
     R.writeResource op
     op.R.buildDoc
-    thread.delete Content
-  }
-
-  Abstract[SIOCt+'BoardPost'] = -> graph, g, e {
-    g.values.map{|p|
-      p[SIOC+'reply_to'] = R[p.R.dirname + '?new']
-    }
   }
 
   ViewGroup[SIOC+'Forum'] = -> g,e {
@@ -42,8 +36,9 @@ class R
      g.values.map{|r|ViewA[SIOC+'Thread'][r,e]}]}
 
   ViewA[SIOC+'Thread']= -> r,e {
+    forum = r[SIOC+'has_container'].justArray[0]
     {_: :h2,
-     c: [{_: :a, class: :forum, href: r.uri, c: r[Title]},
+     c: [{_: :a, class: :forum, href: forum.uri, c: forum.R.basename + ' / '},
          {_: :a, class: :thread,href: r.uri, c: r[Title]}]}}
 
 end
