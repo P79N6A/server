@@ -2,11 +2,12 @@
 watch __FILE__
 class R
 
-  POST[SIOC+'Forum'] = -> thread, forum { # post to a Forum, creates a Thread and its first Post
+  # post to a Forum creates a thread and its first post
+  POST[SIOC+'Forum'] = -> thread, forum {
     time = Time.now.iso8601
     title = thread[Title]
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
-    op = { # original post
+    op = { # "original post"
       'uri' => thread.uri + time.gsub(/[-+:T]/, ''),
       Type => R[SIOCt+'BoardPost'],
       Title => title,
@@ -14,14 +15,15 @@ class R
       SIOC+'has_container' => thread.R,
       SIOC+'reply_to' => thread.R + '?new'}
     R.writeResource op
-    op.R.buildDoc
-  } # base handler writes the thread doc, we just add the OP post here
+    op.R.buildDoc}
 
-  POST[SIOC+'Thread'] = -> post, thread { # post to a Thread
+  # post to a Thread
+  POST[SIOC+'Thread'] = -> post, thread {
     
   }
 
-  POST[SIOC+'Post'] = -> reply, post { # reply to a post
+  # post to a Post (reply)
+  POST[SIOC+'Post'] = -> reply, post {
     
   }
   
