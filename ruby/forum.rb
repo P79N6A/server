@@ -2,7 +2,7 @@
 watch __FILE__
 class R
 
-  POST[SIOC+'Forum'] = -> thread, forum { # posting to a Forum creates a Thread and its first Post
+  POST[SIOC+'Forum'] = -> thread, forum { # post to a Forum, creates a Thread and its first Post
     time = Time.now.iso8601
     title = thread[Title]
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
@@ -12,11 +12,19 @@ class R
       Title => title,
       Content => (thread.delete Content),
       SIOC+'has_container' => thread.R,
-      SIOC+'reply_to' => thread.R + '?new',
-    }
+      SIOC+'reply_to' => thread.R + '?new'}
     R.writeResource op
     op.R.buildDoc
+  } # base handler writes the thread doc, we just add the OP post here
+
+  POST[SIOC+'Thread'] = -> post, thread { # post to a Thread
+    
   }
+
+  POST[SIOC+'Post'] = -> reply, post { # reply to a post
+    
+  }
+  
 
   ViewGroup[SIOC+'Forum'] = -> g,e {
     [H.css('/css/forum',true),
@@ -38,7 +46,7 @@ class R
   ViewA[SIOC+'Thread']= -> r,e {
     forum = r[SIOC+'has_container'].justArray[0]
     {_: :h2,
-     c: [{_: :a, class: :forum, href: forum.uri, c: forum.R.basename + ' / '},
+     c: [{_: :a, class: :forum, href: forum.uri, c: forum.R.basename + '/'},
          {_: :a, class: :thread,href: r.uri, c: r[Title]}]}}
 
 end
