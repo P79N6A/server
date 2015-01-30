@@ -3,6 +3,7 @@ GEM
   specs:
     builder (3.2.2)
     daemons (1.1.9)
+    dotenv (1.0.2)
     ebnf (0.3.6)
       haml (~> 4.0)
       rdf (~> 1.1)
@@ -10,6 +11,9 @@ GEM
     equivalent-xml (0.5.1)
       nokogiri (>= 1.4.3)
     eventmachine (1.0.4)
+    foreman (0.77.0)
+      dotenv (~> 1.0.2)
+      thor (~> 0.19.1)
     haml (4.0.6)
       tilt
     htmlentities (4.3.3)
@@ -100,12 +104,14 @@ GEM
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0)
       rack (~> 1.0)
+    thor (0.19.1)
     tilt (2.0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  foreman
   linkeddata
   mail
   nokogiri

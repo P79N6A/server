@@ -46,7 +46,7 @@ class R
   ViewA[SIOC+'Thread']= -> r,e {
     forum = r[SIOC+'has_container'].justArray[0]
     {_: :h2,
-     c: [{_: :a, class: :forum, href: forum.uri, c: forum.R.basename + '/'},
+     c: [({_: :a, class: :forum, href: forum.uri, c: forum.R.basename + '/'} if forum),
          {_: :a, class: :thread,href: r.uri, c: r[Title]}]}}
 
 end
