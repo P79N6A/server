@@ -3,7 +3,7 @@ watch __FILE__
 class R
 
   # post to a Forum creates a thread and its first post
-  POST[SIOC+'Forum'] = -> thread, forum {
+  POST[SIOC+'Forum'] = -> thread, forum { # thread created by base-handler
     time = Time.now.iso8601
     title = thread[Title]
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
@@ -14,7 +14,7 @@ class R
       Content => (thread.delete Content),
       SIOC+'has_container' => thread.R,
       SIOC+'reply_to' => thread.R + '?new'}
-    R.writeResource op
+    R.writeResource op # store OP
     op.R.buildDoc}
 
   # post to a Thread

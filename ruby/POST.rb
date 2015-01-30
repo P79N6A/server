@@ -84,14 +84,12 @@ class R
             uri + '#'                               # resource URI
           end
         end
-    resource['uri'] ||= s        # identify resource
-    R.writeResource resource     # write resource
-    res = R[s].docroot.buildDoc  # update containing-doc
+    resource['uri'] ||= s         # identify resource
+    R.writeResource resource,true # write resource
     [303,{'Location' => res.uri},[]] 
-    #res.setEnv(@r).response
   end
 
-  def R.writeResource r
+  def R.writeResource r, buildDoc = false
     graph = {r.uri => r}         # resource to graph
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
     path = r.R.fragmentPath      # version base
@@ -100,6 +98,7 @@ class R
     cur = path.a '.e'            # live-resource
     cur.delete if cur.e          # obsolete version
     doc.ln cur                   # make version live
+    r.R.buildDoc if buildDoc
   end
 
   def buildDoc
