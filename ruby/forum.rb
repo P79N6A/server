@@ -3,19 +3,20 @@ watch __FILE__
 class R
 
   # post to a Forum creates a thread and its first post
-  POST[SIOC+'Forum'] = -> thread, forum { # thread created by base-handler
+  POST[SIOC+'Forum'] = -> thread, forum { # URI-less thread from base-handler
     time = Time.now.iso8601
-    title = thread[Title]
+    title = thread[Title] # mint thread-URI
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
-    op = { # "original post"
-      'uri' => thread.uri + time.gsub(/[-+:T]/, ''),
+    postURI = thread.uri + time.gsub(/[-+:T]/, '')
+    op = {# "original post" in thread
+      'uri' => postURI,
       Type => R[SIOCt+'BoardPost'],
       Title => title,
       Content => (thread.delete Content),
+      SIOC+'has_discussion' => thread.R,
       SIOC+'has_container' => thread.R,
-      SIOC+'reply_to' => thread.R + '?new'}
-    R.writeResource op # store OP
-    op.R.buildDoc}
+      SIOC+'reply_to' => R[postURI + '?new']}
+    R.writeResource op, true} # store OP
 
   # post to a Thread
   POST[SIOC+'Thread'] = -> post, thread {
@@ -37,7 +38,7 @@ class R
     editPtr = e.signedIn && !editing
     {class: :forum,
      c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},
-         ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑'} if editPtr),
+         ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit forum-details'} if editPtr),'<br>',
          {_: :span, class: :desc, c: r[Content]},
          ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if editPtr)]}}
 

@@ -88,7 +88,7 @@ class R
                         c = r[Creator][0].R.fragment
                         {_: :a, name: c, href: '#'+p.uri, c: c}}}.intersperse(' ')}, ' ',
                   r[SIOC+'reply_to'].do{|c|
-                    [{_: :a, class: :create, href: c.justArray[0].uri, c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
+                    [{_: :a, class: :create, href: c.justArray[0].maybeURI||'#', c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)]},' ']},
                   r[Date].do{|d|
                     {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].do{|d|

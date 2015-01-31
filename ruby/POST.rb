@@ -68,7 +68,7 @@ class R
         else # new resource
           @r[:Status] = 201
           if e # POST to container
-            resource[SIOC+'has_container'] = R[uri.t] # containment triple
+            resource[SIOC+'has_container'] = R[uri.t] # containment metadata
             targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # type(s) of container
               POST[c].do{|h| h[resource,targetResource]}} # container-specific behaviors
             if resource.uri # URI bound by handler
@@ -78,15 +78,16 @@ class R
               slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
               uri.t + slug + '#'
             end
-          elsif Containers[resource[Type].maybeURI] # container URI
-            uri.t                                   # w/ trailing-slash
+          elsif Containers[resource[Type].maybeURI] # nonexistent container
+            #mk # create container
+            uri.t                                   # add trailing-slash
           else
-            uri + '#'                               # resource URI
+            uri + '#'                               # basic resource
           end
         end
-    resource['uri'] ||= s         # identify resource
-    R.writeResource resource,true # write resource
-    [303,{'Location' => res.uri},[]] 
+    resource['uri'] ||= s           # identify resource
+    R.writeResource resource,true   # write resource
+    [303,{'Location' => resource.uri},[]] # send to new resource
   end
 
   def R.writeResource r, buildDoc = false
