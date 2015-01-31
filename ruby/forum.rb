@@ -46,7 +46,7 @@ class R
      c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},
          ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit forum-details'} if editPtr),'<br>',
          {_: :span, class: :desc, c: r[Content]},
-         ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if editPtr)]}}
+         ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if editPtr && r.R.path==e.R.path)]}}
 
   ViewGroup[SIOC+'Thread'] = -> g,e {
     [H.css('/css/thread',true),
