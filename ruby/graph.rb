@@ -10,8 +10,8 @@ class R
   object:
    Array [object1, object2]
    RDF::URI (URI-identified resource)
-   R (our enhanced subclass of RDF::URI)
-   Hash with a key named 'uri'
+   R (this Resource-class)
+   Hash with a key named "uri"
    RDF::Literal
    String
 
@@ -113,17 +113,18 @@ class R
   end
  
   Mutate = -> g,e {
-    if e.q.has_key? 'new'
-      if e[404] # new standalone resource
+    if e.q.has_key? 'new' # add editable-stub
+      if e[404]
         if e.q.has_key? 'type'
           e.q['edit'] = true
         else # bind type
           g['#new'] = {Type => R['#untyped']}
         end
-      else # post to container
+      else # target exists - new post to container
+        g['#new'] = {Type => [R['#editable'],R[Resource]]}
         g[e.uri].do{|container|
-          container[Type].justArray.map{|type|Containers[type.uri]}. # find contained type
-          compact[0].do{|childType| g['#new'] = {Type => [R['#editable'], R[childType]]}}}
+          container[Type].justArray.map{|type|Containers[type.uri]}. # hint containee type
+          compact[0].do{|childType|g['#new'][Type].push R[childType]}}
       end
     end
 
@@ -134,11 +135,11 @@ class R
       [LDP+'contains',Size].map{|p|r.delete p}
     end
 
-    e[:Filter].justArray.map{|f| # bespoke mutation
+    e[:Filter].justArray.map{|f| # named-mutation
       Filter[f].do{|fn|
         fn[g,e]}}
 
-    # per-type summarizers on containers
+    # per-type summary of container
     if e[:container]
       groups = {}
       g.map{|u,r|
