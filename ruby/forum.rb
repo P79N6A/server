@@ -25,9 +25,15 @@ class R
 
   # post to a Post (reply)
   POST[SIOC+'Post'] = -> reply, post {
-    
-  }
-  
+    thread = post[SIOC+'has_discussion'].R
+    postURI = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')
+    reply.update({ 'uri' => postURI,
+                   Type => R[SIOCt+'BoardPost'],
+                   SIOC+'has_parent' => post.R,
+                   SIOC+'has_discussion' => thread.R,
+                   SIOC+'has_container' => thread.R,
+                   SIOC+'reply_to' => R[postURI + '?new']
+                 })}
 
   ViewGroup[SIOC+'Forum'] = -> g,e {
     [H.css('/css/forum',true),

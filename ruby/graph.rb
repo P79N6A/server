@@ -113,7 +113,7 @@ class R
   end
  
   Mutate = -> g,e {
-    if e.q.has_key? 'new' # add editable-stub
+    if e.q.has_key? 'new' # init editable-stub
       if e[404]
         if e.q.has_key? 'type'
           e.q['edit'] = true
@@ -121,7 +121,7 @@ class R
           g['#new'] = {Type => R['#untyped']}
         end
       else # target exists - new post to container
-        g['#new'] = {Type => [R['#editable'],R[Resource]]}
+        g['#new'] = {Type => [R['#editable'],e.q['type'].do{|t|R[t.expand]}||R[Resource]]}
         g[e.uri].do{|container|
           container[Type].justArray.map{|type|Containers[type.uri]}. # hint containee type
           compact[0].do{|childType|g['#new'][Type].push R[childType]}}
