@@ -15,7 +15,8 @@ class R
       Content => (thread.delete Content),
       SIOC+'has_discussion' => thread.R,
       SIOC+'has_container' => thread.R,
-      SIOC+'reply_to' => R[postURI + '?new']}
+      SIOC+'reply_to' => R[postURI + '?new'],
+    }
     R.writeResource op, true} # store OP
 
   # post to a Thread
@@ -41,12 +42,12 @@ class R
 
   ViewA[SIOC+'Forum'] = -> r,e {
     editing = e.q.has_key?('new') || e.q.has_key?('edit')
-    editPtr = e.signedIn && !editing
+    editPtr = !editing && e.signedIn && r.R.path==e.R.path
     {class: :forum,
      c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},
          ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit forum-details'} if editPtr),'<br>',
          {_: :span, class: :desc, c: r[Content]},
-         ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if editPtr && r.R.path==e.R.path)]}}
+         ({_: :a, class: :post, href: r.uri + '?new', c: "✑ post"} if editPtr)]}}
 
   ViewGroup[SIOC+'Thread'] = -> g,e {
     [H.css('/css/thread',true),
