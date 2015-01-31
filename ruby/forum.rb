@@ -7,7 +7,7 @@ class R
     time = Time.now.iso8601
     title = thread[Title] # mint thread-URI
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
-    postURI = thread.uri + time.gsub(/[-+:T]/, '')
+    postURI = thread.uri + time.gsub(/[-+:T]/, '') + '/'
     op = {# "original post" in thread
       'uri' => postURI,
       Type => R[SIOCt+'BoardPost'],
@@ -26,7 +26,7 @@ class R
   # post to a Post (reply)
   POST[SIOC+'Post'] = -> reply, post {
     thread = post[SIOC+'has_discussion'].R
-    postURI = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')
+    postURI = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '') + '/'
     reply.update({ 'uri' => postURI,
                    Type => R[SIOCt+'BoardPost'],
                    SIOC+'has_parent' => post.R,
