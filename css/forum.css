@@ -22,8 +22,9 @@
     color: #000;
     font-size: 1.1em;
     font-weight: bold;
-    border: .15em solid #333;
-    border-radius: .3em;
-    padding:.1em .2em .1em .1em;
-    margin: .2em;
 }
+.forum .post:hover {
+    background-color: yellow;
+    color: #fff;
+}
+.forum .post .pen {font-size:3em}
