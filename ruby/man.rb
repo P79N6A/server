@@ -112,6 +112,4 @@ class R
     end
   }
 
- #   GET['/man'] = Man # mount man-handler
-
 end

@@ -60,7 +60,9 @@ class R
   def formPOST
     data = Rack::Request.new(@r).POST   # form
     return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
-    resource = {Date=>Time.now.iso8601} # resource
+    resource = { Date => Time.now.iso8601,
+                 Creator => @r.user
+               }
     targetResource = graph[uri] || {}   # POST-target resource
     R.formResource data, resource # parse form
     s = if data.uri # existing resource
