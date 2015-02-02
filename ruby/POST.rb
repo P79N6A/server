@@ -72,7 +72,7 @@ class R
           if e # POST to container
             resource[SIOC+'has_container'] = R[uri.t] # containment metadata
             targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # type(s) of container
-              POST[c].do{|h| h[resource,targetResource]}} # container-specific behaviors
+              POST[c].do{|h| h[resource,targetResource,@r]}} # target-type handler
             if resource.uri # URI bound by handler
               resource.uri
             else # contained resource
