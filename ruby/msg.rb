@@ -79,7 +79,7 @@ class R
              {class: :header,
               c: [r[Creator].do{|c|
                     author = c[0].R.fragment
-                    {_: :a, class: :author, name: author, href: c[0].R.dirname, c: author}},
+                    {_: :a, class: :author, name: author, href: c[0].uri, c: author}},
                   r[To].justArray.map{|o|
                     {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'has_parent'].do{|ps|
