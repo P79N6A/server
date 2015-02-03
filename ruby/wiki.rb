@@ -1,10 +1,11 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 class R
  
   Creatable = [
     SIOC+'Forum',
     SIOCt+'BlogPost',
+    SIOCt+'Wiki',
     SIOCt+'WikiArticle',
   ]
 

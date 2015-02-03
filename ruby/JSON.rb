@@ -2,7 +2,7 @@
 class R
 
   module Format # RDF parser for our JSON format
-
+    # popular non-RDF formats ie Atom/RSS have been given a full-fledged RDF::Reader (see feed.rb), long-tail 'quick hack' triplrs have a transcode-on-read to this format. rm -rf cache/RDF when you feel like
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
       content_encoding 'utf-8'

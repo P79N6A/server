@@ -6,6 +6,7 @@ class R
     SIOC+'Forum' => SIOC+'Thread',
     SIOC+'Thread' => SIOCt+'BoardPost',
     SIOCt+'BoardPost' => SIOCt+'BoardPost',
+    SIOCt+'Wiki' => SIOCt+'WikiArticle',
   }
 
   ViewA[Resource] = -> r,e {r.html}
