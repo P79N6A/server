@@ -1,14 +1,10 @@
-pw  POSIX filesystem <> RDF+HTML <> HTTP
+POSIX filesystem <> RDF+HTML <> HTTP
 
 INSTALL cd ruby
         bundle install # dependencies
-	./install      # link source to library-path
-        cp bin/pw /usr/local/bin
+	./install      # link source to lib-path
 
-USAGE
- pw            # http
- pw ssl        # https
- foreman start # http -> https, https
+USAGE  foreman start # HTTP redirecting to HTTPS, and HTTPS - see Procfile
 
 HOST  mkdir domain/hostname
 CLEAN rm -rf cache index

@@ -1,6 +1,23 @@
 # coding: utf-8
 #watch __FILE__
+
+module Rack
+  module Adapter
+    def self.guess _; :rack end
+    def self.load _
+      Rack::Builder.new { # also in httpd.ru for eg. argument to unicorn
+        use Rack::Deflater
+        run R
+      }.to_app
+    end
+  end
+end
+
 class R
+
+  # help debug-output through thin/foreman shell-buffering a bit
+  $stdout.sync = true
+  $stderr.sync = true
 
   def R.dev # scan watched-files for changes
     Watch.each{|f,ts|
