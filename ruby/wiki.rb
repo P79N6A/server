@@ -1,13 +1,23 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
  
   Creatable = [
-    SIOC+'Forum',
     SIOCt+'BlogPost',
-    SIOCt+'Wiki',
+    Forum, Wiki,
     SIOCt+'WikiArticle',
   ]
+
+  ViewA[Wiki] = -> r,e {
+    {class: :wiki,
+     c: [{_: :h1, c: r[Title]},
+         {_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'}, '<br>',
+         {_: :span, class: :desc, c: r[Content]},
+         {_: :a, class: :post, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "new article"]}]}}
+
+  ViewGroup[Wiki] = -> g,e {
+    [H.css('/css/wiki',true),
+     g.values.map{|r|ViewA[Wiki][r,e]}]}
 
   ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|

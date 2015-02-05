@@ -3,7 +3,7 @@
 class R
 
   # post to a Forum creates a thread and its first post
-  POST[SIOC+'Forum'] = -> thread, forum, env {
+  POST[Forum] = -> thread, forum, env {
     time = Time.now.iso8601
     title = thread[Title] # mint thread-URI
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
@@ -38,11 +38,11 @@ class R
                    SIOC+'reply_to' => R[postURI + '?new']
                  })}
 
-  ViewGroup[SIOC+'Forum'] = -> g,e {
+  ViewGroup[Forum] = -> g,e {
     [H.css('/css/forum',true),
-     g.values.map{|r|ViewA[SIOC+'Forum'][r,e]}]}
+     g.values.map{|r|ViewA[Forum][r,e]}]}
 
-  ViewA[SIOC+'Forum'] = -> r,e {
+  ViewA[Forum] = -> r,e {
     editing = e.q.has_key?('new') || e.q.has_key?('edit')
     editPtr = !editing && e.signedIn && r.R.path==e.R.path
     {class: :forum,

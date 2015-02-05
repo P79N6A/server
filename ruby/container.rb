@@ -3,10 +3,10 @@
 class R
 
   Containers = { # container -> contained types
-    SIOC+'Forum' => SIOC+'Thread',
+    Forum => SIOC+'Thread',
     SIOC+'Thread' => SIOCt+'BoardPost',
     SIOCt+'BoardPost' => SIOCt+'BoardPost',
-    SIOCt+'Wiki' => SIOCt+'WikiArticle',
+    Wiki => SIOCt+'WikiArticle',
   }
 
   ViewA[Resource] = -> r,e {r.html}
