@@ -55,12 +55,16 @@ end
 class R
 
   GET['/whoami'] = -> e,r {
-    u = r.user.uri
-    m = {u => {'uri' => u, Type => R[User]}}
-    r[:Response]['ETag'] = u.h
-    r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
-    e.ldp.condResponse ->{
-      Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
+    if r.scheme!='https'
+      r.SSLupgrade
+    else
+      u = r.user.uri
+      m = {u => {'uri' => u, Type => R[User]}}
+      r[:Response]['ETag'] = u.h
+      r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
+      e.ldp.condResponse ->{
+        Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
+    end}
 
   ViewGroup[User] = -> g,env {
     if env.signedIn

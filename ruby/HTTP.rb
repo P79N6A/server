@@ -168,3 +168,7 @@ class R
                                        g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :prefixes => Prefixes)]]}
 
 end
+
+module Th
+  def SSLupgrade; [301,{'Location' => "https://" + host + self['REQUEST_URI']},[]] end
+end

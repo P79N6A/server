@@ -52,9 +52,7 @@ class R
         return E404[self,@r,m]
       end
     end
-    if (q.has_key?('new') || q.has_key?('edit')) && @r.scheme == 'http' # HTTPS required for editing
-      return [301,{'Location' => "https://" + @r.host + @r['REQUEST_URI']},[]]
-    end
+    return @r.SSLupgrade if (q.has_key?('new') || q.has_key?('edit')) && @r.scheme == 'http' # HTTPS required for editing
 
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id

@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  GET['/man'] = -> e,r {
+  ManHandler = -> e,r {
     graph = RDF::Graph.new
     uri = R['//'+r.host+r['REQUEST_URI']]
     manPath = '/usr/share/man'
