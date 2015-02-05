@@ -1,21 +1,20 @@
 #watch __FILE__
 class R
 =begin
- Hash/JSON for a subset of RDF,
 
-  {subjURI => {predURI => object}}
-
-  subj/predURI: String
-
+  subjectURI/pURI: String
   object:
-   Array [object1, object2]
-   RDF::URI (URI-identified resource)
-   R (this Resource-class)
-   Hash with a key named "uri"
+   Array [objA, objB..]
+   RDF::URI
+   R
+   Hash with 'uri' key
    RDF::Literal
    String
 
- to emit triples: yield subjURI, predURI, object
+ Hash/JSON
+  {subjectURI => {predicateURI => object}}
+ Streams
+  yield subjURI, predURI, object
 
 =end
 
@@ -200,8 +199,7 @@ class Hash
             l.datatype=RDF.XMLLiteral if p == R::Content
             l
           end
-      graph << (RDF::Statement.new s,p,o)
-    }
+      graph << (RDF::Statement.new s,p,o)}
     graph
   end
 
