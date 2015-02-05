@@ -7,7 +7,7 @@ class R
 
   GET['/thumbnail'] = -> e,r {
     path = e.path.sub /^.thumbnail/, ''
-    path = '//' + r['SERVER_NAME'] + path unless path.match /^.domain/
+    path = '//' + r.host + path unless path.match /^.domain/
     i = R path
     if i.file? && i.size > 0
       if i.ext.match /SVG/i

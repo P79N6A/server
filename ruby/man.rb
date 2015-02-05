@@ -3,7 +3,7 @@ class R
 
   GET['/man'] = -> e,r {
     graph = RDF::Graph.new
-    uri = R['//'+r['SERVER_NAME']+r['REQUEST_URI']]
+    uri = R['//'+r.host+r['REQUEST_URI']]
     manPath = '/usr/share/man'
     name = e.justPath.stripSlash.uri.sub(/^\/man/,'').tail || ''
     section = nil
@@ -26,8 +26,8 @@ class R
       else
         man = man.chomp
         roff = man.R
-        R['//' + r['SERVER_NAME'] + '/' + name[0].downcase +  c]
-        dir = R['//' + r['SERVER_NAME'] + roff.dirname.sub(/.*\/share/,'')]
+        R['//' + r.host + '/' + name[0].downcase +  c]
+        dir = R['//' + r.host + roff.dirname.sub(/.*\/share/,'')]
         res = dir.child roff.bare
         doc = res + '.e'
         path = Pathname man

@@ -162,7 +162,7 @@ class R
             doc.ln target }}}}}
 
   def triplrMailMessage &f
-    triplrCacheJSON :triplrMail, @r.do{|r|r['SERVER_NAME']}, [SIOC+'reply_of'], IndexMail, &f
+    triplrCacheJSON :triplrMail, @r.do{|r|r.host}, [SIOC+'reply_of'], IndexMail, &f
   end
 
   ReExpr = /\b[rR][eE]: /

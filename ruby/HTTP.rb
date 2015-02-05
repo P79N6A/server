@@ -31,14 +31,14 @@ class R
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
     e.extend Th # environment util-functions
     dev         # check for updated source-code
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}   # canonical hostname
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/,'.' # clean hostname
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h} # canonical hostname
+    e['SERVER_NAME'] = e.host.gsub /[\.\/]+/, '.'        # clean hostname
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/' # clean path
-    path = Pathname.new(rawpath).expand_path.to_s          # interpret path
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/'   # preserve trailing-slash
-    resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # resource instance
-    e['uri'] = resource.uri                                # canonical URI to environment
-    e[:Links] = [] ; e[:Response] = {}                     # response metadata
+    path = Pathname.new(rawpath).expand_path.to_s        # interpret path
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
+    resource = R[e.scheme + "://" + e.host + path]       # resource instance
+    e['uri'] = resource.uri                              # canonical URI to environment
+    e[:Links] = [] ; e[:Response] = {}                   # response metadata
 #    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # verbose-log request
     resource.setEnv(e).send(method).do{|s,h,b| # call into request and inspect response
       R.log e,s,h,b # log response
@@ -50,20 +50,23 @@ class R
   def R.log e, s, h, b
     Stats[:status][s] ||= 0
     Stats[:status][s] += 1
-    host = e['SERVER_NAME']
-    Stats[:host][host] ||= 0
-    Stats[:host][host] += 1
+    Stats[:host][e.host] ||= 0
+    Stats[:host][e.host] += 1
     mime = nil
     h['Content-Type'].do{|ct|
       mime = ct.split(';')[0]
       Stats[:format][mime] ||= 0
       Stats[:format][mime] += 1}
-    puts [e['REQUEST_METHOD'], s, e.uri, '<'+e.user+'>', e['HTTP_REFERER']].compact.map(&:to_s).map(&:to_utf8).join ' '
+    puts [e['REQUEST_METHOD'], s,
+          [e.scheme, '://', e.host, e['REQUEST_URI']].join,
+          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>',
+          e['HTTP_REFERER']].
+          flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
   E500 = -> x,e {
     error = {'uri' => e.uri,
-             Title => [x.class, x.message].join(' '),
+             Title => [x.class, x.message.noHTML].join(' '),
              Content => '<pre>' + x.backtrace.join("\n").noHTML + '<pre>'}
     graph = {e.uri => error}
     Stats[:status][500] ||= 0
@@ -109,7 +112,7 @@ class R
                           when :error
                             key.uri
                           when :host
-                            r['rack.url_scheme'] + "://" + key + '/'
+                            r.scheme + "://" + key + '/'
                           when :format
                             'http://www.iana.org/assignments/media-types/' + key
                           when :status
@@ -126,14 +129,14 @@ class R
                   {'uri' => uri, Title => title, Stat+'size' => count }}
                  }}
 
-    https =  r['rack.url_scheme'][-1]=='s'
+    https =  r.scheme[-1]=='s'
     g['#scheme'] = {'uri' => '#scheme', Type => R[Container],
                     LDP+'contains' => [
-                      {'uri' => r['rack.url_scheme'] + "://" + r['SERVER_NAME'] + '/stat',
-                       Title => r['rack.url_scheme'],
+                      {'uri' => r.scheme + "://" + r.host + '/stat',
+                       Title => r.scheme,
                        Size => Stats[:status].values.inject(0){|s,v|s+v}
                       },
-                      {'uri' => (https ? 'http' : 'https') + "://" + r['SERVER_NAME'] + '/stat',
+                      {'uri' => (https ? 'http' : 'https') + "://" + r.host + '/stat',
                        Title => https ? 'http' : 'https',
                        Size => 0
                       }

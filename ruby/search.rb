@@ -39,7 +39,7 @@ class R
     m['/search'] = {Type => R[Search+'Input']}
     R.groonga.do{|ga|
       q = e['q']                               # search expression
-      g = e["context"] || d.env['SERVER_NAME'] # context
+      g = e["context"] || d.env.host # context
       r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
       ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
       start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset

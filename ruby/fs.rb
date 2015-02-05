@@ -88,8 +88,8 @@ class R
       qs = '?' + e.env['QUERY_STRING']
       pp = (t-1).strftime('/%Y/%m/%d/') # prev-day
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
-      this[Prev] = {'uri' => pp+qs} if R['//' + e.env['SERVER_NAME'] + pp].e
-      this[Next] = {'uri' => np+qs} if R['//' + e.env['SERVER_NAME'] + np].e}
+      this[Prev] = {'uri' => pp+qs} if R['//' + e.env.host + pp].e
+      this[Next] = {'uri' => np+qs} if R['//' + e.env.host + np].e}
     if e.env[:container]
       e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
     else

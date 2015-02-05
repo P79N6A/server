@@ -211,7 +211,7 @@ class R
     d.dir.child('news').setEnv(e).response}
 
   Render['application/atom+xml'] = -> d,e {
-    id = '//' + e['SERVER_NAME'] + (CGI.escapeHTML e['REQUEST_URI'])
+    id = '//' + e.host + (CGI.escapeHTML e['REQUEST_URI'])
     H(['<?xml version="1.0" encoding="utf-8"?>',
        {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
          c: [{_: :id, c: id},
