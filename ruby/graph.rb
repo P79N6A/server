@@ -112,28 +112,29 @@ class R
   end
  
   Mutate = -> g,e {
-    if e.q.has_key? 'new'
-      if e[404] # new resource
-        if e.q.has_key? 'type' # type bound
-          e.q['edit'] = true   # ready to edit
-        else    # type selector
-          g['#new'] = {Type => R['#untyped']}
+    if e.signedIn
+      if e.q.has_key? 'new'
+        if e[404] # new resource
+          if e.q.has_key? 'type' # type bound
+            e.q['edit'] = true   # ready to edit
+          else    # type selector
+            g['#new'] = {Type => R['#untyped']}
+          end
+        else # new post to extant target
+          g['#new'] = {Type => [R['#editable'], # no URI, POST-handler will decide
+                                e.q['type'].do{|t| R[t.expand]} ||
+                                R[Resource]]}
+          g[e.uri].do{|container|# target
+            container[Type].justArray.map{|type|Containers[type.uri]}. # lookup contained-type
+              compact[0].do{|childType|g['#new'][Type].push R[childType]}}# add contained-type
         end
-      else # new post to extant target
-        g['#new'] = {Type => [R['#editable'],e.q['type'].do{|t|R[t.expand]}||R[Resource]]}
-        g[e.uri].do{|container|
-          container[Type].justArray.map{|type|Containers[type.uri]}. # hint containee type
-          compact[0].do{|childType|g['#new'][Type].push R[childType]}}
+      end
+      if e.q.has_key? 'edit'
+        r = g[e.uri] ||= {}; r[Type]||=[]        # resource
+        r[Type].push R['#editable']              # attach 'editable' type to resource
+        [LDP+'contains',Size].map{|p|r.delete p} # ambient properties, not editable
       end
     end
-
-    if e.q.has_key? 'edit'
-      r = g[e.uri] ||= {}         # resource
-      r[Type] ||= []              # types
-      r[Type].push R['#editable'] # attach 'editable' type to resource
-      [LDP+'contains',Size].map{|p|r.delete p} # ambient properties, non-editable
-    end
-
     e[:Filter].justArray.map{|f| # named-mutation
       Filter[f].do{|fn|
         fn[g,e]}}
