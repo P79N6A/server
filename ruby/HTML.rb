@@ -62,6 +62,10 @@ class String
   end
 end
 
+class Symbol
+  def html; to_s end
+end
+
 class Bignum
   def html; to_s end
 end

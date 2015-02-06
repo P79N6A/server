@@ -59,17 +59,18 @@ class R
            {_: :a, class: :cancel, href: e.uri, c: 'X'},
            {_: :input, type: :submit, value: 'write'}].cr}]}
 
-  ViewA[SIOCt+'WikiArticle'] = -> r,e {
-    [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
-     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection',
-      c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'}]}
-
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
     [H.css('/css/wiki'),
      g.map{|u,r|
        ViewA[SIOCt+'WikiArticle'][r,e]}]}
 
- ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
+  ViewA[SIOCt+'WikiArticle'] = -> r,e {
+    [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
+     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection',
+      c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'}]}
+
+  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
+  ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
      c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}},
          {_: :a, href: r.R.docroot +  '?fragment=' + r.R.fragment, class: :edit, c: :edit},
