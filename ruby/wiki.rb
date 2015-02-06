@@ -2,11 +2,7 @@
 watch __FILE__
 class R
  
-  Creatable = [
-    SIOCt+'BlogPost',
-    Forum, Wiki,
-    SIOCt+'WikiArticle',
-  ]
+  Creatable = [Forum, Wiki, BlogPost, WikiArticle]
 
   ViewA[Wiki] = -> r,e {
     {class: :wiki,
@@ -21,7 +17,9 @@ class R
 
   ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|
-      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
+      {_: :a, style: 'font-size: 2em; display:block',
+       c: c.R.fragment,
+       href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
   ViewGroup['#editable'] = -> graph, e {
     subject = graph.keys[0]
@@ -63,7 +61,7 @@ class R
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
-     {_: :a, href: r.R.docroot +  '?type=sioct:WikiArticleSection',
+     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection',
       c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'}]}
 
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {

@@ -43,7 +43,9 @@ class R < RDF::URI
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
   Forum    = SIOC + 'Forum'
+  BlogPost = SIOCt + 'BlogPost'
   Wiki     = SIOCt + 'Wiki'
+  WikiArticle = SIOCt + 'WikiArticle',
   ACL      = W3   + 'ns/auth/acl#'
   LDP      = W3   + 'ns/ldp#'
   Stat     = W3   + 'ns/posix/stat#'

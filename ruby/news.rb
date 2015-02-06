@@ -121,7 +121,7 @@ class R
             if !u.match /^http/
               u = '/junk/'+u.gsub('/','.')
             end
-            yield u, R::Type, R[R::SIOCt+'BlogPost']
+            yield u, R::Type, R[R::BlogPost]
             
             #links
             inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
@@ -230,6 +230,6 @@ class R
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                            c: d[Content]}}].cr}}.cr]}])}
 
-  ViewGroup[SIOCt+'BlogPost'] = ViewGroup[Resource]
+  ViewGroup[BlogPost] = ViewGroup[Resource]
 
 end
