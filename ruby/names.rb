@@ -95,15 +95,6 @@ class R
   def R.dive s
     s[0..2] + '/' + s[3..-1]
   end
-
-  def fragmentPath
-    f = fragment
-    docroot + '/.' + ((!f || f.empty?) ? '-' : f)
-  end
-
-  def fragments
-    docroot.a('/.*e').glob
-  end
   
   # squash names to prefix:basename
   def expand;   uri.expand.R end

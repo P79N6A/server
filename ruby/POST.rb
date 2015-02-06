@@ -81,7 +81,7 @@ class R
               uri.t + slug + '#'
             end
           elsif Containers[resource[Type].maybeURI] # nonexistent container
-            #mk # create container
+            mk                                      # create container
             uri.t                                   # add trailing-slash
           else
             uri + '#'                               # basic resource
@@ -109,6 +109,19 @@ class R
     fragments.map{|f| f.nodeToGraph graph}
     jsonDoc.w graph, true
     self
+  end
+  def fragmentDir
+    doc = docroot
+    doc.dir + '/' + '.' + doc.basename + '/'
+  end
+  def fragmentPath
+    f = fragment
+    f = '#' if !f || f.empty?
+    fragmentDir + f
+  end
+
+  def fragments
+    fragmentDir.a('*.e').glob
   end
 
 end

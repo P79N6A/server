@@ -73,7 +73,7 @@ class R
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
      c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}},
-         {_: :a, href: r.R.docroot +  '?fragment=' + r.R.fragment, class: :edit, c: :edit},
+         {_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: :edit},
          r[Content]]}}
 
 end
