@@ -2,19 +2,19 @@
 class R
 =begin
 
-  subjectURI/pURI: String
+  subjectURI/predicateURI: String
   object:
-   Array [objA, objB..]
+   Array [objectA, objectB..]
    RDF::URI
+   RDF::Literal
    R
    Hash with 'uri' key
-   RDF::Literal
    String
 
  Hash/JSON
   {subjectURI => {predicateURI => object}}
  Streams
-  yield subjURI, predURI, object
+  yield subjectURI, predicateURI, object
 
 =end
 
