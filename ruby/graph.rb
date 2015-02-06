@@ -131,6 +131,7 @@ class R
       end
       if e.q.has_key? 'edit'
         r = g[e.uri] ||= {}; r[Type]||=[]        # resource
+        r[Title] ||= e.R.basename
         r[Type].push R['#editable']              # attach 'editable' type to resource
         [LDP+'contains',Size].map{|p|r.delete p} # ambient properties, not editable
       end

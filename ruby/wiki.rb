@@ -7,9 +7,9 @@ class R
   ViewA[Wiki] = -> r,e {
     {class: :wiki,
      c: [{_: :h1, c: r[Title]},
-         {_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'}, '<br>',
          {_: :span, class: :desc, c: r[Content]},
-         {_: :a, class: :post, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "new article"]}]}}
+         ([{_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'}, '<br>',
+           {_: :a, class: :post, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "new article"]}] if e.signedIn && r.uri)]}}
 
   ViewGroup[Wiki] = -> g,e {
     [H.css('/css/wiki',true),

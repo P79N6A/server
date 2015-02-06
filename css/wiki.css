@@ -1,26 +1,11 @@
 a {text-decoration:none}
 a > h1, a > h2 {background-color:#fff;color:#000}
 .section {
-    border: .1em dotted #fff;
-    border-radius: .5em;
+    border: .1em dotted #eee;
     padding: .5em;
     margin:.5em;
-    float: left;
 }
-.section:hover {border-color: #ccc;background-color: #fafafa}
-
-.create {
-    border-radius:.2em;
-    background-color:#eee;
-    color:#000;
-}
-
-.create .icon {font-size: 1.6em; background-color:#0f0}
-
 .edit { color: #777; padding-left: .3em }
-.edit:hover { color: #7f7 }
-
-.create, .edit, .history {float: right}
 input, textarea {border: .2em solid #ccc; border-radius: .23em}
 input[type=submit] {background-color: #fff; color: #333; border-color: #333}
 input[type=submit]:hover {background-color:#0f0; color: #fff; border-color: #bfb}
