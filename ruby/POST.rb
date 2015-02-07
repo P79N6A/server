@@ -83,7 +83,7 @@ class R
             mk                                      # create container
             uri.t                                   # add trailing-slash
           else
-            uri + '#'                               # basic resource
+            uri + '#' + slug                        # basic resource
           end
         end
     resource['uri'] ||= s           # identify resource
