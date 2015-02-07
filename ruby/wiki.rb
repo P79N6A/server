@@ -22,8 +22,8 @@ class R
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     [{_: :a, class: :articleTitle, href: r.uri, c: r[Title]},
-     {_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit article description'},
-     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection', c: '+ section', title: 'add section'},
+     {_: :a, class: :edit, href: r.R.docroot.uri + '?edit&fragment=', c: '✑', title: 'edit article description'},
+     {_: :a, class: :addSection, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'},
      '<br>',
      {_: :span, class: :desc, c: r[Content]},
     ]}
