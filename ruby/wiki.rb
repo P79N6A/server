@@ -10,10 +10,10 @@ class R
 
   ViewA[Wiki] = -> r,e {
     {class: :wiki,
-     c: [{_: :h1, c: r[Title]},
-         {_: :span, class: :desc, c: r[Content]},
-         ([{_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'}, '<br>',
-           {_: :a, class: :post, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "new article"]}] if e.signedIn && r.uri)]}}
+     c: [{_: :span, class: :wikiTitle, c: r[Title]},
+         ([{_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'},
+           {_: :a, class: :addArticle, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "new article"]}] if e.signedIn), '<br>',
+         {_: :span, class: :desc, c: r[Content]}]}}
 
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
     [H.css('/css/wiki'),
@@ -21,9 +21,10 @@ class R
        ViewA[SIOCt+'WikiArticle'][r,e]}]}
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
+    doc = r.R.docroot.uri
     [{_: :a, class: :articleTitle, href: r.uri, c: r[Title]},
-     {_: :a, class: :edit, href: r.R.docroot.uri + '?edit&fragment=', c: '✑', title: 'edit article description'},
-     {_: :a, class: :addSection, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'},
+    ({_: :a, class: :edit, href: doc + '?edit&fragment=', c: '✑', title: 'edit article description'} if e.signedIn),
+     {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'},
      '<br>',
      {_: :span, class: :desc, c: r[Content]},
     ]}

@@ -5,5 +5,7 @@ a {text-decoration: none}
     margin:.5em;
 }
 .edit { color: #777; padding-left: .3em }
-.articleTitle {font-size:2em}
-.addSection {background-color:#00f;color:#fff;border-radius:.55em;padding:0 .1em 0 .1em}
+.wikiTitle,.articleTitle {font-size:2em}
+.addSection,.addArticle {color:#fff;border-radius:.55em;padding:0 .15em 0 .1em}
+.addSection {background-color:#00f}
+.addArticle {background-color:purple}
