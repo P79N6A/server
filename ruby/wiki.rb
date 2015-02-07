@@ -1,5 +1,5 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 class R
  
   Creatable = [Forum, Wiki, BlogPost, WikiArticle]
@@ -23,9 +23,8 @@ class R
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     doc = r.R.docroot.uri
     [{_: :a, class: :articleTitle, href: r.uri, c: r[Title]},
-    ({_: :a, class: :edit, href: doc + '?edit&fragment=', c: '✑', title: 'edit article description'} if e.signedIn),
-     {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'},
-     '<br>',
+     ([{_: :a, class: :edit, href: doc + '?edit&fragment=', c: '✑', title: 'edit article description'},
+       {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'}] if e.signedIn), '<br>',
      {_: :span, class: :desc, c: r[Content]},
     ]}
 
@@ -34,9 +33,8 @@ class R
 
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
-     c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}},
-         {_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: :edit},
-         r[Content]]}}
+     c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}}, r[Content],
+         ({_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: '✑'} if e.signedIn)]}}
 
   ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|
