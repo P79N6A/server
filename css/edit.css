@@ -1,0 +1,4 @@
+input, textarea {border: .2em solid #ccc; border-radius: .23em}
+input[type=submit] {background-color: #fff; color: #333; border-color: #333}
+input[type=submit]:hover {background-color:#0f0; color: #fff; border-color: #bfb}
+.cancel {border-radius:.2em; background-color:#f00; color: #fff; font-size:1.4em; margin-right: .2em;padding: .1em .3em .1em .3em}

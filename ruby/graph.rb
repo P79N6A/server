@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-=begin
+=begin miniRDF - this predates RDF.rb and can still be used when you want
 
   subjectURI/predicateURI: String
   object:
@@ -112,35 +112,39 @@ class R
   end
  
   Mutate = -> g,e {
-    if e.signedIn
-      if e.q.has_key? 'new'
-        if e[404] # new resource
+
+    if e.signedIn # editing requires a WebID for ACL/antispam/provenance
+      if e.q.has_key? 'new' # new resource
+        if e[404] # target nonexistent
           if e.q.has_key? 'type' # type bound
             e.q['edit'] = true   # ready to edit
-          else    # type selector
+          else                   # type selector
             g['#new'] = {Type => R['#untyped']}
           end
-        else # new post to extant target
+        else # target exists, new post to it
           g['#new'] = {Type => [R['#editable'], # no URI, POST-handler will decide
-                                e.q['type'].do{|t| R[t.expand]} ||
-                                R[Resource]]}
+                                e.q['type'].do{|t| R[t.expand]} || R[Resource]]} # type
           g[e.uri].do{|container|# target
             container[Type].justArray.map{|type|Containers[type.uri]}. # lookup contained-type
               compact[0].do{|childType|g['#new'][Type].push R[childType]}}# add contained-type
         end
       end
       if e.q.has_key? 'edit'
-        r = g[e.uri] ||= {}; r[Type]||=[]        # resource
+        fragment = e.q['fragment']
+        subject = e.uri + (fragment ? ('#' + fragment) : '')
+        r = g[subject] ||= {}; r[Type]||=[]      # resource
         r[Title] ||= e.R.basename
         r[Type].push R['#editable']              # attach 'editable' type to resource
         [LDP+'contains',Size].map{|p|r.delete p} # ambient properties, not editable
       end
     end
-    e[:Filter].justArray.map{|f| # named-mutation
+
+    # arbitrary named-mutation
+    e[:Filter].justArray.map{|f|
       Filter[f].do{|fn|
         fn[g,e]}}
 
-    # per-type summary of container
+    # per-RDF-type summaries on contents
     if e[:container]
       groups = {}
       g.map{|u,r|
@@ -149,7 +153,7 @@ class R
             groups[v] ||= {} # init type-group
             groups[v][u] = r # resource to type-group
           end}}
-      groups.map{|fn,gr|fn[g,gr,e]} # per-type summarize
+      groups.map{|fn,gr|fn[g,gr,e]} # run summarizer
     end}
 
 end

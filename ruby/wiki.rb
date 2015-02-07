@@ -4,6 +4,10 @@ class R
  
   Creatable = [Forum, Wiki, BlogPost, WikiArticle]
 
+  ViewGroup[Wiki] = -> g,e {
+    [H.css('/css/wiki',true),
+     g.values.map{|r|ViewA[Wiki][r,e]}]}
+
   ViewA[Wiki] = -> r,e {
     {class: :wiki,
      c: [{_: :h1, c: r[Title]},
@@ -11,34 +15,47 @@ class R
          ([{_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'}, '<br>',
            {_: :a, class: :post, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "new article"]}] if e.signedIn && r.uri)]}}
 
-  ViewGroup[Wiki] = -> g,e {
-    [H.css('/css/wiki',true),
-     g.values.map{|r|ViewA[Wiki][r,e]}]}
+  ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
+    [H.css('/css/wiki'),
+     g.map{|u,r|
+       ViewA[SIOCt+'WikiArticle'][r,e]}]}
+
+  ViewA[SIOCt+'WikiArticle'] = -> r,e {
+    [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
+     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection',
+      c: '+ section', title: 'add section'}]}
+
+  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {
+    g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
+
+  ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
+    {class: :section,
+     c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}},
+         {_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: :edit},
+         r[Content]]}}
 
   ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|
-      {_: :a, style: 'font-size: 2em; display:block',
-       c: c.R.fragment,
+      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment,
        href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
   ViewGroup['#editable'] = -> graph, e {
-    subject = graph.keys[0]
-    model = graph[subject] || {'uri' => subject}
+    [graph.map{|u,r|ViewA['#editable'][r,e]},
+     H.css('/css/edit'), H.css('/css/html')]}
+
+  ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|
-      model[Type] = t.expand.R}
-    model[Title] ||= ''
-    model[Content] ||= ''
-    [H.css('/css/html'), H.css('/css/wiki'), # View
+      re[Type] = t.expand.R}
+    re[Title] ||= ''
+    re[Content] ||= ''
      {_: :form, method: :POST,
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
-                     c: [{_: :a, class: :uri, c: subject, href: subject},
-                         {_: :a, class: :history, c: 'history', href: R[subject].fragmentPath + '?set=page'}
-                        ]}},
-                 model.keys.map{|p|
+                     c: {_: :a, class: :uri, c: re.uri, href: re.uri}}},
+                 re.keys.map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.abbr}},
-                         {_: :td, c: model[p].do{|o|
+                         {_: :td, c: re[p].do{|o|
                              o.justArray.map{|o|
                                case p
                                when 'uri'
@@ -57,23 +74,6 @@ class R
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
                                end }}}].cr}}].cr},
            {_: :a, class: :cancel, href: e.uri, c: 'X'},
-           {_: :input, type: :submit, value: 'write'}].cr}]}
-
-  ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
-    [H.css('/css/wiki'),
-     g.map{|u,r|
-       ViewA[SIOCt+'WikiArticle'][r,e]}]}
-
-  ViewA[SIOCt+'WikiArticle'] = -> r,e {
-    [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
-     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection',
-      c: [{class: :icon, c: '+'}, ' add section'], class: :create, title: 'add section'}]}
-
-  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
-  ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
-    {class: :section,
-     c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}},
-         {_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: :edit},
-         r[Content]]}}
+           {_: :input, type: :submit, value: 'write'}].cr}}
 
 end

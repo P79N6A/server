@@ -106,17 +106,22 @@ class R
 
   def buildDoc
     graph = {}
-    fragments.map{|f| f.nodeToGraph graph}
-    jsonDoc.w graph, true
+    fragments.map{|f| f.nodeToGraph graph} # collate fragments
+    jsonDoc.w graph, true                  # write doc
     self
   end
+
+  # container for resource fragments
   def fragmentDir
     doc = docroot
     doc.dir + '/' + '.' + doc.basename + '/'
   end
+
+  # container for a fragment
   def fragmentPath
     f = fragment
-    f = '#' if !f || f.empty?
+    f = 'index' if !f
+    f = '#' if f.empty?
     fragmentDir + f
   end
 
