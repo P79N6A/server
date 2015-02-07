@@ -100,7 +100,7 @@ class R
     doc.w graph, true            # write version
     cur = path.a '.e'            # live-resource
     cur.delete if cur.e          # obsolete version
-    doc.ln cur                   # make version live
+    doc.ln_s cur                 # make version live
     r.R.buildDoc if buildDoc
   end
 

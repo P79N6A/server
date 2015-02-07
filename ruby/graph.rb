@@ -135,7 +135,8 @@ class R
         r = g[subject] ||= {}; r[Type]||=[]      # resource
         r[Title] ||= e.R.basename
         r[Type].push R['#editable']              # attach 'editable' type to resource
-        [LDP+'contains',Size].map{|p|r.delete p} # ambient properties, not editable
+        [LDP+'contains', Size, Creator
+        ].map{|p|r.delete p}                     # ambient properties, not editable
       end
     end
 

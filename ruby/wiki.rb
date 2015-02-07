@@ -21,9 +21,12 @@ class R
        ViewA[SIOCt+'WikiArticle'][r,e]}]}
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
-    [{_: :a, href: r.uri, c: {_: :h1, c: r[Title]}},
-     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection',
-      c: '+ section', title: 'add section'}]}
+    [{_: :a, class: :articleTitle, href: r.uri, c: r[Title]},
+     {_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit article description'},
+     {_: :a, href: r.R.docroot +  '?new&type=sioct:WikiArticleSection', c: '+ section', title: 'add section'},
+     '<br>',
+     {_: :span, class: :desc, c: r[Content]},
+    ]}
 
   ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {
     g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}

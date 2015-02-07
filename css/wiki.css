@@ -1,6 +1,8 @@
+a {text-decoration: none}
 .section {
     border: .1em dotted #eee;
     padding: .5em;
     margin:.5em;
 }
 .edit { color: #777; padding-left: .3em }
+.articleTitle {font-size:2em}
