@@ -2,7 +2,6 @@ watch __FILE__
 class R
 
   def POST
-    return Login[self,@r] if path == '/login'
     return [403,{},[]] if !allowWrite
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
@@ -69,6 +68,8 @@ class R
           data.uri  # subject-URI
         else # new resource
           @r[:Status] = 201
+          t = resource[Title]
+          slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
           if e # POST to container
             resource[SIOC+'has_container'] = R[uri.t] # containment metadata
             targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # type(s) of container
@@ -76,8 +77,6 @@ class R
             if resource.uri # URI bound by handler
               resource.uri
             else # contained resource
-              t = resource[Title]
-              slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
               uri.t + slug + '#'
             end
           elsif Containers[resource[Type].maybeURI] # nonexistent container
