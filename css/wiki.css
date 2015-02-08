@@ -1,3 +1,4 @@
+body {font-family: sans-serif}
 a {text-decoration: none}
 .section {
     border: .1em dotted #eee;
@@ -5,7 +6,7 @@ a {text-decoration: none}
     margin:.5em;
 }
 .edit { color: #777; padding-left: .3em }
-.wikiTitle,.articleTitle {font-size:2em}
+.wikiTitle,.articleTitle {font-size:2em;color:#000;background-color:#fff}
 .addSection,.addArticle {color:#fff;border-radius:.55em;padding:0 .15em 0 .1em}
 .addSection {background-color:#00f}
 .addArticle {background-color:purple}

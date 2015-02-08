@@ -1,18 +1,18 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
  
-  Creatable = [Forum, Wiki, BlogPost, WikiArticle]
+  Creatable = [Forum, Wiki, WikiArticle, BlogPost]
 
   ViewGroup[Wiki] = -> g,e {
-    [H.css('/css/wiki',true),
+    [H.css('/css/wiki'),
      g.values.map{|r|ViewA[Wiki][r,e]}]}
 
   ViewA[Wiki] = -> r,e {
     {class: :wiki,
-     c: [{_: :span, class: :wikiTitle, c: r[Title]},
+     c: [{_: :a, class: :wikiTitle, href: r.uri, c: r[Title]},
          ([{_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'},
-           {_: :a, class: :addArticle, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "new article"]}] if e.signedIn), '<br>',
+           {_: :a, class: :addArticle, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "+article"]}] if e.signedIn), '<br>',
          {_: :span, class: :desc, c: r[Content]}]}}
 
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
@@ -28,8 +28,7 @@ class R
      {_: :span, class: :desc, c: r[Content]},
     ]}
 
-  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {
-    g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
+  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
 
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
