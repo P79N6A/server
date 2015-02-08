@@ -82,8 +82,8 @@ class R
           elsif Containers[resource[Type].maybeURI] # nonexistent container
             mk                                      # create container
             uri.t                                   # add trailing-slash
-          else
-            uri + '#' + slug                        # basic resource
+          else # basic resource
+            uri + '#' + slug
           end
         end
     resource['uri'] ||= s           # identify resource
