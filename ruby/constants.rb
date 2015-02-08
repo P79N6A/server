@@ -116,6 +116,7 @@ chat
 container
 csv
 DELETE
+edit
 forum
 fs
 GET
