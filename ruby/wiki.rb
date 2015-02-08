@@ -32,7 +32,8 @@ class R
 
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
-     c: [{_: :a, href: r.uri, c: {_: :h2, c: r[Title]}}, r[Content],
+     c: [{_: :a, class: :sectionTitle, href: r.uri, c: r[Title]},'<br>',
+         r[Content],
          ({_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: '✑'} if e.signedIn)]}}
 
   ViewGroup['#untyped'] = -> graph, e {
