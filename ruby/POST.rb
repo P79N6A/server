@@ -2,7 +2,7 @@
 class R
 
   def POST
-    return [403,{},[]] if !allowWrite
+    return [403,{},[]] unless @r.signedIn && allowWrite
     case @r['CONTENT_TYPE']
     when /^application\/x-www-form-urlencoded/
       formPOST
@@ -45,8 +45,6 @@ class R
             nil
           elsif o.match HTTP_URI
             o.R                        # normal URI
-          elsif p == Type
-            o.R.expand                 # expand prefix-URI
           elsif p == Content
             StripHTML[o]               # sanitize HTML
           else
@@ -58,37 +56,44 @@ class R
 
   def formPOST
     data = Rack::Request.new(@r).POST   # form
-    return [400,{},[]] unless data[Type] && @r.signedIn # accept RDF resources from clients w/ a webID
-    resource = { Date => Time.now.iso8601,
-                 Creator => @r.user
-               }
-    targetResource = graph[uri] || {}   # POST-target resource
-    R.formResource data, resource # parse form
-    s = if data.uri # existing resource
-          data.uri  # subject-URI
-        else # new resource
-          @r[:Status] = 201
-          t = resource[Title]
-          slug = t && !t.empty? && t.slugify || rand.to_s.h[0..7]
-          if e # POST to container
-            resource[SIOC+'has_container'] = R[uri.t] # containment metadata
-            targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # type(s) of container
-              POST[c].do{|h| h[resource,targetResource,@r]}} # target-type handler
-            if resource.uri # URI bound by handler
-              resource.uri
-            else # contained resource
-              uri.t + slug + '#'
-            end
-          elsif Containers[resource[Type].maybeURI] # nonexistent container
-            mk                                      # create container
-            uri.t                                   # add trailing-slash
-          else # basic resource
-            uri + '#' + slug
-          end
-        end
-    resource['uri'] ||= s           # identify resource
-    R.writeResource resource,true   # write resource
-    [303,{'Location' => resource.uri},[]] # send to new resource
+    type = data.delete Type             # RDF type
+    return  [403,{},[]] unless type     # missing-typetag
+    resource = {}                       # resource
+    targetResource = graph[uri] || {}   # target
+    R.formResource data, resource       # form to model
+    subject = if data.uri # URI provided,
+                data.uri  # use existing
+              else # mint a URI, creating
+                @r[:Status] = 201 # mark as new
+                slug = resource[Title] && !resource[Title].empty? && resource[Title].slugify || rand.to_s.h[0..7] # name
+                if e # POST to container
+                  resource[SIOC+'has_container'] = R[uri.t] # containment metadata
+                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # type(s) of container
+                    POST[c].do{|h| h[resource,targetResource,@r]}} # target handler
+                  if resource.uri # URI bound by handler
+                    resource.uri
+                  else # mint URI for contained resource
+                    uri.t + slug + '#'
+                  end
+                elsif Containers[resource[Type].maybeURI] # creating a container
+                  mk                                      # make fs container
+                  uri.t                                   # add trailing-slash
+                else # plain resource
+                  uri + '#' + slug
+                end
+              end
+    if resource.empty? # blanked out
+      subject.R.fragmentPath.a('.e').delete # unlink live-version (history remains)
+      subject.R.buildDoc # update doc
+      [303,{'Location' => uri},[]]
+    else
+      resource.update({ 'uri' => subject,         # URI
+                        Type => type,             # RDF type
+                        Date => Time.now.iso8601, # timestamp
+                        Creator => @r.user})      # author
+      R.writeResource resource,true # write
+      [303,{'Location' => resource.uri},[]] # return
+    end
   end
 
   def R.writeResource r, buildDoc = false
