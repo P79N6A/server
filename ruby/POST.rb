@@ -110,8 +110,14 @@ class R
 
   def buildDoc
     graph = {}
-    fragments.map{|f| f.nodeToGraph graph} # collate fragments
-    jsonDoc.w graph, true                  # write doc
+    fragments = fragments
+    doc = jsonDoc
+    if !fragments || fragments.empty? # empty
+      doc.delete                      # unlink
+    else
+      fragments.map{|f| f.nodeToGraph graph} # collate fragments
+      doc.w graph, true                      # write doc
+    end
     self
   end
 
