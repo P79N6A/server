@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -115,7 +115,7 @@ class R
     if !fragments || fragments.empty? # empty
       doc.delete                      # unlink
     else
-      fragments.map{|f| f.nodeToGraph graph} # collate fragments
+      fragments.map{|f| f.nodeToGraph graph} # mash fragments
       doc.w graph, true                      # write doc
     end
     self
