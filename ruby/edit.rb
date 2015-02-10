@@ -13,8 +13,8 @@ class R
      H.css('/css/edit'), H.css('/css/html')]}
 
   ViewA['#editable'] = -> re, e {
-    e.q['type'].do{|t|
-      re[Type] = t.expand.R}
+    e.q['type'].do{|t|re[Type] = t.expand.R}
+    datatype = e.q['datatype'] || 'markdown'
     re[Title] ||= ''
     re[WikiText] ||= ''
      {_: :form, method: :POST,
@@ -36,8 +36,10 @@ class R
                                when Content # RDF:HTML literal
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when WikiText # HTML, Markdown, or plaintext
-                                 {_: :textarea, name: p, c: o, rows: 16, cols: 80}
-                                 
+                                 [{_: :textarea, name: p, c: o, rows: 16, cols: 80},
+                                  %w{html markdown text}.map{|f|
+                                   f == datatype ? {_: :b, c: f} : {_: :a, class: :datatype, href: e.q.merge({'datatype' => f}).qs, c: f}
+                                  }.intersperse(' ')]
                                when Date
                                  {_: :b, c: [o,' ']}
                                when Size
