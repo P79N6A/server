@@ -105,7 +105,7 @@ class R
     cur = path.a '.e'            # live-resource
     cur.delete if cur.e          # obsolete version
     doc.ln_s cur                 # make version live
-    r.R.buildDoc if buildDoc
+    r.R.buildDoc if buildDoc     # update containing-doc
   end
 
   def buildDoc
@@ -118,25 +118,19 @@ class R
       resources.map{|f| f.nodeToGraph graph} # mash fragments
       doc.w graph, true                      # write doc
     end
-    self
   end
 
-  # container for resource fragments
-  def fragmentDir
+  def fragmentDir # all fragments
     doc = docroot
     doc.dir.descend + '.' + doc.basename + '/'
   end
+  def fragments; fragmentDir.a('*.e').glob end
 
-  # container for a fragment
-  def fragmentPath
+  def fragmentPath # one fragment
     f = fragment
     f = 'index' if !f
     f = '#' if f.empty?
     fragmentDir + f
-  end
-
-  def fragments
-    fragmentDir.a('*.e').glob
   end
 
 end
