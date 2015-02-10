@@ -24,7 +24,16 @@ class R
      ([{_: :a, class: :edit, href: doc + '?edit&fragment=', c: '✑', title: 'edit article description'},
        {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'}] if e.signedIn), '<br>',
      {_: :span, class: :desc, c: r[Content]},
-    ]}
+     r[WikiText].justArray.map{|t|
+       c = t[Content]
+       case t['datatype']
+       when 'markdown'
+         ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(c)
+       when 'html'
+         StripHTML[c]
+       when 'text'
+         c.hrefs
+       end}]}
 
   ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
 

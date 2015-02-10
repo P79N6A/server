@@ -36,7 +36,7 @@ class R
                                when Content # RDF:HTML literal TODO contentEditable
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when WikiText # HTML, Markdown, or plaintext
-                                 [{_: :textarea, name: p, c: o, rows: 16, cols: 80},
+                                 [{_: :textarea, name: p, c: o[Content], rows: 16, cols: 80},
                                   %w{html markdown text}.map{|f|
                                     if f == datatype
                                       [{_: :b, c: f},
