@@ -44,11 +44,11 @@ class R
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
-            o.R                        # normal URI
+            o.R                  # URI
           elsif p == Content
-            StripHTML[o]               # sanitize HTML
+            StripHTML[o]         # HTML
           else
-            o                          # String
+            o                    # String
           end
       resource[p] = o if o && p.match(HTTP_URI)
     }
@@ -56,7 +56,8 @@ class R
 
   def formPOST
     data = Rack::Request.new(@r).POST   # form
-    type = data.delete Type             # RDF type
+    type = data.delete Type             # RDF-resource type
+    datatype = data.delete 'datatype'   # literal type
     return  [403,{},[]] unless type     # missing-typetag
     resource = {}                       # resource
     targetResource = graph[uri] || {}   # target
