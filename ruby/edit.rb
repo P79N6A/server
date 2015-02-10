@@ -16,7 +16,7 @@ class R
     e.q['type'].do{|t|
       re[Type] = t.expand.R}
     re[Title] ||= ''
-    re[Content] ||= ''
+    re[WikiText] ||= ''
      {_: :form, method: :POST,
        c: [{_: :table, class: :html,
              c: [{_: :tr, c: {_: :td, colspan: 2,
@@ -33,8 +33,11 @@ class R
                                  unless ['#editable', Directory].member?(o.uri)
                                    [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]
                                  end
-                               when Content
+                               when Content # RDF:HTML literal
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
+                               when WikiText # HTML, Markdown, or plaintext
+                                 {_: :textarea, name: p, c: o, rows: 16, cols: 80}
+                                 
                                when Date
                                  {_: :b, c: [o,' ']}
                                when Size

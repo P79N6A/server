@@ -42,6 +42,7 @@ class R < RDF::URI
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
+  WikiText = SIOC + 'wikiText'
   Forum    = SIOC + 'Forum'
   BlogPost = SIOCt + 'BlogPost'
   Wiki     = SIOCt + 'Wiki'
