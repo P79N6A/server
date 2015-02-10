@@ -88,7 +88,7 @@ class R
       [303,{'Location' => uri},[]]
     else
       resource.update({ 'uri' => subject,         # URI
-                        Type => type,             # RDF type
+                        Type => type.R.expand,    # RDF type
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
       R.writeResource resource # write
