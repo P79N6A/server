@@ -38,7 +38,12 @@ class R
                                when WikiText # HTML, Markdown, or plaintext
                                  [{_: :textarea, name: p, c: o, rows: 16, cols: 80},
                                   %w{html markdown text}.map{|f|
-                                   f == datatype ? {_: :b, c: f} : {_: :a, class: :datatype, href: e.q.merge({'datatype' => f}).qs, c: f}
+                                    if f == datatype
+                                      [{_: :b, c: f},
+                                       {_: :input, type: :hidden, name: :datatype, value: f}]
+                                    else
+                                      {_: :a, class: :datatype, href: e.q.merge({'datatype' => f}).qs, c: f}
+                                    end
                                   }.intersperse(' ')]
                                when Date
                                  {_: :b, c: [o,' ']}
