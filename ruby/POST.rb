@@ -91,12 +91,12 @@ class R
                         Type => type,             # RDF type
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
-      R.writeResource resource,true # write
+      R.writeResource resource # write
       [303,{'Location' => resource.uri},[]] # return
     end
   end
 
-  def R.writeResource r, buildDoc = false
+  def R.writeResource r, buildDoc = true
     graph = {r.uri => r}         # resource to graph
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
     path = r.R.fragmentPath      # version base
@@ -109,13 +109,13 @@ class R
   end
 
   def buildDoc
-    graph = {}
-    fragments = fragments
+    resources = fragments
     doc = jsonDoc
-    if !fragments || fragments.empty? # empty
+    if !resources || resources.empty? # empty
       doc.delete                      # unlink
     else
-      fragments.map{|f| f.nodeToGraph graph} # mash fragments
+      graph = {}
+      resources.map{|f| f.nodeToGraph graph} # mash fragments
       doc.w graph, true                      # write doc
     end
     self
@@ -124,7 +124,7 @@ class R
   # container for resource fragments
   def fragmentDir
     doc = docroot
-    doc.dir + '/' + '.' + doc.basename + '/'
+    doc.dir.descend + '.' + doc.basename + '/'
   end
 
   # container for a fragment

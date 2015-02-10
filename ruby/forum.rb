@@ -18,7 +18,7 @@ class R
       SIOC+'has_container' => thread.R,
       SIOC+'reply_to' => R[postURI + '?new'],
     }
-    R.writeResource op, true} # store OP
+    R.writeResource op} # store OP
 
   # post to a Thread
   POST[SIOC+'Thread'] = -> post, thread, env {
