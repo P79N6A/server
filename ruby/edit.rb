@@ -33,7 +33,7 @@ class R
                                  unless ['#editable', Directory].member?(o.uri)
                                    [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]
                                  end
-                               when Content # RDF:HTML literal
+                               when Content # RDF:HTML literal TODO contentEditable
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when WikiText # HTML, Markdown, or plaintext
                                  [{_: :textarea, name: p, c: o, rows: 16, cols: 80},

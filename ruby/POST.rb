@@ -57,11 +57,13 @@ class R
   def formPOST
     data = Rack::Request.new(@r).POST   # form
     type = data.delete Type             # RDF-resource type
-    datatype = data.delete 'datatype'   # literal type
-    return  [403,{},[]] unless type     # missing-typetag
+    datatype = data.delete 'datatype'   # content-literal datatype
+    return [403,{},[]] unless type     # need a typetag (antispam/bogus-POSTs)
+
     resource = {}                       # resource
     targetResource = graph[uri] || {}   # target
-    R.formResource data, resource       # form to model
+    R.formResource data, resource       # cast form to RDF graph
+
     subject = if data.uri # URI provided,
                 data.uri  # use existing
               else # mint a URI, creating
@@ -83,9 +85,10 @@ class R
                   uri + '#' + slug
                 end
               end
-    if resource.empty? # blanked out
+
+    if resource.empty? # blank resource
       subject.R.fragmentPath.a('.e').delete # unlink live-version (history remains)
-      subject.R.buildDoc # update doc
+      subject.R.buildDoc # update (maybe unlink) doc
       [303,{'Location' => uri},[]]
     else
       resource.update({ 'uri' => subject,         # URI
