@@ -64,6 +64,7 @@ class R
     targetResource = graph[uri] || {}   # target
     R.formResource data, resource       # cast form to RDF graph
 
+    # subject URI
     subject = if data.uri # URI provided,
                 data.uri  # use existing
               else # mint a URI, creating
@@ -78,10 +79,10 @@ class R
                   else # mint URI for contained resource
                     uri.t + slug + '#'
                   end
-                elsif Containers[resource[Type].maybeURI] # creating a container
+                elsif Containers[resource[Type].maybeURI] # new container
                   mk                                      # make fs container
                   uri.t                                   # add trailing-slash
-                else # plain resource
+                else # basic resource
                   uri + '#' + slug
                 end
               end
@@ -95,6 +96,9 @@ class R
                         Type => type.R.expand,    # RDF type
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
+      resource[WikiText].do{|c|
+        resource[WikiText] = {Content => c,
+                             'datatype' => datatype}}
       R.writeResource resource # write
       [303,{'Location' => resource.uri},[]] # return
     end
