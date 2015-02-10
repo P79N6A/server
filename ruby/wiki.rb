@@ -21,7 +21,7 @@ class R
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     doc = r.R.docroot.uri
     [{_: :a, class: :articleTitle, href: r.uri, c: r[Title]},
-     ([{_: :a, class: :edit, href: doc + '?edit&fragment=', c: '✑', title: 'edit article description'},
+     ([{_: :a, class: :edit, href: doc + '?edit&fragment='+r.R.fragment, c: '✑', title: 'edit article description'},
        {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'}] if e.signedIn), '<br>',
      {_: :span, class: :desc, c: r[Content]},
      r[WikiText].justArray.map{|t|
