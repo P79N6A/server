@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-=begin miniRDF - this predates RDF.rb and can still be used when you want
+=begin miniRDF - this predates RDF.rb and can still be used if you want
 
   subjectURI/predicateURI: String
   object:
