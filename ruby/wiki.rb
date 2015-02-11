@@ -2,6 +2,18 @@
 #watch __FILE__
 class R
 
+  Render[WikiText] = -> texts {
+    texts.justArray.map{|t|
+      content = t[Content]
+      case t['datatype']
+      when 'markdown'
+        ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render content
+      when 'html'
+        StripHTML[content]
+      when 'text'
+        content.hrefs
+      end}}
+
   ViewGroup[Wiki] = -> g,e {
     [H.css('/css/wiki'),
      g.values.map{|r|ViewA[Wiki][r,e]}]}
@@ -22,25 +34,16 @@ class R
     doc = r.R.docroot.uri
     [{_: :a, class: :articleTitle, href: r.uri, c: r[Title]},
      ([{_: :a, class: :edit, href: doc + '?edit&fragment='+r.R.fragment, c: '✑', title: 'edit article description'},
-       {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'}] if e.signedIn), '<br>',
-     {_: :span, class: :desc, c: r[Content]},
-     r[WikiText].justArray.map{|t|
-       c = t[Content]
-       case t['datatype']
-       when 'markdown'
-         ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(c)
-       when 'html'
-         StripHTML[c]
-       when 'text'
-         c.hrefs
-       end}]}
+       {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'}] if e.signedIn),
+     '<br>',
+     Render[WikiText][r[WikiText]]]}
 
   ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
 
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
      c: [{_: :a, class: :sectionTitle, href: r.uri, c: r[Title]},'<br>',
-         r[Content],
+         Render[WikiText][r[WikiText]],
          ({_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: '✑'} if e.signedIn)]}}
 
 end

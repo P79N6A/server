@@ -176,6 +176,8 @@ class Hash
                       c: (self[R::Label] || self[R::Title] || v.R.abbr).justArray[0]}}
                when R::Content
                  {_: :td, class: :val, colspan: 2, c: v}
+               when R::WikiText
+                 {_: :td, class: :val, colspan: 2, c: R::Render[R::WikiText][v]}
                else
                  [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
                   {_: :td, c: v.html, class: :val}]
