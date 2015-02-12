@@ -6,7 +6,7 @@ module Th
   end
 
   def signedIn
-    user.uri.match /^http/
+    @signedIn ||= user.uri.match /^http/
   end
 
   def user_WebID

@@ -1,5 +1,5 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 class R
 
   Containers = { # container -> contained type
@@ -18,7 +18,10 @@ class R
        title = r.delete Title
        date = r.delete Date
        {class: :resource,
-        c: [{_: :a, href: uri, c: title||uri, class: :id},' ',
+        c: [{_: :a, href: uri, c: title||uri, class: :id},
+            ({_: :a, href: uri.R.docroot +  '?edit&fragment=' + uri.R.fragment,
+              class: :edit,
+              c: '✑'} if e.signedIn),
             {_: :a, href: uri, c: date, class: :date},
             '<br>',
             r.html]}}]}
