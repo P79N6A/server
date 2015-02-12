@@ -68,7 +68,7 @@ class R
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
 
   def triplrContent
-    yield uri+'#', Type, R[Content+'Resource']
+    yield uri+'#', Type, R[Resource]
     yield uri+'#', Content, r
   end
 

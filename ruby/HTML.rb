@@ -129,33 +129,29 @@ class R
                      {_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: View[d,e]}]}]}
 
-  View = -> d,e {
-    if e.q.has_key? '?'
-      Tabulator[d,e]
-    else
-      groups = {}
-      seen = {}
-      d.map{|u,r| # group resources on RDF type
-        r.types.map{|type|
-          if v = ViewGroup[type]
-            groups[v] ||= {}
-            groups[v][u] = r
-            seen[u] = true
-          end}}
+  View = -> d,e { # default view - group by type, try type-renderers, fallback to generic
+    groups = {}
+    seen = {}
+    d.map{|u,r| # group on RDF type
+      r.types.map{|type|
+        if v = ViewGroup[type]
+          groups[v] ||= {}
+          groups[v][u] = r
+          seen[u] = true
+        end}}
 
-      [groups.map{|view,graph|view[graph,e]}, # type-groups
-       d.map{|u,r|                            # singletons
-         if !seen[u]
-           types = r.types
-           type = types.find{|t|ViewA[t]}
-           if types.empty?
-             puts "untyped resource <#{r.uri}>"
-           else
-             puts "view undefined #{types.join ' '}"
-           end
-           ViewA[type ? type : Resource][r,e]
-         end}]
-    end}
+    [groups.map{|view,graph|view[graph,e]}, # type-groups
+     d.map{|u,r|                            # singletons
+       if !seen[u]
+         types = r.types
+         type = types.find{|t|ViewA[t]}
+         if types.empty?
+           puts "untyped resource <#{r.uri}>"
+         else
+           puts "view undefined #{types.join ' '}"
+         end
+         ViewA[type ? type : Resource][r,e]
+       end}]}
 
 end
 

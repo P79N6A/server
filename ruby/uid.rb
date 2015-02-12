@@ -78,6 +78,6 @@ class R
      {_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
      ViewA[Resource][u,e]]}
 
-  ViewGroup[SIOC+'Usergroup'] = TabularView
+  ViewGroup[FOAF+'Person'] = ViewGroup[SIOC+'Usergroup'] = TabularView
 
 end

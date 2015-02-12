@@ -2,7 +2,7 @@
 #watch __FILE__
 class R
 
-  Containers = { # container -> contained types
+  Containers = { # container -> contained type
     Forum => SIOC+'Thread',
     SIOC+'Thread' => SIOCt+'BoardPost',
     SIOCt+'BoardPost' => SIOCt+'BoardPost',
@@ -77,16 +77,13 @@ class R
      end
     ]}
 
-  Tabulator = -> r,e {
+  Tabulator = -> r,e { # data-browser (and editor)
     src = '//linkeddata.github.io/tabulator/'
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
      (H.js  '/js/tabr'),
      (H.css src + 'tabbedtab'),
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
-
-  ViewGroup[Content+'Resource'] = -> d,env {
-    d.values.map{|r|r[Content]}}
 
   def triplrAudio &f
     yield uri, Type, R[Sound]
@@ -95,15 +92,14 @@ class R
     yield uri, Date, mtime
   end
 
-  Abstract[Sound] = -> graph, g, e {
-    c = '#sounds'
-    graph[c] = {'uri' => c, Type => R[Container],
+  Abstract[Sound] = -> graph, g, e { # add player and playlist resources
+    c = '#sounds' # playlist URI
+    graph[c] = {'uri' => c, Type => R[Container], # playlist
                 LDP+'contains' => g.values.map{|s|
-                  graph.delete s.uri
-                  s.update({'uri' => '#'+URI.escape(s.R.path)})}}
-    graph['#audio'] = {Type => R[Sound+'Player']}
-    graph[e.uri].do{|c|c.delete(LDP+'contains')}
-  }
+                  graph.delete s.uri # hide non-playlist (duplicate) mention of this resource
+                  s.update({'uri' => '#'+URI.escape(s.R.path)})}} # playlist entry
+    graph['#audio'] = {Type => R[Sound+'Player']} # player
+    graph[e.uri].do{|c|c.delete(LDP+'contains')}} # hide
 
   ViewGroup[Sound+'Player'] = -> g,e {
     [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio')]}

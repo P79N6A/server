@@ -16,13 +16,27 @@ class R
 
   ViewGroup[Wiki] = -> g,e {
     [H.css('/css/wiki'),
-     g.values.map{|r|ViewA[Wiki][r,e]}]}
+     g.values.map{|r|
+       ViewA[Wiki][r,e]}]}
 
   ViewA[Wiki] = -> r,e {
     {class: :wiki,
-     c: [{_: :a, class: :wikiTitle, href: r.uri, c: r[Title]},
-         ([{_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit Wiki description'},
-           {_: :a, class: :addArticle, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "+article"]}] if e.signedIn), '<br>',
+     c: [{_: :a,
+          class: :wikiTitle,
+          href: r.uri,
+          c: r[Title]},
+         ([{_: :a,
+            class: :edit,
+            href: r.uri + '?edit',
+            c: '✑',
+            title: 'edit Wiki description'},
+           {_: :a,
+            class: :addArticle,
+            href: r.uri + '?new',
+            c: [{_: :span,
+                 class: :pen,
+                 c: "✑"},
+                "+article"]}] if e.signedIn), '<br>',
          {_: :span, class: :desc, c: r[Content]}]}}
 
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
@@ -32,18 +46,37 @@ class R
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     doc = r.R.docroot.uri
-    [{_: :a, class: :articleTitle, href: r.uri, c: r[Title]},
-     ([{_: :a, class: :edit, href: doc + '?edit&fragment='+r.R.fragment, c: '✑', title: 'edit article description'},
-       {_: :a, class: :addSection, href: doc +  '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'}] if e.signedIn),
+    [{_: :a,
+      class: :articleTitle,
+      href: r.uri, c: r[Title]},
+     ([{_: :a,
+        class: :edit,
+        href: doc + '?edit&fragment='+r.R.fragment,
+        c: '✑',
+        title: 'edit article description'},
+       {_: :a,
+        class: :addSection,
+        href: doc +  '?new&type=sioct:WikiArticleSection',
+        c: '+section',
+        title: 'add section'}] if e.signedIn),
      '<br>',
      Render[WikiText][r[WikiText]]]}
 
-  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
+  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {
+    g.map{|u,r|
+      ViewA[SIOCt+'WikiArticleSection'][r,e]}}
 
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
-     c: [{_: :a, class: :sectionTitle, href: r.uri, c: r[Title]},'<br>',
+     c: [{_: :a,
+          class: :sectionTitle,
+          href: r.uri,
+          c: r[Title]},
+         '<br>',
          Render[WikiText][r[WikiText]],
-         ({_: :a, href: r.R.docroot +  '?edit&fragment=' + r.R.fragment, class: :edit, c: '✑'} if e.signedIn)]}}
+         ({_: :a,
+           href: r.R.docroot +  '?edit&fragment=' + r.R.fragment,
+           class: :edit,
+           c: '✑'} if e.signedIn)]}}
 
 end
