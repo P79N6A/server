@@ -161,7 +161,7 @@ class R
      c: [([{_: :a, href: uri, c: date, class: :date},
            ({_: :a, href: uri.R.docroot +  '?edit&fragment=' + uri.R.fragment, class: :edit, c: '✑'} if e.signedIn),
            {_: :a, href: uri, c: title||uri, class: :id}] if uri),
-         '<br>',
+         '<hr>',
          r.html]}}
 
   ViewGroup[Resource] = -> g,e {
