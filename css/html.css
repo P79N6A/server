@@ -1,5 +1,7 @@
 img {max-width: 100%}
 table.html {font-family: sans-serif; max-width: 88ex; display: inline-block; border-width: .1em 0 0 0; border-style: dashed; border-color: #ccc;}
 td.key {text-align:right;}
-td.uri a, td.key a, td.val a.id {background-color: #fff; color: #000;text-decoration: none; font-weight: bold}
+a.id, td.key a {background-color: #fff; color: #000;text-decoration: none; font-weight: bold}
+a.date {color: #aaa;text-decoration: none;}
 pre, code {white-space: pre-wrap}
+

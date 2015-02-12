@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   Containers = { # container -> contained type
@@ -13,7 +13,15 @@ class R
 
   ViewGroup[Resource] = -> g,e {
     [H.css('/css/html',true),
-     g.resources(e).reverse.map(&:html)]}
+     g.resources(e).reverse.map{|r|
+       uri = r.delete 'uri'
+       title = r.delete Title
+       date = r.delete Date
+       [{_: :a, href: uri, c: title||uri, class: :id},' ',
+        {_: :a, href: uri, c: date, class: :date},
+        '<br>',
+        r.html]
+     }]}
 
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
     re = r.R
