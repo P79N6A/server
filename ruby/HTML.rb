@@ -168,8 +168,14 @@ class Hash
            {_: :tr, property: k,
             c: case k
                when 'uri'
-                 {_: :td, class: :uri, colspan: 2, c: {_: :a, href: v,
+                 {_: :td, class: :uri, colspan: 2,
+                  c: {_: :a, href: v,
                       c: (self[R::Label] || self[R::Title] || v.R.abbr).justArray[0]}}
+               when R::Type
+                 types = v.justArray
+                 unless types.size==1 && types[0].uri==R::Resource
+                   {_: :td, class: :val, colspan: 2, c: ['a ', types.intersperse(', ').map(&:html)]}
+                 end
                when R::Content
                  {_: :td, class: :val, colspan: 2, c: v}
                when R::WikiText
