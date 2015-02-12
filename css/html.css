@@ -2,8 +2,9 @@ img {max-width: 100%}
 .resource {display: inline-block}
 table.html {width:100%;font-family: sans-serif; display: inline-block; border-width: .1em 0 0 0; border-style: dashed; border-color: #ccc;}
 td.key {text-align:right;}
+a.id {float: left}
 a.id, td.key a {background-color: #fff; color: #000;text-decoration: none; font-weight: bold}
-a.edit {color:#777;text-decoration: none;margin-left:.1em}
-a.date {color: #aaa;text-decoration: none; float: right;margin-left:.33em}
+a.edit {color:#777;text-decoration: none;margin-left:.1em;float: right;}
+a.date {color: #aaa;text-decoration: none;float: right;margin-left:.33em}
 pre, code {white-space: pre-wrap}
 

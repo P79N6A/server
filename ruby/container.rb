@@ -9,23 +9,6 @@ class R
     Wiki => SIOCt+'WikiArticle',
   }
 
-  ViewA[Resource] = -> r,e {r.html}
-
-  ViewGroup[Resource] = -> g,e {
-    [H.css('/css/html',true),
-     g.resources(e).reverse.map{|r|
-       uri = r.delete 'uri'
-       title = r.delete Title
-       date = r.delete Date
-       {class: :resource,
-        c: [{_: :a, href: uri, c: title||uri, class: :id},
-            ({_: :a, href: uri.R.docroot +  '?edit&fragment=' + uri.R.fragment,
-              class: :edit,
-              c: '✑'} if e.signedIn),
-            {_: :a, href: uri, c: date, class: :date},
-            '<br>',
-            r.html]}}]}
-
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
     re = r.R
     uri = re.uri
