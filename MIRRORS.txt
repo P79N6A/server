@@ -1,3 +1,0 @@
-http://repo.or.cz/w/www.git
-https://github.com/hallwaykid/pw
-https://gitorious.org/element/www

@@ -56,10 +56,8 @@ class R
 
   def formPOST
     data = Rack::Request.new(@r).POST   # form
-    type = data.delete Type             # RDF-resource type
+    type = (data.delete Type)||Resource # RDF-resource type
     datatype = data.delete 'datatype'   # content-literal datatype
-    return [403,{},[]] unless type     # need a typetag (antispam/bogus-POSTs)
-
     resource = {}                       # resource
     targetResource = graph[uri] || {}   # target
     R.formResource data, resource       # cast form to RDF graph
