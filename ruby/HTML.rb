@@ -158,9 +158,9 @@ class R
     title = r.delete Title
     date = r.delete Date
     {class: :resource,
-     c: [{_: :a, href: uri, c: date, class: :date},
-         ({_: :a, href: uri.R.docroot +  '?edit&fragment=' + uri.R.fragment, class: :edit, c: '✑'} if e.signedIn),
-         {_: :a, href: uri, c: title||uri, class: :id},
+     c: [([{_: :a, href: uri, c: date, class: :date},
+           ({_: :a, href: uri.R.docroot +  '?edit&fragment=' + uri.R.fragment, class: :edit, c: '✑'} if e.signedIn),
+           {_: :a, href: uri, c: title||uri, class: :id}] if uri),
          '<br>',
          r.html]}}
 
