@@ -86,7 +86,15 @@ class R
     [H.css('/css/page', true),
      (H.js('/js/pager', true) if paged),
     ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
-     g.map{|u,r|ViewA[LDP+'Resource'][r,env]}]}
+    g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
+    (if !env.signedIn
+     href = if env.scheme == 'http'
+              'https://' + env.host + env['REQUEST_URI']
+            else
+              '/whoami'
+            end
+     {_: :a, class: :identify, href: href, c: '✋'}
+     end)]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
