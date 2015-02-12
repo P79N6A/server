@@ -17,11 +17,11 @@ class R
        uri = r.delete 'uri'
        title = r.delete Title
        date = r.delete Date
-       [{_: :a, href: uri, c: title||uri, class: :id},' ',
-        {_: :a, href: uri, c: date, class: :date},
-        '<br>',
-        r.html]
-     }]}
+       {class: :resource,
+        c: [{_: :a, href: uri, c: title||uri, class: :id},' ',
+            {_: :a, href: uri, c: date, class: :date},
+            '<br>',
+            r.html]}}]}
 
   ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
     re = r.R
