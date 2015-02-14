@@ -68,9 +68,10 @@ class R
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
 
   def triplrContent
-    yield uri+'#', Type, R[Resource]
+    yield uri+'#', Type, R[Content]
     yield uri+'#', Content, r
   end
+  ViewGroup[Content] = -> d,_ {d.values.map{|r|r[Content]}}
 
   def triplrHref enc=nil
     yield uri+'#', Type, R[Resource]

@@ -166,9 +166,8 @@ class R
 
   ViewGroup[Resource] = -> g,e {
     [H.css('/css/html',true),
-     g.resources(e).reverse.map{|r| # sort group
-       ViewA[Resource][r,e]
-     }]}
+     g.resources(e).reverse.map{|r| # sort
+       ViewA[Resource][r,e] }]}
 
 end
 
