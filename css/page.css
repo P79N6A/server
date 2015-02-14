@@ -3,4 +3,4 @@ a.up {margin:.5em;padding:.1em}
 a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
-.identify {color:#aaa;font-size:2em}
+.identify {color:#aaa;font-size:2em;text-decoration:none}
