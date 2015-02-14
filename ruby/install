@@ -6,6 +6,6 @@ require 'pathname'
  src = File.expand_path File.dirname __FILE__
 name = 'ww'
 
-FileUtils.mkdir lib unless Pathname(lib).exist?
+FileUtils.mkdir_p lib unless Pathname(lib).exist?
 FileUtils.ln_s src, lib+name, :verbose => true
 FileUtils.ln_s src+'/'+name+'.rb', lib, :verbose => true
