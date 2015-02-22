@@ -22,7 +22,7 @@ class R
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     e.condResponse ->{
       r[:thread] = true
-      r[:title] = m.values.find{|r|r.class==Hash&&r[Title]}[Title][0].to_s
+      r[:title] = m.values.find{|r|r.class==Hash&&r[Title]}[Title][0].sub ReExpr, ''
       Render[r.format].do{|p|p[m,r]} ||
       m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
