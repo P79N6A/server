@@ -115,15 +115,14 @@ class R
     html.to_xhtml}
 
   Render['text/html'] = -> d,e {
-    u = d[''] || {} # request resource
     H ["<!DOCTYPE html>\n",
        {_: :html,
          c: [{_: :head,
                c: [{_: :meta, charset: 'utf-8'},
                    {_: :link, rel: :icon, href: '/.icon.png'},
                    e[:title].do{|t| {_: :title, c: t}},
-                   u[Next].do{|n| {_: :link, rel: :next, href: n.uri}},
-                   u[Prev].do{|p| {_: :link, rel: :prev, href: p.uri}}]},
+#                   e[:Links].map{|l| {_: :link, rel: , href:}}
+                  ]},
              {_: :body, c: View[d,e]}]}]}
 
   View = -> d,e { # default view - group by type, try type-renderers, fallback to generic

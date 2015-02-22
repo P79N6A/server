@@ -23,11 +23,7 @@ class R
   end
 
   def ldp
-    @r[:Links].concat ["<#{uri}>; rel=canonical",
-                       "<#{aclURI}>; rel=acl",
-                       "<#{docroot}>; rel=meta",
-                       "<http://www.w3.org/ns/ldp#Resource>; rel=type"]
-    @r[:Links].push "<#{Container}>; rel=type" if @r[:container]
+    @r[:Links].push "<#{aclURI}>; rel=acl"
     headers = {
       'Accept-Patch' => 'application/ld+patch',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
