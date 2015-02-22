@@ -155,7 +155,11 @@ class R
             groups[v][u] = r # resource to type-group
           end}}
       groups.map{|fn,gr|fn[g,gr,e]} # run summarizer
-    end}
+    else
+      titles = g.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
+      e[:title] = titles.head if titles.size==1
+    end
+  }
 
 end
 

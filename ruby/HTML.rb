@@ -115,18 +115,15 @@ class R
     html.to_xhtml}
 
   Render['text/html'] = -> d,e {
-    u = d[''] || {}
-    e[:title] = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
+    u = d[''] || {} # request resource
     H ["<!DOCTYPE html>\n",
        {_: :html,
          c: [{_: :head,
                c: [{_: :meta, charset: 'utf-8'},
-                   {_: :title, c: e[:title].size==1 ? e[:title].head : e.uri},
                    {_: :link, rel: :icon, href: '/.icon.png'},
-                   u[Next].do{|n|
-                     {_: :link, rel: :next, href: n.uri}},
-                   u[Prev].do{|p|
-                     {_: :link, rel: :prev, href: p.uri}}]},
+                   e[:title].do{|t| {_: :title, c: t}},
+                   u[Next].do{|n| {_: :link, rel: :next, href: n.uri}},
+                   u[Prev].do{|p| {_: :link, rel: :prev, href: p.uri}}]},
              {_: :body, c: View[d,e]}]}]}
 
   View = -> d,e { # default view - group by type, try type-renderers, fallback to generic

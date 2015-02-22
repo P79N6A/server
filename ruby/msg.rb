@@ -15,8 +15,12 @@ class R
              else
                false
              end
+
+    # show/hide quoted material
     d.map{|u,r| r[Content] = r[Content].justArray.map{|c|
       c.lines.map{|l|l.match(/^<div class='q'/) ? "" : l}.join}} unless quotes
+
+    # d3 could do the range-scaling but noJS wants this data also - SVG, div+CSS timelines..
     arcs = []
     days = {}
     mtimes = d.values.map{|s|
@@ -30,7 +34,9 @@ class R
     range = (max - min).min(0.1)
     days = days.sort_by{|_,m|m}
     yesterday = days[0]
-    days.map{|d,m| # temporal arcs
+
+    # temporal arcs
+    days.map{|d,m|
       arc = {source: '/'+d.gsub('-','/'),
              target: '/'+yesterday[0].gsub('-','/'),
              sourceName: d,
@@ -42,8 +48,9 @@ class R
              targetPos: (max - yesterday[1]) / range,
             }
       yesterday = [d,m]
-      arcs.push arc
-    }
+      arcs.push arc}
+
+    # reference arcs
     d.values.map{|s| # source
       s[SIOC+'has_parent'].justArray.map{|o| # msg source -> target arcs
         d[o.uri].do{|t| # target
@@ -59,9 +66,10 @@ class R
             pos = (max - mt[0].to_f) / range
             arc[:targetPos] = pos}
           arcs.push arc }}}
+
+    # View
     [H.css('/css/mail',true),
-     {_: :style,
-      c: colors.map{|name,c| "[name=\"#{name}\"] {background-color: #{c}}\n"}},
+     {_: :style, c: colors.map{|name,c| "[name=\"#{name}\"] {background-color: #{c}}\n"}},
      {_: :a, class: :noquote,
       href: q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs,
       c: quotes ? '&#x27ea;' : '&#x27eb;',
@@ -89,8 +97,7 @@ class R
                         {_: :a, name: c, href: '#'+p.uri, c: c}}}.intersperse(' ')}, ' ',
                   r[SIOC+'reply_to'].do{|c|
                     {_: :a, class: :reply, title: :reply, href: c.justArray[0].maybeURI||'#', c: ['&#x270e;','&#x270f;','&#x2710;'][rand(3)] + 'reply'}},
-                  r[Date].do{|d|
-                    {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
+                  r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].do{|d|
                     {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡', title: 'goto thread'} unless e[:thread]}]},
              {class: :body, c: r[Content]},
