@@ -79,7 +79,7 @@ class R
     (Pathname.glob pathPOSIX).map &:R
   end
 
-  ViewGroup[Stat+'File'] = TabularView
+  ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
 
   FileSet[Resource] = -> e,q,g {
     this = g['']

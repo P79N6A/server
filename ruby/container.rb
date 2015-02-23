@@ -9,7 +9,7 @@ class R
     Wiki => SIOCt+'WikiArticle',
   }
 
-  ViewA[Container] = ViewA[Directory] = -> r, e, graph = nil {
+  ViewA[Container] = -> r, e, graph = nil {
     re = r.R
     uri = re.uri
     e[:seen] ||= {}
@@ -45,7 +45,7 @@ class R
            ({class: :down, c: {_: :a, href: uri, style: "color: #{color}", c: '&darr;' }} if uri != e.R.uri && r[Size].justArray[0].to_i>0)]}
     end}
 
-  ViewGroup[Container] = ViewGroup[Directory] = -> d,env {
+  ViewGroup[Container] = -> d,env {
     path = env.R.path
     sort = (env.q['sort']||Size).expand
     s_ = case sort # next sort-predicate
