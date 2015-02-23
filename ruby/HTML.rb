@@ -155,7 +155,7 @@ class R
     date = r.delete Date
     {class: :resource,
      c: [([{_: :a, href: uri, c: date, class: :date},
-           ({_: :a, href: uri.R.docroot +  '?edit&fragment=' + uri.R.fragment, class: :edit, c: '✑'} if e.signedIn),
+           ({_: :a, href: uri.R.docroot.path+ '?edit&fragment='+uri.R.fragment, class: :edit, c: '✑'} if e.signedIn),
            {_: :a, href: uri, c: title||uri, class: :id}] if uri),
          '<hr>',
          r.html]}}
