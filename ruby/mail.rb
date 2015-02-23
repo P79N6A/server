@@ -4,15 +4,17 @@ class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
-  MessagePath = ->id{ # message-ID -> path
+  MessagePath = ->id{ # Message-ID -> /path
     id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
     '/msg/' + id.h[0..2] + '/' + id}
 
-  AddrPath = ->address{ # address -> path
+  AddrPath = ->address{ # email-address -> /path
     address = address.downcase
-    name = address.split('@')[0]
-    alpha = address[0].match(/[<"=0-9]/) ? '_' : address[0]
-    '/address/' + alpha + '/' + address.sub('@','.') + '/' + name + '#' + name}
+    person, domainname = address.split '@'
+    dname = domainname.split('.').reverse
+    tld = dname[0]
+    domain = dname[1]
+    ['','address',tld,domain[0],domain,*dname[2..-1],person,''].join('/') + person + '#' + person}
 
   GET['/thread'] = -> e,r {
     m = {}
@@ -27,12 +29,6 @@ class R
       m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   GET['/msg'] = -> e,r{e.path.split('/').size < 4 ? [303, {'Location' => '/'}, []] : nil}
-
-  GET['/address'] = -> e,r {
-    depth = e.path.split('/').size
-    r[:ls] = true if depth == 3 # tabular listing of alphas
-    r.q['set'] ||= 'first-page' if depth == 4 # +first-page at container root
-    nil}
 
   def mail; Mail.read node if f end
 
