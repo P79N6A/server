@@ -12,6 +12,7 @@ begin
              :Response => {},
              :Links => {},
            }.extend Th)
+  puts [uri,'->',r.uri,'<-',*ARGV[1..-1],"\n"].join ' '
   out = r.send *ARGV[1..-1]
   if out.class==Array && out.size==3 && out[0].class == Fixnum # HTTP response
     require 'thin' # use thin to 'pretty print' response to match curl -i
