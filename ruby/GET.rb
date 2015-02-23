@@ -64,7 +64,7 @@ class R
       else
         graph = -> { # (JSON / Hash)
           set.map{|r|r.setEnv(@r).nodeToGraph m} # fs->graph
-          Mutate[m,@r] # arbitrary transform of graph
+          Massage[m,@r]
           m }
 
         if NonRDF.member? @r.format

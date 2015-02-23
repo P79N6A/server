@@ -23,7 +23,7 @@ class R
   end
 
   def ldp
-    @r[:Links].push "<#{aclURI}>; rel=acl"
+    @r[:Links][:acl] = aclURI
     headers = {
       'Accept-Patch' => 'application/ld+patch',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
@@ -31,7 +31,7 @@ class R
       'Access-Control-Expose-Headers' => "User, Triples, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
       'Daemon' => Daemon,
-      'Link' => @r[:Links].intersperse(', ').join,
+      'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
       'User' => @r.user.uri,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
     }

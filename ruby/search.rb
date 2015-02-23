@@ -16,13 +16,13 @@ class R
     (d.take c, o, r['offset'].do{|o|o.R}).do{|s|           # get page
       if r['offset'] && head = s[0]
         uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-        m[''][Prev] = {'uri' => uri}            # prev RDF
-        d.env[:Links].push "<#{uri}>; rel=prev" # prev HTTP
+        m[''][Prev] = {'uri' => uri} # prev RDF
+        d.env[:Links][:prev] = uri   # prev HTTP
       end
       if edge = s.size >= c && s.pop            # further entries exist
         uri = d.uri + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
-        m[''][Next] = {'uri' => uri}            # next RDF
-        d.env[:Links].push "<#{uri}>; rel=next" # next HTTP
+        m[''][Next] = {'uri' => uri} # next RDF
+        d.env[:Links][:next] = uri   # next HTTP
       end
       s }}
 

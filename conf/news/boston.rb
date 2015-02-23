@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'ww/constants'
+require 'ww'
 hostname = ARGV[0]
 scriptDir = (Pathname.new File.expand_path File.dirname __FILE__).relative_path_from Pathname.new `pwd`.chomp
 R[scriptDir.to_s + '/boston.tw'].tw hostname

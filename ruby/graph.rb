@@ -111,7 +111,7 @@ class R
     doc
   end
  
-  Mutate = -> g,e {
+  Massage = -> g,e {
 
     if e.signedIn # editing requires a WebID for ACL/antispam/provenance
       if e.q.has_key? 'new' # new resource
