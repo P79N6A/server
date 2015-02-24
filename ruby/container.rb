@@ -9,6 +9,16 @@ class R
     Wiki => SIOCt+'WikiArticle',
   }
 
+  Filter[Container] = -> g,e {
+    groups = {}
+    g.map{|u,r|
+      r.types.map{|type| # RDF types
+        if v = Abstract[type] # class-summarizer exists
+          groups[v] ||= {} # init type-group
+          groups[v][u] = r # resource to type-group
+        end}}
+    groups.map{|fn,gr|fn[g,gr,e]}} # run summarizer
+
   ViewA[Container] = -> r, e, graph = nil {
     re = r.R
     uri = re.uri

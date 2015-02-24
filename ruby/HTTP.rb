@@ -38,7 +38,7 @@ class R
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
     resource = R[e.scheme + "://" + e.host + path]       # resource instance
     e['uri'] = resource.uri                              # canonical URI to environment
-    e[:Links] = {}; e[:Response] = {}                    # response metadata
+    e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init request-variables
 #    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # verbose-log request
     resource.setEnv(e).send(method).do{|s,h,b| # call into request and inspect response
       R.log e,s,h,b # log response

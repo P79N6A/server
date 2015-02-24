@@ -115,12 +115,18 @@ class R
     html.to_xhtml}
 
   Render['text/html'] = -> d,e {
+
+    if !e[:title]
+      titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
+      e[:title] = titles.head if titles.size==1
+    end
+
     H ["<!DOCTYPE html>\n",
        {_: :html,
          c: [{_: :head,
                c: [{_: :meta, charset: 'utf-8'},
                    {_: :link, rel: :icon, href: '/.icon.png'},
-                   e[:title].do{|t| {_: :title, c: t}},
+                   e[:title].do{|t|{_: :title, c: t}},
                    e[:Links].map{|type,uri| {_: :link, rel: type, href: uri}},
                   ]},
              {_: :body, c: View[d,e]}]}]}

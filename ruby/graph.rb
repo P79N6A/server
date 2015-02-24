@@ -111,56 +111,6 @@ class R
     doc
   end
  
-  Massage = -> g,e {
-
-    if e.signedIn # editing requires a WebID for ACL/antispam/provenance
-      if e.q.has_key? 'new' # new resource
-        if e[404] # target nonexistent
-          if e.q.has_key? 'type' # type bound
-            e.q['edit'] = true   # ready to edit
-          else                   # type selector
-            g['#new'] = {Type => R['#untyped']}
-          end
-        else # target exists, new post to it
-          g['#new'] = {Type => [R['#editable'], # no URI, POST-handler will decide
-                                e.q['type'].do{|t| R[t.expand]} || R[Resource]]} # type
-          g[e.uri].do{|container|# target
-            container[Type].justArray.map{|type|Containers[type.uri]}. # lookup contained-type
-              compact[0].do{|childType|g['#new'][Type].push R[childType]}}# add contained-type
-        end
-      end
-      if e.q.has_key? 'edit'
-        fragment = e.q['fragment']
-        subject = e.uri + (fragment ? ('#' + fragment) : '')
-        r = g[subject] ||= {}; r[Type]||=[]      # resource
-        r[Title] ||= e.R.basename
-        r[Type].push R['#editable']              # attach 'editable' type to resource
-        [LDP+'contains', Size, Creator, SIOC+'has_container'
-        ].map{|p|r.delete p}                     # ambient properties, not editable
-      end
-    end
-
-    # arbitrary named-mutation
-    e[:Filter].justArray.map{|f|
-      Filter[f].do{|fn|
-        fn[g,e]}}
-
-    # per-RDF-type summaries on contents
-    if e[:container]
-      groups = {}
-      g.map{|u,r|
-        r.types.map{|type| # RDF types
-          if v = Abstract[type] # class-summarizer exists
-            groups[v] ||= {} # init type-group
-            groups[v][u] = r # resource to type-group
-          end}}
-      groups.map{|fn,gr|fn[g,gr,e]} # run summarizer
-    else
-      titles = g.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
-      e[:title] = titles.head if titles.size==1
-    end
-  }
-
 end
 
 class Array

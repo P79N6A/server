@@ -64,15 +64,17 @@ class R
       else
         graph = -> { # (JSON / Hash)
           set.map{|r|r.setEnv(@r).nodeToGraph m} # fs->graph
-          Massage[m,@r]
+          @r[:filters].push Container if @r[:container] # summarize contents of container
+          @r[:filters].push 'edit' if @r.signedIn && (q.has_key? 'new') || (q.has_key? 'edit')
+          @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }}
           m }
 
         if NonRDF.member? @r.format
           Render[@r.format][graph[], @r] # JSON/Hash
-        else # Real RDF
+        else
           if @r[:container]
-            g = graph[].toRDF # container-summarization/reduction
-          else
+            g = graph[].toRDF # summarize
+          else # full RDF
             g = RDF::Graph.new
             set.map{|f| f.setEnv(@r).justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end

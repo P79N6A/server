@@ -55,7 +55,7 @@ class R
   FileSet['grep'] = -> e,q,m { # matching files
     e.exist? && q['q'].do{|query|
       GREP_DIRS.find{|p|e.path.match p}.do{|_|
-        e.env[:Filter] = 'grep'
+        e.env[:filters].push 'grep'
         `grep -iRl #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}}
 
   Filter['grep'] = -> d,e { # matching resources
@@ -64,16 +64,16 @@ class R
       e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i # to regular-expression
       results = {}
       d.map{|u,r| # visit resources
-        if r.to_s.match e[:grep]
-          id = '#' + rand.to_s.h
-          results[id] = r.merge({Type => R['#grepResult']})
+        if r.to_s.match e[:grep] # matching resource
+          id = '#' + rand.to_s.h # new "grep-result" resource
+          results[id] = r.merge({Type => R['#grep']})
         else
           d.delete u
         end}
       d.merge! results
     end}
 
-  ViewGroup['#grepResult'] = -> g,e {
+  ViewGroup['#grep'] = -> g,e {
     c = {}
     w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
     w.each_with_index{|w,i|c[w] = i} # enumerated words
