@@ -44,11 +44,11 @@ class R
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
-            o.R                  # URI
+            o.R # URI
           elsif p == Content
-            StripHTML[o]         # HTML
+            StripHTML[o] # HTML
           else
-            o                    # String
+            o   # String
           end
       resource[p] = o if o && p.match(HTTP_URI)
     }
@@ -61,11 +61,9 @@ class R
     resource = {}                       # resource
     targetResource = graph[uri] || {}   # target
     R.formResource data, resource       # cast form to RDF graph
-
-    # subject URI
-    subject = if data.uri # URI provided,
+    subject = if data.uri # subject specified,
                 data.uri  # use existing
-              else # mint a URI, creating
+              else # mint a URI
                 @r[:Status] = 201 # mark as new
                 slug = resource[Title] && !resource[Title].empty? && resource[Title].slugify || rand.to_s.h[0..7] # name
                 if e # POST to container
@@ -78,40 +76,43 @@ class R
                     uri.t + slug + '#'
                   end
                 elsif Containers[resource[Type].maybeURI] # new container
-                  mk                                      # make fs container
+                  mk                                      # make fs-container
                   uri.t                                   # add trailing-slash
-                else # basic resource
-                  uri + '#' + slug
+                else # standard resource
+                  '#' + slug
                 end
               end
 
+    located = (join subject).R # full path to resource
+
     if resource.empty? # blank resource
-      subject.R.fragmentPath.a('.e').delete # unlink live-version (history remains)
-      subject.R.buildDoc # update (maybe unlink) doc
+      located.fragmentPath.a('.e').delete # unlink version
+      located.buildDoc # update doc
       [303,{'Location' => uri},[]]
     else
       resource.update({ 'uri' => subject,         # URI
                         Type => type.R.expand,    # RDF type
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
-      resource[WikiText].do{|c|
-        resource[WikiText] = {Content => c,
-                             'datatype' => datatype}}
-      R.writeResource resource # write
-      [303,{'Location' => resource.uri},[]] # return
+
+      resource[WikiText].do{|c| # wrap wikitext w/ datatype-tag
+        resource[WikiText] = {Content => c, 'datatype' => datatype}}
+
+      located.writeResource resource # write
+      [303,{'Location' => located.uri},[]] # return
     end
   end
 
-  def R.writeResource r, buildDoc = true
-    graph = {r.uri => r}         # resource to graph
+  def writeResource re, build = true
+    graph = {re.uri => re}       # resource to graph
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
-    path = r.R.fragmentPath      # version base
+    path = fragmentPath          # version base
     doc = path + '/' + ts + '.e' # version
     doc.w graph, true            # write version
     cur = path.a '.e'            # live-resource
     cur.delete if cur.e          # obsolete version
     doc.ln_s cur                 # make version live
-    r.R.buildDoc if buildDoc     # update containing-doc
+    buildDoc if build            # update containing-doc
   end
 
   def buildDoc

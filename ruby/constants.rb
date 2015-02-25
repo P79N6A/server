@@ -161,6 +161,10 @@ class Hash
   alias_method :maybeURI, :uri
 end
 
+class RDF::URI
+  def R; R.new to_s end
+end
+
 class NilClass
   def do; nil end
 end

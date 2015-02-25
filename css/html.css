@@ -5,7 +5,7 @@ td.key {text-align:right;}
 a {text-decoration: none;}
 a.id, td.key a , .resource{background-color: #fff; color: #000;}
 a.id, td.key a {font-weight: bold}
-a.id {font-size:1.2em}
+a.id {font-size:1.12em}
 a.edit {color:#777;font-size:2em;float: right;}
 a.date {color:#000;font-size:.93em;float: right;margin-left:.33em}
 pre, code {white-space: pre-wrap}

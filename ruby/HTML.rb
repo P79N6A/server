@@ -156,11 +156,12 @@ class R
        end}]}
 
   ViewA[Resource] = -> r,e {
+    uri = r.uri
     {class: :resource,
-     c: [(if r.uri
-          [({_: :a, href: r.uri, c: r[Date], class: :date} if r[Date]),
-           ({_: :a, href: r.R.docroot.path + '?edit&fragment=' + r.R.fragName, class: :edit, c: '✑'} if e.signedIn),
-           {_: :a, href: r.uri, c: r[Title]||r.uri, class: :id},'<br>']
+     c: [(if uri
+          [({_: :a, href: uri, c: r[Date], class: :date} if r[Date]),
+           ({_: :a, href: e.R.join(uri).R.docroot.path + '?edit&fragment=' + r.R.fragName, class: :edit, c: '✑'} if e.signedIn),
+           {_: :a, href: uri, c: r[Title]||uri, class: :id},'<br>']
           end), r.html]}}
 
   ViewGroup[Resource] = -> g,e {
@@ -184,8 +185,7 @@ class Hash
             c: case k
                when 'uri'
                  {_: :td, class: :uri, colspan: 2,
-                  c: {_: :a, href: v,
-                      c: (self[R::Label] || self[R::Title] || v.R.abbr).justArray[0]}}
+                  c: {_: :a, href: v, c: v}}
                when R::Type
                  types = v.justArray
                  unless types.size==1 && types[0].uri==R::Resource

@@ -23,10 +23,14 @@ class R
     # edit resource
     if e.q.has_key? 'edit'
       fragment = e.q['fragment']
-      r = unless fragment
-            g[e.uri] ||= {} # editing info about the doc or container itself
-          else              #  fragment exists           or init fragment
-            g.values.find{|u,r|u.R.fragment == fragment} || (g['#'+fragment] = {})
+      r = if fragment
+            fragURI = '#' + fragment
+            re = g.values.find{|u,r|u.R.fragment == fragment} || # found in doc
+                 (g[fragURI] = {})                               # create new
+            re['uri'] = fragURI                                  # identify
+            re
+          else
+            g[e.uri] ||= {} # no fragment - doc or container itself
           end
       r[Type] ||= []              # init Type field
       r[Type].push R['#editable'] # attach 'editable' type
@@ -61,7 +65,7 @@ class R
                              o.justArray.map{|o|
                                case p
                                when 'uri'
-                                 [{_: :input, type: :hidden,  name: :uri, value: o}, o.R.href]
+                                 [{_: :input, type: :hidden,  name: :uri, value: o}, o]
                                when Type
                                  unless ['#editable', Directory].member?(o.uri)
                                    [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]
