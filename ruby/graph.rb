@@ -18,7 +18,7 @@ class R
 
 =end
 
-  # triplr -> graph (Hash)
+  # triplr -> graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -28,37 +28,20 @@ class R
     m
   end
 
-  # triplr -> graph (RDF)
-  def fromStreamRDF g, *i
-    send(*i) do |s,p,o|
-      s = R[(lateHost.join s).to_s] # subject
-      p = RDF::URI p                # predicate
-      o = if [R,Hash].member? o.class
-            RDF::URI o.uri     # object URI ||
-          else                 # object Literal
-            l = RDF::Literal o
-            l.datatype=RDF.XMLLiteral if p == Content
-            l
-          end
-      g << (RDF::Statement.new s,p,o)
-    end
-    g
-  end
-
-  # inode(s) -> graph (Hash)
+  # inode(s) -> graph
   def graph graph = {}
     fileResources.map{|d| d.nodeToGraph graph}
     graph
   end
 
-  # inode -> graph (Hash)
+  # inode -> graph
   def nodeToGraph graph = {}
     justRDF(%w{e}).do{|file|
      graph.mergeGraph file.r true}
     graph
   end
 
-  # triplr -> file(s)
+  # triplr -> fs-store
   def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr)    # collect triples
     R.cacheJSON graph, host, p, hook # cache
@@ -66,7 +49,7 @@ class R
     self
   end
 
-  # graph (Hash) -> file(s)
+  # graph -> fs-store
   def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
