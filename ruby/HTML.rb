@@ -142,8 +142,8 @@ class R
           seen[u] = true
         end}}
 
-    [groups.map{|view,graph|view[graph,e]}, # type-groups
-     d.map{|u,r|                            # singletons
+    [groups.map{|view,graph|view[graph,e]}, # show type-groups
+     d.map{|u,r|                            # show singletons
        if !seen[u]
          types = r.types
          type = types.find{|t|ViewA[t]}
@@ -156,15 +156,12 @@ class R
        end}]}
 
   ViewA[Resource] = -> r,e {
-    uri = r.delete 'uri'
-    title = r.delete Title
-    date = r.delete Date
     {class: :resource,
-     c: [([{_: :a, href: uri, c: date, class: :date},
-           ({_: :a, href: uri.R.docroot.path+ '?edit&fragment='+uri.R.fragName, class: :edit, c: '✑'} if e.signedIn),
-           {_: :a, href: uri, c: title||uri, class: :id}] if uri),
-         '<hr>',
-         r.html]}}
+     c: [(if r.uri
+          [({_: :a, href: r.uri, c: r[Date], class: :date} if r[Date]),
+           ({_: :a, href: r.R.docroot.path + '?edit&fragment=' + r.R.fragName, class: :edit, c: '✑'} if e.signedIn),
+           {_: :a, href: r.uri, c: r[Title]||r.uri, class: :id},'<br>']
+          end), r.html]}}
 
   ViewGroup[Resource] = -> g,e {
     [H.css('/css/html',true),

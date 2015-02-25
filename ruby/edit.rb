@@ -61,7 +61,7 @@ class R
                              o.justArray.map{|o|
                                case p
                                when 'uri'
-                                  [{_: :input, type: :hidden,  name: :uri, value: o}, o.R.href]
+                                 [{_: :input, type: :hidden,  name: :uri, value: o}, o.R.href]
                                when Type
                                  unless ['#editable', Directory].member?(o.uri)
                                    [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]

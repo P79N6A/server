@@ -1,9 +1,12 @@
 img {max-width: 100%}
-.resource {display: inline-block;margin-bottom:.3em}
-table.html {width:100%;font-family: sans-serif; display: inline-block}
+.resource {display: inline-block; margin: .5em; border: .6em solid #eee}
+table.html {display: inline-block}
 td.key {text-align:right;}
-a.id, td.key a {background-color: #fff; color: #000;text-decoration: none; font-weight: bold}
-a.edit {color:#777;text-decoration: none;margin-left:.1em;float: right;}
-a.date {color: #aaa;text-decoration: none;float: right;margin-left:.33em}
+a {text-decoration: none;}
+a.id, td.key a , .resource{background-color: #fff; color: #000;}
+a.id, td.key a {font-weight: bold}
+a.id {font-size:1.2em}
+a.edit {color:#777;font-size:2em;float: right;}
+a.date {color:#000;font-size:.93em;float: right;margin-left:.33em}
 pre, code {white-space: pre-wrap}
 
