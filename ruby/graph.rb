@@ -67,7 +67,7 @@ class R
       hook[d,g,host] if hook} # indexer
   end
 
-  # graph (RDF) -> file(s)
+  # graph (RDF) -> fs-store
   def cacheRDF options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|

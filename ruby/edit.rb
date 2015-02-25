@@ -23,12 +23,15 @@ class R
     # edit resource
     if e.q.has_key? 'edit'
       fragment = e.q['fragment']
-      subject = e.uri + (fragment ? ('#' + fragment) : '')
-      r = g[subject] ||= {}; r[Type]||=[]      # resource
-      r[Title] ||= e.R.basename
-      r[Type].push R['#editable']              # attach 'editable' type to resource
-      [LDP+'contains', Size, Creator, SIOC+'has_container'
-      ].map{|p|r.delete p}                     # ambient properties, not editable
+      r = unless fragment
+            g[e.uri] ||= {} # editing info about the doc or container itself
+          else              #  fragment exists           or init fragment
+            g.values.find{|u,r|u.R.fragment == fragment} || (g['#'+fragment] = {})
+          end
+      r[Type] ||= []              # init Type field
+      r[Type].push R['#editable'] # attach 'editable' type
+      r[Title] ||= e.R.basename   # suggest a title
+      [LDP+'contains', Size, Creator, SIOC+'has_container'].map{|p|r.delete p} # ambient properties, not editable
     end}
 
   Creatable = [Forum, Wiki, WikiArticle, BlogPost]
