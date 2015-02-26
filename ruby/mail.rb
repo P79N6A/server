@@ -60,7 +60,7 @@ class R
       group = AddrPath[list]                         # list URI
       yield group, Type, R[SIOC+'Usergroup']         # list class
       yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
-      yield group, SIOC+'has_container', group.R.parentURI.descend}
+      yield group, SIOC+'has_container', group.R.parentURI.descend + '?set=first-page'}
 
     m.from.do{|f|                                    # any authors?
       f.justArray.map{|f|                            # each author
