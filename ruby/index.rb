@@ -6,8 +6,8 @@ class R
   end
 
   def getIndexBasename p; child(p).c.map{|n|R n.basename.gsub '|','/'} end
-  alias_method :index, :getIndexURIlist
-  #alias_method :index, :getIndexBasename
+#  alias_method :getIndex, :getIndexURIlist
+  alias_method :getIndex, :getIndexBasename
 
   def indexURIlist
     
@@ -18,8 +18,8 @@ class R
     FileUtils.mkdir_p dir
     FileUtils.touch dir + '/' + uri.gsub('/','|')
   end
-  alias_method :index, :indexURIlist
-  #alias_method :index, :indexBasename
+#  alias_method :index, :indexURIlist
+alias_method :index, :indexBasename
 
   GET['/cache'] = E404
   GET['/index'] = E404
