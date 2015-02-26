@@ -41,7 +41,7 @@ class R
     graph
   end
 
-  # triplr -> fs-store
+  # triplr -> fs-store -> triplr
   def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr)    # collect triples
     R.cacheJSON graph, host, p, hook # cache

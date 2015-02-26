@@ -53,6 +53,7 @@ class R
   # URI <> POSIX-path
   VHosts = 'domain'
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
+  def node; Pathname.new pathPOSIX end
   def pathPOSIXrel
     if h = host
       VHosts + '/' + h + pathPart

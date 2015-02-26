@@ -27,6 +27,13 @@ class R
     end
   end
 
+  def realpath # find real file after all the symlinks
+    node.realpath
+  rescue Exception => x
+    puts x
+  end
+  def realURI; realpath.do{|p|p.R} end
+
   def readFile parseJSON=false
     if f
       if parseJSON
@@ -43,6 +50,7 @@ class R
       nil
     end
   end
+  alias_method :r, :readFile
 
   def writeFile o,s=false
     dir.mk
@@ -53,6 +61,7 @@ class R
     puts caller[0..2],x
     self
   end
+  alias_method :w, :writeFile
 
   def mkdir
     e || FileUtils.mkdir_p(pathPOSIX)
@@ -61,6 +70,7 @@ class R
     puts x
     self
   end
+  alias_method :mk, :mkdir
 
   def ln t, y=:link
     t = t.R.stripSlash
@@ -71,10 +81,6 @@ class R
   end
 
   def ln_s t; ln t, :symlink end
-
-  alias_method :r, :readFile
-  alias_method :w, :writeFile
-  alias_method :mk, :mkdir
 
   def fileResources
     r = []
@@ -88,6 +94,16 @@ class R
   def glob
     (Pathname.glob pathPOSIX).map &:R
   end
+
+  def exist?;   node.exist? end
+  alias_method :e, :exist?
+  def directory?; node.directory? end
+  def file?;    node.file? end
+  alias_method :f, :file?
+  def symlink?; node.symlink? end
+  def mtime;    node.stat.mtime if e end
+  alias_method :m, :mtime
+  def size;     node.size end
 
   ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
 

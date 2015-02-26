@@ -199,13 +199,6 @@ class R
     graph.keys.push(uri).map{|u|g[u].delete}
   end
 
-  # index recursive-children
-  def reindex graph = host
-    visit{|resource|
-      puts "index #{resource}"
-      resource.roonga graph}
-  end
-
   def q; @r.q end
   def to_i; 0 end
 
