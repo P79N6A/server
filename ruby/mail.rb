@@ -78,7 +78,7 @@ class R
       author = AddrPath[a.address]         # author URI
       yield author, Type, R[FOAF+'Person']
       yield author, SIOC+'name', (a.display_name || a.name)
-      yield author, SIOC+'has_container', author.R.parentURI.descend
+      yield author, SIOC+'has_container', author.R.parentURI.descend + '?set=first-page'
     }
 
     if m.date

@@ -16,8 +16,8 @@ class R
   def walk p, g={}, v={}
     graph g       # resource-graph
     v[uri] = true # mark visited
-    rel = g[uri].do{|s|s[p]} ||[] # outgoing (doc-graph)
-    rev = R['/index/'+p.R.shorten.uri].getIndex(self) ||[] # incoming arcs (index)
+    rel = g[uri].do{|s|s[p]} ||[] # forward-arcs (doc-graph)
+    rev = R['/index/'+p.R.shorten.uri].getIndex(self) ||[] # inverse arcs (index)
     rel.concat(rev).map{|r|
       v[r.uri] || (r.R.walk p,g,v)} # walk unvisited
     g # graph
