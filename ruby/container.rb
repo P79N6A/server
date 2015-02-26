@@ -86,7 +86,7 @@ class R
      [Render['text/html'][ {}, e, Tabulator]]]}
 
   Tabulator = -> g,e {
-    src = '//linkeddata.github.io/tabulator/'
+    src = e.scheme + ':' '//linkeddata.github.com/tabulator/'
     uri = e.scheme + ':' + e.R.path.sub(/^\/tabulator/,'/')
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
