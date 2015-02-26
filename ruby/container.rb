@@ -86,7 +86,7 @@ class R
      [Render['text/html'][ {}, e, Tabulator]]]}
 
   Tabulator = -> g,e {
-    src = e.scheme + ':' '//linkeddata.github.com/tabulator/'
+    src = e.scheme + '://linkeddata.github.io/tabulator/'
     uri = e.scheme + ':' + e.R.path.sub(/^\/tabulator/,'/')
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
@@ -94,7 +94,8 @@ class R
      {_: :script, c: "
 document.addEventListener('DOMContentLoaded', function(){
     var kb = tabulator.kb;
-    tabulator.outline.GotoSubject('#{uri}', true, undefined, true, undefined);
+    var subject = kb.sym('#{uri}');
+    tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
 }, false);
 "},
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
