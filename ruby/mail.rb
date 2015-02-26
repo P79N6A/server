@@ -6,12 +6,16 @@ class R
 
   MessagePath = -> id{
     msg, domainname = id.gsub(/[^a-zA-Z0-9\.\-@]/, '').split '@'
-    dname = domainname.split('.').reverse
-    dname.unshift 'none' if dname.size < 2
+    dname = (domainname||'').split('.').reverse
+    case dname.size
+    when 0
+      dname.unshift 'none','nohost'
+    when 1
+      dname.unshift 'none'
+    end
     tld = dname[0]
     domain = dname[1]
-    ['','address',tld,domain[0],domain,*dname[2..-1],'.m',id.h[0..1],msg].join('/')
-  }
+    ['','address',tld,domain[0],domain,*dname[2..-1],'.m',id.h[0..1],msg].join('/')}
 
   AddrPath = ->address{ # email-address -> /path
     address = address.downcase
@@ -187,7 +191,8 @@ class R
     group = (e.q['group']||To).expand
     threads = {}
     weight = {}
-    g.map{|u,p| # statistics
+
+    g.map{|u,p| # statistics pass
       graph.delete u unless bodies
       p[Title].do{|t|
         title = t[0].sub ReExpr, ''
@@ -199,11 +204,12 @@ class R
         weight[a] ||= 0
         weight[a] += 1
         graph.delete a}}
-    threads.map{|title,post| # cluster
+
+    threads.map{|title,post| # cluster pass
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir # address
         container = dir.uri.t # container URI
-        item = {'uri' => '/thread/' + post.R.basename, Date => post[Date],
+        item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Title => title.noHTML, Size => post[Size]} # thread resource
         graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # human-readable resource-labels
         graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment} # container resource
