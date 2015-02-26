@@ -1,13 +1,25 @@
 #watch __FILE__
 class R
 
-  def getIndex p; child(p).c.map{|n|R n.basename.gsub '|','/'} end
+  def getIndexURIlist
 
-  def index p,o
+  end
+
+  def getIndexBasename p; child(p).c.map{|n|R n.basename.gsub '|','/'} end
+  alias_method :index, :getIndexURIlist
+  #alias_method :index, :getIndexBasename
+
+  def indexURIlist
+    
+  end
+
+  def indexBasename p,o
     dir = 'index/' + p.R.shorten.uri + o.R.path
     FileUtils.mkdir_p dir
     FileUtils.touch dir + '/' + uri.gsub('/','|')
   end
+  alias_method :index, :indexURIlist
+  #alias_method :index, :indexBasename
 
   GET['/cache'] = E404
   GET['/index'] = E404
@@ -17,7 +29,7 @@ class R
     graph g       # resource-graph
     v[uri] = true # mark visited
     rel = g[uri].do{|s|s[p]} ||[] # forward-arcs (doc-graph)
-    rev = R['/index/'+p.R.shorten.uri].getIndex(self) ||[] # inverse arcs (index)
+    rev = R['/index/'+p].getIndex(self) ||[] # inverse arcs (index)
     rel.concat(rev).map{|r|
       v[r.uri] || (r.R.walk p,g,v)} # walk unvisited
     g # graph

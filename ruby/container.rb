@@ -81,12 +81,22 @@ class R
      end
     ]}
 
-  Tabulator = -> r,e { # data-browser (and editor)
+  GET['/tabulator'] = -> r,e { # data-browser (and editor)
+    [200, {'Content-Type' => 'text/html'},
+     [Render['text/html'][ {}, e, Tabulator]]]}
+
+  Tabulator = -> g,e {
     src = '//linkeddata.github.io/tabulator/'
+    uri = e.scheme + ':' + e.R.path.sub(/^\/tabulator/,'/')
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
-     (H.js  '/js/tabr'),
      (H.css src + 'tabbedtab'),
+     {_: :script, c: "
+document.addEventListener('DOMContentLoaded', function(){
+    var kb = tabulator.kb;
+    tabulator.outline.GotoSubject('#{uri}', true, undefined, true, undefined);
+}, false);
+"},
      {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
   def triplrAudio &f

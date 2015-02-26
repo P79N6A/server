@@ -114,7 +114,7 @@ class R
     html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
-  Render['text/html'] = -> d,e {
+  Render['text/html'] = -> d,e,view=View {
 
     if !e[:title]
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
@@ -129,7 +129,7 @@ class R
                    e[:title].do{|t|{_: :title, c: t}},
                    e[:Links].map{|type,uri| {_: :link, rel: type, href: uri}},
                   ]},
-             {_: :body, c: View[d,e]}]}]}
+             {_: :body, c: view[d,e]}]}]}
 
   View = -> d,e { # default view - group by type, try type-renderers, fallback to generic
     groups = {}

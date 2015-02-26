@@ -27,7 +27,7 @@ class R
 
   GET['/thread'] = -> e,r {
     m = {}
-    R[MessagePath[e.basename]].walk SIOC+'reply_of', m
+    R[MessagePath[e.basename]].walk 'sioc:reply_of', m
     return E404[e,r] if m.empty?
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
