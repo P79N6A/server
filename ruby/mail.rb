@@ -4,9 +4,14 @@ class R
 
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
-  MessagePath = ->id{ # Message-ID -> /path
-    id = id.gsub /[^a-zA-Z0-9\.\-@]/, ''
-    '/msg/' + id.h[0..2] + '/' + id}
+  MessagePath = -> id{
+    msg, domainname = id.gsub(/[^a-zA-Z0-9\.\-@]/, '').split '@'
+    dname = domainname.split('.').reverse
+    dname.unshift 'none' if dname.size < 2
+    tld = dname[0]
+    domain = dname[1]
+    ['','address',tld,domain[0],domain,*dname[2..-1],'.m',id.h[0..1],msg].join('/')
+  }
 
   AddrPath = ->address{ # email-address -> /path
     address = address.downcase

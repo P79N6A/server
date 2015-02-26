@@ -1,9 +1,9 @@
-0) link messages and index-dirs to servable path
+0) link messages and indexed-dir to servable path
  $ ln -s ~/.mail domain/mail
- $ ln -sr {address,msg} domain/mail
+ $ ln -sr address domain/mail
 
 1) browse email files over HTTP
  $ firefox mail/today
 
 N) cleanup
-  $ rm -rf address msg index
+  $ rm -rf address index
