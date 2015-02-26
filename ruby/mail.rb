@@ -37,8 +37,6 @@ class R
       Render[r.format].do{|p|p[m,r]} ||
       m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
-  GET['/msg'] = -> e,r{e.path.split('/').size < 4 ? [303, {'Location' => '/'}, []] : nil}
-
   def mail; Mail.read node if f end
 
   def triplrMail &b
