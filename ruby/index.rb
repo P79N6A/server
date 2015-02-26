@@ -12,17 +12,6 @@ class R
     end
   end
 
-  def ln t, y=:link
-    t = t.R.stripSlash
-    unless t.e || t.symlink?
-      t.dir.mk
-      FileUtils.send y, node, t.node
-    end
-  end
-  def ln_s t;   ln t, :symlink end
-
-  # construct URI from triple
-
   def predicatePath p, s = true
     child s ? p.R.shorten : p
   end
@@ -36,6 +25,10 @@ class R
     [(child o), v] # (s,p,o) URI + literal
   end
 
+  def po o
+    indexPath.predicate o, false
+  end
+
   def literal o
     str = nil
     ext = nil
@@ -45,10 +38,6 @@ class R
       str = o.to_json; ext='.json'
     end
     [str.h + ext, str]
-  end
-
-  def predicates
-    c.map{|c| c.basename.expand.R }
   end
 
   def predicate p, short = true
@@ -101,10 +90,6 @@ class R
   def index p,o
     return unless o.class == R
     p.R.indexPath.setFs o,self,false,false
-  end
-
-  def po o
-    indexPath.predicate o, false
   end
 
   def indexPath

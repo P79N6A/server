@@ -62,6 +62,16 @@ class R
     self
   end
 
+  def ln t, y=:link
+    t = t.R.stripSlash
+    unless t.e || t.symlink?
+      t.dir.mk
+      FileUtils.send y, node, t.node
+    end
+  end
+
+  def ln_s t; ln t, :symlink end
+
   alias_method :r, :readFile
   alias_method :w, :writeFile
   alias_method :mk, :mkdir
