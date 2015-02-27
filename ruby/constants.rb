@@ -129,7 +129,6 @@ HTML
 HTTP
 JSON
 image
-index
 mail
 man
 msg
