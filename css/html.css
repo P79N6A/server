@@ -1,5 +1,5 @@
 img {max-width: 100%}
-.resource {display: inline-block; margin: .5em; border: .8em solid #eee}
+.resource {display: inline-block; padding: .2em ; border-radius: .3em; margin: .25em; border: 1em solid #eee}
 table.html {display: inline-block}
 td.key {text-align:right;}
 a {text-decoration: none;}
