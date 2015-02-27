@@ -2,44 +2,16 @@
 class R
 
   # get index (fs)
-  # some variants on filesystem "back-link" indexing
+  # on-filesystem "back-link" indexing
 
-  def getIndexF p # URI-list at doc
-    f = (self + p).node
+  def getIndex p # get
+    f = (docroot + '/.rev/' + p + '.u').node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  def getIndexFI p # URI-list at index/
-    f = (self + p).node
-    f.readlines.map{|l|R l.chomp} if f.exist?
+  def index p, o # set
+    (o.R.docroot + '/.rev/' + p.R.shorten + '.u').appendFile uri
   end
-
-  def getIndexB p # basename
-    child(p).c.map{|n|
-      R n.basename.gsub '|','/'}
-  end
-
-  # set index
-  def indexF p,o # URI-list at doc
-    file = 'index/' + p.R.shorten.uri + o.R.path
-    FileUtils.mkdir_p File.dirname file
-    File.open(file,'a'){|f|f.write uri + "\n"}
-  end
-
-  def indexFI p,o # URI-list at index/
-    file = 'index/' + p.R.shorten.uri + o.R.path
-    FileUtils.mkdir_p File.dirname file
-    File.open(file,'a'){|f|f.write uri + "\n"}
-  end
-
-  def indexB p,o # basename
-    dir = 'index/' + p.R.shorten.uri + o.R.path
-    FileUtils.mkdir_p dir
-    FileUtils.touch dir + '/' + uri.gsub('/','|')
-  end
-
-  alias_method :getIndex, :getIndexF
-  alias_method :index,       :indexF
 
   GET['/cache'] = E404
   GET['/index'] = E404
@@ -49,7 +21,7 @@ class R
     graph g       # resource-graph
     v[uri] = true # mark visited
     rel = g[uri].do{|s|s[pfull]} ||[] # forward-arcs (doc-graph)
-    rev = R['/index/'+pshort].getIndex(self) ||[] # inverse arcs (index)
+    rev = getIndex(pshort) ||[] # inverse arcs (index)
     rel.concat(rev).map{|r|
       v[r.uri] || (r.R.walk pfull,pshort,g,v)} # walk unvisited
     g # graph

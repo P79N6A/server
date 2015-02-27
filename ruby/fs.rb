@@ -52,6 +52,11 @@ class R
   end
   alias_method :r, :readFile
 
+  def appendFile line
+    dir.mk
+    File.open(pathPOSIX,'a'){|f|f.write line + "\n"}
+  end
+
   def writeFile o,s=false
     dir.mk
     File.open(pathPOSIX,'w'){|f|
