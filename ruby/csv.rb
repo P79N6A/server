@@ -36,7 +36,7 @@ class R
               q['reverse'] = ''
             end
             {_: :th, class: :label, property: k,
-             c: {_: :a,
+             c: {_: :a, rel: :nofollow,
                  class: this ? :this : :that,
                   href: q.qs,
                      c: k.R.abbr}}}},
