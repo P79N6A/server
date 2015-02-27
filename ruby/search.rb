@@ -2,8 +2,14 @@
 class R
 
   # get index (fs)
+  # some variants on filesystem "back-link" indexing
 
-  def getIndexF p # URI-list
+  def getIndexF p # URI-list at doc
+    f = (self + p).node
+    f.readlines.map{|l|R l.chomp} if f.exist?
+  end
+
+  def getIndexFI p # URI-list at index/
     f = (self + p).node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
@@ -14,8 +20,13 @@ class R
   end
 
   # set index
+  def indexF p,o # URI-list at doc
+    file = 'index/' + p.R.shorten.uri + o.R.path
+    FileUtils.mkdir_p File.dirname file
+    File.open(file,'a'){|f|f.write uri + "\n"}
+  end
 
-  def indexF p,o # URI-list
+  def indexFI p,o # URI-list at index/
     file = 'index/' + p.R.shorten.uri + o.R.path
     FileUtils.mkdir_p File.dirname file
     File.open(file,'a'){|f|f.write uri + "\n"}
