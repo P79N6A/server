@@ -175,8 +175,30 @@ class R
     [404,{'Content-Type' => r.format},[Render[r.format].do{|p|p[g,r]} ||
                                        g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :prefixes => Prefixes)]]}
 
+  def q; @r.q end
+
 end
 
 module Th
+
   def SSLupgrade; [301,{'Location' => "https://" + host + self['REQUEST_URI']},[]] end
+
+  def q # parse query-string
+    @q ||=
+      (if q = self['QUERY_STRING']
+         h = {}
+         q.split(/&/).map{|e| k, v = e.split(/=/,2).map{|x| CGI.unescape x }
+                              h[k] = v }
+         h
+       else
+         {}
+       end)
+  end
+
+end
+
+class Hash
+  def qs # serialize to query-string
+   '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
+  end
 end

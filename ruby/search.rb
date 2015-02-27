@@ -49,8 +49,6 @@ class R
     node.take(*a).map &:R
   end
 
-  GREP_DIRS.push(/^\/\d{4}\/\d{2}/)
-
   FileSet['find'] = -> e,q,m,x='' {
     e.exist? && q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
@@ -58,7 +56,7 @@ class R
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  # depth-first tree-range in page-chunks
+  # depth-first in page-chunks
   FileSet['page'] = -> d,r,m {
     c = ((r['c'].do{|c|c.to_i} || 32) + 1).max(1024).min 2 # count
     o = r.has_key?('asc') ? :asc : :desc                   # direction
@@ -100,6 +98,8 @@ class R
       m[''][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
       r.map{|r|
         R[r['.uri']]}}}
+
+  GREP_DIRS.push(/^\/\d{4}\/\d{2}/) # allow grep within a particular month
 
   FileSet['grep'] = -> e,q,m { # matching files
     e.exist? && q['q'].do{|query|
@@ -248,36 +248,9 @@ class R
     graph.keys.push(uri).map{|u|g[u].delete}
   end
 
-  def q; @r.q end
-  def to_i; 0 end
-
-end
-
-module Th
-  def q # parse query-string
-    @q ||=
-      (if q = self['QUERY_STRING']
-         h = {}
-         q.split(/&/).map{|e| k, v = e.split(/=/,2).map{|x| CGI.unescape x }
-                              h[k] = v }
-         h
-       else
-         {}
-       end)
-  end
-end
-
-class Hash
-  def qs # serialize to query-string
-   '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
-  end
 end
 
 class Pathname
-
-  def R
-    R.unPOSIX to_s.utf8
-  end
 
   def c
     return [] unless directory?

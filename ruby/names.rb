@@ -154,3 +154,11 @@ module Th
   def host; self['SERVER_NAME'] end
   def scheme; self['rack.url_scheme'] end
 end
+
+class Pathname
+
+  def R
+    R.unPOSIX to_s.utf8
+  end
+
+end
