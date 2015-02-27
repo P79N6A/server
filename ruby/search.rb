@@ -4,13 +4,15 @@ class R
   # get index (fs)
   # on-filesystem "back-link" indexing
 
-  def getIndex p # get
-    f = (docroot + '/.rev/' + p + '.u').node
+  def getIndex rev # get
+    p = path
+    f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev).node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
-
   def index p, o # set
-    (o.R.docroot + '/.rev/' + p.R.shorten + '.u').appendFile uri
+    o = o.R
+    path = o.path
+    R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten).appendFile uri
   end
 
   GET['/cache'] = E404
