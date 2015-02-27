@@ -5,7 +5,7 @@ class R
   GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
 
   MessagePath = -> id{
-    msg, domainname = id.gsub(/[^a-zA-Z0-9\.\-@]/, '').split '@'
+    msg, domainname = id.sub(/^</,'').sub(/>.*/,'').gsub(/[^a-zA-Z0-9\.\-@]/,'').split '@'
     dname = (domainname||'').split('.').reverse
     case dname.size
     when 0
