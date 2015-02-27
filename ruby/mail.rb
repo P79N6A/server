@@ -31,6 +31,7 @@ class R
     return E404[e,r] if m.empty?
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
+    e.cors
     e.condResponse ->{
       r[:thread] = true
       r[:title] = m.values.find{|r|r.class==Hash&&r[Title]}[Title][0].sub ReExpr, ''
