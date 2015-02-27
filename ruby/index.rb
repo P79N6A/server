@@ -1,37 +1,48 @@
-#watch __FILE__
+watch __FILE__
 class R
 
-  def getIndexURIlist
+  # get
 
+  def getIndexF p
+    f = (self + p).node
+    f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  def getIndexBasename p; child(p).c.map{|n|R n.basename.gsub '|','/'} end
-#  alias_method :getIndex, :getIndexURIlist
-  alias_method :getIndex, :getIndexBasename
-
-  def indexURIlist
-    
+  def getIndexB p
+    child(p).c.map{|n|
+      R n.basename.gsub '|','/'}
   end
 
-  def indexBasename p,o
+  # set
+
+  # value stored in line of file
+  def indexF p,o
+    file = 'index/' + p.R.shorten.uri + o.R.path
+    FileUtils.mkdir_p File.dirname file
+    File.open(file,'a'){|f|f.write uri + "\n"}
+  end
+
+  # value stored in basename
+  def indexB p,o
     dir = 'index/' + p.R.shorten.uri + o.R.path
     FileUtils.mkdir_p dir
     FileUtils.touch dir + '/' + uri.gsub('/','|')
   end
-#  alias_method :index, :indexURIlist
-alias_method :index, :indexBasename
+
+  alias_method :getIndex, :getIndexF
+  alias_method :index,       :indexF
 
   GET['/cache'] = E404
   GET['/index'] = E404
 
   # bidirectional recursive-traverse on a predicate
-  def walk p, g={}, v={}
+  def walk pfull, pshort, g={}, v={}
     graph g       # resource-graph
     v[uri] = true # mark visited
-    rel = g[uri].do{|s|s[p]} ||[] # forward-arcs (doc-graph)
-    rev = R['/index/'+p].getIndex(self) ||[] # inverse arcs (index)
+    rel = g[uri].do{|s|s[pfull]} ||[] # forward-arcs (doc-graph)
+    rev = R['/index/'+pshort].getIndex(self) ||[] # inverse arcs (index)
     rel.concat(rev).map{|r|
-      v[r.uri] || (r.R.walk p,g,v)} # walk unvisited
+      v[r.uri] || (r.R.walk pfull,pshort,g,v)} # walk unvisited
     g # graph
   end
 
