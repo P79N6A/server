@@ -183,9 +183,6 @@ class Hash
          c: map{|k,v|
            {_: :tr, property: k,
             c: case k
-               when 'uri'
-                 {_: :td, class: :uri, colspan: 2,
-                  c: {_: :a, href: v, c: v}}
                when R::Type
                  types = v.justArray
                  unless types.size==1 && types[0].uri==R::Resource
@@ -198,7 +195,8 @@ class Hash
                else
                  [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
                   {_: :td, c: v.html, class: :val}]
-               end}}})
+               end} unless k == 'uri'
+         }})
     end
   end
 end
