@@ -4,7 +4,6 @@ table.tab th a {text-decoration: none}
 table.tab th.this a {color: #fff}
 table.tab th.this {background-color: #4a00ff; border-radius:.2em}
 table.tab th.that:hover {background-color: #eef}
-table.tab td {padding: .2em}
 table.tab tr:nth-child(odd) td.this {background-color: #cfc;color:#000}
 table.tab tr:nth-child(even) td.this {background-color: #fff;color:#000}
 table.tab td[property='uri'] a {padding:.1em; border: .1em dotted #ccc;background-color:#fff;color:#000;font-weight:bold;font-size:1.1em;float:right}
