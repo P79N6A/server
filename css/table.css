@@ -1,30 +1,10 @@
-table.tab {
-    border-spacing: 0;
-    margin: auto;
-}
-table.tab th a {
-    display: block;
-    text-decoration: none;
-}
-
-table.tab th a.this {
-    background-color: #0f0;
-    color: #fff;
-}
-
-table.tab th a.that {
-    background-color: #fff;
-    color: #000;
-}
+table.tab th a {text-decoration: none}
+table.tab th a.this {background-color: #4a00ff;color: #fff}
+table.tab th a.that {background-color: #fff;color: #000}
 table.tab td {padding: .2em}
 table.tab tr:nth-child(odd) td.this {background-color: #eef;color:#000}
 table.tab tr:nth-child(even) td.this {background-color: #fff;color:#000}
-table.tab td a {
-    background-color: #000;
-    color: #fff;
-    padding: .1em;
-    text-decoration: none;
-    white-space: nowrap;
-}
+table.tab td[property='uri'] a {border: .1em dotted #ccc;background-color:#fff;color:#000;font-weight:bold;font-size:1.1em;float:right}
+table.tab td[property='uri'] a.docURI {border-width:0; padding:.1em; float: left;background-color:#000;color:#fff;font-size:1.2em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property=uri] {max-width:42em;overflow:hidden}

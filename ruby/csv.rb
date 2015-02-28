@@ -40,12 +40,10 @@ class R
                  class: this ? :this : :that,
                   href: q.qs,
                      c: k.R.abbr}}}},
-         g.resources(e).send(order).map{|e|
-           {_: :tr, about: e.uri, c: keys.map{|k|
+         g.resources(e).send(order).map{|l|
+           {_: :tr, about: l.uri, c: keys.map{|k|
               this = sort == k
               {_: :td, property: k, class: this ? :this : :that,
-               c: k=='uri' ? e.R.do{|r|
-                               {_: :a, href: r.uri, c: e[Title]||e[Label]||r.basename}
-                             } : e[k].html}}}}.cr]}}
+               c: k=='uri' ? l.R.do{|r|{_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename, class: r.uri == e.uri ? :docURI : ''}} : l[k].html}}}}.cr]}}
 
 end
