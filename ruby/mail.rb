@@ -15,7 +15,7 @@ class R
     end
     tld = dname[0]
     domain = dname[1]
-    ['', 'address', tld, domain[0], domain, *dname[2..-1], '.m', id.h[0..2], msg].join('/')}
+    ['', 'address', tld, domain[0], domain, *dname[2..-1], '@', id.h[0..1], msg].join('/')}
 
   AddrPath = ->address{ # email-address -> /path
     address = address.downcase
