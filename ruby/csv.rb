@@ -35,7 +35,7 @@ class R
             else
               q['reverse'] = ''
             end
-            {_: :th, class: :label, property: k, class: this ? :this : :that,
+            {_: :th, property: k, class: this ? :this : :that,
              c: {_: :a, rel: :nofollow, href: q.qs, c: k.R.abbr}}}},
          g.resources(e).send(order).map{|l|
            {_: :tr, about: l.uri, c: keys.map{|k|
