@@ -29,7 +29,7 @@ class R
     g # graph
   end
 
-  # recursive child-nodes - depth-first, sorted
+  # fetch recursive child-nodes
   def take *a
     node.take(*a).map &:R
   end
@@ -41,7 +41,6 @@ class R
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  # depth-first in page-chunks
   FileSet['page'] = -> d,r,m {
     c = ((r['c'].do{|c|c.to_i} || 32) + 1).max(1024).min 2 # count
     o = r.has_key?('asc') ? :asc : :desc                   # direction
@@ -237,13 +236,14 @@ end
 
 class Pathname
 
-  def c
+  def c # children
     return [] unless directory?
     children.delete_if{|n| n.basename.to_s.match /^\./}
     rescue
       []
   end
 
+  # depth-first sorted traverse w/ offset + limit
   def take count=1000, direction=:desc, offset=nil
     offset = offset.pathPOSIX if offset
 
