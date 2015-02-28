@@ -1,6 +1,5 @@
 img {max-width: 100%}
-.resource {display: inline-block; padding: .2em ; border-radius: .3em; margin: .25em; border: 1em solid #eee}
-table.html {display: inline-block}
+table.html , .resource {display: inline-block; margin: .25em;}
 td.key {text-align:right;}
 a {text-decoration: none;}
 a.id, td.key a {font-weight: bold; background-color: #fff; color: #333;border-width:0 0 .1em 0; border-style:dotted;border-color:#ccc}
