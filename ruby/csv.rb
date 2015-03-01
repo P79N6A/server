@@ -47,14 +47,15 @@ class R
                       {_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}}
                   when Type
                     l[Type].justArray.map{|t|
-                      {_: :a, href: t.uri,
-                       class: case t.uri
-                              when Directory
-                                :dir
-                              else
-                                ''
-                              end}
-                    }
+                      type = case t.uri
+                             when SIOC+'Usergroup'
+                               :group
+                             when Directory
+                               :dir
+                             else
+                               nil
+                             end
+                      {_: :a, href: l.uri, c: type ? '' : t.R.fragment, class: type}}
                   else
                     l[k].html
                   end}
