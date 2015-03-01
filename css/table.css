@@ -18,26 +18,3 @@ table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap;font
 table.tab td[property=uri] {max-width:42em;overflow:hidden}
 table.tab a.id {background-color:#fff;color:#000;border:.1em dotted #ddd;padding:.1em;font-weight:bold}
 table.tab a.id:hover {background-color:#000;color:#fff;border-style:solid}
-@font-face {
-    font-family: "icons";
-    src: url('/css/misc/icons.eot');
-    src: url('/css/misc/icons.woff') format('woff');
-    src: url('/css/misc/icons.ttf')  format('truetype');
-}
-a.group:before {
-    content:"\f0c0";
-    font-family: icons;
-    font-size: 1.3em;}
-a.person:before {
-    content:"\f007";
-    font-family: icons;
-    font-size: 1.3em;}
-a.dir:before {
-    content:"\f07c";
-    font-family: icons;
-    font-size: 1.3em;}
-a.file:before {
-    content:"\f15b";
-    font-family: icons;
-    font-size: 1.3em;
-    border-width: 0;}

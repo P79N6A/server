@@ -26,7 +26,7 @@ class R
     sort = (e.q['sort']||'uri').expand
     order = e.q.has_key?('reverse') ? :reverse : :id
     {_: :table, :class => :tab,
-     c: [H.css('/css/table'),
+     c: [H.css('/css/table'),H.css('/css/icons'),
          {_: :tr, c: keys.map{|k|
             this = sort == k
             q = e.q.merge({'sort' => k.shorten})

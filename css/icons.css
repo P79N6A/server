@@ -1,0 +1,23 @@
+@font-face {
+    font-family: "icons";
+    src: url('/css/misc/icons.eot');
+    src: url('/css/misc/icons.woff') format('woff');
+    src: url('/css/misc/icons.ttf')  format('truetype');
+}
+a.group:before {
+    content:"\f0c0";
+    font-family: icons;
+    font-size: 1.3em;}
+a.person:before {
+    content:"\f007";
+    font-family: icons;
+    font-size: 1.3em;}
+a.dir:before {
+    content:"\f07c";
+    font-family: icons;
+    font-size: 1.3em;}
+a.file:before {
+    content:"\f15b";
+    font-family: icons;
+    font-size: 1.3em;
+    border-width: 0;}
