@@ -38,9 +38,9 @@ class R
             {_: :th, property: k, class: this ? :this : :that,
              c: {_: :a, rel: :nofollow, href: q.qs, c: k.R.abbr}}}},
          g.resources(e).send(order).map{|l|
-           {_: :tr, about: l.uri, c: keys.map{|k|
+           {_: :tr, about: l.uri, class: l.uri == e.uri ? :doc : '', c: keys.map{|k|
               this = sort == k
               {_: :td, property: k, class: this ? :this : :that,
-               c: k=='uri' ? l.R.do{|r|{_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename, class: r.uri == e.uri ? :docURI : ''}} : l[k].html}}}}.cr]}}
+               c: k=='uri' ? l.R.do{|r|{_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}} : l[k].html}}}}.cr]}}
 
 end
