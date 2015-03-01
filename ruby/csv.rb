@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def triplrCSV d
@@ -50,12 +50,14 @@ class R
                       type = case t.uri
                              when SIOC+'Usergroup'
                                :group
+                             when FOAF+'Person'
+                               :person
                              when Directory
                                :dir
                              else
                                nil
                              end
-                      {_: :a, href: l.uri, c: type ? '' : t.R.fragment, class: type}}
+                      {_: :a, href: l.uri, c: type ? '' : (t.R.fragment||t.R.basename), class: type}}
                   else
                     l[k].html
                   end}
