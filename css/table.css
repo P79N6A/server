@@ -9,6 +9,7 @@ table.tab th.this {background-color: #4a00ff}
 table.tab th.that:hover {background-color: #eef}
 table.tab tr:nth-child(even) {background-color: #f7f7f7;color:#000}
 table.tab tr.doc td {border-style: solid; border-width: .1em 0 .1em 0;border-color: #555;background-color:#000;color:#fff}
+table.tab tr.doc td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {color: #fff}
 table.tab td[property='uri'] a {padding:.1em;border: .1em dotted #ccc;background-color:#fff;color:#000;font-weight:bold;font-size:1.1em}
 table.tab td[property='uri'],table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right}
 table.tab tr.doc td[property='uri'] a {border-width:0; float: left; font-size: 1.4em; background-color:#000;color:#fff}
@@ -16,7 +17,7 @@ table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap;font
 table.tab td[property=uri] {max-width:42em;overflow:hidden}
 table.tab a.id {background-color:#fff;color:#000;border:.1em dotted #ddd;padding:.1em;font-weight:bold}
 table.tab a.id:hover {background-color:#000;color:#fff;border-style:solid}
-font-face {
+@font-face {
     font-family: "icons";
     src: url('/css/misc/icons.eot');
     src: url('/css/misc/icons.woff') format('woff');
