@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrCSV d
@@ -41,6 +41,23 @@ class R
            {_: :tr, about: l.uri, class: l.uri == e.uri ? :doc : '', c: keys.map{|k|
               this = sort == k
               {_: :td, property: k, class: this ? :this : :that,
-               c: k=='uri' ? l.R.do{|r|{_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}} : l[k].html}}}}.cr]}}
+               c: case k
+                  when 'uri'
+                    l.R.do{|r|
+                      {_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}}
+                  when Type
+                    l[Type].justArray.map{|t|
+                      {_: :a, href: t.uri,
+                       class: case t.uri
+                              when Directory
+                                :dir
+                              else
+                                ''
+                              end}
+                    }
+                  else
+                    l[k].html
+                  end}
+            }}}.cr]}}
 
 end
