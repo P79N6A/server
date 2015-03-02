@@ -5,9 +5,7 @@ class String
 
   def h; Digest::SHA1.hexdigest self end
 
-  def hrefs i=false # HTTP URIs in plain-text
-    #  ) only matches with an opener
-    # ,. only match mid-URI
+  def hrefs i=false # plaintext to HTML (hrefs and images)
     (partition R::Href).do{|p|
       u = p[1].gsub('&','&amp;') # URI
       p[0].noHTML +
@@ -64,7 +62,9 @@ rescue LoadError => e
 end
 
 class R
-
+  # HTTP URIs in plain-text
+  #  ) only matches with an opener
+  # ,. only match mid-URI
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
 
   def R.pencil; ['&#x270e;','&#x270f;','&#x2710;'][rand(3)] end
