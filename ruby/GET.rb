@@ -12,7 +12,9 @@ class R
         @r[:container] = true
         resourceGET
       else
-        [301, {'Location' => uri + '/?' + @r['QUERY_STRING']}, []]
+        cors
+        @r[:Response].update({'Location' => uri + '/?' + @r['QUERY_STRING']})
+        [301, @r[:Response], []]
       end
     else
       stripDoc.setEnv(@r).resourceGET
