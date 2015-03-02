@@ -92,4 +92,9 @@ class R
            {_: :a, class: :cancel, href: e.uri, c: 'X'},
            {_: :input, type: :submit, value: 'write'}].cr}}
 
+  def editLink env
+    doc = env.R
+    doc.join(self).R.docroot + '?edit&fragment=' + fragName
+  end
+
 end

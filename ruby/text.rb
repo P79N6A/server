@@ -67,6 +67,8 @@ class R
 
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
 
+  def R.pencil; ['&#x270e;','&#x270f;','&#x2710;'][rand(3)] end
+
   def triplrContent
     yield uri, Type, R[Content]
     yield uri, Content, r
