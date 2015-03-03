@@ -26,7 +26,7 @@ class R
       update({ 'Content-Type' => mime + '; charset=UTF-8',
                'ETag' => [m,size].h })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    ldp
+    cors
     condResponse ->{ self }
   end
 
