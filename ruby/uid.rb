@@ -62,7 +62,7 @@ class R
       m = {u => {'uri' => u, Type => R[User]}}
       r[:Response]['ETag'] = u.h
       r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
-      e.ldp.condResponse ->{
+      e.condResponse ->{
         Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
     end}
 

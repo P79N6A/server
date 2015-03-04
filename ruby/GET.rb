@@ -3,6 +3,7 @@
 class R
 
   def GET
+    ldp
     if file?
       fileGET
     elsif justPath.file?
@@ -12,7 +13,6 @@ class R
         @r[:container] = true
         resourceGET
       else
-        cors
         @r[:Response].update({'Location' => uri + '/?' + @r['QUERY_STRING']})
         [301, @r[:Response], []]
       end
@@ -26,7 +26,6 @@ class R
       update({ 'Content-Type' => mime + '; charset=UTF-8',
                'ETag' => [m,size].h })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    cors
     condResponse ->{ self }
   end
 
@@ -58,8 +57,6 @@ class R
 
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
-    ldp # resource life-cycle headers, for smart tools
-
     condResponse ->{ # lazy response-finisher
       if set.size==1 && @r.format == set[0].mime # direct to file
         set[0]

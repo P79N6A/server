@@ -136,7 +136,6 @@ class R
     nil}
 
   GET['/today'] = -> e,r {
-    e.ldp
     [303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
 
   ViewA[Search+'Input'] = -> r, e {
