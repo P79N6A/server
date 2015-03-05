@@ -34,6 +34,8 @@ module Th
           end}}
     end
     nil
+  rescue Exception => x
+    puts [:verifyWebID,uri,x,x.class, x.message].join(' ')
   end
 
   def x509cert

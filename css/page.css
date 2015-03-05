@@ -19,6 +19,6 @@ a.identify:before {
 a.user:before {
     content:"\f007";
     font-family: icons;
-    font-size: 1.3em;
-    color:#0f0;
+    font-size: 1.6em;
+    color:#2f2;
 }
