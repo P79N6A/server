@@ -52,7 +52,7 @@ class R
                                :group
                              when FOAF+'Person'
                                :person
-                             when GraphData
+                             when GraphDoc
                                :graph
                              when Directory
                                :dir

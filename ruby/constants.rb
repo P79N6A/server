@@ -30,7 +30,7 @@ class R < RDF::URI
   Daemon   = 'http://src.whats-your.name/pw'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Schema   = 'http://schema.org/'
-  GraphData= FOAF + 'Document'
+  GraphDoc = W3 + '2007/ont/link#RDFDocument'
   Profile  = FOAF + 'PersonalProfileDocument'
   Mu       = Purl + 'ontology/mo/'
   Sound    = Mu + 'Sound'

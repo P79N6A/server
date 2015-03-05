@@ -22,7 +22,6 @@ class R
         yield t.uri, Date, mtime.iso8601}
     else
       yield uri, Type, R[Stat+'File']
-      yield uri, Type, R[GraphData] if RDFsuffixes.member? ext
       yield uri, Date, mtime.iso8601
       yield uri, Size, size
     end
