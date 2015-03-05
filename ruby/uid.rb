@@ -69,15 +69,23 @@ class R
         Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
     end}
 
- ViewGroup[FOAF+'Person'] = -> g,env {[H.css('/css/user'),g.map{|u,r| ViewA[FOAF+'Person'][r,env]}]}
- ViewA[FOAF+'Person'] = -> u,e {{class: :person, c: u.html}}
+  ViewGroup[FOAF+'Person'] = ViewGroup['http://ns.rww.io/wapp#app'] = -> g,env {
+    [H.css('/css/user'),
+     g.map{|u,r| ViewA[FOAF+'Person'][r,env]}]}
 
- ViewGroup[Key] = -> g,env {[H.css('/css/user'),g.map{|u,r| ViewA[Key][r,env]}]}
- ViewA[Key] = -> u,e {
-   {class: :pubkey,
-    c: [{_: :a, class: :pubkey, href: u.uri},u.html]}}
+  ViewA[FOAF+'Person'] = -> u,e {
+    {class: :person,
+     c: [u[FOAF+'img'].justArray.map{|img|{_: :img, class: :avatar, src: img.uri}},u.html]}}
 
- ViewGroup[User] = -> g,env {
+  ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env {
+    [H.css('/css/user'),
+     g.map{|u,r| ViewA[Key][r,env]}]}
+  
+  ViewA[Key] = -> u,e {
+    {class: :pubkey,
+     c: [{_: :a, class: :pubkey, href: u.uri},u.html]}}
+  
+  ViewGroup[User] = -> g,env {
     if env.signedIn
       g.map{|u,r|ViewA[User][r,env]}
     else
