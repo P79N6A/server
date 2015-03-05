@@ -9,10 +9,16 @@ a.up {margin:.5em;padding-left:.2em;padding-right:.2em}
 a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
-a.identify {text-decoration:none;}
+a.identify, a.user {text-decoration:none;}
 a.identify:before {
     content:"\f235";
     font-family: icons;
     font-size: 1.3em;
-    color:#aaa;
+    color:#bbb;
+}
+a.user:before {
+    content:"\f007";
+    font-family: icons;
+    font-size: 1.3em;
+    color:#0f0;
 }

@@ -87,13 +87,16 @@ class R
      (H.js('/js/pager', true) if paged),
     ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
     g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
-    (if !env.signedIn
-     href = if env.scheme == 'http'
-              'https://' + env.host + env['REQUEST_URI']
-            else
-              '/whoami'
-            end
-     {_: :a, class: :identify, href: href}
+    (if env.signedIn
+     uid = env.user.uri
+     {_: :a, class: :user, href: uid, title: uid}
+    else
+      href = if env.scheme == 'http'
+               'https://' + env.host + env['REQUEST_URI']
+             else
+               '/whoami'
+             end
+      {_: :a, class: :identify, href: href}
      end)]}
 
   ViewA[LDP+'Resource'] = -> u,e {
