@@ -191,7 +191,9 @@ class R
     weight = {}
 
     g.map{|u,p| # statistics pass
-      graph.delete u unless bodies
+      graph.delete u unless bodies # hide full-message
+      p[DC+'source'].justArray.map{|s| # hide originating-file
+        graph.delete s.uri}
       p[Title].do{|t|
         title = t[0].sub ReExpr, ''
         threads[title] ||= p
@@ -201,7 +203,7 @@ class R
       p[To].justArray.map(&:maybeURI).map{|a|
         weight[a] ||= 0
         weight[a] += 1
-        graph.delete a}}
+        graph.delete a}} # hide author-description
 
     threads.map{|title,post| # cluster pass
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
