@@ -91,7 +91,7 @@ class R
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r
       unless doc.e && doc.m > m
         graph = {}
-        fromStream graph, :triplrFile
+        fromStream graph, :triplrFile if file?
         fromStream graph, :triplrMIME
         doc.w graph, true
       end

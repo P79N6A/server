@@ -19,10 +19,10 @@ class R
         mtime = t.mtime.to_i
         t = t.stripDoc
         yield t.uri, Type, R[Resource]
-        yield t.uri, Stat+'mtime', mtime}
+        yield t.uri, Date, mtime.iso8601}
     else
       yield uri, Type, R[Stat+'File']
-      yield uri, Stat+'mtime', mtime
+      yield uri, Date, mtime.iso8601
       yield uri, Size, size
     end
   end

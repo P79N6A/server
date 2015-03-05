@@ -54,6 +54,8 @@ class R
                                :person
                              when Directory
                                :dir
+                             when Stat+'File'
+                               :file
                              else
                                nil
                              end
