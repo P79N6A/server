@@ -56,6 +56,8 @@ class R
                                :dir
                              when Stat+'File'
                                :file
+                             when Image
+                               :img
                              else
                                nil
                              end
