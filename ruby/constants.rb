@@ -30,6 +30,8 @@ class R < RDF::URI
   Daemon   = 'http://src.whats-your.name/pw'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Schema   = 'http://schema.org/'
+  GraphData= FOAF + 'Document'
+  Profile  = FOAF + 'PersonalProfileDocument'
   Mu       = Purl + 'ontology/mo/'
   Sound    = Mu + 'Sound'
   Image    = DC + 'Image'
@@ -143,6 +145,7 @@ uid
 wiki
 }.map{|r|require_relative r}
 
+  RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
   NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
 
   alias_method :uri, :to_s

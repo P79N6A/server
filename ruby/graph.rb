@@ -84,10 +84,10 @@ class R
   end
 
   # file -> file (Non-RDF -> RDF)
-  def justRDF pass = %w{e html jsonld n3 nt owl rdf ttl}  # RDF suffixes
-    return unless e                                       # check that source exists
-    doc = self                                            # output doc
-    unless pass.member? realpath.do{|p|p.extname.tail}    # already readable MIME?
+  def justRDF pass = RDFsuffixes
+    return unless e                                    # check that source exists
+    doc = self                                         # output doc
+    unless pass.member? realpath.do{|p|p.extname.tail} # already readable MIME?
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r
       unless doc.e && doc.m > m
         graph = {}

@@ -1,4 +1,5 @@
 # coding: utf-8
+watch __FILE__
 module Th
 
   def user
@@ -67,6 +68,10 @@ class R
       e.condResponse ->{
         Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
     end}
+
+  ViewGroup[Profile] = -> g,env {g.map{|u,r|ViewA[Profile][r,env]}}
+
+  ViewA[Profile] = ViewA[Resource] #-> u,e { }
 
   ViewGroup[User] = -> g,env {
     if env.signedIn

@@ -52,6 +52,8 @@ class R
                                :group
                              when FOAF+'Person'
                                :person
+                             when GraphData
+                               :graph
                              when Directory
                                :dir
                              when Stat+'File'
