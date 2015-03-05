@@ -69,10 +69,15 @@ class R
         Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
     end}
 
-#  ViewGroup[Profile] = -> g,env {g.map{|u,r|ViewA[Profile][r,env]}}
-#  ViewA[Profile] = -> u,e { }
+ ViewGroup[FOAF+'Person'] = -> g,env {[H.css('/css/user'),g.map{|u,r| ViewA[FOAF+'Person'][r,env]}]}
+ ViewA[FOAF+'Person'] = -> u,e {{class: :person, c: u.html}}
 
-  ViewGroup[User] = -> g,env {
+ ViewGroup[Key] = -> g,env {[H.css('/css/user'),g.map{|u,r| ViewA[Key][r,env]}]}
+ ViewA[Key] = -> u,e {
+   {class: :pubkey,
+    c: [{_: :a, class: :pubkey, href: u.uri},u.html]}}
+
+ ViewGroup[User] = -> g,env {
     if env.signedIn
       g.map{|u,r|ViewA[User][r,env]}
     else
@@ -84,6 +89,6 @@ class R
      {_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
      ViewA[Resource][u,e]]}
 
-  ViewGroup[Profile] = ViewGroup[FOAF+'Person'] = ViewGroup[SIOC+'Usergroup'] = TabularView
+  ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
 
 end

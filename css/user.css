@@ -1,0 +1,15 @@
+@font-face {
+    font-family: "icons";
+    src: url('/css/misc/icons.eot');
+    src: url('/css/misc/icons.woff') format('woff');
+    src: url('/css/misc/icons.ttf')  format('truetype');
+}
+div.person {border:1em solid #eee; border-radius:2em;display:inline-block}
+div.pubkey {background-color:#000;color:#fff;padding:.8em;border-radius:2em;display:inline-block;max-width:40em;overflow:hidden;margin:.8em}
+div.pubkey a {color: #fff;text-decoration:none; font-weight: bold;}
+a.pubkey {text-decoration:none}
+a.pubkey:before {
+    content:"\f084";
+    font-family: icons;
+    font-size: 1.3em;
+    border-width: 0;}
