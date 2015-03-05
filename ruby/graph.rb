@@ -88,8 +88,13 @@ class R
     return unless e                                       # check that source exists
     doc = self                                            # output doc
     unless pass.member? realpath.do{|p|p.extname.tail}    # already readable MIME?
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # RDF file
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # write
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r
+      unless doc.e && doc.m > m
+        graph = {}
+        fromStream graph, :triplrFile
+        fromStream graph, :triplrMIME
+        doc.w graph, true
+      end
     end
     doc
   end
