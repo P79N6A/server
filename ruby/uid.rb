@@ -69,9 +69,8 @@ class R
         Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
     end}
 
-  ViewGroup[Profile] = -> g,env {g.map{|u,r|ViewA[Profile][r,env]}}
-
-  ViewA[Profile] = ViewA[Resource] #-> u,e { }
+#  ViewGroup[Profile] = -> g,env {g.map{|u,r|ViewA[Profile][r,env]}}
+#  ViewA[Profile] = -> u,e { }
 
   ViewGroup[User] = -> g,env {
     if env.signedIn
@@ -85,6 +84,6 @@ class R
      {_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
      ViewA[Resource][u,e]]}
 
-  ViewGroup[FOAF+'Person'] = ViewGroup[SIOC+'Usergroup'] = TabularView
+  ViewGroup[Profile] = ViewGroup[FOAF+'Person'] = ViewGroup[SIOC+'Usergroup'] = TabularView
 
 end

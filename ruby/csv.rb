@@ -54,6 +54,8 @@ class R
                                :person
                              when GraphDoc
                                :graph
+                             when Profile
+                               :graph
                              when Directory
                                :dir
                              when Stat+'File'
