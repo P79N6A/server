@@ -93,7 +93,7 @@ class R
             else
               '/whoami'
             end
-     {_: :a, class: :identify, href: href, c: '✋'}
+     {_: :a, class: :identify, href: href}
      end)]}
 
   ViewA[LDP+'Resource'] = -> u,e {
