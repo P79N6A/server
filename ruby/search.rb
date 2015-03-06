@@ -6,13 +6,13 @@ class R
 
   def getIndex rev # get
     p = path
-    f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev).node
+    f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
   def index p, o # set
     o = o.R
     path = o.path
-    R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten).appendFile uri
+    R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
   GET['/cache'] = E404
