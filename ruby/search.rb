@@ -60,6 +60,8 @@ class R
   FileSet['first-page'] = -> d,r,m {
     FileSet['page'][d,r,m].concat FileSet[Resource][d,r,m]}
 
+  FileSet['rev'] = -> e,req,model {(e.dir.child '.' + e.basename + '*.rev').glob}
+
   FileSet['localize'] = -> re,q,g {
     FileSet[Resource][re.justPath.setEnv(re.env),q,g].map{|r|
       r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}

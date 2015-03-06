@@ -125,7 +125,7 @@ class R
     if e.env[:container] #&& e.basename[0] != '.'
       e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
     else
-      e.fileResources
+      e.fileResources.concat FileSet['rev'][e,q,g]
     end}
 
 end
