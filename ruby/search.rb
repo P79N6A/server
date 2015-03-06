@@ -232,13 +232,16 @@ class R
   end
 
   def triplrUriList
-    open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
+    open(pathPOSIX).readlines.map{|l|
       yield l.chomp, Type, R[Resource] }
   end
 
   def triplrRevLinks
-    triplrUriList do |s,p,o|
-      puts s,p,o
+    base, pMini = basename('.rev').tail.split '.'
+    p = pMini.expand
+    o = R[dirname + base]
+    triplrUriList do |s,__,_|
+      yield s, p, o
     end
   end
 
