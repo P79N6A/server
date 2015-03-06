@@ -94,6 +94,7 @@ class R
     'ps' => 'application/postscript',
     'py' => 'application/python',
     'rb' => 'application/ruby',
+    'rev' => 'text/uri-list+index',
     'ru' => 'application/ruby',
     'rdf' => 'application/rdf+xml',
     'rtf' => 'text/rtf',
@@ -138,6 +139,7 @@ class R
     'text/turtle'          => [:triplrTurtle],
     'text/tw'              => [:triplrTwUsers],
     'text/uri-list'        => [:triplrUriList],
+    'text/uri-list+index'  => [:triplrRevLinks],
     'text/x-tex'           => [:triplrTeX],
   }
 

@@ -231,6 +231,17 @@ class R
     graph.keys.push(uri).map{|u|g[u].delete}
   end
 
+  def triplrUriList
+    open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
+      yield l.chomp, Type, R[Resource] }
+  end
+
+  def triplrRevLinks
+    triplrUriList do |s,p,o|
+      puts s,p,o
+    end
+  end
+
 end
 
 class Pathname

@@ -83,11 +83,6 @@ class R
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
   end
 
-  def triplrUriList
-    open(pathPOSIX).readlines.grep(/^[^#]/).map{|l|
-      yield l.chomp, Type, R[Resource] }
-  end
-
   Render['text/uri-list'] = -> g,env {
     g.map{|subjURI,resource|
       resource[LDP+'contains'].justArray.map &:maybeURI
