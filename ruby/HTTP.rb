@@ -81,12 +81,8 @@ class R
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   ViewGroup[LDP+'Resource'] = -> g,env {
-    paged = g.values.find{|r| r[Next] ||
-                              r[Prev] }
-    [H.css('/css/page', true),
-     (H.js('/js/pager', true) if paged),
-    ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} unless env['REQUEST_PATH'] == '/'),
-    g.map{|u,r|ViewA[LDP+'Resource'][r,env]},
+    paged = g.values.find{|r|r[Next] || r[Prev]}
+    [H.css('/css/page', true), (H.js('/js/pager', true) if paged),
     (if env.signedIn
      uid = env.user.uri
      {_: :a, class: :user, href: uid, title: uid}
@@ -97,7 +93,9 @@ class R
                '/whoami'
              end
       {_: :a, class: :identify, href: href}
-     end)]}
+     end),
+    ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} if env['REQUEST_PATH'] != '/'),
+    g.map{|u,r|ViewA[LDP+'Resource'][r,env]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
     label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
