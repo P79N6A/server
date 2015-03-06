@@ -172,7 +172,7 @@ class R
   ReExpr = /\b[rR][eE]: /
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
-    bodies = e.q.has_key? 'bodies' # keep messages
+    bodies = e.q.has_key? 'bodies'
     graph[e.uri].do{|dir|dir.delete(LDP+'contains')}
     if e.format == 'text/html'
       size = g.keys.size
@@ -190,7 +190,7 @@ class R
     threads = {}
     weight = {}
 
-    g.map{|u,p| # statistics pass
+    g.map{|u,p| # statistics + prune pass
       graph.delete u unless bodies # hide full-message
       p[DC+'source'].justArray.map{|s| # hide originating-file
         graph.delete s.uri}
@@ -198,12 +198,12 @@ class R
         title = t[0].sub ReExpr, ''
         threads[title] ||= p
         threads[title][Size] ||= 0
-        threads[title][Size]  += 1 }
-      p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a }
+        threads[title][Size]  += 1 } # count topic
+      p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a } # hide author-description
       p[To].justArray.map(&:maybeURI).map{|a|
         weight[a] ||= 0
-        weight[a] += 1
-        graph.delete a}} # hide author-description
+        weight[a] += 1   # count recipient-occurrence
+        graph.delete a}} # hide recipient-description
 
     threads.map{|title,post| # cluster pass
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
