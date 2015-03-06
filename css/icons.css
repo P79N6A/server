@@ -30,3 +30,8 @@ a.img:before {
     font-family: icons;
     font-size: 1.3em;
     border-width: 0;}
+a.rel:before {
+    content:"\f0a4";
+    font-family: icons;
+    font-size: 1.3em;
+    border-width: 0;}

@@ -245,9 +245,12 @@ class R
     p = pMini.expand
     o = R[dirname + base]
     triplrUriList do |s,__,_|
+      yield s, Type, R[Referer]
       yield s, p, o
     end
   end
+
+  ViewGroup[Referer] = TabularView
 
 end
 

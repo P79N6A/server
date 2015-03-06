@@ -60,6 +60,8 @@ class R
                                :dir
                              when Stat+'File'
                                :file
+                             when Referer
+                               :rel
                              when Image
                                :img
                              else
