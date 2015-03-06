@@ -3,6 +3,7 @@
 class R
 
   def triplrDir
+    yield uri, SIOC+'has_parent', parentURI unless path=='/'
     yield uri, Type, R[Directory]
     yield uri, Date, mtime.iso8601
     contained = c
