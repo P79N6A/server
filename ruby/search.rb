@@ -239,7 +239,9 @@ class R
   end
 
   def triplrRevLinks
-    base, pMini = basename('.rev').tail.split '.'
+    pcs = basename('.rev').tail.split '.'
+    pMini = pcs.pop
+    base = pcs.join '.'
     p = pMini.expand
     o = R[dirname + base]
     triplrUriList do |s,__,_|
