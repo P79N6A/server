@@ -4,6 +4,7 @@
     src: url('/css/misc/icons.woff') format('woff');
     src: url('/css/misc/icons.ttf')  format('truetype');
 }
+a.group, a.graph, a.person, a.dir, a.file, a.img, a.rel {text-decoration: none}
 a.group:before {
     content:"\f0c0";
     font-family: icons;
@@ -31,7 +32,6 @@ a.img:before {
     font-size: 1.3em;
     border-width: 0;}
 a.rel:before {
-    content:"\f0a6";
+    content:"\f0a5";
     font-family: icons;
-    font-size: 1.3em;
     border-width: 0;}

@@ -250,7 +250,25 @@ class R
     end
   end
 
-  ViewGroup[Referer] = TabularView
+  ViewGroup[Referer] = -> g,e {
+    [{_: :style,
+      c: "
+div.referers {
+text-align:center;
+}
+a.referer {
+font-size: 2em;
+margin:.16em;
+color:#fff;
+background-color:#{R.cs};
+padding:.16em;
+border-radius:.1em;
+text-decoration: none;
+}
+"},
+     {class: :referers,
+      c: g.keys.map{|uri|
+        {_: :a, class: :referer, href: uri, c: '&larr;'}}}]}
 
 end
 
