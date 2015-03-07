@@ -94,7 +94,7 @@ class R
              end
       {_: :a, class: :identify, href: href}
      end),
-    ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} if env['REQUEST_PATH'] != '/'),
+#    ({_: :a, class: :up, href: Pathname.new(env['REQUEST_PATH']).parent, c: '&uarr;'} if env['REQUEST_PATH'] != '/'),
     g.map{|u,r|ViewA[LDP+'Resource'][r,env]}]}
 
   ViewA[LDP+'Resource'] = -> u,e {
