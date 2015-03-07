@@ -2,7 +2,7 @@
 #watch __FILE__
 class R
 
-  GREP_DIRS.push(/^\/address\/.\/[^\/]+\/\d{4}/)
+  GREP_DIRS.push(/^\/address\//) # allow grep in email
 
   MessagePath = -> id{
     msg, domainname = id.downcase.sub(/^</,'').sub(/>.*/,'').gsub(/[^a-zA-Z0-9\.\-@]/,'').split '@'
