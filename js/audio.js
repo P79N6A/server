@@ -6,12 +6,11 @@ document.addEventListener("DOMContentLoaded", function(){
     var trax = document.querySelectorAll('#sounds .member')
 
     var select = function(){
-	var s = window.location.hash.slice(1)
+	var s = window.location.hash.slice(1) // strip # from URI
 	if(s == 'rand') {
-	    console.log(trax)
+	    console.log(trax[Math.floor(Math.random() * trax.length)])
 	} else {
-	    if(a.src != s)
-		a.src = decodeURIComponent(s)
+	    a.src = decodeURIComponent(s)
 	}
     }
     if(window.location.hash) select()
