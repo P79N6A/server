@@ -117,8 +117,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
   ViewGroup[Sound+'Player'] = -> g,e {
     [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true},
+     {_: :a, id: :rand, href: '#rand', c: 'R'},
      {_: :style, c: "
 #sounds {max-height: 24em; overflow:scroll}
+#rand {color: #fff; background-color: brown; text-decoration: none; font-weight: bold; font-size: 3em; padding: .3em; border-radius: .1em}
 "},
      H.js('/js/audio')]}
 
