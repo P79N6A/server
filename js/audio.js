@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var select = function(){
 	var s = window.location.hash.slice(1) // strip # from URI
 	if(s == 'rand') {
-	    console.log(trax[Math.floor(Math.random() * trax.length)])
+	    trax[Math.floor(Math.random() * trax.length)].click()
 	} else {
 	    a.src = decodeURIComponent(s)
 	}
