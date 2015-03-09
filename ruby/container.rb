@@ -107,16 +107,19 @@ document.addEventListener('DOMContentLoaded', function(){
     yield uri, Date, mtime
   end
 
-  Abstract[Sound] = -> graph, g, e { # add player and playlist resources
-    c = '#sounds' # playlist URI
-    graph[c] = {'uri' => c, Type => R[Container],
-                LDP+'contains' => g.values.map{|s|
-                  graph.delete s.uri
-                  s.update({'uri' => '#'+URI.escape(s.R.path)})}} # local playlist-entry
+  Abstract[Sound] = -> graph, g, e { # create player and playlist resources
+    pls = '#sounds'
+    graph[pls] = {'uri' => pls, Type => R[Container],
+                  LDP+'contains' => g.values.map{|s| graph.delete s.uri # original resource
+                    s.update({'uri' => '#'+URI.escape(s.R.path)})}} # local playlist-entry
     graph['#audio'] = {Type => R[Sound+'Player']} # player
     graph[e.uri].do{|c|c.delete(LDP+'contains')}} # hide
 
   ViewGroup[Sound+'Player'] = -> g,e {
-    [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true}, H.js('/js/audio')]}
+    [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true},
+     {_: :style, c: "
+#sounds {max-height: 24em; overflow:scroll}
+"},
+     H.js('/js/audio')]}
 
 end
