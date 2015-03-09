@@ -109,10 +109,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
   Abstract[Sound] = -> graph, g, e { # add player and playlist resources
     c = '#sounds' # playlist URI
-    graph[c] = {'uri' => c, Type => R[Container], # playlist
+    graph[c] = {'uri' => c, Type => R[Container],
                 LDP+'contains' => g.values.map{|s|
-                  graph.delete s.uri # hide non-playlist (duplicate) mention of this resource
-                  s.update({'uri' => '#'+URI.escape(s.R.path)})}} # playlist entry
+                  graph.delete s.uri
+                  s.update({'uri' => '#'+URI.escape(s.R.path)})}} # local playlist-entry
     graph['#audio'] = {Type => R[Sound+'Player']} # player
     graph[e.uri].do{|c|c.delete(LDP+'contains')}} # hide
 
