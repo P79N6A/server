@@ -49,15 +49,15 @@ class R
 
   # inode -> graph
   def nodeToGraph graph
-    base=(@r ? @r.R : self).join stripDoc # base-URI
-    justRDF(%w{e}).do{|f|                 # JSON-format doc
-      f.r(true).triples{|s,p,o|           # triple
-        s = base.join(s).to_s             # subject URI
-        if o.class==Hash && o.uri         # object URI
+    base = @r.R.join(stripDoc) if @r    # base-URI
+    justRDF(%w{e}).do{|f|               # JSON-format doc
+      f.r(true).triples{|s,p,o|         # triple
+        s = base.join(s).to_s if @r     # subject URI
+        if @r && o.class==Hash && o.uri # object URI
           o['uri'] = base.join(o.uri).to_s
         end
-        graph[s] ||= {'uri' => s}         # resource
-        graph[s][p] ||= []                # predicate
+        graph[s] ||= {'uri' => s}       # resource
+        graph[s][p] ||= []              # predicate
         graph[s][p].push o unless graph[s][p].member? o
       }}
     graph
