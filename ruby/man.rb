@@ -99,8 +99,7 @@ class R
                 name, s = b.inner_text, section[1]
                 n.replace section[2]
                 linkPath = "/man/#{s}/#{name}"
-                link = linkPath.R.setEnv(r).bindHost
-                graph[uri][SKOS+'related'].push link
+                graph[uri][SKOS+'related'].push linkPath.R
                 b.replace " <a href='#{linkPath}'><b>#{name}</b>(#{s})</a>"}}}
 
           html.w body.children.to_xhtml

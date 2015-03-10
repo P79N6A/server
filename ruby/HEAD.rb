@@ -4,16 +4,15 @@ class R
   def HEAD
     self.GET.
     do{| s, h, b |
-       [ s, h, []]}
+       [ s, h, []]} # just Status + Headers
   end
 
-  def setEnv r # set request-environment
+  def setEnv r
     @r = r
     self
   end
 
-  def getEnv; @r end # get request-environment
-
+  def getEnv; @r end
   alias_method :env, :getEnv
 
   def ldp

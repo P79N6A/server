@@ -1,20 +1,23 @@
 #watch __FILE__
 class R
-=begin miniRDF - this predates RDF.rb and can still be used if you want
+=begin miniRDF - a subset of RDF which trivially works as JSON
 
-  subjectURI/predicateURI: String
-  object:
+ Hash/JSON
+  {subject => {predicate => object}}
+
+ types:
+  subject: String
+  predicate: String
+  object (one of):
    Array [objectA, objectB..]
    RDF::URI
    RDF::Literal
-   R
+   R (subclass of RDF::URI)
    Hash with 'uri' key
    String
 
- Hash/JSON
-  {subjectURI => {predicateURI => object}}
  Streams
-  yield subjectURI, predicateURI, object
+  yield subject, predicate, object
 
 =end
 
@@ -28,29 +31,53 @@ class R
     m
   end
 
-  # inode(s) -> graph
-  def graph graph = {}
-    fileResources.map{|d| d.nodeToGraph graph}
-    graph
+  # inode -> inode (Non-RDF -> RDF)
+  def justRDF pass = RDFsuffixes
+    return unless e                                    # check that source exists
+    doc = self                                         # output doc
+    unless pass.member? realpath.do{|p|p.extname.tail} # already readable MIME?
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cached transcode
+      unless doc.e && doc.m > m                           # cache valid
+        graph = {}                                        # update cache
+        fromStream graph, :triplrFile if file?
+        fromStream graph, :triplrMIME
+        doc.w graph, true
+      end
+    end
+    doc
   end
 
   # inode -> graph
-  def nodeToGraph graph = {}
-    justRDF(%w{e}).do{|file|
-     graph.mergeGraph file.r true}
+  def nodeToGraph graph
+    base = stripDoc             # base URI
+    justRDF(%w{e}).do{|f|       # JSON format
+      f.r(true).triples{|s,p,o| # triples
+        s = base.join(s).to_s   # subject URI
+        if o.class==Hash
+        end
+        graph[s] ||= {'uri' => s} # resource
+        graph[s][p] ||= []        # predicate
+        graph[s][p].push o unless graph[s][p].member? o
+      }}
+    graph
+  end
+  
+  # inode(s) -> graph
+  def graph graph = {}
+    fileResources.map{|d|d.nodeToGraph graph}
     graph
   end
 
-  # triplr -> fs-store -> triplr
-  def triplrCacheJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
-    graph = fromStream({},triplr)    # collect triples
-    R.cacheJSON graph, host, p, hook # cache
-    graph.triples &b if b            # emit triples
+  # triplr -> fs-store
+  def triplrStoreJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
+    graph = fromStream({},triplr) # collect triples
+    R.store graph, host, p, hook  # cache
+    graph.triples &b if b         # emit triples
     self
   end
 
   # graph -> fs-store
-  def R.cacheJSON graph, host = 'localhost',  p = nil,  hook = nil
+  def R.store graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
      (e = u.R                 # resource URI
@@ -67,8 +94,8 @@ class R
       hook[d,g,host] if hook} # indexer
   end
 
-  # graph (RDF) -> fs-store
-  def cacheRDF options = {}
+  # URI -> fs-store
+  def store options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?
@@ -81,22 +108,6 @@ class R
         end
       end}
     g
-  end
-
-  # file -> file (Non-RDF -> RDF)
-  def justRDF pass = RDFsuffixes
-    return unless e                                    # check that source exists
-    doc = self                                         # output doc
-    unless pass.member? realpath.do{|p|p.extname.tail} # already readable MIME?
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r
-      unless doc.e && doc.m > m
-        graph = {}
-        fromStream graph, :triplrFile if file?
-        fromStream graph, :triplrMIME
-        doc.w graph, true
-      end
-    end
-    doc
   end
  
 end
@@ -114,18 +125,10 @@ end
 
 class Hash
 
-  def mergeGraph g
-    g.triples{|s,p,o|
-      self[s] = {'uri' => s} unless self[s].class == Hash 
-      self[s][p] ||= []
-      self[s][p].push o unless self[s][p].member? o } if g
-    self
-  end
-
   def triples &f
     map{|s,r|
       r.map{|p,o|
-        o.justArray.map{|o|yield s,p,o} unless p=='uri'} if r.class == Hash}
+        o.justArray.map{|o|yield s,p,o} unless p=='uri'}}
   end
 
   def types

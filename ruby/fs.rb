@@ -3,24 +3,21 @@
 class R
 
   def triplrDir
-    yield uri, SIOC+'has_parent', parentURI unless path=='/'
     yield uri, Type, R[Directory]
     yield uri, Date, mtime.iso8601
     contained = c
     yield uri, Size, contained.size
-    if contained.size <= 32
-      contained.map{|c|
-        yield uri, LDP+'contains', c.setEnv(@r).bindHost.stripDoc}
-    end
+    contained.map{|c|yield uri, LDP+'contains', c} if contained.size <= 32
+    yield uri, SIOC+'has_parent', parentURI unless path=='/'
   end
 
-  def triplrFile &f
+  def triplrFile
     if symlink?
       realURI.do{|t|
-        mtime = t.mtime.to_i
-        t = t.stripDoc
-        yield t.uri, Type, R[Resource]
-        yield t.uri, Date, mtime.iso8601}
+        yield t.uri, Type, R[Stat+'File']
+        yield t.uri, Date, t.mtime.iso8601
+        yield t.uri, Size, t.size
+      }
     else
       yield uri, Type, R[Stat+'File']
       yield uri, Date, mtime.iso8601
@@ -122,8 +119,8 @@ class R
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
       this[Prev] = {'uri' => pp+qs} if R['//' + e.env.host + pp].e
       this[Next] = {'uri' => np+qs} if R['//' + e.env.host + np].e}
-    if e.env[:container] #&& e.basename[0] != '.'
-      e.fileResources.concat e.c.map{|c|c.setEnv(e.env).bindHost}
+    if e.env[:container]
+      e.fileResources.concat e.c
     else
       e.fileResources.concat FileSet['rev'][e,q,g]
     end}

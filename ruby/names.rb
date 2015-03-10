@@ -87,12 +87,6 @@ class R
     end
   end
 
-  def bindHost
-    return self if !@r || !hierPart.match(/^\//)
-    R[(lateHost.join uri).to_s]
-  end
-  def lateHost; R[@r.scheme + '://' + @r.host + '/'] end
-
   # balanced-prefix container-names
   def R.dive s
     s[0..2] + '/' + s[3..-1]

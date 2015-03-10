@@ -31,7 +31,7 @@ class R
   end
 
   def twGET g
-    triplrCacheJSON :triplrTwMsg, g, nil, FeedArchiverJSON
+    triplrStoreJSON :triplrTwMsg, g, nil, FeedArchiverJSON
   end
 
   def triplrTwUsers
