@@ -61,8 +61,9 @@ class R
       if set.size==1 && @r.format == set[0].mime # direct to file
         set[0]
       else
-        graph = -> { # (JSON / Hash)
-          set.map{|r|r.setEnv(@r).nodeToGraph m} # fs->graph
+        graph = -> { # load JSON/Hash graph
+          set.map{|r|
+            r.setEnv(@r).nodeToGraph m} # fs->graph
           @r[:filters].push Container if @r[:container] # summarize contents of container
           @r[:filters].push 'edit' if @r.signedIn && (q.has_key? 'new') || (q.has_key? 'edit')
           @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }}

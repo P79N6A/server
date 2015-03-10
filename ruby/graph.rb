@@ -21,7 +21,7 @@ class R
 
 =end
 
-  # triplr -> graph
+  # triples -> graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -34,8 +34,8 @@ class R
   # inode -> inode (Non-RDF -> RDF)
   def justRDF pass = RDFsuffixes
     return unless e                                    # check that source exists
-    doc = self                                         # output doc
-    unless pass.member? realpath.do{|p|p.extname.tail} # already readable MIME?
+    doc = self                                         # out doc
+    unless pass.member? realpath.do{|p|p.extname.tail} # already desired MIME?
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cached transcode
       unless doc.e && doc.m > m                           # cache valid
         graph = {}                                        # update cache
@@ -49,26 +49,27 @@ class R
 
   # inode -> graph
   def nodeToGraph graph
-    base = stripDoc             # base URI
-    justRDF(%w{e}).do{|f|       # JSON format
-      f.r(true).triples{|s,p,o| # triples
-        s = base.join(s).to_s   # subject URI
-        if o.class==Hash
+    base=(@r ? @r.R : self).join stripDoc # base-URI
+    justRDF(%w{e}).do{|f|                 # JSON-format doc
+      f.r(true).triples{|s,p,o|           # triple
+        s = base.join(s).to_s             # subject URI
+        if o.class==Hash && o.uri         # object URI
+          o['uri'] = base.join(o.uri).to_s
         end
-        graph[s] ||= {'uri' => s} # resource
-        graph[s][p] ||= []        # predicate
+        graph[s] ||= {'uri' => s}         # resource
+        graph[s][p] ||= []                # predicate
         graph[s][p].push o unless graph[s][p].member? o
       }}
     graph
   end
   
-  # inode(s) -> graph
+  # URI -> graph
   def graph graph = {}
     fileResources.map{|d|d.nodeToGraph graph}
     graph
   end
 
-  # triplr -> fs-store
+  # triples -> fs-store
   def triplrStoreJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr) # collect triples
     R.store graph, host, p, hook  # cache
