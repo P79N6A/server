@@ -1,3 +1,5 @@
+Encoding.default_internal = Encoding.default_external = Encoding::UTF_8
+
 %w{
 cgi
 csv
