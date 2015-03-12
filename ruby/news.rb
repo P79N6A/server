@@ -16,7 +16,21 @@ class R
           e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
       end
     end
-    nil}
+    nil # not at container-root, continue as normal
+  }
+
+  GET['/feed'] = -> d,e {
+    if d.justPath.docroot.uri == '/feed'
+      e['HTTP_ACCEPT'] = 'application/atom+xml' # fix MIME
+      e.q['set'] ||= 'page'; e.q['c'] ||= 15 # 15 posts in desc-date order
+      d.dir.child('news').setEnv(e).response # request of news-container
+    else
+      graph = RDF::Graph.new
+      feed = e.scheme+':'+e.R.path.sub(/^\/feed/,'/')
+      graph.load feed, :format => :feed
+      [200, e[:Response].update({'Content-Type' => e.format}), [graph.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]
+    end
+  }
 
   def getFeed h='localhost'
     store :format => :feed, :hook => FeedArchiverRDF, :hostname => h
@@ -204,12 +218,6 @@ class R
       time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # trim normalized timezones
       base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
       doc.ln R["//#{host}/news/#{time}#{base}n3"]}}
-
-  GET['/feed'] = -> d,e {
-    e['HTTP_ACCEPT'] = 'application/atom+xml'
-    e.q['set'] ||= 'page'
-    e.q['c'] ||= 16
-    d.dir.child('news').setEnv(e).response}
 
   Render['application/atom+xml'] = -> d,e {
     id = '//' + e.host + (CGI.escapeHTML e['REQUEST_URI'])
