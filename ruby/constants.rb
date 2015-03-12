@@ -9,7 +9,6 @@ fileutils
 json
 linkeddata
 mail
-nokogiri
 open-uri
 pathname
 rack
