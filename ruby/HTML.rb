@@ -108,7 +108,7 @@ class R
 
   def nokogiri;  Nokogiri::HTML.parse (open uri).read end
 
-  StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
+  StripHTML = -> body, loseTags=%w{script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
     loseTags.map{|tag| html.css(tag).remove } if loseTags
     html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
