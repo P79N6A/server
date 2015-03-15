@@ -84,8 +84,9 @@ class R
               end
 
     located = (join subject).R # full path to resource
+    puts "uri #{uri} subj #{subject} loc #{located}"
 
-    if resource.empty? # blank resource
+    if resource.empty? # everything blank - unlink
       located.fragmentPath.a('.e').delete # unlink version
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
