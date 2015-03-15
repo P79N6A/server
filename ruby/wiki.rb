@@ -1,10 +1,9 @@
 # coding: utf-8
 #watch __FILE__
 class R
-
+ 
   FileSet['history'] = -> d,env,g {
-    FileSet['page'][d.fragmentDir,env,g]
-  }
+    FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
 
   Render[WikiText] = -> texts {
     texts.justArray.map{|t|
