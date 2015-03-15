@@ -10,6 +10,5 @@ a {text-decoration: none}
 .edit { color: #777; padding-left: .3em }
 .wikiTitle,.articleTitle {font-size:2em;color:#000;background-color:#fff}
 .sectionTitle {font-size:1.5em;color:#fff;background-color:#00f;padding-right:.8em}
-.addSection,.addArticle {color:#fff;border-radius:.55em;padding:0 .15em 0 .1em}
 .addSection {background-color:#00f}
-.addArticle {background-color:purple}
+.addArticle {background-color:#0f0;color:#fff}

@@ -28,7 +28,7 @@ class R
      c: [{_: :a, class: :wikiTitle, href: r.uri, c: r[Title]},
          ([{_: :a, class: :edit, href: r.R.editLink(e), c: R.pencil, title: 'edit Wiki description'},
            {_: :a, class: :addArticle, href: r.uri + '?new',
-            c: [{_: :span, class: :pen, c: "✑"}, "+article"]}] if e.signedIn), '<br>',
+            c: "+article"}] if e.signedIn), '<br>',
          {_: :span, class: :desc, c: r[Content]}]}}
 
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
