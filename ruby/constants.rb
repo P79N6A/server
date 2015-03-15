@@ -1,5 +1,5 @@
 
-#Encoding.default_internal = Encoding.default_external = Encoding::UTF_8 # override environment
+#Encoding.default_internal = Encoding.default_external = Encoding::UTF_8 # override environment locale
 
 %w{
 cgi
