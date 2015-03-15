@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   # post to a Forum creates a thread and its first post
@@ -44,12 +44,12 @@ class R
 
   ViewA[Forum] = -> r,e {
     editing = e.q.has_key?('new') || e.q.has_key?('edit')
-    editPtr = !editing && e.signedIn && r.R.path==e.R.path
+    editPtr = !editing && e.signedIn
     {class: :forum,
      c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},
          ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit forum-details'} if editPtr),'<br>',
          {_: :span, class: :desc, c: r[Content]},
-         ({_: :a, class: :post, href: r.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "post"]} if editPtr)]}}
+         ({_: :a, class: :post, href: r.R.stripFrag.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "post"]} if editPtr)]}}
 
   ViewGroup[SIOC+'Thread'] = -> g,e {
     [H.css('/css/thread',true),
