@@ -79,7 +79,7 @@ class R
                   '#' + slug[]
                 end
               end
-    located = (join subject).R # absolutize relative-URI
+    located = join(subject).R # resolve relative-URI
     puts "uri #{uri} subj #{subject} loc #{located}"
 
     if resource.empty? # everything blank - unlink
