@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -55,40 +55,35 @@ class R
   end
 
   def formPOST
-    data = Rack::Request.new(@r).POST   # form
-    type = (data.delete Type)||Resource # RDF-resource type
-    datatype = data.delete 'datatype'   # content-literal datatype
-    resource = {}                       # resource
-    targetResource = graph[uri] || {}   # target
-    R.formResource data, resource       # cast form to RDF graph
-    subject = if data.uri # subject specified,
-                data.uri  # use existing
-              else # mint a URI
+    data = Rack::Request.new(@r).POST  # form
+    type = data.delete(Type)||Resource # RDF-resource type
+    datatype = data.delete 'datatype'  # content-literal datatype
+    resource = {}                      # resource
+    targetResource = graph[uri] || {}  # target
+    R.formResource data, resource      # cast form to RDF graph
+    slug = -> {resource[Title] &&
+              !resource[Title].empty? &&
+               resource[Title].slugify || rand.to_s.h[0..7]}
+    subject = if data.uri # existing subject
+                data.uri
+              else # create resource
                 @r[:Status] = 201 # mark as new
-                slug = resource[Title] && !resource[Title].empty? && resource[Title].slugify || rand.to_s.h[0..7] # name
-                if e # POST to container
-                  resource[SIOC+'has_container'] = R[uri.t] # containment metadata
-                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # type(s) of container
-                    puts "POST to #{c}"
-                    POST[c].do{|h| h[resource,targetResource,@r]}} # target handler
-                  if resource.uri # URI bound by handler
-                    resource.uri
-                  else # mint URI for contained resource
-                    uri.t + slug + '#'
-                  end
+                if directory? # container
+                  resource[SIOC+'has_container'] = R[uri.t] # add containment metadata
+                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c|
+                    POST[c].do{|h| h[resource,targetResource,@r]}} # type-handler
+                  resource.uri || (uri.t + slug[] + '#') # contained-resource URI
                 elsif Containers[resource[Type].maybeURI] # new container
-                  mk                                      # make fs-container
-                  uri.t                                   # add trailing-slash
-                else # standard resource
-                  '#' + slug
+                  mk; puts "mkContainer"; uri.t
+                else
+                  '#' + slug[]
                 end
               end
-
-    located = (join subject).R # full path to resource
+    located = (join subject).R # absolutize relative-URI
     puts "uri #{uri} subj #{subject} loc #{located}"
 
     if resource.empty? # everything blank - unlink
-      located.fragmentPath.a('.e').delete # unlink version
+      located.fragmentPath.a('.e').delete # obsolete version
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
     else
@@ -99,7 +94,6 @@ class R
 
       resource[WikiText].do{|c| # wrap wikitext w/ datatype-tag
         resource[WikiText] = {Content => c, 'datatype' => datatype}}
-
       located.writeResource resource # write
       [303,{'Location' => located.uri},[]] # return
     end

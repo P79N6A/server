@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   Filter['edit'] = -> g,e {
@@ -22,16 +22,11 @@ class R
 
     # edit resource
     if e.q.has_key? 'edit'
-      fragment = e.q['fragment']
-      r = if fragment
-            fragURI = '#' + fragment
-            re = g.values.find{|u,r|u.R.fragment == fragment} || # found in doc
-                 (g[fragURI] = {})                               # create new
-            re['uri'] = fragURI                                  # identify
-            re
-          else
-            g[e.uri] ||= {} # no fragment - doc or container itself
-          end
+      uri = e.uri
+      if e.q['fragment']
+        uri = uri + '#' + e.q['fragment']
+      end
+      r = g[uri] ||= {} # resource
       r[Type] ||= []              # init Type field
       r[Type].push R['#editable'] # attach 'editable' type
       r[Title] ||= e.R.basename   # suggest a title
