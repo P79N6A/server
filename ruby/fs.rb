@@ -7,7 +7,7 @@ class R
     yield uri, Date, mtime.iso8601
     contained = c
     yield uri, Size, contained.size
-    contained.map{|c|yield uri, LDP+'contains', c} if contained.size <= 32
+    contained.map{|c|yield uri, LDP+'contains', c.stripDoc} if contained.size <= 32
     yield uri, SIOC+'has_parent', parentURI unless path=='/'
   end
 
