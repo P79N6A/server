@@ -58,7 +58,7 @@ class R
     data = Rack::Request.new(@r).POST  # form
     type = data.delete(Type)||Resource # RDF-resource type
     datatype = data.delete 'datatype'  # content-literal datatype
-    resource = {}                      # resource
+    resource = {Type => type.R.expand} # resource
     targetResource = graph[uri] || {}  # target
     R.formResource data, resource      # cast form to RDF graph
     slug = -> {resource[Title] &&
@@ -74,7 +74,7 @@ class R
                     POST[c].do{|h| h[resource,targetResource,@r]}} # type-handler
                   resource.uri || (uri.t + slug[] + '#') # contained-resource URI
                 elsif Containers[resource[Type].maybeURI] # new container
-                  mk; puts "mkContainer"; uri.t
+                  mk; uri.t
                 else
                   '#' + slug[]
                 end
@@ -82,13 +82,12 @@ class R
     located = join(subject).R # resolve relative-URI
     puts "uri #{uri} subj #{subject} loc #{located}"
 
-    if resource.empty? # everything blank - unlink
+    if resource.keys.size==1 && resource[Type]
       located.fragmentPath.a('.e').delete # obsolete version
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
     else
       resource.update({ 'uri' => subject,         # URI
-                        Type => type.R.expand,    # RDF type
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
 
