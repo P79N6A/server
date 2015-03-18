@@ -14,9 +14,10 @@ class R
       else # target exists, new post to it
         g['#new'] = {Type => [R['#editable']]}
         e.q['type'].do{|t| g['#new'][Type].push R[t.expand]}
-        g[e.uri].do{|container|# target
-          container[Type].justArray.map{|type|Containers[type.uri]}. # lookup contained-type
-            compact[0].do{|childType|g['#new'][Type].push R[childType]}}# add contained-type
+        g[e.uri].do{|t| # target
+          t[Type].justArray.map{|type| # target types
+            Containers[type.uri].do{|ct| # contained type
+              g['#new'][Type].push R[ct]}}}
       end
     end
 
