@@ -31,6 +31,10 @@ a.img:before {
     font-family: icons;
     font-size: 1.3em;
     border-width: 0;}
+a.thread:before {
+    content:"\f03c";
+    font-family: icons;
+    border-width: 0;}
 a.rel:before {
     content:"\f0a5";
     font-family: icons;

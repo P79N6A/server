@@ -53,6 +53,8 @@ class R
                          when Type
                            l[Type].justArray.map{|t|
                              type = case t.uri
+                                    when SIOC+'Thread'
+                                      :thread
                                     when SIOC+'Usergroup'
                                       :group
                                     when FOAF+'Person'
