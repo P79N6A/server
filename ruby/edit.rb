@@ -12,8 +12,8 @@ class R
           g['#new'] = {Type => R['#untyped']}
         end
       else # target exists, new post to it
-        g['#new'] = {Type => [R['#editable'], # no URI, POST-handler will decide
-                              e.q['type'].do{|t| R[t.expand]} || R[Resource]]} # type
+        g['#new'] = {Type => [R['#editable']]}
+        e.q['type'].do{|t| g['#new'][Type].push R[t.expand]}
         g[e.uri].do{|container|# target
           container[Type].justArray.map{|type|Containers[type.uri]}. # lookup contained-type
             compact[0].do{|childType|g['#new'][Type].push R[childType]}}# add contained-type
