@@ -21,6 +21,44 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
+  ViewA[CSVns+'Row'] = -> l,e,sort,keys {
+    [{_: :tr, about: l.uri, class: l.uri == e.uri ? :doc : '',
+      c: ["\n",
+          keys.map{|k|
+            this = sort == k
+            [{_: :td, property: k, class: this ? :this : :that,
+              c: case k
+                 when 'uri'
+                   l.R.do{|r|
+                     {_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}}
+                 when Type
+                   l[Type].justArray.map{|t|
+                     type = case t.uri
+                            when SIOC+'Thread'
+                              :thread
+                            when SIOC+'Usergroup'
+                              :group
+                            when FOAF+'Person'
+                              :person
+                            when GraphDoc
+                              :graph
+                            when Directory
+                              :dir
+                            when Stat+'File'
+                              :file
+                            when Image
+                              :img
+                            when '#editable'
+                              :scissors
+                            else
+                              nil
+                            end
+                     {_: :a, href: l.uri, c: type ? '' : (t.R.fragment||t.R.basename), class: type}}
+                 else
+                   l[k].html
+                 end}, "\n"]
+          }]}, "\n"]}
+
   TabularView = ViewGroup[CSVns+'Row'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     sort = (e.q['sort']||'uri').expand
@@ -40,41 +78,7 @@ class R
              end
              [{_: :th, property: k, class: this ? :this : :that,
                c: {_: :a, rel: :nofollow, href: q.qs, c: k.R.abbr}}, "\n"]}}, "\n",
-          g.resources(e).send(order).map{|l|
-            [{_: :tr, about: l.uri, class: l.uri == e.uri ? :doc : '',
-              c: ["\n",
-                  keys.map{|k|
-                    this = sort == k
-                    [{_: :td, property: k, class: this ? :this : :that,
-                      c: case k
-                         when 'uri'
-                           l.R.do{|r|
-                             {_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}}
-                         when Type
-                           l[Type].justArray.map{|t|
-                             type = case t.uri
-                                    when SIOC+'Thread'
-                                      :thread
-                                    when SIOC+'Usergroup'
-                                      :group
-                                    when FOAF+'Person'
-                                      :person
-                                    when GraphDoc
-                                      :graph
-                                    when Directory
-                                      :dir
-                                    when Stat+'File'
-                                      :file
-                                    when Image
-                                      :img
-                                    else
-                                      nil
-                                    end
-                             {_: :a, href: l.uri, c: type ? '' : (t.R.fragment||t.R.basename), class: type}}
-                         else
-                           l[k].html
-                         end}, "\n"]
-                  }]}, "\n"]
-          }]}, "\n"]}
+          g.resources(e).send(order).map{|row|
+            ViewA[CSVns+'Row'][row,e,sort,keys]}]}, "\n"]}
 
 end

@@ -21,6 +21,11 @@ a.dir:before {
     content:"\f07c";
     font-family: icons;
     font-size: 1.3em;}
+a.scissors:before {
+    color: #0f0;
+    content:"\f0c4";
+    font-family: icons;
+    font-size: 1.3em;}
 a.file:before {
     content:"\f15b";
     font-family: icons;
