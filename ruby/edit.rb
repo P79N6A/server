@@ -34,7 +34,10 @@ class R
       r[Type] ||= []              # init Type field
       r[Type].push R['#editable'] # attach 'editable' type
       r[Title] ||= e.R.basename   # suggest a title
-      [LDP+'contains', Size, Creator, SIOC+'has_container'].map{|p|r.delete p} # ambient properties, not editable
+      [LDP+'contains', Size, Creator,
+       SIOC+'has_container',
+       SIOC+'has_parent',
+      ].map{|p|r.delete p} # ambient properties, not editable
     end}
 
   Creatable = [Forum, Wiki, WikiArticle, BlogPost]

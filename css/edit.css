@@ -1,3 +1,4 @@
+body {font-family: sans-serif}
 input, textarea {border: .2em solid #ccc; border-radius: .23em}
 input[type=submit] {background-color: #fff; color: #333; border-color: #333}
 input[type=submit]:hover {background-color:#0f0; color: #fff; border-color: #bfb}
