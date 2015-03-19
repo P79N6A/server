@@ -1,6 +1,8 @@
 watch __FILE__
 class R
 
+  FileSet['edit'] = -> a,b,c {FileSet[Resource][a,b,c].map{|f|f.setEnv b}} # thread environment (base for relURIs)
+
   Filter['edit'] = -> g,e {
 
     # new resource

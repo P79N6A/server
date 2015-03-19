@@ -38,6 +38,9 @@ class R
   end
 
   def response
+    init = q.has_key? 'new'
+    edit = q.has_key? 'edit'
+    q['set'] = 'edit' if edit
     set = []
     m = {'' => {'uri' => uri, Type => [R[LDP+'Resource']]}}
     rs = ResourceSet[q['set']]
@@ -47,16 +50,17 @@ class R
     FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
     if set.empty?
-      if q.has_key? 'new' # skip 404, init blank-resource
+      if init
         @r[404] = true
       else
         return E404[self,@r,m]
       end
     end
-    return @r.SSLupgrade if (q.has_key?('new') || q.has_key?('edit')) && @r.scheme == 'http' # HTTPS required for editing
+    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
 
-    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME
-                           'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation id
+    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME type
+                           'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation-id
+
     condResponse ->{ # lazy response-finisher
       if set.size==1 && @r.format == set[0].mime # direct to file
         set[0]
@@ -64,7 +68,7 @@ class R
         graph = -> { # load JSON/Hash graph
           set.map{|r|r.nodeToGraph m}
           @r[:filters].push Container if @r[:container] # summarize contents of container
-          @r[:filters].push 'edit' if @r.signedIn && (q.has_key? 'new') || (q.has_key? 'edit')
+          @r[:filters].push 'edit' if @r.signedIn && (init||edit)
           @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }}
           m }
 
@@ -73,9 +77,9 @@ class R
         else
           if @r[:container]
             g = graph[].toRDF # summarize
-          else # full RDF
+          else
             g = RDF::Graph.new
-            set.map{|f| f.setEnv(@r).justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
+            set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end
           @r[:Response][:Triples] = g.size.to_s
           g.dump (RDF::Writer.for :content_type => @r.format).to_sym,:base_uri => self,:standard_prefixes => true,:prefixes => Prefixes
