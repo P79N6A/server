@@ -1,9 +1,10 @@
 watch __FILE__
 class R
 
-  FileSet['edit'] = -> a,b,c {FileSet[Resource][a,b,c].map{|f|f.setEnv b}} # thread environment (base for relURIs)
+  FileSet['edit'] = -> resource,qs,model {
+    FileSet[Resource][resource,qs,model].map{|f|f.setEnv resource.env}} # keep environment for relURI ref
 
-  Filter['edit'] = -> g,e {
+  Filter['edit'] = -> g,e { # add editor resources to model
 
     # new resource
     if e.q.has_key? 'new'

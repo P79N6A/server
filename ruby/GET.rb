@@ -51,7 +51,7 @@ class R
 
     if set.empty?
       if init
-        @r[404] = true
+        @r[404] = true # just make a note of it..
       else
         return E404[self,@r,m]
       end
