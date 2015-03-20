@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   FileSet['edit'] = -> resource,qs,model {
@@ -106,6 +106,6 @@ end
 
 module Th
   def editable
-    @editable ||= (signedIn && !q.has_key?('edit') && !q.has_key?('new'))
+    @editable ||= (signedIn && !q.has_key?('edit') && !q.has_key?('new') && q['set']!='history')
   end
 end
