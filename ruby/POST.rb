@@ -79,8 +79,7 @@ class R
                   '#' + slug[]
                 end
               end
-    located = join(subject).R # resolve relative-URI
-    puts "uri #{uri} subj #{subject} loc #{located}"
+    located = (join subject).R.setEnv @r
 
     if resource.keys.size==1 && resource[Type]
       located.fragmentPath.a('.e').delete # obsolete version
@@ -99,15 +98,17 @@ class R
   end
 
   def writeResource re, build = true
-    graph = {re.uri => re}       # resource to graph
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
-    path = fragmentPath          # version base
-    doc = path + '/' + ts + '.e' # version
-    doc.w graph, true            # write version
-    cur = path.a '.e'            # live-resource
-    cur.delete if cur.e          # obsolete version
-    doc.ln_s cur                 # make version live
-    buildDoc if build            # update containing-doc
+    path = fragmentPath          # version-base URI
+    doc = path + '/' + ts + '.e' # version-doc URI
+    rel = URI(stripFrag.uri).route_to(uri).to_s
+    re['uri'] = rel     # local identifier
+    graph = {rel => re} # graph
+    doc.w graph, true   # write graph
+    cur = path.a '.e'   # live-version URI
+    cur.delete if cur.e # unlink obsolete-version
+    doc.ln_s cur        # link live-version
+    buildDoc if build   # update containing-doc
   end
 
   def buildDoc
