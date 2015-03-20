@@ -58,11 +58,12 @@ class R
     re[WikiText] ||= ''
      {_: :form, method: :POST,
        c: [{_: :table, class: :html,
-            c: [{_: :tr,
-                 c: {_: :td, colspan: 2,
-                     c: [{_: :a, class: :uri, c: re.uri, href: re.uri},
-                         {_: :a, class: :history, c: :history, href: re.uri.sub('#','%23')+'?set=history'},
-                        ]}},
+            c: [re.uri.do{|uri|
+                  {_: :tr,
+                   c: {_: :td, colspan: 2,
+                       c: [{_: :a, class: :uri, c: uri, href: uri},
+                           {_: :a, class: :history, c: :history, href: uri.sub('#','%23')+'?set=history'},
+                          ]}}},
                  re.keys.map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.abbr}},
