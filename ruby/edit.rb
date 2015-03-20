@@ -31,9 +31,8 @@ class R
         uri = uri + '#' + e.q['fragment']
       end
       r = g[uri] ||= {} # resource
-      r[Type] ||= []              # init Type field
-      r[Type].push R['#editable'] # attach 'editable' type
-      r[Title] ||= e.R.basename   # suggest a title
+      r[Type] = R['#editable']  # tag editable resource
+      r[Title] ||= e.R.basename # suggest a title
       [LDP+'contains', Size, Creator,
        SIOC+'has_container',
        SIOC+'has_parent',
