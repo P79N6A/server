@@ -30,7 +30,7 @@ class R
      ([{_: :a, class: :edit, href: r.R.editLink(e), c: R.pencil,
         title: 'edit article description'},
        {_: :a, class: :addSection, href: doc + '?new&type=sioct:WikiArticleSection', c: '+section',
-        title: 'add section'}] if e.signedIn),
+        title: 'add section'}] if e.editable),
      '<br>',
      Render[WikiText][r[WikiText]]]}
 
@@ -49,6 +49,6 @@ class R
          ({_: :a,
            href: r.R.docroot +  '?edit&fragment=' + r.R.fragment,
            class: :edit,
-           c: '✑'} if e.signedIn)]}}
+           c: '✑'} if e.editable)]}}
 
 end

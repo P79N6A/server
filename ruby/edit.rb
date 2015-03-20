@@ -103,3 +103,9 @@ class R
   end
 
 end
+
+module Th
+  def editable
+    @editable ||= (signedIn && !q.has_key?('edit') && !q.has_key?('new'))
+  end
+end
