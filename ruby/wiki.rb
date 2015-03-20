@@ -17,18 +17,6 @@ class R
         content.hrefs
       end}}
 
-  ViewGroup[Wiki] = -> g,e {
-    [H.css('/css/wiki'),
-     g.values.map{|r|
-       ViewA[Wiki][r,e]}]}
-
-  ViewA[Wiki] = -> r,e {
-    {class: :wiki,
-     c: [{_: :a, class: :wikiTitle, href: r.uri, c: r[Title]},
-         ([{_: :a, class: :edit, href: r.R.editLink(e), c: R.pencil, title: 'edit Wiki description'},'<br>',
-           {_: :a, class: :addArticle, href: r.R.docroot.uri + '?new', c: "+article"}] if e.signedIn), '<br>',
-         {_: :span, class: :desc, c: r[Content]}]}}
-
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
     [H.css('/css/wiki'),
      g.map{|u,r|
