@@ -13,7 +13,8 @@ class R
         @r[:container] = true
         resourceGET
       else
-        @r[:Response].update({'Location' => uri + '/?' + @r['QUERY_STRING']})
+        q = @r['QUERY_STRING']
+        @r[:Response].update({'Location' => uri + '/' + (q && !q.empty? && ('?' + q) || '')})
         [301, @r[:Response], []]
       end
     else
