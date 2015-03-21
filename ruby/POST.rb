@@ -61,31 +61,33 @@ class R
     resource = {Type => type.R.expand} # resource
     targetResource = graph[uri] || {}  # target
     R.formResource data, resource      # cast form to RDF graph
+
     slug = -> {resource[Title] &&
               !resource[Title].empty? &&
                resource[Title].slugify || rand.to_s.h[0..7]}
+
     subject = if data.uri # existing subject
                 data.uri
               else # create resource
                 @r[:Status] = 201 # mark as new
-                if directory? # container
-                  resource[SIOC+'has_container'] = R[uri.t] # add containment metadata
-                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c|
-                    POST[c].do{|h| h[resource,targetResource,@r]}} # type-handler
-                  resource.uri || (uri.t + slug[] + '#') # contained-resource URI
-                elsif Containers[resource[Type].maybeURI] # new container
+                if directory? # container POST
+                  resource[SIOC+'has_container'] = R[uri.t] # container pointer
+                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # lookup type-handlers
+                    POST[c].do{|h| h[resource,targetResource,@r]}} # run type-handler
+                  resource.uri || (uri.t + slug[] + '#') # contained-resource
+                elsif Containers[resource[Type].maybeURI] # create container
                   mk; uri.t
-                else
+                else # generic resource
                   '#' + slug[]
                 end
               end
     located = (join subject).R.setEnv @r
 
-    if resource.keys.size==1 && resource[Type]
-      located.fragmentPath.a('.e').delete # obsolete version
+    if resource.keys.size==1 && resource[Type] # empty resource
+      located.fragmentPath.a('.e').delete # obsoleted-version URI
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
-    else
+    else # updated resource
       resource.update({ 'uri' => subject,         # URI
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
