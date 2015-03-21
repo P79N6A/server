@@ -3,12 +3,13 @@
 class R
 
   def triplrDir
-    yield uri, Type, R[Directory]
-    yield uri, Date, mtime.iso8601
+    dir = uri.t
+    yield dir, Type, R[Directory]
+    yield dir, Date, mtime.iso8601
     contained = c
-    yield uri, Size, contained.size
-    contained.map{|c|yield uri, LDP+'contains', c.stripDoc} if contained.size <= 32
-    yield uri, SIOC+'has_parent', parentURI unless path=='/'
+    yield dir, Size, contained.size
+    contained.map{|c|yield dir, LDP+'contains', c.stripDoc} if contained.size <= 32
+    yield dir, SIOC+'has_parent', parentURI unless path=='/'
   end
 
   def triplrFile
