@@ -2,13 +2,12 @@
 #watch __FILE__
 class R
 
-  # post to a Forum creates a thread and its first post
   POST[Forum] = -> thread, forum, env {
     time = Time.now.iso8601
-    title = thread[Title] # mint thread-URI
+    title = thread[Title]
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
     postURI = thread.uri + time.gsub(/[-+:T]/, '') + '/'
-    op = {# "original post" in thread
+    op = {
       'uri' => postURI,
       Creator => env.user,
       Type => R[SIOCt+'BoardPost'],
@@ -16,9 +15,8 @@ class R
       Content => (thread.delete Content),
       SIOC+'has_discussion' => thread.R,
       SIOC+'has_container' => thread.R,
-      SIOC+'reply_to' => R[postURI + '?new'],
-    }
-    postURI.R.writeResource op} # store OP
+      SIOC+'reply_to' => R[postURI + '?new']}
+    postURI.R.writeResource op }
 
   # post to a Thread
   POST[SIOC+'Thread'] = -> post, thread, env {

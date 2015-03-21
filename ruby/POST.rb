@@ -101,8 +101,9 @@ class R
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
     path = fragmentPath          # version-base URI
     doc = path + '/' + ts + '.e' # version-doc URI
-    rel = URI(stripFrag.uri).route_to(uri).to_s
-    re['uri'] = rel     # local identifier
+    rel = uri # keep full-URI (faster)
+#    rel = URI(stripFrag.uri).route_to(uri).to_s # find relative-URI
+#    re['uri'] = rel     # localize identifier
     graph = {rel => re} # graph
     doc.w graph, true   # write graph
     cur = path.a '.e'   # live-version URI
