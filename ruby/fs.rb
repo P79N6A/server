@@ -86,11 +86,12 @@ class R
   def ln_s t; ln t, :symlink end
 
   def fileResources
-    r = []
-    r.push self if e # exact match
+    r = [] # docs
+    r.push self if e
     %w{e ht html md n3 ttl txt}.map{|suffix|
       doc = docroot.a '.' + suffix
-      r.push doc if doc.e } # related thru docbase
+      r.push doc.setEnv(@r) if doc.e
+    }
     r
   end
 
@@ -120,7 +121,9 @@ class R
       this[Prev] = {'uri' => pp+qs} if R['//' + e.env.host + pp].e
       this[Next] = {'uri' => np+qs} if R['//' + e.env.host + np].e}
     if e.env[:container]
-      e.fileResources.concat e.c
+      cs = e.c # contained
+      cs.map{|c|c.setEnv e.env} if cs.size < 17 # skip relURI prettiness on larger sets (for speed)
+      e.fileResources.concat cs
     else
       e.fileResources.concat FileSet['rev'][e,q,g]
     end}

@@ -38,38 +38,39 @@ class R
   end
 
   def response
+    m = {'' => {'uri' => uri, # <> you are here
+                Type => [R[LDP+'Resource']]}}
     init = q.has_key? 'new'
     edit = q.has_key? 'edit'
-    q['set'] = 'edit' if edit
-    set = []
-    m = {'' => {'uri' => uri, Type => [R[LDP+'Resource']]}}
-    rs = ResourceSet[q['set']]
+    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for user ID required for edits
+
+    set = [] # resources in response
+    rs = ResourceSet[q['set']] # generic-resources provider
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
-    fs = FileSet[q['set']]
+    fs = FileSet[q['set']] # file(s) provider
     fs[self,q,m].do{|files|set.concat files} if fs
     FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
     if set.empty?
-      if init
+      if init # create resource
         @r[404] = true # just make a note of it..
       else
-        return E404[self,@r,m]
+        return E404[self,@r,m] # not found
       end
     end
-    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
 
     @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME type
                            'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation-id
 
     condResponse ->{ # lazy response-finisher
-      if set.size==1 && @r.format == set[0].mime # direct to file
-        set[0]
+      if set.size==1 && @r.format == set[0].mime # only one file in response and it's the requested MIME
+        set[0] # return file
       else
-        graph = -> { # load JSON/Hash graph
-          set.map{|r|r.nodeToGraph m}
-          @r[:filters].push Container if @r[:container] # summarize contents of container
-          @r[:filters].push 'edit' if @r.signedIn && (init||edit)
-          @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }}
+        graph = -> {
+          set.map{|r|r.nodeToGraph m} # load resources
+          @r[:filters].push Container if @r[:container] # summarizer hooks
+          @r[:filters].push 'edit' if @r.signedIn && (init||edit) # editable tags
+          @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }} # transform
           m }
 
         if NonRDF.member? @r.format
