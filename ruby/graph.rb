@@ -51,7 +51,7 @@ class R
   def nodeToGraph graph
     base = @r.R.join(stripDoc) if @r    # base-URI
     justRDF(%w{e}).do{|f|               # JSON-format doc
-      f.r(true).triples{|s,p,o|         # triple
+      (f.r(true)||{}).triples{|s,p,o|         # triple
         s = base.join(s).to_s if @r     # subject URI
         if @r && o.class==Hash && o.uri # object URI
           o['uri'] = base.join(o.uri).to_s
