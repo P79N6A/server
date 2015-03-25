@@ -167,7 +167,7 @@ class R
     {class: :resource,
      c: [(if uri
           [({_: :a, href: uri, c: r[Date], class: :date} if r[Date]),
-           ({_: :a, href: r.R.editLink(e), class: :edit, c: R.pencil} if e.editable),
+           ({_: :a, href: r.R.editLink(e), class: :edit, title: "edit #{uri}", c: R.pencil} if e.editable),
            {_: :a, href: uri, c: r[Title]||uri, class: :id},'<br>']
           end), r.html]}}
 

@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	}
     },false)
 
-    var trax = document.querySelectorAll('#sounds .member')
+    var trax = document.querySelectorAll('#snd .member')
 
     var select = function(){
 	var s = window.location.hash.slice(1) // strip # from URI

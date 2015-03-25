@@ -2,22 +2,23 @@
 #watch __FILE__
 class R
 
-  Containers = { # container -> contained type
-    Forum => SIOC+'Thread',
-    SIOC+'Thread' => SIOCt+'BoardPost',
-    SIOCt+'BoardPost' => SIOCt+'BoardPost',
+  # POSTable container -> contained types
+  Containers = {
     Wiki => SIOCt+'WikiArticle',
+    Forum            => SIOC+'Thread',
+    SIOC+'Thread'    => SIOCt+'BoardPost',
+   SIOCt+'BoardPost' => SIOCt+'BoardPost',
   }
 
-  Filter[Container] = -> g,e {
+  Filter[Container] = -> g,e { # summarize a container
     groups = {}
     g.map{|u,r|
       r.types.map{|type| # RDF types
-        if v = Abstract[type] # class-summarizer exists
-          groups[v] ||= {} # init type-group
-          groups[v][u] = r # resource to type-group
+        if v = Abstract[type] # summarizer
+          groups[v] ||= {} # type-group
+          groups[v][u] = r # resource -> group
         end}}
-    groups.map{|fn,gr|fn[g,gr,e]}} # run summarizer
+    groups.map{|fn,gr|fn[g,gr,e]}} # summarize
 
   ViewA[Container] = -> r, e, graph = nil {
     re = r.R
@@ -71,19 +72,11 @@ class R
     env[:color] ||= {path => '#222'}
     [H.css('/css/container',true),
      {_: :a, class: :sort, href: env.q.merge({'sort' => s_}).qs, c: '↨' + sort.shorten.split(':')[-1]},
-     if env[:ls]
-       TabularView[d,env]
-     else
-       {class: :containers,
-        c: d.resources(env).group_by{|r|r.R.path||path}.map{|group,resources|
-          resources.map{|r|
-            [ViewA[Container][r,env,d], {_: :p, class: :space}]}}}
-     end
-    ]}
+     {class: :containers,
+      c: d.resources(env).map{|r|
+        [ViewA[Container][r,env,d], {_: :p, class: :space}]}}]}
 
-  GET['/tabulator'] = -> r,e { # data-browser (and editor)
-    [200, {'Content-Type' => 'text/html'},
-     [Render['text/html'][ {}, e, Tabulator]]]}
+  GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
   Tabulator = -> g,e {
     src = e.scheme + '://linkeddata.github.io/tabulator/'
@@ -107,21 +100,15 @@ document.addEventListener('DOMContentLoaded', function(){
     yield uri, Date, mtime
   end
 
-  Abstract[Sound] = -> graph, g, e { # create player and playlist resources
-    pls = '#sounds'
-    graph[pls] = {'uri' => pls, Type => R[Container],
+  Abstract[Sound] = -> graph, g, e { # add player and playlist resources
+    graph['#snd'] = {'uri' => '#snd', Type => R[Container],
                   LDP+'contains' => g.values.map{|s| graph.delete s.uri # original resource
-                    s.update({'uri' => '#'+URI.escape(s.R.path)})}} # local playlist-entry
+                    s.update({'uri' => '#'+URI.escape(s.R.path)})}} # localized playlist-entry
     graph['#audio'] = {Type => R[Sound+'Player']} # player
-    graph[e.uri].do{|c|c.delete(LDP+'contains')}} # hide
+    graph[e.uri].do{|c|c.delete(LDP+'contains')}} # original container
 
   ViewGroup[Sound+'Player'] = -> g,e {
-    [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true},
-     {_: :a, id: :rand, href: '#rand', c: 'R'},
-     {_: :style, c: "
-#sounds {max-height: 24em; overflow:scroll}
-#rand {color: #fff; background-color: brown; text-decoration: none; font-weight: bold; font-size: 3em; padding: .3em; border-radius: .1em}
-"},
-     H.js('/js/audio')]}
+    [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true}, {_: :a, id: :rand, href: '#rand', c: 'R'}, H.js('/js/audio'), {_: :style, c: "#snd {max-height: 24em; overflow:scroll}
+#rand {color: #fff; background-color: brown; text-decoration: none; font-weight: bold; font-size: 3em; padding: .3em; border-radius: .1em}"}]}
 
 end
