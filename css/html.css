@@ -1,5 +1,6 @@
 img {max-width: 100%}
 table.html , .resource {display: inline-block; margin: .25em;}
+tr[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] .new {border-radius:.2em;border: .2em solid #5f5;color:#fff;background-color:#0f0}
 td.key {text-align:right;}
 a {text-decoration: none;}
 a.id, td.key a {font-weight: bold; background-color: #fff; color: #333;border-width:0 0 .1em 0; border-style:dotted;border-color:#ccc}

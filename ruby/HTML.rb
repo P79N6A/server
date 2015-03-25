@@ -184,16 +184,27 @@ class Hash
       r = self.R
       H({_: :a, href: uri, c: r.fragment || r.basename, class: :id})
     else
-      H({_: :table,
-         class: :html,
-         id: uri.do{|u|u.R.fragment||u.R.uri}||'#',
+      id = if uri
+             R[uri].fragment || uri
+           else
+             '#'
+           end
+      H({_: :table, class: :html, id: id,
          c: map{|k,v|
            {_: :tr, property: k,
             c: case k
                when R::Type
                  types = v.justArray
                  unless types.size==1 && types[0].uri==R::Resource
-                   {_: :td, class: :val, colspan: 2, c: ['a ', types.intersperse(', ').map(&:html)]}
+                   {_: :td, class: :val, colspan: 2,
+                    c: ['a ', types.intersperse(', ').map(&:html),
+                        types.map{|t|
+                          R::Containers[t.uri].do{|c|
+                            n = c.R.fragment
+                            [' ',
+                             {_: :a, href: id+'?new', class: :new,
+                              c: ['+',n],
+                              title: "post a #{n} to #{id.R.basename}"}]}}]}
                  end
                when R::Content
                  {_: :td, class: :val, colspan: 2, c: v}
