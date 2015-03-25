@@ -17,6 +17,8 @@ class R
         content.hrefs
       end}}
 
+  ViewGroup[SIOCt+'Wiki'] = ViewGroup[Resource]
+
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
     [H.css('/css/wiki'),
      g.map{|u,r|
