@@ -64,7 +64,7 @@ class R
           }]}, "\n"]}
 
   TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq.-([Label])
     sort = (e.q['sort']||'uri').expand
     order = e.q.has_key?('reverse') ? :reverse : :id
     ["\n",

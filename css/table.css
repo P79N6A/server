@@ -25,7 +25,7 @@ table.tab tr.doc td:last-child {border-radius:0 .3em .3em 0}
 /* type */
 table.tab tr td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {color: #333}
 /* URI */
-table.tab td[property='uri'] {text-align:right}
+table.tab td[property='uri'] {text-align:right;white-space: nowrap}
 table.tab td[property='uri'] a {border: .1em dotted #ccc;background-color:#fff;color:#000;font-weight:bold;font-size:1.1em}
 /* size */
 table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right}

@@ -173,7 +173,6 @@ class R
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     bodies = e.q.has_key? 'bodies'
-    graph[e.uri].do{|dir|dir.delete(LDP+'contains')}
     if e.format == 'text/html'
       size = g.keys.size
       if !e.q.has_key?('group') && size > 12
