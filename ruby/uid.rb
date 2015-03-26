@@ -93,8 +93,7 @@ class R
     end}
 
   ViewA[User] = -> u,e {
-    [{_: :h1, c: u[Name]},
-     {_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
+    [{_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
      ViewA[Resource][u,e]]}
 
   ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView

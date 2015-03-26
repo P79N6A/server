@@ -41,7 +41,6 @@ class R < RDF::URI
   Date     = DC   + 'date'
   Title    = DC   + 'title'
   User     = SIOC + 'UserAccount'
-  Name     = SIOC + 'name'
   Post     = SIOC + 'Post'
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'

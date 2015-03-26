@@ -45,7 +45,7 @@ class R
       s = base + t.css('.js-permalink').attr('href') # subject URI
       yield s, Type, R[SIOCt+'MicroblogPost']
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
-      yield s, Name, t.css('.fullname')[0].inner_text
+      yield s, Label, t.css('.fullname')[0].inner_text
       yield s, Atom+"/link/image", R(t.css('.avatar')[0].attr('src'))
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       content = t.css('.tweet-text')[0]

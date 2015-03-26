@@ -57,13 +57,13 @@ class R
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
     list && list.match(/@/) && m['List-Id'].do{|name|
       name = name.decoded
-      group = AddrPath[list]                         # list URI
-      yield group, Type, R[SIOC+'Usergroup']         # list class
-      yield group, SIOC+'name',name.gsub(/[<>&]/,'') # list name
+      group = AddrPath[list]                    # list URI
+      yield group, Type, R[SIOC+'Usergroup']    # list is a Group
+      yield group, Label, name.gsub(/[<>&]/,'') # list name
       yield group, SIOC+'has_container', group.R.parentURI.descend + '?set=first-page'}
 
-    m.from.do{|f|                                    # any authors?
-      f.justArray.map{|f|                            # each author
+    m.from.do{|f|                    # any authors?
+      f.justArray.map{|f|             # each author
         f = f.to_utf8.downcase        # author address
         creator = AddrPath[f]         # author URI
         yield e, Creator, R[creator]  # message -> author
@@ -77,7 +77,7 @@ class R
     m[:from].addrs.head.do{|a|
       author = AddrPath[a.address]         # author URI
       yield author, Type, R[FOAF+'Person']
-      yield author, SIOC+'name', (a.display_name || a.name)
+      yield author, Label, (a.display_name || a.name)
       yield author, SIOC+'has_container', author.R.parentURI.descend + '?set=first-page'
     }
 
