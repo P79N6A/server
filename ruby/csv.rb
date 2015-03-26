@@ -44,6 +44,8 @@ class R
                               :graph
                             when Directory
                               :dir
+                            when Container
+                              :dir
                             when Stat+'File'
                               :file
                             when Image
@@ -54,18 +56,21 @@ class R
                               nil
                             end
                      {_: :a, href: l.uri, c: type ? '' : (t.R.fragment||t.R.basename), class: type}}
+                 when LDP+'contains'
+                   ViewA[Container][l,e]
                  else
                    l[k].html
                  end}, "\n"]
           }]}, "\n"]}
 
-  TabularView = ViewGroup[CSVns+'Row'] = -> g,e {
+  TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     sort = (e.q['sort']||'uri').expand
     order = e.q.has_key?('reverse') ? :reverse : :id
     ["\n",
      H.css('/css/table'), "\n",
      H.css('/css/icons'), "\n",
+     H.css('/css/container'), "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
            c: keys.map{|k|

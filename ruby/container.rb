@@ -2,6 +2,26 @@
 #watch __FILE__
 class R
 
+  def triplrContainer
+    dir = uri.t
+    yield dir, Type, R[Container]
+    yield dir, SIOC+'has_container', parentURI unless path=='/'
+    yield dir, Date, mtime.iso8601
+    contained = c
+    yield dir, Size, contained.size
+    if contained.size < 22 # provide some "lookahead" into container if not too big - GET its URI for more
+      contained.map{|c|
+        if c.directory?
+          child = c.descend # trailing-slash convention
+          yield dir, LDP+'contains', child
+#          yield child.uri, Type, R[Container]
+        else
+          yield dir, LDP+'contains', c.stripDoc
+        end
+      }
+    end
+  end
+
   # POSTable container -> contained types
   Containers = {
     Wiki => SIOCt+'WikiArticle',
@@ -20,61 +40,32 @@ class R
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}} # summarize
 
-  ViewA[Container] = -> r, e, graph = nil {
+  ViewA[Container] = -> r, e {
     re = r.R
     uri = re.uri
     e[:seen] ||= {}
     unless e[:seen][uri]
       e[:seen][uri] = true
-      graph ||= {}
       path = (re.path||'').t
       group = e.q['group']
       sort = (e.q['sort']||'uri').expand
-      color = e[:color][re.path||e.R.path] ||= R.cs
       {class: :container, id: re.fragment,
-       c: [{_: :a, class: :uri, href: uri, style: "background-color: #{color}",c: r[Label] || re.fragment || re.basename },"<br>\n",
-           r[LDP+'contains'].do{|c|
-             sizes = c.map{|r|r[Size] if r.class == Hash}.flatten.compact
-             maxSize = sizes.max
-             sized = !sizes.empty? && maxSize > 1
-             width = maxSize.to_s.size
-             c.sortRDF(e).send((sized||sort==Date) ? :reverse : :id).map{|r|
-               data = r.class == Hash
-               if child = graph[r.uri]
-                 ViewA[Container][child,e,graph]
-               else
-                 [{_: :a, href: r.R.uri, class: :member,
-                   c: [(if data && sized && r[Size]
-                        s = r[Size].justArray[0]
-                        [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
-                        end),
-                       ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
-                       data && (r[Title] || r[Label]) || r.R.abbr[0..64]
-                      ]}, data ? "<br>" : " "]
-               end
-             }} ||
-           ({class: :down, c: {_: :a, href: uri, style: "color: #{color}", c: '&darr;' }} if uri != e.R.uri && r[Size].justArray[0].to_i>0)]}
+       c: r[LDP+'contains'].do{|c|
+         sizes = c.map{|r|r[Size] if r.class == Hash}.flatten.compact
+         maxSize = sizes.max
+         sized = !sizes.empty? && maxSize > 1
+         width = maxSize.to_s.size
+         c.sortRDF(e).send((sized||sort==Date) ? :reverse : :id).map{|r|
+           data = r.class == Hash
+           [{_: :a, href: r.R.uri, class: :member,
+             c: [(if data && sized && r[Size]
+                  s = r[Size].justArray[0]
+                  [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
+                  end),
+                 ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
+                 data && (r[Title] || r[Label]) || r.R.abbr[0..64]
+                ]}, data ? "<br>" : " "]}}}
     end}
-
-  ViewGroup[Container] = -> d,env {
-    path = env.R.path
-    sort = (env.q['sort']||Size).expand
-    s_ = case sort # next sort-predicate
-         when Size
-           'dc:date'
-         when Date
-           'dc:title'
-         when Stat+'mtime'
-           'dc:title'
-         else
-           'stat:size'
-         end
-    env[:color] ||= {path => '#222'}
-    [H.css('/css/container',true),
-     {_: :a, class: :sort, href: env.q.merge({'sort' => s_}).qs, c: '↨' + sort.shorten.split(':')[-1]},
-     {class: :containers,
-      c: d.resources(env).map{|r|
-        [ViewA[Container][r,env,d], {_: :p, class: :space}]}}]}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 

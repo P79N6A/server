@@ -211,8 +211,8 @@ class R
         container = dir.uri.t # container URI
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Title => title.noHTML, Size => post[Size]} # thread resource
-        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # human-readable resource-labels
-        graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment} # container resource
+        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # resource
+        graph[container] ||= {'uri' => container, Type => R[Container]} # container
         graph[container][LDP+'contains'] ||= [] # containment triples
         graph[container][LDP+'contains'].push item }}} # thread to container
 

@@ -2,16 +2,6 @@
 #watch __FILE__
 class R
 
-  def triplrDir
-    dir = uri.t
-    yield dir, Type, R[Directory]
-    yield dir, Date, mtime.iso8601
-    contained = c
-    yield dir, Size, contained.size
-    contained.map{|c|yield dir, LDP+'contains', c.stripDoc} if contained.size <= 32
-    yield dir, SIOC+'has_parent', parentURI unless path=='/'
-  end
-
   def triplrFile
     if symlink?
       realURI.do{|t|
