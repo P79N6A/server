@@ -188,7 +188,7 @@ class R
     group = (e.q['group']||To).expand
     threads = {}
     weight = {}
-
+    graph.delete e.uri
     g.map{|u,p| # statistics + prune pass
       graph.delete u unless bodies # hide full-message
       p[DC+'source'].justArray.map{|s| # hide originating-file
@@ -211,7 +211,7 @@ class R
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Title => title.noHTML, Size => post[Size]} # thread resource
         graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # resource
-        graph[container] ||= {'uri' => container, Type => R[Container]} # container
+        graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment} # container
         graph[container][LDP+'contains'] ||= [] # containment triples
         graph[container][LDP+'contains'].push item }}} # thread to container
 
