@@ -40,6 +40,29 @@ class R
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}} # summarize
 
+  TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq.-([Label])
+    sort = (e.q['sort']||'uri').expand
+    order = e.q.has_key?('reverse') ? :reverse : :id
+    ["\n",
+     H.css('/css/table'), "\n",
+     H.css('/css/icons'), "\n",
+     H.css('/css/container'), "\n",
+     {_: :table, :class => :tab,
+      c: [{_: :tr,
+           c: keys.map{|k|
+             this = sort == k
+             q = e.q.merge({'sort' => k.shorten})
+             if order == :reverse
+               q.delete 'reverse'
+             else
+               q['reverse'] = ''
+             end
+             [{_: :th, property: k, class: this ? :this : :that,
+               c: {_: :a, rel: :nofollow, href: q.qs, c: k.R.abbr}}, "\n"]}}, "\n",
+          g.resources(e).send(order).map{|row|
+            TableRow[row,e,sort,keys]}]}, "\n"]}
+
   ViewA[Container] = -> r, e {
     re = r.R
     uri = re.uri
@@ -66,6 +89,48 @@ class R
                  data && (r[Title] || r[Label]) || r.R.abbr[0..64]
                 ]}, data ? "<br>" : " "]}}}
     end}
+
+  TableRow = -> l,e,sort,keys {
+    [{_: :tr, about: l.uri, class: l.uri == e.uri ? :doc : '',
+      c: ["\n",
+          keys.map{|k|
+            this = sort == k
+            [{_: :td, property: k, class: this ? :this : :that,
+              c: case k
+                 when 'uri'
+                   l.R.do{|r|
+                     {_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}}
+                 when Type
+                   l[Type].justArray.map{|t|
+                     type = case t.uri
+                            when SIOC+'Thread'
+                              :thread
+                            when SIOC+'Usergroup'
+                              :group
+                            when FOAF+'Person'
+                              :person
+                            when GraphDoc
+                              :graph
+                            when Directory
+                              :dir
+                            when Container
+                              :dir
+                            when Stat+'File'
+                              :file
+                            when Image
+                              :img
+                            when '#editable'
+                              :scissors
+                            else
+                              nil
+                            end
+                     {_: :a, href: l.uri, c: type ? '' : (t.R.fragment||t.R.basename), class: type}}
+                 when LDP+'contains'
+                   ViewA[Container][l,e]
+                 else
+                   l[k].html
+                 end}, "\n"]
+          }]}, "\n"]}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 

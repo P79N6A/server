@@ -123,7 +123,6 @@ names
 acl
 chat
 container
-csv
 DELETE
 edit
 forum
