@@ -41,7 +41,8 @@ class R
     groups.map{|fn,gr|fn[g,gr,e]}} # summarize
 
   TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq.-([Label])
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label]
+    keys = keys - [SIOC+'has_container'] if e.R.path == '/'
     sort = (e.q['sort']||'uri').expand
     order = e.q.has_key?('reverse') ? :reverse : :id
     ["\n",
