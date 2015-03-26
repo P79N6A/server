@@ -188,7 +188,6 @@ class R
     group = (e.q['group']||To).expand
     threads = {}
     weight = {}
-    graph.delete e.uri
     g.map{|u,p| # statistics + prune pass
       graph.delete u unless bodies # hide full-message
       p[DC+'source'].justArray.map{|s| # hide originating-file
