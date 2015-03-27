@@ -92,11 +92,10 @@ class R
     end}
 
   TableRow = -> l,e,sort,keys {
-    [{_: :tr, about: l.uri, class: l.uri == e.uri ? :doc : '',
+    [{_: :tr, about: l.uri,
       c: ["\n",
           keys.map{|k|
-            this = sort == k
-            [{_: :td, property: k, class: this ? :this : :that,
+            [{_: :td, property: k,
               c: case k
                  when 'uri'
                    l.R.do{|r|
