@@ -4,18 +4,18 @@
     src: url('/css/misc/icons.woff') format('woff');
     src: url('/css/misc/icons.ttf')  format('truetype');
 }
-a.up, a[rel=next], a[rel=prev]{max-width: 46%;font-size: 1.5em; border-radius: .18em; text-decoration: none; background-color: #d8d8d8; color: #fff;margin-right:.1em;margin-bottom:.1em;font-family: sans-serif}
-a.up {margin:.5em;padding-left:.2em;padding-right:.2em}
-a.up:hover, a[rel=next]:hover, a[rel=prev]:hover {background-color: #000;color:#fff}
+a[rel=next], a[rel=prev]{max-width: 46%;font-size: 1.5em; border-radius: .18em; text-decoration: none; background-color: #d8d8d8; color: #fff;margin-right:.1em;margin-bottom:.1em;font-family: sans-serif}
+a[rel=next]:hover, a[rel=prev]:hover {background-color:cyan}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
 a.identify, a.user {text-decoration:none;}
+a.identify {color: #ccc;margin-left:.12em}
 a.identify:before {
     content:"\f235";
     font-family: icons;
     font-size: 1.3em;
-    color:#bbb;
 }
+a.identify:hover {color: cyan}
 a.user:before {
     content:"\f234";
     font-family: icons;
