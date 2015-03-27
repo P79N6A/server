@@ -95,8 +95,7 @@ class R
            {_: :input, type: :submit, value: 'write'}].cr}}
 
   def editLink env
-    doc = env.R
-    doc.join(self).R.docroot + '?edit&fragment=' + fragName
+    (env.R.join stripFrag) + '?edit' + (fragment ? ('&fragment=' + fragment) : '')
   end
 
 end

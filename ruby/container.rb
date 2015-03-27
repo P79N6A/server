@@ -128,6 +128,8 @@ class R
                      {_: :a, href: l.uri, c: type ? '' : (t.R.fragment||t.R.basename), class: type}}
                  when LDP+'contains'
                    ViewA[Container][l,e]
+                 when WikiText
+                   Render[WikiText][l[k]]
                  else
                    l[k].html
                  end}, "\n"]

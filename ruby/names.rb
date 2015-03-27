@@ -28,7 +28,6 @@ class R
   def hierPart; path || '/' end
   def queryPart; query ? '?' + query : '' end
   def fragPart; fragment ? '#' + fragment : '' end
-  def fragName; fragment ? fragment : '' end
   def pathPart; hierPart + queryPart + fragPart end
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
