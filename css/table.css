@@ -14,4 +14,4 @@ table.tab th.that a:hover {background-color: cyan;color:#fff}
 /* columns */
 table.tab td[property='uri'] a {font-weight:bold;font-size:1.1em;float:right}
 table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right}
-table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap;font-size:.88em}
+table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}

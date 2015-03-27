@@ -9,7 +9,7 @@ class R
     yield dir, Date, mtime.iso8601
     contained = c
     yield dir, Size, contained.size
-    if contained.size < 22 # provide some "lookahead" into container if not too big - GET its URI for more
+    if contained.size < 22 # provide some "lookahead" on container children if small - GET URI for full
       contained.map{|c|
         if c.directory?
           child = c.descend # trailing-slash convention
@@ -91,6 +91,18 @@ class R
                 ]}, data ? "<br>" : " "]}}}
     end}
 
+  Icons = {
+    Container => :dir,
+    Directory => :dir,
+    FOAF+'Person' => :person,
+    GraphDoc => :graph,
+    Image => :img,
+    SIOC+'Thread' => :thread,
+    SIOC+'Usergroup' => :group,
+    Stat+'File' => :file,
+    '#editable' => :scissors,
+  }
+
   TableRow = -> l,e,sort,keys {
     [{_: :tr, about: l.uri,
       c: ["\n",
@@ -102,29 +114,8 @@ class R
                      {_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}}
                  when Type
                    l[Type].justArray.map{|t|
-                     type = case t.uri
-                            when SIOC+'Thread'
-                              :thread
-                            when SIOC+'Usergroup'
-                              :group
-                            when FOAF+'Person'
-                              :person
-                            when GraphDoc
-                              :graph
-                            when Directory
-                              :dir
-                            when Container
-                              :dir
-                            when Stat+'File'
-                              :file
-                            when Image
-                              :img
-                            when '#editable'
-                              :scissors
-                            else
-                              nil
-                            end
-                     {_: :a, href: l.uri, c: type ? '' : (t.R.fragment||t.R.basename), class: type}}
+                     icon = Icons[t.uri]
+                     {_: :a, href: l.uri, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
                    ViewA[Container][l,e]
                  when WikiText
