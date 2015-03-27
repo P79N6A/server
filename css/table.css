@@ -1,14 +1,14 @@
 table.tab {border-spacing:0;margin-top:.4em;font-family: sans-serif}
 table.tab td {vertical-align: top}
-table.tab a {text-decoration:none;padding:.1em;color: #000;background-color:#fff}
+table.tab a {text-decoration: none;font-weight:bold}
+table.tab tr.black a {color:#000;background-color:#fff}
+table.tab tr.white a {color:#fff;background-color:#000}
 
 /* header */
-table.tab th a {text-decoration: none}
-table.tab th, table.tab a {border-radius:.2em}
+table.tab th {padding: .2em}
 table.tab th.this a {background-color: #4a00ff;color: #fff;}
 table.tab th.that a:hover {background-color: cyan;color:#fff}
 
 /* columns */
-table.tab td[property='uri'] a {font-weight:bold;font-size:1.1em;float:right}
 table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}

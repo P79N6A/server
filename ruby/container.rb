@@ -47,7 +47,7 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id
     sizes = g.values.map{|r|r[Size]}.flatten.compact
     e[:max] = size = sizes.max
-    e[:scale] = 127.0 / (size && size > 0 && size || 127).to_f
+    e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
     [H.css('/css/table',true), H.css('/css/icons',true), H.css('/css/container',true), "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
@@ -99,8 +99,10 @@ class R
   }
 
   TableRow = -> l,e,sort,direction,keys {
-    c = l[Size].justArray[0].do{|s| '%02x' % (128 + ((s > 0 && s || e[:max]) * e[:scale]))} || 'ff'
-    [{_: :tr, about: l.uri, style: "background-color: ##{c}#{c}#{c}",
+    mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
+    c = '%02x' % (255 - mag)
+    color = mag > 127 ? :white : :black
+    [{_: :tr, about: l.uri, class: color, style: "color:#{color};background-color: ##{c*3}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
