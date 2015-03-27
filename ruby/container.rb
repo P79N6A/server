@@ -62,9 +62,9 @@ class R
              [{_: :th, property: k, class: this ? :this : :that,
                c: {_: :a, rel: :nofollow, href: q.qs, c: k.R.abbr}}, "\n"]}}, "\n",
           g.resources(e).send(order).map{|row|
-            TableRow[row,e,sort,keys]}]}, "\n"]}
+            TableRow[row,e,sort,order,keys]}]}, "\n"]}
 
-  ViewA[Container] = -> r, e {
+  ViewA[Container] = -> r, e, sort, direction {
     re = r.R
     uri = re.uri
     e[:seen] ||= {}
@@ -72,14 +72,13 @@ class R
       e[:seen][uri] = true
       path = (re.path||'').t
       group = e.q['group']
-      sort = (e.q['sort']||'uri').expand
       {class: :container, id: re.fragment,
        c: r[LDP+'contains'].do{|c|
          sizes = c.map{|r|r[Size] if r.class == Hash}.flatten.compact
          maxSize = sizes.max
          sized = !sizes.empty? && maxSize > 1
          width = maxSize.to_s.size
-         c.sortRDF(e).send((sized||sort==Date) ? :reverse : :id).map{|r|
+         c.sortRDF(e).send(direction).map{|r|
            data = r.class == Hash
            [{_: :a, href: r.R.uri, class: :member,
              c: [(if data && sized && r[Size]
@@ -103,7 +102,7 @@ class R
     '#editable' => :scissors,
   }
 
-  TableRow = -> l,e,sort,keys {
+  TableRow = -> l,e,sort,direction,keys {
     [{_: :tr, about: l.uri,
       c: ["\n",
           keys.map{|k|
@@ -117,7 +116,7 @@ class R
                      icon = Icons[t.uri]
                      {_: :a, href: l.uri, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
-                   ViewA[Container][l,e]
+                   ViewA[Container][l,e,sort,direction]
                  when WikiText
                    Render[WikiText][l[k]]
                  else
