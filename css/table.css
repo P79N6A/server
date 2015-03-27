@@ -1,4 +1,4 @@
-table.tab {border-spacing:0;margin-top:.4em;font-family: sans-serif}
+table.tab {border-spacing:0}
 table.tab td {vertical-align: top}
 table.tab a {text-decoration: none;font-weight:bold}
 table.tab tr.black a {color:#000;background-color:#fff}
@@ -10,5 +10,7 @@ table.tab th.this a {background-color: #4a00ff;color: #fff;}
 table.tab th.that a:hover {background-color: cyan;color:#fff}
 
 /* columns */
+table.tab td[property='uri'] {background-color: #fff;text-align:right;white-space:nowrap}
+table.tab td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {background-color:#fff}
 table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}

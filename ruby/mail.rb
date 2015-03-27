@@ -185,9 +185,12 @@ class R
       end
     end
     e.q['sort'] ||= Size
+    graph[e.uri].delete Date
+    graph[e.uri].delete Size
     group = (e.q['group']||To).expand
     threads = {}
     weight = {}
+
     g.map{|u,p| # statistics + prune pass
       graph.delete u unless bodies # hide full-message
       p[DC+'source'].justArray.map{|s| # hide originating-file
@@ -212,14 +215,14 @@ class R
                 Title => title.noHTML, Size => post[Size]} # thread resource
         graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # resource
 
-        unless graph[container]
+        unless graph[container] # create container
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], Label => a.R.fragment}
         end
         graph[container][LDP+'contains'] ||= [] # containment triples
         graph[container][LDP+'contains'].push item }} # thread to container
 
-    clusters.map{|container|
+    clusters.map{|container| # find cluster sizes
       graph[container][Size] = graph[container][LDP+'contains'].size
     }
   }

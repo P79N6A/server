@@ -9,5 +9,5 @@ a.sort:hover {color: #000}
 .container .down {background-color: #f7f7f7;width: 100%; text-align:center; border-radius: 0 0 .5em .5em}
 .container a.member {background-color: #fff;color: #000; padding: 0 .2em 0 .2em}
 .container a.member:hover {background-color: #000;color: #fff}
-.container a.member:visited {color: #fff;background-color: #000}
+.container a.member:visited {color: cyan;background-color: #fff}
 p.space {float: left}
