@@ -1,7 +1,6 @@
 table.tab {border-spacing:0;margin-top:.4em;font-family: sans-serif}
 table.tab td {vertical-align: top}
 table.tab a {text-decoration:none;padding:.1em;color: #000;background-color:#fff}
-table.tab tr:nth-child(even) {background-color: #f7f7f7;color:#000}
 
 /* header */
 table.tab th a {text-decoration: none}

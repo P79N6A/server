@@ -45,10 +45,10 @@ class R
     keys = keys - [SIOC+'has_container'] if e.R.path == '/'
     sort = (e.q['sort']||'uri').expand
     direction = e.q.has_key?('reverse') ? :reverse : :id
-    ["\n",
-     H.css('/css/table'), "\n",
-     H.css('/css/icons'), "\n",
-     H.css('/css/container'), "\n",
+    sizes = g.values.map{|r|r[Size]}.flatten.compact
+    e[:max] = size = sizes.max
+    e[:scale] = 127.0 / (size && size > 0 && size || 127).to_f
+    [H.css('/css/table',true), H.css('/css/icons',true), H.css('/css/container',true), "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
            c: keys.map{|k|
@@ -67,28 +67,24 @@ class R
   ViewA[Container] = -> r, e, sort, direction {
     re = r.R
     uri = re.uri
-    e[:seen] ||= {}
-    unless e[:seen][uri]
-      e[:seen][uri] = true
-      path = (re.path||'').t
-      group = e.q['group']
-      {class: :container, id: re.fragment,
-       c: r[LDP+'contains'].do{|c|
-         sizes = c.map{|r|r[Size] if r.class == Hash}.flatten.compact
-         maxSize = sizes.max
-         sized = !sizes.empty? && maxSize > 1
-         width = maxSize.to_s.size
-         c.sortRDF(e).send(direction).map{|r|
-           data = r.class == Hash
-           [{_: :a, href: r.R.uri, class: :member,
-             c: [(if data && sized && r[Size]
-                  s = r[Size].justArray[0]
-                  [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
-                  end),
-                 ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
-                 data && (r[Title] || r[Label]) || r.R.abbr[0..64]
-                ]}, data ? "<br>" : " "]}}}
-    end}
+    path = (re.path||'').t
+    group = e.q['group']
+    {class: :container, id: re.fragment,
+     c: r[LDP+'contains'].do{|c|
+       sizes = c.map{|r|r[Size] if r.class == Hash}.flatten.compact
+       maxSize = sizes.max
+       sized = !sizes.empty? && maxSize > 1
+       width = maxSize.to_s.size
+       c.sortRDF(e).send(direction).map{|r|
+         data = r.class == Hash
+         [{_: :a, href: r.R.uri, class: :member,
+           c: [(if data && sized && r[Size]
+                s = r[Size].justArray[0]
+                [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
+                end),
+               ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
+               data && (r[Title] || r[Label]) || r.R.abbr[0..64]
+              ]}, data ? "<br>" : " "]}}}}
 
   Icons = {
     Container => :dir,
@@ -103,7 +99,8 @@ class R
   }
 
   TableRow = -> l,e,sort,direction,keys {
-    [{_: :tr, about: l.uri,
+    c = l[Size].justArray[0].do{|s| '%02x' % (128 + ((s > 0 && s || e[:max]) * e[:scale]))} || 'ff'
+    [{_: :tr, about: l.uri, style: "background-color: ##{c}#{c}#{c}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
