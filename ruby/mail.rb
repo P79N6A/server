@@ -173,10 +173,11 @@ class R
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     bodies = e.q.has_key? 'bodies'
-    if e.format == 'text/html'
+
+    if e.format == 'text/html' # shortcut to configurations
       size = g.keys.size
       if !e.q.has_key?('group') && size > 12
-        listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date'}).qs
+        listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
         graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
       end
       if !bodies && size < 24
@@ -184,6 +185,7 @@ class R
         graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'}
       end
     end
+
     e.q['sort'] ||= Size
     graph[e.uri].delete Date
     graph[e.uri].delete Size
