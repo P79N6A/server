@@ -18,11 +18,8 @@ class R
       end}}
 
   ViewGroup[SIOCt+'Wiki'] = ViewGroup[Resource]
-
-  ViewGroup[SIOCt+'WikiArticle'] = -> g,e {
-    [H.css('/css/wiki'),
-     g.map{|u,r|
-       ViewA[SIOCt+'WikiArticle'][r,e]}]}
+  ViewGroup[SIOCt+'WikiArticle'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticle'][r,e]}}
+  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     doc = r.R.docroot.uri
@@ -35,10 +32,6 @@ class R
         title: 'add section'}] if e.editable),
      '<br>',
      Render[WikiText][r[WikiText]]]}
-
-  ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {
-    g.map{|u,r|
-      ViewA[SIOCt+'WikiArticleSection'][r,e]}}
 
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
