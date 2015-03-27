@@ -203,6 +203,7 @@ class R
         weight[a] += 1   # count recipient-occurrence
         graph.delete a}} # hide recipient-description
 
+    clusters = []
     threads.map{|title,post| # cluster pass
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir # address
@@ -210,8 +211,17 @@ class R
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Title => title.noHTML, Size => post[Size]} # thread resource
         graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # resource
-        graph[container] ||= {'uri' => container, Type => R[Container], Label => a.R.fragment} # container
+
+        unless graph[container]
+          clusters.push container
+          graph[container] = {'uri' => container, Type => R[Container], Label => a.R.fragment}
+        end
         graph[container][LDP+'contains'] ||= [] # containment triples
-        graph[container][LDP+'contains'].push item }}} # thread to container
+        graph[container][LDP+'contains'].push item }} # thread to container
+
+    clusters.map{|container|
+      graph[container][Size] = graph[container][LDP+'contains'].size
+    }
+  }
 
 end
