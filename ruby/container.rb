@@ -44,7 +44,7 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label]
     keys = keys - [SIOC+'has_container'] if e.R.path == '/'
     sort = (e.q['sort']||'uri').expand
-    order = e.q.has_key?('reverse') ? :reverse : :id
+    direction = e.q.has_key?('reverse') ? :reverse : :id
     ["\n",
      H.css('/css/table'), "\n",
      H.css('/css/icons'), "\n",
@@ -54,15 +54,15 @@ class R
            c: keys.map{|k|
              this = sort == k
              q = e.q.merge({'sort' => k.shorten})
-             if order == :reverse
+             if direction == :reverse
                q.delete 'reverse'
              else
                q['reverse'] = ''
              end
              [{_: :th, property: k, class: this ? :this : :that,
                c: {_: :a, rel: :nofollow, href: q.qs, c: k.R.abbr}}, "\n"]}}, "\n",
-          g.resources(e).send(order).map{|row|
-            TableRow[row,e,sort,order,keys]}]}, "\n"]}
+          g.resources(e).send(direction).map{|row|
+            TableRow[row,e,sort,direction,keys]}]}, "\n"]}
 
   ViewA[Container] = -> r, e, sort, direction {
     re = r.R
