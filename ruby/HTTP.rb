@@ -64,18 +64,33 @@ class R
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
+  GET['/ERROR'] = -> d,e {0/0}
+  GET['/ERROR/ID'] = -> d,e {
+    uri = d.path
+    graph = {uri => Errors[uri]}
+    [200,{'Content-Type' => e.format},
+     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+
   E500 = -> x,e {
-    error = {'uri' => e.uri,
-             Title => [x.class, x.message.noHTML].join(' '),
-             Content => '<pre>' + x.backtrace.join("\n").noHTML + '<pre>'}
-    graph = {e.uri => error}
+    uri = e.uri
+    errorURI = '/ERROR/ID/' + uri.h
+    error = {
+      'uri' => errorURI, '#sourceURI' => R[uri],
+      Title => [x.class, x.message.noHTML].join(' '),
+      Content => '<pre><h2>backtrace</h2>' +
+                 x.backtrace.join("\n").noHTML +
+                 '<h2>ENVIRONMENT</h2>' +
+                 e.html +
+                 '<pre>'}
+    Errors[errorURI] = error
+
     Stats[:status][500] ||= 0
     Stats[:status][500]  += 1
     Stats[:error][error]||= 0
     Stats[:error][error] += 1
 
     $stderr.puts [500, error[Title]]
-
+    graph = {errorURI => error}
     [500,{'Content-Type' => e.format},
      [Render[e.format].do{|p|p[graph,e]} ||
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
@@ -137,6 +152,7 @@ class R
                   {'uri' => uri, Title => title, Stat+'size' => count }}
                  }}
 
+    # enumerate schemes
     https =  r.scheme[-1]=='s'
     g['#scheme'] = {'uri' => '#scheme', Type => R[Container],
                     LDP+'contains' => [
@@ -150,12 +166,14 @@ class R
                       }
                     ]}
 
+    # disk space
     g['#storage'] = {
          Type => R[Resource],
       Content => ['<pre>',
                   `df -TBM -x tmpfs -x devtmpfs`,
                   '</pre>']}
 
+    # render
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 

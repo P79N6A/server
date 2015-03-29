@@ -109,7 +109,7 @@ class R < RDF::URI
   Watch = {}
   GET = {}
   POST = {}
-
+  Errors = {}
   Stats = {error: {},
            format: {},
            host: {},
