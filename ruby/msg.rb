@@ -100,7 +100,10 @@ class R
                   r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].do{|d|
                     {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡', title: 'goto thread'} unless e[:thread]}]},
-             {class: :body, c: r[Content]},
+             r[Content].do{|c|{class: :body, c: c}},
+             r[WikiText].do{|c|
+               puts "SDFSDFSDF",c
+               {class: :body, c: Render[WikiText][c]}},
              [DC+'hasFormat', SIOC+'attachment'].map{|p|
                r[p].justArray.map{|o|
                  {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}},

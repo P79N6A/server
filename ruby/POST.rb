@@ -52,12 +52,12 @@ class R
           end
       resource[p] = o if o && p.match(HTTP_URI)
     }
+    resource[WikiText].do{|c| resource[WikiText] = {Content => c, 'datatype' => form['datatype']}}
   end
 
   def formPOST
     data = Rack::Request.new(@r).POST  # form
     type = data.delete(Type)||Resource # RDF-resource type
-    datatype = data.delete 'datatype'  # content-literal datatype
     resource = {Type => type.R.expand} # resource
     targetResource = graph[uri] || {}  # target
     R.formResource data, resource      # cast form to RDF graph
@@ -87,13 +87,10 @@ class R
       located.fragmentPath.a('.e').delete # obsoleted-version URI
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
-    else # updated resource
+    else # update resource
       resource.update({ 'uri' => subject,         # URI
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
-
-      resource[WikiText].do{|c| # wrap wikitext w/ datatype-tag
-        resource[WikiText] = {Content => c, 'datatype' => datatype}}
       located.writeResource resource # write
       [303,{'Location' => located.uri},[]] # return
     end

@@ -13,6 +13,7 @@ class R
       Type => R[SIOCt+'BoardPost'],
       Title => title,
       Content => (thread.delete Content),
+      WikiText => (thread.delete WikiText),
       SIOC+'has_discussion' => thread.R,
       SIOC+'has_container' => thread.R,
       SIOC+'reply_to' => R[postURI + '?new']}
