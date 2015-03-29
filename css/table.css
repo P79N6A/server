@@ -13,5 +13,5 @@ table.tab th.that a:hover {background-color: cyan;color:#fff}
 table.tab td[property='uri'] {background-color: #fff;text-align:right;white-space:nowrap}
 table.tab td[property='uri'] a,table.tab td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {color:#000;background-color:#fff;font-weight:bold}
 table.tab td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {background-color:#fff}
-table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right;font-weight:bold}
+table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right;font-weight:bold;padding:.15em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
