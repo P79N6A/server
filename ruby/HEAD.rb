@@ -1,5 +1,6 @@
 #watch __FILE__
 class R
+  GET['/ERROR'] = -> d,e {0/0}
 
   def HEAD
     self.GET.

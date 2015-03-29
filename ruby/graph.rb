@@ -39,7 +39,7 @@ class R
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cached transcode
       unless doc.e && doc.m > m                           # cache valid
         graph = {}                                        # update cache
-        fromStream graph, :triplrFile if file?
+        fromStream graph, :triplrFile if self == stripDoc && file?
         fromStream graph, :triplrMIME
         doc.w graph, true
       end
