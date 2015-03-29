@@ -20,17 +20,24 @@ class R
   }
 
   GET['/feed'] = -> d,e {
-    if d.justPath.docroot.uri == '/feed'
+    path = d.justPath.stripDoc.uri.sub /^\/feed\/?/,'' # eat host, ext, and /feed
+    if path.empty? # serve feed
       e['HTTP_ACCEPT'] = 'application/atom+xml' # fix MIME
       e.q['set'] ||= 'page'; e.q['c'] ||= 15 # 15 posts in desc-date order
       d.dir.child('news').setEnv(e).response # request of news-container
-    else
-      graph = RDF::Graph.new
-      feed = e.scheme+':'+e.R.path.sub(/^\/feed/,'/')
-      graph.load feed, :format => :feed
-      [200, e[:Response].update({'Content-Type' => e.format}), [graph.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]
-    end
-  }
+    else # transcode feed
+      if path.split('/').size > 1
+        begin
+          graph = RDF::Graph.new
+          graph.load (e.scheme + '://' + path), :format => :feed
+          [200, e[:Response].update({'Content-Type' => e.format}), [graph.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]
+        rescue
+          E404[d,e]
+        end
+      else
+        E404[d,e]
+      end
+    end}
 
   def getFeed h='localhost'
     store :format => :feed, :hook => FeedArchiverRDF, :hostname => h
