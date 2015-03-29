@@ -225,8 +225,7 @@ class R
         graph[container][LDP+'contains'].push item }} # thread to container
 
     clusters.map{|container| # find cluster sizes
-      graph[container][Size] = graph[container][LDP+'contains'].size
-    }
-  }
+      graph[container][Size] = graph[container][LDP+'contains'].
+                               justArray.inject(0){|sum,val| sum += (val[Size]||0)}}}
 
 end
