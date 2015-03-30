@@ -78,10 +78,7 @@ class R
       'uri' => errorURI, '#sourceURI' => R[uri],
       Title => [x.class, x.message.noHTML].join(' '),
       Content => '<pre><h2>backtrace</h2>' +
-                 x.backtrace.join("\n").noHTML +
-                 '<h2>ENVIRONMENT</h2>' +
-                 e.html +
-                 '<pre>'}
+                 x.backtrace.join("\n").noHTML + '</pre>'}
     Errors[errorURI] = error
 
     Stats[:status][500] ||= 0
@@ -124,7 +121,7 @@ class R
 
   GET['/stat'] = -> e,r {
     g = {}
-    r.q['sort'] ||= 'stat:size'
+#    r.q['sort'] ||= 'stat:size'
 
     Stats.map{|sym, table|
       group = e.uri + '#' + sym.to_s
@@ -162,11 +159,9 @@ class R
                       },
                       {'uri' => (https ? 'http' : 'https') + "://" + r.host + '/stat',
                        Title => https ? 'http' : 'https',
-                       Size => 0
-                      }
-                    ]}
+                       Size => 0 }]}
 
-    # disk space
+    # free space
     g['#storage'] = {
          Type => R[Resource],
       Content => ['<pre>',
@@ -177,25 +172,28 @@ class R
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
-  ENVRDF = -> e {
+  ENV2RDF = -> env, graph {
+    # subject resource
+    subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[Resource]}
 
-  }
+    # headers
+           env.delete :Links
+    resp = env.delete :Response
+    [env,resp].map{|fields|
+      fields.map{|k,v|
+        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.to_s.hrefs}}
 
-  E404 = -> e,r,g=nil {
-    g ||= {}                                               # graph
-    s = g[e.uri] ||= {'uri' => e.uri, Type => R[Resource]} # subject resource
-    if r.format=='text/html'
-      s['#query-string'] = Hash[r.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}] # parsed qs
-      s['#accept'] = r.accept
-      %w{CHARSET LANGUAGE ENCODING}.map{|a| s['#accept-'+a.downcase] = r.accept_('_'+a)}
-    else
-      g.delete ''
-      r.delete :Links
-      r.delete :Response
-    end
-    r.map{|k,v|s[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}        # headers -> graph
-    [404,{'Content-Type' => r.format},[Render[r.format].do{|p|p[g,r]} ||
-                                       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :prefixes => Prefixes)]]}
+    # derived fields
+    subj['#query-string'] = Hash[env.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
+    subj['#accept'] = env.accept
+    %w{CHARSET LANGUAGE ENCODING}.map{|a|
+      subj['#accept-'+a.downcase] = env.accept_('_'+a)}}
+
+  E404 = -> e, env, graph=nil { graph ||= {}
+    ENV2RDF[env,graph]
+    [404, {'Content-Type' => env.format},
+     [Render[env.format].do{|fn|fn[graph,env]} ||
+      graph.toRDF.dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
 
   def q; @r.q end
 

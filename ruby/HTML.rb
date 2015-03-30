@@ -134,7 +134,8 @@ class R
                c: [{_: :meta, charset: 'utf-8'},
                    {_: :link, rel: :icon, href: '/.icon.png'},
                    e[:title].do{|t|{_: :title, c: t}},
-                   e[:Links].map{|type,uri| {_: :link, rel: type, href: uri}},
+                   e[:Links].do{|links|
+                     links.map{|type,uri| {_: :link, rel: type, href: uri}}},
                   ]},
              {_: :body, c: view[d,e]}]}]}
 
