@@ -2,8 +2,9 @@
 class R
 
   def PUT
+    return [400,{},[]] unless @r['CONTENT_TYPE']
+    return [403,{},[]] unless allowWrite
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
-    return [403,{},[]] if !allowWrite
     return [406,{},[]] unless %w{gif html jpg json jsonld png n3 ttl}.member? ext
 
     # container for states

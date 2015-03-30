@@ -187,8 +187,9 @@ class R
     end
 
     e.q['sort'] ||= Size
-    graph[e.uri].delete Date
-    graph[e.uri].delete Size
+    graph[e.uri].do{|r|
+      r.delete Date
+      r.delete Size}
     group = (e.q['group']||To).expand
     threads = {}
     weight = {}

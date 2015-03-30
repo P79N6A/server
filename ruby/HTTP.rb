@@ -177,6 +177,10 @@ class R
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
+  ENVRDF = -> e {
+
+  }
+
   E404 = -> e,r,g=nil {
     g ||= {}                                               # graph
     s = g[e.uri] ||= {'uri' => e.uri, Type => R[Resource]} # subject resource
