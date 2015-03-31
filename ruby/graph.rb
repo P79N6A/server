@@ -134,7 +134,7 @@ class Hash
 
   def triples &f
     map{|s,r|
-      r.map{|p,o|
+      (r||{}).map{|p,o|
         o.justArray.map{|o|yield s,p,o} unless p=='uri'}}
   end
 
@@ -146,12 +146,16 @@ class Hash
     values.sortRDF env
   end
 
-  def toRDF # graph (Hash) -> graph (RDF)
+  def toRDF base=nil
     graph = RDF::Graph.new
     triples{|s,p,o|
-      s = RDF::URI s
+      s = if base
+            base.join s
+          else
+            RDF::URI s
+          end
       p = RDF::URI p
-      o = if [R,Hash].member? o.class
+      o = if [R,Hash].member?(o.class) && o.uri
             RDF::URI o.uri
           else
             l = RDF::Literal o

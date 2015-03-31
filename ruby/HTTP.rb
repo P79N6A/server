@@ -65,17 +65,18 @@ class R
   end
 
 #  GET['/ERROR'] = -> d,e {0/0}
+
   GET['/ERROR/ID'] = -> d,e {
     uri = d.path
     graph = {uri => Errors[uri]}
     [200,{'Content-Type' => e.format},
-     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
-  E404 = -> resource, env, graph=nil {
+  E404 = -> base, env, graph=nil {
     ENV2RDF[env, graph||={}]
     [404,{'Content-Type' => env.format},
      [Render[env.format].do{|fn|fn[graph,env]} ||
-      graph.toRDF.dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
+      graph.toRDF(base).dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
 
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
@@ -165,7 +166,7 @@ class R
 
     # render
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
-      g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
+      g.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
   ENV2RDF = -> env, graph { # environment -> graph
     # request resource
@@ -179,10 +180,10 @@ class R
         subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.to_s.hrefs}}
 
     # derived fields
-    subj['#query-string'] = Hash[env.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
-    subj['#accept'] = env.accept
+    subj[HTTP+'query-string'] = Hash[env.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
+    subj[HTTP+'accept'] = env.accept
     %w{CHARSET LANGUAGE ENCODING}.map{|a|
-      subj['#accept-'+a.downcase] = env.accept_('_'+a)}}
+      subj[HTTP+'accept-'+a.downcase] = env.accept_('_'+a)}}
 
   def q; @r.q end
 
