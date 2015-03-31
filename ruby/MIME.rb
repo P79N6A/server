@@ -103,6 +103,7 @@ class R
     'tex' => 'text/x-tex',
     'textile' => 'text/textile',
     'tsv' => 'text/tab-separated-values',
+    'ttf' => 'font/truetype',
     'ttl' => 'text/turtle',
     'txt' => 'text/plain',
     'tw' => 'text/tw',
