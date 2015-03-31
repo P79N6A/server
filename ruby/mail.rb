@@ -188,6 +188,7 @@ class R
 
     e.q['sort'] ||= Size
     graph[e.uri].do{|r|
+      r.delete Mtime
       r.delete Date
       r.delete Size}
     group = (e.q['group']||To).expand

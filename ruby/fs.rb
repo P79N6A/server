@@ -5,13 +5,17 @@ class R
   def triplrFile
     if symlink?
       realURI.do{|t|
+        mt = t.mtime
         yield t.uri, Type, R[Stat+'File']
-        yield t.uri, Date, t.mtime.iso8601
+        yield t.uri, Date, mt.iso8601
+        yield t.uri, Mtime, mt.to_i
         yield t.uri, Size, t.size
       }
     else
+      mt = mtime
       yield uri, Type, R[Stat+'File']
-      yield uri, Date, mtime.iso8601
+      yield uri, Date, mt.iso8601
+      yield uri, Mtime, mt.to_i
       yield uri, Size, size
     end
   end

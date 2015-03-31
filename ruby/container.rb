@@ -5,8 +5,11 @@ class R
   def triplrContainer
     dir = uri.t
     yield dir, Type, R[Container]
+    yield dir, Type, R[Directory]
     yield dir, SIOC+'has_container', parentURI unless path=='/'
-    yield dir, Date, mtime.iso8601
+    mt = mtime
+    yield dir, Date, mt.iso8601
+    yield dir, Mtime, mt.to_i
     contained = c
     yield dir, Size, contained.size
     if contained.size < 22 # provide some "lookahead" on container children if small - GET URI for full
@@ -14,7 +17,6 @@ class R
         if c.directory?
           child = c.descend # trailing-slash convention
           yield dir, LDP+'contains', child
-#          yield child.uri, Type, R[Container]
         else
           yield dir, LDP+'contains', c.stripDoc
         end
