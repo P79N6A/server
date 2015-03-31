@@ -71,23 +71,28 @@ class R
     [200,{'Content-Type' => e.format},
      [Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
+  E404 = -> resource, env, graph=nil {
+    ENV2RDF[env, graph||={}]
+    [404,{'Content-Type' => env.format},
+     [Render[env.format].do{|fn|fn[graph,env]} ||
+      graph.toRDF.dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
+
   E500 = -> x,e {
-    uri = e.uri
-    errorURI = '/ERROR/ID/' + uri.h
-    error = {
-      'uri' => errorURI, '#sourceURI' => R[uri],
-      Title => [x.class, x.message.noHTML].join(' '),
-      Content => '<pre><h2>backtrace</h2>' +
-                 x.backtrace.join("\n").noHTML + '</pre>'}
+    ENV2RDF[e,graph={}]
+    errorURI = '/ERROR/ID/' + e.uri.h
+    title = [x.class, x.message.noHTML].join ' '
+    bt = '<pre><h2>stack</h2>' + x.backtrace.join("\n").noHTML + '</pre>'
+    error = graph[e.uri]
+    error[Title] = title
+    error[Content] = bt
     Errors[errorURI] = error
 
     Stats[:status][500] ||= 0
     Stats[:status][500]  += 1
-    Stats[:error][error]||= 0
-    Stats[:error][error] += 1
+    Stats[:error][errorURI]||= 0
+    Stats[:error][errorURI] += 1
 
-    $stderr.puts [500, error[Title]]
-    graph = {errorURI => error}
+    $stderr.puts [500, e.uri, title].join ' '
     [500,{'Content-Type' => e.format},
      [Render[e.format].do{|p|p[graph,e]} ||
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
@@ -119,9 +124,8 @@ class R
        {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
     (ViewA[Resource][u,e] unless u.keys.size==1)]}
 
-  GET['/stat'] = -> e,r {
-    g = {}
-#    r.q['sort'] ||= 'stat:size'
+  GET['/stat'] = -> e,r { g = {}
+    r.q['sort'] ||= 'stat:size'
 
     Stats.map{|sym, table|
       group = e.uri + '#' + sym.to_s
@@ -130,7 +134,7 @@ class R
                   LDP+'contains' => table.map{|key, count|
                     uri = case sym
                           when :error
-                            key.uri
+                            key
                           when :host
                             r.scheme + "://" + key + '/'
                           when :format
@@ -140,14 +144,7 @@ class R
                           else
                             e.uri + '#' + rand.to_s.h
                           end
-                  title = case sym
-                          when :error
-                            key[Title]
-                          else
-                            key
-                          end
-                  {'uri' => uri, Title => title, Stat+'size' => count }}
-                 }}
+                  {'uri' => uri, Stat+'size' => count }}}}
 
     # enumerate schemes
     https =  r.scheme[-1]=='s'
@@ -172,14 +169,14 @@ class R
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
-  ENV2RDF = -> env, graph {
+  ENV2RDF = -> env, graph { # environment -> graph
     # subject resource
     subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[Resource]}
 
     # headers
-           env.delete :Links
+   links = env.delete :Links
     resp = env.delete :Response
-    [env,resp].map{|fields|
+    [env,links,resp].compact.map{|fields|
       fields.map{|k,v|
         subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.to_s.hrefs}}
 
@@ -188,12 +185,6 @@ class R
     subj['#accept'] = env.accept
     %w{CHARSET LANGUAGE ENCODING}.map{|a|
       subj['#accept-'+a.downcase] = env.accept_('_'+a)}}
-
-  E404 = -> e, env, graph=nil { graph ||= {}
-    ENV2RDF[env,graph]
-    [404, {'Content-Type' => env.format},
-     [Render[env.format].do{|fn|fn[graph,env]} ||
-      graph.toRDF.dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
 
   def q; @r.q end
 

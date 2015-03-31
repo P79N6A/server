@@ -125,7 +125,7 @@ class R
 
     if !e[:title]
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
-      e[:title] = titles.head if titles.size==1
+      e[:title] = titles.head if titles.size==1 # there can be only one
     end
 
     H ["<!DOCTYPE html>\n",
