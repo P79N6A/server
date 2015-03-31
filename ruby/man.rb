@@ -1,7 +1,10 @@
 #watch __FILE__
 class R
+# man handler
+#  can be mounted in local configuration (local.rb)
+#  R::GET['/man'] = Man
 
-  ManHandler = -> e,r {
+  Man = -> e,r {
     graph = RDF::Graph.new
     uri = R['//'+r.host+r['REQUEST_URI']]
     manPath = '/usr/share/man'
@@ -65,7 +68,7 @@ class R
           `#{pageCmd['utf8',"-t -P -u -P -b"]} > #{txt.sh}`
 
           body = Nokogiri::HTML.parse(page).css('body')[0]
-          
+          body ||= Nokogiri::HTML.parse('<body><body>').css('body')[0]
           # CSS
           body.add_child H H.css('/css/man')
           

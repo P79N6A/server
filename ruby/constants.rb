@@ -77,7 +77,7 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
 
-  Prefix={ # for Hash/JSON (#to_s can make Prefixes (see below) work, check usage before deleting)
+  Prefix={
     # String -> String
     "dc" => DC,
     "foaf" => FOAF,
