@@ -49,15 +49,27 @@ class R
 
   # inode -> graph
   def nodeToGraph graph
-    base = @r.R.join(stripDoc) if @r    # base-URI
-    justRDF(%w{e}).do{|f|               # JSON-format doc
-      (f.r(true)||{}).triples{|s,p,o|         # triple
-        s = base.join(s).to_s if @r     # subject URI
-        if @r && o.class==Hash && o.uri # object URI
-          o['uri'] = base.join(o.uri).to_s
+    if @r
+      base = @r.R.join(stripDoc)
+      baseURI = base.to_s
+      graph[baseURI] ||= {'uri' => baseURI}
+      graph[baseURI][Type] ||= []
+      graph[baseURI][Type].push R[Resource]
+    end
+    justRDF(%w{e}).do{|f| # native JSON-format
+      if base
+#        graph[baseURI][Size] = [f.size]
+#        graph[baseURI][Mtime] = [f.mtime.to_i]
+      end
+      (f.r(true)||{}).triples{|s,p,o|   # triples
+        if base
+          s = base.join(s).to_s     # bind subject-URI
+          if o.class==Hash && o.uri # bind object-URI
+            o['uri'] = base.join(o.uri).to_s
+          end
         end
-        graph[s] ||= {'uri' => s}       # resource
-        graph[s][p] ||= []              # predicate
+        graph[s] ||= {'uri' => s}
+        graph[s][p] ||= []
         graph[s][p].push o unless graph[s][p].member? o
       }}
     graph

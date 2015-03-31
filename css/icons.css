@@ -31,6 +31,11 @@ a.file:before {
     font-family: icons;
     font-size: 1.3em;
     border-width: 0;}
+a.warp:before {
+    content:"\f135";
+    font-family: icons;
+    font-size: 1.3em;
+    border-width: 0;}
 a.img:before {
     content:"\f03e";
     font-family: icons;

@@ -90,7 +90,7 @@ class R
 
   Icons = {
     Container => :dir,
-    Directory => :dir,
+    Directory => :warp,
     FOAF+'Person' => :person,
     GraphDoc => :graph,
     Image => :img,
@@ -115,7 +115,13 @@ class R
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
-                     {_: :a, href: l.uri, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
+                     href = if t.uri == Directory
+                              res = l.R
+                              e.scheme + '://linkeddata.github.io/warp/#/list/' + e.scheme + '/' + res.host + res.path
+                            else
+                              l.uri
+                            end
+                     {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
                    ViewA[Container][l,e,sort,direction]
                  when WikiText
