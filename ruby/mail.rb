@@ -174,7 +174,11 @@ class R
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     bodies = e.q.has_key? 'bodies'
 
-    if e.format == 'text/html' # shortcut to configurations
+    if e.format == 'text/html'
+      graph[e.uri].do{|r|
+        [Mtime,Date,Size,SIOC+'has_container'].
+          map{|p|r.delete p}}
+      # shortcuts to configurations
       size = g.keys.size
       if !e.q.has_key?('group') && size > 12
         listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
@@ -187,10 +191,6 @@ class R
     end
 
     e.q['sort'] ||= Size
-    graph[e.uri].do{|r|
-      r.delete Mtime
-      r.delete Date
-      r.delete Size}
     group = (e.q['group']||To).expand
     threads = {}
     weight = {}
