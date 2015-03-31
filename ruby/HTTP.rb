@@ -64,7 +64,7 @@ class R
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
-  GET['/ERROR'] = -> d,e {0/0}
+#  GET['/ERROR'] = -> d,e {0/0}
   GET['/ERROR/ID'] = -> d,e {
     uri = d.path
     graph = {uri => Errors[uri]}
@@ -80,11 +80,9 @@ class R
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
     errorURI = '/ERROR/ID/' + e.uri.h
-    title = [x.class, x.message.noHTML].join ' '
-    bt = '<pre><h2>stack</h2>' + x.backtrace.join("\n").noHTML + '</pre>'
     error = graph[e.uri]
-    error[Title] = title
-    error[Content] = bt
+    error[Title] = [x.class, x.message.noHTML].join ' '
+    error[Content] = '<pre><h2>stack</h2>' + x.backtrace.join("\n").noHTML + '</pre>'
     Errors[errorURI] = error
 
     Stats[:status][500] ||= 0
@@ -92,7 +90,7 @@ class R
     Stats[:error][errorURI]||= 0
     Stats[:error][errorURI] += 1
 
-    $stderr.puts [500, e.uri, title].join ' '
+    $stderr.puts [500,e.uri,e.R.join(errorURI)].join(' ')
     [500,{'Content-Type' => e.format},
      [Render[e.format].do{|p|p[graph,e]} ||
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
