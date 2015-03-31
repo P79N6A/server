@@ -144,7 +144,7 @@ class R
                           else
                             e.uri + '#' + rand.to_s.h
                           end
-                  {'uri' => uri, Stat+'size' => count }}}}
+                  {'uri' => uri, Title => key, Stat+'size' => count }}}}
 
     # enumerate schemes
     https =  r.scheme[-1]=='s'
@@ -170,7 +170,7 @@ class R
       g.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
   ENV2RDF = -> env, graph { # environment -> graph
-    # subject resource
+    # request resource
     subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[Resource]}
 
     # headers
