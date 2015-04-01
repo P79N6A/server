@@ -217,7 +217,7 @@ class R
         dir = a.R.dir # address
         container = dir.uri.t # container URI
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
-                Title => title.noHTML, Size => post[Size], Type => R[Resource]} # thread resource
+                Label => title.noHTML, Size => post[Size], Type => R[Resource]} # thread resource
 
         unless graph[container] # init cluster-container
           clusters.push container
