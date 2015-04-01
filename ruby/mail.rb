@@ -219,7 +219,7 @@ class R
                 Title => title.noHTML, Size => post[Size]} # thread resource
         if e.format != 'text/html' # resource
           graph[''] ||= {'uri' => ''}
-          graph[''][Type] ||= [R[Container]]
+          graph[''][Type] ||= [R[Container]] # add to main container for gopherish clients like warp
           graph[''][LDP+'contains'] ||= []
           graph[''][LDP+'contains'].push item
           graph[item.uri] ||= {'uri' => item.uri,
