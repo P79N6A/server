@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 =begin
- Hash/JSON
+ Hash
   {subject => {predicate => object}}
 
  types:
@@ -54,6 +54,13 @@ class R
   def nodeToGraph graph
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f| # cached native JSON
+      if f==self # native doc, add resource-pointer
+        s = stripDoc.uri
+        s = base.join(s).to_s if base
+        graph[s] ||= {'uri' => s}
+        graph[s][Type] ||= []
+        graph[s][Type].push R[Resource]
+      end
       (f.r(true)||{}).triples{|s,p,o| # triples
         if base
           s = base.join(s).to_s     # bind subject-URI
