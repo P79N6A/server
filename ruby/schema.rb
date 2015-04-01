@@ -14,7 +14,7 @@ class R
   ViewGroup[RDFs+'Datatype'] = -> g,e {
     ['<br>',{_: :b, style: "font-size:1.3em", c: 'Datatypes'}, TabularView[g,e]]}
 
-  ViewGroup[OWL+'Ontology'] = ViewGroup[Resource]
+  ViewGroup[OWL+'Ontology'] = ViewGroup[BasicResource]
 
    def R.schemaSources
     table = {}

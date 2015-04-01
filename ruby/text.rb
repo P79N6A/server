@@ -166,7 +166,7 @@ class R
     yield uri+'#',Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] if size < 128000
   end
 
-  ViewGroup[SIOCt+'SourceCode'] = ViewGroup[Resource]
+  ViewGroup[SIOCt+'SourceCode'] = ViewGroup[BasicResource]
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
  desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript

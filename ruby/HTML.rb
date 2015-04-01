@@ -171,7 +171,7 @@ class R
          ViewA[type ? type : Resource][(r||{}),e]
        end}]}
 
-  ViewA[Resource] = -> r,e {
+  ViewA[BasicResource] = -> r,e {
     uri = r.uri
     {class: :resource,
      c: [(if uri
@@ -180,10 +180,10 @@ class R
            {_: :a, href: uri, c: r[Title]||uri, class: :id},'<br>']
           end), r.html]}}
 
-  ViewGroup[Resource] = -> g,e {
+  ViewGroup[BasicResource] = -> g,e {
     [H.css('/css/html',true),
      g.resources(e).reverse.map{|r| # sort
-       ViewA[Resource][r,e] }]}
+       ViewA[BasicResource][r,e] }]}
 
 end
 

@@ -104,7 +104,7 @@ class R
   alias_method :m, :mtime
   def size;     node.size end
 
-  ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
+  ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = TabularView
 
   FileSet[Resource] = -> e,q,g {
     this = g['']

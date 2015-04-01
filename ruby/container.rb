@@ -93,6 +93,7 @@ class R
     Directory => :warp,
     FOAF+'Person' => :person,
     GraphDoc => :graph,
+    Resource => :graph,
     Image => :img,
     SIOC+'Thread' => :thread,
     SIOC+'Usergroup' => :group,
