@@ -71,7 +71,7 @@ class R
     [H.css('/css/mail',true),
      {_: :style, c: colors.map{|name,c| "[name=\"#{name}\"] {background-color: #{c}}\n"}},
      {_: :a, class: :noquote, rel: :nofollow,
-      href: q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs,
+      href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs),
       c: quotes ? '&#x27ea;' : '&#x27eb;',
       title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
@@ -96,13 +96,12 @@ class R
                         c = r[Creator][0].R.fragment
                         {_: :a, name: c, href: '#'+p.uri, c: c}}}.intersperse(' ')}, ' ',
                   r[SIOC+'reply_to'].do{|c|
-                    {_: :a, class: :reply, title: :reply, href: c.justArray[0].maybeURI||'#', c: R.pencil + 'reply'}},
+                    {_: :a, class: :reply, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: R.pencil + 'reply'}},
                   r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].do{|d|
                     {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡', title: 'goto thread'} unless e[:thread]}]},
              r[Content].do{|c|{class: :body, c: c}},
              r[WikiText].do{|c|
-               puts "SDFSDFSDF",c
                {class: :body, c: Render[WikiText][c]}},
              [DC+'hasFormat', SIOC+'attachment'].map{|p|
                r[p].justArray.map{|o|
