@@ -149,7 +149,7 @@ class R
                  {_: :a, href: '?rdf', rel: :nofollow, c: {_: :img, src: '/css/misc/cube.svg', style: 'float:right;width:2.3em'}},
                  ({_: :a, rel: :prev, href: prev, c: ['&larr; ', prev], title: '↩ previous page'} if prev),
                  ({_: :a, rel: :next, href: nxt, c: [nxt, ' →'], title: 'next page →'} if nxt),
-                 ('<br>' if paged),
+                 ('<br clear="all"/>' if paged),
                  view[d,e]]}]}]}
 
   View = -> d,e { # default view - group by type, try type-renderers, fallback to generic
