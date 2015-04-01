@@ -104,7 +104,7 @@ class R
     mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
     c = '%02x' % (255 - mag)
     color = mag > 127 ? :white : :black
-    [{_: :tr, class: color, style: "color:#{color};background-color: ##{c*3}",
+    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "color:#{color};background-color: ##{c*3}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
