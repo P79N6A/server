@@ -126,7 +126,9 @@ class R
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.head if titles.size==1 # there can be only one
     end
-    paged = e[:Links][:next]||e[:Links][:prev]
+     nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
+    prev = e[:Links][:prev].do{|p|CGI.escapeHTML p}
+    paged = nxt||prev
 
     H ["<!DOCTYPE html>\n",
        {_: :html,
@@ -135,7 +137,7 @@ class R
                  {_: :link, rel: :icon, href: '/.icon.png'},
                  e[:title].do{|t|{_: :title, c: t}},
                  e[:Links].do{|links|
-                   links.map{|type,uri| {_: :link, rel: type, href: uri}}},
+                   links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  ([H.css('/css/page',true),
                    H.js('/js/pager',true)] if paged),
                  H.css('/css/icons',true),
@@ -144,8 +146,8 @@ class R
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
-                 e[:Links][:prev].do{|p| {_: :a, rel: :prev, href: p, c: ['&larr; ', p], title: '↩ previous page'}},
-                 e[:Links][:next].do{|n| {_: :a, rel: :next, href: n, c: [n, ' →'], title: 'next page →'}},
+                 ({_: :a, rel: :prev, href: prev, c: ['&larr; ', prev], title: '↩ previous page'} if prev),
+                 ({_: :a, rel: :next, href: nxt, c: [nxt, ' →'], title: 'next page →'} if nxt),
                  ('<br>' if paged),
                  view[d,e]]}]}]}
 
