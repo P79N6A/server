@@ -24,7 +24,6 @@ class R
       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
       'Access-Control-Expose-Headers' => "User, Triples, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
-      'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
       'User' => @r.user.uri,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
     })

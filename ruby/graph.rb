@@ -1,23 +1,26 @@
 #watch __FILE__
 class R
-=begin miniRDF - a subset of RDF which trivially works as JSON
-
+=begin
  Hash/JSON
   {subject => {predicate => object}}
 
  types:
   subject: String
   predicate: String
-  object (one of):
-   Array [objectA, objectB..]
-   RDF::URI
-   RDF::Literal
-   R (subclass of RDF::URI)
-   Hash with 'uri' key
-   String
+  object:
+   Array: each member becomes a triple
+    [objectA, objectB..]
 
- Streams
-  yield subject, predicate, object
+   URIs:
+   RDF::URI
+   R (our resource-class)
+   Hash with 'uri' key
+
+  literals:
+   RDF::Literal
+   String
+   Integer
+   FLoat
 
 =end
 
@@ -49,19 +52,9 @@ class R
 
   # inode -> graph
   def nodeToGraph graph
-    if @r
-      base = @r.R.join(stripDoc)
-      baseURI = base.to_s
-      graph[baseURI] ||= {'uri' => baseURI}
-      graph[baseURI][Type] ||= []
-      graph[baseURI][Type].push R[Resource]
-    end
-    justRDF(%w{e}).do{|f| # native JSON-format
-      if base
-#        graph[baseURI][Size] = [f.size]
-#        graph[baseURI][Mtime] = [f.mtime.to_i]
-      end
-      (f.r(true)||{}).triples{|s,p,o|   # triples
+    base = @r.R.join(stripDoc) if @r
+    justRDF(%w{e}).do{|f| # cached native JSON
+      (f.r(true)||{}).triples{|s,p,o| # triples
         if base
           s = base.join(s).to_s     # bind subject-URI
           if o.class==Hash && o.uri # bind object-URI
@@ -70,7 +63,7 @@ class R
         end
         graph[s] ||= {'uri' => s}
         graph[s][p] ||= []
-        graph[s][p].push o unless graph[s][p].member? o
+        graph[s][p].push o #unless graph[s][p].member? o
       }}
     graph
   end

@@ -40,7 +40,7 @@ class R
     e['uri'] = resource.uri                              # canonical URI to environment
     e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init request-variables
 #    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # verbose-log request
-    resource.setEnv(e).send(method).do{|s,h,b| # call into request and inspect response
+    resource.setEnv(e).send(method).do{|s,h,b| # run request and inspect response
       R.log e,s,h,b # log response
       [s,h,b]} # return response
   rescue Exception => x
@@ -96,33 +96,6 @@ class R
      [Render[e.format].do{|p|p[graph,e]} ||
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
-  ViewGroup[LDP+'Resource'] = -> g,env {
-    paged = g.values.find{|r|r[Next] || r[Prev]}
-    [H.css('/css/page', true), (H.js('/js/pager', true) if paged),
-    (if env.signedIn
-     uid = env.user.uri
-     {_: :a, class: :user, href: uid, title: uid}
-    else
-      href = if env.scheme == 'http'
-               'https://' + env.host + env['REQUEST_URI']
-             else
-               '/whoami'
-             end
-      {_: :a, class: :identify, href: href}
-     end),
-    g.map{|u,r|ViewA[LDP+'Resource'][r,env]}]}
-
-  ViewA[LDP+'Resource'] = -> u,e {
-    label = -> r {(r.R.query_values.do{|q|q['offset']} || r).R.stripDoc.path.gsub('/',' ')}
-    prev = u[Prev]
-    nexd = u[Next]
-    [Prev,Next,Type].map{|p|u.delete p}
-    [prev.do{|p|
-       {_: :a, rel: :prev, href: p.uri, c: ['&larr; ', label[p]], title: '↩ previous page'}},
-     nexd.do{|n|
-       {_: :a, rel: :next, href: n.uri, c: [label[n], ' →'], title: 'next page →'}},
-    (ViewA[Resource][u,e] unless u.keys.size==1)]}
-
   GET['/stat'] = -> e,r { g = {}
     r.q['sort'] ||= 'stat:size'
 
@@ -173,9 +146,7 @@ class R
     subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[Resource]}
 
     # headers
-   links = env.delete :Links
-    resp = env.delete :Response
-    [env,links,resp].compact.map{|fields|
+    [env,env[:Links],env[:Response]].compact.map{|fields|
       fields.map{|k,v|
         subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.to_s.hrefs}}
 

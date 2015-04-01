@@ -45,15 +45,11 @@ class R
     c = ((r['c'].do{|c|c.to_i} || 32) + 1).max(1024).min 2 # count
     o = r.has_key?('asc') ? :asc : :desc                   # direction
     (d.take c, o, r['offset'].do{|o|o.R}).do{|s|           # get page
-      if r['offset'] && head = s[0]
-        uri = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-        m[''][Prev] = {'uri' => uri} # prev RDF
-        d.env[:Links][:prev] = uri   # prev HTTP
+      if r['offset'] && head = s[0] # go backwards
+        d.env[:Links][:prev] = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
       end
-      if edge = s.size >= c && s.pop            # further entries exist
-        uri = d.uri + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
-        m[''][Next] = {'uri' => uri} # next RDF
-        d.env[:Links][:next] = uri   # next HTTP
+      if edge = s.size >= c && s.pop # another page exists
+        d.env[:Links][:next] = d.uri + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
       end
       s }}
 
@@ -80,8 +76,8 @@ class R
       down = r.size > start+c                                        # prev
       up   = !(start<=0)                                             # next
       r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      m[''][Prev]={'uri' => '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs} if down # pages
-      m[''][Next]={'uri' => '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs} if up
+      d.env[:Links][:prev] = '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs if down # page pointers
+      d.env[:Links][:next] = '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs if up
       r.map{|r|
         R[r['.uri']]}}}
 

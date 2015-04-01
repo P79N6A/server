@@ -39,13 +39,11 @@ class R
   end
 
   def response
-    m = {'' => {'uri' => uri, # <> you are here
-                Type => [R[LDP+'Resource']]}}
     init = q.has_key? 'new'
     edit = q.has_key? 'edit'
     return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for user ID required for edits
-
-    set = [] # resources in response
+    m = {} # graph
+    set = [] # resources
     rs = ResourceSet[q['set']] # generic-resources provider
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
     fs = FileSet[q['set']] # file(s) provider
@@ -60,8 +58,10 @@ class R
       end
     end
 
-    @r[:Response].update({ 'Content-Type' => @r.format + '; charset=UTF-8',    # MIME type
-                           'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h}) # representation-id
+    @r[:Response].
+      update({'Content-Type' => @r.format + '; charset=UTF-8',
+              'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
+              'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h})
 
     condResponse ->{ # lazy response-finisher
       if set.size==1 && @r.format == set[0].mime # only one file in response and it's the requested MIME

@@ -114,8 +114,8 @@ class R
       qs = query && !query.empty? && ('?' + query) || ''
       pp = (t-1).strftime('/%Y/%m/%d/') # prev-day
       np = (t+1).strftime('/%Y/%m/%d/') # next-day
-      this[Prev] = {'uri' => pp + qs} if R['//' + e.env.host + pp].e
-      this[Next] = {'uri' => np + qs} if R['//' + e.env.host + np].e}
+      e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
+      e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
     if e.env[:container]
       cs = e.c # contained
       cs.map{|c|c.setEnv e.env} if cs.size < 17 # skip relURI prettiness on larger sets (for speed)

@@ -122,22 +122,29 @@ class R
     html.to_xhtml}
 
   Render['text/html'] = -> d,e,view=View {
-
     if !e[:title]
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.head if titles.size==1 # there can be only one
     end
+    paged = e[:Links][:next]||e[:Links][:prev]
 
     H ["<!DOCTYPE html>\n",
        {_: :html,
-         c: [{_: :head,
-               c: [{_: :meta, charset: 'utf-8'},
-                   {_: :link, rel: :icon, href: '/.icon.png'},
-                   e[:title].do{|t|{_: :title, c: t}},
-                   e[:Links].do{|links|
-                     links.map{|type,uri| {_: :link, rel: type, href: uri}}},
-                  ]},
-             {_: :body, c: view[d,e]}]}]}
+        c: [{_: :head,
+             c: [{_: :meta, charset: 'utf-8'},
+                 {_: :link, rel: :icon, href: '/.icon.png'},
+                 e[:title].do{|t|{_: :title, c: t}},
+                 e[:Links].do{|links|
+                   links.map{|type,uri| {_: :link, rel: type, href: uri}}},
+                 ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
+                ]},
+            {_: :body,
+             c: [e.signedIn ?
+                  {_: :a, class: :user, href: e.user.uri, title: uid} :
+                  {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
+                 e[:Links][:prev].do{|p| {_: :a, rel: :prev, href: p, c: ['&larr; ', p], title: '↩ previous page'}},
+                 e[:Links][:next].do{|n| {_: :a, rel: :next, href: n, c: [n, ' →'], title: 'next page →'}},
+                 view[d,e]]}]}]}
 
   View = -> d,e { # default view - group by type, try type-renderers, fallback to generic
     groups = {}
