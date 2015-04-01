@@ -49,7 +49,7 @@ class R
   def nodeToGraph graph
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f| # just native JSON
-      if file? # fs-meta
+      if @r && @r[:container] && file? # fs-meta
         native = f == self
         s = native ? stripDoc.uri : uri # generic-resource or file
         s = base.join(s).to_s if base
