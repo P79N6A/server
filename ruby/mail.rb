@@ -119,7 +119,7 @@ class R
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
           {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
         else
-          [l.hrefs(true), "<br>"]
+          [l.hrefs(true), "<br/>"]
         end,"\n"]})}
 
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
