@@ -124,7 +124,7 @@ class R
   Render['text/html'] = -> d,e,view=View {
     if !e[:title]
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
-      e[:title] = titles.head if titles.size==1 # there can be only one
+      e[:title] = titles.size==1 ? titles.head : e.uri
     end
      nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
     prev = e[:Links][:prev].do{|p|CGI.escapeHTML p}
@@ -135,7 +135,7 @@ class R
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'},
                  {_: :link, rel: :icon, href: '/.icon.png'},
-                 e[:title].do{|t|{_: :title, c: t}},
+                 e[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  ([H.css('/css/page',true),

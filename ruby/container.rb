@@ -111,7 +111,7 @@ class R
               c: case k
                  when 'uri'
                    l.R.do{|r|
-                     {_: :a, href: r.uri, c: l[Title]||l[Label]||r.basename}}
+                     {_: :a, href: CGI.escapeHTML(r.uri), c: l[Title]||l[Label]||r.basename}}
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
@@ -121,7 +121,7 @@ class R
                             else
                               l.uri
                             end
-                     {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
+                     {_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
                    ViewA[Container][l,e,sort,direction]
                  when WikiText
