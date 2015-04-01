@@ -39,7 +39,6 @@ class R
     resource = R[e.scheme + "://" + e.host + path]       # resource instance
     e['uri'] = resource.uri                              # canonical URI to environment
     e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init request-variables
-#    puts e.to_a.concat(e.q.to_a).map{|k,v|[k,v].join "\t"} # verbose-log request
     resource.setEnv(e).send(method).do{|s,h,b| # run request and inspect response
       R.log e,s,h,b # log response
       [s,h,b]} # return response
@@ -59,7 +58,7 @@ class R
       Stats[:format][mime] += 1}
     puts [e['REQUEST_METHOD'], s,
           [e.scheme, '://', e.host, e['REQUEST_URI']].join,
-          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>',
+          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format,
           e['HTTP_REFERER']].
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
