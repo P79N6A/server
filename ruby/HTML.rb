@@ -168,7 +168,7 @@ class R
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
-         ViewA[type ? type : Resource][(r||{}),e]
+         ViewA[type ? type : BasicResource][(r||{}),e]
        end}]}
 
   ViewA[BasicResource] = -> r,e {
@@ -204,17 +204,8 @@ class Hash
             c: case k
                when R::Type
                  types = v.justArray
-                 unless types.size==1 && types[0].uri==R::Resource
-                   {_: :td, class: :val, colspan: 2,
-                    c: ['a ', types.intersperse(', ').map(&:html),
-                        types.map{|t|
-                          R::Containers[t.uri].do{|c|
-                            n = c.R.fragment
-                            [' ',
-                             {_: :a, href: id+'?new', class: :new,
-                              c: ['+',n],
-                              title: "post a #{n} to #{id.R.basename}"}]}}]}
-                 end
+                 {_: :td, class: :val, colspan: 2,
+                  c: ['a ', types.intersperse(', ').map(&:html)]}
                when R::Content
                  {_: :td, class: :val, colspan: 2, c: v}
                when R::WikiText

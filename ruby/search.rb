@@ -175,7 +175,7 @@ class R
             }}].join ' '
        }.do{|f|
          [f.map{|o| '<div class="' + o + '">' }, # open wrapper
-          ViewA[type ? type : Resource][r,e],    # render resource
+          ViewA[type ? type : BasicResource][r,e], # resource
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 

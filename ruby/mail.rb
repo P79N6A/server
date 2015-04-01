@@ -172,6 +172,7 @@ class R
   ReExpr = /\b[rR][eE]: /
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
+    graph.delete e.uri
     bodies = e.q.has_key? 'bodies'
     rdf = e.format != 'text/html'
     e.q['sort'] ||= Size
@@ -216,7 +217,7 @@ class R
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         container = '#' + a.R.fragment # container URI
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
-                Label => title.noHTML, Size => post[Size], Type => R[Resource]} # thread resource
+                Label => title.noHTML, Size => post[Size], Type => R[SIOC+'Thread']} # thread resource
 
         unless graph[container] # init cluster-container
           clusters.push container

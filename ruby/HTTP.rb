@@ -131,7 +131,7 @@ class R
 
     # free space
     g['#storage'] = {
-         Type => R[Resource],
+         Type => R[BasicResource],
       Content => ['<pre>',
                   `df -TBM -x tmpfs -x devtmpfs`,
                   '</pre>']}
@@ -142,7 +142,7 @@ class R
 
   ENV2RDF = -> env, graph { # environment -> graph
     # request resource
-    subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[Resource]}
+    subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
 
     # headers
     [env,env[:Links],env[:Response]].compact.map{|fields|
