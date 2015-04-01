@@ -137,7 +137,7 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: uri}}},
                  ([H.css('/css/page',true),
-                   H.js('/js/pager',true), '<br>'] if paged),
+                   H.js('/js/pager',true)] if paged),
                  H.css('/css/icons',true),
                 ]},
             {_: :body,
@@ -146,6 +146,7 @@ class R
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
                  e[:Links][:prev].do{|p| {_: :a, rel: :prev, href: p, c: ['&larr; ', p], title: '↩ previous page'}},
                  e[:Links][:next].do{|n| {_: :a, rel: :next, href: n, c: [n, ' →'], title: 'next page →'}},
+                 ('<br>' if paged),
                  view[d,e]]}]}]}
 
   View = -> d,e { # default view - group by type, try type-renderers, fallback to generic
