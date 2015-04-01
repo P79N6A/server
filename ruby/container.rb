@@ -62,7 +62,7 @@ class R
                q['reverse'] = ''
              end
              [{_: :th, property: k, class: this ? :this : :that,
-               c: {_: :a, rel: :nofollow, href: q.qs, c: k.R.abbr}}, "\n"]}}, "\n",
+               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), c: k.R.abbr}}, "\n"]}}, "\n",
           g.resources(e).send(direction).map{|row|
             TableRow[row,e,sort,direction,keys]}]}, "\n"]}
 
@@ -71,7 +71,7 @@ class R
     uri = re.uri
     path = (re.path||'').t
     group = e.q['group']
-    {class: :container, id: re.fragment,
+    {class: :container,
      c: r[LDP+'contains'].do{|c|
        sizes = c.map{|r|r[Size] if r.class == Hash}.flatten.compact
        maxSize = sizes.max
@@ -104,7 +104,7 @@ class R
     mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
     c = '%02x' % (255 - mag)
     color = mag > 127 ? :white : :black
-    [{_: :tr, about: l.uri, class: color, style: "color:#{color};background-color: ##{c*3}",
+    [{_: :tr, class: color, style: "color:#{color};background-color: ##{c*3}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
