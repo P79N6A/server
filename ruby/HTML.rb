@@ -136,11 +136,11 @@ class R
                  e[:title].do{|t|{_: :title, c: t}},
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: uri}}},
-                 ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
+                 ([H.css('/css/page',true), H.js('/js/pager',true), '<br>'] if paged),
                 ]},
             {_: :body,
              c: [e.signedIn ?
-                  {_: :a, class: :user, href: e.user.uri, title: uid} :
+                  {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
                  e[:Links][:prev].do{|p| {_: :a, rel: :prev, href: p, c: ['&larr; ', p], title: '↩ previous page'}},
                  e[:Links][:next].do{|n| {_: :a, rel: :next, href: n, c: [n, ' →'], title: 'next page →'}},
