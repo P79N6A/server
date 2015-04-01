@@ -49,3 +49,17 @@ a.rel:before {
     content:"\f0a5";
     font-family: icons;
     border-width: 0;}
+a.identify, a.user {text-decoration:none;}
+a.identify {color: #ccc;margin-left:.12em}
+a.identify:before {
+    content:"\f235";
+    font-family: icons;
+    font-size: 1.3em;
+}
+a.identify:hover {color: cyan}
+a.user:before {
+    content:"\f234";
+    font-family: icons;
+    font-size: 1.5em;
+    color:#aeff28;
+}

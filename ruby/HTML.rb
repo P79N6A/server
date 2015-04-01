@@ -136,7 +136,9 @@ class R
                  e[:title].do{|t|{_: :title, c: t}},
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: uri}}},
-                 ([H.css('/css/page',true), H.js('/js/pager',true), '<br>'] if paged),
+                 ([H.css('/css/page',true),
+                   H.js('/js/pager',true), '<br>'] if paged),
+                 H.css('/css/icons',true),
                 ]},
             {_: :body,
              c: [e.signedIn ?

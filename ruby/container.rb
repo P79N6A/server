@@ -50,7 +50,7 @@ class R
     sizes = g.values.map{|r|r[Size]}.flatten.compact
     e[:max] = size = sizes.max
     e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
-    [H.css('/css/table',true), H.css('/css/icons',true), H.css('/css/container',true), "\n",
+    [H.css('/css/table',true), H.css('/css/container',true), "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
            c: keys.map{|k|
