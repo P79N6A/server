@@ -177,6 +177,7 @@ class R
     rdf = e.format != 'text/html'
     e.q['sort'] ||= Size
     group = (e.q['group']||To).expand
+    size = g.keys.size
     threads = {}
     clusters = []
     weight = {}
@@ -186,16 +187,15 @@ class R
     graph[''][Type] ||= [R[Container]]
     graph[''][LDP+'contains'] ||= []
 
-    if !rdf # add href shortcuts to HTML-UI configurations
-      size = g.keys.size
-      if !e.q.has_key?('group') && size > 12 # list view, time-sort
-        listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
-        graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
-      end
-      if !bodies && size < 24 # expand full-contents
-        fullURI = e.q.merge({'bodies' => ''}).qs
-        graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'}
-      end
+    # links
+    if !bodies && size < 24 # unabbreviated view
+      fullURI = e.q.merge({'bodies' => ''}).qs
+      graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '↓'}
+    end
+
+    if !rdf && !e.q.has_key?('group') # list view
+      listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
+      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
     end
 
     g.map{|u,p| # statistics + prune pass
