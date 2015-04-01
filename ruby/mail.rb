@@ -186,15 +186,12 @@ class R
     graph[''][LDP+'contains'] ||= []
 
     if !rdf # add href shortcuts to HTML-UI configurations
-      graph[e.uri].do{|r|
-        [Mtime,Date,Size,SIOC+'has_container'].
-          map{|p|r.delete p}}
       size = g.keys.size
-      if !e.q.has_key?('group') && size > 12
+      if !e.q.has_key?('group') && size > 12 # list view, time-sort
         listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
         graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
       end
-      if !bodies && size < 24
+      if !bodies && size < 24 # expand full-contents
         fullURI = e.q.merge({'bodies' => ''}).qs
         graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'}
       end
@@ -227,12 +224,11 @@ class R
           graph[item.uri] ||= item
         end
 
-        unless graph[container] # cluster-container
+        unless graph[container] # init cluster-container
           clusters.push container
           graph[''][LDP+'contains'].push container.R
-          graph[container] = {'uri' => container, Type => R[Resource], Label => a.R.fragment, Mtime => time, Size => 0}
+          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment, Mtime => time, Size => 0}
         end
-        graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item }} # thread to container
 
     clusters.map{|container| # find cluster sizes
