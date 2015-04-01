@@ -42,7 +42,6 @@ class R
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cached transcode
       unless doc.e && doc.m > m                           # cache valid
         graph = {}                                        # update cache
-        fromStream graph, :triplrFile if self == stripDoc && file?
         fromStream graph, :triplrMIME
         doc.w graph, true
       end
@@ -53,14 +52,18 @@ class R
   # inode -> graph
   def nodeToGraph graph
     base = @r.R.join(stripDoc) if @r
-    justRDF(%w{e}).do{|f| # cached native JSON
-      if f==self # native doc, add resource-pointer
+    justRDF(%w{e}).do{|f| # just native JSON
+=begin
+      if f==self # add resource-pointer
         s = stripDoc.uri
         s = base.join(s).to_s if base
         graph[s] ||= {'uri' => s}
-        graph[s][Type] ||= []
+        [Type,Size,Mtime].map{|p|graph[s][p] ||= []} # init fields
+        graph[s][Size].push f.size
+        graph[s][Mtime].push f.mtime.to_i
         graph[s][Type].push R[Resource]
       end
+=end
       (f.r(true)||{}).triples{|s,p,o| # triples
         if base
           s = base.join(s).to_s     # bind subject-URI

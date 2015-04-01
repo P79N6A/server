@@ -217,7 +217,17 @@ class R
         container = dir.uri.t # container URI
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Title => title.noHTML, Size => post[Size]} # thread resource
-        graph[item.uri] ||= {'uri' => item.uri, Label => item[Title]} if e.format != 'text/html' # resource
+        if e.format != 'text/html' # resource
+          graph[''] ||= {'uri' => ''}
+          graph[''][Type] ||= [R[Container]]
+          graph[''][LDP+'contains'] ||= []
+          graph[''][LDP+'contains'].push item
+          graph[item.uri] ||= {'uri' => item.uri,
+                               Mtime => Time.now.to_i,
+                               Size => item[Size],
+                               Type => R[Resource],
+                               Label => item[Title]}
+        end
 
         unless graph[container] # create container
           clusters.push container
