@@ -7,13 +7,16 @@ module Th
   end
 
   def selectFormat
+    # query-string
+    return 'text/turtle' if q.has_key? 'rdf'
+    # name extension/suffix
     { '.html' => 'text/html',
       '.json' => 'application/json',
       '.nt' => 'text/plain',
       '.n3' => 'text/n3',
       '.ttl' => 'text/turtle',
     }[File.extname(self['REQUEST_PATH'])].do{|mime| return mime}
-
+    # HTTP Header
     accept.sort.reverse.map{|q,mimes| # MIMES by descending q-value
       mimes.map{|mime|
         return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}}

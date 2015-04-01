@@ -176,7 +176,6 @@ class R
     rdf = e.format != 'text/html'
     e.q['sort'] ||= Size
     group = (e.q['group']||To).expand
-    time = Time.now.to_i
     threads = {}
     weight = {}
 
@@ -217,18 +216,15 @@ class R
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir # address
         container = dir.uri.t # container URI
-        item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date], Mtime => time,
+        item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Title => title.noHTML, Size => post[Size], Type => R[Resource]} # thread resource
-        if rdf # resource
-          graph[''][LDP+'contains'].push item
-          graph[item.uri] ||= item
-        end
 
         unless graph[container] # init cluster-container
           clusters.push container
           graph[''][LDP+'contains'].push container.R
-          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment, Mtime => time, Size => 0}
+          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
+        graph[item.uri] ||= item if rdf # thread RDF
         graph[container][LDP+'contains'].push item }} # thread to container
 
     clusters.map{|container| # find cluster sizes
