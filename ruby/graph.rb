@@ -36,34 +36,29 @@ class R
 
   # inode -> inode (Non-RDF -> RDF)
   def justRDF pass = RDFsuffixes
-    return unless e                                    # check that source exists
-    doc = self                                         # out doc
-    unless pass.member? realpath.do{|p|p.extname.tail} # already desired MIME?
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cached transcode
-      unless doc.e && doc.m > m                           # cache valid
-        graph = {}                                        # update cache
-        fromStream graph, :triplrMIME
-        doc.w graph, true
-      end
+    if pass.member? realpath.do{|p|p.extname.tail} # already desired MIME
+      self
+    else
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache
+      doc
     end
-    doc
   end
 
   # inode -> graph
   def nodeToGraph graph
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f| # just native JSON
-=begin
-      if f==self # add resource-pointer
-        s = stripDoc.uri
+      if file? # fs-meta
+        native = f == self
+        s = native ? stripDoc.uri : uri # generic-resource or file
         s = base.join(s).to_s if base
         graph[s] ||= {'uri' => s}
         [Type,Size,Mtime].map{|p|graph[s][p] ||= []} # init fields
         graph[s][Size].push f.size
         graph[s][Mtime].push f.mtime.to_i
-        graph[s][Type].push R[Resource]
+        graph[s][Type].push R[native ? Resource : (Stat + 'File')]
       end
-=end
       (f.r(true)||{}).triples{|s,p,o| # triples
         if base
           s = base.join(s).to_s     # bind subject-URI
