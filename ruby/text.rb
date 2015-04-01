@@ -9,7 +9,7 @@ class String
     (partition R::Href).do{|p|
       u = p[1].gsub('&','&amp;') # URI
       p[0].noHTML +
-     (p[1].empty? && '' || '<a rel="untyped" href="'+u+'">' +
+     (p[1].empty? && '' || '<a href="'+u+'">' +
        ( i && u.match(/(gif|jpe?g|png|webp)$/i) && "<img src='#{u}'>" || u.sub(/^https?:\/\//,'') ) + '</a>') +
      (p[2].empty? && '' || p[2].hrefs) # again on any post-match tail
     }
