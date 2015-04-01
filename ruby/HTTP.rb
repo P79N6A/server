@@ -147,13 +147,7 @@ class R
     # headers
     [env,env[:Links],env[:Response]].compact.map{|fields|
       fields.map{|k,v|
-        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.to_s.hrefs}}
-
-    # derived fields
-    subj[HTTP+'query-string'] = Hash[env.q.map{|k,v|[k.to_s.hrefs,v.to_s.hrefs]}]
-    subj[HTTP+'accept'] = env.accept
-    %w{CHARSET LANGUAGE ENCODING}.map{|a|
-      subj[HTTP+'accept-'+a.downcase] = env.accept_('_'+a)}}
+        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}}}
 
   def q; @r.q end
 

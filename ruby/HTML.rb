@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 #watch __FILE__
 
-def H x # rewrite Ruby to HTML
+def H x # rewrite Ruby values to HTML
   case x
+  when String
+    x
+  when Array
+    x.map{|n|H n}.join
   when Hash
     void = [:img, :input, :link, :meta].member? x[:_]
     '<' + (x[:_] || 'div').to_s +                        # name
@@ -13,10 +17,29 @@ def H x # rewrite Ruby to HTML
          '<'=>'%3C'}[c]||c}.join + "'"}.join +
       (void ? '/' : '') + '>' + (H x[:c]) +              # children or void
       (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # closer
-  when Array
-    x.map{|n|H n}.join
+  when R
+    H x.href
+  when TrueClass
+    '<input type="checkbox" title="True" checked="checked"/>'
+  when FalseClass
+    '<input type="checkbox" title="True"/>'
+  when Float
+    x.to_s
+  when Bignum
+    x.to_s
+  when Fixnum
+    x.to_s
+  when NilClass
+    ''
+  when StringIO
+    'StringIO'
+  when IO
+    'IO'
+  when Method
+    'function'
   else
-    x.html
+    puts "___________",x.class,x
+    x.to_s.noHTML
   end
 end
 
@@ -41,7 +64,6 @@ end
 class Array
   def cr; intersperse "\n" end
   def head; self[0] end
-  def html; map(&:html).join ' ' end
   def h; join.h end
   def intersperse i
     inject([]){|a,b|a << b << i}[0..-2]
@@ -52,59 +74,28 @@ class Array
 end
 
 class Object
-  def html; self.class.to_s end
   def justArray; [self] end
 end
 
-class String
-  def html
-    self
-  end
-end
-
-class Symbol
-  def html; to_s end
-end
-
-class Bignum
-  def html; to_s end
-end
-
 class Fixnum
-  def html; to_s end
   def max i; i > self ? self : i end
   def min i; i < self ? self : i end
 end
 
 class Float
-  def html; to_s end
   def max i; i > self ? self : i end
   def min i; i < self ? self : i end
 end
 
-class TrueClass
-  def html; H({_: :input, type: :checkbox, title: :True, checked: :checked}) end
-end
-
-class FalseClass
-  def html; H({_: :input, type: :checkbox, title: :False}) end
-end
-
 class NilClass
-  def html; "" end
   def justArray; [] end
-end
-
-class Time
-  def html; H({_: :time, datetime: iso8601, c: to_s}) end
 end
 
 class R
 
   def href name = nil
-    H({_: :a, href: uri, c: name || fragment || basename})
+    {_: :a, href: uri, c: name || fragment || basename}
   end
-  alias_method :html, :href
 
   begin
     require 'nokogiri'
@@ -178,43 +169,36 @@ class R
           [({_: :a, href: uri, c: r[Date], class: :date} if r[Date]),
            ({_: :a, href: r.R.editLink(e), class: :edit, title: "edit #{uri}", c: R.pencil} if e.editable),
            {_: :a, href: uri, c: r[Title]||uri, class: :id},'<br>']
-          end), r.html]}}
+          end),
+         {_: :table, class: :html, id: id,
+          c: r.map{|k,v|
+            {_: :tr, property: k,
+             c: case k
+                when Type
+                  types = v.justArray
+                  {_: :td, class: :val, colspan: 2,
+                   c: ['a ', types.intersperse(', ').map{|t|t.R.href}]}
+                when Content
+                  {_: :td, class: :val, colspan: 2, c: v}
+                when WikiText
+                  {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
+                else
+                  [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
+                   {_: :td, c: v.justArray.map{|v|
+                      case v
+                      when R
+                        v
+                      when Hash
+                        v.R
+                      else
+                        v
+                      end
+                    }, class: :val}]
+                end} unless k == 'uri'}}]}}
 
   ViewGroup[BasicResource] = -> g,e {
     [H.css('/css/html',true),
      g.resources(e).reverse.map{|r| # sort
        ViewA[BasicResource][r,e] }]}
 
-end
-
-class Hash
-  def html
-    if keys.size == 1 && has_key?('uri')
-      r = self.R
-      H({_: :a, href: uri, c: r.fragment || r.basename, class: :id})
-    else
-      id = if uri
-             R[uri].fragment || uri
-           else
-             '#'
-           end
-      H({_: :table, class: :html, id: id,
-         c: map{|k,v|
-           {_: :tr, property: k,
-            c: case k
-               when R::Type
-                 types = v.justArray
-                 {_: :td, class: :val, colspan: 2,
-                  c: ['a ', types.intersperse(', ').map(&:html)]}
-               when R::Content
-                 {_: :td, class: :val, colspan: 2, c: v}
-               when R::WikiText
-                 {_: :td, class: :val, colspan: 2, c: R::Render[R::WikiText][v]}
-               else
-                 [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
-                  {_: :td, c: v.html, class: :val}]
-               end} unless k == 'uri'
-         }})
-    end
-  end
 end

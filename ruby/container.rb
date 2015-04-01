@@ -85,7 +85,7 @@ class R
                 [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
                 end),
                ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
-               data && CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0]) || r.R.abbr[0..64]
+               data && CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s) || r.R.abbr[0..64]
               ]}, data ? "<br>" : " "]}}}}
 
   Icons = {
@@ -131,7 +131,7 @@ class R
                  when WikiText
                    Render[WikiText][l[k]]
                  else
-                   l[k].html
+                   l[k]
                  end}, "\n"]
           }]}, "\n"]}
 

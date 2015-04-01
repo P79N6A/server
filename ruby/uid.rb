@@ -75,7 +75,8 @@ class R
 
   ViewA[FOAF+'Person'] = -> u,e {
     {class: :person,
-     c: [u[FOAF+'img'].justArray.map{|img|{_: :img, class: :avatar, src: img.uri}},u.html]}}
+     c: [u[FOAF+'img'].justArray.map{|img|{_: :img, class: :avatar, src: img.uri}},
+         ViewA[BasicResource][u,e]]}}
 
   ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env {
     [H.css('/css/user'),
@@ -83,7 +84,7 @@ class R
   
   ViewA[Key] = -> u,e {
     {class: :pubkey,
-     c: [{_: :a, class: :pubkey, href: u.uri},u.html]}}
+     c: [{_: :a, class: :pubkey, href: u.uri},u]}}
   
   ViewGroup[User] = -> g,env {
     if env.signedIn

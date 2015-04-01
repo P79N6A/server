@@ -44,9 +44,6 @@ class R
   end
 
   def triplrJSON
-    yield uri+'#'+basename, Content, r(true).html if e && size < 255e3
-  rescue Exception => e
-    puts e
   end
 
   def to_json *a
