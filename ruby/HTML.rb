@@ -37,6 +37,8 @@ def H x # rewrite Ruby values to HTML
     'IO'
   when Method
     'function'
+  when EventMachine::DefaultDeferrable
+    'event'
   else
     puts "___________",x.class,x
     x.to_s.noHTML
