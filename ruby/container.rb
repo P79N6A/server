@@ -85,7 +85,7 @@ class R
                 [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
                 end),
                ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
-               data && (r[Title] || r[Label]) || r.R.abbr[0..64]
+               data && CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0]) || r.R.abbr[0..64]
               ]}, data ? "<br>" : " "]}}}}
 
   Icons = {
@@ -115,7 +115,7 @@ class R
               c: case k
                  when 'uri'
                    l.R.do{|r|
-                     {_: :a, href: CGI.escapeHTML(r.uri), c: l[Title]||l[Label]||r.basename}}
+                     {_: :a, href: CGI.escapeHTML(r.uri), c: CGI.escapeHTML((l[Title]||l[Label]||r.basename).justArray[0])}}
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
