@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\//) # allow grep in email
@@ -173,12 +173,22 @@ class R
 
   Abstract[SIOCt+'MailMessage'] = -> graph, g, e {
     bodies = e.q.has_key? 'bodies'
+    rdf = e.format != 'text/html'
+    e.q['sort'] ||= Size
+    group = (e.q['group']||To).expand
+    time = Time.now.to_i
+    threads = {}
+    weight = {}
 
-    if e.format == 'text/html'
+    # main container (contains cluster-containers)
+    graph[''] ||= {'uri' => ''}
+    graph[''][Type] ||= [R[Container]]
+    graph[''][LDP+'contains'] ||= []
+
+    if !rdf # add href shortcuts to HTML-UI configurations
       graph[e.uri].do{|r|
         [Mtime,Date,Size,SIOC+'has_container'].
           map{|p|r.delete p}}
-      # shortcuts to configurations
       size = g.keys.size
       if !e.q.has_key?('group') && size > 12
         listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
@@ -189,11 +199,6 @@ class R
         graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '&darr;'}
       end
     end
-
-    e.q['sort'] ||= Size
-    group = (e.q['group']||To).expand
-    threads = {}
-    weight = {}
 
     g.map{|u,p| # statistics + prune pass
       graph.delete u unless bodies # hide full-message
@@ -215,25 +220,19 @@ class R
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         dir = a.R.dir # address
         container = dir.uri.t # container URI
-        item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
-                Title => title.noHTML, Size => post[Size]} # thread resource
-        if e.format != 'text/html' # resource
-          graph[''] ||= {'uri' => ''}
-          graph[''][Type] ||= [R[Container]] # add to main container for gopherish clients like warp
-          graph[''][LDP+'contains'] ||= []
+        item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date], Mtime => time,
+                Title => title.noHTML, Size => post[Size], Type => R[Resource]} # thread resource
+        if rdf # resource
           graph[''][LDP+'contains'].push item
-          graph[item.uri] ||= {'uri' => item.uri,
-                               Mtime => Time.now.to_i,
-                               Size => item[Size],
-                               Type => R[Resource],
-                               Label => item[Title]}
+          graph[item.uri] ||= item
         end
 
-        unless graph[container] # create container
+        unless graph[container] # cluster-container
           clusters.push container
-          graph[container] = {'uri' => container, Type => R[Container], Label => a.R.fragment}
+          graph[''][LDP+'contains'].push container.R
+          graph[container] = {'uri' => container, Type => R[Resource], Label => a.R.fragment, Mtime => time, Size => 0}
         end
-        graph[container][LDP+'contains'] ||= [] # containment triples
+        graph[container][LDP+'contains'] ||= []
         graph[container][LDP+'contains'].push item }} # thread to container
 
     clusters.map{|container| # find cluster sizes
