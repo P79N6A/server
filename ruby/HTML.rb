@@ -146,6 +146,7 @@ class R
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
+                 {_: :a, href: '?rdf', c: {_: :img, src: '/css/misc/cube.svg', style: 'width:2em;margin-left:.2em'}},
                  ({_: :a, rel: :prev, href: prev, c: ['&larr; ', prev], title: '↩ previous page'} if prev),
                  ({_: :a, rel: :next, href: nxt, c: [nxt, ' →'], title: 'next page →'} if nxt),
                  ('<br>' if paged),
