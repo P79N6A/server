@@ -63,36 +63,6 @@ class H
 
 end
 
-class Array
-  def cr; intersperse "\n" end
-  def head; self[0] end
-  def h; join.h end
-  def intersperse i
-    inject([]){|a,b|a << b << i}[0..-2]
-  end
-  def tail; self[1..-1] end
-  def justArray; self end
-  def values; self end
-end
-
-class Object
-  def justArray; [self] end
-end
-
-class Fixnum
-  def max i; i > self ? self : i end
-  def min i; i < self ? self : i end
-end
-
-class Float
-  def max i; i > self ? self : i end
-  def min i; i < self ? self : i end
-end
-
-class NilClass
-  def justArray; [] end
-end
-
 class R
 
   def href name = nil

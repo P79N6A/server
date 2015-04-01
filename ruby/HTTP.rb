@@ -5,7 +5,7 @@ module Rack
   module Adapter
     def self.guess _; :rack end
     def self.load _
-      Rack::Builder.new { # also in httpd.ru for eg. argument to unicorn
+      Rack::Builder.new {
         use Rack::Deflater
         run R
       }.to_app
