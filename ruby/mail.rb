@@ -114,8 +114,9 @@ class R
     }.map{|p|
       yield e, Content, H(p.decoded.to_utf8.lines.to_a.map{|l|
         l = l.chomp
-       [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
-          {class: :q, depth: qp[1].scan(/[>|]/).size, c: qp[3].gsub('@','.').hrefs}
+        [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
+         depth = (qp[1].scan /[>|]/).size
+         {class: :q, depth: depth, c: [{_: :span, c: '> '*depth}, qp[3].gsub('@','.').hrefs]}
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
           {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
         else
