@@ -206,6 +206,7 @@ class R
         title = t[0].sub ReExpr, ''
         threads[title] ||= p
         threads[title][Size] ||= 0
+#        puts threads.class,threads[title],threads
         threads[title][Size]  += 1 } # count topic
       p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a } # hide author-description
       p[To].justArray.map(&:maybeURI).map{|a|
@@ -225,7 +226,7 @@ class R
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
         graph[item.uri] ||= item if rdf # thread RDF
-        graph[container][LDP+'contains'].push item }} # thread to container
+        graph[container][LDP+'contains'].push item }} # container -> thread link
 
     clusters.map{|container| # find cluster sizes
       graph[container][Size] = graph[container][LDP+'contains'].
