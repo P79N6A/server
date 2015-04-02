@@ -63,7 +63,8 @@ class R
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
-#  GET['/ERROR'] = -> d,e {0/0}
+  Error = -> resource, environment {0/0}
+  GET['/500'] = Error
 
   GET['/ERROR/ID'] = -> d,e {
     uri = d.path
@@ -73,14 +74,22 @@ class R
 
   E404 = -> base, env, graph=nil {
     ENV2RDF[env, graph||={}]
+    graph[env.uri][Type] = R[HTTP+'404']
     [404,{'Content-Type' => env.format},
      [Render[env.format].do{|fn|fn[graph,env]} ||
       graph.toRDF(base).dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
+
+  ViewGroup[HTTP+'404'] = -> graph, env {
+    [{c: 404, style: 'font-size:11em'}, ViewGroup[BasicResource][graph,env]]}
+
+  ViewGroup[HTTP+'500'] = -> graph, env {
+    [{c: 500, style: 'font-size:11em;color:red'}, ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
     errorURI = '/ERROR/ID/' + e.uri.h
     error = graph[e.uri]
+    error[Type] = R[HTTP+'500']
     error[Title] = [x.class, x.message.noHTML].join ' '
     error[Content] = '<pre><h2>stack</h2>' + x.backtrace.join("\n").noHTML + '</pre>'
     Errors[errorURI] = error

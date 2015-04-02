@@ -40,7 +40,7 @@ def H x # rewrite Ruby values to HTML
   when EventMachine::DefaultDeferrable
     'event'
   else
-    puts "___________",x.class,x
+    puts ["undefined HTML format for",x.class].join ' '
     x.to_s.noHTML
   end
 end
