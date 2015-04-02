@@ -156,7 +156,7 @@ class R
     # headers
     [env,env[:Links],env[:Response]].compact.map{|fields|
       fields.map{|k,v|
-        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v}}}
+        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v}}}
 
   def q; @r.q end
 
