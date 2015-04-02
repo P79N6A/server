@@ -204,10 +204,11 @@ class R
         graph.delete s.uri}
       p[Title].do{|t|
         title = t[0].sub ReExpr, ''
-        threads[title] ||= p
-        threads[title][Size] ||= 0
-#        puts threads.class,threads[title],threads
-        threads[title][Size]  += 1 } # count topic
+        unless threads[title] # init thread
+          p[Size] = 0         # member-count
+          threads[title] = p  # thread data
+        end
+        threads[title][Size] += 1 } # count occurrence
       p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a } # hide author-description
       p[To].justArray.map(&:maybeURI).map{|a|
         weight[a] ||= 0
