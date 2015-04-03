@@ -1,4 +1,5 @@
 a[rel=next], a[rel=prev]{
+    font-size:1.08em;
     max-width: 46%;
     border-radius: .33em;
     padding:.08em;

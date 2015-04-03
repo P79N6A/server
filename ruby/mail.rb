@@ -218,7 +218,8 @@ class R
 
     threads.map{|title,post| # cluster pass
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
-        container = '#' + a.R.fragment # container URI
+        container = a.R.dir.uri.t # container URI (address)
+#        container = '#' + a.R.fragment # container URI (local group)
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Label => title, Size => post[Size], Type => R[SIOC+'Thread']} # thread resource
 
