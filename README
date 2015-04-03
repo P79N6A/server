@@ -1,4 +1,4 @@
-POSIX filesystem <> RDF+HTML <> HTTP
+ a webserver
 
 INSTALL cd ruby
         bundle install # dependencies
