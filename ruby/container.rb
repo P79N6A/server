@@ -15,10 +15,10 @@ class R
     if contained.size < 22 # provide some "lookahead" on container children if small - GET URI for full
       contained.map{|c|
         if c.directory?
-          child = c.descend # trailing-slash convention
+          child = c.descend # trailing-slash convention on containers
           yield dir, LDP+'contains', child
-        else
-          yield dir, LDP+'contains', c.stripDoc
+        else # doc
+          yield dir, LDP+'contains', c.stripDoc # link to generic resource
         end
       }
     end
@@ -131,7 +131,14 @@ class R
                  when WikiText
                    Render[WikiText][l[k]]
                  else
-                   l[k]
+                   l[k].justArray.map{|v|
+                     case v
+                     when Hash
+                       v.R
+                     else
+                       v
+                     end
+                   }
                  end}, "\n"]
           }]}, "\n"]}
 
@@ -159,8 +166,6 @@ class R
                   [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
                    {_: :td, c: v.justArray.map{|v|
                       case v
-                      when R
-                        v
                       when Hash
                         v.R
                       else
