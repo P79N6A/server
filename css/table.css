@@ -1,5 +1,6 @@
+body {background-color:#000;color:#fff}
+
 table.tab {border-spacing:0}
-table.tab td {border-style:solid;border-color:#fff;border-width:.1em 0 0 0;padding:.15em}
 table.tab a {text-decoration: none}
 table.tab tr.black a {color:#000;background-color:#fff}
 table.tab tr.white a {color:#fff;background-color:#000}

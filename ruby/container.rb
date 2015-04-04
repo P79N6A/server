@@ -108,7 +108,7 @@ class R
     mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
     c = '%02x' % (255 - mag)
     color = mag > 127 ? :white : :black
-    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "color:#{color};background-color: ##{c*3}",
+    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "color:#{color};background-color: ##{c*2}ff",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
@@ -134,6 +134,45 @@ class R
                    l[k]
                  end}, "\n"]
           }]}, "\n"]}
+
+  ViewA[BasicResource] = -> r,e {
+    uri = r.uri
+    {class: :resource,
+     c: [(if uri
+          [({_: :a, href: uri, c: r[Date], class: :date} if r[Date]),
+           ({_: :a, href: r.R.editLink(e), class: :edit, title: "edit #{uri}", c: R.pencil} if e.editable),
+           {_: :a, href: uri, c: r[Title]||uri, class: :id},'<br>']
+          end),
+         {_: :table, class: :html, id: id,
+          c: r.map{|k,v|
+            {_: :tr, property: k,
+             c: case k
+                when Type
+                  types = v.justArray
+                  {_: :td, class: :val, colspan: 2,
+                   c: ['a ', types.intersperse(', ').map{|t|t.R.href}]}
+                when Content
+                  {_: :td, class: :val, colspan: 2, c: v}
+                when WikiText
+                  {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
+                else
+                  [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
+                   {_: :td, c: v.justArray.map{|v|
+                      case v
+                      when R
+                        v
+                      when Hash
+                        v.R
+                      else
+                        v
+                      end
+                    }, class: :val}]
+                end} unless k == 'uri'}}]}}
+
+  ViewGroup[BasicResource] = -> g,e {
+    [H.css('/css/html',true),
+     g.resources(e).reverse.map{|r| # sort
+       ViewA[BasicResource][r,e] }]}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
