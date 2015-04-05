@@ -184,9 +184,12 @@ class R
     weight = {}
 
     # main container (contains cluster-containers)
-    graph[''] ||= {'uri' => ''}
-    graph[''][Type] ||= [R[Container]]
-    graph[''][LDP+'contains'] ||= []
+    graph[e.uri] = {
+      'uri' => e.uri,
+      Label => e['REQUEST_PATH'],
+      Type => R[Container],
+      LDP+'contains' => [],
+    }
 
     # links
     if !bodies && size < 24 # unabbreviated view
@@ -225,7 +228,7 @@ class R
 
         unless graph[container] # init cluster-container
           clusters.push container
-          graph[''][LDP+'contains'].push container.R
+          graph[e.uri][LDP+'contains'].push container.R
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
         graph[item.uri] ||= item if rdf # thread RDF

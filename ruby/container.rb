@@ -114,8 +114,8 @@ class R
             [{_: :td, property: k,
               c: case k
                  when 'uri'
-                   l.R.do{|r|
-                     {_: :a, href: CGI.escapeHTML(r.uri), c: CGI.escapeHTML((l[Title]||l[Label]||r.basename).justArray[0])}}
+                   {_: :a, href: (CGI.escapeHTML l.uri),
+                    c: (CGI.escapeHTML (l[Title] || l[Label] ||l.R.basename).justArray[0])}
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
@@ -181,20 +181,16 @@ class R
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
-  Tabulator = -> g,e {
-    src = e.scheme + '://linkeddata.github.io/tabulator/'
-    uri = e.scheme + ':' + e.R.path.sub(/^\/tabulator/,'/')
+  Tabulator = -> g,e { src = e.scheme+'://linkeddata.github.io/tabulator/'
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
      (H.js  src + 'js/mashup/mashlib'),
      (H.css src + 'tabbedtab'),
      {_: :script, c: "
 document.addEventListener('DOMContentLoaded', function(){
     var kb = tabulator.kb;
-    var subject = kb.sym('#{uri}');
+    var subject = kb.sym('#{e.scheme+':' + e.R.path.sub(/^\/tabulator/,'/')}');
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
-}, false);
-"},
-     {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
+}, false);"}, {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
   def triplrAudio &f
     yield uri, Type, R[Sound]
