@@ -30,7 +30,7 @@ class R
       r = g[uri] ||= {} # resource
       r[Type] = R['#editable']  # tag editable resource
       r[Title] ||= e.R.basename # suggest a title
-      [LDP+'contains', Size, Creator,
+      [LDP+'contains', Size, Creator, Mtime,
        SIOC+'has_container',
        SIOC+'has_parent',
       ].map{|p|r.delete p} # ambient properties, not editable
