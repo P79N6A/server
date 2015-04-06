@@ -3,12 +3,11 @@ a[rel=next], a[rel=prev]{
     max-width: 46%;
     padding:.08em;
     text-decoration: none;
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
+    color: #00f;
     margin-right:.1em;
     margin-bottom:.1em;
     font-family: sans-serif;
 }
-a[rel=next]:hover, a[rel=prev]:hover {background-color:cyan}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
