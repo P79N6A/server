@@ -1,7 +1,6 @@
 a[rel=next], a[rel=prev]{
     font-size:1.08em;
     max-width: 46%;
-    border-radius: .33em;
     padding:.08em;
     text-decoration: none;
     background-color: #000;
@@ -13,3 +12,4 @@ a[rel=next], a[rel=prev]{
 a[rel=next]:hover, a[rel=prev]:hover {background-color:cyan}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
+.rdf {float:right;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}

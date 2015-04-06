@@ -1,14 +1,13 @@
-body {background-color:#e8e8e8;color:#000}
-a {color:#fff}
+body {background-color:#efefef;color:#000}
 table.tab {border-spacing:0}
 table.tab a {text-decoration: none}
 table.tab tr.black a {color:#000;background-color:#fff}
 table.tab tr.white a {color:#fff;background-color:#000}
 
 /* header */
-table.tab th {padding: .2em}
-table.tab th.this a {background-color: #4a00ff;color: #fff;}
-table.tab th.that a:hover {background-color: cyan;color:#fff}
+table.tab th a {padding: .2em}
+table.tab th.this a {background-color: #00f;color: #fff;}
+table.tab th.that a {background-color: #000; color:#fff}
 
 /* columns */
 table.tab td[property='uri'] {background-color: #fff;text-align:right}
