@@ -108,7 +108,7 @@ class R
     c = '%02x' % (255 - mag)
     color = mag > 127 ? :dark : :light
     this = l.uri == e.uri # environment URI
-    [{_: :tr, id: (l.R.fragment||l.uri), class: this ? :this : color, style: this ? "" : "background-color: ##{c*3}",
+    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "background-color: #{this ? R.cs : ('#'+c*3)}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
