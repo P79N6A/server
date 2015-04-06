@@ -1,6 +1,7 @@
 table.tab {border-spacing:0}
 table.tab a {text-decoration: none;background-color:#fff;color:#000}
 /* header */
+table.tab th {text-align: left}
 table.tab th.this a {background-color: #00f;color: #fff;}
 table.tab th.that a {background-color: #fff; color:#000}
 /* rows */
