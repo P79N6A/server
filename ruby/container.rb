@@ -62,7 +62,8 @@ class R
                q['reverse'] = ''
              end
              [{_: :th, property: k, class: this ? :this : :that,
-               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), c: k.R.abbr}}, "\n"]}}, "\n",
+               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs),
+                   c: k == Type ? {_: :img, src: '/css/misc/cube.svg'} : k.R.abbr}}, "\n"]}}, "\n",
           g.resources(e).send(direction).map{|row|
             TableRow[row,e,sort,direction,keys]}]}, "\n"]}
 
@@ -105,7 +106,7 @@ class R
     mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
     c = '%02x' % (255 - mag)
     color = mag > 127 ? :white : :black
-    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "color:#{color};background-color: ##{c*2}ff",
+    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "background-color: ##{c*3}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,

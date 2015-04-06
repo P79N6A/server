@@ -1,8 +1,6 @@
 body {background-color:#f4f4f4;color:#000}
 table.tab {border-spacing:0}
 table.tab a {text-decoration: none}
-table.tab tr.black a {color:#000;background-color:#fff}
-table.tab tr.white a {color:#fff;background-color:#000}
 
 /* header */
 table.tab th a {padding: .2em}
@@ -10,9 +8,9 @@ table.tab th.this a {background-color: #00f;color: #fff;}
 table.tab th.that a {background-color: #000; color:#fff}
 
 /* columns */
-table.tab td[property='uri'] {background-color: #fff;text-align:right}
-table.tab td[property='uri'],table.tab td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {border-color:#000;border-width: 0 0 .1em 0;border-style:solid }
+table.tab td[property] {vertical-align:top}
+table.tab td[property='uri'] {text-align:right}
 table.tab td[property='uri'] a,table.tab td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {color:#000;background-color:#fff;font-weight:bold;}
 table.tab td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {background-color:#fff}
-table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right;font-weight:bold}
+table.tab td[property='http://www.w3.org/ns/posix/stat#size'] {text-align:right;font-weight:bold;color:#fff}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
