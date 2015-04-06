@@ -1,4 +1,4 @@
-.container {text-align: left; vertical-align: top; display: inline-block; font-family: sans-serif}
+.container {text-align: left; vertical-align: top; display: inline-block; font-family: sans-serif;margin-bottom:.5em}
 .container a {text-decoration: none}
 .container .size {font-family: monospace; white-space: pre-wrap; color: #999}
 .container a.member:visited .size {color: #fff}

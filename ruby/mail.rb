@@ -228,7 +228,7 @@ class R
 
         unless graph[container] # init cluster-container
           clusters.push container
-          graph[e.uri][LDP+'contains'].push container.R
+#          graph[e.uri][LDP+'contains'].push container.R
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
         graph[item.uri] ||= item if rdf # thread RDF
