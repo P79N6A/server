@@ -1,4 +1,4 @@
-table.tab {border-spacing:0}
+table.tab {border-spacing:0; font-family: sans-serif}
 table.tab a {text-decoration: none}
 /* header */
 table.tab th {text-align: left}
