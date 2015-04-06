@@ -39,8 +39,8 @@ class R
     end
   end
 
-  def R.formResource form, resource
-    form.map{|p,o|                      # form-data to resource
+  def R.formToGraph form, resource
+    form.map{|p,o|
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
@@ -52,7 +52,8 @@ class R
           end
       resource[p] = o if o && p.match(HTTP_URI)
     }
-    resource[WikiText].do{|c| resource[WikiText] = {Content => c, 'datatype' => form['datatype']}}
+    resource[WikiText].do{|c|
+      resource[WikiText] = {Content => c, 'datatype' => form['datatype']}}
   end
 
   def formPOST
@@ -60,7 +61,7 @@ class R
     type = data.delete(Type)||Resource # RDF-resource type
     resource = {Type => type.R.expand} # resource
     targetResource = graph[uri] || {}  # target
-    R.formResource data, resource      # cast form to RDF graph
+    R.formToGraph data, resource       # form-data
 
     slug = -> {resource[Title] &&
               !resource[Title].empty? &&
