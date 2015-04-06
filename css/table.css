@@ -1,12 +1,13 @@
 table.tab {border-spacing:0}
 table.tab a {text-decoration: none;background-color:#fff;color:#000}
-table.tab tr.dark {color:#fff}
-table.tab tr.light {color:#000}
-
 /* header */
 table.tab th a {padding: .2em}
 table.tab th.this a {background-color: #00f;color: #fff;}
 table.tab th.that a {background-color: #000; color:#fff}
+/* rows */
+table.tab tr.dark {color:#fff}
+table.tab tr.light {color:#000}
+table.tab tr.this , table.tab tr.this td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],  table.tab tr.this td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {background-color:#00f;color:#fff}
 
 /* columns */
 table.tab td[property] {vertical-align:top}

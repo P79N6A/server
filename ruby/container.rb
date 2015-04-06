@@ -106,7 +106,8 @@ class R
     mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
     c = '%02x' % (255 - mag)
     color = mag > 127 ? :dark : :light
-    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "background-color: ##{c*3}",
+    this = l.uri == e.uri # environment URI
+    [{_: :tr, id: (l.R.fragment||l.uri), class: this ? :this : color, style: this ? "" : "background-color: ##{c*3}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
