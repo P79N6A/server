@@ -100,9 +100,6 @@ class R
     Stat+'File' => :file,
     '#editable' => :scissors,
   }
-#  types.map{|t| R::Containers[t.uri].do{|c|
-#              n = c.R.fragment
-#              [' ', {_: :a, href: id+'?new', class: :new, c: ['+',n], title: "post a #{n} to #{id.R.basename}"}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
@@ -125,7 +122,11 @@ class R
                             else
                               l.uri
                             end
-                     {_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
+                     [{_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon},
+                      Containers[t.uri].do{|c| puts "typedcont"
+                         n = c.R.fragment
+                         {_: :a, href: l.uri+'?new', c: '+', title: "new #{n} in #{l.uri}"}
+                      }]}
                  when LDP+'contains'
                    ViewA[Container][l,e,sort,direction]
                  when WikiText
