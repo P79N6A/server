@@ -1,6 +1,7 @@
-body {background-color:#f4f4f4;color:#000}
 table.tab {border-spacing:0}
-table.tab a {text-decoration: none}
+table.tab a {text-decoration: none;background-color:#fff;color:#000}
+table.tab tr.dark {color:#fff}
+table.tab tr.light {color:#000}
 
 /* header */
 table.tab th a {padding: .2em}
