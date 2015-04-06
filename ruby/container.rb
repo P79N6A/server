@@ -56,6 +56,8 @@ class R
                    c: case k
                       when Type
                         {_: :img, src: '/css/misc/cube.svg'}
+                      when SIOC+'has_container'
+                        '&uarr;'
                       when 'uri'
                         ''
                       when LDP+'contains'
