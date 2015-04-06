@@ -47,6 +47,7 @@ class R
 
   # inode -> graph
   def nodeToGraph graph
+    return unless e
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f| # just native JSON
       if @r && @r[:container] && file? # fs-meta

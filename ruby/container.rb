@@ -39,10 +39,35 @@ class R
              else
                q['reverse'] = ''
              end
-             container = k == (LDP+'contains')
              [{_: :th, property: k, class: this ? :this : :that,
-               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: container ? :container : '',
-                   c: k == Type ? {_: :img, src: '/css/misc/cube.svg'} : (container ? '' : k.R.abbr)}}, "\n"]}}, "\n",
+               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs),
+                   class: case k
+                          when LDP+'contains'
+                            :container
+                          when Size
+                            :size
+                          when Mtime
+                            :time
+                          when 'uri'
+                            :id
+                          else
+                            ''
+                          end,
+                   c: case k
+                      when Type
+                        {_: :img, src: '/css/misc/cube.svg'}
+                      when 'uri'
+                        ''
+                      when LDP+'contains'
+                        ''
+                      when Size
+                        ''
+                      when Mtime
+                        ''
+                      else
+                        k.R.abbr
+                      end
+                  }}, "\n"]}}, "\n",
           g.resources(e).send(direction).map{|row|
             TableRow[row,e,sort,direction,keys]}]}, "\n"]}
 

@@ -18,6 +18,18 @@ a.graph:before {
     content:"\f1e0";
     font-family: icons;
     font-size: 1.3em;}
+a.size:before {
+    content:"\f161";
+    font-family: icons;
+    font-size: 1.3em;}
+a.id:before {
+    content:"\f02a";
+    font-family: icons;
+    font-size: 1.3em;}
+a.time:before {
+    content:"\f017";
+    font-family: icons;
+    font-size: 1.3em;}
 a.person:before {
     content:"\f007";
     font-family: icons;
