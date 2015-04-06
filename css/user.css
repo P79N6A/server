@@ -4,7 +4,7 @@
     src: url('/css/misc/icons.woff') format('woff');
     src: url('/css/misc/icons.ttf')  format('truetype');
 }
-div.person {border:1em solid #eee; border-radius:2em;display:inline-block}
+div.person {background-color:#fff;color:#000;border:.3em solid #eee; border-radius:.3em;display:inline-block;margin:.5em .5em .5em 0}
 div.pubkey {background-color:#000;color:#fff;padding:.8em;border-radius:2em;display:inline-block;max-width:40em;overflow:hidden;margin:.8em}
 div.person a {color: #555;text-decoration:none; font-weight: bold;}
 div.pubkey a {color: #fff;text-decoration:none; font-weight: bold;}
