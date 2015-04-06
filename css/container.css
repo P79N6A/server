@@ -1,3 +1,4 @@
+tr.dark .container a {color:#fff;background-color:#000}
 .container {text-align: left; vertical-align: top; display: inline-block; font-family: sans-serif}
 .container a {text-decoration: none}
 .container .size {font-family: monospace; white-space: pre-wrap; color: #999}

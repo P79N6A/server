@@ -10,6 +10,10 @@ a.group:before {
     content:"\f0c0";
     font-family: icons;
     font-size: 1.3em;}
+a.container:before {
+    content:"\f187";
+    font-family: icons;
+    font-size: 1.3em;}
 a.graph:before {
     content:"\f1e0";
     font-family: icons;
