@@ -1,9 +1,11 @@
 table.tab {border-spacing:0; font-family: sans-serif}
 table.tab a {text-decoration: none}
 /* header */
-table.tab th {text-align: left; font-weight: normal}
-table.tab th.this a {background-color: #00f;color: #fff;padding:.2em}
-table.tab th.that a {background-color: #fff; color:#000}
+table.tab th {background-color: #fff; text-align: left; font-weight: normal}
+table.tab th a {color:#000}
+table.tab th.this {background-color: #00f}
+table.tab th.this a {color: #fff}
+
 /* rows */
 table.tab tr.dark, table.tab tr.dark a {color:#fff}
 table.tab tr.light, table.tab tr.light a {color:#000}
