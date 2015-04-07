@@ -24,6 +24,7 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label]
     keys = keys - [SIOC+'has_container'] if e.R.path == '/'
     sort = (e.q['sort']||'uri').expand
+    td = "td[property='#{sort}']"
     direction = e.q.has_key?('reverse') ? :reverse : :id
     sizes = g.values.map{|r|r[Size]}.flatten.compact
     e[:max] = size = sizes.max
@@ -32,7 +33,8 @@ class R
      {_: :style, c: "
 table.tab th[property='#{sort}'] {background-color:#e5e5e5; padding: 0 .2em 0 .3em}
 table.tab th[property='#{sort}'] a {color:#fff}
-table.tab td[property='#{sort}'] {border-style: solid; border-color: #e5e5e5; border-width: 0 .1em 0 .1em ; padding:0 .2em 0 .2em}
+table.tab #{td} {border-style: solid; border-color: #e5e5e5; border-width: 0 .1em .08em .1em ; padding:0 .2em 0 .2em}
+tr.light #{td}, tr.dark #{td}, tr.dark #{td} a, tr.light #{td} a {background-color:#fff;color:#000}
 "}, "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,

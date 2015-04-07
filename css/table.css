@@ -5,8 +5,8 @@ table.tab th {text-align: left; font-weight: normal}
 table.tab th a {color:#000}
 
 /* rows */
-table.tab tr.dark, table.tab tr.dark a {color:#fff}
-table.tab tr.light, table.tab tr.light a {color:#000}
+tr.dark,  tr.dark a {color:#fff}
+tr.light, tr.light a {color:#000}
 
 /* columns */
 table.tab td {vertical-align: bottom;border-width: .62em 0 0 0;border-style: solid; border-color: #fff;padding:0}
