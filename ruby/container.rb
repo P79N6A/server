@@ -29,17 +29,21 @@ class R
     e[:max] = size = sizes.max
     e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
     [H.css('/css/table',true), H.css('/css/container',true), "\n",
+     {_: :style, c: "
+table.tab th[property='#{sort}'] {background-color:#e5e5e5; padding: 0 .2em 0 .3em}
+table.tab th[property='#{sort}'] a {color:#fff}
+table.tab td[property='#{sort}'] {border-style: solid; border-color: #e5e5e5; border-width: 0 .1em 0 .1em ; padding:0 .2em 0 .2em}
+"}, "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
            c: keys.map{|k|
-             this = sort == k
              q = e.q.merge({'sort' => k.shorten})
              if direction == :reverse
                q.delete 'reverse'
              else
                q['reverse'] = ''
              end
-             [{_: :th, property: k, class: this ? :this : :that,
+             [{_: :th, property: k,
                c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs),
                    class: case k
                           when LDP+'contains'

@@ -3,8 +3,6 @@ table.tab a {text-decoration: none}
 /* header */
 table.tab th {text-align: left; font-weight: normal}
 table.tab th a {color:#000}
-table.tab th.this {background-color: #00f}
-table.tab th.this a {color: #fff}
 
 /* rows */
 table.tab tr.dark, table.tab tr.dark a {color:#fff}
