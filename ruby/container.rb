@@ -131,9 +131,9 @@ class R
                               l.uri
                             end
                      [{_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon},
-                      Containers[t.uri].do{|c| puts "typedcont"
+                      Containers[t.uri].do{|c|
                          n = c.R.fragment
-                         {_: :a, href: l.uri+'?new', c: '+', title: "new #{n} in #{l.uri}"}
+                         {_: :a, href: l.uri+'?new', c: '+', class: :new, title: "new #{n} in #{l.uri}"}
                       }]}
                  when LDP+'contains'
                    ViewA[Container][l,e,sort,direction]
