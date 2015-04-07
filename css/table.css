@@ -12,5 +12,5 @@ table.tab tr.light, table.tab tr.light a {color:#000}
 
 /* columns */
 table.tab td {vertical-align: bottom;border-width: .62em 0 0 0;border-style: solid; border-color: #fff;padding:0}
-table.tab td[property='uri'] {text-align:right; font-weight: bold;padding: .2em}
+table.tab td[property='uri'] {text-align:right; font-weight: bold;padding: .16em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
