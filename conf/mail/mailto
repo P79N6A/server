@@ -1,2 +1,2 @@
 #!/bin/sh
-urxvt -e mutt "$1"
+gnome-terminal -e "mutt \"$1\""
