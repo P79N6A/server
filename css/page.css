@@ -1,13 +1,11 @@
 a[rel=next], a[rel=prev]{
-    font-size:1.08em;
+    border-radius:.18em;
     max-width: 46%;
-    padding:.08em;
-    text-decoration: none;
-    background-color: #fff;
-    color: #00f;
-    margin-right:.1em;
-    margin-bottom:.1em;
-    font-family: sans-serif;
-}
+    text-decoration: none;font-family: sans-serif;
+    background-color: #ccc;
+    color: #fff;
+    margin:0 .1em .1em 0;}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
+a[rel=prev].a, a[rel=next].a {font-size:1.15em}
+a[rel=next].b {font-size:2em;padding: .1em .28em .1em .28em}
