@@ -122,7 +122,6 @@ class R < RDF::URI
 MIME
 names
 acl
-chat
 container
 DELETE
 edit
