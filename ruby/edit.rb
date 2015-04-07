@@ -95,7 +95,7 @@ class R
            {_: :input, type: :submit, value: 'write'}].cr}}
 
   def editLink env
-    (env.R.join stripFrag) + '?edit' + (fragment ? ('&fragment=' + fragment) : '')
+    (env.R.join stripFrag) + '?' + (env[404] ? 'new' : 'edit') + (fragment ? ('&fragment=' + fragment) : '')
   end
 
 end

@@ -51,11 +51,8 @@ class R
     FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
     if set.empty?
-      if init # create resource
-        @r[404] = true # just make a note of it..
-      else
-        return E404[self,@r,m] # not found
-      end
+      @r[404] = true
+      return E404[self,@r,m] unless init # not found
     end
 
     @r[:Response].

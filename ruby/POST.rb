@@ -69,14 +69,14 @@ class R
 
     subject = if data.uri # existing subject
                 data.uri
-              else # create resource
+              else # new subject
                 @r[:Status] = 201 # mark as new
-                if directory? # container POST
-                  resource[SIOC+'has_container'] = R[uri.t] # container pointer
+                if directory? # container target
+                  resource[SIOC+'has_container'] = R[uri.t] # containment
                   targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # lookup type-handlers
-                    POST[c].do{|h| h[resource,targetResource,@r]}} # run type-handler
-                  resource.uri || (uri.t + slug[] + '#') # contained-resource
-                elsif Containers[resource[Type].maybeURI] # create container
+                    POST[c].do{|h| h[resource,targetResource,@r]}} # type-handler
+                  resource.uri || (uri.t + slug[] + '#') # resource
+                elsif Containers[resource[Type].maybeURI] # creating a container
                   mk; uri.t
                 else # generic resource
                   '#' + slug[]
@@ -84,11 +84,11 @@ class R
               end
     located = (join subject).R.setEnv @r
 
-    if resource.keys.size==1 && resource[Type] # empty resource
-      located.fragmentPath.a('.e').delete # obsoleted-version URI
+    if resource.keys.size==1 && resource[Type] # empty resource?
+      located.fragmentPath.a('.e').delete # unlink current
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
-    else # update resource
+    else # update
       resource.update({ 'uri' => subject,         # URI
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
@@ -101,9 +101,8 @@ class R
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
     path = fragmentPath          # version-base URI
     doc = path + '/' + ts + '.e' # version-doc URI
-    rel = uri # keep full-URI (faster)
-#    rel = URI(stripFrag.uri).route_to(uri).to_s # find relative-URI
-#    re['uri'] = rel     # localize identifier
+    rel = URI(stripFrag.uri).route_to(uri).to_s # free base
+    re['uri'] = rel     # identify
     graph = {rel => re} # graph
     doc.w graph, true   # write graph
     cur = path.a '.e'   # live-version URI
