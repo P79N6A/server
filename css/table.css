@@ -3,13 +3,14 @@ table.tab a {text-decoration: none}
 /* header */
 table.tab th {text-align: left; font-weight: normal; padding: 0 .2em 0 .3em}
 table.tab th a {color:#000}
+th a.date, th a.time, th a.size, th a.container, th a.title {font-size:1.4em}
 
 /* rows */
 tr.dark,  tr.dark a {color:#fff}
 tr.light, tr.light a {color:#000}
 
 /* columns */
-table.tab td {vertical-align: bottom;border-width: .37em 0 0 0;border-style: solid; border-color: #fff;padding:0}
-table.tab td[property='uri'] {text-align:right; font-weight: bold;padding: .16em}
+table.tab td {vertical-align: bottom;border-width: .37em 0 0 0;border-style: solid; border-color: #fff}
+table.tab td[property='uri'] {text-align:right; font-weight: bold}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td a.new {font-weight:bold;font-size:1.9em;color: #0f0}

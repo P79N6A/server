@@ -33,8 +33,7 @@ class R
      {_: :style, c: "
 table.tab th[property='#{sort}'] {background-color:#ddd}
 table.tab th[property='#{sort}'] a {color:#fff}
-table.tab #{td} {border-style: solid; border-color: #e5e5e5; border-width: 0 .1em .15em .1em ; padding:0 .2em 0 .2em}
-tr.light #{td}, tr.dark #{td}, tr.dark #{td} a, tr.light #{td} a {background-color:#fff;color:#000}
+table.tab #{td} {border-style: solid; border-color: #eee; border-width: .37em .1em 0 .1em ; padding:0 .2em 0 .2em}
 "}, "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
@@ -54,8 +53,14 @@ tr.light #{td}, tr.dark #{td}, tr.dark #{td} a, tr.light #{td} a {background-col
                             :size
                           when Mtime
                             :time
+                          when Date
+                            :date
                           when 'uri'
                             :id
+                          when SIOC+'has_creator'
+                            :user
+                          when Title
+                            :title
                           else
                             ''
                           end,
@@ -68,10 +73,16 @@ tr.light #{td}, tr.dark #{td}, tr.dark #{td} a, tr.light #{td} a {background-col
                         ''
                       when LDP+'contains'
                         ''
+                      when SIOC+'has_creator'
+                        ''
                       when Size
+                        ''
+                      when Date
                         ''
                       when Mtime
                         ''
+                      when Title
+                        'T'
                       else
                         k.R.abbr
                       end
