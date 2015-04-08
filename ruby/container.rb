@@ -168,43 +168,6 @@ table.tab #{td} {border-style: solid; border-color: #fffc00; border-width: .37em
                  end}, "\n"]
           }]}, "\n"]}
 
-  ViewA[BasicResource] = -> r,e {
-    uri = r.uri
-    {class: :resource,
-     c: [(if uri
-          [({_: :a, href: uri, c: r[Date], class: :date} if r[Date]),
-           ({_: :a, href: r.R.editLink(e), class: :edit, title: "edit #{uri}", c: R.pencil} if e.editable),
-           {_: :a, href: uri, c: r[Title]||uri, class: :uri},'<br>']
-          end),
-         {_: :table, class: :html, id: id,
-          c: r.map{|k,v|
-            {_: :tr, property: k,
-             c: case k
-                when Type
-                  types = v.justArray
-                  {_: :td, class: :val, colspan: 2,
-                   c: ['a ', types.intersperse(', ').map{|t|t.R.href}]}
-                when Content
-                  {_: :td, class: :val, colspan: 2, c: v}
-                when WikiText
-                  {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
-                else
-                  [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
-                   {_: :td, c: v.justArray.map{|v|
-                      case v
-                      when Hash
-                        v.R
-                      else
-                        v
-                      end
-                    }, class: :val}]
-                end} unless k == 'uri'}}]}}
-
-  ViewGroup[BasicResource] = -> g,e {
-    [H.css('/css/html',true),
-     g.resources(e).reverse.map{|r| # sort
-       ViewA[BasicResource][r,e] }]}
-
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
   Tabulator = -> g,e { src = e.scheme+'://linkeddata.github.io/tabulator/'

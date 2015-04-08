@@ -101,7 +101,7 @@ class R
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
     path = fragmentPath          # version-base URI
     doc = path + '/' + ts + '.e' # version-doc URI
-    rel = URI(stripFrag.uri).route_to(uri).to_s # free base
+    rel = uri[-1] == '/' ? path : URI(stripFrag.uri).route_to(uri).to_s # strip base-URI
     re['uri'] = rel     # identify
     graph = {rel => re} # graph
     doc.w graph, true   # write graph
