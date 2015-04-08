@@ -116,7 +116,7 @@ class R
         l = l.chomp
         [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
          depth = (qp[1].scan /[>|]/).size
-         {class: :q, depth: depth, c: [{_: :span, c: '> '*depth}, qp[3].gsub('@','.').hrefs]}
+         {class: :q, depth: depth, c: [{_: :span, c: '&gt; '*depth}, qp[3].gsub('@','.').hrefs]}
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
           {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
         else
