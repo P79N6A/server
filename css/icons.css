@@ -6,77 +6,22 @@
     src: url('/css/misc/icons.ttf')  format('truetype');
 }
 a.group, a.graph, a.person, a.dir, a.file, a.img, a.rel {text-decoration: none}
-a.group:before {
-    content:"\f0c0";
-    font-family: icons;
-    font-size: 1.3em;}
-a.container:before {
-    content:"\f187";
-    font-family: icons;
-    font-size: 1.3em;}
-a.graph:before {
-    content:"\f1e0";
-    font-family: icons;
-    font-size: 1.3em;}
-a.size:before {
-    content:"\f161";
-    font-family: icons;
-    font-size: 1.3em;}
-a.id:before {
-    content:"\f02a";
-    font-family: icons;
-    font-size: 1.3em;}
-a.time:before {
-    content:"\f017";
-    font-family: icons;
-    font-size: 1.3em;}
-a.person:before {
-    content:"\f007";
-    font-family: icons;
-    font-size: 1.3em;}
-a.dir:before {
-    content:"\f07c";
-    font-family: icons;
-    font-size: 1.3em;}
-a.scissors:before {
-    color: #0f0;
-    content:"\f0c4";
-    font-family: icons;
-    font-size: 1.3em;}
-a.file:before {
-    content:"\f15b";
-    font-family: icons;
-    font-size: 1.3em;
-    border-width: 0;}
-a.warp:before {
-    content:"\f135";
-    font-family: icons;
-    font-size: 1.3em;
-    border-width: 0;}
-a.img:before {
-    content:"\f03e";
-    font-family: icons;
-    font-size: 1.3em;
-    border-width: 0;}
-a.thread:before {
-    content:"\f03c";
-    font-family: icons;
-    border-width: 0;}
-a.rel:before {
-    content:"\f0a5";
-    font-family: icons;
-    border-width: 0;}
+a.group:before { content:"\f0c0"; font-family: icons; font-size: 1.3em;}
+a.container:before { content:"\f187"; font-family: icons; font-size: 1.3em;}
+a.graph:before { content:"\f1e0"; font-family: icons; font-size: 1.3em;}
+a.size:before { content:"\f161"; font-family: icons; font-size: 1.3em;}
+a.id:before { content:"\f02a"; font-family: icons; font-size: 1.3em;}
+a.date:before { content:"\f073"; font-family: icons; font-size: 1.3em;}
+a.time:before { content:"\f017"; font-family: icons; font-size: 1.3em;}
+a.person:before { content:"\f007"; font-family: icons; font-size: 1.3em;}
+a.dir:before { content:"\f07c"; font-family: icons; font-size: 1.3em;}
+a.scissors:before { color: #0f0; content:"\f0c4"; font-family: icons; font-size: 1.3em;}
+a.file:before { content:"\f15b"; font-family: icons; font-size: 1.3em; border-width: 0;}
+a.warp:before { content:"\f135"; font-family: icons; font-size: 1.3em; border-width: 0;}
+a.img:before { content:"\f03e"; font-family: icons; font-size: 1.3em; border-width: 0;}
+a.thread:before { content:"\f03c"; font-family: icons; border-width: 0;}
+a.rel:before { content:"\f0a5"; font-family: icons; border-width: 0;}
 a.identify, a.user {text-decoration:none;}
 a.identify {color: #ccc;margin-left:.12em}
-a.identify:before {
-    content:"\f235";
-    font-family: icons;
-    font-size: 1.3em;
-}
-a.identify:hover {color: cyan}
-a.user:before {
-    content:"\f234";
-    font-family: icons;
-    font-size: 1.5em;
-    color:#aeff28;
-}
+a.identify:before { content:"\f235"; font-family: icons; font-size: 1.3em;}
+a.user:before { content:"\f234"; font-family: icons; font-size: 1.5em; color:#aeff28;}

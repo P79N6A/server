@@ -2,30 +2,33 @@
 
 module Th
 
-  def format # memoized selectFormat
+  def format # memoized MIME
     @format ||= selectFormat
   end
 
-  Prefer = {
-    'text/turtle' => 0,
-    'text/n3' => 1,
-    'application/rdf+xml' => 2,
+  Prefer = { # tiebreaker order (lowest wins)
+    'text/html' => 0,
+    'text/turtle' => 1,
+    'text/n3' => 2,
+    'application/xhtml+xml' => 3,
+    'application/rdf+xml' => 4,
   }
 
   def selectFormat
-    # query-string
+    # 1. query-string
     return 'text/turtle' if q.has_key? 'rdf'
-    # name extension/suffix
+
+    # 2. explicit suffix
     { '.html' => 'text/html',
       '.json' => 'application/json',
       '.nt' => 'text/plain',
       '.n3' => 'text/n3',
       '.ttl' => 'text/turtle',
     }[File.extname(self['REQUEST_PATH'])].do{|mime| return mime}
-    # HTTP Header
 
-    accept.sort.reverse.map{|q,mimes| # MIMES by descending q-value
-      mimes.sort_by{|m|Prefer[m]||2}.map{|mime|
+    # 3. Accept-Header
+    accept.sort.reverse.map{|q,mimes| # MIMES in descending q-order
+      mimes.sort_by{|m|Prefer[m]||2}.map{|mime| # apply tiebreakers
         return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}}
 
     'text/html'
@@ -38,8 +41,8 @@ class R
 
   def mime # MIME-type of associated fs node
     @mime ||=
-      (p = realpath # dereference final location
-       unless p     # deref failed
+      (p = realpath # dereference links
+       unless p     # broken link
          nil
        else
          t = ((File.extname p).tail || '').downcase
@@ -158,18 +161,12 @@ class R
     mime.do{|mime|
       (MIMEsource[mime]||
        MIMEsource[mime.split(/\//)[0]]).do{|s|
-#        puts "triplr #{uri} #{s}"
         send *s,&b }}
   end
 
-  def triplrN3 &b
-    triplrRDF :n3, &b
-  end
-
-  def triplrTurtle &b
-    triplrRDF :turtle, &b
-  end
-
+  # normalize RDF.rb emitters to our types (s,p are URI in String)
+  def triplrN3 &b; triplrRDF :n3, &b end
+  def triplrTurtle &b; triplrRDF :turtle, &b end
   def triplrRDF f
     RDF::Reader.open(pathPOSIX, :format => f, :base_uri => stripDoc){|r|
       r.each_triple{|s,p,o|
