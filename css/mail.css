@@ -3,7 +3,6 @@ body {margin: 0}
 .mail {clear:both;background-color:#fff;color:#000;margin-bottom:.62em}
 .mail .header {position:relative}
 .mail a {text-decoration:none; font-weight: bold; font-size: 1.15em; font-family: sans-serif;background-color:#fff;color:#000}
-.mail a[name] {color: #fff}
 .mail .author {position:absolute;top:0;right:100%;margin-right:.2em;padding:.05em .1em .05em .1em}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .mail .body {font-family: monospace}
