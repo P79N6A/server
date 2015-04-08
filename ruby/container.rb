@@ -31,9 +31,9 @@ class R
     e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
     [H.css('/css/table',true), H.css('/css/container',true), "\n",
      {_: :style, c: "
-table.tab th[property='#{sort}'] {background-color:#ddd}
+table.tab th[property='#{sort}'] {background-color:#eee}
 table.tab th[property='#{sort}'] a {color:#fff}
-table.tab #{td} {border-style: solid; border-color: #eee; border-width: .37em .1em 0 .1em ; padding:0 .2em 0 .2em}
+table.tab #{td} {border-style: solid; border-color: #fffc00; border-width: .37em 0 0 0 ; padding:0 .2em 0 .2em}
 "}, "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
