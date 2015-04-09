@@ -98,17 +98,18 @@ class R
   end
 
   def writeResource re, build = true
+    r = re.R # resource pointer
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
     path = fragmentPath          # version-base URI
     doc = path + '/' + ts + '.e' # version-doc URI
-    rel = uri[-1] == '/' ? path : URI(stripFrag.uri).route_to(uri).to_s # strip base-URI
-    re['uri'] = rel     # identify
-    graph = {rel => re} # graph
-    doc.w graph, true   # write graph
-    cur = path.a '.e'   # live-version URI
-    cur.delete if cur.e # unlink obsolete-version
-    doc.ln_s cur        # link live-version
-    buildDoc if build   # update containing-doc
+    s = r.uri.match(/#/) ? ('#'+r.fragment) : r.path # strip base-URI
+    re['uri'] = s     # identify
+    graph = {s => re} # graph
+    doc.w graph, true # write graph
+    cur = path.a '.e' # live-version URI
+    cur.delete if cur.e # unlink old
+    doc.ln_s cur      # link live-version
+    buildDoc if build # update containing-doc
   end
 
   def buildDoc

@@ -21,6 +21,8 @@ def H x # Ruby values to HTML
     '<input type="checkbox" title="True"/>'
   when String
     x
+  when Symbol
+    x.to_s
   when Array
     x.map{|n|H n}.join
   when Float
