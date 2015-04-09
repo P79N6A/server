@@ -17,7 +17,6 @@ class R
         content.hrefs
       end}}
 
-  ViewGroup[SIOCt+'Wiki'] = ViewGroup[BasicResource]
   ViewGroup[SIOCt+'WikiArticle'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticle'][r,e]}}
   ViewGroup[SIOCt+'WikiArticleSection'] = -> g,e {g.map{|u,r|ViewA[SIOCt+'WikiArticleSection'][r,e]}}
 
