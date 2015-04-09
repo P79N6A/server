@@ -126,8 +126,6 @@ class R
   alias_method :m, :mtime
   def size;     node.size end
 
-  ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = TabularView
-
   FileSet[Resource] = -> e,q,g {
     this = g['']
     e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # paginate day-dirs

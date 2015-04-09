@@ -143,6 +143,7 @@ POST
 PUT
 schema
 search
+table
 text
 uid
 wiki

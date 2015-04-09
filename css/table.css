@@ -10,7 +10,7 @@ tr.dark,  tr.dark a {color:#fff}
 tr.light, tr.light a {color:#000}
 
 /* columns */
-table.tab td {vertical-align: bottom;border-width: .37em 0 0 0;border-style: solid; border-color: #fff}
+table.tab td {vertical-align: bottom;border-width: 0 0 .5em 0;border-style: solid; border-color: #fff}
 table.tab td[property='uri'] {text-align:right; font-weight: bold}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td a.new {font-weight:bold;font-size:1.9em;color: #0f0}
