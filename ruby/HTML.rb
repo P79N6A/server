@@ -141,7 +141,8 @@ class R
     {class: :resource,
      c: [(if uri
           [({_: :a, href: uri, c: r[Date], class: :date} if r[Date]),
-           ({_: :a, href: r.R.editLink(e), class: :edit, title: "#{e[404] ? 'create' : 'edit'} #{uri}", c: R.pencil} if e.editable),
+           ({_: :a, href: r.R.editLink(e), class: :edit, c: R.pencil,
+             title: "#{e[404] ? 'create' : 'edit'} #{uri}"} if e.editable && e.host==r.R.host),
            {_: :a, href: uri, c: r[Title]||uri, class: :uri},'<br>']
           end),
          {_: :table, class: :html, id: id,
@@ -175,22 +176,22 @@ class R
 
   Icons = {
     'uri' => :id,
-    LDP+'contains' => :container,
     Container => :dir,
+    Date => :date,
     Directory => :warp,
     FOAF+'Person' => :person,
     GraphDoc => :graph,
-    Resource => :graph,
-    Title => :title,
     Image => :img,
-    Size => :size,
+    LDP+'contains' => :container,
     Mtime => :time,
-    Date => :date,
+    Resource => :graph,
     SIOC+'Thread' => :thread,
     SIOC+'Usergroup' => :group,
-    Stat+'File' => :file,
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :dir,
+    Size => :size,
+    Stat+'File' => :file,
+    Title => :title,
     '#editable' => :scissors,
   }
 
