@@ -1,4 +1,4 @@
-table.tab {background-color: #fff;color:#000; font-family: sans-serif}
+table.tab {background-color: #fff;color:#000; font-family: sans-serif;float:left}
 table.tab a {text-decoration: none}
 /* header */
 table.tab th {text-align: left; font-weight: normal; padding: 0 .2em 0 .3em}
