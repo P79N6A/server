@@ -13,7 +13,7 @@ class R
     [H.css('/css/table',true), H.css('/css/container',true), "\n",
      {_: :style, c: "
 table.tab th[property='#{sort}'] {background-color:#{e[:color]}}
-table.tab td[property='#{sort}'] {border-style: solid; border-color: #{e[:color]}; border-width: 0 0 .1em 0; padding:0 .2em 0 .2em}
+table.tab td[property='#{sort}'] {border-style: solid; border-color: #{e[:color]}; border-width: 0 0 .16em 0; padding:0 .2em 0 .2em}
 "}, "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
