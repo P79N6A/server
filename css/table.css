@@ -2,8 +2,7 @@ table.tab {background-color: #fff;color:#000; font-family: sans-serif;float:left
 table.tab a {text-decoration: none}
 /* header */
 table.tab th {text-align: left; font-weight: normal; padding: 0 .2em 0 .3em}
-table.tab th a {color:#000}
-th a.date, th a.time, th a.size, th a.container, th a.title {font-size:1.3em}
+table.tab th a {color:#000;font-size:1.5em}
 
 /* rows */
 tr.dark,  tr.dark a {color:#fff}
@@ -13,4 +12,5 @@ tr.light, tr.light a {color:#000}
 table.tab td {vertical-align: bottom;border-width: 0 0 .1em 0;border-style: solid; border-color: #fff}
 table.tab td[property='uri'] {text-align:right; font-weight: bold}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
+table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
 table.tab td a.new {font-weight:bold;font-size:1.9em;color: #0f0}

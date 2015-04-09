@@ -13,7 +13,7 @@ class R
     [H.css('/css/table',true), H.css('/css/container',true), "\n",
      {_: :style, c: "
 table.tab th[property='#{sort}'] {background-color:#{e[:color]}}
-table.tab td[property='#{sort}'] {border-style: solid; border-color: #{e[:color]}; border-width: 0 0 .1em 0; padding:0 .2em 0 .2em}
+table.tab td[property='#{sort}'] {border-style: solid; border-color: #{e[:color]}; border-width: 0 0 0 .1em; padding:0 .2em 0 .2em}
 "}, "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
@@ -25,47 +25,14 @@ table.tab td[property='#{sort}'] {border-style: solid; border-color: #{e[:color]
                q['reverse'] = ''
              end
              [{_: :th, property: k,
-               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs),
-                   class: case k
-                          when LDP+'contains'
-                            :container
-                          when Size
-                            :size
-                          when Mtime
-                            :time
-                          when Date
-                            :date
-                          when 'uri'
-                            :id
-                          when SIOC+'has_creator'
-                            :user
-                          when Title
-                            :title
-                          else
-                            ''
-                          end,
-                   c: case k
-                      when Type
-                        {_: :img, src: '/css/misc/cube.svg'}
-                      when SIOC+'has_container'
-                        '&uarr;'
-                      when 'uri'
-                        ''
-                      when LDP+'contains'
-                        ''
-                      when SIOC+'has_creator'
-                        ''
-                      when Size
-                        ''
-                      when Date
-                        ''
-                      when Mtime
-                        ''
-                      when Title
-                        'T'
-                      else
-                        k.R.abbr
-                      end
+               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
+                   c: if Type == k
+                    {_: :img, src: '/css/misc/cube.svg'}
+                  elsif Icons[k]
+                    ''
+                  else
+                    k.R.abbr
+                   end
                   }}, "\n"]}}, "\n",
           g.resources(e).send(direction).map{|row|
             TableRow[row,e,sort,direction,keys]}]}, "\n"]}

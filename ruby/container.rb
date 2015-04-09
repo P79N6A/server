@@ -42,19 +42,6 @@ class R
                data && CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s) || r.R.abbr[0..64]
               ]}, data ? "<br>" : " "]}}}}
 
-  Icons = {
-    Container => :dir,
-    Directory => :warp,
-    FOAF+'Person' => :person,
-    GraphDoc => :graph,
-    Resource => :graph,
-    Image => :img,
-    SIOC+'Thread' => :thread,
-    SIOC+'Usergroup' => :group,
-    Stat+'File' => :file,
-    '#editable' => :scissors,
-  }
-
   def triplrAudio &f
     yield uri, Type, R[Sound]
     yield uri, Title, bare

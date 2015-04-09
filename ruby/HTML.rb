@@ -173,4 +173,25 @@ class R
      g.resources(e).reverse.map{|r| # sort
        ViewA[BasicResource][r,e] }]}
 
+  Icons = {
+    'uri' => :id,
+    LDP+'contains' => :container,
+    Container => :dir,
+    Directory => :warp,
+    FOAF+'Person' => :person,
+    GraphDoc => :graph,
+    Resource => :graph,
+    Title => :title,
+    Image => :img,
+    Size => :size,
+    Mtime => :time,
+    Date => :date,
+    SIOC+'Thread' => :thread,
+    SIOC+'Usergroup' => :group,
+    Stat+'File' => :file,
+    SIOC+'has_creator' => :user,
+    SIOC+'has_container' => :dir,
+    '#editable' => :scissors,
+  }
+
 end
