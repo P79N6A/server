@@ -22,15 +22,11 @@ class R
 
   ViewA[SIOCt+'WikiArticle'] = -> r,e {
     doc = r.R.docroot.uri
-    [{_: :a,
-      class: :articleTitle,
-      href: r.uri, c: r[Title]},
-     ([{_: :a, class: :edit, href: r.R.editLink(e), c: R.pencil,
-        title: 'edit article description'},
-       {_: :a, class: :addSection, href: doc + '?new&type=sioct:WikiArticleSection', c: '+section',
-        title: 'add section'}] if e.editable),
-     '<br>',
-     Render[WikiText][r[WikiText]]]}
+    [{_: :h1, c: {_: :a, href: r.uri, c: r[Title]}},
+     Render[WikiText][r[WikiText]],
+     ([{_: :a, style: 'font-size:1.5em',href: r.R.editLink(e), c: R.pencil, title: 'edit article description'},
+       {_: :a, href: doc + '?new&type=sioct:WikiArticleSection', c: '+section', title: 'add section'}] if e.editable),
+    ]}
 
   ViewA[SIOCt+'WikiArticleSection'] = -> r,e {
     {class: :section,
