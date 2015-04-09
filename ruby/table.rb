@@ -4,18 +4,16 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label]
     keys = keys - [SIOC+'has_container'] if e.R.path == '/'
     sort = (e.q['sort']||'uri').expand
-    td = "td[property='#{sort}']"
     direction = e.q.has_key?('reverse') ? :reverse : :id
     sizes = g.values.map{|r|r[Size]}.flatten.compact
     e[:max] = size = sizes.max
-    e[:selectionColor] = R.cs
+    e[:color] = R.cs
     e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
 
     [H.css('/css/table',true), H.css('/css/container',true), "\n",
      {_: :style, c: "
-table.tab th[property='#{sort}'] {background-color:#eee}
-table.tab th[property='#{sort}'] a {color:#fff}
-table.tab #{td} {border-style: solid; border-color: #{e[:selectionColor]}; border-width: 0 0 .5em 0; padding:0 .2em 0 .2em}
+table.tab th[property='#{sort}'] {background-color:#{e[:color]}}
+table.tab td[property='#{sort}'] {border-style: solid; border-color: #{e[:color]}; border-width: 0 0 .1em 0; padding:0 .2em 0 .2em}
 "}, "\n",
      {_: :table, :class => :tab,
       c: [{_: :tr,
@@ -77,7 +75,7 @@ table.tab #{td} {border-style: solid; border-color: #{e[:selectionColor]}; borde
     c = '%02x' % (255 - mag)
     color = mag > 127 ? :dark : :light
     this = l.uri == e.uri # environment URI
-    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "background-color: #{this ? e[:selectionColor] : ('#'+c*3)}",
+    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "background-color: #{this ? e[:color] : ('#'+c*3)}",
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
