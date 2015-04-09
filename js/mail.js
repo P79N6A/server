@@ -76,14 +76,5 @@ function tick() {
     node.attr("transform", function(d) { return "translate(" + d.x + "," + (d.pos || 0) + ")"; });
 }
 
-function click(d) {
-    if(window.location.hash.slice(1) == d.uri) {
-	window.location = d.uri
-    } else {
-	window.location.hash = d.uri
-    }
-}
-
-function mouseover(d) {
-    window.location.hash = d.uri
-}
+function click(d) {window.location.hash = d.uri}
+function mouseover(d) {window.location.hash = d.uri}
