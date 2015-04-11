@@ -74,11 +74,12 @@ class R
                 if directory? # container target
                   resource[SIOC+'has_container'] = R[uri.t] # containment
                   targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # lookup type-handlers
-                    POST[c].do{|h| h[resource,targetResource,@r]}} # type-handler
+                    POST[c].do{|h| puts "POST to #{c} at #{uri}"
+                      h[resource,targetResource,@r]}} # type-handler
                   resource.uri || (uri.t + slug[] + '#') # resource
-                elsif Containers[resource[Type].maybeURI] # creating a container
+                elsif Containers[resource[Type].maybeURI] # new, creating a container
                   mk; uri.t
-                else # generic resource
+                else
                   '#' + slug[]
                 end
               end

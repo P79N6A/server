@@ -25,7 +25,7 @@ class R
   }
 
   # post to a Post (reply)
-  POST[SIOC+'Post'] = -> reply, post, env {
+  POST[SIOC+'BoardPost'] = -> reply, post, env {
     thread = post[SIOC+'has_discussion'].R
     postURI = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '') + '/'
     reply.update({ 'uri' => postURI,
