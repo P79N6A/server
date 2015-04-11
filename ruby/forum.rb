@@ -2,8 +2,8 @@
 #watch __FILE__
 class R
 
-  POST[Forum] = -> thread, forum, env {
-    time = Time.now.iso8601
+  POST[Forum] = -> thread, forum, env { # default handler creates thread, add OP here
+    time = Time.now.iso8601             # and mint a custom URI for the thread..
     title = thread[Title]
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
     postURI = thread.uri + time.gsub(/[-+:T]/, '') + '/'
