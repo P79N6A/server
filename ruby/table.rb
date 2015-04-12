@@ -1,21 +1,25 @@
 class R
 
   TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label]
-    keys = keys - [SIOC+'has_container'] if e.R.path == '/'
-    sort = (e.q['sort']||'uri').expand
-    direction = e.q.has_key?('reverse') ? :reverse : :id
-    sizes = g.values.map{|r|r[Size]}.flatten.compact
-    e[:max] = size = sizes.max
     e[:color] = R.cs
-    e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label] # label used in lieu of URI
+    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide parent(s) if any on /
+    sort = (e.q['sort']||'uri').expand                      # default to URI-sort
+    direction = e.q.has_key?('reverse') ? :reverse : :id    # forward or reverse
+    # visualize scale on numeric-sorts
+    if [Size,Mtime].member? sort
+      sizes = g.values.map{|r|r[Size]}.flatten.compact
+      e[:max] = size = sizes.max
+      e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
+    end
 
-    [H.css('/css/table',true), H.css('/css/container',true), "\n",
-     {_: :style, c: "
+    [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
+     {_: :style, # add CSS for selection-color
+      c: "
 table.tab th[property='#{sort}'] {background-color:#{e[:color]}}
 table.tab td[property='#{sort}'] {border-style: dotted; border-color: #{e[:color]}; border-width: 0 .1em .1em .1em; padding:0 .2em 0 .2em}
 "}, "\n",
-     {_: :table, :class => :tab,
+     {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
            c: keys.map{|k|
              q = e.q.merge({'sort' => k.shorten})
@@ -37,12 +41,19 @@ table.tab td[property='#{sort}'] {border-style: dotted; border-color: #{e[:color
           g.resources(e).send(direction).map{|row|
             TableRow[row,e,sort,direction,keys]}]}, "\n"]}
 
-    TableRow = -> l,e,sort,direction,keys {
-    mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
-    c = '%02x' % (255 - mag)
-    color = mag > 127 ? :dark : :light
-    this = l.uri == e.uri # environment URI
-    [{_: :tr, id: (l.R.fragment||l.uri), class: color, style: "background-color: #{this ? e[:color] : ('#'+c*3)}",
+    TableRow = -> l,e,sort,direction,keys { this = l.uri == e.uri # highlight environment row
+      style = if this
+                "background-color: #{e[:color]}"
+              else
+                nil
+              end
+      bright = :light
+      if e[:scale]
+        mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
+        bright = :dark if mag > 127
+        style = "background-color: ##{('%02x' % (255 - mag))*3}" unless this
+      end
+      [{_: :tr, id: (l.R.fragment||l.uri), class: bright, style: style,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
