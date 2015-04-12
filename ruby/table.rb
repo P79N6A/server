@@ -18,10 +18,11 @@ class R
     end
 
     [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
-     {_: :style, # add CSS for selection-color
+     {_: :style, # add CSS for selected-column
       c: "
 table.tab th[property='#{sort}'] {background-color:#{e[:color]}}
 table.tab td[property='#{sort}'] {border-style: dotted; border-color: #{e[:color]}; border-width: 0 .1em .1em .1em; padding:0 .2em 0 .2em}
+.container a.member:visited {color: #fff;background-color: #{e[:color]}}
 "}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
