@@ -6,11 +6,15 @@ class R
     keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide parent(s) if any on /
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # forward or reverse
+
     # visualize scale on numeric-sorts
     if [Size,Mtime].member? sort
-      sizes = g.values.map{|r|r[Size]}.flatten.compact
-      e[:max] = size = sizes.max
-      e[:scale] = 255.0 / (size && size > 0 && size || 255).to_f
+      sizes = g.values.map{|r|r[sort]}.flatten.compact
+      range = 0.0
+      e[:max] = max = sizes.max.to_f
+      e[:min] = min = sizes.min.to_f
+      e[:range] = range = max - min if max && min
+      e[:scale] = 255.0 / (range && range > 0 && range || 255.0)
     end
 
     [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
@@ -49,7 +53,8 @@ table.tab td[property='#{sort}'] {border-style: dotted; border-color: #{e[:color
               end
       bright = :light
       if e[:scale]
-        mag = l[Size].justArray[0].do{|s|s * e[:scale]} || 0
+        mag = l[sort].justArray[0].do{|s|
+          (s - e[:min]) * e[:scale]} || 0
         bright = :dark if mag > 127
         style = "background-color: ##{('%02x' % (255 - mag))*3}" unless this
       end
