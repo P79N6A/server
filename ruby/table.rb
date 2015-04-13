@@ -62,7 +62,7 @@ table.tab td[property='#{sort}'] {border-style: dotted; border-color: #{e[:color
       [{_: :tr, id: (l.R.fragment||l.uri), class: bright, style: style,
       c: ["\n",
           keys.map{|k|
-            [{_: :td, property: k,
+            [{_: :td, property: k,style: this ? "border-color: #{e[:color]}" : '',
               c: case k
                  when 'uri'
                    {_: :a, href: (CGI.escapeHTML l.uri),
