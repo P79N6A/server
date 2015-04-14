@@ -1,4 +1,6 @@
 .rdf {float:right;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
+td.key {text-align:right}
+td.key a, a.uri {font-weight: bold;text-decoration:none;color:#444;background-color:#fff}
 @font-face {
     font-family: "icons";
     src: url('/css/misc/icons.eot');

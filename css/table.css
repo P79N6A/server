@@ -1,5 +1,6 @@
-table.tab {background-color: #fff;color:#000;border-spacing:0; font-family: sans-serif;float:left}
+table.tab {border-spacing:0; font-family: sans-serif}
 table.tab a {text-decoration: none}
+
 /* header */
 table.tab th {vertical-align: bottom; font-weight: normal; padding: 0 .2em 0 .3em}
 table.tab th a {color:#000;font-size:1.5em}

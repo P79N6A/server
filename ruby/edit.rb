@@ -44,14 +44,14 @@ class R
        href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
   ViewGroup['#editable'] = -> graph, e {
-    [graph.map{|u,r|ViewA['#editable'][r,e]},
-     H.css('/css/edit'), H.css('/css/html')]}
+    [graph.map{|u,r|ViewA['#editable'][r,e]}, H.css('/css/edit')]}
 
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     datatype = e.q['datatype'] || 'markdown'
     re[Title] ||= ''
     re[WikiText] ||= ''
+    re[Type] ||= R[WikiArticle]
      {_: :form, method: :POST,
        c: [{_: :table, class: :html,
             c: [re.uri.do{|uri|
@@ -70,7 +70,7 @@ class R
                                  [{_: :input, type: :hidden,  name: :uri, value: o}, o]
                                when Type
                                  unless ['#editable', Directory].member?(o.uri)
-                                   [{_: :input, type: :hidden,  name: Type, value: o.uri}, o.R.href]
+                                   {_: :input, name: Type, value: o.uri}
                                  end
                                when Content # RDF:HTML literal
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}

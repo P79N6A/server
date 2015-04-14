@@ -151,10 +151,6 @@ class R
           c: r.map{|k,v|
             {_: :tr, property: k,
              c: case k
-                when Type
-                  types = v.justArray
-                  {_: :td, class: :val, colspan: 2,
-                   c: ['a ', types.intersperse(', ').map{|t|t.R.href}]}
                 when Content
                   {_: :td, class: :val, colspan: 2, c: v}
                 when WikiText
@@ -172,9 +168,7 @@ class R
                 end} unless k == 'uri'}}]}}
 
   ViewGroup[BasicResource] = -> g,e {
-    [H.css('/css/html',true),
-     g.resources(e).reverse.map{|r| # sort
-       ViewA[BasicResource][r,e] }]}
+    g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
 
   Icons = {
     'uri' => :id,
