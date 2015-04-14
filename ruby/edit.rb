@@ -28,7 +28,8 @@ class R
         uri = uri + '#' + e.q['fragment']
       end
       r = g[uri] ||= {} # resource
-      r[Type] = R['#editable']  # tag editable resource
+      r[Type] ||= []
+      r[Type].push R['#editable']
       r[Title] ||= e.R.basename # suggest a title
       [LDP+'contains', Size, Creator, Mtime,
        SIOC+'has_container',
@@ -69,9 +70,7 @@ class R
                                when 'uri'
                                  [{_: :input, type: :hidden,  name: :uri, value: o}, o]
                                when Type
-                                 unless ['#editable', Directory].member?(o.uri)
-                                   {_: :input, name: Type, value: o.uri}
-                                 end
+                                 {_: :input, name: Type, value: o.uri} unless o.uri == '#editable'
                                when Content # RDF:HTML literal
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when WikiText # HTML, Markdown, or plaintext
