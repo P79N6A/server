@@ -50,14 +50,6 @@ class R
          {_: :span, class: :desc, c: r[Content]},
          ({_: :a, class: :post, href: r.R.stripFrag.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "post"]} if editPtr)]}}
 
-  ViewGroup[SIOC+'Thread'] = -> g,e {
-    [H.css('/css/thread',true),
-     g.values.map{|r|ViewA[SIOC+'Thread'][r,e]}]}
-
-  ViewA[SIOC+'Thread']= -> r,e {
-    forum = r[SIOC+'has_container'].justArray[0]
-    {_: :h2,
-     c: [({_: :a, class: :forum, href: forum.uri, c: forum.R.basename + '/'} if forum),
-         {_: :a, class: :thread,href: r.uri, c: r[Title]}]}}
+  ViewGroup[SIOC+'Thread'] = ViewGroup[Resource]
 
 end
