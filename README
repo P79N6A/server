@@ -2,10 +2,10 @@ INSTALL cd ruby
         bundle install # dependencies
 	./install      # link source to lib-path
 
-USAGE  foreman start # HTTP (port 80) and HTTPS (port 443)
+USAGE  foreman start # HTTP and HTTPS
   # link ruby/Procfile to . or give -f argument
-  # httpd.ru can be used with other Rack-API servers
-  # to allow a normal user to listen on 80/443:
+  # httpd.ru can be used to launch other Rack-API servers
+  # to allow listen on 80/443: (standalone, rather than high-port behind nginx/apache/lighttpd)
   # $ setcap cap_net_bind_service=+ep `which ruby`
 
 HOST  mkdir domain/hostname
