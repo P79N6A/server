@@ -181,7 +181,6 @@ class R
     LDP+'contains' => :container,
     Mtime => :time,
     Resource => :graph,
-    SIOC+'Thread' => :thread,
     SIOC+'Usergroup' => :group,
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :dir,

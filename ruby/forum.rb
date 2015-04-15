@@ -37,19 +37,7 @@ class R
                    SIOC+'reply_to' => R[postURI + '?new']
                  })}
 
-  ViewGroup[Forum] = -> g,e {
-    [H.css('/css/forum',true),
-     g.values.map{|r|ViewA[Forum][r,e]}]}
-
-  ViewA[Forum] = -> r,e {
-    editing = e.q.has_key?('new') || e.q.has_key?('edit')
-    editPtr = !editing && e.signedIn
-    {class: :forum,
-     c: [{_: :a, class: :title, href: r.uri.t + '?set=first-page', c: r[Title]},
-         ({_: :a, class: :edit, href: r.uri + '?edit', c: '✑', title: 'edit forum-details'} if editPtr),'<br>',
-         {_: :span, class: :desc, c: r[Content]},
-         ({_: :a, class: :post, href: r.R.stripFrag.uri + '?new', c: [{_: :span, class: :pen, c: "✑"}, "post"]} if editPtr)]}}
-
+  ViewGroup[Forum] = ViewGroup[Resource]
   ViewGroup[SIOC+'Thread'] = ViewGroup[Resource]
 
 end

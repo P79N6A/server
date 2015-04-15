@@ -7,7 +7,6 @@ class R
     Wiki => SIOCt+'WikiArticle',
     Forum            => SIOC+'Thread',
     SIOC+'Thread'    => SIOCt+'BoardPost',
-   SIOCt+'BoardPost' => SIOCt+'BoardPost',
   }
 
   Filter[Container] = -> g,e { # summarize a container
