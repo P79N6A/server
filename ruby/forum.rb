@@ -2,11 +2,12 @@
 #watch __FILE__
 class R
 
-  POST[Forum] = -> thread, forum, env { # default handler creates thread, add OP here
-    time = Time.now.iso8601             # and mint a custom URI for the thread..
+  POST[Forum] = -> thread, forum, env { # base handler creates thread (Container->contained mapping)
+                                        # we also want an "original post" in the thread. create it here
+    time = Time.now.iso8601             # also we mint a bespoke URI for the thread
     title = thread[Title]
     thread['uri'] = forum.uri + time[0..10].gsub(/[-T]/,'/') + title.slugify + '/'
-    postURI = thread.uri + time.gsub(/[-+:T]/, '') + '/'
+    postURI = thread.uri + time.gsub(/[-+:T]/, '')
     op = {
       'uri' => postURI,
       Creator => env.user,
@@ -16,8 +17,9 @@ class R
       WikiText => (thread.delete WikiText),
       SIOC+'has_discussion' => thread.R,
       SIOC+'has_container' => thread.R,
-      SIOC+'reply_to' => R[postURI + '?new']}
-    postURI.R.writeResource op }
+      SIOC+'reply_to' => R[thread.uri + '?new']}
+
+    postURI.R.writeResource op } # store OP
 
   # post to a Thread
   POST[SIOC+'Thread'] = -> post, thread, env {
