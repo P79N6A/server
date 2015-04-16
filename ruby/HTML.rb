@@ -139,33 +139,32 @@ class R
        end}]}
 
   ViewA[BasicResource] = -> r,e {
-    uri = r.uri
-    {class: :resource,
-     c: [(if uri
-          [({_: :a, href: uri, c: r[Date], class: :date} if r[Date]),
-           ({_: :a, href: r.R.editLink(e), class: :edit, c: R.pencil,
-             title: "#{e[404] ? 'create' : 'edit'} #{uri}"} if e.editable && e.host==r.R.host),
-           {_: :a, href: uri, c: r[Title]||uri, class: :uri},'<br>']
-          end),
-         {_: :table, class: :html, id: id,
-          c: r.map{|k,v|
-            {_: :tr, property: k,
-             c: case k
-                when Content
-                  {_: :td, class: :val, colspan: 2, c: v}
-                when WikiText
-                  {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
-                else
-                  [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
-                   {_: :td, c: v.justArray.map{|v|
-                      case v
-                      when Hash
-                        v.R
-                      else
-                        v
-                      end
-                    }, class: :val}]
-                end} unless k == 'uri'}}]}}
+    uri = if r.uri
+            r.uri.split(e.uri)[-1]
+          else
+            rand.to_s.h
+          end
+    {_: :table, class: :html, id: uri,
+     c: r.map{|k,v|
+       {_: :tr, property: k,
+        c: case k
+           when 'uri'
+             {_: :td, colspan: 2, c: {_: :a, href: uri, c: uri}}
+           when Content
+             {_: :td, class: :val, colspan: 2, c: v}
+           when WikiText
+             {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
+           else
+             [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
+              {_: :td, c: v.justArray.map{|v|
+                 case v
+                 when Hash
+                   v.R
+                 else
+                   v
+                 end
+               }, class: :val}]
+           end}}}}
 
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
