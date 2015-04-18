@@ -63,8 +63,7 @@ class R
     targetResource = graph[uri] || {}  # target
     R.formToGraph data, resource       # form-data
 
-    slug = -> {resource[Title] &&
-              !resource[Title].empty? &&
+    slug = -> {resource[Title] && !resource[Title].empty? &&
                resource[Title].slugify || rand.to_s.h[0..7]}
 
     subject = if data.uri # existing subject
@@ -75,12 +74,12 @@ class R
                   resource[SIOC+'has_container'] = R[uri.t] # containment
                   targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # lookup type-handlers
                     POST[c].do{|h| puts "POST to #{c} at #{uri}"
-                      h[resource,targetResource,@r]}} # type-handler
-                  resource.uri || (uri.t + slug[] + '#') # resource
-                elsif Containers[resource[Type].maybeURI] # new, creating a container
-                  mk; uri.t
-                else
-                  '#' + slug[]
+                      h[resource,targetResource,@r]}} # typed POST-handler
+                  resource.uri || (uri.t + slug[] + '#') # contained-resource URI
+                elsif Containers[resource[Type].maybeURI] # create a container
+                  mk; uri.t # create fs-container, ensure trailing-slash URI
+                else # create generic resource URI
+                  '#' + slug[] # fragment in doc
                 end
               end
     located = (join subject).R.setEnv @r

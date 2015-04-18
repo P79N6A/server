@@ -125,14 +125,15 @@ acl
 container
 DELETE
 edit
-forum
 fs
 GET
 graph
 HEAD
 HTML
+table
 HTTP
 JSON
+forum
 image
 mail
 man
@@ -143,7 +144,6 @@ POST
 PUT
 schema
 search
-table
 text
 uid
 wiki

@@ -156,8 +156,8 @@ class R
       title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
         {class: :mail, id: r.uri,
-         c: [r[Title].do{|t|
-               title = t[0].sub ReExpr, ''
+         c: [r[Title].justArray[0].do{|t|
+               title = t.sub ReExpr, ''
                if titles[title]
                  nil
                else

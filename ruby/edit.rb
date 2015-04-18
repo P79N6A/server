@@ -1,6 +1,9 @@
 #watch __FILE__
 class R
 
+  FileSet['history'] = -> d,env,g {
+    FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
+
   Filter['edit'] = -> g,e { # add editor resources to model
 
     # new resource
@@ -70,7 +73,7 @@ class R
                                when 'uri'
                                  [{_: :input, type: :hidden,  name: :uri, value: o}, o]
                                when Type
-                                 {_: :input, name: Type, value: o.uri} unless o.uri == '#editable'
+                                 {_: :input, name: Type, value: o.uri, size: 54} unless o.uri == '#editable'
                                when Content # RDF:HTML literal
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when WikiText # HTML, Markdown, or plaintext
