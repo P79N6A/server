@@ -103,10 +103,8 @@ class R
                  e[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 ([H.css('/css/page',true),
-                   H.js('/js/pager',true)] if paged),
-                 H.css('/css/icons',true),
-                ]},
+                 ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
+                 H.css('/css/icons',true)]},
             {_: :body,
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
