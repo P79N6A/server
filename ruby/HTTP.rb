@@ -64,7 +64,7 @@ class R
   end
 
   Error = -> resource, environment {0/0}
-  GET['/500'] = Error
+#  GET['/500'] = Error
 
   GET['/ERROR/ID'] = -> d,e {
     uri = d.path
