@@ -149,7 +149,9 @@ class R
     # View
     [H.css('/css/mail',true),
      {_: :style,
-      c: colors.map{|name,c| ".mail a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {background-color: #{c}}\n"}},
+      c: colors.map{|name,c|
+        [".mail .header a[name=\"#{name}\"] {color: #000; background-color: #{c}}\n",
+".mail[author=\"#{name}\"] .body a {color: #{c}; border-style: dotted; border-width: 0 0 .14em 0; border-color: #{c}}\n"]}},
      {_: :a, class: :noquote, rel: :nofollow,
       href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs),
       c: quotes ? '&#x27ea;' : '&#x27eb;',
