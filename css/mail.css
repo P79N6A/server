@@ -8,8 +8,7 @@ body {margin: 0}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .mail .body {font-family: monospace}
 .mail .q > span {display:none}
-.mail .q[depth] {border-radius: .13em}
-.mail .q[depth="1"] {background-color:#000;color:#fff;    margin-left:-.15em; padding-left:.15em}
+.mail .q[depth="1"] {background-color:#fff;color:#000;    margin-left:-.15em; padding-left:.15em}
 .mail .q[depth="2"] {background-color:#0F1A51;color:#fff; margin-left:-0.8em; padding-left:.15em}
 .mail .q[depth="3"] {background-color:#033684;color:#fff; margin-left:-1.3em}
 .mail .q[depth="4"] {background-color:#3F0F86;color:#fff; margin-left:-2.0em}
