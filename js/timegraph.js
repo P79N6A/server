@@ -5,14 +5,14 @@ links.forEach(function(link) { // unique nodes from arc-list
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
 			    name:  link.sourceName,
-			    size: (link.sourceSize || 17),
+			    size: 16,
 			    pos: link.sourcePos * (height - 16) + 8,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
-			    size: 17,
+			    size: 16,
 			    pos: link.targetPos * (height - 16) + 8,
 			   });
 });
@@ -66,5 +66,12 @@ function tick() {
     node.attr("transform", function(d) { return "translate(" + d.x + "," + (d.pos || 0) + ")"; });
 }
 
-function click(d) {window.location.hash = d.uri}
+function click(d) {
+    var uri = d.uri
+    if(document.getElementById(uri)) {
+	window.location.hash = uri
+    } else {
+	window.location = uri
+    }
+}
 function mouseover(d) {window.location.hash = d.uri}
