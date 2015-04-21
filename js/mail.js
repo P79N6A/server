@@ -30,25 +30,12 @@ var svg = d3.select("body").append("svg")
     .attr("width", window.innerWidth)
     .attr("height", height);
 
-svg.append('svg:defs').append('svg:marker')
-    .attr('id', 'end-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr("refX", 10)
-    .attr('markerWidth', 3)
-    .attr('markerHeight', 3)
-    .attr('orient', 'auto')
-    .append('svg:path')
-    .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#ddd');
-
 var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
     .attr("class", "link")
     .style('stroke', function(d){
-	return (d.arcColor || '#ccc')
-    })
-    .style('marker-end', 'url(#end-arrow)');
+	return (d.sourceColor || '#ccc')});
 
 var node = svg.selectAll(".node")
     .data(force.nodes())
@@ -65,7 +52,11 @@ node.append("text")
 
 node.append("rect")
     .style("fill", function(d) { return d.color; })
-    .attr("width", function(d) { return d.size; }).attr("x",function(d) { return d.size * -1 + 10; }).attr("height", 9);
+    .attr("width", function(d) { return d.size; })
+    .attr("x",function(d) { return d.size * -1 + 10; })
+    .attr("height", 9)
+    .attr("rx",4)
+    .attr("ry",4);
 
 function tick() {
     link.attr("x1", function(d) { return d.source.x; })
