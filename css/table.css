@@ -16,5 +16,6 @@ tr.light, tr.light a {color:#000}
 table.tab td {border-radius: .16em; vertical-align: bottom}
 table.tab td[property='uri'] {text-align:right; font-weight: bold;white-space: nowrap;padding:.1em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
-table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
+table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] {background-color:#000}
+table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {color: #fff;font-size: 1.5em}
 table.tab td a.new {font-weight:bold;font-size:1.5em;color: #0f0;background-color: #fff;border-radius:.2em;padding: 0 .13em 0 .13em}
