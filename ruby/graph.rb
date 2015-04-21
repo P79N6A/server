@@ -128,7 +128,7 @@ class Array
   def sortRDF env
     sort = (env.q['sort']||'dc:date').expand
     sortType = [R::Size, R::Stat+'mtime'].member?(sort) ? :to_i : :to_s
-    sort_by{|i|
+    compact.sort_by{|i|
       ((if i.class==Hash
         if sort == 'uri'
           i[R::Label] || i.uri
