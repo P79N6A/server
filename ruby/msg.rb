@@ -157,11 +157,11 @@ class R
         {class: :mail, id: r.uri,
          c: [r[Title].justArray[0].do{|t|
                title = t.sub ReExpr, ''
-               if titles[title]
+               if titles[title] # title already shown
                  nil
                else
                  titles[title] = true
-                 {_: :a, class: :title, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title}
+                 {_: :a, class: :subject, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title}
                end},
              {class: :header,
               c: [r[Creator].do{|c|

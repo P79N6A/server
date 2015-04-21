@@ -6,6 +6,7 @@ body {margin: 0}
 .mail .author {position:absolute;top:0;right:100%;margin-right:.2em;}
 .mail .author, .mail a[name] {padding:.05em .1em .05em .1em}
 .mail .ts, .mail .discussion, .noquote {float: right}
+.mail .subject {background-color:#f3f3f3;color:#000;padding: 0 6em 0 .3em}
 .mail .body {font-family: monospace}
 .mail .q > span {display:none}
 .mail .q[depth="1"] {background-color:#fff;color:#000;    margin-left:-.15em; padding-left:.15em}
