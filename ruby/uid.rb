@@ -69,22 +69,13 @@ class R
         Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
     end}
 
-  ViewGroup[FOAF+'Person'] = ViewGroup['http://ns.rww.io/wapp#app'] = -> g,env {
-    [H.css('/css/user'),
-     g.map{|u,r| ViewA[FOAF+'Person'][r,env]}]}
-
-  ViewA[FOAF+'Person'] = -> u,e {
-    {class: :person,
-     c: [u[FOAF+'img'].justArray.map{|img|{_: :img, class: :avatar, src: img.uri}},
-         ViewA[BasicResource][u,e]]}}
+  ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
 
   ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env {
     [H.css('/css/user'),
      g.map{|u,r| ViewA[Key][r,env]}]}
   
-  ViewA[Key] = -> u,e {
-    {class: :pubkey,
-     c: [{_: :a, class: :pubkey, href: u.uri},u]}}
+  ViewA[Key] = -> u,e {{class: :pubkey, c: [{_: :a, class: :pubkey, href: u.uri},u]}}
   
   ViewGroup[User] = -> g,env {
     if env.signedIn
@@ -96,7 +87,5 @@ class R
   ViewA[User] = -> u,e {
     [{_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
      ViewA[BasicResource][u,e]]}
-
-  ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
 
 end
