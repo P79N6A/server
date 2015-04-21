@@ -4,12 +4,11 @@ body {margin: 0}
 
 .mail .header {position:relative}
 .mail .header a {background-color:#000;color:#fff}
-.mail a {text-decoration:none; font-weight: bold; border-radius: .15em; font-size: 1.15em}
+.mail a {text-decoration:none; font-weight: bold; border-radius: .15em; font-size: 1.125em}
 .mail .author {position:absolute;top:1em;right:100%;margin-right:.2em;}
 .mail .author, .mail a[name] {padding:.05em .1em .05em .1em}
 .mail .ts, .mail .discussion, .noquote {float: right}
-.mail .header .title {background-color:  #eee;color:#000;padding:.1em}
-.mail .header .title a {background-color:#eee;color:#000}
+.mail .header a.subject {background-color:#fff;color:#000;font-size:1.3em;padding:.18em}
 .mail a.attached {color:#777}
 
 .mail .body {font-family: monospace}

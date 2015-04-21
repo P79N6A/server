@@ -151,7 +151,7 @@ class R
      {_: :style,
       c: colors.map{|name,c|
         [".mail .header a[name=\"#{name}\"] {color: #000; background-color: #{c}}\n",
-".mail[author=\"#{name}\"] .body a {color: #{c}; border-style: dotted; border-width: 0 0 .14em 0; border-color: #{c}}\n"]}},
+         ".mail[author=\"#{name}\"] .body a {color: #fff; background-color: #{c}}\n"]}},
      {_: :a, class: :noquote, rel: :nofollow,
       href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs),
       c: quotes ? '&#x27ea;' : '&#x27eb;',
@@ -162,11 +162,11 @@ class R
          c: [{class: :header,
               c: [r[Title].justArray[0].do{|t|
                     title = t.sub ReExpr, ''
-                    if titles[title] # title already shown
+                    if titles[title] # already shown
                       nil
                     else
                       titles[title] = true
-                      {class: :title, c: {_: :a, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title}}
+                      [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title},"<br/>"]
                     end},
                   r[Creator].do{|c| {_: :a, class: :author, name: author, href: c[0].uri, c: author}},
                   r[To].justArray.map{|o|
