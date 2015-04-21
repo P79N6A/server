@@ -27,7 +27,7 @@ body {margin: 0}
 .noquote:hover {background-color: #ddd}
 img {max-width: 100%}
 svg {position: fixed;top: 0;left: 0;z-index:-1}
-svg, body {background-color:#000;color:#fff}
+svg, body, .mail .body {background-color:#000;color:#fff}
 .link {fill: none;stroke-width: .14em; stroke: #bbb}
 rect {fill: #f8f8f8}
 text {fill: #000; font: .88em sans-serif;pointer-events: none;text-anchor: end}
