@@ -235,7 +235,7 @@ class R
         graph[container][LDP+'contains'].push item }} # container -> thread link
 
     graph['#author'] = {'uri' => '#author', Type => R[Container],
-                         LDP+'contains' => authors.map{|a,size| size > 1 ? {'uri' => a, Size => size} : nil}}
+                         LDP+'contains' => authors.map{|a,size| size > 2 ? {'uri' => a, Size => size} : nil}}
 
     clusters.map{|container| # count cluster-sizes
       graph[container][Size] = graph[container][LDP+'contains'].
