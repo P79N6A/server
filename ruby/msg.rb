@@ -150,8 +150,7 @@ class R
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c|
-        [".mail .header a[name=\"#{name}\"] {color: #000; background-color: #{c}}\n",
-         ".mail[author=\"#{name}\"] .body a {color: #fff; background-color: #{c}}\n"]}},
+        ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
      {_: :a, class: :noquote, rel: :nofollow,
       href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs),
       c: quotes ? '&#x27ea;' : '&#x27eb;',
