@@ -120,8 +120,8 @@ class R
       arc = {source: '/'+d.gsub('-','/'),
              target: '/'+yesterday[0].gsub('-','/'),
              sourceName: d,
-             sourceColor: '#ddd',
-             targetColor: '#ddd',
+             sourceColor: '#eee',
+             targetColor: '#eee',
              sourcePos: (max - m) / range,
              targetPos: (max - yesterday[1]) / range,
             }

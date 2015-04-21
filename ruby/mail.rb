@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/address\//) # allow grep in email
@@ -180,23 +180,22 @@ class R
     group = (e.q['group']||To).expand
     size = g.keys.size
     threads = {}
+    authors = {}
     clusters = []
     weight = {}
 
-    # main container (contains cluster-containers)
+    # original container
     graph[e.uri] = {
-      'uri' => e.uri,
-      Label => e['REQUEST_PATH'],
+      'uri' => e.uri, Label => e.R.basename,
       Type => R[Container],
-      LDP+'contains' => [],
+      SIOC+'has_container' => e.R.parentURI,
     }
 
-    # links
+    # links to alternate container-filterings
     if !bodies && size < 24 # unabbreviated view
       fullURI = e.q.merge({'bodies' => ''}).qs
       graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '↓'}
     end
-
     if !rdf && !e.q.has_key?('group') # list view
       listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
       graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
@@ -204,10 +203,10 @@ class R
 
     g.map{|u,p| # statistics + prune pass
       graph.delete u unless bodies # hide full-message
-      p[DC+'source'].justArray.map{|s| # hide originating-file
+      p[DC+'source'].justArray.map{|s| # hide originating-file metadata
         graph.delete s.uri}
-      p[Title].do{|t|
-        title = t[0].sub ReExpr, ''
+      p[Title].do{|t| # title
+        title = t[0].sub ReExpr, '' # strip reply-prefix
         unless threads[title] # init thread
           p[Size] = 0         # member-count
           threads[title] = p  # thread data
@@ -221,20 +220,18 @@ class R
 
     threads.map{|title,post| # cluster pass
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
-        container = a.R.dir.uri.t # container URI (address)
-#        container = '#' + a.R.fragment # container URI (local group)
+        container = a.R.dir.uri.t # container URI
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
                 Label => title, Size => post[Size], Type => R[SIOC+'Thread']} # thread resource
 
         unless graph[container] # init cluster-container
           clusters.push container
-#          graph[e.uri][LDP+'contains'].push container.R
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
-        graph[item.uri] ||= item if rdf # thread RDF
+        graph[item.uri] ||= item if rdf # add thread to RDF graph
         graph[container][LDP+'contains'].push item }} # container -> thread link
 
-    clusters.map{|container| # find cluster sizes
+    clusters.map{|container| # count cluster-sizes
       graph[container][Size] = graph[container][LDP+'contains'].
                                justArray.inject(0){|sum,val| sum += (val[Size]||0)}}}
 
