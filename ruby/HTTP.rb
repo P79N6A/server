@@ -58,13 +58,13 @@ class R
       Stats[:format][mime] += 1}
     puts [e['REQUEST_METHOD'], s,
           [e.scheme, '://', e.host, e['REQUEST_URI']].join,
-          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format,
+          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format, e['HTTP_ACCEPT'],
           e['HTTP_REFERER']].
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
   Error = -> resource, environment {0/0}
-#  GET['/500'] = Error
+#  GET['/500'] = Error # throw some errors to see what happens
 
   GET['/ERROR/ID'] = -> d,e {
     uri = d.path
