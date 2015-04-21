@@ -212,7 +212,10 @@ class R
           threads[title] = p  # thread data
         end
         threads[title][Size] += 1 } # count occurrence
-      p[Creator].justArray.map(&:maybeURI).map{|a| graph.delete a } # hide author-description
+      p[Creator].justArray.map(&:maybeURI).map{|a|
+        authors[a] ||= 0
+        authors[a] += 1 # count authoring
+        graph.delete a } # hide author-description
       p[To].justArray.map(&:maybeURI).map{|a|
         weight[a] ||= 0
         weight[a] += 1   # count recipient-occurrence
@@ -230,6 +233,9 @@ class R
         end
         graph[item.uri] ||= item if rdf # add thread to RDF graph
         graph[container][LDP+'contains'].push item }} # container -> thread link
+
+    graph['#author'] = {'uri' => '#author', Type => R[Container],
+                         LDP+'contains' => authors.map{|a,size| {'uri' => a, Size => size}}}
 
     clusters.map{|container| # count cluster-sizes
       graph[container][Size] = graph[container][LDP+'contains'].
