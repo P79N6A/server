@@ -1,9 +1,10 @@
 a[rel=next], a[rel=prev]{
-    border-radius:.18em;
+    border-radius:.12em;
     max-width: 46%;
     text-decoration: none;font-family: sans-serif;
-    background-color: #ccc;
+    background-color: #111;
     color: #fff;
+    border: .1em dotted #333;
     margin:0 .1em .1em 0;}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
