@@ -234,8 +234,7 @@ class R
         graph[item.uri] ||= item if rdf # add thread to RDF graph
         graph[container][LDP+'contains'].push item }} # container -> thread link
 
-    graph['#author'] = {'uri' => '#author', Type => R[Container],
-                         LDP+'contains' => authors.map{|a,size| size > 2 ? {'uri' => a, Size => size} : nil}}
+    graph[e.uri][LDP+'contains'] = authors.map{|a,size| size > 2 ? {'uri' => a, Size => size} : nil}
 
     clusters.map{|container| # count cluster-sizes
       graph[container][Size] = graph[container][LDP+'contains'].
