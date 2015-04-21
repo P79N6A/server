@@ -149,14 +149,14 @@ class R
     # View
     [H.css('/css/mail',true),
      {_: :style,
-      c: [".mail .body a {background-color: #{R.cs};color:#000}\n",
-          colors.map{|name,c| ".mail a[name=\"#{name}\"] {background-color: #{c}}\n"}]},
+      c: colors.map{|name,c| ".mail a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {background-color: #{c}}\n"}},
      {_: :a, class: :noquote, rel: :nofollow,
       href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs),
       c: quotes ? '&#x27ea;' : '&#x27eb;',
       title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
-        {class: :mail, id: r.uri,
+        author = r[Creator].do{|c| c[0].R.fragment } || 'anonymous'
+        {class: :mail, author: author, id: r.uri,
          c: [{class: :header,
               c: [r[Title].justArray[0].do{|t|
                     title = t.sub ReExpr, ''
@@ -166,9 +166,7 @@ class R
                       titles[title] = true
                       {class: :title, c: {_: :a, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title}}
                     end},
-                  r[Creator].do{|c|
-                    author = c[0].R.fragment
-                    {_: :a, class: :author, name: author, href: c[0].uri, c: author}},
+                  r[Creator].do{|c| {_: :a, class: :author, name: author, href: c[0].uri, c: author}},
                   r[To].justArray.map{|o|
                     {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'has_parent'].do{|ps|

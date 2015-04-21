@@ -1,6 +1,7 @@
 body {margin: 0}
 .messages {float: left;margin-left:21%;font-family: sans-serif;}
 .mail {clear:both;margin-bottom:.62em}
+
 .mail .header {position:relative}
 .mail .header a {background-color:#000;color:#fff}
 .mail a {text-decoration:none; font-weight: bold; border-radius: .15em; font-size: 1.15em}
@@ -11,7 +12,7 @@ body {margin: 0}
 .mail .header .title a {background-color:#eee;color:#000}
 
 .mail .body {font-family: monospace}
-
+.mail .body a {background-color:#fff;color:#000}
 .mail .q > span {display:none}
 .mail .q[depth="1"] {background-color:#fff;color:#000;    margin-left:-.15em; padding-left:.15em}
 .mail .q[depth="2"] {background-color:#0F1A51;color:#fff; margin-left:-0.8em; padding-left:.15em}
