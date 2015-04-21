@@ -104,14 +104,14 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
-                 H.css('/css/icons',true)]},
+                 H.css('/css/base',true)]},
             {_: :body,
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
                  {_: :a, href: '?rdf', rel: :nofollow, c: {_: :img, src: '/css/misc/cube.svg', class: :rdf}},
-                 ({_: :a, rel: :prev, class: :a, href: prev, c: ['&larr; ', prev], title: '↩ previous page'} if prev),
-                 ({_: :a, rel: :next, class: :a, href: nxt, c: [nxt, ' →'], title: 'next page →'} if nxt),
+                 ({_: :a, rel: :prev, class: :a, href: prev, c: ['<span>←</span> ', prev], title: 'previous page'} if prev),
+                 ({_: :a, rel: :next, class: :a, href: nxt, c: ['<span>→</span> ', nxt], title: 'next page'} if nxt),
                  ('<br clear="all"/>' if paged),
                  view[d,e],
                  ({_: :a, rel: :next, class: :b, href: nxt, c: '→'} if nxt),

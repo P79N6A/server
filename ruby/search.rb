@@ -46,10 +46,10 @@ class R
     o = r.has_key?('asc') ? :asc : :desc                   # direction
     (d.take c, o, r['offset'].do{|o|o.R}).do{|s|           # get page
       if r['offset'] && head = s[0] # go backwards
-        d.env[:Links][:prev] = d.uri + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
+        d.env[:Links][:prev] = d.path + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
       end
       if edge = s.size >= c && s.pop # another page exists
-        d.env[:Links][:next] = d.uri + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
+        d.env[:Links][:next] = d.path + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
       end
       s }}
 
