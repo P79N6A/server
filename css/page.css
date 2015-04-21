@@ -1,7 +1,6 @@
 a[rel=next], a[rel=prev]{border-radius:.3em;overflow:hidden;
     max-width: 46%; text-decoration: none;font-family: sans-serif;
     background-color: #f8f8f8; color: #222; font-size:.92em}
-a[rel=next] span, a[rel=prev] span {font-size:2em}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
 a[rel=next].b {font-size:2em; padding: .1em}
