@@ -41,7 +41,7 @@ class R
      {_: :style, # add CSS for selected-column
       c: "
 table.tab th[property='#{sort}'] {background-color:#{e[:color]}}
-table.tab td[property='#{sort}'] {border-style: dotted; border-color: #{e[:color]}; border-width: 0 .1em .1em .1em; padding:0 .2em 0 .2em}
+table.tab td[property='#{sort}'] {border: .2em solid #{e[:color]}}
 .container a.member:visited {color: #fff;background-color: #{e[:color]}}
 "}, "\n",
      {_: :table, :class => :tab, # <table>
