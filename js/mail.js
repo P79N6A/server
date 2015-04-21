@@ -34,8 +34,7 @@ var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
     .attr("class", "link")
-    .style('stroke', function(d){
-	return (d.sourceColor || '#ccc')});
+    .style('stroke', function(d){return (d.sourceColor || '#ccc')});
 
 var node = svg.selectAll(".node")
     .data(force.nodes())
