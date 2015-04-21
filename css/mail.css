@@ -2,12 +2,16 @@ body {margin: 0}
 .messages {float: left;margin-left:21%;font-family: sans-serif;}
 .mail {clear:both;margin-bottom:.62em}
 .mail .header {position:relative}
-.mail a {text-decoration:none; font-weight: bold; border-radius: .15em; font-size: 1.15em; background-color:#000;color:#fff}
-.mail .author {position:absolute;top:0;right:100%;margin-right:.2em;}
+.mail .header a {background-color:#000;color:#fff}
+.mail a {text-decoration:none; font-weight: bold; border-radius: .15em; font-size: 1.15em}
+.mail .author {position:absolute;top:1em;right:100%;margin-right:.2em;}
 .mail .author, .mail a[name] {padding:.05em .1em .05em .1em}
 .mail .ts, .mail .discussion, .noquote {float: right}
-.mail .subject {background-color:#f7f7f7;color:#000;padding: 0 6em 0 .15em}
+.mail .header .title {background-color:  #eee;color:#000;padding:.1em}
+.mail .header .title a {background-color:#eee;color:#000}
+
 .mail .body {font-family: monospace}
+
 .mail .q > span {display:none}
 .mail .q[depth="1"] {background-color:#fff;color:#000;    margin-left:-.15em; padding-left:.15em}
 .mail .q[depth="2"] {background-color:#0F1A51;color:#fff; margin-left:-0.8em; padding-left:.15em}
@@ -24,9 +28,11 @@ body {margin: 0}
 .mail .q[depth="13"] {background-color:#f00;color:#fff;   margin-left:-6.5em}
 .mail .q[depth="14"] {background-color:#f06;color:#fff;   margin-left:-7.0em}
 .mail .q[depth="15"] {background-color:#fffc00;color:#000;margin-left:-7.5em}
+
 .noquote {position:fixed;bottom:0;left:0;font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em;background-color:#fff;color:#999;text-decoration:none}
 .noquote:hover {background-color: #ddd}
 img {max-width: 100%}
+
 svg {position: fixed;top: 0;left: 0;z-index:-1}
 svg, body, .mail .body {background-color:#000;color:#fff}
 .link {fill: none;stroke-width: .28em; stroke-dasharray: 1,1;stroke: #fff}

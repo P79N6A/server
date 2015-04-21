@@ -155,16 +155,16 @@ class R
       title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
         {class: :mail, id: r.uri,
-         c: [r[Title].justArray[0].do{|t|
-               title = t.sub ReExpr, ''
-               if titles[title] # title already shown
-                 nil
-               else
-                 titles[title] = true
-                 {_: :a, class: :subject, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title}
-               end},
-             {class: :header,
-              c: [r[Creator].do{|c|
+         c: [{class: :header,
+              c: [r[Title].justArray[0].do{|t|
+                    title = t.sub ReExpr, ''
+                    if titles[title] # title already shown
+                      nil
+                    else
+                      titles[title] = true
+                      {class: :title, c: {_: :a, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title}}
+                    end},
+                  r[Creator].do{|c|
                     author = c[0].R.fragment
                     {_: :a, class: :author, name: author, href: c[0].uri, c: author}},
                   r[To].justArray.map{|o|
