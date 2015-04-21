@@ -1,5 +1,5 @@
 a {text-decoration: none}
-table.chat {clear:both}
+table.chat {clear:both; font-family: sans-serif}
 table.chat img {max-width: 100%}
 table.chat td {border-radius: .18em}
 table.chat td.date {background-color: #ccc; color: #fff}
