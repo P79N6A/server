@@ -186,6 +186,6 @@ class R
                r[p].justArray.map{|o|
                  {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}},
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
-     H.js('/js/mail',true)]}
+     H.js('/js/timegraph',true)]}
 
 end
