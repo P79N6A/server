@@ -1,5 +1,5 @@
 body {margin: 0}
-.messages {float: left;margin-left:21%;font-family: sans-serif;}
+.messages {float: left;margin-left:22%;font-family: sans-serif;}
 .mail {clear:both;margin-bottom:.62em}
 
 .mail .header {position:relative}
@@ -38,4 +38,4 @@ svg {position: fixed;top: 0;left: 0;z-index:-1}
 svg, body {background-color:#000;color:#fff}
 .link {fill: none;stroke-width: .28em; stroke-dasharray: 1,1;stroke: #fff}
 rect {fill: #f8f8f8}
-text {fill: #000; font: .88em sans-serif;pointer-events: none;text-anchor: end}
+text {fill: #000; font: .88em sans-serif;pointer-events: none}

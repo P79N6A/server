@@ -58,7 +58,7 @@ class R
       Stats[:format][mime] += 1}
     puts [e['REQUEST_METHOD'], s,
           [e.scheme, '://', e.host, e['REQUEST_URI']].join,
-          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format, e['HTTP_ACCEPT'],
+          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format, #e['HTTP_ACCEPT'],
           e['HTTP_REFERER']].
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end

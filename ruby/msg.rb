@@ -122,7 +122,7 @@ class R
              sourceName: d,
              sourceColor: '#eee',
              targetColor: '#eee',
-             sourceSize: 128,
+             sourceSize: 62,
              sourcePos: (max - m) / range,
              targetPos: (max - yesterday[1]) / range,
             }
