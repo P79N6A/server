@@ -39,8 +39,8 @@ class R
     end
 
     [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
-     {_: :style, # CSS on selected-column
-      c: "table.tab th[property='#{sort}'], table.tab td[property='#{sort}'] {border: .1em solid #{e[:color]}}
+     {_: :style, # highlight selected-column
+      c: "th[property='#{sort}'], td[property='#{sort}'], tr[id='#{e.uri}'] td {border: .16em solid #{e[:color]}}
 .container a.member:visited {color: #fff;background-color: #{e[:color]}}"}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
@@ -61,16 +61,18 @@ class R
                     k.R.abbr
                    end
                   }}, "\n"]}}, "\n",
-          rows.map{|row|
-            if scale
-              mag = l[sort].justArray[0].do{|s|
+          {_: :style,
+           c: if scale
+            rows.map{|r|
+              mag = r[sort].justArray[0].do{|s|
                 (s - min) * scale} || 0
-              bright = :dark if mag > 127
-              style = "background-color: ##{('%02x' % (255 - mag))*3}"
-            end
-          },
-          rows.map{|row|
-           TableRow[row,e,sort,direction,keys]}]}, "\n"]}
+              "tr[id='#{r.R.fragment||r.uri}'] td {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}
+          else
+            ["td {background-color:#fff;color:#000}\n",
+             "tr[id='#{e.uri}'] td {background-color: #{e[:color]}}"]
+           end
+           },
+          rows.map{|r| TableRow[r,e,sort,direction,keys] }]}, "\n"]}
 
     TableRow = -> l,e,sort,direction,keys {
       [{_: :tr, id: (l.R.fragment||l.uri),
