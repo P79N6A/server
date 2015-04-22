@@ -15,4 +15,4 @@ td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5
 td a.new {font-weight:bold;font-size:1.5em;color: #0f0;background-color: #fff;border-radius:.2em;padding: 0 .13em 0 .13em}
 .container .size {font-family: monospace; white-space: pre-wrap}
 .container a.member {background-color:#000;color:#fff}
-.container a.member:visited {color:#bbb}
+.container a.member:visited {background-color:#fff;color:#000}
