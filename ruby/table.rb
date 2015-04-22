@@ -40,9 +40,11 @@ class R
 
     [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
      {_: :style, # highlight selected-column and row
-      c: "th[property='#{sort}'], td[property='#{sort}'] {border: .16em solid #{color}}
+      c: "
+th[property='#{sort}'], td[property='#{sort}'] {border: .16em solid #{color}}
 tr[id='#{e.uri}'] td {background-color: #{color}}
 tr[id='#{e.uri}'] td a {color: #fff}
+td a {color: #{color}}
 .container a.member:visited {color: #fff;background-color: #{color}}"}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
