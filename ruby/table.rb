@@ -41,6 +41,7 @@ class R
     [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
      {_: :style, # highlight selected-column
       c: "th[property='#{sort}'], td[property='#{sort}'], tr[id='#{e.uri}'] td {border: .16em solid #{e[:color]}}
+tr[id='#{e.uri}'] td[property='uri'] {background-color: #{e[:color]}}
 .container a.member:visited {color: #fff;background-color: #{e[:color]}}"}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
@@ -66,10 +67,9 @@ class R
             rows.map{|r|
               mag = r[sort].justArray[0].do{|s|
                 (s - min) * scale} || 0
-              "tr[id='#{r.R.fragment||r.uri}'] td {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}
+              "tr[id='#{r.R.fragment||r.uri}'] td {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"} # scalar value derived style
           else
-            ["td {background-color:#fff;color:#000}\n",
-             "tr[id='#{e.uri}'] td {background-color: #{e[:color]}}"]
+            "tr[id='#{e.uri}'] td {background-color: #{e[:color]}}" # highlight current row
            end
            },
           rows.map{|r| TableRow[r,e,sort,direction,keys] }]}, "\n"]}
