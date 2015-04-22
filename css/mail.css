@@ -5,7 +5,7 @@ body {margin: 0}
 .mail .header {position:relative}
 .mail .header a {background-color:#000;color:#fff;font-size:1.125em}
 .mail a {text-decoration:none; font-weight: bold; border-radius: .15em}
-.mail .author {position:absolute;top:1em;right:100%;margin-right:.2em;}
+.mail .author {position:absolute;top:.5em;right:100%;margin-right:.2em;}
 .mail .author, .mail a[name] {padding:.05em .1em .05em .1em}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .mail .header a.subject {background-color:#fff;color:#000;font-size:1.3em;padding:.18em}
@@ -36,6 +36,6 @@ img {max-width: 100%}
 
 svg {position: fixed;top: 0;left: 0;z-index:-1}
 svg, body {background-color:#000;color:#fff}
-.link {fill: none;stroke-width: .28em; stroke-dasharray: 1,1;stroke: #fff}
+.link {fill: none;stroke-width: .2em; stroke-dasharray: 2,1;stroke: #fff}
 rect {fill: #f8f8f8}
 text {fill: #000; font: .88em sans-serif;pointer-events: none}
