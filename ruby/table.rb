@@ -42,9 +42,8 @@ class R
     [H.css('/css/table',true), "\n",
      {_: :style, # highlight selected property and resource
       c: "th[property='#{sort}'], td[property='#{sort}'], tr[id='#{e.uri}'] td {color:#000;background-color: #{color}}
-td[property='#{sort}'] a, tr[id='#{e.uri}'] td a {color: #fff;background-color: #{color}; border-radius: .12em}
-td a {color: #{color}}
-.container a.member:visited {color:#555}"}, "\n",
+td[property='#{sort}'] a, tr[id='#{e.uri}'] td a {color: #fff}
+td a {color: #{color}}"}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
            c: keys.map{|k|
