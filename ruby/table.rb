@@ -1,3 +1,4 @@
+#watch __FILE__
 class R
 
   def triplrCSV d
@@ -38,12 +39,12 @@ class R
       scale = 255.0 / (range && range > 0 && range || 255.0)
     end
 
-    [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
+    [H.css('/css/table',true), "\n",
      {_: :style, # highlight selected property and resource
-      c: "th[property='#{sort}'], td[property='#{sort}'], tr[id='#{e.uri}'] td {background-color: #{color}}
-td[property='#{sort}'] a, tr[id='#{e.uri}'] td a {color: #fff}
+      c: "th[property='#{sort}'], td[property='#{sort}'], tr[id='#{e.uri}'] td {color:#000;background-color: #{color}}
+td[property='#{sort}'] a, tr[id='#{e.uri}'] td a {color: #fff;background-color: #{color}; border-radius: .12em}
 td a {color: #{color}}
-.container a.member:visited {color: #fff;background-color: #{color}}"}, "\n",
+.container a.member:visited {color:#555}"}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
            c: keys.map{|k|
