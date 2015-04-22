@@ -38,12 +38,9 @@ class R
     end
 
     [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
-     {_: :style, # add CSS for selected-column
-      c: "
-table.tab th[property='#{sort}'] {background-color:#{e[:color]}}
-table.tab td[property='#{sort}'] {border: .1em solid #{e[:color]}}
-.container a.member:visited {color: #fff;background-color: #{e[:color]}}
-"}, "\n",
+     {_: :style, # CSS on selected-column
+      c: "table.tab th[property='#{sort}'], table.tab td[property='#{sort}'] {border: .1em solid #{e[:color]}}
+.container a.member:visited {color: #fff;background-color: #{e[:color]}}"}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
            c: keys.map{|k|
