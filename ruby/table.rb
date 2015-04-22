@@ -39,11 +39,9 @@ class R
     end
 
     [H.css('/css/table',true), H.css('/css/container',true), "\n", # inline CSS to cut roundtrips
-     {_: :style, # highlight selected-column and row
-      c: "
-th[property='#{sort}'], td[property='#{sort}'] {border: .16em solid #{color}}
-tr[id='#{e.uri}'] td {background-color: #{color}}
-tr[id='#{e.uri}'] td a {color: #fff}
+     {_: :style, # highlight selected property and resource
+      c: "th[property='#{sort}'], td[property='#{sort}'], tr[id='#{e.uri}'] td {background-color: #{color}}
+td[property='#{sort}'] a, tr[id='#{e.uri}'] td a {color: #fff}
 td a {color: #{color}}
 .container a.member:visited {color: #fff;background-color: #{color}}"}, "\n",
      {_: :table, :class => :tab, # <table>
@@ -67,8 +65,7 @@ td a {color: #{color}}
                   }}, "\n"]}}, "\n",
           ({_: :style, c: rows.map{|r|
               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
-              td = "tr[id='#{r.R.fragment||r.uri}'] td"
-              "#{td}, #{td} a {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
+              "tr[id='#{r.R.fragment||r.uri}'] td {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
           rows.map{|r| TableRow[r,e,sort,direction,keys] }]}, "\n"]}
 
     TableRow = -> l,e,sort,direction,keys {

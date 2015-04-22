@@ -1,20 +1,15 @@
-table.tab, body {background-color:#000;color:#fff}
+body {background-color:#000;color:#fff}
 table.tab {border-spacing: .1em;font-family: sans-serif}
 table.tab a {text-decoration: none}
-
-/* header */
 table.tab th {vertical-align: bottom; font-weight: normal; padding: 0 .2em 0 .3em}
 table.tab th a {color:#fff;font-size:1.5em}
-
-/* rows */
 tr.dark {background-color: #000}
 tr.dark,  tr.dark a {color:#fff}
 tr.light {background-color:#fff}
 tr.light, tr.light a {color:#000}
-
-/* columns */
-table.tab td {background-color:#fff;color:#000;border-radius: .16em; vertical-align: bottom}
-table.tab td[property='uri'] {text-align:right; font-weight: bold;white-space: nowrap;padding:.1em}
-table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
-table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
-table.tab td a.new {font-weight:bold;font-size:1.5em;color: #0f0;background-color: #fff;border-radius:.2em;padding: 0 .13em 0 .13em}
+td, th {border-radius: .16em}
+td {background-color:#fff;color:#000;vertical-align: bottom}
+td[property='uri'] {text-align:right; font-weight: bold;white-space: nowrap;padding:.1em}
+td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
+td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
+td a.new {font-weight:bold;font-size:1.5em;color: #0f0;background-color: #fff;border-radius:.2em;padding: 0 .13em 0 .13em}
