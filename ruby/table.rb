@@ -67,7 +67,8 @@ tr[id='#{e.uri}'] td[property='uri'] {background-color: #{e[:color]}}
             rows.map{|r|
               mag = r[sort].justArray[0].do{|s|
                 (s - min) * scale} || 0
-              "tr[id='#{r.R.fragment||r.uri}'] td {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"} # scalar value derived style
+              td = "tr[id='#{r.R.fragment||r.uri}'] td"
+              "#{td}, #{td} a {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"} # scalar shade
           else
             "tr[id='#{e.uri}'] td {background-color: #{e[:color]}}" # highlight current row
            end
