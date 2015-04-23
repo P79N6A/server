@@ -139,7 +139,6 @@ mail
 man
 msg
 news
-OPTIONS
 POST
 PUT
 schema

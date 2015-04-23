@@ -2,10 +2,10 @@
 #watch __FILE__
 class R
 
-  FileSet['history'] = -> d,env,g {
+  FileSet['history'] = -> d,env,g {# paginate internal history-storage container
     FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
 
-  Filter['edit'] = -> g,e { # add editor resources to model
+  Filter['edit'] = -> g,e { # add editor-resource to response
 
     # new resource
     if e.q.has_key? 'new'
@@ -79,17 +79,19 @@ class R
            class: :edit,
            c: '✑'} if e.editable)]}}
 
+  # bind type in query-string
   ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment,
        href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
-  ViewGroup['#editable'] = -> graph, e {
-    [graph.map{|u,r|ViewA['#editable'][r,e]}, H.css('/css/edit')]}
+  # show editor for each editable resource + edit CSS once
+  ViewGroup['#editable'] = -> graph, e {[graph.map{|u,r|ViewA['#editable'][r,e]},H.css('/css/edit')]}
 
+  # HTML based editor. <form> and URI-keys
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
-    datatype = e.q['datatype'] || 'markdown'
+    datatype = e.q['datatype'] || 'html'
     re[Title] ||= ''
     re[WikiText] ||= ''
     re[Type] ||= R[WikiArticle]

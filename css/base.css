@@ -32,4 +32,4 @@ a.identify {color: #ccc}
 a.identify:before { content:"\f235"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.identify, a.user {font-size:1.4em;float: left;margin:0 .2em .2em 0; text-decoration:none}
-body > a.user {color:#aeff28}
+body > a.user {color:#d5ff00}
