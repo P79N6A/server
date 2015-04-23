@@ -1,6 +1,18 @@
 #watch __FILE__
 class R
 
+  AllowMethods = %w{GET PUT POST OPTIONS HEAD MKCOL DELETE PATCH}
+  Allow = AllowMethods.join ', '
+
+  def OPTIONS
+    ldp
+    method = @r['HTTP_ACCESS_CONTROL_REQUEST_METHOD']
+    headers = @r['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
+    head = {'Access-Control-Allow-Methods' => (AllowMethods.member? method) ? method : Allow}
+    head['Access-Control-Allow-Headers'] = headers if headers
+    [200,(@r[:Response].update head), []]
+  end
+
   def HEAD
     self.GET.
     do{| s, h, b |
