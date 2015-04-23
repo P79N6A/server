@@ -146,7 +146,6 @@ schema
 search
 text
 uid
-wiki
 }.map{|r|require_relative r}
 
   RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
