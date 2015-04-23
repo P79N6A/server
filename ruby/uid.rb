@@ -61,7 +61,7 @@ class R
     if r.scheme!='https'
       r.SSLupgrade
     else
-      u = r.user.uri
+      u = r.user.uri # user URI,  <dns:IP> or WebID
       m = {u => {'uri' => u, Type => R[User]}}
       r[:Response]['ETag'] = u.h
       r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
@@ -70,22 +70,14 @@ class R
     end}
 
   ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
-
-  ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env {
-    [H.css('/css/user'),
-     g.map{|u,r| ViewA[Key][r,env]}]}
-  
+  ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env { g.map{|u,r| ViewA[Key][r,env]}}
   ViewA[Key] = -> u,e {{class: :pubkey, c: [{_: :a, class: :pubkey, href: u.uri},u]}}
   
   ViewGroup[User] = -> g,env {
-    if env.signedIn
-      g.map{|u,r|ViewA[User][r,env]}
-    else
+    if env.signedIn # render user-data
+      g.map{|u,r|ViewA[BasicResource][r,env]}
+    else # no WebID found, offer cert-creation service
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
     end}
-
-  ViewA[User] = -> u,e {
-    [{_: :a, style: "font-size: 2em;color:#fff;background-color:#000;text-decoration:none", href: u.uri, c: u.uri},
-     ViewA[BasicResource][u,e]]}
 
 end
