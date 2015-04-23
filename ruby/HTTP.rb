@@ -158,6 +158,28 @@ class R
       fields.map{|k,v|
         subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v}}}
 
+  def aclURI
+    if basename.index('.acl') == 0
+      self
+    elsif hierPart == '/'
+      child '.acl'
+    else
+      dir.child '.acl.' + basename
+    end
+  end
+
+  def allowAppend
+    return allowWrite
+  end
+
+  def allowRead
+    true
+  end
+
+  def allowWrite
+    true
+  end
+
   def q; @r.q end
 
 end

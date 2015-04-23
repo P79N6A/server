@@ -121,7 +121,6 @@ class R < RDF::URI
 %w{
 MIME
 names
-acl
 container
 DELETE
 edit
