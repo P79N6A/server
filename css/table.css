@@ -9,6 +9,7 @@ tr.light {background-color:#fff}
 tr.light, tr.light a {color:#000}
 td, th {border-radius: .16em}
 td {background-color:#fff;color:#000;vertical-align: bottom}
+table.tab {margin: .7em}
 td[property='uri'] {text-align:right; font-weight: bold;white-space: nowrap;padding:.1em}
 td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
