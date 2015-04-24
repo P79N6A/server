@@ -161,7 +161,7 @@ class R
                  else
                    v
                  end
-               }, class: :val}]
+               }.intersperse(' '), class: :val}]
            end}}}}
 
   ViewGroup[BasicResource] = -> g,e {
