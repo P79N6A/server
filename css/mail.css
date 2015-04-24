@@ -5,8 +5,8 @@ body {margin: 0}
 .mail .header {position:relative}
 .mail .header a {background-color:#000;color:#fff;font-size:1.125em}
 .mail a {text-decoration:none; font-weight: bold; border-radius: .15em}
-.mail .author {position:absolute;top:.5em;right:100%;margin-right:.2em;}
-.mail .author, .mail a[name] {padding:.05em .1em .05em .1em}
+.mail .author {position:absolute;top:.5em;right:100%;margin-right:.2em;padding:.05em .1em .05em .1em}
+.mail a.to {padding:0 .2em 0 .2em}
 .mail .ts, .mail .discussion, .noquote {float: right}
 .mail .header a.subject {background-color:#fff;color:#000;font-size:1.3em;padding:.18em}
 .mail a.attached {color:#777}
