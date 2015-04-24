@@ -103,7 +103,7 @@ td a {color: #{color}}"}, "\n",
                      else
                        v
                      end
-                   }
+                   }.intersperse(' ')
                  end}, "\n"]
           }]}, "\n"]}
 
