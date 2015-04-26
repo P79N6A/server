@@ -8,7 +8,7 @@ class R
     yield dir, Type, R[Directory]
     yield dir, SIOC+'has_container', parentURI unless path=='/'
     mt = mtime
-#    yield dir, Date, mt.iso8601
+    yield dir, Date, mt.iso8601
     yield dir, Mtime, mt.to_i
     contained = c
     yield dir, Size, contained.size
@@ -29,7 +29,7 @@ class R
       realURI.do{|t|
         mt = t.mtime
         yield t.uri, Type, R[Stat+'File']
-#        yield t.uri, Date, mt.iso8601
+        yield t.uri, Date, mt.iso8601
         yield t.uri, Mtime, mt.to_i
         yield t.uri, Size, t.size
       }
