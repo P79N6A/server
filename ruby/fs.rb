@@ -36,7 +36,7 @@ class R
     else
       mt = mtime
       yield uri, Type, R[Stat+'File']
-#      yield uri, Date, mt.iso8601
+      yield uri, Date, mt.iso8601
       yield uri, Mtime, mt.to_i
       yield uri, Size, size
     end
