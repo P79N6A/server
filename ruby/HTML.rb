@@ -153,7 +153,8 @@ class R
            when WikiText
              {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
            else
-             [{_: :td, c: {_: :a, href: k, c: k.to_s.R.abbr}, class: :key},
+             icon = Icons[k]
+             [{_: :td, c: {_: :a, href: k, class: icon, c: icon ? '' : k.to_s.R.abbr}, class: :key},
               {_: :td, c: v.justArray.map{|v|
                  case v
                  when Hash
