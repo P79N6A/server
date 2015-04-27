@@ -7,6 +7,7 @@ tr[property='uri'] td a {color:#fff; font-weight:bold; text-decoration: none}
 td {border-radius: .16em}
 td.key {text-align:right}
 td.key a {font-weight: bold;text-decoration:none}
+td.key img {height: 1.4em}
 @font-face {
     font-family: "icons";
     src: url('/css/misc/icons.eot');
