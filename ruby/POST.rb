@@ -102,14 +102,22 @@ class R
     ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
     path = fragmentPath          # version-base URI
     doc = path + '/' + ts + '.e' # version-doc URI
-    s = r.uri.match(/#/) ? ('#'+r.fragment) : r.path # strip base-URI
-    re['uri'] = s     # identify
-    graph = {s => re} # graph
+    s = if r.uri.match /#/  # relative subject-URI
+          '#' + r.fragment # fragment
+        elsif r.uri[-1] == '/'
+          r.basename + '/' # container
+        else
+          r.path
+        end
+    re['uri'] = s     # identify resource
+    graph = {s => re} # resource to graph
     doc.w graph, true # write graph
     cur = path.a '.e' # live-version URI
     cur.delete if cur.e # unlink old
     doc.ln_s cur      # link live-version
     buildDoc if build # update containing-doc
+    puts "doc #{doc}"
+    puts "current #{cur}"
   end
 
   def buildDoc
