@@ -8,8 +8,8 @@ class R
     yield dir, Type, R[Directory]
     yield dir, SIOC+'has_container', parentURI unless path=='/'
     mt = mtime
-    yield dir, Date, mt.iso8601
     yield dir, Mtime, mt.to_i
+    yield dir, Date, mt.iso8601
     contained = c
     yield dir, Size, contained.size
     if contained.size < 22 # provide some "lookahead" on container children if small - GET URI for full
@@ -24,25 +24,7 @@ class R
     end
   end
 
-  def triplrFile
-    if symlink?
-      realURI.do{|t|
-        mt = t.mtime
-        yield t.uri, Type, R[Stat+'File']
-        yield t.uri, Date, mt.iso8601
-        yield t.uri, Mtime, mt.to_i
-        yield t.uri, Size, t.size
-      }
-    else
-      mt = mtime
-      yield uri, Type, R[Stat+'File']
-      yield uri, Date, mt.iso8601
-      yield uri, Mtime, mt.to_i
-      yield uri, Size, size
-    end
-  end
-
-  def realpath # find real file after all the symlinks
+  def realpath # follow fs-links
     node.realpath
   rescue Exception => x
     puts x

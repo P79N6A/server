@@ -55,9 +55,11 @@ class R
         s = native ? stripDoc.uri : uri # generic-resource or file
         s = base.join(s).to_s if base
         graph[s] ||= {'uri' => s}
-        [Type,Size,Mtime].map{|p|graph[s][p] ||= []} # init fields
+        [Type,Size,Mtime,Date].map{|p|graph[s][p] ||= []} # init fields
+        mt = f.mtime
         graph[s][Size].push f.size
-        graph[s][Mtime].push f.mtime.to_i
+        graph[s][Mtime].push mt.to_i
+        graph[s][Date].push mt.iso8601
         graph[s][Type].push R[native ? Resource : (Stat + 'File')]
       end
       (f.r(true)||{}).triples{|s,p,o| # triples
