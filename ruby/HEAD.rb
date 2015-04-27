@@ -34,7 +34,7 @@ class R
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
       'Access-Control-Allow-Credentials' => 'true',
       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
-      'Access-Control-Expose-Headers' => "User, Triples, Location, Link, Vary, Last-Modified",
+      'Access-Control-Expose-Headers' => "User, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
       'User' => @r.user.uri,
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',

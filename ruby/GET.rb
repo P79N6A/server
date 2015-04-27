@@ -41,18 +41,25 @@ class R
   def response
     init = q.has_key? 'new'
     edit = q.has_key? 'edit'
-    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for user ID required for edits
+    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
     m = {} # graph
-    set = [] # resources
-    rs = ResourceSet[q['set']] # generic-resources provider
+    set = [] # resource-set
+
+    # generic-resource provider
+    rs = ResourceSet[q['set']]
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
-    fs = FileSet[q['set']] # file(s) provider
+
+    # file provider
+    fs = FileSet[q['set']]
     fs[self,q,m].do{|files|set.concat files} if fs
-    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
+
+    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs # default set
 
     if set.empty?
       @r[404] = true
-      return E404[self,@r,m] unless init # not found
+      unless init # instantiate resource
+        return E404[self,@r,m]
+      end
     end
 
     @r[:Response].
@@ -61,26 +68,25 @@ class R
               'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h})
 
     condResponse ->{ # lazy response-finisher
-      if set.size==1 && @r.format == set[0].mime # only one file in response and it's the requested MIME
-        set[0] # return file
+      if set.size==1 && @r.format == set[0].mime # one file in response, MIME in Accept
+        set[0] # no transcode, just file
       else
-        graph = -> {
+        graph = -> { # JSON/Hash model construction
           set.map{|r|r.nodeToGraph m} # load resources
-          @r[:filters].push Container if @r[:container] # summarizer hooks
-          @r[:filters].push 'edit' if @r.signedIn && (init||edit) # editable tags
-          @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }} # transform
-          m }
+          @r[:filters].push Container if @r[:container] # add summarizer for container
+          @r[:filters].push 'edit' if @r.signedIn && (init||edit) # add editor-facilities
+          @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }} # do arbitrary-transforms
+          m } # model
 
         if NonRDF.member? @r.format
-          Render[@r.format][graph[], @r] # JSON/Hash
-        else
+          Render[@r.format][graph[],@r] # JSON/hash render
+        else #RDF model
           if @r[:container]
-            g = graph[].toRDF # summarize
+            g = graph[].toRDF # use JSON/Hash model of container (for reduction/querying)
           else
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end
-          @r[:Response][:Triples] = g.size.to_s
           g.dump (RDF::Writer.for :content_type => @r.format).to_sym,:base_uri => self,:standard_prefixes => true,:prefixes => Prefixes
         end
       end}
