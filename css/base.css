@@ -29,6 +29,8 @@ a.file:before { content:"\f15b"; font-family: icons; }
 a.key:before { content:"\f084"; font-family: icons; }
 a.warp:before { content:"\f135"; font-family: icons; }
 a.img:before { content:"\f03e"; font-family: icons; }
+a.comments:before { content:"\f0e6"; font-family: icons; }
+a.link:before { content:"\f0c1"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.title:before { content:"\f035"; font-family: icons; }
 a.rel:before { content:"\f0a5"; font-family: icons; }

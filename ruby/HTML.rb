@@ -187,6 +187,8 @@ class R
     LDP+'contains' => :container,
     Mtime => :time,
     Resource => :graph,
+    RSS+'link' => :link,
+    RSS+'comments' => :comments,
     SIOC+'Usergroup' => :group,
     SIOC+'wikiText' => :pencil,
     SIOC+'has_creator' => :user,
