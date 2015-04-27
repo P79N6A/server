@@ -1,11 +1,13 @@
-INSTALL cd ruby
-        bundle install # dependencies
+GET     git clone https://github.com/hallwaykid/pw.git
+INSTALL cd pw/ruby     # enter source dir
+        bundle install # install dependencies
 	./install      # link source to lib-path
 
-USAGE foreman start # HTTP and HTTPS - uses ruby/Procfile
+        cd ..         # run in place, or symlink {css,js} to served path
+USE     foreman start # HTTP and HTTPS on 80/443
 NOTES
--httpd.ru can be used to launch other Rack-API servers
--to allow listen on 80/443: (standalone, rather than high-port behind nginx/apache/lighttpd)
+-httpd.ru can be used to launch other Rack-API servers ('thin' is default, unicorn works well)
+-to allow listen on 80/443
  $ setcap cap_net_bind_service=+ep `which ruby`
 
 HOST  mkdir domain/hostname
