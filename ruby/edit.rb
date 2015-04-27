@@ -5,7 +5,7 @@ class R
   FileSet['history'] = -> d,env,g {# paginate internal history-storage container
     FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
 
-  Filter['edit'] = -> g,e { # add editor-resource to response
+  Filter['edit'] = -> g,e { # add editor-types to resource(s)
 
     # new resource
     if e.q.has_key? 'new'

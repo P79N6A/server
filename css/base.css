@@ -3,7 +3,9 @@ body > a.user {color:#d5ff00}
 .rdf {float:right;background-color:#fff;padding: .25em .35em .25em .3em;border-radius:1.2em;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
 table {display: inline-block}
 tr[property='uri'] td {background-color:#000;color:#fff}
-tr[property='uri'] td a {color:#fff; font-weight:bold; text-decoration: none}
+tr[property='uri'] td a {color:#fff; text-decoration: none}
+tr[property='uri'] td a.uri {font-weight: bold}
+tr[property='uri'] td a.pencil {float: right}
 td {border-radius: .16em}
 td.key {text-align:right}
 td.key a {font-weight: bold;text-decoration:none}
