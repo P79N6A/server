@@ -36,12 +36,12 @@ class R
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/' # clean path
     path = Pathname.new(rawpath).expand_path.to_s        # interpret path
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-    resource = R[e.scheme + "://" + e.host + path]       # resource instance
-    e['uri'] = resource.uri                              # canonical URI to environment
-    e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init request-variables
-    resource.setEnv(e).send(method).do{|s,h,b| # run request and inspect response
-      R.log e,s,h,b # log response
-      [s,h,b]} # return response
+    resource = R[e.scheme + "://" + e.host + path]       # resource reference
+    e['uri'] = resource.uri                              # add normalized-URI to environment
+    e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init HEAD storage
+    resource.setEnv(e).send(method).do{|s,h,b| # do request and inspect response
+      R.log e,s,h,b # log
+      [s,h, b]} # return
   rescue Exception => x
     E500[x,e]
   end
