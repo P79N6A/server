@@ -1,0 +1,1 @@
+{"doc/":{"uri":"doc/","http://www.w3.org/1999/02/22-rdf-syntax-ns#type":[{"uri":"http://rdfs.org/sioc/types#Wiki"}],"http://purl.org/dc/terms/title":["documentation"],"http://purl.org/dc/terms/date":["2015-04-27T20:22:47+00:00"],"http://rdfs.org/sioc/ns#has_creator":[{"uri":"https://carmen.rww.io/profile/card#me"}]}}
