@@ -154,7 +154,15 @@ class R
              {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
            else
              icon = Icons[k]
-             [{_: :td, c: {_: :a, href: k, class: icon, c: icon ? '' : k.to_s.R.abbr}, class: :key},
+             [{_: :td,
+               c: {_: :a, href: k, class: icon,
+                   c: if Type == k
+                    {_: :img, src: '/css/misc/cube.svg'}
+                  elsif icon
+                    ''
+                  else
+                    k.to_s.R.abbr
+                   end}, class: :key},
               {_: :td, c: v.justArray.map{|v|
                  case v
                  when Hash
