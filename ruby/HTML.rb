@@ -188,6 +188,7 @@ class R
     Mtime => :time,
     Resource => :graph,
     RSS+'link' => :link,
+    RSS+'guid' => :id,
     RSS+'comments' => :comments,
     SIOC+'Usergroup' => :group,
     SIOC+'wikiText' => :pencil,
