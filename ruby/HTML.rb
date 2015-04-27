@@ -142,6 +142,7 @@ class R
           else
             rand.to_s.h
           end
+    resource = r.R
     {_: :table, class: :html, id: uri,
      c: r.map{|k,v|
        {_: :tr, property: k,
@@ -149,7 +150,7 @@ class R
            when 'uri'
              {_: :td, colspan: 2,
               c: [{_: :a, class: :uri, href: uri, c: uri},
-                  ({_: :a, class: :pencil, href: r.R.editLink(e)} if e.editable)
+                  ({_: :a, class: :pencil, href: resource.editLink(e)} if e.editable(resource))
                  ]}
            when Content
              {_: :td, class: :val, colspan: 2, c: v}

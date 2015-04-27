@@ -116,7 +116,13 @@ class R
 end
 
 module Th
-  def editable
-    @editable ||= (signedIn && !q.has_key?('edit') && !q.has_key?('new') && q['set']!='history')
+  def editable r
+    @editable ||= (
+      signedIn &&            # webID required
+      !q.has_key?('edit') && # already editing
+      !q.has_key?('new') &&  # create + bind types first
+      q['set']!='history' && # can't edit history
+     (!r.host||r.host==host) # one of our own resources
+    )
   end
 end
