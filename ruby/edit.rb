@@ -55,16 +55,15 @@ class R
         content.hrefs
       end}}
 
-  # present type-selection dialog
+  # type-binding links
   ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment,
        href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
-  # show editor for each editable resource + edit CSS once
   ViewGroup['#editable'] = -> graph, e {[graph.map{|u,r|ViewA['#editable'][r,e]},H.css('/css/edit')]}
 
-  # HTML based editor. <form> and URI-keys
+  # HTML based editor: a <form>
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     datatype = e.q['datatype'] || 'html'
@@ -77,8 +76,7 @@ class R
                   {_: :tr,
                    c: {_: :td, colspan: 2,
                        c: [{_: :a, class: :uri, c: uri, href: uri},
-                           {_: :a, class: :history, c: :history, href: uri.sub('#','%23')+'?set=history'},
-                          ]}}},
+                           {_: :a, class: :history, c: :history, href: uri.sub('#','%23')+'?set=history'}]}}},
                  re.keys.map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.abbr}},

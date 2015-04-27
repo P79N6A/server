@@ -1,18 +1,11 @@
-body {background-color:#000;color:#fff}
-table.tab {border-spacing: .1em;font-family: sans-serif}
+table.tab {margin: .7em;border-spacing: .1em;font-family: sans-serif}
 table.tab a {text-decoration: none}
 table.tab th {vertical-align: bottom; font-weight: normal; padding: 0 .2em 0 .3em}
 table.tab th a {color:#fff;font-size:1.5em}
-tr.dark {background-color: #000}
-tr.dark,  tr.dark a {color:#fff}
-tr.light {background-color:#fff}
-tr.light, tr.light a {color:#000}
-td, th {border-radius: .16em}
-td {background-color:#fff;color:#000;vertical-align: bottom}
-table.tab {margin: .7em}
-td[property='uri'] {text-align:right; font-weight: bold}
-td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
-td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {padding: 0 .2em 0 .2em; border-radius: .5em ; font-weight: bold; background-color:#0f0; color: #fff}
+table.tab td, table.tab th {border-radius: .16em}
+table.tab td[property='uri'] {text-align:right; font-weight: bold}
+table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
+table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {padding: 0 .2em 0 .2em; border-radius: .5em ; font-weight: bold; background-color:#0f0; color: #fff}
 .container .size {font-family: monospace; white-space: pre-wrap}
 .container a.member {background-color:#000;color:#fff}
 .container a.member:visited {background-color:#fff;color:#000}

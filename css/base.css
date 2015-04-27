@@ -1,9 +1,13 @@
+body {background-color:#000; color:#fff}
+body > a.user {color:#d5ff00}
 .rdf {float:right;background-color:#fff;padding: .25em .35em .25em .3em;border-radius:1.2em;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
 table {display: inline-block}
 tr[property='uri'] td {border-radius:.16em;background-color:#000;color:#fff}
 tr[property='uri'] a {color:#fff; font-weight:bold; text-decoration: none}
-td.key {text-align:right}
-td.key a, a.uri {font-weight: bold;text-decoration:none;color:#444;background-color:#fff}
+tr[property="http://rdfs.org/sioc/ns#wikiText"] td {background-color:#000;color:#fff}
+td {border-radius: .16em}
+td.key {text-align:right;background-color:#333}
+td.key a {font-weight: bold;text-decoration:none;color:#ccc}
 @font-face {
     font-family: "icons";
     src: url('/css/misc/icons.eot');
@@ -32,4 +36,4 @@ a.identify {color: #ccc}
 a.identify:before { content:"\f235"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.identify, a.user {font-size:1.4em;float: left;margin:0 .2em .2em 0; text-decoration:none}
-body > a.user {color:#d5ff00}
+
