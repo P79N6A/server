@@ -56,8 +56,9 @@ class R
     FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs # default set
 
     if set.empty?
-      @r[404] = true
-      unless init # instantiate resource
+      if init # instantiate resource
+        @r[:empty] = true
+      else
         return E404[self,@r,m]
       end
     end

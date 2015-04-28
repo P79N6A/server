@@ -2,14 +2,17 @@
 #watch __FILE__
 class R
 
-  FileSet['history'] = -> d,env,g {# paginate internal history-storage container
-    FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
+  # paginate history-storage
+  FileSet['history'] = -> d,env,g {
+    FileSet['page'][d.fragmentDir,env,g].map{|f|
+      puts f
+      f.setEnv env}}
 
   Filter['edit'] = -> g,e { # add editor-types to resource(s)
 
     # new resource
     if e.q.has_key? 'new'
-      if e[404] # target nonexistent
+      if e[:empty]
         if e.q.has_key? 'type' # type bound
           e.q['edit'] = true   # ready to edit
         else                   # type selector
@@ -110,7 +113,7 @@ class R
            {_: :input, type: :submit, value: 'write'}].cr}}
 
   def editLink env
-    (env.R.join stripFrag) + '?' + (env[404] ? 'new' : 'edit') + (fragment ? ('&fragment=' + fragment) : '')
+    (env.R.join stripFrag) + '?edit' + (fragment ? ('&fragment=' + fragment) : '')
   end
 
 end

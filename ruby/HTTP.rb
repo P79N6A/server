@@ -156,7 +156,10 @@ class R
     # headers
     [env,env[:Links],env[:Response]].compact.map{|fields|
       fields.map{|k,v|
-        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v}}}
+        unless k.match /^rack/
+          subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v
+        end
+      }}}
 
   def aclURI
     if basename.index('.acl') == 0
