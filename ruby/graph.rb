@@ -1,22 +1,22 @@
 #watch __FILE__
 class R
-=begin
+=begin minimal RDF-subset
  Hash
   {subject => {predicate => object}}
 
  types:
   subject: String
   predicate: String
-  object:
-   Array: each member becomes a triple
+  object: URI* or Literal* or
+   List (each member creates a triple)
     [objectA, objectB..]
 
-   URIs:
+  *URI
    RDF::URI
    R (our resource-class)
    Hash with 'uri' key
 
-  literals:
+  *Literal
    RDF::Literal
    String
    Integer
