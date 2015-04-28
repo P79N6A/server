@@ -74,7 +74,7 @@ td a {color: #{color}}"}, "\n",
               c: case k
                  when 'uri'
                    {_: :a, href: (CGI.escapeHTML l.uri),
-                    c: (CGI.escapeHTML (l[Title] || l[Label] ||l.R.basename).justArray[0])}
+                    c: (CGI.escapeHTML (l[Title] || l[Label] ||l.R.basename).justArray[0])} if l.uri
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
@@ -84,7 +84,7 @@ td a {color: #{color}}"}, "\n",
                             else
                               l.uri
                             end
-                     [{_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon},
+                     [({_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon} if href),
                       (if e.editable l.R
                        Containers[t.uri].do{|c|
                          n = c.R.fragment
