@@ -106,8 +106,8 @@ class R
 
   def fragmentPath # one fragment
     f = fragment
-    f = 'index' if !f
-    f = '#' if f.empty?
+    f = '_' if !f
+    f = '__' if f.empty?
     fragmentDir + f
   end
 

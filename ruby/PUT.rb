@@ -39,7 +39,7 @@ class R
     path = fragmentPath          # version-base URI
     doc = path + '/' + ts + '.e' # version-doc URI
     s = if r.uri.match /#/  # relative subject-URI
-          '#' + r.fragment # fragment
+          '#' + r.fragment # resource-fragment
         elsif r.uri[-1] == '/'
           r.basename + '/' # container
         else
