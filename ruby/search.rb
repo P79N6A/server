@@ -59,7 +59,7 @@ class R
   FileSet['rev'] = -> e,req,model {(e.dir.child '.' + e.basename + '*.rev').glob}
 
   FileSet['localize'] = -> re,q,g {
-    FileSet[Resource][re.justPath.setEnv(re.env),q,g].map{|r|
+    FileSet[Resource][re.justPath,q,g].map{|r|
       r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
 
   # https://github.com/groonga/groonga

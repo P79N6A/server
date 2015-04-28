@@ -36,7 +36,7 @@ class R
   def bare; basename suffix end
 
   # relativities within hierPart
-  def justPath; hierPart.R end
+  def justPath; hierPart.R.setEnv(@r) end
   def descend; uri.t.R end
   def child u; descend + u.to_s end
   def dirname; schemePart + hostPart + (File.dirname pathPart) end
@@ -72,7 +72,7 @@ class R
 
   def stripFrag; R uri.split(/#/)[0] end
 
-  def stripDoc;  R uri.sub /\.(e|ht|html|json|md|n3|ttl|txt)$/, '' end
+  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|n3|ttl|txt)$/,''].setEnv(@r) end
 
   def stripSlash
     if uri[-1] == '/'

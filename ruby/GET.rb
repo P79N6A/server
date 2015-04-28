@@ -7,18 +7,9 @@ class R
     if file?
       fileGET
     elsif justPath.file?
-      justPath.setEnv(@r).fileGET
-    elsif directory?
-      if uri[-1] == '/'
-        @r[:container] = true
-        resourceGET
-      else
-        q = @r['QUERY_STRING']
-        @r[:Response].update({'Location' => uri + '/' + (q && !q.empty? && ('?' + q) || '')})
-        [301, @r[:Response], []]
-      end
+      justPath.fileGET
     else
-      stripDoc.setEnv(@r).resourceGET
+      stripDoc.resourceGET
     end
   end
 
@@ -39,23 +30,33 @@ class R
   end
 
   def response
+    if directory?
+      if uri[-1] == '/'
+        @r[:container] = true
+      else
+        qs = @r['QUERY_STRING']
+        @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
+        return [301, @r[:Response], []]
+      end
+    end
     init = q.has_key? 'new'
     edit = q.has_key? 'edit'
     return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
     m = {} # graph
     set = [] # resource-set
 
-    # generic-resource provider
+    # generic-resource set
     rs = ResourceSet[q['set']]
     rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
-    # file provider
+    # file set
     fs = FileSet[q['set']]
     fs[self,q,m].do{|files|set.concat files} if fs
 
-    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs # default set
+    # default set
+    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
-    if set.empty?
+    if set.empty? # empty set
       if init # instantiate resource
         @r[:empty] = true
       else
@@ -70,7 +71,7 @@ class R
 
     condResponse ->{ # lazy response-finisher
       if set.size==1 && @r.format == set[0].mime # one file in response, MIME in Accept
-        set[0] # no transcode, just file
+        set[0] # no transcode, just return file
       else
         graph = -> { # JSON/Hash model construction
           set.map{|r|r.nodeToGraph m} # load resources
@@ -80,11 +81,11 @@ class R
           m } # model
 
         if NonRDF.member? @r.format
-          Render[@r.format][graph[],@r] # JSON/hash render
-        else #RDF model
-          if @r[:container]
-            g = graph[].toRDF # use JSON/Hash model of container (for reduction/querying)
-          else
+          Render[@r.format][graph[],@r]
+        else # RDF
+          if @r[:container] # container
+            g = graph[].toRDF
+          else # doc
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
           end

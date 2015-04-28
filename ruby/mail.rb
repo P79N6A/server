@@ -4,7 +4,7 @@ class R
 
   GREP_DIRS.push(/^\/address\//) # allow grep in email
 
-  MessagePath = -> id{
+  MessagePath = -> id{ # message-ID -> path
     msg, domainname = id.downcase.sub(/^</,'').sub(/>.*/,'').gsub(/[^a-zA-Z0-9\.\-@]/,'').split '@'
     dname = (domainname||'').split('.').reverse
     case dname.size
@@ -17,13 +17,15 @@ class R
     domain = dname[1]
     ['', 'address', tld, domain[0], domain, *dname[2..-1], '@', id.h[0..1], msg].join('/')}
 
-  AddrPath = ->address{ # email-address -> /path
+  AddrPath = ->address{ # email-address -> path
     address = address.downcase
     person, domainname = address.split '@'
     dname = domainname.split('.').reverse
     tld = dname[0]
     domain = dname[1]
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
+
+  GET['/address'] = -> e,r {e.justPath.response} # we dont use the host
 
   GET['/thread'] = -> e,r {
     m = {}

@@ -79,7 +79,7 @@ td a {color: #{color}}"}, "\n",
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
                      href = if t.uri == Directory
-                              res = l.R
+                              res = e.R.join l.uri
                               e.scheme + '://linkeddata.github.io/warp/#/list/' + e.scheme + '/' + res.host + res.path
                             else
                               l.uri
