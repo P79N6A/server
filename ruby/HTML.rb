@@ -163,7 +163,7 @@ class R
                    c: if Type == k
                     {_: :img, src: '/css/misc/cube.svg'}
                   else
-                    icon ? '' : k.R.basename
+                    icon ? '' : (k.R.fragment||k.R.basename)
                    end}, class: :key},
               {_: :td, c: v.justArray.map{|v|
                  case v
