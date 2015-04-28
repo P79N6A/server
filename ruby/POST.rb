@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def POST
@@ -95,54 +95,6 @@ class R
       located.writeResource resource # write
       [303,{'Location' => located.uri},[]] # return
     end
-  end
-
-  def writeResource re, build = true
-    r = re.R # resource pointer
-    ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
-    path = fragmentPath          # version-base URI
-    doc = path + '/' + ts + '.e' # version-doc URI
-    s = if r.uri.match /#/  # relative subject-URI
-          '#' + r.fragment # fragment
-        elsif r.uri[-1] == '/'
-          r.basename + '/' # container
-        else
-          r.path
-        end
-    re['uri'] = s     # identify resource
-    graph = {s => re} # resource to graph
-    doc.w graph, true # write graph
-    cur = path.a '.e' # live-version URI
-    cur.delete if cur.e # unlink old
-    doc.ln_s cur      # link live-version
-    buildDoc if build # update containing-doc
-    puts "doc #{doc}"
-    puts "current #{cur}"
-  end
-
-  def buildDoc
-    resources = fragments
-    doc = jsonDoc
-    if !resources || resources.empty? # empty
-      doc.delete                      # unlink
-    else
-      graph = {}
-      resources.map{|f| f.nodeToGraph graph} # mash fragments
-      doc.w graph, true                      # write doc
-    end
-  end
-
-  def fragmentDir # all fragments
-    doc = docroot
-    doc.dir.descend + '.' + doc.basename + '/'
-  end
-  def fragments; fragmentDir.a('*.e').glob end
-
-  def fragmentPath # one fragment
-    f = fragment
-    f = 'index' if !f
-    f = '#' if f.empty?
-    fragmentDir + f
   end
 
 end

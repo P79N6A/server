@@ -98,16 +98,17 @@ class R
   def n3; docroot.a '.n3' end
   def jsonDoc; docroot.a '.e' end
 
-  def abbr
-    if fragment
-      if fragment.empty?
-        basename[0..-2]
-      else
-        fragment
-      end
-    else
-      basename
-    end
+  def fragmentDir
+    doc = docroot
+    doc.dir.descend + '.' + doc.basename + '/'
+  end
+  def fragments; fragmentDir.a('*.e').glob end
+
+  def fragmentPath # one fragment
+    f = fragment
+    f = 'index' if !f
+    f = '#' if f.empty?
+    fragmentDir + f
   end
 
 end

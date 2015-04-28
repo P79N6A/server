@@ -82,7 +82,7 @@ class R
                            {_: :a, class: :history, c: :history, href: uri.sub('#','%23')+'?set=history'}]}}},
                  re.keys.map{|p|
                    {_: :tr,
-                     c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.abbr}},
+                     c: [{_: :td, class: :key, c: {_: :a, href: p, c: p.R.fragment||p.R.basename}},
                          {_: :td, c: re[p].do{|o|
                              o.justArray.map{|o|
                                case p

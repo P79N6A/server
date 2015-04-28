@@ -57,10 +57,8 @@ td a {color: #{color}}"}, "\n",
                c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
                    c: if Type == k
                     {_: :img, src: '/css/misc/cube.svg'}
-                  elsif Icons[k]
-                    ''
                   else
-                    k.R.abbr
+                    Icons[k] ? '' : k.R.basename
                    end
                   }}, "\n"]}}, "\n",
           ({_: :style, c: rows.map{|r|

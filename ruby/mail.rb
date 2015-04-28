@@ -192,7 +192,7 @@ class R
     }
 
     # links to alternate container-filterings
-    if !bodies && size < 24 # unabbreviated view
+    if !bodies && size < 24 # full content
       fullURI = e.q.merge({'bodies' => ''}).qs
       graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '↓'}
     end

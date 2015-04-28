@@ -162,10 +162,8 @@ class R
                c: {_: :a, href: k, class: icon,
                    c: if Type == k
                     {_: :img, src: '/css/misc/cube.svg'}
-                  elsif icon
-                    ''
                   else
-                    k.to_s.R.abbr
+                    icon ? '' : k.R.basename
                    end}, class: :key},
               {_: :td, c: v.justArray.map{|v|
                  case v
