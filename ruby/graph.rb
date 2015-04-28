@@ -1,13 +1,14 @@
 #watch __FILE__
 class R
-=begin minimal RDF-subset
- Hash
-  {subject => {predicate => object}}
+=begin minimal RDF-subset in native-types w/o RDF.rb dependency/overhead (fast)
+ Graph: Hash
+  {subject* => {predicate* => object*}}
+ Stream:
+  yield subject*, predicate*, object*
 
- types:
-  subject: String
-  predicate: String
-  object: URI* or Literal* or
+  *subject: String
+  *predicate: String
+  *object: URI* or Literal* or
    List (each member creates a triple)
     [objectA, objectB..]
 
@@ -18,13 +19,12 @@ class R
 
   *Literal
    RDF::Literal
-   String
-   Integer
-   FLoat
+   String Integer Float
 
+   stream-functions that both consume (provide a "block") and produce (yield) can be combined in pipelines
 =end
 
-  # triples -> graph
+  # Stream -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -34,18 +34,18 @@ class R
     m
   end
 
-  # inode -> inode (Non-RDF -> RDF)
+  # File(notRDF) -> File(RDF) (via MIME-specific emitter)
   def justRDF pass = RDFsuffixes
-    if pass.member? realpath.do{|p|p.extname.tail} # already desired MIME
-      self
+    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
+      self # unchanged
     else
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache
-      doc
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
+      doc # derived doc
     end
   end
 
-  # inode -> graph
+  # File -> Graph
   def nodeToGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
@@ -76,13 +76,13 @@ class R
     graph
   end
   
-  # URI -> graph
+  # URI -> Graph
   def graph graph = {}
     fileResources.map{|d|d.nodeToGraph graph}
     graph
   end
 
-  # triples -> fs-store
+  # Stream -> doc(s)
   def triplrStoreJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr) # collect triples
     R.store graph, host, p, hook  # cache
@@ -90,7 +90,7 @@ class R
     self
   end
 
-  # graph -> fs-store
+  # Graph -> doc(s)
   def R.store graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -106,22 +106,6 @@ class R
       d = d.R; puts "<#{d.docroot}>"
       d.w g,true              # cache
       hook[d,g,host] if hook} # indexer
-  end
-
-  # URI -> fs-store
-  def store options = {}
-    g = RDF::Repository.load self, options
-    g.each_graph.map{|graph|
-      if graph.named?
-        doc = graph.name.n3
-        unless doc.e
-          doc.dir.mk
-          file = doc.pathPOSIX
-          RDF::Writer.open(file){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
-          options[:hook][doc,graph,options[:hostname]] if options[:hook]
-        end
-      end}
-    g
   end
  
 end
@@ -159,6 +143,7 @@ class Hash
     values.sortRDF env
   end
 
+  # Hash graph -> RDF Graph
   def toRDF base=nil
     graph = RDF::Graph.new
     triples{|s,p,o|
