@@ -37,7 +37,7 @@ class R
       r = g[uri] ||= {} # resource
       r[Type] ||= []
       r[Type].push R['#editable']
-      r[Title] ||= e.R.basename # suggest a title
+      r[Label] ||= e.R.basename
       [LDP+'contains', Size, Creator, Mtime,
        SIOC+'has_container',
        SIOC+'has_parent',
@@ -70,10 +70,12 @@ class R
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     datatype = e.q['datatype'] || 'html'
-    re[Title] ||= ''
-    re[WikiText] ||= ''
-    re[Type] ||= R[WikiArticle]
-     {_: :form, method: :POST,
+    unless re[Type]
+      re[Type] = R[WikiArticle]
+      re[Title] ||= ''
+      re[WikiText] ||= ''
+    end
+      {_: :form, method: :POST,
        c: [{_: :table, class: :html,
             c: [re.uri.do{|uri|
                   {_: :tr,
