@@ -70,12 +70,10 @@ class R
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     datatype = e.q['datatype'] || 'html'
-    unless re[Type]
-      re[Type] = R[WikiArticle]
-      re[Title] ||= ''
-      re[WikiText] ||= ''
-    end
-      {_: :form, method: :POST,
+    re[Type] ||= R[WikiArticle]
+    re[Title] ||= ''
+    re[WikiText] ||= ''
+    {_: :form, method: :POST,
        c: [{_: :table, class: :html,
             c: [re.uri.do{|uri|
                   {_: :tr,
