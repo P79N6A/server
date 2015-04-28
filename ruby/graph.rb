@@ -60,7 +60,7 @@ class R
           graph[s][Size].push f.size
           graph[s][Mtime].push mt.to_i
           graph[s][Date].push mt.iso8601
-          graph[s][Type] ||= R[Resource]
+          graph[s][Type].push R[Resource]
         end
       end
       ((f.r true) || {}). # load graph
