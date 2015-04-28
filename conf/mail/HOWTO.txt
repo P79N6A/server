@@ -1,10 +1,8 @@
-0) link messages and derived-dir to servable path (host-shortcut optional)
- $ echo 127.0.0.1 mail >> /etc/hosts
+0) link (or deliver) messages into server path
  ~ ln -s ~/.mail/2016 domain/mail
- ~ ln -sr address domain/mail
 
 1) browse using HTTP
  $ firefox mail/today
 
-N) cleanup (ref-index + RDF-transcoded mail)
-  $ rm -rf address
+N) cleanup
+  $ rm -rf address index

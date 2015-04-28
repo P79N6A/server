@@ -50,17 +50,18 @@ class R
     return unless e
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f| # RDF doc
-      if @r && @r[:container] && file? # containment-meta
-        native = f == self # URI unchanged (already RDF), use generic
-        s = native ? stripDoc.uri : uri # prefer generic-resource over file URI
-        s = base.join(s).to_s if base # expand relative-URI
-        graph[s] ||= {'uri' => s} # resource to graph
-        [Type,Size,Mtime,Date].map{|p|graph[s][p] ||= []} # meta fields
-        mt = f.mtime
-        graph[s][Size].push f.size
-        graph[s][Mtime].push mt.to_i
-        graph[s][Date].push mt.iso8601
-        graph[s][Type].push R[native ? Resource : (Stat + 'File')]
+      if @r && @r[:container] && file? # contained file
+        if self != f# skip internal-storage (.e)
+          s = stripDoc.uri # point to generic-resource
+          s = base.join(s).to_s if base # expand relative-URI
+          graph[s] ||= {'uri' => s} # resource to graph
+          [Type,Size,Mtime,Date].map{|p|graph[s][p] ||= []} # meta fields
+          mt = f.mtime
+          graph[s][Size].push f.size
+          graph[s][Mtime].push mt.to_i
+          graph[s][Date].push mt.iso8601
+          graph[s][Type] ||= R[Resource]
+        end
       end
       ((f.r true) || {}). # load graph
         triples{|s,p,o|   # foreach triple
