@@ -58,7 +58,7 @@ td a {color: #{color}}"}, "\n",
                    c: if Type == k
                     {_: :img, src: '/css/misc/cube.svg'}
                   else
-                    Icons[k] ? '' : k.R.basename
+                    Icons[k] ? '' : (k.R.fragment||k.R.basename)
                    end
                   }}, "\n"]}}, "\n",
           ({_: :style, c: rows.map{|r|
