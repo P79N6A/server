@@ -49,30 +49,30 @@ class R
   def nodeToGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
-    justRDF(%w{e}).do{|f| # just native JSON
-      if @r && @r[:container] && file? # fs-meta
-        native = f == self
-        s = native ? stripDoc.uri : uri # generic-resource or file
-        s = base.join(s).to_s if base
-        graph[s] ||= {'uri' => s}
-        [Type,Size,Mtime,Date].map{|p|graph[s][p] ||= []} # init fields
+    justRDF(%w{e}).do{|f| # RDF doc
+      if @r && @r[:container] && file? # containment-meta
+        native = f == self # URI unchanged (already RDF), use generic
+        s = native ? stripDoc.uri : uri # prefer generic-resource over file URI
+        s = base.join(s).to_s if base # expand relative-URI
+        graph[s] ||= {'uri' => s} # resource to graph
+        [Type,Size,Mtime,Date].map{|p|graph[s][p] ||= []} # meta fields
         mt = f.mtime
         graph[s][Size].push f.size
         graph[s][Mtime].push mt.to_i
         graph[s][Date].push mt.iso8601
         graph[s][Type].push R[native ? Resource : (Stat + 'File')]
       end
-      (f.r(true)||{}).triples{|s,p,o| # triples
-        if base
-          s = base.join(s).to_s     # bind subject-URI
-          if o.class==Hash && o.uri # bind object-URI
+      ((f.r true) || {}). # load graph
+        triples{|s,p,o|   # foreach triple
+        if base           # base URI
+          s = base.join(s).to_s     # resolve subject-URI
+          if o.class==Hash && o.uri # resolve object-URI
             o['uri'] = base.join(o.uri).to_s
           end
         end
         graph[s] ||= {'uri' => s}
         graph[s][p] ||= []
-        graph[s][p].push o #unless graph[s][p].member? o
-      }}
+        graph[s][p].push o}} # unless graph[s][p].member? o # dedupe
     graph
   end
   
