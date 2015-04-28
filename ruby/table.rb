@@ -24,7 +24,7 @@ class R
   TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
     color = R.cs
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label] # label for URI
-    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide containers of /
+    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide parent-column on root container
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
     rows = g.resources(e).send direction                    # sorted resources
@@ -85,10 +85,11 @@ td a {color: #{color}}"}, "\n",
                               l.uri
                             end
                      [{_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon},
-                      Containers[t.uri].do{|c|
+                      (if e.editable l.R
+                       Containers[t.uri].do{|c|
                          n = c.R.fragment
-                         {_: :a, href: l.uri+'?new', c: '+', class: :new, title: "new #{n} in #{l.uri}"}
-                      }]}
+                         {_: :a, href: l.uri+'?new', c: '+', class: :new, title: "new #{n} in #{l.uri}"}}
+                       end)]}
                  when LDP+'contains'
                    ViewA[Container][l,e,sort,direction]
                  when WikiText
