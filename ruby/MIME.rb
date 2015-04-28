@@ -67,6 +67,7 @@ class R
     'atom' => 'application/atom+xml',
     'avi' => 'video/avi',
     'e' => 'application/json+rdf',
+    'eml' => 'message/rfc822',
     'coffee' => 'text/plain',
     'conf' => 'text/plain',
     'css' => 'text/css',

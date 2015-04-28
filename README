@@ -1,15 +1,15 @@
-GET     git clone https://github.com/hallwaykid/pw.git
-                  http://repo.or.cz/w/www.git
+GET     git clone https://github.com/hallwaykid/pw.git # or
+        git clone http://repo.or.cz/w/www.git
 
-INSTALL cd pw/ruby     # enter source-dir
-        bundle install # install dependencies
-	./install      # link source to rubylib-path
+        cd pw/ruby
+INSTALL bundle install # dependencies
+	./install      # symlink (rsync or build gem if you want)
 
-        cd ..         # run in place (or symlink {css,js} to pwd)
+        cd ..         # run here or link {css,js}
 USE     foreman start # HTTP and HTTPS on 80/443
 NOTES
- httpd.ru can be used to launch other Rack-API servers ('thin' is default, unicorn works well)
- to allow listen on 80/443 (instead of above 1024 behind nginx/lighttpd/apache)
+ httpd.ru can be used to launch other Rack-API servers ('thin' is default, unicorn works well, etc)
+ to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep `which ruby`
 
 HOST  mkdir domain/hostname

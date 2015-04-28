@@ -1,8 +1,18 @@
-0) link (or deliver) messages into server path
- ~ ln -s ~/.mail/2016 domain/mail
+the server converts files to RDF,
 
-1) browse using HTTP
- $ firefox mail/today
+1. make messages visible to server: (example)
+ ~ ln -s /home/maillist/.mail/2016 domain/hostname
 
-N) cleanup
-  $ rm -rf address index
+2. browse to them. to see all of today's messages:
+ $ firefox hostname/today
+  domain/localhost/2016/01/16/msg.ABCD , on the filesystem can be browsed at
+  http://localhost/2016/01/16/msg.ABCD.html
+
+  documents will automatically appear in address/,
+  the server will log new messages as theyre encountered
+  all links (except dc:source) use permalink location, original messages can be removed once seen.
+
+ the provided .procmailrc should ensure message filenames that:
+  begin with msg. or end with .eml. otherwise edit MIME.rb or FILE(1) will be invoked to sniff
+
+ if none of this makes sense, email <_@whats-your.name> and ask for help
