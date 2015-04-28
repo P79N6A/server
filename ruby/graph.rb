@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-=begin minimal RDF-subset in native-types w/o RDF.rb dependency/overhead (fast)
+=begin a minimal RDF-subset in native-types w/o RDF.rb dependency/overhead (fast, fun, easier(maybe?))
  Graph: Hash
   {subject* => {predicate* => object*}}
  Stream:
