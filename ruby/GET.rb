@@ -21,27 +21,31 @@ class R
     condResponse ->{ self }
   end
 
-  def resourceGET
-    paths = justPath.cascade
-    [@r.host,""].map{|h|
-      paths.map{|p| GET[h+p].do{|fn| fn[self,@r].do{|r| # search for handlers
-        return r }}}} # bespoke handler
-    response # default handler
+  def resourceGET # custom-handler lookup
+    paths = justPath.cascade 
+    [@r.host,""].map{|h| # host-specific, then daemon-wide
+      paths.map{|p| # bubble up to /
+        GET[h+p].do{|fn| # handler found
+          fn[self,@r].do{|r| # call handler
+        return r }}}} # return (non-nil handler response)
+    response # default response
   end
 
   def response
     if directory?
       if uri[-1] == '/'
         @r[:container] = true
-      else
+      else # redirect to enter container (trailing-/)
         qs = @r['QUERY_STRING']
         @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
         return [301, @r[:Response], []]
       end
     end
+
     init = q.has_key? 'new'
     edit = q.has_key? 'edit'
     return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
+
     m = {} # graph
     set = [] # resource-set
 
@@ -57,7 +61,7 @@ class R
     FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
     if set.empty? # empty set
-      if init # instantiate resource
+      if init # bypass 404
         @r[:empty] = true
       else
         return E404[self,@r,m]
