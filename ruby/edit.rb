@@ -64,8 +64,8 @@ class R
 
   ViewGroup['#editable'] = -> graph, e {
     [graph.map{|u,r|ViewA['#editable'][r,e]},
-     H.js('/js/edit'),
-     H.css('/css/edit')]}
+     H.js('/js/edit',true),
+     H.css('/css/edit',true)]}
 
   # HTML based editor: a <form>
   ViewA['#editable'] = -> re, e {
@@ -110,7 +110,7 @@ class R
                                else
                                  {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
                                end }}}].cr}}].cr},
-           {_: :a, class: :cancel, href: e.uri, c: 'X'},
+           {_: :a, id: :cancel, class: :cancel, href: e.uri, c: 'X'},
            {_: :input, type: :submit, value: 'write'}].cr}}
 
   def editLink env
