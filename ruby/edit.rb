@@ -1,12 +1,10 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   # paginate history-storage
   FileSet['history'] = -> d,env,g {
-    FileSet['page'][d.fragmentDir,env,g].map{|f|
-      puts f
-      f.setEnv env}}
+    FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
 
   Filter['edit'] = -> g,e { # add editor-types to resource(s)
 
@@ -64,7 +62,10 @@ class R
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment,
        href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
-  ViewGroup['#editable'] = -> graph, e {[graph.map{|u,r|ViewA['#editable'][r,e]},H.css('/css/edit')]}
+  ViewGroup['#editable'] = -> graph, e {
+    [graph.map{|u,r|ViewA['#editable'][r,e]},
+     H.js('/js/edit'),
+     H.css('/css/edit')]}
 
   # HTML based editor: a <form>
   ViewA['#editable'] = -> re, e {

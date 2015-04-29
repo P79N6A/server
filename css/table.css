@@ -1,4 +1,4 @@
-table.tab {margin: .7em;border-spacing: .1em;font-family: sans-serif}
+table.tab {margin: .7em;border-spacing: .1em}
 table.tab a {text-decoration: none}
 table.tab th a {color:#fff;font-size:1.5em;font-weight: normal}
 table.tab td[property='uri'] {text-align:right; font-weight: bold}
