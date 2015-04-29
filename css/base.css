@@ -1,43 +1,38 @@
-body {background-color:#000; color:#fff}
+a.comments:before { content:"\f0e6"; font-family: icons; }
+a.container:before { content:"\f187"; font-family: icons; }
+a.date:before { content:"\f073"; font-family: icons; }
+a.dir:before { content:"\f07c"; font-family: icons; }
+a.file:before { content:"\f15b"; font-family: icons; }
+a.graph:before { content:"\f1e0"; font-family: icons; }
+a.group:before { content:"\f0c0"; font-family: icons;}
+a.id:before { content:"\f02a"; font-family: icons; }
+a.identify, a.user {font-size:1.4em;float: left;margin:0 .2em .2em 0; text-decoration:none}
+a.identify:before { content:"\f235"; font-family: icons; }
+a.identify {color: #ccc}
+a.img:before { content:"\f03e"; font-family: icons; }
+a.key:before { content:"\f084"; font-family: icons; }
+a.link:before { content:"\f0c1"; font-family: icons; }
+a.pencil:before { content:"\f040"; font-family: icons; }
+a.person:before { content:"\f007"; font-family: icons; }
+a.rel:before { content:"\f0a5"; font-family: icons; }
+a.reply:before { content:"\f122"; font-family: icons; }
+a.scissors:before { content:"\f0c4"; font-family: icons; }
+a.size:before { content:"\f161"; font-family: icons; }
+a.thread:before { content:"\f03c"; font-family: icons; }
+a.time:before { content:"\f017"; font-family: icons; }
+a.title:before { content:"\f035"; font-family: icons; }
+a.user:before { content:"\f007"; font-family: icons;}
+a.warp:before { content:"\f135"; font-family: icons; }
 body > a.user {color:#00ff0d}
+body {background-color:#000; color:#fff}
+@font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 .rdf {float:right;background-color:#fff;padding: .25em .35em .25em .3em;border-radius:1.2em;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
 table {display: inline-block; font-family: Corbel, Calibri, sans-serif}
-tr[property='uri'] td {background-color:#000;color:#fff}
-tr[property='uri'] td a {color:#fff; text-decoration: none}
-tr[property='uri'] td a.uri {font-weight: bold}
-tr[property='uri'] td a.pencil {float: right}
 td {border-radius: .16em}
-td.key {text-align:right}
 td.key a {font-weight: bold;text-decoration:none}
 td.key img {height: 1.4em}
-@font-face {
-    font-family: "icons";
-    src: url('/css/misc/icons.eot');
-    src: url('/css/misc/icons.woff') format('woff');
-    src: url('/css/misc/icons.ttf')  format('truetype');
-}
-a.group:before { content:"\f0c0"; font-family: icons;}
-a.container:before { content:"\f187"; font-family: icons; }
-a.graph:before { content:"\f1e0"; font-family: icons; }
-a.size:before { content:"\f161"; font-family: icons; }
-a.id:before { content:"\f02a"; font-family: icons; }
-a.date:before { content:"\f073"; font-family: icons; }
-a.time:before { content:"\f017"; font-family: icons; }
-a.person:before { content:"\f007"; font-family: icons; }
-a.dir:before { content:"\f07c"; font-family: icons; }
-a.scissors:before { content:"\f0c4"; font-family: icons; }
-a.pencil:before { content:"\f040"; font-family: icons; }
-a.file:before { content:"\f15b"; font-family: icons; }
-a.key:before { content:"\f084"; font-family: icons; }
-a.warp:before { content:"\f135"; font-family: icons; }
-a.img:before { content:"\f03e"; font-family: icons; }
-a.comments:before { content:"\f0e6"; font-family: icons; }
-a.link:before { content:"\f0c1"; font-family: icons; }
-a.thread:before { content:"\f03c"; font-family: icons; }
-a.title:before { content:"\f035"; font-family: icons; }
-a.rel:before { content:"\f0a5"; font-family: icons; }
-a.identify {color: #ccc}
-a.identify:before { content:"\f235"; font-family: icons; }
-a.user:before { content:"\f007"; font-family: icons;}
-a.identify, a.user {font-size:1.4em;float: left;margin:0 .2em .2em 0; text-decoration:none}
-
+td.key {text-align:right}
+tr[property='uri'] td a {color:#fff; text-decoration: none}
+tr[property='uri'] td a.pencil {float: right}
+tr[property='uri'] td a.uri {font-weight: bold}
+tr[property='uri'] td {background-color:#000;color:#fff}
