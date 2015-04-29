@@ -52,8 +52,6 @@ class R
     cur.delete if cur.e # unlink old
     doc.ln_s cur      # link live-version
     buildDoc if build # update containing-doc
-    puts "doc #{doc}"
-    puts "current #{cur}"
   end
 
   def buildDoc

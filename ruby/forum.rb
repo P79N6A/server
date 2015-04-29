@@ -27,7 +27,5 @@ class R
                    SIOC+'reply_to' => R[postURI + '?new']
                  })}
 
-  ViewGroup[Forum] = ViewGroup[Resource]
-  ViewGroup[SIOC+'Thread'] = TabularView
 
 end
