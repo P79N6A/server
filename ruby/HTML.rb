@@ -200,6 +200,7 @@ class R
     SIOC+'wikiText' => :pencil,
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :dir,
+    SIOC+'reply_to' => :reply,
     Size => :size,
     Stat+'File' => :file,
     Title => :title,
