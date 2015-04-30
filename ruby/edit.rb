@@ -1,5 +1,5 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 class R
 
   # paginate history-storage
@@ -10,7 +10,7 @@ class R
 
     # new resource
     if e.q.has_key? 'new'
-      if e[:empty]
+      if e[404]
         if e.q.has_key? 'type' # type bound
           e.q['edit'] = true   # ready to edit
         else                   # type selector
@@ -114,7 +114,7 @@ class R
            {_: :input, type: :submit, value: 'write'}].cr}}
 
   def editLink env
-    (env.R.join stripFrag) + '?edit' + (fragment ? ('&fragment=' + fragment) : '')
+    (env.R.join stripFrag) + (env[404] ? '?new' : '?edit') + (fragment ? ('&fragment=' + fragment) : '')
   end
 
 end

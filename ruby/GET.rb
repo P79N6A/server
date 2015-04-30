@@ -61,11 +61,8 @@ class R
     FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
 
     if set.empty? # empty set
-      if init # bypass 404
-        @r[:empty] = true
-      else
-        return E404[self,@r,m]
-      end
+      @r[404] = true
+      return E404[self,@r,m] unless init
     end
 
     @r[:Response].
