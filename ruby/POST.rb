@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
@@ -57,6 +57,7 @@ class R
   end
 
   def formPOST
+    puts "<form> POST to #{uri}"
     data = Rack::Request.new(@r).POST  # form
     type = data.delete(Type)||Resource # RDF-resource type
     resource = {Type => type.R.expand} # resource
@@ -67,21 +68,27 @@ class R
                resource[Title].slugify || rand.to_s.h[0..7]}
 
     subject = if data.uri # existing subject
+#                puts "URI exists #{data.uri}"
                 data.uri
               else # new subject
+#                puts "201 Creating.."
                 @r[:Status] = 201 # mark as new
-                if directory? # container target
+                if directory? # new container-member
+                  puts "new containee"
                   resource[SIOC+'has_container'] = R[uri.t] # containment
                   targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # lookup type-handlers
                     POST[c].do{|h| puts "POST to #{c} at #{uri}"
-                      h[resource,targetResource,@r]}} # typed POST-handler
+                      h[resource,targetResource,@r]}} # container-type handler
                   resource.uri || (uri.t + slug[] + '#') # contained-resource URI
-                elsif Containers[resource[Type].maybeURI] # create a container
+                elsif Containers[resource[Type].maybeURI] # new container
+                  puts "creating container"
                   mk; uri.t # create fs-container, ensure trailing-slash URI
-                else # create generic resource URI
+                else # new basic-resource
+                  puts "creating generic resource"
                   '#' + slug[] # fragment in doc
                 end
               end
+
     located = (join subject).R.setEnv @r
 
     if resource.keys.size==1 && resource[Type] # empty resource?
