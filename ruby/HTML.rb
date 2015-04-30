@@ -145,7 +145,7 @@ class R
     resource = r.R
     {_: :table, class: :html, id: uri,
      c: r.map{|k,v|
-       {_: :tr, property: k,
+       [{_: :tr, property: k,
         c: case k
            when 'uri'
              {_: :td, colspan: 2,
@@ -158,13 +158,14 @@ class R
              {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
            else
              icon = Icons[k]
-             [{_: :td,
+             ["\n ",
+              {_: :td,
                c: {_: :a, href: k, class: icon,
                    c: if Type == k
                     {_: :img, src: '/css/misc/cube.svg'}
                   else
                     icon ? '' : (k.R.fragment||k.R.basename)
-                   end}, class: :key},
+                   end}, class: :key}, "\n ",
               {_: :td, c: v.justArray.map{|v|
                  case v
                  when Hash
@@ -172,8 +173,11 @@ class R
                  else
                    v
                  end
-               }.intersperse(' '), class: :val}]
-           end}}}}
+               }.intersperse(' '), class: :val}, "\n"
+             ]
+           end}, "\n"
+       ]
+     }}}
 
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
