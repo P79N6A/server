@@ -73,7 +73,12 @@ class R
      [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   E404 = -> base, env, graph=nil {
-    ENV2RDF[env, graph||={}]
+    graph ||= {}
+    graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
+    graph[env.uri][RDFs+'seeAlso'] = []
+    base.cascade.reverse.map{|p|
+      p.e && graph[env.uri][RDFs+'seeAlso'].push(p)}
+    ENV2RDF[env, graph]
     graph[env.uri][Type] = R[HTTP+'404']
     [404,{'Content-Type' => env.format},
      [Render[env.format].do{|fn|fn[graph,env]} ||
