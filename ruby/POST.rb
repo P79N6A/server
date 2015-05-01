@@ -63,15 +63,17 @@ class R
     resource = {Type => type.R.expand} # resource
     targetResource = graph[uri] || {}  # target
     R.formToGraph data, resource       # form-data
-    isContainer = Containers[resource[Type].maybeURI]
+    isContainer = Containers[resource[Type].maybeURI] # subject is container
+    makeContainer = false # subject is a new container
+
     slug = -> {resource[Title] && !resource[Title].empty? &&
                resource[Title].slugify || rand.to_s.h[0..7]}
 
     subject = if data.uri # existing subject
-#                puts "URI exists #{data.uri}"
+                puts "URI exists #{data.uri}"
                 data.uri
               else # new subject
-#                puts "201 Creating.."
+                puts "201 Creating.."
                 @r[:Status] = 201 # mark as new
                 if directory? # new container-member
                   puts "new containee"
@@ -87,15 +89,14 @@ class R
                   else
                     (uri.t + slug[] + '#') # containee URI
                   end
-                  if isContainer # new container (in container..)
-                    #mk
-                  end
+                  makeContainer = true if isContainer # new container (in container..)
                 elsif isContainer # new container
                   puts "new container"
-                  mk; uri.t # container-with-trailing-slash/
+                  makeContainer = true
+                  uri.t # container/
                 else # new basic-resource
                   puts "new generic resource"
-                  '#' + slug[] # fragment in doc
+                  '#' + slug[] # doc#fragment
                 end
               end
 
@@ -106,10 +107,11 @@ class R
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
     else # update
+      located.mk if makeContainer # create fs-container
       resource.update({ 'uri' => subject,         # URI
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
-      located.writeResource resource # write
+      located.writeResource resource # write data
       [303,{'Location' => located.uri},[]] # return
     end
   end
