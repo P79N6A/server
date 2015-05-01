@@ -3,7 +3,7 @@ table.tab a {text-decoration: none}
 table.tab th a {color:#fff;font-size:1.5em;font-weight: normal}
 table.tab td[property='uri'] {text-align:right; font-weight: bold}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
-table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {padding: 0 .3em 0 .3em; margin: 0 .2em 0 .2em; border-radius: .5em ; font-weight: bold; background-color:#0f0; color: #fff}
+table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {padding: 0 .24em 0 .24em; margin: 0 .2em 0 .2em; border-radius: .5em ; font-weight: bold; background-color:#0f0; color: #fff}
 .container .size {font-family: monospace; white-space: pre-wrap}
 .container a.member {background-color:#000;color:#fff}
 .container a.member:visited {background-color:#fff;color:#000}

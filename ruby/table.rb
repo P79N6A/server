@@ -22,7 +22,7 @@ class R
   end
 
   TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
-    color = R.cs
+    color = e[:color]
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label] # label for URI
     keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide parent-column on root container
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort

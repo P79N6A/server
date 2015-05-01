@@ -91,7 +91,8 @@ class R
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.size==1 ? titles.head : e.uri
     end
-     nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
+    e[:color] = R.cs
+    nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
     prev = e[:Links][:prev].do{|p|CGI.escapeHTML p}
     paged = nxt||prev
 
@@ -104,7 +105,9 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
-                 H.css('/css/base',true)]},
+                 H.css('/css/base',true),
+                 {_: :style, c: "a {color: #{e[:color]}}"}
+                ]},
             {_: :body,
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
