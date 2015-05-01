@@ -63,7 +63,7 @@ class R
     resource = {Type => type.R.expand} # resource
     targetResource = graph[uri] || {}  # target
     R.formToGraph data, resource       # form-data
-
+    isContainer = Containers[resource[Type].maybeURI]
     slug = -> {resource[Title] && !resource[Title].empty? &&
                resource[Title].slugify || rand.to_s.h[0..7]}
 
@@ -76,15 +76,25 @@ class R
                 if directory? # new container-member
                   puts "new containee"
                   resource[SIOC+'has_container'] = R[uri.t] # containment
-                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c| # lookup type-handlers
+
+                  # lookup typed-container handler
+                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c|
                     POST[c].do{|h| puts "POST to #{c} at #{uri}"
-                      h[resource,targetResource,@r]}} # container-type handler
-                  resource.uri || (uri.t + slug[] + '#') # contained-resource URI
-                elsif Containers[resource[Type].maybeURI] # new container
-                  puts "creating container"
-                  mk; uri.t # create fs-container, ensure trailing-slash URI
+                      h[resource,targetResource,@r]}} # container handler
+                  
+                  if resource.uri # bespoke-handler may have minted URI
+                    resource.uri # bespoke URI
+                  else
+                    (uri.t + slug[] + '#') # containee URI
+                  end
+                  if isContainer # new container (in container..)
+                    #mk
+                  end
+                elsif isContainer # new container
+                  puts "new container"
+                  mk; uri.t # container-with-trailing-slash/
                 else # new basic-resource
-                  puts "creating generic resource"
+                  puts "new generic resource"
                   '#' + slug[] # fragment in doc
                 end
               end
