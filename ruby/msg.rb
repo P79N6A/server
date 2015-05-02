@@ -1,5 +1,4 @@
 # coding: utf-8
-#watch __FILE__
 class R
 
   def triplrIRC &f
@@ -10,11 +9,7 @@ class R
     doc = uri.gsub '#','%23'
     channel = bare
     r.lines.map{|l|
-=begin
-19:10 [    kludge] _abc_: because people discovered that APL was totally unmaintainable.  People wrote code and then went to lunch and when they came back they couldn't figure out what the hell they had done.
-19:10 [     _abc_] Sounds like Perl
-=end
-      l.scan(/(\d\d):(\d\d) \[[\s@]*([^\(\]]+)[^\]]*\] (.*)/){|m|
+      l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = doc + '#' + (i+=1).to_s
         yield s, Date,                day+'T'+m[0]+':'+m[1]+':00'
         yield s, SIOCt+'ChatChannel', channel
