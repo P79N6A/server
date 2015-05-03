@@ -54,7 +54,7 @@ class R
 
   # URI for post
   POST[SIOC+'Thread'] = -> post, thread, env {
-    post['uri'] = thread.uri + time.gsub(/[-+:T]/, '')
+    post['uri'] = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')
     post[SIOC+'reply_to'] = R[thread.uri + '?new#reply']}
 
   ViewA[SIOCt+'InstantMessage'] = ViewA[SIOCt+'MicroblogPost'] = -> r,e {
