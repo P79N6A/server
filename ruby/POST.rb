@@ -39,16 +39,12 @@ class R
     end
   end
 
-  def R.formToGraph form, resource
-
-  end
-
   def formPOST
     form = Rack::Request.new(@r).POST  # form data
-    type = form.delete(Type)||Resource # RDF-type
-    resource = {Type => type.R.expand}
-    resource = R.formToGraph form
-    form.map{|p,o|
+    resource = {}                      # input resource
+    resource[Type] = ((form.delete Type) ||
+                      Resource).R.expand  # RDF-type
+    form.map{|p,o| # each triple
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
@@ -58,14 +54,15 @@ class R
           else
             o   # String
           end
-      resource[p] = o if o && p.match(HTTP_URI)
-    }
+      resource[p] = o if o && p.match(HTTP_URI)}
+
+    # wrap typed-content with type-tag
     resource[WikiText].do{|c|
-      resource[WikiText] = {Content => c, 'datatype' => form['datatype']}}
-    # input resource
+      resource[WikiText] = {Content => c,
+                            'datatype' => form['datatype']}}
     targetResource = graph[uri] || {}  # target resource
 
-    isContainer = Containers[resource[Type].maybeURI] # subject is container
+    isContainer = Containers[resource[Type].maybeURI]
     newContainer = false
 
     slug = -> {resource[Title] && !resource[Title].empty? &&
