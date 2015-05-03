@@ -132,7 +132,6 @@ HTML
 table
 HTTP
 JSON
-forum
 image
 mail
 man

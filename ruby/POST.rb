@@ -40,6 +40,14 @@ class R
   end
 
   def R.formToGraph form, resource
+
+  end
+
+  def formPOST
+    form = Rack::Request.new(@r).POST  # form data
+    type = form.delete(Type)||Resource # RDF-type
+    resource = {Type => type.R.expand}
+    resource = R.formToGraph form
     form.map{|p,o|
       o = if !o || o.empty?
             nil
@@ -54,60 +62,53 @@ class R
     }
     resource[WikiText].do{|c|
       resource[WikiText] = {Content => c, 'datatype' => form['datatype']}}
-  end
+    # input resource
+    targetResource = graph[uri] || {}  # target resource
 
-  def formPOST
-    puts "<form> POST to #{uri}"
-    data = Rack::Request.new(@r).POST  # form
-    type = data.delete(Type)||Resource # RDF-resource type
-    resource = {Type => type.R.expand} # resource
-    targetResource = graph[uri] || {}  # target
-    R.formToGraph data, resource       # form-data
     isContainer = Containers[resource[Type].maybeURI] # subject is container
-    makeContainer = false # subject is a new container
+    newContainer = false
 
     slug = -> {resource[Title] && !resource[Title].empty? &&
                resource[Title].slugify || rand.to_s.h[0..7]}
 
-    subject = if data.uri # existing subject
-                puts "URI exists #{data.uri}"
-                data.uri
+    subject = if form.uri # existing subject
+                form.uri
               else # new subject
-                puts "201 Creating.."
                 @r[:Status] = 201 # mark as new
-                if directory? # new container-member
-                  puts "new containee"
-                  resource[SIOC+'has_container'] = R[uri.t] # containment
 
-                  # lookup typed-container handler
+                if directory? # new container-member
+                  newContainer = true if isContainer
+                  resource[SIOC+'has_container'] = R[uri.t] # container pointer
+
+                  # typed container-handlers
                   targetResource[Type].justArray.map(&:maybeURI).compact.map{|c|
-                    POST[c].do{|h| puts "POST to #{c} at #{uri}"
-                      h[resource,targetResource,@r]}} # container handler
+                    POST[c].do{|h|
+                      puts "POST to a #{c} at #{uri}"
+                      h[resource,targetResource,@r]}} # handle
                   
-                  if resource.uri # bespoke-handler may have minted URI
-                    resource.uri # bespoke URI
+                  if resource.uri # bespoke-handler minted URI
+                    resource.uri  # bespoke URI
                   else
-                    (uri.t + slug[] + '#') # containee URI
+                    (uri.t + slug[] + '#') # container/doc#
                   end
-                  makeContainer = true if isContainer # new container (in container..)
+
                 elsif isContainer # new container
-                  puts "new container"
-                  makeContainer = true
-                  uri.t # container/
+                  newContainer = true
+                  uri.t           # container/
                 else # new basic-resource
-                  puts "new generic resource"
-                  '#' + slug[] # doc#fragment
+                  '#' + slug[]    # doc#fragment
                 end
               end
 
     located = (join subject).R.setEnv @r
 
-    if resource.keys.size==1 && resource[Type] # empty resource?
-      located.fragmentPath.a('.e').delete # unlink current
-      located.buildDoc # update doc
+    if resource.keys.size==1 && resource[Type] # delete
+      located.fragmentPath.a('.e').delete # unlink frag-doc
+      located.buildDoc # update resource-doc
       [303,{'Location' => uri},[]]
+
     else # update
-      located.mk if makeContainer # create fs-container
+      located.mk if newContainer # create container
       resource.update({ 'uri' => subject,         # URI
                         Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
