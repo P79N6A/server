@@ -23,7 +23,7 @@ class R
     ldp
     [201,@r[:Response].update({Location: uri}),[]]
   rescue Exception => e
-    puts x.class, x.message
+    puts e.class, e.message
     [400,{},[]]
   end
 
