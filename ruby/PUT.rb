@@ -22,6 +22,9 @@ class R
 
     ldp
     [201,@r[:Response].update({Location: uri}),[]]
+  rescue Exception => e
+    puts x.class, x.message
+    [400,{},[]]
   end
 
   def MKCOL
