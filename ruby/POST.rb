@@ -9,13 +9,16 @@ class R
     when /^multipart\/form-data/
       filePOST
     when /^text\/(n3|turtle)/
-      rdfPOST
+      graphPOST
     else
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
+  rescue Exception => e
+    puts e.class, e.message
+    [400,{},[]]
   end
 
-  def rdfPOST
+  def graphPOST
     if @r.linkHeader['type'] == Container
       path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
       path.PUT
