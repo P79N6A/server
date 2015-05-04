@@ -131,7 +131,6 @@ HEAD
 HTML
 table
 HTTP
-JSON
 image
 mail
 man
