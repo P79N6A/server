@@ -6,7 +6,7 @@ class R
   FileSet['history'] = -> d,env,g {
     FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
 
-  Filter['edit'] = -> g,e { # add editor-types to resource(s)
+  Filter['edit'] = -> g,e { # add editor-typetags to resource(s) so view-dispatcher will bring up editor
 
     # new resource
     if e.q.has_key? 'new'
@@ -71,6 +71,7 @@ class R
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     datatype = e.q['datatype'] || 'html'
+    re[Creator] ||= e.user
     re[Type] ||= R[WikiArticle]
     re[Title] ||= ''
     re[WikiText] ||= ''
