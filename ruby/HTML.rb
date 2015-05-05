@@ -106,7 +106,9 @@ class R
                    links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
                  H.css('/css/base',true),
-                 {_: :style, c: "a {color: #{e[:color]}}"}
+                 {_: :style,
+                  c: ["a {color: #{e[:color]}}\n",
+                      rand(2)==0 ? "body {background-color:#000; color:#fff}" : "body {background-color:#fff; color:#000}" ]}
                 ]},
             {_: :body,
              c: [e.signedIn ?
