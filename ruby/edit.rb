@@ -42,7 +42,7 @@ class R
       ].map{|p|r.delete p} # ambient properties, not editable
     end}
 
-  Creatable = [Forum, Wiki, WikiArticle, BlogPost]
+  Creatable = [Forum, Wiki, Blog]
 
   Render[WikiText] = -> texts {
     texts.justArray.map{|t|

@@ -26,7 +26,6 @@ class R < RDF::URI
   RO    = 'http://rdfs.org/'
   DC    = Purl + 'dc/terms/'
   SIOC  = RO + 'sioc/ns#'
-  SIOCt = RO + 'sioc/types#'
   VOID  = RO + 'ns/void#'
   Search   = 'http://sindice.com/vocab/search#'
   Daemon   = 'http://src.whats-your.name/pw'
@@ -47,10 +46,11 @@ class R < RDF::URI
   Content  = SIOC + 'content'
   WikiText = SIOC + 'wikiText'
   Forum    = SIOC + 'Forum'
-  BlogPost = SIOCt + 'BlogPost'
-  Wiki     = SIOCt + 'Wiki'
+  BlogPost = SIOC + 'BlogPost'
+  Wiki     = SIOC + 'Wiki'
+  Wiki     = SIOC + 'Blog'
   Referer  = SIOC + 'Referer'
-  WikiArticle = SIOCt + 'WikiArticle'
+  WikiArticle = SIOC + 'WikiArticle'
   Auth     = W3   + 'ns/auth/'
   ACL      = Auth + 'acl#'
   Key      = Auth + 'cert#RSAPublicKey'
@@ -86,7 +86,6 @@ class R < RDF::URI
     "rdf" => RDFns,
     "rdfs" => RDFs,
     "sioc" => SIOC,
-    "sioct" => SIOCt,
     "stat" => Stat,
   }
 
@@ -96,7 +95,6 @@ class R < RDF::URI
     :ldp => RDF::URI(LDP),
     :rdf => RDF::URI(RDFns),
     :rdfs => RDF::URI(RDFs),
-    :sioct => RDF::URI(SIOCt),
     :stat => RDF::URI(Stat),
   }
 
