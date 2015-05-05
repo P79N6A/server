@@ -12,10 +12,10 @@ class R
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = doc + '#' + (i+=1).to_s
         yield s, Date,                day+'T'+m[0]+':'+m[1]+':00'
-        yield s, SIOCt+'ChatChannel', channel
+        yield s, SIOC+'ChatChannel', channel
         yield s, Creator,             m[2]
         yield s, Content,             m[3].hrefs(true)
-        yield s, Type,                R[SIOCt+'InstantMessage']
+        yield s, Type,                R[SIOC+'InstantMessage']
       } rescue nil
     }
   end
@@ -29,7 +29,7 @@ class R
     base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
-      yield s, Type, R[SIOCt+'MicroblogPost']
+      yield s, Type, R[SIOC+'MicroblogPost']
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
       yield s, Label, t.css('.fullname')[0].inner_text
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
@@ -57,7 +57,7 @@ class R
     post['uri'] = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')
     post[SIOC+'reply_to'] = R[thread.uri + '?new#reply']}
 
-  ViewA[SIOCt+'InstantMessage'] = ViewA[SIOCt+'MicroblogPost'] = -> r,e {
+  ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
     [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
      r[Creator].do{|c|
        re = r.R
@@ -65,14 +65,14 @@ class R
        e[:creators][name] = R.cs
        {_: :a, href: re.fragment.do{|f|'#'+f} || r.uri, id: re.fragment, creator: name, c: name }}," ", r[Content],"<br>\n"]}
 
-  ViewGroup[SIOCt+'InstantMessage'] = -> d,e {
-    e.q['a'] = 'sioct:ChatChannel,sioc:has_creator'
+  ViewGroup[SIOC+'InstantMessage'] = -> d,e {
+    e.q['a'] = 'sioc:ChatChannel,sioc:has_creator'
     e[:creators] ||= {}
     [Facets[d,e],
      H.css('/css/chat',true),
      {_: :style, c: e[:creators].map{|n,c|"a[creator='#{n}'] {color:#fff;background-color: #{c}}"}.cr}]}
 
-  ViewGroup[SIOCt+'MicroblogPost'] = -> d,e {
+  ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
     label = {}
     count = 0
     [{_: :table, class: :chat, c: d.resources(e).reverse.map{|r|
@@ -87,7 +87,7 @@ class R
      {_: :style, c: label.map{|n,l| "table.chat td.creator.l#{l[:id]} {background-color: #{cs}}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
-  ViewGroup[SIOCt+'BoardPost'] = ViewGroup[SIOCt+'MailMessage'] = -> d,e {
+  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     titles = {}
     q = e.q

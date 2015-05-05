@@ -145,7 +145,7 @@ class R
        ViewA[Search+'Input'][i,e]}]}
 
   Facets = -> m,e {
-    a = Hash[((e.q['a']||'sioct:ChatChannel').split ',').map{|a|
+    a = Hash[((e.q['a']||'sioc:ChatChannel').split ',').map{|a|
                [a.expand,{}]}]
 
     # statistics

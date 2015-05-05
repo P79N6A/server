@@ -4,9 +4,9 @@ class R
 
   # POSTable container -> contained types
   Containers = {
-    Wiki => SIOCt+'WikiArticle',
+    Wiki => SIOC+'WikiArticle',
     Forum            => SIOC+'Thread',
-    SIOC+'Thread'    => SIOCt+'BoardPost',
+    SIOC+'Thread'    => SIOC+'BoardPost',
   }
 
   Filter[Container] = -> g,e { # summarize a container

@@ -48,7 +48,7 @@ class R < RDF::URI
   Forum    = SIOC + 'Forum'
   BlogPost = SIOC + 'BlogPost'
   Wiki     = SIOC + 'Wiki'
-  Wiki     = SIOC + 'Blog'
+  Blog     = SIOC + 'Blog'
   Referer  = SIOC + 'Referer'
   WikiArticle = SIOC + 'WikiArticle'
   Auth     = W3   + 'ns/auth/'
