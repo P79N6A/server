@@ -160,7 +160,7 @@ class R
       c: quotes ? '&#x27ea;' : '&#x27eb;',
       title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # message
-        author = r[Creator].do{|c| c[0].R.fragment } || 'anonymous'
+        author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
         {class: :mail, author: author, id: r.uri,
          c: [{class: :header,
               c: [r[Title].justArray[0].do{|t|
@@ -171,7 +171,7 @@ class R
                       titles[title] = true
                       [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title},"<br/>"]
                     end},
-                  r[Creator].do{|c| {_: :a, class: :author, name: author, href: c[0].uri, c: author}},
+                  r[Creator].justArray[0].do{|c| {_: :a, class: :author, name: author, href: c.uri, c: author}},
                   r[To].justArray.map{|o|
                     {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'has_parent'].do{|ps|

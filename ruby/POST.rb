@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def POST
@@ -83,7 +83,7 @@ class R
                   # typed container-handlers
                   targetResource[Type].justArray.map(&:maybeURI).compact.map{|c|
                     POST[c].do{|h|
-                      puts "POST to a #{c} at #{uri}"
+                      puts " to a #{c} at #{uri},"
                       h[resource,targetResource,@r]}} # handle
                   
                   if resource.uri # bespoke-handler minted URI
