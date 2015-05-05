@@ -96,22 +96,22 @@ class R
                   newContainer = true
                   uri.t           # container/
                 else # new basic-resource
-                  '#' + slug[]    # doc#fragment
+                  '#' + slug[]    # doc#frag
                 end
               end
 
     located = (join subject).R.setEnv @r
 
     if resource.keys.size==1 && resource[Type] # delete
-      located.fragmentPath.a('.e').delete # unlink frag-doc
-      located.buildDoc # update resource-doc
+      located.fragmentPath.a('.e').delete # unlink doc-fragment
+      located.buildDoc # update doc
       [303,{'Location' => uri},[]]
 
     else # update
       located.mk if newContainer # create container
       resource.update({ 'uri' => subject,         # URI
-                        Date => Time.now.iso8601, # timestamp
                         Creator => @r.user})      # author
+      resource[Date] = Time.now.iso8601 if !isContainer # timestamp
       located.writeResource resource # write data
       [303,{'Location' => located.uri},[]] # return
     end
