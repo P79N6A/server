@@ -6,7 +6,7 @@ a.file:before { content:"\f15b"; font-family: icons; }
 a.graph:before { content:"\f1e0"; font-family: icons; }
 a.group:before { content:"\f0c0"; font-family: icons;}
 a.id:before { content:"\f02a"; font-family: icons; }
-a.identify, a.user {font-size:1.4em;float: left;margin:.2em; text-decoration:none}
+body > a.identify, body > a.user {font-size:1.4em;float: left;margin:.2em; text-decoration:none}
 a.identify:before { content:"\f235"; font-family: icons; }
 a.identify {color: #ccc}
 a.img:before { content:"\f03e"; font-family: icons; }
