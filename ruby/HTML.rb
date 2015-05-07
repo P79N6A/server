@@ -108,7 +108,11 @@ class R
                  H.css('/css/base',true),
                  {_: :style,
                   c: ["a {color: #{e[:color]}}\n",
-                      rand(2)==0 ? "body {background-color:#000; color:#fff}" : "body {background-color:#fff; color:#000}" ]}
+                      if (rand 2) == 0
+                        "body {background-color:#000; color:#fff}"
+                      else
+                        "body {background-color:#fff; color:#000}"
+                      end]}
                 ]},
             {_: :body,
              c: [e.signedIn ?

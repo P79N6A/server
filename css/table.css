@@ -2,7 +2,7 @@ table.tab {margin: .7em;border-spacing: .1em}
 table.tab a {text-decoration: none}
 table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
-table.tab th a {color:#fff;font-size:1.5em;font-weight: normal}
+table.tab th a {font-size:1.5em;font-weight: normal}
 table.tab td[property='uri'] {text-align:right; font-weight: bold}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {padding: 0 .24em 0 .24em; margin: 0 .2em 0 .2em; border-radius: .5em ; font-weight: bold; background-color:#0f0; color: #fff}
