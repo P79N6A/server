@@ -194,10 +194,6 @@ class R
     }
 
     # links to alternate container-filterings
-    if !bodies && size < 24 # full content
-      fullURI = e.q.merge({'bodies' => ''}).qs
-      graph[fullURI] = {'uri' => fullURI, Type => R[Container], Label => '↓'}
-    end
     if !rdf && !e.q.has_key?('group') # list view
       listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
       graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
