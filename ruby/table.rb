@@ -41,10 +41,10 @@ class R
 
     [H.css('/css/table',true), "\n",
      {_: :style, # highlight selected property (column) and resource (row)
-      c: "
-th[property='#{sort}'], td[property='#{sort}'], tr[id='#{e.uri}'] td {color:#000;background-color: #{color}}
-td[property='#{sort}'] a, tr[id='#{e.uri}'] td a {color: #fff}
-th a, td a {color: #{color}}"}, "\n",
+      c: "td[property='#{sort}'] {border:.16em solid #{color}}
+tr[id='#{e.uri}'] td {background-color:#{color}}
+tr[id='#{e.uri}'] td a {color:#fff}
+"}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,
            c: keys.map{|k|
