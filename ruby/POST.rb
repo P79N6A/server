@@ -75,28 +75,21 @@ class R
                 form.uri
               else # new subject
                 @r[:Status] = 201 # mark as new
-
-                if directory? # new container-member
+                if directory? # containee
                   newContainer = true if isContainer
-                  resource[SIOC+'has_container'] = R[uri.t] # container pointer
+                  resource[SIOC+'has_container'] = R[uri.t]
 
-                  # typed container-handlers
-                  targetResource[Type].justArray.map(&:maybeURI).compact.map{|c|
-                    POST[c].do{|h|
-                      puts " to a #{c} at #{uri},"
-                      h[resource,targetResource,@r]}} # handle
-                  
-                  if resource.uri # bespoke-handler minted URI
-                    resource.uri  # bespoke URI
+                  if identifier = Identify[resource[Type].uri]
+                    identifier[resource,targetResource,@r] # URI function
                   else
-                    (uri.t + slug[] + '#') # container/doc#
+                    (uri.t + slug[] + '#') # container/doc# URI
                   end
 
                 elsif isContainer # new container
                   newContainer = true
-                  uri.t           # container/
-                else # new basic-resource
-                  '#' + slug[]    # doc#frag
+                  uri.t # container/ URI
+                else
+                  '#' + slug[] # #fragment URI
                 end
               end
 

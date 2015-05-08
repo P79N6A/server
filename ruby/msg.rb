@@ -48,12 +48,9 @@ class R
   def twGET g; triplrStoreJSON :triplrTwMsg, g, nil, FeedArchiverJSON end
 
   Identify[SIOC+'Thread'] = -> thread, forum, env {
-    thread['uri'] = forum.uri + Time.now.iso8601[0..10].gsub(/[-T]/,'/') + thread[Title].slugify + '/'
-    thread[SIOC+'reply_to'] = R[thread.uri + '?new#reply']}
+    forum.uri + Time.now.iso8601[0..10].gsub(/[-T]/,'/') + thread[Title].slugify + '/'}
 
-  Identify[SIOC+'BoardPost'] = -> post, thread, env {
-    post['uri'] = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')
-    post[SIOC+'reply_to'] = R[thread.uri + '?new#reply']}
+  Identify[SIOC+'BoardPost'] = -> post, thread, env {thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')}
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
     [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
