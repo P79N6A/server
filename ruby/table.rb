@@ -8,12 +8,9 @@ class R
               puts "CSV parse-error in #{uri}"
               []
             end
-
     lines[0].do{|fields| # header-row
-
       yield uri+'#', Type, R[CSVns+'Table']
       yield uri+'#', CSVns+'rowCount', lines.size
-
       lines[1..-1].each_with_index{|row,line|
         row.each_with_index{|field,i|
           id = uri + '#row:' + line.to_s
@@ -29,7 +26,7 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
     rows = g.resources(e).send direction                    # sorted resources
 
-    # visualize scale on numeric-sorts
+    # visualize scale on numeric-sort
     if [Size,Mtime].member? sort
       sizes = g.values.map{|r|r[sort]}.flatten.compact
       range = 0.0
@@ -75,7 +72,7 @@ tr[id='#{e.uri}'] td a {color:#fff}
               c: case k
                  when 'uri'
                    {_: :a, href: (CGI.escapeHTML l.uri),
-                    c: (CGI.escapeHTML (l[Title] || l[Label] ||l.R.basename).justArray[0])} if l.uri
+                    c: (l[Title]||l[Label]||l.R.basename).justArray[0]} if l.uri
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
