@@ -78,8 +78,7 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
 
-  Prefix={
-    # String -> String
+  Prefix={ # String -> String # TODO remove one of these (probably this and keep Prefixes below)
     "dc" => DC,
     "foaf" => FOAF,
     "ldp" => LDP,
@@ -89,8 +88,7 @@ class R < RDF::URI
     "stat" => Stat,
   }
 
-  Prefixes = { # for RDF::Writer
-    # Symbol -> URI
+  Prefixes = { # Symbol -> URI
     :http => RDF::URI(HTTP),
     :ldp => RDF::URI(LDP),
     :rdf => RDF::URI(RDFns),
@@ -101,6 +99,7 @@ class R < RDF::URI
   FileSet = {}     # files to GET
   ResourceSet = {} # resources to GET
   Abstract = {}    # per RDF-type summarizer
+  Create = {}      # Resource template
   Identify = {}    # URI template
   Filter = {}      # arbitrary graph-transformer
   Render = {}      # MIME renderer

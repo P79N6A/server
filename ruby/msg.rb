@@ -52,7 +52,10 @@ class R
 
   Identify[SIOC+'BoardPost'] = -> post, thread, env {thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')}
 
-  ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
+  Create[SIOC+'Thread'] = -> thread, forum, env {
+  }
+
+    ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
     [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
      r[Creator].do{|c|
        re = r.R

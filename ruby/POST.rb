@@ -45,7 +45,7 @@ class R
   def formPOST
     form = Rack::Request.new(@r).POST  # form data
     resource = {}                      # input resource
-    resource[Type] = ((form.delete Type) || Resource).R.expand
+    type = (resource[Type] = ((form.delete Type) || Resource).R.expand).uri
     form.map{|p,o| # each triple
       o = if !o || o.empty?
             nil
@@ -58,14 +58,13 @@ class R
           end
       resource[p] = o if o && p.match(HTTP_URI)}
     resource[WikiText].do{|c| # variable-type content
-      datatype = form['datatype']
+      datatype = form['datatype'] # type-tag
       c = StripHTML[c] if datatype == 'html' # clean up
       resource[WikiText] = {Content => c, 'datatype' => datatype}} # wrap with type
     targetResource = graph[uri] || {}
-    isContainer = Containers[resource[Type].maybeURI]
+    isContainer = Containers[type]
     newContainer = false
-    slug = -> {resource[Title] && !resource[Title].empty? &&
-               resource[Title].slugify || rand.to_s.h[0..7]}
+    name = -> {resource[Title] && !resource[Title].empty? && resource[Title].slugify || rand.to_s.h[0..7]}
 
     subject = if form.uri # existing subject
                 form.uri
@@ -74,23 +73,21 @@ class R
                 if directory? # containee
                   newContainer = true if isContainer
                   resource[SIOC+'has_container'] = R[uri.t]
-                  if identifier = Identify[resource[Type].uri]
-                    identifier[resource,targetResource,@r] # URI function
-                  else
-                    (uri.t + slug[] + '#')
-                  end
+                  Create[type].do{|c|  c[resource,targetResource,@r]} # RDF-type constructor
+                Identify[type].do{|id|id[resource,targetResource,@r]} || # custom containee URI
+                  (uri.t + name[] + '#') # basic containee URI
                 elsif isContainer # new container
                   newContainer = true
-                  uri.t # container/
-                else
-                  '#' + slug[] # #fragment URI
+                  uri.t #container/ URI
+                else # new resource
+                  '#' + name[] # fragment URI
                 end
               end
 
     located = (join subject).R.setEnv @r
 
-    if resource.keys.size==1 && resource[Type] # delete
-      located.fragmentPath.a('.e').delete # unlink doc-fragment
+    if resource.keys.size==1 # empty but typetag-field
+      located.fragmentPath.a('.e').delete # unlink fragment
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
 
