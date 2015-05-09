@@ -45,29 +45,25 @@ class R
   def formPOST
     form = Rack::Request.new(@r).POST  # form data
     resource = {}                      # input resource
-    resource[Type] = ((form.delete Type) ||
-                      Resource).R.expand  # RDF-type
+    resource[Type] = ((form.delete Type) || Resource).R.expand
     form.map{|p,o| # each triple
       o = if !o || o.empty?
             nil
           elsif o.match HTTP_URI
             o.R # URI
           elsif p == Content
-            StripHTML[o] # HTML
+            StripHTML[o] # sanitize HTML content
           else
-            o   # String
+            o.noHTML # string
           end
       resource[p] = o if o && p.match(HTTP_URI)}
-
-    # wrap typed-content with type-tag
-    resource[WikiText].do{|c|
-      resource[WikiText] = {Content => c,
-                            'datatype' => form['datatype']}}
-    targetResource = graph[uri] || {}  # target resource
-
+    resource[WikiText].do{|c| # variable-type content
+      datatype = form['datatype']
+      c = StripHTML[c] if datatype == 'html' # clean up
+      resource[WikiText] = {Content => c, 'datatype' => datatype}} # wrap with type
+    targetResource = graph[uri] || {}
     isContainer = Containers[resource[Type].maybeURI]
     newContainer = false
-
     slug = -> {resource[Title] && !resource[Title].empty? &&
                resource[Title].slugify || rand.to_s.h[0..7]}
 

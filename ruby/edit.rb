@@ -51,7 +51,7 @@ class R
       when 'markdown'
         ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render content
       when 'html'
-        StripHTML[content]
+        content
       when 'text'
         content.hrefs
       end}}
