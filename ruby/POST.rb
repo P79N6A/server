@@ -78,16 +78,14 @@ class R
                 if directory? # containee
                   newContainer = true if isContainer
                   resource[SIOC+'has_container'] = R[uri.t]
-
                   if identifier = Identify[resource[Type].uri]
                     identifier[resource,targetResource,@r] # URI function
                   else
-                    (uri.t + slug[] + '#') # container/doc# URI
+                    (uri.t + slug[] + '#')
                   end
-
                 elsif isContainer # new container
                   newContainer = true
-                  uri.t # container/ URI
+                  uri.t # container/
                 else
                   '#' + slug[] # #fragment URI
                 end
