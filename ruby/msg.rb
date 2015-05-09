@@ -58,6 +58,7 @@ class R
 
   Create[SIOC+'BoardPost'] = -> post, thread, env {
     post[SIOC+'has_discussion'] = R[thread.uri]
+    post[Title] = thread[Title]
   }
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
