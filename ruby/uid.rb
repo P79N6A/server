@@ -75,7 +75,11 @@ class R
   
   ViewGroup[User] = -> g,env {
     if env.signedIn # render user-data
-      g.map{|u,r|ViewA[BasicResource][r,env]}
+      g.map{|u,r|
+        {style: "border-radius: 2em; background-color:#eee;color:#000;display:inline-block",
+         c: [{_: :a, class: :user, style: "font-size: 3em",
+              href: "http://linkeddata.github.io/profile-editor/#/profile/view?webid=" + CGI.escape(u)},
+             ViewA[BasicResource][r,env]]}}
     else # no WebID found, offer cert-creation service
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
     end}
