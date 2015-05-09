@@ -53,8 +53,11 @@ class R
   Identify[SIOC+'BoardPost'] = -> post, thread, env {thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')}
 
   Create[SIOC+'Thread'] = -> thread, forum, env {
-#    puts "new thread in #{forum.uri}"
     thread[SIOC+'has_container'] = R[forum.uri]
+  }
+
+  Create[SIOC+'BoardPost'] = -> post, thread, env {
+    post[SIOC+'has_discussion'] = R[thread.uri]
   }
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
@@ -157,7 +160,7 @@ class R
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
      {_: :a, class: :noquote, rel: :nofollow, href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs),
       c: quotes ? '&lt;' : '&gt;', title: "#{quotes ? "hide" : "show"} quotes"},
-     {class: :messages, c: d.resources(e).reverse.map{|r| # message
+     {class: :messages, c: d.resources(e).reverse.map{|r| # a message
         author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
         {class: :mail, author: author, id: r.uri,
          c: [{class: :header,
@@ -167,7 +170,7 @@ class R
                       nil
                     else
                       titles[title] = true
-                      [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].do{|d|d[0].uri}||r.uri, c: title},"<br/>"]
+                      [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
                     end},
                   r[Creator].justArray[0].do{|c| {_: :a, class: :author, name: author, href: c.uri, c: author}},
                   r[To].justArray.map{|o|
@@ -180,8 +183,8 @@ class R
                   r[SIOC+'reply_to'].do{|c|
                     {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
                   r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
-                  r[SIOC+'has_discussion'].do{|d|
-                    {_: :a, class: :discussion, href: d[0].uri + '#' + r.uri, c: '≡', title: 'goto thread'} unless e[:thread]}]},
+                  r[SIOC+'has_discussion'].justArray[0].do{|d|
+                    {_: :a, class: :discussion, href: d.uri + '#' + (r.uri||''), c: '≡', title: 'goto thread'} unless e[:thread]}]},
              r[Content].do{|c|{class: :body, c: c}},
              r[WikiText].do{|c|
                {class: :body, c: Render[WikiText][c]}},
