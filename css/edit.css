@@ -1,7 +1,7 @@
 body {font-family: sans-serif}
 form td.key a {font-size:1.5em}
 input, textarea {border-width: .1em 0 0 .1em; border-style:dotted;border-color:#aaa}
-input[name="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"], input[name="http://rdfs.org/sioc/ns#has_creator"], input[name="http://rdfs.org/sioc/ns#has_container"],input[name="http://rdfs.org/sioc/ns#has_discussion"] {color: #0f0;background-color:#999}
+input[name="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"], input[name="http://rdfs.org/sioc/ns#has_creator"], input[name="http://rdfs.org/sioc/ns#has_container"], input[name="http://rdfs.org/sioc/ns#has_parent"],input[name="http://rdfs.org/sioc/ns#has_discussion"] {color: #0f0;background-color:#999}
 input[type=submit] {background-color: #fff; color: #333; border-color: #333}
 input[type=submit]:hover {background-color:#0f0; color: #fff; border-color: #bfb}
 .cancel {text-decoration: none;border-radius:.2em; background-color:#f00; color: #fff; font-size:1.4em; margin-right: .2em;padding: .1em .3em .1em .3em}

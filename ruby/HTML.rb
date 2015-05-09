@@ -210,6 +210,7 @@ class R
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :dir,
     SIOC+'has_discussion' => :comments,
+    SIOC+'has_parent' => :reply,
     SIOC+'reply_to' => :reply,
     Size => :size,
     Stat+'File' => :file,

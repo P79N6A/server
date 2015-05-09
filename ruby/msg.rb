@@ -48,15 +48,23 @@ class R
   def twGET g; triplrStoreJSON :triplrTwMsg, g, nil, FeedArchiverJSON end
 
   Identify[SIOC+'Thread'] = -> thread, forum, env {
-    forum.uri + Time.now.iso8601[0..10].gsub(/[-T]/,'/') + thread[Title].slugify + '/'}
+    forum.uri + Time.now.iso8601[0..10].gsub(/[-T]/,'/') + thread[Title].slugify + '/'
+  }
 
-  Identify[SIOC+'BoardPost'] = -> post, thread, env {thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')}
+  Identify[SIOC+'BoardPost'] = -> post, thread, env {
+    uri = thread.uri + Time.now.iso8601.gsub(/[-+:T]/, '')
+    post[SIOC+'reply_to'] = R[thread.uri + '?new&reply_of=' + CGI.escape(uri)]
+    uri
+  }
 
   Create[SIOC+'Thread'] = -> thread, forum, env {
     thread[SIOC+'has_container'] = R[forum.uri]
   }
 
   Create[SIOC+'BoardPost'] = -> post, thread, env {
+    env.q['reply_of'].do{|re|
+      post[SIOC+'has_parent'] = re.R
+    }
     post[SIOC+'has_discussion'] = R[thread.uri]
     post[Title] = thread[Title]
   }
@@ -142,9 +150,9 @@ class R
       s[SIOC+'has_parent'].justArray.map{|o| # msg source -> target arcs
         d[o.uri].do{|t| # target
           arc = {source: s.uri, target: o.uri}
-          author = s[Creator][0].R.fragment
+          author = s[Creator].justArray[0].do{|c|c.R.fragment}
           arc[:sourceColor] = colors[author] ||= cs
-          author = t[Creator][0].R.fragment
+          author = t[Creator].justArray[0].do{|c|c.R.fragment}
           arc[:targetColor] = colors[author] ||= cs
           s[Mtime].do{|mt|
             pos = (max - mt[0].to_f) / range
@@ -177,7 +185,7 @@ class R
                   r[To].justArray.map{|o|
                     {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'has_parent'].do{|ps|
-                    ps.map{|p| # replied-to messages
+                    ps.justArray.map{|p| # replied-to messages
                       d[p.uri].do{|r| # target msg
                         c = r[Creator][0].R.fragment
                         {_: :a, name: c, href: '#'+p.uri, c: c}}}.intersperse(' ')}, ' ',

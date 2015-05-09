@@ -90,7 +90,7 @@ class R
                                when 'uri'
                                  [{_: :input, type: :hidden,  name: :uri, value: o}, o]
                                when Type
-                                 {_: :input, name: Type, value: o.uri, size: 54} unless o.uri == '#editable'
+                                 {_: :input, name: Type, value: o.uri, size: 64} unless o.uri == '#editable'
                                when Content # RDF:HTML literal
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when WikiText # HTML, Markdown, or plaintext
@@ -108,7 +108,7 @@ class R
                                when Size
                                  [o,' ']
                                else
-                                 {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 54}
+                                 {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 64}
                                end }}}].cr}}].cr},
            {_: :a, id: :cancel, class: :cancel, href: e.uri, c: 'X'},
            {_: :input, type: :submit, value: 'write'}].cr}}
