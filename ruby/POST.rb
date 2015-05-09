@@ -94,7 +94,11 @@ class R
       located.mk if newContainer # create container
       resource.update({ 'uri' => subject,         # URI
                         Creator => @r.user})      # author
-      resource[Date] = Time.now.iso8601 if !isContainer # timestamp
+      if !isContainer # timestamp
+        mt = Time.now
+        resource[Date] = mt.iso8601
+        resource[Mtime] = mt.to_i
+      end
       located.writeResource resource # write data
       [303,{'Location' => located.uri},[]] # return
     end

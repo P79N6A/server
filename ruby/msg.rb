@@ -117,7 +117,6 @@ class R
     d.map{|u,r| r[Content] = r[Content].justArray.map{|c|
       c.lines.map{|l|l.match(/^<div class='q'/) ? "" : l}.join}} unless quotes
 
-    # d3 could do the range-scaling but noJS wants this data also - SVG, div+CSS timelines..
     arcs = []
     days = {}
     mtimes = d.values.map{|s|

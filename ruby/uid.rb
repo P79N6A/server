@@ -74,13 +74,13 @@ class R
   ViewA[Key] = -> u,e {{class: :pubkey, c: [{_: :a, class: :pubkey, href: u.uri},u]}}
   
   ViewGroup[User] = -> g,env {
-    if env.signedIn # render user-data
+    if env.signedIn
       g.map{|u,r|
         {style: "border-radius: 2em; background-color:#eee;color:#000;display:inline-block",
          c: [{_: :a, class: :user, style: "font-size: 3em",
-              href: "http://linkeddata.github.io/profile-editor/#/profile/view?webid=" + CGI.escape(u)},
+              href: "http://linkeddata.github.io/profile-editor/#/profile/view?webid=" + CGI.escape(u)}, # enhanced profile-view
              ViewA[BasicResource][r,env]]}}
-    else # no WebID found, offer cert-creation service
+    else # no WebID found, link to cert-creator
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
     end}
 
