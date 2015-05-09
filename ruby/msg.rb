@@ -166,8 +166,7 @@ class R
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
-     {_: :a, class: :noquote, rel: :nofollow, href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs),
-      c: quotes ? '&lt;' : '&gt;', title: "#{quotes ? "hide" : "show"} quotes"},
+#     {_: :a, class: :noquote, rel: :nofollow, href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs), c: quotes ? '&lt;' : '&gt;', title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # a message
         author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
         {class: :mail, author: author, id: r.uri,

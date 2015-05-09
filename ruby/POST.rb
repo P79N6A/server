@@ -43,6 +43,7 @@ class R
   end
 
   def formPOST
+    containerPOST = directory?
     form = Rack::Request.new(@r).POST  # form data
     resource = {}                      # input resource
     type = (resource[Type] = ((form.delete Type) || Resource).R.expand).uri
@@ -70,7 +71,7 @@ class R
                 form.uri
               else # new subject
                 @r[:Status] = 201 # mark as new
-                if directory? # containee
+                if containerPOST # containee
                   newContainer = true if isContainer
                   resource[SIOC+'has_container'] = R[uri.t]
                   Identify[type].do{|id|id[resource,targetResource,@r]} || # custom containee URI
@@ -100,7 +101,7 @@ class R
         resource[Mtime] = mt.to_i
       end
       located.writeResource resource # write data
-      [303,{'Location' => located.uri},[]] # return
+      [303,{'Location' => containerPOST ? uri : located.uri},[]] # return
     end
   end
 
