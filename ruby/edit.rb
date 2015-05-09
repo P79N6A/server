@@ -16,13 +16,14 @@ class R
         else                   # type selector
           g['#new'] = {Type => R['#untyped']}
         end
-      else # target exists, new post to it
-        g['#new'] = {Type => [R['#editable']]}
-        e.q['type'].do{|t| g['#new'][Type].push R[t.expand]}
-        g[e.uri].do{|t| # target
-          t[Type].justArray.map{|type| # target types
-            Containers[type.uri].do{|ct| # contained type
-              g['#new'][Type].push R[ct]}}}
+      else # post to target resource
+        subject = g['#new'] = {Type => [R['#editable']]}
+        e.q['type'].do{|t| subject[Type].push R[t.expand]}
+        g[e.uri].do{|target|
+          target[Type].justArray.map{|type| # container type
+            Containers[type.uri].do{|ct| # containee type
+              Create[ct].do{|c|c[subject,target,e]} # bespoke constructor
+              subject[Type].push R[ct]}}}
       end
     end
 
@@ -36,10 +37,8 @@ class R
       r[Type] ||= []
       r[Type].push R['#editable']
       r[Label] ||= e.R.basename
-      [LDP+'contains', Size, Creator, Mtime,
-       SIOC+'has_container',
-       SIOC+'has_parent',
-      ].map{|p|r.delete p} # ambient properties, not editable
+      [LDP+'contains', Size, Creator, Mtime, SIOC+'has_container', SIOC+'has_parent',
+      ].map{|p|r.delete p} # server-managed properties
     end}
 
   Creatable = [Forum, Wiki, Blog]

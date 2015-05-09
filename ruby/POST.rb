@@ -73,8 +73,7 @@ class R
                 if directory? # containee
                   newContainer = true if isContainer
                   resource[SIOC+'has_container'] = R[uri.t]
-                  Create[type].do{|c|  c[resource,targetResource,@r]} # RDF-type constructor
-                Identify[type].do{|id|id[resource,targetResource,@r]} || # custom containee URI
+                  Identify[type].do{|id|id[resource,targetResource,@r]} || # custom containee URI
                   (uri.t + name[] + '#') # basic containee URI
                 elsif isContainer # new container
                   newContainer = true

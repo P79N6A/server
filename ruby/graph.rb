@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-=begin a minimal RDF-subset in native-types w/o RDF.rb dependency/overhead (fast, fun, easier(maybe?))
+=begin minimal RDF-subset in Hash/JSON w/o RDF.rb dependency/overhead (fast, fun, easier(maybe?))
  Graph: Hash
   {subject* => {predicate* => object*}}
  Stream:
@@ -21,7 +21,7 @@ class R
    RDF::Literal
    String Integer Float
 
-   stream-functions that both consume (provide a "block") and produce (yield) can be combined in pipelines
+   stream-functions that both consume (provide a "block") and produce (call yield) can be combined in pipelines
 =end
 
   # Stream -> Graph
