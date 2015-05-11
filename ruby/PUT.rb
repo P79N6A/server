@@ -53,7 +53,7 @@ class R
     doc.w graph, true # write graph
     cur = path.a '.e' # live-version URI
     cur.delete if cur.e # unlink old
-    doc.ln_s cur      # link live-version
+    doc.ln cur        # link live-version
     buildDoc if build # update containing-doc
   end
 

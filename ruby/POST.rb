@@ -46,7 +46,7 @@ class R
     containerPOST = directory?
     form = Rack::Request.new(@r).POST  # form data
     resource = {}                      # input resource
-    type = (resource[Type] = ((form.delete Type) || Resource).R.expand).uri
+    type = (resource[Type] = ((form.delete Type) || WikiArticle).R.expand).uri
     form.map{|p,o| # each triple
       o = if !o || o.empty?
             nil
@@ -54,6 +54,8 @@ class R
             o.R # URI
           elsif p == Content
             StripHTML[o] # sanitize HTML content
+          elsif p == WikiText
+            o # variable-type, handle later
           else
             o.noHTML # string
           end
