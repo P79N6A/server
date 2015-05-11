@@ -80,7 +80,7 @@ class R
                   (uri.t + name[] + '#') # basic containee URI
                 elsif isContainer # new container
                   newContainer = true
-                  uri.t #container/ URI
+                  uri.t # container/ URI
                 else # new resource
                   '#' + name[] # fragment URI
                 end
