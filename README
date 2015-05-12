@@ -1,9 +1,12 @@
 GET     git clone https://github.com/hallwaykid/pw.git ||
         git clone http://repo.or.cz/w/www.git
+
 INSTALL cd pw/ruby     # enter dir
         bundle install # install dependencies
 	./install      # make symlink to ruby-lib (rsync/cp it or have gem-tooling do something if you prefer)
-USE     cd ..          # {css,js} should be visible so change dirs
+
+USE     cd ..          # {css,js} should be visible
+        ln ruby/Profile . # foreman uses this
         foreman start  # run HTTP and HTTPS daemons on 80/443
 NOTES
 httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well, etc)
