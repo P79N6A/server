@@ -16,6 +16,8 @@ NOTES
 - httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well etc)
 - to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep `which ruby`
+- optional shell-shortcut to call resource-functions:
+ $ cp ruby/R ~/bin
 
 HOST  mkdir domain/hostname
 CLEAN rm -rf cache index

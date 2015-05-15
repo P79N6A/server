@@ -55,7 +55,7 @@ class R
          elsif Rack::Mime::MIME_TYPES['.'+t]
            Rack::Mime::MIME_TYPES['.'+t]
          else
-           puts "unknown MIME #{p}" # Warn if file(1) is invoked
+           puts "unknown MIME #{p}" # Warn when file(1) is invoked
            `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
          end
        end )
