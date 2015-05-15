@@ -137,9 +137,9 @@ class R
         d[o.uri].do{|t| # target
           arc = {source: s.uri, target: o.uri}
           author = s[Creator].justArray[0].do{|c|c.R.fragment}
-          arc[:sourceColor] = colors[author] ||= cs
+          arc[:sourceColor] = colors[author] ||= randomColor
           author = t[Creator].justArray[0].do{|c|c.R.fragment}
-          arc[:targetColor] = colors[author] ||= cs
+          arc[:targetColor] = colors[author] ||= randomColor
           s[Mtime].do{|mt|
             pos = (max - mt[0].to_f) / range
             arc[:sourcePos] = pos}
