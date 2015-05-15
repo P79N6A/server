@@ -98,18 +98,36 @@ class R
   def n3; docroot.a '.n3' end
   def jsonDoc; docroot.a '.e' end
 
-  def fragmentDir
+  def fragmentDir # container for all fragments in doc
     doc = docroot
     doc.dir.descend + '.' + doc.basename + '/'
   end
   def fragments; fragmentDir.a('*.e').glob end
 
-  def fragmentPath # one fragment
+  def fragmentPath # doc with just one fragment (used on fragment-history)
     f = fragment
     f = '_' if !f
     f = '__' if f.empty?
     fragmentDir + f
   end
+
+  # filesystem name-lookup
+  def glob; (Pathname.glob pathPOSIX).map &:R end
+  def realpath # follow all links
+    node.realpath
+  rescue Exception => x
+    puts x
+  end
+  def realURI; realpath.do{|p|p.R} end
+  def exist?;   node.exist? end
+  alias_method :e, :exist?
+  def directory?; node.directory? end
+  def file?;    node.file? end
+  alias_method :f, :file?
+  def symlink?; node.symlink? end
+  def mtime;    node.stat.mtime if e end
+  alias_method :m, :mtime
+  def size;     node.size end
 
 end
 

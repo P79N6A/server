@@ -69,4 +69,39 @@ class R
     end
   end
 
+  def appendFile line
+    dir.mk
+    File.open(pathPOSIX,'a'){|f|f.write line + "\n"}
+  end
+
+  def writeFile o,s=false
+    dir.mk
+    File.open(pathPOSIX,'w'){|f|
+      f << (s ? o.to_json : o)}
+    self
+  rescue Exception => x
+    puts caller[0..2],x
+    self
+  end
+  alias_method :w, :writeFile
+
+  def mkdir
+    e || FileUtils.mkdir_p(pathPOSIX)
+    self
+  rescue Exception => x
+    puts x
+    self
+  end
+  alias_method :mk, :mkdir
+
+  def ln t, y=:link
+    t = t.R.stripSlash
+    unless t.e || t.symlink?
+      t.dir.mk
+      FileUtils.send y, node, t.node
+    end
+  end
+
+  def ln_s t; ln t, :symlink end
+
 end

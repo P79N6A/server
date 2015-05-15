@@ -34,6 +34,35 @@ class R
     node.take(*a).map &:R
   end
 
+  # files describing a resource
+  def fileResources
+    r = [] # docs
+    r.push self if e
+    %w{e ht html md n3 ttl txt}.map{|suffix|
+      doc = docroot.a '.' + suffix
+      r.push doc.setEnv(@r) if doc.e
+    }
+    r
+  end
+
+  FileSet[Resource] = -> e,q,g {
+    this = g['']
+    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # paginate day-dirs
+      t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # cast to date
+      query = e.env['QUERY_STRING']
+      qs = query && !query.empty? && ('?' + query) || ''
+      pp = (t-1).strftime('/%Y/%m/%d/') # prev-day
+      np = (t+1).strftime('/%Y/%m/%d/') # next-day
+      e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
+      e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
+    if e.env[:container]
+      cs = e.c # contained
+      cs.map{|c|c.setEnv e.env} if cs.size < 17 # skip relURI prettiness on larger sets (for speed)
+      e.fileResources.concat cs
+    else
+      e.fileResources.concat FileSet['rev'][e,q,g]
+    end}
+
   FileSet['find'] = -> e,q,m,x='' {
     e.exist? && q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh

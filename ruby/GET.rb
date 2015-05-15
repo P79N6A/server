@@ -114,4 +114,23 @@ class R
     end
   end
 
+  # get from underlying FS
+  def readFile parseJSON=false
+    if f
+      if parseJSON
+        begin
+          JSON.parse File.open(pathPOSIX).read
+        rescue Exception => x
+          puts "error reading JSON: #{caller} #{uri} #{x}"
+          {}
+        end
+      else
+        File.open(pathPOSIX).read
+      end
+    else
+      nil
+    end
+  end
+  alias_method :r, :readFile
+
 end

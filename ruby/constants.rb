@@ -121,7 +121,6 @@ names
 container
 DELETE
 edit
-fs
 GET
 graph
 HEAD

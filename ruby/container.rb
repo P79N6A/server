@@ -2,6 +2,28 @@
 #watch __FILE__
 class R
 
+  def triplrContainer
+    dir = uri.t
+    yield dir, Type, R[Container]
+    yield dir, Type, R[Directory]
+    yield dir, SIOC+'has_container', parentURI unless path=='/'
+    mt = mtime
+    yield dir, Mtime, mt.to_i
+    yield dir, Date, mt.iso8601
+    contained = c
+    yield dir, Size, contained.size
+    if contained.size < 22 # provide some "lookahead" on small contained-containers
+      contained.map{|c|
+        if c.directory?
+          child = c.descend # trailing-slash convention on containers
+          yield dir, LDP+'contains', child
+        else # doc
+          yield dir, LDP+'contains', c.stripDoc # link to generic resource
+        end
+      }
+    end
+  end
+
   # POSTable container -> contained types
   Containers = {
     Wiki => SIOC+'WikiArticle',
