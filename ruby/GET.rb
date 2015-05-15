@@ -27,7 +27,7 @@ class R
       paths.map{|p| # bubble up to /
         GET[h+p].do{|fn| # handler found
           fn[self,@r].do{|r| # call handler
-        return r }}}} # return (non-nil handler response)
+        return r }}}} # return (a non-nil handler response)
     response # default response
   end
 
@@ -35,7 +35,7 @@ class R
     if directory?
       if uri[-1] == '/'
         @r[:container] = true
-      else # redirect to enter container (trailing-/)
+      else # redirect to enter container
         qs = @r['QUERY_STRING']
         @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
         return [301, @r[:Response], []]
