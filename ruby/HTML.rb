@@ -91,7 +91,7 @@ class R
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.size==1 ? titles.head : e.uri
     end
-    e[:color] = R.cs
+    e[:color] = R.randomColor
     nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
     prev = e[:Links][:prev].do{|p|CGI.escapeHTML p}
     paged = nxt||prev
@@ -217,5 +217,23 @@ class R
     Title => :title,
     '#editable' => :scissors,
   }
+
+  def R.randomColor # fully saturated
+
+    hsv2rgb = -> h,s,v {
+      i = h.floor
+      f = h - i
+      p = v * (1 - s)
+      q = v * (1 - (s * f))
+      t = v * (1 - (s * (1 - f)))
+      r,g,b=[[v,t,p],
+             [q,v,p],
+             [p,v,t],
+             [p,q,v],
+             [t,p,v],
+             [v,p,q]][i].map{|q|q*255.0}}
+
+    '#%02x%02x%02x' % hsv2rgb[rand*6,1,1]
+  end
 
 end

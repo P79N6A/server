@@ -6,8 +6,8 @@ INSTALL cd pw/ruby     # enter dir
 	./install      # make symlink to ruby-lib (rsync/cp it or have gem-tooling do something if you prefer)
 
 USE     cd ..          # {css,js} should be visible
-        ln ruby/Profile . # foreman uses this
-        foreman start  # run HTTP and HTTPS daemons on 80/443
+        ln ruby/Procfile .
+        foreman start  # run HTTP/HTTPS daemons on port 80/443
 NOTES
 httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well, etc)
 to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)

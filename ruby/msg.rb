@@ -69,22 +69,7 @@ class R
     post[Title] = thread[Title]
   }
 
-  ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
-    [{_: :span, class: :date, c: r[Date][0].split('T')[1][0..4]}, " ",
-     r[Creator].do{|c|
-       re = r.R
-       name = c[0].respond_to?(:uri) ? (c[0].R.fragment || c[0].R.basename) : c[0].to_s
-       e[:creators][name] = R.cs
-       {_: :a, href: re.fragment.do{|f|'#'+f} || r.uri, id: re.fragment, creator: name, c: name }}," ", r[Content],"<br>\n"]}
-
-  ViewGroup[SIOC+'InstantMessage'] = -> d,e {
-    e.q['a'] = 'sioc:ChatChannel,sioc:has_creator'
-    e[:creators] ||= {}
-    [Facets[d,e],
-     H.css('/css/chat',true),
-     {_: :style, c: e[:creators].map{|n,c|"a[creator='#{n}'] {color:#fff;background-color: #{c}}"}.cr}]}
-
-  ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
+  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
     label = {}
     count = 0
     [{_: :table, class: :chat, c: d.resources(e).reverse.map{|r|
@@ -96,7 +81,9 @@ class R
                label[name][:c] += 1
                {_: :td, class: 'creator l'+label[name][:id], c: {_: :a, href: r.uri, c: name }}} || {_: :td},
              {_: :td, class: :body, c: r[Content]}]}}.cr },
-     {_: :style, c: label.map{|n,l| "table.chat td.creator.l#{l[:id]} {background-color: #{cs}}" if l[:c] > 1}.cr },
+     {_: :style,
+      c: label.map{|n,l|
+        "table.chat td.creator.l#{l[:id]} {background-color: #{randomColor}}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
   ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {

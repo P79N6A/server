@@ -128,7 +128,6 @@ HEAD
 HTML
 table
 HTTP
-image
 mail
 man
 msg

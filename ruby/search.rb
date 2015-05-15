@@ -256,7 +256,7 @@ a.referer {
 font-size: 2em;
 margin:.16em;
 color:#fff;
-background-color:#{R.cs};
+background-color:#{e[:color]};
 padding:.16em;
 border-radius:.1em;
 text-decoration: none;
