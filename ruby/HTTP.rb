@@ -160,9 +160,7 @@ class R
     # headers
     [env,env[:Links],env[:Response]].compact.map{|fields|
       fields.map{|k,v|
-        unless k.to_s.match /^rack/
-          subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v
-        end
+        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v unless k.to_s.match /^rack/
       }}}
 
   def aclURI
@@ -173,10 +171,6 @@ class R
     else
       dir.child '.acl.' + basename
     end
-  end
-
-  def allowAppend
-    return allowWrite
   end
 
   def allowRead

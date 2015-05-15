@@ -9,9 +9,10 @@ USE     cd ..          # {css,js} should be visible
         ln ruby/Procfile .
         foreman start  # run HTTP/HTTPS daemons on port 80/443
 NOTES
-httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well, etc)
-to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
+- httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well, etc)
+- to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep `which ruby`
+- on Debian, apt-get install libssl-dev before 'bundle install' for full client-cert/webID support
 
 HOST  mkdir domain/hostname
 CLEAN rm -rf cache index
