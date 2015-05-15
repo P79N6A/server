@@ -1,18 +1,21 @@
 GET     git clone https://github.com/hallwaykid/pw.git ||
         git clone http://repo.or.cz/w/www.git
 
-INSTALL cd pw/ruby     # enter dir
-        bundle install # install dependencies
-	./install      # make symlink to ruby-lib (rsync/cp it or have gem-tooling do something if you prefer)
+PREINSTALL
+  install ruby, via distro-specific means
+  on Debian, apt-get install libssl-dev (or WebID won't work)
 
-USE     cd ..          # {css,js} should be visible
-        ln ruby/Procfile .
-        foreman start  # run HTTP/HTTPS daemons on port 80/443
+INSTALL cd pw/ruby
+        bundle install # dependencies
+	./install      # symlink ruby-lib (rsync/cp it or have gem-tools do something if you prefer)
+
+USE     cd ..          # or make {css,js} visible
+        ln ruby/Procfile . # for Foreman
+        foreman start  # HTTP/HTTPS daemons on port 80/443
 NOTES
-- httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well, etc)
+- httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well etc)
 - to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep `which ruby`
-- on Debian, apt-get install libssl-dev before 'bundle install' for full client-cert/webID support
 
 HOST  mkdir domain/hostname
 CLEAN rm -rf cache index
