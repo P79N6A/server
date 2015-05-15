@@ -3,7 +3,7 @@ GET     git clone https://github.com/hallwaykid/pw.git ||
 
 PREINSTALL
   install ruby, via distro-specific means
-  on Debian, apt-get install libssl-dev (or WebID won't work)
+  on Debian, apt-get install libssl-dev (for WebID user-certificate support)
 
 INSTALL cd pw/ruby
         bundle install # dependencies

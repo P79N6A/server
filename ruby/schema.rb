@@ -61,6 +61,7 @@ class R
     g
   end
 
+  # fetch ALL the schemas prefix.cc identifies
   def R.cacheSchemas
     R.schemaSources.map{|prefix,uri| uri.R.cacheSchema prefix }
   end
