@@ -31,7 +31,6 @@ class R < RDF::URI
   Daemon   = 'http://src.whats-your.name/pw'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Schema   = 'http://schema.org/'
-  GraphDoc = W3 + '2007/ont/link#RDFDocument'
   Profile  = FOAF + 'PersonalProfileDocument'
   Mu       = Purl + 'ontology/mo/'
   Sound    = Mu + 'Sound'
@@ -78,7 +77,7 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
 
-  Prefix={ # String -> String # TODO remove one of these (probably this and keep Prefixes below)
+  Prefix={ # String -> String
     "dc" => DC,
     "foaf" => FOAF,
     "ldp" => LDP,

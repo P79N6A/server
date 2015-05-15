@@ -31,7 +31,7 @@ module Th
       mimes.sort_by{|m|Prefer[m]||2}.map{|mime| # apply tiebreakers
         return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}}
 
-    'text/html'
+    'text/html' # default
   end
 
 end
@@ -55,7 +55,7 @@ class R
          elsif Rack::Mime::MIME_TYPES['.'+t]
            Rack::Mime::MIME_TYPES['.'+t]
          else
-           puts "unknown MIME #{p}"
+           puts "unknown MIME #{p}" # Warn if file(1) is invoked
            `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
          end
        end )

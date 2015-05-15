@@ -197,7 +197,6 @@ class R
     Date => :date,
     Directory => :warp,
     FOAF+'Person' => :person,
-    GraphDoc => :graph,
     Image => :img,
     LDP+'contains' => :container,
     Mtime => :time,
