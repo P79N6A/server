@@ -44,7 +44,7 @@ class R
             uri => {
               'uri' => uri,
               Title => name,
-              Type => [R[Purl+'ontology/bibo/Manual'],R[BasicResource]],
+              Type => R[Purl+'ontology/bibo/Manual'],
               DC+'locale' => [],
               RDFs+'seeAlso' => [],
               SKOS+'related' => [],

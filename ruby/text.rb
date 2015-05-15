@@ -76,7 +76,6 @@ class R
   ViewGroup[Content] = -> d,_ {d.values.map{|r|r[Content]}}
 
   def triplrHref enc=nil
-    yield uri+'#', Type, R[BasicResource]
     yield uri+'#', Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: open(pathPOSIX).read.do{|r|
@@ -99,7 +98,6 @@ class R
 
   def triplrOrg
     require 'org-ruby'
-    yield uri+'#', Type, R[Content]
     yield uri+'#', Content, Orgmode::Parser.new(r).to_html
   end
 
