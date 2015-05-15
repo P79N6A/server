@@ -63,10 +63,9 @@ class R
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
-  Error = -> resource, environment {0/0}
-#  GET['/500'] = Error # throw some errors to see what happens
+#  GET['/500'] = -> resource, environment {0/0}
 
-  GET['/ERROR/ID'] = -> d,e {
+  GET['/ERROR'] = -> d,e {
     uri = d.path
     graph = {uri => Errors[uri]}
     [200,{'Content-Type' => e.format},
@@ -92,7 +91,7 @@ class R
 
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
-    errorURI = '/ERROR/ID/' + e.uri.h
+    errorURI = '/ERROR/' + e.uri.h
     error = graph[e.uri]
     error[Type] = R[HTTP+'500']
     error[Title] = [x.class, x.message.noHTML].join ' '

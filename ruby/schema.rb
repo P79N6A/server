@@ -1,18 +1,15 @@
 #watch __FILE__
 class R
 
-  ViewGroup[RDFClass] =  ViewGroup[OWL+'Class'] = -> g,e {
-    ['<br>',{_: :b, style: "font-size:1.6em", c: 'Class'}, TabularView[g,e]]}
-
-  ViewGroup[Property] =
+  ViewGroup[RDFClass] =
+    ViewGroup[RDFs+'Datatype'] =
+    ViewGroup[Property] =
+    ViewGroup[OWL+'Class'] =
     ViewGroup[OWL+'ObjectProperty'] =
     ViewGroup[OWL+'DatatypeProperty'] =
     ViewGroup[OWL+'SymmetricProperty'] =
-    ViewGroup[OWL+'TransitiveProperty'] = -> g,e {
-    ['<br>',{_: :b, style: "font-size:1.3em", c: 'Properties'}, TabularView[g,e]]}
-
-  ViewGroup[RDFs+'Datatype'] = -> g,e {
-    ['<br>',{_: :b, style: "font-size:1.3em", c: 'Datatypes'}, TabularView[g,e]]}
+    ViewGroup[OWL+'TransitiveProperty'] =
+    TabularView
 
   ViewGroup[OWL+'Ontology'] = ViewGroup[BasicResource]
 
@@ -26,11 +23,8 @@ class R
     table
   end
 
-  def R.schemas
-    R['schema'].c.select{|f|f.node.symlink?}
-  end
-
-  # $ R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
+  # example, import arbitrary doc at prefix (shell):
+  #$ R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
   def cacheSchema prefix
     short = R['schema'].child(prefix).n3
     if !short.e
@@ -69,11 +63,6 @@ class R
 
   def R.cacheSchemas
     R.schemaSources.map{|prefix,uri| uri.R.cacheSchema prefix }
-  end
-
-  def R.indexSchemas
-    R.schemas.map{|s| s.roonga 'schema'; puts s } # keyword index
-    nil
   end
 
 end
