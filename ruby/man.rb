@@ -29,7 +29,6 @@ class R
       else
         man = man.chomp
         roff = man.R
-        R['//' + r.host + '/' + name[0].downcase +  c]
         dir = R['//' + r.host + roff.dirname.sub(/.*\/share/,'')]
         res = dir.child roff.bare
         doc = res + '.e'
