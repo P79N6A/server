@@ -130,7 +130,7 @@ table
 HTTP
 mail
 man
-msg
+message
 news
 POST
 PUT
