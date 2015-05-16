@@ -2,21 +2,21 @@ GET     git clone https://github.com/hallwaykid/pw.git ||
         git clone http://repo.or.cz/w/www.git
 
 PREINSTALL
-  install ruby, via distro-specific means
-  on Debian, apt-get install libssl-dev (for WebID user-certificate support)
+ install ruby via distro-specific means
+ Debian: apt-get install libssl-dev (for WebID user-certificates)
 
 INSTALL cd pw/ruby
         bundle install # dependencies
-	./install      # symlink ruby-lib (rsync/cp it or have gem-tools do something if you prefer)
+	./install      # symlink source to ruby-path
 
-USE     cd ..          # or make {css,js} visible
-        ln ruby/Procfile . # for Foreman
+USE     cd ..
+        ln ruby/Procfile .
         foreman start  # HTTP/HTTPS daemons on port 80/443
-NOTES
+NOTE
 - httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well, etc)
 - to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
   $ setcap cap_net_bind_service=+ep `which ruby`
-- optional shell-shortcut to call resource-functions:
+- optional shell-binding
   $ cp ruby/R ~/bin
 
 HOST  mkdir domain/hostname
