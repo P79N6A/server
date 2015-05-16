@@ -76,12 +76,14 @@ class R
     # find absolute-location of resource
     located = (join subject).R.setEnv @r # resolve relative-URI
 
-    if resource.keys.size==1 # empty resource (just a typetag field)
+    if (resource.keys - [Type,Creator,Date,Mtime]).empty? # empty
+#      puts :Empty
       located.fragmentPath.a('.e').delete # unlink fragment-doc
       located.buildDoc # update doc
       [303,{'Location' => uri},[]]
 
     else # update resource
+#      puts :Update
       located.mk if makeContainer # create container
       resource.update({ 'uri' => subject,         # URI
                         Creator => @r.user})      # author
