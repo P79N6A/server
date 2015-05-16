@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-=begin minimal RDF-subset in Hash/JSON w/o RDF.rb dependency/overhead (fast, fun, easier(maybe?))
+=begin minimal RDF-subset in Hash/JSON
  Graph: Hash
   {subject* => {predicate* => object*}}
  Stream:
@@ -21,7 +21,7 @@ class R
    RDF::Literal
    String Integer Float
 
-   stream-functions that both consume (provide a "block") and produce (call yield) can be combined in pipelines
+   stream-functions that consume (provide a "block") and produce (yield) can be combined in pipelines
 =end
 
   # Stream -> Graph
@@ -34,18 +34,13 @@ class R
     m
   end
 
-  # File(notRDF) -> File(RDF) (via MIME-specific emitter)
-  def justRDF pass = RDFsuffixes
-    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
-      self # unchanged
-    else
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
-      doc # derived doc
-    end
+  # URI -> Graph
+  def graph graph = {}
+    fileResources.map{|d|d.nodeToGraph graph}
+    graph
   end
 
-  # File -> Graph
+  # file -> Graph
   def nodeToGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
@@ -77,13 +72,7 @@ class R
     graph
   end
   
-  # URI -> Graph
-  def graph graph = {}
-    fileResources.map{|d|d.nodeToGraph graph}
-    graph
-  end
-
-  # Stream -> doc(s)
+  # Stream -> file(s)
   def triplrStoreJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr) # collect triples
     R.store graph, host, p, hook  # cache
@@ -91,7 +80,7 @@ class R
     self
   end
 
-  # Graph -> doc(s)
+  # Graph -> file(s)
   def R.store graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -109,7 +98,7 @@ class R
       hook[d,g,host] if hook} # indexer
   end
 
-  # URI -> doc
+  # URI -> file
   def store options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -173,6 +162,17 @@ class R
   end
 
   Render['application/json'] = -> d,e { d.to_json }
+
+  # file (non-RDF) ->  file (RDF) (MIME-specific conversion)
+  def justRDF pass = RDFsuffixes
+    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
+      self # unchanged
+    else
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
+      doc # derived doc
+    end
+  end
 
 end
 
