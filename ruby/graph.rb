@@ -109,7 +109,23 @@ class R
       hook[d,g,host] if hook} # indexer
   end
 
-  # RDF::Reader for our format
+  # URI -> doc
+  def store options = {}
+    g = RDF::Repository.load self, options
+    g.each_graph.map{|graph|
+      if graph.named?
+        doc = graph.name.n3
+        unless doc.e
+          doc.dir.mk
+          file = doc.pathPOSIX
+          RDF::Writer.open(file){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
+          options[:hook][doc,graph,options[:hostname]] if options[:hook]
+        end
+      end}
+    g
+  end
+
+  # RDF::Reader for JSON-format
   module Format
 
     class Format < RDF::Format
