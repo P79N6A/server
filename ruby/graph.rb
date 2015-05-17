@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-=begin minimal RDF-subset in Hash/JSON w/o RDF.rb dependency/overhead (fast, fun, easier(maybe?))
+=begin minimal RDF-subset in Hash/JSON
  Graph: Hash
   {subject* => {predicate* => object*}}
  Stream:
@@ -21,10 +21,10 @@ class R
    RDF::Literal
    String Integer Float
 
-   stream-functions that both consume (provide a "block") and produce (call yield) can be combined in pipelines
+   stream-functions that consume (provide a "block") and produce (yield) can be combined in pipelines
 =end
 
-  # Stream -> Graph
+  # Stream -> Hash/JSON Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -34,33 +34,28 @@ class R
     m
   end
 
-  # File(notRDF) -> File(RDF) (via MIME-specific emitter)
-  def justRDF pass = RDFsuffixes
-    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
-      self # unchanged
-    else
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
-      doc # derived doc
-    end
+  # URI -> Hash/JSON Graph
+  def graph graph = {}
+    fileResources.map{|d|d.nodeToGraph graph}
+    graph
   end
 
-  # File -> Graph
+  # file -> Hash/JSON Graph
   def nodeToGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f| # RDF doc
       if @r && @r[:container] && file? # contained file
-        if self != f# skip internal-storage (.e)
-          s = stripDoc.uri # point to generic-resource
-          s = base.join(s).to_s if base # expand relative-URI
-          graph[s] ||= {'uri' => s} # resource to graph
-          [Type,Size,Mtime,Date].map{|p|graph[s][p] ||= []} # meta fields
+        # add file-metadata
+        if self != f # skip native-storage
+          s = stripDoc.uri # strip to generic-resource
+          s = base.join(s).to_s if base # resolve URI
+          graph[s] ||= {'uri' => s} # graph
           mt = f.mtime
-          graph[s][Size].push f.size
-          graph[s][Mtime].push mt.to_i
-          graph[s][Date].push mt.iso8601
-          graph[s][Type].push R[Resource]
+          graph[s][Size] = f.size
+          graph[s][Mtime] = mt.to_i
+          graph[s][Date] = mt.iso8601
+          graph[s][Type] ||= R[Resource]
         end
       end
       ((f.r true) || {}). # load graph
@@ -77,13 +72,7 @@ class R
     graph
   end
   
-  # URI -> Graph
-  def graph graph = {}
-    fileResources.map{|d|d.nodeToGraph graph}
-    graph
-  end
-
-  # Stream -> doc(s)
+  # Stream -> file(s)
   def triplrStoreJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
     graph = fromStream({},triplr) # collect triples
     R.store graph, host, p, hook  # cache
@@ -91,7 +80,7 @@ class R
     self
   end
 
-  # Graph -> doc(s)
+  # Hash/JSON Graph -> file(s)
   def R.store graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -109,7 +98,7 @@ class R
       hook[d,g,host] if hook} # indexer
   end
 
-  # URI -> doc
+  # URI -> file
   def store options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -125,7 +114,7 @@ class R
     g
   end
 
-  # RDF::Reader for JSON-format
+  # RDF::Reader for Hash/JSON graph
   module Format
 
     class Format < RDF::Format
@@ -174,6 +163,17 @@ class R
 
   Render['application/json'] = -> d,e { d.to_json }
 
+  # file (non-RDF) ->  file (RDF)
+  def justRDF pass = RDFsuffixes
+    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
+      self # unchanged
+    else
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
+      doc # derived doc
+    end
+  end
+
 end
 
 class Array
@@ -209,7 +209,7 @@ class Hash
     values.sortRDF env
   end
 
-  # Hash graph -> RDF Graph
+  # Hash/JSON Graph -> RDF::Graph
   def toRDF base=nil
     graph = RDF::Graph.new
     triples{|s,p,o|
