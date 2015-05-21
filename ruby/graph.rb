@@ -67,8 +67,7 @@ class R
           end
         end
         graph[s] ||= {'uri' => s}
-        graph[s][p] ||= []
-        graph[s][p].push o}} # unless graph[s][p].member? o # dedupe
+        graph[s][p] = (graph[s][p]||[]).justArray.push o}} # unless graph[s][p].member? o # dedupe
     graph
   end
   
