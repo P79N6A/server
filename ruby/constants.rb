@@ -13,7 +13,9 @@ mail
 open-uri
 pathname
 rack
-shellwords}.map{|r|require r}
+shellwords}.map{|r|
+  puts "ld #{r}"
+  require r}
 
 class R < RDF::URI
 
