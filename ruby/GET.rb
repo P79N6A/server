@@ -76,9 +76,10 @@ class R
       else
         graph = -> { # JSON/Hash model construction
           set.map{|r|r.nodeToGraph m} # load resources
-          @r[:filters].push Container if @r[:container] # add summarizer for container
+          @r[:filters].push Container if @r[:container] # add container-summarize filter
           @r[:filters].push 'edit' if @r.signedIn && (init||edit) # add editor-facilities
-          @r[:filters].justArray.map{|f|Filter[f].do{|f| f[m,@r] }} # do arbitrary-transforms
+          @r[:filters].justArray.map{|f|
+            Filter[f].do{|f| f[m,@r] }} # named model-transformation functions
           m } # model
 
         if NonRDF.member? @r.format
