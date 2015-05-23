@@ -56,9 +56,15 @@ class R
       e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
       e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
     if e.env[:container]
-      cs = e.c # contained
-      cs.map{|c|c.setEnv e.env} if cs.size < 17 # skip relURI prettiness on larger sets (for speed)
-      e.fileResources.concat cs
+      cs = e.c # child-nodes
+      size = cs.size
+      if size < 512
+        cs[0].setEnv e.env if cs.size == 1
+        e.fileResources.concat cs
+      else
+        puts "#{e.uri}  #{size} nodes - paged"
+        FileSet['page'][e,q,g]
+      end
     else
       e.fileResources.concat FileSet['rev'][e,q,g]
     end}
