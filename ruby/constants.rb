@@ -14,8 +14,9 @@ open-uri
 pathname
 rack
 shellwords}.map{|r|
-  puts "ld #{r}"
+  print r, ' '
   require r}
+print "dynloaded\n"
 
 class R < RDF::URI
 
