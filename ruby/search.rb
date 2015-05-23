@@ -2,14 +2,14 @@
 class R
 
   # get index (fs)
-  # on-filesystem "back-link" indexing
+  # on-filesystem RDF-link indexing
 
-  def getIndex rev # get
+  def getIndex rev # match (? p o)
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
-  def index p, o # set
+  def index p, o # index (s p o)
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
@@ -58,11 +58,11 @@ class R
     if e.env[:container]
       cs = e.c # child-nodes
       size = cs.size
-      if size < 512
+      if size < 256
         cs[0].setEnv e.env if cs.size == 1
         e.fileResources.concat cs
       else
-        puts "#{e.uri}  #{size} nodes - paged"
+        puts "#{e.uri}  #{size} children, paginating"
         FileSet['page'][e,q,g]
       end
     else
