@@ -165,6 +165,15 @@ class R
              {_: :td, class: :val, colspan: 2, c: v}
            when WikiText
              {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
+           when Atom+'enclosure'
+             {_: :td, class: :val, colspan: 2, c: v.justArray.map{|v|
+                resource = v.R
+                if %w{png jpg gif}.member? resource.ext
+                  {_: :img, src: resource.uri}
+                else
+                  resource
+                end
+              }}
            else
              icon = Icons[k]
              ["\n ",
