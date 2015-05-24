@@ -3,14 +3,14 @@ GET     git clone https://github.com/hallwaykid/pw.git ||
 
 PREINSTALL
  install ruby via distro-specific means
- Debian: apt-get install libssl-dev (for WebID user-certificates)
+ install libssl-dev(el) if needed (for user-certificates)
 
 INSTALL cd pw/ruby
         bundle install # dependencies
 	./install      # symlink source to ruby-path
 
 USE     cd ..
-        ln ruby/Procfile.thin Procfile # config foreman
+        ln ruby/Procfile.thin Procfile # configure foreman
         foreman start  # HTTP/HTTPS daemons on port 80/443
 NOTE
 - to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)

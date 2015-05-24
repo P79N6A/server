@@ -119,4 +119,15 @@ document.addEventListener('DOMContentLoaded', function(){
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
 }, false);"}, {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
+  ViewGroup[RDFClass] =
+    ViewGroup[RDFs+'Datatype'] =
+    ViewGroup[Property] =
+    ViewGroup[OWL+'Class'] =
+    ViewGroup[OWL+'Ontology'] =
+    ViewGroup[OWL+'ObjectProperty'] =
+    ViewGroup[OWL+'DatatypeProperty'] =
+    ViewGroup[OWL+'SymmetricProperty'] =
+    ViewGroup[OWL+'TransitiveProperty'] =
+    TabularView
+
 end
