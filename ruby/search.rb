@@ -59,7 +59,7 @@ class R
       cs = e.c # child-nodes
       size = cs.size
       if size < 256
-        cs[0].setEnv e.env if cs.size == 1
+        cs.map{|c|c.setEnv e.env} if size < 32 # reference environment on children
         e.fileResources.concat cs
       else
         puts "#{e.uri}  #{size} children, paginating"
