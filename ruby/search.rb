@@ -1,9 +1,7 @@
 #watch __FILE__
 class R
 
-  # get index (fs)
-  # on-filesystem RDF-link indexing
-
+  # lookup RDF-link index
   def getIndex rev # match (? p o)
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
@@ -59,7 +57,7 @@ class R
       cs = e.c # child-nodes
       size = cs.size
       if size < 256
-        cs.map{|c|c.setEnv e.env} if size < 32 # reference environment on children
+        cs.map{|c|c.setEnv e.env} if size < 32 # reference environment, force relURI-eval
         e.fileResources.concat cs
       else
         puts "#{e.uri}  #{size} children, paginating"
@@ -77,42 +75,65 @@ class R
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
   FileSet['page'] = -> d,r,m {
-    c = ((r['c'].do{|c|c.to_i} || 32) + 1).max(1024).min 2 # count
-    o = r.has_key?('asc') ? :asc : :desc                   # direction
-    (d.take c, o, r['offset'].do{|o|o.R}).do{|s|           # get page
-      if r['offset'] && head = s[0] # go backwards
+
+    # count
+    c = ((r['c'].do{|c|c.to_i} || 32) + 1).max(1024).min 2
+
+    # direction
+    o = r.has_key?('asc') ? :asc : :desc
+
+    (d.take c, o, r['offset'].do{|o|o.R}).do{|s| # traverse
+      if r['offset'] && head = s[0] # create direction-reversing perspective
         d.env[:Links][:prev] = d.path + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
       end
-      if edge = s.size >= c && s.pop # another page exists
+      if edge = s.size >= c && s.pop # lookahead-node (and therefore another page) exists
         d.env[:Links][:next] = d.path + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
       end
       s }}
 
   FileSet['first-page'] = -> d,r,m {
+    # include container-meta with its first page
     FileSet['page'][d,r,m].concat FileSet[Resource][d,r,m]}
 
+  # undirected relaxation
+  # (?S ?P O) matching fileset - inlines referring-resources (aka backlinks)
   FileSet['rev'] = -> e,req,model {(e.dir.child '.' + e.basename + '*.rev').glob}
 
+  # rewrite resource-URIs to our local-cache mapping
   FileSet['localize'] = -> re,q,g {
     FileSet[Resource][re.justPath,q,g].map{|r|
       r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
 
+  # arbitrary text search
   # https://github.com/groonga/groonga
   # https://github.com/ranguba/rroonga
   ResourceSet['groonga'] = ->d,e,m{
-    m['/search'] = {Type => R[Search+'Input']}
+    m['/search'] = {Type => R[Search+'Input']} # add a search-box to response-resources
+
     R.groonga.do{|ga|
-      q = e['q']                               # search expression
+      q = e['q']                     # search expression
       g = e["context"] || d.env.host # context
-      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # expression if exists
-      ga.select{|r| r['graph'] == g}                                                 # or just an ordered set
+
+      # evaluate expression
+      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # query
+      ga.select{|r| r['graph'] == g}                                 # or just ordered set
       start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset
       c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
       down = r.size > start+c                                        # prev
       up   = !(start<=0)                                             # next
-      r = r.sort(e.has_key?('relevant') ? [["_score"]]:[["time","descending"]],:offset =>start,:limit =>c) # sort
-      d.env[:Links][:prev] = '/search/' + {'q' => q, 'start' => start + c, 'c' => c}.qs if down # page pointers
-      d.env[:Links][:next] = '/search/' + {'q' => q, 'start' => start - c, 'c' => c}.qs if up
+
+      # sort
+      r = r.sort(e.has_key?('relevance') ? [["_score"]] : [["time","descending"]],
+                 :offset =>start, :limit =>c)
+
+      # paginate
+      d.env[:Links][:prev] = '/search/' + {'q' => q,
+                                           'start' => start + c,
+                                           'c' => c}.qs if down
+      d.env[:Links][:next] = '/search/' + {'q' => q,
+                                           'start' => start - c,
+                                           'c' => c}.qs if up
+      # resource thunks
       r.map{|r|
         R[r['.uri']]}}}
 
