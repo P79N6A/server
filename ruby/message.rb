@@ -178,7 +178,9 @@ class R
                     {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
                   r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
                   r[SIOC+'has_discussion'].justArray[0].do{|d|
-                    {_: :a, class: :discussion, href: d.uri + '#' + (r.uri||''), c: '≡', title: 'goto thread'} unless e[:thread]}]},
+                    {_: :a, class: :discussion,
+                     href: d.uri + '#' + (r.R.path||''),
+                     c: '≡', title: 'goto thread'} unless e[:thread]}]},
              r[Content].do{|c|{class: :body, c: c}},
              r[WikiText].do{|c|
                {class: :body, c: Render[WikiText][c]}},
