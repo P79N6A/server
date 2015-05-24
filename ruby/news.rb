@@ -123,9 +123,13 @@ class R
       end
 
       def rawFeedTriples
-        x = {} # build XML name-prefix table
+        x = {} # XML-namespace table
         head = @doc.match(/<(rdf|rss|feed)([^>]+)/i)
-        head && head[2] && head[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|x[m[0]]=m[1]}
+        head && head[2] && head[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|
+          prefix = m[0]
+          uri = m[1]
+          uri = uri + '#' unless uri[-1]=='#'
+          x[prefix] = uri}
 
         # resources
         @doc.scan(%r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi){|m|
@@ -148,12 +152,12 @@ class R
             #links
             inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
               e[1].match(/(href|url|src)=['"]?([^'">\s]+)/).do{|url|
-                yield(u,R::Atom+'/link/'+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].R)}}
+                yield(u,R::Atom+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].R)}}
 
             #elements
             inner.scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
               yield u,                           # s
-              (x[e[0]&&e[0].chop]||R::RSS)+e[1], # p
+              (x[e[0] && e[0].chop]||R::RSS) + e[1], # p
            e[3].extend(SniffContent).sniff.do{|o|# o
                 o.match(HTTP_URI) ? o.R : o
               }}

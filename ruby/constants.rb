@@ -63,7 +63,7 @@ class R < RDF::URI
   RDFs     = W3   + '2000/01/rdf-schema#'
   OWL      = W3   + '2002/07/owl#'
   SKOS     = W3   + '2004/02/skos/core#'
-  Atom     = W3   + '2005/Atom'
+  Atom     = W3   + '2005/Atom#'
   HTTP     = W3   + '2011/http#'
   Header   = W3   + '2011/http-headers#'
   Next     = LDP  + 'nextPage'

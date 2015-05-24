@@ -3,7 +3,7 @@
 
 def H x # Ruby values to HTML
   case x
-  when Hash # DOM node
+  when Hash # Hash as DOM-node
     void = [:img, :input, :link, :meta].member? x[:_]
     '<' + (x[:_] || 'div').to_s +                        # name
       (x.keys - [:_,:c]).map{|a|                         # attribute name
@@ -42,7 +42,7 @@ def H x # Ruby values to HTML
   when EventMachine::DefaultDeferrable
     'event'
   else
-    puts ["undefined HTML format for",x.class].join ' '
+    puts ["undefined HTML-serialization for",x.class].join ' '
     x.to_s.noHTML
   end
 end
@@ -201,6 +201,10 @@ class R
     LDP+'contains' => :container,
     Mtime => :time,
     Resource => :graph,
+    Atom+'self' => :graph,
+    Atom+'alternate' => :file,
+    Atom+'edit' => :pencil,
+    Atom+'replies' => :comments,
     RSS+'link' => :link,
     RSS+'guid' => :id,
     RSS+'comments' => :comments,
