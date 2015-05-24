@@ -95,6 +95,7 @@ class R
     nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
     prev = e[:Links][:prev].do{|p|CGI.escapeHTML p}
     paged = nxt||prev
+    brk = '<br clear="all"/>'
 
     H ["<!DOCTYPE html>\n",
        {_: :html,
@@ -121,9 +122,9 @@ class R
                  {_: :a, href: '?rdf', rel: :nofollow, c: {_: :img, src: '/css/misc/cube.svg', class: :rdf}},
                  ({_: :a, rel: :prev, class: :a, href: prev, c: ['← ', prev], title: 'previous page'} if prev),
                  ({_: :a, rel: :next, class: :a, href: nxt, c: ['→ ', nxt], title: 'next page'} if nxt),
-                 ('<br clear="all"/>' if paged),
+                 (brk if paged),
                  view[d,e],
-                 ({_: :a, rel: :next, class: :b, href: nxt, c: '→'} if nxt),
+                 ([brk,{_: :a, rel: :next, class: :b, href: nxt, c: '→'}] if nxt),
                 ]}]}]}
 
   View = -> d,e { # default view - group by type, try type-renderers, fallback to generic
