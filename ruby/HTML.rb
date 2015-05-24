@@ -195,10 +195,12 @@ class R
     'uri' => :id,
     Container => :dir,
     Date => :date,
+    Title => :title,
     Directory => :warp,
     FOAF+'Person' => :person,
     Image => :img,
     LDP+'contains' => :container,
+    Size => :size,
     Mtime => :time,
     Resource => :graph,
     Atom+'self' => :graph,
@@ -215,9 +217,7 @@ class R
     SIOC+'has_discussion' => :comments,
     SIOC+'has_parent' => :reply,
     SIOC+'reply_to' => :reply,
-    Size => :size,
     Stat+'File' => :file,
-    Title => :title,
     '#editable' => :scissors,
   }
 
