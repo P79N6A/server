@@ -10,13 +10,12 @@ INSTALL cd pw/ruby
 	./install      # symlink source to ruby-path
 
 USE     cd ..
-        ln ruby/Procfile .
+        ln ruby/Procfile.thin Procfile # config foreman
         foreman start  # HTTP/HTTPS daemons on port 80/443
 NOTE
-- httpd.ru can be used for other Rack-API servers ('thin' is default, 'unicorn' works well, etc)
 - to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
   $ setcap cap_net_bind_service=+ep `which ruby`
-- optional shell-binding to resource functions
+- shell-binding to resource methods
   $ cp ruby/R ~/bin
 
 HOST  mkdir domain/hostname
