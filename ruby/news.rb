@@ -5,18 +5,19 @@ class R
   GET['/news'] = -> d,e {
     if d.justPath.docroot.uri == '/news'
       e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
-      if e.q.has_key?('q')
+      if e.q.has_key?('q') # search query
         e.q['set'] ||= 'groonga'
-      else
+      else # paginate container
         e.q['set'] ||= 'page'
         e.q['c'] ||= 28
+        # use Memento date-offsets as traversal-cursor
         e['HTTP_ACCEPT_DATETIME'].do{|dt|
           t = Time.parse dt
           e[:Response]['Memento-Datetime'] = dt
           e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
       end
     end
-    nil # not at container-root, continue as normal
+    nil # not at container-root, no special handling
   }
 
   GET['/feed'] = -> d,e {
@@ -127,9 +128,9 @@ class R
         head = @doc.match(/<(rdf|rss|feed)([^>]+)/i)
         head && head[2] && head[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|
           prefix = m[0]
-          uri = m[1]
-          uri = uri + '#' unless uri[-1]=='#'
-          x[prefix] = uri}
+          base = m[1]
+          base = base + '#' unless %w{/ #}.member? base [-1]
+          x[prefix] = base}
 
         # resources
         @doc.scan(%r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi){|m|
