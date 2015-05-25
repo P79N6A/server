@@ -74,9 +74,14 @@ class R
   E404 = -> base, env, graph=nil {
     graph ||= {}
     graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
-    graph[env.uri][RDFs+'seeAlso'] = []
+    seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
+
+    # add container-dir breadcrumbs
     base.cascade.reverse.map{|p|
-      p.e && graph[env.uri][RDFs+'seeAlso'].push(p)}
+      p.e && seeAlso.push(p)}
+    # add incomplete-path matches
+    seeAlso.concat base.a('*').glob
+    
     ENV2RDF[env, graph]
     graph[env.uri][Type] = R[HTTP+'404']
     [404,{'Content-Type' => env.format},
@@ -84,10 +89,12 @@ class R
       graph.toRDF(base).dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
 
   ViewGroup[HTTP+'404'] = -> graph, env {
-    [{c: 404, style: 'font-size:11em'}, ViewGroup[BasicResource][graph,env]]}
+    [{c: 404, style: 'font-size:11em;font-family:monospace'},
+     ViewGroup[BasicResource][graph,env]]}
 
   ViewGroup[HTTP+'500'] = -> graph, env {
-    [{c: 500, style: 'font-size:11em;color:red'}, ViewGroup[BasicResource][graph,env]]}
+    [{c: 500, style: 'font-size:11em;font-family:monospace;color:red'},
+     ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
@@ -152,16 +159,6 @@ class R
     # render
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
-
-  ENV2RDF = -> env, graph { # environment -> graph
-    # request resource
-    subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
-
-    # headers
-    [env,env[:Links],env[:Response]].compact.map{|fields|
-      fields.map{|k,v|
-        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v unless k.to_s.match /^rack/
-      }}}
 
   ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
   ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env { g.map{|u,r| ViewA[Key][r,env]}}

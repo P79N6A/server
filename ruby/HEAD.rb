@@ -27,6 +27,16 @@ class R
   def getEnv; @r end
   alias_method :env, :getEnv
 
+  ENV2RDF = -> env, graph { # environment -> graph
+    # request resource
+    subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
+
+    # headers
+    [env,env[:Links],env[:Response]].compact.map{|fields|
+      fields.map{|k,v|
+        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.hrefs : v unless k.to_s.match /^rack/
+      }}}
+
   def ldp
     @r[:Links][:acl] = aclURI
     @r[:Response].update({
