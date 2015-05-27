@@ -1,6 +1,6 @@
 #watch __FILE__
 class R
-=begin minimal RDF-subset in Hash/JSON
+=begin RDF-subset in Hash/JSON. this predates and is alternative to RDF.rb
  Graph: Hash
   {subject* => {predicate* => object*}}
  Stream:
