@@ -14,7 +14,7 @@ USE     cd ..
         foreman start  # HTTP/HTTPS daemons on port 80/443
 NOTE
 - to listen on 80/443 (in lieu of >1024 behind apache/nginx/lighttpd)
- $ setcap cap_net_bind_service=+ep `which ruby`
+ $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 
 - shell-binding to resource methods
  $ cp ruby/R ~/bin
