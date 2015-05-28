@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  # lookup RDF-link index
+  # RDF-link index
   def getIndex rev # match (? p o)
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
@@ -43,21 +43,23 @@ class R
     r
   end
 
-  FileSet[Resource] = -> e,q,g {
-    this = g['']
-    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m| # paginate day-dirs
-      t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # cast to date
+  FileSet[Resource] = -> e,q,g { this = g['']
+
+    # paginate date-dirs
+    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m|
+      t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # date object
       query = e.env['QUERY_STRING']
       qs = query && !query.empty? && ('?' + query) || ''
-      pp = (t-1).strftime('/%Y/%m/%d/') # prev-day
-      np = (t+1).strftime('/%Y/%m/%d/') # next-day
+      pp = (t-1).strftime('/%Y/%m/%d/') # previous day
+      np = (t+1).strftime('/%Y/%m/%d/') # nex day
       e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
       e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
+
     if e.env[:container]
       cs = e.c # child-nodes
       size = cs.size
       if size < 256
-        cs.map{|c|c.setEnv e.env} if size < 32 # reference environment, force relURI-eval
+        cs.map{|c|c.setEnv e.env} if size < 32 # referencing environment triggers relURI-resolution
         e.fileResources.concat cs
       else
         puts "#{e.uri}  #{size} children, paginating"
