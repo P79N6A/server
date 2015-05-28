@@ -16,7 +16,7 @@ rack
 shellwords}.map{|r|
   print r, ' '
   require r}
-print "dynloaded\n"
+print "\n"
 
 class R < RDF::URI
 

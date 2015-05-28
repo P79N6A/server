@@ -141,7 +141,12 @@ class R
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     yield uri+'#', Type, R[SIOC+'SourceCode']
-    yield uri+'#',Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] if size < 128000
+    if size < 128000 # skip huge source-code files
+      yield uri+'#', Content,
+            '<div style="max-width: 100ex; background-color:#fff; color:#000; padding: .5em; margin: .5em">' +
+            StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] +
+            '</div>'
+    end
   end
 
   ViewGroup[SIOC+'SourceCode'] = ViewGroup[BasicResource]
