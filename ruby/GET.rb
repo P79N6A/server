@@ -85,13 +85,14 @@ class R
         if NonRDF.member? @r.format
           Render[@r.format][graph[],@r]
         else # RDF
+          base = @r.R.join uri
           if @r[:container] # container
             g = graph[].toRDF
           else # doc
             g = RDF::Graph.new
-            set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => self}}
+            set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
           end
-          g.dump (RDF::Writer.for :content_type => @r.format).to_sym,:base_uri => self,:standard_prefixes => true,:prefixes => Prefixes
+          g.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
         end
       end}
   end
@@ -115,7 +116,7 @@ class R
     end
   end
 
-  # get from underlying FS
+  # get content from underlying FS
   def readFile parseJSON=false
     if f
       if parseJSON
