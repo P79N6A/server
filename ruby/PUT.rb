@@ -104,4 +104,8 @@ class R
 
   def ln_s t; ln t, :symlink end
 
+  def PATCH
+    puts uri,@r
+  end
+
 end
