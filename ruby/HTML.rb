@@ -176,10 +176,11 @@ class R
               }}
            else
              icon = Icons[k]
+             rdfType = Type == k
              ["\n ",
               {_: :td,
-               c: {_: :a, href: k, class: icon,
-                   c: if Type == k
+               c: {_: :a, href: rdfType ? (r.R.docroot.uri+'?data') : k, class: icon,
+                   c: if rdfType
                     {_: :img, src: '/css/misc/cube.svg'}
                   else
                     icon ? '' : (k.R.fragment||k.R.basename)
