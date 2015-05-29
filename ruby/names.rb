@@ -113,7 +113,7 @@ class R
 
   # filesystem name-lookup
   def glob; (Pathname.glob pathPOSIX).map &:R end
-  def realpath # follow all links
+  def realpath # follow all the links
     node.realpath
   rescue Exception => x
     puts x

@@ -86,7 +86,14 @@ class R
     html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
-  Render['text/html'] = -> d,e,view=View {
+  Render['text/html'] = -> d,e,view=nil {
+    if !view
+      view = if e.q.has_key? 'data'
+               Tabulator
+             else
+               View
+             end
+    end
     if !e[:title]
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.size==1 ? titles.head : e.uri
@@ -119,7 +126,7 @@ class R
                  ([brk,{_: :a, rel: :next, class: :b, href: nxt, c: '→'}] if nxt),
                 ]}]}]}
 
-  View = -> d,e { # default view - group by type, try type-renderers, fallback to generic
+  View = -> d,e { # default view - group by type, try type-render, fallback to generic
     groups = {}
     seen = {}
     d.map{|u,r| # group on RDF type
