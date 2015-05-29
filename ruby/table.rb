@@ -108,10 +108,20 @@ tr[id='#{e.uri}'] td a {color:#fff}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
-  Tabulator = -> g,e { src = e.scheme+'://linkeddata.github.io/tabulator/'
+  Tabulator = -> g,e {
+
+    # look for a local copy and use it if found
+    host = if '/tabulator/js/mashup/mashlib.js'.R.exist?
+             puts "mirroring  https://github.com/linkeddata/tabulator.git"
+             ""
+           else
+             e.scheme + '://linkeddata.github.io'
+           end
+    base = host + '/tabulator'
+
     [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
-     (H.js  src + 'js/mashup/mashlib'),
-     (H.css src + 'tabbedtab'),
+     (H.js  base + '/js/mashup/mashlib'),
+     (H.css base + '/tabbedtab'),
      {_: :script, c: "
 document.addEventListener('DOMContentLoaded', function(){
     var kb = tabulator.kb;
