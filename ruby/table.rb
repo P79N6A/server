@@ -108,11 +108,11 @@ tr[id='#{e.uri}'] td a {color:#fff}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
-  Tabulator = -> g,e {
+  Tabulator = -> g,e { # data browser/editor
 
-    # look for a local copy and use it if found
+    # look for a local copy and use if found
     host = if '/tabulator/js/mashup/mashlib.js'.R.exist?
-             puts "mirroring  https://github.com/linkeddata/tabulator.git"
+#             puts "mirroring  https://github.com/linkeddata/tabulator.git"
              ""
            else
              e.scheme + '://linkeddata.github.io'
@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function(){
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
 }, false);"}, {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
 
+  # tabular view for schema types
   ViewGroup[RDFClass] =
     ViewGroup[RDFs+'Datatype'] =
     ViewGroup[Property] =
