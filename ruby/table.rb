@@ -51,9 +51,10 @@ tr[id='#{e.uri}'] td a {color:#fff}
              else
                q['reverse'] = ''
              end
+             rdfType = Type == k
              [{_: :th, property: k,
-               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
-                   c: if Type == k
+               c: {_: :a, rel: :nofollow, href: rdfType ? '?data' : CGI.escapeHTML(q.qs), class: Icons[k]||'',
+                   c: if rdfType
                     {_: :img, src: '/css/misc/cube.svg'}
                   else
                     Icons[k] ? '' : (k.R.fragment||k.R.basename)
@@ -62,7 +63,10 @@ tr[id='#{e.uri}'] td a {color:#fff}
           ({_: :style, c: rows.map{|r|
               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
               "tr[id='#{r.R.fragment||r.uri}'] td {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
-          rows.map{|r| TableRow[r,e,sort,direction,keys] }]}, "\n"]}
+          rows.map{|r|
+            TableRow[r,e,sort,direction,keys]
+          }]},
+     "\n"]}
 
     TableRow = -> l,e,sort,direction,keys {
       [{_: :tr, id: (l.R.fragment||l.uri),
