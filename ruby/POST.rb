@@ -1,16 +1,20 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def POST
     return [403,{},[]] unless @r.signedIn && allowWrite
-    case @r['CONTENT_TYPE']
+    mime = @r['CONTENT_TYPE']
+    case mime
     when /^application\/x-www-form-urlencoded/
       formPOST
     when /^multipart\/form-data/
       filePOST
     when /^text\/(n3|turtle)/
       graphPOST
+    when /^application\/sparql-update/
+      sparqlPOST
     else
+      puts "rare MIME #{mime}"
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
   rescue Exception => e
@@ -105,6 +109,12 @@ class R
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
     end
+  end
+
+  def sparqlPOST
+    query = @r['rack.input'].read
+    puts query,""
+    [200,{},[]]
   end
 
   def graphPOST
