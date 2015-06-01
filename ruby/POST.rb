@@ -17,9 +17,20 @@ class R
       puts "rare MIME #{mime}"
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
-  rescue Exception => e
-    puts e.class, e.message
-    [400,{},[]]
+  end
+
+  def sparqlPOST
+    query = @r['rack.input'].read
+    doc = n3
+    model = RDF::Repository.new
+    model.load doc if doc.e
+    puts "storage: #{doc}"
+    print "query: "
+    puts query
+    sse = SPARQL.parse(query, update: true)
+    sse.execute(model)
+    n3.w model.dump(:n3)
+    [200,{},[]]
   end
 
   def formPOST # handle RDF in x-www-form-urlencoded data
@@ -53,27 +64,27 @@ class R
     makeContainer = false
     slug = -> {resource[Title] && !resource[Title].empty? && resource[Title].slugify || rand.to_s.h[0..7]}
 
-    # find resource-identifier
+    # bind resource-identifier
     subject = if form.uri # existing subject
                 form.uri # keep it
               else # new subject
                 @r[:Status] = 201 # mark as new
-                makeContainer = true if isContainer # make underlying container
+                makeContainer = true if isContainer # create underlying container
                 if directory? # new containee
                   resource[SIOC+'has_container'] = R[uri.t] # point to container
-                  if identifier = Identify[type] # URI-minter bound to container
+                  if identifier = Identify[type] # URI-minter found
                     identifier[resource,graph[uri],@r] # bespoke URI
-                  else # basic containee URI
+                  else # basic containee
                     if isContainer
                       uri.t + slug[] + '/' # contained-container
                     else
-                     uri.t + slug[] + '#' # sole resource in doc
+                     uri.t + slug[] + '#' # resource in doc
                     end
                   end
                 elsif isContainer # new container
-                  uri.t # container/-URI
+                  uri.t # container/ URI
                 else # new resource
-                  '#' + slug[] # fragment-URI
+                  '#' + slug[] # #fragment URI
                 end
               end
 
@@ -109,12 +120,6 @@ class R
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
     end
-  end
-
-  def sparqlPOST
-    query = @r['rack.input'].read
-    puts query,""
-    [200,{},[]]
   end
 
   def graphPOST
