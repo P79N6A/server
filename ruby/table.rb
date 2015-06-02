@@ -112,26 +112,39 @@ tr[id='#{e.uri}'] td a {color:#fff}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
-  Tabulator = -> g,e { # data browser/editor
+  Tabulator = -> g,e { # data browser/editor # https://github.com/linkeddata/tabulator.git
+    path = e.R.path
 
-    # look for a local copy and use if found
-    host = if '/tabulator/js/mashup/mashlib.js'.R.exist?
-#             puts "mirroring  https://github.com/linkeddata/tabulator.git"
-             ""
+    # select subject URI
+    subject = if path.match?(/^\/tabulator/) # use tabulator interface with other URI (XHR + CORS needed)
+                e.scheme + ':' + path.sub(/^\/tabulator/,'/')
+              else # this URI
+                e.uri
+              end
+
+    # prefer local script cache
+    jquery = if '/js/jquery.js'.R.exist?
+               '/js/jquery'
+             else
+               'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
+             end
+
+    tabr = if '/tabulator/js/mashup/mashlib.js'.R.exist?
+             '/tabulator'
            else
-             e.scheme + '://linkeddata.github.io'
+             e.scheme + '://linkeddata.github.io/tabulator'
            end
-    base = host + '/tabulator'
 
-    [(H.js 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'),
-     (H.js  base + '/js/mashup/mashlib'),
-     (H.css base + '/tabbedtab'),
+    [(H.js jquery), (H.js tabr + '/js/mashup/mashlib'),
+     (H.css tabr + '/tabbedtab'),
      {_: :script, c: "
 document.addEventListener('DOMContentLoaded', function(){
     var kb = tabulator.kb;
-    var subject = kb.sym('#{e.scheme+':' + e.R.path.sub(/^\/tabulator/,'/')}');
+    var subject = kb.sym('#{subject}');
     tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
-}, false);"}, {class: :TabulatorOutline, id: :DummyUUID},{_: :table, id: :outline}]}
+}, false);"},
+     {class: :TabulatorOutline, id: :DummyUUID},
+     {_: :table, id: :outline}]}
 
   # tabular view for schema types
   ViewGroup[RDFClass] =
