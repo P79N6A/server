@@ -14,7 +14,7 @@ class R
     when /^application\/sparql-update/
       sparqlPOST
     else
-      puts "rare MIME #{mime}"
+#      puts "rare MIME #{mime}"
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
   end
