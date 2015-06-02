@@ -21,15 +21,15 @@ class R
 
   def sparqlPOST
     query = @r['rack.input'].read
-    doc = n3
+    doc = ttl
     model = RDF::Repository.new
     model.load doc if doc.e
-    puts "storage: #{doc}"
-    print "query: "
-    puts query
+    puts "POST target #{uri}"
+    puts "storage in #{doc}"
+    puts "UPDATE"; puts query
     sse = SPARQL.parse(query, update: true)
     sse.execute(model)
-    n3.w model.dump(:n3)
+    doc.w model.dump(:ttl)
     [200,{},[]]
   end
 

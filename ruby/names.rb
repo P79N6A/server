@@ -93,7 +93,9 @@ class R
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
 
+  # document URIs
   def n3; docroot.a '.n3' end
+  def ttl; docroot.a '.ttl' end
   def jsonDoc; docroot.a '.e' end
 
   # fragment-per-doc URIs, for "thing"-granularity storage
