@@ -26,7 +26,7 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
     rows = g.resources(e).send direction                    # sorted resources
 
-    # visualize scale on numeric-sort
+    # scale numeric-sort fields
     if [Size,Mtime].member? sort
       sizes = g.values.map{|r|r[sort]}.flatten.compact
       range = 0.0
