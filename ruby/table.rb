@@ -116,7 +116,7 @@ tr[id='#{e.uri}'] td a {color:#fff}
     path = e.R.path
 
     # select subject URI
-    subject = if path.match?(/^\/tabulator/) # use tabulator interface with other URI (XHR + CORS needed)
+    subject = if path.match(/^\/tabulator/) # use tabulator interface with other URI (XHR + CORS needed)
                 e.scheme + ':' + path.sub(/^\/tabulator/,'/')
               else # this URI
                 e.uri
