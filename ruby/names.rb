@@ -8,21 +8,21 @@ end
 
 class R
 
-  # constructors
+  # constructor
   def R uri = nil
     uri ? (R.new uri) : self
   end
   def R.[] uri; R.new uri end
 
-  # equality / comparison operators
+  # equality / comparison
   def ==  u; to_s == u.to_s end
   def <=> c; to_s <=> c.to_s end
 
-  # append operator
+  # append
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # URI-component nil to empty-string for unexceptional concatenation
+  # string parts
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
@@ -35,7 +35,7 @@ class R
     suffix ? (File.basename pathPart, suffix) : (File.basename pathPart) end
   def bare; basename suffix end
 
-  # relativities within hierPart
+  # hierPart traverses
   def justPath; hierPart.R.setEnv(@r) end
   def descend; uri.t.R end
   def child u; descend + u.to_s end
@@ -44,8 +44,6 @@ class R
   def parentURI; R schemePart + hostPart + Pathname.new(hierPart).parent.to_s end
   def children; node.c.map &:R end
   alias_method :c, :children
-
-  # recursive paths up to /
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
@@ -86,36 +84,42 @@ class R
     end
   end
 
-  # balanced-prefix container-names
+  # balanced-containers ( 4096 on hashed-ID)
   def R.dive s
     s[0..2] + '/' + s[3..-1]
   end
   
-  # squash names to prefix:basename
+  # squashed names
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
 
   def n3; docroot.a '.n3' end
   def jsonDoc; docroot.a '.e' end
 
-  def fragmentDir # container for all fragments in doc
+  # fragment-per-doc URIs, for "thing"-granularity storage
+
+  # container of fragment-docs
+  def fragmentDir
     doc = docroot
     doc.dir.descend + '.' + doc.basename + '/'
   end
+
+  # fragment-docs of doc
   def fragments; fragmentDir.a('*.e').glob end
 
-  def fragmentPath # doc with just one fragment (used on fragment-history)
+  # fragment-doc of resource
+  def fragmentPath
     f = fragment
     f = '_' if !f
     f = '__' if f.empty?
     fragmentDir + f
   end
 
-  # filesystem name-lookup
+  # filesystem name-lookups
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def realpath # follow all the links
     node.realpath
-  rescue Exception => x
+  rescue Exception => x # warn on errors.. dangling-symlinks, permission failure
     puts x
   end
   def realURI; realpath.do{|p|p.R} end
@@ -148,7 +152,7 @@ class String
    (Expand[self] =
      match(/([^:]+):([^\/].*)/).do{|e|
       ( R::Prefix[e[1]] || e[1]+':' )+e[2]} ||
-     gsub('|','/')) # no prefix found, squash URI to basename
+     gsub('|','/')) # no prefix found, squash to basename
   end
 
   def shorten
