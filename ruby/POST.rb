@@ -33,7 +33,8 @@ class R
     [200,{},[]]
   end
 
-  def formPOST # handle RDF in x-www-form-urlencoded data
+  # edit our subset of RDF in classic <form> workflow
+  def formPOST
     form = Rack::Request.new(@r).POST  # form data
     resource = {}                      # source graoh
     type = (resource[Type] = ((form.delete Type) || WikiArticle).R.expand).uri # source type
