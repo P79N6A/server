@@ -7,7 +7,7 @@ PREINSTALL
 
 INSTALL cd pw/ruby
         bundle install # dependencies
-	./install      # symlink source to ruby-path
+	./install      # link source into ruby $path
 
 USE     cd ..
         ln conf/server/Procfile . # select daemon

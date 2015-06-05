@@ -335,7 +335,7 @@ class Pathname
       []
   end
 
-  # depth-first sorted traverse w/ offset + limit
+  # range traverse w/ offset + limit
   def take count=1000, direction=:desc, offset=nil
     offset = offset.pathPOSIX if offset
 
