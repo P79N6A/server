@@ -2,11 +2,11 @@ GET     git clone https://github.com/hallwaykid/pw.git ||
         git clone http://repo.or.cz/w/www.git
 
 PREINSTALL
- install ruby libssl-dev libgit2-dev via distro-specific means
+ install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
 
 INSTALL cd pw/ruby
+	./install      # make symlink
         bundle install # dependencies
-	./install      # link source into ruby $path
 USE     cd ..
         ln conf/server/Procfile . # select daemon
         foreman start  # run HTTP/HTTPS daemons on port 80/443
