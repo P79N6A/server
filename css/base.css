@@ -23,16 +23,10 @@ a.time:before { content:"\f017"; font-family: icons; }
 a.title:before { content:"\f035"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
+body {font-family: sans-serif}
 body > a.user {color:#00ff0d}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 .rdf {float:right;background-color:#fff;padding: .25em .35em .25em .3em;border-radius:1.2em;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
-table {display: inline-block; font-family: Corbel, Calibri, sans-serif}
-table.html {max-width: 100ex}
-td {border-radius: .16em}
-td.key a {font-weight: bold;text-decoration:none}
-td.key img {height: 1.4em}
 td.key {text-align:right}
-tr[property='uri'] td a {color:#fff; text-decoration: none}
-tr[property='uri'] td a.pencil {float: right}
-tr[property='uri'] td a.uri {font-weight: bold}
-tr[property='uri'] td {background-color:#000;color:#fff}
+td.key a {font-weight: bold; text-decoration:none}
+td.key img {height: 1.4em}

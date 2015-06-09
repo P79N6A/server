@@ -1,21 +1,40 @@
+PW  this is a web-server designed to be "ready to use", rather than a web-framework to build apps like Rails or Sinatra
+
+Request -> files -> RDF model -> RDF or NonRDF Response
+
+if you want a purely-RDF server you can likely get away with the Rack::LinkedData handler from RDF.rb
+we support the classic RDF content-negotiation as above and add the following:
+ - cached "parsing" of a variety of non-RDF MIMEs to RDF model including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code etc
+ - serializing to non-RDF MIMEs including Atom/RSS feeds and retro lynx-compatible HTML
+ - a more full-featured HTTP handler doing most things linked-data clients expect (behavior similar to https://github.com/linkeddata/gold/ , https://github.com/read-write-web/rww-play)
+ - handle customization of file-search, summarization + HTML view-rendering on a RDF-Typeclass basis
+ - supplied customizations for common use-cases like email and full-text search
+
 GET     git clone https://github.com/hallwaykid/pw.git ||
         git clone http://repo.or.cz/w/www.git
 
-PREINSTALL
+PREREQUISITES
  install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
 
-INSTALL cd pw/ruby
-	./install      # make symlink
-        bundle install # dependencies
-USE     cd ..
+  ruby - the language this software is written in
+  bundler - installs library dependencies for ruby
+  libgit - enable fs-state history browsing
+  libssl - enables client-certificates for WebID authentication
+  lib{xml,xslt} - used by nokogiri to sanitize HTML input
+  cmake, pkg-config - toolchain-support for ruby extension-building
+
+INSTALL cd pw/ruby     # enter source-dir
+	./install      # symlink source-code to lib-path
+        bundle install # install Ruby-dependencies
+USE     cd ..          # goto server-root (can be elsewhere, but copy or link {css,js})
         ln conf/server/Procfile . # select daemon
         foreman start  # run HTTP/HTTPS daemons on port 80/443
 NOTE
-- to listen on 80/443 (alt: >1024 behind apache/nginx/lighttpd)
+- to listen on 80/443 (optional, another angle is listen >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 
-- shell-binding to resource methods
+- shell-binding to resource methods. ex: R http://myblog.com feeds
  $ cp ruby/R ~/bin
 
-- wipe cache of RDF-transcodes
+- wipe RDF cache
  $ rm -rf cache
