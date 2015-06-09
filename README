@@ -1,11 +1,11 @@
-PW is a HTTP-daemon generally conforming to conventions outlined in http://linkeddata.github.io/SoLiD/
+PW is a HTTP-daemon conforming to conventions outlined in http://linkeddata.github.io/SoLiD/
 
-if you want a RDF server you can get away with Rack::LinkedData from RDF.rb. more some stuff we needed:
+if you want a RDF server you can get away with Rack::LinkedData. more stuff we needed:
 
  - cached "parsing" of a variety of non-RDF MIMEs to RDF model including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code etc
  - serializing to non-RDF MIMEs including Atom/RSS feeds and retro lynx-compatible HTML
  - transcoding between RDF.rb and our added MIMEs accessible via HTTP content-negotiation
- - an alternative to HTTP-header based content-negotiation via name extension (suffix) hints
+ - an alternative to HTTP-header based content-negotiation via name-extension (suffix) hints
  - an alternative to slower pure-Ruby RDF-parsers via the native JSON-library and a speed-optimized subset of RDF
  - a more full-featured HTTP handler doing most things linked-data clients expect (behavior similar to https://github.com/linkeddata/gold/ , https://github.com/read-write-web/rww-play)
  - pagination of large-containers including summarization, Link headers, sorted-ranges, offsets/cursors
