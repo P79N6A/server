@@ -1,18 +1,28 @@
-PW is a HTTP-daemon conforming to conventions outlined in http://linkeddata.github.io/SoLiD/ , features include:
+PW is a HTTP daemon conforming to conventions outlined in http://linkeddata.github.io/SoLiD/  features:
 
- - cached "parsing" of a variety of non-RDF MIMEs to RDF model including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code etc
- - serializing to non-RDF MIMEs including Atom/RSS feeds and retro lynx-compatible HTML
- - transcoding between RDF.rb and our added MIMEs accessible via HTTP content-negotiation
- - an alternative to HTTP-header based content-negotiation via name-extension (suffix) hints
- - an alternative to slower pure-Ruby RDF-parsers via the native JSON-library and a speed-optimized subset of RDF
- - HTTP handler doing many things linked-data clients expect (https://github.com/linkeddata/gold/ , https://github.com/read-write-web/rww-play)
- - pagination of large-containers including summarization, Link headers, sorted-ranges, offsets/cursors
+ HTTP
+ - HTTP handler does many things linked-data clients expect (similar behavior to https://github.com/linkeddata/gold/ + https://github.com/read-write-web/rww-play)
  - authentication of users via WebID claim-verification
- - accepting of edits on PUT or POST and a basic editor for basic-browsers
- - customization of behaviour by binding lambdas to RDF-typeclasses
- - customizations for: email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find, sort, grep
+ - accept edits on PUT or POST and a basic editor for basic-browsers w/ <form> capability
+ - paging large-containers: summarization, Link headers, sorted-ranges, offsets/cursors
 
-GET  git clone https://github.com/hallwaykid/pw.git ||
+ MIME
+ - emit a variety of Non-RDF MIMEs as RDF including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
+ - serialize to Non-RDF MIMEs including Atom/RSS feeds and lynx/links/w3m-compatible HTML[1234]
+ - MIME-transcode accessible via HTTP content-negotiation
+ - alternative to HTTP-header based content-negotiation via name-extension (suffix) hints 
+ - alternative to "slower" MIMEs using pure-Ruby RDF-parsers w/ the native JSON-library and a subset of RDF
+
+ APP/FRAMEWORK
+ - customize behaviour by binding lambdas to RDF-typeclasses
+ - domain-configurations for email, lifestream/newsfeed/timeline-aggregation, full-text/indexed search and unindexed-search (find + grep)
+
+ ROBUST
+ - a consideration of failure modes
+ - stored URIs are relative and late-bound. mount your data on any hostname (symlinks, cp, rsync, NFS) on HTTP or HTTPS
+ - light and lightweight on dependencies. no SQL or SPARQL database needed, we just need filesystem access
+
+SRC  git clone https://github.com/hallwaykid/pw.git ||
      git clone http://repo.or.cz/w/www.git
 
 PREREQUISITES
@@ -27,7 +37,7 @@ USE     cd ..          # goto server-root (can be elsewhere, but copy or link {c
 NOTE
 - open a REPL:
  $ irb -rww
-- to listen on 80/443 (optional, another angle is listen >1024 behind apache/nginx/lighttpd)
+- to listen on 80/443 (optional, already can listen >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 - shell-binding to resource methods. ex: R http://bl.og feeds
  $ cp ruby/R ~/bin 
