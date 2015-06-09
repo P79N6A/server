@@ -1,16 +1,17 @@
-PW is a HTTP daemon conforming to conventions outlined in http://linkeddata.github.io/SoLiD/  features:
+PW is a HTTP daemon conforming to conventions outlined in http://linkeddata.github.io/SoLiD/
 
  HTTP
  - HTTP handler does many things linked-data clients expect (similar behavior to https://github.com/linkeddata/gold/ + https://github.com/read-write-web/rww-play)
- - authentication of users via WebID claim-verification
- - accept edits on PUT or POST and a basic editor for basic-browsers w/ <form> capability
+ - authentication of users: WebID claim-verification
+ - accept edits and uploads on PUT and POST
+ - provide a basic editor for basic browsers w/ <form> capability, bootstrap (third-party) JS+SPARQL editor for modern user-agents
  - paging large-containers: summarization, Link headers, sorted-ranges, offsets/cursors
 
  MIME
- - emit a variety of Non-RDF MIMEs as RDF including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
- - serialize to Non-RDF MIMEs including Atom/RSS feeds and lynx/links/w3m-compatible HTML[1234]
+ - parse Non-RDF to RDF: mail-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
+ - serialize to Non-RDF: Atom/RSS feeds and lynx/links/w3m-compatible HTML[1234]
  - MIME-transcode accessible via HTTP content-negotiation
- - alternative to HTTP-header based content-negotiation via name-extension (suffix) hints 
+ - alternative to HTTP-header based content-negotiation using name-extension (suffix) hints 
  - alternative to "slower" MIMEs using pure-Ruby RDF-parsers w/ the native JSON-library and a subset of RDF
 
  APP/FRAMEWORK
@@ -20,7 +21,7 @@ PW is a HTTP daemon conforming to conventions outlined in http://linkeddata.gith
  ROBUST
  - a consideration of failure modes
  - stored URIs are relative and late-bound. mount your data on any hostname (symlinks, cp, rsync, NFS) on HTTP or HTTPS
- - light and lightweight on dependencies. no SQL or SPARQL database needed, we just need filesystem access
+ - light and lightweight on dependencies. no SQL or SPARQL database needed, just a filesystem 
 
 SRC  git clone https://github.com/hallwaykid/pw.git ||
      git clone http://repo.or.cz/w/www.git
