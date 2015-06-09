@@ -5,25 +5,18 @@ PW is a HTTP-daemon conforming to conventions outlined in http://linkeddata.gith
  - transcoding between RDF.rb and our added MIMEs accessible via HTTP content-negotiation
  - an alternative to HTTP-header based content-negotiation via name-extension (suffix) hints
  - an alternative to slower pure-Ruby RDF-parsers via the native JSON-library and a speed-optimized subset of RDF
- - a more full-featured HTTP handler doing most things linked-data clients expect (behavior similar to https://github.com/linkeddata/gold/ , https://github.com/read-write-web/rww-play)
+ - HTTP handler doing many things linked-data clients expect (https://github.com/linkeddata/gold/ , https://github.com/read-write-web/rww-play)
  - pagination of large-containers including summarization, Link headers, sorted-ranges, offsets/cursors
  - authentication of users via WebID claim-verification
  - accepting of edits on PUT or POST and a basic editor for basic-browsers
  - customization of behaviour by binding lambdas to RDF-typeclasses
- - customization for use-cases: email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find, sort, grep
+ - customizations for: email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find, sort, grep
 
 GET  git clone https://github.com/hallwaykid/pw.git ||
      git clone http://repo.or.cz/w/www.git
 
 PREREQUISITES
  install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
-
-      ruby - the language this software is written in
-   bundler - installs library dependencies for ruby
-    libgit - enable fs-state history browsing
-       ssl - enables client-certificates for WebID authentication
-{xml,xslt} - used by nokogiri to sanitize HTML input
-cmake, pkg - toolchain-support for ruby extension-building
 
 INSTALL cd pw/ruby     # enter source-dir
 	./install      # symlink source-code to lib-path
