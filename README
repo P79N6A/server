@@ -11,8 +11,8 @@ if you want a RDF server you can get away with Rack::LinkedData. more stuff we n
  - pagination of large-containers including summarization, Link headers, sorted-ranges, offsets/cursors
  - authentication of users via WebID claim-verification
  - accepting of edits on PUT or POST and a basic editor for basic-browsers
- - bespoke customization of response and server-behavior by binding lambdas to RDF-typeclasses
- - supplied customization for use-cases: email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find, sort, grep
+ - customization of behaviour by binding lambdas to RDF-typeclasses
+ - customization for use-cases: email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find, sort, grep
 
 GET  git clone https://github.com/hallwaykid/pw.git ||
      git clone http://repo.or.cz/w/www.git
@@ -34,6 +34,8 @@ USE     cd ..          # goto server-root (can be elsewhere, but copy or link {c
         ln conf/server/Procfile . # select daemon
         foreman start  # run HTTP/HTTPS daemons on port 80/443
 NOTE
+- open a REPL:
+ $ irb -rww
 - to listen on 80/443 (optional, another angle is listen >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 - shell-binding to resource methods. ex: R http://bl.og feeds
