@@ -1,27 +1,31 @@
-PW is a web-server "ready to use", generally conforming to conventions outlined in http://linkeddata.github.io/SoLiD/
+PW is a HTTP-daemon generally conforming to conventions outlined in http://linkeddata.github.io/SoLiD/
 
-Request -> files -> RDF model -> RDF or NonRDF Response
-
-if you want a purely-RDF server you can likely get away with the Rack::LinkedData handler from RDF.rb, or use pw for:
+if you want a RDF server you can get away with Rack::LinkedData from RDF.rb. more some stuff we needed:
 
  - cached "parsing" of a variety of non-RDF MIMEs to RDF model including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code etc
  - serializing to non-RDF MIMEs including Atom/RSS feeds and retro lynx-compatible HTML
+ - transcoding between RDF.rb and our added MIMEs accessible via HTTP content-negotiation
+ - an alternative to HTTP-header based content-negotiation via name extension (suffix) hints
+ - an alternative to slower pure-Ruby RDF-parsers via the native JSON-library and a speed-optimized subset of RDF
  - a more full-featured HTTP handler doing most things linked-data clients expect (behavior similar to https://github.com/linkeddata/gold/ , https://github.com/read-write-web/rww-play)
- - customization of response on a RDF-Typeclass basis
- - supplied customizations for common use-cases like email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find,sort,grep
+ - pagination of large-containers including summarization, Link headers, sorted-ranges, offsets/cursors
+ - authentication of users via WebID claim-verification
+ - accepting of edits on PUT or POST and a basic editor for basic-browsers
+ - bespoke customization of response and server-behavior by binding lambdas to RDF-typeclasses
+ - supplied customization for use-cases: email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find, sort, grep
 
-GET     git clone https://github.com/hallwaykid/pw.git ||
-        git clone http://repo.or.cz/w/www.git
+GET  git clone https://github.com/hallwaykid/pw.git ||
+     git clone http://repo.or.cz/w/www.git
 
 PREREQUISITES
  install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
 
-  ruby - the language this software is written in
-  bundler - installs library dependencies for ruby
-  libgit - enable fs-state history browsing
-  libssl - enables client-certificates for WebID authentication
-  lib{xml,xslt} - used by nokogiri to sanitize HTML input
-  cmake, pkg-config - toolchain-support for ruby extension-building
+      ruby - the language this software is written in
+   bundler - installs library dependencies for ruby
+    libgit - enable fs-state history browsing
+       ssl - enables client-certificates for WebID authentication
+{xml,xslt} - used by nokogiri to sanitize HTML input
+cmake, pkg - toolchain-support for ruby extension-building
 
 INSTALL cd pw/ruby     # enter source-dir
 	./install      # symlink source-code to lib-path
@@ -32,7 +36,7 @@ USE     cd ..          # goto server-root (can be elsewhere, but copy or link {c
 NOTE
 - to listen on 80/443 (optional, another angle is listen >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-- shell-binding to resource methods. ex: R http://myblog.com feeds
+- shell-binding to resource methods. ex: R http://bl.og feeds
  $ cp ruby/R ~/bin 
 - wipe RDF cache
  $ rm -rf cache
