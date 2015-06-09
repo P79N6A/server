@@ -8,10 +8,6 @@ HOWTO pw as a webmail-system
   domain/localhost/2016/01/16/msg.ABCD on the filesystem is made accessible at
   http://localhost/2016/01/16/msg.ABCD.html
 
-  RDF-links point to archive-location, original messages can be removed
-
-NOTES 
- the provided .procmailrc should ensure message filename
-  begin with msg. or end with .eml. otherwise FILE(1) will be invoked to sniff
-
- all derived-files are contained in address/ for easy removal and one-path route-handling
+NOTE links use archive-location, original messages can be removed
+ message filenames begin with msg or end with eml or FILE(1) will be invoked
+ all output is contained in address/ for easy removal or one-path server route-handling
