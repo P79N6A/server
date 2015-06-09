@@ -1,18 +1,17 @@
-the server converts files to RDF,
+HOWTO pw as a webmail-system
 
-1. make messages visible to server: (example)
- ~ ln -s /home/maillist/.mail/2016 domain/hostname
+1. make messages visible to the server
+ ~ ln -s /home/hyper/.mail/2016 domain/hostname
 
-2. browse to them. to see all of today's messages:
+2. browse messages. to see all of today's messages:
  $ firefox hostname/today
-  domain/localhost/2016/01/16/msg.ABCD , on the filesystem can be browsed at
+  domain/localhost/2016/01/16/msg.ABCD on the filesystem is made accessible at
   http://localhost/2016/01/16/msg.ABCD.html
 
-  documents will automatically appear in address/,
-  the server will log new messages as theyre encountered
-  all links (except dc:source) use permalink location, original messages can be removed once seen.
+  RDF-links point to archive-location, original messages can be removed
 
- the provided .procmailrc should ensure message filenames that:
-  begin with msg. or end with .eml. otherwise edit MIME.rb or FILE(1) will be invoked to sniff
+NOTES 
+ the provided .procmailrc should ensure message filename
+  begin with msg. or end with .eml. otherwise FILE(1) will be invoked to sniff
 
- if none of this makes sense, email <_@whats-your.name> and ask for help
+ all derived-files are contained in address/ for easy removal and one-path route-handling
