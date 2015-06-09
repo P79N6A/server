@@ -1,6 +1,4 @@
-PW is a HTTP-daemon conforming to conventions outlined in http://linkeddata.github.io/SoLiD/
-
-if you want a RDF server you can get away with Rack::LinkedData. more stuff we needed:
+PW is a HTTP-daemon conforming to conventions outlined in http://linkeddata.github.io/SoLiD/ , features include:
 
  - cached "parsing" of a variety of non-RDF MIMEs to RDF model including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code etc
  - serializing to non-RDF MIMEs including Atom/RSS feeds and retro lynx-compatible HTML
