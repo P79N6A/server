@@ -1,14 +1,14 @@
-PW  this is a web-server designed to be "ready to use", rather than a web-framework to build apps like Rails or Sinatra
+PW is a web-server "ready to use", generally conforming to conventions outlined in http://linkeddata.github.io/SoLiD/
 
 Request -> files -> RDF model -> RDF or NonRDF Response
 
-if you want a purely-RDF server you can likely get away with the Rack::LinkedData handler from RDF.rb
-we support the classic RDF content-negotiation as above and add the following:
+if you want a purely-RDF server you can likely get away with the Rack::LinkedData handler from RDF.rb, or use pw for:
+
  - cached "parsing" of a variety of non-RDF MIMEs to RDF model including email-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code etc
  - serializing to non-RDF MIMEs including Atom/RSS feeds and retro lynx-compatible HTML
  - a more full-featured HTTP handler doing most things linked-data clients expect (behavior similar to https://github.com/linkeddata/gold/ , https://github.com/read-write-web/rww-play)
- - handle customization of file-search, summarization + HTML view-rendering on a RDF-Typeclass basis
- - supplied customizations for common use-cases like email and full-text search
+ - customization of response on a RDF-Typeclass basis
+ - supplied customizations for common use-cases like email, lifestream/newsfeed/timeline-aggregation, full-text search and basic unindexed-search - find,sort,grep
 
 GET     git clone https://github.com/hallwaykid/pw.git ||
         git clone http://repo.or.cz/w/www.git
@@ -32,9 +32,7 @@ USE     cd ..          # goto server-root (can be elsewhere, but copy or link {c
 NOTE
 - to listen on 80/443 (optional, another angle is listen >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-
 - shell-binding to resource methods. ex: R http://myblog.com feeds
- $ cp ruby/R ~/bin
-
+ $ cp ruby/R ~/bin 
 - wipe RDF cache
  $ rm -rf cache
