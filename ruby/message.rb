@@ -12,7 +12,7 @@ class R
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = doc + '#' + (i+=1).to_s
         yield s, Date,                day+'T'+m[0]+':'+m[1]+':00'
-        yield s, SIOC+'ChatChannel', channel
+        yield s, SIOC+'channel', channel
         yield s, Creator,             m[2]
         yield s, Content,             m[3].hrefs(true)
         yield s, Type,                R[SIOC+'InstantMessage']
@@ -69,21 +69,23 @@ class R
     post[Title] = thread[Title]
   }
 
+  ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
+    [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
+     r[Creator].do{|c|
+       name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
+       e[:label][name] ||= {c: 0, id: (e[:count] += 1).to_s}
+       e[:label][name][:c] += 1
+       {class: 'creator l' + e[:label][name][:id], c: {_: :a, href: r.uri, c: name }}},
+     {_: :span, class: 'body', c: r[Content]},'<br>']}
+
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
-    label = {}
-    count = 0
-    [{_: :table, class: :chat, c: d.resources(e).reverse.map{|r|
-        {_: :tr,
-         c: [{_: :td, class: :date, c: r[Date][0].split('T')[1][0..4]},
-             r[Creator].do{|c|
-               name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
-               label[name] ||= {c: 0, id: (count += 1).to_s}
-               label[name][:c] += 1
-               {_: :td, class: 'creator l'+label[name][:id], c: {_: :a, href: r.uri, c: name }}} || {_: :td},
-             {_: :td, class: :body, c: r[Content]}]}}.cr },
+    e[:label] ||= {}
+    e[:count] = 0
+    e.q['a'] = 'sioc:channel'
+    [{class: :chat, c: Facets[d,e]},
      {_: :style,
-      c: label.map{|n,l|
-        "table.chat td.creator.l#{l[:id]} {background-color: #{randomColor}}" if l[:c] > 1}.cr },
+      c: e[:label].map{|n,l|
+        ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
   ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
@@ -153,7 +155,6 @@ class R
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
-#     {_: :a, class: :noquote, rel: :nofollow, href: CGI.escapeHTML(q.merge({'quotes' => quotes ? 'no' : 'yes'}).qs), c: quotes ? '&lt;' : '&gt;', title: "#{quotes ? "hide" : "show"} quotes"},
      {class: :messages, c: d.resources(e).reverse.map{|r| # a message
         author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
         {class: :mail, author: author, id: r.uri,

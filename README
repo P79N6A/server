@@ -14,12 +14,9 @@ PW is a HTTP daemon conforming to conventions outlined in http://linkeddata.gith
  - alternative to HTTP-header based content-negotiation using name-extension (suffix) hints 
  - alternative to "slower" MIMEs using pure-Ruby RDF-parsers w/ the native JSON-library and a subset of RDF
 
- APP/FRAMEWORK
+ FRAMEWORK
  - customize behaviour by binding lambdas to RDF-typeclasses
  - domain-configurations for email, lifestream/newsfeed/timeline-aggregation, full-text/indexed search and unindexed-search (find + grep)
-
- ROBUST
- - a consideration of failure modes
  - stored URIs are relative and late-bound. mount your data on any hostname (symlinks, cp, rsync, NFS) on HTTP or HTTPS
  - light and lightweight on dependencies. no SQL or SPARQL database needed, just a filesystem 
 
