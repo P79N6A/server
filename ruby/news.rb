@@ -12,11 +12,10 @@ class R
         e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
         if e.q.has_key?('q') # search query
           e.q['set'] ||= 'groonga'
-        else # paginate container
+        else # paged subtree
           e.q['set'] ||= 'page'
           e.q['c'] ||= 28
-          # use Memento date-offsets as traversal-cursor
-          puts "AYE"
+          # date-offsets as traversal-cursor (aka Memento)
           e['HTTP_ACCEPT_DATETIME'].do{|dt|
             t = Time.parse dt
             e[:Response]['Memento-Datetime'] = dt

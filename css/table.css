@@ -3,13 +3,13 @@ table.tab a {text-decoration: none}
 table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
-table.tab td {vertical-align: bottom}
+table.tab td {vertical-align: bottom;border-radius: .2em}
 table.tab td[property='uri'] {text-align:right; font-weight: bold;min-width:10em}
-table.tab td.content {padding: .4em; border-style: solid; border-color: #eee; border-width: 0 0 .5em 0}
+table.tab td.content {padding: .4em; border-style: solid; border-color: #eee; border-width: 0 0 .8em 0}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
 table.tab td[property='http://purl.org/dc/terms/title'] {min-width: 20em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {padding: 0 .24em 0 .24em; margin: 0 .2em 0 .2em; border-radius: .5em ; font-weight: bold; background-color:#0f0; color: #fff}
 .container .size {font-family: monospace; white-space: pre-wrap}
-.container a.member {border-radius:.13em;padding: 0 .1em 0 .1em;background-color:#000;color:#fff}
+.container a.member {border-radius:.2em;padding: 0 .1em 0 .1em;background-color:#000;color:#fff}
 .container a.member:visited {background-color:#fff;color:#000}
