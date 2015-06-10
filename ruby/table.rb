@@ -23,9 +23,6 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq -
            [Label,
             Content,
-            'http://search.yahoo.com/mrss/content',
-            'http://wellformedweb.org/CommentAPI/commentRss',
-            SIOC+'num_replies',
             Atom+'media']
     keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide parent-column on root container
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
@@ -44,9 +41,9 @@ class R
 
     [H.css('/css/table',true), "\n",
      {_: :style, # highlight selected property (column) and resource (row)
-      c: "td[property='#{sort}'] {border:.16em solid #{color}}
-tr[id='#{e.uri}'] td {background-color:#{color}}
-tr[id='#{e.uri}'] td a {color:#fff}
+      c: "td[property='#{sort}'] {background-color: #{color};color:#fff}
+tr[id='#{e.uri}'] td {background-color:#000}
+tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
 "}, "\n",
      {_: :table, :class => :tab, # <table>
       c: [{_: :tr,

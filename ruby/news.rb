@@ -115,20 +115,24 @@ class R
 
       def mapPredicates *f
         send(*f){|s,p,o|
-          yield s,
-          { Purl+'dc/elements/1.1/creator' => Creator,
-            Purl+'dc/elements/1.1/subject' => SIOC+'subject',
-            Atom+'author' => Creator,
-            RSS+'description' => Content,
-            RSS+'encoded' => Content,
-            RSS+'modules/content/encoded' => Content,
-            RSS+'modules/slash/comments' => SIOC+'num_replies',
-            Atom+'content' => Content,
-            Atom+'summary' => Content,
-            RSS+'title' => Title,
-            Atom+'title' => Title,
-          }[p]||p,
-          o }
+          if ['http://search.yahoo.com/mrss/content', 'http://wellformedweb.org/CommentAPI/commentRss', RSS+'guid', RSS+'link', RSS+'comments', SIOC+'num_replies'].member? p
+            
+          else
+            yield s,
+                  { Purl+'dc/elements/1.1/creator' => Creator,
+                    Purl+'dc/elements/1.1/subject' => SIOC+'subject',
+                    Atom+'author' => Creator,
+                    RSS+'description' => Content,
+                    RSS+'encoded' => Content,
+                    RSS+'modules/content/encoded' => Content,
+                    RSS+'modules/slash/comments' => SIOC+'num_replies',
+                    Atom+'content' => Content,
+                    Atom+'summary' => Content,
+                    RSS+'title' => Title,
+                    Atom+'title' => Title,
+                  }[p] || p, o
+          end
+        }
       end
 
       def rawFeedTriples
