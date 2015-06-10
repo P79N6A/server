@@ -251,6 +251,6 @@ class R
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                            c: d[Content]}}].cr}}.cr]}])}
 
-  ViewGroup[BlogPost] = ViewGroup[BasicResource]
+  ViewGroup[BlogPost] = TabularView
 
 end
