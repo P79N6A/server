@@ -5,7 +5,7 @@ table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
 table.tab td {vertical-align: bottom}
 table.tab td[property='uri'] {text-align:right; font-weight: bold;min-width:10em}
-table.tab td.content {border-style: solid; border-color: #eee; border-width: 0 0 2em 0}
+table.tab td.content {padding: .4em; border-style: solid; border-color: #eee; border-width: 0 0 .5em 0}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
 table.tab td[property='http://purl.org/dc/terms/title'] {min-width: 20em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}

@@ -20,7 +20,13 @@ class R
 
   TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
     color = e[:color]
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq - [Label,Content]
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq -
+           [Label,
+            Content,
+            'http://search.yahoo.com/mrss/content',
+            'http://wellformedweb.org/CommentAPI/commentRss',
+            SIOC+'num_replies',
+            Atom+'media']
     keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide parent-column on root container
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction

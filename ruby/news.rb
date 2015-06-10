@@ -83,7 +83,7 @@ class R
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
                                                                            else
-                                                                             o.gsub(/[&<>]+/,' ')
+                                                                             o.gsub(/<[^>]*>/,' ')
                                                                            end)
                                                          l.datatype=RDF.XMLLiteral if p == Content
                                                          l),
