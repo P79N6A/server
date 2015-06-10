@@ -3,21 +3,29 @@ class R
   GREP_DIRS.push(/^\/news\/\d{4}\/\d{2}/)
 
   GET['/news'] = -> d,e {
-    if d.justPath.docroot.uri == '/news'
-      e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
-      if e.q.has_key?('q') # search query
-        e.q['set'] ||= 'groonga'
-      else # paginate container
-        e.q['set'] ||= 'page'
-        e.q['c'] ||= 28
-        # use Memento date-offsets as traversal-cursor
-        e['HTTP_ACCEPT_DATETIME'].do{|dt|
-          t = Time.parse dt
-          e[:Response]['Memento-Datetime'] = dt
-          e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
+    location = d.justPath.docroot.uri
+    newsloc = '/news'
+    if location.downcase == newsloc # case-insensitive match
+      if location != newsloc
+        [301, {'Location' => newsloc}, []]
+      else
+        e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
+        if e.q.has_key?('q') # search query
+          e.q['set'] ||= 'groonga'
+        else # paginate container
+          e.q['set'] ||= 'page'
+          e.q['c'] ||= 28
+          # use Memento date-offsets as traversal-cursor
+          puts "AYE"
+          e['HTTP_ACCEPT_DATETIME'].do{|dt|
+            t = Time.parse dt
+            e[:Response]['Memento-Datetime'] = dt
+            e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
+        end
       end
+    else
+      nil
     end
-    nil # not at container-root, no special handling
   }
 
   GET['/feed'] = -> d,e {

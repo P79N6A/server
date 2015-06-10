@@ -21,21 +21,22 @@ class R
     condResponse ->{ self }
   end
 
-  def resourceGET # custom-handler lookup
-    paths = justPath.cascade 
-    [@r.host,""].map{|h| # host-specific, then daemon-wide
-      paths.map{|p| # bubble up to /
-        GET[h+p].do{|fn| # handler found
-          fn[self,@r].do{|r| # call handler
-        return r }}}} # return (a non-nil handler response)
-    response # default response
+  def resourceGET # handler lookup
+    bases = [@r.host, ""] # specific host, then generic path
+    paths = justPath.cascade.map(&:to_s).map &:downcase
+    bases.map{|b|
+      paths.map{|p|
+        GET[b + p].do{|fn| # handler bound
+          fn[self,@r].do{|r| # call
+        return r }}}} # non-nil return, stop cascading
+    response
   end
 
   def response
     if directory?
       if uri[-1] == '/'
         @r[:container] = true
-      else # redirect to enter container
+      else # enter the container
         qs = @r['QUERY_STRING']
         @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
         return [301, @r[:Response], []]
