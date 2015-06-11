@@ -1,6 +1,4 @@
-a[rel=next], a[rel=prev]{border-radius:.2em;overflow:hidden;
-    max-width: 46%; text-decoration: none;font-family: sans-serif;
-    background-color: #fff; color: #000; font-size:.92em}
+a[rel=next], a[rel=prev]{overflow:hidden;max-width: 46%; text-decoration: none;font-family: sans-serif;background-color: #fff; color: #000}
 a[rel=prev] {float:left}
 a[rel=next] {float:right}
 a[rel=next].b {font-size:2em; padding: .1em}
