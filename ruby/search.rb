@@ -98,7 +98,7 @@ class R
     FileSet['page'][d,r,m].concat FileSet[Resource][d,r,m]}
 
   # undirected relaxation
-  # (?S ?P O) matching fileset - inlines referring-resources (aka backlinks)
+  # (?S ?P O) match fileset - inlines referring-resources (any predicate)
   FileSet['rev'] = -> e,req,model {(e.dir.child '.' + e.basename + '*.rev').glob}
 
   # rewrite resource-URIs to our local-cache mapping

@@ -21,6 +21,7 @@ class R
             e[:Response]['Memento-Datetime'] = dt
             e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
         end
+        nil
       end
     else
       nil

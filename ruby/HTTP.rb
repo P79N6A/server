@@ -40,6 +40,7 @@ class R
     e['uri'] = resource.uri                              # add normalized-URI to environment
     e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init HEAD storage
     resource.setEnv(e).send(method).do{|s,h,b| # do request and inspect response
+#      puts :r,s,h
       R.log e,s,h,b # log
       [s,h, b]} # return
   rescue Exception => x
@@ -47,6 +48,7 @@ class R
   end
 
   def R.log e, s, h, b
+    return unless e&&s&&h&&b
     Stats[:status][s] ||= 0
     Stats[:status][s] += 1
     Stats[:host][e.host] ||= 0
