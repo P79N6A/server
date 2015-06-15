@@ -30,4 +30,4 @@ body > a.user {color:#00ff0d}
 td.key {text-align:right}
 td.key a {font-weight: bold; text-decoration:none}
 td.key img {height: 1.4em}
-tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
+tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 86ex}
