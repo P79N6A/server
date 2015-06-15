@@ -183,6 +183,7 @@ class R
     bodies = e.q.has_key? 'bodies'
     rdf = e.format != 'text/html'
     e.q['sort'] ||= Size
+    e.q['reverse'] ||= 'reverse'
     group = (e.q['group']||To).expand
     size = g.keys.size
     threads = {}
@@ -215,8 +216,6 @@ class R
         end
         threads[title][Size] += 1 } # count occurrence
       p[Creator].justArray.map(&:maybeURI).map{|a|
-#        authors[a] ||= 0
-#        authors[a] += 1 # count authoring
         graph.delete a } # hide author-description
       p[To].justArray.map(&:maybeURI).map{|a|
         weight[a] ||= 0
@@ -233,10 +232,8 @@ class R
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
-        graph[item.uri] ||= item if rdf # add thread to RDF graph
+        graph[item.uri] ||= item if rdf # thread to RDF-graph
         graph[container][LDP+'contains'].push item }} # container -> thread link
-
-#    graph[e.uri][LDP+'contains'] = authors.map{|a,size| size > 2 ? {'uri' => a, Size => size} : nil}
 
     clusters.map{|container| # count cluster-sizes
       graph[container][Size] = graph[container][LDP+'contains'].
