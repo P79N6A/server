@@ -53,14 +53,26 @@ class R
        sized = !sizes.empty? && maxSize > 1
        width = maxSize.to_s.size
        c.sortRDF(e).send(direction).map{|r|
+         uri = r.R.uri
          data = r.class == Hash
-         [{_: :a, href: r.R.uri, class: :member,
+         [{_: :a, href: uri, class: :member,
            c: [(if data && sized && r[Size]
                 s = r[Size].justArray[0]
                 [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']
                 end),
-               ([r[Date].justArray[0].to_s,' '] if data && sort==Date),
-               data && CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s) || r.uri]}, data ? "<br>" : " "]}}}}
+               (if data && sort==Date
+                [r[Date].justArray[0].to_s,' ']
+                end),
+               (if data
+                CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s)
+               else
+                 uri
+                end)
+              ]}, "<br>",
+          (if data && (c = r[LDP+'contains'])
+           [c.map{|i|{_: :a, href: r.uri, c: {_: :img, src: i.uri, style: 'max-height:10em'}}},'<br>']
+           end)
+         ]}}}}
 
   def triplrAudio &f
     yield uri, Type, R[Sound]

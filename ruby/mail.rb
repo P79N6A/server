@@ -218,7 +218,12 @@ class R
           p[Size] = 0         # member-count
           threads[title] = p  # thread data
         end
-        threads[title][Size] += 1 } # count occurrence
+        p[DC+'image'].do{|i|
+          threads[title][LDP+'contains'] ||= []
+          threads[title][LDP+'contains'].concat i
+        }
+        threads[title][Size] += 1 # count occurrence
+      }
       p[Creator].justArray.map(&:maybeURI).map{|a|
         graph.delete a } # hide author-description
       p[To].justArray.map(&:maybeURI).map{|a|
@@ -229,8 +234,12 @@ class R
     threads.map{|title,post| # cluster pass
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         container = a.R.dir.uri.t # container URI
-        item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]), Date => post[Date],
-                Label => title, Size => post[Size], Type => R[SIOC+'Thread']} # thread resource
+        item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]),
+                Date => post[Date],
+                Label => title,
+                Size => post[Size],
+                Type => R[SIOC+'Thread']} # thread resource
+        post[DC+'image'].do{|i| item[LDP+'contains'] = i }
 
         unless graph[container] # init cluster-container
           clusters.push container
