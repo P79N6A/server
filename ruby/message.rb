@@ -155,7 +155,7 @@ class R
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
-     {class: :messages, c: d.resources(e).reverse.map{|r| # a message
+     {class: :messages, c: d.resources(e).reverse.map{|r| # each message
         author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
         {class: :mail, author: author, id: r.uri,
          c: [{class: :header,

@@ -115,19 +115,20 @@ class R
 
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
 
-    parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') &&
-      Mail::Encodings.defined?(p.body.encoding)      # decodable?
+    parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') && # if text &&
+      Mail::Encodings.defined?(p.body.encoding)                     #    decodable
     }.map{|p|
-      yield e, Content, H(p.decoded.to_utf8.lines.to_a.map{|l|
-        l = l.chomp
-        [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
-         depth = (qp[1].scan /[>|]/).size
-         {class: :q, depth: depth, c: [{_: :span, c: '&gt; '*depth}, qp[3].gsub('@','.').hrefs]}
-        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
-          {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
-        else
-          [l.hrefs(true), "<br/>"]
-        end,"\n"]})}
+      body = H p.decoded.to_utf8.lines.to_a.map{|l|
+                 l = l.chomp
+                 [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
+                  depth = (qp[1].scan /[>|]/).size
+                  {class: :q, depth: depth, c: [{_: :span, c: '&gt; '*depth}, qp[3].gsub('@','.').hrefs]}
+                 elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
+                   {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
+                 else
+                   [l.hrefs(true){|i| yield e, DC+'image', i}, "<br/>"]
+                  end,"\n"]}
+      yield e, Content, body}
 
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 

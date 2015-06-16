@@ -5,13 +5,18 @@ class String
 
   def h; Digest::SHA1.hexdigest self end
 
-  def hrefs i=false # plaintext to HTML (hrefs and images)
-    (partition R::Href).do{|p|
-      u = p[1].gsub('&','&amp;') # URI
-      p[0].noHTML +
+  # HTML from plaintext. create hrefs and optionally images
+  def hrefs images=false, &b
+    partition(R::Href).do{|p|
+      u = p[1].gsub('&','&amp;') # escape URI
+      p[0].noHTML +              # escape pre-match
      (p[1].empty? && '' || '<a href="'+u+'">' +
-       ( i && u.match(/(gif|jpe?g|png|webp)$/i) && "<img src='#{u}'/>" || u.sub(/^https?:\/\//,'') ) + '</a>') +
-     (p[2].empty? && '' || p[2].hrefs) # again on any post-match tail
+      (if images && u.match(/(gif|jpe?g|png|webp)$/i)
+       "<img src='#{u}'/>"
+       else
+        u
+       end) + '</a>') +
+     (p[2].empty? && '' || p[2].hrefs(images)) # process post-match tail
     }
   rescue
     self
