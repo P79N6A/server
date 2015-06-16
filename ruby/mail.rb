@@ -120,14 +120,16 @@ class R
     }.map{|p|
       body = H p.decoded.to_utf8.lines.to_a.map{|l|
                  l = l.chomp
-                 [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted
+                 [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
                   depth = (qp[1].scan /[>|]/).size
                   {class: :q, depth: depth, c: [{_: :span, c: '&gt; '*depth}, qp[3].gsub('@','.').hrefs]}
-                 elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
+                 elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # quote-provenance
                    {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
-                 else
-                   [l.hrefs(true){|i| yield e, DC+'image', i}, "<br/>"]
-                  end,"\n"]}
+                 else # original line
+                   [l.hrefs(true){|p,o|
+                      yield e, p, o},
+                    "<br/>"]
+                  end, "\n"]}
       yield e, Content, body}
 
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
