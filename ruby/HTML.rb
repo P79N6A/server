@@ -123,11 +123,11 @@ class R
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
                  {_: :a, href: e.q.merge({'data' => ''}).qs, rel: :nofollow, c: {_: :img, src: '/css/misc/cube.svg', class: :rdf}},
-                 ({_: :a, rel: :prev, class: :a, href: prev, c: ['← ', prev], title: 'previous page'} if prev),
-                 ({_: :a, rel: :next, class: :a, href: nxt, c: ['→ ', nxt], title: 'next page'} if nxt),
+                 ({_: :a, rel: :prev, href: prev, c: '←', title: 'previous page'} if prev),
+                 ({_: :a, rel: :next, href: nxt, c: '→', title: 'next page'} if nxt),
                  (brk if paged),
                  view[d,e],
-                 ([brk,{_: :a, rel: :next, class: :b, href: nxt, c: '→'}] if nxt),
+                 ([brk,{_: :a, rel: :next, href: nxt, c: '→'}] if nxt),
                 ]}]}]}
 
   View = -> d,e { # default view - group by type, try type-render, fallback to generic

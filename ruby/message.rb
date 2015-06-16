@@ -167,9 +167,9 @@ class R
                       titles[title] = true
                       [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
                     end},
-                  r[Creator].justArray[0].do{|c| {_: :a, class: :author, name: author, href: c.uri, c: author}},
+                  r[Creator].justArray[0].do{|c| {_: :a, class: :author, name: author, href: c.R.dirname+'?set=page', c: author}},
                   r[To].justArray.map{|o|
-                    {_: :a, class: :to, href: o.R.dirname, c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
+                    {_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'has_parent'].do{|ps|
                     ps.justArray.map{|p| # replied-to messages
                       d[p.uri].do{|r| # target msg
