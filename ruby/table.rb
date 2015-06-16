@@ -54,15 +54,9 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
              else
                q['reverse'] = ''
              end
-             rdfType = Type == k
              [{_: :th, property: k,
-               c: {_: :a, rel: :nofollow, href: rdfType ? '?data' : CGI.escapeHTML(q.qs), class: Icons[k]||'',
-                   c: if rdfType
-                    {_: :img, src: '/css/misc/cube.svg'}
-                  else
-                    Icons[k] ? '' : (k.R.fragment||k.R.basename)
-                   end
-                  }}, "\n"]}}, "\n",
+               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
+                   c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]}}, "\n",
           ({_: :style, c: rows.map{|r|
               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
               "tr[id='#{r.R.fragment||r.uri}'] td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),

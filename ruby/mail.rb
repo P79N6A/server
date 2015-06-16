@@ -151,7 +151,8 @@ class R
       file.w p.body.decoded if !file.e                # write
       yield e, SIOC+'attachment', file                # message -> attached resource
       if p.main_type=='image'                         # image reference in HTML
-        yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]})
+        yield e, DC+'image', file # image pointer
+        yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]}) # add image to HTML-component
       end }
   rescue Exception => x
     puts ["MAILERROR",uri,x,x.backtrace[0..2]].join(' ')
