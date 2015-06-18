@@ -1,29 +1,28 @@
 pw is a HTTP/HTTPS daemon
 
-designed to be light and lightweight on dependencies - no SQL or SPARQL runtime-engines, just file-backing. it has a few features beyond trivial file-serving considered a bare-minumum to becoming a usable server:
+designed to be light and lightweight on dependencies, it has a few features beyond trivial file-servers considered a bare-minimum:
 
 HTTP
  - controller conforms to linked-data workflows (behaves similar to https://github.com/linkeddata/gold/ and https://github.com/read-write-web/rww-play) outlined in http://linkeddata.github.io/SoLiD/
  - authentication of users: WebID claim-verification
  - accept edits and uploads on PUT and POST
- - provide a basic editor for browsers using <form>, bootstrap (third-party) JS+SPARQL editor for modern user-agents
+ - supply a basic editor for browsers using <form>, bootstrap (third-party) JS+SPARQL editor for modern user-agents
  - paging large-containers: summarization, Link headers, sorted-ranges, offsets/cursors
- - fs-indexing of encountered data, which combined with the flexible container-paging eliminates (No-)SQL dependency for common use-cases
+ - fs-indexing of encountered data, which combined with flexible container-paging drops (No-)SQL dependency for common use-cases
 
  MIME
  - parse Non-RDF to RDF: mail-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
  - serialize to Non-RDF: Atom/RSS feeds and lynx/links/w3m-compatible HTML[1234]
- - MIME-transcode accessible via HTTP content-negotiation
- - alternative to HTTP-header based content-negotiation using name-extension (suffix) hints 
- - alternative to "slower" MIMEs using pure-Ruby RDF-parsers w/ the native JSON-library and a subset of RDF
+ - any-to-any (supported format) MIME-transcode accessible via standard HTTP content-negotiation
+ - content-type negotiation: Accept header and name-extension (suffix) hints 
+ - speedy native-JSON format implements a subset of RDF (with RDF::Reader class)
 
  FRAMEWORK
  - customize behaviour by binding lambdas to RDF-typeclasses
- - supplied behaviors for email, lifestream/newsfeed/timelines, full-text/indexed search and unindexed-search (webized find + grep)
  - stored URIs are relative and late-bound. mount your data on any hostname, on HTTP or HTTPS and manage it with common filesystem tools (git, rsync, NFS)
 
-SRC  git clone https://github.com/hallwaykid/pw.git ||
-     git clone http://repo.or.cz/w/www.git
+SRC git clone https://github.com/hallwaykid/pw.git ||
+    git clone http://repo.or.cz/w/www.git
 
 PREREQUISITES
  install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
@@ -34,12 +33,13 @@ INSTALL cd pw/ruby     # enter source-dir
 USE     cd ..          # goto server-root. if elsewhere, copy/link {css/,js/}
         ln conf/server/Procfile . # select daemon
         foreman start  # run HTTP/HTTPS daemons on port 80/443
-NOTE
-- REPL
- $ irb -rww
-- to listen on 80/443 (optional, or listen >1024 behind apache/nginx/lighttpd)
+NOTES
+ REPL: $ irb -rww
+
+listen on 80/443 (or >1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-- call resource methods in shell scripts. ex: R http://bl.og feeds
+
+use resource methods in shell scripts. ex: R http://bl.og feeds
  $ cp ruby/R ~/bin 
-- wipe caches
- $ rm -rf cache index
+
+clean $ rm -rf cache index
