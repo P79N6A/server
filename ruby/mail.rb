@@ -195,7 +195,7 @@ class R
     clusters = []
     weight = {}
 
-    # original container
+    # base container
     graph[e.uri] = {
       'uri' => e.uri, Label => e.R.basename,
       Type => R[Container],

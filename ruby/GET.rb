@@ -4,7 +4,7 @@ class R
 
   def GET
     ldp
-    if file?
+    if file? && !q.has_key?('data')
       fileGET
     elsif justPath.file?
       justPath.fileGET
