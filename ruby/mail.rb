@@ -202,10 +202,15 @@ class R
       SIOC+'has_container' => e.R.parentURI,
     }
 
-    # links to alternate container-filterings
-    if !rdf && !e.q.has_key?('group') # list view
-      listURI = e.q.merge({'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}).qs
-      graph[listURI] = {'uri' => listURI, Type => R[Container], Label => '≡'}
+    # link to alternate container-filterings - date-order and expanded-content view
+    unless rdf
+      args = if e.q.has_key?('group') # unabbreviated-view
+               {'bodies' => ''}
+             else                     # date-sort view
+               {'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}
+             end
+      viewURI = e.q.merge(args).qs
+      graph[viewURI] = {'uri' => viewURI, Type => R[Container], Label => '≡'}
     end
 
     g.map{|u,p| # statistics + prune pass
