@@ -27,19 +27,21 @@ SRC git clone https://github.com/hallwaykid/pw.git ||
 PREREQUISITES
  install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
 
-INSTALL cd pw/ruby     # enter source-dir
-	./install      # symlink source-code to lib-path
-        bundle install # install Ruby-dependencies
-USE     cd ..          # goto server-root. if elsewhere, copy/link {css/,js/}
+INSTALL cd pw/ruby                # enter source-dir
+	./install                 # symlink source-code to lib-path
+        bundle install            # source ruby libraries
+USE     cd ..                     # goto server-root. if elsewhere copy/link {css,js}/
         ln conf/server/Procfile . # select daemon
-        foreman start  # run HTTP/HTTPS daemons on port 80/443
+        foreman start             # start HTTP/HTTPS daemons
 NOTES
- REPL: $ irb -rww
+ REPL
+ $ irb -rww
 
-listen on 80/443 (or >1024 behind apache/nginx/lighttpd)
+listen on 80/443 (!>1024 behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 
 use resource methods in shell scripts. ex: R http://bl.og feeds
  $ cp ruby/R ~/bin 
 
-clean $ rm -rf cache index
+cleanup
+ $ rm -rf cache index

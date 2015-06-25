@@ -12,7 +12,7 @@ class R
     yield dir, Date, mt.iso8601
     contained = c
     yield dir, Size, contained.size
-    if contained.size < 22 # provide some "lookahead" on small contained-containers
+    if contained.size < 22 # provide some "lookahead" on small contained-containers. GET them directly for full (or paged, summarized) contents
       contained.map{|c|
         if c.directory?
           child = c.descend # trailing-slash convention on containers
@@ -41,7 +41,7 @@ class R
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}} # summarize
 
-  ViewA[Container] = -> r, e, sort, direction {
+  ViewA[Container] = -> r, e, sort, direction { # view a container as HTML
     re = r.R
     uri = re.uri
     path = (re.path||'').t
@@ -81,9 +81,9 @@ class R
     yield uri, Date, mtime
   end
 
-  Abstract[Sound] = -> graph, g, e { # add player and playlist resources
+  Abstract[Sound] = -> graph, g, e { # create player and playlist resources
     graph['#snd'] = {'uri' => '#snd', Type => R[Container],
-                  LDP+'contains' => g.values.map{|s| graph.delete s.uri # original resource
+                  LDP+'contains' => g.values.map{|s| graph.delete s.uri # original entry
                     s.update({'uri' => '#'+URI.escape(s.R.path)})}} # localized playlist-entry
     graph['#audio'] = {Type => R[Sound+'Player']} # player
     graph[e.uri].do{|c|c.delete(LDP+'contains')}} # original container
@@ -108,9 +108,9 @@ class R
         if !path.e
           path.dir.mk
           if i.mime.match(/^video/)
-            `ffmpegthumbnailer -s 256 -i #{i.sh} -o #{path.sh}`
+            `ffmpegthumbnailer -s 360 -i #{i.sh} -o #{path.sh}`
           else
-            `gm convert #{i.ext.match(/^jpg/) ? 'jpg:' : ''}#{i.sh} -thumbnail "256x256" #{path.sh}`
+            `gm convert #{i.ext.match(/^jpg/) ? 'jpg:' : ''}#{i.sh} -thumbnail "360x360" #{path.sh}`
           end
         end
       end
@@ -122,7 +122,7 @@ class R
   ViewA[Image] = ->i,e{{_: :a, href: i.uri, c: {_: :img, class: :thumb, src: '/thumbnail' + i.R.path}}}
 
   ViewGroup[Image] = -> g,e {
-    [{_: :style, c: "img.thumb {max-width: 256px; max-height: 256px}"},
+    [{_: :style, c: "img.thumb {max-width: 360px; max-height: 360px}"},
      g.map{|u,r| ViewA[Image][r,e]}]}
 
 end
