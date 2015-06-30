@@ -1,4 +1,4 @@
-pw is a HTTP/HTTPS daemon
+PW is a HTTP/HTTPS daemon
 
 designed to be light and lightweight on dependencies, it has a few features beyond trivial file-servers considered a bare-minimum:
 
@@ -25,7 +25,7 @@ SRC git clone https://github.com/hallwaykid/pw.git ||
     git clone http://repo.or.cz/w/www.git
 
 PREINSTALL (dependencies)
- install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
+ ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
 
 INSTALL cd pw/ruby                # enter srcdir
 	./install                 # symlink source-code to lib-path
@@ -34,8 +34,8 @@ USE     cd ..                     # goto server-root. if elsewhere copy/link {cs
         ln conf/server/Procfile . # select Rack-engine
         foreman start             # start HTTP/HTTPS daemons
 NOTES
- REPL
- $ irb -rww
+
+repl$ irb -rww
 
 listen on 80/443 || >1024 (behind apache/nginx/lighttpd)
  $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
@@ -43,7 +43,6 @@ listen on 80/443 || >1024 (behind apache/nginx/lighttpd)
 use resource methods in shell scripts. ex: R http://bl.og feeds
  $ cp ruby/R ~/bin 
 
-cleanup
- $ rm -rf cache index
+clean$ rm -rf cache index
 
 author carmen at mw.logbook.am
