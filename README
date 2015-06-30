@@ -25,7 +25,7 @@ SRC git clone https://github.com/hallwaykid/pw.git ||
     git clone http://repo.or.cz/w/www.git
 
 PREINSTALL (dependencies)
- ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev cmake pkg-config
+ ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
 
 INSTALL cd pw/ruby                # enter srcdir
 	./install                 # symlink source-code to lib-path
