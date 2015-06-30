@@ -45,3 +45,5 @@ use resource methods in shell scripts. ex: R http://bl.og feeds
 
 cleanup
  $ rm -rf cache index
+
+author  carmen at mw.logbook.am
