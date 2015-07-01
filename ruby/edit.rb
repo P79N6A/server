@@ -60,11 +60,13 @@ class R
     Creatable.map{|c|
       {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
+  # editor CSS/JS
   ViewGroup['#editable'] = -> graph, e {
     [graph.map{|u,r|ViewA['#editable'][r,e]},
      H.js('/js/edit', true),
     H.css('/css/edit',true)]}
 
+  # editor for one resource, as a HTML <form> element
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     datatype = e.q['datatype'] || 'html'
@@ -124,7 +126,7 @@ module Th
       !q.has_key?('edit') && # already editing
       !q.has_key?('new') &&  # create + bind types first
       q['set']!='history' && # can't edit history
-     (!r.host||r.host==host) # one of our own resources
+     (!r.host||r.host==host) # our resource, not a non-authoritive cache
     )
   end
 end

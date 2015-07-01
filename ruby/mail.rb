@@ -205,12 +205,13 @@ class R
     # link to alternate container-filterings - date-order and expanded-content view
     unless rdf
       args = if e.q.has_key?('group') # unabbreviated-view
-               {'bodies' => ''}
+               {'bodies' => '', Label => '&darr;'}
              else                     # date-sort view
-               {'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => ''}
+               {'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => '', Label => '≡'}
              end
+      label = args.delete Label
       viewURI = e.q.merge(args).qs
-      graph[viewURI] = {'uri' => viewURI, Type => R[Container], Label => '≡'}
+      graph[viewURI] = {'uri' => viewURI, Type => R[Container], Label => label}
     end
 
     g.map{|u,p| # statistics + prune pass
