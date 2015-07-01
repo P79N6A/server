@@ -18,6 +18,7 @@ a.rel:before { content:"\f0a5"; font-family: icons; }
 a.reply:before { content:"\f122"; font-family: icons; }
 a.scissors:before { content:"\f0c4"; font-family: icons; }
 a.size:before { content:"\f161"; font-family: icons; }
+a.tag:before { content:"\f02b"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.title:before { content:"\f035"; font-family: icons; }

@@ -208,6 +208,7 @@ class R
     'uri' => :id,
     Container => :dir,
     Date => :date,
+    Label => :tag,
     Title => :title,
     Directory => :warp,
     FOAF+'Person' => :person,

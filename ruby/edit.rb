@@ -93,14 +93,18 @@ class R
                            {_: :a, class: :history, c: :history, href: uri.sub('#','%23')+'?set=history'}]}}},
                  re.keys.map{|p|
                    {_: :tr,
-                     c: [{_: :td, class: :key, c: {_: :a, class: Icons[p], href: p, c: Type==p&&{_: :img,src: '/css/misc/cube.svg'}||Icons[p]&&''||p.R.fragment||p.R.basename}},
+                     c: [{_: :td, class: :key, c: {_: :a, class: Icons[p], href: p, c: Icons[p]&&''||p.R.fragment||p.R.basename}},
                          {_: :td, c: re[p].do{|o|
                              o.justArray.map{|o|
                                case p
                                when 'uri'
                                  [{_: :input, type: :hidden,  name: :uri, value: o}, o]
                                when Type
-                                 {_: :input, name: Type, value: o.uri, size: 64} unless o.uri == '#editable'
+                                 unless o.uri == '#editable'
+                                   [{_: :input, name: Type, value: o.uri, type: :hidden},
+                                    {_: :a, class: Icons[o.uri], title: o.uri}
+                                   ]
+                                 end
                                when Content # RDF:HTML literal
                                  {_: :textarea, name: p, c: o, rows: 16, cols: 80}
                                when WikiText # HTML, Markdown, or plaintext
