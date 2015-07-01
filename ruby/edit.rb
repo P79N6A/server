@@ -2,11 +2,11 @@
 #watch __FILE__
 class R
 
-  # paginate history-storage
+  # paginate history-storage container
   FileSet['history'] = -> d,env,g {
     FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
 
-  Filter['edit'] = -> g,e { # add editor-typetags to resource(s) so view-dispatcher will bring up editor
+  Filter['edit'] = -> g,e { # add editor-typetags to resource(s)
 
     # new resource
     if e.q.has_key? 'new'
@@ -55,18 +55,16 @@ class R
         content.hrefs
       end}}
 
-  # type-binding links
+  # HTML type-selector controls
   ViewGroup['#untyped'] = -> graph, e {
     Creatable.map{|c|
-      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment,
-       href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
+      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
 
   ViewGroup['#editable'] = -> graph, e {
     [graph.map{|u,r|ViewA['#editable'][r,e]},
-     H.js('/js/edit',true),
-     H.css('/css/edit',true)]}
+     H.js('/js/edit', true),
+    H.css('/css/edit',true)]}
 
-  # HTML based editor: a <form>
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     datatype = e.q['datatype'] || 'html'
