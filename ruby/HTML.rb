@@ -117,7 +117,7 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
-                 H.css('/css/base',true), {_: :style, c: "a {color: #{e[:color]}}"}]},
+                 H.css('/css/base',true)]},
             {_: :body,
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
