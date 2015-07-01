@@ -182,6 +182,7 @@ class R
 
   ReExpr = /\b[rR][eE]: /
 
+  # summarize a set of emails to overview-containers
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     graph.delete e.uri
     bodies = e.q.has_key? 'bodies'

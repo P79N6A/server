@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   # paginate history-storage container
@@ -41,7 +41,10 @@ class R
       ].map{|p|r.delete p} # server-managed properties
     end}
 
-  Creatable = [Forum, Wiki, Blog]
+  Creatable = {
+    Container => [Forum, Wiki, Blog],
+    Resource => [Resource, WikiArticle],
+  }
 
   Render[WikiText] = -> texts {
     texts.justArray.map{|t|
@@ -57,8 +60,14 @@ class R
 
   # HTML type-selector controls
   ViewGroup['#untyped'] = -> graph, e {
-    Creatable.map{|c|
-      {_: :a, style: 'font-size: 2em; display:block', c: c.R.fragment, href: e['REQUEST_PATH']+'?new&type='+c.shorten}}}
+    Creatable.map{|category,types|
+      {style: 'background-color:#efefef;color:#000;border-radius:1em;float:left;padding:.8em;margin:.8em',
+        c: types.map{|type|
+        {_: :a, style: 'font-size: 2em; display:block',
+         c: type.R.fragment, href: e['REQUEST_PATH']+'?new&type='+type.shorten}}
+      }
+    }
+  }
 
   # editor CSS/JS
   ViewGroup['#editable'] = -> graph, e {
