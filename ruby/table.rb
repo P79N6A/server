@@ -108,15 +108,16 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
          {_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}
        }]}
 
-  ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = TabularView
+    ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
+    ViewGroup[Resource] = TabularView
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
-  Tabulator = -> g,e { # data browser/editor # https://github.com/linkeddata/tabulator.git
+  Tabulator = -> g,e { # data browser/editor https://github.com/linkeddata/tabulator.git
     path = e.R.path
 
     # select subject URI
-    subject = if path.match(/^\/tabulator/) # use tabulator interface with other URI (XHR + CORS needed)
+    subject = if path.match(/^\/tabulator/) # tabulator-UI for another URI (XHR + CORS)
                 e.scheme + ':' + path.sub(/^\/tabulator/,'/')
               else # this URI
                 e.uri
