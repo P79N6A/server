@@ -64,7 +64,7 @@ class R
       {style: 'background-color:#efefef;color:#000;border-radius:1em;float:left;padding:0 .8em .8em .8em;margin:.8em',
        c: [{_: :a, style: 'color:#000;font-size:2em', class: Icons[category]},
          types.map{|type|
-           {_: :a, style: 'font-size: 2em; display:block;color:#333;text-decoration:none',
+           {_: :a, class: Icons[type],style: 'font-size: 2em; display:block;color:#333;text-decoration:none',
             c: type.R.fragment, href: e['REQUEST_PATH']+'?new&type='+type.shorten}}]
       }
     }

@@ -216,6 +216,8 @@ class R
     Size => :size,
     Mtime => :time,
     Resource => :graph,
+    Forum => :comments,
+    WikiArticle => :pencil,
     Atom+'self' => :graph,
     Atom+'alternate' => :file,
     Atom+'edit' => :pencil,
