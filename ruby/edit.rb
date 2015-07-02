@@ -106,7 +106,7 @@ class R
       {_: :textarea, name: p, c: o, rows: 16, cols: 80}
     when WikiText # HTML, Markdown, or plaintext
       datatype = env.q['datatype'] || 'html'
-      [{_: :textarea, name: p, c: o[Content], rows: 16, cols: 80},
+      [{_: :textarea, name: p, c: o[Content], rows: 16, cols: 80},'<br>',
        %w{html markdown text}.map{|f|
          if f == datatype
            [{_: :b, c: f},
