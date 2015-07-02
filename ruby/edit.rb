@@ -2,6 +2,11 @@
 watch __FILE__
 class R
 
+  Creatable = {
+    Container => [Forum, Wiki, Blog],
+    Resource => [Resource, WikiArticle],
+  }
+
   # paginate history-storage container
   FileSet['history'] = -> d,env,g {
     FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
@@ -37,15 +42,10 @@ class R
       r[Type] ||= []
       r[Type].push R['#editable']
       r[Label] ||= e.R.basename
-      [LDP+'contains', Size, Creator, Mtime, SIOC+'has_container', SIOC+'has_parent',
-      ].map{|p|r.delete p} # can't edit server-managed properties (basic provenance + containment)
+
+      [Size, Creator, Mtime, LDP+'contains', SIOC+'has_container', SIOC+'has_parent'].
+        map{|p|r.delete p} # can't edit server-managed properties (basic provenance + containment)
     end}
-
-  Creatable = {
-    Container => [Forum, Wiki, Blog],
-    Resource => [Resource, WikiArticle],
-  }
-
 
   # HTML type-selector controls
   ViewGroup['#untyped'] = -> graph, e {
