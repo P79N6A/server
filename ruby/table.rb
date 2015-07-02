@@ -45,23 +45,28 @@ class R
 tr[id='#{e.uri}'] td {background-color:#000}
 tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
 "}, "\n",
-     {_: :table, :class => :tab, # <table>
+     {_: :table, :class => :tab, # TABLE
       c: [{_: :tr,
-           c: keys.map{|k|
-             q = e.q.merge({'sort' => k.shorten})
-             if direction == :reverse
-               q.delete 'reverse'
-             else
-               q['reverse'] = ''
-             end
-             [{_: :th, property: k,
-               c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
-                   c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]}}, "\n",
+           c: [keys.map{|k|
+                 q = e.q.merge({'sort' => k.shorten})
+                 if direction == :reverse
+                   q.delete 'reverse'
+                 else
+                   q['reverse'] = ''
+                 end
+                 [{_: :th, property: k,
+                   c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
+                       c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
+               (if e.editable e.R
+                {_: :th, c: {_: :a, class: :wrench, href: '?edit'}}
+                end)
+              ]
+          }, "\n",
           ({_: :style, c: rows.map{|r|
               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
               "tr[id='#{r.R.fragment||r.uri}'] td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
           rows.map{|r|
-            TableRow[r,e,sort,direction,keys]
+            TableRow[r,e,sort,direction,keys] # ROW
           }]},
      "\n"]}
 
@@ -105,7 +110,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                  end}, "\n"]
             },
          (if e.q.has_key? 'edit'
-          {_: :td, c: {_: :a, class: :cog, href: '?edit'}
+          {_: :td, c: {_: :a, class: :cog, href: '?edit&fragment='+l.R.fragment}
            }
           end)
            ]}, "\n",
