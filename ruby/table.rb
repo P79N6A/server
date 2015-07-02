@@ -112,7 +112,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
          (if e.q.has_key? 'edit'
           fragment = l.R.fragment
           unless e.q['fragment'] == fragment
-            {_: :td, c: {_: :a, class: :cog, href: '?edit&fragment='+fragment}}
+            {_: :td, c: {_: :a, class: :wrench, style: 'color:#888',href: '?edit&fragment='+fragment}}
           end
           end)
            ]}, "\n",
