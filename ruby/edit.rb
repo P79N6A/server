@@ -77,8 +77,7 @@ class R
             c: [re.uri.do{|uri|
                   {_: :tr,
                    c: {_: :td, colspan: 2,
-                       c: [{_: :a, class: :uri, c: uri, href: uri},
-                           {_: :a, class: :history, c: :history, href: uri.sub('#','%23')+'?set=history'}]}}},
+                       c: {_: :a, class: :history, c: :history, href: uri.sub('#','%23')+'?set=history'}}}},
                  re.keys.map{|p|
                    {_: :tr,
                      c: [{_: :td, class: :key, c: {_: :a, class: Icons[p], href: p, c: Icons[p]&&''||p.R.fragment||p.R.basename}},
@@ -86,8 +85,8 @@ class R
                              o.justArray.map{|o|
                                EditableValue[p,o,e]
                              }}}].cr}}].cr},
-           {_: :a, id: :cancel, class: :cancel, href: e.uri, c: 'X'},
-           {_: :input, type: :submit, value: 'write'}].cr}}
+           {_: :a, id: :cancel, class: :cancel, href: e.uri, c: 'X cancel'},
+           {_: :input, type: :submit, value: '+ save'}].cr}}
 
   def editLink env
     (env.R.join stripFrag) + (env[404] ? '?new' : '?edit') + (fragment ? ('&fragment=' + fragment) : '')
@@ -122,8 +121,7 @@ class R
       [o,' ']
     else
       {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 64}
-    end
-  }
+    end}
 
 end
 
