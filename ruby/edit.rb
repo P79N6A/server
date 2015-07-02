@@ -8,7 +8,7 @@ class R
 
   Filter['edit'] = -> g,e { # add editor-typetags to resource(s)
 
-    # new resource
+    # add new resource
     if e.q.has_key? 'new'
       if e[404]
         if e.q.has_key? 'type' # type bound
@@ -27,7 +27,7 @@ class R
       end
     end
 
-    # edit resource
+    # enable editable resource
     if e.q.has_key? 'edit'
       uri = e.uri
       if e.q['fragment']
@@ -38,7 +38,7 @@ class R
       r[Type].push R['#editable']
       r[Label] ||= e.R.basename
       [LDP+'contains', Size, Creator, Mtime, SIOC+'has_container', SIOC+'has_parent',
-      ].map{|p|r.delete p} # server-managed properties
+      ].map{|p|r.delete p} # can't edit server-managed properties (basic provenance + containment)
     end}
 
   Creatable = {
@@ -46,17 +46,6 @@ class R
     Resource => [Resource, WikiArticle],
   }
 
-  Render[WikiText] = -> texts {
-    texts.justArray.map{|t|
-      content = t[Content]
-      case t['datatype']
-      when 'markdown'
-        ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render content
-      when 'html'
-        content
-      when 'text'
-        content.hrefs
-      end}}
 
   # HTML type-selector controls
   ViewGroup['#untyped'] = -> graph, e {

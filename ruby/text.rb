@@ -142,6 +142,18 @@ class R
     yield uri+'#', Content, RedCloth.new(r).to_html
   end
 
+  Render[WikiText] = -> texts {
+    texts.justArray.map{|t|
+      content = t[Content]
+      case t['datatype']
+      when 'markdown'
+        ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render content
+      when 'html'
+        content
+      when 'text'
+        content.hrefs
+      end}}
+
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     yield uri+'#', Type, R[SIOC+'SourceCode']
