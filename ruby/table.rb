@@ -110,8 +110,10 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                  end}, "\n"]
             },
          (if e.q.has_key? 'edit'
-          {_: :td, c: {_: :a, class: :cog, href: '?edit&fragment='+l.R.fragment}
-           }
+          fragment = l.R.fragment
+          unless e.q['fragment'] == fragment
+            {_: :td, c: {_: :a, class: :cog, href: '?edit&fragment='+fragment}}
+          end
           end)
            ]}, "\n",
        l[Content].do{|c|
