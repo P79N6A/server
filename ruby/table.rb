@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrCSV d
@@ -123,13 +123,12 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                 e.uri
               end
 
-    # prefer local script cache
+    # prefer local script caches
     jquery = if '/js/jquery.js'.R.exist?
                '/js/jquery'
              else
                'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
              end
-
     tabr = if '/tabulator/js/mashup/mashlib.js'.R.exist?
              '/tabulator'
            else
