@@ -58,7 +58,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                    c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
                        c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
                (if e.editable e.R
-                {_: :th, c: {_: :a, class: :wrench, href: '?edit'}}
+                {_: :th, c: {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}}
                 end)
               ]
           }, "\n",

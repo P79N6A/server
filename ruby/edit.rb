@@ -27,7 +27,7 @@ class R
       end
     end
 
-    # enable editable resource
+    # make resource editable
     if e.q.has_key? 'edit'
       uri = e.uri
       if e.q['fragment']
