@@ -68,7 +68,6 @@ class R
   # editor for one resource, as a HTML <form> element
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
-    datatype = e.q['datatype'] || 'html'
     re[Type] ||= R[WikiArticle]
     re[Title] ||= ''
     re[WikiText] ||= ''
@@ -85,40 +84,46 @@ class R
                      c: [{_: :td, class: :key, c: {_: :a, class: Icons[p], href: p, c: Icons[p]&&''||p.R.fragment||p.R.basename}},
                          {_: :td, c: re[p].do{|o|
                              o.justArray.map{|o|
-                               case p
-                               when 'uri'
-                                 [{_: :input, type: :hidden,  name: :uri, value: o}, o]
-                               when Type
-                                 unless o.uri == '#editable'
-                                   [{_: :input, name: Type, value: o.uri, type: :hidden},
-                                    {_: :a, class: Icons[o.uri], title: o.uri}
-                                   ]
-                                 end
-                               when Content # RDF:HTML literal
-                                 {_: :textarea, name: p, c: o, rows: 16, cols: 80}
-                               when WikiText # HTML, Markdown, or plaintext
-                                 [{_: :textarea, name: p, c: o[Content], rows: 16, cols: 80},
-                                  %w{html markdown text}.map{|f|
-                                    if f == datatype
-                                      [{_: :b, c: f},
-                                       {_: :input, type: :hidden, name: :datatype, value: f}]
-                                    else
-                                      {_: :a, class: :datatype, href: e.q.merge({'datatype' => f}).qs, c: f}
-                                    end
-                                  }.intersperse(' ')]
-                               when Date
-                                 {_: :b, c: [o,' ']}
-                               when Size
-                                 [o,' ']
-                               else
-                                 {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 64}
-                               end }}}].cr}}].cr},
+                               EditableValue[p,o,e]
+                             }}}].cr}}].cr},
            {_: :a, id: :cancel, class: :cancel, href: e.uri, c: 'X'},
            {_: :input, type: :submit, value: 'write'}].cr}}
 
   def editLink env
     (env.R.join stripFrag) + (env[404] ? '?new' : '?edit') + (fragment ? ('&fragment=' + fragment) : '')
   end
+
+  EditableValue = -> p,o,env {
+    case p
+    when 'uri'
+      [{_: :input, type: :hidden,  name: :uri, value: o}, o]
+    when Type
+      unless o.uri == '#editable'
+        [{_: :input, name: Type, value: o.uri, type: :hidden},
+         {_: :a, class: Icons[o.uri], title: o.uri}
+        ]
+      end
+    when Content # RDF:HTML literal
+      {_: :textarea, name: p, c: o, rows: 16, cols: 80}
+    when WikiText # HTML, Markdown, or plaintext
+      datatype = env.q['datatype'] || 'html'
+      [{_: :textarea, name: p, c: o[Content], rows: 16, cols: 80},
+       %w{html markdown text}.map{|f|
+         if f == datatype
+           [{_: :b, c: f},
+            {_: :input, type: :hidden, name: :datatype, value: f}]
+         else
+           {_: :a, class: :datatype, href: env.q.merge({'datatype' => f}).qs, c: f}
+         end
+       }.intersperse(' ')]
+    when Date
+      {_: :b, c: [o,' ']}
+    when Size
+      [o,' ']
+    else
+      {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 64}
+    end
+  }
 
 end
 
