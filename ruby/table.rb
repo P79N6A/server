@@ -103,7 +103,12 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                      end
                    }.intersperse(' ')
                  end}, "\n"]
-            }]}, "\n",
+            },
+         (if e.q.has_key? 'edit'
+          {_: :td, c: {_: :a, class: :cog, href: '?edit'}
+           }
+          end)
+           ]}, "\n",
        l[Content].do{|c|
          {_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}
        }]}
