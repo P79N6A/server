@@ -6,3 +6,5 @@ a.datatype {text-decoration:none}
     content:"\f1da";
     font-family: icons;
     font-size: 1.3em;}
+
+.cancel {text-decoration: none;border-radius:.2em; background-color:#f00; color: #fff; font-size:1.4em; margin-right: .2em;padding: .1em .3em .1em .3em}

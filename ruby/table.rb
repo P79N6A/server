@@ -75,7 +75,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
       fragment = l.R.fragment
       selected = e.q['fragment'] == fragment
       [(if editing && selected
-        [EditorIncludes, '<form method=POST>']
+        [EditorIncludes[], '<form method=POST>']
         end),
        {_: :tr, id: (l.R.fragment||l.uri), style: (editing && selected) ? 'background-color:#f6f6f6;color:#000' : '',
         c: ["\n",
