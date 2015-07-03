@@ -1,9 +1,5 @@
 body {font-family: sans-serif}
 form td.key a {font-size:1.5em}
-input, textarea {border-width: .1em 0 0 .1em; border-style:dotted;border-color:#aaa}
-input[type=submit] {background-color: #fff; color: #333; border-color: #333}
-input[type=submit]:hover {background-color:#0f0; color: #fff; border-color: #bfb}
-.cancel {text-decoration: none;border-radius:.2em; background-color:#f00; color: #fff; font-size:1.4em; margin-right: .2em;padding: .1em .3em .1em .3em}
 a.datatype {text-decoration:none}
 .history {float: right;}
 .history:before {

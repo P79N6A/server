@@ -75,7 +75,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
       fragment = l.R.fragment
       selected = e.q['fragment'] == fragment
       [('<form method=POST>' if editing),
-       {_: :tr, id: (l.R.fragment||l.uri),
+       {_: :tr, id: (l.R.fragment||l.uri), style: (editing&&selected) ? 'background-color:#f6f6f6;color:#000' : '',
         c: ["\n",
             keys.map{|k|
               [{_: :td, property: k,
@@ -118,8 +118,12 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                  end
                 end}, "\n"]
             },
-            if editing && !selected && fragment
-            {_: :td, c: {_: :a, class: :wrench, style: 'color:#888',href: '?edit&fragment='+fragment}}
+            if editing && fragment
+              {_: :td, c: if selected
+                SaveButton[e]
+              else
+                {_: :a, class: :wrench, style: 'color:#888',href: '?edit&fragment='+fragment}
+              end}
           end
            ]},
        ('</form>' if editing),

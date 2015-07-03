@@ -31,22 +31,6 @@ class R
               subject[Type].push R[ct]}}}
       end
     end
-
-
-
-    if e.q.has_key? 'edit'
-      uri = e.uri
-      if e.q['fragment']
-        uri = uri + '#' + e.q['fragment']
-      end
-      r = g[uri] ||= {} # resource
-      r[Type] ||= []
-      r[Type].push R['#editable']
-      r[Label] ||= e.R.basename
-
-      [Size, Creator, Mtime, LDP+'contains', SIOC+'has_container', SIOC+'has_parent'].
-        map{|p|r.delete p} # can't edit server-managed properties (basic provenance + containment)
-    end
   }
 
   # HTML type-selector controls
@@ -66,6 +50,10 @@ class R
     [graph.map{|u,r|ViewA['#editable'][r,e]},
      H.js('/js/edit', true),
     H.css('/css/edit',true)]}
+
+  SaveButton = -> e {
+    [{_: :a, id: :cancel, class: :cancel, href: e.uri+'?edit', c: 'X cancel'},
+    {_: :input, type: :submit, value: 'save'}]}
 
   # editor for one resource, as a HTML <form> element
   ViewA['#editable'] = -> re, e {
@@ -87,43 +75,47 @@ class R
                              o.justArray.map{|o|
                                EditableValue[p,o,e]
                              }}}].cr}}].cr},
-           {_: :a, id: :cancel, class: :cancel, href: e.uri, c: 'X cancel'},
-           {_: :input, type: :submit, value: '+ save'}].cr}}
+          SaveButton[e]].cr}}
 
   def editLink env
     (env.R.join stripFrag) + (env[404] ? '?new' : '?edit') + (fragment ? ('&fragment=' + fragment) : '')
   end
 
   EditableValue = -> p,o,env {
-    case p
-    when 'uri'
-      [{_: :input, type: :hidden,  name: :uri, value: o}, o]
-    when Type
-      unless o.uri == '#editable'
-        [{_: :input, name: Type, value: o.uri, type: :hidden},
-         {_: :a, class: Icons[o.uri], title: o.uri}
-        ]
-      end
-    when Content # RDF:HTML literal
-      {_: :textarea, name: p, c: o, rows: 16, cols: 80}
-    when WikiText # HTML, Markdown, or plaintext
-      datatype = env.q['datatype'] || 'html'
-      [{_: :textarea, name: p, c: o[Content], rows: 16, cols: 80},'<br>',
-       %w{html markdown text}.map{|f|
-         if f == datatype
-           [{_: :b, c: f},
-            {_: :input, type: :hidden, name: :datatype, value: f}]
-         else
-           {_: :a, class: :datatype, href: env.q.merge({'datatype' => f}).qs, c: f}
-         end
-       }.intersperse(' ')]
-    when Date
-      {_: :b, c: [o,' ']}
-    when Size
-      [o,' ']
+    if [Size, Creator, Mtime, LDP+'contains', SIOC+'has_container', SIOC+'has_parent'].member? p
+    # can't edit server-managed values (basic provenance + containment)
     else
-      {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 24}
-    end}
+      case p
+      when 'uri'
+        [{_: :input, type: :hidden,  name: :uri, value: o}, o]
+      when Type
+        unless o.uri == '#editable'
+          [{_: :input, name: Type, value: o.uri, type: :hidden},
+           {_: :a, class: Icons[o.uri], title: o.uri}
+          ]
+        end
+      when Content # RDF:HTML literal
+        {_: :textarea, name: p, c: o, rows: 8, cols: 48}
+      when WikiText # HTML, Markdown, or plaintext
+        datatype = env.q['datatype'] || 'html'
+        [{_: :textarea, name: p, c: o[Content], rows: 8, cols: 48},'<br>',
+         %w{html markdown text}.map{|f|
+           if f == datatype
+             [{_: :b, c: f},
+              {_: :input, type: :hidden, name: :datatype, value: f}]
+           else
+             {_: :a, class: :datatype, href: env.q.merge({'datatype' => f}).qs, c: f}
+           end
+         }.intersperse(' ')]
+      when Date
+        {_: :b, c: [o,' ']}
+      when Size
+        [o,' ']
+      else
+        {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 24}
+      end
+    end
+  }
 
 end
 
