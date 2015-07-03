@@ -7,4 +7,6 @@ a.datatype {text-decoration:none}
     font-family: icons;
     font-size: 1.3em;}
 
-.cancel {text-decoration: none;border-radius:.2em; background-color:#f00; color: #fff; font-size:1.4em; margin-right: .2em;padding: .1em .3em .1em .3em}
+.cancel {background-color:#f00; color: #fff}
+.save {background-color:#fff; color: #000}
+.cancel,.save {text-decoration: none;border-width: 0; font-size:1.3em; padding:.1em}

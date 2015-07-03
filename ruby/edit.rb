@@ -51,7 +51,7 @@ class R
 
   SaveButton = -> e {
     [{_: :a, id: :cancel, class: :cancel, href: e.uri+'?edit', c: 'X cancel'},
-    {_: :input, type: :submit, value: 'save'}]}
+    {_: :input, class: :save, type: :submit, value: ' write '}]}
 
   # editor for one resource, as a HTML <form> element
   ViewA['#editable'] = -> re, e {
