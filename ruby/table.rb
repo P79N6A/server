@@ -71,11 +71,19 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
      "\n"]}
 
     TableRow = -> l,e,sort,direction,keys {
-      [{_: :tr, id: (l.R.fragment||l.uri),
+      editing = e.q.has_key? 'edit'
+      fragment = l.R.fragment
+      selected = e.q['fragment'] == fragment
+      [('<form method=POST>' if editing),
+       {_: :tr, id: (l.R.fragment||l.uri),
         c: ["\n",
-         keys.map{|k|
+            keys.map{|k|
               [{_: :td, property: k,
-              c: case k
+                c: if editing && selected
+                 l[k].justArray.map{|o|
+                   EditableValue[k,o,e]}
+               else
+                 case k
                  when 'uri'
                    {_: :a, href: (CGI.escapeHTML l.uri),
                     c: (l[Title]||l[Label]||l.R.basename).justArray[0]} if l.uri
@@ -107,15 +115,15 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                        v
                      end
                    }.intersperse(' ')
-                 end}, "\n"]
+                 end
+                end}, "\n"]
             },
-         (if e.q.has_key? 'edit'
-          fragment = l.R.fragment
-          unless e.q['fragment'] == fragment
+            if editing && !selected && fragment
             {_: :td, c: {_: :a, class: :wrench, style: 'color:#888',href: '?edit&fragment='+fragment}}
           end
-          end)
-           ]}, "\n",
+           ]},
+       ('</form>' if editing),
+       "\n",
        l[Content].do{|c|
          {_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}
        }]}

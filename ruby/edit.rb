@@ -32,7 +32,8 @@ class R
       end
     end
 
-    # make resource editable
+
+
     if e.q.has_key? 'edit'
       uri = e.uri
       if e.q['fragment']
@@ -45,7 +46,8 @@ class R
 
       [Size, Creator, Mtime, LDP+'contains', SIOC+'has_container', SIOC+'has_parent'].
         map{|p|r.delete p} # can't edit server-managed properties (basic provenance + containment)
-    end}
+    end
+  }
 
   # HTML type-selector controls
   ViewGroup['#untyped'] = -> graph, e {
@@ -120,7 +122,7 @@ class R
     when Size
       [o,' ']
     else
-      {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 64}
+      {_: :input, name: p, value: o.respond_to?(:uri) ? o.uri : o, size: 24}
     end}
 
 end
