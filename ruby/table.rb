@@ -74,8 +74,10 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
       editing = e.q.has_key? 'edit'
       fragment = l.R.fragment
       selected = e.q['fragment'] == fragment
-      [('<form method=POST>' if editing),
-       {_: :tr, id: (l.R.fragment||l.uri), style: (editing&&selected) ? 'background-color:#f6f6f6;color:#000' : '',
+      [(if editing && selected
+        [EditorIncludes, '<form method=POST>']
+        end),
+       {_: :tr, id: (l.R.fragment||l.uri), style: (editing && selected) ? 'background-color:#f6f6f6;color:#000' : '',
         c: ["\n",
             keys.map{|k|
               [{_: :td, property: k,
@@ -126,7 +128,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
               end}
           end
            ]},
-       ('</form>' if editing),
+       ('</form>' if editing && selected),
        "\n",
        l[Content].do{|c|
          {_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}

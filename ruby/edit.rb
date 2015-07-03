@@ -46,10 +46,8 @@ class R
   }
 
   # editor CSS/JS
-  ViewGroup['#editable'] = -> graph, e {
-    [graph.map{|u,r|ViewA['#editable'][r,e]},
-     H.js('/js/edit', true),
-    H.css('/css/edit',true)]}
+  EditorIncludes = [H.js('/js/edit', true), H.css('/css/edit',true)]
+  ViewGroup['#editable'] = -> graph, e {[ graph.map{|u,r| ViewA['#editable'][r,e] }, EditorIncludes]}
 
   SaveButton = -> e {
     [{_: :a, id: :cancel, class: :cancel, href: e.uri+'?edit', c: 'X cancel'},
