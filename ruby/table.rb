@@ -80,7 +80,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
             keys.map{|k|
               [{_: :td, property: k,
                 c: if editing && selected
-                 l[k].justArray.map{|o|
+                 (l[k]||'').justArray.map{|o|
                    EditableValue[k,o,e]}
                else
                  case k
