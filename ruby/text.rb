@@ -3,8 +3,6 @@
 
 class String
 
-  def h; Digest::SHA1.hexdigest self end
-
   # HTML from plaintext
   def hrefs images=false, &b
     pre,link,post = self.partition R::Href
@@ -27,8 +25,6 @@ class String
     gsub('>','&gt;')
   end
 
-  def tail; self[1..-1] end
-
   def to_utf8
     encode('UTF-8', undef: :replace)
   rescue Encoding::InvalidByteSequenceError
@@ -38,8 +34,6 @@ class String
   def utf8
     force_encoding 'UTF-8'
   end
-
-  def t; match(/\/$/) ? self : self+'/' end
 
 end
 

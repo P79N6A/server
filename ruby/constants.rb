@@ -20,6 +20,9 @@ print "\n"
 
 class R < RDF::URI
 
+  alias_method :uri, :to_s
+  alias_method :maybeURI, :uri
+
   FSbase = `pwd`.chomp ; BaseLen = FSbase.size
   HTTP_URI = /\A(\/|http)[\S]+\Z/
 
@@ -141,9 +144,6 @@ text
 
   RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
   NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
-
-  alias_method :uri, :to_s
-  alias_method :maybeURI, :uri
 
   def R.schemas # list schemas
     table = {}
