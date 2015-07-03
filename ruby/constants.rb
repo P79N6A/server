@@ -122,11 +122,11 @@ MIME
 names
 container
 DELETE
-edit
 GET
 graph
 HEAD
 HTML
+edit
 table
 HTTP
 mail
