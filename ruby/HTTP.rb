@@ -38,11 +38,10 @@ class R
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
     resource = R[e.scheme + "://" + e.host + path]       # resource reference
     e['uri'] = resource.uri                              # add normalized-URI to environment
-    e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init HEAD storage
-    resource.setEnv(e).send(method).do{|s,h,b| # do request and inspect response
-#      puts :r,s,h
-      R.log e,s,h,b # log
-      [s,h, b]} # return
+    e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init response-header fields
+    resource.setEnv(e).send(method).do{|s,h,b| # run request and inspect response
+      R.log e,s,h,b # logging
+      [s,h,b]} # response
   rescue Exception => x
     E500[x,e]
   end
@@ -65,14 +64,6 @@ class R
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
-#  GET['/500'] = -> resource, environment {0/0}
-
-  GET['/ERROR'] = -> d,e {
-    uri = d.path
-    graph = {uri => Errors[uri]}
-    [200,{'Content-Type' => e.format},
-     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
-
   E404 = -> base, env, graph=nil {
     graph ||= {}
     graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
@@ -93,6 +84,15 @@ class R
   ViewGroup[HTTP+'404'] = -> graph, env {
     [{c: 404, style: 'font-size:11em;font-family:monospace'},
      ViewGroup[BasicResource][graph,env]]}
+
+#  GET['/500'] = -> resource, environment {0/0} # create an error inside a request
+
+  GET['/ERROR'] = -> d,e { # render cached-info about error
+    uri = d.path
+    graph = {uri => Errors[uri]}
+    [200,{'Content-Type' => e.format},
+     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+
 
   ViewGroup[HTTP+'500'] = -> graph, env {
     [{c: 500, style: 'font-size:11em;font-family:monospace;color:red'},
