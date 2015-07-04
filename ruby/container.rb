@@ -119,7 +119,15 @@ class R
       E404[e,r]
     end}
 
-  ViewA[Image] = ->i,e{{_: :a, href: i.uri, c: {_: :img, class: :thumb, src: '/thumbnail' + i.R.path}}}
+  ViewA[Image] = ->img,e{
+    image = img.R
+    {_: :a, href: image.uri,
+     c: {_: :img, class: :thumb,
+         src: if image.ext.downcase == 'gif'
+                image.uri
+              else
+                '/thumbnail' + image.path
+              end}}}
 
   ViewGroup[Image] = -> g,e {
     [{_: :style, c: "img.thumb {max-width: 360px; max-height: 360px}"},
