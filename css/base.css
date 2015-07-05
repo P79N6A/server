@@ -37,3 +37,4 @@ td.key {text-align:right}
 td.key a {font-weight: bold; text-decoration:none}
 td.key img {height: 1.4em}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 86ex}
+a.addButton {margin-left:7em;font-size:2em;background-color:#3f3;color:#fff;border-radius:.2em;padding:0 .3em 0 .3em;text-decoration:none}

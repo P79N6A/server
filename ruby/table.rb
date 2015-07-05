@@ -57,10 +57,14 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                  [{_: :th, property: k,
                    c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
                        c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
-               (if e.editable(e.R) && !e.q.has_key?('edit')
-                {_: :th, c: {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}}
-                end)
-              ]
+               (if e.editable(e.R)
+                {_: :th,
+                 c: if !e.q.has_key?('edit')
+                  {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}
+                else
+                  {_: :a, class: :addButton, c: '+', title: 'add property'}
+                 end}
+                end)]
           }, "\n",
           ({_: :style, c: rows.map{|r|
               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
@@ -83,7 +87,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
              end
     selected = selURI == this.uri
     [(if edit && selected
-      [EditorIncludes[], '<form method=POST>']
+      [H.css('/css/edit',true), '<form method=POST>']
       end),
      {_: :tr, id: (this.fragment||l.uri), style: (edit && selected) ? 'background-color:#f6f6f6;color:#000' : '',
       c: ["\n",

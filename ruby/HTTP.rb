@@ -84,7 +84,7 @@ class R
 
   ViewGroup[HTTP+'404'] = -> graph, env {
     [{_: :span, c: 404, style: 'font-size:11em;font-family:monospace'},
-     ({_: :a, style: 'margin-left:8em;font-size:2em;background-color:#3f3;color:#fff;border-radius:.2em;padding:0 .3em 0 .3em;text-decoration:none', c: '+', href: '?new'} if env.editable),
+     ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
 #  GET['/500'] = -> resource, environment {0/0} # create an error inside a request
