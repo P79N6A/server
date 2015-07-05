@@ -11,25 +11,21 @@ class R
   FileSet['history'] = -> d,env,g {
     FileSet['page'][d.fragmentDir,env,g].map{|f|f.setEnv env}}
 
-  Filter['edit'] = -> g,e { # add editor-typetags to resource(s)
-
-    # add new resource
-    if e.q.has_key? 'new'
-      if e[404]
-        if e.q.has_key? 'type' # type bound
-          e.q['edit'] = true   # ready to edit
-        else                   # type selector
-          g['#new'] = {Type => R['#untyped']}
-        end
-      else # post to target resource
-        subject = g['#new'] = {Type => [R['#editable']]}
-        e.q['type'].do{|t| subject[Type].push R[t.expand]}
-        g[e.uri].do{|target|
-          target[Type].justArray.map{|type| # container type
-            Containers[type.uri].do{|ct| # containee type
-              Create[ct].do{|c|c[subject,target,e]} # bespoke constructor
-              subject[Type].push R[ct]}}}
+  Filter['#create'] = -> g,e {
+    if e[404]
+      if e.q.has_key? 'type' # type bound
+        e.q['edit'] = true   # ready to edit
+      else                   # type selector
+        g['#new'] = {Type => R['#untyped']}
       end
+    else # post to target resource
+      subject = g['#new'] = {Type => [R['#editable']]}
+      e.q['type'].do{|t| subject[Type].push R[t.expand]}
+      g[e.uri].do{|target| # target resource
+        target[Type].justArray.map{|type| # target type
+          Containers[type.uri].do{|ct| # containee type
+            Create[ct].do{|c|c[subject,target,e]} # bespoke constructor
+            subject[Type].push R[ct]}}}
     end
   }
 

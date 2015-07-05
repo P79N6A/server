@@ -33,8 +33,12 @@ class R
   end
 
   def response
+    init = q.has_key? 'new'
+    edit = q.has_key? 'edit'
+    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
+
     if directory?
-      if uri[-1] == '/'
+      if uri[-1] == '/' # already in the container
         @r[:container] = true
       else # enter the container
         qs = @r['QUERY_STRING']
@@ -43,27 +47,23 @@ class R
       end
     end
 
-    init = q.has_key? 'new'
-    edit = q.has_key? 'edit'
-    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
-
-    m = {} # graph
-    set = [] # resource-set
+    graph = {}
+    set = []
 
     # generic-resource set
     rs = ResourceSet[q['set']]
-    rs[self,q,m].do{|l|l.map{|r|set.concat r.fileResources}} if rs
+    rs[self,q,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
     # file set
     fs = FileSet[q['set']]
-    fs[self,q,m].do{|files|set.concat files} if fs
+    fs[self,q,graph].do{|files|set.concat files} if fs
 
     # default set
-    FileSet[Resource][self,q,m].do{|f|set.concat f} unless rs||fs
+    FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
 
     if set.empty? # empty set
       @r[404] = true
-      return E404[self,@r,m] unless init
+      return E404[self,@r,graph] unless init
     end
 
     @r[:Response].
@@ -75,20 +75,20 @@ class R
       if set.size==1 && @r.format == set[0].mime # one file in response, MIME in Accept
         set[0] # no transcode, just return file
       else
-        graph = -> { # JSON/Hash model construction
-          set.map{|r|r.nodeToGraph m} # load resources
-          @r[:filters].push Container if @r[:container] # add container-summarize filter
-          @r[:filters].push 'edit' if @r.signedIn && (init||edit) # add editor-facilities
+        loadGraph = -> {
+          set.map{|r|r.nodeToGraph graph} # load resources
+          @r[:filters].push Container if @r[:container] # container-summarize
+          @r[:filters].push '#create' if @r.signedIn && init # create a resource
           @r[:filters].justArray.map{|f|
-            Filter[f].do{|f| f[m,@r] }} # named model-transformation functions
-          m } # model
+            Filter[f][graph,@r]} # model-transformations
+          graph}
 
         if NonRDF.member? @r.format
-          Render[@r.format][graph[],@r]
+          Render[@r.format][loadGraph[],@r]
         else # RDF
           base = @r.R.join uri
           if @r[:container] # container
-            g = graph[].toRDF
+            g = loadGraph[].toRDF
           else # doc
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
