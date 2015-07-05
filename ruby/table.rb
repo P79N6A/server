@@ -57,7 +57,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                  [{_: :th, property: k,
                    c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
                        c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
-               (if e.editable e.R
+               (if e.editable(e.R) && !e.q.has_key?('edit')
                 {_: :th, c: {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}}
                 end)
               ]
@@ -73,10 +73,13 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
     edit = e.q.has_key? 'edit'
-    selURI = if e.uri[-1] == '/'
-               e.uri # container
-             else
-               e.uri + '#' + ( e.q['fragment'] || '' ) # resource
+    frag = e.q['fragment']
+    selURI = if frag
+               if e.uri[-1] == '/'
+                 e.uri # container
+               else
+                 e.uri + '#' + frag # resource
+               end
              end
     selected = selURI == this.uri
     [(if edit && selected
