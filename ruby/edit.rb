@@ -13,19 +13,20 @@ class R
 
   Filter['#create'] = -> g,e {
     if e[404]
-      if e.q.has_key? 'type' # type bound
-        e.q['edit'] = true   # ready to edit
-      else                   # type selector
-        g['#new'] = {Type => R['#untyped']}
-      end
-    else # post to target resource
-      subject = g['#new'] = {Type => [R['#editable']]}
+      type = e.q['type']
+      g[''] = {Type => if type # type bound
+                [R[type],R['#editable']]
+              else # defer to type-selector
+                R['#untyped']
+              end}
+    else # target exists - new member
+      subject = g['#'] = {Type => [R['#editable']]}
       e.q['type'].do{|t| subject[Type].push R[t.expand]}
       g[e.uri].do{|target| # target resource
         target[Type].justArray.map{|type| # target type
           Containers[type.uri].do{|ct| # containee type
-            Create[ct].do{|c|c[subject,target,e]} # bespoke constructor
-            subject[Type].push R[ct]}}}
+            Create[ct].do{|c|c[subject,target,e]} # create resource
+            subject[Type].push R[ct]}}} # add type-tag
     end
   }
 
@@ -116,10 +117,8 @@ end
 module Th
   def editable r=nil
     @editable ||= (
-      signedIn &&            # webID required
-      !q.has_key?('edit') && # already editing
-      !q.has_key?('new') &&  # create + bind types first
-      q['set']!='history' && # can't edit history
+      signedIn &&                # user-ID required
+      q['set']!='history' &&     # can't change history
      (!r||!r.host||r.host==host) # our resource, not a non-authoritive cache
     )
   end

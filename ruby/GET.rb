@@ -28,27 +28,27 @@ class R
       paths.map{|p|
         GET[b + p].do{|fn| # handler bound
           fn[self,@r].do{|r| # call
-        return r }}}} # non-nil return, stop cascading
+        return r }}}} # non-nil return, stop cascading and finish
     response
   end
 
   def response
     init = q.has_key? 'new'
     edit = q.has_key? 'edit'
-    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required for editing
+    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required when editing
 
     if directory?
       if uri[-1] == '/' # already in the container
         @r[:container] = true
-      else # enter the container
+      else # enter container
         qs = @r['QUERY_STRING']
         @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
         return [301, @r[:Response], []]
       end
     end
 
-    graph = {}
     set = []
+    graph = {}
 
     # find generic-resource(s)
     rs = ResourceSet[q['set']]
@@ -71,20 +71,21 @@ class R
               'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h})
 
     condResponse ->{ # lazy response-finisher
-      if set.size==1 && @r.format == set[0].mime # one file in response, MIME in Accept
+      if set.size==1 && @r.format == set[0].mime # one file in response, MIME preferred
         set[0] # no transcode, just return file
       else
         loadGraph = -> {
           set.map{|r|r.nodeToGraph graph} # load resources
           @r[:filters].push Container if @r[:container] # container-summarize
           @r[:filters].push '#create' if @r.signedIn && init # create a resource
+
           @r[:filters].justArray.map{|f|
-            Filter[f][graph,@r]} # model-transformations
+            Filter[f][graph,@r]} # transform
           graph}
 
         if NonRDF.member? @r.format
           Render[@r.format][loadGraph[],@r]
-        else # RDF
+        else
           base = @r.R.join uri
           if @r[:container] # container
             g = loadGraph[].toRDF
