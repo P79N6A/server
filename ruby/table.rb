@@ -69,73 +69,74 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
             TableRow[r,e,sort,direction,keys] # TABLE-ROW
           }]},
      "\n"]}
-
-    TableRow = -> l,e,sort,direction,keys {
-      editing = e.q.has_key? 'edit'
-      fragment = l.R.fragment
-      selected = e.q['fragment'] == fragment
-      [(if editing && selected
-        [EditorIncludes[], '<form method=POST>']
-        end),
-       {_: :tr, id: (l.R.fragment||l.uri), style: (editing && selected) ? 'background-color:#f6f6f6;color:#000' : '',
-        c: ["\n",
-            keys.map{|k|
-              [{_: :td, property: k,
-                c: if editing && selected
-                 (l[k]||'').justArray.map{|o|
-                   EditableValue[k,o,e]}
+  
+  TableRow = -> l,e,sort,direction,keys {
+    this = l.R
+    edit = e.q.has_key? 'edit'
+    selURI = if e.uri[-1] == '/'
+               e.uri # container
+             else
+               e.uri + '#' + ( e.q['fragment'] || '' ) # resource
+             end
+    selected = selURI == this.uri
+    [(if edit && selected
+      [EditorIncludes[], '<form method=POST>']
+      end),
+     {_: :tr, id: (this.fragment||l.uri), style: (edit && selected) ? 'background-color:#f6f6f6;color:#000' : '',
+      c: ["\n",
+          keys.map{|k|
+            [{_: :td, property: k,
+              c: if edit && selected
+               (l[k]||'').justArray.map{|o|
+                 EditableValue[k,o,e]}
+             else
+               case k
+               when 'uri'
+                 {_: :a, href: (CGI.escapeHTML l.uri),
+                  c: (l[Title]||l[Label]||this.basename).justArray[0]} if l.uri
+               when Type
+                 l[Type].justArray.map{|t|
+                   icon = Icons[t.uri]
+                   href = if t.uri == Directory
+                            res = e.R.join l.uri
+                            e.scheme + '://linkeddata.github.io/warp/#/list/' + e.scheme + '/' + res.host + res.path
+                          else
+                            l.uri
+                          end
+                   [({_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon} if href),
+                    (if e.editable this
+                     Containers[t.uri].do{|c|
+                       n = c.R.fragment
+                       {_: :a, href: l.uri+'?new', c: '+', class: :new, title: "new #{n} in #{l.uri}"}}
+                     end)]}
+               when LDP+'contains'
+                 ViewA[Container][l,e,sort,direction]
+               when WikiText
+                 Render[WikiText][l[k]]
                else
-                 case k
-                 when 'uri'
-                   {_: :a, href: (CGI.escapeHTML l.uri),
-                    c: (l[Title]||l[Label]||l.R.basename).justArray[0]} if l.uri
-                 when Type
-                   l[Type].justArray.map{|t|
-                     icon = Icons[t.uri]
-                     href = if t.uri == Directory
-                              res = e.R.join l.uri
-                              e.scheme + '://linkeddata.github.io/warp/#/list/' + e.scheme + '/' + res.host + res.path
-                            else
-                              l.uri
-                            end
-                     [({_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon} if href),
-                      (if e.editable l.R
-                       Containers[t.uri].do{|c|
-                         n = c.R.fragment
-                         {_: :a, href: l.uri+'?new', c: '+', class: :new, title: "new #{n} in #{l.uri}"}}
-                       end)]}
-                 when LDP+'contains'
-                   ViewA[Container][l,e,sort,direction]
-                 when WikiText
-                   Render[WikiText][l[k]]
-                 else
-                   l[k].justArray.map{|v|
-                     case v
-                     when Hash
-                       v.R
-                     else
-                       v
-                     end
-                   }.intersperse(' ')
-                 end
-                end}, "\n"]
-            },
-            if editing && fragment
-              {_: :td, c: if selected
-                SaveButton[e]
-              else
-                {_: :a, class: :wrench, style: 'color:#888',href: '?edit&fragment='+fragment}
-              end}
-          end
-           ]},
-       ('</form>' if editing && selected),
-       "\n",
-       l[Content].do{|c|
-         {_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}
-       }]}
+                 l[k].justArray.map{|v|
+                   case v
+                   when Hash
+                     v.R
+                   else
+                     v
+                   end
+                 }.intersperse(' ')
+               end
+              end}, "\n"]
+          },
+          if edit
+            {_: :td, c: if selected
+              SaveButton[e]
+            else
+              {_: :a, class: :wrench, style: 'color:#888',href: this.docroot.uri+'?edit&fragment='+(this.fragment||'')}
+             end}
+          end]},
+     ('</form>' if edit && selected), "\n",
+     l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}}]}
 
-    ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
-    ViewGroup[Resource] = TabularView
+  ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
+  ViewGroup[Resource] = TabularView
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
