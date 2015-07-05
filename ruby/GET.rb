@@ -50,18 +50,17 @@ class R
     graph = {}
     set = []
 
-    # generic-resource set
+    # find generic-resource(s)
     rs = ResourceSet[q['set']]
     rs[self,q,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
-    # file set
+    # find file(s)
     fs = FileSet[q['set']]
     fs[self,q,graph].do{|files|set.concat files} if fs
 
-    # default set
     FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
 
-    if set.empty? # empty set
+    if set.empty?
       @r[404] = true
       return E404[self,@r,graph] unless init
     end
