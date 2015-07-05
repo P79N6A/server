@@ -102,7 +102,7 @@ class R
 
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
-    errorURI = '/ERROR/' + e.uri.h
+    errorURI = '/ERROR/' + (e.uri||'').h
     error = graph[e.uri]
     error[Type] = R[HTTP+'500']
     error[Title] = [x.class, x.message.noHTML].join ' '
