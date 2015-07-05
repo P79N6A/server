@@ -160,10 +160,7 @@ class R
        [{_: :tr, property: k,
         c: case k
            when 'uri'
-             {_: :td, colspan: 2,
-              c: [{_: :a, class: :uri, href: uri, c: uri},
-                  ({_: :a, class: :pencil, href: resource.editLink(e)} if e.editable(resource))
-                 ]}
+             {_: :td, colspan: 2, c: {_: :a, class: :uri, href: uri, c: uri}}
            when Content
              {_: :td, class: :val, colspan: 2, c: v}
            when WikiText

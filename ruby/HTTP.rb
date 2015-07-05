@@ -83,7 +83,8 @@ class R
       graph.toRDF(base).dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
 
   ViewGroup[HTTP+'404'] = -> graph, env {
-    [{c: 404, style: 'font-size:11em;font-family:monospace'},{_: :a, c: '+'},
+    [{_: :span, c: 404, style: 'font-size:11em;font-family:monospace'},
+     ({_: :a, style: 'margin-left:8em;font-size:2em;background-color:#3f3;color:#fff;border-radius:.2em;padding:0 .3em 0 .3em;text-decoration:none', c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
 #  GET['/500'] = -> resource, environment {0/0} # create an error inside a request

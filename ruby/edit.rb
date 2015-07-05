@@ -118,13 +118,13 @@ class R
 end
 
 module Th
-  def editable r
+  def editable r=nil
     @editable ||= (
       signedIn &&            # webID required
       !q.has_key?('edit') && # already editing
       !q.has_key?('new') &&  # create + bind types first
       q['set']!='history' && # can't edit history
-     (!r.host||r.host==host) # our resource, not a non-authoritive cache
+     (!r||!r.host||r.host==host) # our resource, not a non-authoritive cache
     )
   end
 end
