@@ -64,7 +64,9 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                   if !e.q.has_key?('addProperty')
                     {_: :a, class: :addButton, c: '+', title: 'add property', href: e.q.merge({'addProperty' => ''}).qs}
                   elsif e.q['addProperty'].empty?
-                    {_: :input, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em'}
+                    {_: :form, method: :GET,
+                     c: [{_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
+                       {_: :input, name: :addProperty, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em;background-color:#dfd;color:#000'}]}
                   end
                   end}
                 end)]
