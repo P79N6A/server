@@ -42,14 +42,13 @@ class R
     }
   }
 
-  # editor CSS/JS
   ViewGroup['#editable'] = -> graph, e {[ graph.map{|u,r| ViewA['#editable'][r,e] }, H.css('/css/edit',true)]}
 
   SaveButton = -> e {
     [{_: :a, id: :cancel, class: :cancel, href: e.uri+'?edit', c: 'X cancel'},
     {_: :input, class: :save, type: :submit, value: ' write '}]}
 
-  # editor for one resource, as a HTML <form> element
+  # edit resource in a HTML <form>
   ViewA['#editable'] = -> re, e {
     e.q['type'].do{|t|re[Type] = t.expand.R}
     re[Type] ||= R[WikiArticle]

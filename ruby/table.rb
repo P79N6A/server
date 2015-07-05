@@ -28,6 +28,10 @@ class R
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
     rows = g.resources(e).send direction                    # sorted resources
+    e.q['addProperty'].do{|p|
+      p = p.expand
+      keys.push p unless keys.member?(p)||!p.match(/^http/)
+    }
 
     # scale numeric-sort fields
     if [Size,Mtime].member? sort
@@ -65,7 +69,9 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                     {_: :a, class: :addButton, c: '+', title: 'add property', href: e.q.merge({'addProperty' => ''}).qs}
                   elsif e.q['addProperty'].empty?
                     {_: :form, method: :GET,
-                     c: [{_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
+                     c: [
+                       {_: :input, name: :edit, val: :edit, type: :hidden},
+                       {_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
                        {_: :input, name: :addProperty, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em;background-color:#dfd;color:#000'}]}
                   end
                   end}
