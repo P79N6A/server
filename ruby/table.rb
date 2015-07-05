@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrCSV d
@@ -58,12 +58,15 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
                    c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
                        c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
                (if e.editable(e.R)
-                {_: :th,
-                 c: if !e.q.has_key?('edit')
+                {_: :th, c: if !e.q.has_key?('edit')
                   {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}
-                else
-                  {_: :a, class: :addButton, c: '+', title: 'add property'}
-                 end}
+                elsif e.q.has_key?('fragment')
+                  if !e.q.has_key?('addProperty')
+                    {_: :a, class: :addButton, c: '+', title: 'add property', href: e.q.merge({'addProperty' => ''}).qs}
+                  elsif e.q['addProperty'].empty?
+                    {_: :input, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em'}
+                  end
+                  end}
                 end)]
           }, "\n",
           ({_: :style, c: rows.map{|r|
