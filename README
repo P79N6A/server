@@ -3,46 +3,39 @@ PW is a HTTP/HTTPS daemon
 designed to be light and lightweight on dependencies, it has a few features beyond trivial file-servers considered a bare-minimum:
 
  HTTP(S)
- - controller conforms to linked-data workflows (behaves similar to https://github.com/linkeddata/gold/ and https://github.com/read-write-web/rww-play) outlined in http://linkeddata.github.io/SoLiD/
- - authentication of users: WebID claim-verification
- - accept edits and uploads on PUT and POST
- - supply a basic editor for browsers using <form>, bootstrap (third-party) JS+SPARQL editor for modern user-agents
+ - controller mostly behaves similarly to protocols described in http://linkeddata.github.io/SoLiD/
+ - WebID/X509-User-Certificate signin
+ - uploads on PUT and POST (Container and HTML-<form> support) 
  - paging large-containers: summarization, Link headers, sorted-ranges, offsets/cursors
- - fs-indexing of encountered data, which combined with flexible container-paging drops (No-)SQL dependency for common use-cases
+ - lazy indexing
 
  MIME-types
- - parse Non-RDF to RDF: mail-messages, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
- - serialize to Non-RDF: Atom/RSS feeds and lynx/links/w3m-compatible HTML[1234]
- - any-to-any (supported format) MIME-transcode accessible via standard HTTP content-negotiation
- - content-type negotiation: Accept header and name-extension (suffix) hints 
- - speedy native-JSON format implements a subset of RDF (with RDF::Reader class)
+ - input: email, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
+ - output: Atom/RSS feeds and lynx/links/w3m-compatible HTML[1234]
+ - MIME-convert betweeen all RDF.rb and above formats
+ - content-type select: Accept header or name-extension (suffix) hints 
 
  FRAMEWORK
- - customize behaviour by binding lambdas to RDF-typeclasses
- - stored URIs are relative and late-bound. mount your data on any hostname, on HTTP or HTTPS and manage it with common filesystem tools (git, rsync, NFS)
+ - customize behaviour: bind lambdas to RDF-types
+ - stored URIs are relative and late-bound. mount your data on any hostname, on HTTP or HTTPS and manage it with common filesystem tools (ln, git, rsync, NFS)
 
 SRC git clone https://github.com/hallwaykid/pw.git ||
     git clone http://repo.or.cz/w/www.git
 
-PREINSTALL (dependencies)
- ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
 
-INSTALL cd pw/ruby                # enter srcdir
-	./install                 # symlink source-code to lib-path
-        bundle install            # source ruby libraries
-USE     cd ..                     # goto server-root. if elsewhere copy/link {css,js}/
-        ln conf/server/Procfile . # select Rack-engine
-        foreman start             # start HTTP/HTTPS daemons
-NOTES
+install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
+     cd pw/ruby                # enter srcdir
+     ./install                 # link src -> lib
+     bundle install            # install ruby libraries
+USE  cd ..                     # goto server-root. if elsewhere copy/link {css,js}/
+     ln conf/server/Procfile . # select Rack-engine
+     foreman start             # start HTTP/HTTPS daemons
 
 repl$ irb -rww
 
-listen on 80/443 || >1024 (behind apache/nginx/lighttpd)
- $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-
-use resource methods in shell scripts. ex: R http://bl.og feeds
- $ cp ruby/R ~/bin 
+listen on 80/443 || # $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+ >1024 (behind apache/nginx/lighttpd)
 
 clean$ rm -rf cache index
 
-author carmen at mw.logbook.am
+author carmen@mw.logbook.am
