@@ -2,9 +2,7 @@
 #watch __FILE__
 class R
 
-  GREP_DIRS.push(/^\/address\//) # allow grep in email
-
-  MessagePath = -> id{ # message-ID -> path
+  MessagePath = -> id{ # Message-ID -> path
     msg, domainname = id.downcase.sub(/^</,'').sub(/>.*/,'').gsub(/[^a-zA-Z0-9\.\-@]/,'').split '@'
     dname = (domainname||'').split('.').reverse
     case dname.size
@@ -18,7 +16,6 @@ class R
     ['', 'address', tld, domain[0], domain, *dname[2..-1], '@', id.h[0..1], msg].join('/')}
 
   AddrPath = ->address{ # email-address -> path
-#    puts "address #{address}"
     address = address.downcase
     person, domainname = address.split '@'
     dname = (domainname||'').split('.').reverse
@@ -26,7 +23,7 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-  GET['/address'] = -> e,r {e.justPath.response} # we dont use the host
+  GET['/address'] = -> e,r {e.justPath.response}
 
   GET['/thread'] = -> e,r {
     m = {}
@@ -248,7 +245,7 @@ class R
                 Type => R[SIOC+'Thread']} # thread resource
         post[DC+'image'].do{|i| item[LDP+'contains'] = i }
 
-        unless graph[container] # init cluster-container
+        unless graph[container] # cluster-container
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
