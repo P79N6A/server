@@ -1,33 +1,34 @@
 var nodes = {};
-var height = window.innerHeight
+var height = 222;
+var width = window.innerWidth;
 links.forEach(function(link) { // unique nodes from arc-list
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
 			    name:  link.sourceName,
 			    size: 16,
-			    pos: link.sourcePos * (height - 16) + 8,
+			    pos: link.sourcePos * width,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
 			    size: 16,
-			    pos: link.targetPos * (height - 16) + 8,
+			    pos: link.targetPos * width,
 			   });
 });
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
-    .size([333,height])
+    .size([width,height])
     .linkDistance(12)
     .charge(-64)
     .on("tick", tick)
     .start();
 
 var svg = d3.select("body").append("svg")
-    .attr("width", window.innerWidth)
+    .attr("width", width)
     .attr("height", height);
 
 var link = svg.selectAll(".link")
@@ -58,12 +59,12 @@ node.append("rect")
     .attr("ry",4);
 
 function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-	.attr("y1", function(d) { return (d.source.pos || 0); })
-	.attr("x2", function(d) { return d.target.x; })
-	.attr("y2", function(d) { return (d.target.pos || 0); });
+    link.attr("y1", function(d) { return d.source.y; })
+	.attr("x1", function(d) { return (d.source.pos || 0); })
+	.attr("y2", function(d) { return d.target.y; })
+	.attr("x2", function(d) { return (d.target.pos || 0); });
 
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + (d.pos || 0) + ")"; });
+    node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
 }
 
 function click(d) {
