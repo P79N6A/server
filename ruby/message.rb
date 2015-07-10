@@ -2,12 +2,14 @@
 class R
 
   def triplrIRC &f
-    i=-1
+    i=-1 # line index
+
     day = dirname.split('/')[-3..-1].do{|dp|
       dp.join('-') if dp[0].match(/^\d{4}$/)
     }||''
     doc = uri.gsub '#','%23'
     channel = bare
+
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = doc + '#' + (i+=1).to_s
