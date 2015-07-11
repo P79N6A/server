@@ -3,13 +3,16 @@
 class R
 
   def triplrContainer
-    dir = uri.t
+    dir = uri.t # trailing-slash
+
     yield dir, Type, R[Container]
     yield dir, Type, R[Directory]
     yield dir, SIOC+'has_container', parentURI unless path=='/'
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601
+
+    # direct children
     contained = c
     yield dir, Size, contained.size
     if contained.size < 22 # provide some "lookahead" on small contained-containers. GET them directly for full (or paged, summarized) contents
@@ -22,6 +25,7 @@ class R
         end
       }
     end
+
   end
 
   # POSTable container -> contained types

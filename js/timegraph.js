@@ -1,5 +1,5 @@
 var nodes = {};
-var height = 222;
+var height = 200;
 var width = window.innerWidth;
 links.forEach(function(link) { // unique nodes from arc-list
   link.source = nodes[link.source] || (
