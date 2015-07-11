@@ -29,7 +29,7 @@ var force = d3.layout.force()
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", 255);
+    .attr("height", height);
 
 var link = svg.selectAll(".link")
     .data(force.links())
