@@ -59,9 +59,9 @@ node.append("rect")
     .attr("ry",4);
 
 function tick() {
-    link.attr("y1", function(d) { return d.source.y; })
+    link.attr("y1", function(d) { return d.source.y + 4; })
 	.attr("x1", function(d) { return (d.source.pos || 0); })
-	.attr("y2", function(d) { return d.target.y; })
+	.attr("y2", function(d) { return d.target.y + 4; })
 	.attr("x2", function(d) { return (d.target.pos || 0); });
 
     node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
