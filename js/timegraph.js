@@ -46,10 +46,6 @@ var node = svg.selectAll(".node")
     .on("click", click)
     .call(force.drag);
 
-var nodeLen = node[0].length;
-var nodeLast = nodeLen - 1;
-var nodeIdx = 0;
-
 node.append("text")
     .attr('y',10).attr('x',8)
     .style("fill", function(d) { return d.color; })
@@ -95,7 +91,12 @@ function click(d) {
 function mouseover(d) {window.location.hash = d.uri}
 
 document.addEventListener("DOMContentLoaded", function(){
+var nodeLen = node[0].length;
+var nodeLast = nodeLen - 1;
+var nodeIdx = 0;
     document.addEventListener("keydown",function(e){
+
+	// left
 	if(e.keyCode == 37){
 	    if(nodeIdx <= 0) {
 		nodeIdx = nodeLast;
@@ -103,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		nodeIdx = nodeIdx - 1;
 	    };
 	};
+	// right
 	if(e.keyCode == 39){
 	    if(nodeIdx >= nodeLast){
 		nodeIdx = 0;
@@ -111,5 +113,5 @@ document.addEventListener("DOMContentLoaded", function(){
 	    }
 	};
 	var t = node[0][nodeIdx];
-	console.log(t);
+	t.__onclick();
     },false)}, false);
