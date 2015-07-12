@@ -46,6 +46,8 @@ var node = svg.selectAll(".node")
     .on("click", click)
     .call(force.drag);
 
+console.log(node[0])
+
 node.append("text")
     .attr('y',10).attr('x',8)
     .style("fill", function(d) { return d.color; })
@@ -67,7 +69,8 @@ function tick() {
     })
 	.attr("x1", function(d) { return (d.source.pos || 0); })
 	.attr("y2", function(d) {
-	    return d.target.y + 4;
+	    var f = d.target.uri == focus;
+	    return (f ? middle : d.target.y) + 4;
 	})
 	.attr("x2", function(d) { return (d.target.pos || 0); });
 
