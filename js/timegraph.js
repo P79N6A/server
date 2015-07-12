@@ -78,8 +78,9 @@ function tick() {
 function click(d) {
     d.y = middle;
     d.py = middle;
+    cursor.setAttribute('x', d.pos);
     var uri = d.uri
-    if(uri) {
+    if(uri) {	
 	if(document.getElementById(uri)) {
 	    window.location.hash = uri
 	} else {
@@ -113,6 +114,5 @@ document.addEventListener("DOMContentLoaded", function(){
 	    }
 	};
 	var t = node[0][nodeIdx];
-	cursor.setAttribute('x', t.__data__.pos);
 	t.__onclick();
     },false)}, false);
