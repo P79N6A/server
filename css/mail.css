@@ -35,7 +35,7 @@ body {margin: 0}
 .noquote:hover {background-color: #ddd}
 img {max-width: 100%}
 
-svg {position: fixed;top: 0;left: 0;z-index:2;background-color:#333}
+svg {position: fixed;top: 0;left: 0;z-index:2;background-color:#111}
 body {background-color:#000;color:#fff}
 .link {fill: none;stroke-width: .25em; stroke-dasharray: 1,6;stroke: #fff}
 rect {fill: #f8f8f8}
