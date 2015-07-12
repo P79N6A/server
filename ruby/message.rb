@@ -127,8 +127,8 @@ class R
       arc = {source: '/'+d.gsub('-','/'),
              target: '/'+yesterday[0].gsub('-','/'),
              sourceName: d,
-             sourceColor: '#eee',
-             targetColor: '#eee',
+             sourceColor: '#CCC',
+             targetColor: '#CCC',
              sourcePos: (max - m) / range,
              targetPos: (max - yesterday[1]) / range,
             }
@@ -154,7 +154,7 @@ class R
 
     # View
     [H.css('/css/mail',true),
-     {style: "height:200px"},
+     {style: "height:150px"},
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
