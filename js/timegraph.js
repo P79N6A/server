@@ -31,6 +31,8 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
+svg.append('rect').attr('height',height).attr('class','cursor').attr('fill','green').attr('width',4);
+var cursor = svg.select('.cursor')[0];
 
 var link = svg.selectAll(".link")
     .data(force.links())
