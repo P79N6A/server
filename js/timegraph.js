@@ -31,8 +31,9 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-svg.append('rect').attr('height',height).attr('class','cursor').attr('fill','green').attr('width',4);
-var cursor = svg.select('.cursor')[0];
+svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#fff').attr('width',8);
+var cursor = svg.select('.cursor')[0][0];
+
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -75,7 +76,6 @@ function tick() {
 }
 
 function click(d) {
-
     d.y = middle;
     d.py = middle;
     var uri = d.uri
@@ -113,5 +113,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	    }
 	};
 	var t = node[0][nodeIdx];
+	cursor.setAttribute('x', t.__data__.pos);
 	t.__onclick();
     },false)}, false);
