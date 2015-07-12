@@ -7,14 +7,14 @@ links.forEach(function(link) { // unique nodes from arc-list
 			    color: link.sourceColor,
 			    name:  link.sourceName,
 			    size: 16,
-			    pos: link.sourcePos * width,
+			    pos: link.sourcePos * (width - 32) + 16,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
 			    size: 16,
-			    pos: link.targetPos * width,
+			    pos: link.targetPos * (width - 32) + 16,
 			   });
 });
 
@@ -22,8 +22,8 @@ var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
     .size([width,height])
-    .linkDistance(12)
-    .charge(-64)
+    .linkDistance(10)
+    .charge(-32)
     .on("tick", tick)
     .start();
 
