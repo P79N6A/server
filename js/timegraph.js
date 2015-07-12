@@ -61,9 +61,9 @@ node.append("rect")
 
 var focus;
 function tick() {
-//    var focused = d.uri == focus;
     link.attr("y1", function(d) {
-	return d.source.y + 4;
+    var f = d.source.uri == focus;
+	return (f ? middle : d.source.y) + 4;
     })
 	.attr("x1", function(d) { return (d.source.pos || 0); })
 	.attr("y2", function(d) {
@@ -71,7 +71,7 @@ function tick() {
 	})
 	.attr("x2", function(d) { return (d.target.pos || 0); });
 
-    node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
+    node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + ( d.uri == focus ? middle : d.y) + ")"; });
 }
 
 function click(d) {
