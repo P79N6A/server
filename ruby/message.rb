@@ -175,9 +175,13 @@ class R
                     {_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
                   r[SIOC+'has_parent'].do{|ps|
                     ps.justArray.map{|p| # replied-to messages
-                      d[p.uri].do{|r| # target msg
-                        c = r[Creator][0].R.fragment
-                        {_: :a, name: c, href: '#'+p.uri, c: c}}}.intersperse(' ')}, ' ',
+                      d[p.uri].do{|r| # target msg in graph
+                        r[Creator].justArray[0].do{|c|
+                          c = c.R.fragment
+                          {_: :a, name: c, href: '#'+p.uri, c: c}
+                        }
+                      }
+                    }.intersperse(' ')}, ' ',
                   r[SIOC+'reply_to'].do{|c|
                     {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
                   r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
