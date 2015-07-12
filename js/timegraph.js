@@ -24,14 +24,14 @@ var force = d3.layout.force()
     .links(links)
     .size([width,height])
     .linkDistance(8)
-    .charge(-32)
+    .charge(-22)
     .on("tick", tick)
     .start();
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#fff').attr('width',8);
+svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#fff').attr('width',8).attr('x',width);
 var cursor = svg.select('.cursor')[0][0];
 
 
@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function(){
     var nodeLast = nodeLen - 1;
     var nodeIdx = 0;
     document.addEventListener("keydown",function(e){
-
 	// left
 	if(e.keyCode == 37){
 	    if(nodeIdx <= 0) {
