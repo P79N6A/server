@@ -86,4 +86,14 @@ function click(d) {
 //	window.location = uri
     }
 }
+
 function mouseover(d) {window.location.hash = d.uri}
+
+document.addEventListener("DOMContentLoaded", function(){
+    document.addEventListener("keydown",function(e){
+//	console.log(e.keyCode)
+	if(e.keyCode == 37)
+	    document.location.href = document.querySelector('a[rel=next]').href
+	if(e.keyCode == 39)
+	    document.location.href = document.querySelector('a[rel=prev]').href
+    },false)}, false);
