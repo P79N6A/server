@@ -128,7 +128,7 @@ class R
              target: '/'+yesterday[0].gsub('-','/'),
              sourceName: d,
              sourceColor: '#CCC',
-             targetColor: '#CCC',
+             targetColor: '#ccc',
              sourcePos: (max - m) / range,
              targetPos: (max - yesterday[1]) / range,
             }
@@ -145,10 +145,10 @@ class R
           author = t[Creator].justArray[0].do{|c|c.R.fragment}
           arc[:targetColor] = colors[author] ||= randomColor
           s[Mtime].do{|mt|
-            pos = (max - mt[0].to_f) / range
+            pos = (mt[0].to_f - min) / range
             arc[:sourcePos] = pos}
           t[Mtime].do{|mt|
-            pos = (max - mt[0].to_f) / range
+            pos = (mt[0].to_f - min) / range
             arc[:targetPos] = pos}
           arcs.push arc }}}
 
