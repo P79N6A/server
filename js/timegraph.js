@@ -1,6 +1,7 @@
 var nodes = {};
 var height = 150;
 var width = window.innerWidth;
+var middle = height / 2;
 links.forEach(function(link) { // unique nodes from arc-list
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
@@ -58,10 +59,16 @@ node.append("rect")
     .attr("rx",4)
     .attr("ry",4);
 
+var focus;
 function tick() {
-    link.attr("y1", function(d) { return d.source.y + 4; })
+//    var focused = d.uri == focus;
+    link.attr("y1", function(d) {
+	return d.source.y + 4;
+    })
 	.attr("x1", function(d) { return (d.source.pos || 0); })
-	.attr("y2", function(d) { return d.target.y + 4; })
+	.attr("y2", function(d) {
+	    return d.target.y + 4;
+	})
 	.attr("x2", function(d) { return (d.target.pos || 0); });
 
     node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
@@ -69,10 +76,14 @@ function tick() {
 
 function click(d) {
     var uri = d.uri
+    var y = middle;
+    d.y = y;
+    d.py = y;
+    focus = uri;
     if(document.getElementById(uri)) {
 	window.location.hash = uri
     } else {
-	window.location = uri
+//	window.location = uri
     }
 }
 function mouseover(d) {window.location.hash = d.uri}
