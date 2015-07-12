@@ -45,6 +45,7 @@ var node = svg.selectAll(".node")
     .on("mouseover", mouseover)
     .on("click", click)
     .call(force.drag);
+//    .sort(function(e){return e.pos;});
 
 node.append("text")
     .attr('y',10).attr('x',8)
@@ -91,9 +92,9 @@ function click(d) {
 function mouseover(d) {window.location.hash = d.uri}
 
 document.addEventListener("DOMContentLoaded", function(){
-var nodeLen = node[0].length;
-var nodeLast = nodeLen - 1;
-var nodeIdx = 0;
+    var nodeLen = node[0].length;
+    var nodeLast = nodeLen - 1;
+    var nodeIdx = 0;
     document.addEventListener("keydown",function(e){
 
 	// left
