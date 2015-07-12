@@ -151,50 +151,61 @@ class R
             pos = (mt[0].to_f - min) / range
             arc[:targetPos] = pos}
           arcs.push arc }}}
-
+    arcs = arcs.sort_by{|a| a[:sourcePos]}
     # View
     [H.css('/css/mail',true),
      {style: "height:150px"},
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
-     {class: :messages, c: d.resources(e).reverse.map{|r| # each message
+
+     # message
+     {class: :messages, c: d.resources(e).reverse.map{|r|
+
         author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
+
         {class: :mail, author: author, id: r.uri,
-         c: [{class: :header,
-              c: [r[Title].justArray[0].do{|t|
-                    title = t.sub ReExpr, ''
-                    if titles[title] # already shown
-                      nil
-                    else
-                      titles[title] = true
-                      [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
-                    end},
-                  r[Creator].justArray[0].do{|c| {_: :a, class: :author, name: author, href: c.R.dirname+'?set=page', c: author}},
-                  r[To].justArray.map{|o|
-                    {_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
-                  r[SIOC+'has_parent'].do{|ps|
-                    ps.justArray.map{|p| # replied-to messages
-                      d[p.uri].do{|r| # target msg in graph
-                        r[Creator].justArray[0].do{|c|
-                          c = c.R.fragment
-                          {_: :a, name: c, href: '#'+p.uri, c: c}
-                        }
+         c: [
+           # header
+           {class: :header,
+            c: [r[Title].justArray[0].do{|t|
+                  title = t.sub ReExpr, ''
+                  if titles[title] # already shown
+                    nil
+                  else
+                    titles[title] = true
+                    [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
+                  end},
+                r[Creator].justArray[0].do{|c| {_: :a, class: :author, name: author, href: c.R.dirname+'?set=page', c: author}},
+                r[To].justArray.map{|o|
+                  {_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
+                r[SIOC+'has_parent'].do{|ps|
+                  ps.justArray.map{|p| # replied-to messages
+                    d[p.uri].do{|r| # target msg in graph
+                      r[Creator].justArray[0].do{|c|
+                        c = c.R.fragment
+                        {_: :a, name: c, href: '#'+p.uri, c: c}
                       }
-                    }.intersperse(' ')}, ' ',
-                  r[SIOC+'reply_to'].do{|c|
-                    {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
-                  r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
-                  r[SIOC+'has_discussion'].justArray[0].do{|d|
-                    {_: :a, class: :discussion,
-                     href: d.uri + '#' + (r.R.path||''),
-                     c: '≡', title: 'goto thread'} unless e[:thread]}]},
-             r[Content].do{|c|{class: :body, c: c}},
-             r[WikiText].do{|c|
-               {class: :body, c: Render[WikiText][c]}},
-             [DC+'hasFormat', SIOC+'attachment'].map{|p|
-               r[p].justArray.map{|o|
-                 {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}},
+                    }
+                  }.intersperse(' ')}, ' ',
+                r[SIOC+'reply_to'].do{|c|
+                  {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
+                r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
+                r[SIOC+'has_discussion'].justArray[0].do{|d|
+                  {_: :a, class: :discussion,
+                   href: d.uri + '#' + (r.R.path||''),
+                   c: '≡', title: 'goto thread'} unless e[:thread]}]},
+
+           # body
+           r[Content].do{|c|{class: :body, c: c}},
+           r[WikiText].do{|c|
+             {class: :body, c: Render[WikiText][c]}},
+
+           # attachments
+           [DC+'hasFormat', SIOC+'attachment'].map{|p|
+             r[p].justArray.map{|o|
+               {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}},
+
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/timegraph',true)]}
 

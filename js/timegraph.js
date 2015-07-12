@@ -45,7 +45,6 @@ var node = svg.selectAll(".node")
     .on("mouseover", mouseover)
     .on("click", click)
     .call(force.drag);
-//    .sort(function(e){return e.pos;});
 
 node.append("text")
     .attr('y',10).attr('x',8)
