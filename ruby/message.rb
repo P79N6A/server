@@ -129,8 +129,8 @@ class R
              sourceName: d,
              sourceColor: '#CCC',
              targetColor: '#ccc',
-             sourcePos: (max - m) / range,
-             targetPos: (max - yesterday[1]) / range,
+             sourcePos: (m - min) / range,
+             targetPos: (yesterday[1] - min) / range,
             }
       yesterday = [d,m]
       arcs.push arc}
