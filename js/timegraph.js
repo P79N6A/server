@@ -76,15 +76,17 @@ function tick() {
 }
 
 function click(d) {
+
+    d.y = middle;
+    d.py = middle;
     var uri = d.uri
-    var y = middle;
-    d.y = y;
-    d.py = y;
-    focus = uri;
-    if(document.getElementById(uri)) {
-	window.location.hash = uri
-    } else {
-//	window.location = uri
+    if(uri) {
+	focus = uri;
+	if(document.getElementById(uri)) {
+	    window.location.hash = uri
+	} else {
+	    //	window.location = uri
+	}
     }
 }
 
