@@ -155,6 +155,7 @@ class R
     # View
     [H.css('/css/mail',true),
      {style: "height:150px"},
+     {_: :style, id: :highlight},
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},

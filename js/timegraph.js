@@ -75,13 +75,15 @@ function tick() {
     node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
 }
 
+var highlight = document.getElementById('highlight')
 function click(d) {
     d.y = middle;
     d.py = middle;
     cursor.setAttribute('x', d.pos);
     var r = document.getElementById(d.uri)
     if(r){
-//	window.location.hash = d.uri;
+	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#efc;color:#000}";
+	//	window.location.hash = d.uri;
 	var pos = r.offsetTop;
 	document.body.scrollTop = pos;
     }

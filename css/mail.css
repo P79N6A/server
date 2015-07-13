@@ -10,12 +10,12 @@ body {margin: 0;font-family: sans-serif}
 .mail .header a.pencil {color: #ddd}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
-.mail .body {font-family: monospace;background-color:#000;color:#fff;max-width: 120ex;padding-top:.2em}
+.mail .body {font-family: monospace;background-color:#000;color:#fff;max-width: 120ex;padding:.2em}
 .mail .body a {border-radius: .15em}
 .mail a.attached {color:#777}
 
 .mail .q > span {display:none}
-.mail .q[depth="1"] {background-color:#fff;color:#000;    margin-left:-.15em; padding-left:.15em}
+.mail .q[depth="1"] {background-color:#eee;color:#000;    margin-left:-.15em; padding-left:.15em}
 .mail .q[depth="2"] {background-color:#0F1A51;color:#fff; margin-left:-0.8em; padding-left:.15em}
 .mail .q[depth="3"] {background-color:#033684;color:#fff; margin-left:-1.3em}
 .mail .q[depth="4"] {background-color:#3F0F86;color:#fff; margin-left:-2.0em}
