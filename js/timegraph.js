@@ -45,7 +45,7 @@ var node = svg.selectAll(".node")
     .data(force.nodes())
     .enter().append("g")
     .attr("class", "node")
-    .on("mouseover", mouseover)
+    .on("mouseover", click)
     .on("click", click)
     .call(force.drag);
 
@@ -79,17 +79,8 @@ function click(d) {
     d.y = middle;
     d.py = middle;
     cursor.setAttribute('x', d.pos);
-    var uri = d.uri
-    if(uri) {	
-	if(document.getElementById(uri)) {
-	    window.location.hash = uri
-	} else {
-	    //	window.location = uri
-	}
-    }
+    window.location.hash = d.uri
 }
-
-function mouseover(d) {window.location.hash = d.uri}
 
 document.addEventListener("DOMContentLoaded", function(){
     var nodeLen = node[0].length;
