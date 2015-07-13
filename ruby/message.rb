@@ -164,11 +164,12 @@ class R
 
         author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
 
-        {class: :mail, author: author, id: r.uri,
+        {class: :mail, author: author,
          c: [
            # header
            {class: :header,
-            c: [r[Title].justArray[0].do{|t|
+            c: [{_: :a, id: r.uri},
+              r[Title].justArray[0].do{|t|
                   title = t.sub ReExpr, ''
                   if titles[title] # already shown
                     nil

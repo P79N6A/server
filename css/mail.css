@@ -3,6 +3,7 @@ body {margin: 0}
 .mail {clear:both;margin-bottom:.62em}
 
 .mail .header {position:relative}
+.mail .header a[id] {position:absolute;top:-9em;left:0}
 .mail .header a {background-color:#000;color:#fff;font-size:1.125em}
 .mail a {text-decoration:none; font-weight: bold; border-radius: .15em}
 .mail .author {position:absolute;top:.5em;right:100%;margin-right:.2em;padding:.05em .1em .05em .1em}
