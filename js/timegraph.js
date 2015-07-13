@@ -81,8 +81,8 @@ function click(d) {
     cursor.setAttribute('x', d.pos);
     var r = document.getElementById(d.uri)
     if(r){
+//	window.location.hash = d.uri;
 	var pos = r.offsetTop;
-	console.log(pos);
 	document.body.scrollTop = pos;
     }
 }
