@@ -52,14 +52,14 @@ var node = svg.selectAll(".node")
 node.append("rect")
     .style("fill", function(d) { return d.color; })
     .attr("width", function(d) { return d.size; })
-    .attr("x",function(d) { return d.size * -1 + 10; })
+    .attr("x",function(d) { return d.size * -1 + 12.5; })
     .attr("height", 9)
     .attr("ry",4);
 
 node.append("text")
     .attr('y',2).attr('x',-30)
     .attr('transform','rotate(90)')
-    .style("fill", '#ccc')
+    .style("fill", '#e8e8e8')
     .text(function(d) { return d.name; });
 
 function tick() {
