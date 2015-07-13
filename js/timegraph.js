@@ -82,7 +82,7 @@ function click(d) {
     cursor.setAttribute('x', d.pos);
     var r = document.getElementById(d.uri)
     if(r){
-	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#efc;color:#000}";
+	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#888;color:#000}";
 	//	window.location.hash = d.uri;
 	var pos = r.offsetTop;
 	document.body.scrollTop = pos;
