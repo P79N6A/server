@@ -7,6 +7,7 @@ body {margin: 0;font-family: sans-serif}
 .mail .header a[id] {position:absolute;top:-9em;left:0}
 .mail .header a {background-color:#000;color:#fff;font-size:1.125em}
 .mail .header a.date {white-space: nowrap;font-size:.8em}
+.mail .header a.pencil {color: #ddd}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
 .mail .body {font-family: monospace;background-color:#000;color:#fff;max-width: 120ex;padding-top:.2em}
