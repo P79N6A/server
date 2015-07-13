@@ -161,43 +161,36 @@ class R
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
 
      # message
-     {class: :messages, c: d.resources(e).reverse.map{|r|
-
-        author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
-
-        [{class: :mail, author: author,
-         c: [# subject
-           r[Title].justArray[0].do{|t|
-             title = t.sub ReExpr, ''
-             if titles[title] # already shown
-               nil
-             else
-               titles[title] = true
-               [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
-             end},
-
+     {_: :table, class: :messages, c: d.resources(e).reverse.map{|r|
+        {_: :tr, class: :mail,
+          c: [
            # header
-           {class: :header,
+           {_: :td, class: :header,
             c: [{_: :a, id: r.uri},
                 r[Creator].justArray[0].do{|c|
-                  ['<br>',
-                   {_: :b, c: :from}, '<br>',
-                   {_: :a, class: :from, name: author, href: c.R.dirname+'?set=page', c: author},'<br>']},
-                '<br>',
-                {_: :b, c: :to},'<br>',
+                  author = c.R.fragment || 'anonymous'
+                  {class: :from, c: [{_: :b, c: :from}, '<br>',
+                   {_: :a,
+                    name: author,
+                    href: c.R.dirname+'?set=page',
+                    c: author}]}},
 
-                r[To].justArray.map{|o|
-                  [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
-
-                r[SIOC+'has_parent'].do{|ps|
-                  ps.justArray.map{|p| # replied-to messages
-                    d[p.uri].do{|r| # target msg in graph
-                      r[Creator].justArray[0].do{|c|
-                        c = c.R.fragment
-                        [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                      }
-                    }
-                  }},
+                {class: :to, c: [
+                   {_: :b, c: :to},'<br>',
+                   r[To].justArray.map{|o|
+                     [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
+                   # inferred recipients
+                   r[SIOC+'has_parent'].do{|ps|
+                     ps.justArray.map{|p| # replied-to messages
+                       d[p.uri].do{|r| # target msg in graph
+                         r[Creator].justArray[0].do{|c|
+                           c = c.R.fragment
+                           [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
+                         }
+                       }
+                     }},
+                   
+                 ]},
 
                 r[Date].do{|d|
                   ['<br>',
@@ -209,20 +202,32 @@ class R
                 r[SIOC+'has_discussion'].justArray[0].do{|d|
                   {_: :a, class: :discussion,
                    href: d.uri + '#' + (r.R.path||''),
-                   c: '≡', title: 'goto thread'} unless e[:thread]}]},
+                   c: '≡', title: 'goto thread'} unless e[:thread]}]}, "\n",
 
            # body
-           r[Content].do{|c|{class: :body, c: c}},
-           r[WikiText].do{|c|
-             {class: :body, c: Render[WikiText][c]}},
+           {_: :td, class: :body,
+            c: [
+              # subject
+              r[Title].justArray[0].do{|t|
+                title = t.sub ReExpr, ''
+                if titles[title] # already shown
+                  nil
+                else
+                  titles[title] = true
+                  [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
+                end},
+              
+              r[Content].do{|c| {class: :body, c: c}},
+              r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
+              
+              # attached
+              [DC+'hasFormat', SIOC+'attachment'].map{|p|
+                r[p].justArray.map{|o|
+                  {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
+              
+            ]},
 
-           # attachments
-           [DC+'hasFormat', SIOC+'attachment'].map{|p|
-             r[p].justArray.map{|o|
-               {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]},
-         '<hr>'
-        ]
-        }
+          ]}}
       },
 
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
