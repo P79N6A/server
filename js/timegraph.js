@@ -45,8 +45,8 @@ var node = svg.selectAll(".node")
     .data(force.nodes())
     .enter().append("g")
     .attr("class", "node")
-    .on("mouseover", click)
-    .on("click", click)
+    .on("mouseover", moveCursor)
+    .on("click", moveCursor)
     .call(force.drag);
 
 node.append("rect")
@@ -76,16 +76,15 @@ function tick() {
 }
 
 var highlight = document.getElementById('highlight')
-function click(d) {
+function moveCursor(d) {
     d.y = middle;
     d.py = middle;
     cursor.setAttribute('x', d.pos);
     var r = document.getElementById(d.uri)
     if(r){
-	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#ddd;color:#000}";
+	document.body.scrollTop = r.offsetTop;
+	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#fff;color:#000}";
 	//	window.location.hash = d.uri;
-	var pos = r.offsetTop;
-	document.body.scrollTop = pos;
     }
 }
 
