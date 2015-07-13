@@ -8,14 +8,14 @@ links.forEach(function(link) { // unique nodes from arc-list
 			    color: link.sourceColor,
 			    name:  link.sourceName,
 			    size: 16,
-			    pos: link.sourcePos * (width - 32) + 16,
+			    pos: link.sourcePos * (width - 42) + 21,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
 			    size: 16,
-			    pos: link.targetPos * (width - 32) + 16,
+			    pos: link.targetPos * (width - 42) + 21,
 			   });
 });
 
@@ -83,7 +83,7 @@ function moveCursor(d) {
     var r = document.getElementById(d.uri)
     if(r){
 	document.body.scrollTop = r.offsetTop;
-	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#fff;color:#000}";
+	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#f8f8f8;color:#000}";
 	//	window.location.hash = d.uri;
     }
 }
