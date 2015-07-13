@@ -31,7 +31,7 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#fff').attr('width',8).attr('x',width);
+svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#ccc').attr('width',10).attr('x',width);
 var cursor = svg.select('.cursor')[0][0];
 
 
@@ -49,11 +49,6 @@ var node = svg.selectAll(".node")
     .on("click", click)
     .call(force.drag);
 
-node.append("text")
-    .attr('y',10).attr('x',8)
-    .style("fill", function(d) { return d.color; })
-    .text(function(d) { return d.name; });
-
 node.append("rect")
     .style("fill", function(d) { return d.color; })
     .attr("width", function(d) { return d.size; })
@@ -61,6 +56,12 @@ node.append("rect")
     .attr("height", 9)
     .attr("rx",4)
     .attr("ry",4);
+
+node.append("text")
+    .attr('y',2).attr('x',-25)
+    .attr('transform','rotate(90)')
+    .style("fill", '#ccc')
+    .text(function(d) { return d.name; });
 
 function tick() {
     link.attr("y1", function(d) {
