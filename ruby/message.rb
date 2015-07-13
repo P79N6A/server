@@ -1,4 +1,5 @@
 # coding: utf-8
+watch __FILE__
 class R
 
   def triplrIRC &f
@@ -164,34 +165,47 @@ class R
 
         author = r[Creator].justArray[0].do{|c| c.R.fragment } || 'anonymous'
 
-        {class: :mail, author: author,
-         c: [
+        [{class: :mail, author: author,
+         c: [# subject
+           r[Title].justArray[0].do{|t|
+             title = t.sub ReExpr, ''
+             if titles[title] # already shown
+               nil
+             else
+               titles[title] = true
+               [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
+             end},
+
            # header
            {class: :header,
             c: [{_: :a, id: r.uri},
-              r[Title].justArray[0].do{|t|
-                  title = t.sub ReExpr, ''
-                  if titles[title] # already shown
-                    nil
-                  else
-                    titles[title] = true
-                    [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
-                  end},
-                r[Creator].justArray[0].do{|c| {_: :a, class: :author, name: author, href: c.R.dirname+'?set=page', c: author}},
+                r[Creator].justArray[0].do{|c|
+                  ['<br>',
+                   {_: :b, c: :from}, '<br>',
+                   {_: :a, class: :from, name: author, href: c.R.dirname+'?set=page', c: author},'<br>']},
+                '<br>',
+                {_: :b, c: :to},'<br>',
+
                 r[To].justArray.map{|o|
-                  {_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment} unless colors[o.R.fragment]}.intersperse(' '), ' ',
+                  [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
+
                 r[SIOC+'has_parent'].do{|ps|
                   ps.justArray.map{|p| # replied-to messages
                     d[p.uri].do{|r| # target msg in graph
                       r[Creator].justArray[0].do{|c|
                         c = c.R.fragment
-                        {_: :a, name: c, href: '#'+p.uri, c: c}
+                        [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
                       }
                     }
-                  }.intersperse(' ')}, ' ',
+                  }},
+
+                r[Date].do{|d|
+                  ['<br>',
+                   {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},'<br>']},
+
                 r[SIOC+'reply_to'].do{|c|
-                  {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
-                r[Date].do{|d| {_: :a, class: :ts, href: r.uri, c: d[0].sub('T',' ')}},
+                  [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},'<br>']},
+
                 r[SIOC+'has_discussion'].justArray[0].do{|d|
                   {_: :a, class: :discussion,
                    href: d.uri + '#' + (r.R.path||''),
@@ -205,7 +219,11 @@ class R
            # attachments
            [DC+'hasFormat', SIOC+'attachment'].map{|p|
              r[p].justArray.map{|o|
-               {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}},
+               {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]},
+         '<hr>'
+        ]
+        }
+      },
 
      H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
      H.js('/js/timegraph',true)]}

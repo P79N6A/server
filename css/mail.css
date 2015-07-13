@@ -1,16 +1,16 @@
 body {margin: 0}
 .messages {float: left;margin-left:21.22%;font-family: sans-serif;}
-.mail {clear:both;margin-bottom:.62em}
+.mail {clear:both;margin-bottom:.62em;position:relative}
+.mail > a.subject {ackground-color:#fff;color:#000;font-size:1.3em;padding:.18em}
 
-.mail .header {position:relative}
+.mail .header {position:absolute;right:100%}
+.mail .header b {color: #aaa}
 .mail .header a[id] {position:absolute;top:-9em;left:0}
 .mail .header a {background-color:#000;color:#fff;font-size:1.125em}
-.mail a {text-decoration:none; font-weight: bold; border-radius: .15em}
-.mail .author {position:absolute;top:.5em;right:100%;margin-right:.2em;padding:.05em .1em .05em .1em}
-.mail a.to {padding:0 .2em 0 .2em}
-.mail .ts, .mail .discussion, .noquote {float: right}
-.mail .discussion {margin-left:1em}
-.mail .header a.subject {background-color:#fff;color:#000;font-size:1.3em;padding:.18em}
+.mail .header a.date {white-space: nowrap;margin-left: -1em;font-size:.8em}
+.mail a {text-decoration:none; font-weight: bold}
+.mail .body {padding-left:.5em}
+.mail .body a {border-radius: .15em}
 .mail a.attached {color:#777}
 
 .mail .body {font-family: monospace}
