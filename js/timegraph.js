@@ -79,7 +79,7 @@ function click(d) {
     d.y = middle;
     d.py = middle;
     cursor.setAttribute('x', d.pos);
-    window.location.hash = d.uri
+    window.location.hash = d.uri;
 }
 
 document.addEventListener("DOMContentLoaded", function(){

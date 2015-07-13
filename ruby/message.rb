@@ -93,7 +93,6 @@ class R
 
   ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
-    titles = {}
     q = e.q
     quotes = if q['quotes'] == "yes"
                true
@@ -162,12 +161,11 @@ class R
 
      # message
      {_: :table, class: :messages, c: d.resources(e).reverse.map{|r|
-        {_: :tr, class: :mail,
+        {_: :tr, class: :mail, id: r.uri,
           c: [
            # header
            {_: :td, class: :header,
-            c: [{_: :a, id: r.uri},
-                r[Creator].justArray[0].do{|c|
+            c: [r[Creator].justArray[0].do{|c|
                   author = c.R.fragment || 'anonymous'
                   {class: :from, c: [{_: :b, c: :from}, '<br>',
                    {_: :a,
@@ -186,11 +184,7 @@ class R
                          r[Creator].justArray[0].do{|c|
                            c = c.R.fragment
                            [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                         }
-                       }
-                     }},
-                   
-                 ]},
+                         }}}}]},
 
                 r[Date].do{|d|
                   ['<br>',
@@ -209,13 +203,9 @@ class R
             c: [
               # subject
               r[Title].justArray[0].do{|t|
-                title = t.sub ReExpr, ''
-                if titles[title] # already shown
-                  nil
-                else
-                  titles[title] = true
-                  [{_: :a, class: :subject, href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}||r.uri, c: title},"<br/>"]
-                end},
+                [{_: :a, class: :subject,
+                  href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri} || r.uri,
+                  c: t},"<br/>"]},
               
               r[Content].do{|c| {class: :body, c: c}},
               r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
