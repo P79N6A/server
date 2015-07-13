@@ -1,5 +1,5 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 class R
 
   def triplrIRC &f
@@ -205,7 +205,7 @@ class R
               # subject
               r[Title].justArray[0].do{|t|
                 [{_: :a, class: :subject,
-                  href: r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri} || r.uri,
+                  href: r.uri,
                   c: t},"<br/>"]},
               
               r[Content].do{|c| {class: :body, c: c}},
