@@ -57,7 +57,7 @@ node.append("rect")
     .attr("ry",4);
 
 node.append("text")
-    .attr('y',2).attr('x',-30)
+    .attr('x',-30)
     .attr('transform','rotate(90)')
     .style("fill", '#e8e8e8')
     .text(function(d) { return d.name; });
