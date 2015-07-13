@@ -79,7 +79,12 @@ function click(d) {
     d.y = middle;
     d.py = middle;
     cursor.setAttribute('x', d.pos);
-    window.location.hash = d.uri;
+    var r = document.getElementById(d.uri)
+    if(r){
+	var pos = r.offsetTop;
+	console.log(pos);
+	document.body.scrollTop = pos;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function(){
