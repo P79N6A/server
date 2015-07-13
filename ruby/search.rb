@@ -311,11 +311,10 @@ div.referers {
 text-align:center;
 }
 a.referer {
-font-size: 2em;
+font-size: 1.2em;
 margin:.16em;
 color:#fff;
 background-color:#{e[:color]};
-padding:.16em;
 border-radius:.1em;
 text-decoration: none;
 }
