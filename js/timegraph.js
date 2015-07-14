@@ -94,6 +94,8 @@ function moveCursor(d) {
 	window.location.hash = d.uri;
 	document.body.scrollTop = r.offsetTop;
     }
+    console.log("hmm",d3.event);
+    return false;
 }
 
 // index messages on URI
@@ -135,6 +137,8 @@ document.addEventListener("keydown",function(e){
 	    
 	};
 	node[0][nodeIdx].__onclick();
+	e.preventDefault();
+	return false;
     };
 },false)
 
