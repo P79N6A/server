@@ -94,22 +94,28 @@ document.addEventListener("DOMContentLoaded", function(){
     var nodeLast = nodeLen - 1;
     var nodeIdx = 0;
     document.addEventListener("keydown",function(e){
-	// left
-	if(e.keyCode == 37){
-	    if(nodeIdx <= 0) {
-		nodeIdx = nodeLast;
-	    } else {
-		nodeIdx = nodeIdx - 1;
+
+	// arrow-key navigation
+	if((e.keyCode==37)||(e.keyCode==39)) {
+
+	    // left
+	    if(e.keyCode == 37){
+		if(nodeIdx <= 0) {
+		    nodeIdx = nodeLast;
+		} else {
+		    nodeIdx = nodeIdx - 1;
+		};
 	    };
+	    // right
+	    if(e.keyCode == 39){
+		if(nodeIdx >= nodeLast){
+		    nodeIdx = 0;
+		} else {
+		    nodeIdx = nodeIdx + 1;
+		}
+		
+	    };
+	    force.resume();
+	    node[0][nodeIdx].__onclick();
 	};
-	// right
-	if(e.keyCode == 39){
-	    if(nodeIdx >= nodeLast){
-		nodeIdx = 0;
-	    } else {
-		nodeIdx = nodeIdx + 1;
-	    }
-	};
-	force.resume();
-	node[0][nodeIdx].__onclick();
     },false)}, false);
