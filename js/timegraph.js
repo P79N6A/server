@@ -44,7 +44,6 @@ var node = svg.selectAll(".node")
     .data(force.nodes())
     .enter().append("g")
     .attr("class", "node")
-    .on("mouseover", moveCursor)
     .on("click", moveCursor)
     .call(force.drag);
 
@@ -110,6 +109,7 @@ function focusMessage(e) {
 	nodeIdx = message[1];
 	moveCursor(message[0]);
     };
+    return null;
 }
 
 document.addEventListener("keydown",function(e){
