@@ -124,17 +124,21 @@ document.addEventListener("keydown",function(e){
 },false)
 
 function findNode(event) {
-    var closest = null;
+    var found = null;
+    var foundIdx = null;
     var distance = width;
     node.each(function(item,index){
 	var d = Math.abs(event.clientX - item.pos);
 	if(d <= distance){
 	    distance = d;
-	    closest = item;
-	    nodeIdx = index;
+	    found = item;
+	    foundIdx = index;
 	}
     });
-    moveCursor(closest);
+    if(foundIdx != nodeIdx){
+	nodeIdx = foundIdx;
+	moveCursor(found);
+    }
     return false;
 }
 
