@@ -97,10 +97,18 @@ function moveCursor(d) {
     }
 }
 
+// index messages on URI
+var messages = {}
+node.each(function(item,index){
+    messages[item.uri] = [item,index]
+});
+
 function focusMessage(e) {
     if(e.target.className=='header'){
 	var id = e.target.parentNode.getAttribute("id");
-	console.log(id);
+	message = messages[id];
+	nodeIdx = message[1];
+	moveCursor(message[0]);
     };
 }
 
