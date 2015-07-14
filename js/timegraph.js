@@ -25,14 +25,14 @@ var force = d3.layout.force()
     .links(arcs)
     .size([width,height])
     .linkDistance(8)
-    .charge(-18)
+    .charge(-21)
     .on("tick", tick)
     .start();
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#ccc').attr('width',10).attr('x',width);
+svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#eee').attr('width',10).attr('x',width);
 var cursor = svg.select('.cursor')[0][0];
 
 
@@ -110,6 +110,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		nodeIdx = nodeIdx + 1;
 	    }
 	};
-//	force.start
+	force.resume();
 	node[0][nodeIdx].__onclick();
     },false)}, false);
