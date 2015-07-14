@@ -61,6 +61,9 @@ node.append("text")
     .style("fill", '#e8e8e8')
     .text(function(d) { return d.name; });
 
+var nodeLen = node[0].length;
+var nodeLast = nodeLen - 1;
+
 function tick() {
     link.attr("y1", function(d) {
 	return d.source.y + 4;
@@ -79,9 +82,6 @@ svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#e
 
 var cursor = svg.select('.cursor')[0][0];
 var cursorCSS = document.getElementById('highlight')
-
-var nodeLen = node[0].length;
-var nodeLast = nodeLen - 1;
 var nodeIdx = 0;
 
 function moveCursor(d) {
@@ -99,10 +99,10 @@ function moveCursor(d) {
 
 function focusMessage(e) {
     if(e.target.className=='header'){
-	console.log('header click')
-    }
+	var id = e.target.parentNode.getAttribute("id");
+	console.log(id);
+    };
 }
-document.getElementById("messages").addEventListener("click",focusMessage);
 
 document.addEventListener("keydown",function(e){
 
@@ -152,3 +152,4 @@ function findNode(event) {
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("click",findNode);
+document.getElementById("messages").addEventListener("click",focusMessage);
