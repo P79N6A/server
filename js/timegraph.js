@@ -76,16 +76,16 @@ function tick() {
     node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
 }
 
-var highlight = document.getElementById('highlight')
+var cursorCSS = document.getElementById('highlight')
 function moveCursor(d) {
     d.y = middle;
     d.py = middle;
     cursor.setAttribute('x', d.pos);
     var r = document.getElementById(d.uri)
     if(r){
+	cursorCSS.textContent = "tr[id='"+d.uri + "'] > td {background-color:#f8f8f8;color:#000}";
+	window.location.hash = d.uri;
 	document.body.scrollTop = r.offsetTop;
-	highlight.textContent = "tr[id='"+d.uri + "'] > td {background-color:#f8f8f8;color:#000}";
-	//	window.location.hash = d.uri;
     }
 }
 
@@ -110,6 +110,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		nodeIdx = nodeIdx + 1;
 	    }
 	};
-	var t = node[0][nodeIdx];
-	t.__onclick();
+//	force.start
+	node[0][nodeIdx].__onclick();
     },false)}, false);
