@@ -83,7 +83,6 @@ var cursorCSS = document.getElementById('highlight')
 var nodeIdx = 0;
 
 function moveCursor(d) {
-    console.log("moveCursor",d);
     force.resume();
     d.y = middle;
     d.py = middle;
@@ -103,7 +102,7 @@ node.each(function(item,index){
     messages[item.uri] = [item,index]
 });
 
-function focusMessage(e) {
+function clickToFocus(e) {
     if(e.target.className=='header'){
 	var id = e.target.parentNode.getAttribute("id");
 	message = messages[id];
@@ -135,12 +134,13 @@ document.addEventListener("keydown",function(e){
 	    }
 	    
 	};
-	moveCursor(node[0][nodeIdx].__data__);
 	e.preventDefault();
+	moveCursor(node[0][nodeIdx].__data__);
 	return false;
     };
 },false)
 
+var prevPos = null;
 function findNode(event) {
     var found = null;
     var foundIdx = null;
@@ -153,9 +153,10 @@ function findNode(event) {
 	    foundIdx = index;
 	}
     });
-    if(foundIdx != nodeIdx){
+    if((foundIdx != nodeIdx) && (found.pos != prevPos)){
 	nodeIdx = foundIdx;
 	moveCursor(found);
+	prevPos = found.pos;
     }
     return false;
 }
@@ -163,4 +164,4 @@ function findNode(event) {
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("click",findNode);
-document.getElementById("messages").addEventListener("click",focusMessage);
+document.getElementById("messages").addEventListener("click",clickToFocus);
