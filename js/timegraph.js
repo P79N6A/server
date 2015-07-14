@@ -131,9 +131,11 @@ function findNode(event) {
 	if(d <= distance){
 	    distance = d;
 	    closest = item;
+	    nodeIdx = index;
 	}
     });
     moveCursor(closest);
+    return false;
 }
 
 var timegraph = document.getElementById('timegraph');
