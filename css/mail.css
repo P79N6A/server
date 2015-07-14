@@ -9,6 +9,7 @@ body {margin: 0;font-family: sans-serif}
 .mail .header div.to {margin-bottom:.4em}
 .mail .header a.date {white-space: nowrap;font-size:.8em}
 .mail .header a.pencil {color: #ddd}
+.mail .header a.discussion {font-size:2em}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
 .mail .body {font-family: monospace;background-color:#000;color:#fff;max-width: 120ex;padding:.2em}
