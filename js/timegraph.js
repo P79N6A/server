@@ -25,7 +25,7 @@ var force = d3.layout.force()
     .links(arcs)
     .size([width,height])
     .linkDistance(8)
-    .charge(-21)
+    .charge(-18)
     .on("tick", tick)
     .start();
 
@@ -78,6 +78,7 @@ function tick() {
 
 var cursorCSS = document.getElementById('highlight')
 function moveCursor(d) {
+    force.resume();
     d.y = middle;
     d.py = middle;
     cursor.setAttribute('x', d.pos);
@@ -115,7 +116,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		}
 		
 	    };
-	    force.resume();
 	    node[0][nodeIdx].__onclick();
 	};
     },false)}, false);
