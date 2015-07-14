@@ -32,7 +32,6 @@ body {font-family: sans-serif}
 body > a.user {color:#00ff0d}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 .rdf {float:right;background-color:#fff;padding: .25em .35em .25em .3em;border-radius:1.2em;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
-a {color: #555}
 td.key {text-align:right}
 td.key a {font-weight: bold; text-decoration:none}
 td.key img {height: 1.4em}

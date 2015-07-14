@@ -1,7 +1,6 @@
 body {margin: 0;font-family: sans-serif}
 
-.messages {margin: auto}
-
+.messages {margin: auto; border-spacing:0}
 .mail .header {max-width:11.2em;overflow:hidden}
 .mail .header b {color: #aaa}
 .mail .header a[id] {position:absolute;top:-9em;left:0}
@@ -12,8 +11,7 @@ body {margin: 0;font-family: sans-serif}
 .mail .header a.discussion {font-size:2em}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
-.mail .body {font-family: monospace;background-color:#000;color:#fff;max-width: 120ex;padding:.2em}
-.mail .body a {border-radius: .15em}
+.mail .body {font-family: monospace; max-width: 120ex}
 .mail a.attached {color:#777}
 
 .mail .q > span {display:none}
