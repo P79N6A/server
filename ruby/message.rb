@@ -178,7 +178,7 @@ class R
                    {_: :b, c: :to},'<br>',
                    r[To].justArray.map{|o|
                      [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
-                   # inferred recipients
+                   # author of reply-of target
                    r[SIOC+'has_parent'].do{|ps|
                      ps.justArray.map{|p| # replied-to messages
                        d[p.uri].do{|r| # target msg in graph
@@ -188,8 +188,7 @@ class R
                          }}}}]},
 
                 r[Date].do{|d|
-                  ['<br>',
-                   {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},'<br>']},
+                  [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},'<br>']},
 
                 r[SIOC+'reply_to'].do{|c|
                   [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},'<br>']},
@@ -197,7 +196,7 @@ class R
                 r[SIOC+'has_discussion'].justArray[0].do{|d|
                   {_: :a, class: :discussion,
                    href: d.uri + '#' + (r.R.path||''),
-                   c: '≡', title: 'goto thread'} unless e[:thread]}]}, "\n",
+                   c: '≡', title: 'show in thread'} unless e[:thread]}]}, "\n",
 
            # body
            {_: :td, class: :body,

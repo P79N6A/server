@@ -2,10 +2,11 @@ body {margin: 0;font-family: sans-serif}
 
 .messages {margin: auto}
 
-.mail .header {max-width:10.8em}
+.mail .header {max-width:11.2em;overflow:hidden}
 .mail .header b {color: #aaa}
 .mail .header a[id] {position:absolute;top:-9em;left:0}
 .mail .header a {background-color:#000;color:#fff}
+.mail .header div.to {margin-bottom:.4em}
 .mail .header a.date {white-space: nowrap;font-size:.8em}
 .mail .header a.pencil {color: #ddd}
 .mail a {text-decoration:none; font-weight: bold}
