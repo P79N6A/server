@@ -32,12 +32,8 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .on("click", findNode)
     .on("mouseover", findNode);
-
-// init cursor
-svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#eee').attr('width',10).attr('x',width);
-var cursor = svg.select('.cursor')[0][0];
-
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -79,6 +75,10 @@ function tick() {
     node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
 }
 
+// cursor
+svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#eee').attr('width',10).attr('x',width);
+
+var cursor = svg.select('.cursor')[0][0];
 var cursorCSS = document.getElementById('highlight')
 
 function moveCursor(d) {
@@ -94,35 +94,36 @@ function moveCursor(d) {
     }
 }
 
-function findNode(d) {
-    console.log('fn')
-}
-document.addEventListener("DOMContentLoaded", function(){
-    var nodeLen = node[0].length;
-    var nodeLast = nodeLen - 1;
-    var nodeIdx = 0;
-    document.addEventListener("keydown",function(e){
+var nodeLen = node[0].length;
+var nodeLast = nodeLen - 1;
+var nodeIdx = 0;
 
-	// arrow-key navigation
-	if((e.keyCode==37)||(e.keyCode==39)) {
+document.addEventListener("keydown",function(e){
 
-	    // left
-	    if(e.keyCode == 37){
-		if(nodeIdx <= 0) {
-		    nodeIdx = nodeLast;
-		} else {
-		    nodeIdx = nodeIdx - 1;
-		};
+    // arrow-key navigation
+    if((e.keyCode==37)||(e.keyCode==39)) {
+
+	// left
+	if(e.keyCode == 37){
+	    if(nodeIdx <= 0) {
+		nodeIdx = nodeLast;
+	    } else {
+		nodeIdx = nodeIdx - 1;
 	    };
-	    // right
-	    if(e.keyCode == 39){
-		if(nodeIdx >= nodeLast){
-		    nodeIdx = 0;
-		} else {
-		    nodeIdx = nodeIdx + 1;
-		}
-		
-	    };
-	    node[0][nodeIdx].__onclick();
 	};
-    },false)}, false);
+	// right
+	if(e.keyCode == 39){
+	    if(nodeIdx >= nodeLast){
+		nodeIdx = 0;
+	    } else {
+		nodeIdx = nodeIdx + 1;
+	    }
+	    
+	};
+	node[0][nodeIdx].__onclick();
+    };
+},false)
+
+function findNode(d) {
+    console.log("sdf")
+}
