@@ -123,12 +123,17 @@ document.addEventListener("keydown",function(e){
     };
 },false)
 
-function findNode(d) {
-//    var close = nil
-    node.each(function(a,b){
-	console.log('a',a)
-	console.log('b',b)
+function findNode(event) {
+    var closest = null;
+    var distance = width;
+    node.each(function(item,index){
+	var d = Math.abs(event.clientX - item.pos);
+	if(d <= distance){
+	    distance = d;
+	    closest = item;
+	}
     });
+    moveCursor(closest);
 }
 
 var timegraph = document.getElementById('timegraph');
