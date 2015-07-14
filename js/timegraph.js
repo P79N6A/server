@@ -2,7 +2,8 @@ var nodes = {};
 var height = 150;
 var width = window.innerWidth;
 var middle = height / 2;
-links.forEach(function(link) { // unique nodes from arc-list
+
+arcs.forEach(function(link) { // unique nodes from arc-list
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
@@ -21,7 +22,7 @@ links.forEach(function(link) { // unique nodes from arc-list
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
-    .links(links)
+    .links(arcs)
     .size([width,height])
     .linkDistance(8)
     .charge(-18)

@@ -189,7 +189,6 @@ class R
     group = (e.q['group']||To).expand
     size = g.keys.size
     threads = {}
-    authors = {}
     clusters = []
     weight = {}
 

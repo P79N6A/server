@@ -152,9 +152,11 @@ class R
             arc[:targetPos] = pos}
           arcs.push arc }}}
     arcs = arcs.sort_by{|a| a[:sourcePos]}
-    # View
+    timegraph = arcs.size > 1
+
+    # HTML view
     [H.css('/css/mail',true),
-     {style: "height:150px"},
+     ({style: "height:150px"} if timegraph),
      {_: :style, id: :highlight},
      {_: :style,
       c: colors.map{|name,c|
@@ -220,7 +222,11 @@ class R
           ]}}
       },
 
-     H.js('/js/d3.v3.min'), {_: :script, c: "var links = #{arcs.to_json};"},
-     H.js('/js/timegraph',true)]}
+     (if timegraph
+      [H.js('/js/d3.v3.min'),
+       {_: :script, c: "var arcs = #{arcs.to_json};"},
+       H.js('/js/timegraph',true)]
+      end),
+    ]}
 
 end
