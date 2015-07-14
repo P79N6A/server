@@ -80,6 +80,10 @@ svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#e
 var cursor = svg.select('.cursor')[0][0];
 var cursorCSS = document.getElementById('highlight')
 
+var nodeLen = node[0].length;
+var nodeLast = nodeLen - 1;
+var nodeIdx = 0;
+
 function moveCursor(d) {
     force.resume();
     d.y = middle;
@@ -93,9 +97,12 @@ function moveCursor(d) {
     }
 }
 
-var nodeLen = node[0].length;
-var nodeLast = nodeLen - 1;
-var nodeIdx = 0;
+function focusMessage(e) {
+    if(e.target.className=='header'){
+	console.log('header click')
+    }
+}
+document.getElementById("messages").addEventListener("click",focusMessage);
 
 document.addEventListener("keydown",function(e){
 

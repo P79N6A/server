@@ -163,7 +163,7 @@ class R
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
 
      # message
-     {_: :table, class: :messages, c: d.resources(e).reverse.map{|r|
+     {_: :table, class: :messages, id: :messages, c: d.resources(e).reverse.map{|r|
         {_: :tr, class: :mail, id: r.uri,
           c: [
            # header
