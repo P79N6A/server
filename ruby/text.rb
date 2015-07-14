@@ -14,7 +14,7 @@ class String
         "<img src='#{u}'/>"           # inline image
        else
          yield(R::DC+'link',u.R) if b # emit link tuple
-         u                            # text
+         u.sub(/^https?.../,'')       # text
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(images,&b)) # process post-match tail
   end
