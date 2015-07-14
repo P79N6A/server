@@ -30,10 +30,9 @@ var force = d3.layout.force()
     .start();
 
 var svg = d3.select("body").append("svg")
+    .attr("id","timegraph")
     .attr("width", width)
     .attr("height", height)
-    .on("click", findNode)
-    .on("mouseover", findNode);
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -125,5 +124,14 @@ document.addEventListener("keydown",function(e){
 },false)
 
 function findNode(d) {
-    console.log("sdf")
+//    var close = nil
+    node.each(function(a,b){
+	console.log('a',a)
+	console.log('b',b)
+    });
 }
+
+var timegraph = document.getElementById('timegraph');
+timegraph.addEventListener("mouseover",findNode);
+timegraph.addEventListener("mouseover",findNode);
+
