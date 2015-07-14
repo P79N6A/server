@@ -31,7 +31,10 @@ var force = d3.layout.force()
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .on("mouseover", findNode);
+
+// init cursor
 svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#eee').attr('width',10).attr('x',width);
 var cursor = svg.select('.cursor')[0][0];
 
@@ -77,6 +80,7 @@ function tick() {
 }
 
 var cursorCSS = document.getElementById('highlight')
+
 function moveCursor(d) {
     force.resume();
     d.y = middle;
@@ -90,6 +94,9 @@ function moveCursor(d) {
     }
 }
 
+function findNode(d) {
+    console.log('fn')
+}
 document.addEventListener("DOMContentLoaded", function(){
     var nodeLen = node[0].length;
     var nodeLast = nodeLen - 1;
