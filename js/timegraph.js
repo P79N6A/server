@@ -44,7 +44,6 @@ var node = svg.selectAll(".node")
     .data(force.nodes())
     .enter().append("g")
     .attr("class", "node")
-    .on("click", moveCursor)
     .call(force.drag);
 
 node.append("rect")
@@ -84,6 +83,7 @@ var cursorCSS = document.getElementById('highlight')
 var nodeIdx = 0;
 
 function moveCursor(d) {
+    console.log("moveCursor",d);
     force.resume();
     d.y = middle;
     d.py = middle;
@@ -94,11 +94,10 @@ function moveCursor(d) {
 	window.location.hash = d.uri;
 	document.body.scrollTop = r.offsetTop;
     }
-    console.log("hmm",d3.event);
     return false;
 }
 
-// index messages on URI
+// messages keyed on URI
 var messages = {}
 node.each(function(item,index){
     messages[item.uri] = [item,index]
@@ -136,7 +135,7 @@ document.addEventListener("keydown",function(e){
 	    }
 	    
 	};
-	node[0][nodeIdx].__onclick();
+	moveCursor(node[0][nodeIdx].__data__);
 	e.preventDefault();
 	return false;
     };
