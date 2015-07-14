@@ -124,7 +124,6 @@ document.addEventListener("keydown",function(e){
 },false)
 
 function findNode(event) {
-    console.log(event.clientX);
     var closest = null;
     var distance = width;
     node.each(function(item,index){
@@ -138,6 +137,5 @@ function findNode(event) {
 }
 
 var timegraph = document.getElementById('timegraph');
-timegraph.addEventListener("mouseover",findNode);
-timegraph.addEventListener("mouseover",findNode);
-
+timegraph.addEventListener("mousemove",findNode);
+timegraph.addEventListener("click",findNode);
