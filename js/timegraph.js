@@ -32,7 +32,7 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("id","timegraph")
     .attr("width", width)
-    .attr("height", height)
+    .attr("height", height);
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -124,6 +124,7 @@ document.addEventListener("keydown",function(e){
 },false)
 
 function findNode(event) {
+    console.log(event.clientX);
     var closest = null;
     var distance = width;
     node.each(function(item,index){
