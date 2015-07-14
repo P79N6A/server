@@ -83,7 +83,7 @@ function moveCursor(d) {
     cursor.setAttribute('x', d.pos);
     var r = document.getElementById(d.uri)
     if(r){
-	cursorCSS.textContent = "tr[id='"+d.uri + "'] > td {background-color:#f8f8f8;color:#000}";
+	cursorCSS.textContent = "tr[id='"+d.uri + "'] > td:first-child {background-color: #fff}";
 	window.location.hash = d.uri;
 	document.body.scrollTop = r.offsetTop;
     }
