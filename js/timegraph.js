@@ -62,6 +62,12 @@ node.append("text")
 var nodeLen = node[0].length;
 var nodeLast = nodeLen - 1;
 
+// URI -> (item, event-index)
+var messages = {}
+node.each(function(item,index){
+    messages[item.uri] = [item,index]
+});
+
 function tick() {
     link.attr("y1", function(d) {
 	return d.source.y + 4;
@@ -96,22 +102,6 @@ function moveCursor(d) {
     return false;
 }
 
-// messages keyed on URI
-var messages = {}
-node.each(function(item,index){
-    messages[item.uri] = [item,index]
-});
-
-function clickToFocus(e) {
-    if(e.target.className=='header'){
-	var id = e.target.parentNode.getAttribute("id");
-	message = messages[id];
-	nodeIdx = message[1];
-	moveCursor(message[0]);
-    };
-    return null;
-}
-
 document.addEventListener("keydown",function(e){
 
     // arrow-key navigation
@@ -140,6 +130,7 @@ document.addEventListener("keydown",function(e){
     };
 },false)
 
+// find nearest node to mouse/tap-point in the timegraph
 var prevPos = null;
 function findNode(event) {
     var found = null;
@@ -161,7 +152,17 @@ function findNode(event) {
     return false;
 }
 
+function clickToFocusMessage(e) {
+    if(e.target.className=='header'){
+	var id = e.target.parentNode.getAttribute("id");
+	message = messages[id];
+	nodeIdx = message[1];
+	moveCursor(message[0]);
+    };
+    return null;
+}
+
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("click",findNode);
-document.getElementById("messages").addEventListener("click",clickToFocus);
+document.getElementById("messages").addEventListener("click",clickToFocusMessage);
