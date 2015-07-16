@@ -157,7 +157,6 @@ class R
     # HTML view
     [H.css('/css/mail',true),
      ({style: "height:150px"} if timegraph),
-     {_: :style, id: :highlight},
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
@@ -168,7 +167,7 @@ class R
           c: [
            # header
            {_: :td, class: :header,
-            c: [r[Creator].justArray[0].do{|c|
+            c: {class: :fields, c: [r[Creator].justArray[0].do{|c|
                   author = c.R.fragment || 'anonymous'
                   {class: :from, c: [{_: :b, c: :from}, '<br>',
                    {_: :a,
@@ -198,7 +197,7 @@ class R
                 r[SIOC+'has_discussion'].justArray[0].do{|d|
                   {_: :a, class: :discussion,
                    href: d.uri + '#' + (r.R.path||''),
-                   c: '≡', title: 'show in thread'} unless e[:thread]}]}, "\n",
+                   c: '≡', title: 'show in thread'} unless e[:thread]}]}}, "\n",
 
            # body
            {_: :td, class: :body,

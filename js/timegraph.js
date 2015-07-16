@@ -85,7 +85,6 @@ function tick() {
 svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#eee').attr('width',10).attr('x',width);
 
 var cursor = svg.select('.cursor')[0][0];
-var cursorCSS = document.getElementById('highlight')
 var nodeIdx = 0;
 
 function moveCursor(d) {
@@ -94,11 +93,8 @@ function moveCursor(d) {
     d.py = middle;
     cursor.setAttribute('x', d.pos);
     var r = document.getElementById(d.uri)
-    if(r){
-	cursorCSS.textContent = "tr.mail[id='"+d.uri + "'] > td {border-color:#fff}";
-	window.location.hash = d.uri;
-	document.body.scrollTop = r.offsetTop;
-    }
+    if(r)
+ 	window.location.hash = d.uri;
     return false;
 }
 
@@ -149,6 +145,7 @@ function findNode(event) {
 	moveCursor(found);
 	prevPos = found.pos;
     }
+    event.preventDefault();
     return false;
 }
 
