@@ -25,7 +25,7 @@ var force = d3.layout.force()
     .links(arcs)
     .size([width,height])
     .linkDistance(8)
-    .charge(-18)
+    .charge(-20)
     .on("tick", tick)
     .start();
 
@@ -82,9 +82,11 @@ function tick() {
 }
 
 // cursor
-svg.append('rect').attr('height',height).attr('class','cursor').style('fill','#eee').attr('width',10).attr('x',width);
+svg.append('rect').attr('height',height).attr('id','cursorB').style('fill','#333').attr('width',2).attr('x',width);
+svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#eee').attr('width',10).attr('x',width);
 
-var cursor = svg.select('.cursor')[0][0];
+var cursor = svg.select('#cursor')[0][0];
+var cursorB = svg.select('#cursorB')[0][0];
 var nodeIdx = 0;
 
 function moveCursor(d) {
@@ -126,14 +128,15 @@ document.addEventListener("keydown",function(e){
     };
 },false)
 
-// find nearest node to mouse/tap-point in the timegraph
+// find nearest node to mouse/tap-point
 var prevPos = null;
 function findNode(event) {
+    var x = event.clientX;
     var found = null;
     var foundIdx = null;
     var distance = width;
     node.each(function(item,index){
-	var d = Math.abs(event.clientX - item.pos);
+	var d = Math.abs(x - item.pos);
 	if(d <= distance){
 	    distance = d;
 	    found = item;
@@ -145,6 +148,7 @@ function findNode(event) {
 	moveCursor(found);
 	prevPos = found.pos;
     }
+    cursorB.setAttribute('x', x);
     event.preventDefault();
     return false;
 }
