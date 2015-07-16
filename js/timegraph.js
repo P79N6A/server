@@ -33,6 +33,7 @@ var svg = d3.select("body").append("svg")
     .attr("id","timegraph")
     .attr("width", width)
     .attr("height", height);
+svg.append('rect').attr('height',height).attr('id','cursorB').style('fill','#224').attr('width',2).attr('x',width);
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -82,7 +83,6 @@ function tick() {
 }
 
 // cursor
-svg.append('rect').attr('height',height).attr('id','cursorB').style('fill','#224').attr('width',2).attr('x',width);
 svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#eee').attr('width',10).attr('x',width);
 
 var cursor = svg.select('#cursor')[0][0];
