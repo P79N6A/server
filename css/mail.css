@@ -1,7 +1,7 @@
 body {margin: 0;font-family: sans-serif}
 
 .messages {margin: auto; border-spacing:0}
-.mail .header {border-color:#000;border-style: solid; border-width: 0 0 0 1.4em}
+.mail .header {border-width: .16em 0 .16em .16em;border-radius: .5em 0 0 .5em; padding: .2em 0 .6em .2em}
 .mail .header b {color: #aaa}
 .mail .header a[id] {position:absolute;top:-9em;left:0}
 .mail .header a {background-color:#000;color:#fff}
@@ -9,13 +9,15 @@ body {margin: 0;font-family: sans-serif}
 .mail .header a.date {white-space: nowrap;font-size:.8em}
 .mail .header a.pencil {color: #ddd}
 .mail .header a.discussion {font-size:2em}
+
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
-.mail td.body {font-family: monospace; max-width: 120ex;padding-left: 1em}
+.mail a.attached {color:#777}
+.mail .header, .mail .body {border-color:#000;border-style: solid}
+
+.mail td.body {font-family: monospace; max-width: 120ex;border-radius: 0 .5em .5em 0; border-width:.16em .16em .16em 0;padding:0}
 .mail div.body {padding-top: .3em}
 .mail div.body a {background-color:#0aff26;color:#000;border-radius:.16em}
-.mail a.attached {color:#777}
-.mail td {padding-bottom:.8em}
 
 .mail .q > span {display:none}
 .mail .q[depth="1"] {background-color:#eee;color:#000;    margin-left:-.15em; padding-left:.15em}
