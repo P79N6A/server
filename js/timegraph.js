@@ -153,12 +153,20 @@ function findNode(event) {
     return false;
 }
 
-function clickToFocusMessage(e) {
-    if(e.target.className=='header'){
-	var id = e.target.parentNode.getAttribute("id");
-	message = messages[id];
-	nodeIdx = message[1];
-	moveCursor(message[0]);
+N = NodeList.prototype
+E = Element.prototype
+N.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a);return this}
+E.on = function(b,f){
+    this.addEventListener(b,f,false)
+    return this}
+N.on = function(){return this.map(E.on,arguments)}
+
+function clickToFocusMessage() {
+    var id = this.getAttribute("id");
+    var message = messages[id];
+    if(message) {
+    nodeIdx = message[1];
+    moveCursor(message[0]);
     };
     return null;
 }
@@ -166,4 +174,4 @@ function clickToFocusMessage(e) {
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("click",findNode);
-document.getElementById("messages").addEventListener("click",clickToFocusMessage);
+document.querySelectorAll(".mail").on("click",clickToFocusMessage);
