@@ -1,3 +1,7 @@
+Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return this}
+NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
+NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
+
 var nodes = {};
 var height = 150;
 var width = window.innerWidth;
@@ -131,7 +135,12 @@ document.addEventListener("keydown",function(e){
 // find nearest node to mouse/tap-point
 var prevPos = null;
 function findNode(event) {
-    var x = event.clientX;
+    var x = null;
+    if (event.targetTouches) {
+	x = event.targetTouches[0].clientX;
+    } else {
+	x = event.clientX;
+    }
     var found = null;
     var foundIdx = null;
     var distance = width;
@@ -150,16 +159,9 @@ function findNode(event) {
     }
     cursorB.setAttribute('x', x);
     event.preventDefault();
+//    event.stopPropagation();
     return false;
 }
-
-N = NodeList.prototype
-E = Element.prototype
-N.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a);return this}
-E.on = function(b,f){
-    this.addEventListener(b,f,false)
-    return this}
-N.on = function(){return this.map(E.on,arguments)}
 
 function clickToFocusMessage() {
     var id = this.getAttribute("id");
@@ -173,5 +175,6 @@ function clickToFocusMessage() {
 
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
+timegraph.addEventListener("touchmove",findNode);
 timegraph.addEventListener("click",findNode);
 document.querySelectorAll(".mail").on("click",clickToFocusMessage);
