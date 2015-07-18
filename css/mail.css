@@ -3,13 +3,11 @@ body {margin: 0;font-family: sans-serif}
 .messages {margin: auto; border-spacing:0}
 .mail:target .header .fields {background-color: #fff;color:#000}
 .mail:target td.header, .mail:target td.body {padding-top:150px}
-.mail:target td.header {background-color:#eee;border-radius:.2em}
-.mail:target td.body {background-color:#080808}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
 .mail a.attached {color:#777}
 
-.mail .header .fields {padding:.5em}
+.mail .header .fields {padding:.3em}
 .mail .header {padding: 0;max-width:21.22em}
 .mail .header b {color: #aaa}
 .mail .header a[id] {position:absolute;top:-9em;left:0}
