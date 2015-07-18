@@ -23,7 +23,7 @@ SRC git clone https://github.com/hallwaykid/pw.git ||
 PRE-INSTALL any missing dependencies
 
 # voidlinux
-$ xbps-install ruby libgit2-devel libxml2-devel libxslt-devel
+$ xbps-install ruby ruby-devel libgit2-devel libxml2-devel libxslt-devel
 $ gem install bundler
 
 # debian
