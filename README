@@ -20,14 +20,24 @@ PW is a HTTP/HTTPS daemon
 SRC git clone https://github.com/hallwaykid/pw.git ||
     git clone http://repo.or.cz/w/www.git
 
+PRE-INSTALL any missing dependencies
 
-install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
-     cd pw/ruby                # enter srcdir
-     ./install                 # link src -> lib
-     bundle install            # install ruby libraries
-USE  cd ..                     # goto server-root. if elsewhere copy/link {css,js}/
-     ln conf/server/Procfile . # select Rack-engine
-     foreman start             # start HTTP/HTTPS daemons
+# voidlinux
+$ xbps-install ruby libgit2-devel libxml2-devel libxslt-devel
+$ gem install bundler
+
+# debian
+$ apt-get install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
+
+INSTALL
+$ cd pw/ruby     # enter srcdir
+$ sh install     # symlink source to ruby $sitelibdir (in ~/ or system-wide depending on configuration)
+$ bundle install # fetch required ruby libraries
+
+USE
+$ cd ..  # goto server-root. if elsewhere copy/link {css,js}/
+$ ln conf/server/Procfile . # select Rack-engine
+$ foreman start  # start HTTP/HTTPS daemons
 
 repl$ irb -rww
 
@@ -36,4 +46,4 @@ listen on 80/443 || # $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 
 clean$ rm -rf cache index
 
-contact carmen@mw.logbook.am
+author carmen@mw.logbook.am
