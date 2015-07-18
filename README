@@ -5,7 +5,7 @@ PW is a HTTP/HTTPS daemon
  - WebID/X509-User-Certificate signin
  - uploads on PUT and POST (Container and HTML-<form> support) 
  - paging large-containers: summarization, Link headers, sorted-ranges, offsets/cursors
- - lazy indexing - GET stuff to index it (links in Page-able containers)
+ - lazy indexing - GET stuff to index it (links resources to page-able index-containers)
 
  MIME-types
  - input: email, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
