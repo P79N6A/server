@@ -56,16 +56,21 @@ class R
       e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
 
     if e.env[:container]
-      cs = e.c # child-nodes
-      size = cs.size
-      if size < 256
-        cs.map{|c|c.setEnv e.env} if size < 32 # referencing environment triggers relURI-resolution
-        e.fileResources.concat cs
+      htmlFile = e.a 'index.html' # container-index is HTML-file
+      if e.env.format=='text/html' && htmlFile.e
+        [htmlFile.setEnv(e.env)] # attach environment and use file 
       else
-        puts "#{e.uri}  #{size} children, paginating"
-        FileSet['page'][e,q,g]
+        cs = e.c # node children
+        size = cs.size
+        if size < 256
+          cs.map{|c|c.setEnv e.env} if size < 32 # referencing environment triggers relURI-resolution
+          e.fileResources.concat cs
+        else
+          puts "#{e.uri}  #{size} children, paginating"
+          FileSet['page'][e,q,g]
+        end
       end
-    else
+    else # add URI-list files. pointers to included resources whose subject isnt here under the doc base. less FS overhead than one link per-resource
       e.fileResources.concat FileSet['rev'][e,q,g]
     end}
 

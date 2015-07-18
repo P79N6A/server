@@ -44,6 +44,12 @@ repl$ irb -rww
 listen on 80/443 || # $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
  >1024 (behind apache/nginx/lighttpd)
 
+OPTIONAL deps 
+# mail
+ getmail procmail msmtp mutt # see mail README
+# code
+ source-highlight python-Pygments
+
 clean$ rm -rf cache index
 
 author carmen@mw.logbook.am

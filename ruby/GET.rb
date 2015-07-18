@@ -32,14 +32,18 @@ class R
     response
   end
 
-  def response
+  def response # default GET request->response handler
     init = q.has_key? 'new'
     edit = q.has_key? 'edit'
     return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required when editing
 
     if directory?
-      if uri[-1] == '/' # already in the container
+      if uri[-1] == '/' # in the container
         @r[:container] = true
+        htmlFile = a('index.html')
+        if @r.format=='text/html' && htmlFile.e
+          puts "SDF"
+        end
       else # enter container
         qs = @r['QUERY_STRING']
         @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
