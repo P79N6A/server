@@ -3,7 +3,7 @@ body {margin: 0;font-family: sans-serif}
 .messages {margin: auto; border-spacing:0}
 .mail:target .header .fields {background-color: #fff;color:#000}
 .mail:target td.header, .mail:target td.body {padding-top:150px}
-.mail:target td.header {background-color:#eee;border-radius:.8em}
+.mail:target td.header {background-color:#eee;border-radius:.2em}
 .mail:target td.body {background-color:#080808}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
