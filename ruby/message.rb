@@ -137,7 +137,7 @@ class R
             pos = (mt[0].to_f - min) / range
             arc[:targetPos] = pos}
           arcs.push arc }}}
-    arcs = arcs.sort_by{|a| a[:sourcePos]}
+
     timegraph = arcs.size > 1
 
     # HTML
