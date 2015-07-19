@@ -147,7 +147,7 @@ class R
         ".mail a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
 
      {class: :messages, id: :messages,
-      c: d.resources(e).reverse.map{|r|
+      c: d.resources(e).map{|r|
         {class: :mail, id: r.uri,
          c: [
            r[Title].justArray[0].do{|t|
