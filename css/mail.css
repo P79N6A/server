@@ -1,5 +1,6 @@
 body {margin: 0;font-family: sans-serif}
-.messages, .mail {margin: auto}
+.messages {white-space: nowrap}
+.mail {display: inline-block}
 .mail:target .header .fields {background-color: #fff;color:#000}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
