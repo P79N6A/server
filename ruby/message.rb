@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrIRC &f
@@ -164,16 +164,12 @@ class R
       c: d.resources(e).reverse.map{|r|
         {class: :mail, id: r.uri,
          c: [
-           # from
            r[Creator].justArray[0].do{|c|
              author = c.R.fragment || 'anonymous'
-             [{_: :b, c: :from},
-              {_: :a,
+             {_: :a,
                name: author,
                href: c.R.dirname+'?set=page',
-               c: author}]},
-           # to
-           {_: :b, c: :to},
+               c: author}},
            r[To].justArray.map{|o|
              [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
            r[SIOC+'has_parent'].do{|ps|
@@ -185,24 +181,18 @@ class R
                  }}}},
            
            r[Date].do{|d| {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')}},
-           
            r[SIOC+'reply_to'].do{|c|
              {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
-           
            r[SIOC+'has_discussion'].justArray[0].do{|d|
              {_: :a, class: :discussion,
               href: d.uri + '#' + (r.R.path||''),
               c: '≡', title: 'show in thread'} unless e[:thread]},
-           
            r[Title].justArray[0].do{|t|
              {_: :a, class: :subject,
               href: r.uri,
               c: t}},
-           
            r[Content].do{|c| {class: :body, c: c}},
            r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
-           
-           # attached
            [DC+'hasFormat', SIOC+'attachment'].map{|p|
              r[p].justArray.map{|o|
                {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
