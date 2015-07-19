@@ -164,6 +164,10 @@ class R
       c: d.resources(e).reverse.map{|r|
         {class: :mail, id: r.uri,
          c: [
+           r[Title].justArray[0].do{|t|
+             {_: :a, class: :title,
+              href: r.uri,
+              c: ' '+t}},'<br>',
            r[Creator].justArray[0].do{|c|
              author = c.R.fragment || 'anonymous'
              {_: :a,
@@ -178,8 +182,7 @@ class R
                  r[Creator].justArray[0].do{|c|
                    c = c.R.fragment
                    [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                 }}}},
-           
+                 }}}},           
            r[Date].do{|d| {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')}},
            r[SIOC+'reply_to'].do{|c|
              {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
@@ -187,10 +190,6 @@ class R
              {_: :a, class: :discussion,
               href: d.uri + '#' + (r.R.path||''),
               c: '≡', title: 'show in thread'} unless e[:thread]},
-           r[Title].justArray[0].do{|t|
-             {_: :a, class: :subject,
-              href: r.uri,
-              c: t}},
            r[Content].do{|c| {class: :body, c: c}},
            r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
            [DC+'hasFormat', SIOC+'attachment'].map{|p|
