@@ -1,17 +1,16 @@
 PW is a HTTP/HTTPS daemon
 
  HTTPd features:
- - mostly compatible with http://linkeddata.github.io/SoLiD/
- - WebID/X509-User-Certificate signin
+ - User-Certificate signin
  - uploads on PUT and POST (Container and HTML-<form> support) 
  - paging large-containers: summarization, Link headers, sorted-ranges, offsets/cursors
- - lazy indexing - GET stuff to index it (links resources to page-able index-containers)
+ - lazy indexing - GET stuff to index it in a traversible container
+ - mostly conforming with http://linkeddata.github.io/SoLiD/
 
  MIME-types
- - input: email, Atom/RSS feeds, chatlogs, text-files, CSV, Markdown, highlighted-code
- - output: Atom/RSS feeds and lynx/links/w3m-compatible HTML[1234]
- - MIME-convert betweeen all RDF.rb and above formats
- - content-type select: Accept header and URI name-extension (suffix) hints 
+ - input: Atom/RSS feeds, email, chatlogs, text-files, CSV, Markdown, highlighted-code
+ - output: Atom/RSS, HTML, Turtle
+  via Accept header and URI suffix
 
  FRAMEWORK
  - customize behaviour: bind lambdas to RDF-types
@@ -38,11 +37,10 @@ USE
 $ cd ..  # goto server-root. if elsewhere copy/link {css,js}/
 $ ln conf/server/Procfile . # select Rack-engine
 $ foreman start  # start HTTP/HTTPS daemons
+#listen on 80/443 || # $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+# >1024 (behind apache/nginx/lighttpd)
 
 repl$ irb -rww
-
-listen on 80/443 || # $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
- >1024 (behind apache/nginx/lighttpd)
 
 OPTIONAL deps 
 # mail
@@ -50,6 +48,5 @@ OPTIONAL deps
 # code
  source-highlight python-Pygments
 
-clean$ rm -rf cache index
-
-author carmen@mw.logbook.am
+CLEAN
+$ rm -rf cache index
