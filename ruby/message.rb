@@ -168,12 +168,6 @@ class R
              {_: :a, class: :title,
               href: r.uri,
               c: ' '+t}},'<br>',
-           r[Creator].justArray[0].do{|c|
-             author = c.R.fragment || 'anonymous'
-             {_: :a,
-               name: author,
-               href: c.R.dirname+'?set=page',
-               c: author}},'&rarr;',
            r[To].justArray.map{|o|
              [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
            r[SIOC+'has_parent'].do{|ps|
@@ -182,7 +176,13 @@ class R
                  r[Creator].justArray[0].do{|c|
                    c = c.R.fragment
                    [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                 }}}},           
+                 }}}},'&larr; ',
+           r[Creator].justArray[0].do{|c|
+             author = c.R.fragment || 'anonymous'
+             {_: :a,
+               name: author,
+               href: c.R.dirname+'?set=page',
+               c: author}},' ',
            r[Date].do{|d| {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')}},' ',
            r[SIOC+'reply_to'].do{|c|
              {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},' ',

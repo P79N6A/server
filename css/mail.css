@@ -15,7 +15,6 @@ body {margin: 0;font-family: sans-serif;background-color:#002}
 .mail a {
     text-decoration:none;
     font-weight: bold;
-    font-size: 1.08em;
     padding: 0 .1em 0 .1em;
     background-color:#fff;color:#000;
 }
@@ -23,7 +22,7 @@ body {margin: 0;font-family: sans-serif;background-color:#002}
 .mail a.title {background-color:#000;color:#eee;font-weight: normal; font-size:1.1em}
 .mail:target a.title {background-color: #fff;color:#000}
 .mail a.discussion {float:right;font-size:2em}
-
+.mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em}
 .mail .body {font-family: monospace;white-space: pre-wrap;padding-top:.8em}
 .mail .body a {
     background-color:#0f0;
