@@ -156,76 +156,61 @@ class R
 
     # HTML view
     [H.css('/css/mail',true),
-     ({style: "height:150px"} if timegraph),
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
 
-     # message
      {class: :messages, id: :messages, c: d.resources(e).reverse.map{|r|
         {class: :mail, id: r.uri,
-          c: [
-           # header
-           {class: :header,
-            c: {class: :fields, c: [r[Creator].justArray[0].do{|c|
-                  author = c.R.fragment || 'anonymous'
-                  {class: :from, c: [{_: :b, c: :from}, '<br>',
-                   {_: :a,
-                    name: author,
-                    href: c.R.dirname+'?set=page',
-                    c: author}]}},
-
-                {class: :to, c: [
-                   {_: :b, c: :to},'<br>',
-                   r[To].justArray.map{|o|
-                     [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
-                   # author of reply-of target
-                   r[SIOC+'has_parent'].do{|ps|
-                     ps.justArray.map{|p| # replied-to messages
-                       d[p.uri].do{|r| # target msg in graph
-                         r[Creator].justArray[0].do{|c|
-                           c = c.R.fragment
-                           [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                         }}}}]},
-
-                r[Date].do{|d|
-                  [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},'<br>']},
-
-                r[SIOC+'reply_to'].do{|c|
-                  [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},'<br>']},
-
-                r[SIOC+'has_discussion'].justArray[0].do{|d|
-                  {_: :a, class: :discussion,
+         c: [
+           # from
+           r[Creator].justArray[0].do{|c|
+             author = c.R.fragment || 'anonymous'
+             [{_: :b, c: :from},
+              {_: :a,
+               name: author,
+               href: c.R.dirname+'?set=page',
+               c: author}]},
+           # to
+           {_: :b, c: :to},
+           r[To].justArray.map{|o|
+             [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
+           r[SIOC+'has_parent'].do{|ps|
+             ps.justArray.map{|p| # replied-to messages
+               d[p.uri].do{|r| # target msg in graph
+                 r[Creator].justArray[0].do{|c|
+                   c = c.R.fragment
+                   [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
+                 }}}},
+           
+           r[Date].do{|d| {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')}},
+           
+           r[SIOC+'reply_to'].do{|c|
+             {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
+           
+           r[SIOC+'has_discussion'].justArray[0].do{|d|
+             {_: :a, class: :discussion,
                    href: d.uri + '#' + (r.R.path||''),
-                   c: '≡', title: 'show in thread'} unless e[:thread]}]}}, "\n",
-
-           # body
-           {class: :body,
-            c: [
-              # subject
-              r[Title].justArray[0].do{|t|
-                [{_: :a, class: :subject,
-                  href: r.uri,
-                  c: t},"<br/>"]},
-              
-              r[Content].do{|c| {class: :body, c: c}},
-              r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
+                   c: '≡', title: 'show in thread'} unless e[:thread]},
+           
+           r[Title].justArray[0].do{|t|
+             {_: :a, class: :subject,
+               href: r.uri,
+               c: t}},
+             
+           r[Content].do{|c| {class: :body, c: c}},
+           r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
               
               # attached
-              [DC+'hasFormat', SIOC+'attachment'].map{|p|
-                r[p].justArray.map{|o|
-                  {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
-              
-            ]},
-
-          ]}}
-      },
-
+           [DC+'hasFormat', SIOC+'attachment'].map{|p|
+             r[p].justArray.map{|o|
+               {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
+         ]}},
      (if timegraph
       [H.js('/js/d3.min'),
        {_: :script, c: "var arcs = #{arcs.to_json};"},
        H.js('/js/timegraph',true)]
-      end),
+      end)
     ]}
 
 end
