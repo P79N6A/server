@@ -163,7 +163,7 @@ function findNode(event) {
     return false;
 }
 
-function clickToFocusMessage() {
+function jumpMessage() {
     var id = this.getAttribute("id");
     var message = messages[id];
     if(message) {
@@ -177,4 +177,4 @@ var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("touchmove",findNode);
 timegraph.addEventListener("click",findNode);
-document.querySelectorAll(".mail").on("click",clickToFocusMessage);
+document.querySelectorAll(".mail").on("click",jumpMessage);

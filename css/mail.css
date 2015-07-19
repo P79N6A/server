@@ -1,7 +1,7 @@
 body {margin: 0;font-family: sans-serif}
 .messages {white-space: nowrap}
 .mail {display: inline-block;vertical-align:top}
-.mail:target .header .fields {background-color: #fff;color:#000}
+.mail:target {background-color: #fff;color:#000}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
 .mail a.attached {color:#777}
