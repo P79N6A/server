@@ -162,11 +162,11 @@ class R
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
 
      # message
-     {_: :table, class: :messages, id: :messages, c: d.resources(e).reverse.map{|r|
-        {_: :tr, class: :mail, id: r.uri,
+     {class: :messages, id: :messages, c: d.resources(e).reverse.map{|r|
+        {class: :mail, id: r.uri,
           c: [
            # header
-           {_: :td, class: :header,
+           {class: :header,
             c: {class: :fields, c: [r[Creator].justArray[0].do{|c|
                   author = c.R.fragment || 'anonymous'
                   {class: :from, c: [{_: :b, c: :from}, '<br>',
@@ -200,7 +200,7 @@ class R
                    c: '≡', title: 'show in thread'} unless e[:thread]}]}}, "\n",
 
            # body
-           {_: :td, class: :body,
+           {class: :body,
             c: [
               # subject
               r[Title].justArray[0].do{|t|
