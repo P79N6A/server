@@ -79,7 +79,7 @@ class R
        e[:label][name] ||= {c: 0, id: (e[:count] += 1).to_s}
        e[:label][name][:c] += 1
        {class: 'creator l' + e[:label][name][:id], c: {_: :a, href: r.uri, c: name }}},
-     {_: :span, class: 'body', c: r[Content]},'<br>']}
+     {_: :span, class: 'body', c: r[Content]}]}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
     e[:label] ||= {}

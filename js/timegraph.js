@@ -3,7 +3,7 @@ NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.appl
 NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
 var nodes = {};
-var height = 150;
+var height = 180;
 var width = window.innerWidth;
 var middle = height / 2;
 

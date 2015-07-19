@@ -124,8 +124,7 @@ class R
                    {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
                  else # original line
                    [l.hrefs(true){|p,o|
-                      yield e, p, o},
-                    "<br/>"]
+                      yield e, p, o}]
                   end, "\n"]}
       yield e, Content, body}
 
