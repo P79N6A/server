@@ -124,7 +124,6 @@ document.addEventListener("keydown",function(e){
 	    } else {
 		nodeIdx = nodeIdx + 1;
 	    }
-	    
 	};
 	e.preventDefault();
 	moveCursor(node[0][nodeIdx].__data__);
