@@ -1,6 +1,13 @@
-body {margin: 0;font-family: sans-serif}
+body {margin: 0;font-family: sans-serif;background-color:#002}
 .messages {white-space: nowrap}
-.mail {display: inline-block;vertical-align:top}
+.mail {
+    display: inline-block;
+    vertical-align:top;
+    padding: .8em;
+    margin:.8em;
+    background-color:#000;
+    color:#fff;
+    border-radius: 0 0 1em 1em;}
 .mail:target {background-color: #fff;color:#000}
 .mail a {text-decoration:none; font-weight: bold}
 .mail a.subject {background-color:#fff;color:#000;font-size:1.3em}
@@ -43,8 +50,6 @@ body {margin: 0;font-family: sans-serif}
 img {max-width: 100%}
 
 svg {position: fixed;bottom: 0;left: 0;z-index:2}
-body {background-color:#000;color:#fff}
 .link {fill: none;stroke-width: .25em; stroke-dasharray: 1,6;stroke: #fff}
 rect {fill: #f8f8f8}
 text {fill: #000; font: .88em sans-serif;pointer-events: none}
-td {vertical-align: top}
