@@ -158,7 +158,7 @@ class R
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c|
-        ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
+        ".mail a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
 
      {class: :messages, id: :messages,
       c: d.resources(e).reverse.map{|r|
@@ -173,7 +173,7 @@ class R
              {_: :a,
                name: author,
                href: c.R.dirname+'?set=page',
-               c: author}},
+               c: author}},'&rarr;',
            r[To].justArray.map{|o|
              [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
            r[SIOC+'has_parent'].do{|ps|
@@ -183,9 +183,9 @@ class R
                    c = c.R.fragment
                    [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
                  }}}},           
-           r[Date].do{|d| {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')}},
+           r[Date].do{|d| {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')}},' ',
            r[SIOC+'reply_to'].do{|c|
-             {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},
+             {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},' ',
            r[SIOC+'has_discussion'].justArray[0].do{|d|
              {_: :a, class: :discussion,
               href: d.uri + '#' + (r.R.path||''),
