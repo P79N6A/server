@@ -24,9 +24,9 @@ $ gem install bundler
 $ apt-get install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
 
 INSTALL
-$ cd pw/ruby     # enter srcdir
-$ sh install     # symlink source to ruby $sitelibdir (in ~/ or system-wide depending on configuration)
-$ bundle install # fetch required ruby libraries
+$ cd pw/ruby
+$ sh install     # symlink source to ruby $sitelibdir
+$ bundle install # fetch ruby libraries
 
 USE
 $ cd ..  # goto server-root. if elsewhere copy/link {css,js}/
