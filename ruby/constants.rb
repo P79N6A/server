@@ -101,17 +101,19 @@ class R < RDF::URI
     :stat => RDF::URI(Stat),
   }
 
-  FileSet = {}     # files to GET
-  ResourceSet = {} # resources to GET
-  Abstract = {}    # per RDF-type summarizer
+  FileSet = {}     # files in GET
+  ResourceSet = {} # resources in GET
+  Abstract = {}    # summarize
   Create = {}      # Resource template
   Identify = {}    # URI template
-  Filter = {}      # arbitrary graph-transformer
+  Filter = {}      # graph-transform
   Render = {}      # MIME renderer
-  ViewA = {}       # HTML template (singleton)
-  ViewGroup = {}   # HTML template (set of RDF-type)
+  ViewA = {}       # HTML template (one resource)
+  ViewGroup = {}   # HTML template (set of resources)
+
+  GET = {}         # GET handler bound to URI
+
   Watch = {}       # source-files to check for changes
-  GET = {}         # GET handler
   Errors = {}      # runtime errors
   Stats = {error: {}, # stats
            format: {},
