@@ -94,20 +94,6 @@ class R
   ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     q = e.q
-    quotes = if q['quotes'] == "yes"
-               true
-             elsif q['quotes'] == "no"
-               false
-             elsif d.keys.size < 6
-               true
-             else
-               false
-             end
-
-    # show/hide quoted material
-    d.map{|u,r| r[Content] = r[Content].justArray.map{|c|
-            c.lines.map{|l|l.match(/^<div class='q'/) ? "" : l}.join}} unless quotes
-
     arcs = []
     days = {}
     mtimes = d.values.map{|s|
