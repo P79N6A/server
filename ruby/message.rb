@@ -106,7 +106,7 @@ class R
 
     # show/hide quoted material
     d.map{|u,r| r[Content] = r[Content].justArray.map{|c|
-      c.lines.map{|l|l.match(/^<div class='q'/) ? "" : l}.join}} unless quotes
+            c.lines.map{|l|l.match(/^<div class='q'/) ? "" : l}.join}} unless quotes
 
     arcs = []
     days = {}
@@ -154,13 +154,14 @@ class R
     arcs = arcs.sort_by{|a| a[:sourcePos]}
     timegraph = arcs.size > 1
 
-    # HTML view
+    # HTML
     [H.css('/css/mail',true),
      {_: :style,
       c: colors.map{|name,c|
         ".mail .header a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"}},
 
-     {class: :messages, id: :messages, c: d.resources(e).reverse.map{|r|
+     {class: :messages, id: :messages,
+      c: d.resources(e).reverse.map{|r|
         {class: :mail, id: r.uri,
          c: [
            # from
@@ -190,27 +191,27 @@ class R
            
            r[SIOC+'has_discussion'].justArray[0].do{|d|
              {_: :a, class: :discussion,
-                   href: d.uri + '#' + (r.R.path||''),
-                   c: '≡', title: 'show in thread'} unless e[:thread]},
+              href: d.uri + '#' + (r.R.path||''),
+              c: '≡', title: 'show in thread'} unless e[:thread]},
            
            r[Title].justArray[0].do{|t|
              {_: :a, class: :subject,
-               href: r.uri,
-               c: t}},
-             
+              href: r.uri,
+              c: t}},
+           
            r[Content].do{|c| {class: :body, c: c}},
            r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
-              
-              # attached
+           
+           # attached
            [DC+'hasFormat', SIOC+'attachment'].map{|p|
              r[p].justArray.map{|o|
                {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
-         ]}},
-     (if timegraph
-      [H.js('/js/d3.min'),
-       {_: :script, c: "var arcs = #{arcs.to_json};"},
-       H.js('/js/timegraph',true)]
-      end)
+         ]}}},
+      (if timegraph
+       [H.js('/js/d3.min'),
+        {_: :script, c: "var arcs = #{arcs.to_json};"},
+        H.js('/js/timegraph',true)]
+       end)
     ]}
-
+  
 end
