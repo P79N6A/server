@@ -91,7 +91,7 @@ class R
         ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
-  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     q = e.q
     arcs = []
