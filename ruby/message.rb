@@ -166,18 +166,19 @@ class R
                       }}}},
                 r[To].justArray.map{|o|
                   o = o.R
-                  [{_: :a, class: :to, href: o, c: o.fragment || o.path || o.host},' ']},
+                  [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
                 ' &larr; ',
                 r[Creator].justArray[0].do{|c|
                   authorURI = c.class==Hash || c.class==R
                   name = if authorURI
-                           c.R.fragment || 'anonymous'
+                           u = c.R
+                           u.fragment || u.basename || u.host || 'anonymous'
                          else
                            c.to_s
                          end
                   [{_: :a,
                     name: name,
-                    href: authorURI ? (c.R.dirname+'?set=page') : '#',
+                    href: authorURI ? c.uri : '#',
                     c: name},' ',
                   ]},
                 r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},

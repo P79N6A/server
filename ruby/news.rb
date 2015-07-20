@@ -1,3 +1,4 @@
+#watch __FILE__
 class R
 
   GREP_DIRS.push(/^\/news\/\d{4}\/\d{2}/)
@@ -86,7 +87,7 @@ class R
       end
       
       def each_statement &fn
-        dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream massager stack
+        dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream transformer stack
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -104,7 +105,15 @@ class R
 
       def resolveURIs *f
         send(*f){|s,p,o|
-          yield s, p, p == Content ?
+          content = p == Content
+          if content && s.R.host.match(/reddit\.com$/)
+            (Nokogiri::HTML.fragment o.sub(/.* submitted by /,' ')).do{|o|
+              links = o.css('a')
+              yield s, Creator, R[links[0].attr('href')]
+              yield s, To, R[links[1].attr('href')]
+            }
+          end
+          yield s, p, content ?
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
               if a.has_attribute? 'href'
