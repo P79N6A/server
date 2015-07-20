@@ -142,6 +142,36 @@ function jumpMessage() {
     return null;
 }
 
+document.addEventListener("keydown",function(e){
+
+    // arrow-key navigation
+    loc = window.location.hash;
+    if( ((e.keyCode==37) || (e.keyCode==39)) && loc ) {
+	console.log('arrow',loc)
+	// left
+	if(e.keyCode == 37){
+	    if(nodeIdx <= 0) {
+		nodeIdx = nodeLast;
+	    } else {
+		nodeIdx = nodeIdx - 1;
+	    };
+	};
+	// right
+	if(e.keyCode == 39){
+	    if(nodeIdx >= nodeLast){
+		nodeIdx = 0;
+	    } else {
+		nodeIdx = nodeIdx + 1;
+	    }
+	    
+	};
+	e.preventDefault();
+	moveCursor(node[0][nodeIdx].__data__);
+	return false;
+    };
+},false)
+
+
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("touchmove",findNode);
