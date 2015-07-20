@@ -161,7 +161,7 @@ class R
               u = '/junk/'+u.gsub('/','.')
             end
             yield u, R::Type, R[R::BlogPost]
-            yield u, To, R[u.R.hostPart]
+            yield u, To, u.R
 
             #links
             inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
