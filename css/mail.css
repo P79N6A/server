@@ -9,6 +9,7 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
     color:#fff;
     border-radius: 0 0 1em 1em;
     max-width:168ex;
+    white-space: normal;
 }
 .mail:target {background-color: #fff;color:#000}
 
@@ -18,6 +19,9 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
     padding: 0 .1em 0 .1em;
     background-color:#000;color:#fff;
 }
+
+.mail .header {max-width:76ex;background-color:#333}
+.mail .header a {white-space: nowrap}
 .mail a.attached {color:#000;background-color:#eee}
 .mail a.title {background-color:#000;color:#eee;font-weight: normal; font-size:1.1em}
 .mail:target a.title {background-color: #fff;color:#000}
