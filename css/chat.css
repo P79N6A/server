@@ -2,8 +2,6 @@
 .chat a {text-decoration: none}
 .chat img {max-width: 100%}
 .chat .td {border-radius: .18em}
-.chat .date {background-color: #ccc; color: #fff}
-.chat .creator {display:inline-block; min-width: 8em; text-align: right; background-color: #ddd}
+.chat .creator {display:inline-block; min-width: 8em; text-align: right}
 .chat .creator a {color: #fff}
-.chat .body {border-width: 0 0 .1em 0; border-style: solid; border-color: #ddd}
 .chat .body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
