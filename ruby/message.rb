@@ -160,11 +160,13 @@ class R
                   ps.justArray.map{|p| # replied-to messages
                     d[p.uri].do{|r| # target msg in graph
                       r[Creator].justArray[0].do{|c|
-                        c = c.R.fragment
+                        uri = c.R
+                        c = uri.fragment || uri.path || uri.host
                         [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
                       }}}},
                 r[To].justArray.map{|o|
-                  [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment},' ']},
+                  o = o.R
+                  [{_: :a, class: :to, href: o, c: o.fragment || o.path || o.host},' ']},
                 ' &larr; ',
                 r[Creator].justArray[0].do{|c|
                   authorURI = c.class==Hash || c.class==R

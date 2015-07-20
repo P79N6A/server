@@ -86,7 +86,7 @@ class R
       end
       
       def each_statement &fn
-        dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o|
+        dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream massager stack
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -161,7 +161,8 @@ class R
               u = '/junk/'+u.gsub('/','.')
             end
             yield u, R::Type, R[R::BlogPost]
-            
+            yield u, To, R[u.R.hostPart]
+
             #links
             inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
               e[1].match(/(href|url|src)=['"]?([^'">\s]+)/).do{|url|
