@@ -119,9 +119,12 @@ class R
                  l = l.chomp
                  [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
                   depth = (qp[1].scan /[>|]/).size
-                  {class: :q, depth: depth, c: [{_: :span, c: '&gt; '*depth}, qp[3].gsub('@','.').hrefs]}
+                  {class: :q,
+                   depth: depth,
+                   c: [{_: :span, c: '&gt; '*depth},
+                       qp[3].gsub('@','.').hrefs]}
                  elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # quote-provenance
-                   {class: :q, depth: 0, c: l.gsub('@','.').hrefs}
+                   {class: :q, depth: 0, c: l.gsub('@','.').hrefs} # obfuscate quoted address, linkify
                  else # original line
                    [l.hrefs(true){|p,o|
                       yield e, p, o}]
