@@ -109,26 +109,29 @@ class R
 
     m.in_reply_to.do{|r|                             # direct-reference predicate
       yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
-
+    
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
-
+    
     parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') && # if text &&
-      Mail::Encodings.defined?(p.body.encoding)                     #    decodable
+                 Mail::Encodings.defined?(p.body.encoding)                     #    decodable
     }.map{|p|
       body = H p.decoded.to_utf8.lines.to_a.map{|l|
-                 l = l.chomp
-                 [if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
-                  depth = (qp[1].scan /[>|]/).size
-                  {class: :q,
-                   depth: depth,
-                   c: [{_: :span, c: '&gt; '*depth},
-                       qp[3].gsub('@','.').hrefs]}
-                 elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # quote-provenance
-                   {class: :q, depth: 0, c: l.gsub('@','.').hrefs} # obfuscate quoted address, linkify
-                 else # original line
-                   [l.hrefs(true){|p,o|
-                      yield e, p, o}]
-                  end, "\n"]}
+        l = l.chomp
+        if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
+          depth = (qp[1].scan /[>|]/).size
+          if qp[3].empty?
+            nil
+          else
+            {class: :q, depth: depth,
+             c: [{_: :span, c: '&gt; '*depth},
+                 qp[3].gsub('@','.').hrefs]}
+          end
+        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # quote-provenance
+          {class: :q, depth: 0, c: l.gsub('@','.').hrefs} # obfuscate quoted address, linkify
+        else # original line
+          [l.hrefs(true){|p,o|
+             yield e, p, o}]
+        end}.compact.intersperse("\n")
       yield e, Content, body}
 
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
