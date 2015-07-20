@@ -167,11 +167,16 @@ class R
                   [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment},' ']},
                 ' &larr; ',
                 r[Creator].justArray[0].do{|c|
-                  author = c.R.fragment || 'anonymous'
+                  authorURI = c.class==Hash || c.class==R
+                  name = if authorURI
+                           c.R.fragment || 'anonymous'
+                         else
+                           c.to_s
+                         end
                   [{_: :a,
-                    name: author,
-                    href: c.R.dirname+'?set=page',
-                    c: author},' ',
+                    name: name,
+                    href: authorURI ? (c.R.dirname+'?set=page') : '#',
+                    c: name},' ',
                   ]},
                 r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
                 r[SIOC+'reply_to'].do{|c|
