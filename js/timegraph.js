@@ -64,9 +64,6 @@ node.append("text")
     .style("fill", '#e8e8e8')
     .text(function(d) { return d.name; });
 
-var nodeLen = node[0].length;
-var nodeLast = nodeLen - 1;
-
 // URI -> (item, event-index)
 var messages = {}
 node.each(function(item,index){
@@ -103,33 +100,6 @@ function moveCursor(d) {
  	window.location.hash = d.uri;
     return false;
 }
-
-document.addEventListener("keydown",function(e){
-
-    // arrow-key navigation
-    if((e.keyCode==37)||(e.keyCode==39)) {
-
-	// left
-	if(e.keyCode == 37){
-	    if(nodeIdx <= 0) {
-		nodeIdx = nodeLast;
-	    } else {
-		nodeIdx = nodeIdx - 1;
-	    };
-	};
-	// right
-	if(e.keyCode == 39){
-	    if(nodeIdx >= nodeLast){
-		nodeIdx = 0;
-	    } else {
-		nodeIdx = nodeIdx + 1;
-	    }
-	};
-	e.preventDefault();
-	moveCursor(node[0][nodeIdx].__data__);
-	return false;
-    };
-},false)
 
 // find nearest node to mouse/tap-point
 var prevPos = null;
