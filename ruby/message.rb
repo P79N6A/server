@@ -153,31 +153,33 @@ class R
            r[Title].justArray[0].do{|t|
              {_: :a, class: :title,
               href: r.uri,
-              c: ' '+t}},'<br>',
+              c: ' '+t}},"<br>\n",
 
            {class: :header,
-            c: [r[To].justArray.map{|o|
-                  [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment}, ' ']},
-                r[SIOC+'has_parent'].do{|ps|
+            c: [r[SIOC+'has_parent'].do{|ps|
                   ps.justArray.map{|p| # replied-to messages
                     d[p.uri].do{|r| # target msg in graph
                       r[Creator].justArray[0].do{|c|
                         c = c.R.fragment
                         [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                      }}}},'&larr; ',
+                      }}}},
+                r[To].justArray.map{|o|
+                  [{_: :a, class: :to, href: o.R.dirname+'?set=page', c: o.R.fragment},' ']},
+                ' &larr; ',
                 r[Creator].justArray[0].do{|c|
                   author = c.R.fragment || 'anonymous'
-                  {_: :a,
-                   name: author,
-                   href: c.R.dirname+'?set=page',
-                   c: author}},' ',
-                r[Date].do{|d| {_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')}},' ',
+                  [{_: :a,
+                    name: author,
+                    href: c.R.dirname+'?set=page',
+                    c: author},' ',
+                  ]},
+                r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
                 r[SIOC+'reply_to'].do{|c|
-                  {_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}},' ',
+                  [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
                 r[SIOC+'has_discussion'].justArray[0].do{|d|
                   {_: :a, class: :discussion,
                    href: d.uri + '#' + (r.R.path||''),
-                   c: '≡', title: 'show in thread'} unless e[:thread]}]},
+                   c: '≡', title: 'show in thread'} unless e[:thread]}].intersperse("\n  ")},
 
            r[Content].do{|c| {class: :body, c: c}},
            r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
