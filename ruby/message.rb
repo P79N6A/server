@@ -138,8 +138,6 @@ class R
             arc[:targetPos] = pos}
           arcs.push arc }}}
 
-    timegraph = arcs.size > 1
-
     # HTML
     [H.css('/css/mail',true),
      {_: :style,
@@ -195,11 +193,9 @@ class R
              r[p].justArray.map{|o|
                {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
          ]}}},
-      (if timegraph
-       [H.js('/js/d3.min'),
-        {_: :script, c: "var arcs = #{arcs.to_json};"},
-        H.js('/js/timegraph',true)]
-       end)
+
+     H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
+     H.js('/js/timegraph',true)
     ]}
   
 end

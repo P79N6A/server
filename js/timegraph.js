@@ -134,6 +134,8 @@ function findNode(event) {
 
 function jumpMessage() {
     var id = this.getAttribute("id");
+    console.log('jump',id)
+
     var message = messages[id];
     if(message) {
     nodeIdx = message[1];
@@ -170,7 +172,6 @@ document.addEventListener("keydown",function(e){
 	return false;
     };
 },false)
-
 
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
