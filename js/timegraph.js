@@ -115,7 +115,8 @@ function findNode(event) {
 	    found = item;
 	}
     });
-    window.location.hash = found.uri;
+    if(found)
+	window.location.hash = found.uri;
 }
 
 document.addEventListener("keydown",function(e){
