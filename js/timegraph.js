@@ -102,6 +102,10 @@ function moveCursor(d) {
     return false;
 }
 
+window.onhashchange = function(e){
+    console.log('location',e,this)
+}
+
 // find nearest node to mouse/tap-point
 var prevPos = null;
 function findNode(event) {
