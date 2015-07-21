@@ -24,7 +24,7 @@ a.size:before { content:"\f161"; font-family: icons; }
 a.tag:before { content:"\f02b"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
-a.title:before { content:"\f035"; font-family: icons; }
+a.title:before { content:"\f035"; font-family: icons; color: #777}
 a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
