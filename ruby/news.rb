@@ -106,12 +106,16 @@ class R
       def resolveURIs *f
         send(*f){|s,p,o|
           content = p == Content
-          if content && s.R.host.match(/reddit\.com$/)
-            (Nokogiri::HTML.fragment o.sub(/.* submitted by /,' ')).do{|o|
-              links = o.css('a')
-              yield s, Creator, R[links[0].attr('href')]
-              yield s, To, R[links[1].attr('href')]
-            }
+          if content
+            if s.R.host.match(/reddit\.com$/)
+              (Nokogiri::HTML.fragment o.sub(/.* submitted by /,' ')).do{|o|
+                links = o.css('a')
+                yield s, Creator, R[links[0].attr('href')]
+                yield s, To, R[links[1].attr('href')]
+              }
+            else
+              yield s, To, s.R.hostPart.R
+            end
           end
           yield s, p, content ?
           (Nokogiri::HTML.fragment o).do{|o|
@@ -170,7 +174,6 @@ class R
               u = '/junk/'+u.gsub('/','.')
             end
             yield u, R::Type, R[R::BlogPost]
-            yield u, To, u.R
 
             #links
             inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
