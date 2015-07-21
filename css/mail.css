@@ -4,14 +4,18 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
     display: inline-block;
     vertical-align:top;
     padding: .8em;
-    margin: 0 .8em .8em .8em;
+    margin-right: .8em;
     background-color:#000;
     color:#fff;
     border-radius: 0 0 1em 1em;
     max-width:168ex;
     white-space: normal;
+    border-color: #002;
+    border-width: 0 .19em .19em .19em;
+    border-style: solid;
 }
 .mail:target {background-color: #fff;color:#000}
+.mail:hover {border-color: #eee}
 
 .mail a {
     text-decoration:none;
