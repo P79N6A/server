@@ -119,27 +119,23 @@ function findNode(event) {
 document.addEventListener("keydown",function(e){
 
     // arrow-key navigation
-    loc = window.location.hash;
-    if( ((e.keyCode==37) || (e.keyCode==39)) && loc ) {
-	console.log('arrow',loc)
+    if((e.keyCode==37) || (e.keyCode==39)) {
+	loc = window.location.hash.slice(1);
+	cur = document.getElementById(loc)
+	var next = null;
+
 	// left
 	if(e.keyCode == 37){
-	    if(nodeIdx <= 0) {
-		nodeIdx = nodeLast;
-	    } else {
-		nodeIdx = nodeIdx - 1;
-	    };
+	    next = cur.previousSibling;
 	};
+
 	// right
 	if(e.keyCode == 39){
-	    if(nodeIdx >= nodeLast){
-		nodeIdx = 0;
-	    } else {
-		nodeIdx = nodeIdx + 1;
-	    }
-	    
+	    next = cur.nextSibling;
 	};
-	window.location.hash='';
+
+	if(next)
+	    window.location.hash=next.id;
 	e.preventDefault();
 	return false;
     };

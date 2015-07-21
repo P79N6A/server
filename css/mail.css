@@ -4,7 +4,7 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
     display: inline-block;
     vertical-align:top;
     padding: .8em;
-    margin-right: .8em;
+    margin-right: 1em;
     background-color:#000;
     color:#fff;
     border-radius: 0 0 1em 1em;
@@ -15,7 +15,7 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
 }
 .mail[name] {background-color:#000; color:#fff}
 .mail:target {background-color: #fff;color:#000}
-.mail:target, .mail:hover {border-width: 0 0 .8em 0}
+.mail:target, .mail:hover {border-width: 0 0 .7em 0}
 .mail a {
     text-decoration:none;
     font-weight: bold;
