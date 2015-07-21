@@ -91,6 +91,7 @@ var cursorB = svg.select('#cursorB')[0][0];
 var nodeIdx = 0;
 
 function moveCursor(d) {
+    console.log('cursormove',d,this)
     force.resume();
     d.y = middle;
     d.py = middle;
@@ -132,7 +133,7 @@ function findNode(event) {
     return false;
 }
 
-function jumpMessage() {
+function focusMessage() {
     var id = this.getAttribute("id");
     console.log('jump',id)
 
@@ -177,4 +178,4 @@ var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("touchmove",findNode);
 timegraph.addEventListener("click",findNode);
-document.querySelectorAll(".mail").on("click",jumpMessage);
+document.querySelectorAll(".mail").on("click",focusMessage);

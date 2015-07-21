@@ -88,7 +88,7 @@ class R
     [{class: :chat, c: Facets[d,e]},
      {_: :style,
       c: e[:label].map{|n,l|
-        ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}" if l[:c] > 1}.cr },
+        ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
   ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
