@@ -89,20 +89,11 @@ svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#eee'
 var cursor = svg.select('#cursor')[0][0];
 var cursorB = svg.select('#cursorB')[0][0];
 
-function moveCursor(d) {
-    console.log('cursormove',d,this)
-    force.resume();
-    d.y = middle;
-    d.py = middle;
-    cursor.setAttribute('x', d.pos);
-    var r = document.getElementById(d.uri)
-    if(r)
- 	window.location.hash = d.uri;
-    return false;
-}
-
 window.onhashchange = function(e){
-    var target = messages[window.location.hash]
+    var target = messages[window.location.hash.slice(1)];
+    force.resume();
+    target.y = target.py = middle;
+    cursor.setAttribute('x', target.pos);
 }
 
 // find nearest node to mouse/tap-point
