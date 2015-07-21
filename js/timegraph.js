@@ -123,18 +123,24 @@ document.addEventListener("keydown",function(e){
 
     // arrow-key navigation
     if((e.keyCode==37) || (e.keyCode==39)) {
-
-	var cur = document.getElementById(window.location.hash.slice(1));
 	var next = null;
+	var curID = window.location.hash.slice(1);
+	var cur = document.getElementById(curID);
+
 	if(cur){
 	    if(e.keyCode == 37) // left
 		next = cur.previousSibling;
 	    if(e.keyCode == 39) // right
 		next = cur.nextSibling;
-	    if(next)
-		window.location.hash = next.id;
+	} else {
+	    next = document.querySelector('[id]');
 	}
-	e.preventDefault();
+
+	if(next) {
+	    window.location.hash = next.id;
+	    e.preventDefault();
+	};
+
 	return false;
     };
 },false)
