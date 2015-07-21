@@ -88,7 +88,6 @@ svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#eee'
 
 var cursor = svg.select('#cursor')[0][0];
 var cursorB = svg.select('#cursorB')[0][0];
-var nodeIdx = 0;
 
 function moveCursor(d) {
     console.log('cursormove',d,this)
@@ -126,8 +125,7 @@ function findNode(event) {
 	    foundIdx = index;
 	}
     });
-    if((foundIdx != nodeIdx) && (found.pos != prevPos)){
-	nodeIdx = foundIdx;
+    if(found.pos != prevPos){
 	moveCursor(found);
 	prevPos = found.pos;
     }
@@ -135,18 +133,6 @@ function findNode(event) {
     event.preventDefault();
 //    event.stopPropagation();
     return false;
-}
-
-function focusMessage() {
-    var id = this.getAttribute("id");
-    console.log('jump',id)
-
-    var message = messages[id];
-    if(message) {
-    nodeIdx = message[1];
-    moveCursor(message[0]);
-    };
-    return null;
 }
 
 document.addEventListener("keydown",function(e){
@@ -172,8 +158,8 @@ document.addEventListener("keydown",function(e){
 	    }
 	    
 	};
+	window.location.hash='';
 	e.preventDefault();
-	moveCursor(node[0][nodeIdx].__data__);
 	return false;
     };
 },false)
@@ -182,4 +168,4 @@ var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("touchmove",findNode);
 timegraph.addEventListener("click",findNode);
-document.querySelectorAll(".mail").on("click",focusMessage);
+document.querySelectorAll(".mail").on("click",function(){window.location.hash=this.getAttribute("id");});
