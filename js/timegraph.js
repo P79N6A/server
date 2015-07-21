@@ -91,9 +91,11 @@ var cursorB = svg.select('#cursorB')[0][0];
 
 window.onhashchange = function(e){
     var target = messages[window.location.hash.slice(1)];
-    force.resume();
-    target.y = target.py = middle;
-    cursor.setAttribute('x', target.pos);
+    if(target) {
+	force.resume();
+	target.y = target.py = middle;
+	cursor.setAttribute('x', target.pos);
+    }
 }
 
 // find nearest node to mouse/tap-point
@@ -120,22 +122,17 @@ document.addEventListener("keydown",function(e){
 
     // arrow-key navigation
     if((e.keyCode==37) || (e.keyCode==39)) {
-	loc = window.location.hash.slice(1);
-	cur = document.getElementById(loc)
+
+	var cur = document.getElementById(window.location.hash.slice(1));
 	var next = null;
-
-	// left
-	if(e.keyCode == 37){
-	    next = cur.previousSibling;
-	};
-
-	// right
-	if(e.keyCode == 39){
-	    next = cur.nextSibling;
-	};
-
-	if(next)
-	    window.location.hash=next.id;
+	if(cur){
+	    if(e.keyCode == 37) // left
+		next = cur.previousSibling;
+	    if(e.keyCode == 39) // right
+		next = cur.nextSibling;
+	    if(next)
+		window.location.hash = next.id;
+	}
 	e.preventDefault();
 	return false;
     };
