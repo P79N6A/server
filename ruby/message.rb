@@ -142,7 +142,7 @@ class R
     [H.css('/css/mail',true),
      {_: :style,
       c: [colors.map{|name,c|
-            "[name=\"#{name}\"] {color: #000; background-color: #{c}}\n"},
+            "[name=\"#{name}\"] {color: #000; border-color: #{c};background-color: #{c}}\n"},
           (1..15).map{|depth|
             back = rand(2) == 0
             ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}
@@ -150,8 +150,20 @@ class R
 
      {class: :messages, id: :messages,
       c: d.resources(e).map{|r|
-        reWho = nil
-        {class: :mail, id: r.uri,
+        name = reWho = nil
+        author = r[Creator].justArray[0].do{|c|
+          authorURI = c.class==Hash || c.class==R
+          name = if authorURI
+                   u = c.R
+                   u.fragment || u.basename || u.host || 'anonymous'
+                 else
+                   c.to_s
+                 end
+          [{_: :a,
+            name: name,
+            href: authorURI ? c.uri : '#',
+            c: name},' ']}
+        {class: :mail, name: name, id: r.uri,
          c: [
            r[Title].justArray[0].do{|t|
              {_: :a, class: :title,
@@ -172,19 +184,7 @@ class R
                   o = o.R
                   [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
                 ' &larr; ',
-                r[Creator].justArray[0].do{|c|
-                  authorURI = c.class==Hash || c.class==R
-                  name = if authorURI
-                           u = c.R
-                           u.fragment || u.basename || u.host || 'anonymous'
-                         else
-                           c.to_s
-                         end
-                  [{_: :a,
-                    name: name,
-                    href: authorURI ? c.uri : '#',
-                    c: name},' ',
-                  ]},
+                author,
                 r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
                 r[SIOC+'reply_to'].do{|c|
                   [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},

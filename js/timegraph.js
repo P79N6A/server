@@ -106,7 +106,6 @@ window.onhashchange = function(e){
 }
 
 // find nearest node to mouse/tap-point
-var prevPos = null;
 function findNode(event) {
     var x = null;
     if (event.targetTouches) {
@@ -115,23 +114,17 @@ function findNode(event) {
 	x = event.clientX;
     }
     var found = null;
-    var foundIdx = null;
     var distance = width;
     node.each(function(item,index){
 	var d = Math.abs(x - item.pos);
 	if(d <= distance){
 	    distance = d;
 	    found = item;
-	    foundIdx = index;
 	}
     });
-    if(found.pos != prevPos){
-	moveCursor(found);
-	prevPos = found.pos;
-    }
+    console.log(found);
     cursorB.setAttribute('x', x);
     event.preventDefault();
-//    event.stopPropagation();
     return false;
 }
 
