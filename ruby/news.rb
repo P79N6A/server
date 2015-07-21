@@ -32,10 +32,10 @@ class R
   GET['/feed'] = -> d,e {
     path = d.justPath.stripDoc.uri.sub /^\/feed\/?/,'' # eat host, ext, and /feed
     if path.empty? # serve feed
-      e['HTTP_ACCEPT'] = 'application/atom+xml' # fix MIME
-      e.q['set'] ||= 'page'; e.q['c'] ||= 15 # 15 posts in desc-date order
-      d.dir.child('news').setEnv(e).response # request of news-container
-    else # transcode feed
+      e['HTTP_ACCEPT'] = 'application/atom+xml' # fixed MIME
+      e.q['set'] ||= 'page'; e.q['c'] ||= 15    # select 15 posts in date-desc order
+      d.dir.child('news').setEnv(e).response    # jump to news-container
+    else # serve third-party feed as RDF
       if path.split('/').size > 1
         begin
           graph = RDF::Graph.new
