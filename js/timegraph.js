@@ -64,10 +64,10 @@ node.append("text")
     .style("fill", '#e8e8e8')
     .text(function(d) { return d.name; });
 
-// URI -> (item, event-index)
+// URI -> item
 var messages = {}
 node.each(function(item,index){
-    messages[item.uri] = [item,index]
+    messages[item.uri] = item;
 });
 
 function tick() {
@@ -102,7 +102,7 @@ function moveCursor(d) {
 }
 
 window.onhashchange = function(e){
-    console.log('location',e,this)
+    var target = messages[window.location.hash]
 }
 
 // find nearest node to mouse/tap-point
@@ -122,10 +122,7 @@ function findNode(event) {
 	    found = item;
 	}
     });
-    console.log(found);
-    cursorB.setAttribute('x', x);
-    event.preventDefault();
-    return false;
+    window.location.hash = found.uri;
 }
 
 document.addEventListener("keydown",function(e){

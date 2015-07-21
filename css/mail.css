@@ -15,7 +15,7 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
 }
 .mail[name] {background-color:#000; color:#fff}
 .mail:target {background-color: #fff;color:#000}
-.mail:hover {border-width: 0 .3em .3em .3em}
+.mail:target, .mail:hover {border-width: 0 0 .8em 0}
 .mail a {
     text-decoration:none;
     font-weight: bold;
@@ -32,9 +32,9 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
 .mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em;}
 .mail .body {font-family: monospace;white-space: pre-wrap;padding-top:.8em;}
 .mail .body a {
-    background-color:#f0f0f0;
+    background-color:#fff;
     color:#000;
-    border-color:#00f;
+    border-color:#aaa;
     border-width:0 0 .1em 0;
     border-style:dotted;
     border-radius:.16em;
