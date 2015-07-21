@@ -142,7 +142,7 @@ class R
     [H.css('/css/mail',true),
      {_: :style,
       c: [colors.map{|name,c|
-            ".mail a[name=\"#{name}\"], .mail .q[name=\"#{name}\"] {color: #000; background-color: #{c}}\n"},
+            "[name=\"#{name}\"] {color: #000; background-color: #{c}}\n"},
           (1..15).map{|depth|
             back = rand(2) == 0
             ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}
