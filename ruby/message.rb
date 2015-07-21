@@ -145,7 +145,7 @@ class R
             ".mail a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"},
           (1..15).map{|depth|
             back = rand(2) == 0
-            ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? 'color:#000' : ''}}\n"}
+            ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}
          ]},
 
      {class: :messages, id: :messages,
