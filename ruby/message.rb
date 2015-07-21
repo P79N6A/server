@@ -142,7 +142,7 @@ class R
     [H.css('/css/mail',true),
      {_: :style,
       c: [colors.map{|name,c|
-            ".mail a[name=\"#{name}\"], .mail[author=\"#{name}\"] .body a {color: #000; background-color: #{c}}\n"},
+            ".mail a[name=\"#{name}\"], .mail .q[name=\"#{name}\"] {color: #000; background-color: #{c}}\n"},
           (1..15).map{|depth|
             back = rand(2) == 0
             ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}
@@ -150,6 +150,7 @@ class R
 
      {class: :messages, id: :messages,
       c: d.resources(e).map{|r|
+        reWho = nil
         {class: :mail, id: r.uri,
          c: [
            r[Title].justArray[0].do{|t|
@@ -164,6 +165,7 @@ class R
                       r[Creator].justArray[0].do{|c|
                         uri = c.R
                         c = uri.fragment || uri.path || uri.host
+                        reWho = c
                         [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
                       }}}},
                 r[To].justArray.map{|o|
@@ -191,7 +193,9 @@ class R
                    href: d.uri + '#' + (r.R.path||''),
                    c: '≡', title: 'show in thread'} unless e[:thread]}].intersperse("\n  ")},
 
-           r[Content].do{|c| {class: :body, c: c}},
+           r[Content].justArray.map{|c|
+             {class: :body, c: reWho ? c.gsub("depth='1'>","name='#{reWho}'>") : c}
+           },
            r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
            [DC+'hasFormat', SIOC+'attachment'].map{|p|
              r[p].justArray.map{|o|
