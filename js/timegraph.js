@@ -127,15 +127,17 @@ document.addEventListener("keydown",function(e){
 	var curID = window.location.hash.slice(1);
 	var cur = document.getElementById(curID);
 
-	if(cur){
+	if(cur) {
 	    if(e.keyCode == 37) // left
 		next = cur.previousSibling;
 	    if(e.keyCode == 39) // right
 		next = cur.nextSibling;
 	} else {
 	    next = document.querySelector('[id]');
-	}
-
+	};
+	console.log('cur',cur);
+	console.log('curID',curID);
+	console.log('next',next);
 	if(next) {
 	    window.location.hash = next.id;
 	    e.preventDefault();
