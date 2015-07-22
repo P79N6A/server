@@ -106,7 +106,7 @@ class R
     nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
     prev = e[:Links][:prev].do{|p|CGI.escapeHTML p}
     paged = nxt||prev
-    brk = '<br clear="all"/>'
+    br = '<br clear="all"/>'
 
     H ["<!DOCTYPE html>\n",
        {_: :html,
@@ -115,18 +115,19 @@ class R
                  {_: :link, rel: :icon, href: '/.icon.png'},
                  e[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
                  e[:Links].do{|links|
-                   links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
+                   links.map{|type,uri|
+                     {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  ([H.css('/css/page',true), H.js('/js/pager',true)] if paged),
-                 H.css('/css/base',true)]},
+                 H.js('/js/kbd',true), H.css('/css/base',true)]},
             {_: :body,
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
                  ({_: :a, rel: :prev, href: prev, c: '←', title: 'previous page'} if prev),
                  ({_: :a, rel: :next, href: nxt, c: '→', title: 'next page'} if nxt),
-                 (brk if paged),
+                 (br if paged),
                  view[d,e],
-                 ([brk,{_: :a, rel: :next, href: nxt, c: '→'}] if nxt),
+                 ([br,{_: :a, rel: :next, href: nxt, c: '→'}] if nxt),
                 ]}]}]}
 
   View = -> d,e { # default view - group by type, try type-render, fallback to generic

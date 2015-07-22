@@ -1,7 +1,3 @@
-Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return this}
-NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
-NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
-
 var nodes = {};
 var height = 180;
 var width = window.innerWidth;
@@ -118,34 +114,6 @@ function findNode(event) {
     if(found)
 	window.location.hash = found.uri;
 }
-
-document.addEventListener("keydown",function(e){
-
-    // arrow-key navigation
-    if((e.keyCode==37) || (e.keyCode==39)) {
-	var next = null;
-	var curID = window.location.hash.slice(1);
-	var cur = document.getElementById(curID);
-
-	if(cur) {
-	    if(e.keyCode == 37) // left
-		next = cur.previousSibling;
-	    if(e.keyCode == 39) // right
-		next = cur.nextSibling;
-	} else {
-	    next = document.querySelector('[selectable][id]');
-	};
-	console.log('cur',cur);
-	console.log('curID',curID);
-	console.log('next',next);
-	if(next) {
-	    window.location.hash = next.id;
-	    e.preventDefault();
-	};
-
-	return false;
-    };
-},false)
 
 var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
