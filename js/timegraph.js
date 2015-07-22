@@ -133,7 +133,7 @@ document.addEventListener("keydown",function(e){
 	    if(e.keyCode == 39) // right
 		next = cur.nextSibling;
 	} else {
-	    next = document.querySelector('[id]');
+	    next = document.querySelector('[selectable][id]');
 	};
 	console.log('cur',cur);
 	console.log('curID',curID);
