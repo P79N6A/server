@@ -43,8 +43,5 @@ OPTIONAL deps
 # code
  source-highlight python-Pygments
 
-TWEAK
- - bind lambda to RDF-type - see src
-
 CLEAN
 $ rm -rf cache index
