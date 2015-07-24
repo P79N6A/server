@@ -5,7 +5,7 @@ PW is a HTTP/HTTPS daemon
  - uploads on PUT and POST with LDP-Container and retro HTML-<form> capability
  - paging containers: summarization, Link headers, sorted-ranges, offsets/cursors
  - lazy indexing via GET (fs links in a traversible container)
- - mostly conforming with http://linkeddata.github.io/SoLiD/ guidelines
+ - mostly conforming to http://linkeddata.github.io/SoLiD/ guidelines
 
  MIME-types
  - input: RDF.rb formats + Atom/RSS feeds, email, chatlogs, text-files, CSV, Markdown, highlighted-code
@@ -43,8 +43,8 @@ OPTIONAL deps
 # code
  source-highlight python-Pygments
 
-FRAMEWORK
- - customize: bind lambda to RDF-type 
+TWEAK
+ - bind lambda to RDF-type - see src
 
 CLEAN
 $ rm -rf cache index
