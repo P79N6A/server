@@ -16,8 +16,8 @@ SRC git clone https://github.com/hallwaykid/pw.git ||
 
 PRE-INSTALL any missing dependencies
 
-# voidlinux
-$ xbps-install ruby ruby-devel libgit2-devel libxml2-devel libxslt-devel
+# void
+$ xbps-install ruby ruby-devel libgit2-devel libxml2-devel libxslt-devel source-highlight python-Pygments
 $ gem install bundler
 
 # debian
@@ -36,12 +36,6 @@ $ foreman start  # start HTTP/HTTPS daemons
 # >1024 (behind apache/nginx/lighttpd)
 
 repl$ irb -rww
-
-OPTIONAL deps 
-# mail
- getmail procmail msmtp mutt # see mail README
-# code
- source-highlight python-Pygments
 
 CLEAN
 $ rm -rf cache index
