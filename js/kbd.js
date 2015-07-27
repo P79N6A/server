@@ -5,26 +5,7 @@ NodeList.prototype.on = function(){return this.map(Element.prototype.on,argument
 document.addEventListener("keydown",function(e){
 
     console.log(e.keyCode);
-    // next-prev resource navigation
-    if((e.keyCode==37) || (e.keyCode==39)) {
-	var next = null;
-	var curID = window.location.hash.slice(1);
-	var cur = document.getElementById(curID);
+    if(e.keyCode==37 || e.keyCode==80)
+	window.history.back();
 
-	if(cur) {
-	    if(e.keyCode == 37) // left
-		next = cur.previousSibling;
-	    if(e.keyCode == 39) // right
-		next = cur.nextSibling;
-	} else {
-	    next = document.querySelector('[selectable][id]');
-	};
-
-	if(next) {
-	    window.location.hash = next.id;
-	    e.preventDefault();
-	};
-
-	return false;
-    };
 },false)
