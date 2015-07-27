@@ -79,16 +79,13 @@ function tick() {
     node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
 }
 
-// cursor
+// create cursor
 svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#eee').attr('width',10).attr('x',width);
+var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
+var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
-var cursor = svg.select('#cursor')[0][0];
-var cursorB = svg.select('#cursorB')[0][0];
-
-window.onhashchange = function(e){
-    a = 3;
-    console.log(this)
-    console.log(a);
+window.onhashchange = function(e){ // center resource in view
+//    console.log(a);
     var target = messages[window.location.hash.slice(1)];
     if(target) {
 	force.resume();
