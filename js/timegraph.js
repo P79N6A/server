@@ -86,6 +86,9 @@ var cursor = svg.select('#cursor')[0][0];
 var cursorB = svg.select('#cursorB')[0][0];
 
 window.onhashchange = function(e){
+    a = 3;
+    console.log(this)
+    console.log(a);
     var target = messages[window.location.hash.slice(1)];
     if(target) {
 	force.resume();
