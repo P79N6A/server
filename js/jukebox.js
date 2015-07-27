@@ -90,12 +90,14 @@ var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
 window.onhashchange = function(e){ // center resource in view
     var id = window.location.hash.slice(1);
-    var target = messages[id];
-    console.log(id,target);
-    if(target) {
+    var resource = document.getElementById(id);
+    var vz = messages[id];
+    console.log(id,resource,vz);
+    if(vz) {
 	force.resume();
-	target.y = target.py = middle;
-	cursor.setAttribute('x', target.pos);
+	vz.y = vz.py = middle;
+	cursor.setAttribute('x', vz.pos);
+	cursor.setAttribute('y', vz.y);
     }
 }
 
