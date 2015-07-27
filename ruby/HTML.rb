@@ -123,8 +123,8 @@ class R
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
-                 ({_: :a, selectable: true, rel: :prev, href: prev, c: '←', title: 'previous page'} if prev),
-                 ({_: :a, selectable: true, rel: :next, href: nxt, c: '→', title: 'next page'} if nxt),
+                 ({_: :a, rel: :prev, href: prev, c: '←', title: 'previous page'} if prev),
+                 ({_: :a, rel: :next, href: nxt, c: '→', title: 'next page'} if nxt),
                  (br if paged),
                  view[d,e],
                  ([br,{_: :a, rel: :next, href: nxt, c: '→'}] if nxt),
