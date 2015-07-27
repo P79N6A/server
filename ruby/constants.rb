@@ -100,7 +100,7 @@ class R < RDF::URI
     :rdfs => RDF::URI(RDFs),
     :stat => RDF::URI(Stat),
   }
-
+  ## user-customize 
   FileSet = {}     # files in GET
   ResourceSet = {} # resources in GET
   Abstract = {}    # summarize

@@ -162,7 +162,7 @@ class R
 
   Render['application/json'] = -> d,e { d.to_json }
 
-  # file (non-RDF) ->  file (RDF)
+  # file-reference (non-RDF) ->  file-reference (RDF)
   def justRDF pass = RDFsuffixes
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
       self # unchanged

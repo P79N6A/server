@@ -4,7 +4,8 @@ NodeList.prototype.on = function(){return this.map(Element.prototype.on,argument
 
 document.addEventListener("keydown",function(e){
 
-    // arrow-key navigation
+    console.log(e.keyCode);
+    // next-prev resource navigation
     if((e.keyCode==37) || (e.keyCode==39)) {
 	var next = null;
 	var curID = window.location.hash.slice(1);
