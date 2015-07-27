@@ -1,9 +1,13 @@
+Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return this}
+NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
+NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
+
 var nodes = {};
 var height = 180;
 var width = window.innerWidth;
 var middle = height / 2;
 
-arcs.forEach(function(link) { // unique nodes from arc-list
+arcs.forEach(function(link) { // populate node-table from triples
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
@@ -85,8 +89,9 @@ var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
 window.onhashchange = function(e){ // center resource in view
-//    console.log(a);
-    var target = messages[window.location.hash.slice(1)];
+    var id = window.location.hash.slice(1);
+    var target = messages[id];
+    console.log(id,target);
     if(target) {
 	force.resume();
 	target.y = target.py = middle;
@@ -120,13 +125,10 @@ timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("touchmove",findNode);
 timegraph.addEventListener("click",findNode);
 document.querySelectorAll(".mail").on("click",function(){window.location.hash=this.getAttribute("id");});
-Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return this}
-NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
-NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
 document.addEventListener("keydown",function(e){
 
-//    console.log(e.keyCode);
+    console.log(e.keyCode);
 
     // p
     if(e.keyCode==37 || e.keyCode==80)
