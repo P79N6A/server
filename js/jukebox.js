@@ -132,7 +132,7 @@ document.addEventListener("keydown",function(e){
 
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
-    console.log(e.keyCode);
+//    console.log(e.keyCode);
 
     // p, <left-arrow> <-
     if(e.keyCode==37 || e.keyCode==80)
@@ -140,24 +140,27 @@ document.addEventListener("keydown",function(e){
 
     // n, <right-arrow> ->, <tab>
     if(e.keyCode==39 || e.keyCode==78 || e.keyCode==9){
-
-	if(resource) {	// current resource
-	    var explicitNext = resource.getAttribute("next");
-	    if(explicitNext) { // next resource
-		window.location = explicitNext;
-	    } else { // next in sequence
-		var nextSibling = resource.nextSibling;
-		if(nextSibling) {
-		    var nextId = nextSibling.getAttribute("id");
-		    if(nextId) {
-			window.location.hash = nextId;
+	if (event.getModifierState("Shift")) {
+	    window.history.back();
+	} else {
+	    if(resource) {	// current resource
+		var explicitNext = resource.getAttribute("next");
+		if(explicitNext) { // next resource
+		    window.location = explicitNext;
+		} else { // next in sequence
+		    var nextSibling = resource.nextSibling;
+		    if(nextSibling) {
+			var nextId = nextSibling.getAttribute("id");
+			if(nextId) {
+			    window.location.hash = nextId;
+			};
 		    };
 		};
+	    } else { // no focused-resource bound
+		var cur = document.querySelector('[id][selectable]');
+		if(cur)
+		    window.location.hash = cur.getAttribute('id');
 	    };
-	} else { // no focused-resource bound
-	    var cur = document.querySelector('[id][selectable]');
-	    if(cur)
-		window.location.hash = cur.getAttribute('id');
 	};
     };
 
@@ -170,5 +173,7 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
     };
+    e.preventDefault();
+    e.stopPropagation();
 
 },false);
