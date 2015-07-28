@@ -7,14 +7,12 @@ document.addEventListener("keydown",function(e){
     var prev = function() {
 	if(resource) {
 	    var sib = resource.previousSibling;
-	    console.log(resource,'res',sib);
 	    if(sib) { // previous entry
 		var prevId = sib.getAttribute("id");
 		if(prevId)
 		    window.location.hash = prevId;
 	    } else { // wrap
-		console.log('wrap',resource);
-		var loop = resource.parentNode.querySelector('[selectable]:last-child');
+		var loop = resource.parentNode.lastChild;
 		if(loop)
 		    window.location.hash = loop.getAttribute("id");
 	    };
@@ -88,7 +86,7 @@ document.addEventListener("keydown",function(e){
     };
 
     // back
-    if(e.keyCode==80) // p
+    if(e.keyCode==66 || e.keyCode==80) // b, p
 	window.history.back();
 
 },false);
