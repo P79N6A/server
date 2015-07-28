@@ -132,18 +132,18 @@ document.addEventListener("keydown",function(e){
 
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
-//    console.log(e.keyCode);
+    console.log(e.keyCode);
 
-    // p, <-(left-arrow)
+    // p, <left-arrow> <-
     if(e.keyCode==37 || e.keyCode==80)
 	window.history.back();
 
-    // n, (right-arrow)->
-    if(e.keyCode==39 || e.keyCode==78){
+    // n, <right-arrow> ->, <tab>
+    if(e.keyCode==39 || e.keyCode==78 || e.keyCode==9){
 
 	if(resource) {	// current resource
 	    var explicitNext = resource.getAttribute("next");
-	    if(explicitNext) { // next resource declared
+	    if(explicitNext) { // next resource
 		window.location = explicitNext;
 	    } else { // next in sequence
 		var nextSibling = resource.nextSibling;
@@ -154,10 +154,12 @@ document.addEventListener("keydown",function(e){
 		    };
 		};
 	    };
+	} else { // no target-resource
+
 	};
     };
 
-    // (enter)
+    // <enter>
     if(e.keyCode==13){
 	if(resource) {
 	    var href = resource.getAttribute("href");
