@@ -92,7 +92,7 @@ window.onhashchange = function(e){ // center resource in view
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
     var vz = messages[id];
-    console.log(id,resource,vz);
+//    console.log(id,resource,vz);
     if(vz) {
 	force.resume();
 	vz.y = vz.py = middle;
@@ -130,15 +130,27 @@ document.querySelectorAll(".mail").on("click",function(){window.location.hash=th
 
 document.addEventListener("keydown",function(e){
 
-    console.log(e.keyCode);
+//    console.log(e.keyCode);
 
-    // p
+    // p, <-(left-arrow)
     if(e.keyCode==37 || e.keyCode==80)
 	window.history.back();
-    // n
+    // n, (right-arrow)->
     if(e.keyCode==39 || e.keyCode==78){
-	var cur = document.getElementById(window.location.hash.slice(1));
-	console.log(cur);
+	var id = window.location.hash.slice(1);
+	var resource = document.getElementById(id);
+	var explicitNext = resource.getAttribute("next");
+	if(explicitNext) {
+	    window.location = explicitNext;
+	} else {
+	    var nextSibling = resource.nextSibling;
+	    if(nextSibling) {
+		var nextId = nextSibling.getAttribute("id");
+		if(nextId) {
+		    window.location.hash = nextId;
+		}
+	    };
+	};
     };
 
 },false);
