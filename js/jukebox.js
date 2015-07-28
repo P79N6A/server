@@ -130,20 +130,24 @@ document.querySelectorAll(".mail").on("click",function(){window.location.hash=th
 
 document.addEventListener("keydown",function(e){
 
-//    console.log(e.keyCode);
+    console.log(e.keyCode);
 
     // p, <-(left-arrow)
     if(e.keyCode==37 || e.keyCode==80)
 	window.history.back();
+
     // n, (right-arrow)->
     if(e.keyCode==39 || e.keyCode==78){
+
+	// current resource
 	var id = window.location.hash.slice(1);
 	var resource = document.getElementById(id);
+
 	if(resource) {
 	    var explicitNext = resource.getAttribute("next");
-	    if(explicitNext) {
+	    if(explicitNext) { // next resource declared
 		window.location = explicitNext;
-	    } else {
+	    } else { // next in sequence
 		var nextSibling = resource.nextSibling;
 		if(nextSibling) {
 		    var nextId = nextSibling.getAttribute("id");
@@ -153,6 +157,11 @@ document.addEventListener("keydown",function(e){
 		};
 	    };
 	};
+    };
+
+    // (enter)
+    if(e.keyCode==13){
+
     };
 
 },false);
