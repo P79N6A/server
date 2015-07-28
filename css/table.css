@@ -3,7 +3,7 @@ table.tab a {text-decoration: none}
 table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
-table.tab tr:hover td {background-color:#ef0}
+table.tab tr:hover td {background-color:#ef0; color: #000}
 table.tab tr:target {background-color: #fe0; color: #fff}
 table.tab tr:target a {color: #000}
 table.tab td {vertical-align: bottom; border-style: dotted; border-color: #eee; border-width: 0 0 .1em 0;padding:.1em}
