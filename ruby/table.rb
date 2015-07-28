@@ -100,7 +100,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
     [(if edit && selected
       [H.css('/css/edit',true), '<form method=POST>']
       end),
-     {_: :tr, id: (this.fragment||l.uri), style: (edit && selected) ? 'background-color:#f6f6f6;color:#000' : '',
+     {_: :tr, id: l.uri, href: l.uri, selectable: :true, style: (edit && selected) ? 'background-color:#f6f6f6;color:#000' : '',
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
@@ -150,7 +150,7 @@ tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
               {_: :a, class: :wrench, style: 'color:#888',href: this.docroot.uri+'?edit&fragment='+(this.fragment||'')}
              end}
           end]},
-     ('</form>' if edit && selected), "\n",
+     ('</form>' if edit && selected),
      l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}}]}
 
   ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
