@@ -3,9 +3,9 @@ table.tab a {text-decoration: none}
 table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
-table.tab tr:hover td {border-color:#ef0}
+table.tab tr:hover td {border-color: yellow}
 table.tab tr:target, table.tab tr:target a, .container a.member:target {background-color: #fe0; color: #000}
-table.tab td {vertical-align: bottom; border-style: solid; border-color: #eee; border-width: .06em 0 .06em 0}
+table.tab td {vertical-align: bottom; border-style: dotted; border-color: #eee; border-width: .1em 0 .1em 0}
 table.tab td[property='uri'] {text-align:right; font-weight: bold;min-width:10em}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
