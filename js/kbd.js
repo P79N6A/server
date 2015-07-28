@@ -4,20 +4,24 @@ document.addEventListener("keydown",function(e){
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
 
+    var prev = function() {
+	
+    };
+
+    var next = function() {
+
+    };
+
 //    console.log(e.keyCode);
 
     // previous location
-    //  keys: p
-    if(e.keyCode==37 || e.keyCode==38 || e.keyCode==80){
-	e.preventDefault();	
+    if(e.keyCode==80) // p
 	window.history.back();
-    };
 
     // previous entry
     // <up-arrow>
-    var prev = function() {
-	
-    }
+    if(e.keyCode==38)
+	prev();
 
     // next entry
     // n <down-arrow> <tab>
