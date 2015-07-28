@@ -6,19 +6,25 @@ document.addEventListener("keydown",function(e){
 
 //    console.log(e.keyCode);
 
-    // previous
-    //  keys: p <left-arrow> <up-arrow>
+    // previous location
+    //  keys: p
     if(e.keyCode==37 || e.keyCode==38 || e.keyCode==80){
 	e.preventDefault();	
 	window.history.back();
     };
 
-    // next
+    // previous entry
+    // <up-arrow>
+    var prev = function() {
+	
+    }
+
+    // next entry
     // n <down-arrow> <tab>
     if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (event.getModifierState("Shift")) {
-	    window.history.back();
+	    prev();
 	} else {
 	    if(resource) {	// current resource
 		var explicitNext = resource.getAttribute("next");
@@ -45,7 +51,10 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // enter
+    // exit context
+    // <left-arrow> <esc>
+
+    // enter context
     // <enter> <right-arrow>
     if(e.keyCode == 39|| e.keyCode==13){
 	e.preventDefault();
