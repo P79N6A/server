@@ -1,8 +1,9 @@
 
 document.addEventListener("keydown",function(e){
-
+    var resource = null;
     var id = window.location.hash.slice(1);
-    var resource = document.getElementById(id);
+    if(id)
+	resource = document.getElementById(id);
 
     var prev = function() {
 	if(resource) {
@@ -31,7 +32,7 @@ document.addEventListener("keydown",function(e){
 		    if(nextId)
 			window.location.hash = nextId;
 		} else { // sequence-end, wrap around
-		    var loop = resource.parentNode.querySelector('[selectable]');
+		    var loop = resource.parentNode.firstChild;
 		    if(loop)
 			window.location.hash = loop.getAttribute("id");
 		};
@@ -49,7 +50,7 @@ document.addEventListener("keydown",function(e){
     // <up-arrow>
     if(e.keyCode==38) {
 	e.preventDefault();
-	if (event.getModifierState("Shift")) {
+	if (e.getModifierState("Shift")) {
 	    next();
 	} else {
 	    prev();
@@ -60,7 +61,7 @@ document.addEventListener("keydown",function(e){
     // n <down-arrow> <tab>
     if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
-	if (event.getModifierState("Shift")) {
+	if (e.getModifierState("Shift")) {
 	    prev();
 	} else {
 	    next();
