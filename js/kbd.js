@@ -5,11 +5,24 @@ document.addEventListener("keydown",function(e){
     var resource = document.getElementById(id);
 
     var prev = function() {
-	
+	if(resource) {
+	    var sib = resource.previousSibling;
+	    console.log(resource,'res',sib);
+	    if(sib) { // previous entry
+		var prevId = sib.getAttribute("id");
+		if(prevId)
+		    window.location.hash = prevId;
+	    } else { // wrap
+		console.log('wrap',resource);
+		var loop = resource.parentNode.querySelector('[selectable]:last-child');
+		if(loop)
+		    window.location.hash = loop.getAttribute("id");
+	    };
+	}
     };
 
     var next = function() {
-	if(resource) {	// current resource
+	if(resource) {	// focused resource
 	    var explicitNext = resource.getAttribute("next");
 	    if(explicitNext) { // next by declaration
 		window.location = explicitNext;
@@ -17,16 +30,15 @@ document.addEventListener("keydown",function(e){
 		var nextSibling = resource.nextSibling;
 		if(nextSibling) { // next in sequence
 		    var nextId = nextSibling.getAttribute("id");
-		    if(nextId) {
+		    if(nextId)
 			window.location.hash = nextId;
-		    };
-		} else { // sequence-end
+		} else { // sequence-end, wrap around
 		    var loop = resource.parentNode.querySelector('[selectable]');
 		    if(loop)
 			window.location.hash = loop.getAttribute("id");
 		};
 	    };
-	} else { // no focused-resource bound
+	} else { // no focused-resource, annoint one
 	    var cur = document.querySelector('[id][selectable]');
 	    if(cur)
 		window.location.hash = cur.getAttribute('id');
@@ -35,14 +47,16 @@ document.addEventListener("keydown",function(e){
 
 //    console.log(e.keyCode);
 
-    // previous location
-    if(e.keyCode==80) // p
-	window.history.back();
-
     // previous entry
     // <up-arrow>
-    if(e.keyCode==38)
-	prev();
+    if(e.keyCode==38) {
+	e.preventDefault();
+	if (event.getModifierState("Shift")) {
+	    next();
+	} else {
+	    prev();
+	};
+    };
 
     // next entry
     // n <down-arrow> <tab>
@@ -72,5 +86,9 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
     };
+
+    // back
+    if(e.keyCode==80) // p
+	window.history.back();
 
 },false);
