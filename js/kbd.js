@@ -90,8 +90,8 @@ document.addEventListener("keydown",function(e){
     };
 
     // enter context
-    // <enter> <right-arrow>
-    if(e.keyCode == 39|| e.keyCode==13){
+    // <right-arrow>
+    if(e.keyCode == 39){
 	e.preventDefault();
 	if(resource) {
 	    var child = resource.querySelector('[id][selectable]');
@@ -103,7 +103,21 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
     };
+    // <enter>
+    if(e.keyCode == 13){
+	e.preventDefault();
+	if(resource) {
+	    var child = resource.querySelector('[id][selectable]');
+	    var href = resource.getAttribute("href");
+	    if(href){
+		document.location = href;
+	    } else if(child) {
+		window.location.hash = child.getAttribute('id');
+	    };
+	};
+    };
 
+    
     // back
     if(e.keyCode==66 || e.keyCode==80) // b, p
 	window.history.back();
