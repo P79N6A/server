@@ -46,8 +46,7 @@ document.addEventListener("keydown",function(e){
 	    var href = resource.getAttribute("href");
 	    if(href) {
 		e.preventDefault();
-		window.location.hash = "";
-		//		document.location = href;
+		document.location = href;
 	    };
 	};
     };
