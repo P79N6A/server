@@ -84,7 +84,7 @@ function tick() {
 }
 
 // create cursor
-svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#eee').attr('width',10).attr('x',width);
+svg.append('rect').attr('height',10).attr('id','cursor').style('fill','#ccc').attr('width',10).attr('x',width);
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
@@ -100,7 +100,7 @@ window.onhashchange = function(e){ // center resource in view
 	force.resume();
 	vz.y = vz.py = middle;
 	cursor.setAttribute('x', vz.pos);
-	cursor.setAttribute('y', vz.y);
+	cursor.setAttribute('y', vz.py);
     }
 }
 
@@ -138,11 +138,14 @@ document.addEventListener("keydown",function(e){
 //    console.log(e.keyCode);
 
     // p, <left-arrow> <-
-    if(e.keyCode==37 || e.keyCode==80)
+    if(e.keyCode==37 || e.keyCode==80){
+	e.preventDefault();	
 	window.history.back();
+    };
 
     // n, <right-arrow> ->, <tab>
     if(e.keyCode==39 || e.keyCode==78 || e.keyCode==9){
+	e.preventDefault();
 	if (event.getModifierState("Shift")) {
 	    window.history.back();
 	} else {
@@ -174,11 +177,11 @@ document.addEventListener("keydown",function(e){
 	if(resource) {
 	    var href = resource.getAttribute("href");
 	    if(href) {
+		e.preventDefault();
 		document.location = href;
 	    };
 	};
     };
-    e.preventDefault();
-    e.stopPropagation();
+//    e.stopPropagation();
 
 },false);
