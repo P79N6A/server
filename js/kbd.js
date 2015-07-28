@@ -9,7 +9,28 @@ document.addEventListener("keydown",function(e){
     };
 
     var next = function() {
-
+	if(resource) {	// current resource
+	    var explicitNext = resource.getAttribute("next");
+	    if(explicitNext) { // next by declaration
+		window.location = explicitNext;
+	    } else {
+		var nextSibling = resource.nextSibling;
+		if(nextSibling) { // next in sequence
+		    var nextId = nextSibling.getAttribute("id");
+		    if(nextId) {
+			window.location.hash = nextId;
+		    };
+		} else { // sequence-end
+		    var loop = resource.parentNode.querySelector('[selectable]');
+		    if(loop)
+			window.location.hash = loop.getAttribute("id");
+		};
+	    };
+	} else { // no focused-resource bound
+	    var cur = document.querySelector('[id][selectable]');
+	    if(cur)
+		window.location.hash = cur.getAttribute('id');
+	}
     };
 
 //    console.log(e.keyCode);
@@ -30,28 +51,7 @@ document.addEventListener("keydown",function(e){
 	if (event.getModifierState("Shift")) {
 	    prev();
 	} else {
-	    if(resource) {	// current resource
-		var explicitNext = resource.getAttribute("next");
-		if(explicitNext) { // next by declaration
-		    window.location = explicitNext;
-		} else {
-		    var nextSibling = resource.nextSibling;
-		    if(nextSibling) { // next in sequence
-			var nextId = nextSibling.getAttribute("id");
-			if(nextId) {
-			    window.location.hash = nextId;
-			};
-		    } else { // sequence-end
-			var loop = resource.parentNode.querySelector('[selectable]');
-			if(loop)
-			    window.location.hash = loop.getAttribute("id");
-		    };
-		};
-	    } else { // no focused-resource bound
-		var cur = document.querySelector('[id][selectable]');
-		if(cur)
-		    window.location.hash = cur.getAttribute('id');
-	    };
+	    next();
 	};
     };
 
