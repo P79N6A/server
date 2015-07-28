@@ -7,7 +7,7 @@ body {margin: 0;font-family: sans-serif;background-color:#002;color:#fff;padding
     margin-right: 1em;
     background-color:#000;
     color:#fff;
-    border-radius: 0 0 .2em .2em;
+    border-radius: .2em;
     max-width:168ex;
     white-space: normal;
 }
