@@ -70,6 +70,9 @@ document.addEventListener("keydown",function(e){
 
     // exit context
     // <left-arrow> <esc>
+    if(e.keyCode==27 || e.keyCode==37){
+	console.log('up');
+    }
 
     // enter context
     // <enter> <right-arrow>
