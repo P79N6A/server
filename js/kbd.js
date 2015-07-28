@@ -44,8 +44,6 @@ document.addEventListener("keydown",function(e){
 	}
     };
 
-//    console.log(e.keyCode);
-
     // previous entry
     // <up-arrow>
     if(e.keyCode==38) {
