@@ -154,8 +154,10 @@ document.addEventListener("keydown",function(e){
 		    };
 		};
 	    };
-	} else { // no target-resource
-
+	} else { // no focused-resource bound
+	    var cur = document.querySelector('[id][selectable]');
+	    if(cur)
+		window.location.hash = cur.getAttribute('id');
 	};
     };
 
