@@ -59,7 +59,7 @@ class R
        c.sortRDF(e).send(direction).map{|r|
          uri = r.R.uri
          data = r.class == Hash
-         [{_: :a, href: uri, class: :member,
+         [{_: :a, href: uri, class: :member, selectable: true, id: uri,
            c: [(if data && sized && r[Size]
                 s = r[Size].justArray[0]
                 [{_: :span, class: :size, c: (s > 1 ? "%#{width}d" % s : ' '*width).gsub(' ','&nbsp;')}, ' ']

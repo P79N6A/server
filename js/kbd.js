@@ -31,7 +31,7 @@ document.addEventListener("keydown",function(e){
 			if(nextId) {
 			    window.location.hash = nextId;
 			};
-		    } else { // resource-sequence end
+		    } else { // sequence-end
 			var loop = resource.parentNode.querySelector('[selectable]');
 			if(loop)
 			    window.location.hash = loop.getAttribute("id");
@@ -48,10 +48,13 @@ document.addEventListener("keydown",function(e){
     // enter
     // <enter> <right-arrow>
     if(e.keyCode == 39|| e.keyCode==13){
+	e.preventDefault();
 	if(resource) {
+	    var child = resource.querySelector('[id][selectable]');
 	    var href = resource.getAttribute("href");
-	    if(href) {
-		e.preventDefault();
+	    if(child){
+		window.location.hash = child.getAttribute('id');
+	    } else if(href) {
 		document.location = href;
 	    };
 	};

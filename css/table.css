@@ -4,7 +4,7 @@ table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
 table.tab tr:hover td {background-color:#ef0; color: #000}
-table.tab tr:target {background-color: #fe0; color: #fff}
+table.tab tr:target, .container a.member:target {background-color: #fe0; color: #fff}
 table.tab tr:target a {color: #000}
 table.tab td {vertical-align: bottom; border-style: dotted; border-color: #eee; border-width: 0 0 .1em 0;padding:.1em}
 table.tab td[property='uri'] {text-align:right; font-weight: bold;min-width:10em}
