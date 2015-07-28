@@ -29,7 +29,7 @@ document.addEventListener("keydown",function(e){
 			    window.location.hash = nextId;
 			};
 		    } else { // resource-sequence end
-			window.location = document.referrer;
+//			window.location = document.referrer;
 		    };
 		};
 	    } else { // no focused-resource bound
