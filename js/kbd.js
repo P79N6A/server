@@ -72,7 +72,15 @@ document.addEventListener("keydown",function(e){
     // <left-arrow> <esc>
     if(e.keyCode==27 || e.keyCode==37){
 	if(resource) {
-	    console.log('find p');
+	    var ri = null;
+	    var r = resource;
+	    while(r.parentNode && !ri) {
+		r = r.parentNode;
+		if(r)
+		    ri = r.getAttribute('id');
+	    }
+	    if(ri)
+		window.location.hash = ri;
 	} else {
 	    window.history.back();
 	};
