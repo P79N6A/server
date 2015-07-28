@@ -148,15 +148,17 @@ document.addEventListener("keydown",function(e){
 	} else {
 	    if(resource) {	// current resource
 		var explicitNext = resource.getAttribute("next");
-		if(explicitNext) { // next resource
+		if(explicitNext) { // next by declaration
 		    window.location = explicitNext;
-		} else { // next in sequence
+		} else {
 		    var nextSibling = resource.nextSibling;
-		    if(nextSibling) {
+		    if(nextSibling) { // next in sequence
 			var nextId = nextSibling.getAttribute("id");
 			if(nextId) {
 			    window.location.hash = nextId;
 			};
+		    } else {
+			window.location = document.referrer;
 		    };
 		};
 	    } else { // no focused-resource bound
