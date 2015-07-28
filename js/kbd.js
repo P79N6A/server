@@ -72,15 +72,18 @@ document.addEventListener("keydown",function(e){
     // <left-arrow> <esc>
     if(e.keyCode==27 || e.keyCode==37){
 	if(resource) {
-	    var ri = null;
-	    var r = resource;
-	    while(r.parentNode && !ri) {
+	    var up = null;
+	    var r = resource.parentNode;
+	    while(r && r.nodeName != '#document' && !up) {
+		if(r.hasAttribute('selectable'))
+		    up = r.getAttribute('id');
 		r = r.parentNode;
-		if(r)
-		    ri = r.getAttribute('id');
 	    }
-	    if(ri)
-		window.location.hash = ri;
+	    if(up){
+		window.location.hash = up;
+	    } else {
+		window.history.back();
+	    };
 	} else {
 	    window.history.back();
 	};
