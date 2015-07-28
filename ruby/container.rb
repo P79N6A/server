@@ -72,7 +72,7 @@ class R
                else
                  uri
                 end)
-              ]}, "<br>",
+              ]},
           (if data && (c = r[LDP+'contains'])
            [c.map{|i|{_: :a, href: r.uri, c: {_: :img, src: i.uri, style: 'max-width: 360px; max-height: 360px'}}},'<br>']
            end)
