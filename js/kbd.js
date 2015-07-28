@@ -4,7 +4,7 @@ document.addEventListener("keydown",function(e){
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
 
-    console.log(e.keyCode);
+//    console.log(e.keyCode);
 
     // previous
     //  keys: p <left-arrow> <up-arrow>
@@ -32,7 +32,9 @@ document.addEventListener("keydown",function(e){
 			    window.location.hash = nextId;
 			};
 		    } else { // resource-sequence end
-//			window.location = document.referrer;
+			var loop = resource.parentNode.querySelector('[selectable]');
+			if(loop)
+			    window.location.hash = loop.getAttribute("id");
 		    };
 		};
 	    } else { // no focused-resource bound
