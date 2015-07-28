@@ -130,7 +130,9 @@ document.querySelectorAll(".mail").on("click",function(){window.location.hash=th
 
 document.addEventListener("keydown",function(e){
 
-    console.log(e.keyCode);
+    var id = window.location.hash.slice(1);
+    var resource = document.getElementById(id);
+//    console.log(e.keyCode);
 
     // p, <-(left-arrow)
     if(e.keyCode==37 || e.keyCode==80)
@@ -139,11 +141,7 @@ document.addEventListener("keydown",function(e){
     // n, (right-arrow)->
     if(e.keyCode==39 || e.keyCode==78){
 
-	// current resource
-	var id = window.location.hash.slice(1);
-	var resource = document.getElementById(id);
-
-	if(resource) {
+	if(resource) {	// current resource
 	    var explicitNext = resource.getAttribute("next");
 	    if(explicitNext) { // next resource declared
 		window.location = explicitNext;
@@ -161,7 +159,12 @@ document.addEventListener("keydown",function(e){
 
     // (enter)
     if(e.keyCode==13){
-
+	if(resource) {
+	    var href = resource.getAttribute("href");
+	    if(href) {
+		document.location = href;
+	    };
+	};
     };
 
 },false);
