@@ -71,12 +71,11 @@ class R
                 CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s)
                else
                  uri
+                end),
+               (if data && (c = r[LDP+'contains'])
+                c.map{|i|{_: :img, src: i.uri, style: 'max-width: 360px; max-height: 360px'}}
                 end)
-              ]},
-          (if data && (c = r[LDP+'contains'])
-           [c.map{|i|{_: :a, href: r.uri, c: {_: :img, src: i.uri, style: 'max-width: 360px; max-height: 360px'}}},'<br>']
-           end)
-         ]}}}}
+              ]}]}}}}
 
   def triplrAudio &f
     yield uri, Type, R[Sound]
