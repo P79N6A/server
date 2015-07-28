@@ -3,16 +3,19 @@ document.addEventListener("keydown",function(e){
 
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
+
 //    console.log(e.keyCode);
 
-    // p, <left-arrow> <-
-    if(e.keyCode==37 || e.keyCode==80){
+    // previous
+    //  keys: p <left-arrow> <up-arrow>
+    if(e.keyCode==37 || e.keyCode==38 || e.keyCode==80){
 	e.preventDefault();	
 	window.history.back();
     };
 
-    // n, <right-arrow> ->, <tab>
-    if(e.keyCode==39 || e.keyCode==78 || e.keyCode==9){
+    // next
+    // n <right-arrow> <down-arrow> <tab>
+    if(e.keyCode==39 || e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (event.getModifierState("Shift")) {
 	    window.history.back();

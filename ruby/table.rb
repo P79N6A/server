@@ -44,11 +44,6 @@ class R
     end
 
     [H.css('/css/table',true), "\n",
-     {_: :style, # highlight selected property (column) and resource (row)
-      c: "td[property='#{sort}'] {background-color: #{color};color:#fff}
-tr[id='#{e.uri}'] td {background-color:#000}
-tr[id='#{e.uri}'] td a, td[property='#{sort}'] a {color:#fff}
-"}, "\n",
      {_: :table, :class => :tab, # TABLE
       c: [{_: :tr,
            c: [keys.map{|k|

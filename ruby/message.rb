@@ -163,7 +163,7 @@ class R
             name: name,
             href: authorURI ? c.uri : '#',
             c: name},' ']}
-        {class: :mail, name: name, id: r.uri, selectable: :true,
+        {class: :mail, name: name, id: r.uri, href: r.uri, selectable: :true,
          c: [
            r[Title].justArray[0].do{|t|
              {_: :a, class: :title,
