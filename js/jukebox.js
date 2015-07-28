@@ -139,16 +139,18 @@ document.addEventListener("keydown",function(e){
     if(e.keyCode==39 || e.keyCode==78){
 	var id = window.location.hash.slice(1);
 	var resource = document.getElementById(id);
-	var explicitNext = resource.getAttribute("next");
-	if(explicitNext) {
-	    window.location = explicitNext;
-	} else {
-	    var nextSibling = resource.nextSibling;
-	    if(nextSibling) {
-		var nextId = nextSibling.getAttribute("id");
-		if(nextId) {
-		    window.location.hash = nextId;
-		}
+	if(resource) {
+	    var explicitNext = resource.getAttribute("next");
+	    if(explicitNext) {
+		window.location = explicitNext;
+	    } else {
+		var nextSibling = resource.nextSibling;
+		if(nextSibling) {
+		    var nextId = nextSibling.getAttribute("id");
+		    if(nextId) {
+			window.location.hash = nextId;
+		    };
+		};
 	    };
 	};
     };
