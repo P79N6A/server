@@ -203,7 +203,7 @@ class R
          ]}}},
 
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
-     H.js('/js/jukebox')
+     H.js('/js/timegraph')
     ]}
   
 end

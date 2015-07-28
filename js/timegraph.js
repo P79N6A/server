@@ -92,7 +92,7 @@ window.onhashchange = function(e){ // center resource in view
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
     if(resource) {
-	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2),0);
+	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), resource.offsetTop);
     }
     var vz = messages[id];
 //    console.log(id,resource,vz);
