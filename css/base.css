@@ -1,3 +1,4 @@
+a {color: #777}
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }

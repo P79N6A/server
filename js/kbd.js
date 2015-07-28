@@ -4,7 +4,7 @@ document.addEventListener("keydown",function(e){
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
 
-//    console.log(e.keyCode);
+    console.log(e.keyCode);
 
     // previous
     //  keys: p <left-arrow> <up-arrow>
@@ -14,8 +14,8 @@ document.addEventListener("keydown",function(e){
     };
 
     // next
-    // n <right-arrow> <down-arrow> <tab>
-    if(e.keyCode==39 || e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
+    // n <down-arrow> <tab>
+    if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (event.getModifierState("Shift")) {
 	    window.history.back();
@@ -43,8 +43,9 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // <enter>
-    if(e.keyCode==13){
+    // enter
+    // <enter> <right-arrow>
+    if(e.keyCode == 39|| e.keyCode==13){
 	if(resource) {
 	    var href = resource.getAttribute("href");
 	    if(href) {
