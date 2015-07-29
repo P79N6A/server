@@ -1,12 +1,12 @@
-table.tab {margin: .7em;border-spacing: 0}
-table.tab a {text-decoration: none}
+table.tab {border-spacing:0}
 table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
 table.tab tr:hover {background-color:#ddd}
-table.tab tr:target, .container a.member:target {background-color: #fe0; color: #000}
-table.tab td {padding:.3em;vertical-align:bottom;}
-table.tab td[property='uri'] {text-align:right; font-weight: bold;white-space: nowrap;font-size:1.18em}
+table.tab tr:target td, .container a.member:target {background-color: #fe0; color: #000}
+td {padding:.3em;vertical-align:bottom;background-color: #fff; color: #000}
+table.tab td[property='uri'] {text-align:right; white-space: nowrap}
+table.tab td[property='uri'] a {font-weight: bold;font-size:1.18em; color: #000}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
