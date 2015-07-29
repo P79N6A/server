@@ -318,9 +318,6 @@ text-align:center;
 a.referer {
 font-size: 1.2em;
 margin:.16em;
-color:#fff;
-background-color:#{e[:color]};
-border-radius:.1em;
 text-decoration: none;
 }
 "},

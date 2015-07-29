@@ -102,12 +102,6 @@ class R
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.size==1 ? titles.head : e.uri
     end
-    e[:color] = R.randomColor
-    nxt = e[:Links][:next].do{|n|CGI.escapeHTML n}
-    prev = e[:Links][:prev].do{|p|CGI.escapeHTML p}
-    paged = nxt||prev
-    br = '<br clear="all"/>'
-
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -117,18 +111,12 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                (H.css('/css/page',true) if paged),
                  H.css('/css/base',true)]},
             {_: :body,
              c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
-                 ({_: :a, rel: :prev, href: prev, c: '←', title: 'previous page'} if prev),
-                 ({_: :a, rel: :next, href: nxt, c: '→', title: 'next page'} if nxt),
-                 (br if paged),
-                 view[d,e],
-                 ([br,{_: :a, rel: :next, href: nxt, c: '→'}] if nxt),
-                ]}]}]}
+                 view[d,e]]}]}]}
 
   View = -> d,e { # default view - group by type, try type-render, fallback to generic
     groups = {}

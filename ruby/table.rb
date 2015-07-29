@@ -19,7 +19,6 @@ class R
   end
 
   TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
-    color = e[:color]
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq -
            [Label,
             Content,
