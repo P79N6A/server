@@ -1,4 +1,8 @@
 a {color: #000;background-color:#fff;border-style:solid;border-width: 0 0 .1em 0;border-color:yellow}
+a.user {color:#00ff0d;background-color:#f8f8f8;}
+a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0; text-decoration:none}
+a.identify {color: #ccc;background-color:#f8f8f8}
+
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }
@@ -7,9 +11,7 @@ a.file:before { content:"\f15b"; font-family: icons; }
 a.graph:before { content:"\f1e0"; font-family: icons; }
 a.group:before { content:"\f0c0"; font-family: icons;}
 a.id:before { content:"\f02a"; font-family: icons; }
-body > a.identify, body > a.user {font-size:1.4em;float: left;margin:.2em; text-decoration:none}
 a.identify:before { content:"\f235"; font-family: icons; }
-a.identify {color: #ccc}
 a.img:before { content:"\f03e"; font-family: icons; }
 a.key:before { content:"\f084"; font-family: icons; }
 a.link:before { content:"\f0c1"; font-family: icons; }
@@ -30,11 +32,8 @@ a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
 body {font-family: sans-serif;background-color:#f8f8f8;color:#000}
-body > a.user {color:#00ff0d}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
-.rdf {float:right;background-color:#fff;padding: .25em .35em .25em .3em;border-radius:1.2em;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
 td.key {text-align:right}
 td.key a {font-weight: bold; text-decoration:none}
 td.key img {height: 1.4em}
-tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 86ex}
-a.addButton {margin-left:7em;font-size:2em;background-color:#3f3;color:#fff;border-radius:.2em;padding:0 .3em 0 .3em;text-decoration:none}
+tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
