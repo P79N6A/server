@@ -132,7 +132,7 @@ class R
           [l.hrefs(true){|p,o|
              yield e, p, o}]
         end}.compact.intersperse("\n")
-      yield e, Content, body}
+      yield e, Content, "<div style='font-family: monospace;white-space: pre-wrap;'>"+body+"</div>"}
 
     attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
 
