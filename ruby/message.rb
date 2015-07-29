@@ -149,7 +149,7 @@ class R
          ]},
 
      {class: :messages, id: :messages,
-      c: d.resources(e).map{|r|
+      c: d.resources(e).reverse.map{|r|
         name = reWho = nil
         author = r[Creator].justArray[0].do{|c|
           authorURI = c.class==Hash || c.class==R
