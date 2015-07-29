@@ -5,8 +5,15 @@ NodeList.prototype.on = function(){return this.map(Element.prototype.on,argument
 document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes exist
 
     // tap to focus
-    document.querySelectorAll("[selectable][id]").on("click",function(){window.location.hash=this.getAttribute("id");});
-
+    document.querySelectorAll("[selectable][id]").on("click",function(){
+	var loc = window.location.hash.slice(1);
+	var id = this.getAttribute("id");
+	if(loc == id && this.hasAttribute('href')){
+	    window.location = this.getAttribute('href');
+	} else {
+	    window.location.hash = id;
+	};
+    });
 });
 			  
 // arrow-key navigation
