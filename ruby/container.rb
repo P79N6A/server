@@ -71,10 +71,10 @@ class R
                 CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s)
                else
                  uri
-                end),
+                end), '<br>',
                (if data && (c = r[LDP+'contains'])
-                ['<br>',
-                 c.map{|i|{_: :img, src: i.uri, style: 'max-width: 360px; max-height: 360px'}}]
+                [c.map{|i|{_: :img, src: i.uri, style: 'max-width: 360px; max-height: 360px'}},
+                 '<br>']
                 end)
               ]}]}}}}
 

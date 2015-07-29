@@ -6,12 +6,12 @@ table.tab th a {font-size:1.5em;font-weight: normal}
 table.tab tr:hover {background-color:#ddd}
 table.tab tr:target, table.tab tr:target a, .container a.member:target {background-color: #fe0; color: #000}
 table.tab td {vertical-align: bottom; border-style: dotted; border-color: #eee; border-width: .1em 0 .1em 0;padding:.3em}
-table.tab td[property='uri'] {text-align:right; font-weight: bold;font-size:1.2em}
+table.tab td[property='uri'] {text-align:right; font-weight: bold;font-size:1.18em}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
 table.tab td[property='http://purl.org/dc/terms/title'] {min-width: 20em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {padding: 0 .24em 0 .24em; margin: 0 .2em 0 .2em; border-radius: .5em ; font-weight: bold; background-color:#0f0; color: #fff}
 .container .size {font-family: monospace; white-space: pre-wrap}
-.container a.member {background-color:#fff;color:#000;display:block}
-.container a.member:visited {color:#aaa}
+.container a.member {background-color:#fff;color:#000}
+.container a.member:visited {color:#777}
