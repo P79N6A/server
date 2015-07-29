@@ -1,4 +1,15 @@
+Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return this}
+NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
+NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
+document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes exist
+
+    // tap to focus
+    document.querySelectorAll("[selectable][id]").on("click",function(){window.location.hash=this.getAttribute("id");});
+
+});
+			  
+// arrow-key navigation
 document.addEventListener("keydown",function(e){
     var resource = null;
     var id = window.location.hash.slice(1);

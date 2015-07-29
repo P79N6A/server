@@ -1,7 +1,3 @@
-Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return this}
-NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
-NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
-
 var nodes = {};
 var height = 180;
 var width = window.innerWidth;
@@ -129,4 +125,4 @@ var timegraph = document.getElementById('timegraph');
 timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("touchmove",findNode);
 timegraph.addEventListener("click",findNode);
-document.querySelectorAll(".mail").on("click",function(){window.location.hash=this.getAttribute("id");});
+
