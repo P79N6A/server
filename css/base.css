@@ -1,4 +1,4 @@
-a {color: #666}
+a {color: #000;background-color:#fff;border-style:solid;border-width: 0 0 .1em 0;border-color:yellow}
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }
@@ -29,7 +29,7 @@ a.title:before { content:"\f035"; font-family: icons; color: #777}
 a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
-body {font-family: sans-serif}
+body {font-family: sans-serif;background-color:#f8f8f8;color:#000}
 body > a.user {color:#00ff0d}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 .rdf {float:right;background-color:#fff;padding: .25em .35em .25em .3em;border-radius:1.2em;width:2.3em;height:2.645em;margin:0 .3em .5em .3em}
