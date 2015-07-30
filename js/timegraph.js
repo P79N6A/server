@@ -33,7 +33,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", height);
 
 // input-location cursor
-svg.append('rect').attr('height',height).attr('id','cursorB').style('fill','#224').attr('width',2).attr('x',width);
+svg.append('rect').attr('height',middle).attr('id','cursorB').style('fill','#ddd').attr('width',1).attr('x',width).attr('y',middle);
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -79,7 +79,7 @@ function tick() {
 }
 
 // create cursor
-svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width);
+svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width).attr('ry',4);
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
