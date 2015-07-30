@@ -1,5 +1,5 @@
 var nodes = {};
-var height = 180;
+var height = 150;
 var width = window.innerWidth;
 var middle = height / 2;
 
@@ -8,14 +8,12 @@ arcs.forEach(function(link) { // populate node-table from triples
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
 			    name:  link.sourceName,
-			    size: 16,
 			    pos: link.sourcePos * (width - 42) + 21,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
 			    name:  link.targetName,
-			    size: 16,
 			    pos: link.targetPos * (width - 42) + 21,
 			   });
 });
@@ -33,6 +31,8 @@ var svg = d3.select("body").append("svg")
     .attr("id","timegraph")
     .attr("width", width)
     .attr("height", height);
+
+// input-location cursor
 svg.append('rect').attr('height',height).attr('id','cursorB').style('fill','#224').attr('width',2).attr('x',width);
 
 var link = svg.selectAll(".link")
@@ -49,8 +49,7 @@ var node = svg.selectAll(".node")
 
 node.append("rect")
     .style("fill", function(d) { return d.color; })
-    .attr("width", function(d) { return d.size; })
-    .attr("x",function(d) { return d.size * -1 + 12.5; })
+    .attr("width", 9)
     .attr("height", 9)
     .attr("ry",4);
 
@@ -107,6 +106,7 @@ function findNode(event) {
     } else {
 	x = event.clientX;
     }
+    cursorB.setAttribute('x',x);
     var found = null;
     var distance = width;
     node.each(function(item,index){
