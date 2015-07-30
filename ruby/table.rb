@@ -73,7 +73,7 @@ class R
                     end)]}},
           ({_: :style, c: rows.map{|r|
               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
-              "tr[id='#{r.R.fragment||r.uri}'] td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
+              "tr[href='#{r.R.fragment||r.uri}'] td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
           {_: :tbody, c: rows.map{|r|
             TableRow[r,e,sort,direction,keys] # TABLE-ROW
            }}]},
