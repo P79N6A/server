@@ -168,7 +168,7 @@ class R
            r[Title].justArray[0].do{|t|
              {_: :a, class: :title,
               href: r.uri,
-              c: ' '+t}},"<br>\n",
+              c: CGI.escapeHTML(t)}},"<br>\n",
 
            {class: :header,
             c: [r[SIOC+'has_parent'].do{|ps|
