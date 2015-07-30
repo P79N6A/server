@@ -80,18 +80,17 @@ function tick() {
 }
 
 // create cursor
-svg.append('rect').attr('height',28).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width);
+svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width);
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
 window.onhashchange = function(e){ // center resource in view
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
-    if(resource) {
-	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), resource.offsetTop);
-    }
+    if(resource)
+	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
+//    	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), resource.offsetTop);
     var vz = messages[id];
-//    console.log(id,resource,vz);
     if(vz) {
 	force.resume();
 	vz.y = vz.py = middle;
