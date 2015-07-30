@@ -101,6 +101,7 @@ window.onhashchange = function(e){ // center resource in view
 // find nearest node to mouse/tap-point
 function findNode(event) {
     event.preventDefault();
+    event.stopPropagation();
     var x = null;
     if (event.targetTouches) {
 	x = event.targetTouches[0].clientX;
