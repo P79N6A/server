@@ -68,10 +68,11 @@ class R
                 [r[Date].justArray[0].to_s,' ']
                 end),
                (if data
-                CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s)
+                [CGI.escapeHTML((r[Title] || r[Label] || r.R.fragment || r.R.basename).justArray[0].to_s),
+                 (r[Title] ? '<br>' : ' ')]
                else
                  uri
-                end), '<br>',
+                end),
                (if data && (c = r[LDP+'contains'])
                 [c.map{|i|{_: :img, src: i.uri, style: 'float:left; max-width: 360px; max-height: 360px'}},
                  '<br>']
