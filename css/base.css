@@ -2,7 +2,7 @@ a {color:#555;text-decoration:none;padding-left: .18em; padding-right: .18em}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ccc}
-a[rel='next'] {background-color:#0f0;color: #fff; padding: .2em; border: .2em solid #0f0; border-radius: .2em .8em .8em .2em}
+a[rel='next'] {background-color:#0f0;color: #fff; float: right; padding: .2em; border: .2em solid #0f0; border-radius: .2em .8em .8em .2em}
 a[rel='next']:target {background-color:#fff;color: #000; border-color: #0f0}
 
 a.comments:before { content:"\f0e6"; font-family: icons; }
