@@ -112,6 +112,8 @@ class R
                    href = if t.uri == Directory
                             res = e.R.join l.uri
                             e.scheme + '://linkeddata.github.io/warp/#/list/' + e.scheme + '/' + res.host + res.path
+                          elsif t.uri == Container
+                            l.uri + '?set=page'
                           else
                             l.uri
                           end
@@ -155,14 +157,14 @@ class R
   Tabulator = -> g,e { # data browser/editor https://github.com/linkeddata/tabulator.git
     path = e.R.path
 
-    # select subject URI
-    subject = if path.match(/^\/tabulator/) # tabulator-UI for another URI (XHR + CORS)
+    # bind subject URI
+    subject = if path.match(/^\/tabulator/) # tabulator-UI for another URI (XHR + CORS permissions required)
                 e.scheme + ':' + path.sub(/^\/tabulator/,'/')
               else # this URI
                 e.uri
               end
 
-    # prefer local script caches
+    # prioritize local script-cache
     jquery = if '/js/jquery.js'.R.exist?
                '/js/jquery'
              else

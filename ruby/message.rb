@@ -149,7 +149,7 @@ class R
          ]},
 
      {class: :messages, id: :messages,
-      c: d.resources(e).reverse.map{|r|
+      c: [d.resources(e).reverse.map{|r|
         name = reWho = nil
         author = r[Creator].justArray[0].do{|c|
           authorURI = c.class==Hash || c.class==R
@@ -200,7 +200,9 @@ class R
            [DC+'hasFormat', SIOC+'attachment'].map{|p|
              r[p].justArray.map{|o|
                {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
-         ]}}},
+         ]}},
+          e[:Links][:next].do{|n|{_: :a, rel: :next, href: CGI.escapeHTML(n.to_s)}}
+         ]},
 
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph')
