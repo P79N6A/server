@@ -201,8 +201,9 @@ class R
              r[p].justArray.map{|o|
                {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
          ]}},
-          e[:Links][:next].do{|n|{_: :a, rel: :next, href: CGI.escapeHTML(n.to_s)}}
-         ]},
+          e[:Links][:next].do{|n|
+            {_: :a, id: n, rel: :next, c: 'continue &rarr;', href: CGI.escapeHTML(n.to_s)}
+          }]},
 
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph')
