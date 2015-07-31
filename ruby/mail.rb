@@ -244,7 +244,7 @@ class R
         container = a.R.dir.uri.t # container URI
         item = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]),
                 Date => post[Date],
-                Label => title,
+                Title => title,
                 Size => post[Size],
                 Type => R[SIOC+'Thread']} # thread resource
         post[DC+'image'].do{|i| item[LDP+'contains'] = i }
