@@ -2,14 +2,12 @@ body {font-family: sans-serif;padding-bottom:150px}
 .mail {
     display: inline-block;
     float: right;
-    vertical-align:top;
-    padding-left: .5em;
+    padding: .3em;
     margin: .5em;
+    border-radius: .18em;
     background-color:#000;
     color:#fff;
-    border-radius: .5em;
-    max-width:168ex;
-    white-space: normal;
+    max-width:144ex;
 }
 .mail[name] {background-color:#000; color:#fff}
 .mail:target {background-color: #fff;color:#000}
