@@ -33,7 +33,7 @@ a.title:before { content:"\f035"; font-family: icons; color: #777}
 a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
-body {font-family: sans-serif;background-color:#f8f8f8;color:#000}
+body {font-family: sans-serif}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 td.key {text-align:right}
 td.key a {font-weight: bold; text-decoration:none}
