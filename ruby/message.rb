@@ -149,7 +149,10 @@ class R
          ]},
 
      {class: :messages, id: :messages,
-      c: [d.resources(e).reverse.map{|r|
+      c: [
+        e[:Links][:prev].do{|n|
+          {_: :a, id: n, rel: :prev, c: '&larr; previous', href: CGI.escapeHTML(n.to_s)}},
+        d.resources(e).reverse.map{|r|
         name = reWho = nil
         author = r[Creator].justArray[0].do{|c|
           authorURI = c.class==Hash || c.class==R
@@ -202,7 +205,7 @@ class R
                {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
          ]}},
           e[:Links][:next].do{|n|
-            {_: :a, id: n, rel: :next, c: 'continue &rarr;', href: CGI.escapeHTML(n.to_s)}
+            {_: :a, id: n, rel: :next, c: 'next &rarr;', href: CGI.escapeHTML(n.to_s)}
           }]},
 
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
