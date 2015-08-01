@@ -147,67 +147,59 @@ class R
             back = rand(2) == 0
             ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}
          ]},
-
      {class: :messages, id: :messages,
-      c: [
-        e[:Links][:prev].do{|n|
-          {_: :a, id: n, rel: :prev, c: '&larr; previous', href: CGI.escapeHTML(n.to_s)}},
-        d.resources(e).reverse.map{|r|
-        name = reWho = nil
-        author = r[Creator].justArray[0].do{|c|
-          authorURI = c.class==Hash || c.class==R
-          name = if authorURI
-                   u = c.R
-                   u.fragment || u.basename || u.host || 'anonymous'
-                 else
-                   c.to_s
-                 end
-          [{_: :a,
-            name: name,
-            href: authorURI ? c.uri : '#',
-            c: name},' ']}
-        {class: :mail, name: name, id: r.uri, href: r.uri, selectable: :true,
-         c: [
-           r[Title].justArray[0].do{|t|
-             {_: :a, class: :title,
-              href: r.uri,
-              c: CGI.escapeHTML(t)}},"<br>\n",
+      c: [e[:Links][:prev].do{|n| {_: :a, id: n, rel: :prev, c: '&larr; previous', href: CGI.escapeHTML(n.to_s)}},
+          d.resources(e).reverse.map{|r|
+            name = reWho = nil
+            author = r[Creator].justArray[0].do{|c|
+              authorURI = c.class==Hash || c.class==R
+              name = if authorURI
+                       u = c.R
+                       u.fragment || u.basename || u.host || 'anonymous'
+                     else
+                       c.to_s
+                     end
+              [{_: :a, name: name, c: name,
+                href: authorURI ? c.uri : '#'},' ']}
+            {class: :mail, name: name, id: r.uri, href: r.uri, selectable: :true,
+             c: [r[Title].justArray[0].do{|t|
+                   {_: :a, class: :title,
+                    href: r.uri,
+                    c: CGI.escapeHTML(t)}},"<br>\n",
+                 {class: :header,
+                  c: [r[SIOC+'has_parent'].do{|ps|
+                        ps.justArray.map{|p| # replied-to messages
+                          d[p.uri].do{|r| # target msg in graph
+                            r[Creator].justArray[0].do{|c|
+                              uri = c.R
+                              c = uri.fragment || uri.path || uri.host
+                              reWho = c
+                              [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
+                            }}}},
+                      r[To].justArray.map{|o|
+                        o = o.R
+                        [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
+                      ' &larr; ',
+                      author,
+                      r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
+                      r[SIOC+'reply_to'].do{|c|
+                        [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
+                      r[SIOC+'has_discussion'].justArray[0].do{|d|
+                        {_: :a, class: :discussion,
+                         href: d.uri + '#' + (r.R.path||''),
+                         c: '≡', title: 'show in thread'} unless e[:thread]}].intersperse("\n  ")},
 
-           {class: :header,
-            c: [r[SIOC+'has_parent'].do{|ps|
-                  ps.justArray.map{|p| # replied-to messages
-                    d[p.uri].do{|r| # target msg in graph
-                      r[Creator].justArray[0].do{|c|
-                        uri = c.R
-                        c = uri.fragment || uri.path || uri.host
-                        reWho = c
-                        [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                      }}}},
-                r[To].justArray.map{|o|
-                  o = o.R
-                  [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
-                ' &larr; ',
-                author,
-                r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
-                r[SIOC+'reply_to'].do{|c|
-                  [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
-                r[SIOC+'has_discussion'].justArray[0].do{|d|
-                  {_: :a, class: :discussion,
-                   href: d.uri + '#' + (r.R.path||''),
-                   c: '≡', title: 'show in thread'} unless e[:thread]}].intersperse("\n  ")},
-
-           r[Content].justArray.map{|c|
-             {class: :body, c: reWho ? c.gsub("depth='1'>","name='#{reWho}'>") : c}
-           },
-           r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
-           [DC+'hasFormat', SIOC+'attachment'].map{|p|
-             r[p].justArray.map{|o|
-               {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
-         ]}},
-          e[:Links][:next].do{|n|
-            {_: :a, id: n, rel: :next, c: 'next &rarr;', href: CGI.escapeHTML(n.to_s)}
-          }]},
-
+                 r[Content].justArray.map{|c|
+                   {class: :body, c: reWho ? c.gsub("depth='1'>","name='#{reWho}'>") : c}
+                 },
+                 r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
+                 [DC+'hasFormat', SIOC+'attachment'].map{|p|
+                   r[p].justArray.map{|o|
+                     {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
+                ]}},
+          e[:Links][:next].do{|n| {_: :a, id: n, rel: :next, c: 'next &rarr;', href: CGI.escapeHTML(n.to_s)}}
+         ]},'<br clear=all>',
+     {style: "height: 150px"},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph')
     ]}
