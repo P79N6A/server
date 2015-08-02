@@ -82,12 +82,8 @@ svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff'
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
-window.onhashchange = function(e){ // center resource in view
+window.onhashchange = function(e){ // move cursor to current focus
     var id = window.location.hash.slice(1);
-    var resource = document.getElementById(id);
-    if(resource)
-	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
-//    	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), resource.offsetTop);
     var vz = messages[id];
     if(vz) {
 	force.resume();

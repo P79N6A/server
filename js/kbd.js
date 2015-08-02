@@ -15,6 +15,9 @@ document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes
 	    window.location = this.getAttribute('href');
 	} else {
 	    window.location.hash = id;
+	    var resource = document.getElementById(id);
+	    if(resource)
+		window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
 	};
     };
     var selectable = document.querySelectorAll("[selectable][id]");
