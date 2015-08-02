@@ -139,6 +139,6 @@ document.addEventListener("keydown",function(e){
 	window.history.back();
     // forward
     if(e.keyCode==78) // n
-	window.history.back();
+	window.history.forward();
 
 },false);
