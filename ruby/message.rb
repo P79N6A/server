@@ -199,7 +199,7 @@ class R
                 ]}},
           e[:Links][:next].do{|n| {_: :a, id: n, rel: :next, c: 'next &rarr;', href: CGI.escapeHTML(n.to_s)}}
          ]},'<br clear=all>',
-     {style: "height: 150px"},
+     {style: "height: 127px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.33"},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph')
     ]}
