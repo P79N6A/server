@@ -4,25 +4,21 @@ NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.appl
 NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
 document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes exist
-    // tap/click/mouseover to focus
+    // tap/click to focus
     var focusNode = function(){
-	window.location.hash = this.getAttribute("id");
-    };
-    var gotoNode = function(){
 	var loc = window.location.hash.slice(1);
 	var id = this.getAttribute("id");
-	if(loc == id && this.hasAttribute('href')){
+	if(loc == id && this.hasAttribute('href')){ // already focused, jump to canonical location
 	    window.location = this.getAttribute('href');
 	} else {
 	    window.location.hash = id;
 	    var resource = document.getElementById(id);
-	    if(resource)
+	    if(resource) // horizontally center the resource
 		window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
 	};
     };
     var selectable = document.querySelectorAll("[selectable][id]");
-    selectable.on("click",gotoNode);
-    selectable.on("mouseover",focusNode);
+    selectable.on("click",focusNode);
 });
 			  
 // arrow-key navigation
@@ -32,7 +28,7 @@ document.addEventListener("keydown",function(e){
     if(id)
 	resource = document.getElementById(id);
 
-    var prev = function() {
+    var prev = function() { // previous in sequence
 	if(resource) {
 	    var sib = resource.previousSibling;
 	    if(sib) { // previous entry
@@ -46,11 +42,10 @@ document.addEventListener("keydown",function(e){
 	    };
 	}
     };
-
-    var next = function() {
+    var next = function() { // next in sequence
 	if(resource) {	// focused resource
 	    var explicitNext = resource.getAttribute("next");
-	    if(explicitNext) { // next by declaration
+	    if(explicitNext) { // next by declaration, can jump document-contexts
 		window.location = explicitNext;
 	    } else {
 		var nextSibling = resource.nextSibling;
@@ -64,15 +59,14 @@ document.addEventListener("keydown",function(e){
 			window.location.hash = loop.getAttribute("id");
 		};
 	    };
-	} else { // no focused-resource, annoint one
+	} else { // no focused-resource, find the first one
 	    var cur = document.querySelector('[id][selectable]');
 	    if(cur)
 		window.location.hash = cur.getAttribute('id');
 	}
     };
 
-    // select previous
-    // <up-arrow>
+    // <up>
     if(e.keyCode==38) {
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
@@ -81,9 +75,7 @@ document.addEventListener("keydown",function(e){
 	    prev();
 	};
     };
-
-    // select next
-    // <down-arrow> <tab>
+    // <down> <tab>
     if(e.keyCode==40 || e.keyCode==9){
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
@@ -99,18 +91,14 @@ document.addEventListener("keydown",function(e){
 	if(resource) {
 	    var up = null;
 	    var r = resource.parentNode;
-	    while(r && r.nodeName != '#document' && !up) {
+	    while(r && r.nodeName != '#document' && !up) { // find parent context
 		if(r.hasAttribute('selectable'))
 		    up = r.getAttribute('id');
 		r = r.parentNode;
 	    }
-	    if(up){
-		window.location.hash = up;
-	    } else {
-		window.history.back();
-	    };
-	} else {
-	    window.history.back();
+	    if(!up)
+		;
+	    window.location.hash = up;
 	};
     };
 
