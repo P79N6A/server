@@ -1,6 +1,6 @@
 .mail {
     display: inline-block;
-    float: right;
+    vertical-align: top;
     padding: .3em;
     margin: .5em;
     border-radius: .23em;
