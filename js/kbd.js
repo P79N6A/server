@@ -4,9 +4,11 @@ NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.appl
 NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
 document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes exist
-
-    // tap to focus
-    document.querySelectorAll("[selectable][id]").on("click",function(){
+    // tap/click/mouseover to focus
+    var focusNode = function(){
+	window.location.hash = this.getAttribute("id");
+    };
+    var gotoNode = function(){
 	var loc = window.location.hash.slice(1);
 	var id = this.getAttribute("id");
 	if(loc == id && this.hasAttribute('href')){
@@ -14,7 +16,10 @@ document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes
 	} else {
 	    window.location.hash = id;
 	};
-    });
+    };
+    var selectable = document.querySelectorAll("[selectable][id]");
+    selectable.on("click",gotoNode);
+    selectable.on("mouseover",focusNode);
 });
 			  
 // arrow-key navigation
