@@ -1,3 +1,4 @@
+
 Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return this}
 NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
 NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
@@ -62,7 +63,7 @@ document.addEventListener("keydown",function(e){
 	}
     };
 
-    // previous entry
+    // select previous
     // <up-arrow>
     if(e.keyCode==38) {
 	e.preventDefault();
@@ -73,9 +74,9 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // next entry
-    // n <down-arrow> <tab>
-    if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
+    // select next
+    // <down-arrow> <tab>
+    if(e.keyCode==40 || e.keyCode==9){
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
 	    prev();
@@ -84,7 +85,7 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // exit context
+    // exit
     // <left-arrow> <esc>
     if(e.keyCode==27 || e.keyCode==37){
 	if(resource) {
@@ -105,7 +106,7 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // enter context
+    // enter
     // <right-arrow>
     if(e.keyCode == 39){
 	e.preventDefault();
@@ -133,9 +134,11 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    
-    // back
+    // path/trail/history back
     if(e.keyCode==66 || e.keyCode==80) // b, p
+	window.history.back();
+    // forward
+    if(e.keyCode==78) // n
 	window.history.back();
 
 },false);
