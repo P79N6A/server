@@ -1,3 +1,5 @@
+.messages {white-space: nowrap;}
+
 .mail {
     display: inline-block;
     vertical-align: top;
