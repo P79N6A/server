@@ -112,7 +112,7 @@ class R
     days.map{|d,m|
       arc = {source: '/'+d.gsub('-','/'),
              target: '/'+yesterday[0].gsub('-','/'),
-             sourceName: d.gsub('-','..'),
+             sourceName: d,
              sourceColor: '#fff',
              targetColor: '#fff',
              sourcePos: (m - min) / range,
