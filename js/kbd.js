@@ -66,6 +66,7 @@ document.addEventListener("keydown",function(e){
 	}
     };
 
+    // previous entry
     // <up>
     if(e.keyCode==38) {
 	e.preventDefault();
@@ -75,8 +76,10 @@ document.addEventListener("keydown",function(e){
 	    prev();
 	};
     };
-    // <down> <tab>
-    if(e.keyCode==40 || e.keyCode==9){
+
+    // next entry
+    // <down> <right> <tab>
+    if(e.keyCode==39 || e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
 	    prev();
@@ -85,9 +88,9 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // exit
-    // <left-arrow> <esc>
-    if(e.keyCode==27 || e.keyCode==37){
+    // exit context
+    // <esc>
+    if(e.keyCode==27){
 	if(resource) {
 	    var up = null;
 	    var r = resource.parentNode;
@@ -96,26 +99,15 @@ document.addEventListener("keydown",function(e){
 		    up = r.getAttribute('id');
 		r = r.parentNode;
 	    }
-	    if(!up)
-		;
-	    window.location.hash = up;
+	    if(!up) {
+		window.location = window.location.pathname;
+	    } else {
+		window.location.hash = up;
+	    };
 	};
     };
 
     // enter
-    // <right-arrow>
-    if(e.keyCode == 39){
-	e.preventDefault();
-	if(resource) {
-	    var child = resource.querySelector('[id][selectable]');
-	    var href = resource.getAttribute("href");
-	    if(child){
-		window.location.hash = child.getAttribute('id');
-	    } else if(href) {
-		document.location = href;
-	    };
-	};
-    };
     // <enter>
     if(e.keyCode == 13){
 	e.preventDefault();
@@ -134,7 +126,7 @@ document.addEventListener("keydown",function(e){
     if(e.keyCode==66 || e.keyCode==80) // b, p
 	window.history.back();
     // forward
-    if(e.keyCode==78) // n
+    if(e.keyCode==70) // n
 	window.history.forward();
 
 },false);
