@@ -5,7 +5,9 @@ body {
     text-align:center;
 }
 table, div {text-align: left;white-space: normal}
-a {color:#555;text-decoration:none;padding-left: .18em; padding-right: .18em}
+table {border-spacing:0 .1em}
+td {padding:.3em;vertical-align:bottom;background-color: #fff; color: #000}
+a {text-decoration:none}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
@@ -44,6 +46,6 @@ a.warp:before { content:"\f135"; font-family: icons; }
 body {font-family: sans-serif}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 td.key {text-align:right}
-td.key a {font-weight: bold; text-decoration:none}
+td.key a {font-weight: bold; background-color:#fff;color:#333;text-decoration:none}
 td.key img {height: 1.4em}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}

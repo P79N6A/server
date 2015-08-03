@@ -40,7 +40,7 @@ class R
   def ldp
     @r[:Links][:acl] = aclURI
     @r[:Response].update({
-      'Accept-Patch' => 'application/ld+patch',
+#      'Accept-Patch' => 'application/ld+patch',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
       'Access-Control-Allow-Credentials' => 'true',
       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
