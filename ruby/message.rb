@@ -148,7 +148,8 @@ class R
             ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}
          ]},
      {class: :messages, id: :messages,
-      c: [e[:Links][:prev].do{|n| {_: :a, id: n, rel: :prev, c: '&larr; previous', href: CGI.escapeHTML(n.to_s)}},
+      c: [e[:Links][:prev].do{|n|
+            {_: :a, id: :first, rel: :prev, c: '&larr; previous', href: CGI.escapeHTML(n.to_s)}},
           d.resources(e).reverse.map{|r|
             name = reWho = nil
             author = r[Creator].justArray[0].do{|c|
@@ -197,7 +198,9 @@ class R
                    r[p].justArray.map{|o|
                      {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
                 ]}},
-          e[:Links][:next].do{|n| {_: :a, id: n, rel: :next, c: 'next &rarr;', href: CGI.escapeHTML(n.to_s)}}
+          e[:Links][:next].do{|n|
+            uri = CGI.escapeHTML(n.to_s)
+            {_: :a, id: n, rel: :next, c: 'next &rarr;', href: uri, next: uri + '#first'}}
          ]},'<br clear=all>',
      {style: "height: 127px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.33"},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
