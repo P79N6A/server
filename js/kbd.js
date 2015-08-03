@@ -21,14 +21,15 @@ document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes
     selectable.on("click",focusNode);
 });
 			  
-// arrow-key navigation
+// keyboard navigation
 document.addEventListener("keydown",function(e){
     var resource = null;
     var id = window.location.hash.slice(1);
     if(id)
 	resource = document.getElementById(id);
 
-    var prev = function() { // previous in sequence
+    // previous in sequence
+    var prev = function() {
 	if(resource) {
 	    var sib = resource.previousSibling;
 	    if(sib) { // previous entry
@@ -42,7 +43,8 @@ document.addEventListener("keydown",function(e){
 	    };
 	}
     };
-    var next = function() { // next in sequence
+    // next in sequence
+    var next = function() {
 	if(resource) {	// focused resource
 	    var explicitNext = resource.getAttribute("next");
 	    if(explicitNext) { // next by declaration, can jump document-contexts
@@ -65,8 +67,6 @@ document.addEventListener("keydown",function(e){
 		window.location.hash = cur.getAttribute('id');
 	}
     };
-
-    // previous entry
     // <up>
     if(e.keyCode==38) {
 	e.preventDefault();
@@ -76,8 +76,6 @@ document.addEventListener("keydown",function(e){
 	    prev();
 	};
     };
-
-    // next entry
     // <down> <right> <tab>
     if(e.keyCode==39 || e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
@@ -88,7 +86,7 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // exit context
+    // exit
     // <esc>
     if(e.keyCode==27){
 	if(resource) {
@@ -114,10 +112,10 @@ document.addEventListener("keydown",function(e){
 	if(resource) {
 	    var child = resource.querySelector('[id][selectable]');
 	    var href = resource.getAttribute("href");
-	    if(href){
-		document.location = href;
-	    } else if(child) {
+	    if(child){
 		window.location.hash = child.getAttribute('id');
+	    } else if(href) {
+		document.location = href;		
 	    };
 	};
     };
