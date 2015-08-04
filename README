@@ -1,4 +1,4 @@
-PW is a HTTP/HTTPS daemon
+a HTTP/HTTPS daemon
 
  HTTPd features:
  - User-Certificate signin
