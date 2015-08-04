@@ -142,7 +142,11 @@ message
 news
 POST
 PUT
-search
+search.fs
+search.index
+search.text
+search.ui
+search.webize
 sound
 text
 }.map{|r|require_relative r}
