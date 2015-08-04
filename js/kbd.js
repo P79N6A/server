@@ -121,6 +121,7 @@ document.addEventListener("keydown",function(e){
 },false);
 
 window.onhashchange = function(e){ // center node
+    console.log('hashch')
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
     if(resource) // horizontally center the resource
