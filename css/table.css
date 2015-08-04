@@ -9,6 +9,3 @@ table.tab td.content {max-width:100ex}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a {font-size: 1.5em}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
-.container .size {font-family: monospace; white-space: pre-wrap}
-.container a.member {background-color:#fff;color:#000}
-.container a.member:visited {color:#777}

@@ -125,7 +125,6 @@ class R < RDF::URI
 %w{
 MIME
 names
-container
 DELETE
 GET
 graph
@@ -134,6 +133,7 @@ HTML
 edit
 table
 HTTP
+image
 mail.extract
 mail.summarize
 mail.webize
@@ -143,6 +143,7 @@ news
 POST
 PUT
 search
+sound
 text
 }.map{|r|require_relative r}
 
