@@ -85,13 +85,16 @@ class R
     e[:label] ||= {}
     e[:count] = 0
     e.q['a'] = 'sioc:channel'
-    [{class: :chat, c: Facets[d,e]},
+    [{class: :chat, c: d.map{|u,r|ViewA[SIOC+'InstantMessage'][r,e]}},
      {_: :style,
       c: e[:label].map{|n,l|
         ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
-  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+    ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
+    }
+
+    ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     q = e.q
     arcs = []
