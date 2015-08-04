@@ -93,6 +93,10 @@ class R
         ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
+  ViewA['#chatBlock'] = -> d,e {
+'blokkk'
+  }
+
   ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
     name = reWho = nil
     author = r[Creator].justArray[0].do{|c|
@@ -140,7 +144,7 @@ class R
            r[p].justArray.map{|o|
              {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}
 
-    ViewGroup['#chunkOfChat'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+    ViewGroup['#chatBlock'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     q = e.q
     arcs = []

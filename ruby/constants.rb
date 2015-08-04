@@ -134,7 +134,9 @@ HTML
 edit
 table
 HTTP
-mail
+mail.extract
+mail.summarize
+mail.webize
 man
 message
 news
