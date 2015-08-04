@@ -138,7 +138,9 @@ mail.extract
 mail.summarize
 mail.webize
 man
-message
+message.chat
+message.ui
+message.webize
 news
 POST
 PUT
