@@ -113,7 +113,7 @@ class R
                             res = e.R.join l.uri
                             e.scheme + '://linkeddata.github.io/warp/#/list/' + e.scheme + '/' + res.host + res.path
                           elsif t.uri == Container
-                            l.R.path + '?set=page'
+                            (l.R.path||'') + '?set=page'
                           else
                             l.uri
                           end
