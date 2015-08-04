@@ -91,20 +91,67 @@ class R
         ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
-    ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
-    }
+  ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
+    name = reWho = nil
+    author = r[Creator].justArray[0].do{|c|
+      authorURI = c.class==Hash || c.class==R
+      name = if authorURI
+               u = c.R
+               u.fragment || u.basename || u.host || 'anonymous'
+             else
+               c.to_s
+             end
+      [{_: :a, name: name, c: name, href: authorURI ? c.uri : '#'},' ']}
+    {class: :mail, name: name, id: r.uri, href: r.uri, selectable: :true,
+     c: [r[Title].justArray[0].do{|t|
+           {_: :a, class: :title,
+            href: r.uri,
+            c: CGI.escapeHTML(t)}},"<br>\n",
+         {class: :header,
+          c: [r[SIOC+'has_parent'].do{|ps|
+                ps.justArray.map{|p| # replied-to messages
+                  d[p.uri].do{|r| # target msg in graph
+                    r[Creator].justArray[0].do{|c|
+                      uri = c.R
+                      c = uri.fragment || uri.path || uri.host
+                      reWho = c
+                      [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
+                    }}}},
+              r[To].justArray.map{|o|
+                o = o.R
+                [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
+              ' &larr; ',
+              author,
+              r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
+              r[SIOC+'reply_to'].do{|c|
+                [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
+              r[SIOC+'has_discussion'].justArray[0].do{|d|
+                {_: :a, class: :discussion,
+                 href: d.uri + '#' + (r.R.path||''),
+                 c: '≡', title: 'show in thread'} unless e[:thread]}].intersperse("\n  ")},
+
+         r[Content].justArray.map{|c|
+           {class: :body, c: reWho ? c.gsub("depth='1'>","name='#{reWho}'>") : c}
+         },
+         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
+         [DC+'hasFormat', SIOC+'attachment'].map{|p|
+           r[p].justArray.map{|o|
+             {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}
 
     ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     q = e.q
     arcs = []
     days = {}
+
+    # normalize mtimes to float
     mtimes = d.values.map{|s|
       s[Date].justArray[0].do{|d|
         day = d[0..9]
-        days[day] ||= day.to_time.to_f}
+        days[day] ||= day.to_time.to_f} # unique days
       s[Mtime]
     }.flatten.compact.map(&:to_f)
+
     min = mtimes.min || 0
     max = mtimes.max || 1
     range = (max - min).min(0.1)
@@ -153,54 +200,7 @@ class R
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
             {_: :a, id: :first, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}},
-          d.resources(e).reverse.map{|r|
-            name = reWho = nil
-            author = r[Creator].justArray[0].do{|c|
-              authorURI = c.class==Hash || c.class==R
-              name = if authorURI
-                       u = c.R
-                       u.fragment || u.basename || u.host || 'anonymous'
-                     else
-                       c.to_s
-                     end
-              [{_: :a, name: name, c: name,
-                href: authorURI ? c.uri : '#'},' ']}
-            {class: :mail, name: name, id: r.uri, href: r.uri, selectable: :true,
-             c: [r[Title].justArray[0].do{|t|
-                   {_: :a, class: :title,
-                    href: r.uri,
-                    c: CGI.escapeHTML(t)}},"<br>\n",
-                 {class: :header,
-                  c: [r[SIOC+'has_parent'].do{|ps|
-                        ps.justArray.map{|p| # replied-to messages
-                          d[p.uri].do{|r| # target msg in graph
-                            r[Creator].justArray[0].do{|c|
-                              uri = c.R
-                              c = uri.fragment || uri.path || uri.host
-                              reWho = c
-                              [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                            }}}},
-                      r[To].justArray.map{|o|
-                        o = o.R
-                        [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
-                      ' &larr; ',
-                      author,
-                      r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
-                      r[SIOC+'reply_to'].do{|c|
-                        [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
-                      r[SIOC+'has_discussion'].justArray[0].do{|d|
-                        {_: :a, class: :discussion,
-                         href: d.uri + '#' + (r.R.path||''),
-                         c: '≡', title: 'show in thread'} unless e[:thread]}].intersperse("\n  ")},
-
-                 r[Content].justArray.map{|c|
-                   {class: :body, c: reWho ? c.gsub("depth='1'>","name='#{reWho}'>") : c}
-                 },
-                 r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
-                 [DC+'hasFormat', SIOC+'attachment'].map{|p|
-                   r[p].justArray.map{|o|
-                     {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}
-                ]}},
+          d.resources(e).reverse.map{|r|ViewA[SIOC+'MailMessage'][r,e,d]},
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
             {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}
