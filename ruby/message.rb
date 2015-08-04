@@ -149,7 +149,7 @@ class R
          ]},
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
-            {_: :a, id: :first, rel: :prev, c: '&larr; previous', href: CGI.escapeHTML(n.to_s)}},
+            {_: :a, id: :first, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}},
           d.resources(e).reverse.map{|r|
             name = reWho = nil
             author = r[Creator].justArray[0].do{|c|
@@ -200,7 +200,7 @@ class R
                 ]}},
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
-            {_: :a, id: n, rel: :next, c: 'next &rarr;', href: uri, next: uri + '#first'}}
+            {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}
          ]},'<br clear=all>',
      {style: "height: 127px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.33"},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
