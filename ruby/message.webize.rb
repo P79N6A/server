@@ -24,5 +24,4 @@ class R
     post[Title] = thread[Title]
   }
 
-
 end

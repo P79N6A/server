@@ -1,5 +1,7 @@
 class R
 
+  # IRC
+
   def triplrIRC &f
     i=-1 # line index
 
@@ -20,6 +22,8 @@ class R
       } rescue nil
     }
   end
+
+  # twitter
 
   def triplrTwUsers
     open(pathPOSIX).readlines.map{|l|
