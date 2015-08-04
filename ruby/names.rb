@@ -135,6 +135,50 @@ class R
   alias_method :m, :mtime
   def size;     node.size end
 
+  # filesystem name-storage
+  def triplrContainer
+    dir = uri.t # trailing-slash
+
+    yield dir, Type, R[Container]
+    yield dir, Type, R[Directory]
+    yield dir, SIOC+'has_container', parentURI unless path=='/'
+    mt = mtime
+    yield dir, Mtime, mt.to_i
+    yield dir, Date, mt.iso8601
+
+    # direct children
+    contained = c
+    yield dir, Size, contained.size
+    if contained.size < 22 # provide some "lookahead" on small contained-containers. GET them directly for full contents
+      contained.map{|c|
+        if c.directory?
+          child = c.descend # trailing-slash convention on containers
+          yield dir, LDP+'contains', child
+        else # doc
+          yield dir, LDP+'contains', c.stripDoc # link to generic resource
+        end
+      }
+    end
+
+  end
+
+    # POSTable container -> contained types
+  Containers = {
+    Wiki => SIOC+'WikiArticle',
+    Forum            => SIOC+'Thread',
+    SIOC+'Thread'    => SIOC+'BoardPost',
+  }
+
+  Filter[Container] = -> g,e { # summarize contained - dispatch to type-specific
+    groups = {}
+    g.map{|u,r|
+      r.types.map{|type| # RDF types
+        if v = Abstract[type] # summarizer
+          groups[v] ||= {} # type-group
+          groups[v][u] = r # resource -> group
+        end}}
+    groups.map{|fn,gr|fn[g,gr,e]}} # summarize
+
 end
 
 class String
@@ -171,49 +215,6 @@ class String
   end
 
   def sh; Shellwords.escape self end
-
-  def triplrContainer
-    dir = uri.t # trailing-slash
-
-    yield dir, Type, R[Container]
-    yield dir, Type, R[Directory]
-    yield dir, SIOC+'has_container', parentURI unless path=='/'
-    mt = mtime
-    yield dir, Mtime, mt.to_i
-    yield dir, Date, mt.iso8601
-
-    # direct children
-    contained = c
-    yield dir, Size, contained.size
-    if contained.size < 22 # provide some "lookahead" on small contained-containers. GET them directly for full (or paged, summarized) contents
-      contained.map{|c|
-        if c.directory?
-          child = c.descend # trailing-slash convention on containers
-          yield dir, LDP+'contains', child
-        else # doc
-          yield dir, LDP+'contains', c.stripDoc # link to generic resource
-        end
-      }
-    end
-
-  end
-
-    # POSTable container -> contained types
-  Containers = {
-    Wiki => SIOC+'WikiArticle',
-    Forum            => SIOC+'Thread',
-    SIOC+'Thread'    => SIOC+'BoardPost',
-  }
-
-  Filter[Container] = -> g,e { # summarize contained - dispatch to type-specific
-    groups = {}
-    g.map{|u,r|
-      r.types.map{|type| # RDF types
-        if v = Abstract[type] # summarizer
-          groups[v] ||= {} # type-group
-          groups[v][u] = r # resource -> group
-        end}}
-    groups.map{|fn,gr|fn[g,gr,e]}} # summarize
 
 end
 
