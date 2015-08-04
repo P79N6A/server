@@ -152,13 +152,14 @@ class R
       s[Mtime]
     }.flatten.compact.map(&:to_f)
 
+    # find max/min mtimes
     min = mtimes.min || 0
     max = mtimes.max || 1
     range = (max - min).min(0.1)
     days = days.sort_by{|_,m|m}
     yesterday = days[0]
 
-    # temporal arcs
+    # contruct temporal-arcs
     days.map{|d,m|
       arc = {source: '/'+d.gsub('-','/'),
              target: '/'+yesterday[0].gsub('-','/'),
@@ -171,7 +172,7 @@ class R
       yesterday = [d,m]
       arcs.push arc}
 
-    # reference arcs
+    # construct reference-arcs
     d.values.map{|s| # source
       s[SIOC+'has_parent'].justArray.map{|o| # msg source -> target arcs
         d[o.uri].do{|t| # target

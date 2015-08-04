@@ -12,9 +12,6 @@ document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes
 	    window.location = this.getAttribute('href');
 	} else {
 	    window.location.hash = id;
-	    var resource = document.getElementById(id);
-	    if(resource) // horizontally center the resource
-		window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
 	};
     };
     var selectable = document.querySelectorAll("[selectable][id]");
@@ -126,3 +123,10 @@ document.addEventListener("keydown",function(e){
 	window.history.forward();
 
 },false);
+
+window.onhashchange = function(e){ // center node
+    var id = window.location.hash.slice(1);
+    var resource = document.getElementById(id);
+    if(resource) // horizontally center the resource
+	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
+};
