@@ -76,8 +76,8 @@ document.addEventListener("keydown",function(e){
 	    prev();
 	};
     };
-    // <down> <right> <tab>
-    if(e.keyCode==39 || e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
+    // <down> <right> <n> <tab>
+    if(e.keyCode==40 || e.keyCode==39 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
 	    prev();
@@ -120,11 +120,9 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // path/trail/history back
     if(e.keyCode==66 || e.keyCode==80) // b, p
 	window.history.back();
-    // forward
-    if(e.keyCode==70) // n
+    if(e.keyCode==70) // f
 	window.history.forward();
 
 },false);

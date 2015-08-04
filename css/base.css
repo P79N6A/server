@@ -11,9 +11,10 @@ a {text-decoration:none}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
-a[rel='prev'] {background-color:#333;color: #fff; float: left; padding: .2em; margin: .2em; border: .2em solid #333; border-radius: .8em .2em .2em .8em}
-a[rel='next'] {background-color:#0f0;color: #fff; float: right; padding: .2em; margin: .2em; border: .2em solid #0f0; border-radius: .2em .8em .8em .2em}
-a[rel='prev']:target,a[rel='next']:target {background-color:#fff;color: #000; border-color: #0f0}
+a[rel='prev'] {float: left}
+a[rel='next'] {float: right;min-height:30em}
+a[rel='prev'], a[rel='next'] {background-color:#333;color: #fff}
+a[rel='prev']:target,a[rel='next']:target {background-color:#fff;color: #000}
 
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
