@@ -64,14 +64,10 @@ document.addEventListener("keydown",function(e){
 		window.location.hash = cur.getAttribute('id');
 	}
     };
-    // <up>
-    if(e.keyCode==38) {
+    // <up> <left>
+    if(e.keyCode==38||e.keyCode==37) {
 	e.preventDefault();
-	if (e.getModifierState("Shift")) {
-	    next();
-	} else {
-	    prev();
-	};
+	prev();
     };
     // <down> <right> <n> <tab>
     if(e.keyCode==40 || e.keyCode==39 || e.keyCode==78 || e.keyCode==9){
