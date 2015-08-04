@@ -79,7 +79,9 @@ class R
        e[:label][name] ||= {c: 0, id: (e[:count] += 1).to_s}
        e[:label][name][:c] += 1
        {class: 'creator l' + e[:label][name][:id], c: {_: :a, href: r.uri, c: name }}},
-     {_: :span, class: 'body', c: r[Content]}]}
+     {_: :span, class: 'body', c: r[Content]},
+     '<br>'
+    ]}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
     e[:label] ||= {}
@@ -138,7 +140,7 @@ class R
            r[p].justArray.map{|o|
              {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}
 
-    ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+    ViewGroup['#chunkOfChat'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     q = e.q
     arcs = []
