@@ -9,7 +9,7 @@ PW is a HTTP/HTTPS daemon
 
  MIME-types
  - input: RDF.rb formats + Atom/RSS feeds, email, chatlogs, text-files, CSV, Markdown
- - output: RDF.rb formats + Atom/RSS, HTML (classic), HTML(5+JS) data-browser
+ - output: RDF.rb formats + Atom/RSS, HTML (classic), HTML5+JS data-browsers
 
 SRC git clone https://github.com/hallwaykid/pw.git ||
     git clone http://repo.or.cz/w/www.git
@@ -29,11 +29,12 @@ $ sh install     # symlink source to ruby $sitelibdir
 $ bundle install # fetch ruby libraries
 
 USE
-$ cd ..  # goto server-root. if elsewhere copy/link {css,js}/
+$ cd ..                     # goto server-root (if elsewhere copy/link {css,js})
 $ ln conf/server/Procfile . # select Rack-engine
-$ foreman start  # start HTTP/HTTPS daemons
-#listen on 80/443 || # $ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-# >1024 (behind apache/nginx/lighttpd)
+$ foreman start             # start HTTP/HTTPS-daemons
+
+to listen on 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+              >1024: run behind apache/nginx/lighttpd (see conf for config-examples)
 
 repl$ irb -rww
 
