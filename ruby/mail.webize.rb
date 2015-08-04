@@ -21,21 +21,21 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-  GET['/address'] = -> e,r {e.justPath.response}
+  GET['/address'] = -> e,r {e.justPath.response} # free hostname
 
   GET['/thread'] = -> e,r {
     m = {}
-    R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m
-    return E404[e,r] if m.empty?
+    R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
+    return E404[e,r] if m.empty?                                       # anything found?
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     e.condResponse ->{
       r[:thread] = true
       m.values.find{|r|
-        r.class == Hash && r[Title]}.do{|t|
+        r.class == Hash && r[Title]}.do{|t| # elevate thread title to document level
         title = t.justArray[0]
         r[:title] = title.sub ReExpr, '' if title.class==String}
-      Render[r.format].do{|p|p[m,r]} ||
+      Render[r.format].do{|p|p[m,r]} ||                         # render RDF or HTML
       m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
 end
