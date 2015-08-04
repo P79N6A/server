@@ -8,8 +8,8 @@ PW is a HTTP/HTTPS daemon
  - mostly conforming to http://linkeddata.github.io/SoLiD/ guidelines
 
  MIME-types
- - input: RDF.rb formats + Atom/RSS feeds, email, chatlogs, text-files, CSV, Markdown, highlighted-code
- - output: RDF.rb formats + Atom/RSS, HTML, Turtle
+ - input: RDF.rb formats + Atom/RSS feeds, email, chatlogs, text-files, CSV, Markdown
+ - output: RDF.rb formats + Atom/RSS, HTML (classic), HTML(5+JS) data-browser
 
 SRC git clone https://github.com/hallwaykid/pw.git ||
     git clone http://repo.or.cz/w/www.git
