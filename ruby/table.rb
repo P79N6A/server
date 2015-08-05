@@ -18,12 +18,13 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g,e {
+  TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq -
            [Label,
             Content,
             Atom+'media']
-    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide parent-column on root container
+    keys = keys - skipP if skipP                            # key blacklist
+    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide "parent" of root container
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
     rows = g.resources(e).send direction                    # sorted resources
@@ -44,7 +45,7 @@ class R
 
     [H.css('/css/table',true), "\n",
      {_: :table, :class => :tab, # TABLE
-      c: [{_: :thead,
+      c: [({_: :thead,
            c: {_: :tr,
                c: [keys.map{|k|
                      q = e.q.merge({'sort' => k.shorten})
@@ -70,7 +71,7 @@ class R
                            {_: :input, name: :addProperty, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em;background-color:#dfd;color:#000'}]}
                       end
                      end}
-                    end)]}},
+                    end)]}} unless skipP),
           ({_: :style, c: rows.map{|r|
               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
               "tr[href='#{r.R.fragment||r.uri}'] td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
@@ -124,7 +125,10 @@ class R
                        {_: :a, href: l.uri+'?new', c: '+', class: :new, title: "new #{n} in #{l.uri}"}}
                      end)]}
                when LDP+'contains'
-                 ViewA[Container][l,e,sort,direction]
+                 l[k].do{|children|
+                   cGraph = {}
+                   children.justArray.map{|c|cGraph[c.uri] = c}
+                   ViewGroup[Container][cGraph,e,[Title,Date,Type]]}
                when WikiText
                  Render[WikiText][l[k]]
                else
