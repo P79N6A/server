@@ -18,7 +18,7 @@ SRC git clone https://github.com/hallwaykid/pw.git ||
 PRE-INSTALL
 
 # void
-$ xbps-install ruby ruby-devel libgit2-devel libxml2-devel libxslt-devel source-highlight python-Pygments
+$ xbps-install base-devel ruby ruby-devel libgit2-devel libxml2-devel libxslt-devel source-highlight python-Pygments
 $ gem install bundler
 
 # debian
