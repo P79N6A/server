@@ -92,15 +92,16 @@ document.addEventListener("keydown",function(e){
 		r = r.parentNode;
 	    }
 	    if(!up) { // default parent-context (doc)
-		var path = window.location.pathname;
-		console.log('up',path)
-		if(window.location == path) {
-		    window.history.back();
-		} else {
-		    window.location = path;
-		};
+		    window.location = window.location.pathname;
 	    } else { // parent-context
 		window.location.hash = up;
+	    };
+	} else {
+	    var up = document.querySelector("head > link[rel='parent']")
+	    if(up) {
+		document.location = up.getAttribute('href');
+	    } else {
+		window.history.back();
 	    };
 	};
     };

@@ -105,6 +105,7 @@ class R
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'},
                  {_: :link, rel: :icon, href: '/.icon.png'},
+                 {_: :link, rel: :parent, href: e.R.parentURI},
                  e[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
                  e[:Links].do{|links|
                    links.map{|type,uri|
