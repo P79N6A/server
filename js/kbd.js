@@ -25,7 +25,7 @@ document.addEventListener("keydown",function(e){
     if(id)
 	resource = document.getElementById(id);
 
-    // previous in sequence
+    // previous item
     var prev = function() {
 	if(resource) {
 	    var sib = resource.previousSibling;
@@ -40,7 +40,8 @@ document.addEventListener("keydown",function(e){
 	    };
 	}
     };
-    // next in sequence
+
+    // next item
     var next = function() {
 	if(resource) {	// focused resource
 	    var explicitNext = resource.getAttribute("next");
@@ -79,7 +80,7 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // exit
+    // exit context
     // <left> <esc>
     if(e.keyCode==37||e.keyCode==27){
 	if(resource) {
@@ -98,9 +99,9 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // enter
-    // <right> <enter>
-    if(e.keyCode==39 || e.keyCode == 13){
+    // enter context
+    // <right> 
+    if(e.keyCode==39){
 	e.preventDefault();
 	if(resource) {
 	    var child = resource.querySelector('[id][selectable]');
@@ -108,11 +109,21 @@ document.addEventListener("keydown",function(e){
 	    if(child){
 		window.location.hash = child.getAttribute('id');
 	    } else if(href) {
-		document.location = href;		
+		document.location = href;
 	    };
 	};
     };
 
+    // goto URI
+    if(e.keyCode == 13) {
+	if(resource) {
+	    var href = resource.getAttribute("href");
+	    if(href)
+		document.location = href;
+	};
+    };
+
+    // history
     if(e.keyCode==66 || e.keyCode==80) // b, p
 	window.history.back();
     if(e.keyCode==70) // f

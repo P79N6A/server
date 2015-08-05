@@ -19,14 +19,14 @@ class R
   end
 
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq -
-           [Label,
-            Content,
-            Atom+'media']
-    keys = keys - skipP if skipP                            # key blacklist
-    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide "parent" of root container
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
+
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+    keys = keys - [Label, Content]                          # content handled separately, label used as needed
+    keys = keys - skipP if skipP                            # key skiplist
+    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide "parent" of root container
+
     rows = g.resources(e).send direction                    # sorted resources
     e.q['addProperty'].do{|p|
       p = p.expand

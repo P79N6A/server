@@ -6,6 +6,8 @@ body {
 }
 table, div {text-align: left;white-space: normal}
 table {border-spacing:0}
+tr:target td {background-color:#444;color:#fff}
+tr:target td a {font-weight: bold;color:#fff}
 td {vertical-align:bottom;border-width: 0 0 .1em 0; border-style: solid; background-color: #fff; color: #000}
 a {text-decoration:none}
 a.user {color:#00ff0d}

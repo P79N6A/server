@@ -141,18 +141,13 @@ class R
        end}]}
 
   ViewA[BasicResource] = -> r,e {
-    uri = if r.uri
-            r.uri.split(e.uri)[-1]
-          else
-            rand.to_s.h
-          end
-    resource = r.R
-    {_: :table, class: :html, id: uri,
+    fragment = r.R.fragment || r.uri
+    {_: :table, class: :html, id: fragment, selectable: :true,
      c: r.map{|k,v|
-       [{_: :tr, property: k,
+       [{_: :tr, property: k, id: [r.uri,k].h, selectable: :true,
         c: case k
            when 'uri'
-             {_: :td, colspan: 2, c: {_: :a, class: :uri, href: uri, c: uri}}
+             {_: :td, colspan: 2, c: {_: :a, class: :uri, href: r.uri, c: fragment}}
            when Content
              {_: :td, class: :val, colspan: 2, c: v}
            when WikiText
