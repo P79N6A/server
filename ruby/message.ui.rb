@@ -28,6 +28,7 @@ class R
 
   ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
     name = reWho = nil
+    href = r.uri
     author = r[Creator].justArray[0].do{|c|
       authorURI = c.class==Hash || c.class==R
       name = if authorURI
@@ -37,7 +38,14 @@ class R
                c.to_s
              end
       [{_: :a, name: name, c: name, href: authorURI ? c.uri : '#'},' ']}
-    {class: :mail, name: name, id: r.uri, href: r.uri, selectable: :true,
+
+    discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
+      unless e[:thread]
+        href = d.uri + '#' + (r.R.path||'')
+        {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
+      end}
+
+    {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
      c: [r[Title].justArray[0].do{|t|
            {_: :a, class: :title,
             href: r.uri,
@@ -60,10 +68,8 @@ class R
               r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
               r[SIOC+'reply_to'].do{|c|
                 [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
-              r[SIOC+'has_discussion'].justArray[0].do{|d|
-                {_: :a, class: :discussion,
-                 href: d.uri + '#' + (r.R.path||''),
-                 c: '≡', title: 'show in thread'} unless e[:thread]}].intersperse("\n  ")},
+              discussion
+             ].intersperse("\n  ")},
 
          r[Content].justArray.map{|c|
            {class: :body, c: reWho ? c.gsub("depth='1'>","name='#{reWho}'>") : c}
