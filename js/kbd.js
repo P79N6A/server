@@ -65,11 +65,13 @@ document.addEventListener("keydown",function(e){
 		window.location.hash = cur.getAttribute('id');
 	}
     };
-    // <up>
-    if(e.keyCode==38) {
+    // prev
+    // <up> <p> <shift-tab>
+    if(e.keyCode==38||e.keyCode==80) {
 	e.preventDefault();
 	prev();
     };
+    // next
     // <down> <n> <tab>
     if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
@@ -131,7 +133,7 @@ document.addEventListener("keydown",function(e){
     };
 
     // history
-    if(e.keyCode==66 || e.keyCode==80) // b, p
+    if(e.keyCode==66) // b
 	window.history.back();
     if(e.keyCode==70) // f
 	window.history.forward();
