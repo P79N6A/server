@@ -18,7 +18,18 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  TabularView = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
+  TabularView =  ViewGroup[Directory] = ViewGroup[Container] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
+    containers = g.values
+    containers.map{|c|
+      c[LDP+'contains'] = c[LDP+'contains'].justArray.map{|child|
+        if g[child.uri] # take node from flat-graph and move to container-child
+          g.delete child.uri
+        else
+          child
+        end
+      }
+    }
+
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
@@ -152,22 +163,6 @@ class R
           end]},
      ('</form>' if edit && selected),
      l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}}]}
-
-  ViewGroup[Stat+'File'] = TabularView
-  ViewGroup[Resource] = TabularView
-
-  ViewGroup[Directory] = ViewGroup[Container] = -> graph,e {
-    containers = graph.values
-    containers.map{|c|
-      c[LDP+'contains'] = c[LDP+'contains'].justArray.map{|child| # move children from toplevel-graph to object-position
-        if graph[child.uri]
-          graph.delete child.uri
-        else
-          child
-        end
-      }
-    }
-    TabularView[graph,e]}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 

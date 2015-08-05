@@ -143,6 +143,9 @@ document.addEventListener("keydown",function(e){
 window.addEventListener("hashchange",function(e){
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
-    if(resource) // horizontally center the resource
+    if(resource) {
+	var resTitle = resource.getAttribute('href');
+	document.querySelector('title').innerText = resTitle;
 	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
+    };
 });
