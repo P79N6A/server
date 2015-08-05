@@ -45,12 +45,13 @@ body {font-family: sans-serif}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 
 table, div {text-align: left;white-space: normal}
-table {border-spacing:0}
+table {border-spacing:0 .1em}
 tr:target td {background-color:#444;color:#fff}
 tr:target td a {color:#fff}
-td {padding: .1em .2em .1em .2em; vertical-align:bottom;border-width: 0 0 .1em 0; border-style: solid; background-color: #fff; color: #000}
+td {padding: .1em .2em .1em .2em; vertical-align:bottom;border-width: 0 0 .1em 0; border-color: #ddd; border-style: dotted; background-color: #fff; color: #000}
 td a {color:#000}
 
+table.tab {}
 table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
@@ -63,5 +64,6 @@ table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {
 td.key {text-align:right}
 td.key a {font-weight: bold; background-color:#fff;color:#333;text-decoration:none}
 td.key img {height: 1.4em}
+td > table.tab {width:100%}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
-td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em}
+td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: .2em; text-align: right; font-weight: bold}

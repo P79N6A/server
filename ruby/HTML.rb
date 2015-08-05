@@ -114,8 +114,7 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
             {_: :body, style: "background-color: #{color}",
-             c: [{_: :style, c: "td {border-color: #{color}}"},
-                 e.signedIn ?
+             c: [e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
                  view[d,e]]}]}]}
