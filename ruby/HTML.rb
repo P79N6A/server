@@ -102,6 +102,7 @@ class R
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.size==1 ? titles.head : e.uri
     end
+    color = R.randomColor
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -112,8 +113,9 @@ class R
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
-            {_: :body, style: "background-color: #{R.randomColor}",
-             c: [e.signedIn ?
+            {_: :body, style: "background-color: #{color}",
+             c: [{_: :style, c: "td {border-color: #{color}}"},
+                 e.signedIn ?
                   {_: :a, class: :user, href: e.user.uri} :
                   {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
                  view[d,e]]}]}]}
