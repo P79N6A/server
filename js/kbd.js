@@ -64,13 +64,13 @@ document.addEventListener("keydown",function(e){
 		window.location.hash = cur.getAttribute('id');
 	}
     };
-    // <up> <left>
-    if(e.keyCode==38||e.keyCode==37) {
+    // <up>
+    if(e.keyCode==38) {
 	e.preventDefault();
 	prev();
     };
-    // <down> <right> <n> <tab>
-    if(e.keyCode==40 || e.keyCode==39 || e.keyCode==78 || e.keyCode==9){
+    // <down> <n> <tab>
+    if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
 	    prev();
@@ -80,8 +80,8 @@ document.addEventListener("keydown",function(e){
     };
 
     // exit
-    // <esc>
-    if(e.keyCode==27){
+    // <left> <esc>
+    if(e.keyCode==37||e.keyCode==27){
 	if(resource) {
 	    var up = null;
 	    var r = resource.parentNode;
@@ -99,8 +99,8 @@ document.addEventListener("keydown",function(e){
     };
 
     // enter
-    // <enter>
-    if(e.keyCode == 13){
+    // <right> <enter>
+    if(e.keyCode==39 || e.keyCode == 13){
 	e.preventDefault();
 	if(resource) {
 	    var child = resource.querySelector('[id][selectable]');
