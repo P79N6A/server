@@ -6,7 +6,7 @@ body {
 }
 table, div {text-align: left;white-space: normal}
 table {border-spacing:0 .1em}
-td {padding:.3em;vertical-align:bottom;background-color: #fff; color: #000}
+td {vertical-align:bottom;background-color: #fff; color: #000}
 a {text-decoration:none}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}

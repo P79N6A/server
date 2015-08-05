@@ -18,7 +18,7 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  TabularView = ViewGroup[Container] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
+  TabularView = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq -
            [Label,
             Content,
@@ -128,7 +128,7 @@ class R
                  l[k].do{|children|
                    cGraph = {}
                    children.justArray.map{|c|cGraph[c.uri] = c}
-                   ViewGroup[Container][cGraph,e,[Title,Date,Type]]}
+                   ViewGroup[CSVns+'Row'][cGraph,e,[Title,Date,Type]]}
                when WikiText
                  Render[WikiText][l[k]]
                else
@@ -153,8 +153,21 @@ class R
      ('</form>' if edit && selected),
      l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}}]}
 
-  ViewGroup[Directory] = ViewGroup[Stat+'File'] = TabularView
+  ViewGroup[Stat+'File'] = TabularView
   ViewGroup[Resource] = TabularView
+
+  ViewGroup[Directory] = ViewGroup[Container] = -> graph,e {
+    containers = graph.values
+    containers.map{|c|
+      c[LDP+'contains'] = c[LDP+'contains'].justArray.map{|child| # move children from toplevel-graph to object-position
+        if graph[child.uri]
+          graph.delete child.uri
+        else
+          child
+        end
+      }
+    }
+    TabularView[graph,e]}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
