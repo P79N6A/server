@@ -24,7 +24,7 @@ class R
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = keys - [Label, Content]                          # content handled separately, label used as needed
-    keys = keys - skipP if skipP                            # key skiplist
+    keys = keys - (skipP - [sort]) if skipP                 # key skiplist, always show sorted-property
     keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide "parent" of root container
 
     rows = g.resources(e).send direction                    # sorted resources

@@ -149,7 +149,7 @@ class R
     # direct children
     contained = c
     yield dir, Size, contained.size
-    if contained.size < 22 # provide some "lookahead" on small contained-containers. GET them directly for full contents
+    if contained.size < 32 # provide some "lookahead" on small contained-containers. GET them directly for full contents
       contained.map{|c|
         if c.directory?
           child = c.descend # trailing-slash convention on containers
