@@ -92,7 +92,13 @@ document.addEventListener("keydown",function(e){
 		r = r.parentNode;
 	    }
 	    if(!up) { // default parent-context (doc)
-		window.location = window.location.pathname;
+		var path = window.location.pathname;
+		console.log('up',path)
+		if(window.location == path) {
+		    window.history.back();
+		} else {
+		    window.location = path;
+		};
 	    } else { // parent-context
 		window.location.hash = up;
 	    };

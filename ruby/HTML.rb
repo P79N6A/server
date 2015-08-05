@@ -76,6 +76,7 @@ class R
   rescue LoadError
     puts "warning: nokogiri missing"
   end
+
   def nokogiri
     Nokogiri::HTML.parse (open uri).read
   end
@@ -91,17 +92,13 @@ class R
     end}
 
   Render['text/html'] = -> d,e,view=nil {
-    if !view
-      view = if e.q.has_key? 'data'
-               Tabulator
-             else
-               View
-             end
-    end
+    view ||= (e.q.has_key? 'data') ? Tabulator : View
+
     if !e[:title]
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
       e[:title] = titles.size==1 ? titles.head : e.uri
     end
+
     color = R.randomColor
     H ["<!DOCTYPE html>\n",
        {_: :html,
