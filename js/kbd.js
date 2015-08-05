@@ -90,9 +90,9 @@ document.addEventListener("keydown",function(e){
 		    up = r.getAttribute('id');
 		r = r.parentNode;
 	    }
-	    if(!up) {
+	    if(!up) { // default parent-context (doc)
 		window.location = window.location.pathname;
-	    } else {
+	    } else { // parent-context
 		window.location.hash = up;
 	    };
 	};
