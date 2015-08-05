@@ -138,7 +138,7 @@ document.addEventListener("keydown",function(e){
 
 },false);
 
-window.addEventListener4("hashchange",function(e){
+window.addEventListener("hashchange",function(e){
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
     if(resource) // horizontally center the resource
