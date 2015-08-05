@@ -138,10 +138,9 @@ document.addEventListener("keydown",function(e){
 
 },false);
 
-window.onhashchange = function(e){ // center node
-    console.log('hashch')
+window.addEventListener4("hashchange",function(e){
     var id = window.location.hash.slice(1);
     var resource = document.getElementById(id);
     if(resource) // horizontally center the resource
 	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
-};
+});

@@ -82,7 +82,7 @@ svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff'
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
-window.onhashchange = function(e){ // move cursor to current focus
+window.addEventListener("hashchange",function(e){ // move cursor to current focus
     var id = window.location.hash.slice(1);
     var vz = messages[id];
     if(vz) {
@@ -91,7 +91,7 @@ window.onhashchange = function(e){ // move cursor to current focus
 	cursor.setAttribute('x', vz.pos);
 	cursor.setAttribute('y', vz.py);
     }
-}
+});
 
 // find nearest node to mouse/tap-point
 function findNode(event) {
