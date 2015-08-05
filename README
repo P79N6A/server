@@ -26,7 +26,7 @@ $ apt-get install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev p
 
 INSTALL
 $ cd pw/ruby
-$ sh install     # symlink source to ruby $sitelibdir
+$ ruby install   # link source to ruby $sitelibdir
 $ bundle install # fetch ruby libraries
 
 USE
