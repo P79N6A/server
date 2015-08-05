@@ -95,7 +95,7 @@ class R
     [(if edit && selected
       [H.css('/css/edit',true), '<form method=POST>']
       end),
-     {_: :tr, id: l.R.pathPart, href: l.uri, selectable: :true, style: (edit && selected) ? 'background-color:#f6f6f6;color:#000' : '',
+     {_: :tr, id: l.R.pathPart+'.'+(l[SIOC+'has_conntainer'].to_s.h), href: l.uri, selectable: :true, style: (edit && selected) ? 'background-color:#f6f6f6;color:#000' : '',
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
