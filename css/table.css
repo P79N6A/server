@@ -2,7 +2,7 @@ table.tab th {vertical-align:bottom}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal}
 table.tab tr:hover {background-color:#ddd}
-table.tab td[property='uri'] a {font-weight: bold; color: #000}
+table.tab td[property='uri'] a {font-weight: bold}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
