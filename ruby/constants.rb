@@ -174,7 +174,7 @@ man
 message.chat
 message.ui
 message.webize
-news
+message.news
 POST
 PUT
 search.fs
