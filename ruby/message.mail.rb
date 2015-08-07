@@ -3,7 +3,7 @@ class R
   ReExpr = /\b[rR][eE]: /
 
   def mail; Mail.read node if f end
-
+  # emit message-data triples
   def triplrMail &b
     m = mail; return unless m # parse
     id = m.message_id || m.resent_message_id
