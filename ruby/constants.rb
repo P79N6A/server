@@ -167,11 +167,10 @@ edit
 table
 HTTP
 image
-mail.extract
-mail.summarize
-mail.webize
 man
 message.chat
+message.mail
+message.mail.summarize
 message.ui
 message.webize
 message.news
