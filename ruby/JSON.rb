@@ -1,5 +1,5 @@
 class R
-=begin RDF-subset in JSON. mostly for speed, and to have a minimum-viable "graph in JSON"
+=begin RDF-subset in JSON. mostly for speed, and to have a minimum-viable graph-format on JSON
 
  Graph: Hash
   {subject => {predicate => object}}

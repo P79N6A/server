@@ -5,14 +5,15 @@ NodeList.prototype.on = function(){return this.map(Element.prototype.on,argument
 
 document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes exist
     // tap/click to focus
-    var focusNode = function(){
+    var focusNode = function(e){
 	var loc = window.location.hash.slice(1);
 	var id = this.getAttribute("id");
-	if(loc == id && this.hasAttribute('href')){ // already focused, jump to canonical location
+	if(loc == id && this.hasAttribute('href')){ // jump to canonical location: tap while focused
 	    window.location = this.getAttribute('href');
 	} else {
 	    window.location.hash = id;
 	};
+	e.stopPropagation();
     };
     var selectable = document.querySelectorAll("[selectable][id]");
     selectable.on("click",focusNode);
