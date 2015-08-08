@@ -160,7 +160,7 @@ MIME
 names
 DELETE
 GET
-graph
+JSON
 HEAD
 HTML
 edit

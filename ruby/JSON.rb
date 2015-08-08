@@ -1,16 +1,18 @@
-#watch __FILE__
 class R
-=begin RDF-subset in Hash/JSON. this predates and is alternative to RDF.rb
+=begin RDF-subset in JSON
+
  Graph: Hash
-  {subject* => {predicate* => object*}}
+  {subject => {predicate => object}}
  Stream:
-  yield subject*, predicate*, object*
+   produce:
+  yield subject, predicate, object
+   consume:
+  do |subject,predicate,object|
 
   *subject: String
   *predicate: String
-  *object: URI* or Literal* or
-   List (each member creates a triple)
-    [objectA, objectB..]
+  *object: URI or Literal or
+   List/Array [objectA, objectB..]
 
   *URI
    RDF::URI
@@ -21,7 +23,6 @@ class R
    RDF::Literal
    String Integer Float
 
-   stream-functions that consume (provide a "block") and produce (yield) can be combined in pipelines
 =end
 
   # Stream -> Hash/JSON Graph
