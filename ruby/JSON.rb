@@ -1,5 +1,5 @@
 class R
-=begin RDF-subset in JSON
+=begin RDF-subset in JSON. mostly for speed, and to have a minimum-viable "graph in JSON"
 
  Graph: Hash
   {subject => {predicate => object}}
@@ -25,7 +25,7 @@ class R
 
 =end
 
-  # Stream -> Hash/JSON Graph
+  # Stream -> JSONGraph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -35,13 +35,13 @@ class R
     m
   end
 
-  # URI -> Hash/JSON Graph
+  # URI -> JSONGraph
   def graph graph = {}
     fileResources.map{|d|d.nodeToGraph graph}
     graph
   end
 
-  # file -> Hash/JSON Graph
+  # file -> JSONGraph
   def nodeToGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
@@ -80,7 +80,7 @@ class R
     self
   end
 
-  # Hash/JSON Graph -> file(s)
+  # JSONGraph -> file(s)
   def R.store graph, host = 'localhost',  p = nil,  hook = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -114,7 +114,7 @@ class R
     g
   end
 
-  # RDF::Reader for Hash/JSON graph
+  # JSONGraph RDF::Reader
   module Format
 
     class Format < RDF::Format
@@ -209,7 +209,7 @@ class Hash
     values.sortRDF env
   end
 
-  # Hash/JSON Graph -> RDF::Graph
+  # JSONGraph -> RDF::Graph
   def toRDF base=nil
     graph = RDF::Graph.new
     triples{|s,p,o|
