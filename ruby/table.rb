@@ -34,9 +34,8 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = keys - [Label, Content]                          # content handled separately, label used as needed
-    keys = keys - (skipP - [sort]) if skipP                 # key skiplist, always show sorted-property
-    keys = keys - [SIOC+'has_container'] if e.R.path == '/' # hide "parent" of root container
+    keys = keys - [Label, Content]                          # content gets row, label consulted as needed
+    keys = keys - (skipP - [sort]) if skipP                 # key skiplist
 
     rows = g.resources(e).send direction                    # sorted resources
     e.q['addProperty'].do{|p|
@@ -53,7 +52,7 @@ class R
       range = max - min if max && min
       scale = 255.0 / (range && range > 0 && range || 255.0)
     end
-    puts keys.size,keys
+
     [H.css('/css/table',true), "\n",
      {_: :table, :class => :tab, # TABLE
       c: [({_: :thead,

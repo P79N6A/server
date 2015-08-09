@@ -121,7 +121,7 @@ class R
 
   GET['/stat'] = -> e,r { g = {}
     r.q['sort'] ||= 'stat:size'
-
+    r.q['reverse'] = true
     Stats.map{|sym, table|
       group = e.uri + '#' + sym.to_s
       g[group] = {'uri' => group,
