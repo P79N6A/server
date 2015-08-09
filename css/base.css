@@ -46,7 +46,7 @@ table {border-spacing:0}
 tr:target td {background-color:#444;color:#fff}
 tr:target td a {color:#fff}
 
-table.tab {border-radius:.2em;border-spacing: .1em .18em}
+table.tab {border-radius:.2em;border-spacing: 0 .18em}
 table.tab th {vertical-align:bottom;background-color:#333;border-style: solid;border-radius: .16em;border-color:#000;border-width: 0 .2em 0 0;padding-left:.2em}
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal;color:#ccc}
