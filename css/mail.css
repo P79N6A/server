@@ -59,6 +59,6 @@
 img {max-width: 100%}
 
 svg {position: fixed;bottom: 0;left: 0;z-index:2}
-.link {fill: none;stroke-width: .25em; stroke-dasharray: 1,6;stroke: #fff}
+.link {fill: none;stroke-width: .2em; stroke-dasharray: 1,1;stroke: #fff}
 rect {fill: #f8f8f8}
 text {fill: #000; font: .88em sans-serif;pointer-events: none}

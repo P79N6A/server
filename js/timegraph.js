@@ -1,5 +1,5 @@
 var nodes = {};
-var height = 150;
+var height = 128;
 var width = window.innerWidth;
 var middle = height / 2;
 
@@ -78,7 +78,7 @@ function tick() {
 }
 
 // create cursor
-svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width).attr('ry',4);
+svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width).attr('y',middle).attr('ry',4);
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
@@ -89,7 +89,6 @@ window.addEventListener("hashchange",function(e){ // move cursor to current focu
 	force.resume();
 	vz.y = vz.py = middle;
 	cursor.setAttribute('x', vz.pos);
-	cursor.setAttribute('y', vz.py);
     }
 });
 

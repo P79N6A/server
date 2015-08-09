@@ -147,7 +147,7 @@ class R
             uri = CGI.escapeHTML(n.to_s)
             {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}
          ]},'<br clear=all>',
-     {style: "height: 127px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.33"},
+     {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.2"},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph')
     ]}

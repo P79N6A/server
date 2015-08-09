@@ -53,7 +53,7 @@ class R
       range = max - min if max && min
       scale = 255.0 / (range && range > 0 && range || 255.0)
     end
-
+    puts keys.size,keys
     [H.css('/css/table',true), "\n",
      {_: :table, :class => :tab, # TABLE
       c: [({_: :thead,
