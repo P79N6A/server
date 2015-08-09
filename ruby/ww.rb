@@ -15,8 +15,69 @@ pathname
 rack
 shellwords}.map{|r|
   print r, ' '
-  require r}
+  require r
+}
+
 print "\n"
+
+class RDF::URI
+
+  def R
+    R.new to_s
+  end
+
+end
+
+class Array
+  def cr; intersperse "\n" end
+  def head; self[0] end
+  def tail; self[1..-1] end
+  def h; join.h end
+  def intersperse i
+    inject([]){|a,b|a << b << i}[0..-2]
+  end
+  def justArray; self end
+end
+
+class Fixnum
+  def max i; i > self ? self : i end
+  def min i; i < self ? self : i end
+end
+
+class Float
+  def max i; i > self ? self : i end
+  def min i; i < self ? self : i end
+end
+
+class FalseClass
+  def do; false end
+end
+
+class Hash
+  def R; R.new uri end
+  def uri; self["uri"] end
+  alias_method :maybeURI, :uri
+end
+
+class NilClass
+  def do; nil end
+  def justArray; [] end
+end
+
+class Object
+  def id; self end
+  def do; yield self end
+  def maybeURI; nil end
+  def justArray; [self] end
+  def time?
+    (self.class == Time) || (self.class == DateTime)
+  end
+  def to_time
+    time? ? self : Time.parse(self)
+  rescue
+    nil
+  end
+end
 
 class R < RDF::URI
 
@@ -219,59 +280,4 @@ RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
     end
    end
 
-end
-
-class Array
-  def cr; intersperse "\n" end
-  def head; self[0] end
-  def tail; self[1..-1] end
-  def h; join.h end
-  def intersperse i
-    inject([]){|a,b|a << b << i}[0..-2]
-  end
-  def justArray; self end
-end
-
-class Fixnum
-  def max i; i > self ? self : i end
-  def min i; i < self ? self : i end
-end
-
-class Float
-  def max i; i > self ? self : i end
-  def min i; i < self ? self : i end
-end
-
-class FalseClass
-  def do; false end
-end
-
-class Hash
-  def R; R.new uri end
-  def uri; self["uri"] end
-  alias_method :maybeURI, :uri
-end
-
-class RDF::URI
-  def R; R.new to_s end
-end
-
-class NilClass
-  def do; nil end
-  def justArray; [] end
-end
-
-class Object
-  def id; self end
-  def do; yield self end
-  def maybeURI; nil end
-  def justArray; [self] end
-  def time?
-    (self.class == Time) || (self.class == DateTime)
-  end
-  def to_time
-    time? ? self : Time.parse(self)
-  rescue
-    nil
-  end
 end
