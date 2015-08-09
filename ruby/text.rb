@@ -78,6 +78,9 @@ class R
     H({_: :pre, style: 'white-space: pre-wrap',
         c: open(pathPOSIX).read.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
+  rescue
+    puts "error hyperlinking #{uri}"
+    nil
   end
 
   Render['text/uri-list'] = -> g,env {
