@@ -40,12 +40,14 @@ class R
       [{_: :a, name: name, c: name, href: authorURI ? c.uri : '#'},' ']}
 
     discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
-      unless e[:thread]
+      if e[:thread]
+        href = r.uri + '#' + (r.R.path||'')
+      else
         href = d.uri + '#' + (r.R.path||'')
         {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
       end}
 
-    {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
+    {class: :mail, name: name, id: r.R.path, href: href, selectable: :true,
      c: [r[Title].justArray[0].do{|t|
            {_: :a, class: :title,
             href: r.uri,

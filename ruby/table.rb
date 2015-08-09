@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def triplrCSV d
@@ -138,7 +138,7 @@ class R
                  l[k].do{|children|
                    cGraph = {}
                    children.justArray.map{|c|cGraph[c.uri] = c}
-                   ViewGroup[CSVns+'Row'][cGraph,e,[Title,Date,Type,SIOC+'has_container']]}
+                   ViewGroup[CSVns+'Row'][cGraph,e,[Title,Date,SIOC+'has_container']]}
                when WikiText
                  Render[WikiText][l[k]]
                else
