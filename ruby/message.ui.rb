@@ -27,7 +27,7 @@ class R
   }
 
   ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
-    name = reWho = nil
+    name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
       authorURI = c.class==Hash || c.class==R
@@ -53,16 +53,7 @@ class R
             href: r.uri,
             c: CGI.escapeHTML(t)}},"<br>\n",
          {class: :header,
-          c: [r[SIOC+'has_parent'].do{|ps|
-                ps.justArray.map{|p| # replied-to messages
-                  d[p.uri].do{|r| # target msg in graph
-                    r[Creator].justArray[0].do{|c|
-                      uri = c.R
-                      c = uri.fragment || uri.path || uri.host
-                      reWho = c
-                      [{_: :a, name: c, href: '#'+p.uri, c: c}, ' ']
-                    }}}},
-              r[To].justArray.map{|o|
+          c: [r[To].justArray.map{|o|
                 o = o.R
                 [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
               ' &larr; ',
@@ -73,9 +64,7 @@ class R
               discussion
              ].intersperse("\n  ")},
 
-         r[Content].justArray.map{|c|
-           {class: :body, c: reWho ? c.gsub("depth='1'>","name='#{reWho}'>") : c}
-         },
+         r[Content].justArray.map{|c| {class: :body, c: c}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
          [DC+'hasFormat', SIOC+'attachment'].map{|p|
            r[p].justArray.map{|o|
