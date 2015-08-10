@@ -63,7 +63,7 @@ table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {
 td.key {text-align:right}
 td.key a {font-weight: bold; background-color:#fff;color:#333;text-decoration:none}
 td.key img {height: 1.4em}
-td.val, td.val > a  {background-color:#000;color:#fff;font-weight:bold;padding-left:.15em}
-td > table.tab {width:100%}
+td.val, td.val > a  {background-color:#000;color:#fff;padding-left:.15em}
+td.val > a {font-weight:bold;}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
 td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: .2em; text-align: right; font-weight: normal}
