@@ -41,9 +41,10 @@ class R
 
     discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
       if e[:thread]
-        href = r.uri + '#' + (r.R.path||'')
+        href = r.uri + '#' + (r.R.path||'') # link to standalone msg
+        nil
       else
-        href = d.uri + '#' + (r.R.path||'')
+        href = d.uri + '#' + (r.R.path||'') # link to msg in thread
         {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
       end}
 
