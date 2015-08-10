@@ -3,18 +3,20 @@ exit 0 if ARGV.empty?
 require 'ww'
 begin
   uri = R[ARGV[0]]
-  # request from cmd-line instead of Rack
+  # populate request fields as no webserver
   r = R[uri.to_s.sub(/\?#{uri.query}$/,'')]
   r.setEnv({ 'QUERY_STRING' => uri.query||'',
              'REQUEST_PATH' => r.justPath.to_s,
              'REQUEST_URI' => uri.justPath.to_s,
              'SERVER_NAME' => r.host||'localhost',
-             :Response => {},
-             :Links => {},
+             :Response => {}, :Links => {},
            }.extend Th)
-  puts [uri,'->',r.uri,'<-',*ARGV[1..-1],"\n"].join ' '
+
+  # do
   out = r.send *ARGV[1..-1]
-  if out.class==Array && out.size==3 && out[0].class == Fixnum # HTTP response
+
+  # HTTP-response to stdout
+  if out.class==Array && out.size==3 && out[0].class == Fixnum
     require 'thin' # use thin to 'pretty print' response to match curl -i
     response = Thin::Response.new
     response.status, response.headers, response.body = *out
@@ -24,6 +26,4 @@ begin
   else
     puts out
   end
-rescue Exception => e
- puts e.class, e.message, e.backtrace
 end
