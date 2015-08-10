@@ -34,7 +34,7 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = keys - [Label, Content]                          # content gets row, label consulted as needed
+    keys = keys - [Title, Label, Content]                   # title/labels on URI, content gets own row
     keys = keys - (skipP - [sort]) if skipP                 # key skiplist
 
     rows = g.resources(e).send direction                    # sorted resources
@@ -138,7 +138,7 @@ class R
                  l[k].do{|children|
                    cGraph = {}
                    children.justArray.map{|c|cGraph[c.uri] = c}
-                   ViewGroup[CSVns+'Row'][cGraph,e,[Title,Date,SIOC+'has_container']]}
+                   ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]}
                when WikiText
                  Render[WikiText][l[k]]
                else
