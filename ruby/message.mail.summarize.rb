@@ -70,6 +70,7 @@ class R
                          Type => R[SIOC+'Thread']})
         else
           thread[Type] = R[SIOC+'MailMessage']
+          thread[Creator] = post[Creator]
         end
         post[Image].do{|i| thread[Image] = i }
 
