@@ -31,7 +31,7 @@ $ bundle install # fetch ruby libraries
 
 USE
 $ cd ..                     # goto server-root (if elsewhere copy/link {css,js})
-$ ln conf/server/Procfile . # select Rack-engine
+$ cp conf/daemon/Procfile . # select Rack-engine
 $ foreman start             # start HTTP/HTTPS-daemons
 
 to listen on 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
