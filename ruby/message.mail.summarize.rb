@@ -59,19 +59,26 @@ class R
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
         container = a.R.dir.uri.t # container URI
         id = URI.escape post[DC+'identifier'][0]
-        item = {'uri' => '/thread/' + id + '#' + URI.escape(post.uri),
-                Date => post[Date],
-                Title => title,
-                Size => post[Size],
-                Type => R[SIOC+'Thread']} # thread resource
-        post[DC+'image'].do{|i| item[LDP+'contains'] = i }
+
+        # thread resource
+        thread = {'uri' => '/thread/' + id + '#' + URI.escape(post.uri),
+                  Date => post[Date],
+                  Title => title,
+                 }
+        if post[Size] > 1
+          thread.update({Size => post[Size],
+                         Type => R[SIOC+'Thread']})
+        else
+          thread[Type] = R[SIOC+'MailMessage']
+        end
+        post[Image].do{|i| thread[Image] = i }
 
         unless graph[container] # cluster-container
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
-        graph[item.uri] ||= item if rdf # thread to RDF-graph
-        graph[container][LDP+'contains'].push item }} # container -> thread link
+        graph[thread.uri] ||= thread if rdf
+        graph[container][LDP+'contains'].push thread }}
 
     clusters.map{|container| # count cluster-sizes
       graph[container][Size] = graph[container][LDP+'contains'].

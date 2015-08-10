@@ -1,5 +1,40 @@
 class R
 
+  Icons = {
+    'uri' => :id,
+    Container => :dir,
+    Date => :date,
+    Label => :tag,
+    Title => :title,
+    Directory => :warp,
+    FOAF+'Person' => :person,
+    Image => :img,
+    LDP+'contains' => :container,
+    Size => :size,
+    Mtime => :time,
+    Resource => :graph,
+    Forum => :comments,
+    WikiArticle => :pencil,
+    Atom+'self' => :graph,
+    Atom+'alternate' => :file,
+    Atom+'edit' => :pencil,
+    Atom+'replies' => :comments,
+    RSS+'link' => :link,
+    RSS+'guid' => :id,
+    RSS+'comments' => :comments,
+    SIOC+'Usergroup' => :group,
+    SIOC+'wikiText' => :pencil,
+    SIOC+'has_creator' => :user,
+    SIOC+'has_container' => :dir,
+    SIOC+'has_discussion' => :comments,
+    SIOC+'Thread' => :comments,
+    SIOC+'MailMessage' => :envelope,
+    SIOC+'has_parent' => :reply,
+    SIOC+'reply_to' => :reply,
+    Stat+'File' => :file,
+    '#editable' => :scissors,
+  }
+
   GET['/thumbnail'] = -> e,r {
     path = e.path.sub /^.thumbnail/, ''
     path = '//' + r.host + path unless path.match /^.domain/

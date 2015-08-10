@@ -34,6 +34,7 @@ a.scissors:before { content:"\f0c4"; font-family: icons; }
 a.size:before { content:"\f161"; font-family: icons; }
 a.tag:before { content:"\f02b"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
+a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.title:before { content:"\f035"; font-family: icons; color: #777}
 a.user:before { content:"\f007"; font-family: icons;}
@@ -66,4 +67,5 @@ td.key img {height: 1.4em}
 td.val, td.val > a  {background-color:#000;color:#fff;padding-left:.15em}
 td.val > a {font-weight:bold;}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
+td[property="http://www.w3.org/ns/ldp#contains"] table {float:right}
 td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: .2em; text-align: right; font-weight: normal}
