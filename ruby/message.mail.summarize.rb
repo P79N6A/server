@@ -82,6 +82,6 @@ class R
 
     clusters.map{|container| # count cluster-sizes
       graph[container][Size] = graph[container][LDP+'contains'].
-                               justArray.inject(0){|sum,val| sum += (val[Size]||0)}}}
+                               justArray.inject(0){|sum,val| sum += (val[Size]||1)}}}
 
 end
