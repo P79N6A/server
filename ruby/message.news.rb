@@ -53,7 +53,7 @@ class R
     store :format => :feed, :hook => FeedArchiverRDF, :hostname => h
     self
   rescue Exception => e
-    puts [uri, e, e.message, e.backtrace]
+    puts uri, e, e.message
   end
   def getFeeds h='localhost'
     uris.map{|u| u.R.getFeed h}
