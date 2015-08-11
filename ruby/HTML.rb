@@ -144,7 +144,8 @@ class R
        [{_: :tr, property: k, id: [r.uri,k].h, selectable: :true,
         c: case k
            when 'uri'
-             {_: :td, colspan: 2, c: {_: :a, class: :uri, href: r.uri, c: fragment}}
+             [{_: :td, class: :key},
+              {_: :td, class: :val, c: {_: :a, class: :uri, href: r.uri, c: r.uri}}]
            when Content
              {_: :td, class: :val, colspan: 2, c: v}
            when WikiText

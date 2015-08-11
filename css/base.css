@@ -66,6 +66,7 @@ td.key a {font-weight: bold; background-color:#fff;color:#333;text-decoration:no
 td.key img {height: 1.4em}
 td.val, td.val > a  {background-color:#000;color:#fff;padding-left:.15em}
 td.val > a {font-weight:bold;}
+tr[property='uri'] td.val {border-radius: .6em .6em 0 0;padding-left: .3em}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
 td[property="http://www.w3.org/ns/ldp#contains"] table {float:right}
 td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: .2em; text-align: right; font-weight: normal}
