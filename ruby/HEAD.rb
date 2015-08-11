@@ -31,11 +31,14 @@ class R
     # request resource
     subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
 
-    # headers
-    [env,env[:Links],env[:Response]].compact.map{|fields|
-      fields.map{|k,v|
+    env['SERVER_SOFTWARE'] = 'https://gitlab.com/ix/pw'.R
+    [env,
+     env[:Links],
+     env[:Response]].compact.map{|db|
+      db.map{|k,v|
         subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/
-      }}}
+      }}
+  }
 
   def ldp
     @r[:Links][:acl] = aclURI
