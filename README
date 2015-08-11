@@ -2,15 +2,15 @@ a HTTP/HTTPS daemon
 
  HTTPd features:
  - User-Certificate signin
- - uploads on PUT and POST with LDP-Container and retro HTML-<form> capability
- - paging containers aka directories/folders:
+ - uploads on PUT and POST with LDP-Container interface
+ - paging containers (aka directories/folders)
     summarization, Link headers, sorted-ranges, offsets/cursors
  - lazy indexing via GET (linked to traversible container)
  - follows http://linkeddata.github.io/SoLiD/ guidelines
 
  MIME-types
- - input RDF.rb formats + Atom/RSS feeds, email, chatlogs, text-files, CSV, Markdown
- - output RDF.rb formats + Atom/RSS, HTML (classic), HTML5+JS data-browsers
+ input: RDF.rb formats + Atom/RSS, email, chat, text, CSV, Markdown, code
+ output: RDF.rb formats + Atom/RSS, HTML (classic), HTML5+JS data-browsers
 
 SRC git clone https://github.com/hallwaykid/pw.git ||
     git clone http://repo.or.cz/w/www.git
