@@ -12,8 +12,7 @@ a HTTP/HTTPS daemon
  input: RDF.rb formats + Atom/RSS, email, chat, text, CSV, Markdown, code
  output: RDF.rb formats + Atom/RSS, HTML (classic), HTML5+JS data-browsers
 
-SRC git clone https://github.com/hallwaykid/pw.git ||
-    git clone http://repo.or.cz/w/www.git
+SRC git@gitlab.com:ix/pw.git https://github.com/hallwaykid/pw http://repo.or.cz/w/www.git
 
 PRE-INSTALL
 
