@@ -38,14 +38,17 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = keys - [Title, Label, Content]                   # title/labels on URI, content gets own row
     keys = keys - (skipP - [sort]) if skipP                 # key skiplist
-
+    
     rows = g.resources(e).send direction                    # sorted resources
     e.q['addProperty'].do{|p|
       p = p.expand
       keys.push p unless keys.member?(p)||!p.match(/^http/)
     }
 
-    # scale numeric-sort fields
+    if keys.size == 1 && keys[0] == 'uri'
+      g.keys.map{|r|[r.R,' ']}
+    else
+
     if [Size,Mtime].member? sort
       sizes = g.values.map{|r|r[sort]}.flatten.compact
       range = 0.0
@@ -90,7 +93,8 @@ class R
           {_: :tbody, c: rows.map{|r|
             TableRow[r,e,sort,direction,keys] # TABLE-ROW
            }}]},
-     "\n"]}
+     "\n"]
+    end}
   
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
