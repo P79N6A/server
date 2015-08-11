@@ -20,14 +20,16 @@ class R
 
   TabularView =  ViewGroup[Directory] = ViewGroup[Container] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
     containers = g.values
+
+    # move contained-nodes from toplevel to child-position
     containers.map{|c|
       c[LDP+'contains'] = c[LDP+'contains'].justArray.map{|child|
-        if g[child.uri] # take node from flat-graph and move to container-child
+        if g[child.uri] # contained node
           g.delete child.uri
         else
           child
         end
-      }
+      } if c[LDP+'contains']
     }
 
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
@@ -137,7 +139,9 @@ class R
                when LDP+'contains'
                  l[k].do{|children|
                    cGraph = {}
-                   children.justArray.map{|c|cGraph[c.uri] = c}
+                   children.justArray.map{|c|
+                     cGraph[c.uri] = c
+                   }
                    ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]}
                when WikiText
                  Render[WikiText][l[k]]

@@ -61,7 +61,7 @@ table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
 
-
+table.html {margin: auto}
 td.key {text-align:right}
 td.key a {font-weight: bold;color:#000}
 td.key img {max-height: 2em}
