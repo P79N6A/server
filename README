@@ -34,8 +34,8 @@ $ cd ..                     # goto server-root (if elsewhere copy/link {css,js})
 $ cp conf/daemon/Procfile . # select Rack-engine
 $ foreman start             # start HTTP/HTTPS-daemons
 
-to listen on 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-              >1024: run behind apache/nginx/lighttpd (see conf for config-examples)
+listen on 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+           >1024: run behind apache/nginx/lighttpd, see conf/
 
 repl$ irb -rww
 
