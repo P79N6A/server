@@ -43,7 +43,6 @@ a.warp:before { content:"\f135"; font-family: icons; }
 body {font-family: sans-serif}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 
-table {border-spacing:0}
 tr:target td {background-color:#444;color:#fff}
 tr:target td a {color:#fff}
 
@@ -61,12 +60,15 @@ table.tab td[property='uri'] a {font-weight: bold}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
+
+
 td.key {text-align:right}
-td.key a {font-weight: bold; background-color:#fff;color:#333;text-decoration:none}
-td.key img {height: 1.4em}
+td.key a {font-weight: bold;color:#000}
+td.key img {max-height: 2em}
+td.val {border-radius: .2em}
 td.val, td.val > a  {background-color:#000;color:#fff;padding-left:.15em}
 td.val > a {font-weight:bold;}
-tr[property='uri'] td.val {border-radius: .6em .6em 0 0;padding-left: .3em}
+tr[property='uri'] td a {color: #000}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
 td[property="http://www.w3.org/ns/ldp#contains"] table {float:right}
 td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: .2em; text-align: right; font-weight: normal}

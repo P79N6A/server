@@ -144,8 +144,9 @@ class R
        [{_: :tr, property: k, id: [r.uri,k].h, selectable: :true,
         c: case k
            when 'uri'
-             [{_: :td, class: :key},
-              {_: :td, class: :val, c: {_: :a, class: :uri, href: r.uri, c: r.uri}}]
+             u = CGI.escapeHTML r.uri
+             [{_: :td},
+              {_: :td, c: {_: :a, class: :uri, href: u, c: u}}]
            when Content
              {_: :td, class: :val, colspan: 2, c: v}
            when WikiText
