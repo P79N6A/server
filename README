@@ -24,12 +24,12 @@ $ gem install bundler
 $ apt-get install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
 
 INSTALL
-$ cd pw/ruby
+$ cd ruby
 $ ruby install   # link source to ruby $sitelibdir
 $ bundle install # fetch ruby libraries
 
 USE
-$ cd ..                     # goto server-root (if elsewhere copy/link {css,js})
+$ cd ..
 $ cp conf/daemon/Procfile . # select Rack-engine
 $ foreman start             # start HTTP/HTTPS-daemons
 
