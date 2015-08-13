@@ -36,16 +36,12 @@ class R
       e.q['set'] ||= 'page'; e.q['c'] ||= 15    # select 15 posts in date-desc order
       d.dir.child('news').setEnv(e).response    # jump to news-container
     else # serve third-party feed as RDF
-      puts "remote feed"
       if path.split('/').size > 1
         begin
           graph = RDF::Graph.new
           feedURI = e.scheme + '://' + path
-          puts feedURI
           graph.load feedURI, :format => :feed
           [200, e[:Response].update({'Content-Type' => e.format}), [graph.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]
-#        rescue
-#          E404[d,e]
         end
       else
         E404[d,e]
@@ -90,7 +86,7 @@ class R
       end
       
       def each_statement &fn
-        dateNormalize(:resolveURIs,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream transformer stack
+        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream transformer stack
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -106,12 +102,18 @@ class R
         each_statement{|s| block.call *s.to_triple}
       end
 
-      def resolveURIs *f
+      def massage *f
         send(*f){|s,p,o|
           content = p == Content
-          if content
+
+          reddit = s.R.host.match(/reddit\.com$/)
+          # TODO host and/or server-engine specific Atom/RSS-massage hooks
+
+          # predicate-narrowed sub-extractions
+          if content # SIOC::content
             submission = /.* submitted by /
-            if s.R.host.match(/reddit\.com$/) && o.match(submission)
+            # reddit authorship-data in Content (original post)
+            if reddit && o.match(submission)
               (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|o|
                 links = o.css('a')
                 yield s, Creator, R[links[0].attr('href')]
@@ -120,14 +122,27 @@ class R
             else
               yield s, To, s.R.hostPart.R
             end
+          elsif p == Title
+            # reddit authorship-data in Title (comment)
+            if reddit
+              authorTitleRe = /^(\S+) on /
+              authorTitle = o.match authorTitleRe
+              if authorTitle
+                yield s, Creator, R['https://reddit.com/u/'+authorTitle[1]]
+              end
+            end
           end
+
+          # resolve URIs relative to originating-doc
           yield s, p, content ?
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
               if a.has_attribute? 'href'
                 (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
               end}
-            o.to_xhtml} : o}
+            o.to_xhtml} : o
+
+        }
       end
 
       def mapPredicates *f
