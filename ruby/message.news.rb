@@ -36,13 +36,16 @@ class R
       e.q['set'] ||= 'page'; e.q['c'] ||= 15    # select 15 posts in date-desc order
       d.dir.child('news').setEnv(e).response    # jump to news-container
     else # serve third-party feed as RDF
+      puts "remote feed"
       if path.split('/').size > 1
         begin
           graph = RDF::Graph.new
-          graph.load (e.scheme + '://' + path), :format => :feed
+          feedURI = e.scheme + '://' + path
+          puts feedURI
+          graph.load feedURI, :format => :feed
           [200, e[:Response].update({'Content-Type' => e.format}), [graph.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]
-        rescue
-          E404[d,e]
+#        rescue
+#          E404[d,e]
         end
       else
         E404[d,e]
@@ -107,8 +110,9 @@ class R
         send(*f){|s,p,o|
           content = p == Content
           if content
-            if s.R.host.match(/reddit\.com$/)
-              (Nokogiri::HTML.fragment o.sub(/.* submitted by /,' ')).do{|o|
+            submission = /.* submitted by /
+            if s.R.host.match(/reddit\.com$/) && o.match(submission)
+              (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|o|
                 links = o.css('a')
                 yield s, Creator, R[links[0].attr('href')]
                 yield s, To, R[links[1].attr('href')]
