@@ -55,7 +55,7 @@ table.tab td a {color:#fff}
 table.tab tr:target td a {color:#000}
 table.tab td {background-color:#000;color:#fff;vertical-align:bottom}
 table.tab tr:target td {background-color:#eee;color:#000}
-table.tab td[property='uri'] {text-align:right}
+table.tab td[property='uri'] {text-align:right;border-radius: .28em 0 0 .28em}
 table.tab td[property='uri'] a {font-weight: bold}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
@@ -71,4 +71,4 @@ td.val > a {font-weight:bold;}
 tr[property='uri'] td a {color: #000}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
 td[property="http://www.w3.org/ns/ldp#contains"] table {float:right}
-td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: 0 .23em .23em 0; text-align: right; font-weight: normal}
+td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: 0 .28em .28em 0; text-align: right; font-weight: normal}
