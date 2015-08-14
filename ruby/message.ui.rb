@@ -32,9 +32,9 @@ class R
 
     {class: :chatLog,
      selectable: true,
-     id: log.R.fragment,
+     id: URI.escape(log.R.fragment),
      c: [{_: :b,
-          c: "#{log[SIOC+'channel']}, #{log['#hour']}"},
+          c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
