@@ -79,16 +79,9 @@ class R
     colors = {}
     q = e.q
     arcs = []
-    days = {}
 
     # normalize mtimes to float
     mtimes = d.values.map{|s|
-
-      # record unique days
-      s[Date].justArray[0].do{|d|
-        day = d[0..9]
-        days[day] ||= day.to_time.to_f}
-
       s[Mtime] || s[Date].justArray.map(&:to_time)
     }.flatten.compact.map(&:to_f)
 
@@ -96,8 +89,7 @@ class R
     min = mtimes.min || 0
     max = mtimes.max || 1
     range = (max - min).min(0.1)
-    days = days.sort_by{|_,m|m}
-    posF = -> time {(time - min) / range}
+    posF = -> time {(time.to_f - min) / range}
 
     # arcs
     prior = {'uri' => '#'}
@@ -110,18 +102,26 @@ class R
             arc[:sourceColor] = colors[author] ||= randomColor
             author = t[Creator].justArray[0].do{|c|c.R.fragment}
             arc[:targetColor] = colors[author] ||= randomColor
-            s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0].to_f]}
-            t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0].to_f]}
+            s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0]]}
+            t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0]]}
             arcs.push arc }}
       else # ancester unspecified, use temporal ancestor
         arcs.push({source: s.uri,
                    target: prior.uri,
-                   sourcePos: posF[s[Date].justArray[0].to_time.to_f],
-                   targetPos: posF[prior[Date].justArray[0].to_time.to_f],
+                   sourcePos: posF[s[Date].justArray[0].to_time],
+                   targetPos: posF[prior[Date].justArray[0].to_time],
                   })
         prior = s
       end
     }
+
+    # day-labels
+    days = {}
+    d.values.map{|s|
+      s[Date].justArray[0].do{|d|
+        day = d[0..9]
+        days[day] ||= posF[day.to_time]}}
+    days = days.sort_by{|_,m|m}
 
     # HTML
     e[:label] ||= {}
@@ -145,7 +145,8 @@ class R
             {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}
          ]},'<br clear=all>',
      {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.2"},
-     H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};\n var days = #{days.to_json}"},
+     days.map{|label,pos|{style: "position:fixed;left:#{pos*100}%;transform: rotate(90deg);bottom:2.4em;z-index:2;color:#fff",c: label}},
+     H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph'),
      {_: :style,
       c: e[:label].map{|n,l|

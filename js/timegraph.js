@@ -7,13 +7,11 @@ arcs.forEach(function(link) { // populate node-table from triples
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
-			    name:  link.sourceName,
 			    pos: link.sourcePos * (width - 42) + 21,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
-			    name:  link.targetName,
 			    pos: link.targetPos * (width - 42) + 21,
 			   });
 });
@@ -52,11 +50,6 @@ node.append("rect")
     .attr("width", 9)
     .attr("height", 9)
     .attr("ry",4);
-
-node.append("text")
-    .attr('transform','rotate(90)')
-    .style("fill", '#ffffff')
-    .text(function(d) { return d.name; });
 
 // URI -> item
 var messages = {}
