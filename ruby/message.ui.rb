@@ -89,7 +89,7 @@ class R
         day = d[0..9]
         days[day] ||= day.to_time.to_f}
 
-      s[Mtime] || s[Date].do{|d|d.justArray[0].to_time.to_f}
+      s[Mtime] || s[Date].justArray.map(&:to_time)
     }.flatten.compact.map(&:to_f)
 
     # find max/min mtimes
@@ -97,23 +97,9 @@ class R
     max = mtimes.max || 1
     range = (max - min).min(0.1)
     days = days.sort_by{|_,m|m}
-    yesterday = nil
     posF = -> time {(time - min) / range}
 
-    # contruct temporal-arcs
-    days.map{|d,m|
-      arcs.push({source: '/'+d.gsub('-','/'),
-                 target: '/'+yesterday[0].gsub('-','/'),
-                 sourceName: d,
-                 sourceColor: '#fff',
-                 targetColor: '#fff',
-                 sourcePos: posF[m],
-                 targetPos: posF[yesterday[1]],
-                }) if yesterday
-      yesterday = [d,m]
-    }
-
-    # visual arcs
+    # arcs
     prior = {'uri' => '#'}
     resources.map{|s| # arc source
       if s[SIOC+'has_parent']
@@ -127,7 +113,7 @@ class R
             s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0].to_f]}
             t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0].to_f]}
             arcs.push arc }}
-      else
+      else # ancester unspecified, use temporal ancestor
         arcs.push({source: s.uri,
                    target: prior.uri,
                    sourcePos: posF[s[Date].justArray[0].to_time.to_f],
@@ -159,7 +145,7 @@ class R
             {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}
          ]},'<br clear=all>',
      {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.2"},
-     H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
+     H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};\n var days = #{days.to_json}"},
      H.js('/js/timegraph'),
      {_: :style,
       c: e[:label].map{|n,l|
