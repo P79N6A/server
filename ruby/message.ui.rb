@@ -142,7 +142,7 @@ class R
             uri = CGI.escapeHTML(n.to_s)
             {class: :next, id: n, href: uri, next: uri + '#first', c: {_: :a, rel: :next, c: '&rarr;', href: uri}}}
          ]},'<br clear=all>',
-     {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.2"},
+     {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:#000;opacity: 0.8"},
      days.map{|label,pos|{class: :day, style: "left:#{pos*100}%",c: label}},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph'),
