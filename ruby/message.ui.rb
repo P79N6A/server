@@ -22,9 +22,7 @@ class R
         ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
-  ViewA['#chatBlock'] = -> d,e {
-'blokkk'
-  }
+  ViewA[SIOC+'ChatLog'] = -> l,e {ViewGroup[SIOC+'InstantMessage'][l[LDP+'contains'],e]}
 
   ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = ViewA[SIOC+'ChatLog'] = -> r,e,d {
     name = nil

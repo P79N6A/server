@@ -1,8 +1,9 @@
+watch __FILE__
 class R
 
   # cluster by channel*hour
   Abstract[SIOC+'InstantMessage'] = -> graph, g, e {
-    
+   puts g.keys
   }
 
   # IRC
