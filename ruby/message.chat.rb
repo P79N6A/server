@@ -5,9 +5,16 @@ class R
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
     msgs.map{|uri,msg|
       chan = msg[SIOC+'channel'].justArray[0] || ''
-      hour = msg[Date].justArray[0][11..12]
+      date = msg[Date].justArray[0]
+      hour = date[11..12]
       log = '#' + chan + '.' + hour
-      graph[log] ||= {'uri' => log, Type => R[SIOC+'ChatLog'],SIOC+'channel' => chan, '#hour' => hour, LDP+'contains' => []}
+      graph[log] ||= {
+        'uri' => log,
+        Type => R[SIOC+'ChatLog'],
+        SIOC+'channel' => chan,
+        Date => (date[0..12]+':00').to_time.iso8601,
+        '#hour' => hour,
+        LDP+'contains' => []}
       graph[log][LDP+'contains'].push msg
       graph.delete uri
     }

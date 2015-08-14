@@ -7,12 +7,12 @@ arcs.forEach(function(link) { // populate node-table from triples
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    color: link.sourceColor,
-			    pos: link.sourcePos * (width - 42) + 21,
+			    pos: link.sourcePos * width,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    color: link.targetColor,
-			    pos: link.targetPos * (width - 42) + 21,
+			    pos: link.targetPos * width,
 			   });
 });
 
