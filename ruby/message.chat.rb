@@ -12,10 +12,10 @@ class R
         'uri' => log,
         Type => R[SIOC+'ChatLog'],
         SIOC+'channel' => chan,
-        Date => (date[0..12]+':00').to_time.iso8601,
         '#hour' => hour,
         LDP+'contains' => []}
       graph[log][LDP+'contains'].push msg
+      graph[log][Date] = date if !graph[log][Date] || date > graph[log][Date]
       graph.delete uri
     }
   }

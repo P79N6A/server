@@ -23,7 +23,7 @@ class R
       graph[line.uri] = line}
 
     {class: :chatLog,
-     selectable: true,
+     selectable: true, date: log[Date],
      id: URI.escape(log.R.fragment),
      c: [{_: :b,
           c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},'<br>',
