@@ -124,12 +124,8 @@ class R
             arc[:sourceColor] = colors[author] ||= randomColor
             author = t[Creator].justArray[0].do{|c|c.R.fragment}
             arc[:targetColor] = colors[author] ||= randomColor
-            s[Mtime].do{|mt|
-              pos = posF[mt[0].to_f - min]
-              arc[:sourcePos] = pos}
-            t[Mtime].do{|mt|
-              pos = posF[mt[0].to_f]
-              arc[:targetPos] = pos}
+            s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0].to_f]}
+            t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0].to_f]}
             arcs.push arc }}
       else
         arcs.push({source: s.uri,
