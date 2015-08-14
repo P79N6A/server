@@ -1,4 +1,5 @@
 # coding: utf-8
+#watch __FILE__
 class R
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
@@ -22,9 +23,16 @@ class R
         ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
      H.css('/css/chat',true)]}
 
-  ViewA[SIOC+'ChatLog'] = -> l,e {ViewGroup[SIOC+'InstantMessage'][l[LDP+'contains'],e]}
+  ViewA[SIOC+'ChatLog'] = -> log,e,d {
+    graph = {}
+    log[LDP+'contains'].map{|line|
+      graph[line.uri] = line}
+    {class: :chatLog,
+     c: [{_: :b, c: "#{log[SIOC+'channel']}, #{log['#hour']} hours"},
+         ViewGroup[SIOC+'InstantMessage'][graph,e]]}
+  }
 
-  ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = ViewA[SIOC+'ChatLog'] = -> r,e,d {
+  ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
@@ -69,7 +77,7 @@ class R
            r[p].justArray.map{|o|
              {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}
 
-    ViewGroup['#chatBlock'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+    ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     colors = {}
     q = e.q
     arcs = []
@@ -132,7 +140,8 @@ class R
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
             {_: :a, id: :first, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}},
-          d.resources(e).reverse.map{|r|ViewA[SIOC+'MailMessage'][r,e,d]},
+          d.resources(e).reverse.map{|r|
+            ViewA[r[Type].justArray[0].uri][r,e,d]},
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
             {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}

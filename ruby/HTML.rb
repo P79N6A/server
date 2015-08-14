@@ -128,7 +128,7 @@ class R
           seen[u] = true
         end}}
 
-    [H.js('/js/kbd'), # keyboard-navigation
+    [H.js('/js/kbd',true), # keyboard-navigation
      groups.map{|view,graph|view[graph,e]}, # show type-groups
      d.map{|u,r|                            # show singletons
        if !seen[u]

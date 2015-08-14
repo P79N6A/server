@@ -1,9 +1,16 @@
-watch __FILE__
+#watch __FILE__
 class R
 
-  # cluster by channel*hour
-  Abstract[SIOC+'InstantMessage'] = -> graph, g, e {
-   puts g.keys
+  # group by channel-hour. if huge we could emit much less w/ file-pointers, hourly-pagination.. full contents for now
+  Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
+    msgs.map{|uri,msg|
+      chan = msg[SIOC+'channel'].justArray[0] || ''
+      hour = msg[Date].justArray[0][11..12]
+      log = '#' + chan + '.' + hour
+      graph[log] ||= {'uri' => log, Type => R[SIOC+'ChatLog'],SIOC+'channel' => chan, '#hour' => hour, LDP+'contains' => []}
+      graph[log][LDP+'contains'].push msg
+      graph.delete uri
+    }
   }
 
   # IRC
@@ -41,6 +48,7 @@ class R
     nokogiri.css('div.tweet > div.content').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
       yield s, Type, R[SIOC+'MicroblogPost']
+      yield s, SIOC+'channel', 'twitter'
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
       yield s, Label, t.css('.fullname')[0].inner_text
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601

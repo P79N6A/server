@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def triplrCSV d
@@ -49,56 +49,54 @@ class R
       g.keys.map{|r|[r.R,' ']}
     else
 
-    if [Size,Mtime].member? sort
-      sizes = g.values.map{|r|r[sort]}.flatten.compact
-      range = 0.0
-      max = sizes.max.to_f
-      min = sizes.min.to_f
-      range = max - min if max && min
-      scale = 255.0 / (range && range > 0 && range || 255.0)
-    end
+      if [Size,Mtime].member? sort
+        sizes = g.values.map{|r|r[sort]}.flatten.compact
+        range = 0.0
+        max = sizes.max.to_f
+        min = sizes.min.to_f
+        range = max - min if max && min
+        scale = 255.0 / (range && range > 0 && range || 255.0)
+      end
 
-    [H.css('/css/table',true), "\n",
-     {_: :table, :class => :tab, # TABLE
-      c: [({_: :thead,
-           c: {_: :tr,
-               c: [keys.map{|k|
-                     q = e.q.merge({'sort' => k.shorten})
-                     if direction == :reverse
-                       q.delete 'reverse'
-                     else
-                       q['reverse'] = ''
-                     end
-                     [{_: :th,
-                       property: k,
-                       style: k == sort ? 'background-color:#555' : '',
-                       c: {_: :a,
-                           rel: :nofollow,
-                           href: CGI.escapeHTML(q.qs),
-                           class: Icons[k]||'',
-                           c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
-                   (if e.editable(e.R)
-                    {_: :th, c: if !e.q.has_key?('edit')
-                      {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}
-                    elsif e.q.has_key?('fragment')
-                      if !e.q.has_key?('addProperty')
-                        {_: :a, class: :addButton, c: '+', title: 'add property', href: e.q.merge({'addProperty' => ''}).qs}
-                      elsif e.q['addProperty'].empty?
-                        {_: :form, method: :GET,
-                         c: [
-                           {_: :input, name: :edit, val: :edit, type: :hidden},
-                           {_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
-                           {_: :input, name: :addProperty, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em;background-color:#dfd;color:#000'}]}
-                      end
-                     end}
-                    end)]}} unless skipP),
-          ({_: :style, c: rows.map{|r|
-              mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
-              "tr[href='#{r.R.fragment||r.uri}'] > td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
-          {_: :tbody, c: rows.map{|r|
-            TableRow[r,e,sort,direction,keys] # TABLE-ROW
-           }}]},
-     "\n"]
+      {_: :table, :class => :tab, # TABLE
+       c: [({_: :thead,
+             c: {_: :tr,
+                 c: [keys.map{|k|
+                       q = e.q.merge({'sort' => k.shorten})
+                       if direction == :reverse
+                         q.delete 'reverse'
+                       else
+                         q['reverse'] = ''
+                       end
+                       [{_: :th,
+                         property: k,
+                         style: k == sort ? 'background-color:#555' : '',
+                         c: {_: :a,
+                             rel: :nofollow,
+                             href: CGI.escapeHTML(q.qs),
+                             class: Icons[k]||'',
+                             c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
+                     (if e.editable(e.R)
+                      {_: :th, c: if !e.q.has_key?('edit')
+                        {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}
+                      elsif e.q.has_key?('fragment')
+                        if !e.q.has_key?('addProperty')
+                          {_: :a, class: :addButton, c: '+', title: 'add property', href: e.q.merge({'addProperty' => ''}).qs}
+                        elsif e.q['addProperty'].empty?
+                          {_: :form, method: :GET,
+                           c: [
+                             {_: :input, name: :edit, val: :edit, type: :hidden},
+                             {_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
+                             {_: :input, name: :addProperty, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em;background-color:#dfd;color:#000'}]}
+                        end
+                       end}
+                      end)]}} unless skipP),
+           ({_: :style, c: rows.map{|r|
+               mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
+               "tr[href='#{r.R.fragment||r.uri}'] > td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
+           {_: :tbody, c: rows.map{|r|
+              TableRow[r,e,sort,direction,keys] # TABLE-ROW
+            }}]}
     end}
   
   TableRow = -> l,e,sort,direction,keys {

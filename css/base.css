@@ -71,7 +71,7 @@ td.val > a {font-weight:bold;}
 
 table.tab th:hover {background-color:#333}
 th:first-child {border-radius: .6em 0 0 .2em}
-th:last-child {border-radius: 0 .4em .2em 0}
+th:last-child {border-radius: 0 .4em .24em 0}
 
 tr[property='uri'] td a {color: #000}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}

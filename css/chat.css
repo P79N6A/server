@@ -1,4 +1,4 @@
-.chat {clear:both;background-color: #000;color: #fff}
+.chatLog {padding: 0 .3em .3em .3em; border-radius: .3em; display:inline-block;vertical-align:top;background-color: #000;color: #fff}
 .chat a {text-decoration: none}
 .chat img {max-width: 100%}
 .chat .creator {display:inline-block; min-width: 8em; text-align: right}
