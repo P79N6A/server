@@ -71,7 +71,7 @@ function tick() {
 }
 
 // create cursor
-svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width).attr('y',middle).attr('ry',4);
+svg.append('rect').attr('height',86).attr('id','cursor').style('fill','#fff').attr('width',6).attr('x',width).attr('y',42).attr('ry',2);
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
