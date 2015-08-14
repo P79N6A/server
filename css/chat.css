@@ -3,5 +3,5 @@
 .chat a {text-decoration: none}
 .chat img {max-width: 100%}
 .chat .creator {display:inline-block; min-width: 8em; text-align: right}
-.chat .creator a {color: #ccc}
+.chat .creator a {color: #bbb}
 .chat .body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
