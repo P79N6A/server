@@ -21,16 +21,21 @@ class R
      {_: :style,
       c: e[:label].map{|n,l|
         ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
-     H.css('/css/chat',true)]}
+    ]}
 
   ViewA[SIOC+'ChatLog'] = -> log,e,d {
+
+    # lines to graph
     graph = {}
     log[LDP+'contains'].map{|line|
       graph[line.uri] = line}
+
     {class: :chatLog,
-     c: [{_: :b, c: "#{log[SIOC+'channel']}, #{log['#hour']} hours"},
-         ViewGroup[SIOC+'InstantMessage'][graph,e]]}
-  }
+     selectable: :true,
+     id: log.uri,
+     c: [{_: :b,
+          c: "#{log[SIOC+'channel']}, #{log['#hour']} hours"},
+         ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
     name = nil
@@ -129,7 +134,7 @@ class R
           arcs.push arc }}}
 
     # HTML
-    [H.css('/css/mail',true),
+    [H.css('/css/mail',true),H.css('/css/chat',true),
      {_: :style,
       c: [colors.map{|name,c|
             "[name=\"#{name}\"] {color: #000; background-color: #{c}}\n"},
