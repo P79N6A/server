@@ -8,9 +8,10 @@ a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
 
-div.prev,div.next {height:42em;width:12em;margin:1em;border-radius:.4em;background-color:#555;display:inline-block}
-div.next:target,div.prev:target {background-color:#fff;color: #000}
-a[rel='prev'], a[rel='next'] {color: #fff;font-size:3em}
+div.prev,div.next {height:42em;width:12em;margin:1em;border-radius:.4em;background-color:#222;display:inline-block}
+div.next:target, div.prev:target {background-color:#fff;color: #000}
+div.next:target a, div.prev:target a {color: #000}
+a[rel='prev'], a[rel='next'] {color: #ccc;font-size:3em}
 a[rel='next'] {float:right}
 a[rel='prev'] {float:left}
 
