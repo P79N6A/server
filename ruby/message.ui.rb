@@ -26,7 +26,7 @@ class R
      selectable: true, date: log[Date],
      id: URI.escape(log.R.fragment),
      c: [{_: :b,
-          c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},'<br>',
+          c: "#{log['#hour']}:00 #{log[SIOC+'channel']}"},'<br>',
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
@@ -137,7 +137,7 @@ class R
          ]},
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
-            {class: :prev, c: {_: :a, id: :first, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}}},
+            {class: :prev, id: :first, c: {_: :a, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}}},
           resources.reverse.map{|r|
             ViewA[r[Type].justArray[0].uri][r,e,d]},
           e[:Links][:next].do{|n|
