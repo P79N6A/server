@@ -31,8 +31,8 @@ class R
       graph[line.uri] = line}
 
     {class: :chatLog,
-     selectable: :true,
-     id: log.uri,
+     selectable: true,
+     id: log.R.fragment,
      c: [{_: :b,
           c: "#{log[SIOC+'channel']}, #{log['#hour']} hours"},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
