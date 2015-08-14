@@ -51,7 +51,7 @@ class R
         {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
       end}
 
-    {class: :mail, name: name, id: r.R.path, href: href, selectable: :true,
+    {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
      c: [r[Title].justArray[0].do{|t|
            {_: :a, class: :title,
             href: r.uri,
@@ -74,7 +74,8 @@ class R
            r[p].justArray.map{|o|
              {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}
 
-    ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+  ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+    resources = d.resources(e)
     colors = {}
     q = e.q
     arcs = []
@@ -82,10 +83,13 @@ class R
 
     # normalize mtimes to float
     mtimes = d.values.map{|s|
+
+      # record unique days
       s[Date].justArray[0].do{|d|
         day = d[0..9]
-        days[day] ||= day.to_time.to_f} # unique days
-      s[Mtime]
+        days[day] ||= day.to_time.to_f}
+
+      s[Mtime] || s[Date].do{|d|d.justArray[0].to_time.to_f}
     }.flatten.compact.map(&:to_f)
 
     # find max/min mtimes
@@ -93,37 +97,49 @@ class R
     max = mtimes.max || 1
     range = (max - min).min(0.1)
     days = days.sort_by{|_,m|m}
-    yesterday = days[0]
+    yesterday = nil
+    posF = -> time {(time - min) / range}
 
     # contruct temporal-arcs
     days.map{|d,m|
-      arc = {source: '/'+d.gsub('-','/'),
-             target: '/'+yesterday[0].gsub('-','/'),
-             sourceName: d,
-             sourceColor: '#fff',
-             targetColor: '#fff',
-             sourcePos: (m - min) / range,
-             targetPos: (yesterday[1] - min) / range,
-            }
+      arcs.push({source: '/'+d.gsub('-','/'),
+                 target: '/'+yesterday[0].gsub('-','/'),
+                 sourceName: d,
+                 sourceColor: '#fff',
+                 targetColor: '#fff',
+                 sourcePos: posF[m],
+                 targetPos: posF[yesterday[1]],
+                }) if yesterday
       yesterday = [d,m]
-      arcs.push arc}
+    }
 
-    # construct reference-arcs
-    d.values.map{|s| # source
-      s[SIOC+'has_parent'].justArray.map{|o| # msg source -> target arcs
-        d[o.uri].do{|t| # target
-          arc = {source: s.uri, target: o.uri}
-          author = s[Creator].justArray[0].do{|c|c.R.fragment}
-          arc[:sourceColor] = colors[author] ||= randomColor
-          author = t[Creator].justArray[0].do{|c|c.R.fragment}
-          arc[:targetColor] = colors[author] ||= randomColor
-          s[Mtime].do{|mt|
-            pos = (mt[0].to_f - min) / range
-            arc[:sourcePos] = pos}
-          t[Mtime].do{|mt|
-            pos = (mt[0].to_f - min) / range
-            arc[:targetPos] = pos}
-          arcs.push arc }}}
+    # visual arcs
+    prior = {'uri' => '#'}
+    resources.map{|s| # arc source
+      if s[SIOC+'has_parent']
+        s[SIOC+'has_parent'].justArray.map{|o|
+          d[o.uri].do{|t| # arc target
+            arc = {source: s.uri, target: o.uri}
+            author = s[Creator].justArray[0].do{|c|c.R.fragment}
+            arc[:sourceColor] = colors[author] ||= randomColor
+            author = t[Creator].justArray[0].do{|c|c.R.fragment}
+            arc[:targetColor] = colors[author] ||= randomColor
+            s[Mtime].do{|mt|
+              pos = posF[mt[0].to_f - min]
+              arc[:sourcePos] = pos}
+            t[Mtime].do{|mt|
+              pos = posF[mt[0].to_f]
+              arc[:targetPos] = pos}
+            arcs.push arc }}
+      else
+        arcs.push({source: s.uri,
+                   target: prior.uri,
+                   sourcePos: posF[s[Date].justArray[0].to_time.to_f],
+                   targetPos: posF[prior[Date].justArray[0].to_time.to_f],
+                  })
+        prior = s
+      end
+    }
 
     # HTML
     e[:label] ||= {}
@@ -140,7 +156,7 @@ class R
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
             {_: :a, id: :first, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}},
-          d.resources(e).reverse.map{|r|
+          resources.reverse.map{|r|
             ViewA[r[Type].justArray[0].uri][r,e,d]},
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
