@@ -26,7 +26,6 @@ document.addEventListener("keydown",function(e){
     if(id)
 	resource = document.getElementById(id);
 
-    // previous item
     var prev = function() {
 	if(resource) {
 	    var sib = resource.previousSibling;
@@ -42,7 +41,6 @@ document.addEventListener("keydown",function(e){
 	}
     };
 
-    // next item
     var next = function() {
 	if(resource) {	// focused resource
 	    var explicitNext = resource.getAttribute("next");
@@ -66,13 +64,14 @@ document.addEventListener("keydown",function(e){
 		window.location.hash = cur.getAttribute('id');
 	}
     };
-    // prev
+
+    // prev entry
     // <up> <p> <shift-tab>
     if(e.keyCode==38||e.keyCode==80) {
 	e.preventDefault();
 	prev();
     };
-    // next
+    // next entry
     // <down> <n> <tab>
     if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
@@ -84,9 +83,9 @@ document.addEventListener("keydown",function(e){
     };
 
     // exit context
-    // <left> <esc>
-    if(e.keyCode==37||e.keyCode==27){
-	if(resource) {
+    // <esc>
+    if(e.keyCode==27){
+	if(resource) { // in-doc context
 	    var up = null;
 	    var r = resource.parentNode;
 	    while(r && r.nodeName != '#document' && !up) { // find parent context
@@ -99,7 +98,7 @@ document.addEventListener("keydown",function(e){
 	    } else { // parent-context
 		window.location.hash = up;
 	    };
-	} else {
+	} else { // doc-context
 	    var up = document.querySelector("head > link[rel='parent']")
 	    if(up) {
 		document.location = up.getAttribute('href');
@@ -134,7 +133,7 @@ document.addEventListener("keydown",function(e){
     };
 
     // history
-    if(e.keyCode==66) // b
+    if(e.keyCode==37 || e.keyCode==66) // <left>, b
 	window.history.back();
     if(e.keyCode==70) // f
 	window.history.forward();
