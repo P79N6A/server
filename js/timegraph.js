@@ -31,7 +31,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", height);
 
 // input-location cursor
-svg.append('rect').attr('height',middle).attr('id','cursorB').style('fill','#ddd').attr('width',1).attr('x',width).attr('y',middle);
+svg.append('rect').attr('height',86).attr('id','cursorB').style('fill','#555').attr('width',1).attr('x',width).attr('y',42);
 
 var link = svg.selectAll(".link")
     .data(force.links())
