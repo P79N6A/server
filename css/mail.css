@@ -9,7 +9,7 @@
     border-radius: .23em;
     background-color:#000;
     color:#fff;
-    max-width:144ex;
+    max-width:111ex;
 }
 .mail[name] {background-color:#000; color:#fff}
 .mail:target {background-color: #fff;color:#000}
