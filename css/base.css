@@ -64,8 +64,8 @@ table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
 
 table.html {margin: auto}
-td.key {text-align:right}
-td.key a {font-weight: bold;color:#000}
+td.key {text-align:right;padding-right:.4em;}
+td.key a {font-weight: bold;color:#ccc;background-color:#000}
 td.key img {max-height: 2em}
 td.val {border-radius: .2em}
 td.val, td.val > a  {background-color:#000;color:#fff;padding-left:.15em}
