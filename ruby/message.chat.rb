@@ -1,5 +1,10 @@
 class R
 
+  # cluster by channel*hour
+  Abstract[SIOC+'InstantMessage'] = -> graph, g, e {
+    
+  }
+
   # IRC
 
   def triplrIRC &f

@@ -26,7 +26,7 @@ class R
 'blokkk'
   }
 
-  ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
+  ViewA[SIOC+'BlogPost'] =  ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = ViewA[SIOC+'ChatLog'] = -> r,e,d {
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|

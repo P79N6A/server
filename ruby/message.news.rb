@@ -107,7 +107,7 @@ class R
           content = p == Content
 
           reddit = s.R.host.match(/reddit\.com$/)
-          # TODO host and/or server-engine specific Atom/RSS-massage hooks
+          # TODO host and/or serverengine-specific hooks
 
           # predicate-narrowed sub-extractions
           if content # SIOC::content
