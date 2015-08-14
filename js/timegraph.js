@@ -77,7 +77,7 @@ var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
 window.addEventListener("hashchange",function(e){ // move cursor to current focus
     var id = window.location.hash.slice(1);
-    var vz = messages[id];
+    var vz = messages[id] || messages[window.location.hash];
     if(vz) {
 	force.resume();
 	vz.y = vz.py = middle;
