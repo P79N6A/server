@@ -66,14 +66,14 @@ document.addEventListener("keydown",function(e){
     };
 
     // prev entry
-    // <up> <p> <shift-tab>
-    if(e.keyCode==38||e.keyCode==80) {
+    // <left> <up> <p> <shift-tab>
+    if(e.keyCode==37||e.keyCode==38||e.keyCode==80) {
 	e.preventDefault();
 	prev();
     };
     // next entry
-    // <down> <n> <tab>
-    if(e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
+    // <right> <down> <n> <tab>
+    if(e.keyCode==39 || e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
 	    prev();
@@ -109,8 +109,8 @@ document.addEventListener("keydown",function(e){
     };
 
     // enter context
-    // <right> 
-    if(e.keyCode==39){
+    // <enter> 
+    if(e.keyCode==13){
 	e.preventDefault();
 	if(resource) {
 	    var child = resource.querySelector('[id][selectable]');
@@ -123,19 +123,10 @@ document.addEventListener("keydown",function(e){
 	};
     };
 
-    // goto URI
-    if(e.keyCode == 13) {
-	if(resource) {
-	    var href = resource.getAttribute("href");
-	    if(href)
-		document.location = href;
-	};
-    };
-
     // history
-    if(e.keyCode==37 || e.keyCode==66) // <left>, b
+    if(e.keyCode==66) // (b)ack
 	window.history.back();
-    if(e.keyCode==70) // f
+    if(e.keyCode==70) // (f)orward
 	window.history.forward();
 
 },false);
