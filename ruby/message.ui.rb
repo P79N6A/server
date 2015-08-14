@@ -34,7 +34,7 @@ class R
      selectable: true,
      id: log.R.fragment,
      c: [{_: :b,
-          c: "#{log[SIOC+'channel']}, #{log['#hour']} hours"},
+          c: "#{log[SIOC+'channel']}, #{log['#hour']}"},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
