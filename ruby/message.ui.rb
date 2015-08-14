@@ -13,15 +13,7 @@ class R
      '<br>'
     ]}
 
-  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
-    e[:label] ||= {}
-    e[:count] = 0
-    e.q['a'] = 'sioc:channel'
-    [{class: :chat, c: d.map{|u,r|ViewA[SIOC+'InstantMessage'][r,e]}},
-     {_: :style,
-      c: e[:label].map{|n,l|
-        ".chat .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chat .creator.l#{l[:id]} a {color:#fff}" if l[:c] > 1}.cr },
-    ]}
+  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e]}}
 
   ViewA[SIOC+'ChatLog'] = -> log,e,d {
 
@@ -34,7 +26,7 @@ class R
      selectable: true,
      id: URI.escape(log.R.fragment),
      c: [{_: :b,
-          c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},
+          c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},'<br>',
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
@@ -134,6 +126,9 @@ class R
           arcs.push arc }}}
 
     # HTML
+    e[:label] ||= {}
+    e[:count] = 0
+
     [H.css('/css/mail',true),H.css('/css/chat',true),
      {_: :style,
       c: [colors.map{|name,c|
@@ -153,7 +148,10 @@ class R
          ]},'<br clear=all>',
      {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.2"},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
-     H.js('/js/timegraph')
+     H.js('/js/timegraph'),
+     {_: :style,
+      c: e[:label].map{|n,l|
+        ".chatLog .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chatLog .creator.l#{l[:id]} a {color:#000}" if l[:c] > 1}.cr },
     ]}
 
 end

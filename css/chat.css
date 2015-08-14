@@ -1,7 +1,7 @@
 .chatLog {padding: 0 .3em .3em .3em;max-width:120ex;white-space: normal;margin: .4em; border-radius: .4em; display:inline-block;vertical-align:top;background-color: #000;color: #fff}
 .chatLog:target {background-color: #fff;color: #000}
-.chat a {text-decoration: none}
-.chat img {max-width: 100%}
-.chat .creator {display:inline-block; min-width: 8em; text-align: right}
-.chat .creator a {color: #bbb}
-.chat .body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
+.chatLog a {text-decoration: none}
+.chatLog img {max-width: 100%}
+.chatLog .creator {display:inline-block; min-width: 8em; text-align: right}
+.chatLog .creator a {color: #aaa}
+.chatLog .body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
