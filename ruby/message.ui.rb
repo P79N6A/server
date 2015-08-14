@@ -137,12 +137,12 @@ class R
          ]},
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
-            {_: :a, id: :first, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}},
+            {class: :prev, c: {_: :a, id: :first, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}}},
           resources.reverse.map{|r|
             ViewA[r[Type].justArray[0].uri][r,e,d]},
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
-            {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}
+            {class: :next, id: n, href: uri, next: uri + '#first', c: {_: :a, rel: :next, c: '&rarr;', href: uri}}}
          ]},'<br clear=all>',
      {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.2"},
      days.map{|label,pos|{class: :day, style: "left:#{pos*100}%",c: label}},
