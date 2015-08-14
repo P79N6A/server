@@ -69,8 +69,13 @@ class R
                      else
                        q['reverse'] = ''
                      end
-                     [{_: :th, property: k,
-                       c: {_: :a, rel: :nofollow, href: CGI.escapeHTML(q.qs), class: Icons[k]||'',
+                     [{_: :th,
+                       property: k,
+                       style: k == sort ? 'background-color:#555' : '',
+                       c: {_: :a,
+                           rel: :nofollow,
+                           href: CGI.escapeHTML(q.qs),
+                           class: Icons[k]||'',
                            c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
                    (if e.editable(e.R)
                     {_: :th, c: if !e.q.has_key?('edit')
@@ -126,15 +131,7 @@ class R
                when Type
                  l[Type].justArray.map{|t|
                    icon = Icons[t.uri]
-                   href = if t.uri == Directory
-                            res = e.R.join l.uri
-                            e.scheme + '://linkeddata.github.io/warp/#/list/' + e.scheme + '/' + res.host + res.path
-                          elsif t.uri == Container
-                            (l.R.path||'') + '?set=page'
-                          else
-                            l.uri
-                          end
-                   [({_: :a, href: CGI.escapeHTML(href), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon} if href),
+                   [({_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon} if l.uri),
                     (if e.editable this
                      Containers[t.uri].do{|c|
                        n = c.R.fragment

@@ -69,8 +69,9 @@ td.val {border-radius: .2em}
 td.val, td.val > a  {background-color:#000;color:#fff;padding-left:.15em}
 td.val > a {font-weight:bold;}
 
-th[property='uri'] {border-radius: .6em 0 0 .2em}
-th[property='http://www.w3.org/ns/posix/stat#size'] {border-radius: 0 .4em .2em 0}
+table.tab th:hover {background-color:#333}
+th:first-child {border-radius: .6em 0 0 .2em}
+th:last-child {border-radius: 0 .4em .2em 0}
 
 tr[property='uri'] td a {color: #000}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
