@@ -3,17 +3,16 @@
 class R
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
-    [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
-     r[Creator].do{|c|
-       name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
-       e[:label][name] ||= {c: 0, id: (e[:count] += 1).to_s}
-       e[:label][name][:c] += 1
-       {class: 'creator l' + e[:label][name][:id], c: {_: :a, href: r.uri, c: name }}},
-     {_: :span, class: 'body', c: r[Content]},
-     '<br>'
-    ]}
+    {href: r.uri, class: :ublog, selectable: true, id: r.uri,
+     c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
+         r[Creator].do{|c|
+           name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
+           e[:label][name] ||= {c: 0, id: (e[:count] += 1).to_s}
+           e[:label][name][:c] += 1
+           {class: 'creator l' + e[:label][name][:id], c: {_: :a, href: r.uri, c: name }}},
+         {_: :span, class: 'body', c: r[Content]}]}}
 
-  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e]}}
+  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {{c: d.map{|u,r|ViewA[SIOC+'InstantMessage'][r,e]}}}
 
   ViewA[SIOC+'ChatLog'] = -> log,e,d {
 
@@ -25,8 +24,7 @@ class R
     {class: :chatLog,
      selectable: true, date: log[Date],
      id: URI.escape(log.R.fragment),
-     c: [{_: :b,
-          c: "#{log['#hour']}:00 #{log[SIOC+'channel']}"},'<br>',
+     c: [{_: :b, c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
