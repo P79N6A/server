@@ -145,7 +145,7 @@ class R
             {_: :a, id: n, rel: :next, c: '&rarr;', href: uri, next: uri + '#first'}}
          ]},'<br clear=all>',
      {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:white;opacity: 0.2"},
-     days.map{|label,pos|{style: "position:fixed;left:#{pos*100}%;transform: rotate(90deg);bottom:2.4em;z-index:2;color:#fff",c: label}},
+     days.map{|label,pos|{class: :day, style: "left:#{pos*100}%",c: label}},
      H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/timegraph'),
      {_: :style,
