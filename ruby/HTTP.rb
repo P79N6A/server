@@ -96,7 +96,7 @@ class R
 
 
   ViewGroup[HTTP+'500'] = -> graph, env {
-    [{_: :style, c: 'body { background-color:red }'},
+    [{_: :style, c: 'body {background-color:red}'},
      ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {

@@ -1,5 +1,6 @@
-body {font-family: sans-serif;padding-bottom:127px;}
+body {font-family: sans-serif}
 a {text-decoration:none}
+a.uri {font-size:1.2em}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
@@ -41,20 +42,18 @@ a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
 table.tab {border-radius:.2em;border-spacing: 0 .18em}
-table.tab th {vertical-align:bottom;background-color:#111}
-table.tab th a {font-size:1.5em;font-weight: normal;color:#fff}
-table.tab th:hover {background-color:#333}
-table.tab td, table.tab td a {background-color:#000;color:#fff;text-align:right;vertical-align:bottom}
+table.tab th a {font-size:1.5em;font-weight: normal;color:#ccc}
+table.tab td, table.tab td a, a.uri {background-color:#000;color:#fff;text-align:right;vertical-align:bottom}
 table.tab tr:target td, table.tab tr:target td a {background-color:#fff;color:#000}
 table.tab td[property='uri'] a {font-weight: bold}
-table.tab td a:visited {color:#ccc}
+table.tab td a:visited {color:#ddd}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
 
 td.key {text-align:right;padding-right:.2em}
-td.key a {font-weight: bold;color:#fff;background-color:#000}
+td.key a {font-weight: bold;color:#fff}
 td.key img {max-height: 2em}
 td.val, td.val > a {border-radius: .2em;background-color:#000;color:#fff;}
 td.val > a {font-weight:bold;}

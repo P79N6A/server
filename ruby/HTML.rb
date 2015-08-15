@@ -144,8 +144,7 @@ class R
         c: case k
            when 'uri'
              u = CGI.escapeHTML r.uri
-             [{_: :td},
-              {_: :td, c: {_: :a, class: :uri, href: u, c: u}}]
+             {_: :td, class: :uri, colspan: 2, c: {_: :a, class: :uri, href: u, c: u}}
            when Content
              {_: :td, class: :val, colspan: 2, c: v}
            when WikiText
