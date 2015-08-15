@@ -43,6 +43,7 @@ a.warp:before { content:"\f135"; font-family: icons; }
 table.tab {border-radius:.2em;border-spacing: 0 .18em}
 table.tab th {vertical-align:bottom;background-color:#111}
 table.tab th a {font-size:1.5em;font-weight: normal;color:#fff}
+table.tab th:hover {background-color:#333}
 table.tab td, table.tab td a {background-color:#000;color:#fff;text-align:right;vertical-align:bottom}
 table.tab tr:target td, table.tab tr:target td a {background-color:#fff;color:#000}
 table.tab td[property='uri'] a {font-weight: bold}
@@ -50,6 +51,7 @@ table.tab td a:visited {color:#ccc}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
+tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
 
 td.key {text-align:right;padding-right:.4em;}
 td.key a {font-weight: bold;color:#ccc;background-color:#000}
@@ -58,10 +60,4 @@ td.val {border-radius: .2em}
 td.val, td.val > a  {background-color:#000;color:#fff;padding-left:.15em}
 td.val > a {font-weight:bold;}
 
-table.tab th:hover {background-color:#333}
-th:first-child {border-radius: .6em 0 0 .2em}
-th:last-child {border-radius: 0 .4em .24em 0}
 
-tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
-td[property="http://www.w3.org/ns/ldp#contains"] table {float:right}
-td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: 0 .28em .28em 0; text-align: right; font-weight: normal}
