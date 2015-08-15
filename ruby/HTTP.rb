@@ -86,8 +86,7 @@ class R
     [{_: :style, c: "tr[property='http://www.w3.org/2011/http#USER_AGENT'] td {font-size:.8em}"},
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
-
-#  GET['/500'] = -> resource, environment {0/0} # create an error inside a request
+#  GET['/500'] = -> resource, environment {0/0}
 
   GET['/ERROR'] = -> d,e { # render cached-info about error
     uri = d.path
@@ -97,7 +96,7 @@ class R
 
 
   ViewGroup[HTTP+'500'] = -> graph, env {
-    [{c: 500, style: 'font-size:11em;font-family:monospace;color:red'},
+    [{_: :style, c: 'body { background-color:red }'},
      ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {

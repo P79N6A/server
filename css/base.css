@@ -1,8 +1,4 @@
-body {
-    font-family: sans-serif;
-    padding-bottom:127px;
-    background-color:#111;color:#fff;
-}
+body {font-family: sans-serif;padding-bottom:127px;}
 a {text-decoration:none}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
@@ -15,6 +11,7 @@ a[rel='prev'], a[rel='next'] {color: #ccc;font-size:3em}
 a[rel='next'] {float:right}
 a[rel='prev'] {float:left}
 
+@font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }
@@ -43,27 +40,17 @@ a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
-@font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
-
-tr:target td {background-color:#444;color:#fff}
-tr:target td a {color:#fff}
-
 table.tab {border-radius:.2em;border-spacing: 0 .18em}
-table.tab th {vertical-align:bottom;background-color:#111;border-style: solid;border-color:#000;border-width: 0 .2em 0 0;padding-left:.2em}
-table.tab th img {max-width:2em;max-height:2em}
+table.tab th {vertical-align:bottom;background-color:#111}
 table.tab th a {font-size:1.5em;font-weight: normal;color:#fff}
-table.tab tr:hover {background-color:#ddd}
-table.tab tr:target td a {color:#000;background-color:#fff}
-table.tab td, table.tab td a {background-color:#000;color:#fff;vertical-align:bottom}
-table.tab tr:target td {background-color:#eee;color:#000}
-table.tab td[property='uri'] {text-align:right;border-radius: .28em 0 0 .28em}
+table.tab td, table.tab td a {background-color:#000;color:#fff;text-align:right;vertical-align:bottom}
+table.tab tr:target td, table.tab tr:target td a {background-color:#fff;color:#000}
 table.tab td[property='uri'] a {font-weight: bold}
-table.tab td a:visited {color:#bbb}
+table.tab td a:visited {color:#ccc}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
 
-table.html {margin: auto}
 td.key {text-align:right;padding-right:.4em;}
 td.key a {font-weight: bold;color:#ccc;background-color:#000}
 td.key img {max-height: 2em}
