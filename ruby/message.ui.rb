@@ -49,6 +49,12 @@ class R
         {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
       end}
 
+    contained = {}
+    [DC+'hasFormat', SIOC+'attachment'].map{|p|
+      r[p].justArray.map{|o|
+        contained[o.uri] = {'uri' => o.uri, Size => 0} }}
+    attache = contained.empty? ? nil : TabularView[contained,e]
+
     {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
      c: [r[Title].justArray[0].do{|t|
            {_: :a, class: :title,
@@ -68,9 +74,8 @@ class R
 
          r[Content].justArray.map{|c| {class: :body, c: c}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
-         [DC+'hasFormat', SIOC+'attachment'].map{|p|
-           r[p].justArray.map{|o|
-             {_: :a, class: :attached, href: o.uri, c: '⬚ ' + o.R.basename}}}]}}
+         attache
+        ]}}
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     resources = d.resources(e)
@@ -120,11 +125,11 @@ class R
         day = d[0..9]
         days[day] ||= posF[day.to_time]}}
     days = days.sort_by{|_,m|m}
-
-    # HTML
+    # arbitrary labels
     e[:label] ||= {}
     e[:count] = 0
 
+    # HTML
     [H.css('/css/mail',true),H.css('/css/chat',true),
      {_: :style,
       c: [colors.map{|name,c|

@@ -53,12 +53,12 @@ table.tab th {vertical-align:bottom;background-color:#111;border-style: solid;bo
 table.tab th img {max-width:2em;max-height:2em}
 table.tab th a {font-size:1.5em;font-weight: normal;color:#fff}
 table.tab tr:hover {background-color:#ddd}
-table.tab td a {color:#fff}
-table.tab tr:target td a {color:#000}
-table.tab td {background-color:#000;color:#fff;vertical-align:bottom}
+table.tab tr:target td a {color:#000;background-color:#fff}
+table.tab td, table.tab td a {background-color:#000;color:#fff;vertical-align:bottom}
 table.tab tr:target td {background-color:#eee;color:#000}
 table.tab td[property='uri'] {text-align:right;border-radius: .28em 0 0 .28em}
 table.tab td[property='uri'] a {font-weight: bold}
+table.tab td a:visited {color:#bbb}
 table.tab td.content {max-width:100ex}
 table.tab td[property='http://purl.org/dc/terms/date'] {white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
@@ -75,7 +75,6 @@ table.tab th:hover {background-color:#333}
 th:first-child {border-radius: .6em 0 0 .2em}
 th:last-child {border-radius: 0 .4em .24em 0}
 
-tr[property='uri'] td a {color: #000}
 tr[property='http://rdfs.org/sioc/ns#content'] td {max-width: 100ex}
 td[property="http://www.w3.org/ns/ldp#contains"] table {float:right}
 td[property='http://www.w3.org/ns/posix/stat#size'] {padding: 0 .3em 0 .3em; border-radius: 0 .28em .28em 0; text-align: right; font-weight: normal}
