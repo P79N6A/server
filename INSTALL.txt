@@ -1,27 +1,24 @@
 
-PRE-INSTALL
-
-# void
-$ xbps-install base-devel ruby ruby-devel libgit2-devel libxml2-devel libxslt-devel source-highlight python-Pygments
-$ gem install bundler
-
-# debian
-$ apt-get install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config
-
-INSTALL
 $ cd ruby
-$ ruby install   # link source to ruby $sitelibdir
-$ bundle install # fetch ruby libraries
+$ ruby install   # link source to $sitelibdir
+
+DEPENDENCIES
+$ xbps-install base-devel ruby ruby-devel libgit2-devel libxml2-devel libxslt-devel source-highlight python-Pygments # void <http://www.voidlinux.eu/>
+$ apt-get install ruby bundler libssl-dev libgit2-dev libxml2-dev libxslt1-dev pkg-config                            # debian <http://www.debian.org/>
+
+$ gem install bundler
+$ bundle install      # ruby libraries
 
 USE
 $ cd ..
-$ cp conf/Procfile .
+$ cp conf/Procfile . # tweak as desired for base server-engine and IP settings
 $ foreman start
 
-listen on 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-           >1024: run behind apache/nginx/lighttpd, see conf/
+port 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+      >1024: standalone or behind apache/nginx/lighttpd, samples in conf/
 
-repl$ irb -rww
+REPL
+$ irb -rww
 
 CLEAN
 $ rm -rf cache index
