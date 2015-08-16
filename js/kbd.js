@@ -137,6 +137,6 @@ window.addEventListener("hashchange",function(e){
     if(resource) {
 	var resTitle = resource.getAttribute('href');
 	document.querySelector('title').innerText = resTitle;
-	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY - 20);
+	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
     };
 });

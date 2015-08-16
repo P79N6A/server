@@ -1,4 +1,4 @@
-.chatLog {padding: 0 .3em .3em .3em;max-width:120ex;white-space: normal;margin: .4em; border-radius: .48em; display:inline-block;vertical-align:top;background-color: #000;color: #fff}
+.chatLog {padding: 0 .3em .3em .3em;max-width:120ex;white-space: normal;margin: .4em; display:inline-block;vertical-align:top;background-color: #000;color: #fff}
 .chatLog:target {background-color: #fff;color: #000}
 .chatLog a {text-decoration: none}
 .chatLog img {max-width: 100%}
