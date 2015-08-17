@@ -16,7 +16,7 @@ end
 
 class R
 
-  # help debug-output through thin/foreman shell-buffering a bit
+  # coax debug-output through thin/foreman shell-buffering a bit
   $stdout.sync = true
   $stderr.sync = true
 
@@ -27,22 +27,49 @@ class R
       end }
   end
 
-  def R.call e
+  def R.call e # Rack calls request here
     method = e['REQUEST_METHOD']
+
+    # whitelist supported methods in Allow constant
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
-    e.extend Th # environment util-functions
-    dev         # check for updated source-code
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h} # canonical hostname
-    e['SERVER_NAME'] = e.host.gsub /[\.\/]+/, '.'        # clean hostname
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/' # clean path
-    path = Pathname.new(rawpath).expand_path.to_s        # interpret path
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-    resource = R[e.scheme + "://" + e.host + path]       # resource reference
-    e['uri'] = resource.uri                              # add normalized-URI to environment
-    e[:Links] = {}; e[:Response] = {}; e[:filters] = []  # init response-header fields
-    resource.setEnv(e).send(method).do{|s,h,b| # run request and inspect response
-      R.log e,s,h,b # logging
-      [s,h,b]} # response
+
+    # add environment utility-functions to rack env-Hash
+    e.extend Th
+
+    # "development mode" hook, source-code watch
+    dev
+
+    # find canonical hostname
+    e['HTTP_X_FORWARDED_HOST'].do{|h|
+      e['SERVER_NAME']=h}
+
+    # strip junk in hostname, like .. and /
+    e['SERVER_NAME'] = e.host.gsub /[\.\/]+/, '.'
+
+    # local paths can contain URI special-cars
+    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/'
+
+    # interpret path, preserving trailing-slash
+    path = Pathname.new(rawpath).expand_path.to_s
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/'
+
+    # affix found URI to environment
+    resource = R[e.scheme + "://" + e.host + path]
+    e['uri'] = resource.uri
+
+    # init response-header fields
+    e[:Links] = {}
+    e[:Response] = {}
+    e[:filters] = []
+
+    # call request-method
+    resource.setEnv(e).send(method).do{|s,h,b|
+      # inspect response
+      R.log e,s,h,b
+
+      # return
+      [s,h,b]
+    }
   rescue Exception => x
     E500[x,e]
   end
@@ -86,9 +113,11 @@ class R
     [{_: :style, c: "tr[property='http://www.w3.org/2011/http#USER_AGENT'] td {font-size:.8em}"},
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
-#  GET['/500'] = -> resource, environment {0/0}
+
+  GET['/DivideByZero'] = -> resource, environment {0/0}
 
   GET['/ERROR'] = -> d,e { # render cached-info about error
+    puts "ERror",d.uri
     uri = d.path
     graph = {uri => Errors[uri]}
     [200,{'Content-Type' => e.format},
