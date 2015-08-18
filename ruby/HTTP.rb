@@ -114,8 +114,8 @@ class R
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
-  GET['/DivideByZero'] = -> resource, environment {0/0}
-
+  GET['/500'] = -> resource, environment {0/0}
+ 
   GET['/ERROR'] = -> d,e { # render cached-info about error
     puts "ERror",d.uri
     uri = d.path
