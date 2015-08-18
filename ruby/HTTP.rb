@@ -1,14 +1,14 @@
-
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 
 module Rack
   module Adapter
+    # don't guess, use rack
     def self.guess _; :rack end
-    def self.load _
+    def self.load _ # Rack configuration
       Rack::Builder.new {
-        use Rack::Deflater
-        run R
+        use Rack::Deflater # gzip response
+        run R              # call R.call
       }.to_app
     end
   end
@@ -114,15 +114,7 @@ class R
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
-  GET['/500'] = -> resource, environment {0/0}
- 
-  GET['/ERROR'] = -> d,e { # render cached-info about error
-    puts "ERror",d.uri
-    uri = d.path
-    graph = {uri => Errors[uri]}
-    [200,{'Content-Type' => e.format},
-     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
-
+  GET['/500'] = -> resource, environment {0/0} # force an error to test error-handling
 
   ViewGroup[HTTP+'500'] = -> graph, env {
     [{_: :style, c: 'body {background-color:red}'},
@@ -192,6 +184,13 @@ class R
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
       g.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
+  GET['/stat/HTTP'] = -> d,e {
+    puts "ERror",d.uri
+    uri = d.path
+    graph = {uri => Errors[uri]}
+    [200,{'Content-Type' => e.format},
+     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+
   ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
   ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env { g.map{|u,r| ViewA[Key][r,env]}}
   ViewA[Key] = -> u,e {{class: :pubkey, c: [{_: :a, class: :pubkey, href: u.uri},u]}}
@@ -241,7 +240,7 @@ class R
 
 end
 
-module Th
+module Th # methods which introspect request-environment
 
   def user
     @user ||= (user_WebID || user_DNS)
@@ -311,7 +310,9 @@ module Th
 end
 
 class Hash
-  def qs # serialize to query-string
-   '?'+map{|k,v|k.to_s+'='+(v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
+  def qs # serialize query-string
+    '?'+map{|k,v|
+      k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
+    }.intersperse("&").join('')
   end
 end
