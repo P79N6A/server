@@ -117,19 +117,9 @@ class R
      ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {
-    base = '/stat/HTTP/500/'
-    slug = e.uri.h
-    uri = base + slug
-    error = Stats['HTTP']['500'][slug] = {
-      'uri' => uri,
-      DC+'source' => e.R,
-      Type => R[HTTP+'500'],
-      Title => [x.class,x.message.noHTML].join(' '),
-      Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>',
-      SIOC+'has_container' => R[base],
-    }
-
-    graph = {uri => error}
+    graph = {'' => Stats['HTTP']['500'][e.uri.h] = {
+               'uri' => e.uri, Type => R[HTTP+'500'], Title => [x.class,x.message.noHTML].join(' '),
+               Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>'}}
     [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
@@ -144,7 +134,7 @@ class R
     else # container
       x.keys.map{|child|
         uri = x[child]['uri']  || (e.uri.t + child.t)
-        graph[uri] = {'uri' => uri, Type => R[Resource], Label => x[child][Label]||uri, Size => x[child][Size]}
+        graph[uri] = {'uri' => uri, Type => R[Resource], Label => x[child][Label], Size => x[child][Size]}
       }
     end
 
