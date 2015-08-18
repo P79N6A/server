@@ -125,9 +125,6 @@ class R
         day = d[0..9]
         days[day] ||= posF[day.to_time]}}
     days = days.sort_by{|_,m|m}
-    # arbitrary labels
-    e[:label] ||= {}
-    e[:count] = 0
 
     # HTML
     [H.css('/css/mail',true),H.css('/css/chat',true),
