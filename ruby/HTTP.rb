@@ -119,7 +119,7 @@ class R
   E500 = -> x,e {
     errors = Stats['status']['500']
     graph = {'' => errors[e.uri.h] = {
-               'uri' => e['REQUEST_URI'],
+               'uri' => '//' + e.host + e['REQUEST_URI'],
                Type => R[HTTP+'500'],
                Label => e.R.basename,
                Title => [x.class,x.message.noHTML].join(' '),
