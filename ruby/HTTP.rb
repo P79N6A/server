@@ -142,6 +142,8 @@ class R
       }
     end
 
+    e.q['sort'] ||= 'stat:size'
+    e.q['reverse'] ||= true
     # render response
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[graph,r]} || graph.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
