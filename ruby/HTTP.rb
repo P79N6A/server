@@ -117,24 +117,16 @@ class R
      ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {
-    ENV2RDF[e,graph={}]
-     errorURI = '/stat/HTTP/500/' + (e.uri||'').h
-    error = graph[e.uri]
-    Errors[errorURI] = error
+    slug = (e.uri||'').h
+    error = Stats['HTTP']['500'][slug] = {
+      'uri' => '/stat/HTTP/500' + slug,
+      Type => R[HTTP+'500'],
+      SIOC+'has_container' => R['/stat/HTTP/500'],
+      Title => [x.class, x.message.noHTML].join(' '),
+      Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>'}
 
-    Stats['status']['500'] ||= {}
-    error = Stats['status']['500'][errorURI] ||= {}
-    error[Type] = R[HTTP+'500']
-    error[Title] = [x.class, x.message.noHTML].join ' '
-    error[Content] = '<pre><h2>stack</h2>' + x.backtrace.join("\n").noHTML + '</pre>'
-
-    Stats[:error][errorURI]||= 0
-    Stats[:error][errorURI] += 1
-
-    $stderr.puts [500,e.uri,e.R.join(errorURI)].join(' ')
-    [500,{'Content-Type' => e.format},
-     [Render[e.format].do{|p|p[graph,e]} ||
-      graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+    graph = {error.uri => error}
+    [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
     path = e.path
