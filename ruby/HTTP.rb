@@ -76,19 +76,14 @@ class R
 
   def R.log e, s, h, b
     return unless e&&s&&h&&b
-    Stats[:status][s] ||= 0
-    Stats[:status][s] += 1
-    Stats[:host][e.host] ||= 0
-    Stats[:host][e.host] += 1
-    mime = nil
-    h['Content-Type'].do{|ct|
-      mime = ct.split(';')[0]
-      Stats[:format][mime] ||= 0
-      Stats[:format][mime] += 1}
-    puts [e['REQUEST_METHOD'], s,
-          [e.scheme, '://', e.host, e['REQUEST_URI']].join,
-          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format, #e['HTTP_ACCEPT'],
-          e['HTTP_REFERER']].
+    Stats['status'][s.to_s] ||= {'uri' => '/stat/status/'+s.to_s, Size => 0}
+    Stats['status'][s.to_s][Size] += 1
+    Stats['host'][e.host] ||= {'uri' => e.host, Size => 0}
+    Stats['host'][e.host][Size] += 1
+
+    # log request to stdout
+    puts [e['REQUEST_METHOD'], s, [e.scheme, '://', e.host, e['REQUEST_URI']].join,
+          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format, e['HTTP_REFERER']].
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
@@ -123,15 +118,16 @@ class R
 
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
-    errorURI = '/stat/HTTP/500/' + (e.uri||'').h
+     errorURI = '/stat/HTTP/500/' + (e.uri||'').h
     error = graph[e.uri]
+    Errors[errorURI] = error
+
+    Stats['status']['500'] ||= {}
+    error = Stats['status']['500'][errorURI] ||= {}
     error[Type] = R[HTTP+'500']
     error[Title] = [x.class, x.message.noHTML].join ' '
     error[Content] = '<pre><h2>stack</h2>' + x.backtrace.join("\n").noHTML + '</pre>'
-    Errors[errorURI] = error
 
-    Stats[:status][500] ||= 0
-    Stats[:status][500]  += 1
     Stats[:error][errorURI]||= 0
     Stats[:error][errorURI] += 1
 
@@ -141,7 +137,11 @@ class R
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
-    g = {e.uri => Stats[e.path]}
+    path = e.path
+    selector = path.sub(/^\/stat\//,'')
+
+    g = {path => Stats[path]}
+
     # render response
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} || g.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 

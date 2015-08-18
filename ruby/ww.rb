@@ -176,12 +176,11 @@ class R < RDF::URI
   GET = {}         # GET handler bound to URI
   Watch = {}       # source-files to check for changes
 
-  Stats = {error: {}, # server-stats
-           format: {},
-           host: {},
-           status: {},
-           'HTTP' => {},
-          }
+  Stats = {
+    'host' => {},
+    'status' => {},
+    'HTTP' => {},
+  }
 
 %w{
 MIME
