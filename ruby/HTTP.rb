@@ -132,15 +132,14 @@ class R
 
   GET['/stat'] = -> e,r {
     path = e.path
-    cursor = Stats
-    path.sub(/^\/stat\//,'').split('/').map{|part|
-      
-    }
+    x = Stats
+    path.sub(/^\/stat\//,'').split('/').map{|name|
+      x = x[name]}
 
-    g = {path => Stats[path]}
-
+    graph = {x.uri => x}
+    puts graph
     # render response
-    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} || g.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
+    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[graph,r]} || graph.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
   ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
   
