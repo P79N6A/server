@@ -78,7 +78,7 @@ class R
     return unless e&&s&&h&&b
     Stats['status'][s.to_s] ||= {Size => 0}
     Stats['status'][s.to_s][Size] += 1
-    Stats['host'][e.host] ||= {'uri' => e.host, Size => 0}
+    Stats['host'][e.host] ||= {'uri' => '//'+e.host, Size => 0}
     Stats['host'][e.host][Size] += 1
 
     # log request to stdout
@@ -138,15 +138,14 @@ class R
       n = x[name]  # try next
       x = n if n } # found
 
-    graph = {}
+    graph = {'..' => {'uri' => '..', Type => R[Container]}}
     if x.uri # item
       graph[x.uri] = x
     else # container
       x.keys.map{|child|
         uri = e.uri.t + child
-        graph[uri] = {'uri' => uri, Type => R[Resource], Size => x[child][Size]}
+        graph[uri.t] = {'uri' => uri.t, Type => R[Resource], Size => x[child][Size]}
       }
-      x['..'] = {'uri' => '..', Type => R[Container]}
     end
 
     # render response
