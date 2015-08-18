@@ -131,17 +131,21 @@ class R
     [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
-    path = e.path
+    graph = {}
     x = Stats
-    path.sub(/^\/stat\//,'').split('/').map{|name|
+    e.path.sub(/^\/stat\//,'').split('/').map{|name|
       n = x[name]  # try next
       x = n if n } # found
 
-    unless x.uri # thing
-      # container
-      x = {'uri' => e.uri, Type => R[Container], LDP+'contains' => x.keys.map{|child|{'uri' => e.uri + '/' + child}}}
+    if x.uri # item
+      graph[x.uri] = x
+    else # container
+      x.keys.map{|child|
+        uri = e.uri + '/' + child
+        graph[uri] = {'uri' => uri, Type => R[Container]}
+      }
     end
-    graph = {x.uri => x}
+
     # render response
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[graph,r]} || graph.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
