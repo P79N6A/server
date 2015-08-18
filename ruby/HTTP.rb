@@ -76,9 +76,9 @@ class R
 
   def R.log e, s, h, b
     return unless e&&s&&h&&b
-    Stats['status'][s.to_s] ||= {Size => 0}
+    Stats['status'][s.to_s] ||= {'uri' => '/stat/status/'+s.to_s.t, Type => R[Resource], Size => 0}
     Stats['status'][s.to_s][Size] += 1
-    Stats['host'][e.host] ||= {'uri' => '//'+e.host, Size => 0}
+    Stats['host'][e.host] ||= {'uri' => '//'+e.host, Label => e.host, Size => 0}
     Stats['host'][e.host][Size] += 1
 
     # log request to stdout
@@ -122,7 +122,7 @@ class R
     uri = base + slug
     error = Stats['HTTP']['500'][slug] = {
       'uri' => uri,
-      DC+'source' => e.uri,
+      DC+'source' => e.R,
       Type => R[HTTP+'500'],
       Title => [x.class,x.message.noHTML].join(' '),
       Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>',
@@ -143,8 +143,8 @@ class R
       graph[x.uri] = x
     else # container
       x.keys.map{|child|
-        uri = e.uri.t + child
-        graph[uri.t] = {'uri' => uri.t, Type => R[Resource], Size => x[child][Size]}
+        uri = x[child]['uri']  || (e.uri.t + child.t)
+        graph[uri] = {'uri' => uri, Type => R[Resource], Label => x[child][Label]||uri, Size => x[child][Size]}
       }
     end
 
