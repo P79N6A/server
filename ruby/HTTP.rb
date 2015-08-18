@@ -97,9 +97,10 @@ class R
     graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
     seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
 
-    # add container-dir breadcrumbs
+    # add container-container breadcrumbs
     base.cascade.reverse.map{|p|
       p.e && seeAlso.push(p)}
+
     # add incomplete-path matches
     seeAlso.concat base.a('*').glob
     
@@ -114,7 +115,7 @@ class R
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
-  GET['/500'] = -> resource, environment {0/0} # force an error to test error-handling
+  GET['/500'] = -> resource, environment {0/0} # force an error to see what happens
 
   ViewGroup[HTTP+'500'] = -> graph, env {
     [{_: :style, c: 'body {background-color:red}'},
@@ -122,7 +123,7 @@ class R
 
   E500 = -> x,e {
     ENV2RDF[e,graph={}]
-    errorURI = '/ERROR/' + (e.uri||'').h
+    errorURI = '/stat/HTTP/500/' + (e.uri||'').h
     error = graph[e.uri]
     error[Type] = R[HTTP+'500']
     error[Title] = [x.class, x.message.noHTML].join ' '
@@ -141,7 +142,7 @@ class R
 
   GET['/stat'] = -> e,r { g = {}
     r.q['sort'] ||= 'stat:size'
-    r.q['reverse'] = true
+    r.q['reverse'] ||= true
     Stats.map{|sym, table|
       group = e.uri + '#' + sym.to_s
       g[group] = {'uri' => group,
@@ -161,19 +162,6 @@ class R
                           end
                   {'uri' => uri, Title => key, Stat+'size' => count }}}}
 
-    # enumerate schemes
-    https =  r.scheme[-1]=='s'
-    g['#scheme'] = {'uri' => '#scheme', Type => R[Container],
-                    LDP+'contains' => [
-                      {'uri' => r.scheme + "://" + r.host + '/stat',
-                       Title => r.scheme,
-                       Size => Stats[:status].values.inject(0){|s,v|s+v}
-                      },
-                      {'uri' => (https ? 'http' : 'https') + "://" + r.host + '/stat',
-                       Title => https ? 'http' : 'https',
-                       Size => 0 }]}
-
-    # free space
     g['#storage'] = {
          Type => R[BasicResource],
       Content => ['<pre>',
@@ -192,8 +180,6 @@ class R
      [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
-  ViewGroup[Key] = ViewGroup['http://xmlns.com/wot/0.1/PubKey'] = -> g,env { g.map{|u,r| ViewA[Key][r,env]}}
-  ViewA[Key] = -> u,e {{class: :pubkey, c: [{_: :a, class: :pubkey, href: u.uri},u]}}
   
   ViewGroup[User] = -> g,env {
     if env.signedIn
