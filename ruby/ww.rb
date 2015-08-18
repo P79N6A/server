@@ -178,8 +178,7 @@ class R < RDF::URI
 
   Stats = {
     'host' => {},
-    'HTTP' => {'500' => {}},
-    'status' => {},
+    'status' => {'500' => {}},
   }
 
 %w{

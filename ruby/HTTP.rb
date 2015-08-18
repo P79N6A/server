@@ -117,9 +117,13 @@ class R
      ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {
-    graph = {'' => Stats['HTTP']['500'][e.uri.h] = {
-               'uri' => e.uri, Type => R[HTTP+'500'], Title => [x.class,x.message.noHTML].join(' '),
-               Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>'}}
+    graph = {'' => Stats['status']['500'][e.uri.h] = {
+               'uri' => e.uri,
+               Type => R[HTTP+'500'],
+               Title => [x.class,x.message.noHTML].join(' '),
+               Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>',
+               SIOC+'has_container' => R['/stat/status/500/'],
+             }}
     [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
