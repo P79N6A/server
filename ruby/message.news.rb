@@ -1,8 +1,6 @@
 #watch __FILE__
 class R
 
-  GREP_DIRS.push(/^\/news\/\d{4}\/\d{2}/)
-
   GET['/news'] = -> d,e {
     location = d.justPath.docroot.uri
     newsloc = '/news'

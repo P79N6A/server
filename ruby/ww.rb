@@ -173,17 +173,15 @@ class R < RDF::URI
   Render = {}      # MIME renderer
   ViewA = {}       # HTML template (one resource)
   ViewGroup = {}   # HTML template (set of resources)
-
   GET = {}         # GET handler bound to URI
-
   Watch = {}       # source-files to check for changes
-  Errors = {}      # runtime errors
-  Stats = {error: {}, # stats
+
+  Stats = {error: {}, # server-stats
            format: {},
            host: {},
-           status: {}}
-
-  GREP_DIRS = []
+           status: {},
+           'HTTP' => {},
+          }
 
 %w{
 MIME
