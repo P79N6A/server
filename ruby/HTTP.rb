@@ -76,7 +76,7 @@ class R
 
   def R.log e, s, h, b
     return unless e&&s&&h&&b
-    Stats['status'][s.to_s] ||= {'uri' => '/stat/status/'+s.to_s, Size => 0}
+    Stats['status'][s.to_s] ||= {Size => 0}
     Stats['status'][s.to_s][Size] += 1
     Stats['host'][e.host] ||= {'uri' => e.host, Size => 0}
     Stats['host'][e.host][Size] += 1
@@ -123,7 +123,6 @@ class R
       'uri' => uri,
       DC+'source' => e.uri,
       Type => R[HTTP+'500'],
-#      SIOC+'has_container' => R['/stat/HTTP/500'],
       Title => [x.class,x.message.noHTML].join(' '),
       Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>'}
 
@@ -131,18 +130,18 @@ class R
     [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
-    graph = {}
     x = Stats
     e.path.sub(/^\/stat\//,'').split('/').map{|name|
       n = x[name]  # try next
       x = n if n } # found
 
+    graph = {}
     if x.uri # item
       graph[x.uri] = x
     else # container
       x.keys.map{|child|
         uri = e.uri + '/' + child
-        graph[uri] = {'uri' => uri, Type => R[Container]}
+        graph[uri] = {'uri' => uri, Type => R[Resource]}.merge(x[child])
       }
     end
 
