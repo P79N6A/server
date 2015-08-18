@@ -140,44 +140,10 @@ class R
      [Render[e.format].do{|p|p[graph,e]} ||
       graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
-  GET['/stat'] = -> e,r { g = {}
-    r.q['sort'] ||= 'stat:size'
-    r.q['reverse'] ||= true
-    Stats.map{|sym, table|
-      group = e.uri + '#' + sym.to_s
-      g[group] = {'uri' => group,
-                  Type => R[Container], Label => sym.to_s,
-                  LDP+'contains' => table.map{|key, count|
-                    uri = case sym
-                          when :error
-                            key
-                          when :host
-                            r.scheme + "://" + key + '/'
-                          when :format
-                            'http://www.iana.org/assignments/media-types/' + key
-                          when :status
-                            W3 + '2011/http-statusCodes#' + key.to_s
-                          else
-                            e.uri + '#' + rand.to_s.h
-                          end
-                  {'uri' => uri, Title => key, Stat+'size' => count }}}}
-
-    g['#storage'] = {
-         Type => R[BasicResource],
-      Content => ['<pre>',
-                  `df -TBM -x tmpfs -x devtmpfs`,
-                  '</pre>']}
-
-    # render
-    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} ||
-      g.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
-
-  GET['/stat/HTTP'] = -> d,e {
-    puts "ERror",d.uri
-    uri = d.path
-    graph = {uri => Errors[uri]}
-    [200,{'Content-Type' => e.format},
-     [Render[e.format].do{|p|p[graph,e]} || graph.toRDF(d).dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+  GET['/stat'] = -> e,r {
+    g = {e.uri => Stats[e.path]}
+    # render response
+    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[g,r]} || g.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 
   ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
   
