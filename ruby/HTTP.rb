@@ -117,20 +117,25 @@ class R
      ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {
-    slug = (e.uri||'').h
+    slug = e.uri.h
+    uri = '/stat/HTTP/500/' + slug
     error = Stats['HTTP']['500'][slug] = {
-      'uri' => '/stat/HTTP/500' + slug,
+      'uri' => uri,
+      DC+'source' => e.uri,
       Type => R[HTTP+'500'],
-      SIOC+'has_container' => R['/stat/HTTP/500'],
-      Title => [x.class, x.message.noHTML].join(' '),
+#      SIOC+'has_container' => R['/stat/HTTP/500'],
+      Title => [x.class,x.message.noHTML].join(' '),
       Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>'}
 
-    graph = {error.uri => error}
+    graph = {uri => error}
     [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
     path = e.path
-    selector = path.sub(/^\/stat\//,'')
+    cursor = Stats
+    path.sub(/^\/stat\//,'').split('/').map{|part|
+      
+    }
 
     g = {path => Stats[path]}
 
