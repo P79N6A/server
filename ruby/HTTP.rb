@@ -140,9 +140,10 @@ class R
       graph[x.uri] = x
     else # container
       x.keys.map{|child|
-        uri = e.uri + '/' + child
-        graph[uri] = {'uri' => uri, Type => R[Resource]}.merge(x[child])
+        uri = e.uri.t + child
+        graph[uri] = {'uri' => uri, Type => R[Resource], Size => x[child][Size]}
       }
+      x['..'] = {'uri' => '..', Type => R[Container]}
     end
 
     # render response
