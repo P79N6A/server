@@ -1,5 +1,5 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 
 module Rack
   module Adapter
@@ -110,7 +110,7 @@ class R
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
-  GET['/500'] = -> resource, environment {0/0} # force an error to see what happens
+#  GET['/500'] = -> resource, environment {0/0} # force an error to see what happens
 
   ViewGroup[HTTP+'500'] = -> graph, env {
     [{_: :style, c: 'body {background-color:red}'},
