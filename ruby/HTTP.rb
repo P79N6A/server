@@ -134,10 +134,13 @@ class R
     path = e.path
     x = Stats
     path.sub(/^\/stat\//,'').split('/').map{|name|
-      x = x[name]}
-
+      n = x[name]  # try next
+      x = n if n } # found
+    if x.uri # leaf
+    else  # container
+      x = {'uri' => e.uri, Type => R[Container], LDP+'contains' => x.keys.map{|child|R[e.uri + '/' + child]}}
+    end
     graph = {x.uri => x}
-    puts graph
     # render response
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[graph,r]} || graph.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
 

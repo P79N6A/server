@@ -29,7 +29,7 @@ class R
         else
           child
         end
-      } if c[LDP+'contains']
+      } if c.class == Hash && c[LDP+'contains']
     }
 
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
