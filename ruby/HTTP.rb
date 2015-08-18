@@ -118,14 +118,19 @@ class R
 
   E500 = -> x,e {
     errors = Stats['status']['500']
-    graph = {'' => errors[e.uri.h] = {
-               'uri' => '//' + e.host + e['REQUEST_URI'],
-               Type => R[HTTP+'500'],
-               Label => e.R.basename,
-               Title => [x.class,x.message.noHTML].join(' '),
-               Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>',
-               SIOC+'has_container' => R['/stat/status/500/'],
-             }}
+
+    error = errors[e.uri.h] ||= {
+      'uri' => '//' + e.host + e['REQUEST_URI'],
+      Type => R[HTTP+'500'],
+      Label => e.R.basename,
+      Title => [x.class,x.message.noHTML].join(' '),
+      Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>',
+      SIOC+'has_container' => R['/stat/status/500/'],
+      Size => 0}
+
+    error[Size] += 1
+
+    graph = {'' => error}
     [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
 
   GET['/stat'] = -> e,r {
