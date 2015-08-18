@@ -136,9 +136,10 @@ class R
     path.sub(/^\/stat\//,'').split('/').map{|name|
       n = x[name]  # try next
       x = n if n } # found
-    if x.uri # leaf
-    else  # container
-      x = {'uri' => e.uri, Type => R[Container], LDP+'contains' => x.keys.map{|child|R[e.uri + '/' + child]}}
+
+    unless x.uri # thing
+      # container
+      x = {'uri' => e.uri, Type => R[Container], LDP+'contains' => x.keys.map{|child|{'uri' => e.uri + '/' + child}}}
     end
     graph = {x.uri => x}
     # render response
