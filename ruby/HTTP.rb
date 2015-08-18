@@ -117,7 +117,8 @@ class R
      ViewGroup[BasicResource][graph,env]]}
 
   E500 = -> x,e {
-    graph = {'' => Stats['status']['500'][e.uri.h] = {
+    errors = Stats['status']['500']
+    graph = {'' => errors[e.uri.h] = {
                'uri' => e.uri,
                Type => R[HTTP+'500'],
                Title => [x.class,x.message.noHTML].join(' '),
@@ -138,7 +139,7 @@ class R
     else # container
       x.keys.map{|child|
         uri = x[child]['uri']  || (e.uri.t + child.t)
-        graph[uri] = {'uri' => uri, Type => R[Resource], Label => x[child][Label], Size => x[child][Size]}
+        graph[uri] = {'uri' => uri, Type => R[x[child].uri ? Resource : Container], Label => x[child][Label], Size => x[child][Size] || x[child].keys.size}
       }
     end
 
