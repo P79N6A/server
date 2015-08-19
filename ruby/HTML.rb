@@ -128,14 +128,16 @@ class R
         end}}
 
     e[:label] ||= {} # labels
-    [H.js('/js/kbd',true), # keyboard-navigation
-     groups.map{|view,graph|view[graph,e]}, # type-groups
+    [groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # singletons
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
-       end}]}
+       end},
+     {_: :style,c: e[:label].map{|name| "[name=\"#{name}\"] {color: #000; background-color: #{randomColor}}\n"}},
+     H.js('/js/kbd',true), # keyboard-navigation
+    ]}
 
   ViewA[BasicResource] = -> r,e {
     fragment = r.R.fragment || r.uri

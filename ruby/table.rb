@@ -145,7 +145,8 @@ class R
                when WikiText
                  Render[WikiText][l[k]]
                when DC+'tag'
-                 
+                 l[k].justArray.map{|v|
+                   {_: :a, href: '#', c: v}}
                else
                  l[k].justArray.map{|v|
                    case v

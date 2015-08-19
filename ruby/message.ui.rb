@@ -7,9 +7,8 @@ class R
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
          r[Creator].do{|c|
            name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
-           e[:label][name] ||= {c: 0, id: rand.to_s.h[0..2]}
-           e[:label][name][:c] += 1
-           {class: 'creator l' + e[:label][name][:id], c: {_: :a, href: r.uri, c: name }}},
+           e[:label][name] = true
+           {name: name, c: {_: :a, href: r.uri, c: name}}},
          {_: :span, class: 'body', c: r[Content]}]}}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {{c: d.map{|u,r|ViewA[SIOC+'InstantMessage'][r,e]}}}
@@ -129,12 +128,9 @@ class R
     # HTML
     [H.css('/css/mail',true),H.css('/css/chat',true),
      {_: :style,
-      c: [colors.map{|name,c|
-            "[name=\"#{name}\"] {color: #000; background-color: #{c}}\n"},
-          (1..15).map{|depth|
+      c: (1..15).map{|depth|
             back = rand(2) == 0
-            ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}
-         ]},
+            ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}},
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
             {class: :prev, id: :first, c: {_: :a, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}}},
@@ -143,14 +139,12 @@ class R
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
             {class: :next, id: n, href: uri, next: uri + '#first', c: {_: :a, rel: :next, c: '&rarr;', href: uri}}}
-         ]},'<br clear=all>',
+         ]},
+     '<br clear=all>',
      {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:#000;opacity: 0.8"},
      days.map{|label,pos|{class: :day, style: "left:#{pos*100}%",c: label}},
-     H.js('/js/d3.min'), {_: :script, c: "var arcs = #{arcs.to_json};"},
-     H.js('/js/timegraph'),
-     {_: :style,
-      c: e[:label].map{|n,l|
-        ".chatLog .creator.l#{l[:id]} {background-color: #{randomColor}}\n.chatLog .creator.l#{l[:id]} a {color:#000}" if l[:c] > 1}.cr },
-    ]}
+     H.js('/js/d3.min'),
+     {_: :script, c: "var arcs = #{arcs.to_json};"},
+     H.js('/js/timegraph')]}
 
 end
