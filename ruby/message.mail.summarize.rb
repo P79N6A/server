@@ -14,7 +14,7 @@ class R
     weight = {}
 #    graph[e.uri] = {'uri' => e.uri, Label => e.R.path, Type => R[Container]}
 
-    # link to alternate container-filterings
+    # convenience links to alternate container-filterings
     args = if e.q.has_key?('group') # unabbreviated-view
              {'bodies' => '', Label => '&darr;'}
            else                     # date-sort view
@@ -24,46 +24,47 @@ class R
     viewURI = e.q.merge(args).qs
     graph[viewURI] = {'uri' => viewURI, Type => R[Container], Label => label}
 
-    g.map{|u,p| # analysis pass
+    # pass 1. prune + analyze
+    g.map{|u,p|
+      recipients = p[To].justArray.map &:maybeURI
 
       # hide unless requested:
-      graph.delete u unless bodies # full-message
-      p[DC+'source'].justArray.map{|s| # provenance
-        graph.delete s.uri}
+      graph.delete u unless bodies                                # unsummarized message
+      p[DC+'source'].justArray.map{|s|graph.delete s.uri}         # provenance
+      p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # author-description
+      recipients.map{|a|graph.delete a}                           # recipient-description
 
-      p[Title].do{|t| # title
-        title = t[0].sub ReExpr, '' # strip reply-prefix
-        unless threads[title] # init thread
-          p[Size] = 0         # member-count
-          threads[title] = p  # thread data
+      p[Title].do{|t|
+        title = t[0].sub ReExpr, '' # strip prefix
+        unless threads[title]
+          p[Size] = 0               # member-count
+          threads[title] = p        # thread
         end
-        p[DC+'image'].do{|i|
-          threads[title][LDP+'contains'] ||= []
-          threads[title][LDP+'contains'].concat i
-        }
-        threads[title][Size] += 1 # count occurrence
-      }
-      p[Creator].justArray.map(&:maybeURI).map{|a|
-        graph.delete a } # hide author-description
-      p[To].justArray.map(&:maybeURI).map{|a|
-        weight[a] ||= 0
-        weight[a] += 1   # count recipient-occurrence
-        graph.delete a}} # hide recipient-description
+        threads[title][Size] += 1}  # thread size
 
-    threads.map{|title,post| # cluster pass
+      recipients.map{|a|            # address weight
+        weight[a] ||= 0
+        weight[a] += 1}}
+
+    # pass 2. cluster
+    threads.map{|title,post|
       post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest wins
         container = a.R.dir.uri.t
         mid = URI.escape post[DC+'identifier'][0]
-        thread = {'uri' => '/thread/' + mid + '#' + URI.escape(post.uri), Date => post[Date], Title => title}
-        if post[Size] > 1
+
+        # thread
+        tags = []
+        title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
+        thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid + '#' + URI.escape(post.uri), Date => post[Date], Title => title, Image => post[Image]}
+        if post[Size] > 1 # thread
           thread.update({Size => post[Size],
                          Type => R[SIOC+'Thread']})
-        else
+        else # singleton post
           thread[Type] = R[SIOC+'MailMessage']
           thread[Creator] = post[Creator]
         end
-        post[Image].do{|i| thread[Image] = i }
 
+        # cluster container
         unless graph[container]
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
