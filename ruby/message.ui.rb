@@ -8,7 +8,7 @@ class R
          r[Creator].do{|c|
            name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
            e[:label][name] = true
-           {class: :creator, name: name, c: {_: :a, href: r.uri, c: name}}},
+           {class: :creator, c: {_: :a, href: r.uri, name: name, c: name}}},
          {_: :span, class: 'body', c: r[Content]}]}}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {{c: d.map{|u,r|ViewA[SIOC+'InstantMessage'][r,e]}}}
