@@ -11,6 +11,7 @@ div.next:target a, div.prev:target a {color: #000}
 a[rel='prev'], a[rel='next'] {color: #ccc;font-size:3em}
 a[rel='next'] {float:right}
 a[rel='prev'] {float:left}
+[name] > a {color:#000}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }

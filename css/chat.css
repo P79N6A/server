@@ -3,6 +3,5 @@
 .chatLog a {text-decoration: none}
 .chatLog img {max-width: 100%}
 .chatLog .creator {display:inline-block; min-width: 8em; text-align: right}
-.chatLog .creator a {color: #aaa}
 .chatLog .body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
 .chatLog .ublog:target {background-color:#fff;color:#000}

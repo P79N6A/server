@@ -135,7 +135,7 @@ class R
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
-     {_: :style,c: e[:label].map{|name| "[name=\"#{name}\"] {color: #000; background-color: #{randomColor}}\n"}},
+     {_: :style,c: e[:label].map{|name,_| "[name=\"#{name}\"] {color: #000; background-color: #{randomColor}}\n"}},
      H.js('/js/kbd',true), # keyboard-navigation
     ]}
 
