@@ -1,5 +1,5 @@
 # coding: utf-8
-watch __FILE__
+#watch __FILE__
 class R
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
@@ -12,7 +12,6 @@ class R
     threads = {}
     clusters = []
     weight = {}
-#    graph[e.uri] = {'uri' => e.uri, Label => e.R.path, Type => R[Container]}
 
     # convenience links to alternate container-filterings
     args = if e.q.has_key?('group') # unabbreviated-view

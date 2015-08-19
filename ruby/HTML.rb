@@ -126,12 +126,11 @@ class R
           groups[v][u] = r
           seen[u] = true
         end}}
-    # named labels
-    e[:label] ||= {}
-    e[:count] = 0
+
+    e[:label] ||= {} # labels
     [H.js('/js/kbd',true), # keyboard-navigation
-     groups.map{|view,graph|view[graph,e]}, # show type-groups
-     d.map{|u,r|                            # show singletons
+     groups.map{|view,graph|view[graph,e]}, # type-groups
+     d.map{|u,r|                            # singletons
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}

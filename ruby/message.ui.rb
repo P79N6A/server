@@ -7,7 +7,7 @@ class R
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
          r[Creator].do{|c|
            name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
-           e[:label][name] ||= {c: 0, id: (e[:count] += 1).to_s}
+           e[:label][name] ||= {c: 0, id: rand.to_s.h[0..2]}
            e[:label][name][:c] += 1
            {class: 'creator l' + e[:label][name][:id], c: {_: :a, href: r.uri, c: name }}},
          {_: :span, class: 'body', c: r[Content]}]}}

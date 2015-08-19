@@ -144,6 +144,8 @@ class R
                    ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]}
                when WikiText
                  Render[WikiText][l[k]]
+               when DC+'tag'
+                 
                else
                  l[k].justArray.map{|v|
                    case v
