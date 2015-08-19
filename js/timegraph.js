@@ -6,12 +6,12 @@ var middle = height / 2;
 arcs.forEach(function(link) { // populate node-table from triples
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
-			    color: link.sourceColor,
+			    name: link.sourceLabel,
 			    pos: link.sourcePos * width,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
-			    color: link.targetColor,
+			    name: link.targetLabel,
 			    pos: link.targetPos * width,
 			   });
 });
@@ -37,7 +37,7 @@ var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
     .attr("class", "link")
-    .style('stroke', function(d){return (d.sourceColor || '#ccc')});
+    .attr('name', function(d){return d.sourceLabel});
 
 var node = svg.selectAll(".node")
     .data(force.nodes())
@@ -46,7 +46,7 @@ var node = svg.selectAll(".node")
     .call(force.drag);
 
 node.append("rect")
-    .style("fill", function(d) { return d.color; })
+    .attr("name", function(d) { return d.name; })
     .attr("width", 9)
     .attr("height", 9)
     .attr("ry",4);

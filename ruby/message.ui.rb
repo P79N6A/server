@@ -78,8 +78,6 @@ class R
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     resources = d.resources(e)
-    colors = {}
-    q = e.q
     arcs = []
 
     # normalize mtimes to float
@@ -99,11 +97,11 @@ class R
       if s[SIOC+'has_parent']
         s[SIOC+'has_parent'].justArray.map{|o|
           d[o.uri].do{|t| # arc target
-            arc = {source: s.uri, target: o.uri}
-            author = s[Creator].justArray[0].do{|c|c.R.fragment}
-            arc[:sourceColor] = colors[author] ||= randomColor
-            author = t[Creator].justArray[0].do{|c|c.R.fragment}
-            arc[:targetColor] = colors[author] ||= randomColor
+            sLabel = s[Creator].justArray[0].do{|c|c.R.fragment}
+            tLabel = t[Creator].justArray[0].do{|c|c.R.fragment}
+            e[:label][sLabel] = true
+            e[:label][tLabel] = true
+            arc = {source: s.uri, target: o.uri, sourceLabel: sLabel, targetLabel: tLabel}
             s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0]]}
             t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0]]}
             arcs.push arc }}
