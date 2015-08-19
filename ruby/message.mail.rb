@@ -88,15 +88,15 @@ class R
              c: [{_: :span, c: '&gt; '*depth},
                  qp[3].gsub('@','.').hrefs]}
           end
-        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # quote-provenance
-          {class: :q, depth: 0, c: l.gsub('@','.').hrefs} # obfuscate quoted address, linkify
+        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
+          {class: :q, depth: 0, c: l.gsub('@','.').hrefs} # obfuscate attributed address
         else # original line
           [l.hrefs(true){|p,o|
              yield e, p, o}]
         end}.compact.intersperse("\n")
       yield e, Content, "<div style='font-family: monospace;white-space: pre-wrap;'>"+body+"</div>"}
 
-    attache = -> { e.R.a('.attache').mk }   # filesystem container for attachments & parts
+    attache = -> {e.R.a('.attache').mk} # container for attachments & parts
 
     htmlCount = 0
     htmlFiles.map{|p| # HTML content

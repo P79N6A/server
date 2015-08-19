@@ -50,7 +50,7 @@ table.tab td.content, tr[property='http://rdfs.org/sioc/ns#content'] td {max-wid
 table.tab td[property='http://purl.org/dc/terms/date'], td[property='http://www.w3.org/ns/posix/stat#mtime'] {font-size:.86em;white-space: nowrap}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
 table.html {margin:auto}
-td.key, td[property='uri'] {text-align:right;padding-right:.2em}
+td.key, td[property='uri'] {max-width:100ex;text-align:right;padding-right:.2em}
 td.key a {font-weight: bold;color:#fff}
 td.key img {max-height: 2em}
 td table {float: right}

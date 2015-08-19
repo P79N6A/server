@@ -1,10 +1,10 @@
 # coding: utf-8
+watch __FILE__
 class R
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     graph.delete e.uri
     bodies = e.q.has_key? 'bodies'
-    rdf = e.format != 'text/html'
     e.q['sort'] ||= Size
     e.q['reverse'] ||= 'reverse'
     group = (e.q['group']||To).expand
@@ -12,30 +12,25 @@ class R
     threads = {}
     clusters = []
     weight = {}
+#    graph[e.uri] = {'uri' => e.uri, Label => e.R.path, Type => R[Container]}
 
-    # base container
-    graph[e.uri] = {
-      'uri' => e.uri, Label => e.R.basename,
-      Type => R[Container],
-      SIOC+'has_container' => e.R.parentURI,
-    }
+    # link to alternate container-filterings
+    args = if e.q.has_key?('group') # unabbreviated-view
+             {'bodies' => '', Label => '&darr;'}
+           else                     # date-sort view
+             {'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => '', Label => '≡'}
+           end
+    label = args.delete Label
+    viewURI = e.q.merge(args).qs
+    graph[viewURI] = {'uri' => viewURI, Type => R[Container], Label => label}
 
-    # link to alternate container-filterings - date-order and expanded-content view
-    unless rdf
-      args = if e.q.has_key?('group') # unabbreviated-view
-               {'bodies' => '', Label => '&darr;'}
-             else                     # date-sort view
-               {'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => '', Label => '≡'}
-             end
-      label = args.delete Label
-      viewURI = e.q.merge(args).qs
-      graph[viewURI] = {'uri' => viewURI, Type => R[Container], Label => label}
-    end
+    g.map{|u,p| # analysis pass
 
-    g.map{|u,p| # statistics + prune pass
-      graph.delete u unless bodies # hide full-message
-      p[DC+'source'].justArray.map{|s| # hide originating-file metadata
+      # hide unless requested:
+      graph.delete u unless bodies # full-message
+      p[DC+'source'].justArray.map{|s| # provenance
         graph.delete s.uri}
+
       p[Title].do{|t| # title
         title = t[0].sub ReExpr, '' # strip reply-prefix
         unless threads[title] # init thread
@@ -56,15 +51,10 @@ class R
         graph.delete a}} # hide recipient-description
 
     threads.map{|title,post| # cluster pass
-      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest address wins
-        container = a.R.dir.uri.t # container URI
-        id = URI.escape post[DC+'identifier'][0]
-
-        # thread resource
-        thread = {'uri' => '/thread/' + id + '#' + URI.escape(post.uri),
-                  Date => post[Date],
-                  Title => title,
-                 }
+      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest wins
+        container = a.R.dir.uri.t
+        mid = URI.escape post[DC+'identifier'][0]
+        thread = {'uri' => '/thread/' + mid + '#' + URI.escape(post.uri), Date => post[Date], Title => title}
         if post[Size] > 1
           thread.update({Size => post[Size],
                          Type => R[SIOC+'Thread']})
@@ -74,14 +64,13 @@ class R
         end
         post[Image].do{|i| thread[Image] = i }
 
-        unless graph[container] # cluster-container
+        unless graph[container]
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
-        graph[thread.uri] ||= thread if rdf
         graph[container][LDP+'contains'].push thread }}
 
-    clusters.map{|container| # count cluster-sizes
+    clusters.map{|container| # child-count metadata
       graph[container][Size] = graph[container][LDP+'contains'].
                                justArray.inject(0){|sum,val| sum += (val[Size]||1)}}}
 
