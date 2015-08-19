@@ -107,7 +107,7 @@ class R
             s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0]]}
             t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0]]}
             arcs.push arc }}
-      else # ancester unspecified, use temporal ancestor
+      else # unspecified, use temporal relation
         arcs.push({source: s.uri,
                    target: prior.uri,
                    sourcePos: posF[s[Date].justArray[0].to_time],
@@ -117,20 +117,17 @@ class R
       end
     }
 
-    # day-labels
+    # labels
     days = {}
     d.values.map{|s|
       s[Date].justArray[0].do{|d|
         day = d[0..9]
         days[day] ||= posF[day.to_time]}}
     days = days.sort_by{|_,m|m}
-
+    (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
+    
     # HTML
     [H.css('/css/mail',true),H.css('/css/chat',true),
-     {_: :style,
-      c: (1..15).map{|depth|
-            back = rand(2) == 0
-            ".mail .q[depth=\"#{depth}\"] {#{back ? 'background-' : ''}color: #{R.randomColor}; #{back ? '' : 'background-'}color:#000}\n"}},
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
             {class: :prev, id: :first, c: {_: :a, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}}},

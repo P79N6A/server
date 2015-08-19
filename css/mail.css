@@ -37,24 +37,6 @@ body {padding-bottom:127px;background-color:#000;color:#fff}
     border-radius:.16em;
 }
 
-.mail .body .q {display: inline}
-.mail .q > span {display:none}
-.mail .q[depth="1"] {margin-left:0}
-.mail .q[depth="2"] {margin-left:-.4em}
-.mail .q[depth="3"] {margin-left:-.8em}
-.mail .q[depth="4"] {margin-left:-1.2em}
-.mail .q[depth="5"] {margin-left:-1.6em}
-.mail .q[depth="6"] {margin-left:-2.0em}
-.mail .q[depth="7"] {margin-left:-2.4em}
-.mail .q[depth="8"] {margin-left:-2.8em}
-.mail .q[depth="9"] {margin-left:-3.2em}
-.mail .q[depth="10"] {margin-left:-3.6em}
-.mail .q[depth="11"] {margin-left:-4.0em}
-.mail .q[depth="12"] {margin-left:-4.4em}
-.mail .q[depth="13"] {margin-left:-4.8em}
-.mail .q[depth="14"] {margin-left:-5.2em}
-.mail .q[depth="15"] {margin-left:-5.6em}
-
 .noquote {position:fixed;bottom:0;left:0;font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em;background-color:#fff;color:#999;text-decoration:none}
 .noquote:hover {background-color: #ddd}
 img {max-width: 100%}
