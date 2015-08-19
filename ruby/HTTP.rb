@@ -110,7 +110,7 @@ class R
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
-#  GET['/500'] = -> resource, environment {0/0} # force an error to see what happens
+  GET['/500'] = -> resource, environment {0/0} # force an error to see what happens
 
   ViewGroup[HTTP+'500'] = -> graph, env {
     [{_: :style, c: 'body {background-color:red}'},
@@ -122,10 +122,8 @@ class R
     error = errors[e.uri.h] ||= {
       'uri' => '//' + e.host + e['REQUEST_URI'],
       Type => R[HTTP+'500'],
-      Label => e.R.basename,
-      Title => [x.class,x.message.noHTML].join(' '),
+      Label => [x.class,x.message.noHTML].join(' '),
       Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>',
-      SIOC+'has_container' => R['/stat/status/500/'],
       Size => 0}
 
     error[Size] += 1
@@ -135,7 +133,7 @@ class R
 
   GET['/stat'] = -> e,r {
     graph = {}
-    x = Stats # stat tree
+    x = Stats # tree
     e.path.sub(/^\/stat\//,'').split('/').map{|name|
       n = x[name]  # try name
       x = n if n } # found
@@ -145,7 +143,12 @@ class R
     else # container
       x.keys.map{|child|
         uri = x[child]['uri']  || (e.uri.t + child.t)
-        graph[uri] = {'uri' => uri, Type => R[x[child].uri ? Resource : Container], Label => x[child][Label], Size => x[child][Size] || x[child].keys.size}
+        graph[uri] = {'uri' => uri,
+                      Type => R[x[child].uri ? Resource : Container],
+                      Size => x[child][Size] || x[child].keys.size,
+                      Label => x[child][Label],
+                      Content => x[child][Content],
+                     }
       }
     end
 
