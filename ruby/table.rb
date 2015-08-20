@@ -147,7 +147,7 @@ class R
                when DC+'tag'
                  l[k].justArray.map{|v|
                    e[:label][v] = true
-                   {_: :a, href: '#', name: v, c: v}}
+                   [{_: :a, href: '#', name: v, c: v},' ']}
                else
                  l[k].justArray.map{|v|
                    case v
