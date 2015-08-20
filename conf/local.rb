@@ -1,6 +1,8 @@
 # when placed at server-root, this will load on daemon-start
 class R
 
-  GET['/man'] = Man # mount man-handler
+  # mount man-handler
+  GET['/man'] = Man # on a path
+  GET['man.whats-your.name/'] # on a host
 
 end

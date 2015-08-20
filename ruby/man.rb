@@ -1,8 +1,5 @@
 #watch __FILE__
 class R
-# man handler
-#  can be mounted in local configuration (local.rb)
-#  R::GET['/man'] = Man
 
   Man = -> e,r {
     graph = RDF::Graph.new
@@ -113,4 +110,6 @@ class R
     end
   }
 
+  GET['127.0.53.53/'] = Man
+  
 end
