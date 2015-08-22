@@ -265,7 +265,7 @@ module Th # methods which introspect request-environment
       (if q = self['QUERY_STRING']
          h = {}
          q.split(/&/).map{|e| k, v = e.split(/=/,2).map{|x| CGI.unescape x }
-                              h[k] = v }
+                              h[k.downcase] = v }
          h
        else
          {}
