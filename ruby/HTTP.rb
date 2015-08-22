@@ -78,7 +78,7 @@ class R
     return unless e&&s&&h&&b
     Stats['status'][s.to_s] ||= {'uri' => '/stat/status/'+s.to_s.t, Type => R[Resource], Size => 0}
     Stats['status'][s.to_s][Size] += 1
-    Stats['host'][e.host] ||= {'uri' => '//'+e.host, Label => e.host, Size => 0}
+    Stats['host'][e.host] ||= {'uri' => e.scheme+'://'+e.host, Label => e.host, Size => 0}
     Stats['host'][e.host][Size] += 1
 
     # log request to stdout

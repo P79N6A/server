@@ -13,7 +13,7 @@ class R
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {{c: d.map{|u,r|ViewA[SIOC+'InstantMessage'][r,e]}}}
 
-  ViewA[SIOC+'ChatLog'] = -> log,e,d {
+  ViewA[SIOC+'ChatLog'] = -> log,e {
 
     # lines to graph
     graph = {}
@@ -26,7 +26,7 @@ class R
      c: [{_: :b, c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
-  ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e,d {
+  ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
@@ -123,14 +123,14 @@ class R
         days[day] ||= posF[day.to_time]}}
     days = days.sort_by{|_,m|m}
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
+    e.q['a'] ||= 'sioc:addressed_to'
     
     # HTML
     [H.css('/css/mail',true),H.css('/css/chat',true),
      {class: :messages, id: :messages,
       c: [e[:Links][:prev].do{|n|
             {class: :prev, id: :first, c: {_: :a, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}}},
-          resources.reverse.map{|r|
-            ViewA[r[Type].justArray[0].uri][r,e,d]},
+          Facets[d,e], # filterable resource set
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
             {class: :next, id: n, href: uri, next: uri + '#first', c: {_: :a, rel: :next, c: '&rarr;', href: uri}}}

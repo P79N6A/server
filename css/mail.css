@@ -1,6 +1,6 @@
 body {padding-bottom:127px;background-color:#000;color:#fff}
 .messages {white-space: nowrap;}
-
+.messages div {display: inline-block}
 .mail {
     white-space: normal;
     display: inline-block;

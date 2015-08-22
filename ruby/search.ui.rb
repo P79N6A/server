@@ -1,19 +1,23 @@
 class R
 
   Facets = -> m,e {
-    a = Hash[((e.q['a']||'sioc:ChatChannel').split ',').map{|a|
+    a = Hash[((e.q['a']||'dc:source').split ',').map{|a|
                [a.expand,{}]}]
 
     # statistics
-    m.map{|s,r| a.map{|p,_|
-        r[p].do{|o|
-            o.justArray.map{|o|
-            a[p][o]=(a[p][o]||0)+1}}}}
+    m.map{|s,r| # resources
+      a.map{|p,_| # properties
+        r[p].do{|o| # value
+            o.justArray.map{|o| # values
+              a[p][o] = (a[p][o]||0)+1 # count occurrences
+            }}}}
 
-    # identifiers
+    # facet shortnames
     i = {}
     c = 0
-    n = ->o{i[o] ||= 'f'+(c+=1).to_s}
+    n = ->o{i[o] ||= 'f'+(c+=1).to_s} # mint an id
+
+    # HTML
     [(H.css'/css/facets'),(H.js'/js/facets'),
      {class: :sidebar, c: a.map{|f,v|
          {class: :facet, facet: n[f], # predicate
@@ -30,6 +34,7 @@ class R
               n[o.to_s] # identifier
             }}].join ' '
        }.do{|f|
+#         puts r.keys
          [f.map{|o| '<div class="' + o + '">' }, # open wrapper
           ViewA[type ? type : BasicResource][r,e], # resource
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
