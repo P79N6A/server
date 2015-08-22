@@ -128,9 +128,7 @@ class R
     # HTML
     [H.css('/css/mail',true),H.css('/css/chat',true),
      {class: :messages, id: :messages,
-      c: [e[:Links][:prev].do{|n|
-            {class: :prev, id: :first, c: {_: :a, rel: :prev, c: '&larr;', href: CGI.escapeHTML(n.to_s)}}},
-          Facets[d,e], # filterable resource set
+      c: [Facets[d,e], # filterable resource set
           e[:Links][:next].do{|n|
             uri = CGI.escapeHTML(n.to_s)
             {class: :next, id: n, href: uri, next: uri + '#first', c: {_: :a, rel: :next, c: '&rarr;', href: uri}}}

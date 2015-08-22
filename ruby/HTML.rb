@@ -131,7 +131,16 @@ class R
         end}}
 
     e[:label] ||= {} # labels
-    [groups.map{|view,graph|view[graph,e]}, # type-groups
+    [{class: :paginate,
+      c: [e[:Links][:prev].do{|p|
+            p = CGI.escapeHTML p.to_s
+            {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
+          e[:Links][:next].do{|n|
+            n = CGI.escapeHTML n.to_s
+            {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
+         ]},
+
+     groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # singletons
        if !seen[u]
          types = (r||{}).types
