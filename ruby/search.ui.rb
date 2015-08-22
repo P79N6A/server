@@ -30,7 +30,16 @@ class R
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
-                       {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.R.basename : k.to_s)}
+                       {_: :span, class: :name,
+                        c: (k.respond_to?(:uri) ? (
+                                                    k = k.R
+                                                    path = k.path
+                                                    if !path || path == '/'
+                                                      k.host
+                                                    else
+                                                      path
+                                                    end
+                                                  ) : k.to_s)}
                       ]}}]}}},
      # content
      m.map{|u,r| # each resource

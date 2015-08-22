@@ -14,7 +14,7 @@
 .sidebar {
     display: inline-block;
     float: left;
-    border-radius:0 1em 1em 1em;
+    border-radius:.14em .18em 1em 1em;
     border: 1em solid red;
 }
 .sidebar div {display:block}
