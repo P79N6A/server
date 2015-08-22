@@ -1,10 +1,13 @@
 class R
 
-  Facets = -> m,e {
+  # wrap nodes in facet-containers
+  Facets = -> m,e { # CSS rules are updated at runtime to control visible-set
+
+    # facetized properties. can be multiple commma-sep and URI-prefix shortened
     a = Hash[((e.q['a']||'dc:source').split ',').map{|a|
                [a.expand,{}]}]
 
-    # statistics
+    # generate statistics
     m.map{|s,r| # resources
       a.map{|p,_| # properties
         r[p].do{|o| # value
@@ -19,27 +22,34 @@ class R
 
     # HTML
     [(H.css'/css/facets'),(H.js'/js/facets'),
+
+     # filter-rules sidebar
      {class: :sidebar, c: a.map{|f,v|
          {class: :facet, facet: n[f], # predicate
-           c: [{class: :predicate, c: f},
+           c: [{class: :predicate, c: f.shorten},
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
-                       {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.R.basename : k.to_s)}]}}]}}},
+                       {_: :span, class: :name, c: (k.respond_to?(:uri) ? k.R.basename : k.to_s)}
+                      ]}}]}}},
+     # content
      m.map{|u,r| # each resource
+
+       # find typed-renderer
        type = r.types.find{|t|ViewA[t]}
+
        a.map{|p,_| # each facet
-         [n[p], r[p].do{|o| # value
+         [n[p], r[p].do{|o| # each value
             o.justArray.map{|o|
-              n[o.to_s] # identifier
+              n[o.to_s] # find facet-identifier
             }}].join ' '
-       }.do{|f|
-#         puts r.keys
-         [f.map{|o| '<div class="' + o + '">' }, # open wrapper
-          ViewA[type ? type : BasicResource][r,e], # resource
-          (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
+       }.do{|f| # facet-id bound
+         [f.map{|o| '<div class="' + o + '">' }, # open node wrapper(s)
+          ViewA[type ? type : BasicResource][r,e], # contained-resource
+          (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrappers
          ]}}]}
 
+  # grep the request-model and highlight results
   ViewGroup['#grep'] = -> g,e {
     c = {}
     w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
