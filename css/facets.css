@@ -1,5 +1,3 @@
-body {margin: 0}
-
 .selector {
     border-radius: 0 0 .5em .5em;
     background-color: #eee;
@@ -8,13 +6,16 @@ body {margin: 0}
     padding: .2em;
     margin: .16em;
 }
+
 .selector:hover {
     background-color:#fff;
 }
 
 .sidebar {
-    position:fixed;
-    top:0;right:0;
+    display: inline-block;
+    float: left;
+    border-radius:0 1em 1em 1em;
+    border: 1em solid red;
 }
 .sidebar div {display:block}
 
