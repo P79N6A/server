@@ -1,6 +1,7 @@
+var svg = d3.select("#timegraph > svg")
 var nodes = {};
-var height = 128;
-var width = window.innerWidth;
+var height = svg[0][0].clientHeight;
+var width = svg[0][0].clientWidth;
 var middle = height / 2;
 
 arcs.forEach(function(link) { // populate node-table from triples
@@ -25,13 +26,8 @@ var force = d3.layout.force()
     .on("tick", tick)
     .start();
 
-var svg = d3.select("body").append("svg")
-    .attr("id","timegraph")
-    .attr("width", width)
-    .attr("height", height);
-
 // input-location cursor
-svg.append('rect').attr('height',86).attr('id','cursorB').style('fill','#555').attr('width',1).attr('x',width).attr('y',42);
+svg.append('rect').attr('height',height).attr('id','cursorB').style('fill','#555').attr('width',1).attr('x',width);
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -71,7 +67,7 @@ function tick() {
 }
 
 // create cursor
-svg.append('rect').attr('height',86).attr('id','cursor').style('fill','#fff').attr('width',5).attr('x',width).attr('y',42);
+svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',5).attr('x',width);
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 

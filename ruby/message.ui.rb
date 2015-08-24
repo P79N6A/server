@@ -132,7 +132,7 @@ class R
         {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
      {class: :items, c: Facets[d,e]},
      days.map{|label,pos|{class: :day, style: "left:#{pos*100}%",c: label}},
-     {id: :backdrop},
+     {id: :timegraph, c: [{class: :backdrop},{_: :svg}]},
      {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/d3.min'),
      H.js('/js/timegraph',true)]}
