@@ -61,7 +61,7 @@ class R
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrappers
          ]}}]}
 
-  # grep the request-model and highlight results
+  # grep the render-model and highlight results
   ViewGroup['#grep'] = -> g,e {
     c = {}
     w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
