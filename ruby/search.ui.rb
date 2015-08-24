@@ -31,10 +31,12 @@ class R
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
                        {_: :span, class: :name,
-                        c: (k.respond_to?(:uri) ? (
-                                                    k = k.R
+                        c: (k.respond_to?(:uri) ? ( k = k.R
                                                     path = k.path
-                                                    if !path || path == '/'
+                                                    frag = k.fragment
+                                                    if frag
+                                                      frag
+                                                    elsif !path || path == '/'
                                                       k.host
                                                     else
                                                       path
