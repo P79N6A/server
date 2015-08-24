@@ -5,6 +5,6 @@ class R
   GET['man.whats-your.name/'] = Man # host
 
   # inbox
-  GET['m.whats-your.name/'] = GET['/today']
+  GET['m.whats-your.name/'] = -> e,r {GET['/today'][e,r] if e.path == '/'}
 
 end
