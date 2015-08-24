@@ -61,7 +61,7 @@ class R
          {class: :header,
           c: [r[To].justArray.map{|o|
                 o = o.R
-                [{_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host},' ']},
+                {_: :a, class: :to, href: o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
               ' &larr; ',
               author,
               r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
