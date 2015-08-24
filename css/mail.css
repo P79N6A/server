@@ -24,7 +24,7 @@ body {padding-bottom:127px;background-color:#000;color:#fff}
 .mail a.to {background-color:#000;color:#fff;}
 .mail div.title {width:100%;background-color:#009;border-radius:.2em}
 .mail a.title {color:#000;background-color:#fff;font-weight: normal; font-size:1.1em}
-.mail a.discussion {float:right;font-size:2em;color:#000}
+.mail a.discussion {float:right;font-size:2em;color:#fff;background-color:#000}
 .mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em;}
 .mail .body a {
     background-color:#fff;
@@ -38,7 +38,7 @@ body {padding-bottom:127px;background-color:#000;color:#fff}
 .noquote {position:fixed;bottom:0;left:0;font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em;background-color:#fff;color:#999;text-decoration:none}
 .noquote:hover {background-color: #ddd}
 img {max-width: 100%}
-
+#backdrop {height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:#000;opacity: 0.5}
 svg {position: fixed;bottom: 0;left: 0;z-index:2;overflow:visible}
 .link {fill: none;stroke-width: .2em; stroke-dasharray: 1,1;stroke: #fff}
 rect {fill: #f8f8f8}

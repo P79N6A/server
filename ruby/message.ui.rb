@@ -128,8 +128,11 @@ class R
     # HTML
     [H.css('/css/mail',true),
      H.css('/css/chat',true),
+     (resources[0][Title].justArray[0].do{|t|
+        {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
      {class: :items, c: Facets[d,e]},
      days.map{|label,pos|{class: :day, style: "left:#{pos*100}%",c: label}},
+     {id: :backdrop},
      {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/d3.min'),
      H.js('/js/timegraph',true)]}
