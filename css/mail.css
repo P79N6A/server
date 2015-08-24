@@ -42,11 +42,11 @@ img {max-width: 100%}
     bottom:0;
     left:26%;
     width:48%;
-    height:11%;
-    border-color: #700;
+    height:9%;
+    border-color: #600;
     border-width: .1em .1em 0 .1em;
     border-style: solid;
-    border-radius:1em 1em 0 0;
+    border-radius:2em 2em 0 0;
 }
 #timegraph .backdrop {
     position:absolute;
@@ -61,4 +61,4 @@ img {max-width: 100%}
 .link {fill: none;stroke-width: .2em; stroke-dasharray: 1,1;stroke: #fff}
 rect {fill: #f8f8f8}
 text {font: .88em sans-serif;pointer-events: none}
-div.day {transform: rotate(90deg);position:fixed;bottom:2.8em;z-index:2;font-size:.88em;color:#fff;white-space:nowrap}
+div.day {transform: rotate(90deg);position:absolute;top:2.4em;z-index:2;font-size:.88em;color:#eee;white-space:nowrap}
