@@ -7,7 +7,7 @@ a.identify {color: #ddd}
 
 .paginate {margin-bottom: .6em; display:inline-block}
 .paginate a {font-size:2em;background-color:#fff;color:#000}
-.paginate a[rel='prev'] {padding:.1em .3em .1em .3em}
+.paginate a[rel='prev'] {padding:.1em .33em .1em .27em}
 .paginate a[rel='next'] {padding:.1em .25em .1em .35em}
 
 [name] > a {color:#000}

@@ -171,6 +171,8 @@ class R
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
     end}
 
+  # user-icon
+  # e.signedIn ? {_: :a, class: :user, href: e.user.uri} : {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'}
   GET['/whoami'] = -> e,r {
     if r.scheme!='https'
       r.SSLupgrade

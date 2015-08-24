@@ -113,13 +113,9 @@ class R
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
-            {_: :body,
-             c: [e.signedIn ?
-                  {_: :a, class: :user, href: e.user.uri} :
-                  {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'},
-                 view[d,e]]}]}]}
+            {_: :body, c: view[d,e]}]}]}
 
-  View = -> d,e { # default view - group by type, try type-render, fallback to generic
+  View = -> d,e { # default view - group by type, try typed-render, fallback to generic
     groups = {}
     seen = {}
     d.map{|u,r| # group on RDF type
