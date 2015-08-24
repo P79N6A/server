@@ -135,7 +135,7 @@ class R
             n = CGI.escapeHTML n.to_s
             {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
          ]} if e[:Links][:prev] || e[:Links][:next]),
-
+     ({_: :span, class: :path, c: e.R.path[1..-2]} if e[:container]),
      groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # singletons
        if !seen[u]
