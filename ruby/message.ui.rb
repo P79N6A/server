@@ -11,7 +11,9 @@ class R
            {class: :creator, c: {_: :a, href: r.uri, name: name, c: name}}},
          {_: :span, class: 'body', c: r[Content]}]}}
 
-  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {{c: d.map{|u,r|ViewA[SIOC+'InstantMessage'][r,e]}}}
+  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
+    {style: 'padding-top: .3em', c: d.map{|u,r|
+       ViewA[SIOC+'InstantMessage'][r,e]}}}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
 
@@ -20,8 +22,7 @@ class R
     log[LDP+'contains'].map{|line|
       graph[line.uri] = line}
 
-    {class: :chatLog,
-     selectable: true, date: log[Date],
+    {class: :chatLog, selectable: true, date: log[Date],
      id: URI.escape(log.R.fragment),
      c: [{_: :b, c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
@@ -56,9 +57,7 @@ class R
 
     {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
      c: [r[Title].justArray[0].do{|t|
-           {_: :a, class: :title,
-            href: r.uri,
-            c: CGI.escapeHTML(t)}},"<br>\n",
+           {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}},
          {class: :header,
           c: [r[To].justArray.map{|o|
                 o = o.R
