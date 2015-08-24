@@ -126,18 +126,12 @@ class R
     e.q['a'] ||= 'sioc:addressed_to'
     
     # HTML
-    [H.css('/css/mail',true),H.css('/css/chat',true),
-     {class: :messages, id: :messages,
-      c: [Facets[d,e], # filterable resource set
-          e[:Links][:next].do{|n|
-            uri = CGI.escapeHTML(n.to_s)
-            {class: :next, id: n, href: uri, next: uri + '#first', c: {_: :a, rel: :next, c: '&rarr;', href: uri}}}
-         ]},
-     '<br clear=all>',
-     {style: "height: 86px;width: 100%;position:fixed;bottom:0;left:0;z-index:1;background-color:#000;opacity: 0.8"},
+    [H.css('/css/mail',true),
+     H.css('/css/chat',true),
+     {class: :items, c: Facets[d,e]},
      days.map{|label,pos|{class: :day, style: "left:#{pos*100}%",c: label}},
-     H.js('/js/d3.min'),
      {_: :script, c: "var arcs = #{arcs.to_json};"},
-     H.js('/js/timegraph')]}
+     H.js('/js/d3.min'),
+     H.js('/js/timegraph',true)]}
 
 end
