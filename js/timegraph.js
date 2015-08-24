@@ -86,10 +86,11 @@ function findNode(event) {
     event.preventDefault();
     event.stopPropagation();
     var x = null;
+//    console.log(event);
     if (event.targetTouches) {
-	x = event.targetTouches[0].clientX;
+	x = event.targetTouches[0].offsetX;
     } else {
-	x = event.clientX;
+	x = event.offsetX;
     }
     cursorB.setAttribute('x',x);
     var found = null;

@@ -37,8 +37,26 @@ body {padding-bottom:127px;background-color:#000;color:#fff}
 .noquote {position:fixed;bottom:0;left:0;font-size: 2em;padding: 0 .4em 0 .4em;border-radius: .15em;background-color:#fff;color:#999;text-decoration:none}
 .noquote:hover {background-color: #ddd}
 img {max-width: 100%}
-#timegraph {position:fixed;bottom:0;left:20%;width:60%;height:20%}
-#timegraph .backdrop {position:absolute;border-radius: 2em 2em 0 0;height:100%;width: 100%;z-index:1;background-color:yellow;opacity: 0.5}
+#timegraph {
+    position:fixed;
+    bottom:0;
+    left:26%;
+    width:48%;
+    height:11%;
+    border-color: #700;
+    border-width: .1em .1em 0 .1em;
+    border-style: solid;
+    border-radius:1em 1em 0 0;
+}
+#timegraph .backdrop {
+    position:absolute;
+    height:100%;
+    width: 100%;
+    z-index:1;
+    background-color:#f00;
+    opacity: 0.16;
+    border-radius:1em 1em 0 0;
+}
 #timegraph > svg {z-index:3;overflow:visible;width:100%;height:100%}
 .link {fill: none;stroke-width: .2em; stroke-dasharray: 1,1;stroke: #fff}
 rect {fill: #f8f8f8}
