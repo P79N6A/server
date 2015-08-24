@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", function(){
 var svg = d3.select("#timegraph > svg")
 var nodes = {};
 var height = svg[0][0].clientHeight;
@@ -86,7 +87,6 @@ function findNode(event) {
     event.preventDefault();
     event.stopPropagation();
     var x = null;
-//    console.log(event);
     if (event.targetTouches) {
 	x = event.targetTouches[0].offsetX;
     } else {
@@ -111,3 +111,4 @@ timegraph.addEventListener("mousemove",findNode);
 timegraph.addEventListener("touchmove",findNode);
 timegraph.addEventListener("click",findNode);
 
+}, false);

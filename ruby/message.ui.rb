@@ -124,7 +124,7 @@ class R
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
     e.q['a'] ||= defaultFilter
-    
+    tc = randomColor
     # HTML
     [H.css('/css/mail',true),
      H.css('/css/chat',true),
@@ -132,9 +132,9 @@ class R
         {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
      {class: :items, c: Facets[d,e]},
      {id: :timegraph,
-      c: [{class: :backdrop},
+      c: [{class: :backdrop, style: "background-color: #{tc}"},
           {_: :svg},
-          days.map{|label,pos|{class: :day, style: "left:#{pos*100}%", c: label}},
+          days.map{|label,pos|{class: :day, style: "color: #{tc};left:#{pos*100}%", c: label}},
          ]},
      {_: :script, c: "var arcs = #{arcs.to_json};"},
      H.js('/js/d3.min'),
