@@ -21,10 +21,11 @@ class R
     n = ->o{i[o] ||= 'f'+(c+=1).to_s} # mint an id
 
     # HTML
-    [(H.css'/css/facets'),(H.js'/js/facets'),
+    [(H.css'/css/facets',true),
+     (H.js'/js/facets',true),
 
      # filter-rules sidebar
-     {class: :sidebar, c: a.map{|f,v|
+     ({class: :sidebar, c: a.map{|f,v|
          {class: :facet, facet: n[f], # predicate
            c: [{class: :predicate, c: f.shorten.split(':')[-1]},
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
@@ -42,7 +43,7 @@ class R
                                                       path
                                                     end
                                                   ) : k.to_s)}
-                      ]}}]}}},
+                      ]}}]}}} unless m.keys.size==1),
      # content
      m.map{|u,r| # each resource
 
