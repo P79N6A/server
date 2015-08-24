@@ -56,8 +56,8 @@ class R
     attache = contained.empty? ? nil : TabularView[contained,e]
 
     {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
-     c: [r[Title].justArray[0].do{|t|
-           {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}},
+     c: [(r[Title].justArray[0].do{|t|
+            {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}} unless e[:thread]),
          {class: :header,
           c: [r[To].justArray.map{|o|
                 o = o.R
