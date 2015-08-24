@@ -1,4 +1,5 @@
 body {padding-bottom:127px;background-color:#000;color:#fff}
+h1 {margin: 0}
 .items {white-space: nowrap;}
 .mail {
     white-space: normal;
