@@ -4,7 +4,7 @@ class R
   GET['/man'] = Man                 # path
   GET['man.whats-your.name/'] = Man # host
 
-  # inbox
+  # foward root path at host to inbox
   GET['m.whats-your.name/'] = -> e,r {GET['/today'][e,r] if e.path == '/'}
 
 end

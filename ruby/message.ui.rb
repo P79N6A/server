@@ -122,7 +122,8 @@ class R
         days[day] ||= posF[day.to_time]}}
     days = days.sort_by{|_,m|m}
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
-    e.q['a'] ||= 'sioc:addressed_to'
+    defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
+    e.q['a'] ||= defaultFilter
     
     # HTML
     [H.css('/css/mail',true),
