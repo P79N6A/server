@@ -13,7 +13,7 @@ class R
           e.q['set'] ||= 'groonga'
         else # paged subtree
           e.q['set'] ||= 'page'
-          e.q['c'] ||= 28
+          e.q['c'] ||= 22
           # date-offsets as traversal-cursor (aka Memento)
           e['HTTP_ACCEPT_DATETIME'].do{|dt|
             t = Time.parse dt
