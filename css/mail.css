@@ -28,9 +28,6 @@ body {padding-bottom:127px;background-color:#000;color:#fff}
 .mail .body a {
     background-color:#fff;
     color:#000;
-    border-color:#aaa;
-    border-width:0 0 .1em 0;
-    border-style:dotted;
     border-radius:.16em;
 }
 .mail span.sep {font-size:1.2em;margin: 0 .06em 0 .06em}
