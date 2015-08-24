@@ -26,7 +26,7 @@ class R
      # filter-rules sidebar
      {class: :sidebar, c: a.map{|f,v|
          {class: :facet, facet: n[f], # predicate
-           c: [{class: :predicate, c: f.shorten},
+           c: [{class: :predicate, c: f.shorten.split(':')[-1]},
                v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
                  {facet: n.(k.to_s), # predicate-object tuple
                    c: [{_: :span, class: :count, c: v},
