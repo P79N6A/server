@@ -7,10 +7,8 @@
 .sidebar div {display:block}
 
 .facet {
-    font-size:1.18em;
+    font-size:1.16em;
     cursor:pointer;
-    max-width:24em;
-    max-height:32em;
     white-space:nowrap;
     background-color:white;color:black;
 }
