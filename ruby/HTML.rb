@@ -68,10 +68,7 @@ end
 class R
 
   def href name = nil
-    {_: :a,
-  href: uri,
-  name: name || fragment || basename,
-     c: name || fragment || basename}
+    {_: :a, href: uri, c: name || fragment || basename}
   end
 
   begin
