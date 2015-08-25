@@ -51,8 +51,7 @@ class R
 
     contained = {}
     [DC+'hasFormat', SIOC+'attachment'].map{|p|
-      r[p].justArray.map{|o|
-        contained[o.uri] = {'uri' => o.uri, Size => 0} }}
+      r[p].justArray.map{|o| contained[o.uri] = {'uri' => o.uri}}}
     attache = contained.empty? ? nil : TabularView[contained,e]
 
     {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
