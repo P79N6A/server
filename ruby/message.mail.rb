@@ -115,9 +115,10 @@ class R
       file = attache[].child name                     # name
       file.w p.body.decoded if !file.e                # write
       yield e, SIOC+'attachment', file                # message -> attached resource
-      if p.main_type=='image'                         # image reference in HTML
-        yield e, DC+'image', file # image pointer
-        yield e, Content, H({_: :a, href: file.uri, c: [{_: :img, src: file.uri},p.filename]}) # add image to HTML-component
+      if p.main_type=='image'                         # image attachment?
+        yield e, DC+'Image', file                     # image reference in RDF
+        yield e, Content,                             # image reference in HTML
+          H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]})
       end }
   rescue Exception => x
     puts ["MAILERROR",uri,x,x.backtrace[0..2]].join(' ')

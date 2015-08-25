@@ -55,6 +55,7 @@ class R
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid + '#' + URI.escape(post.uri), Date => post[Date], Title => title, Image => post[Image]}
+        puts thread[Image]
         if post[Size] > 1 # thread
           thread.update({Size => post[Size],
                          Type => R[SIOC+'Thread']})

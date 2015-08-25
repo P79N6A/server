@@ -10,7 +10,7 @@ class String
     pre.noHTML +    # escape pre-match
       (link.empty? && '' || '<a href="'+u+'">' + # hyperlink
        (if images && u.match(/(gif|jpe?g|png|webp)$/i) # image?
-        yield(R::DC+'image',u.R) if b # emit image-link tuple
+        yield(R::DC+'Image',u.R) if b # emit image-link tuple
         "<img src='#{u}'/>"           # inline image
        else
          yield(R::DC+'link',u.R) if b # emit link tuple
