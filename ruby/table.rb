@@ -35,9 +35,9 @@ class R
     sort = (e.q['sort']||'uri').expand                      # default to URI-sort
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = keys - [Title, Label, Content]                   # title/labels on URI, content gets own row
-    keys = keys - (skipP - [sort]) if skipP                 # key skiplist
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
+    keys = keys - [Title, Label, Content, Image]            # title/labels on URI, content gets own row
+    keys = keys - (skipP - [sort]) if skipP                 # arbitrary key-skiplist
     
     rows = g.resources(e).send direction                    # sorted resources
     e.q['addProperty'].do{|p|
@@ -168,7 +168,12 @@ class R
              end}
           end]},
      ('</form>' if edit && selected),
-     l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}}]}
+     l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}},
+     l[Image].do{|c|
+       {_: :tr,
+        c: {_: :td, colspan: keys.size,
+            c: c.justArray.map{|i|{_: :a, href: i.uri, c: {_: :img, src: i.uri, style: 'height:14em'}}}.intersperse(' ')}}},
+    ]}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
 
@@ -181,7 +186,7 @@ class R
               else # this URI
                 e.uri
               end
-
+     # TODO import new jquery-free version
     # prioritize local script-cache
     jquery = if '/js/jquery.js'.R.exist?
                '/js/jquery'
