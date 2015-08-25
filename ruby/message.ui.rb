@@ -54,7 +54,7 @@ class R
       r[p].justArray.map{|o| contained[o.uri] = {'uri' => o.uri}}}
     attache = contained.empty? ? nil : TabularView[contained,e]
 
-    {class: :mail, name: name, id: r.uri, href: href, selectable: :true,
+    {class: :mail, id: r.uri, href: href, selectable: :true,
      c: [(r[Title].justArray[0].do{|t|
             {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}} unless e[:thread]),
          {class: :header,
