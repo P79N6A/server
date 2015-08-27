@@ -1,13 +1,12 @@
 .sidebar {
-    display: inline-block;
-    float: left;
+    position:fixed;
+    left:0;
     border: .3em solid white;
     border-radius: .4em;
 }
 .sidebar div {display:block}
 
 .facet {
-    font-size:1.16em;
     cursor:pointer;
     white-space:nowrap;
     background-color:white;color:black;

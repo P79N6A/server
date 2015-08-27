@@ -1,5 +1,5 @@
 body {padding-bottom:127px;background-color:#000;color:#fff}
-.items {white-space: nowrap;}
+.items {margin-left:10em}
 .mail {
     white-space: normal;
     display: inline-block;

@@ -1,6 +1,6 @@
 .chatLog {
     padding-top: .3em;
-    border-style: solid;border-color:white;border-width: .1em 0 0 0;
+    border-style:dotted;border-color:white;border-width: .1em 0 0 0;
     white-space: normal;
     margin: .4em;
     display:inline-block;
