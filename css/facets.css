@@ -3,6 +3,8 @@
     left:0;
     border: .3em solid white;
     border-radius: .4em;
+    z-index: 0;
+    max-width: 9em;overflow:hidden;
 }
 .sidebar div {display:block}
 
