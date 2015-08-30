@@ -129,7 +129,7 @@ class R
      H.css('/css/chat',true),
      (resources[0][Title].justArray[0].do{|t|
         {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
-     {class: :items, c: Facets[d,e]},
+     {class: :items, c: Facets[d,e]}, # resources in filterable wrapper-nodes
      ([{id: :timegraph,
         c: [{class: :backdrop, style: "background-color: #{tc}"},
             {_: :svg}, days.map{|label,pos|{class: :day, style: "color: #{tc};left:#{pos*100}%", c: label}}]},

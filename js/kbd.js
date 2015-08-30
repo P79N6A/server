@@ -66,14 +66,14 @@ document.addEventListener("keydown",function(e){
     };
 
     // prev entry
-    // <left> <up> <p> <shift-tab>
-    if(e.keyCode==37||e.keyCode==38||e.keyCode==80) {
+    // <p> <shift-tab>
+    if(e.keyCode==80) {
 	e.preventDefault();
 	prev();
     };
     // next entry
-    // <right> <down> <n> <tab>
-    if(e.keyCode==39 || e.keyCode==40 || e.keyCode==78 || e.keyCode==9){
+    // <n> <tab>
+    if(e.keyCode==78 || e.keyCode==9){
 	e.preventDefault();
 	if (e.getModifierState("Shift")) {
 	    prev();
