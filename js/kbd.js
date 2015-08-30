@@ -3,19 +3,42 @@ Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return th
 NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
 NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
-document.addEventListener("DOMContentLoaded", function(){ // wait till DOM nodes exist
-    // tap/click to focus
-    var focusNode = function(e){
-	var loc = window.location.hash.slice(1);
-	var id = this.getAttribute("id");
-	if(loc == id && this.hasAttribute('href')){ // jump to canonical location: tap while focused
-	    window.location = this.getAttribute('href');
-	} else {
-	    window.location.hash = id;
-	};
-	e.stopPropagation();
+var items = {};
+var item = null;
+var jumpDoc = function(direction) {
+    var doc = document.querySelector("head > link[rel='"+direction+"']");
+    if(doc)
+	window.location = doc.getAttribute('href');
+};
+var prevDoc = function() {jumpDoc('prev');}
+var nextDoc = function() {jumpDoc('next');}
+var focusNode = function(e){
+    var loc = window.location.hash.slice(1);
+    var id = this.getAttribute("id");
+    if(loc == id && this.hasAttribute('href')){ // double-tap, goto item
+	window.location = this.getAttribute('href');
+    } else {
+	window.location.hash = id;
     };
+    e.stopPropagation();
+};
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    // selectable items
     var selectable = document.querySelectorAll("[selectable][id]");
+    // build traversible-network
+    selectable.map(function(){
+	var id = this.getAttribute('id');
+	var re = {};
+	re['id'] = id;
+	if(item){
+	    re['prev'] = item;
+	    re['prev']['next'] = re;
+	};
+	items[id] = item = re;
+    });
+    // tap-to-select
     selectable.on("click",focusNode);
 });
 			  
@@ -25,50 +48,24 @@ document.addEventListener("keydown",function(e){
     var id = window.location.hash.slice(1);
     if(id)
 	resource = document.getElementById(id);
-    var jumpDoc = function(direction) {
-	var doc = document.querySelector("head > link[rel='"+direction+"']");
-	if(doc)
-	    window.location = doc.getAttribute('href');
-    };
-    var prevDoc = function() {jumpDoc('prev');}
-    var nextDoc = function() {jumpDoc('next');}
-
-    var prev = function() { // resource/item/entry
+    var prev = function() {
 	if(resource) {
-	    var sib = resource.previousSibling;
-	    if(sib) { // previous entry
-		var prevId = sib.getAttribute("id");
-		if(prevId)
-		    window.location.hash = prevId;
-	    } else { // wrap
-		var loop = resource.parentNode.lastChild;
-		if(loop)
-		    window.location.hash = loop.getAttribute("id");
+	    var p = items[id]['prev'];
+	    if(p) { // previous item
+		window.location.hash = p['id'];
+	    } else { // out of previous items -> previous page
+		prevDoc();
 	    };
 	}
     };
-
     var next = function() {
-	if(resource) {	// focused resource
-	    var explicitNext = resource.getAttribute("next");
-	    if(explicitNext) { // next by declaration, can jump document-contexts
-		window.location = explicitNext;
-	    } else {
-		var nextSibling = resource.nextSibling;
-		if(nextSibling) { // next in sequence
-		    var nextId = nextSibling.getAttribute("id");
-		    if(nextId)
-			window.location.hash = nextId;
-		} else { // sequence-end, wrap around
-		    var loop = resource.parentNode.firstChild;
-		    if(loop)
-			window.location.hash = loop.getAttribute("id");
-		};
+	if(resource) {
+	    var n = items[id]['next'];
+	    if(n) { // next item
+		window.location.hash = n['id'];
+	    } else { // out of next-items -> next page
+		nextDoc();
 	    };
-	} else { // no focused-resource, find the first one
-	    var cur = document.querySelector('[id][selectable]');
-	    if(cur)
-		window.location.hash = cur.getAttribute('id');
 	}
     };
 
@@ -96,52 +93,10 @@ document.addEventListener("keydown",function(e){
 	    next(); // <tab> next (resource)
 	};
     };
-   
-    // exit context
-    // <esc>
-    if(e.keyCode==27){
-	if(resource) { // in-doc context
-	    var up = null;
-	    var r = resource.parentNode;
-	    while(r && r.nodeName != '#document' && !up) { // find parent context
-		if(r.hasAttribute('selectable'))
-		    up = r.getAttribute('id');
-		r = r.parentNode;
-	    }
-	    if(!up) { // default parent-context (doc)
-		    window.location = window.location.pathname;
-	    } else { // parent-context
-		window.location.hash = up;
-	    };
-	} else { // doc-context
-	    var up = document.querySelector("head > link[rel='parent']")
-	    if(up) {
-		document.location = up.getAttribute('href');
-	    } else {
-		window.history.back();
-	    };
-	};
-    };
 
-    // enter context
-    // <enter> 
-    if(e.keyCode==13){
-	e.preventDefault();
-	if(resource) {
-	    var child = resource.querySelector('[id][selectable]');
-	    var href = resource.getAttribute("href");
-	    if(child){
-		window.location.hash = child.getAttribute('id');
-	    } else if(href) {
-		document.location = href;
-	    };
-	};
-    };
-
-    // history
-    if(e.keyCode==66) // (b)ack
+    if(e.keyCode==66) // <b>  back
 	window.history.back();
-    if(e.keyCode==70) // (f)orward
+    if(e.keyCode==70) // <f>  forward
 	window.history.forward();
 
 },false);
