@@ -25,8 +25,15 @@ document.addEventListener("keydown",function(e){
     var id = window.location.hash.slice(1);
     if(id)
 	resource = document.getElementById(id);
+    var jumpDoc = function(direction) {
+	var doc = document.querySelector("head > link[rel='"+direction+"']");
+	if(doc)
+	    window.location = doc.getAttribute('href');
+    };
+    var prevDoc = function() {jumpDoc('prev');}
+    var nextDoc = function() {jumpDoc('next');}
 
-    var prev = function() {
+    var prev = function() { // resource/item/entry
 	if(resource) {
 	    var sib = resource.previousSibling;
 	    if(sib) { // previous entry
@@ -65,23 +72,31 @@ document.addEventListener("keydown",function(e){
 	}
     };
 
-    // prev entry
-    // <p> <shift-tab>
     if(e.keyCode==80) {
 	e.preventDefault();
-	prev();
-    };
-    // next entry
-    // <n> <tab>
-    if(e.keyCode==78 || e.keyCode==9){
-	e.preventDefault();
 	if (e.getModifierState("Shift")) {
-	    prev();
+	    prevDoc(); // <shift-p>  previous (doc)
 	} else {
-	    next();
+	    prev(); // <p>  previous (resource)
 	};
     };
-
+    if(e.keyCode==78){
+	e.preventDefault();
+	if (e.getModifierState("Shift")) {
+	    nextDoc(); // <shift-n> next (doc)
+	} else {
+	    next(); // <n> next (resource)
+	};
+    };
+    if(e.keyCode==9){
+	e.preventDefault();
+	if (e.getModifierState("Shift")) {
+	    prev(); // <shift-tab> previous (resource)
+	} else {
+	    next(); // <tab> next (resource)
+	};
+    };
+   
     // exit context
     // <esc>
     if(e.keyCode==27){
