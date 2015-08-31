@@ -4,6 +4,9 @@ class R
   # group by channel-hour. if huge we could emit much less w/ file-pointers, hourly-pagination.. full contents for now
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
     msgs.map{|uri,msg|
+      creator = msg[Creator].justArray[0]
+      name = creator.respond_to?(:uri) ? creator.uri.split(/[\/#]/)[-1] : creator.to_s
+      msg[Label] = name
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
       hour = date[11..12]

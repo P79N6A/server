@@ -3,12 +3,11 @@
 class R
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
+    name = r[Label] || ''
+    e[:label][name] = true
     {href: r.uri, class: :ublog, selectable: true, id: r.uri,
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
-         r[Creator].do{|c|
-           name = c[0].respond_to?(:uri) ? c[0].uri.split(/[\/#]/)[-1] : c[0].to_s
-           e[:label][name] = true
-           {class: :creator, c: {_: :a, href: r.uri, name: name, c: name}}},
+         {class: :creator, c: {_: :a, href: r.uri, name: name, c: name}},
          {_: :span, class: 'body', c: r[Content]}]}}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
@@ -24,6 +23,7 @@ class R
     graph = {}
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri, sourcePos: posF[line[Date].justArray[0].to_time],
+                     sourceLabel: line[Label],
                      target: log.uri, targetPos: logDate, weight: 2.0})
       graph[line.uri] = line}
 
