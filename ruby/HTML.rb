@@ -124,31 +124,38 @@ class R
         end}}
 
     e[:label] ||= {} # labels
-    [({class: :paginate,
-      c: [e[:Links][:prev].do{|p|
-            p = CGI.escapeHTML p.to_s
-            {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
-          e[:Links][:next].do{|n|
-            n = CGI.escapeHTML n.to_s
-            {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
-         ]} if e[:Links][:prev] || e[:Links][:next]),
-     (if e[:container]
+    e[:sidebar] = [] # control pane
+
+    # next/prev control
+    e[:sidebar].push({class: :paginate,
+                      c: [e[:Links][:prev].do{|p|
+                            p = CGI.escapeHTML p.to_s
+                            {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
+                          e[:Links][:next].do{|n|
+                            n = CGI.escapeHTML n.to_s
+                            {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
+                         ]}) if e[:Links][:prev] || e[:Links][:next]
+    # up
+    if e[:container]
       path = e.R.justPath
       up = path.dirname
-      {_: :span, class: :path, c: [{_: :a, class: :dirname, href: up, c: up.tail.gsub('/','.')},{_: :span, class: :basename, c: path.basename}]}
-      end),
-     groups.map{|view,graph|view[graph,e]}, # type-groups
+      e[:sidebar].push({_: :span, class: :path,
+                        c: [{_: :a, class: :dirname, href: up, c: up.tail.gsub('/','.')},
+                            {_: :span, class: :basename, c: path.basename}]})
+    end
+
+    [groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # singletons
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
+     {class: :sidebar, c: e[:sidebar]},
      {_: :style, c: e[:label].map{|name,_|
         c = randomColor
         "[name=\"#{name}\"] {color: #000; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     H.js('/js/kbd',true), # keyboard-navigation
-    ]}
+     H.js('/js/kbd',true)]}
 
   ViewA[BasicResource] = -> r,e {
     fragment = r.R.fragment || r.uri

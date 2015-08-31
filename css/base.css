@@ -50,3 +50,11 @@ table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {
 body > table.tab {margin:auto}
 td.key img {max-height: 2em}
 body > table.tab > tbody > tr > td[property="uri"] {text-align: right}
+
+.sidebar {
+    position:fixed;
+    left:0;top:0;
+    z-index: 0;
+    max-width: 9em;overflow:hidden;
+}
+.sidebar div {display:block}

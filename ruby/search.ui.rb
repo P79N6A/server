@@ -20,45 +20,47 @@ class R
     c = 0
     n = ->o{i[o] ||= 'f'+(c+=1).to_s} # mint an id
 
+    # filter control
+    e[:sidebar].push(a.map{|f,v|
+                       {class: :facet, facet: n[f],
+                        c: [{class: :predicate,
+                             c: f.shorten.split(':')[-1]},
+                            v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by usage-weight
+                              {facet: n.(k.to_s), # predicate-object tuple
+                               c: [{_: :span, class: :count, c: v},
+                                   {_: :span, class: :name, # select a label
+                                    c: (k.respond_to?(:uri) ? ( k = k.R
+                                                                path = k.path
+                                                                frag = k.fragment
+                                                                if frag
+                                                                  frag
+                                                                elsif !path || path == '/'
+                                                                  k.host
+                                                                else
+                                                                  path
+                                                                end
+                                                              ) : k.to_s)}]}}]}}) unless m.keys.size==1
+
     # HTML
     [(H.css'/css/facets',true),
      (H.js'/js/facets',true),
 
-     # filter-rules sidebar
-     ({class: :sidebar, c: a.map{|f,v|
-         {class: :facet, facet: n[f], # predicate
-           c: [{class: :predicate, c: f.shorten.split(':')[-1]},
-               v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by popularity
-                 {facet: n.(k.to_s), # predicate-object tuple
-                   c: [{_: :span, class: :count, c: v},
-                       {_: :span, class: :name,
-                        c: (k.respond_to?(:uri) ? ( k = k.R
-                                                    path = k.path
-                                                    frag = k.fragment
-                                                    if frag
-                                                      frag
-                                                    elsif !path || path == '/'
-                                                      k.host
-                                                    else
-                                                      path
-                                                    end
-                                                  ) : k.to_s)}
-                      ]}}]}}} unless m.keys.size==1),
      # content
      m.map{|u,r| # each resource
 
-       # find typed-renderer
+       # lookup renderer
        type = r.types.find{|t|ViewA[t]}
 
+       # build facet-identifiers
        a.map{|p,_| # each facet
          [n[p], r[p].do{|o| # each value
             o.justArray.map{|o|
               n[o.to_s] # find facet-identifier
             }}].join ' '
-       }.do{|f| # facet-id bound
-         [f.map{|o| '<div class="' + o + '">' }, # open node wrapper(s)
-          ViewA[type ? type : BasicResource][r,e], # contained-resource
-          (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrappers
+       }.do{|f| # facet-id(s) bound
+         [f.map{|o| '<div class="' + o + '">' }, # open wrapper
+          ViewA[type ? type : BasicResource][r,e], # resource
+          (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 
   # grep the graph and highlight results
