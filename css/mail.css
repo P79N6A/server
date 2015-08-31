@@ -1,11 +1,10 @@
 body {padding-bottom:127px;background-color:#000;color:#fff}
-.items {margin-left:9em;z-index: 2}
+.msgs, h1, .mail {margin: auto}
+h1 {text-align:center}
 .mail {
     white-space: normal;
-    display: inline-block;
     vertical-align: top;
     padding-left: .3em;
-    margin: .4em;
     background-color:#000;
     color:#fff;
     max-width:111ex;
