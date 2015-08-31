@@ -16,10 +16,16 @@ class R
        ViewA[SIOC+'InstantMessage'][r,e]}}}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
-
-    # lines to graph
+    posF = -> time {
+#      puts((time.to_f - e[:tgmin]) / e[:tgrng])
+      (time.to_f - e[:tgmin]) / e[:tgrng]
+    }
+    logDate = posF[log[Date].justArray[0].to_time],
     graph = {}
     log[LDP+'contains'].map{|line|
+      e[:arcs].push({source: line.uri, sourcePos: posF[line[Date].justArray[0].to_time],
+                     target: log.uri, targetPos: logDate,
+                     weight: 1})
       graph[line.uri] = line}
 
     {class: :chatLog, selectable: true, date: log[Date],
@@ -84,9 +90,9 @@ class R
     }.flatten.compact.map(&:to_f)
 
     #  max/min mtimes
-    min = mtimes.min || 0
-    max = mtimes.max || 1
-    range = (max - min).min(0.1)
+    e[:tgmin] = min = mtimes.min || 0
+    e[:tgmax] = max = mtimes.max || 1
+    e[:tgrng] = range = (max - min).min(0.1)
     posF = -> time {(time.to_f - min) / range}
 
     # arcs
