@@ -9,12 +9,12 @@ arcs.forEach(function(link) { // populate node-table from triples
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    name: link.sourceLabel,
-			    pos: link.sourcePos * height,
+			    pos: height - link.sourcePos * height,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    name: link.targetLabel,
-			    pos: link.targetPos * height,
+			    pos: height - link.targetPos * height,
 			   });
 });
 
@@ -78,7 +78,7 @@ window.addEventListener("hashchange",function(e){ // move cursor to current focu
     if(vz) {
 	force.resume();
 	vz.x = vz.px = center;
-	cursor.setAttribute('y', vz.pos);
+	cursor.setAttribute('y', vz.pos + 2);
     }
 });
 
@@ -86,17 +86,17 @@ window.addEventListener("hashchange",function(e){ // move cursor to current focu
 function findNode(event) {
     event.preventDefault();
     event.stopPropagation();
-    var x = null;
+    var y = null;
     if (event.targetTouches) {
-	x = event.targetTouches[0].offsetX;
+	y = event.targetTouches[0].offsetY;
     } else {
-	x = event.offsetX;
+	y = event.offsetY;
     }
-    cursorB.setAttribute('x',x);
+    cursorB.setAttribute('y',y);
     var found = null;
     var distance = width;
     node.each(function(item,index){
-	var d = Math.abs(x - item.pos);
+	var d = Math.abs(y - item.pos);
 	if(d <= distance){
 	    distance = d;
 	    found = item;
