@@ -24,8 +24,7 @@ class R
     graph = {}
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri, sourcePos: posF[line[Date].justArray[0].to_time],
-                     target: log.uri, targetPos: logDate,
-                     weight: 1})
+                     target: log.uri, targetPos: logDate, weight: 2.0})
       graph[line.uri] = line}
 
     {class: :chatLog, selectable: true, date: log[Date],

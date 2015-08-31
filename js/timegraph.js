@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function(){
 var svg = d3.select("#timegraph > svg")
 var nodes = {};
@@ -10,11 +11,13 @@ arcs.forEach(function(link) { // populate node-table from triples
       nodes[link.source] = {uri: link.source,
 			    name: link.sourceLabel,
 			    pos: height - link.sourcePos * height,
+			    weight: link.weight || 8,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    name: link.targetLabel,
 			    pos: height - link.targetPos * height,
+			    weight: 8,
 			   });
 });
 
@@ -34,6 +37,7 @@ var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
     .attr("class", "link")
+    .attr("stroke-width",function(d) { return ((d.weight || 4) / 20.0) + 'em'; })
     .attr('name', function(d){return d.sourceLabel});
 
 var node = svg.selectAll(".node")
@@ -44,9 +48,9 @@ var node = svg.selectAll(".node")
 
 node.append("rect")
     .attr("name", function(d) { return d.name; })
-    .attr("width", 8)
-    .attr("height", 8)
-    .attr("ry",4);
+    .attr("width", function(d) { return d.weight; })
+    .attr("height", function(d) { return d.weight; })
+    .attr("ry", function(d) { return d.weight / 2.0; });
 
 // URI -> item
 var messages = {}
