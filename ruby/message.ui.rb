@@ -123,12 +123,11 @@ class R
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
     e.q['a'] ||= defaultFilter
-    tc = randomColor
     # HTML
     tg = {id: :timegraph,
           c: [{_: :svg},
               days.map{|label,pos|
-                {class: :day, style: "color: #{tc};bottom:#{pos*100}%", c: label}}]}
+                {class: :day, style: "top:#{100 - pos*100}%", c: label}}]}
     [H.css('/css/mail',true),
      H.css('/css/chat',true),
      {class: :msgs,

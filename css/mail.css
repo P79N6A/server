@@ -34,8 +34,8 @@ h1 {text-align:center}
 .noquote:hover {background-color: #ddd}
 img {max-width: 100%}
 #timegraph {
-    width:8em;
-    height:42em;
+    width:9em;
+    height:48em;
     margin-top:.5em;
 }
 #timegraph > svg {z-index:3;overflow:visible;width:100%;height:100%}
