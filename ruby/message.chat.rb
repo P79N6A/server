@@ -17,7 +17,7 @@ class R
         SIOC+'addressed_to' => chan,
       }
       graph[log][LDP+'contains'].push msg
-      graph[log][Date] = date if !graph[log][Date] || date < graph[log][Date]
+      graph[log][Date] = date if !graph[log][Date]
       graph.delete uri
     }
   }

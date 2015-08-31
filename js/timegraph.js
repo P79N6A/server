@@ -26,7 +26,7 @@ var force = d3.layout.force()
     .links(arcs)
     .size([width,height])
     .linkDistance(8)
-    .charge(-20)
+    .charge(-22)
     .on("tick", tick)
     .start();
 
