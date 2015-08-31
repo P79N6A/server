@@ -60,11 +60,11 @@ node.each(function(item,index){
 
 function tick() {
     link.attr("x1", function(d) {
-	return d.source.x + 4;
+	return d.source.x + (d.source.weight /2.0);
     })
 	.attr("y1", function(d) { return (d.source.pos || 0); })
 	.attr("x2", function(d) {
-	    return d.target.x + 4;
+	    return d.target.x;
 	})
 	.attr("y2", function(d) { return (d.target.pos || 0); });
 
