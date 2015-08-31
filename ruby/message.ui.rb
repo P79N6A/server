@@ -128,7 +128,7 @@ class R
     tg = {id: :timegraph,
           c: [{_: :svg},
               days.map{|label,pos|
-                {class: :day, style: "color: #{tc};top:#{pos*100}%", c: label}}]}
+                {class: :day, style: "color: #{tc};bottom:#{pos*100}%", c: label}}]}
     [H.css('/css/mail',true),
      H.css('/css/chat',true),
      {class: :msgs,

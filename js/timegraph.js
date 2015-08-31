@@ -3,18 +3,18 @@ var svg = d3.select("#timegraph > svg")
 var nodes = {};
 var height = svg[0][0].clientHeight;
 var width = svg[0][0].clientWidth;
-var middle = height / 2;
+var center = width / 2;
 
 arcs.forEach(function(link) { // populate node-table from triples
   link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    name: link.sourceLabel,
-			    pos: link.sourcePos * width,
+			    pos: link.sourcePos * height,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    name: link.targetLabel,
-			    pos: link.targetPos * width,
+			    pos: link.targetPos * height,
 			   });
 });
 
@@ -28,7 +28,7 @@ var force = d3.layout.force()
     .start();
 
 // input-location cursor
-svg.append('rect').attr('height',height).attr('id','cursorB').style('fill','#555').attr('width',1).attr('x',width);
+svg.append('rect').attr('width',width).attr('id','cursorB').style('fill','#555').attr('height',1).attr('y',height);
 
 var link = svg.selectAll(".link")
     .data(force.links())
@@ -44,8 +44,8 @@ var node = svg.selectAll(".node")
 
 node.append("rect")
     .attr("name", function(d) { return d.name; })
-    .attr("width", 9)
-    .attr("height", 9)
+    .attr("width", 8)
+    .attr("height", 8)
     .attr("ry",4);
 
 // URI -> item
@@ -55,20 +55,20 @@ node.each(function(item,index){
 });
 
 function tick() {
-    link.attr("y1", function(d) {
-	return d.source.y + 4;
+    link.attr("x1", function(d) {
+	return d.source.x + 4;
     })
-	.attr("x1", function(d) { return (d.source.pos || 0); })
-	.attr("y2", function(d) {
-	    return d.target.y + 4;
+	.attr("y1", function(d) { return (d.source.pos || 0); })
+	.attr("x2", function(d) {
+	    return d.target.x + 4;
 	})
-	.attr("x2", function(d) { return (d.target.pos || 0); });
+	.attr("y2", function(d) { return (d.target.pos || 0); });
 
-    node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + (d.pos || 0) + ")"; });
 }
 
 // create cursor
-svg.append('rect').attr('height',height).attr('id','cursor').style('fill','#fff').attr('width',3).attr('x',width);
+svg.append('rect').attr('width',width).attr('id','cursor').style('fill','#fff').attr('height',3).attr('y',height);
 var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
 var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
 
@@ -77,8 +77,8 @@ window.addEventListener("hashchange",function(e){ // move cursor to current focu
     var vz = messages[id] || messages[window.location.hash];
     if(vz) {
 	force.resume();
-	vz.y = vz.py = middle;
-	cursor.setAttribute('x', vz.pos);
+	vz.x = vz.px = center;
+	cursor.setAttribute('y', vz.pos);
     }
 });
 
