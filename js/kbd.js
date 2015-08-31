@@ -5,6 +5,7 @@ NodeList.prototype.on = function(){return this.map(Element.prototype.on,argument
 
 var items = {};
 var item = null;
+var last = null;
 var jumpDoc = function(direction) {
     var doc = document.querySelector("head > link[rel='"+direction+"']");
     if(doc)
@@ -24,81 +25,83 @@ var focusNode = function(e){
 };
 
 document.addEventListener("DOMContentLoaded", function(){
-
-    // selectable items
     var selectable = document.querySelectorAll("[selectable][id]");
-    // build traversible-network
     selectable.map(function(){
 	var id = this.getAttribute('id');
 	var re = {};
 	re['id'] = id;
-	if(item){
+	if(item){ // link traversible nodes
 	    re['prev'] = item;
 	    re['prev']['next'] = re;
 	};
 	items[id] = item = re;
     });
-    // tap-to-select
+    last = item;
     selectable.on("click",focusNode);
 });
-			  
+
 // keyboard navigation
 document.addEventListener("keydown",function(e){
     var resource = null;
     var id = window.location.hash.slice(1);
+
     if(id)
 	resource = document.getElementById(id);
-    var prev = function() {
-	if(resource) {
+
+    if(resource) { // a resource has focus
+	var prev = function() {
 	    var p = items[id]['prev'];
 	    if(p) { // previous item
 		window.location.hash = p['id'];
 	    } else { // out of previous items -> previous page
 		prevDoc();
 	    };
-	}
-    };
-    var next = function() {
-	if(resource) {
+	};
+	var next = function() {
 	    var n = items[id]['next'];
 	    if(n) { // next item
 		window.location.hash = n['id'];
 	    } else { // out of next-items -> next page
 		nextDoc();
 	    };
-	}
-    };
-
-    if(e.keyCode==80) {
-	e.preventDefault();
-	if (e.getModifierState("Shift")) {
-	    prevDoc(); // <shift-p>  previous (doc)
-	} else {
-	    prev(); // <p>  previous (resource)
+	};
+	// key: p
+	if(e.keyCode==80) {
+	    e.preventDefault();
+	    if (e.getModifierState("Shift")) {
+		prevDoc(); // <shift-p>  previous (page)
+	    } else {
+		prev(); // <p>  previous (resource)
+	    };
+	};
+	// key: n
+	if(e.keyCode==78){
+	    e.preventDefault();
+	    if (e.getModifierState("Shift")) {
+		nextDoc(); // <shift-n> next (page)
+	    } else {
+		next(); // <n> next (resource)
+	    };
+	};
+	// key: tab
+	if(e.keyCode==9){
+	    e.preventDefault();
+	    if (e.getModifierState("Shift")) {
+		prev(); // <shift-tab> previous (resource)
+	    } else {
+		next(); // <tab> next (resource)
+	    };
+	};
+    } else { // no resources focused
+	// <n> <tab>  select first entry
+	if(e.keyCode==78||e.keyCode==9) {
+	    window.location.hash = document.querySelector('[selectable][id]').getAttribute('id');
+	};
+	// <p> select last entry
+	if(e.keyCode==80) {
+	    window.location.hash = last;
 	};
     };
-    if(e.keyCode==78){
-	e.preventDefault();
-	if (e.getModifierState("Shift")) {
-	    nextDoc(); // <shift-n> next (doc)
-	} else {
-	    next(); // <n> next (resource)
-	};
-    };
-    if(e.keyCode==9){
-	e.preventDefault();
-	if (e.getModifierState("Shift")) {
-	    prev(); // <shift-tab> previous (resource)
-	} else {
-	    next(); // <tab> next (resource)
-	};
-    };
-
-    if(e.keyCode==66) // <b>  back
-	window.history.back();
-    if(e.keyCode==70) // <f>  forward
-	window.history.forward();
-
 },false);
 
 window.addEventListener("hashchange",function(e){
