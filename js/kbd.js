@@ -3,20 +3,18 @@ Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return th
 NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
 NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
-var items = {};
-var item = null;
-var last = null;
 var jumpDoc = function(direction) {
     var doc = document.querySelector("head > link[rel='"+direction+"']");
     if(doc)
-	window.location = doc.getAttribute('href');
+	window.location = doc.getAttribute('href') + '#first';
 };
 var prevDoc = function() {jumpDoc('prev');}
 var nextDoc = function() {jumpDoc('next');}
+
 var focusNode = function(e){
     var loc = window.location.hash.slice(1);
     var id = this.getAttribute("id");
-    if(loc == id && this.hasAttribute('href')){ // double-tap, goto item
+    if(loc == id && this.hasAttribute('href')){ // already selected and tapped again, goto
 	window.location = this.getAttribute('href');
     } else {
 	window.location.hash = id;
@@ -24,8 +22,16 @@ var focusNode = function(e){
     e.stopPropagation();
 };
 
+// find navigable (whitelisted via @selectable) nodes
+var items = {};
+var item = null;
+var first = null;
+var last = null;
 document.addEventListener("DOMContentLoaded", function(){
     var selectable = document.querySelectorAll("[selectable][id]");
+    first = selectable[0].getAttribute('id');
+    if(window.location.hash.slice(1)=='first')
+	window.location.hash = first;
     selectable.map(function(){
 	var id = this.getAttribute('id');
 	var re = {};
@@ -40,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function(){
     selectable.on("click",focusNode);
 });
 
-// keyboard navigation
+// keyboard-control
 document.addEventListener("keydown",function(e){
     var resource = null;
     var id = window.location.hash.slice(1);
@@ -48,7 +54,7 @@ document.addEventListener("keydown",function(e){
     if(id)
 	resource = document.getElementById(id);
 
-    if(resource) { // a resource has focus
+    if(resource) { // focused resource
 	var prev = function() {
 	    var p = items[id]['prev'];
 	    if(p) { // previous item
@@ -92,12 +98,12 @@ document.addEventListener("keydown",function(e){
 		next(); // <tab> next (resource)
 	    };
 	};
-    } else { // no resources focused
-	// <n> <tab>  select first entry
+    } else { // no selection
+	// <n> <tab>  first entry
 	if(e.keyCode==78||e.keyCode==9) {
-	    window.location.hash = document.querySelector('[selectable][id]').getAttribute('id');
+	    window.location.hash = first;
 	};
-	// <p> select last entry
+	// <p> last entry
 	if(e.keyCode==80) {
 	    window.location.hash = last;
 	};
