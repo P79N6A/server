@@ -76,14 +76,14 @@ class R
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     resources = d.resources(e)
-    arcs = []
+    arcs = e[:arcs] = []
 
     # normalize mtimes to float
     mtimes = d.values.map{|s|
       s[Mtime] || s[Date].justArray.map(&:to_time)
     }.flatten.compact.map(&:to_f)
 
-    # find max/min mtimes
+    #  max/min mtimes
     min = mtimes.min || 0
     max = mtimes.max || 1
     range = (max - min).min(0.1)
@@ -121,13 +121,15 @@ class R
         days[day] ||= posF[day.to_time]}}
     days = days.sort_by{|_,m|m}
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
+
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
     e.q['a'] ||= defaultFilter
-    # HTML
     tg = {id: :timegraph,
           c: [{_: :svg},
               days.map{|label,pos|
                 {class: :day, style: "top:#{100 - pos*100}%", c: label}}]}
+
+    # HTML
     [H.css('/css/mail',true),
      H.css('/css/chat',true),
      {class: :msgs,
@@ -135,7 +137,7 @@ class R
              {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
           Facets[d,e]]}, # resources in filterable wrapper-nodes
      (e[:sidebar].push(tg); nil),
-     ([{_: :script, c: "var arcs = #{arcs.to_json};"},
+     ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true)] unless d.keys.size==1)]}
 
