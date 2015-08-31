@@ -39,7 +39,7 @@ var facets = function(){
 	if(on.length > 0) {
 	    s.push('.'+p+'{display:none}') // hide this predicate by default
 	    on.map(function(){            // only show predicate+object matches
-		s.push('.'+p+'.'+this.attr('facet')+'{display:inline}')})
+		s.push('.'+p+'.'+this.attr('facet')+'{display:block}')})
 
 	    // activate rules
 	    var style = document.createElement('style')

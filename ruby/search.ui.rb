@@ -26,20 +26,21 @@ class R
                         c: [{class: :predicate,
                              c: f.shorten.split(':')[-1]},
                             v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by usage-weight
-                              {facet: n.(k.to_s), # predicate-object tuple
+                              name = k.respond_to?(:uri) ? ( k = k.R
+                                                             path = k.path
+                                                             frag = k.fragment
+                                                             if frag
+                                                               frag
+                                                             elsif !path || path == '/'
+                                                               k.host
+                                                             else
+                                                               path
+                                                             end
+                                                           ) : k.to_s
+                              {facet: n.(k.to_s), # facet
                                c: [{_: :span, class: :count, c: v},
-                                   {_: :span, class: :name, # select a label
-                                    c: (k.respond_to?(:uri) ? ( k = k.R
-                                                                path = k.path
-                                                                frag = k.fragment
-                                                                if frag
-                                                                  frag
-                                                                elsif !path || path == '/'
-                                                                  k.host
-                                                                else
-                                                                  path
-                                                                end
-                                                              ) : k.to_s)}]}}]}}) unless m.keys.size==1
+                                   {_: :span, name: name, class: :name, # label
+                                    c: name}]}}]}}) unless m.keys.size==1
 
     # HTML
     [(H.css'/css/facets',true),

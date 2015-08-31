@@ -125,16 +125,18 @@ class R
     e.q['a'] ||= defaultFilter
     tc = randomColor
     # HTML
+    tg = {id: :timegraph,
+          c: [{_: :svg},
+              days.map{|label,pos|
+                {class: :day, style: "color: #{tc};top:#{pos*100}%", c: label}}]}
     [H.css('/css/mail',true),
      H.css('/css/chat',true),
      {class: :msgs,
       c: [(resources[0][Title].justArray[0].do{|t|
              {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
           Facets[d,e]]}, # resources in filterable wrapper-nodes
-     ([{id: :timegraph,
-        c: [{class: :backdrop, style: "background-color: #{tc}"},
-            {_: :svg}, days.map{|label,pos|{class: :day, style: "color: #{tc};left:#{pos*100}%", c: label}}]},
-       {_: :script, c: "var arcs = #{arcs.to_json};"},
+     (e[:sidebar].push(tg); nil),
+     ([{_: :script, c: "var arcs = #{arcs.to_json};"},
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true)] unless d.keys.size==1)]}
 
