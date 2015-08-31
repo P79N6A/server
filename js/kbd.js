@@ -51,10 +51,10 @@ document.addEventListener("keydown",function(e){
     var resource = null;
     var id = window.location.hash.slice(1);
 
-    if(id)
+    if(id) // selection
 	resource = document.getElementById(id);
+    if(resource) {
 
-    if(resource) { // focused resource
 	var prev = function() {
 	    var p = items[id]['prev'];
 	    if(p) { // previous item
@@ -63,6 +63,7 @@ document.addEventListener("keydown",function(e){
 		prevDoc();
 	    };
 	};
+
 	var next = function() {
 	    var n = items[id]['next'];
 	    if(n) { // next item
@@ -71,6 +72,7 @@ document.addEventListener("keydown",function(e){
 		nextDoc();
 	    };
 	};
+
 	// key: p
 	if(e.keyCode==80) {
 	    e.preventDefault();
@@ -99,14 +101,14 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
     } else { // no selection
+
 	// <n> <tab>  first entry
-	if(e.keyCode==78||e.keyCode==9) {
+	if(e.keyCode==78||e.keyCode==9)
 	    window.location.hash = first;
-	};
+
 	// <p> last entry
-	if(e.keyCode==80) {
+	if(e.keyCode==80)
 	    window.location.hash = last;
-	};
     };
 },false);
 
