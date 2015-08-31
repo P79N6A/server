@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(){
 var svg = d3.select("#timegraph > svg")
 var nodes = {};
-var height = svg[0][0].clientHeight;
-var width = svg[0][0].clientWidth;
+var height = svg[0][0].clientHeight || 600;
+var width = svg[0][0].clientWidth || 128;
 var center = width / 2;
 
 arcs.forEach(function(link) { // populate node-table from triples
