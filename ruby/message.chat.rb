@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  # group by channel-hour. if huge we could emit much less w/ file-pointers, hourly-pagination.. full contents for now
+  # group by channel-hour
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
     msgs.map{|uri,msg|
       creator = msg[Creator].justArray[0]
@@ -25,8 +25,6 @@ class R
     }
   }
 
-  # IRC
-
   def triplrIRC &f
     i=-1 # line index
 
@@ -49,12 +47,10 @@ class R
   end
 
   # twitter
-
   def triplrTwUsers
     open(pathPOSIX).readlines.map{|l|
       yield 'https://twitter.com/'+l.chomp, Type, R[Resource]}
   end
-
   def triplrTwMsg
     base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
@@ -70,13 +66,11 @@ class R
         a.set_attribute('href',base + u) if u.match /^\//}
       yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
   end
-
   def tw g
     node.readlines.shuffle.each_slice(22){|s|
       u = 'https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
       u.R.twGET g}
   end
-
   def twGET g; triplrStoreJSON :triplrTwMsg, g, nil, FeedArchiverJSON end
 
 end

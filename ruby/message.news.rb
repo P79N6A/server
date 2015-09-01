@@ -5,17 +5,15 @@ class R
     if d.path == '/news/'
       e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
       if e.q.has_key?('q') # search
-        e.q['set'] ||= 'groonga'
+        e.q['set'] = 'groonga'
       else # subtree
-        e.q['set'] ||= 'page'
+        e.q['set'] = 'page'
         e.q['c'] ||= 22
-        e['HTTP_ACCEPT_DATETIME'].do{|dt| # date-offsets as traversal-cursor (aka Memento)
+        e['HTTP_ACCEPT_DATETIME'].do{|dt|
           t = Time.parse dt
           e[:Response]['Memento-Datetime'] = dt
           e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
       end
-      nil
-    else
       nil
     end}
 
@@ -63,7 +61,7 @@ class R
       end
       
       def each_statement &fn
-        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream transformer stack
+        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream transform pipeline
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -84,12 +82,11 @@ class R
           content = p == Content
 
           reddit = s.R.host.match(/reddit\.com$/)
-          # TODO host and/or serverengine-specific hooks
+          # TODO host-specific hooks
 
-          # predicate-narrowed sub-extractions
-          if content # SIOC::content
+          # predicate-specific extractions
+          if content
             submission = /.* submitted by /
-            # reddit authorship-data in Content (original post)
             if reddit && o.match(submission)
               (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|o|
                 links = o.css('a')
@@ -100,7 +97,6 @@ class R
               yield s, To, s.R.hostPart.R
             end
           elsif p == Title
-            # reddit authorship-data in Title (comment)
             if reddit
               authorTitleRe = /^(\S+) on /
               authorTitle = o.match authorTitleRe
@@ -110,7 +106,7 @@ class R
             end
           end
 
-          # resolve URIs relative to originating-doc
+          # resolve URIs relative to origin doc
           yield s, p, content ?
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
