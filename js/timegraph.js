@@ -58,7 +58,7 @@ function tick() {
     })
 	.attr("y1", function(d) { return (d.source.pos || 0); })
 	.attr("x2", function(d) {
-	    return d.target.x;
+	    return d.target.x + 2;
 	})
 	.attr("y2", function(d) { return (d.target.pos || 0); });
 

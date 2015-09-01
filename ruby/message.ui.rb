@@ -24,7 +24,7 @@ class R
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri, sourcePos: posF[line[Date].justArray[0].to_time],
                      sourceLabel: line[Label],
-                     target: log.uri, targetPos: logDate, weight: 2.0})
+                     target: log.uri, targetPos: logDate})
       graph[line.uri] = line}
 
     {class: :chatLog, selectable: true, date: log[Date],
@@ -108,13 +108,6 @@ class R
             s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0]]}
             t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0]]}
             arcs.push arc }}
-      else # unspecified, use temporal relation
-        arcs.push({source: s.uri,
-                   target: prior.uri,
-                   sourcePos: posF[s[Date].justArray[0].to_time],
-                   targetPos: posF[prior[Date].justArray[0].to_time],
-                  })
-        prior = s
       end
     }
 
