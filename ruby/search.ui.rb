@@ -3,7 +3,7 @@ class R
   # wrap nodes in facet-containers
   Facets = -> m,e { # CSS rules are updated at runtime to control visible-set
 
-    # facetized properties. can be multiple commma-sep and URI-prefix shortened
+    # facetized properties. can be multiple (commma-sep) URI-prefix shortened
     a = Hash[((e.q['a']||'dc:source').split ',').map{|a|
                [a.expand,{}]}]
 
@@ -14,15 +14,10 @@ class R
             o.justArray.map{|o| # values
               a[p][o] = (a[p][o]||0)+1 # count occurrences
             }}}}
-
-    # facet shortnames
-    i = {}
-    c = 0
-    n = ->o{i[o] ||= 'f'+(c+=1).to_s} # mint an id
-
+    fid = -> f {f.to_s.h[0..8]}
     # filter control
     e[:sidebar].push(a.map{|f,v|
-                       {class: :facet, facet: n[f],
+                       {class: :facet, facet: fid[f],
                         c: [{class: :predicate,
                              c: f.shorten.split(':')[-1]},
                             v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by usage-weight
@@ -37,7 +32,7 @@ class R
                                                                path
                                                              end
                                                            ) : k.to_s
-                              {facet: n.(k.to_s), # facet
+                              {facet: fid[k], # facet
                                c: [{_: :span, class: :count, c: v},
                                    {_: :span, name: name, class: :name, # label
                                     c: name}]}}]}}) unless m.keys.size==1
@@ -53,18 +48,17 @@ class R
        type = r.types.find{|t|ViewA[t]}
 
        # build facet-identifiers
-       a.map{|p,_| # each facet
-         [n[p], r[p].do{|o| # each value
-            o.justArray.map{|o|
-              n[o.to_s] # find facet-identifier
-            }}].join ' '
+       a.map{|p,_|
+         [fid[p], # p facet
+          r[p].do{|o| # p+o facet
+            o.justArray.map{|o|fid[o]}}].join ' '
        }.do{|f| # facet-id(s) bound
          [f.map{|o| '<div class="' + o + '">' }, # open wrapper
           ViewA[type ? type : BasicResource][r,e], # resource
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 
-  # grep the graph and highlight results
+  # grep view
   ViewGroup['#grep'] = -> g,e {
     c = {}
     w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
