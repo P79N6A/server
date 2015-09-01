@@ -22,7 +22,7 @@ class R
       graph[log][LDP+'contains'].push msg
       graph[log][Date] = date[0..12]+':59:59' if !graph[log][Date]
       graph.delete uri
-    }
+    } unless e[:nosummary]
   }
 
   def triplrIRC &f

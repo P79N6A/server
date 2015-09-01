@@ -18,10 +18,11 @@ class R
     end}
 
   GET['/feed'] = -> d,e {
+    e[:nosummary] = true                      # don't group/filter
     e['HTTP_ACCEPT'] = 'application/atom+xml' # set feed MIME
-    e.q['set'] = 'page'
-    e.q['c'] ||= 20
-    d.dir.child('news/').setEnv(e).response}  # news container
+    e.q['set'] = 'page'                       # paginate news/ container
+    e.q['c'] ||= 20                           # post-count
+    d.dir.child('news/').setEnv(e).response}  # return
 
   def getFeed h='localhost'
     store :format => :feed, :hook => FeedArchiverRDF, :hostname => h
@@ -257,15 +258,13 @@ class R
              {_: :link, rel: :self, href: id},
              {_: :updated, c: Time.now.iso8601},
              d.map{|u,d|
-               d[Content] &&
                {_: :entry,
-                 c: [{_: :id, c: u},
-                     {_: :link, href: d.uri},
-                     d[Date].do{|d|{_: :updated, c: d[0]}},
-                     d[Title].do{|t|{_: :title, c: t}},
-                     d[Creator].do{|c|{_: :author, c: c[0]}},
+                 c: [{_: :id, c: u}, {_: :link, href: u},
+                     d[Date].do{|d|   {_: :updated, c: d[0]}},
+                     d[Title].do{|t|  {_: :title,   c: t}},
+                     d[Creator].do{|c|{_: :author,  c: c[0]}},
                      {_: :content, type: :xhtml,
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
-                           c: d[Content]}}].cr}}.cr]}])}
+                           c: d[Content]}}]}}]}])}
 
 end
