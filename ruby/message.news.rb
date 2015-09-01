@@ -2,30 +2,22 @@
 class R
 
   GET['/news'] = -> d,e {
-    location = d.justPath.docroot.uri
-    newsloc = '/news'
-    if location.downcase == newsloc # case-insensitive match
-      if location != newsloc
-        [301, {'Location' => newsloc}, []]
-      else
-        e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
-        if e.q.has_key?('q') # search query
-          e.q['set'] ||= 'groonga'
-        else # paged subtree
-          e.q['set'] ||= 'page'
-          e.q['c'] ||= 22
-          # date-offsets as traversal-cursor (aka Memento)
-          e['HTTP_ACCEPT_DATETIME'].do{|dt|
-            t = Time.parse dt
-            e[:Response]['Memento-Datetime'] = dt
-            e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
-        end
-        nil
+    if d.path == '/news/'
+      e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
+      if e.q.has_key?('q') # search
+        e.q['set'] ||= 'groonga'
+      else # subtree
+        e.q['set'] ||= 'page'
+        e.q['c'] ||= 22
+        e['HTTP_ACCEPT_DATETIME'].do{|dt| # date-offsets as traversal-cursor (aka Memento)
+          t = Time.parse dt
+          e[:Response]['Memento-Datetime'] = dt
+          e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
       end
+      nil
     else
       nil
-    end
-  }
+    end}
 
   GET['/feed'] = -> d,e {
     e['HTTP_ACCEPT'] = 'application/atom+xml' # set feed MIME
