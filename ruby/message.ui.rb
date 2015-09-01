@@ -16,16 +16,22 @@ class R
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}
+    label = log[Label]
+    date = log[Date].justArray[0]
+    time = date.to_time
+
+    # line -> log
     log[LDP+'contains'].map{|line|
-      e[:arcs].push({source: line.uri, sourceTime: line[Date].justArray[0].to_time,
+      e[:arcs].push({source: line.uri,
+                     sourceTime: line[Date].justArray[0].to_time,
                      sourceLabel: line[Label],
-                     targetLabel: log[Label],
-                     target: log.uri, targetTime: log[Date].justArray[0].to_time})
+                     targetLabel: label,
+                     target: log.uri,
+                     targetTime: time})
       graph[line.uri] = line}
 
-    {class: :chatLog, selectable: true, date: log[Date], id: URI.escape(log.R.fragment),
-     c: [{_: :b, c: log[Label]},
-         ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
+    {class: :chatLog, selectable: true, date: date, id: URI.escape(log.R.fragment),
+     c: [{_: :b, c: log[Label]}, ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     name = nil
@@ -94,13 +100,9 @@ class R
     }
 
     # labels
-    days = {}
-    d.values.map{|s|
-      s[Date].justArray[0].do{|d|
-        day = d[0..9]
-        days[day] ||= day.to_time}}
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
 
+    # facet-filter properties
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
     e.q['a'] ||= defaultFilter
 

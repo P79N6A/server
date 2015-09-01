@@ -4,6 +4,9 @@
     cursor:pointer;
     white-space:nowrap;
     background-color:white;color:black;
+    max-width:10em;
+    max-height:15em;
+    overflow: scroll;
 }
 .facet .predicate {
     background-color:#000;

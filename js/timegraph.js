@@ -29,9 +29,6 @@ var force = d3.layout.force()
     .on("tick", tick)
     .start();
 
-// input-location cursor
-svg.append('rect').attr('width',width).attr('id','cursorB').style('fill','#555').attr('height',1).attr('y',height);
-
 var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
@@ -75,8 +72,7 @@ function tick() {
 
 // create cursor
 svg.append('rect').attr('width',width).attr('id','cursor').style('fill','#fff').attr('height',3).attr('y',height);
-var cursor = svg.select('#cursor')[0][0]; // nearest-match cursor
-var cursorB = svg.select('#cursorB')[0][0]; // raw-input cursor
+var cursor = svg.select('#cursor')[0][0];
 
 window.addEventListener("hashchange",function(e){ // move cursor to current focus
     var id = window.location.hash.slice(1);
@@ -98,7 +94,6 @@ function findNode(event) {
     } else {
 	y = event.offsetY;
     }
-    cursorB.setAttribute('y',y);
     var found = null;
     var distance = width;
     node.each(function(item,index){

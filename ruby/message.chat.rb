@@ -15,13 +15,12 @@ class R
         'uri' => log,
         Type => R[SIOC+'ChatLog'],
         SIOC+'channel' => chan,
-        '#hour' => hour,
+        Date => date[0..12]+':30:00',
         Label => "#{hour}00 #{chan}",
         LDP+'contains' => [],
         SIOC+'addressed_to' => chan,
       }
       graph[log][LDP+'contains'].push msg
-      graph[log][Date] = date[0..12]+':30:00' if !graph[log][Date]
       graph.delete uri
     } unless e[:nosummary]
   }
