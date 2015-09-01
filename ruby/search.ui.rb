@@ -14,8 +14,12 @@ class R
             o.justArray.map{|o| # values
               a[p][o] = (a[p][o]||0)+1 # count occurrences
             }}}}
-    fid = -> f {f.to_s.h[0..8]}
+
     # filter control
+    fid = -> f {
+      f = f.respond_to?(:uri) ? f.uri : f.to_s
+      f.gsub(/[^a-zA-Z]+/,'_')
+    }
     e[:sidebar].push(a.map{|f,v|
                        {class: :facet, facet: fid[f],
                         c: [{class: :predicate,
