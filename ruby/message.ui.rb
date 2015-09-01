@@ -17,13 +17,12 @@ class R
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}
     log[LDP+'contains'].map{|line|
-      e[:arcs].push({source: line.uri, sourcePos: line[Date].justArray[0].to_time,
+      e[:arcs].push({source: line.uri, sourceTime: line[Date].justArray[0].to_time,
                      sourceLabel: line[Label],
-                     target: log.uri, targetPos: log[Date].justArray[0].to_time})
+                     target: log.uri, targetTime: log[Date].justArray[0].to_time})
       graph[line.uri] = line}
 
-    {class: :chatLog, selectable: true, date: log[Date],
-     id: URI.escape(log.R.fragment),
+    {class: :chatLog, selectable: true, date: log[Date], id: URI.escape(log.R.fragment),
      c: [{_: :b, c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
@@ -76,20 +75,7 @@ class R
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     resources = d.resources(e)
-    arcs = e[:arcs] = []
-
-    # normalize mtimes to float
-    mtimes = d.values.map{|s|
-      s[Mtime] || s[Date].justArray.map(&:to_time)
-    }.flatten.compact.map(&:to_f)
-
-    #  max/min mtimes
-    e[:tgmin] = min = mtimes.min || 0
-    e[:tgmax] = max = mtimes.max || 1
-    e[:tgrng] = range = (max - min).min(0.1)
-    posF = -> time {(time.to_f - min) / range}
-
-    # arcs
+    e[:arcs] = []
     prior = {'uri' => '#'}
     resources.map{|s| # arc source
       if s[SIOC+'has_parent']
@@ -100,9 +86,9 @@ class R
             e[:label][sLabel] = true
             e[:label][tLabel] = true
             arc = {source: s.uri, target: o.uri, sourceLabel: sLabel, targetLabel: tLabel}
-            s[Mtime].do{|mt| arc[:sourcePos] = mt[0]}
-            t[Mtime].do{|mt| arc[:targetPos] = mt[0]}
-            arcs.push arc }}
+            s[Mtime].do{|mt| arc[:sourceTime] = mt[0]}
+            t[Mtime].do{|mt| arc[:targetTime] = mt[0]}
+            e[:arcs].push arc }}
       end
     }
 
@@ -111,8 +97,7 @@ class R
     d.values.map{|s|
       s[Date].justArray[0].do{|d|
         day = d[0..9]
-        days[day] ||= posF[day.to_time]}}
-    days = days.sort_by{|_,m|m}
+        days[day] ||= day.to_time}}
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
 
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
@@ -123,8 +108,25 @@ class R
      {class: :msgs,
       c: [(resources[0][Title].justArray[0].do{|t|
              {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
-          Facets[d,e]]}, # resources in filterable wrapper-nodes
-     (e[:sidebar].push({id: :timegraph, c: {_: :svg}}); nil),
+          Facets[d,e]]}, # filterable resources
+     (e[:sidebar].push({id: :timegraph, c: {_: :svg}}) # timegraph
+
+      #  max/min time-values
+      times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.
+              flatten.compact.map(&:to_f)
+      min = times.min || 0
+      max = times.max || 1
+      range = (max - min).min(0.1)
+
+      # scale times to range
+      e[:arcs].map{|a|
+        a[:sourcePos] = (a[:sourceTime].to_f - min) / range
+        a[:targetPos] = (a[:targetTime].to_f - min) / range
+        a.delete :sourceTime
+        a.delete :targetTime
+      }
+      
+      nil),
      ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true)] unless d.keys.size==1)]}
