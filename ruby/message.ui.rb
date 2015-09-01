@@ -15,16 +15,11 @@ class R
        ViewA[SIOC+'InstantMessage'][r,e]}}}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
-    posF = -> time {
-#      puts((time.to_f - e[:tgmin]) / e[:tgrng])
-      (time.to_f - e[:tgmin]) / e[:tgrng]
-    }
-    logDate = posF[log[Date].justArray[0].to_time],
     graph = {}
     log[LDP+'contains'].map{|line|
-      e[:arcs].push({source: line.uri, sourcePos: posF[line[Date].justArray[0].to_time],
+      e[:arcs].push({source: line.uri, sourcePos: line[Date].justArray[0].to_time,
                      sourceLabel: line[Label],
-                     target: log.uri, targetPos: logDate})
+                     target: log.uri, targetPos: log[Date].justArray[0].to_time})
       graph[line.uri] = line}
 
     {class: :chatLog, selectable: true, date: log[Date],
@@ -105,8 +100,8 @@ class R
             e[:label][sLabel] = true
             e[:label][tLabel] = true
             arc = {source: s.uri, target: o.uri, sourceLabel: sLabel, targetLabel: tLabel}
-            s[Mtime].do{|mt| arc[:sourcePos] = posF[mt[0]]}
-            t[Mtime].do{|mt| arc[:targetPos] = posF[mt[0]]}
+            s[Mtime].do{|mt| arc[:sourcePos] = mt[0]}
+            t[Mtime].do{|mt| arc[:targetPos] = mt[0]}
             arcs.push arc }}
       end
     }
@@ -122,19 +117,14 @@ class R
 
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
     e.q['a'] ||= defaultFilter
-    tg = {id: :timegraph,
-          c: [{_: :svg},
-              days.map{|label,pos|
-                {class: :day, style: "top:#{100 - pos*100}%", c: label}}]}
 
     # HTML
-    [H.css('/css/mail',true),
-     H.css('/css/chat',true),
+    [H.css('/css/message',true),
      {class: :msgs,
       c: [(resources[0][Title].justArray[0].do{|t|
              {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
           Facets[d,e]]}, # resources in filterable wrapper-nodes
-     (e[:sidebar].push(tg); nil),
+     (e[:sidebar].push({id: :timegraph, c: {_: :svg}}); nil),
      ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true)] unless d.keys.size==1)]}
