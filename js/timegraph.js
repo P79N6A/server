@@ -6,18 +6,16 @@ var height = svg[0][0].clientHeight || 600;
 var width = svg[0][0].clientWidth || 128;
 var center = width / 2;
 
-arcs.forEach(function(link) { // populate node-table from triples
-  link.source = nodes[link.source] || (
+arcs.forEach(function(link) { // bind node-table and link data
+    link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    name: link.sourceLabel,
 			    pos: height - link.sourcePos * height,
-			    weight: link.weight || 8,
 			   });
   link.target = nodes[link.target] || (
       nodes[link.target] = {uri: link.target,
 			    name: link.targetLabel,
 			    pos: height - link.targetPos * height,
-			    weight: 8,
 			   });
 });
 
@@ -37,7 +35,6 @@ var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
     .attr("class", "link")
-    .attr("stroke-width",function(d) { return ((d.weight || 4) / 20.0) + 'em'; })
     .attr('name', function(d){return d.sourceLabel});
 
 var node = svg.selectAll(".node")
@@ -47,10 +44,7 @@ var node = svg.selectAll(".node")
     .call(force.drag);
 
 node.append("rect")
-    .attr("name", function(d) { return d.name; })
-    .attr("width", function(d) { return d.weight; })
-    .attr("height", function(d) { return d.weight; })
-    .attr("ry", function(d) { return d.weight / 2.0; });
+    .attr("name", function(d) { return d.name; });
 
 // URI -> item
 var messages = {}
@@ -60,7 +54,7 @@ node.each(function(item,index){
 
 function tick() {
     link.attr("x1", function(d) {
-	return d.source.x + (d.source.weight /2.0);
+	return d.source.x + 2;
     })
 	.attr("y1", function(d) { return (d.source.pos || 0); })
 	.attr("x2", function(d) {
