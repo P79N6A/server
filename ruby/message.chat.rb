@@ -16,6 +16,7 @@ class R
         Type => R[SIOC+'ChatLog'],
         SIOC+'channel' => chan,
         '#hour' => hour,
+        Label => "#{hour}00 #{chan}",
         LDP+'contains' => [],
         SIOC+'addressed_to' => chan,
       }

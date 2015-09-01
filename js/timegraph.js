@@ -5,8 +5,9 @@ var nodes = {};
 var height = svg[0][0].clientHeight || 600;
 var width = svg[0][0].clientWidth || 128;
 var center = width / 2;
-
+    var targetCount = {};
 arcs.forEach(function(link) { // bind node-table and link data
+    targetCount[link.target] = typeof(targetCount[link.target])=="number" ? (targetCount[link.target] + 1) : 0
     link.source = nodes[link.source] || (
       nodes[link.source] = {uri: link.source,
 			    name: link.sourceLabel,
@@ -31,7 +32,6 @@ var force = d3.layout.force()
 // input-location cursor
 svg.append('rect').attr('width',width).attr('id','cursorB').style('fill','#555').attr('height',1).attr('y',height);
 
-    var labels = {};
 var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
@@ -49,13 +49,9 @@ var node = svg.selectAll(".node")
 
     node.append("text")
 	.text(function(d) {
-	    var label = '';
-	    if(!labels[d.name]) {
-		label = d.name
-		labels[d.name] = true;
-	    }
-	    return label;
+	    return (targetCount[d.uri] > 0 ? d.name : '');
 	})
+	.attr('x',8).attr('y',3)
 	.attr("name", function(d) { return d.name; });
 
 // URI -> item

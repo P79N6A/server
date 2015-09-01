@@ -19,11 +19,12 @@ class R
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri, sourceTime: line[Date].justArray[0].to_time,
                      sourceLabel: line[Label],
+                     targetLabel: log[Label],
                      target: log.uri, targetTime: log[Date].justArray[0].to_time})
       graph[line.uri] = line}
 
     {class: :chatLog, selectable: true, date: log[Date], id: URI.escape(log.R.fragment),
-     c: [{_: :b, c: "#{log['#hour']}00 #{log[SIOC+'channel']}"},
+     c: [{_: :b, c: log[Label]},
          ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
