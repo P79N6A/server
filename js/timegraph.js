@@ -31,6 +31,7 @@ var force = d3.layout.force()
 // input-location cursor
 svg.append('rect').attr('width',width).attr('id','cursorB').style('fill','#555').attr('height',1).attr('y',height);
 
+    var labels = {};
 var link = svg.selectAll(".link")
     .data(force.links())
     .enter().append("line")
@@ -42,9 +43,20 @@ var node = svg.selectAll(".node")
     .enter().append("g")
     .attr("class", "node")
     .call(force.drag);
+    
+    node.append("rect")
+	.attr("name", function(d) { return d.name; });
 
-node.append("rect")
-    .attr("name", function(d) { return d.name; });
+    node.append("text")
+	.text(function(d) {
+	    var label = '';
+	    if(!labels[d.name]) {
+		label = d.name
+		labels[d.name] = true;
+	    }
+	    return label;
+	})
+	.attr("name", function(d) { return d.name; });
 
 // URI -> item
 var messages = {}
