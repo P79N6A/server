@@ -51,5 +51,5 @@ td {border-radius: .18em}
 td.key, td[property="uri"] {text-align: right}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
-.sidebar {position:fixed;left:0;top:0;z-index: 0}
+.sidebar {background-color:#fff;color:#000;position:fixed;left:0;top:0;z-index: 0}
 #pointer {background-color:#000;color:#fff;position:absolute;top:-.3em;left:-1em;font-size:1.8em}
