@@ -36,9 +36,9 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
-    keys = keys - [Title, Label, Content, Image]            # title/labels on URI, content gets own row
+    keys = keys - [Title, Label, Content, Image, 'uri']     # content gets own row
     keys = keys - (skipP - [sort]) if skipP                 # arbitrary key-skiplist
-    
+    keys.push 'uri'
     rows = g.resources(e).send direction                    # sorted resources
     e.q['addProperty'].do{|p|
       p = p.expand
