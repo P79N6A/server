@@ -32,8 +32,10 @@ class R
                      targetTime: time})
       graph[line.uri] = line}
 
-    {class: :chatLog, selectable: true, date: date, href: log.uri, id: log.uri,
-     c: [{_: :b, name: label, c: log[Label]}, ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
+    {class: :chatLog,name: label, selectable: true, date: date, href: log.uri, id: log.uri,
+     c: [{_: :b, c: log[Label]},
+         ViewGroup[SIOC+'InstantMessage'][graph,e],
+        ]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     name = nil
@@ -135,7 +137,7 @@ class R
                             c: e[:timelabel].map{|l|
                               pos = (max - l.to_time.to_f) / range * 100
                               y = pos.to_s + '%'
-                              [{_: :line, stroke: '#aaa', 'stroke-dasharray' => '3,3', x1: 0, x2: '100%', y1: y, y2: y},
+                              [{_: :line, stroke: '#fff', 'stroke-dasharray' => '3,3', x1: 0, x2: '100%', y1: y, y2: y},
                                {_: :text, fill: '#fff', 'font-size'  =>'.8em',c: l, dy: -3, x: 0, y: y}
                               ]}}})
 

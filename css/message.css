@@ -43,19 +43,16 @@ div.day {
      position:absolute;
      font-size:.88em;
      white-space:nowrap;
-}.chatLog {
-    padding-top: .3em;
-    border-style:dotted;border-color:white;border-width: .1em 0 0 0;
-    white-space: normal;
-    margin:auto;
+}
+.chatLog {
+    margin:.7em;
     max-width:144ex;
     vertical-align:top;
-    background-color: #000;
-    color: #fff;
 }
 .chatLog:target {background-color: #fff;color: #000}
 .chatLog a {text-decoration: none}
 .chatLog img {max-width: 100%}
+.ublog {background-color:#000;color:#fff}
 .chatLog .creator {display:inline-block; min-width: 8em; text-align: right}
 .chatLog .body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
 .chatLog .ublog:target {background-color:#fff;color:#000}
