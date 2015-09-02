@@ -92,7 +92,6 @@ class R
     end}
 
   Render['text/html'] = -> d,e,view=nil {
-    view ||= (e.q.has_key? 'data') ? Tabulator : View
 
     if !e[:title]
       titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
@@ -110,12 +109,12 @@ class R
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
-            {_: :body, c: view[d,e]}]}]}
+            {_: :body, c: View[d,e]}]}]}
 
-  View = -> d,e { # default view - group by type, try typed-render, fallback to generic
+  View = -> d,e { # default view
     groups = {}
     seen = {}
-    d.map{|u,r| # group on RDF type
+    d.map{|u,r| # group by RDF type
       (r||{}).types.map{|type|
         if v = ViewGroup[type]
           groups[v] ||= {}

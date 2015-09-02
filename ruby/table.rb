@@ -175,41 +175,6 @@ class R
             c: c.justArray.map{|i|{_: :a, href: i.uri, c: {_: :img, src: i.uri, class: :tablePreview}}}.intersperse(' ')}}},
     ]}
 
-  GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}
-
-  Tabulator = -> g,e { # data browser/editor https://github.com/linkeddata/tabulator.git
-    path = e.R.path
-
-    # bind subject URI
-    subject = if path.match(/^\/tabulator/) # tabulator-UI for another URI (XHR + CORS permissions required)
-                e.scheme + ':' + path.sub(/^\/tabulator/,'/')
-              else # this URI
-                e.uri
-              end
-     # TODO import new jquery-free version
-    # prioritize local script-cache
-    jquery = if '/js/jquery.js'.R.exist?
-               '/js/jquery'
-             else
-               'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
-             end
-    tabr = if '/tabulator/js/mashup/mashlib.js'.R.exist?
-             '/tabulator'
-           else
-             e.scheme + '://linkeddata.github.io/tabulator'
-           end
-
-    [(H.js jquery), (H.js tabr + '/js/mashup/mashlib'),
-     (H.css tabr + '/tabbedtab'),
-     {_: :script, c: "
-document.addEventListener('DOMContentLoaded', function(){
-    var kb = tabulator.kb;
-    var subject = kb.sym('#{subject}');
-    tabulator.outline.GotoSubject(subject, true, undefined, true, undefined);
-}, false);"},
-     {class: :TabulatorOutline, id: :DummyUUID},
-     {_: :table, id: :outline}]}
-
   # tabular view for schema types
   ViewGroup[RDFClass] =
     ViewGroup[RDFs+'Datatype'] =
