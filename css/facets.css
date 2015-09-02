@@ -1,7 +1,7 @@
 
 .facet {
-    margin:auto;
-    cursor:pointer;
+    clear: both;
+    cursor: pointer;
     white-space:nowrap;
     background-color:white;color:black;
     max-width:10em;

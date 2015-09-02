@@ -135,7 +135,7 @@ class R
                             {_: :span, class: :basename, title: path, c: path.basename}]})
     end
 
-    e[:sidebar].push({class: :paginate,
+    e[:sidebar].push({_: :span, class: :paginate,
                       c: [e[:Links][:prev].do{|p|
                             p = CGI.escapeHTML p.to_s
                             {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
