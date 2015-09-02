@@ -57,8 +57,12 @@ document.addEventListener("DOMContentLoaded", function(){
 
 // keyboard control
 document.addEventListener("keydown",function(e){
+    var href = null;
+    var resource = null;
     var id = window.location.hash.slice(1);
-    if(id) {
+    if(id)
+	resource = document.getElementById(id)
+    if(resource) {
 
 	var prev = function() {
 	    var p = items[id]['prev'];
@@ -107,20 +111,16 @@ document.addEventListener("keydown",function(e){
 	};
 	// key: enter
 	if(e.keyCode==13) {
-	    var href = document.getElementById(id).getAttribute('href');
+	    var href = resource.getAttribute('href');
 	    if(href)
 		window.location.href = href;
 	};
-
     } else { // no selection
-
-	// <n> <tab>  first entry
-	if(e.keyCode==78||e.keyCode==9)
-	    window.location.hash = first;
-
-	// <p> last entry
-	if(e.keyCode==80)
+	if(e.keyCode==80) {
 	    window.location.hash = last;
+	} else {
+	    window.location.hash = first;
+	};
     };
 },false);
 
