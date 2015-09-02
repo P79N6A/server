@@ -3,13 +3,13 @@ Element.prototype.on = function(b,f){this.addEventListener(b,f,false); return th
 NodeList.prototype.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a); return this}
 NodeList.prototype.on = function(){return this.map(Element.prototype.on,arguments)}
 
-var jumpDoc = function(direction) {
+var jumpDoc = function(direction, start) {
     var doc = document.querySelector("head > link[rel='"+direction+"']");
     if(doc)
-	window.location = doc.getAttribute('href') + '#first';
+	window.location = doc.getAttribute('href') + start;
 };
-var prevDoc = function() {jumpDoc('prev');}
-var nextDoc = function() {jumpDoc('next');}
+var prevDoc = function() {jumpDoc('prev','#last')}
+var nextDoc = function() {jumpDoc('next','#first')}
 
 var focusNode = function(e){
     var loc = window.location.hash.slice(1);
@@ -24,36 +24,41 @@ var focusNode = function(e){
 
 // find navigable (whitelisted via @selectable) nodes
 var items = {};
-var item = null;
+var prior = null;
 var first = null;
 var last = null;
 document.addEventListener("DOMContentLoaded", function(){
+    var loc = window.location.hash.slice(1);
     var selectable = document.querySelectorAll("[selectable][id]");
+    selectable.on("click",focusNode);
+
+    // first node
     first = selectable[0].getAttribute('id');
-    if(window.location.hash.slice(1)=='first')
+    if(loc=='first')
 	window.location.hash = first;
+
+    // link graph of traversible nodes
     selectable.map(function(){
 	var id = this.getAttribute('id');
 	var re = {};
 	re['id'] = id;
-	if(item){ // link traversible nodes
-	    re['prev'] = item;
+	if(prior){
+	    re['prev'] = prior;
 	    re['prev']['next'] = re;
 	};
-	items[id] = item = re;
+	items[id] = prior = re;
     });
-    last = item;
-    selectable.on("click",focusNode);
+    
+    // last node
+    last = prior['id'];
+    if(loc=='last')
+	window.location.hash = last;
 });
 
-// keyboard-control
+// keyboard control
 document.addEventListener("keydown",function(e){
-    var resource = null;
     var id = window.location.hash.slice(1);
-
-    if(id) // selection
-	resource = document.getElementById(id);
-    if(resource) {
+    if(id) {
 
 	var prev = function() {
 	    var p = items[id]['prev'];
@@ -100,6 +105,10 @@ document.addEventListener("keydown",function(e){
 		next(); // <tab> next (resource)
 	    };
 	};
+	// key: enter
+	if(e.keyCode==13)
+	    window.location.href = document.getElementById(id).getAttribute('href');
+
     } else { // no selection
 
 	// <n> <tab>  first entry
