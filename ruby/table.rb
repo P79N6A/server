@@ -172,7 +172,7 @@ class R
      l[Image].do{|c|
        {_: :tr,
         c: {_: :td, colspan: keys.size,
-            c: c.justArray.map{|i|{_: :a, href: i.uri, c: {_: :img, src: i.uri, style: 'height:14em'}}}.intersperse(' ')}}},
+            c: c.justArray.map{|i|{_: :a, href: i.uri, c: {_: :img, src: i.uri, class: :tablePreview}}}.intersperse(' ')}}},
     ]}
 
   GET['/tabulator'] = -> r,e {[200, {'Content-Type' => 'text/html'},[Render['text/html'][{}, e, Tabulator]]]}

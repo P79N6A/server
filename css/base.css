@@ -47,8 +47,9 @@ table.tab td, table.tab td a, a.uri, td.val, td.val > a {border-radius: .18em;pa
 table.tab tr:target td, table.tab tr:target td a {background-color:#000;color:#fff}
 table.tab td[property='uri'] a {font-weight: bold}
 table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
-body {font-family: sans-serif}
+body {font-family: sans-serif;padding-left:9.2em}
 body > table.tab {margin:auto}
 td.key img {max-height: 2em}
+img.tablePreview {max-height:14em;max-width:100%}
 body > table.tab > tbody > tr > td[property="uri"] {text-align: right}
 .sidebar {position:fixed;left:0;top:0;z-index: 0}
