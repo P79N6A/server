@@ -18,7 +18,8 @@ class R
     # filter control
     fid = -> f {
       f = f.respond_to?(:uri) ? f.uri : f.to_s
-      f.gsub(/[^a-zA-Z]+/,'_')
+#      f.gsub(/[^a-zA-Z]+/,'_')
+      f.h[0..3]
     }
     e[:sidebar].push(a.map{|f,v|
                        {class: :facet, facet: fid[f],
