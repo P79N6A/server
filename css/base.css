@@ -9,8 +9,8 @@ a.identify {color: #ddd}
 .paginate a[rel='prev'] {padding:.1em .33em .1em .27em}
 .paginate a[rel='next'] {padding:.1em .25em .1em .35em}
 .path {padding: 0 .3em 0 .3em}
-.path > .dirname {color: #ccc;vertical-align:top;font-size:1.8em}
-.path > .basename {font-weight: bold;font-size: 2em;padding-left:.16em}
+.path > .dirname {color: #bbb;background-color:#fff;vertical-align:top;font-size:1.8em}
+.path > .basename {font-weight: bold;font-size: 2em;padding-left:.16em;color:#000;background-color:#fff}
 [name] > a {color:#000}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
