@@ -1,4 +1,4 @@
-body {background-color:#000;color:#fff;font-family: sans-serif;padding-left:9.2em}
+body {background-color:#000;color:#fff;font-family: sans-serif;padding-left:9.2em;padding-top:1em}
 a {text-decoration:none}
 a.uri {font-size:1.2em}
 a.user {color:#00ff0d}
@@ -9,9 +9,8 @@ a.identify {color: #ddd}
 .paginate a {font-size:2em;background-color:#fff;color:#000}
 .paginate a[rel='prev'] {padding:.1em .33em .1em .27em}
 .paginate a[rel='next'] {padding:.1em .25em .1em .35em}
-.path {padding: 0 .3em 0 .3em}
-.path > .dirname {color: #888}
-.path > .basename {font-weight: bold;font-size: 2em;color:#000;background-color:#fff}
+.path > .dirname {color: #888; float: left}
+.path > .basename {font-weight: bold;float: left;font-size: 2em;color:#000;background-color:#fff}
 [name] > a {color:#000}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
@@ -51,5 +50,5 @@ td {border-radius: .18em;vertical-align:top}
 :target, :target td, :target a {background-color:#fff;color:#000}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
-.sidebar {border-radius: 0 .4em .4em 0;padding-bottom:.6em;margin-top:.4em;background-color:#fff;color:#000;position:fixed;left:0;top:0;z-index: 0}
-#pointer {background-color:#000;color:#fff;position:absolute;top:-.3em;left:-1em;font-size:1.8em}
+.sidebar {border-radius: 0 .3em .4em 0;padding-bottom:.6em;margin-top:.4em;background-color:#fff;color:#000;position:fixed;left:0;top:0;z-index: 0}
+#pointer {color:#fff;position:absolute;top:-.3em;left:-1em;font-size:1.8em}

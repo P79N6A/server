@@ -113,6 +113,7 @@ class R
     # facet-filter properties
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
     e.q['a'] ||= defaultFilter
+    timegraph = false
 
     # HTML
     [H.css('/css/message',true),
@@ -132,8 +133,8 @@ class R
         a[:sourcePos] = (a[:sourceTime].to_f - min) / range
         a[:targetPos] = (a[:targetTime].to_f - min) / range
         a.delete :sourceTime
-        a.delete :targetTime
-      }
+        a.delete :targetTime }
+      timegraph = e[:arcs].size > 1
 
       e[:sidebar].push({id: :timegraph,
                         c: {_: :svg,
@@ -142,11 +143,10 @@ class R
                               y = pos.to_s + '%'
                               [{_: :line, stroke: '#000', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
                                {_: :text, fill: '#000', 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, x: 0, y: y}
-                              ]}}})
+                              ]}}}) if timegraph
 
       nil),
      ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
-       H.js('/js/d3.min'),
-       H.js('/js/timegraph',true)] unless d.keys.size==1)]}
+       H.js('/js/d3.min'), H.js('/js/timegraph',true)] if timegraph)]}
 
 end
