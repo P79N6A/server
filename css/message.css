@@ -1,5 +1,4 @@
 .msgs, h1, .mail {margin: auto}
-h1 {text-align:center}
 .mail {
     white-space: normal;
     vertical-align: top;
@@ -51,8 +50,8 @@ div.day {
     vertical-align:top;
 }
 .chatLog:target {background-color: #fff;color: #000}
-.chatLog a {text-decoration: none}
 .chatLog img {max-width: 100%}
-.chatLog .creator {display:inline-block; min-width: 8em; text-align: right}
+.chatLog .creator {background-color:#000;color:#fff;margin:0;padding:0;display:inline-block; min-width: 8em; text-align: right}
+.chatLog .body {background-color:#000;color:#fff;display: inline-block}
 .chatLog .body a {background-color: #fff; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
 .chatLog .ublog:target {background-color:#fff;color:#000}

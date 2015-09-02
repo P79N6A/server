@@ -8,7 +8,7 @@ class R
     {href: r.uri, class: :ublog, selectable: true, id: r.uri,
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
          {class: :creator, c: {_: :a, href: r.uri, name: name, c: name}},
-         {_: :span, class: 'body', c: r[Content]}]}}
+         {class: 'body', c: r[Content]}]}}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
     {style: 'padding-top: .3em', c: d.map{|u,r|
@@ -32,8 +32,8 @@ class R
                      targetTime: time})
       graph[line.uri] = line}
 
-    {class: :chatLog, selectable: true, date: date, href: log.uri, id: log.uri,
-     c: [{_: :b, name: label, c: log[Label]},
+    {class: :chatLog, name: label, selectable: true, date: date, href: log.uri, id: log.uri,
+     c: [{_: :b, c: log[Label]},
          ViewGroup[SIOC+'InstantMessage'][graph,e],
         ]}}
 
@@ -137,7 +137,7 @@ class R
                             c: e[:timelabel].map{|l|
                               pos = (max - l.to_time.to_f) / range * 100
                               y = pos.to_s + '%'
-                              [{_: :line, stroke: '#fff', 'stroke-dasharray' => '3,3', x1: 0, x2: '100%', y1: y, y2: y},
+                              [{_: :line, stroke: '#fff', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
                                {_: :text, fill: '#fff', 'font-size'  =>'.8em',c: l, dy: -3, x: 0, y: y}
                               ]}}})
 
