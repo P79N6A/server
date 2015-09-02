@@ -46,7 +46,8 @@ div.day {
 }
 .chatLog {
     position:relative;
-    margin:.7em;
+    margin: auto;
+    padding:.3em;
     max-width:144ex;
     border-radius: .16em .2em .2em .16em;
     vertical-align:top;

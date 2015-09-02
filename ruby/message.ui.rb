@@ -11,8 +11,7 @@ class R
          {class: 'body', c: r[Content]}]}}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
-    {style: 'padding-top: .3em', c: d.map{|u,r|
-       ViewA[SIOC+'InstantMessage'][r,e]}}}
+    d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e]}}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}
@@ -32,10 +31,10 @@ class R
                      targetTime: time})
       graph[line.uri] = line}
 
-    {class: :chatLog, name: label, selectable: true, date: date, href: log.uri, id: log.uri,
+    [{class: :chatLog, name: label, selectable: true, date: date, href: log.uri, id: log.uri,
      c: [{_: :b, c: log[Label]},
          ViewGroup[SIOC+'InstantMessage'][graph,e],
-        ]}}
+        ]},'<br>']}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     arc = {source: r.uri, target: r.uri, sourceLabel: r[Label], targetLabel: r[Label]}
