@@ -145,7 +145,8 @@ class R
                             {_: :span, class: :basename, c: path.basename}]})
     end
 
-    [groups.map{|view,graph|view[graph,e]}, # type-groups
+    [{id: :pointer, c: '&gt;'},
+     groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # singletons
        if !seen[u]
          types = (r||{}).types

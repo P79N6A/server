@@ -23,6 +23,7 @@ var focusNode = function(e){
 };
 
 // find navigable (whitelisted via @selectable) nodes
+var pointer = document.querySelector('#pointer');
 var items = {};
 var prior = null;
 var first = null;
