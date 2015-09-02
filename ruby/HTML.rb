@@ -127,7 +127,14 @@ class R
     e[:label] ||= {} # labels
     e[:sidebar] = [] # control pane
 
-    # next/prev control
+    if e[:container]
+      path = e.R.justPath
+      up = path.dirname
+      e[:sidebar].push({_: :span, class: :path,
+                        c: [{_: :a, class: :dirname, href: up, c: '&uarr;'},
+                            {_: :span, class: :basename, title: path, c: path.basename}]})
+    end
+
     e[:sidebar].push({class: :paginate,
                       c: [e[:Links][:prev].do{|p|
                             p = CGI.escapeHTML p.to_s
@@ -136,14 +143,6 @@ class R
                             n = CGI.escapeHTML n.to_s
                             {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
                          ]}) if e[:Links][:prev] || e[:Links][:next]
-    # up
-    if e[:container]
-      path = e.R.justPath
-      up = path.dirname
-      e[:sidebar].push({_: :span, class: :path,
-                        c: [{_: :a, class: :dirname, href: up, c: up.tail.gsub('/','.')},
-                            {_: :span, class: :basename, c: path.basename}]})
-    end
 
     [groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # singletons
