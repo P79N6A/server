@@ -44,9 +44,10 @@ a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
 body > table.tab , body > table.html {margin:auto}
+td > table.tab {float: right}
 table a {font-weight: bold; color:#fff;background-color: #000}
 table th a {font-size:1.5em;font-weight: normal;color:#ccc}
-td {border-radius: .18em}
+td {border-radius: .18em;vertical-align:top}
 :target, :target td, :target a {background-color:#fff;color:#000}
 td.key, td[property="uri"] {text-align: right}
 td.key img {max-height: 2em}
