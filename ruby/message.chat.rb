@@ -10,11 +10,12 @@ class R
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
       uri = '/news/' + date[0..12].gsub(/\D/,'/')
+      label = "#{date[11..12]}00 #{chan}"
       graph[uri] ||= {'uri' => uri}
       graph[uri][SIOC+'channel'] ||= chan
       graph[uri][SIOC+'addressed_to'] ||= chan
       graph[uri][Date] ||= date[0..12]+':30:00'
-      graph[uri][Label] ||= "#{date[11..12]}00 #{chan}"
+      graph[uri][Label] ||= label
       graph[uri][Type] ||= R[SIOC+'ChatLog']
       graph[uri][LDP+'contains'] ||= []
       graph[uri][LDP+'contains'].push msg

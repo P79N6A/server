@@ -19,7 +19,9 @@ class R
     label = log[Label]
     date = log[Date].justArray[0]
     time = date.to_time
-
+    hour = date[0..12] + ':00:00'
+    e[:timelabel].push hour
+    e[:label][label] = true
     # line -> log
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri,
@@ -31,7 +33,7 @@ class R
       graph[line.uri] = line}
 
     {class: :chatLog, selectable: true, date: date, href: log.uri, id: log.uri,
-     c: [{_: :b, c: log[Label]}, ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
+     c: [{_: :b, name: label, c: log[Label]}, ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     name = nil
@@ -83,6 +85,7 @@ class R
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     resources = d.resources(e)
     e[:arcs] = []
+    e[:timelabel] = []
     prior = {'uri' => '#'}
     resources.map{|s| # arc source
       if s[SIOC+'has_parent']
@@ -112,9 +115,7 @@ class R
       c: [(resources[0][Title].justArray[0].do{|t|
              {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
           Facets[d,e]]}, # filterable resources
-     (e[:sidebar].push({id: :timegraph, c: {_: :svg}}) # timegraph
-
-      #  max/min time-values
+     (#  max/min time-values
       times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.
               flatten.compact.map(&:to_f)
       min = times.min || 0
@@ -128,7 +129,16 @@ class R
         a.delete :sourceTime
         a.delete :targetTime
       }
-      
+
+      e[:sidebar].push({id: :timegraph,
+                        c: {_: :svg,
+                            c: e[:timelabel].map{|l|
+                              pos = (max - l.to_time.to_f) / range * 100
+                              y = pos.to_s + '%'
+                              [{_: :line, stroke: '#aaa', 'stroke-dasharray' => '3,3', x1: 0, x2: '100%', y1: y, y2: y},
+                               {_: :text, fill: '#fff', 'font-size'  =>'.8em',c: l, dy: -3, x: 0, y: y}
+                              ]}}})
+
       nil),
      ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
        H.js('/js/d3.min'),
