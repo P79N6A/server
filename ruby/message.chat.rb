@@ -3,27 +3,23 @@ class R
 
   # group by channel-hour
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
-    msgs.map{|uri,msg|
+    msgs.map{|msgid,msg|
       creator = msg[Creator].justArray[0]
       name = creator.respond_to?(:uri) ? creator.uri.split(/[\/#]/)[-1] : creator.to_s
       msg[Label] = name
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
-      hour = date[11..12]
-      log = '#' + chan + '.' + hour
-      graph[log] ||= {
-        'uri' => log,
-        Type => R[SIOC+'ChatLog'],
-        SIOC+'channel' => chan,
-        Date => date[0..12]+':30:00',
-        Label => "#{hour}00 #{chan}",
-        LDP+'contains' => [],
-        SIOC+'addressed_to' => chan,
-      }
-      graph[log][LDP+'contains'].push msg
-      graph.delete uri
-    } unless e[:nosummary]
-  }
+      uri = '/news/' + date[0..12].gsub(/\D/,'/')
+      graph[uri] ||= {'uri' => uri}
+      graph[uri][SIOC+'channel'] ||= chan
+      graph[uri][SIOC+'addressed_to'] ||= chan
+      graph[uri][Date] ||= date[0..12]+':30:00'
+      graph[uri][Label] ||= "#{date[11..12]}00 #{chan}"
+      graph[uri][Type] ||= R[SIOC+'ChatLog']
+      graph[uri][LDP+'contains'] ||= []
+      graph[uri][LDP+'contains'].push msg
+      graph.delete msgid
+    } unless e[:nosummary]}
 
   def triplrIRC &f
     i=-1 # line index

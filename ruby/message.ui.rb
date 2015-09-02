@@ -30,7 +30,7 @@ class R
                      targetTime: time})
       graph[line.uri] = line}
 
-    {class: :chatLog, selectable: true, date: date, href: log.uri, id: URI.escape(log.R.fragment),
+    {class: :chatLog, selectable: true, date: date, href: log.uri, id: log.uri,
      c: [{_: :b, c: log[Label]}, ViewGroup[SIOC+'InstantMessage'][graph,e]]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
