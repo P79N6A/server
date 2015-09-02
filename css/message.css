@@ -32,7 +32,6 @@ h1 {text-align:center}
 .mail span.sep {font-size:1.2em;margin: 0 .06em 0 .06em}
 img {max-width: 100%}
 #timegraph {
-    background-color: #fff;
     width:8em;
     height:48em;
     margin-top:.5em;

@@ -141,8 +141,8 @@ class R
                             c: e[:timelabel].map{|l|
                               pos = (max - l.to_time.to_f) / range * 100
                               y = pos.to_s + '%'
-                              [{_: :line, stroke: '#000', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
-                               {_: :text, fill: '#000', 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, x: 0, y: y}
+                              [{_: :line, stroke: '#fff', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
+                               {_: :text, fill: '#fff', 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, x: 0, y: y}
                               ]}}}) if timegraph
 
       nil),
