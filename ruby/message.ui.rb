@@ -38,6 +38,10 @@ class R
         ]}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
+    arc = {source: r.uri, target: r.uri, sourceLabel: r[Label], targetLabel: r[Label]}
+    r[Date].do{|t| arc[:sourceTime] = arc[:targetTime] = t.justArray[0].to_time}
+    e[:arcs].push arc
+
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|

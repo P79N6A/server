@@ -71,7 +71,7 @@ function tick() {
 }
 
 // create cursor
-svg.append('rect').attr('width',width).attr('id','cursor').style('fill','#fff').attr('height',3).attr('y',height);
+    svg.append('rect').attr('width',16).attr('id','cursor').style('fill','#000').attr('height',3).attr('x',12).attr('y',height);
 var cursor = svg.select('#cursor')[0][0];
 
 window.addEventListener("hashchange",function(e){ // move cursor to current focus
