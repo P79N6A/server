@@ -44,13 +44,14 @@ div.day {
      white-space:nowrap;
 }
 .chatLog {
+    position:relative;
     margin:.7em;
-    max-width:168ex;
+    max-width:144ex;
     border-radius: .16em .2em .2em .16em;
     vertical-align:top;
 }
 .chatLog:target {background-color: #fff;color: #000}
-.chatLog .ublog {background-color:#000;color:#fff}
+.chatLog .ublog {position:relative;background-color:#000;color:#fff}
 .chatLog .ublog:target, .chatLog .body a {background-color:#fff;color:#000}
 .chatLog img {max-width: 100%}
 .chatLog .date {color: #888;font-size: .88em}

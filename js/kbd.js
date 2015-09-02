@@ -23,7 +23,6 @@ var focusNode = function(e){
 };
 
 // find navigable (whitelisted via @selectable) nodes
-var pointer = document.querySelector('#pointer');
 var items = {};
 var prior = null;
 var first = null;
@@ -131,6 +130,12 @@ window.addEventListener("hashchange",function(e){
     if(resource) {
 	var resTitle = resource.getAttribute('href');
 	document.querySelector('title').innerText = resTitle;
-	window.scrollTo(resource.offsetLeft + (resource.clientWidth / 2) - (window.width / 2), window.scrollY);
+	var pointer = document.querySelector('#pointer');
+	if(pointer)
+	    pointer.remove();
+	var ptr = document.createElement('div');
+	ptr.setAttribute('id','pointer');
+	ptr.innerHTML = '&rarr;';
+	resource.appendChild(ptr);
     };
 });
