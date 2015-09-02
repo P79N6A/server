@@ -89,8 +89,8 @@ class R
     e[:arcs] = []
     e[:timelabel] = []
     prior = {'uri' => '#'}
-    resources.map{|s| # arc source
-      if s[SIOC+'has_parent']
+    resources.map{|s|
+      if s[SIOC+'has_parent'] # explicit parent
         s[SIOC+'has_parent'].justArray.map{|o|
           d[o.uri].do{|t| # arc target
             sLabel = s[Creator].justArray[0].do{|c|c.R.fragment}
@@ -138,7 +138,7 @@ class R
                               pos = (max - l.to_time.to_f) / range * 100
                               y = pos.to_s + '%'
                               [{_: :line, stroke: '#000', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
-                               {_: :text, fill: '#000', 'font-size'  =>'.8em',c: l, dy: -3, x: 0, y: y}
+                               {_: :text, fill: '#000', 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, x: 0, y: y}
                               ]}}})
 
       nil),
