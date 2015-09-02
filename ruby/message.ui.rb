@@ -67,7 +67,7 @@ class R
       r[p].justArray.map{|o| contained[o.uri] = {'uri' => o.uri}}}
     attache = contained.empty? ? nil : TabularView[contained,e]
 
-    {class: :mail, id: r.uri, href: href, selectable: :true,
+    [{class: :mail, id: r.uri, href: href, selectable: :true,
      c: [(r[Title].justArray[0].do{|t|
             {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}} unless e[:thread]),
          {class: :header,
@@ -85,7 +85,7 @@ class R
          r[Content].justArray.map{|c| {class: :body, c: c}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
          attache
-        ]}}
+        ]},'<br>']}
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     resources = d.resources(e)
