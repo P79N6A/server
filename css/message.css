@@ -1,5 +1,6 @@
 .msgs, h1, .mail {margin: auto}
 .mail {
+    position:relative;
     white-space: normal;
     vertical-align: top;
     padding-left: .3em;
