@@ -95,6 +95,7 @@ class R
     # add container-container breadcrumbs
     base.cascade.reverse.map{|p|
       p.e && seeAlso.push(p)}
+    env[:Links][:next] = env[:Links][:prev] = seeAlso[0]
 
     # add incomplete-path matches
     seeAlso.concat base.a('*').glob
@@ -109,8 +110,6 @@ class R
     [{_: :style, c: "tr[property='http://www.w3.org/2011/http#USER_AGENT'] td {font-size:.8em}"},
      ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
-
-  GET['/500'] = -> resource, environment {0/0} # force an error to see what happens
 
   ViewGroup[HTTP+'500'] = -> graph, env {
     [{_: :style, c: 'body {background-color:red}'},

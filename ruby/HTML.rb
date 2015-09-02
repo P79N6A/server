@@ -68,7 +68,7 @@ end
 class R
 
   def href name = nil
-    {_: :a, href: uri, c: name || fragment || basename}
+    {_: :a, selectable: true, id: rand.to_s.h[0..5], href: uri, c: name || fragment || basename}
   end
 
   begin
