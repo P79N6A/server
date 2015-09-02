@@ -10,8 +10,8 @@ a.identify {color: #ddd}
 .paginate a[rel='prev'] {padding:.1em .33em .1em .27em}
 .paginate a[rel='next'] {padding:.1em .25em .1em .35em}
 .path {padding: 0 .3em 0 .3em}
-.path > .dirname {color: #bbb;background-color:#fff;vertical-align:top}
-.path > .basename {font-weight: bold;font-size: 2em;padding-left:.16em;color:#000;background-color:#fff}
+.path > .dirname {color: #888}
+.path > .basename {font-weight: bold;font-size: 2em;color:#000;background-color:#fff}
 [name] > a {color:#000}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
@@ -44,7 +44,6 @@ a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
 body > table.tab , body > table.html {margin:auto}
-table.tab {border-radius:.3em;border: .8em solid #ccc}
 table a {font-weight: bold; color:#fff;background-color: #000}
 table th a {font-size:1.5em;font-weight: normal;color:#ccc}
 td {border-radius: .18em}

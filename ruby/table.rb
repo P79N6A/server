@@ -57,8 +57,8 @@ class R
         range = max - min if max && min
         scale = 255.0 / (range && range > 0 && range || 255.0)
       end
-
-      {_: :table, :class => :tab, # TABLE
+      a = rand(3)
+      {_: :table, class: :tab, style: "background-color:##{a}#{a}#{a};color:#fff",
        c: [({_: :thead,
              c: {_: :tr,
                  c: [keys.map{|k|
@@ -70,7 +70,7 @@ class R
                        end
                        [{_: :th,
                          property: k,
-                         style: k == sort ? 'background-color:#555' : '',
+                         style: k == sort ? 'background-color:#0f0' : '',
                          c: {_: :a,
                              rel: :nofollow,
                              href: CGI.escapeHTML(q.qs),
