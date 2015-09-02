@@ -1,5 +1,5 @@
 body {background-color:#000;color:#fff;font-family: sans-serif;padding-left:9.2em}
-a {text-decoration:none;background-color:#000;color:#fff;}
+a {text-decoration:none}
 a.uri {font-size:1.2em}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
@@ -43,14 +43,12 @@ a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
-table.html {margin:auto}
-table.tab th a {font-size:1.5em;font-weight: normal;color:#ccc}
+body > table.tab , body > table.html {margin:auto}
+table a {font-weight: bold; color:#fff;background-color: #000}
+table th a {font-size:1.5em;font-weight: normal;color:#ccc}
 td {border-radius: .18em}
-table.tab tr:target td, table.tab tr:target td a, table.html tr:target td, table.html tr:target td a {background-color:#fff;color:#000}
-table.tab td[property='uri'] a {font-weight: bold}
-table.tab td[property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] a.new {background-color:#0f0; color: #fff}
-body > table.tab {margin:auto}
+:target, :target td, :target a {background-color:#fff;color:#000}
+td.key, td[property="uri"] {text-align: right}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
-body > table.tab > tbody > tr > td[property="uri"] {text-align: right}
 .sidebar {position:fixed;left:0;top:0;z-index: 0}
