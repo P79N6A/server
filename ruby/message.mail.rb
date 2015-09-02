@@ -25,7 +25,7 @@ class R
       group = AddrPath[list]                    # list URI
       yield group, Type, R[SIOC+'Usergroup']    # list is a Group
       yield group, Label, name.gsub(/[<>&]/,'') # list name
-      yield group, SIOC+'has_container', group.R.parentURI.descend + '?set=page'}
+      yield group, SIOC+'has_container', group.R.parentURI.descend}
 
     m.from.do{|f|                    # any authors?
       f.justArray.map{|f|             # each author
@@ -43,7 +43,7 @@ class R
       author = AddrPath[a.address]         # author URI
       yield author, Type, R[FOAF+'Person']
       yield author, Label, (a.display_name || a.name)
-      yield author, SIOC+'has_container', author.R.parentURI.descend + '?set=page'
+      yield author, SIOC+'has_container', author.R.parentURI.descend
     }
 
     if m.date
