@@ -125,7 +125,7 @@ class R
                case k
                when 'uri'
                  {_: :a, href: (CGI.escapeHTML l.uri),
-                  c: (l[Title]||l[Label]||this.basename).justArray[0]} if l.uri
+                  c: CGI.escapeHTML((l[Title]||l[Label]||this.basename).justArray[0])} if l.uri
                when Type
                  l[Type].justArray.map{|t|
                    icon = Icons[t.uri]
