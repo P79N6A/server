@@ -47,12 +47,13 @@ div.day {
 .chatLog {
     margin:.7em;
     max-width:144ex;
+    border-radius: .16em .2em .2em .16em;
     vertical-align:top;
 }
 .chatLog:target {background-color: #fff;color: #000}
 .chatLog a {text-decoration: none}
 .chatLog img {max-width: 100%}
-.ublog {background-color:#000;color:#fff}
 .chatLog .creator {display:inline-block; min-width: 8em; text-align: right}
-.chatLog .body a {background-color: #e2e2e2; color: #000; border-radius: .18em; padding: 0 .1em 0 .1em}
-.chatLog .ublog:target {background-color:#fff;color:#000}
+.chatLog .body {background-color:#fff;color:#000}
+.chatLog .body a {background-color: #000; color: #fff; border-radius: .18em; padding: 0 .1em 0 .1em}
+.chatLog .ublog:target {background-color:#000;color:#fff}
