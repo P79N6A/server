@@ -46,6 +46,7 @@ a.warp:before { content:"\f135"; font-family: icons; }
 body > table.tab , body > table.html {margin:auto}
 table a {font-weight: bold; color:#fff;background-color: #000}
 table th a {font-size:1.5em;font-weight: normal;color:#ccc}
+table,tr,td {position:relative}
 td {border-radius: .18em}
 :target, :target td, :target a {background-color:#fff;color:#000}
 td.key, td[property="uri"] {text-align: right}

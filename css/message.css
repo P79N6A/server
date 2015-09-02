@@ -1,4 +1,5 @@
 .msgs, h1, .mail {margin: auto}
+h1 {text-align:center}
 .mail {
     position:relative;
     white-space: normal;
