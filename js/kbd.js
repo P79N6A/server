@@ -106,8 +106,11 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 	// key: enter
-	if(e.keyCode==13)
-	    window.location.href = document.getElementById(id).getAttribute('href');
+	if(e.keyCode==13) {
+	    var href = document.getElementById(id).getAttribute('href');
+	    if(href)
+		window.location.href = href;
+	};
 
     } else { // no selection
 
