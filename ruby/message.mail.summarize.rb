@@ -13,16 +13,6 @@ class R
     clusters = []
     weight = {}
 
-    # convenience links to alternate container-filterings
-    args = if e.q.has_key?('group') # unabbreviated-view
-             {'bodies' => '', Label => '&darr;'}
-           else                     # date-sort view
-             {'group' => 'rdf:type', 'sort' => 'dc:date', 'reverse' => '', Label => '≡'}
-           end
-    label = args.delete Label
-    viewURI = e.q.merge(args).qs
-    graph[viewURI] = {'uri' => viewURI, Type => R[Container], Label => label}
-
     # pass 1. prune + analyze
     g.map{|u,p|
       recipients = p[To].justArray.map &:maybeURI
