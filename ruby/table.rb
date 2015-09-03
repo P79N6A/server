@@ -18,7 +18,15 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  TabularView =  ViewGroup[Directory] = ViewGroup[Container] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
+  ViewGroup[Directory] = ViewGroup[Container] = -> g,e {
+    g.map{|id,container|
+      {class: :container,
+       c: [{class: :label, c: id.R.basename},
+           {class: :contents, c: TabularView[{id => container},e,['uri',Type,Size]]}]}
+    }
+  }
+
+  TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
     containers = g.values
 
     # move contained-nodes from toplevel to child-position
@@ -36,9 +44,8 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
-    keys = keys - [Title, Label, Content, Image, 'uri']     # content gets own row
-    keys = keys - (skipP - [sort]) if skipP                 # arbitrary key-skiplist
-    keys.push 'uri'
+    keys = keys - [Title, Label, Content, Image]
+    keys = keys - skipP if skipP                 # key-skiplist
     rows = g.resources(e).send direction                    # sorted resources
     e.q['addProperty'].do{|p|
       p = p.expand
@@ -57,8 +64,7 @@ class R
         range = max - min if max && min
         scale = 255.0 / (range && range > 0 && range || 255.0)
       end
-      a = rand(3)
-      {_: :table, class: :tab, style: "background-color:##{a}#{a}#{a};color:#fff",
+      {_: :table, class: :tab,
        c: [({_: :thead,
              c: {_: :tr,
                  c: [keys.map{|k|
