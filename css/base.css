@@ -46,7 +46,7 @@ a.warp:before { content:"\f135"; font-family: icons; }
 body > table.tab , body > table.html {margin:auto}
 table {border-spacing: 0}
 table th a {font-size:1.5em;font-weight: normal;color:#ccc}
-table td a {color:#fff;background-color:#000;font-weight:bold;border-radius:.2em}
+table td a {color:#fff;background-color:#000;font-weight:bold;padding:.2em;border-radius:.2em}
 td {border-radius: .18em;vertical-align:top}
 td[property="uri"] {min-width:14em}
 :target, :target td, :target a {background-color:#0f0;color:#fff}
@@ -58,5 +58,5 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container {padding: .3em;display: inline-block}
 .container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding:.2em;font-weight:bold;background-color:#fff;color:#000;}
 .container > .label a {color:#000}
-.container > .contents {border-radius: 0 .4em .4em .4em;background-color:#eee;color:#000}
-.container > .contents a {color:#000;background-color:#fff;font-weight: bold}
+.container > .contents {border-radius: 0 .4em .4em .4em;padding:.2em;background-color:#eee;color:#000}
+
