@@ -21,7 +21,7 @@ class R
   ViewGroup[Directory] = ViewGroup[Container] = -> g,e {
     g.map{|id,container|
       {class: :container,
-       c: [{class: :label, c: id.R.basename},
+       c: [{class: :label, c: {_: :a, href: id+'?set=first-page', c: id.R.basename}},
            {class: :contents, c: TabularView[{id => container},e,['uri',Type,Size]]}]}
     }
   }
