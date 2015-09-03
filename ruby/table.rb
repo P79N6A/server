@@ -19,7 +19,8 @@ class R
   end
 
   ViewGroup[Directory] = ViewGroup[Container] = -> g,e {
-    if e.q.has_key? 'table'
+    tabular = e.q['table'] == 'table'
+    if tabular
       TabularView[g,e]
     else
       g.map{|id,container|

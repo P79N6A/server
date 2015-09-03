@@ -132,7 +132,11 @@ class R
       up = path.dirname
       e[:sidebar].push({_: :span, class: :path,
                         c: [{_: :a, class: :dirname, href: up, c: '&uarr;'},
-                            {_: :a, class: :basename, href: e.q.merge({'table'=>'table'}).qs, title: path, c: path.basename}]})
+                            {_: :a,
+                             class: :basename,
+                             href: e.q.merge({'table'=>e.q['table']=='table' ? '' : 'table'}).qs,
+                             title: path,
+                             c: path.basename}]})
     end
 
     e[:sidebar].push({_: :span, class: :paginate,
