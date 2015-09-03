@@ -15,18 +15,16 @@ class R
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}
-    label = log[Label]
     date = log[Date].justArray[0]
     time = date.to_time
     hour = date[0..12] + ':00:00'
     e[:timelabel].push hour
-    e[:label][label] = true
     # line -> log
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri,
                      sourceTime: line[Date].justArray[0].to_time,
                      sourceLabel: line[Label],
-                     targetLabel: label,
+                     targetLabel: log[Label],
                      target: log.uri,
                      targetTime: time})
       graph[line.uri] = line}
