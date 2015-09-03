@@ -49,7 +49,7 @@ class R
              else
                c.to_s
              end
-      [{_: :a, name: name, c: name, href: authorURI ? c.uri : '#'},' ']}
+      [{_: :a, name: name, c: name, href: authorURI ? (c.R.dir+'?set=first-page') : '#'},' ']}
 
     discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
       if e[:thread]

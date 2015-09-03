@@ -44,10 +44,10 @@ a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
 body > table.tab , body > table.html {margin:auto}
-table a {font-weight: bold; color:#fff;background-color: #000}
+table {border-spacing: 0}
 table th a {font-size:1.5em;font-weight: normal;color:#ccc}
 td {border-radius: .18em;vertical-align:top}
-:target, :target td, :target a {background-color:#fff;color:#000}
+:target, :target td, :target a {background-color:#000;color:#fff}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
 .sidebar {border-radius: 0 .3em .4em 0;padding-bottom:.6em;margin-top:.4em;position:fixed;left:0;top:0;z-index: 0}
@@ -58,3 +58,5 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container > .label a {color:#000}
 .container > .contents {border-radius: 0 .4em .4em .4em}
 .container > .contents, .container > .label  {background-color:#fff;color:#000;}
+.container table a {font-weight: bold; color:#000;background-color: #fff}
+
