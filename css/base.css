@@ -47,6 +47,7 @@ body > table.tab , body > table.html {margin:auto}
 table {border-spacing: 0}
 table th a {font-size:1.5em;font-weight: normal;color:#ccc}
 td {border-radius: .18em;vertical-align:top}
+td[property="uri"] {min-width:14em}
 :target, :target td, :target a {background-color:#0f0;color:#fff}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
