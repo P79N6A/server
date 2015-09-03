@@ -13,22 +13,22 @@ class R
       e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
       e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
 
-    if e.env[:container]
-      htmlFile = e.a 'index.html' # container-index is HTML-file
-      if e.env.format=='text/html' && htmlFile.e
-        [htmlFile.setEnv(e.env)] # attach environment and use file 
+    if e.env[:container] # dir
+      htmlFile = e.a 'index.html' # container-index in HTML-file
+      if e.env.format=='text/html' && htmlFile.e # exists?
+        [htmlFile.setEnv(e.env)] # index-file response
       else
         cs = e.c # node children
         size = cs.size
         if size < 256
-          cs.map{|c|c.setEnv e.env} if size < 32 # referencing environment triggers relURI-resolution
-          e.fileResources.concat cs
+#          cs.map{|c|c.setEnv e.env} # thread request-environment for relative URI resolution 
+          e.fileResources.concat cs # set is small, include it all in response
         else
           puts "#{e.uri}  #{size} children, paginating"
           FileSet['page'][e,q,g]
         end
       end
-    else # add inbound-linked resources
+    else # resource - add reverse links
       e.fileResources.concat FileSet['rev'][e,q,g]
     end}
 
