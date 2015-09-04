@@ -4,7 +4,7 @@ class R
   FileSet['grep'] = -> e,q,m { # grep in files
     q['q'].do{|query| # required argument
       e.env[:filters].push 'grep'
-      `grep -il #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|
+      `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|
         R.unPOSIX r.chomp}}}
 
   Filter['grep'] = -> d,e { # grep in graph
