@@ -7,6 +7,7 @@
     max-width:9em;
     max-height:15em;
     overflow: hidden;
+    border-radius:.2em
 }
 .facet .predicate {
     background-color:#000;

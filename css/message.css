@@ -4,7 +4,8 @@ h1 {text-align:center}
     position:relative;
     white-space: normal;
     vertical-align: top;
-    padding-left: .3em;
+    padding: .4em;
+    border-radius: .2em .4em .5em .5em;
     background-color:#000;
     color:#fff;
     max-width:111ex;
