@@ -25,8 +25,8 @@ class R
       e[:arcs].push({source: line.uri,
                      sourceTime: line[Date].justArray[0].to_time,
                      sourceLabel: line[Label],
-                     targetLabel: log[Label],
-                     target: log.uri,
+                     targetLabel: line[Label],
+                     target: line.uri,
                      targetTime: time})
       graph[line.uri] = line}
 
