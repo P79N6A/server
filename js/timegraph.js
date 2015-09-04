@@ -46,7 +46,7 @@ var node = svg.selectAll(".node")
 
     node.append("text")
 	.text(function(d) {
-	    return (targetCount[d.uri] > 0 ? d.name : '');
+	    return (targetCount[d.uri] > 1 ? d.name : '');
 	})
 	.attr('x',8).attr('y',3)
 	.attr("name", function(d) { return d.name; });
