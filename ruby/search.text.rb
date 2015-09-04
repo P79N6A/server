@@ -11,15 +11,13 @@ class R
     w = e.q['q']
     if w && w.size > 1 # query
       e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i # to regular-expression
-      results = {}
       d.map{|u,r| # check resource
         if r.to_s.match e[:grep] # matching resource
-          id = '#' + rand.to_s.h # new grep-result
-          results[id] = r.merge({Type => R['#grep']}) # attach typetag
+          r[Type] ||= []
+          r[Type].push R['#grep']
         else
           d.delete u
         end}
-      d.merge! results
     end}
 
   # groonga  https://github.com/groonga/groonga  https://github.com/ranguba/rroonga
