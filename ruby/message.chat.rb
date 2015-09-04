@@ -5,8 +5,6 @@ class R
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
     msgs.map{|msgid,msg|
       creator = msg[Creator].justArray[0]
-      name = creator.respond_to?(:uri) ? creator.uri.split(/[\/#]/)[-1] : creator.to_s
-      msg[Label] = name
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
       uri = '/news/' + date[0..12].gsub(/\D/,'/')
@@ -37,6 +35,7 @@ class R
         yield s, Date,                day+'T'+m[0]+':'+m[1]+':00'
         yield s, SIOC+'channel', channel
         yield s, Creator,             m[2]
+        yield s, Label,             m[2]
         yield s, Content,             m[3].hrefs(true)
         yield s, Type,                R[SIOC+'InstantMessage']
       } rescue nil
