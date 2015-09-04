@@ -3,7 +3,7 @@
 class R
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
-    name = r[Label] || ''
+    name = r[Label].justArray[0] || ''
     e[:label][name] = true
     {href: r.uri, class: :ublog, selectable: true, id: r.uri,
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
@@ -19,6 +19,7 @@ class R
     time = date.to_time
     hour = date[0..12] + ':00:00'
     e[:timelabel].push hour
+    e[:label][log[Label].justArray[0]] = true
     # line -> log
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri,
