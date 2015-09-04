@@ -166,7 +166,7 @@ class R
      l[Image].do{|c|
        {_: :tr,
         c: {_: :td, colspan: keys.size,
-            c: c.justArray.map{|i|{_: :a, href: i.uri, c: {_: :img, src: i.uri, class: :tablePreview}}}.intersperse(' ')}}},
+            c: c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :tablePreview}}}.intersperse(' ')}}},
     ]}
 
   # tabular view for schema types
