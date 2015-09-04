@@ -7,8 +7,8 @@ class R
       creator = msg[Creator].justArray[0]
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
-      uri = '/news/' + date[0..12].gsub(/\D/,'/')
       label = "#{date[11..12]}00 #{chan}"
+      uri = '/news/' + date[0..12].gsub(/\D/,'/') + '#' + label
       graph[uri] ||= {'uri' => uri}
       graph[uri][SIOC+'channel'] ||= chan
       graph[uri][SIOC+'addressed_to'] ||= chan
