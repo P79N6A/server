@@ -18,7 +18,7 @@ class R
     date = log[Date].justArray[0]
     time = date.to_time
     hour = date[0..12] + ':00:00'
-    e[:timelabel].push hour
+    e[:timelabel][hour] = true
     e[:label][log[Label].justArray[0]] = true
     # line -> log
     log[LDP+'contains'].map{|line|
@@ -89,7 +89,7 @@ class R
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     resources = d.resources(e)
     e[:arcs] = []
-    e[:timelabel] = []
+    e[:timelabel] = {}
     prior = {'uri' => '#'}
     resources.map{|s|
       if s[SIOC+'has_parent'] # explicit parent
@@ -137,7 +137,7 @@ class R
 
       e[:sidebar].push({id: :timegraph,
                         c: {_: :svg,
-                            c: e[:timelabel].map{|l|
+                            c: e[:timelabel].map{|l,_|
                               pos = (max - l.to_time.to_f) / range * 100
                               y = pos.to_s + '%'
                               [{_: :line, stroke: '#fff', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
