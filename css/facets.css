@@ -1,20 +1,17 @@
-
 .facet {
     clear: both;
     cursor: pointer;
     white-space:nowrap;
-    background-color:white;color:black;
     max-width:9em;
     max-height:15em;
     overflow: hidden;
-    border-radius:.2em
 }
 .facet .predicate {
     background-color:#000;
     color:#fff;
     padding:.2em;
 }
-
+.facet .name {border-radius:.16em;padding:0 .14em 0 .14em}
 .facet .count {
     float:left;
     text-align:right;

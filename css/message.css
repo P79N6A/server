@@ -1,11 +1,11 @@
 .msgs, h1, .mail {margin: auto}
-h1 {text-align:center}
+h1 {text-align:center;font-size:1.8em;margin-top:-.8em;margin-bottom:.3em}
 .mail {
     position:relative;
     white-space: normal;
     vertical-align: top;
     padding: .4em;
-    border-radius: .2em .4em .5em .5em;
+    border-radius: .3em;
     background-color:#000;
     color:#fff;
     max-width:111ex;
