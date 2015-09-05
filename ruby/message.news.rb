@@ -237,8 +237,8 @@ class R
     doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t|
-        t = t[0].gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-        b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # derive basename
+        t = t[0].gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
+        b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
         doc.ln R["//#{host}/news/#{t}#{b}e"]}} # link to timeline
     doc}
 
@@ -247,7 +247,7 @@ class R
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # trim normalized timezones
       base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-      doc.ln R["//#{host}/news/#{time}#{base}n3"]}}
+      doc.ln R["//#{host}/news/#{time}#{base}n3"]}} # link
 
   Render['application/atom+xml'] = -> d,e {
     id = '//' + e.host + (CGI.escapeHTML e['REQUEST_URI'])

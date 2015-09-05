@@ -1,5 +1,5 @@
 class R
-=begin RDF-subset in JSON. mostly for speed, and to have a minimum-viable graph-format on JSON
+=begin RDF-subset in JSON. why not just RDF.rb and JSON-LD? we use that too. this is for speed, implementation-simplicity, and because it existed before RDF.rb and we still like using it sometimes
 
  Graph: Hash
   {subject => {predicate => object}}
@@ -72,11 +72,11 @@ class R
     graph
   end
 
-  # a pass-thru triplr which caches+indexes previously-unseen resources as a side-effect
-  # non-destructive, a new identifier required for cache-write
+  # wrapper triplr - caches and indexes previously-unseen resources as a side-effect
+  # non-destructive: a new identifier is required for cache-write
   # Stream -> file(s) -> Stream
   def triplrCache triplr, host = 'localhost', ps = nil, indexer = nil, &b
-    graph = fromStream({},triplr) # collect triples
+    graph = fromStream({},triplr) # bunch triples
     R.store graph, host, ps, indexer # cache
     graph.triples &b if b         # emit triples
     self
@@ -116,7 +116,7 @@ class R
     g
   end
 
-  # JSONGraph RDF::Reader
+  # RDF::Reader for JSON format
   module Format
 
     class Format < RDF::Format
