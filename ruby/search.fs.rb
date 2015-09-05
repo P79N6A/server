@@ -21,8 +21,8 @@ class R
         cs = e.c # node children
         size = cs.size
         if size < 256
-#          cs.map{|c|c.setEnv e.env} # thread request-environment for relative URI resolution 
-          e.fileResources.concat cs # set is small, include it all in response
+          cs.map{|c|c.setEnv e.env}
+          e.fileResources.concat cs
         else
           puts "#{e.uri}  #{size} children, paginating"
           FileSet['page'][e,q,g]

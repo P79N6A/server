@@ -54,6 +54,7 @@ class R
       yield s, Type, R[SIOC+'MicroblogPost']
       yield s, SIOC+'channel', 'twitter'
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
+
       yield s, Label, t.css('.fullname')[0].inner_text
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       content = t.css('.tweet-text')[0]
@@ -67,6 +68,6 @@ class R
       u = 'https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
       u.R.twGET g}
   end
-  def twGET g; triplrStoreJSON :triplrTwMsg, g, nil, FeedArchiverJSON end
+  def twGET g; triplrCache :triplrTwMsg, g, nil, FeedArchiverJSON end
 
 end

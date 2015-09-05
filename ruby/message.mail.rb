@@ -123,7 +123,8 @@ class R
     puts ["MAILERROR",uri,x,x.backtrace[0..2]].join(' ')
   end
 
-  IndexMail = ->doc,graph,host { # link to address-containers
+  IndexMail = ->doc,graph,host {
+    doc.roonga host
     graph.map{|u,r|
       addresses = []
       r[Creator].do{|from|addresses.concat from}
@@ -136,10 +137,10 @@ class R
             container = address.R.dirname + '/' + month
             target = R[container + name + '.e']
             target = R[container + name + ' ' + rand.to_s.h[0..2] + '.e'] if target.e
-            doc.ln target }}}}}
+            doc.ln target }}}}} # link message to index directory
 
   def triplrMailMessage &f
-    triplrStoreJSON :triplrMail, @r.do{|r|r.host}, [SIOC+'reply_of'], IndexMail, &f
+    triplrCache :triplrMail, @r.do{|r|r.host}, [SIOC+'reply_of'], IndexMail, &f
   end
 
 end

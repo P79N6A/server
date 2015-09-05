@@ -71,17 +71,19 @@ class R
         graph[s][p] = (graph[s][p]||[]).justArray.push o}} # unless graph[s][p].member? o # dedupe
     graph
   end
-  
-  # Stream -> file(s)
-  def triplrStoreJSON triplr, host = 'localhost',  p = nil,  hook = nil, &b
+
+  # a pass-thru triplr which caches+indexes previously-unseen resources as a side-effect
+  # non-destructive, a new identifier required for cache-write
+  # Stream -> file(s) -> Stream
+  def triplrCache triplr, host = 'localhost', ps = nil, indexer = nil, &b
     graph = fromStream({},triplr) # collect triples
-    R.store graph, host, p, hook  # cache
+    R.store graph, host, ps, indexer # cache
     graph.triples &b if b         # emit triples
     self
   end
 
-  # JSONGraph -> file(s)
-  def R.store graph, host = 'localhost',  p = nil,  hook = nil
+  # JSONGraph -> file(s). supply list of predicates to index, and/or arbitrary indexer-lambda
+  def R.store graph, host = 'localhost', p = nil, indexer = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
      (e = u.R                 # resource URI
@@ -91,11 +93,11 @@ class R
        docs[doc.uri][u] = r   # resource -> graph
        p && p.map{|p|         # index predicates
          r[p].do{|v|v.map{|o| # objects exist?
-             e.index p,o}}})) if u} # index
+             e.index p,o}}})) if u} # index property
     docs.map{|d,g| # each doc
       d = d.R; puts "<#{d.docroot}>"
-      d.w g,true              # cache
-      hook[d,g,host] if hook} # indexer
+      d.w g,true                    # write
+      indexer[d,g,host] if indexer} # index-update handler
   end
 
   # URI -> file
@@ -169,8 +171,8 @@ class R
       self # unchanged
     else
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
-      doc # derived doc
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache
+      doc # mapped doc
     end
   end
 
