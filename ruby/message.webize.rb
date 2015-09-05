@@ -56,15 +56,12 @@ class R
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
 
-    e.condResponse ->{
-      r[:thread] = true # contextual clue
-
-      # elevate thread title to document level
+    e.condResponse ->{ r[:thread] = true
+      # add thread title to document
       m.values.find{|r|
         r.class == Hash && r[Title]}.do{|t|
         title = t.justArray[0]
         r[:title] = title.sub ReExpr, '' if title.class==String}
-
       # render RDF or HTML
       Render[r.format].do{|p|p[m,r]} ||
         m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)
