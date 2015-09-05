@@ -25,7 +25,7 @@ class R
     d.dir.child('news/').setEnv(e).response}  # return
 
   def getFeed h='localhost'
-    store :format => :feed, :hook => FeedArchiverRDF, :hostname => h
+    store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
   rescue Exception => e
     puts uri, e, e.message
@@ -233,7 +233,7 @@ class R
 
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
 
-  FeedArchiverJSON = -> doc, graph, host {
+  IndexFeedJSON = -> doc, graph, host {
     doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t|
@@ -242,7 +242,7 @@ class R
         doc.ln R["//#{host}/news/#{t}#{b}e"]}} # link to timeline
     doc}
 
-  FeedArchiverRDF = -> doc, graph, host {
+  IndexFeedRDF = -> doc, graph, host {
     doc.roonga host
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # trim normalized timezones

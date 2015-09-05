@@ -68,6 +68,6 @@ class R
       u = 'https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
       u.R.twGET g}
   end
-  def twGET g; triplrCache :triplrTwMsg, g, nil, FeedArchiverJSON end
+  def twGET g; triplrCache :triplrTwMsg, g, nil, IndexFeedJSON end
 
 end
