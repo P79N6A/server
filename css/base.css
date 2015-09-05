@@ -6,7 +6,7 @@ a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
 
 .paginate a {font-size:2em;background-color:#000}
-.paginate a[rel="prev"] {float: left;color:#999;padding-right:.2em}
+.paginate a[rel="prev"] {float: left;color:#555;padding-right:.2em}
 .paginate a[rel="next"] {float: right;color:#fff;padding-left:.2em}
 
 .path {font-size:2em}

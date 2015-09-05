@@ -86,8 +86,6 @@ window.addEventListener("hashchange",function(e){ // move cursor to current focu
 
 // find nearest node to mouse/tap-point
 function findNode(event) {
-    event.preventDefault();
-    event.stopPropagation();
     var y = null;
     if (event.targetTouches) {
 	y = event.targetTouches[0].offsetY;

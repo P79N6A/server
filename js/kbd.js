@@ -84,7 +84,6 @@ document.addEventListener("keydown",function(e){
 
 	// key: p
 	if(e.keyCode==80) {
-	    e.preventDefault();
 	    if (e.getModifierState("Shift")) {
 		prevDoc(); // <shift-p>  previous (page)
 	    } else {
@@ -93,7 +92,6 @@ document.addEventListener("keydown",function(e){
 	};
 	// key: n
 	if(e.keyCode==78){
-	    e.preventDefault();
 	    if (e.getModifierState("Shift")) {
 		nextDoc(); // <shift-n> next (page)
 	    } else {
@@ -102,7 +100,6 @@ document.addEventListener("keydown",function(e){
 	};
 	// key: tab
 	if(e.keyCode==9){
-	    e.preventDefault();
 	    if (e.getModifierState("Shift")) {
 		prev(); // <shift-tab> previous (resource)
 	    } else {
