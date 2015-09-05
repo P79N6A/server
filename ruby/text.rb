@@ -155,10 +155,7 @@ class R
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     yield uri+'#', Type, R[SIOC+'SourceCode']
     if size < 128000 # skip huge source-code files
-      yield uri+'#', Content,
-            '<div style="float: left; background-color:#fff; color:#000; padding: .5em; margin: .5em">' +
-            StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] +
-            '</div>'
+      yield uri+'#', Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil]
     end
   end
 
