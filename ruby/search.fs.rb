@@ -92,9 +92,9 @@ class R
   # bidirectional+recursive traverse on named predicate
   def walk pfull, pshort, g={}, v={}
     graph g       # graph
-    v[uri] = true # mark visited
+    v[uri] = true # mark this as visited
     rel = g[uri].do{|s|s[pfull]} ||[] # outbound arcs (via doc)
-    rev = getIndex(pshort) ||[] # inbound arcs (via index)
+    rev = getIndex(pshort) ||[]       # inbound arcs (via index)
     rel.concat(rev).map{|r|
       v[r.uri] || (r.R.walk pfull,pshort,g,v)} # walk unvisited
     g # graph
