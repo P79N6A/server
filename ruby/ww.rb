@@ -203,7 +203,6 @@ message.news
 POST
 PUT
 search.fs
-search.index
 search.text
 search.ui
 search.webize

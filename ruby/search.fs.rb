@@ -76,6 +76,51 @@ class R
     r
   end
 
+  # basic file-backed index for common triple-pattern topology
+  def getIndex rev # match (? p o) using index
+    p = path
+    f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
+    f.readlines.map{|l|R l.chomp} if f.exist?
+  end
+
+  def index p, o # append to (s,p,o) index
+    o = o.R
+    path = o.path
+    R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
+  end
+
+  # bidirectional+recursive traverse on named predicate
+  def walk pfull, pshort, g={}, v={}
+    graph g       # resource-graph
+    v[uri] = true # mark visited
+    rel = g[uri].do{|s|s[pfull]} ||[] # outbound arcs (via doc)
+    rev = getIndex(pshort) ||[] # inbound arcs (via index)
+    rel.concat(rev).map{|r|
+      v[r.uri] || (r.R.walk pfull,pshort,g,v)} # walk unvisited
+    g # graph
+  end
+
+  # recursive child-nodes
+  def take *a
+    node.take(*a).map &:R
+  end
+
+  FileSet['rev'] = -> e,req,model {
+    inR = (e.dir.child '.' + e.basename + '*.rev').glob
+  }
+
+  def triplrRevLinks
+    pcs = basename('.rev').tail.split '.'
+    pMini = pcs.pop
+    base = pcs.join '.'
+    p = pMini.expand
+    o = R[dirname + base]
+    triplrUriList do |s,__,_|
+      yield s, Type, R[Referer]
+      yield s, p, o
+    end
+  end
+
 end
 
 class Pathname
