@@ -65,11 +65,6 @@ class R
         {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
       end}
 
-    contained = {}
-    [DC+'hasFormat', SIOC+'attachment'].map{|p|
-      r[p].justArray.map{|o| contained[o.uri] = {'uri' => o.uri}}}
-    attache = contained.empty? ? nil : TabularView[contained,e]
-
     [{class: :mail, id: r.uri, href: href, selectable: :true,
      c: [(r[Title].justArray[0].do{|t|
             {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}} unless e[:thread]),
@@ -77,6 +72,7 @@ class R
           c: [r[To].justArray.map{|o|
                 o = o.R
                 {_: :a, class: :to, href: o.dir+'?set=first-page', c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
+              # link replied-to message
               {_: :a, c: ' &larr; ',
                href: r[SIOC+'has_parent'].justArray[0].do{|p|
                  p.uri + '#' + p.uri
@@ -90,10 +86,9 @@ class R
                 [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
               discussion
              ].intersperse("\n  ")},
-
          r[Content].justArray.map{|c| {class: :body, c: c}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
-         attache
+         [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|{_: :a, name: name, class: :file, href: o.uri, c: o.R.basename}}},
         ]},'<br>']}
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
