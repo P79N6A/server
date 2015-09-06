@@ -23,6 +23,7 @@ h1 {text-align:center;font-size:1.8em;margin-top:-.8em;margin-bottom:.3em}
 .mail a.title {color:#000;background-color:#fff;font-weight: normal; font-size:1.1em}
 .mail a.discussion {float:right;font-size:2em;color:#fff;background-color:#000}
 .mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em;}
+.mail .body {padding:.4em}
 .mail .body a {
     background-color:#fff;
     color:#000;
