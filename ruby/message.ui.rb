@@ -77,9 +77,15 @@ class R
           c: [r[To].justArray.map{|o|
                 o = o.R
                 {_: :a, class: :to, href: o.dir+'?set=first-page', c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
-              ' &larr; ',
+              {_: :a, c: ' &larr; ',
+               href: r[SIOC+'has_parent'].justArray[0].do{|p|
+                 p.uri + '#' + p.uri
+               }||'#'},
               author,
-              r[Date].do{|d| [{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
+              r[Date].do{|d|
+                [{_: :a, class: :date,
+                  href: r.uri + '#' + r.uri,
+                  c: d[0].sub('T',' ')},' ']},
               r[SIOC+'reply_to'].do{|c|
                 [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
               discussion
