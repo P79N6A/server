@@ -153,7 +153,6 @@ class R
     'text/turtle'          => [:triplrTurtle],
     'text/tw'              => [:triplrTwUsers],
     'text/uri-list'        => [:triplrUriList],
-    'text/uri-list+index'  => [:triplrRevLinks],
     'text/x-tex'           => [:triplrTeX],
   }
 
