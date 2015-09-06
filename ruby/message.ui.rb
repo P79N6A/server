@@ -36,6 +36,7 @@ class R
         ]},'<br>']}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
+    localPath = r.uri == r.R.path
     arc = {source: r.uri, target: r.uri, sourceLabel: r[Label], targetLabel: r[Label]}
     r[Date].do{|t|
       time = t.justArray[0].to_time
@@ -54,7 +55,7 @@ class R
              else
                c.to_s
              end
-      [{_: :a, name: name, c: name, href: authorURI ? (c.R.dir+'?set=first-page') : '#'},' ']}
+      [{_: :a, name: name, c: name, href: authorURI ? (localPath ? (c.R.dir+'?set=first-page') : c.uri) : '#'},' ']}
 
     discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
       if e[:thread]
@@ -71,7 +72,7 @@ class R
          {class: :header,
           c: [r[To].justArray.map{|o|
                 o = o.R
-                {_: :a, class: :to, href: o.dir+'?set=first-page', c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
+                {_: :a, class: :to, href: localPath ? (o.dir+'?set=first-page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
               # link replied-to message
               {_: :a, c: ' &larr; ',
                href: r[SIOC+'has_parent'].justArray[0].do{|p|
