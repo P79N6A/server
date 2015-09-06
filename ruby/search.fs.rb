@@ -76,7 +76,7 @@ class R
     r
   end
 
-  # basic file-backed index for common triple-pattern topology
+  # basic index for triple-pattern (.rev file)
   def getIndex rev # match (? p o) using index
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
@@ -91,7 +91,7 @@ class R
 
   # bidirectional+recursive traverse on named predicate
   def walk pfull, pshort, g={}, v={}
-    graph g       # resource-graph
+    graph g       # graph
     v[uri] = true # mark visited
     rel = g[uri].do{|s|s[pfull]} ||[] # outbound arcs (via doc)
     rev = getIndex(pshort) ||[] # inbound arcs (via index)
@@ -106,20 +106,12 @@ class R
   end
 
   FileSet['rev'] = -> e,req,model {
-    inR = (e.dir.child '.' + e.basename + '*.rev').glob
-  }
 
-  def triplrRevLinks
-    pcs = basename('.rev').tail.split '.'
-    pMini = pcs.pop
-    base = pcs.join '.'
-    p = pMini.expand
-    o = R[dirname + base]
-    triplrUriList do |s,__,_|
-      yield s, Type, R[Referer]
-      yield s, p, o
-    end
-  end
+    # find resources with incoming-arcs, index-lookup
+    (e.dir.child '.' + e.basename + '*.rev').glob.map{|rev|
+      rev.node.readlines.map{|r|
+        r.chomp.R.fileResources
+      }}.flatten}
 
 end
 
