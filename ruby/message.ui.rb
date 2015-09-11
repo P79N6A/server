@@ -7,8 +7,8 @@ class R
     e[:label][name] = true
     {href: r.uri, class: :ublog, selectable: true, id: r.uri,
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
-         {class: :creator, c: {_: :a, href: r.uri, name: name, c: name}},
-         {class: 'body', c: r[Content]}]}}
+         {_: :span, class: :creator, c: {_: :a, href: r.uri, name: name, c: name}},' ',
+         {_: :span, class: 'body', c: r[Content]}]}}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
     d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e]}}
