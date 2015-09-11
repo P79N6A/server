@@ -25,13 +25,15 @@ class R
     d.dir.child('news/').setEnv(e).response}  # return
 
   def getFeed h='localhost'
+    puts "fetch #{uri}"
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
   rescue Exception => e
     puts uri, e, e.message
   end
   def getFeeds h='localhost'
-    uris.map{|u| u.R.getFeed h}
+    uris.map{|u|
+      u.R.getFeed h}
     nil
   end
 
