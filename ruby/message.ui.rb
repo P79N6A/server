@@ -18,16 +18,18 @@ class R
     date = log[Date].justArray[0]
     time = date.to_time
     hour = date[0..12] + ':00:00'
+    hourTime = hour.to_time
     e[:timelabel][hour] = true
     e[:label][log[Label].justArray[0]] = true
     # line -> log
+    lineCount = 0
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri,
                      sourceTime: line[Date].justArray[0].to_time,
                      sourceLabel: line[Label],
-                     targetLabel: line[Label],
-                     target: line.uri,
-                     targetTime: time})
+                     target: log.uri,
+                     targetTime: hourTime}) if lineCount < 4
+      lineCount += 1
       graph[line.uri] = line}
 
     [{class: :chatLog, name: log[Label], selectable: true, date: date, href: log.uri, id: log.uri,
