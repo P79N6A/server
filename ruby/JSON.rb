@@ -109,7 +109,8 @@ class R
         unless doc.e
           doc.dir.mk
           file = doc.pathPOSIX
-          RDF::Writer.open(file){|f|f << graph} ; puts "<#{doc.docroot}> #{graph.count} triples"
+          RDF::Writer.open(file){|f|f << graph}
+          puts "#{doc.docroot} #{graph.count}"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
