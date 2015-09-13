@@ -98,11 +98,10 @@ class R
         ]},'<br>']}
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
-    resources = d.resources(e)
     e[:arcs] = []
     e[:timelabel] = {}
     prior = {'uri' => '#'}
-    resources.map{|s|
+    d.values.map{|s|
       if s[SIOC+'has_parent'] # explicit parent
         s[SIOC+'has_parent'].justArray.map{|o|
           d[o.uri].do{|t| # arc target
@@ -123,12 +122,13 @@ class R
     # facet-filter properties
     defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
     e.q['a'] ||= defaultFilter
+    e.q['reverse'] ||= true
     timegraph = false
 
     # HTML
     [H.css('/css/message',true),
      {class: :msgs,
-      c: [(resources[0][Title].justArray[0].do{|t|
+      c: [(d.values[0][Title].justArray[0].do{|t|
              {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
           Facets[d,e]]}, # filterable resources
      (#  max/min time-values

@@ -45,7 +45,7 @@ class R
      (H.js'/js/facets',true),
 
      # content
-     m.map{|u,r| # each resource
+     m.resources(e).map{|r| # each resource
 
        # lookup renderer
        type = r.types.find{|t|ViewA[t]}

@@ -183,6 +183,7 @@ class Array
   def sortRDF env
     sort = (env.q['sort']||'dc:date').expand
     sortType = [R::Size, R::Stat+'mtime'].member?(sort) ? :to_i : :to_s
+    orient = env.q.has_key?('reverse') ? :reverse : :id
     compact.sort_by{|i|
       ((if i.class==Hash
         if sort == 'uri'
@@ -192,7 +193,7 @@ class Array
         end
        else
          i.uri
-        end).justArray[0]||0).send sortType}
+        end).justArray[0]||0).send sortType}.send(orient)
   end
 end
 
