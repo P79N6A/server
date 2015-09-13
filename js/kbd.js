@@ -83,7 +83,7 @@ document.addEventListener("keydown",function(e){
 	};
 
 	// key: p
-	if(e.keyCode==80) {
+	if(e.keyCode==80||e.keyCode==38) {
 	    if (e.getModifierState("Shift")) {
 		prevDoc(); // <shift-p>  previous (page)
 	    } else {
@@ -91,7 +91,7 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 	// key: n
-	if(e.keyCode==78){
+	if(e.keyCode==78||e.keyCode=40){
 	    if (e.getModifierState("Shift")) {
 		nextDoc(); // <shift-n> next (page)
 	    } else {
