@@ -92,7 +92,7 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 	// key: n
-	if((key==78)||(key=40)){
+	if((key==78)||(key==40)){
 	    if (e.getModifierState("Shift")) {
 		nextDoc(); // <shift-n> next (page)
 	    } else {
