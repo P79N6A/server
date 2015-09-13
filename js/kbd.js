@@ -82,8 +82,9 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 
+	var key = e.keyCode;
 	// key: p
-	if(e.keyCode==80||e.keyCode==38) {
+	if((key==80)||(key==38)) {
 	    if (e.getModifierState("Shift")) {
 		prevDoc(); // <shift-p>  previous (page)
 	    } else {
@@ -91,7 +92,7 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 	// key: n
-	if(e.keyCode==78||e.keyCode=40){
+	if((key==78)||(key=40)){
 	    if (e.getModifierState("Shift")) {
 		nextDoc(); // <shift-n> next (page)
 	    } else {
@@ -99,7 +100,7 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 	// key: tab
-	if(e.keyCode==9){
+	if(key==9){
 	    if (e.getModifierState("Shift")) {
 		prev(); // <shift-tab> previous (resource)
 	    } else {
@@ -107,13 +108,13 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 	// key: enter
-	if(e.keyCode==13) {
+	if(key==13) {
 	    var href = resource.getAttribute('href');
 	    if(href)
 		window.location.href = href;
 	};
     } else { // no selection
-	if(e.keyCode==80) {
+	if(key==80) {
 	    window.location.hash = last;
 	} else {
 	    window.location.hash = first;
