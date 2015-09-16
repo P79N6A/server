@@ -20,6 +20,7 @@ class R
       graph.delete msgid
     } unless e[:nosummary]}
 
+  # IRC
   def triplrIRC &f
     i=-1 # line index
 
@@ -42,12 +43,8 @@ class R
     }
   end
 
-  # twitter
-  def triplrTwUsers
-    open(pathPOSIX).readlines.map{|l|
-      yield 'https://twitter.com/'+l.chomp, Type, R[Resource]}
-  end
-  def triplrTwMsg
+  # Twitter
+  def triplrTwitter
     base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
@@ -68,6 +65,6 @@ class R
       u = 'https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
       u.R.twGET g}
   end
-  def twGET g; triplrCache :triplrTwMsg, g, nil, IndexFeedJSON end
+  def twGET g; triplrCache :triplrTwitter, g, nil, IndexFeedJSON end
 
 end

@@ -120,7 +120,6 @@ class R
     'ttf' => 'font/truetype',
     'ttl' => 'text/turtle',
     'txt' => 'text/plain',
-    'tw' => 'text/tw',
     'u' => 'text/uri-list',
     'url' => 'text/plain',
     'wav' => 'audio/wav',
