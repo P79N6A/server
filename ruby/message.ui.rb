@@ -4,10 +4,11 @@ class R
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
     name = r[Label].justArray[0] || ''
-    e[:label][name] = true
+    label = name.gsub(/[^a-zA-Z0-9]/,'')
+    e[:label][label] = true
     {href: r.uri, class: :ublog, selectable: true, id: r.uri,
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
-         {_: :span, class: :creator, c: {_: :a, href: r.uri, name: name, c: name}},' ',
+         {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
          {_: :span, class: 'body', c: r[Content]}]}}
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {

@@ -1,7 +1,7 @@
 #watch __FILE__
 class R
 
-  # group by channel-hour
+  # put messages in channel-hour bins of type ChatLog
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
     msgs.map{|msgid,msg|
       creator = msg[Creator].justArray[0]

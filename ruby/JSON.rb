@@ -75,10 +75,10 @@ class R
   # wrapper triplr - caches and indexes previously-unseen resources as a side-effect
   # non-destructive: a new identifier is required for cache-write
   # Stream -> file(s) -> Stream
-  def triplrCache triplr, host = 'localhost', ps = nil, indexer = nil, &b
+  def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
     graph = fromStream({},triplr) # bunch triples
-    R.store graph, host, ps, indexer # cache
-    graph.triples &b if b         # emit triples
+    R.store graph, host, properties, indexer # cache
+    graph.triples &b if b # emit triples
     self
   end
 
