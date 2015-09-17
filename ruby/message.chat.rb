@@ -1,7 +1,42 @@
 #watch __FILE__
 class R
 
-  # put messages in channel-hour bins of type ChatLog
+  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
+    d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e]}}
+
+  ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
+    name = r[Label].justArray[0] || ''
+    label = name.gsub(/[^a-zA-Z0-9]/,'')
+    e[:label][label] = true
+    {href: r.uri, class: :ublog, selectable: true, id: r.uri,
+     c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
+         {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
+         {_: :span, class: 'body', c: r[Content]}]}}
+
+  ViewA[SIOC+'ChatLog'] = -> log,e {
+    graph = {}
+    date = log[Date].justArray[0]
+    time = date.to_time
+    hour = date[0..12] + ':00:00'
+    hourTime = hour.to_time
+    e[:timelabel][hour] = true
+    e[:label][log[Label].justArray[0]] = true
+    lineCount = 0
+    log[LDP+'contains'].map{|line|
+      e[:arcs].push({source: line.uri,
+                     sourceTime: line[Date].justArray[0].to_time,
+                     sourceLabel: line[Label],
+                     target: log.uri,
+                     targetTime: hourTime}) if lineCount < 17
+      lineCount += 1
+      graph[line.uri] = line}
+
+    [{class: :chatLog, name: log[Label], selectable: true, date: date, href: log.uri, id: log.uri,
+     c: [{_: :b, c: log[Label]},
+         ViewGroup[SIOC+'InstantMessage'][graph,e],
+        ]},'<br>']}
+
+  # drop messages in channel-hour bins of type ChatLog
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
     msgs.map{|msgid,msg|
       creator = msg[Creator].justArray[0]
