@@ -2,6 +2,7 @@
 #watch __FILE__
 class R
 
+  # mint identifiers for various POSTed resource-types - forum usecase
   Identify[SIOC+'Thread'] = -> thread, forum, env {
     forum.uri + Time.now.iso8601[0..10].gsub(/[-T]/,'/') + thread[Title].slugify + '/'
   }
@@ -45,9 +46,9 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-  GET['/address'] = -> e,r {e.justPath.response} # free hostname
+  GET['/address'] = -> e,r {e.justPath.response} # hostname unbound
 
-  GET['/thread'] = -> e,r { # reconstruct thread
+  GET['/thread'] = -> e,r { # construct thread
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
     return E404[e,r] if m.empty?                                       # nothing found?
