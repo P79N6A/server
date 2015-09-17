@@ -94,12 +94,6 @@ class R
     end}
 
   Render['text/html'] = -> d,e,view=nil {
-
-    if !e[:title]
-      titles = d.map{|u,r|r[Title] if r.class==Hash}.flatten.select{|t|t.class == String}
-      e[:title] = titles.size==1 ? titles.head : e.uri
-    end
-
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,

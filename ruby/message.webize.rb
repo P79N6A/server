@@ -52,21 +52,13 @@ class R
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
     return E404[e,r] if m.empty?                                       # nothing found?
-
-    # thread identity
     r[:Response]['ETag'] = [m.keys.sort, r.format].h
     r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
-
-    e.condResponse ->{ r[:thread] = true
-      # add thread title to document
-      m.values.find{|r|
-        r.class == Hash && r[Title]}.do{|t|
-        title = t.justArray[0]
-        r[:title] = title.sub ReExpr, '' if title.class==String}
-      # render RDF or HTML
+    e.condResponse ->{
+      m.values[0][Title].justArray[0].do{|t| r[:title] = t.sub ReExpr, '' }
+      r[:thread] = true
       Render[r.format].do{|p|p[m,r]} ||
-        m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)
-    }}
+        m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
@@ -160,7 +152,8 @@ class R
     [H.css('/css/message',true),
      {class: :msgs,
       c: [(d.values[0][Title].justArray[0].do{|t|
-             {_: :h1, c: CGI.escapeHTML(t.sub(ReExpr,''))}} if e[:thread]),
+             title = t.sub ReExpr, ''
+             {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
           Facets[d,e]]}, # filterable resources
      (#  max/min time-values
       times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.
