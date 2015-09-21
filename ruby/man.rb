@@ -59,8 +59,15 @@ class R
 
           preconv = %w{hu pt tr}.member?(superLang) ? "" : "-k"
           gzipped = man.match /\.gz$/
-
-          pageCmd = -> format,opts="" {"#{gzipped ? 'z' : ''}cat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
+          bzipped = man.match /\.bz2$/
+          catcompressed = if bzipped
+                            "bz"
+                          elsif gzipped
+                            "z"
+                          else
+                            nil
+                          end
+          pageCmd = -> format,opts="" {"#{catcompressed}cat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
 
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
           `#{pageCmd['utf8',"-t -P -u -P -b"]} > #{txt.sh}`
