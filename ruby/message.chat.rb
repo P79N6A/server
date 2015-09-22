@@ -8,7 +8,10 @@ class R
     name = r[Label].justArray[0] || ''
     label = name.gsub(/[^a-zA-Z0-9]/,'')
     e[:label][label] = true
-    {href: r.uri, class: :ublog, selectable: true, id: r.uri,
+    {href: r.uri,
+     id: r.uri,
+     class: :ublog,
+#     selectable: true,
      c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
          {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
          {_: :span, class: 'body', c: r[Content]}]}}
