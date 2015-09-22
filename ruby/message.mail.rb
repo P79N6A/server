@@ -126,7 +126,11 @@ class R
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     graph.delete e.uri
-    bodies = e.q.has_key? 'bodies'
+    bodies = e.q.has_key? 'full'
+    unless bodies
+      graph[e.uri] ||= {'uri' => e.uri}
+      graph[e.uri]['#summarized'] = true
+    end
     e.q['sort'] ||= Size
     e.q['reverse'] ||= 'reverse'
     group = (e.q['group']||To).expand
@@ -138,9 +142,7 @@ class R
     # pass 1. prune + analyze
     g.map{|u,p|
       recipients = p[To].justArray.map &:maybeURI
-
-      # hide unless requested:
-      graph.delete u unless bodies                                # unsummarized message
+      graph.delete u unless bodies # remove unsummarized
       p[DC+'source'].justArray.map{|s|graph.delete s.uri}         # provenance
       p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # author-description
       recipients.map{|a|graph.delete a}                           # recipient-description
@@ -179,7 +181,7 @@ class R
         # cluster container
         unless graph[container]
           clusters.push container
-          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment, '#summarized' => true}
+          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
         graph[container][LDP+'contains'].push thread }}
 
