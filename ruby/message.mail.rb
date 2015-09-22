@@ -4,7 +4,7 @@ class R
   ReExpr = /\b[rR][eE]: /
 
   def mail; Mail.read node if f end
-  # emit message-data triples
+
   def triplrMail &b
     m = mail; return unless m # parse
     id = m.message_id || m.resent_message_id
@@ -179,7 +179,7 @@ class R
         # cluster container
         unless graph[container]
           clusters.push container
-          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
+          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment, '#summarized' => true}
         end
         graph[container][LDP+'contains'].push thread }}
 
