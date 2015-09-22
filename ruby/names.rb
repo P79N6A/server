@@ -168,16 +168,6 @@ class R
     SIOC+'Thread'    => SIOC+'BoardPost',
   }
 
-  Filter[Container] = -> g,e { # summarize contained - dispatch to type-specific
-    groups = {}
-    g.map{|u,r|
-      r.types.map{|type| # RDF types
-        if v = Abstract[type] # summarizer
-          groups[v] ||= {} # type-group
-          groups[v][u] = r # resource -> group
-        end}}
-    groups.map{|fn,gr|fn[g,gr,e]}} # summarize
-
 end
 
 class String
