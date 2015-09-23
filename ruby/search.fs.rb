@@ -42,7 +42,7 @@ class R
   FileSet['page'] = -> d,r,m {
 
     # count
-    c = ((r['c'].do{|c|c.to_i} || 32) + 1).max(1024).min 2
+    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
 
     # direction
     o = r.has_key?('asc') ? :asc : :desc
