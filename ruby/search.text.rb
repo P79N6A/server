@@ -2,14 +2,14 @@ class R
 
   # grep
   FileSet['grep'] = -> e,q,m { # grep in files
-    q['q'].do{|query| # required argument
+    q['q'].do{|query|
       e.env[:filters].push 'grep'
       `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|
         R.unPOSIX r.chomp}}}
 
-  Filter['grep'] = -> d,e { # grep in graph
+  Filter['grep'] = -> d,e { # grep in-memory graph
     w = e.q['q']
-    if w && w.size > 1 # query
+    if w && w.size > 1 # query-str
       e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i # to regular-expression
       d.map{|u,r| # check resource
         if r.to_s.match e[:grep] # matching resource
@@ -21,6 +21,7 @@ class R
     end}
 
   # groonga  https://github.com/groonga/groonga  https://github.com/ranguba/rroonga
+  # gem install rroonga
   ResourceSet['groonga'] = ->d,e,m{
     m['/search'] = {Type => R[Search+'Input']} # add a search-box to response-resources
 
