@@ -127,10 +127,6 @@ class R
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     graph.delete e.uri
     bodies = e.q.has_key? 'full'
-    unless bodies
-      graph[e.uri] ||= {'uri' => e.uri}
-      graph[e.uri]['#summarized'] = true
-    end
     e.q['sort'] ||= Size
     e.q['reverse'] ||= 'reverse'
     group = (e.q['group']||To).expand
