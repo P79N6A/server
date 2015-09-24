@@ -11,16 +11,7 @@ var jumpDoc = function(direction, start) {
 var prevDoc = function() {jumpDoc('prev','#last')}
 var nextDoc = function() {jumpDoc('next','#first')}
 
-var focusNode = function(e){
-    var loc = window.location.hash.slice(1);
-    var id = this.getAttribute("id");
-    if(loc == id && this.hasAttribute('href')){ // already selected and tapped again, goto
-	window.location = this.getAttribute('href');
-    } else {
-	window.location.hash = id;
-    };
-    e.stopPropagation();
-};
+var focusNode = function(e){window.location.hash = this.getAttribute("id")};
 
 // find navigable (whitelisted via @selectable) nodes
 var items = {};
