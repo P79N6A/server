@@ -117,11 +117,15 @@ class R
                      end)]}
                when LDP+'contains'
                  l[k].do{|children|
-                   cGraph = {}
-                   children.justArray.map{|c|
-                     cGraph[c.uri] = c
-                   }
-                   ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]}
+                   children = children.justArray
+                   if e.q['table'] == 'table' || children[0].keys.size>1
+                     cGraph = {}
+                     children.map{|c| cGraph[c.uri] = c }
+                     ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]
+                   else
+                     children.map{|c|c.R}
+                   end
+                 }
                when WikiText
                  Render[WikiText][l[k]]
                when DC+'tag'
