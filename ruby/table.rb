@@ -23,13 +23,14 @@ class R
     if tabular
       TabularView[g,e]
     else
+      table = e.q['table'] == 'table'
       g.map{|id,container|
         {class: :container,
          c: [{class: :label, c: {_: :a, href: id+'?set=first-page', c: id.R.basename}},
-             {class: :contents, c: TabularView[{id => container},e,['uri',Type,Mtime,SIOC+'has_container',Size]]}]}
-    }
-    end
-  }
+             {class: :contents,
+              c: TabularView[{id => container},e,['uri',Type,Mtime,SIOC+'has_container',Size]]
+             }]}}
+    end}
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
 
