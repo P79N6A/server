@@ -82,22 +82,6 @@ class R
               line[0..400].gsub(a){|g| # each word-match
                 H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match <span>
 
-  ViewGroup[Referer] = -> g,e {
-    [{_: :style,
-      c: "
-div.referers {
-text-align:center;
-}
-a.referer {
-font-size: 1.2em;
-margin:.16em;
-text-decoration: none;
-}
-"},
-     {class: :referers,
-      c: g.keys.map{|uri|
-        {_: :a, class: :referer, href: uri, c: '&larr;'}}}]}
-
   ViewA[Search+'Input'] = -> r, e {
     {_: :form, action: r.uri, c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}}}
 

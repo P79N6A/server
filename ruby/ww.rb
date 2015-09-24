@@ -116,7 +116,6 @@ class R < RDF::URI
   BlogPost = SIOC + 'BlogPost'
   Wiki     = SIOC + 'Wiki'
   Blog     = SIOC + 'Blog'
-  Referer  = SIOC + 'Referer'
   WikiArticle = SIOC + 'WikiArticle'
   Auth     = W3   + 'ns/auth/'
   ACL      = Auth + 'acl#'
