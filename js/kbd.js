@@ -13,7 +13,6 @@ var nextDoc = function() {jumpDoc('next','#first')}
 
 var focusNode = function(e){window.location.hash = this.getAttribute("id")};
 
-// find navigable (whitelisted via @selectable) nodes
 var items = {};
 var prior = null;
 var first = null;
@@ -23,12 +22,13 @@ document.addEventListener("DOMContentLoaded", function(){
     var selectable = document.querySelectorAll("[selectable][id]");
     selectable.on("click",focusNode);
 
+    // navigable (whitelisted via @selectable) nodes
     // first node
     first = selectable[0].getAttribute('id');
     if(loc=='first')
 	window.location.hash = first;
 
-    // link graph of traversible nodes
+    // link adjacent traversibles
     selectable.map(function(){
 	var id = this.getAttribute('id');
 	var re = {};

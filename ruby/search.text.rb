@@ -41,10 +41,10 @@ class R
                  :offset =>start, :limit =>c)
 
       # paginate
-      d.env[:Links][:prev] = '/search/' + {'q' => q,
+      d.env[:Links][:next] = '/search/' + {'q' => q,
                                            'start' => start + c,
                                            'c' => c}.qs if down
-      d.env[:Links][:next] = '/search/' + {'q' => q,
+      d.env[:Links][:prev] = '/search/' + {'q' => q,
                                            'start' => start - c,
                                            'c' => c}.qs if up
       # resource thunks
