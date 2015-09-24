@@ -18,7 +18,7 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  ViewGroup[Directory] = ViewGroup[Container] = -> g,e {
+  ViewGroup[Container] = -> g,e {
     tabular = e.q['table'] == 'table'
     if tabular
       TabularView[g,e]
@@ -31,7 +31,7 @@ class R
              }]}}
     end}
 
-  TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
+  TabularView = ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
 
     sort = (e.q['sort']||'uri').expand                      # sort property
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
