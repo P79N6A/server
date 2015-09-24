@@ -13,8 +13,7 @@ class R
       e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i # to regular-expression
       d.map{|u,r| # check resource
         if r.to_s.match e[:grep] # matching resource
-          r[Type] ||= []
-          r[Type].push R['#grep']
+          r[Type] = R['#grep-result']
         else
           d.delete u
         end}

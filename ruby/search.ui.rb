@@ -61,26 +61,26 @@ class R
           (0..f.size-1).map{|c|'</div>'}, "\n",  # close wrapper
          ]}}]}
 
-  # grep view
-  ViewGroup['#grep'] = -> g,e {
+  ViewGroup['#grep-result'] = -> g,e {
     c = {}
     w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
     w.each_with_index{|w,i|c[w] = i} # enumerated words
     a = /(#{w.join '|'})/i           # highlight-pattern
 
-    [{_: :style, c: c.values.map{|i| # stylesheet
-        b = rand(16777216)                # word color
-        f = b > 8388608 ? :black : :white # keep contrasty
-        ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}}, # word-color CSS
+    [{_: :style,
+      c: ["h5 a {background-color: #fff;color:#000}\n h5 {margin:.3em}\n",
+          c.values.map{|i|
+            b = rand(16777216)                # word color
+            f = b > 8388608 ? :black : :white # keep contrasty
+            ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}]}, # word-color CSS
 
      g.map{|u,r| # matching resources
        r.values.flatten.select{|v|v.class==String}.map{|str| # string values
          str.lines.map{|ls|ls.gsub(/<[^>]+>/,'')}}.flatten.  # lines within strings
          grep(e[:grep]).do{|lines|                           # matching lines
-         ['<br>',r.R.href,'<br>', # match URI
+         [{_: :h5, c: r.R.href}, # match URI
             lines[0..5].map{|line| # HTML-render of first 6 matching-lines
-              line[0..400].gsub(a){|g| # each word-match
-                H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match <span>
+              line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
 
   ViewA[Search+'Input'] = -> r, e {
     {_: :form, action: r.uri, c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}}}
