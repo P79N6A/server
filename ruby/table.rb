@@ -45,14 +45,6 @@ class R
       keys.push p unless keys.member?(p)||!p.match(/^http/)
     }
 
-    if [Size,Mtime].member? sort
-      sizes = g.values.map{|r|r[sort]}.flatten.compact
-      range = 0.0
-      max = sizes.max.to_f
-      min = sizes.min.to_f
-      range = max - min if max && min
-      scale = 255.0 / (range && range > 0 && range || 255.0)
-    end
     {_: :table, class: :tab,
      c: [({_: :thead,
            c: {_: :tr,
@@ -79,20 +71,14 @@ class R
                         {_: :a, class: :addButton, c: '+', title: 'add property', href: e.q.merge({'addProperty' => ''}).qs}
                       elsif e.q['addProperty'].empty?
                         {_: :form, method: :GET,
-                         c: [
-                           {_: :input, name: :edit, val: :edit, type: :hidden},
-                           {_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
-                           {_: :input, name: :addProperty, placeholder: 'add property', style: 'border: .2em solid #0f0;border-radius:.3em;background-color:#dfd;color:#000'}]}
+                         c: [{_: :input, name: :edit, val: :edit, type: :hidden},
+                             {_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
+                             {_: :input, name: :addProperty, placeholder: 'add property'}]}
                       end
                      end}
                     end)]}} unless skipP),
-         ({_: :style, c: rows.map{|r|
-             mag = r[sort].justArray[0].do{|s| (s - min) * scale} || 0
-             "tr[href='#{r.R.fragment||r.uri}'] > td[property='#{sort}'] {color: #{mag < 127 ? :white : :black}; background-color: ##{('%02x' % mag)*3}}\n"}} if scale),
-         {_: :tbody, c: rows.map{|r|
-            TableRow[r,e,sort,direction,keys] # TABLE-ROW
-          }}]}}
-  
+         {_: :tbody, c: rows.map{|r| TableRow[r,e,sort,direction,keys]}}]}}
+
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
     edit = e.q.has_key? 'edit'
