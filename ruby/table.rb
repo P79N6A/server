@@ -23,7 +23,6 @@ class R
     if tabular
       TabularView[g,e]
     else
-      table = e.q['table'] == 'table'
       g.map{|id,container|
         {class: :container,
          c: [{class: :label, c: {_: :a, href: id+'?set=first-page', c: id.R.basename}},
