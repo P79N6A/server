@@ -81,7 +81,6 @@ class R
     }
   end
 
-  # Twitter
   def triplrTwitter
     base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
@@ -104,5 +103,68 @@ class R
       u.R.twGET g}
   end
   def twGET g; triplrCache :triplrTwitter, g, nil, IndexFeedJSON end
+
+  ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+    e[:arcs] = []
+    e[:timelabel] = {}
+    prior = {'uri' => '#'}
+    d.values.map{|s|
+      if s[SIOC+'has_parent'] # explicit parent
+        s[SIOC+'has_parent'].justArray.map{|o|
+          d[o.uri].do{|t| # arc target
+            sLabel = s[Creator].justArray[0].do{|c|c.R.fragment}
+            tLabel = t[Creator].justArray[0].do{|c|c.R.fragment}
+            e[:label][sLabel] = true
+            e[:label][tLabel] = true
+            arc = {source: s.uri, target: o.uri, sourceLabel: sLabel, targetLabel: tLabel}
+            s[Mtime].do{|mt| arc[:sourceTime] = mt[0]}
+            t[Mtime].do{|mt| arc[:targetTime] = mt[0]}
+            e[:arcs].push arc }}
+      end
+    }
+
+    # labels
+    (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
+
+    # facet-filter properties
+    defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
+    e.q['a'] ||= defaultFilter
+    e.q['reverse'] ||= true
+    timegraph = false
+
+    # HTML
+    [H.css('/css/message',true),
+     {class: :msgs,
+      c: [(d.values[0][Title].justArray[0].do{|t|
+             title = t.sub ReExpr, ''
+             {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
+          Facets[d,e]]}, # filterable resources
+     (#  max/min time-values
+      times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.
+              flatten.compact.map(&:to_f)
+      min = times.min || 0
+      max = times.max || 1
+      range = (max - min).min(0.1)
+
+      # scale times to range
+      e[:arcs].map{|a|
+        a[:sourcePos] = (a[:sourceTime].to_f - min) / range
+        a[:targetPos] = (a[:targetTime].to_f - min) / range
+        a.delete :sourceTime
+        a.delete :targetTime }
+      timegraph = e[:arcs].size > 1
+
+      e[:sidebar].push({id: :timegraph,
+                        c: {_: :svg,
+                            c: e[:timelabel].map{|l,_|
+                              pos = (max - l.to_time.to_f) / range * 100
+                              y = pos.to_s + '%'
+                              [{_: :line, stroke: '#fff', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
+                               {_: :text, fill: '#fff', 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, x: 0, y: y}
+                              ]}}}) if timegraph
+
+      nil),
+     ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
+       H.js('/js/d3.min'), H.js('/js/timegraph',true)] if timegraph)]}
 
 end

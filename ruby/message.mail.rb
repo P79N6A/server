@@ -205,4 +205,64 @@ class R
     triplrCache :triplrMail, @r.do{|r|r.host}, [SIOC+'reply_of'], IndexMail, &f
   end
 
+  ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
+    localPath = r.uri == r.R.path
+    arc = {source: r.uri, target: r.uri, sourceLabel: r[Label], targetLabel: r[Label]}
+    r[Date].do{|t|
+      time = t.justArray[0].to_time
+      arc[:sourceTime] = arc[:targetTime] = time
+      e[:timelabel][time.iso8601[0..9]] = true
+    }
+    e[:arcs].push arc
+    mail = r.types.member?(SIOC+'MailMessage')
+    name = nil
+    href = r.uri
+    author = r[Creator].justArray[0].do{|c|
+      authorURI = c.class==Hash || c.class==R
+      name = if authorURI
+               u = c.R
+               u.fragment || u.basename || u.host || 'anonymous'
+             else
+               c.to_s
+             end
+      [{_: :a, name: name, c: name, href: authorURI ? (localPath ? (c.R.dir+'?set=first-page') : c.uri) : '#'},' ']}
+
+    discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
+      if e[:thread]
+        href = r.uri + '#' + (r.R.path||'') # link to standalone msg
+        nil
+      else
+        href = d.uri + '#' + (r.R.path||'') # link to msg in thread
+        {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
+      end}
+
+    # HTML
+    [{class: :mail, id: r.uri, href: href, selectable: :true,
+     c: [(r[Title].justArray[0].do{|t|
+            {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}} unless e[:thread]),
+         {class: :header,
+          c: [r[To].justArray.map{|o|
+                o = o.R
+                {_: :a, class: :to, href: localPath ? (o.dir+'?set=first-page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
+              # reply-target message
+              {_: :a, c: ' &larr; ',
+               href: r[SIOC+'has_parent'].justArray[0].do{|p|
+                 p.uri + '#' + p.uri
+               }||'#'},
+              author,
+              # timestamp
+              r[Date].do{|d|
+                [{_: :a, class: :date,
+                  href: r.uri + '#' + r.uri,
+                  c: d[0].sub('T',' ')},' ']},
+              r[SIOC+'reply_to'].do{|c|
+                [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
+              discussion
+             ].intersperse("\n  ")},
+         r[Content].justArray.map{|c|
+           {_: mail ? :pre : :div, class: :body, c: c}},
+         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
+         [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|{_: :a, name: name, class: :file, href: o.uri, c: o.R.basename}}},
+        ]},'<br>']}
+
 end
