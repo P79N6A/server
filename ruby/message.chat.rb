@@ -12,9 +12,11 @@ class R
      id: r.uri,
      class: :ublog,
 #     selectable: true,
-     c: [{_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
-         {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
-         {_: :span, class: 'body', c: r[Content]}]}}
+     c: [
+       {_: :span, class: 'body', c: r[Content]},
+       {_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
+       {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
+     ]}}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}
@@ -45,10 +47,9 @@ class R
       creator = msg[Creator].justArray[0]
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
-      label = "#{date[11..12]}00 #{chan}"
+      label = "#{date[11..12]}00"
       uri = '/news/' + date[0..12].gsub(/\D/,'/') + '#' + label
       graph[uri] ||= {'uri' => uri}
-      graph[uri][SIOC+'channel'] ||= chan
       graph[uri][SIOC+'addressed_to'] ||= chan
       graph[uri][Date] ||= date[0..12]+':30:00'
       graph[uri][Label] ||= label
