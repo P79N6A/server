@@ -1,6 +1,5 @@
 body {font-family: sans-serif;padding-left:9.2em;padding-top:1.6em}
-a {text-decoration:none}
-a.uri {font-size:1.2em}
+
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
@@ -53,7 +52,10 @@ td[property="uri"] {min-width:14em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
-:target, :target > td {background-color:#0f0;color:#fff}
+:target {background-color:#000;
+	 color:#fff;
+	 padding:.8em}
+:target a {color:#eee;font-weight:bold}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
 .sidebar {position:fixed;left:0;top:0}

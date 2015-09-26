@@ -4,23 +4,12 @@ h1 {text-align:center;font-size:1.8em;margin-top:-.8em;margin-bottom:.3em}
     position:relative;
     white-space: normal;
     vertical-align: top;
-    border-radius: .3em;
-    background-color:#000;
-    color:#fff;
-    max-width:111ex;
+    margin:auto;
 }
 .mail[name] {background-color:#000; color:#fff}
-.mail:target {background-color: #fff;color:#000}
-
-.mail a {
-    text-decoration:none;
-    font-weight: bold;
-    padding: 0 .1em 0 .1em;
-}
 
 .mail a.file {padding:.2em;border-radius:.2em;margin:.1em}
 .mail a.to {background-color:#000;color:#fff;}
-.mail a.title {color:#000;background-color:#fff;font-weight: normal; font-size:1.1em}
 .mail a.discussion {float:right;font-size:2em;color:#fff;background-color:#000}
 .mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em;}
 .mail .body {padding:.4em}
@@ -45,19 +34,5 @@ div.day {
      font-size:.88em;
      white-space:nowrap;
 }
-.chatLog {
-    position:relative;
-    margin: auto;
-    padding:.3em;
-    max-width:144ex;
-    border-radius: .16em .2em .2em .16em;
-    vertical-align:top;
-}
-.chatLog:target {background-color: #fff;color: #000}
-.chatLog .ublog {position:relative;background-color:#000;color:#fff}
-.chatLog .ublog:target, .chatLog .body a {background-color:#fff;color:#000}
 .chatLog img {max-width: 100%}
-.chatLog .date {color: #888;font-size: .88em}
-.chatLog .creator {display:inline-block; min-width: 8em; text-align: right}
-.chatLog .body {display: inline-block}
-
+.chatLog .creator {display:inline-block; min-width: 9em; text-align: right}
