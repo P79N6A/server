@@ -13,8 +13,8 @@ class R
      class: :ublog,
 #     selectable: true,
      c: [
-       {_: :span, class: 'body', c: r[Content]},
-       {_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},
+       {_: :span, class: 'body', c: r[Content]},' ',
+       {_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},' ',
        {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
      ]}}
 
@@ -25,7 +25,6 @@ class R
     hour = date[0..12] + ':00:00'
     hourTime = hour.to_time
     e[:timelabel][hour] = true
-    e[:label][log[Label].justArray[0]] = true
     lineCount = 0
     log[LDP+'contains'].map{|line|
       e[:arcs].push({source: line.uri,

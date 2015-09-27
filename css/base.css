@@ -45,7 +45,8 @@ a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
 body > table.tab , body > table.html {margin:auto}
-table {border-spacing: 0}
+body > table.tab {background-color:#eee}
+body > table.tab td {background-color:#fff;color:#000}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold;padding:.1em;border-radius:.2em}
 td {border-radius: .18em;vertical-align:top}
@@ -53,10 +54,10 @@ td[property="uri"] {min-width:14em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
-:target {background-color:#ef2;
-	 color:#000;
+:target {background-color:#000;
+	 color:#fff;
 	 padding:.8em}
-:target a {color:#000;font-weight:bold}
+:target a {color:#fff;font-weight:bold}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
 .sidebar {position:fixed;left:0;top:0}
