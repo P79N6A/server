@@ -195,7 +195,6 @@ image
 man
 message.chat
 message.mail
-message.webize
 message.news
 POST
 PUT
