@@ -45,8 +45,6 @@ a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
 
 body > table.tab , body > table.html {margin:auto}
-body > table.tab {background-color:#eee}
-body > table.tab td {background-color:#fff;color:#000}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold;padding:.1em;border-radius:.2em}
 td {border-radius: .18em;vertical-align:top}
@@ -67,4 +65,4 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container a {color:#000;background-color:#fff;border-radius:.2em}
 .container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding:.2em;font-weight:bold;background-color:#eee;color:#000;}
 .container > .label a {padding:0 .08em 0 .08em;}
-.container > .contents {border-radius: 0 .4em .4em .4em;padding:.2em;background-color:#eee;color:#000}
+.container > .contents {background-color:#eee;color:#000}
