@@ -140,7 +140,6 @@ class R
     dir = uri.t # trailing-slash
 
     yield dir, Type, R[Directory]
-    yield dir, SIOC+'has_container', parentURI unless path=='/'
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601
