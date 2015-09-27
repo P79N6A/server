@@ -51,6 +51,7 @@ table td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-wei
 td {border-radius: .18em;vertical-align:top}
 td[property="uri"] {min-width:14em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
+td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 80ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
 :target {background-color:#000;

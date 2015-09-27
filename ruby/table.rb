@@ -133,7 +133,7 @@ class R
                      children.map{|c| cGraph[c.uri] = c }
                      ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]
                    else
-                     children.map{|c|c.R}
+                     children.map{|c|[c.R, ' ']}
                    end
                  }
                when WikiText
