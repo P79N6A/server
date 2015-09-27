@@ -77,7 +77,14 @@ class R
                       end
                      end}
                     end)]}} unless skipP),
-         {_: :tbody, c: rows.map{|r| TableRow[r,e,sort,direction,keys]}}]}}
+         {_: :tbody, c: rows.map{|r|
+            if r.uri == e.uri
+              puts "THIS #{e.uri}",r
+              TableRow[r,e,sort,direction,keys]
+            else
+              TableRow[r,e,sort,direction,keys]
+            end
+          }}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
