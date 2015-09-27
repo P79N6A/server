@@ -20,12 +20,11 @@ class R
       else
         cs = e.c # node children
         size = cs.size
-        if size < 256
+        if size < 86 # inline all the children
           cs.map{|c|c.setEnv e.env}
           e.fileResources.concat cs
         else
-          puts "#{e.uri}  #{size} children, paginating"
-          FileSet['page'][e,q,g]
+          e.fileResources # child-pointers
         end
       end
     else # resource - add reverse links
