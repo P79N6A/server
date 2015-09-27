@@ -135,29 +135,23 @@ class R
   alias_method :m, :mtime
   def size;     node.size end
 
-  # filesystem name-storage
   def triplrContainer
-    dir = uri.t # trailing-slash
+    dir = uri.t # trailing-slash convention
 
     yield dir, Type, R[Directory]
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601
-
-    # direct children
     contained = c
     yield dir, Size, contained.size
-    if contained.size < 32 # provide some "lookahead" on small contained-containers. GET them directly for full contents
-      contained.map{|c|
-        if c.directory?
-          child = c.descend # trailing-slash convention on containers
-          yield dir, LDP+'contains', child
-        else # doc
-          yield dir, LDP+'contains', c.stripDoc # link to generic resource
-        end
-      }
-    end
-
+    contained.map{|c|
+      if c.directory?
+        child = c.descend # trailing-slash directory-URI convention
+        yield dir, LDP+'contains', child
+      else # doc
+        yield dir, LDP+'contains', c.stripDoc # link to generic resource
+      end
+    }
   end
 
     # POSTable container -> contained types

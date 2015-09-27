@@ -78,9 +78,12 @@ class R
                      end}
                     end)]}} unless skipP),
          {_: :tbody, c: rows.map{|r|
-            if r.uri == e.uri
-              puts "THIS #{e.uri}",r
-              TableRow[r,e,sort,direction,keys]
+            if r.uri == e.uri && r.uri[-1]=='/' # current directory
+              r[LDP+'contains'].justArray.map{|c|
+                dir = c.uri[-1] == '/'
+                e[:sidebar].concat ['<br>',{_: :a, href: c.uri, c: c.R.basename + (dir ? '/' : '')}]
+              }
+              nil
             else
               TableRow[r,e,sort,direction,keys]
             end

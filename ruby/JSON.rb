@@ -1,5 +1,5 @@
 class R
-=begin RDF-subset in JSON. why not just RDF.rb and JSON-LD? we use that too. this is for speed, implementation-simplicity, and because it existed before RDF.rb and we still like using it sometimes
+=begin RDF-subset in JSON. why not use RDF.rb and JSON-LD? we use that too. this is for speed, implementation-simplicity + it existed before RDF.rb and we still like using it sometimes
 
  Graph: Hash
   {subject => {predicate => object}}
