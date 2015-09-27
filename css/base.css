@@ -62,7 +62,7 @@ img.tablePreview {max-height:14em;max-width:100%}
 #pointer {color:#fff;position:absolute;top:-.3em;left:-1em;font-size:1.8em}
 
 .container {padding: .3em;display: inline-block}
-.container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding:.2em;font-weight:bold;background-color:#fff;color:#000;}
-.container > .label a {color:#000}
+.container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding:.2em;font-weight:bold;background-color:#eee;color:#000;}
+.container > .label a {color:#000;background-color:#eee}
 .container > .contents {border-radius: 0 .4em .4em .4em;padding:.2em;background-color:#eee;color:#000}
 
