@@ -47,6 +47,7 @@ a.warp:before { content:"\f135"; font-family: icons; }
 body > table.tab , body > table.html {margin:auto}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold;padding:.1em;border-radius:.2em}
+table td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td {border-radius: .18em;vertical-align:top}
 td[property="uri"] {min-width:14em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
