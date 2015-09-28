@@ -20,7 +20,7 @@ class R
       else
         cs = e.c # node children
         size = cs.size
-        if size < 86 # inline all the children
+        if size < 256 # inline all the children
           cs.map{|c|c.setEnv e.env}
           e.fileResources.concat cs
         else
