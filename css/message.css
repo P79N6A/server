@@ -14,6 +14,7 @@
 .mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em;}
 .mail .body {padding:.4em}
 .mail .body a {
+    font-weight: bold;
     background-color:#fff;
     color:#000;
 }
