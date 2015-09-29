@@ -130,7 +130,9 @@ class R
                      children.map{|c| cGraph[c.uri] = c }
                      ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]
                    else
-                     children.map{|c|[c.R, ' ']}
+                     [children.map{|c|[c.R, ' ']},
+                      ({style: 'padding: .1em .5em .1em .3em;background-color:#00f;color:#fff;font-size:1.3em;border-radius: .2em .2em .8em .8em',_: :a, href: '?contents',c: "&darr; Show All"} if children.size > 255)
+                     ]
                    end
                  }
                when WikiText
