@@ -50,10 +50,11 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("keydown",function(e){
     var href = null;
     var resource = null;
+    var key = e.keyCode;
     var id = window.location.hash.slice(1);
     if(id)
 	resource = document.getElementById(id)
-    if(resource) {
+    if(resource) { // selection exists
 
 	var prev = function() {
 	    var p = items[id]['prev'];
@@ -73,7 +74,6 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
 
-	var key = e.keyCode;
 	// key: p
 	if((key==80)||(key==38)) {
 	    if (e.getModifierState("Shift")) {
@@ -104,10 +104,8 @@ document.addEventListener("keydown",function(e){
 	    if(href)
 		window.location.href = href;
 	};
-    } else { // no selection
-	if(key==80) {
-	    window.location.hash = last;
-	} else {
+    } else { // nothing selected
+	if(key==40||key==78) {
 	    window.location.hash = first;
 	};
     };
