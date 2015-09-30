@@ -124,8 +124,8 @@ class R
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
           l.gsub('@','.').hrefs # obfuscate attributed address
         else # original line
-          [l.hrefs(true){|p,o|
-             yield e, p, o}]
+          [l.hrefs(true){|p,o| # hyperlink plaintext
+             yield e, p, o}] # emit link as triple
         end}.compact.intersperse("\n")
       yield e, Content, body}
 
