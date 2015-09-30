@@ -1,5 +1,6 @@
 body {font-family: sans-serif;padding-left:9.2em;padding-top:1.6em;color:#000;background-color:#eee;}
-span {background-color: #fff;color:#000}
+span {border-radius:.2em;
+    background-color: #fff;color:#000}
 a {text-decoration:none;}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
@@ -56,9 +57,7 @@ td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/tag"] a {color: #fff}
-:target, :target span {background-color:#000;
-	 color:#fff;
-	 padding:.8em}
+:target {background-color:#000; color:#fff}
 :target a {color:#fff;font-weight:bold}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
