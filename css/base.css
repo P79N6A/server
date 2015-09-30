@@ -1,5 +1,5 @@
 body {font-family: sans-serif;padding-left:9.2em;padding-top:1.6em;color:#000;background-color:#eee;}
-
+span {background-color: #fff;color:#000}
 a {text-decoration:none;}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}

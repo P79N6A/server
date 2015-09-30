@@ -295,7 +295,7 @@ class R
               discussion
              ].intersperse("\n  ")},
          r[Content].justArray.map{|c|
-           {_: mail ? :pre : :div, class: :body, c: c}},
+           {_: mail ? :pre : :div, class: :body, c: {_: :span, c: c}}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
          [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|{_: :a, name: name, class: :file, href: o.uri, c: o.R.basename}}},
         ]},'<br>']}
