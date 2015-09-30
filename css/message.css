@@ -36,3 +36,4 @@ div.day {
 }
 
 .chatLog {padding:.8em}
+.chatLog .body {background-color:#fff;color:#000} 
