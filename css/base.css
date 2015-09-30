@@ -50,7 +50,7 @@ table td a {font-weight:bold;padding:.1em;border-radius:.2em}
 table td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td {border-radius: .18em;vertical-align:top}
 td[property="uri"] a {background-color:#fff;color:#000}
-td[property="http://purl.org/dc/terms/date"],td[property="http://purl.org/dc/terms/tag"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
+td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
 td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
