@@ -36,7 +36,7 @@ class R
                                                              end
                                                            ) : k.to_s
                               {facet: fid[k], # facet
-                               c: [{_: :span, class: :count, c: v},
+                               c: [{_: :span, class: :count, c: v},' ',
                                    {_: :span, name: name, class: :name, # label
                                     c: name}]}}]}}) unless m.keys.size==1
 
