@@ -165,14 +165,14 @@ class R < RDF::URI
   ## user-customize tables
   FileSet = {}     # files in GET
   ResourceSet = {} # resources in GET
-  Abstract = {}    # summarize
   Create = {}      # Resource template
-  Identify = {}    # URI template
-  Filter = {}      # graph-transform
+  Identify = {}    # URI-template
+  Filter = {}      # graph-transform (ad-hoc)
+  Abstract = {}    # graph-transform (summarize group of RDF type)
   Render = {}      # MIME renderer
   ViewA = {}       # HTML template (one resource)
   ViewGroup = {}   # HTML template (set of resources)
-  GET = {}         # GET handler bound to URI
+  GET = {}         # GET handler
   Watch = {}       # source-files to check for changes
 
   Stats = {
