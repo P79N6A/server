@@ -27,6 +27,7 @@ class R
 
   # summarized contained resources on per-type basis
   Filter[Container] = -> g,e {
+    e[:title] ||= e.R.path
     groups = {}
     g.map{|u,r|
       r.types.map{|type| # RDF types
@@ -37,7 +38,6 @@ class R
     groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer(s)
 
   Filter[Title] = -> g,e {
-    e[:title] ||= g.values.find{|r|r[Title]}[Title].justArray[0].to_s
-  }
+    e[:title] ||= g.values.find{|r|r[Title]}[Title].justArray[0].to_s}
 
 end

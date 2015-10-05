@@ -77,8 +77,8 @@ class R
         loadGraph = -> {
           set.map{|r|r.nodeToGraph graph} # load resources
           @r[:filters].push Container if @r[:container] # container-summarize
+          @r[:filters].push Title
           @r[:filters].push '#create' if @r.signedIn && init # create a resource
-
           @r[:filters].justArray.map{|f|
             Filter[f][graph,@r]} # transform
           graph}

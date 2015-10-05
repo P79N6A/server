@@ -60,7 +60,7 @@ class R
     # init response-header fields
     e[:Links] = {}
     e[:Response] = {}
-    e[:filters] = [Title]
+    e[:filters] = []
 
     # call request-method
     resource.setEnv(e).send(method).do{|s,h,b|
