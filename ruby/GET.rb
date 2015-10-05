@@ -117,7 +117,6 @@ class R
     end
   end
 
-  # get content from underlying FS
   def readFile parseJSON=false
     if f
       if parseJSON
