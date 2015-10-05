@@ -1,5 +1,5 @@
 class R
-=begin RDF-subset in JSON. why not use RDF.rb and JSON-LD? we use that too. this is for speed, implementation-simplicity + it existed before RDF.rb and we still like using it sometimes
+=begin RDF-subset in JSON
 
  Graph: Hash
   {subject => {predicate => object}}
@@ -68,12 +68,12 @@ class R
           end
         end
         graph[s] ||= {'uri' => s}
-        graph[s][p] = (graph[s][p]||[]).justArray.push o}} # unless graph[s][p].member? o # dedupe
+        graph[s][p] = (graph[s][p]||[]).justArray.push o}}
     graph
   end
 
   # wrapper triplr - caches and indexes previously-unseen resources as a side-effect
-  # non-destructive: a new identifier is required for cache-write
+  # non-destructive: a new identifier is required for write
   # Stream -> file(s) -> Stream
   def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
     graph = fromStream({},triplr) # bunch triples
