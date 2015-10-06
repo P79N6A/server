@@ -30,13 +30,13 @@ class R
   def R.call e # Rack calls request here
     method = e['REQUEST_METHOD']
 
-    # whitelist supported methods in Allow constant
+    # allow whitelisted methods
     return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
 
-    # add environment utility-functions to rack env-Hash
+    # add environment utility-functions to env Hash
     e.extend Th
 
-    # "development mode" hook, source-code watch
+    # check any development-mode files
     dev
 
     # find canonical hostname
@@ -46,18 +46,16 @@ class R
     # strip junk in hostname, like .. and /
     e['SERVER_NAME'] = e.host.gsub /[\.\/]+/, '.'
 
-    # local paths can contain URI special-cars
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/'
-
     # interpret path, preserving trailing-slash
+    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/'
     path = Pathname.new(rawpath).expand_path.to_s
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
-    # affix found URI to environment
+    # instantiate resource
     resource = R[e.scheme + "://" + e.host + path]
     e['uri'] = resource.uri
 
-    # init response-header fields
+    # header-field containers
     e[:Links] = {}
     e[:Response] = {}
     e[:filters] = []
