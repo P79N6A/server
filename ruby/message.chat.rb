@@ -11,7 +11,6 @@ class R
     {href: r.uri,
      id: r.uri,
      class: :ublog,
-#     selectable: true,
      c: [
        {_: :span, class: 'body', c: r[Content]},' ',
        {_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},' ',

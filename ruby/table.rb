@@ -88,84 +88,52 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    edit = e.q.has_key? 'edit'
     frag = e.q['fragment']
-    selURI = if frag
-               if e.uri[-1] == '/'
-                 e.uri # container
-               else
-                 e.uri + '#' + frag # resource
-               end
-             end
-    selected = selURI == this.uri
-    [(if edit && selected
-      [H.css('/css/edit',true), '<form method=POST>']
-      end),
-     {_: :tr, id: rand.to_s.h, href: l.uri, selectable: :true, style: (edit && selected) ? 'background-color:#f6f6f6;color:#000' : '',
+    [{_: :tr, id: this.path, href: l.uri, selectable: :true,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
-              c: if edit && selected
-               (l[k]||'').justArray.map{|o|
-                 EditableValue[k,o,e]}
-             else
-               case k
-               when 'uri'
-                 {_: :a, href: (CGI.escapeHTML l.uri),
-                  c: CGI.escapeHTML((l[Title]||l[Label]||this.basename).justArray[0])} if l.uri
-               when Type
-                 l[Type].justArray.map{|t|
-                   icon = Icons[t.uri]
-                   [({_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon} if l.uri),
-                    (if e.editable this
-                     Containers[t.uri].do{|c|
-                       n = c.R.fragment
-                       {_: :a, href: l.uri+'?new', c: '+', class: :new, title: "new #{n} in #{l.uri}"}}
-                     end)]}
-               when LDP+'contains'
-                 l[k].do{|children|
-                   children = children.justArray
-                   if e.q['table'] == 'table' || children[0].keys.size>1
-                     cGraph = {}
-                     children.map{|c| cGraph[c.uri] = c }
-                     ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]
-                   else
-                     [({style: 'padding: .1em .5em .1em .3em;background-color:#00f;color:#fff;font-size:1.3em;border-radius: .2em .2em .8em .8em',_: :a, href: '?contents',c: "&uarr; Show All"} if children.size > 255),
-                      children.map{|c|[c.R, ' ']}]
-                   end
-                 }
-               when WikiText
-                 Render[WikiText][l[k]]
-               when DC+'tag'
-                 l[k].justArray.map{|v|
-                   e[:label][v] = true
-                   [{_: :a, href: '#', name: v, c: v},' ']}
-               else
-                 l[k].justArray.map{|v|
-                   case v
-                   when Hash
-                     v.R
-                   else
-                     v
-                   end
-                 }.intersperse(' ')
-               end
-              end}, "\n"]
-          },
-          if edit
-            {_: :td, c: if selected
-              SaveButton[e]
-            else
-              {_: :a, class: :wrench, style: 'color:#888',href: this.docroot.uri+'?edit&fragment='+(this.fragment||'')}
-             end}
-          end]},
-     ('</form>' if edit && selected),
+              c: case k
+                 when 'uri'
+                   {_: :a, href: (CGI.escapeHTML l.uri),
+                    c: CGI.escapeHTML((l[Title]||l[Label]||this.basename).justArray[0])} if l.uri
+                 when Type
+                   l[Type].justArray.map{|t|
+                     icon = Icons[t.uri]
+                     {_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
+                 when LDP+'contains'
+                   l[k].do{|children|
+                     children = children.justArray
+                     if e.q['table'] == 'table' || children[0].keys.size>1
+                       cGraph = {}
+                       children.map{|c| cGraph[c.uri] = c }
+                       ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]
+                     else
+                       [({style: 'padding: .1em .5em .1em .3em;background-color:#00f;color:#fff;font-size:1.3em;border-radius: .2em .2em .8em .8em',_: :a, href: '?contents',c: "&uarr; Show All"} if children.size > 255),
+                        children.map{|c|[c.R, ' ']}]
+                     end
+                   }
+                 when WikiText
+                   Render[WikiText][l[k]]
+                 when DC+'tag'
+                   l[k].justArray.map{|v|
+                     e[:label][v] = true
+                     [{_: :a, href: '#', name: v, c: v},' ']}
+                 else
+                   l[k].justArray.map{|v|
+                     case v
+                     when Hash
+                       v.R
+                     else
+                       v
+                     end
+                   }.intersperse(' ')
+                 end}, "\n"]}]},
      l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}},
      l[Image].do{|c|
        {_: :tr,
         c: {_: :td, colspan: keys.size,
-            c: c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :tablePreview}}}.intersperse(' ')}}},
-    ]}
+            c: c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :tablePreview}}}.intersperse(' ')}}}]}
 
   # tabular view for schema types
   ViewGroup[RDFClass] =
