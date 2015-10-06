@@ -88,7 +88,6 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    frag = e.q['fragment']
     [{_: :tr, id: this.path, href: l.uri, selectable: :true,
       c: ["\n",
           keys.map{|k|
