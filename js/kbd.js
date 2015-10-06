@@ -72,27 +72,27 @@ document.addEventListener("keydown",function(e){
 	};
 
 	// key: p
-	if((key==80)||(key==38)) {
+	if(key==80) {
 	    if (e.getModifierState("Shift")) {
-		prevDoc(); // <shift-p>  previous (page)
+		prevDoc(); // <shift-p>  previous page
 	    } else {
-		prev(); // <p>  previous (resource)
+		prev();    // <p> previous resource
 	    };
 	};
 	// key: n
-	if((key==78)||(key==40)){
+	if(key==78){
 	    if (e.getModifierState("Shift")) {
-		nextDoc(); // <shift-n> next (page)
+		nextDoc(); // <shift-n> next page
 	    } else {
-		next(); // <n> next (resource)
+		next();    // <n> next resource
 	    };
 	};
 	// key: tab
 	if(key==9){
 	    if (e.getModifierState("Shift")) {
-		prev(); // <shift-tab> previous (resource)
+		prev(); // <shift-tab> previous resource
 	    } else {
-		next(); // <tab> next (resource)
+		next(); // <tab> next resource
 	    };
 	};
 	// key: enter
@@ -102,7 +102,7 @@ document.addEventListener("keydown",function(e){
 		window.location.href = href;
 	};
     } else { // nothing selected
-	if(key==40||key==78) {
+	if(key==9||key==78) {
 	    window.location.hash = first;
 	};
     };
