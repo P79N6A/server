@@ -5,12 +5,12 @@
     max-width:9em;
     max-height:15em;
     overflow: hidden;
+    background-color:#fff;color:#000;
 }
 .facet .count {
     float:left;
     text-align:right;
     min-width:2.4ex;
     font-weight: bold;
-    margin-right:.3em;
-    color:#000;background-color:#fff;
+    margin-right:.1em;
 }
