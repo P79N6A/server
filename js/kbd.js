@@ -58,11 +58,8 @@ document.addEventListener("keydown",function(e){
 
 	var prev = function() {
 	    var p = items[id]['prev'];
-	    if(p) { // previous item
+	    if(p) // previous item
 		window.location.hash = p['id'];
-	    } else { // out of previous items -> previous page
-		prevDoc();
-	    };
 	};
 
 	var next = function() {
