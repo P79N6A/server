@@ -28,7 +28,7 @@ var facets = function(){
 	    poN.style.backgroundColor='';
 	} else {
 	    poN.attr('on','true');
-	    poN.style.backgroundColor='#fff';
+	    poN.style.backgroundColor='#0f0';
 	}
 	document.querySelector('style.'+p) && document.querySelector('style.'+p).remove() // GC obsolete rules
 	

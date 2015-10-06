@@ -6,12 +6,6 @@
     max-height:15em;
     overflow: hidden;
 }
-.facet .predicate {
-    background-color:#000;
-    color:#fff;
-    padding:.2em;
-}
-.facet .name {border-radius:.16em;padding:0 .14em 0 .14em}
 .facet .count {
     float:left;
     text-align:right;
