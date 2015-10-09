@@ -1,8 +1,6 @@
 body {font-family: sans-serif;padding-left:9.2em;padding-top:1.6em;color:#000;background-color:#eee;}
 pre {white-space: pre-wrap}
 
-.sidebar {position:fixed;left:0;top:0;max-height:100%}
-.sidebar input {max-width: 9em}
 #pointer {color:#fff;position:absolute;top:-.3em;left:-1em;font-size:1.8em}
 
 a {text-decoration:none;}
@@ -48,6 +46,10 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.warp:before { content:"\f135"; font-family: icons; }
+
+.sidebar {position:fixed;left:0;top:0;max-height:100%}
+.sidebar input {max-width: 9em;border:0;font-weight:bold;border-radius:.2em;margin:.2em}
+.sidebar .expand {padding: .1em .5em .1em .3em;background-color:#00f;color:#fff;font-size:1.3em;border-radius: .2em .2em .6em .6em;margin-left: .3em;}
 
 body > table.tab , body > table.html {margin:auto}
 table th a {font-size:1.5em;font-weight: normal}

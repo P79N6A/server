@@ -20,10 +20,11 @@ class R
       else
         cs = e.c # node children
         size = cs.size
-        if size < 256 || q.has_key?('contents')
+        if size < 256 || q.has_key?('full')
           cs.map{|c|c.setEnv e.env}
           e.fileResources.concat cs
         else
+          e.env[:summarized] = true
           e.fileResources # child-pointers
         end
       end

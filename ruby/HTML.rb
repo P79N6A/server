@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+3# -*- coding: utf-8 -*-
 #watch __FILE__
 
 def H x # Ruby values to HTML
@@ -141,7 +141,9 @@ class R
                          ]}) if e[:Links][:prev] || e[:Links][:next]
 
     if e[:container]
-      e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e]
+      e[:sidebar].push [ViewA[SearchBox][{'uri' => '/search/'},e],
+                        ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&darr; show All"} if e[:summarized])
+                       ]
     end
 
     [groups.map{|view,graph|view[graph,e]}, # type-groups
