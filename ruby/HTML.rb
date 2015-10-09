@@ -142,7 +142,7 @@ class R
 
     if e[:container]
       e[:sidebar].push [ViewA[SearchBox][{'uri' => '/search/'},e],
-                        ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&darr; show All"} if e[:summarized] && d.keys.size < 33)
+                        ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&darr; show All"} if e[:summarized])
                        ]
     end
 
