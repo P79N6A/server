@@ -39,6 +39,7 @@ class R
     groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer(s)
 
   Filter[Title] = -> g,e {
-    e[:title] ||= g.values.find{|r|r[Title]}[Title].justArray[0].to_s}
+    g.values.find{|r|r[Title]}.do{|r|
+       e[:title] ||= r[Title].justArray[0].to_s}}
 
 end
