@@ -82,8 +82,11 @@ class R
               r[LDP+'contains'].justArray.map{|c|
                 dir = c.uri[-1] == '/'
                 e[:sidebar].concat ['<br>',{_: :a, href: c.uri, c: c.R.basename + (dir ? '/' : '')}]}
+              nil
+#              TableRow[{'uri' => '..'},e,sort,direction,keys]
+            else
+              TableRow[r,e,sort,direction,keys]
             end
-            TableRow[r,e,sort,direction,keys]
           }}]}}
 
   TableRow = -> l,e,sort,direction,keys {
