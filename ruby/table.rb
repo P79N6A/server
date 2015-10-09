@@ -38,8 +38,8 @@ class R
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
     keys = keys - [Title, Label, Content, Image]
-    keys = keys - skipP if skipP                 # key-skiplist
-    rows = g.resources(e).send direction                    # sorted resources
+    keys = keys - skipP if skipP # key-skiplist
+    rows = g.resources e         # sorted resources
     e.q['addProperty'].do{|p|
       p = p.expand
       keys.push p unless keys.member?(p)||!p.match(/^http/)
