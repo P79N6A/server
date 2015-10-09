@@ -140,6 +140,10 @@ class R
                             {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
                          ]}) if e[:Links][:prev] || e[:Links][:next]
 
+    if e[:container]
+      e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e]
+    end
+
     [groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # singletons
        if !seen[u]

@@ -15,7 +15,7 @@ class R
     elsif !R['//'+r.host+'/man'].exist? # /man must exist in domain dir
       nil
     elsif name.empty?
-      input = {Type => R[Search+'Input']}
+      input = {Type => R[SearchBox]}
       [200,{'Content-Type' => 'text/html'},[Render['text/html'][{'/man' => input},r]]] 
     else
 

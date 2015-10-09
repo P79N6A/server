@@ -95,7 +95,6 @@ class R < RDF::URI
   DC    = Purl + 'dc/terms/'
   SIOC  = RO + 'sioc/ns#'
   VOID  = RO + 'ns/void#'
-  Search   = 'http://sindice.com/vocab/search#'
   Daemon   = 'http://src.whats-your.name/pw'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Schema   = 'http://schema.org/'
@@ -143,6 +142,8 @@ class R < RDF::URI
   Directory= Stat + 'Directory'
   Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
+  Search   = 'http://sindice.com/vocab/search#'
+  SearchBox= Search+'Input'
 
   Prefix={ # String -> String
     "dc" => DC,

@@ -22,7 +22,7 @@ class R
   # groonga  https://github.com/groonga/groonga  https://github.com/ranguba/rroonga
   # gem install rroonga
   ResourceSet['groonga'] = ->d,e,m{
-    m['/search'] = {Type => R[Search+'Input']} # add a search-box to response-resources
+    m['/search'] = {Type => R[SearchBox]} # add a search-box to response-resources
 
     R.groonga.do{|ga|
       q = e['q']                     # search expression

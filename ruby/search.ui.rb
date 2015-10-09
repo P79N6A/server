@@ -82,13 +82,9 @@ class R
             lines[0..5].map{|line| # HTML-render of first 6 matching-lines
               line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
 
-  ViewA[Search+'Input'] = -> r, e {
-    {_: :form, action: r.uri, c: {_: :input, name: :q, value: e.q['q'], style: 'font-size:2em'}}}
+  ViewA[SearchBox] = -> r, e {{_: :form, action: r.uri, c: {_: :input, name: :q, value: e.q['q']}}}
 
-  ViewGroup[Search+'Input'] = -> d,e {
-    [H.js('/js/search',true),
-     d.values.map{|i|
-       ViewA[Search+'Input'][i,e]}]}
-
+  ViewGroup[SearchBox] = -> d,e {
+    [H.js('/js/search',true), d.values.map{|i|ViewA[SearchBox][i,e]}]}
 
 end
