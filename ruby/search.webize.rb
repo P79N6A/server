@@ -18,6 +18,7 @@ class R
   # use "search-result" set
   GET['/search'] = -> d,e {
     e.q['set'] = 'groonga'
+    e[:container] = true
     e[:filters].push 'grep'
     nil}
 

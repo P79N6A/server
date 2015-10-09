@@ -22,8 +22,6 @@ class R
   # groonga  https://github.com/groonga/groonga  https://github.com/ranguba/rroonga
   # gem install rroonga
   ResourceSet['groonga'] = ->d,e,m{
-    m['/search'] = {Type => R[SearchBox]} # add a search-box to response-resources
-
     R.groonga.do{|ga|
       q = e['q']                     # search expression
       g = e["context"] || d.env.host # context
