@@ -62,7 +62,7 @@ td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100ex}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/tag"] a {color: #fff}
-:target, :target span {background-color:#000; color:#fff}
+:target {background-color:#000; color:#fff}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
 
