@@ -1,3 +1,4 @@
+# coding: utf-8
 #watch __FILE__
 class R
 
@@ -66,7 +67,7 @@ class R
                 dir = c.uri[-1] == '/'
                 e[:sidebar].concat ['<br>',{_: :a, class: dir ? :dir : :graph, href: c.uri, c: c.R.basename + (dir ? '/' : '')}]}
               nil
-              TableRow[{'uri' => '..'},e,sort,direction,keys] unless r.R.path=='/'
+              TableRow[{'uri' => '..', Label => '↑'},e,sort,direction,keys] unless r.R.path=='/'
             else
               TableRow[r,e,sort,direction,keys]
             end
