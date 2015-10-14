@@ -81,7 +81,7 @@ class R
             if r.uri == e.uri && r.uri[-1]=='/' # current directory
               r[LDP+'contains'].justArray.map{|c|
                 dir = c.uri[-1] == '/'
-                e[:sidebar].concat ['<br>',{_: :a, href: c.uri, c: c.R.basename + (dir ? '/' : '')}]}
+                e[:sidebar].concat ['<br>',{_: :a, class: dir ? :dir : :graph, href: c.uri, c: c.R.basename + (dir ? '/' : '')}]}
               nil
               TableRow[{'uri' => '..'},e,sort,direction,keys] unless r.R.path=='/'
             else
