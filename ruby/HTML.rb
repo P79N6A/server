@@ -126,7 +126,7 @@ class R
                         c: [{_: :a, class: :dirname, href: up, c: '&uarr;'},
                             {_: :a,
                              class: :basename,
-                             href: e.q.merge({'table'=>e.q['table']=='table' ? '' : 'table'}).qs,
+                             href: '',
                              title: path,
                              c: path.basename}]})
     end

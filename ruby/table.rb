@@ -19,23 +19,20 @@ class R
   end
 
   ViewGroup[Container] = -> g,e {
-    tabular = e.q['table'] == 'table'
-    if tabular
-      TabularView[g,e]
-    else
       g.map{|id,container|
         {class: :container,
          c: [{class: :label, c: {_: :a, href: id+'?set=first-page', c: id.R.basename}},
-             {class: :contents, c: TabularView[{id => container},e]}]}}
-    end}
+             {class: :contents, c: TabularView[{id => container},e,false,false]}]}}}
 
-  TabularView = ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e {
+  TabularView = ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
     sort = (e.q['sort']||'uri').expand                      # sort property
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
-    keys = keys - [Title, Label, Content, Image, Type]
+    keys = keys - [Title, Label, Content, Image, Type, 'uri']
+    # put URI and typetag at beginning
+    keys.unshift 'uri' if show_id
     keys.unshift Type
     rows = g.resources e         # sorted resources
     e.q['addProperty'].do{|p|
@@ -44,7 +41,7 @@ class R
     }
 
     {_: :table, class: :tab,
-     c: [{_: :thead,
+     c: [({_: :thead,
            c: {_: :tr,
                c: [keys.map{|k|
                      q = e.q.merge({'sort' => k.shorten})
@@ -74,7 +71,7 @@ class R
                              {_: :input, name: :addProperty, placeholder: 'add property'}]}
                       end
                      end}
-                    end)]}},
+                    end)]}} if show_head),
          {_: :tbody, c: rows.map{|r|
             if r.uri == e.uri && r.uri[-1]=='/' # current directory
               r[LDP+'contains'].justArray.map{|c|
@@ -104,10 +101,10 @@ class R
                  when LDP+'contains'
                    l[k].do{|children|
                      children = children.justArray
-                     if e.q['table'] == 'table' || children[0].keys.size>1
-                       cGraph = {}
-                       children.map{|c| cGraph[c.uri] = c }
-                       ViewGroup[CSVns+'Row'][cGraph,e]
+                     if children[0].keys.size > 1 # tabular-view for children w/ data
+                       childGraph = {}
+                       children.map{|c|childGraph[c.uri] = c}
+                       TabularView[childGraph,e,false]
                      else
                        children.map{|c|[c.R, ' ']}
                      end
