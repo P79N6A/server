@@ -26,19 +26,17 @@ class R
       g.map{|id,container|
         {class: :container,
          c: [{class: :label, c: {_: :a, href: id+'?set=first-page', c: id.R.basename}},
-             {class: :contents,
-              c: TabularView[{id => container},e,['uri',Type,Mtime,SIOC+'has_container',Size]]
-             }]}}
+             {class: :contents, c: TabularView[{id => container},e]}]}}
     end}
 
-  TabularView = ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, skipP = nil {
+  TabularView = ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e {
 
     sort = (e.q['sort']||'uri').expand                      # sort property
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
-    keys = keys - [Title, Label, Content, Image]
-    keys = keys - skipP if skipP # key-skiplist
+    keys = keys - [Title, Label, Content, Image, Type]
+    keys.unshift Type
     rows = g.resources e         # sorted resources
     e.q['addProperty'].do{|p|
       p = p.expand
@@ -46,7 +44,7 @@ class R
     }
 
     {_: :table, class: :tab,
-     c: [({_: :thead,
+     c: [{_: :thead,
            c: {_: :tr,
                c: [keys.map{|k|
                      q = e.q.merge({'sort' => k.shorten})
@@ -76,7 +74,7 @@ class R
                              {_: :input, name: :addProperty, placeholder: 'add property'}]}
                       end
                      end}
-                    end)]}} unless skipP),
+                    end)]}},
          {_: :tbody, c: rows.map{|r|
             if r.uri == e.uri && r.uri[-1]=='/' # current directory
               r[LDP+'contains'].justArray.map{|c|
@@ -109,7 +107,7 @@ class R
                      if e.q['table'] == 'table' || children[0].keys.size>1
                        cGraph = {}
                        children.map{|c| cGraph[c.uri] = c }
-                       ViewGroup[CSVns+'Row'][cGraph,e,[Date,SIOC+'has_container']]
+                       ViewGroup[CSVns+'Row'][cGraph,e]
                      else
                        children.map{|c|[c.R, ' ']}
                      end
