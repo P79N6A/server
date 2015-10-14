@@ -6,7 +6,7 @@ class R
     Date => :date,
     Label => :tag,
     Title => :title,
-    Directory => :warp,
+    Directory => :dir,
     FOAF+'Person' => :person,
     Image => :img,
     LDP+'contains' => :container,

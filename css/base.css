@@ -45,7 +45,6 @@ a.thread:before { content:"\f03c"; font-family: icons; }
 a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
-a.warp:before { content:"\f135"; font-family: icons; }
 
 .sidebar {position:fixed;left:0;top:0;max-height:100%}
 .sidebar input {font-size:1.2em;max-width: 8em;border:0;font-weight:bold;border-radius:.2em;margin-top:.3em}
