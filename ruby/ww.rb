@@ -189,7 +189,6 @@ GET
 JSON
 HEAD
 HTML
-edit
 table
 HTTP
 image

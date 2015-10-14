@@ -32,7 +32,6 @@ class R
     SIOC+'has_parent' => :reply,
     SIOC+'reply_to' => :reply,
     Stat+'File' => :file,
-    '#editable' => :scissors,
   }
 
   GET['/thumbnail'] = -> e,r {

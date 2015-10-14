@@ -58,20 +58,7 @@ class R
                            href: CGI.escapeHTML(q.qs),
                            class: Icons[k]||'',
                            c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
-                   (if e.editable(e.R)
-                    {_: :th, c: if !e.q.has_key?('edit')
-                      {_: :a, class: :wrench, href: '?edit', style: 'color:#aaa'}
-                    elsif e.q.has_key?('fragment')
-                      if !e.q.has_key?('addProperty')
-                        {_: :a, class: :addButton, c: '+', title: 'add property', href: e.q.merge({'addProperty' => ''}).qs}
-                      elsif e.q['addProperty'].empty?
-                        {_: :form, method: :GET,
-                         c: [{_: :input, name: :edit, val: :edit, type: :hidden},
-                             {_: :input, name: :fragment, val: e.q['fragment'], type: :hidden},
-                             {_: :input, name: :addProperty, placeholder: 'add property'}]}
-                      end
-                     end}
-                    end)]}} if show_head),
+                  ]}} if show_head),
          {_: :tbody, c: rows.map{|r|
             if r.uri == e.uri && r.uri[-1]=='/' # current directory
               r[LDP+'contains'].justArray.map{|c|

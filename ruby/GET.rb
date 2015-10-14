@@ -34,8 +34,6 @@ class R
 
   def response # default GET request->response handler
     init = q.has_key? 'new'
-    edit = q.has_key? 'edit'
-    return @r.SSLupgrade if (init||edit) && @r.scheme == 'http' # HTTPS required when editing
 
     if directory?
       if uri[-1] == '/' # in the container

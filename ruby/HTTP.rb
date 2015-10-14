@@ -106,7 +106,6 @@ class R
 
   ViewGroup[HTTP+'404'] = -> graph, env {
     [{_: :style, c: "tr[property='http://www.w3.org/2011/http#USER_AGENT'] td {font-size:.8em}"},
-     ({_: :a, class: :addButton, c: '+', href: '?new'} if env.editable),
      ViewGroup[BasicResource][graph,env]]}
 
   ViewGroup[HTTP+'500'] = -> graph, env {
