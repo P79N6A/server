@@ -30,10 +30,11 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
-    keys = keys - [Title, Label, Content, Image, Type, 'uri']
+    keys = keys - [Title, Label, Content, Image, Type, 'uri', Size]
     # put URI and typetag at beginning
     keys.unshift 'uri' if show_id
     keys.unshift Type
+    keys.unshift Size
     rows = g.resources e         # sorted resources
     e.q['addProperty'].do{|p|
       p = p.expand

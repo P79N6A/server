@@ -216,10 +216,7 @@ class R
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
         graph[container][LDP+'contains'].push thread }}
-
-    clusters.map{|container| # child-count metadata
-      graph[container][Size] = graph[container][LDP+'contains'].
-                               justArray.inject(0){|sum,val| sum += (val[Size]||1)}}}
+  }
 
   IndexMail = ->doc,graph,host {
     doc.roonga host
