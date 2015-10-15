@@ -50,6 +50,8 @@ a.user:before { content:"\f007"; font-family: icons;}
 .sidebar input {font-size:1.2em;max-width: 8em;border:0;font-weight:bold;border-radius:.2em;margin-top:.3em}
 .sidebar .expand {padding: .1em .5em .1em .3em;background-color:#00f;color:#fff;font-size:1.2em;border-radius: .2em .2em .6em .6em;margin-left: .3em;}
 .sidebar a.graph, .sidebar a.dir {background-color:#fff;color:#000;font-weight:bold;border-radius:.2em}
+.sidebar a.dir:before {padding-right:.2em}
+.sidebar a.graph:before {padding-right:.4em}
 .sidebar a.graph:hover, .sidebar a.dir:hover {background-color:#00f;color:#fff}
 
 body > table.tab , body > table.html {margin:auto}
