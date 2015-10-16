@@ -1,5 +1,5 @@
 body {font-family: sans-serif;padding-left:9.2em;padding-top:1.6em;color:#000;background-color:#eee;}
-pre {white-space: pre-wrap}
+pre {white-space: pre-wrap; margin:0}
 
 #pointer {color:#fff;position:absolute;top:-.3em;left:-1em;font-size:1.8em}
 
