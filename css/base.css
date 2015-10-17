@@ -60,6 +60,7 @@ table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold;padding:.1em;border-radius:.2em}
 table td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td {border-radius: .18em;vertical-align:top}
+td[property="uri"] {white-space: nowrap}
 td[property="uri"] a {background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
 td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100ex}
@@ -71,9 +72,9 @@ td[property="http://purl.org/dc/terms/tag"] a {color: #fff}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
 
-.container {padding: .3em;float: left;clear:both}
+.container {padding: .3em;display:inline-block}
 .container a {border-radius:.2em;color:#fff}
 .container > .label, .container > .contents {background-color:#000;color:#fff}
-.container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding:.2em .5em .2em 2.2em;font-weight:bold;}
+.container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .label a {color:#fff}
-.container > .contents {border-radius: 0 .3em .3em .3em}
+.container > .contents {border-radius: 0 .4em .4em .4em}
