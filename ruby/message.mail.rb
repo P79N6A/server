@@ -270,7 +270,7 @@ class R
       end}
 
     # HTML
-    [{class: :mail, id: r.uri, href: href, selectable: :true,
+    {class: :mail, id: r.uri, href: href, selectable: :true,
      c: [(r[Title].justArray[0].do{|t|
             {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}} unless e[:thread]),
          {class: :header,
@@ -296,6 +296,6 @@ class R
            {_: mail ? :pre : :div, class: :body, c: {_: :span, c: c}}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
          [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|{_: :a, name: name, class: :file, href: o.uri, c: o.R.basename}}},
-        ]},'<br>']}
+        ]}}
 
 end
