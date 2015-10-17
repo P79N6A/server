@@ -19,12 +19,6 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  ViewGroup[Container] = -> g,e {
-      g.map{|id,container|
-        {class: :container,
-         c: [{class: :label, c: {_: :a, href: id+'?set=first-page', c: id.R.basename}},
-             {class: :contents, c: TabularView[{id => container},e,false,false]}]}}}
-
   TabularView = ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
     sort = (e.q['sort']||'uri').expand                      # sort property

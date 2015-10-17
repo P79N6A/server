@@ -208,6 +208,12 @@ class R
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
 
+  ViewGroup[Container] = -> g,e {
+    {class: :containers, c: g.map{|id,container|
+       {class: :container,
+        c: [{class: :label, c: {_: :a, href: id+'?set=first-page', c: id.R.basename}},
+            {class: :contents, c: TabularView[{id => container},e,false,false]}]}}}}
+
   def R.randomColor # fully saturated
 
     hsv2rgb = -> h,s,v {
