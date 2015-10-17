@@ -4,7 +4,6 @@
     white-space: normal;
     vertical-align: top;
     margin:auto;
-    padding:.8em;
 }
 .mail[name] {background-color:#000; color:#fff}
 .mail .header {float: right}
