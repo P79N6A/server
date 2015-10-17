@@ -5,8 +5,8 @@
     margin:auto;
     padding: .3em;
     border-color: #eee;
-    border-width: .2em 0 0 0;
-    border-style: dotted;
+    border-width: 0 0 .1em 0;
+    border-style: solid;
 }
 .mail .header {float: right;text-align:right}
 .mail a.to, .mail a.file, .mail a.discussion {background-color:#000;color:#fff;padding:.1em;border-radius:.2em;}
