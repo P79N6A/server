@@ -71,8 +71,8 @@ td[property="http://purl.org/dc/terms/tag"] a {color: #fff}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
 
-.container {padding: .3em;display: inline-block}
-.container a {border-radius:.2em;color:cyan}
+.container {padding: .3em;float: left;clear:both}
+.container a {border-radius:.2em;color:#fff}
 .container > .label, .container > .contents {background-color:#000;color:#fff}
 .container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding:.2em .5em .2em 2.2em;font-weight:bold;}
 .container > .label a {color:#fff}
