@@ -277,25 +277,25 @@ class R
           c: [r[To].justArray.map{|o|
                 o = o.R
                 {_: :a, class: :to, href: localPath ? (o.dir+'?set=first-page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
-              # reply-target message
+              # reply-of (direct)
               {_: :a, c: ' &larr; ',
                href: r[SIOC+'has_parent'].justArray[0].do{|p|
                  p.uri + '#' + p.uri
                }||'#'},
               author,
-              # timestamp
               r[Date].do{|d|
                 [{_: :a, class: :date,
                   href: r.uri + '#' + r.uri,
                   c: d[0].sub('T',' ')},' ']},
               r[SIOC+'reply_to'].do{|c|
                 [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
-              discussion
+              discussion,
+              [DC+'hasFormat', SIOC+'attachment'].map{|p|
+                r[p].justArray.map{|o|
+                  ['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}}
              ].intersperse("\n  ")},
          r[Content].justArray.map{|c|
            {_: mail ? :pre : :div, class: :body, c: {_: :span, c: c}}},
-         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
-         [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|{_: :a, name: name, class: :file, href: o.uri, c: o.R.basename}}},
-        ]}}
+         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}}]}}
 
 end

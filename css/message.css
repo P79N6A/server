@@ -1,22 +1,21 @@
 .msgs, h1, .mail {margin: auto}
 .mail {
     position:relative;
-    white-space: normal;
     vertical-align: top;
     margin:auto;
+    padding: .3em;
+    border-color: #eee;
+    border-width: .2em 0 0 0;
+    border-style: dotted;
 }
-.mail[name] {background-color:#000; color:#fff}
-.mail .header {float: right}
-.mail a.file {padding:.2em;border-radius:.2em;margin:.1em}
-.mail a.to {background-color:#000;color:#fff;}
-.mail a.discussion {float:right;font-size:2em;color:#fff;background-color:#000}
+.mail .header {float: right;text-align:right}
+.mail a.to, .mail a.file, .mail a.discussion {background-color:#000;color:#fff;padding:.1em;border-radius:.2em;}
 .mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em;}
 .mail .body a {
     font-weight: bold;
     background-color:#fff;
     color:#000;
 }
-
 .mail span.sep {font-size:1.2em;margin: 0 .06em 0 .06em}
 img {max-width: 100%}
 #timegraph {

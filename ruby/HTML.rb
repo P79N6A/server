@@ -1,4 +1,4 @@
-3# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #watch __FILE__
 
 def H x # Ruby values to HTML
@@ -156,7 +156,7 @@ class R
      {class: :sidebar, c: e[:sidebar]},
      {_: :style, c: e[:label].map{|name,_|
         c = randomColor
-        "[name=\"#{name}\"] {color: #000; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
+        "[name=\"#{name}\"] {color: #fff; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
      H.js('/js/kbd',true)]}
 
   ViewA[BasicResource] = -> r,e {
