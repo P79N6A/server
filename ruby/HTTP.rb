@@ -215,9 +215,9 @@ module Th # methods which introspect request-environment
 
   def user_WebID
     x509cert.do{|c|
-      cert = R['/cache/uid/' + R.dive(c.h)]
-      verifyWebID.do{|id| cert.w id } unless cert.exist?
-      return R[cert.r] if cert.exist?}
+      cert = R['/cache/uid/' + R.dive(c.h)] # cert URI
+      verifyWebID.do{|id| cert.w id } unless cert.exist? # update cache
+      return R[cert.r] if cert.exist?} # validated user-URI
   end
 
   def verifyWebID pem = x509cert

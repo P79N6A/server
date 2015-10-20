@@ -50,7 +50,7 @@ class R
       'Access-Control-Expose-Headers' => "User, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
       'MS-Author-Via' => 'SPARQL',
-      'User' => @r.user.uri,
+      'User' => [@r.user],
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
     })
     self
