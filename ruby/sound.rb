@@ -7,16 +7,16 @@ class R
     yield uri, Date, mtime
   end
 
-  Abstract[Sound] = -> graph, g, e { # create player and playlist resources
+  Abstract[Sound] = -> graph, g, e { # put sounds in playlist container, add player resource
     graph['#snd'] = {'uri' => '#snd', Type => R[Container],
-                  LDP+'contains' => g.values.map{|s| graph.delete s.uri # original entry
-                    s.update({'uri' => '#'+URI.escape(s.R.path)})}} # localized playlist-entry
-    graph['#audio'] = {Type => R[Sound+'Player']} # player
-    graph[e.uri].do{|c|c.delete(LDP+'contains')}} # original container
+                  LDP+'contains' => g.values.map{|s| graph.delete s.uri
+                    s.update({'uri' => '#'+URI.escape(s.R.path)})}} # playlist-entry
+    graph['#audio'] = {Type => R[Sound+'Player']}} # player
 
   ViewGroup[Sound+'Player'] = -> g,e {
-    [{id: :audio, _: :audio, autoplay: :true, style: 'width:100%', controls: true}, {_: :a, id: :rand, href: '#rand', c: 'R'}, H.js('/js/audio'), {_: :style, c: "#snd {max-height: 24em; overflow:scroll}
-#rand {color: #fff; background-color: brown; text-decoration: none; font-weight: bold; font-size: 3em; padding: .3em; border-radius: .1em}"}]}
+    [H.js('/js/audio'),
+     {_: :audio, id: :audio, controls: true}]}
+
   def triplrImage &f
     yield uri, Type, R[Image]
   end
