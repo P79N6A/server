@@ -162,7 +162,6 @@ class R
         send *s,&b }}
   end
 
-  # normalize RDF.rb emitters to our types (s,p are URI in String)
   def triplrN3 &b; triplrRDF :n3, &b end
   def triplrTurtle &b; triplrRDF :turtle, &b end
   def triplrRDF f
@@ -170,5 +169,20 @@ class R
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
   end
+
+  def triplrAudio &f
+    yield uri, Type, R[Sound]
+    yield uri, Title, bare
+  end
+
+  Abstract[Sound] = -> graph, g, e { # put sounds in playlist container, add player resource
+    graph['#snd'] = {'uri' => '#snd', Type => R[Container],
+                  LDP+'contains' => g.values.map{|s| graph.delete s.uri
+                    s.update({'uri' => '#'+URI.escape(s.R.path)})}} # playlist-entry
+    graph['#audio'] = {Type => R[Sound+'Player']}} # player
+
+  ViewGroup[Sound+'Player'] = -> g,e {
+    [H.js('/js/audio'),
+     {_: :audio, id: :audio, controls: true}]}
 
 end

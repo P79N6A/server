@@ -202,7 +202,6 @@ search.fs
 search.text
 search.ui
 search.webize
-sound
 text
 }.map{|r|require_relative r}
 

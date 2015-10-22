@@ -58,6 +58,10 @@ class R
       E404[e,r]
     end}
 
+  def triplrImage &f
+    yield uri, Type, R[Image]
+  end
+
   ViewA[Image] = ->img,e{
     image = img.R
     {_: :a, href: image.uri,
