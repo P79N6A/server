@@ -9,13 +9,12 @@ REQUISITES
  gem install bundler
 
 INSTALL
- bundle install # install ruby llibraries
- ruby install # symlink source dir to library path
+ bundle install # install ruby libraries
+ ruby install # symlink source-dir to library-path
 
 USE
 $ cd ..
-$ cp conf/Procfile . # tweak as desired for base server-engine and IP settings
+$ cp conf/Procfile . # tweak configuration as desired
 $ foreman start
-
 port 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
       >1024: standalone or behind apache/nginx/lighttpd, samples in conf/

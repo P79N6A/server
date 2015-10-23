@@ -134,7 +134,7 @@ class R
                              c: path.basename}]})
     end
 
-    # provide request-level pagination links in HTML
+    # request-level pagination links
     e[:sidebar].push({_: :span, class: :paginate,
                       c: [e[:Links][:prev].do{|p|
                             p = CGI.escapeHTML p.to_s
@@ -144,7 +144,7 @@ class R
                             {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
                          ]}) if e[:Links][:prev] || e[:Links][:next]
 
-    # container-search
+    # container-search input box
     if e[:container]
       e[:sidebar].push [ViewA[SearchBox][{'uri' => '/search/'},e],
                         ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&darr; show"} if e[:summarized])
@@ -190,15 +190,10 @@ class R
               }}
            else
              icon = Icons[k]
-             rdfType = Type == k
              ["\n ",
               {_: :td,
-               c: {_: :a, href: rdfType ? (r.R.docroot.uri+'?data') : k, class: icon,
-                   c: if rdfType
-                    {_: :img, src: '/css/misc/cube.svg'}
-                  else
-                    icon ? '' : (k.R.fragment||k.R.basename)
-                   end}, class: :key}, "\n ",
+               c: {_: :a, href: k, class: icon,
+                   c: icon ? '' : (k.R.fragment||k.R.basename)}, class: :key}, "\n ",
               {_: :td, c: v.justArray.map{|v|
                  case v
                  when Hash
