@@ -151,15 +151,17 @@ class R
                        ]
     end
 
-    [groups.map{|view,graph|view[graph,e]}, # type-groups
-     d.map{|u,r|                            # singletons
+    # show
+    [groups.map{|view,graph|view[graph,e]}, # type-group renders
+     d.map{|u,r|                            # resources without a group renderer
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
      {class: :sidebar, c: e[:sidebar]},
-     {_: :style, c: e[:label].map{|name,_|
+     {_: :style,
+      c: e[:label].map{|name,_| # label-color CSS
         c = randomColor
         "[name=\"#{name}\"] {color: #fff; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
      H.js('/js/kbd',true)]}
