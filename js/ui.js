@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	};
     };
-    if(window.location.hash)
-	upgrade();
+    upgrade();
     window.addEventListener('hashchange',upgrade);
 }, false);
