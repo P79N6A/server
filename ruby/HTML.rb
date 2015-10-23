@@ -167,8 +167,7 @@ class R
      H.js('/js/ui',true)]}
 
   ViewA[BasicResource] = -> r,e {
-    fragment = r.R.fragment || r.uri
-    {_: :table, class: :html, id: fragment,
+    {_: :table, class: :html, id: r.R.fragment || r.uri,
      c: r.map{|k,v|
        [{_: :tr, property: k,
         c: case k
@@ -206,6 +205,14 @@ class R
            end}, "\n"
        ]
      }}}
+  ViewA[FOAF+'Person'] = -> r,e {
+    {_: :a,
+     class: :person,
+     id: r.R.fragment,
+     href: r.uri,
+     upgrade: '//linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
+     c: r[FOAF+'name'].justArray[0] || r.R.basename}
+  }
 
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}

@@ -30,11 +30,13 @@ document.addEventListener("DOMContentLoaded", function(){
 //		console.log('resource',resource);
 		var ui = resource.getAttribute('upgrade');
 		if (ui) {
-		    console.log('ui',ui);
+		    window.location = ui;
 		};
 	    };
 	};
     };
+  // goto UI
     upgrade();
     window.addEventListener('hashchange',upgrade);
+
 }, false);
