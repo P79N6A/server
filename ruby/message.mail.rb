@@ -270,7 +270,7 @@ class R
       end}
 
     # HTML
-    {class: :mail, id: r.uri, href: href, selectable: :true,
+    {class: :mail, id: r.uri, href: href,
      c: [(r[Title].justArray[0].do{|t|
             {class: :title, c: {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}}} unless e[:thread]),
          {class: :header,
