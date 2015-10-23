@@ -78,7 +78,7 @@ class R
     m[:from].addrs.head.do{|a|
       author = AddrPath[a.address]         # author URI
       yield author, Type, R[FOAF+'Person']
-      yield author, Label, (a.display_name || a.name)
+      yield author, FOAF+'name', (a.display_name || a.name)
     }
 
     if m.date
