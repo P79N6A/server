@@ -87,26 +87,25 @@ class R
 
   E404 = -> base, env, graph=nil {
     graph ||= {}
+    user = env.user.to_s
     graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
+    graph[user] = {'uri' => user, Type => R[FOAF+'Person']}
     seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
 
     # add container-container breadcrumbs
     base.cascade.reverse.map{|p|
       p.e && seeAlso.push(p)}
-    env[:Links][:next] = env[:Links][:prev] = seeAlso[0]
+
+    # suggest a next move
+    env[:Links][:next] = seeAlso[0]
 
     # add incomplete-path matches
-    seeAlso.concat base.a('*').glob
+#    seeAlso.concat base.a('*').glob
     
     ENV2RDF[env, graph]
-    graph[env.uri][Type] = R[HTTP+'404']
     [404,{'Content-Type' => env.format},
      [Render[env.format].do{|fn|fn[graph,env]} ||
       graph.toRDF(base).dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
-
-  ViewGroup[HTTP+'404'] = -> graph, env {
-    [{_: :style, c: "tr[property='http://www.w3.org/2011/http#USER_AGENT'] td {font-size:.8em}"},
-     ViewGroup[BasicResource][graph,env]]}
 
   ViewGroup[HTTP+'500'] = -> graph, env {
     [{_: :style, c: 'body {background-color:red}'},
