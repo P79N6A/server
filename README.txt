@@ -1,5 +1,5 @@
 WAT
-this is an experimental webserver in the process of being deleted. you probably want https://github.com/ruby-rdf/rdf-ldp
+this server is in the process of being deleted. you probably want https://github.com/ruby-rdf/rdf-ldp
 
 $ cd ruby
 
