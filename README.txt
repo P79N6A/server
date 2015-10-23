@@ -18,5 +18,5 @@ USE
 $ cd ..
 $ cp conf/Procfile . # tweak configuration as desired
 $ foreman start
-port 80/443: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-      >1024: standalone or behind apache/nginx/lighttpd, samples in conf/
+port: 80/443 (standalone)  setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+      >1024  (behind apache/nginx/lighttpd/etc) configuration samples in conf/
