@@ -85,11 +85,19 @@ class R
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
   end
 
+  def R.parseQS qs
+    h = {}
+    qs.split(/&/).map{|e|
+      k, v = e.split(/=/,2).map{|x| CGI.unescape x }
+      h[(k||'').downcase] = v }
+    h
+  end
+
   E404 = -> base, env, graph=nil {
     graph ||= {}
     user = env.user.to_s
-    graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
     graph[user] = {'uri' => user, Type => R[FOAF+'Person']}
+    graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
     seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
 
     # add container-container breadcrumbs
@@ -257,13 +265,10 @@ module Th # methods which introspect request-environment
 
   def SSLupgrade; [301,{'Location' => "https://" + host + self['REQUEST_URI']},[]] end
 
-  def q # parse query-string
+  def q # memoized query keys/vals
     @q ||=
       (if q = self['QUERY_STRING']
-         h = {}
-         q.split(/&/).map{|e| k, v = e.split(/=/,2).map{|x| CGI.unescape x }
-                              h[(k||'').downcase] = v }
-         h
+         R.parseQS q
        else
          {}
        end)
