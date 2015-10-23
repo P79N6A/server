@@ -5,7 +5,7 @@ document.addEventListener("keydown",function(e){
 	if(doc)
 	    window.location = doc.getAttribute('href') + start;
     };
-
+    // pagination key-control
     var key = e.keyCode;
     if(e.getModifierState("Shift")) {
 	// <shift-p> goto prev-page
@@ -17,3 +17,19 @@ document.addEventListener("keydown",function(e){
 	    jumpDoc('next','#first');
     };
 },false);
+
+// if JS support exists, switch to JS UI to resource
+document.addEventListener("DOMContentLoaded", function(){
+    var upgrade = function(){
+	var id = window.location.hash.slice(1);
+	if(id) {
+	    var resource = document.getElementById(id);
+	    if(resource) {
+		var ui = ;
+	    };
+	};
+    };
+    if(window.location.hash)
+	upgrade();
+    window.addEventListener('hashchange',upgrade);
+}, false);

@@ -164,7 +164,7 @@ class R
       c: e[:label].map{|name,_| # label-color CSS
         c = randomColor
         "[name=\"#{name}\"] {color: #fff; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     H.js('/js/kbd',true)]}
+     H.js('/js/ui',true)]}
 
   ViewA[BasicResource] = -> r,e {
     fragment = r.R.fragment || r.uri
