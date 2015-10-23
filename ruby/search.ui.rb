@@ -83,8 +83,6 @@ class R
               line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
 
   ViewA[SearchBox] = -> r, e {{_: :form, action: r.uri, c: {_: :input, name: :q, placeholder: :search, value: e.q['q']}}}
-
-  ViewGroup[SearchBox] = -> d,e {
-    [H.js('/js/search',true), d.values.map{|i|ViewA[SearchBox][i,e]}]}
+  ViewGroup[SearchBox] = -> d,e {d.values.map{|i|ViewA[SearchBox][i,e]}}
 
 end
