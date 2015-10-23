@@ -106,9 +106,11 @@ class R
             {_: :body, c: View[d,e]}]}]}
 
   View = -> d,e { # default view
-    groups = {}
     seen = {}
-    d.map{|u,r| # group by RDF type
+
+    # group resources on RDFtype
+    groups = {}
+    d.map{|u,r|
       (r||{}).types.map{|type|
         if v = ViewGroup[type]
           groups[v] ||= {}
@@ -116,9 +118,10 @@ class R
           seen[u] = true
         end}}
 
-    e[:label] ||= {} # labels
-    e[:sidebar] = [] # control pane
+    e[:label] ||= {} # resource labels
+    e[:sidebar] = [] # overview/control-pane
 
+    # container links on sidebar
     if e[:container]
       path = e.R.justPath
       up = path.dirname
@@ -131,6 +134,7 @@ class R
                              c: path.basename}]})
     end
 
+    # provide request-level pagination links in HTML
     e[:sidebar].push({_: :span, class: :paginate,
                       c: [e[:Links][:prev].do{|p|
                             p = CGI.escapeHTML p.to_s
@@ -140,6 +144,7 @@ class R
                             {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
                          ]}) if e[:Links][:prev] || e[:Links][:next]
 
+    # container-search
     if e[:container]
       e[:sidebar].push [ViewA[SearchBox][{'uri' => '/search/'},e],
                         ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&darr; show"} if e[:summarized])
