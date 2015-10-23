@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   AllowMethods = %w{GET PUT POST OPTIONS HEAD MKCOL DELETE PATCH}
@@ -29,8 +29,12 @@ class R
 
   ENV2RDF = -> env, graph { # environment -> graph
     # request resource
-    subj = graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
-
+    subj = graph[env.uri] ||= {'uri' => env.uri}
+    # inspect query
+    qs = graph['#query'] = {'uri' => '#query'}
+    env.q.map{|key,val|
+      qs['#'+key.slugify] = val
+    }
     env['SERVER_SOFTWARE'] = 'https://gitlab.com/ix/pw'.R
     [env,
      env[:Links],
