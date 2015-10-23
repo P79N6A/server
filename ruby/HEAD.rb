@@ -28,14 +28,19 @@ class R
   alias_method :env, :getEnv
 
   ENV2RDF = -> env, graph { # environment -> graph
+
     # request resource
     subj = graph[env.uri] ||= {'uri' => env.uri}
+
     # inspect query
     qs = graph['#query'] = {'uri' => '#query'}
     env.q.map{|key,val|
       qs['#'+key.slugify] = val
     }
+
+    # server-engine pointer
     env['SERVER_SOFTWARE'] = 'https://gitlab.com/ix/pw'.R
+
     [env,
      env[:Links],
      env[:Response]].compact.map{|db|
