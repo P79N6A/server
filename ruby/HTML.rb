@@ -161,7 +161,7 @@ class R
 
   ViewA[BasicResource] = -> r,e {
     fragment = r.R.fragment || r.uri
-    {_: :table, class: :html, id: fragment, selectable: :true,
+    {_: :table, class: :html, id: fragment,
      c: r.map{|k,v|
        [{_: :tr, property: k,
         c: case k

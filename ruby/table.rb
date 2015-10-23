@@ -70,7 +70,7 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    [{_: :tr, id: this.path, href: l.uri, selectable: :true,
+    [{_: :tr, id: this.path, href: l.uri,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
