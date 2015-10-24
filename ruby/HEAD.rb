@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   AllowMethods = %w{GET PUT POST OPTIONS HEAD MKCOL DELETE PATCH}
