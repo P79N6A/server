@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 class R
 
   def PUT # non-destructive
@@ -84,37 +84,33 @@ class R
     mime = @r['CONTENT_TYPE']
     case mime
     when /^multipart\/form-data/
-      filePOST
-    when /^text\/(n3|turtle)/
-      graphPOST
+      upload
     when /^application\/sparql-update/
       update
+    when /^text\/(n3|turtle)/
+      if @r.linkHeader['type'] == Container
+        path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
+        path.PUT
+        if path.e
+          [200,@r[:Response].update({Location: path.uri}),[]]
+        else
+          mk
+        end
+      else
+        self.PUT
+      end
     else
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, multipart/form-data'},[]]
     end
   end
 
-  def filePOST
+  def upload
     p = (Rack::Request.new env).params
     if file = p['file']
       FileUtils.cp file[:tempfile], child(file[:filename]).pathPOSIX
       file[:tempfile].unlink
       ldp
       [201,@r[:Response].update({Location: uri}),[]]
-    end
-  end
-
-  def graphPOST
-    if @r.linkHeader['type'] == Container
-      path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
-      path.PUT
-      if path.e
-        [200,@r[:Response].update({Location: path.uri}),[]]
-      else
-        mk
-      end
-    else
-      self.PUT
     end
   end
 
