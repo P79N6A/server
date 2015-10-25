@@ -161,7 +161,6 @@ class R
   end
 
   def update
-    ldp
     puts "PATCH #{uri}"
     query = @r['rack.input'].read
     puts query
@@ -172,10 +171,8 @@ class R
     sse = SPARQL.parse(query, update: true)
     sse.execute(model)
     doc.w model.dump(:ttl)
-    [200,{},[]]
-  rescue Exception => e
-    puts e
-    [200,{},[]]
+    ldp
+    [200,@r[:Response],[]]
   end
 
 end
