@@ -1,7 +1,7 @@
 watch __FILE__
 class R
 
-  def PUT
+  def PUT # non-destructive
     return [400,{},[]] unless @r['CONTENT_TYPE']
     return [403,{},[]] unless allowWrite
     ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
@@ -29,7 +29,7 @@ class R
 
   def DELETE
     return [403, {}, ["Forbidden"]] unless allowWrite
-    return [409, {}, ["not found"]] unless exist?
+    return [409, {}, ["resource not found"]] unless exist?
     puts "DELETE #{uri}"
     delete
     [200,{
@@ -39,48 +39,6 @@ class R
   end
 
   def delete; node.deleteNode if e; self end
-
-  def MKCOL
-    return [403, {}, ["Forbidden"]] unless allowWrite
-    return [405, {}, ["file exists"]] if file?
-    return [405, {}, ["dir exists"]] if directory?
-    mk
-    ldp
-    [201,@r[:Response].update({Location: uri}),[]]
-  end
-
-  def writeResource re, build = true
-    r = re.R # resource pointer
-    ts = Time.now.iso8601.gsub /[-+:T]/, '' # timestamp slug
-    path = fragmentPath          # version-base URI
-    doc = path + '/' + ts + '.e' # version-doc URI
-    s = if r.uri.match /#/  # relative subject-URI
-          '#' + r.fragment # resource-fragment
-        elsif r.uri[-1] == '/'
-          r.basename + '/' # container
-        else
-          r.path
-        end
-    re['uri'] = s     # identify resource
-    graph = {s => re} # resource to graph
-    doc.w graph, true # write graph
-    cur = path.a '.e' # live-version URI
-    cur.delete if cur.e # unlink old
-    doc.ln cur        # link live-version
-    buildDoc if build # update containing-doc
-  end
-
-  def buildDoc
-    resources = fragments
-    doc = jsonDoc
-    if !resources || resources.empty? # empty
-      doc.delete                      # unlink
-    else
-      graph = {}
-      resources.map{|f| f.nodeToGraph graph} # mash fragments
-      doc.w graph, true                      # write doc
-    end
-  end
 
   def appendFile line
     dir.mk
@@ -132,7 +90,7 @@ class R
     when /^application\/sparql-update/
       update
     else
-      [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
+      [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, multipart/form-data'},[]]
     end
   end
 
@@ -153,7 +111,7 @@ class R
       if path.e
         [200,@r[:Response].update({Location: path.uri}),[]]
       else
-        path.MKCOL
+        mk
       end
     else
       self.PUT

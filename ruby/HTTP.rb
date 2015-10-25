@@ -16,7 +16,7 @@ end
 
 class R
 
-  AllowMethods = %w{GET PUT POST OPTIONS HEAD MKCOL DELETE PATCH}
+  AllowMethods = %w{HEAD GET PUT PATCH POST OPTIONS DELETE}
   Allow = AllowMethods.join ', '
 
   def OPTIONS
@@ -67,8 +67,8 @@ class R
   def ldp
     @r[:Links][:acl] = aclURI
     @r[:Response].update({
-#      'Accept-Patch' => 'application/ld+patch',
-      'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/n3, text/turtle',
+      'Accept-Patch' => 'application/ld+patch, application/sparql-update',
+      'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/turtle',
       'Access-Control-Allow-Credentials' => 'true',
       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
       'Access-Control-Expose-Headers' => "User, Location, Link, Vary, Last-Modified",
@@ -239,20 +239,6 @@ class R
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
     end}
 
-  # user-icon
-  # e.signedIn ? {_: :a, class: :user, href: e.user.uri} : {_: :a, class: :identify,href: e.scheme=='http' ? ('https://' + e.host + e['REQUEST_URI']) : '/whoami'}
-  GET['/whoami'] = -> e,r {
-    if r.scheme!='https'
-      r.SSLupgrade
-    else
-      u = r.user.uri # user URI,  <dns:IP> or WebID
-      m = {u => {'uri' => u, Type => R[User]}}
-      r[:Response]['ETag'] = u.h
-      r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
-      e.condResponse ->{
-        Render[r.format].do{|p|p[m,r]}|| m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}
-    end}
-
   def aclURI
     if basename.index('.acl') == 0
       self
@@ -326,7 +312,7 @@ module Th # methods which introspect request-environment
       OpenSSL::X509::Certificate.new(pem).do{|x509|
         x509.extensions.find{|x|x.oid == 'subjectAltName'}.do{|user|
           user = user.value.sub /^URI./, ''
-          head = {'Accept' => 'text/turtle, text/n3, application/ld+json;q=0.8, text/html;q=0.5, application/xhtml+xml;q=0.5, application/rdf+xml;q=0.3'}
+          head = {'Accept' => 'text/turtle, application/ld+json;q=0.8, text/html;q=0.5, application/xhtml+xml;q=0.5, application/rdf+xml;q=0.3'}
           graph = RDF::Repository.load user, headers: head
           query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{user}> :key [ :modulus ?m; :exponent ?e; ] . }"
           SPARQL.execute query, graph do |result|
