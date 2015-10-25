@@ -166,9 +166,9 @@ class R
     query = @r['rack.input'].read
     puts query
     doc = ttl
-    model = RDF::Repository.new
-    model.load doc if doc.e
     puts "doc #{doc}"
+    model = RDF::Repository.new
+    model.load doc.pathPOSIX, :base_uri => uri if doc.e
     sse = SPARQL.parse(query, update: true)
     sse.execute(model)
     doc.w model.dump(:ttl)

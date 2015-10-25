@@ -21,8 +21,8 @@ class R
     condResponse ->{ self }
   end
 
-  def resourceGET # handler lookup
-    bases = [@r.host, ""] # specific host, then generic path
+  def resourceGET
+    bases = [@r.host, ""] # specific host+path or just path
     paths = justPath.cascade.map(&:to_s).map &:downcase
     bases.map{|b|
       paths.map{|p|
@@ -32,7 +32,7 @@ class R
     response
   end
 
-  def response # default GET request->response handler
+  def response
     init = q.has_key? 'new'
 
     if directory?
