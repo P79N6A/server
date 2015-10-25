@@ -1,25 +1,16 @@
 #watch __FILE__
 class R
 
-  def PUT # non-destructive
-    return [400,{},[]] unless @r['CONTENT_TYPE']
+  def PUT
     return [403,{},[]] unless allowWrite
-    ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s # suffix from MIME
-    return [406,{},[]] unless %w{gif html jpg json jsonld png n3 ttl}.member? ext
-
-    # container for states
-    versions = docroot.child '.v'
-
-    # version URI
+    ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s
+    versions = docroot.child '.v' # container for states
+    versions.mk
     doc = versions.child Time.now.iso8601.gsub(/\W/,'') + '.' + ext 
-    body = @r['rack.input'].read
-    doc.w body unless body.empty?
-
-    main = stripDoc.a('.' + ext) # canonical doc-URI
-
+    doc.w @r['rack.input'].read
+    main = stripDoc.a('.' + ext)
     main.delete if main.e # unlink prior
     doc.ln main           # link current
-
     ldp
     [201,@r[:Response].update({Location: uri}),[]]
   rescue Exception => e

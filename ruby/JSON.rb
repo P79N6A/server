@@ -1,31 +1,17 @@
 class R
-=begin RDF-subset in JSON
+=begin
+  JSON graph
 
- Graph: Hash
   {subject => {predicate => object}}
- Stream:
-   produce:
-  yield subject, predicate, object
-   consume:
-  do |subject,predicate,object|
 
-  *subject: String
-  *predicate: String
-  *object: URI or Literal or
-   List/Array [objectA, objectB..]
-
-  *URI
-   RDF::URI
-   R (our resource-class)
-   Hash with 'uri' key
-
-  *Literal
-   RDF::Literal
-   String Integer Float
+  subject+predicate are URIs in a text field
+  object is R or RDF::URI or RDF::Literal or JSON literal or
+   Hash/Object with 'uri' key or
+   [objectA, objectB..]
 
 =end
 
-  # Stream -> JSONGraph
+  # Stream -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -35,13 +21,13 @@ class R
     m
   end
 
-  # URI -> JSONGraph
+  # URI -> Graph
   def graph graph = {}
     fileResources.map{|d|d.nodeToGraph graph}
     graph
   end
 
-  # file -> JSONGraph
+  # file -> Graph
   def nodeToGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
@@ -72,9 +58,8 @@ class R
     graph
   end
 
-  # wrapper triplr - caches and indexes previously-unseen resources as a side-effect
-  # non-destructive: a new identifier is required for write
-  # Stream -> file(s) -> Stream
+  # MITM triplr - caches and indexes previously-unseen resources as a side-effect
+  # non-destructive, only writes to new identifier
   def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
     graph = fromStream({},triplr) # bunch triples
     R.store graph, host, properties, indexer # cache
@@ -82,7 +67,7 @@ class R
     self
   end
 
-  # JSONGraph -> file(s). supply list of predicates to index, and/or arbitrary indexer-lambda
+  # Graph, host, predicates to index, indexer-lambda -> file(s) 
   def R.store graph, host = 'localhost', p = nil, indexer = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -117,7 +102,7 @@ class R
     g
   end
 
-  # RDF::Reader for JSON format
+  # Reader class for RDF library
   module Format
 
     class Format < RDF::Format
@@ -166,7 +151,7 @@ class R
 
   Render['application/json'] = -> d,e { d.to_json }
 
-  # file-reference (non-RDF) ->  file-reference (RDF)
+  # file-reference (non-RDF file) ->  file-reference (RDF file)
   def justRDF pass = RDFsuffixes
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
       self # unchanged
@@ -213,7 +198,7 @@ class Hash
     values.sortRDF env
   end
 
-  # JSONGraph -> RDF::Graph
+  # convert to RDF::Graph
   def toRDF base=nil
     graph = RDF::Graph.new
     triples{|s,p,o|
