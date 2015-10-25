@@ -1,4 +1,4 @@
-#watch __FILE__
+watch __FILE__
 class R
 
   def PUT
@@ -118,9 +118,7 @@ class R
   def ln_s t; ln t, :symlink end
 
   def PATCH
-    puts uri,@r
-puts @r['rack.input'].read
-    [200,{},[]]
+    update
   end
 
   def POST
@@ -132,7 +130,7 @@ puts @r['rack.input'].read
     when /^text\/(n3|turtle)/
       graphPOST
     when /^application\/sparql-update/
-      sparqlPOST
+      update
     else
       [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, text/n3, multipart/form-data'},[]]
     end
@@ -162,17 +160,20 @@ puts @r['rack.input'].read
     end
   end
 
-  def sparqlPOST
+  def update
+    puts "PATCH #{uri}"
     query = @r['rack.input'].read
     doc = ttl
     model = RDF::Repository.new
     model.load doc if doc.e
-    puts "POST target #{uri}"
     puts "storage in #{doc}"
     puts "UPDATE"; puts query
     sse = SPARQL.parse(query, update: true)
     sse.execute(model)
     doc.w model.dump(:ttl)
+    [200,{},[]]
+  rescue Exception => e
+    puts e
     [200,{},[]]
   end
 

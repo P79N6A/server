@@ -172,7 +172,7 @@ class R
     # suggest a next move
     env[:Links][:next] = seeAlso[0]
 
-    # add incomplete-path matches
+    # incomplete-path matches
 #    seeAlso.concat base.a('*').glob
     
     ENV2RDF[env, graph]
