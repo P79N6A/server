@@ -161,13 +161,14 @@ class R
   end
 
   def update
+    ldp
     puts "PATCH #{uri}"
     query = @r['rack.input'].read
+    puts query
     doc = ttl
     model = RDF::Repository.new
     model.load doc if doc.e
-    puts "storage in #{doc}"
-    puts "UPDATE"; puts query
+    puts "doc #{doc}"
     sse = SPARQL.parse(query, update: true)
     sse.execute(model)
     doc.w model.dump(:ttl)
