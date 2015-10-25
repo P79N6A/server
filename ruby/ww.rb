@@ -184,10 +184,7 @@ class R < RDF::URI
 %w{
 MIME
 names
-DELETE
-GET
 JSON
-HEAD
 HTML
 table
 HTTP
@@ -196,13 +193,13 @@ man
 message.chat
 message.mail
 message.news
-POST
-PUT
+read
 search.fs
 search.text
 search.ui
 search.webize
 text
+write
 }.map{|r|require_relative r}
 
 require './local.rb' if R['local.rb'].exist? # local customizations
