@@ -1,17 +1,16 @@
-WHAT?
-due to wanting to get something working right away, before Ruby had an RDF library,
-a native format of "almost" RDF built on JSON was invented,
+WHAT? RDF-izers and a webserver for webmail, news-aggregation, filesystem-browsing, 
+
+HISTORY
+before Ruby had an RDF library, a format of "almost" RDF built on JSON was invented,
 sans blank-nodes and advanced literal datatypes/languages (just JSON-native types).
 despite the omissions, being able to trivially-implement in new languages is one advantage,
-as is swiftly-loading thousands of files for a sub-second response thanks to native JSON-parsers and jettisoned complexity
+as is swiftly-loading thousands of files for a sub-second response thanks to native a JSON-parse
+and raw merging into RAM without the mapping/expansion steps of JSON-LD
 
-files go in domain/hostname/path/to/file, or path/to/file, the latter visible on any host
-
-we try to behave like a LDP server. see: https://github.com/ruby-rdf/rdf-ldp
-our JSON-format and Atom/RSS feeds have a RDF::Reader class, to be used in apps/servers like the one above
-or you can use our daemon for a zero-configuration web-mail, newsreader and filesystem-browser
-directly on port 80/443 as a non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-or behind apache or nginx or some other front-end
+this format now has a RDF::Reader class, to use in apps/servers like https://github.com/ruby-rdf/rdf-ldp
+the long-tail non-RDF Formats are transcoded to this intermediate JSON format for speed on repeated reads.
+our daemon does this by swapping out references to the non-RDF files with a reference to transcoded almost-RDF JSON files
+or you can use RDF::Reader for non-RDF directly, without this optimization, see the Atom/RSS reader for examples
 
 REQUISITES
 Debian http://www.debian.org/
@@ -28,7 +27,8 @@ INSTALL
  bundle install # install ruby libraries
  ruby install # symlink source-dir to library-path
 
-USE
+USE -> files in domain/hostname/path/to/file and/or path/to/file, the latter visible on any host
  cd ..
  cp conf/Procfile .
- foreman start
+ foreman start # to listen on port 80/443 as non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+ 
