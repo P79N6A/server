@@ -1,13 +1,13 @@
-WHAT? webmail, news-aggregation, filesystem-browsing via RDF-conversion
+WHAT? filesystem-browsing via RDF-conversion
 
-before Ruby had an RDF library, a format of "almost" RDF built on JSON was invented,
+a subset of RDF in JSON is our intermediary format,
 sans blank-nodes and advanced literal datatypes/languages (just JSON-native types).
 despite the omissions, being able to trivially-implement in new languages is one advantage,
-as is swiftly-loading thousands of files for a sub-second response thanks to native a JSON-parse
-and raw merging into RAM without the mapping/expansion steps of JSON-LD
+as is loading thousands of files in a sub-second response thanks to native-stdlib JSON-parsers
+and trivial merging into RAM without the mapping/expansion steps of JSON-LD or pure-ruby parsers
 
-this format has a RDF::Reader class to use in apps/servers like https://github.com/ruby-rdf/rdf-ldp
-our daemon builds a cache of non-RDF in this format. a conversion is initiated in a GET request
+our daemon populates a cache of non-RDF in this intermediary format, and RDF::Reader implementations
+for the original MIMEs and the intermediary format allows reading from say https://github.com/ruby-rdf/rdf-ldp
 
 REQUISITES
 Debian http://www.debian.org/
@@ -28,5 +28,3 @@ USE -> files in domain/hostname/path/to/file and/or path/to/file, latter visible
  foreman start # listen on port 80/443 as non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
  # you can use nginx/apache do <1024 and bind to a high-port. or throw us behind a 404-handler on a LDP server, or..
  # mail-URIs start with /address or /thread so just those paths could be sent in, etc..
-
-this has always been shipped as a "complete" server but there are more than one way to rig tings up
