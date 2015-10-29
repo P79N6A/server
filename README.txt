@@ -1,4 +1,4 @@
-WHAT? filesystem-browsing via RDF-conversion
+WHAT? filesystem-browsing via RDF-conversion, for email, newsreading, archival
 
 a subset of RDF in JSON is our intermediary format,
 sans blank-nodes and advanced literal datatypes/languages (just JSON-native types).
