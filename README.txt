@@ -27,4 +27,4 @@ USE -> files in domain/hostname/path/to/file and/or path/to/file, latter visible
  cp conf/Procfile .
  foreman start # listen on port 80/443 as non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
  # you can use nginx/apache do <1024 and bind to a high-port. or throw us behind a 404-handler on a LDP server, or..
- # mail-URIs start with /address or /thread so just those paths could be sent in, etc..
+ # mail-paths start with /address or /thread so just those paths could be sent in, etc..
