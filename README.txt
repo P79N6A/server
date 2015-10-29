@@ -1,13 +1,15 @@
-WHAT? filesystem-browsing via RDF-conversion, for email, newsreading, archival
-
 a subset of RDF in JSON is our intermediary format,
-sans blank-nodes and advanced literal datatypes/languages (just JSON-native types).
+no blank-nodes, advanced literal datatypes/languages (just JSON-native types), or prefix-expansioned prediccate-URIs.
 despite the omissions, being able to trivially-implement in new languages is one advantage,
-as is loading thousands of files in a sub-second response thanks to native-stdlib JSON-parsers
-and trivial merging into RAM without the mapping/expansion steps of JSON-LD or pure-ruby parsers
+as is loading thousands of files in a sub-second response w/ native-stdlib JSON-parsers vs pure-ruby RDF-parsers,
+and a model allowing trivial "hash merge" into RAM without the mapping/expansion/rewriting steps of JSON-LD.
 
-our daemon populates a cache of non-RDF in this intermediary format, and RDF::Reader implementations
-for the original MIMEs and the intermediary format allows reading from say https://github.com/ruby-rdf/rdf-ldp
+i wouldnt recommend using this server unless you know what you're doing. it's in the process of being deleted. 
+i mainly just wanted something low-hassle and minimal to read mail and news. it predates RDF.rb and maybe even Rails.
+first we erased manual sprintf()'ing to a socket with Rack, when that came along. then later a RDF::Reader was written
+so we can use our speed-oriented subset in full RDF Graphs and apps, and next i'll proably delete the daemon and 
+figure out how to hook in the RDF-izers behind the Non-RDF hooks in lamprey from https://github.com/ruby-rdf/rdf-ldp
+it's been in the process of deletion for 12 years and one day hopefully it will be entirely gone! 
 
 REQUISITES
 Debian http://www.debian.org/
