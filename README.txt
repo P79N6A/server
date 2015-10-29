@@ -29,7 +29,4 @@ USE -> files in domain/hostname/path/to/file and/or path/to/file, latter visible
  # you can use nginx/apache do <1024 and bind to a high-port. or throw us behind a 404-handler on a LDP server, or..
  # mail-URIs start with /address or /thread so just those paths could be sent in, etc..
 
-a fun exercise might be expose our caching/transcoding on a RDF::Repository interface in addition to HTTP
-patches welcome..
-
--c <carmen@mw.logbook.am>
+this has always been shipped as a "complete" server but there are more than one way to rig tings up
