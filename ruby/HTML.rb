@@ -103,9 +103,18 @@ class R
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
-            {_: :body, c: View[d,e]}]}]}
+            {_: :body,
+             c: case e.q['ui']
+                when 'tabulator'
+                  base = '//linkeddata.github.io/tabulator/'
+                  [H.css(base+'tabbedtab'), H.js(base+'js/mashup/mashlib'),
+                   {_: :script, c: "document.addEventListener('DOMContentLoaded', function(){tabulator.outline.GotoSubject(tabulator.kb.sym(window.location.href), true, undefined, true, undefined)})"},
+                   {class: :TabulatorOutline, id: :DummyUUID, c: {_: :table, id: :outline}}]
+                else
+                  DefaultView[d,e]
+                end}]}]}
 
-  View = -> d,e { # default view
+  DefaultView = -> d,e {
     seen = {}
 
     # group resources on RDFtype
