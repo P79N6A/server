@@ -1,9 +1,17 @@
-WHAT  a content-management system, web-mail, newsreader, implemented by way of
-a www-daemon, backed by a filesystem. a cached conversion to RDF ensues, unless your data is already RDF
-if your data is always RDF you can skip this software entirely and use https://github.com/ruby-rdf/rdf-ldp
-there's a RDF::Reader class for our intermediary format which you could use with other apps or servers
+WHAT?
+due to wanting to get something working right away, before Ruby had an RDF library,
+a native format of "almost" RDF built on JSON was invented,
+sans blank-nodes and advanced literal datatypes/languages (just JSON-native types).
+despite the omissions, being able to trivially-implement in new languages is one advantage,
+as is swiftly-loading thousands of files for a sub-second response thanks to native JSON-parsers and jettisoned complexity
 
-our intermediary format is "almost" RDF built just using JSON and Hash classes, omitting blank-nodes and advanced literal datatypes/languages (just JSON-native types)
+files go in domain/hostname/path/to/file, or path/to/file, the latter visible on any host
+
+we try to behave like a LDP server. see: https://github.com/ruby-rdf/rdf-ldp
+our JSON-format and Atom/RSS feeds have a RDF::Reader class, to be used in apps/servers like the one above
+or you can use our daemon for a zero-configuration web-mail, newsreader and filesystem-browser
+directly on port 80/443 as a non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+or behind apache or nginx or some other front-end
 
 REQUISITES
 Debian http://www.debian.org/
@@ -24,7 +32,3 @@ USE
  cd ..
  cp conf/Procfile .
  foreman start
-
-TIPS
-port 80/443 non-root: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-      >1024 nginx + apache configuration examples in conf/
