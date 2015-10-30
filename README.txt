@@ -1,5 +1,5 @@
 WHAT
-a HTTP interface to locally-stored mail and news, or a filesystem in general
+a HTTP interface to mail and news (files) or a filesystem in general, compatible with LDP clients
 
 JSON format
 a mini-RDF in JSON with no blank-nodes or special-syntax literal-datatypes/languages (just JSON-native types)
@@ -13,15 +13,14 @@ REQUISITES
 Debian http://www.debian.org/
  apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
 Voidlinux http://www.voidlinux.eu/
- xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments
- gem install bundler
+ xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
 
 INSTALL
  cd ruby
- bundle install # install ruby libraries
- ruby install # symlink source-dir to library-path
+ bundle install     # install packages we depend on
+ ruby install       # install this package
  cd ..
- cp conf/Procfile . # deamon configuration
+ cp conf/Procfile . # deamon configuration, edit to taste
 
 USE
  foreman start
