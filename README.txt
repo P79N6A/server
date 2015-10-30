@@ -9,10 +9,7 @@ first we erased manual output to a socket for Rack when that came along, then la
 to parse our JSON into full RDF graphs. there's also RDF::Readers for non-RDF formats directly like Atom/RSS feeds, 
 
 our HTTP daemon uses a JSON-cache of the non-RDF for speed, and type-specific indexer-hooks are run on cache-miss (file changed) events
-NEXT as an alternative to our daemon, how about lamprey from https://github.com/ruby-rdf/rdf-ldp - a custom Repository that hides our indexing/caching perhaps?
-our own daemon might stay. one goal has been to be as "suckless" as possible, with minimal abstraction-bloat. but as the RDF team has
-added that abstraction and at least thought about non-RDF in the LDP spec we should give them a try. actually are but this "works" and
-there are various things i definitely dont want 4 different kinds of LDP "containers", POSIX had dirs and files, that ought to be enough
+a fun exercise might be to hook our non-RDF functionality in behind the daemon in https://github.com/ruby-rdf/rdf-ldp 
 
 REQUISITES (distro-specific names, yay. any platform that runs Ruby should work)
 Debian http://www.debian.org/
