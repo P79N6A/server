@@ -62,7 +62,6 @@ class R
                 e[:sidebar].concat ['<br>',{_: :a, class: :dir, href: c.uri, c: c.R.basename}] if dir
               }
               nil
-              TableRow[{'uri' => '..', Label => '↑'},e,sort,direction,keys] unless r.R.path=='/'
             else
               TableRow[r,e,sort,direction,keys]
             end
