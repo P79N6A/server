@@ -8,8 +8,6 @@ as is reading thousands of files for a sub-second response via C/stdlib JSON-par
 and a model allowing trivial "hash merge" into RAM without mapping/expansion/rewriting steps of JSON-LD (our
 predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes etc)
 
-a fun exercise might be to hook our RDF-izers into the Non-RDF hooks in https://github.com/ruby-rdf/rdf-ldp 
-
 REQUISITES (distro-specific names, yay. any platform that runs Ruby should work)
 Debian http://www.debian.org/
  apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
