@@ -1,15 +1,14 @@
+WHAT
+a HTTP interface to locally-cached mail and news, or a filesystem in general
+
+JSON format
 a mini-RDF in JSON with no blank-nodes or special-syntax literal datatypes/languages (just JSON-native types)
 despite the omissions, being able to trivially-implement in new languages is one advantage,
 as is reading thousands of files for a sub-second response via C/stdlib JSON-parser vs pure-ruby RDF-parsers,
 and a model allowing trivial "hash merge" into RAM without mapping/expansion/rewriting steps of JSON-LD (our
 predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes etc)
 
-original use-case was a HTTP interface to locally-cached mail and news. it predates RDF.rb and maybe even Rails.
-first we erased manual output to a socket for Rack when that came along, then later a RDF::Reader was added
-to parse our JSON into full RDF graphs. there's also RDF::Readers for non-RDF formats directly like Atom/RSS feeds, 
-
-our HTTP daemon uses a JSON-cache of the non-RDF for speed, and type-specific indexer-hooks are run on cache-miss (file changed) events
-a fun exercise might be to hook our non-RDF functionality in behind the daemon in https://github.com/ruby-rdf/rdf-ldp 
+a fun exercise might be to hook our RDF-izers into the Non-RDF hooks in https://github.com/ruby-rdf/rdf-ldp 
 
 REQUISITES (distro-specific names, yay. any platform that runs Ruby should work)
 Debian http://www.debian.org/
