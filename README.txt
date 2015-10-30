@@ -1,15 +1,14 @@
-a subset of RDF in JSON is our intermediary format,
-no blank-nodes, advanced literal datatypes/languages (just JSON-native types), or prefix-expansioned prediccate-URIs.
+a mini-RDF in JSON with no blank-nodes or special-syntax literal datatypes/languages (just JSON-native types)
 despite the omissions, being able to trivially-implement in new languages is one advantage,
-as is loading thousands of files in a sub-second response w/ native-stdlib JSON-parsers vs pure-ruby RDF-parsers,
-and a model allowing trivial "hash merge" into RAM without the mapping/expansion/rewriting steps of JSON-LD.
+as is reading thousands of files for a sub-second response via C/stdlib JSON-parser vs pure-ruby RDF-parsers,
+and a model allowing trivial "hash merge" into RAM without mapping/expansion/rewriting steps of JSON-LD (our
+predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes etc)
 
-i wouldnt recommend using this server unless you know what you're doing. it's in the process of being deleted. 
-i mainly just wanted something low-hassle and minimal to read mail and news. it predates RDF.rb and maybe even Rails.
-first we erased manual sprintf()'ing to a socket with Rack, when that came along. then later a RDF::Reader was written
-so we can use our speed-oriented subset in full RDF Graphs and apps, and next i'll proably delete the daemon and 
-figure out how to hook in the RDF-izers behind the Non-RDF hooks in lamprey from https://github.com/ruby-rdf/rdf-ldp
-it's been in the process of deletion for 12 years and one day hopefully it will be entirely gone! 
+original use-case was a HTTP interface to locally-cached mail and news. it predates RDF.rb and maybe even Rails.
+first we erased manual sprintf()'ing to a socket for Rack when that came along, then later a RDF::Reader was added
+to parse our JSON into real RDF Graphs. next i'll proably delete the daemon and use lamprey from https://github.com/ruby-rdf/rdf-ldp
+
+our HTTP server uses a JSON-cache of the non-RDF for speed, and type-specific indexer-hooks are run on cache-miss (file changed) events
 
 REQUISITES
 Debian http://www.debian.org/
