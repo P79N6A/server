@@ -1,12 +1,13 @@
 WHAT
-a HTTP interface to locally-cached mail and news, or a filesystem in general
+a HTTP interface to locally-stored mail and news, or a filesystem in general
 
 JSON format
 a mini-RDF in JSON with no blank-nodes or special-syntax literal-datatypes/languages (just JSON-native types)
 despite the omissions, being able to trivially-implement in new languages is one advantage,
 as is reading thousands of files for a sub-second response via C/stdlib JSON-parser vs pure-ruby RDF-parsers,
 and a model allowing trivial "hash merge" into RAM without mapping/expansion/rewriting steps of JSON-LD (our
-predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes etc)
+predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes, no mapping-frames)
+of course having the full RDF model is good sometimes, a RDF::Reader gets you to the full version
 
 REQUISITES
 Debian http://www.debian.org/
