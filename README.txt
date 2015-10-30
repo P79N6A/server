@@ -20,10 +20,13 @@ INSTALL
  cd ruby
  bundle install # install ruby libraries
  ruby install # symlink source-dir to library-path
-
-USE -> files in domain/hostname/path/to/file and/or path/to/file, latter visible to any host
  cd ..
- cp conf/Procfile .
- foreman start # listen on port 80/443 as non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
- # you can use nginx/apache do <1024 and bind to a high-port. or throw us behind a 404-handler on a LDP server, or..
- # mail-paths start with /address or /thread so just those paths could be sent in, etc..
+ cp conf/Procfile . # deamon configuration
+
+USE
+ foreman start
+
+TIPS
+ files go in in domain/hostname/path/to/file and/or path/to/file, latter visible to any host
+
+ to listen on port 80/443 as a non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
