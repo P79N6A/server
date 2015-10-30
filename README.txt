@@ -5,12 +5,16 @@ and a model allowing trivial "hash merge" into RAM without mapping/expansion/rew
 predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes etc)
 
 original use-case was a HTTP interface to locally-cached mail and news. it predates RDF.rb and maybe even Rails.
-first we erased manual sprintf()'ing to a socket for Rack when that came along, then later a RDF::Reader was added
-to parse our JSON into real RDF Graphs. next i'll proably delete the daemon and use lamprey from https://github.com/ruby-rdf/rdf-ldp
+first we erased manual output to a socket for Rack when that came along, then later a RDF::Reader was added
+to parse our JSON into full RDF graphs. there's also RDF::Readers for non-RDF formats directly like Atom/RSS feeds, 
 
-our HTTP server uses a JSON-cache of the non-RDF for speed, and type-specific indexer-hooks are run on cache-miss (file changed) events
+our HTTP daemon uses a JSON-cache of the non-RDF for speed, and type-specific indexer-hooks are run on cache-miss (file changed) events
+NEXT as an alternative to our daemon, how about lamprey from https://github.com/ruby-rdf/rdf-ldp - a custom Repository that hides our indexing/caching perhaps?
+our own daemon might stay. one goal has been to be as "suckless" as possible, with minimal abstraction-bloat. but as the RDF team has
+added that abstraction and at least thought about non-RDF in the LDP spec we should give them a try. actually are but this "works" and
+there are various things i definitely dont want lke 4 different kinds of LDP "containers" - POSIX with just dirs and files was a lot less byzantine than that
 
-REQUISITES
+REQUISITES (distro-specific names, yay. any platform that runs Ruby should work)
 Debian http://www.debian.org/
  apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
 
