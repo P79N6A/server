@@ -12,7 +12,7 @@ our HTTP daemon uses a JSON-cache of the non-RDF for speed, and type-specific in
 NEXT as an alternative to our daemon, how about lamprey from https://github.com/ruby-rdf/rdf-ldp - a custom Repository that hides our indexing/caching perhaps?
 our own daemon might stay. one goal has been to be as "suckless" as possible, with minimal abstraction-bloat. but as the RDF team has
 added that abstraction and at least thought about non-RDF in the LDP spec we should give them a try. actually are but this "works" and
-there are various things i definitely dont want lke 4 different kinds of LDP "containers" - POSIX with just dirs and files was a lot less byzantine than that
+there are various things i definitely dont want 4 different kinds of LDP "containers", POSIX had dirs and files, that ought to be enough
 
 REQUISITES (distro-specific names, yay. any platform that runs Ruby should work)
 Debian http://www.debian.org/
