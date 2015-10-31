@@ -156,7 +156,7 @@ class R
     # container-search input box
     if e[:container]
       e[:sidebar].push [ViewA[SearchBox][{'uri' => '/search/'},e],
-                        ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&darr;"} if e[:summarized])
+                        ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&#9660;"} if e[:summarized])
                        ]
     end
 
