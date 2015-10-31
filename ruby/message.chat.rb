@@ -137,7 +137,11 @@ class R
       c: [(d.values[0][Title].justArray[0].do{|t|
              title = t.sub ReExpr, ''
              {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
-          Facets[d,e]]}, # filterable resources
+          Facets[d,e], # filterable resources
+          e[:Links][:next].do{|n|
+          {_: :a, href: n, c: '&#9660;', style: 'color:#ddd;font-size:10em;margin:.8em'}
+          }
+         ]},
      (#  max/min time-values
       times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.
               flatten.compact.map(&:to_f)
