@@ -130,35 +130,38 @@ class R
     e[:label] ||= {} # resource labels
     e[:sidebar] = [] # overview/control-pane
 
-    # container links on sidebar
-    if e[:container]
-      path = e.R.justPath
-      up = path.dirname
-      e[:sidebar].push({_: :span, class: :path,
-                        c: [{_: :a, class: :dirname, href: up, c: '&uarr;'},
-                            {_: :a,
-                             class: :basename,
-                             href: '',
-                             title: path,
-                             c: path.basename}]})
-    end
-
-    # request-level pagination links
-    e[:sidebar].push({_: :span, class: :paginate,
-                      c: [e[:Links][:prev].do{|p|
-                            p = CGI.escapeHTML p.to_s
-                            {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
-                          e[:Links][:next].do{|n|
-                            n = CGI.escapeHTML n.to_s
-                            {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
-                         ]}) if e[:Links][:prev] || e[:Links][:next]
-
+    path = e.R.justPath
+    directions = {_: :table, class: :pager,
+                  c: [{_: :tr,
+                       c: [{_: :td},
+                           {_: :td,
+                            c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},
+                           {_: :td}]},
+                      {_: :tr,
+                       c: [{_: :td, c: e[:Links][:prev].do{|p|
+                              p = CGI.escapeHTML p.to_s
+                              {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
+                           },
+                           {_: :td, c: {_: :a,
+                                        class: :basename,
+                                        href: '',
+                                        title: path,
+                                        c: path.basename}},
+                           {_: :td, c: e[:Links][:next].do{|n|
+                              n = CGI.escapeHTML n.to_s
+                              {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
+                           }
+                          ]},
+                      {_: :tr,
+                       c: [{_: :td},
+                           {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&#9660;"} if e[:summarized])},
+                           {_: :td}
+                       ]}
+                     ]}
+    e[:sidebar].push directions
+    
     # container-search input box
-    if e[:container]
-      e[:sidebar].push [ViewA[SearchBox][{'uri' => '/search/'},e],
-                        ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&#9660;"} if e[:summarized])
-                       ]
-    end
+    e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
 
     # show
     [groups.map{|view,graph|view[graph,e]}, # type-group renders
