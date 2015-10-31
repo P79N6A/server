@@ -6,9 +6,10 @@ a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
 
-.paginate a {font-size:2em}
-.paginate a[rel="prev"] {float: left;color:#bbb;padding-right:.2em}
-.paginate a[rel="next"] {float: right;color:#000;padding-left:.2em}
+.paginate a, a.expand {font-size:2em}
+.paginate a[rel="prev"] {float: left;color:#bbb}
+.paginate a[rel="next"] {float: right;color:#000}
+a.expand {color:#000}
 
 .path {font-size:2em}
 .path > .dirname {color: #eee}
@@ -45,7 +46,6 @@ a.user:before { content:"\f007"; font-family: icons;}
 
 .sidebar {position:fixed;left:0;top:0;max-height:100%}
 .sidebar input {font-size:1.2em;max-width: 8em;border:0;font-weight:bold;border-radius:.2em;margin-top:.3em;margin-bottom:.3em}
-.sidebar .expand {padding: .1em .5em .1em .3em;background-color:#00f;color:#fff;font-size:1.2em;border-radius: .2em .2em .6em .6em;margin-left: .3em;}
 .sidebar a.graph, .sidebar a.dir {background-color:#fff;color:#000;font-weight:bold;border-radius:.2em}
 .sidebar a.dir:before {padding-right:.2em}
 .sidebar a.graph:before {padding-right:.4em}
