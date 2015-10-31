@@ -139,7 +139,7 @@ class R
              {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
           Facets[d,e], # filterable resources
           e[:Links][:next].do{|n|
-          {_: :a, href: n, c: '&#9660;', style: 'color:#ddd;font-size:10em;margin:.8em'}
+          {_: :a, href: n, c: '&#9660;', style: 'color:#ddd;font-size:9.6em;margin-left:.15em'}
           }
          ]},
      (#  max/min time-values
