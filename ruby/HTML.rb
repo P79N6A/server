@@ -142,11 +142,8 @@ class R
                               p = CGI.escapeHTML p.to_s
                               {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
                            },
-                           {_: :td, c: {_: :a,
-                                        class: :basename,
-                                        href: '',
-                                        title: path,
-                                        c: path.basename}},
+                           {_: :td, c: ({_: :a, class: :basename,
+                                        href: '', title: path, c: path.basename} if e[:container])},
                            {_: :td, c: e[:Links][:next].do{|n|
                               n = CGI.escapeHTML n.to_s
                               {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
