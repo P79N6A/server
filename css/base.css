@@ -6,9 +6,8 @@ a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
 
-.pager td {text-align: center}
 .pager a {font-size:2em; color: #000}
-.pager a[rel="prev"] {color:#bbb}
+.pager a[rel="prev"] {color:#ccc}
 .pager .dirname {color: #ddd}
 .pager .basename {font-weight: bold}
 
