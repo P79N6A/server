@@ -165,16 +165,10 @@ class R
     graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
     seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
 
-    # add container-container breadcrumbs
+    # containment
     base.cascade.reverse.map{|p|
       p.e && seeAlso.push(p)}
 
-    # suggest a next move
-    env[:Links][:next] = seeAlso[0]
-
-    # incomplete-path matches
-#    seeAlso.concat base.a('*').glob
-    
     ENV2RDF[env, graph]
     [404,{'Content-Type' => env.format},
      [Render[env.format].do{|fn|fn[graph,env]} ||
