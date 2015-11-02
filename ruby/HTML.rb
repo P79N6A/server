@@ -155,8 +155,10 @@ class R
                            {_: :td}
                        ]}
                      ]}
+
     e[:sidebar].push directions
-    
+    tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: 'cubes tabr'}
+
     # container-search input box
     e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
 
@@ -173,7 +175,9 @@ class R
       c: e[:label].map{|name,_| # label-color CSS
         c = randomColor
         "[name=\"#{name}\"] {color: #fff; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     H.js('/js/ui',true)]}
+     tabr,
+     H.js('/js/ui',true)
+    ]}
 
   ViewA[BasicResource] = -> r,e {
     {_: :table, class: :html, id: r.R.fragment || r.uri,

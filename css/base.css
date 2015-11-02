@@ -27,6 +27,7 @@ a.key:before { content:"\f084"; font-family: icons; }
 a.link:before { content:"\f0c1"; font-family: icons; }
 a.cog:before { content:"\f013"; font-family: icons; }
 a.gears:before { content:"\f085"; font-family: icons; }
+a.cubes:before { content:"\f1b3"; font-family: icons; }
 a.wrench:before { content:"\f0ad"; font-family: icons; }
 a.pencil:before { content:"\f040"; font-family: icons; }
 a.person:before { content:"\f007"; font-family: icons; }
@@ -66,6 +67,7 @@ td.val {max-width: 100%; overflow: hidden}
 :target {background-color:#fff6f6; color:#000}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
+.tabr {position:absolute;padding: .2em; color:#444;bottom:0;left:0;font-size:1.8em}
 
 .container {padding: .3em;display:inline-block}
 .container a {border-radius:.2em;color:#fff}
