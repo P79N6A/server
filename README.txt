@@ -1,13 +1,15 @@
 WHAT
 a HTTP interface to mail and news (files) or a filesystem in general, compatible with LDP clients
 
-JSON format
+JSON format - optional alternative in addition to RDF formats (if you JUST want those, see https://github.com/ruby-rdf/rdf-ldp)
 a mini-RDF in JSON with no blank-nodes or special-syntax literal-datatypes/languages (just JSON-native types)
 despite the omissions, being able to trivially-implement in new languages is one advantage,
 as is reading thousands of files for a sub-second response via C/stdlib JSON-parser vs pure-ruby RDF-parsers,
 and a model allowing trivial "hash merge" into RAM without mapping/expansion/rewriting steps of JSON-LD (our
 predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes, no mapping-frames)
-of course having the full RDF model is good sometimes, a RDF::Reader gets you to the full version
+
+everything is a Resource, with a URI. our resource-class is named R, one can be instantiated with R() or R[] syntax.
+it is a subclass of RDF::URI. our JSON format has an RDF::Reader interface. our daemon may be going away in favor of lamprey
 
 REQUISITES
 Debian http://www.debian.org/
