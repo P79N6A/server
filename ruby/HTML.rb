@@ -151,7 +151,7 @@ class R
                           ]},
                       {_: :tr,
                        c: [{_: :td},
-                           {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs,c: "&#9660;"} if e[:summarized])},
+                           {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])},
                            {_: :td}
                        ]}
                      ]}
