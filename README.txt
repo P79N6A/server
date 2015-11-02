@@ -9,7 +9,7 @@ and a model allowing trivial "hash merge" into RAM without mapping/expansion/rew
 predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes, no mapping-frames)
 
 everything is a Resource, with a URI. our resource-class is named R, one can be instantiated with R() or R[] syntax.
-it is a subclass of RDF::URI. our JSON format has an RDF::Reader interface. our daemon may be going away in favor of lamprey
+it is derived from RDF::URI. our JSON format has an RDF::Reader interface. our daemon may be going away in favor of lamprey if LDP-API churns endlessly
 
 REQUISITES
 Debian http://www.debian.org/
