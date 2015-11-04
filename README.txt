@@ -1,5 +1,5 @@
 WHAT
-a HTTP interface to mail and news (files) or a filesystem in general, compatible with LDP clients
+a HTTP interface to mail and news (files) or a filesystem in general
 
 JSON format - optional alternative in addition to RDF formats (if you JUST want those, see https://github.com/ruby-rdf/rdf-ldp)
 a mini-RDF in JSON with no blank-nodes or special-syntax literal-datatypes/languages (just JSON-native types)
@@ -8,8 +8,7 @@ as is reading thousands of files for a sub-second response via C/stdlib JSON-par
 and a model allowing trivial "hash merge" into RAM without mapping/expansion/rewriting steps of JSON-LD (our
 predicate URIs are always fully expanded, no searching inside strings for base-URI prefixes, no mapping-frames)
 
-everything is a Resource, with a URI. our resource-class is named R, one can be instantiated with R() or R[] syntax.
-it is derived from RDF::URI. our JSON format has an RDF::Reader interface. our daemon may be going away in favor of lamprey if LDP-API churns endlessly
+everything is a Resource, with a URI. our resource-class is named R, one can be instantiated with R() or R[] syntax
 
 REQUISITES
 Debian http://www.debian.org/
