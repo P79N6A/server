@@ -56,11 +56,13 @@ class R
       map{|t|yield e, Type, t}
 
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
-    list && list.match(/@/) && m['List-Id'].do{|name|
+
+    list && list.match(/@/) && m['List-Id'].do{|name| # list resource
       name = name.decoded
       group = AddrPath[list]                    # list URI
       yield group, Type, R[SIOC+'Usergroup']    # list is a Group
       yield group, Label, name.gsub(/[<>&]/,'') # list name
+      yield group, SIOC+'has_container', group.R.dir
     }
 
     m.from.do{|f|                    # any authors?
@@ -75,10 +77,11 @@ class R
         yield e, SIOC+'reply_to',     # reply URI
         R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
 
-    m[:from].addrs.head.do{|a|
-      author = AddrPath[a.address]         # author URI
+    m[:from].addrs.head.do{|a|# author resource
+      author = AddrPath[a.address]
       yield author, Type, R[FOAF+'Person']
       yield author, FOAF+'name', (a.display_name || a.name)
+      yield author, SIOC+'has_container', author.R.dir
     }
 
     if m.date
