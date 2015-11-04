@@ -160,11 +160,11 @@ class R
   end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
-#    graph.delete e.uri
     bodies = e.q.has_key? 'full'
     e[:summarized] = true unless bodies
     e.q['sort'] ||= Size
     e.q['reverse'] ||= 'reverse'
+    isRDF = e.format != 'text/html'
     group = (e.q['group']||To).expand
     size = g.keys.size
     threads = {}
@@ -193,7 +193,7 @@ class R
 
     # pass 2. cluster
     threads.map{|title,post|
-      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # heaviest wins
+      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # bind heaviest grouping-property value, by default should be recipient and therefore mailing-list
         container = a.R.dir.uri.t
         mid = URI.escape post[DC+'identifier'][0]
 
@@ -210,7 +210,11 @@ class R
           thread[Creator] = post[Creator]
         end
 
-        # cluster container
+        if isRDF # give post a label based on Title, messageID-derived URI considerably less informative
+          graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]}
+        end
+
+        # create container for the cluster
         unless graph[container]
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
