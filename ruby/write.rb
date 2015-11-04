@@ -74,8 +74,8 @@ class R
     return [403,{},[]] unless @r.signedIn && allowWrite
     mime = @r['CONTENT_TYPE']
     case mime
-    when /^multipart\/form-data/
-      upload
+#    when /^multipart\/form-data/
+#      upload
     when /^application\/sparql-update/
       update
     when /^text\/(n3|turtle)/
@@ -91,7 +91,7 @@ class R
         self.PUT
       end
     else
-      [406,{'Accept-Post' => 'application/x-www-form-urlencoded, text/turtle, multipart/form-data'},[]]
+      [406,{'Accept-Post' => 'text/turtle'},[]]
     end
   end
 
