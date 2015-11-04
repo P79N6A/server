@@ -19,7 +19,7 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  TabularView = ViewGroup[Directory] = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
+  TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
     sort = (e.q['sort']||'uri').expand                      # sort property
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
@@ -31,11 +31,6 @@ class R
     keys.unshift Type
     keys.unshift Size
     rows = g.resources e         # sorted resources
-    e.q['addProperty'].do{|p|
-      p = p.expand
-      keys.push p unless keys.member?(p)||!p.match(/^http/)
-    }
-
     {_: :table, class: :tab,
      c: [({_: :thead,
            c: {_: :tr,
@@ -56,16 +51,7 @@ class R
                            c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
                   ]}} if show_head),
          {_: :tbody, c: rows.map{|r|
-            if r.uri == e.uri && r.uri[-1]=='/' # current directory
-              r[LDP+'contains'].justArray.map{|c|
-                dir = c.uri[-1] == '/'
-                e[:sidebar].concat ['<br>',{_: :a, class: :dir, href: c.uri, c: c.R.basename}] if dir
-              }
-              nil
-            else
-              TableRow[r,e,sort,direction,keys]
-            end
-          }}]}}
+            TableRow[r,e,sort,direction,keys]}}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R

@@ -136,9 +136,8 @@ class R
   def size;     node.size end
 
   def triplrContainer
-    dir = uri.t # trailing-slash convention
-
-    yield dir, Type, R[Directory]
+    dir = uri.t
+    yield dir, Type, R[Container]
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601

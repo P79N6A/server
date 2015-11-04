@@ -1,3 +1,4 @@
+
 class R
 
   Icons = {
@@ -6,7 +7,6 @@ class R
     Date => :date,
     Label => :tag,
     Title => :title,
-    Directory => :dir,
     FOAF+'Person' => :person,
     Image => :img,
     LDP+'contains' => :container,

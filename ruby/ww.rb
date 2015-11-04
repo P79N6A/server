@@ -139,7 +139,6 @@ class R < RDF::URI
   BasicResource = W3 + 'ns/rdf#Resource'
   Label    = RDFs + 'label'
   Size     = Stat + 'size'
-  Directory= Stat + 'Directory'
   Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
   Search   = 'http://sindice.com/vocab/search#'
