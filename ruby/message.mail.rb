@@ -163,6 +163,9 @@ class R
   end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
+    if graph[e.uri]
+      graph[e.uri].delete LDP+'contains'
+    end
     bodies = e.q.has_key? 'full'
     e[:summarized] = true unless bodies
     e.q['sort'] ||= Size
