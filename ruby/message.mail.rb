@@ -206,7 +206,7 @@ class R
         # thread (or message)
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
-        thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid + '#' + URI.escape(post.uri), Title => title, Image => post[Image]}
+        thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid , Title => title, Image => post[Image]}
 
         if post[Size] > 1 # thread
           thread.update({Size => post[Size],
