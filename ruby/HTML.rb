@@ -157,7 +157,7 @@ class R
                      ]}
 
     e[:sidebar].push directions
-    tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}}
+    tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
 
     # container-search input box
     e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
