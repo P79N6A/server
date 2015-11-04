@@ -152,6 +152,7 @@ class R
         yield dir, LDP+'contains', c.stripDoc # link to generic resource
       end
     }
+    yield dir, SIOC+'has_container', dir.R.dir
   end
 
     # POSTable container -> contained types
