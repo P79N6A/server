@@ -67,7 +67,7 @@ td.val {max-width: 100%; overflow: hidden}
 :target {background-color:#fff6f6; color:#000}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
-.tabr {position:fixed;padding: .2em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.4em; height: 1.61em}
+.tabr {position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 
 .container {padding: .3em;display:inline-block}
 .container a {border-radius:.2em;color:#fff}

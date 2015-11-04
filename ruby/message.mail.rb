@@ -121,12 +121,12 @@ class R
           else
             {name: "quote#{depth}", _: :span, c: [{_: :span, c: '&gt; '*depth}, qp[3].gsub('@','.').hrefs]} # obfuscate quoted addresses
           end
-        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/)
+        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution line
           l.gsub('@','.').hrefs # obfuscate attributed address
-        else # original line
+        else # fresh line
           [l.hrefs(true){|p,o| # hyperlink plaintext
-             yield e, p, o}] # emit link as triple
-        end}.compact.intersperse("\n")
+             yield e, p, o}] # emit discovered link(s) as RDF
+        end}.compact.intersperse("<br>\n")
       yield e, Content, body}
 
     attache = -> {e.R.a('.attache').mk} # container for attachments & parts
@@ -247,7 +247,6 @@ class R
       e[:timelabel][time.iso8601[0..9]] = true
     }
     e[:arcs].push arc
-    mail = r.types.member?(SIOC+'MailMessage')
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
@@ -294,8 +293,7 @@ class R
                 r[p].justArray.map{|o|
                   ['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}}
              ].intersperse("\n  ")},
-         r[Content].justArray.map{|c|
-           {_: mail ? :pre : :div, class: :body, c: {_: :span, c: c}}},
+         r[Content].justArray.map{|c|{class: :body, c: c}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}}]}}
 
 end
