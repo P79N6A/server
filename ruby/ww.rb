@@ -219,7 +219,6 @@ names
 JSON
 HTML
 HTTP
-man
 message.chat
 message.mail
 message.news
