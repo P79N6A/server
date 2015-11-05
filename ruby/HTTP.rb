@@ -219,8 +219,6 @@ class R
     e.q['reverse'] ||= true
     # render response
     [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[graph,r]} || graph.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
-
-  ViewGroup[Profile] = ViewGroup[SIOC+'Usergroup'] = TabularView
   
   ViewGroup[User] = -> g,env {
     if env.signedIn
@@ -229,7 +227,7 @@ class R
          c: [{_: :a, class: :user, style: "font-size: 3em;text-decoration:none",
               href: "http://linkeddata.github.io/profile-editor/#/profile/view?webid=" + CGI.escape(u)}, # enhanced profile-view
              ViewA[BasicResource][r,env]]}}
-    else # no WebID found, link to cert-creator
+    else # no WebID found, link to onboarding-UI
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
     end}
 
