@@ -185,7 +185,6 @@ MIME
 names
 JSON
 HTML
-table
 HTTP
 image
 man
