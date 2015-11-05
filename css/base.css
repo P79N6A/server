@@ -1,7 +1,7 @@
 body {font-family: sans-serif;padding-left:10em;padding-top:1.6em}
 pre {white-space: pre-wrap}
 
-a {text-decoration:none;color: #888}
+a {text-decoration:none;font-weight: bold;color: #888}
 a.user {color:#00ff0d}
 a.identify, a.user {font-size:1.4em;float: left;margin:.2em; border-width:0}
 a.identify {color: #ddd}
