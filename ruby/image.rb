@@ -25,7 +25,7 @@ class R
     SIOC+'Usergroup' => :group,
     SIOC+'wikiText' => :pencil,
     SIOC+'has_creator' => :user,
-    SIOC+'has_container' => :dir,
+    SIOC+'has_container' => :up,
     SIOC+'has_discussion' => :comments,
     SIOC+'Thread' => :comments,
     SIOC+'MailMessage' => :envelope,

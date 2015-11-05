@@ -138,6 +138,7 @@ class R
   def triplrContainer
     dir = uri.t
     yield dir, Type, R[Container]
+    yield dir, SIOC+'has_container', dir.R.dir
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601
@@ -151,7 +152,6 @@ class R
         yield dir, LDP+'contains', c.stripDoc # link to generic resource
       end
     }
-    yield dir, SIOC+'has_container', dir.R.dir
   end
 
     # POSTable container -> contained types

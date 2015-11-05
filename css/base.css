@@ -24,6 +24,7 @@ a.identify:before { content:"\f235"; font-family: icons; }
 a.img:before { content:"\f03e"; font-family: icons; }
 a.key:before { content:"\f084"; font-family: icons; }
 a.link:before { content:"\f0c1"; font-family: icons; }
+a.up:before { content:"\f148"; font-family: icons; }
 a.cog:before { content:"\f013"; font-family: icons; }
 a.gears:before { content:"\f085"; font-family: icons; }
 a.cubes:before { content:"\f1b3"; font-family: icons; }
