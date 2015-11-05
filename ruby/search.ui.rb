@@ -1,4 +1,27 @@
 class R
+  # search handler
+  GET['/search'] = -> d,e {
+    e.q['set'] = 'groonga'
+    e[:container] = true
+    e[:filters].push 'grep'
+    nil}
+
+  # summarize contained-data on per-type basis
+  Filter[Container] = -> g,e {
+    e[:title] ||= e.R.path
+    groups = {}
+    g.map{|u,r|
+      r.types.map{|type| # RDF types
+        if v = Abstract[type] # summarizer
+          groups[v] ||= {} # type-group
+          groups[v][u] = r # resource -> group
+        end}}
+    groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer(s)
+
+  # set a request-level Title from the RDF-model
+  Filter[Title] = -> g,e {
+    g.values.find{|r|r[Title]}.do{|r|
+       e[:title] ||= r[Title].justArray[0].to_s}}
 
   # wrap nodes in facet-containers
   Facets = -> m,e { # CSS rules are updated at runtime to control visible-set

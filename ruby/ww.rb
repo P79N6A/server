@@ -195,7 +195,6 @@ read
 search.fs
 search.text
 search.ui
-search.webize
 text
 write
 }.map{|r|require_relative r}

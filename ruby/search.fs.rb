@@ -60,6 +60,25 @@ class R
   FileSet['first-page'] = -> d,r,m {
     FileSet['page'][d,r,m].concat FileSet[Resource][d,r,m]}
 
+  # rewrite URIs to local-cache
+  FileSet['localize'] = -> re,q,g {
+    FileSet[Resource][re.justPath,q,g].map{|r|
+      r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
+
+  # local resource-cache with child-URIs rewritten to "stay local"
+  GET['/domain'] = -> e,r {
+    r[:container] = true if e.justPath.e # summarized containers
+    r.q['set'] = 'localize'
+    nil}
+
+  # directory du jour
+  GET['/today'] = -> e,r {
+    [303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
+
+  # internal-storage paths, don't serve directly
+  GET['/cache'] = E404
+  GET['/index'] = E404
+
   def triplrUriList
     open(pathPOSIX).readlines.map{|l|
       yield l.chomp, Type, R[Resource] }
