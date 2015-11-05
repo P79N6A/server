@@ -135,23 +135,23 @@ class R
                   c: [{_: :tr,
                        c: [{_: :td},
                            {_: :td,
-                            c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},
+                            c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')}, # up
                            {_: :td}]},
                       {_: :tr,
                        c: [{_: :td, c: e[:Links][:prev].do{|p|
                               p = CGI.escapeHTML p.to_s
-                              {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
+                              {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}, # left
                            },
                            {_: :td, c: ({_: :a, class: :basename,
                                         href: '', title: path, c: path.basename} if e[:container])},
                            {_: :td, c: e[:Links][:next].do{|n|
                               n = CGI.escapeHTML n.to_s
-                              {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
+                              {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}, # right
                            }
                           ]},
                       {_: :tr,
                        c: [{_: :td},
-                           {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])},
+                           {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])}, # down
                            {_: :td}
                        ]}
                      ]}
@@ -159,12 +159,12 @@ class R
     e[:sidebar].push directions
     tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
 
-    # container-search input box
+    # search-box
     e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
 
     # show
-    [groups.map{|view,graph|view[graph,e]}, # type-group renders
-     d.map{|u,r|                            # resources without a group renderer
+    [groups.map{|view,graph|view[graph,e]}, # type-groups
+     d.map{|u,r|                            # ungrouped
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
@@ -172,11 +172,11 @@ class R
        end},
      {class: :sidebar, c: e[:sidebar]},
      {_: :style,
-      c: e[:label].map{|name,_| # label-color CSS
+      c: e[:label].map{|name,_| # label-colors
         c = randomColor
         "[name=\"#{name}\"] {color: #fff; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     tabr,
-     H.js('/js/ui',true)
+     tabr, # upgrade to RDF UI
+     H.js('/js/ui',true) # keybinding JS
     ]}
 
   ViewA[BasicResource] = -> r,e {
@@ -292,7 +292,7 @@ class R
                  when LDP+'contains'
                    l[k].do{|children|
                      children = children.justArray
-                     if children[0].keys.size > 1 # tabular-view for children w/ data
+                     if children[0].keys.size > 1 # tabular-view of contained children
                        childGraph = {}
                        children.map{|c|childGraph[c.uri] = c}
                        TabularView[childGraph,e,false]
