@@ -175,8 +175,8 @@ class R
       c: e[:label].map{|name,_| # label-colors
         c = randomColor
         "[name=\"#{name}\"] {color: #fff; background-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     tabr, # upgrade to RDF UI
-     H.js('/js/ui',true) # keybinding JS
+     tabr, # upgrade to RDF-UI
+     H.js('/js/ui',true) # keybinding-JS
     ]}
 
   ViewA[BasicResource] = -> r,e {
