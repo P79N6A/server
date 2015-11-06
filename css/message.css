@@ -1,22 +1,7 @@
-.msgs, h1, .mail {margin: auto}
-.mail {
-    position:relative;
-    vertical-align: top;
-    margin:auto;
-    padding: .3em;
-    border-color: #eee;
-    border-width: 0 0 .1em 0;
-    border-style: solid;
-}
-.mail .header {float: right;text-align:right}
-.mail a.to, .mail a.file, .mail a.discussion {background-color:#000;color:#fff;padding:.1em;border-radius:.2em;}
-.mail a[name] {font-size:1.1em;padding:0 .15em 0 .15em;}
-.mail .body a {
-    font-weight: bold;
-    background-color:#fff;
-    color:#000;
-}
-.mail span.sep {font-size:1.2em;margin: 0 .06em 0 .06em}
+body {font-family: sans-serif;padding-left:10em;padding-top:1.6em}
+.mail .header {float: right}
+.mail .body a {background-color:#fff;color:#000;font-size:1.08em}
+a.to {color: #000;background-color: #fff}
 img {max-width: 100%}
 #timegraph {
     width:8em;
@@ -32,6 +17,4 @@ div.day {
      font-size:.88em;
      white-space:nowrap;
 }
-
-.chatLog {padding:.8em}
 .chatLog .body {background-color:#fff;color:#000}
