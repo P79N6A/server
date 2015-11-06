@@ -267,7 +267,7 @@ class R
              else
                c.to_s
              end
-      [{_: :a, name: name, c: name, href: authorURI ? (localPath ? (c.R.dir+'?set=first-page') : c.uri) : '#'},' ']}
+      [{_: :a, name: name, c: name, href: authorURI ? (localPath ? (c.R.dir+'?set=page') : c.uri) : '#'},' ']}
 
     discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
       if e[:thread]
@@ -285,7 +285,7 @@ class R
          {class: :header,
           c: [r[To].justArray.map{|o|
                 o = o.R
-                {_: :a, class: :to, href: localPath ? (o.dir+'?set=first-page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
+                {_: :a, class: :to, href: localPath ? (o.dir+'?set=page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
               # reply-of (direct)
               {_: :a, c: ' &larr; ',
                href: r[SIOC+'has_parent'].justArray[0].do{|p|
