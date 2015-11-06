@@ -131,39 +131,36 @@ class R
     e[:sidebar] = [] # overview/control-pane
 
     path = e.R.justPath
-    directions = {_: :table, class: :pager,
-                  c: [{_: :tr,
-                       c: [{_: :td},
-                           {_: :td,
-                            c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')}, # up
-                           {_: :td}]},
-                      {_: :tr,
-                       c: [{_: :td, c: e[:Links][:prev].do{|p|
-                              p = CGI.escapeHTML p.to_s
-                              {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}, # left
-                           },
-                           {_: :td, c: ({_: :a, class: :basename,
-                                        href: '', title: path, c: path.basename} if e[:container])},
-                           {_: :td, c: e[:Links][:next].do{|n|
-                              n = CGI.escapeHTML n.to_s
-                              {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}, # right
-                           }
-                          ]},
-                      {_: :tr,
-                       c: [{_: :td},
-                           {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])}, # down
-                           {_: :td}
-                       ]}
-                     ]}
-
-    e[:sidebar].push directions
     tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
 
     # search-box
     e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
 
-    # show
-    [groups.map{|view,graph|view[graph,e]}, # type-groups
+    [{_: :table, class: :pager, # directions
+      c: [{_: :tr,
+           c: [{_: :td},
+               {_: :td,
+                c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')}, # up
+               {_: :td}]},
+          {_: :tr,
+           c: [{_: :td, c: e[:Links][:prev].do{|p|
+                  p = CGI.escapeHTML p.to_s
+                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}, # left
+               },
+               {_: :td, c: ({_: :a, class: :basename,
+                             href: '', title: path, c: path.basename} if e[:container])},
+               {_: :td, c: e[:Links][:next].do{|n|
+                  n = CGI.escapeHTML n.to_s
+                  {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}, # right
+               }
+              ]},
+          {_: :tr,
+           c: [{_: :td},
+               {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])}, # down
+               {_: :td}
+              ]}
+         ]},
+     groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # ungrouped
        if !seen[u]
          types = (r||{}).types
