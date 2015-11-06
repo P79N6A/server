@@ -136,30 +136,20 @@ class R
     # search-box
     e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
 
-    [{_: :table, class: :pager, # directions
+    [{_: :table, class: :pager, # direction pointers
       c: [{_: :tr,
-           c: [{_: :td},
-               {_: :td,
-                c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')}, # up
-               {_: :td}]},
+           c: [{_: :td},{_: :td, c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},{_: :td}]}, # up
           {_: :tr,
            c: [{_: :td, c: e[:Links][:prev].do{|p|
                   p = CGI.escapeHTML p.to_s
-                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}, # left
-               },
+                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
                {_: :td, c: ({_: :a, class: :basename,
-                             href: '', title: path, c: path.basename} if e[:container])},
+                             href: '', title: path, c: path.basename} if e[:container])}, # here
                {_: :td, c: e[:Links][:next].do{|n|
                   n = CGI.escapeHTML n.to_s
-                  {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}, # right
-               }
-              ]},
+                  {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}}]}, # right
           {_: :tr,
-           c: [{_: :td},
-               {_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])}, # down
-               {_: :td}
-              ]}
-         ]},
+           c: [{_: :td},{_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])},{_: :td}]}]}, # down
      groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # ungrouped
        if !seen[u]

@@ -38,7 +38,7 @@ a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 
 .sidebar {position:fixed;left:0;top:0;max-height:100%}
-.sidebar input {font-size:1.2em;max-width: 8em;border:0;font-weight:bold;border-radius:.2em;margin-top:.3em;margin-bottom:.3em}
+.sidebar input {max-width: 6em;border:0;font-weight:bold}
 
 body > table.tab , body > table.html {margin:auto}
 table.tab {border-spacing: 0}
