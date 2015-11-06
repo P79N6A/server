@@ -205,28 +205,20 @@ class R
            end}, "\n"
        ]
      }}}
+
   ViewA[FOAF+'Person'] = -> r,e {
-    {_: :a,
-     class: :person,
-     id: r.R.fragment,
-     href: r.uri,
+    {_: :a, class: :person, id: r.R.fragment, href: r.uri,
      upgrade: '//linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
-     c: r[FOAF+'name'].justArray[0] || r.R.basename}
-  }
+     c: r[FOAF+'name'].justArray[0] || r.R.basename}}
 
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
 
   ViewGroup[Container] = -> g,e {
     {class: :containers, c: g.map{|id,container|
-       if id == e.uri
-         ViewA[BasicResource][container,e]
-       else
-         {class: "container",
-          c: [{class: :label, c: {_: :a, href: id+'?set=page', c: id.R.basename}},
-              {class: :contents, c: TabularView[{id => container},e,false,false]}]}
-       end
-     }}}
+       {class: :container,
+        c: [{class: :label, c: {_: :a, href: id+'?set=page', c: id.R.basename}},
+            {class: :contents, c: TabularView[{id => container},e,false,false]}]}}}}
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
