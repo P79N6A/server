@@ -217,7 +217,7 @@ class R
   ViewGroup[Container] = -> g,e {
     {class: :containers, c: g.map{|id,container|
        {class: :container,
-        c: [{class: :label, c: {_: :a, href: id+'?set=page', c: id.R.basename}},
+        c: [{class: :label, c: {_: :a, href: id, c: id.R.basename}},
             {class: :contents, c: TabularView[{id => container},e,false,false]}]}}}}
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
