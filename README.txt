@@ -1,7 +1,7 @@
 WHAT
-a HTTP interface to mail and news (files) or a filesystem in general
+a HTTP interface to the filesystem
 
-JSON format - optional alternative in addition to RDF formats and plaintext
+JSON format - optional alternative to RDF formats, HTML and plaintext
 a mini-RDF in JSON with no blank-nodes or special-syntax literal-datatypes/languages (just JSON-native types)
 despite the omissions, being able to trivially-implement in new languages is one advantage,
 as is reading thousands of files for a sub-second response via C/stdlib JSON-parser vs pure-ruby RDF-parsers,
@@ -28,6 +28,6 @@ USE
  foreman start
 
 TIPS
- files go in in domain/hostname/path/to/file and/or path/to/file, latter visible to any host
-
- to listen on port 80/443 as a non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+ - files go in ./domain/$HOST/path/to/file or ./path/to/file
+ - server can be run elsewhere, but link or copy jss/ and css/ directories to server-root
+ - howto listen on port 80/443 as a non-root user: setcap cap_net_bind_service=+ep $(realpath `which ruby`)
