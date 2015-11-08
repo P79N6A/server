@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 def H x # Ruby values to HTML
   case x
@@ -214,11 +214,12 @@ class R
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
 
+  ViewA[Container] = -> container,e {
+    {class: :container,
+     c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
+         {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
   ViewGroup[Container] = -> g,e {
-    {class: :containers, c: g.map{|id,container|
-       {class: :container,
-        c: [{class: :label, c: {_: :a, href: id, c: id.R.basename}},
-            {class: :contents, c: TabularView[{id => container},e,false,false]}]}}}}
+    {class: :containers, c: g.map{|id,c|ViewA[Container][c,e]}}}
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
