@@ -91,6 +91,7 @@ class R
     'jsonld' => 'application/ld+json',
     'log' => 'text/log',
     'm4a' => 'audio/mp4',
+    'markdown' => 'text/markdown',
     'md' => 'text/markdown',
     'mkv' => 'video/matroska',
     'mp3' => 'audio/mpeg',
