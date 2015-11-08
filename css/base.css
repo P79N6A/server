@@ -60,7 +60,7 @@ img.tablePreview {max-height:14em;max-width:100%}
 .tabr {position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 
 .container {padding: .3em;display:inline-block}
-.container a {color:#fff}
+.container a {color:#fff;border-radius: .16em}
 .container > .label, .container > .label a, .container > .contents {background-color:#000;color:#fff}
 .container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .contents {border-radius: 0 .4em .4em .4em}
