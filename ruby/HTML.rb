@@ -224,10 +224,10 @@ class R
     [({class: :container,
        c: [{class: :label, c: cur.R.basename, style: 'font-size: 2em;background-color:#ccc;color:#000'},
            {class: :contents, style: 'background-color:#ccc;color:#000',
-            c: (cur[LDP+'contains']||[]).map{|c|
+            c: cur[LDP+'contains'].map{|c|
               g.delete(c.uri).do{|c|ViewA[Container][c,e]} || c.R
             }}
-          ]} if cur),
+          ]} if cur && cur[LDP+'contains']),
       g.map{|id,c|ViewA[Container][c,e]}]} # other containers
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {

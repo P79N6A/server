@@ -41,8 +41,6 @@ a.user:before { content:"\f007"; font-family: icons;}
 .sidebar input {max-width: 6em;border:0;font-weight:bold}
 
 body > table.tab , body > table.html {margin:auto}
-table.tab {border-spacing: 0}
-table.tab td {padding: .2em}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold}
 table td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
