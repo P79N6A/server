@@ -224,7 +224,7 @@ class R
     [({class: :container,
        c: [{class: :label, c: cur.R.basename, style: 'font-size: 2em;background-color:#ccc;color:#000'},
            {class: :contents, style: 'background-color:#ccc;color:#000',
-            c: cur[LDP+'contains'].map{|c|
+            c: (cur[LDP+'contains']||[]).map{|c|
               g.delete(c.uri).do{|c|ViewA[Container][c,e]} || c.R
             }}
           ]} if cur),
