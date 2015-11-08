@@ -1,4 +1,4 @@
-pw - a HTTP interface to the filesystem, zero-configuration server for your emails, news (message/rfc2822, RSS, Atom) and misc
+pw - a HTTP interface to the filesystem & zero-configuration server for mails and news (message/rfc2822, RSS, Atom)
 
 an optimized JSON format, alternative to RDF formats, HTML and plaintext is used throughout:
 mini-RDF in JSON with no blank-nodes or special-syntax literal-datatypes/languages (just JSON-native types).
