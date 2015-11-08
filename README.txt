@@ -1,4 +1,4 @@
-pw - a HTTP interface to the filesystem
+pw - a HTTP interface to the filesystem, zero-configuration server for your emails, news (message/rfc2822, RSS, Atom) and misc
 
 an optimized JSON format, alternative to RDF formats, HTML and plaintext is used throughout:
 mini-RDF in JSON with no blank-nodes or special-syntax literal-datatypes/languages (just JSON-native types).
@@ -10,7 +10,6 @@ predicate URIs are stored in full, no searching inside strings for base-URI pref
 everything is a Resource with a URI. our Resource-class is named R and can be instantiated in R() or R[] syntax
 the URI is a subclass of RDF::URI and JSON-format has an RDF::Reader: if you request RDF our subset becomes the real thing
 
-"drop in files and go" with a zero-configuration server for your emails, news (message/rfc2822, RSS, Atom) and misc files
 on-line search is available via Groonga and grep. nothing is indexed by resident crawler-processes, you must GET to trigger indexing
 
 REQUISITES
