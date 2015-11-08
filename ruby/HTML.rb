@@ -218,8 +218,17 @@ class R
     {class: :container,
      c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
+
   ViewGroup[Container] = -> g,e {
-    {class: :containers, c: g.map{|id,c|ViewA[Container][c,e]}}}
+    cur = g.delete e.uri # requested container
+    [({class: :container,
+       c: [{class: :label, c: cur.R.basename, style: 'font-size: 2em;background-color:#ccc;color:#000'},
+           {class: :contents, style: 'background-color:#ccc;color:#000',
+            c: cur[LDP+'contains'].map{|c|
+              g.delete(c.uri).do{|c|ViewA[Container][c,e]} || c.R
+            }}
+          ]} if cur),
+      g.map{|id,c|ViewA[Container][c,e]}]} # other containers
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
