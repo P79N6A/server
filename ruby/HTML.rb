@@ -133,9 +133,6 @@ class R
     path = e.R.justPath
     tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
 
-    # search-box
-    e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
-
     [{_: :table, class: :pager, # direction pointers
       c: [{_: :tr,
            c: [{_: :td},{_: :td, c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},{_: :td}]}, # up
@@ -150,6 +147,7 @@ class R
                   {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}}]}, # right
           {_: :tr,
            c: [{_: :td},{_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])},{_: :td}]}]}, # down
+     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]), # search
      groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # ungrouped
        if !seen[u]

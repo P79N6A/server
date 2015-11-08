@@ -38,7 +38,7 @@ a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 
 .sidebar {position:fixed;left:0;top:0;max-height:100%}
-.sidebar input {max-width: 6em;border:0;font-weight:bold}
+body > form > input {max-width: 8em;float: right;border:0;font-weight:bold}
 
 body > table.tab , body > table.html {margin:auto}
 table th a {font-size:1.5em;font-weight: normal}
@@ -62,5 +62,5 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container {padding: .3em;display:inline-block}
 .container a {color:#fff;border-radius: .16em}
 .container > .label, .container > .label a, .container > .contents {background-color:#000;color:#fff}
-.container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
+.container > .label {border-radius: .48em .48em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .contents {border-radius: 0 .4em .4em .4em}
