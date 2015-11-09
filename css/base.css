@@ -38,15 +38,13 @@ a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 
 .sidebar {position:fixed;left:0;top:0;max-height:100%}
-.sidebar input {max-width: 6em;border:0;font-weight:bold}
+body > form > input {max-width: 8em;float: right;border:0;font-weight:bold}
 
 body > table.tab , body > table.html {margin:auto}
-table.tab {border-spacing: 0}
-table.tab td {padding: .2em}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold}
 table td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
-td {border-radius: .18em;vertical-align:top}
+td {vertical-align:top}
 td[property="uri"] {white-space: nowrap}
 td[property="uri"] a {background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
@@ -62,7 +60,7 @@ img.tablePreview {max-height:14em;max-width:100%}
 .tabr {position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 
 .container {padding: .3em;display:inline-block}
-.container a {color:#fff}
+.container a {color:#fff;border-radius: .16em}
 .container > .label, .container > .label a, .container > .contents {background-color:#000;color:#fff}
-.container > .label {border-radius: .5em .5em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
+.container > .label {border-radius: .48em .48em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .contents {border-radius: 0 .4em .4em .4em}

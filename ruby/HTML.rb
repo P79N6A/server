@@ -133,9 +133,6 @@ class R
     path = e.R.justPath
     tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
 
-    # search-box
-    e[:sidebar].push ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]
-
     [{_: :table, class: :pager, # direction pointers
       c: [{_: :tr,
            c: [{_: :td},{_: :td, c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},{_: :td}]}, # up
@@ -144,12 +141,13 @@ class R
                   p = CGI.escapeHTML p.to_s
                   {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
                {_: :td, c: ({_: :a, class: :basename,
-                             href: path, title: path, c: path.basename} if e[:container])}, # here
+                             href: path, title: path, c: path.basename} if e[:container]&&!d[e.uri])}, # here
                {_: :td, c: e[:Links][:next].do{|n|
                   n = CGI.escapeHTML n.to_s
                   {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}}]}, # right
           {_: :tr,
            c: [{_: :td},{_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])},{_: :td}]}]}, # down
+     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]), # search
      groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # ungrouped
        if !seen[u]
@@ -214,11 +212,19 @@ class R
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
 
+  ViewA[Container] = -> container,e {
+    {class: :container,
+     c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
+         {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
+
   ViewGroup[Container] = -> g,e {
-    {class: :containers, c: g.map{|id,container|
-       {class: :container,
-        c: [{class: :label, c: {_: :a, href: id, c: id.R.basename}},
-            {class: :contents, c: TabularView[{id => container},e,false,false]}]}}}}
+    cur = g.delete e.uri # request container
+    [({class: :container,
+       c: [{class: :label, c: cur.R.basename, style: 'font-size: 2em;background-color:#ccc;color:#000'},
+           {class: :contents, style: 'padding: .5em;background-color:#ccc;color:#000',
+            c: cur[LDP+'contains'].map{|c|
+              g.delete(c.uri).do{|c|ViewA[Container][c,e]}}}]} if cur && cur[LDP+'contains']),
+      g.map{|id,c|ViewA[Container][c,e]}]} # other containers
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
