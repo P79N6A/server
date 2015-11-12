@@ -1,12 +1,11 @@
 #pw
 
-HTTP interface to a filesystem to be used as a zero-configuration webserver for mail and news (message/rfc2822, RSS, Atom) among other things
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) to be used as a zero-configuration webserver for [mail](http://m.whats-your.name) and [news](https://github.com/majestrate/nntpchan) (message/rfc2822, RSS, Atom) among other things
 
 ## MIMEs
-an optimized JSON format, alternative to RDF formats, HTML and plaintext is used throughout:
 
 ### JSON
-a subset of RDF with no blank-nodes or special-syntax literal-datatypes/languages, just JSON-native literals
+a subset of [RDF](https://ruby-rdf.github.io/) with no [blank-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just JSON-native literals
 
 data is arranged for URI key-lookup and merge into a memory Hash-table, w.o mapping/expansion/rewriting:
 
@@ -21,7 +20,7 @@ everything is a Resource with a URI. the Resource-class is R, instantiated in R(
 
 our resource class is just an identifier with one instance-variable, an environment (inherited from a HTTP request)
 
-### RDF compatibility
+### RDF-compatibility
 
 #### Resource
 R is a subclass of RDF::URI and inherits its methods. we added a bidirectional-mapping from URIs to POSIX fs-paths
