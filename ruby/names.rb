@@ -38,6 +38,24 @@ class R
   alias_method :c, :children
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
   def cascade; stripSlash.hierarchy end
+  def triplrContainer
+    dir = uri.t
+    yield dir, Type, R[Container]
+    yield dir, SIOC+'has_container', dir.R.dir unless path=='/'
+    mt = mtime
+    yield dir, Mtime, mt.to_i
+    yield dir, Date, mt.iso8601
+    contained = c
+    yield dir, Size, contained.size
+    contained.map{|c|
+      if c.directory?
+        child = c.descend # trailing-slash directory-URI convention
+        yield dir, LDP+'contains', child
+      else # doc
+        yield dir, LDP+'contains', c.stripDoc # link to generic resource
+      end
+    }
+  end
 
   # POSIX-path mapping
   VHosts = 'domain'
@@ -62,15 +80,15 @@ class R
     puts x
   end
   def realURI; realpath.do{|p|p.R} end
-  def exist?;   node.exist? end
+  def exist?; node.exist? end
   alias_method :e, :exist?
   def directory?; node.directory? end
-  def file?;    node.file? end
+  def file?; node.file? end
   alias_method :f, :file?
   def symlink?; node.symlink? end
-  def mtime;    node.stat.mtime if e end
+  def mtime; node.stat.mtime if e end
   alias_method :m, :mtime
-  def size;     node.size end
+  def size; node.size end
 
   # balanced-containers. hash as string-arg
   def R.dive s
@@ -101,32 +119,6 @@ class R
   def n3; docroot.a '.n3' end
   def ttl; docroot.a '.ttl' end
   def jsonDoc; docroot.a '.e' end
-
-  def triplrContainer
-    dir = uri.t
-    yield dir, Type, R[Container]
-    yield dir, SIOC+'has_container', dir.R.dir unless path=='/'
-    mt = mtime
-    yield dir, Mtime, mt.to_i
-    yield dir, Date, mt.iso8601
-    contained = c
-    yield dir, Size, contained.size
-    contained.map{|c|
-      if c.directory?
-        child = c.descend # trailing-slash directory-URI convention
-        yield dir, LDP+'contains', child
-      else # doc
-        yield dir, LDP+'contains', c.stripDoc # link to generic resource
-      end
-    }
-  end
-
-    # POSTable container -> contained types
-  Containers = {
-    Wiki => SIOC+'WikiArticle',
-    Forum            => SIOC+'Thread',
-    SIOC+'Thread'    => SIOC+'BoardPost',
-  }
 
 end
 
