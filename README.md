@@ -17,7 +17,7 @@ files of one [URI per line](http://amundsen.com/hypermedia/urilist/). used as pr
 ## API
 everything is a [resource](https://en.wikipedia.org/wiki/Web_resource) with a [URI](https://tools.ietf.org/html/rfc3986). the Resource-class is [R](ruby/names.rb.html), instantiated in R() or R[] syntax
 
-our resource class is an [identifier](https://en.wikipedia.org/wiki/Identifier) with one [instance-variable](http://ruby-doc.com/docs/ProgrammingRuby/html/tut_classes.html), an [environment](https://mitpress.mit.edu/sicp/full-text/sicp/book/node77.html) (inherited from a [HTTP request](http://tools.ietf.org/html/rfc7231#section-5)). the [environment](https://en.wikipedia.org/wiki/Eval#Ruby) provides a base URI to [resolve relative-URIs](https://tools.ietf.org/html/rfc3986#section-5.2) against
+our [resource](http://stackoverflow.com/questions/25737584/subclassof-and-instance-of-rdf-rdfsclass/25743530#25743530) class is an [identifier](https://en.wikipedia.org/wiki/Identifier) with one [instance-variable](http://ruby-doc.com/docs/ProgrammingRuby/html/tut_classes.html), an [environment](https://mitpress.mit.edu/sicp/full-text/sicp/book/node77.html) (inherited from a [HTTP request](http://tools.ietf.org/html/rfc7231#section-5)). the [environment](https://en.wikipedia.org/wiki/Eval#Ruby) provides a base URI to [resolve relative-URIs](https://tools.ietf.org/html/rfc3986#section-5.2) against
 
 ### RDF-compatibility
 
