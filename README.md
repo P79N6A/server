@@ -7,13 +7,12 @@
 ### JSON
 a subset of [RDF](https://ruby-rdf.github.io/) with no [blank-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals
 
-data is arranged for URI key-lookup and merge into a memory [Hash](http://docs.ruby-lang.org/en/2.0.0/Hash.html)-table, w.o [mapping/expansion/rewriting](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms):
+data is arranged for [URI](https://www.ietf.org/rfc/rfc1630.txt) key-lookup and [merge](ruby/JSON.rb.html) into a memory [Hash](http://docs.ruby-lang.org/en/2.0.0/Hash.html)-table, w.o [mapping/expansion/rewriting](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms):
 
-[predicate](http://www.w3.org/TR/rdf11-concepts/#dfn-predicate) [URIs](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) are stored in full, no searching inside strings for base-URI prefixes or *-LD mapping-frames
+[predicate](http://www.w3.org/TR/rdf11-concepts/#dfn-predicate) [URIs](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) are stored in full, no searching inside strings for [base-URI](https://annevankesteren.nl/2005/08/base-examples) prefixes or [*-LD mapping-frames](http://json-ld.org/spec/latest/json-ld-framing/)
 
 ### URI list
-files of one URI per line. used as primitive indexes and triple building-blocks. about as trivial as parsing can get
-
+files of one [URI per line](http://amundsen.com/hypermedia/urilist/). used as primitive [indexes](https://en.wikipedia.org/wiki/Database_index) and [triple](http://stackoverflow.com/questions/273218/whats-an-rdf-triple) building-blocks. about as trivial as [parsing](https://github.com/RubenVerborgh/N3.js#parsing) can get
 
 ## API
 everything is a Resource with a URI. the Resource-class is R, instantiated in R() or R[] syntax
