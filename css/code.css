@@ -7,9 +7,8 @@ code {
 }
 
 .highlight {
-    background-color: #012;
-    color: #eee;
-    padding: .4em;
+    background-color:#eee;color:#000;padding:.5em;
+    border-radius: .5em;
 }
 
 p,pre {margin:.1em}
