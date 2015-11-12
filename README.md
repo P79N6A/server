@@ -64,3 +64,8 @@ foreman start
 ``` sh
 setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 ```
+
+## MIRRORS
+[http://src.whats-your.name/pw/](http://src.whats-your.name/pw/)
+[https://gitlab.com/ix/pw](https://gitlab.com/ix/pw)
+[http://repo.or.cz/www](http://repo.or.cz/www)
