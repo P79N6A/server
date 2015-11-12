@@ -20,7 +20,7 @@ class R
       else
         cs = e.c # node children
         size = cs.size
-        if size < 256 || q.has_key?('full')
+        if size < 512 || q.has_key?('full')
           cs.map{|c|c.setEnv e.env}
           e.fileResources.concat cs
         else
@@ -40,14 +40,12 @@ class R
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
   FileSet['page'] = -> d,r,m {
-
     # count
     c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
-
     # direction
     o = r.has_key?('asc') ? :asc : :desc
 
-    (d.take c, o, r['offset'].do{|o|o.R}).do{|s| # traverse
+    (d.take c, o, r['offset'].do{|o|o.R}).do{|s| # get elements
       if r['offset'] && head = s[0] # create direction-reversing link
         d.env[:Links][:prev] = d.path + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
       end
@@ -56,10 +54,6 @@ class R
       end
       s }}
 
-  # page and container-meta
-  FileSet['first-page'] = -> d,r,m {
-    FileSet['page'][d,r,m].concat FileSet[Resource][d,r,m]}
-
   # rewrite URIs to local-cache
   FileSet['localize'] = -> re,q,g {
     FileSet[Resource][re.justPath,q,g].map{|r|
@@ -67,15 +61,13 @@ class R
 
   # local resource-cache with child-URIs rewritten to "stay local"
   GET['/domain'] = -> e,r {
-    r[:container] = true if e.justPath.e # summarized containers
+    r[:container] = true if e.justPath.e # summarize containers
     r.q['set'] = 'localize'
     nil}
 
   # directory du jour
-  GET['/today'] = -> e,r {
-    [303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
+  GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
 
-  # internal-storage paths, don't serve directly
   GET['/cache'] = E404
   GET['/index'] = E404
 
@@ -95,14 +87,13 @@ class R
     r
   end
 
-  # basic index for triple-pattern (.rev file)
-  def getIndex rev # match (? p o) using index
+  def getIndex rev # match (? p o) using index-file
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  def index p, o # append to (s,p,o) index
+  def index p, o # append to (s,p,o) index-file
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
