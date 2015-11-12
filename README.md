@@ -1,4 +1,4 @@
-# pw
+# [pw](http://src.whats-your.name/pw/)
 
 [HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) which can be used as a [zero-configuration](http://suckless.org/philosophy) webserver for [mail](http://m.whats-your.name) and [news](https://github.com/majestrate/nntpchan) ([message/rfc2822](http://www.faqs.org/rfcs/rfc2822.html), [RSS](http://web.resource.org/rss/1.0/spec), [Atom](https://tools.ietf.org/html/rfc4287))
 
@@ -22,7 +22,7 @@ our [resource](http://stackoverflow.com/questions/25737584/subclassof-and-instan
 ### RDF-compatibility
 
 #### Resource
-R is a [subclass](https://encrypted.google.com/search?hl=en&q=inheritance%20ruby) of [RDF::URI](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI) and inherits its methods. we add a [bidirectional-mapping](https://en.wikipedia.org/wiki/Bidirectional_map) from [URIs](https://encrypted.google.com/search?hl=en&q=%22URI%20arithmetic%22) to [filesystem names](https://en.wikipedia.org/wiki/Computer_file#Identifying_and_organizing_files)
+R is a [subclass](http://rubylearning.com/satishtalim/ruby_inheritance.html) of [RDF::URI](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI) and inherits its methods. we add a [bidirectional-mapping](https://en.wikipedia.org/wiki/Bidirectional_map) from [URIs](https://encrypted.google.com/search?hl=en&q=%22URI%20arithmetic%22) to [filesystem names](https://en.wikipedia.org/wiki/Computer_file#Identifying_and_organizing_files)
 
 
 #### JSON format
@@ -57,8 +57,8 @@ foreman start
 ```
 
 ## TIPS
-* files go in ./domain/$HOST/path/to/file or ./path/to/file
-* server can be run elsewhere, link or copy [js/](js/) and [css/](css/) directories to [server-root](.)
+* files go in domain/$HOST/path/to/file or path/to/file
+* daemon can run elsewhere, link or copy [js/](js/) and [css/](css/) directories to [server-root](.)
 * one way to listen on port 80/443 as a non-root user:
 
 ``` sh
@@ -66,6 +66,6 @@ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 ```
 
 ## MIRRORS
-[src.whats-your.name/pw/](http://src.whats-your.name/pw/)
-[gitlab.com/ix/pw](https://gitlab.com/ix/pw)
-[repo.or.cz/www](http://repo.or.cz/www)
+[src.whats-your.name/pw/](http://src.whats-your.name/pw/) 
+[gitlab.com/ix/pw](https://gitlab.com/ix/pw) 
+[repo.or.cz/www](http://repo.or.cz/www) 
