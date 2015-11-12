@@ -49,7 +49,6 @@ td[property="uri"] {white-space: nowrap}
 td[property="uri"] a {background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
 td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100%}
-td[property="http://www.w3.org/ns/ldp#contains"] > a {background-color:#fff;color:#000}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100%}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/tag"] a {color: #fff}

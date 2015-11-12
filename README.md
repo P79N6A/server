@@ -1,15 +1,15 @@
 #pw
 
-[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) to be used as a zero-configuration webserver for [mail](http://m.whats-your.name) and [news](https://github.com/majestrate/nntpchan) (message/rfc2822, RSS, Atom) among other things
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) which can be used as a [zero-configuration](http://suckless.org/philosophy) webserver for [mail](http://m.whats-your.name) and [news](https://github.com/majestrate/nntpchan) ([message/rfc2822](http://www.faqs.org/rfcs/rfc2822.html), [RSS](http://web.resource.org/rss/1.0/spec), [Atom](https://tools.ietf.org/html/rfc4287))
 
 ## MIMEs
 
 ### JSON
-a subset of [RDF](https://ruby-rdf.github.io/) with no [blank-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just JSON-native literals
+a subset of [RDF](https://ruby-rdf.github.io/) with no [blank-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals
 
-data is arranged for URI key-lookup and merge into a memory Hash-table, w.o mapping/expansion/rewriting:
+data is arranged for URI key-lookup and merge into a memory [Hash](http://docs.ruby-lang.org/en/2.0.0/Hash.html)-table, w.o [mapping/expansion/rewriting](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms):
 
-predicate URIs are stored in full, no searching inside strings for base-URI prefixes or *-LD mapping-frames
+[predicate](http://www.w3.org/TR/rdf11-concepts/#dfn-predicate) [URIs](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) are stored in full, no searching inside strings for base-URI prefixes or *-LD mapping-frames
 
 ### URI list
 files of one URI per line. used as primitive indexes and triple building-blocks. about as trivial as parsing can get
