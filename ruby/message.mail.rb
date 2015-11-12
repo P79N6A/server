@@ -304,6 +304,7 @@ class R
                   ['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}}
              ].intersperse("\n  ")},
          r[Content].justArray.map{|c|{class: :body, c: c}},
-         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}}]}}
+         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},'<br>'
+        ]}}
 
 end
