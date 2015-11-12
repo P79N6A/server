@@ -15,18 +15,18 @@ data is arranged for [URI](https://www.ietf.org/rfc/rfc1630.txt) key-lookup and 
 files of one [URI per line](http://amundsen.com/hypermedia/urilist/). used as primitive [indexes](https://en.wikipedia.org/wiki/Database_index) and [triple](http://stackoverflow.com/questions/273218/whats-an-rdf-triple) building-blocks. about as trivial as [parsing](https://github.com/RubenVerborgh/N3.js#parsing) can get
 
 ## API
-everything is a Resource with a URI. the Resource-class is R, instantiated in R() or R[] syntax
+everything is a [resource](https://en.wikipedia.org/wiki/Web_resource) with a [URI](https://tools.ietf.org/html/rfc3986). the Resource-class is [R](ruby/names.rb.html), instantiated in R() or R[] syntax
 
-our resource class is just an identifier with one instance-variable, an environment (inherited from a HTTP request)
+our resource class is an [identifier](https://en.wikipedia.org/wiki/Identifier) with one [instance-variable](http://ruby-doc.com/docs/ProgrammingRuby/html/tut_classes.html), an [environment](https://mitpress.mit.edu/sicp/full-text/sicp/book/node77.html) (inherited from a [HTTP request](http://tools.ietf.org/html/rfc7231#section-5)). the [environment](https://en.wikipedia.org/wiki/Eval#Ruby) provides a base URI to [resolve relative-URIs](https://tools.ietf.org/html/rfc3986#section-5.2) against
 
 ### RDF-compatibility
 
 #### Resource
-R is a subclass of RDF::URI and inherits its methods. we added a bidirectional-mapping from URIs to POSIX fs-paths
+R is a subclass of [RDF::URI](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI) and inherits its methods. we added a bidirectional-mapping from URIs to [filesystem names](https://en.wikipedia.org/wiki/Computer_file#Identifying_and_organizing_files)
 
 
 #### JSON format
-an RDF::Reader interface is defined. there is no Writer defined, as it cant roundtrip full RDF. for full RDF we recommend [Turtle](http://www.w3.org/TeamSubmission/turtle/)
+an [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interface is defined. there is no [RDF::Writer](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Writer) defined, as it cant [roundtrip](https://en.wikipedia.org/wiki/Round-trip_format_conversion) full RDF. for writing full RDF we recommend [Turtle](http://www.w3.org/TeamSubmission/turtle/)
 
 ### Search
 on-line search is available via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). no server-side crawlers: you must [GET](man/GET.html) to trigger indexing
@@ -58,5 +58,9 @@ foreman start
 
 ## TIPS
 * files go in ./domain/$HOST/path/to/file or ./path/to/file
-* server can be run elsewhere, link or copy jss/ and css/ directories to server-root
-* howto listen on port 80/443 as a non-root user: setcap cap_net_bind_service=+ep $(realpath \`which ruby\`)
+* server can be run elsewhere, link or copy [js/](js/) and [css/](css/) directories to [server-root](.)
+* one way to listen on port 80/443 as a non-root user:
+
+``` sh
+setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+```
