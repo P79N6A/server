@@ -1,6 +1,6 @@
 class R
 
-  # constructor
+  # constructors
   def R uri = nil
     uri ? (R.new uri) : self
   end
@@ -14,7 +14,7 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # string parts
+  # string parts with nulls as empty-string
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
@@ -27,7 +27,7 @@ class R
     suffix ? (File.basename pathPart, suffix) : (File.basename pathPart) end
   def bare; basename suffix end
 
-  # hierPart traverses
+  # container traverses
   def justPath; hierPart.R.setEnv(@r) end
   def descend; uri.t.R end
   def child u; descend + u.to_s end
@@ -39,7 +39,7 @@ class R
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
   def cascade; stripSlash.hierarchy end
 
-  # URI <> POSIX-path
+  # POSIX-path mapping
   VHosts = 'domain'
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def node; Pathname.new pathPOSIX end
@@ -55,41 +55,6 @@ class R
   end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
   def sh; pathPOSIX.utf8.sh end # shell-escape path
-
-  def docroot
-    @docroot ||= stripFrag.stripDoc.stripSlash
-  end
-
-  def stripFrag; R uri.split(/#/)[0] end
-
-  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|n3|ttl|txt)$/,''].setEnv(@r) end
-
-  def stripSlash
-    if uri[-1] == '/'
-      if path == '/'
-        self
-      else
-        uri[0..-2].R
-      end
-    else
-      self
-    end
-  end
-
-  # balanced-containers. hash something to string-arg
-  def R.dive s
-    s[0..2] + '/' + s[3..-1]
-  end
-  
-  # squashed names
-  def expand;   uri.expand.R end
-  def shorten;  uri.shorten.R end
-
-  # document URIs
-  def n3; docroot.a '.n3' end
-  def ttl; docroot.a '.ttl' end
-  def jsonDoc; docroot.a '.e' end
-
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def realpath # follow all the links
     node.realpath
@@ -106,6 +71,36 @@ class R
   def mtime;    node.stat.mtime if e end
   alias_method :m, :mtime
   def size;     node.size end
+
+  # balanced-containers. hash as string-arg
+  def R.dive s
+    s[0..2] + '/' + s[3..-1]
+  end
+  
+  # squashed names
+  def expand;   uri.expand.R end
+  def shorten;  uri.shorten.R end
+
+  # document URIs
+  def docroot
+    @docroot ||= stripFrag.stripDoc.stripSlash
+  end
+  def stripFrag; R uri.split(/#/)[0] end
+  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|n3|ttl|txt)$/,''].setEnv(@r) end
+  def stripSlash
+    if uri[-1] == '/'
+      if path == '/'
+        self
+      else
+        uri[0..-2].R
+      end
+    else
+      self
+    end
+  end
+  def n3; docroot.a '.n3' end
+  def ttl; docroot.a '.ttl' end
+  def jsonDoc; docroot.a '.e' end
 
   def triplrContainer
     dir = uri.t
