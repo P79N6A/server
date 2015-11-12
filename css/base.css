@@ -5,8 +5,9 @@ a {font-weight: bold}
 .pager a {text-decoration: none; font-size:2em; color: #000;background-color:#fff;}
 .pager a[rel="prev"] {color:#ccc}
 .pager .dirname {color: #ddd}
-
+[name] {text-decoration: none}
 [name]:hover {color:#000}
+
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }

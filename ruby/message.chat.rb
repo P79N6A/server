@@ -139,9 +139,7 @@ class R
              {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
           Facets[d,e], # filterable resources
           e[:Links][:next].do{|n|
-          {_: :a, href: n, c: '&#9660;', style: 'color:#ddd;font-size:9.6em;margin-left:.15em'}
-          }
-         ]},
+            {_: :a, href: n, c: '&#9660;', style: 'text-decoration:none;color:#ddd;font-size:9.6em;margin-left:.15em'}}]},
      (#  max/min time-values
       times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.
               flatten.compact.map(&:to_f)
