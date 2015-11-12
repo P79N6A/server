@@ -11,7 +11,7 @@ data is arranged for [URI](https://www.ietf.org/rfc/rfc1630.txt) key-lookup and 
 
 [predicate](http://www.w3.org/TR/rdf11-concepts/#dfn-predicate) [URIs](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) are stored in full, no searching inside strings for [base-URI](https://annevankesteren.nl/2005/08/base-examples) prefixes or [*-LD mapping-frames](http://json-ld.org/spec/latest/json-ld-framing/)
 
-### URI list
+### URI lists
 files of one [URI per line](http://amundsen.com/hypermedia/urilist/). used as primitive [indexes](https://en.wikipedia.org/wiki/Database_index) and [triple](http://stackoverflow.com/questions/273218/whats-an-rdf-triple) building-blocks. about as trivial as [parsing](https://github.com/RubenVerborgh/N3.js#parsing) can get
 
 ## API
@@ -66,6 +66,6 @@ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 ```
 
 ## MIRRORS
-[http://src.whats-your.name/pw/](http://src.whats-your.name/pw/)
-[https://gitlab.com/ix/pw](https://gitlab.com/ix/pw)
-[http://repo.or.cz/www](http://repo.or.cz/www)
+[src.whats-your.name/pw/](http://src.whats-your.name/pw/)
+[gitlab.com/ix/pw](https://gitlab.com/ix/pw)
+[repo.or.cz/www](http://repo.or.cz/www)
