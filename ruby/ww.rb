@@ -1,6 +1,12 @@
 
 #Encoding.default_internal = Encoding.default_external = Encoding::UTF_8 # override environment locale
 
+# add watch __FILE__ to file to enlist in change-surveillance
+def watch f
+  R::Watch[f] = File.mtime f
+  puts 'developing '+f
+end
+
 %w{
 cgi
 csv
@@ -21,11 +27,13 @@ shellwords}.map{|r|
 print "\n"
 
 class RDF::URI
-
   def R
     R.new to_s
   end
+end
 
+def R uri
+  R.new uri
 end
 
 class Array

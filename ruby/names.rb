@@ -1,11 +1,3 @@
-def watch f
-  R::Watch[f] = File.mtime f
-  puts 'dev '+f end
-
-def R uri
-  R.new uri
-end
-
 class R
 
   # constructor
@@ -84,7 +76,7 @@ class R
     end
   end
 
-  # balanced-containers ( 4096 on hashed-ID)
+  # balanced-containers
   def R.dive s
     s[0..2] + '/' + s[3..-1]
   end
