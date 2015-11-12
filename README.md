@@ -22,14 +22,14 @@ our resource class is an [identifier](https://en.wikipedia.org/wiki/Identifier) 
 ### RDF-compatibility
 
 #### Resource
-R is a subclass of [RDF::URI](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI) and inherits its methods. we added a bidirectional-mapping from URIs to [filesystem names](https://en.wikipedia.org/wiki/Computer_file#Identifying_and_organizing_files)
+R is a [subclass](https://encrypted.google.com/search?hl=en&q=inheritance%20ruby) of [RDF::URI](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI) and inherits its methods. we add a [bidirectional-mapping](https://en.wikipedia.org/wiki/Bidirectional_map) from [URIs](https://encrypted.google.com/search?hl=en&q=%22URI%20arithmetic%22) to [filesystem names](https://en.wikipedia.org/wiki/Computer_file#Identifying_and_organizing_files)
 
 
 #### JSON format
-an [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interface is defined. there is no [RDF::Writer](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Writer) defined, as it cant [roundtrip](https://en.wikipedia.org/wiki/Round-trip_format_conversion) full RDF. for writing full RDF we recommend [Turtle](http://www.w3.org/TeamSubmission/turtle/)
+an [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interface is defined. there is no [RDF::Writer](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Writer) defined, as one cant [roundtrip](https://en.wikipedia.org/wiki/Round-trip_format_conversion) full RDF. for writing full RDF we recommend [Turtle](http://www.w3.org/TeamSubmission/turtle/)
 
 ### Search
-on-line search is available via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). no server-side crawlers: you must [GET](man/GET.html) to trigger indexing
+[on-line search](https://en.wikipedia.org/wiki/Online_search) is available via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). no server-side [crawlers](https://en.wikipedia.org/wiki/Web_crawler): you must [GET](ruby/read.rb.html) to trigger indexing of stored content
 
 ## REQUISITES
 
