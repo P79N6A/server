@@ -76,7 +76,7 @@ class R
     end
   end
 
-  # balanced-containers
+  # balanced-containers. hash something to string-arg
   def R.dive s
     s[0..2] + '/' + s[3..-1]
   end
@@ -90,26 +90,6 @@ class R
   def ttl; docroot.a '.ttl' end
   def jsonDoc; docroot.a '.e' end
 
-  # fragment-per-doc URIs, for "thing"-granularity storage
-
-  # container of fragment-docs
-  def fragmentDir
-    doc = docroot
-    doc.dir.descend + '.' + doc.basename + '/'
-  end
-
-  # fragment-docs of doc
-  def fragments; fragmentDir.a('*.e').glob end
-
-  # fragment-doc of resource
-  def fragmentPath
-    f = fragment
-    f = '_' if !f
-    f = '__' if f.empty?
-    fragmentDir + f
-  end
-
-  # filesystem name-lookups
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def realpath # follow all the links
     node.realpath
