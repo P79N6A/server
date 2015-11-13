@@ -219,8 +219,8 @@ class R
   ViewGroup[Container] = -> g,e {
     cur = g.delete e.uri # request container
     [({class: :container,
-       c: [{class: :label, c: cur.R.basename, style: 'font-size: 2em;background-color:#ccc;color:#000'},
-           {class: :contents, style: 'padding: .5em;background-color:#ccc;color:#000',
+       c: [{class: :label, c: cur.R.basename, style: 'font-size: 2em;background-color:#eee;color:#000'},
+           {class: :contents, style: 'padding: .3em;background-color:#eee;color:#000',
             c: cur[LDP+'contains'].map{|c|
               g.delete(c.uri).do{|c|ViewA[Container][c,e]}}}]} if cur && cur[LDP+'contains']),
       g.map{|id,c|ViewA[Container][c,e]}]} # other containers
