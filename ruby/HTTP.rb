@@ -50,7 +50,7 @@ class R
     # inspect query
     qs = graph['#query'] = {'uri' => '#query'}
     env.q.map{|key,val|
-      qs['#'+key.slugify] = val
+      qs['#'+key.gsub(/\W+/,'_')] = val
     }
 
     # server-engine pointer

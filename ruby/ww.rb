@@ -204,22 +204,17 @@ class R < RDF::URI
   }
 
   ## user-customize tables
+  GET = {}         # GET handler
   FileSet = {}     # files in GET
   ResourceSet = {} # resources in GET
-  Create = {}      # Resource template
-  Identify = {}    # URI-template
-  Filter = {}      # graph-transform (ad-hoc)
-  Abstract = {}    # graph-transform (summarize group of RDF type)
+  Filter = {}      # graph-transform (whole graph)
+  Abstract = {}    # graph-transform (subgraph of RDF type)
   Render = {}      # MIME renderer
   ViewA = {}       # HTML template (one resource)
-  ViewGroup = {}   # HTML template (set of resources)
-  GET = {}         # GET handler
+  ViewGroup = {}   # HTML template (resources of RDF type)
   Watch = {}       # source-files to check for changes
 
-  Stats = {
-    'host' => {},
-    'status' => {'500' => {}},
-  }
+  Stats = {'host' => {}, 'status' => {'500' => {}}}
 
 %w{
 MIME
@@ -238,7 +233,7 @@ text
 write
 }.map{|r|require_relative r}
 
-require './local.rb' if R['local.rb'].exist? # local customizations
+require './local.rb' if R['local.rb'].exist? # local configuration
 
 RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
   NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
