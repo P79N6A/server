@@ -31,5 +31,5 @@ RDF URIs are deterministically minted from the Message-ID. original message-file
 rm -rf ~/.mail/2016/01
 ```
 
-to really kill messages you'd have to delete all of the above plus flush [tabulator](https://github.com/linkeddata/tabulator)'s knowledge-base and possibly delete on other machines synced with [rsync](http://linux.die.net/man/1/rsync) or [syncthing](https://syncthing.net/) or [btsync](https://www.getsync.com/) or [gluster](http://www.gluster.org/) or they'll haunt you forever. it's by design that messages are at least a little hard to delete. ultimately the database is the filesystem, opening up replication to however you prefer - we are just adding a layer of rewriting and caching
+to really kill messages you'd have to delete all of the above plus flush [tabulator](https://github.com/linkeddata/tabulator)'s knowledge-base and delete on other machines synced with [rsync](http://linux.die.net/man/1/rsync), [syncthing](https://syncthing.net/), [btsync](https://www.getsync.com/) or [gluster](http://www.gluster.org/) or they'll haunt you forever. it's by design that messages are at least a little hard to delete. ultimately the database is the filesystem, opening up replication to however you prefer - we are just adding a cached layer of rewriting
 
