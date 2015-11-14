@@ -1,13 +1,36 @@
-HOWTO pw as a webmail-system
+# webmail-system
 
-1. make messages visible to the server
- ~ ln -s /home/hyper/.mail/2016 domain/hostname
+make messages visible to the server, e.g.:
 
-2. browse messages. to see all of today's messages:
- $ firefox hostname/today
-  domain/localhost/2016/01/16/msg.ABCD on the filesystem is made accessible at
-  http://localhost/2016/01/16/msg.ABCD.html
+``` sh
+cd /var/www
+ln -s /home/subscriber/.mail/2016 domain/localhost
+```
 
-NOTE links use archive-location, original messages can be removed
- message filenames begin with msg or end with eml or FILE(1) will be invoked
- all output is contained in address/ for easy removal or one-path server route-handling
+browse messages. for example today's messages:
+
+``` sh
+$ chromium localhost/today
+```
+
+## URL structure
+* person and message resources are stored under **/address**
+* a dynamic-handler at **/thread** constructs discussions
+* full-text-index storage is at **/index**
+* RDF-ized transcodes at **/cache**
+
+to wipe out all content derived from browsing the original message-files:
+
+``` sh
+rm -rf address cache index
+```
+
+RDF URIs are deterministically minted from the Message-ID. original message-files arent pointed to and can be removed after being "seen" by the server:
+
+``` sh
+rm -rf ~/.mail/2016/01
+```
+
+to really kill messages you'd have to delete all of the above, and flush [tabulator](https://github.com/linkeddata/tabulator)'s knowledgebase and delete files on other machines synced with [rsync](http://linux.die.net/man/1/rsync) or [syncthing](https://syncthing.net/) or [btsync](https://www.getsync.com/) or [gluster](http://www.gluster.org/) or they'll haunt you forever. it's by design that messages are at least a little hard to delete. ultimately the database is in the filesystem, opening up replication to however you prefer - we are just adding another layer of caching
+
+
