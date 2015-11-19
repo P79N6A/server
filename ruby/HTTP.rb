@@ -5,7 +5,7 @@ module Rack
   module Adapter
     # don't guess, use rack
     def self.guess _; :rack end
-    def self.load _ # Rack configuration
+    def self.load _ # load this configuration instead of config.ru file
       Rack::Builder.new {
         use Rack::Deflater # gzip response
         run R              # call R.call
@@ -52,13 +52,8 @@ class R
     env.q.map{|key,val|
       qs['#'+key.gsub(/\W+/,'_')] = val
     }
-
-    # server-engine pointer
     env['SERVER_SOFTWARE'] = 'https://gitlab.com/ix/pw'.R
-
-    [env,
-     env[:Links],
-     env[:Response]].compact.map{|db|
+    [env, env[:Links], env[:Response]].compact.map{|db|
       db.map{|k,v|
         subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/
       }}
@@ -95,7 +90,8 @@ class R
     method = e['REQUEST_METHOD']
 
     # allow whitelisted methods
-    return [405, {'Allow' => Allow},[]] unless AllowMethods.member? method
+    return [405,{'Allow' => Allow},[]] unless AllowMethods.member? method
+    return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
 
     # add environment utility-functions to env Hash
     e.extend Th
