@@ -61,3 +61,9 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container > .label, .container > .label a, .container > .contents {text-decoration: none; background-color:#000;color:#fff}
 .container > .label {border-radius: .48em .48em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .contents {border-radius: 0 .4em .4em .4em}
+
+div.header a {text-decoration:none}
+div.header a.title {font-size:1.2em;background-color:#000;color:#fff;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
+div.body a {background-color:#fff;color:#000;border-radius:.2em}
+a.nextPage {text-decoration:none;color:#ddd;font-size:9.6em;margin-left:.15em}
+img {max-width: 100%}
