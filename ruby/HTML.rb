@@ -130,7 +130,7 @@ class R
     e[:label] ||= {} # resource labels
 
     path = e.R.justPath
-    tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
+#    tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
 
     [{_: :table, class: :pager, # direction pointers
       c: [{_: :tr,
@@ -157,7 +157,7 @@ class R
       c: e[:label].map{|name,_| # label-colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     tabr, # upgrade to RDF-UI
+#     tabr, # upgrade to RDF-UI
      H.js('/js/ui',true) # keybinding-JS
     ]}
 
