@@ -59,6 +59,7 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .contents {border-radius: 0 .4em .4em .4em}
 div.msgs > h1 {text-align:center}
+div.chatLog {margin-bottom: .7em}
 div.header a.title {font-size:1.2em;background-color:#000;color:#fff;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
 div.mail {margin:auto;max-width:127ex}
 div.body a {background-color:#000;color:#fff;border-radius:.2em}
