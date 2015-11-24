@@ -71,7 +71,7 @@ class R
   end
 
   def POST
-    return [403,{},[]] unless @r.signedIn && allowWrite
+    return [403,{},[]] unless allowWrite
     mime = @r['CONTENT_TYPE']
     case mime
 #    when /^multipart\/form-data/

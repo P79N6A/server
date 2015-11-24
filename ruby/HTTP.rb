@@ -242,7 +242,7 @@ class R
   end
 
   def allowWrite
-    true
+    @r.signedIn
   end
 
   def q; @r.q end
