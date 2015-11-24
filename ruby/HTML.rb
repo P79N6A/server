@@ -128,7 +128,6 @@ class R
         end}}
 
     e[:label] ||= {} # resource labels
-    e[:sidebar] = [] # overview/control-pane
 
     path = e.R.justPath
     tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
@@ -154,7 +153,6 @@ class R
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
-     {class: :sidebar, c: e[:sidebar]},
      {_: :style,
       c: e[:label].map{|name,_| # label-colors
         c = randomColor

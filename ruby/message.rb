@@ -6,7 +6,10 @@ class R
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     e[:arcs] = []
     e[:timelabel] = {}
-    prior = {'uri' => '#'}
+    e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
+    e.q['reverse'] ||= true
+
+    # find timegraph arcs
     d.values.map{|s|
       if s[SIOC+'has_parent'] # explicit parent
         s[SIOC+'has_parent'].justArray.map{|o|
@@ -25,49 +28,41 @@ class R
     # labels
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
 
-    # facet-filter properties
-    defaultFilter = e[:thread] ? Creator : 'sioc:addressed_to'
-    e.q['a'] ||= defaultFilter
-    e.q['reverse'] ||= true
-    timegraph = false
+    resources = Facets[d,e]
+
+    # scale time-values
+    times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.flatten.compact.map(&:to_f)
+    min = times.min || 0
+    max = times.max || 1
+    range = (max - min).min(0.1)
+    e[:arcs].map{|a|
+      a[:sourcePos] = (a[:sourceTime].to_f - min) / range
+      a[:targetPos] = (a[:targetTime].to_f - min) / range
+      a.delete :sourceTime
+      a.delete :targetTime }
+    timegraph = e[:arcs].size > 1
 
     # HTML
     [H.css('/css/message',true),
+     ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
+       H.js('/js/d3.min'),
+       H.js('/js/timegraph',true),
+       {id: :timegraph,
+        c: {_: :svg,
+            c: e[:timelabel].map{|l,_|
+              pos = (max - l.to_time.to_f) / range * 100
+              y = pos.to_s + '%'
+              [{_: :line, stroke: '#333', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
+               {_: :text, 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, x: 0, y: y}
+              ]}}}
+      ] if timegraph),
      {class: :msgs,
       c: [(d.values[0][Title].justArray[0].do{|t|
              title = t.sub ReExpr, ''
              {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
-          Facets[d,e], # resources in filterable wrappers
+          resources,
           e[:Links][:next].do{|n|
-            {_: :a, href: n, c: '&#9660;', class: :nextPage}}]},
-     (#  max/min time-values
-      times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.
-              flatten.compact.map(&:to_f)
-      min = times.min || 0
-      max = times.max || 1
-      range = (max - min).min(0.1)
-
-      # scale times to range
-      e[:arcs].map{|a|
-        a[:sourcePos] = (a[:sourceTime].to_f - min) / range
-        a[:targetPos] = (a[:targetTime].to_f - min) / range
-        a.delete :sourceTime
-        a.delete :targetTime }
-      timegraph = e[:arcs].size > 1
-
-      e[:sidebar].push({id: :timegraph,
-                        c: {_: :svg,
-                            c: e[:timelabel].map{|l,_|
-                              pos = (max - l.to_time.to_f) / range * 100
-                              y = pos.to_s + '%'
-                              [{_: :line, stroke: '#333', 'stroke-dasharray' => '2,2', x1: 0, x2: '100%', y1: y, y2: y},
-                               {_: :text, 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, x: 0, y: y}
-                              ]}}}) if timegraph
-
-      nil),
-     ([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
-       H.js('/js/d3.min'),
-       H.js('/js/timegraph',true)] if timegraph)]}
+            {_: :a, href: n, c: '&#9660;', class: :nextPage}}]}]}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
