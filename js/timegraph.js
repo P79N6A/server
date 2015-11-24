@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function(){
     var center = width / 2;
     var targetCount = {};
     arcs.forEach(function(link) { // bind node-table and link data
-	targetCount[link.target] = typeof(targetCount[link.target])=="number" ? (targetCount[link.target] + 1) : 0
 	link.source = nodes[link.source] || (
 	    nodes[link.source] = {uri: link.source,
 				  name: link.sourceLabel,
@@ -43,9 +42,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	.attr("name", function(d) { return d.name; });
 
     node.append("text")
-	.text(function(d) {
-	    return (targetCount[d.uri] > 1 ? d.name : '');
-	})
+	.text(function(d) {return d.name;})
 	.attr('x',8).attr('y',3)
 	.attr("name", function(d) { return d.name; });
 

@@ -66,13 +66,7 @@ class R
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
-    arc = {source: r.uri, target: r.uri, sourceLabel: r[Label], targetLabel: r[Label]}
-    r[Date].do{|t|
-      time = t.justArray[0].to_time
-      arc[:sourceTime] = arc[:targetTime] = time
-      e[:timelabel][time.iso8601[0..9]] = true
-    }
-    e[:arcs].push arc
+    r[Date].do{|t| e[:timelabel][t.justArray[0].to_time.iso8601[0..9]] = true }
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
