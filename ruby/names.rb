@@ -54,7 +54,7 @@ class R
       else # doc
         yield dir, LDP+'contains', c.stripDoc # link to generic resource
       end
-    }
+    } unless contained.size > 42
   end
 
   # POSIX-path mapping
