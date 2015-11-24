@@ -20,9 +20,10 @@ class R
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}
     log[LDP+'contains'].map{|line| graph[line.uri] = line}
-    [{class: :chatLog, name: log[Label], href: log.uri, id: log.uri,
-     c: [{_: :b, c: log[Label]},
-         ViewGroup[SIOC+'InstantMessage'][graph,e]]},'<br>']}
+    [{_: :hr},
+     {class: :chatLog, name: log[Label], href: log.uri, id: log.uri,
+      c: [{_: :b, c: log[Label]},
+          ViewGroup[SIOC+'InstantMessage'][graph,e]]}]}
 
   # drop messages in channel-hour bins of type ChatLog
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
