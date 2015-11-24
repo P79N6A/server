@@ -38,35 +38,35 @@ class R
               a[p][o] = (a[p][o]||0)+1 # count occurrences
             }}}}
 
-    # filter control
+    # mint a facet-identifier, greppable
     fid = -> f {
       f = f.respond_to?(:uri) ? f.uri : f.to_s
       f.sub('http','').gsub(/[^a-zA-Z]+/,'_')}
-    e[:sidebar].push(a.map{|f,v|
-                       {class: :facet, facet: fid[f],
-                        c: [{class: :predicate,
-                             c: f.shorten.split(':')[-1]},
-                            v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by usage-weight
-                              name = k.respond_to?(:uri) ? ( k = k.R
-                                                             path = k.path
-                                                             frag = k.fragment
-                                                             if frag
-                                                               frag
-                                                             elsif !path || path == '/'
-                                                               k.host
-                                                             else
-                                                               path
-                                                             end
-                                                           ) : k.to_s
-                              {facet: fid[k], # facet
-                               c: [{_: :span, class: :count, c: v},' ',
-                                   {_: :span, name: name, class: :name, # label
-                                    c: name}]}}]}}) unless m.keys.size==1
 
     # HTML
     [(H.css'/css/facets',true),
      (H.js'/js/facets',true),
-
+     # filter control
+     (a.map{|f,v|
+       {class: :facet, facet: fid[f],
+        c: [{class: :predicate,
+             c: f.shorten.split(':')[-1]},
+            v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by usage-weight
+              name = k.respond_to?(:uri) ? ( k = k.R
+                                             path = k.path
+                                             frag = k.fragment
+                                             if frag
+                                               frag
+                                             elsif !path || path == '/'
+                                               k.host
+                                             else
+                                               path
+                                             end
+                                           ) : k.to_s
+              {facet: fid[k], # facet
+               c: [{_: :span, class: :count, c: v},' ',
+                   {_: :span, name: name, class: :name, # label
+                    c: name}]}}]}} unless m.keys.size==1),
      # content
      m.resources(e).map{|r| # each resource
 
