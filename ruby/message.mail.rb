@@ -122,7 +122,8 @@ class R
           if qp[3].empty?
             nil
           else
-            {name: "quote#{depth}", _: :span, c: [{_: :span, c: '&gt; '*depth}, qp[3].gsub('@','.').hrefs]} # obfuscate quoted addresses
+            name = "quote#{depth}"
+            {class: :quote, name: name, _: :span, c: ["<span class='indent' name='#{name}'> </span>"*depth, qp[3].gsub('@','.').hrefs]}
           end
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution line
           l.gsub('@','.').hrefs # obfuscate attributed address

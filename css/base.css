@@ -65,5 +65,6 @@ img.tablePreview {max-height:14em;max-width:100%}
 div.header a {text-decoration:none}
 div.header a.title {font-size:1.2em;background-color:#000;color:#fff;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
 div.body a {background-color:#fff;color:#000;border-radius:.2em}
+div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 .4em 0 .4em}
 a.nextPage {text-decoration:none;color:#ddd;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
