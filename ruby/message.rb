@@ -95,31 +95,29 @@ class R
       end}
 
     # HTML
-    {class: :mail, id: r.uri, href: href,
-     c: [{class: :header,
-          c: [(r[Title].justArray[0].do{|t| {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}} unless e[:thread]),
-              r[To].justArray.map{|o|
-                o = o.R
-                {_: :a, class: :to, href: localPath ? (o.dir+'?set=page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
-              # reply-of (direct)
-              {_: :a, c: ' &larr; ',
-               href: r[SIOC+'has_parent'].justArray[0].do{|p|
-                 p.uri + '#' + p.uri
-               }||'#'},
-              author,
-              r[Date].do{|d|
-                [{_: :a, class: :date,
-                  href: r.uri + '#' + r.uri,
-                  c: d[0].sub('T',' ')},' ']},
-              r[SIOC+'reply_to'].do{|c|
-                [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
-              discussion,
-              [DC+'hasFormat', SIOC+'attachment'].map{|p|
-                r[p].justArray.map{|o|
-                  ['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}}
-             ].intersperse("\n  ")},
-         r[Content].justArray.map{|c|{class: :body, c: c}},
-         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},'<br>'
-        ]}}
+    [{class: :mail, id: r.uri, href: href,
+      c: [{class: :header,
+           c: [(r[Title].justArray[0].do{|t| {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}} unless e[:thread]),
+               r[To].justArray.map{|o|
+                 o = o.R
+                 {_: :a, class: :to, href: localPath ? (o.dir+'?set=page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
+               # reply-of (direct)
+               {_: :a, c: ' &larr; ',
+                href: r[SIOC+'has_parent'].justArray[0].do{|p|
+                  p.uri + '#' + p.uri
+                }||'#'},
+               author,
+               r[Date].do{|d|
+                 [{_: :a, class: :date,
+                   href: r.uri + '#' + r.uri,
+                   c: d[0].sub('T',' ')},' ']},
+               r[SIOC+'reply_to'].do{|c|
+                 [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
+               discussion
+              ].intersperse("\n  ")},
+          r[Content].justArray.map{|c|{class: :body, c: c}},
+          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
+          [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}},
+         ]},'<br>']}
 
 end

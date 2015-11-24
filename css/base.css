@@ -62,6 +62,6 @@ div.msgs > h1 {text-align:center}
 div.header a.title {font-size:1.2em;background-color:#000;color:#fff;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
 div.mail {margin:auto;max-width:128ex}
 div.body a {background-color:#000;color:#fff;border-radius:.2em}
-div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 .1em .1em .45em;border-radius: .4em .2em .2em .4em}
+div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 0 .08em .42em;border-radius: .4em .2em .2em .4em}
 a.nextPage {color:#ddd;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
