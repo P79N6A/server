@@ -53,7 +53,6 @@ tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100%}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/tag"] a {color: #fff}
 td.val {max-width: 100%; overflow: hidden}
-:target {background-color:#000; color:#fff}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}
 .tabr {position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}

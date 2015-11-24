@@ -1,7 +1,7 @@
-body {font-family: sans-serif;padding-left:10em;padding-top:1.6em}
-.mail .header {float: right}
 .mail .body a {background-color:#fff;color:#000;font-size:1.08em}
-a.to {color: #000;background-color: #fff}
+div.header a {text-decoration:none;color:#000;background-color:#fff}
+div.header a.title {font-size:1.2em;background-color:#000;color:#fff;border-radius: .1em .4em .4em .1em;padding-left:.2em;padding-right:.3em}
+a.nextPage {text-decoration:none;color:#ddd;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
 #timegraph {
     width:8em;
