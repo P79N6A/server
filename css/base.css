@@ -64,5 +64,5 @@ div.header a.title {font-size:1.2em;background-color:#000;color:#fff;border-radi
 div.mail {margin:auto;max-width:127ex}
 div.body a {background-color:#000;color:#fff;border-radius:.2em}
 div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 0 .08em .42em;border-radius: .4em .2em .2em .4em}
-a.nextPage {color:#ddd;font-size:9.6em;margin-left:.15em}
+a.nextPage {color:#ddd;background-color:#fff;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
