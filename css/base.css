@@ -57,9 +57,9 @@ img.tablePreview {max-height:14em;max-width:100%}
 .tabr {position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 
 .container {padding: .2em;display:inline-block}
-.container a {color:#fff;border-radius: .16em}
-.container > .label, .container > .label a, .container > .contents {text-decoration: none; background-color:#000;color:#fff}
-.container > .label {border-radius: .48em .48em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
+.container a {text-decoration: none;color:#000;background-color:#fff;border-radius: .16em}
+.container > .label, .container > .label a, .container > .contents {text-decoration: none; background-color:#f4f4f4;color:#000}
+.container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .contents {border-radius: 0 .4em .4em .4em}
 
 div.header a {text-decoration:none}
