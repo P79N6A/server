@@ -5,7 +5,7 @@ class R
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     e[:arcs] = []
-    e[:timelabel] = {}
+    e[:daylabel] = {}
     e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
     e.q['reverse'] ||= true
 
@@ -49,7 +49,7 @@ class R
        H.js('/js/timegraph',true),
        {id: :timegraph,
         c: {_: :svg,
-            c: e[:timelabel].map{|l,_|
+            c: e[:label_day].map{|l,_|
               pos = (l.to_time.to_f - min) / range * 100
               x = pos.to_s + '%'
               [{_: :line, stroke: '#333', 'stroke-dasharray' => '2,2', y1: 0, y2: '100%', x1: x, x2: x},
@@ -66,7 +66,7 @@ class R
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
-    r[Date].do{|t| e[:timelabel][t.justArray[0].to_time.iso8601[0..9]] = true }
+    r[Date].do{|t| e[:label_day][t.justArray[0].to_time.iso8601[0..10]] = true }
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
