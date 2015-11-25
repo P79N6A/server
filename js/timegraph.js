@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(){
     var svg = d3.select("#timegraph > svg")
     var nodes = {};
-    var width = svg[0][0].clientWidth || 600;
+    var width = svg[0][0].clientWidth || 1920;
     var height = svg[0][0].clientHeight || 128;
     var center = width / 2;
     var targetCount = {};

@@ -1,11 +1,12 @@
 # coding: utf-8
+#watch __FILE__
 class R
 
   # generic message-view
 
   ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     e[:arcs] = []
-    e[:daylabel] = {}
+    e[:day] = {}
     e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
     e.q['reverse'] ||= true
 
@@ -49,12 +50,15 @@ class R
        H.js('/js/timegraph',true),
        {id: :timegraph,
         c: {_: :svg,
-            c: e[:label_day].map{|l,_|
-              pos = (l.to_time.to_f - min) / range * 100
-              x = pos.to_s + '%'
-              [{_: :line, stroke: '#333', 'stroke-dasharray' => '2,2', y1: 0, y2: '100%', x1: x, x2: x},
-               {_: :text, 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, y: 0, x: x}
-              ]}}}
+            c: e[:day].map{|l,_|
+              %w{00 06 12 18}.map{|hour|
+                day = hour == '00'
+                ts = l + hour + ':00'
+                pos = (ts.to_time.to_f - min) / range * 100
+                x = pos.to_s + '%'
+                [{_: :line, stroke: day ? '#555' : '#ccc', 'stroke-dasharray' => day ? '2,2' : '1,1', y1: 0, y2: '100%', x1: x, x2: x},
+                 {_: :text, 'font-size'  =>'.8em', fill: day ? '#000' : '#bbb', c: (day ? ts[0..9] : ts[11..12]), dy: day ? -3 : 7, y: 0, x: x}]}
+            }}}
       ] if timegraph),
      {class: :msgs,
       c: [(d.values[0][Title].justArray[0].do{|t|
@@ -66,7 +70,7 @@ class R
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
-    r[Date].do{|t| e[:label_day][t.justArray[0].to_time.iso8601[0..10]] = true }
+    r[Date].do{|t| e[:day][t.justArray[0].to_time.iso8601[0..10]] = true }
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
