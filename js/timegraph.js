@@ -43,7 +43,10 @@ document.addEventListener("DOMContentLoaded", function(){
     node.append("text")
 	.text(function(d) {return d.name;})
 	.attr('x',8).attr('y',3)
-	.attr("name", function(d) { return d.name; });
+	.attr("name", function(d) { return d.name; })
+	.on("click",function(e){
+	    window.location.hash=e.uri;
+	});
 
     function tick() {
 	link.attr("y1", function(d) {
