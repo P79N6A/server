@@ -168,7 +168,7 @@ class R
       graph[e.uri].delete LDP+'contains'
     end
     bodies = e.q.has_key? 'full'
-    e[:summarized] = true unless bodies
+    e[:summarized] = true unless bodies || g.keys.size > 42
     e.q['sort'] ||= Size
     e.q['reverse'] ||= 'reverse'
     isRDF = e.format != 'text/html'
