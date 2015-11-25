@@ -13,7 +13,7 @@ class R
       e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
       e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
 
-    if e.env[:container] # dir
+    if e.env[:container]
       htmlFile = e.a 'index.html' # container-index in HTML-file
       if e.env.format=='text/html' && htmlFile.e # exists?
         [htmlFile.setEnv(e.env)] # index-file response
@@ -28,8 +28,8 @@ class R
           e.fileResources # child-pointers
         end
       end
-    else # resource - add reverse links
-      e.fileResources.concat FileSet['rev'][e,q,g]
+    else # resource
+      e.fileResources
     end}
 
   FileSet['find'] = -> e,q,m,x='' {

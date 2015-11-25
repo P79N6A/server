@@ -79,7 +79,7 @@ class R
              end
       [{_: :a, name: name, c: name, href: authorURI ? (localPath ? (c.R.dir+'?set=page') : c.uri) : '#'},' ']}
 
-    discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}
+    discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
     # HTML
     [{class: :mail, id: r.uri, href: href,
