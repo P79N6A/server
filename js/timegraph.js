@@ -29,6 +29,11 @@ document.addEventListener("DOMContentLoaded", function(){
 	.data(force.links())
 	.enter().append("line")
 	.attr("class", "link")
+	.on("click",function(e){
+	    svg[0][0].style.position = 'fixed';
+	    console.log(this,e);
+	    window.location.hash=e.source.uri;
+	})
 	.attr('name', function(d){return d.sourceLabel});
 
     var node = svg.selectAll(".node")
