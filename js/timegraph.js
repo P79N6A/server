@@ -21,8 +21,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	.nodes(d3.values(nodes))
 	.links(arcs)
 	.size([width,height])
-	.linkDistance(8)
-	.charge(-24)
+	.charge(-50)
 	.on("tick", tick)
 	.start();
 
