@@ -50,7 +50,7 @@ class R
        {id: :timegraph,
         c: {_: :svg,
             c: e[:timelabel].map{|l,_|
-              pos = (max - l.to_time.to_f) / range * 100
+              pos = (l.to_time.to_f - min) / range * 100
               x = pos.to_s + '%'
               [{_: :line, stroke: '#333', 'stroke-dasharray' => '2,2', y1: 0, y2: '100%', x1: x, x2: x},
                {_: :text, 'font-size'  =>'.8em',c: l.sub('T',' '), dy: -3, y: 0, x: x}
@@ -94,10 +94,7 @@ class R
                   p.uri + '#' + p.uri
                 }||'#'},
                author,
-               r[Date].do{|d|
-                 [{_: :a, class: :date,
-                   href: r.uri + '#' + r.uri,
-                   c: d[0].sub('T',' ')},' ']},
+               r[Date].do{|d|[{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
                r[SIOC+'reply_to'].do{|c|
                  [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
               ].intersperse("\n  ")},
