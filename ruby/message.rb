@@ -45,7 +45,6 @@ class R
 
     # HTML
     [([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
-       H.css('/css/timegraph',true),
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true),
        {id: :timegraph,

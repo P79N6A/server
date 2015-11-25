@@ -1,3 +1,4 @@
+body {font-family: sans-serif}
 pre {white-space: pre-wrap}
 a {text-decoration:none;font-weight: bold;color:#fff;background-color:#000;padding-left:.1em;padding-right:.1em}
 
@@ -68,3 +69,7 @@ div.body span.quoted {padding-left:.18em}
 a.nextPage {color:#ddd;background-color:#fff;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
 :target {background-color:#000;color:#fff;padding-top:10em}
+
+#timegraph > svg {overflow:visible;width:100%;height:8em;z-index:1}
+.link {fill: none;stroke: #333;stroke-width:.18em}
+rect {fill: #ccc;width:.3em;height:.3em;ry:.3em}
