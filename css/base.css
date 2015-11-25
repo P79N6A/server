@@ -67,3 +67,4 @@ div.body span[name] {background-color:#fff;color:#000;border-style: solid; borde
 div.body span.quoted {padding-left:.18em}
 a.nextPage {color:#ddd;background-color:#fff;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
+:target {background-color:#000;color:#fff}
