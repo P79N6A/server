@@ -1,10 +1,7 @@
 .facet {
-    clear: both;
+    float:left;
     cursor: pointer;
     white-space:nowrap;
-    max-width:9em;
-    max-height:15em;
-    overflow: hidden;
     background-color:#fff;color:#000;
 }
 .facet .count {
