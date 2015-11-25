@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	.attr('x',8).attr('y',3)
 	.attr("name", function(d) { return d.name; })
 	.on("click",function(e){
+	    svg[0][0].style.position = 'fixed';
 	    window.location.hash=e.uri;
 	});
 
