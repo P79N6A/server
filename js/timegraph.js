@@ -47,11 +47,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function tick() {
 	link.attr("y1", function(d) {
-	    return d.source.y;
+	    return d.source.y + 1.8;
 	})
 	    .attr("x1", function(d) { return (d.source.pos || 0); })
 	    .attr("y2", function(d) {
-		return d.target.y;
+		return d.target.y + 1.8;
 	    })
 	    .attr("x2", function(d) { return (d.target.pos || 0); });
 
