@@ -79,19 +79,12 @@ class R
              end
       [{_: :a, name: name, c: name, href: authorURI ? (localPath ? (c.R.dir+'?set=page') : c.uri) : '#'},' ']}
 
-    discussion = r[SIOC+'has_discussion'].justArray[0].do{|d|
-      if e[:thread]
-        href = r.uri + '#' + (r.R.path||'') # link to standalone msg
-        nil
-      else
-        href = d.uri + '#' + (r.R.path||'') # link to msg in thread
-        {_: :a, class: :discussion, href: href, c: '≡', title: 'show in thread'}
-      end}
+    discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri}
 
     # HTML
     [{class: :mail, id: r.uri, href: href,
       c: [{class: :header,
-           c: [(r[Title].justArray[0].do{|t| {_: :a, class: :title, href: r.uri, c: CGI.escapeHTML(t)}} unless e[:thread]),
+           c: [(r[Title].justArray[0].do{|t| {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t)}} unless e[:thread]),
                r[To].justArray.map{|o|
                  o = o.R
                  {_: :a, class: :to, href: localPath ? (o.dir+'?set=page') : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
@@ -107,7 +100,6 @@ class R
                    c: d[0].sub('T',' ')},' ']},
                r[SIOC+'reply_to'].do{|c|
                  [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
-               discussion
               ].intersperse("\n  ")},
           r[Content].justArray.map{|c|{class: :body, c: c}},
           r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
