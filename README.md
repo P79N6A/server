@@ -20,7 +20,7 @@ argument 2 follows our usual rules for disambiguating a resource (R|RDF::URI|JSO
 
 <tr><td><b>HTTP</b></td><td>
 a web-server &mdash; launch one with &#39;foreman start&#39;.
-a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server. they call a HTTP-method on a resource which dispatches the appropriate HTTP method. you could run our handlers in another server via config.ru setups or middleware-wrappers falling back on real-RDF 404s or hook up our non-RDF readers to a file-backed RDF::Repository to back <a href=https://github.com/ruby-rdf/rdf-ldp>RDF::LDP</a>. let your imagination run wild and remember the included server is just an idea, a "house wine" and we're always changing things around so maybe you should look in git history to find a vintage you like or invent your own
+a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server. they call a HTTP-method on a resource which dispatches the appropriate HTTP method. you could run our handlers in another server via config.ru setups or middleware-wrappers falling back on real-RDF 404s or hook up our non-RDF readers to a file-backed RDF::Repository to back <a href=https://github.com/ruby-rdf/rdf-ldp>RDF::LDP</a>. let your imagination run wild and remember the included server is just an idea, a "house wine" and we're always changing things around so maybe check git history to find a vintage you like or invent your own
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
@@ -30,7 +30,7 @@ one reason we serve RDF is so you can <a href="https://github.com/solid/solid-ap
 </table>
 
 ## HISTORY
-originally Ruby didn't have an RDF library and there was only one [author](mailto:carmen@whats-your.name) with only so much time who wanted something like an LDP daemon. the approach was to map with as little abstraction as required to basic structures provided by the standard-library and OS, so mappings to/from filesystem paths (instead of LDP's 4~ container-types we have one: a fs just has directories), JSON-objects (a compiled-C blob in Ruby stdlib is always going to trounce pure-Ruby parsers that have to take all of Turtle's footnotes into account), the Hash class (a flexible memory-model class? Hash with URI-keys will do). "install" is just a symlink to the live-source path as more code-change is planned, particularly adding more RDF-library interfaces for more configuration-possibilities
+originally Ruby didn't have an RDF library and there was only one [author](mailto:carmen@whats-your.name) with only so much time who wanted something like an LDP daemon. the approach was to map with as little abstraction as required to basic structures provided by the standard-library and OS, so mappings to/from filesystem paths (instead of LDP's 4~ container-types we have one: a fs just has directories), JSON-objects (a compiled-C blob in Ruby stdlib is always going to trounce pure-Ruby parsers that have to take all of Turtle's footnotes into account), the Hash class (a flexible memory-model class? Hash with URI-keys will do). "install" is just a symlink to the live-source path as more code-change, particularly deletion is planned
 
 ## REQUISITES
 
