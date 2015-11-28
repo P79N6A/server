@@ -30,7 +30,7 @@ one reason we serve RDF is so you can <a href="https://github.com/solid/solid-ap
 </table>
 
 ## HISTORY
-originally Ruby didn't have an RDF library and there was only one [author](mailto:carmen@whats-your.name) with only so much time who wanted something like an LDP daemon. the approach was to map with as little abstraction as required to basic structures provided by the standard-library and OS, so trivial mappings to/from filesystem paths (instead of LDP's 4~ container-types we have one: a fs just has directories), JSON-objects (a compiled-C blob in Ruby stdlib is always going to trounce pure-Ruby parsers that have to take all of Turtle's footnotes into account), the Hash class (a flexible memory-model class? Hash with URI-keys will do). "install" is just a symlink to the live-source path as more code-change is planned, particularly adding more RDF-library interfaces for more reconfiguration-possibilities
+originally Ruby didn't have an RDF library and there was only one [author](mailto:carmen@whats-your.name) with only so much time who wanted something like an LDP daemon. the approach was to map with as little abstraction as required to basic structures provided by the standard-library and OS, so trivial mappings to/from filesystem paths (instead of LDP's 4~ container-types we have one: a fs just has directories), JSON-objects (a compiled-C blob in Ruby stdlib is always going to trounce pure-Ruby parsers that have to take all of Turtle's footnotes into account), the Hash class (a flexible memory-model class? Hash with URI-keys will do). "install" is just a symlink to the live-source path as more code-change is planned, particularly adding more RDF-library interfaces for more configuration-possibilities
 
 ## REQUISITES
 
