@@ -6,24 +6,31 @@ non-RDF is first converted to a **JSON**-[subset](https://en.wikipedia.org/wiki/
 
 ## INTERFACES
 
-#### Resource - the key building-block
-resource [R](ruby/names.rb.html) is constructed with R() or R[] or cast from convertible-types (URI as String, URI as JSON-object, RDF::URI, File-handle) by calling method 'R'. our resource reference is an identifier coupled with an environment (inherited from a [HTTP request](http://tools.ietf.org/html/rfc7231#section-5)). the environment provides a base URI to [resolve relative-URIs](https://tools.ietf.org/html/rfc3986#section-5.2) against. we use syntactical-conventions in URI-expressions for a bidirectional name-mapping with filesystem paths. the programmer is encouraged to think in terms of resources, with physical-paths mapped to and from behind the scenes as needed. **R** is a [subclass](http://rubylearning.com/satishtalim/ruby_inheritance.html) of [RDF::URI](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI) and inherits its methods. you can send **R** into the **RDF** framework anywhere a **RDF::URI** is expected
+<table>
 
-#### streaming RDF
-for streaming triples between functions we use the built-in yield and do {block} features of Ruby to produce and consume our subset of RDF.
+<tr><td><b>Resources</b></td><td>
+<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI as String, URI as JSON-object, RDF::URI, File-handle) by calling method R. this is an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. we use syntactical-conventions in URI-expressions for a bidirectional name-mapping with filesystem paths. the programmer is encouraged to think in terms of resources, with physical-paths mapped to and from behind the scenes as needed. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and inherits its methods &mdash; you can send <strong>R</strong> into the <strong>RDF</strong> framework anywhere a <strong>RDF::URI</strong> is expected
+</td></tr>
+
+<tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
+for streaming triples between functions we use the yield and do{block} features of Ruby to produce and consume our subset of RDF.
 argument 0 and 1 are expected to be a string-type containing a URI.
-argument 2 follows our usual rules for disambiguating a resource (RDF::URI | R | JSON-object) and literal (JSON value)
+argument 2 follows our usual rules for disambiguating a resource (R|RDF::URI|JSON-object) and literal (JSON-value)
+</td></tr>
 
-#### HTTP
-a **HTTP** interface is available as a web-server. launch one with 'foreman start'.
-a [Rack](http://rack.github.io/) interface is available and used to expose our [handlers](ruby/read.rb.html) to low-level socket-engines like [Thin](http://code.macournoyer.com/thin/) and [Unicorn](http://unicorn.bogomips.org/) which complete a full web-server. they call our HTTP-method (unimaginatively called ['call'](ruby/HTTP.rb.html), as Rack-interface specifies) on a resource instance which will dispatch the appropriate HTTP method.
+<tr><td><b>HTTP</b></td><td>
+a web-server &mdash; launch one with &#39;foreman start&#39;.
+a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server. they call a HTTP-method (unimaginatively named <a href="ruby/HTTP.rb.html">&#39;call&#39;</a> per Rack-interface) on a resource instance which will dispatch the appropriate HTTP method
+</td></tr>
 
-#### User
+<tr><td><b>UI</b></td><td>
+one reason we serve RDF is so you can <a href="https://github.com/solid/solid-apps">bring your own</a> interface. <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a>-compatibility (non-JS hypertext-browsers) is important to us so we also provide classic <b>text/html</b>
+</td></tr>
 
-one reason we serve RDF is so you can [bring your own](https://github.com/solid/solid-apps) interface. [links](http://links.twibright.com/)/[lynx](http://lynx.invisible-island.net/current/)/[w3m](http://w3m.sourceforge.net/)-compatibility (non-JS hypertext-browsers) is important to us so we provide text/html on request
+</table>
 
 ## HISTORY
-originally Ruby didn't have an RDF library and there was only one [author](mailto:carmen@whats-your.name) with only so much time who wanted something like an LDP daemon. the approach was to map with as little abstraction as required to basic structures provided by the standard-library and OS, so trivial mappings to/from filesystem paths (instead of LDP's 4~ container-types we have one: a fs just has directories), JSON-objects (a compiled-C blob in Ruby stdlib is always going to trounce pure-Ruby parsers that have to take all of Turtle's footnotes into account), the Hash class (a flexible memory-model class? Hash with URI-keys will do). "install" is just a symlink to the live-source path as more code-deletion is planned
+originally Ruby didn't have an RDF library and there was only one [author](mailto:carmen@whats-your.name) with only so much time who wanted something like an LDP daemon. the approach was to map with as little abstraction as required to basic structures provided by the standard-library and OS, so trivial mappings to/from filesystem paths (instead of LDP's 4~ container-types we have one: a fs just has directories), JSON-objects (a compiled-C blob in Ruby stdlib is always going to trounce pure-Ruby parsers that have to take all of Turtle's footnotes into account), the Hash class (a flexible memory-model class? Hash with URI-keys will do). "install" is just a symlink to the live-source path as more code-change is planned, particularly adding more RDF-library interfaces for more reconfiguration-possibilities
 
 ## REQUISITES
 
