@@ -20,7 +20,7 @@ argument 2 follows our usual rules for disambiguating a resource (R|RDF::URI|JSO
 
 <tr><td><b>HTTP</b></td><td>
 a web-server &mdash; launch one with &#39;foreman start&#39;.
-a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server. they call a HTTP-method (unimaginatively named <a href="ruby/HTTP.rb.html">&#39;call&#39;</a> per Rack-interface) on a resource instance which will dispatch the appropriate HTTP method. you can mix our RDF-izing handlers into another <a href=https://github.com/ruby-rdf/rdf-ldp>LDP</a> server if you know what you're doing, via config.ru files or middleware-wrappers falling back on real-RDF 404s, just let your imagination run wild..
+a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server. they call a HTTP-method on a resource which dispatches the appropriate HTTP method. you could run our handlers in another server via config.ru setups or middleware-wrappers falling back on real-RDF 404s or hook up our non-RDF readers to a file-backed RDF::Repository to back <a href=https://github.com/ruby-rdf/rdf-ldp>RDF::LDP</a>. let your imagination run wild and remember the included server is just an idea, a "house wine" and we're always changing things around so maybe you should look in git history to find a vintage you like or invent your own
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
