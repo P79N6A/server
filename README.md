@@ -9,18 +9,18 @@ non-RDF is first converted to a **JSON**-[subset](https://en.wikipedia.org/wiki/
 <table>
 
 <tr><td><b>Resources</b></td><td>
-<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI as String, URI as JSON-object, RDF::URI, File-handle) by calling method R. this is an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. we use syntactical-conventions in URI-expressions for a bidirectional name-mapping with filesystem paths. the programmer is encouraged to think in terms of resources, with physical-paths mapped to and from behind the scenes as needed. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and inherits its methods &mdash; you can send <strong>R</strong> into the <strong>RDF</strong> framework anywhere a <strong>RDF::URI</strong> is expected
+<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI|String|JSON-object|File) by calling method R. this is an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. we add a bidirectional name-mapping with filesystem paths. the programmer is encouraged to think in terms of resources, with physical-paths mapped to and from behind the scenes as needed. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and inherits its methods &mdash; you can send <strong>R</strong> into the <strong>RDF</strong> framework anywhere a <strong>RDF::URI</strong> is expected
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
-for streaming triples between functions we use the yield and do{block} features of Ruby to produce and consume our subset of RDF.
-argument 0 and 1 are expected to be a string-type containing a URI.
+for streaming triples between functions we use the yield and do{block} features of Ruby to produce and consume a subset of RDF.
+argument 0 and 1 are expected to contain a URI in string-form.
 argument 2 follows our usual rules for disambiguating a resource (R|RDF::URI|JSON-object) and literal (JSON-value)
 </td></tr>
 
 <tr><td><b>HTTP</b></td><td>
 a web-server &mdash; launch one with &#39;foreman start&#39;.
-a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server. they call a HTTP-method (unimaginatively named <a href="ruby/HTTP.rb.html">&#39;call&#39;</a> per Rack-interface) on a resource instance which will dispatch the appropriate HTTP method
+a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server. they call a HTTP-method (unimaginatively named <a href="ruby/HTTP.rb.html">&#39;call&#39;</a> per Rack-interface) on a resource instance which will dispatch the appropriate HTTP method. you can mix our RDF-izing handlers into another <a href=https://github.com/ruby-rdf/rdf-ldp>LDP</a> server if you know what you're doing, via config.ru files or middleware-wrappers falling back on real-RDF 404s, just let your imagination run wild..
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
