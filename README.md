@@ -1,4 +1,4 @@
-**[pw](http://src.whats-your.name/pw/)** is a [HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to the [filesystem](http://www.multicians.org/fjcc4.html) for [use](http://suckless.org/philosophy) as a web-server for [mail](conf/mail/) and [news](conf/news/) ([message/rfc2822](http://www.faqs.org/rfcs/rfc2822.html), [RSS](http://web.resource.org/rss/1.0/spec), [Atom](https://tools.ietf.org/html/rfc4287)). [on-line search](https://en.wikipedia.org/wiki/Online_search) is available via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). with no server-side [crawlers](https://en.wikipedia.org/wiki/Web_crawler) one must [GET](ruby/read.rb.html) to trigger indexing of fs [content](https://en.wikipedia.org/wiki/Content_(media)). this is a zero-config (beyond a few symlinks) launch-and-go server which for the adventurous could also be used as a [suckless](http://suckless.org/philosophy) take on a generic-webserver
+**[pw](http://src.whats-your.name/pw/)** is a [HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to the [filesystem](http://www.multicians.org/fjcc4.html) for [use](http://suckless.org/philosophy) as a web-server for [mail](conf/mail/) and [news](conf/news/) ([message/rfc2822](http://www.faqs.org/rfcs/rfc2822.html), [RSS](http://web.resource.org/rss/1.0/spec), [Atom](https://tools.ietf.org/html/rfc4287)). [on-line search](https://en.wikipedia.org/wiki/Online_search) is available via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). with no server-side [crawlers](https://en.wikipedia.org/wiki/Web_crawler) one must [GET](ruby/read.rb.html) to trigger indexing of fs [content](https://en.wikipedia.org/wiki/Content_(media)). this is a zero-config (beyond a few symlinks) launch-and-go server which could be seen as a [suckless](http://suckless.org/philosophy) take on a generic filesystem-webserver
 
 ## MIMEs
 
@@ -23,7 +23,7 @@ there's no one way to break content into pages, in a directory you might want a 
 </td></tr>
 
 <tr><td><b>abstracts</b></td><td>
-content on a filesystem can be voluminous. summarizers may be used to provide an index to a larger amount of content. <a href=ruby/message.mail.rb.html>defined</a> on a RDF-type
+content on a filesystem can be voluminous. summarizers to provide an index to a larger amount of content are <a href=ruby/message.mail.rb.html>defined</a> on RDF-types
 </td></tr>
 
 <tr><td><b>HTTP</b></td><td>
