@@ -1,6 +1,72 @@
 # coding: utf-8
 class R
 
+  Abstract[SIOC+'MailMessage'] = -> graph, g, e {
+    if graph[e.uri]
+      graph[e.uri].delete LDP+'contains'
+    end
+    bodies = e.q.has_key? 'full'
+    e[:summarized] = true unless bodies || g.keys.size > 42
+    e.q['sort'] ||= Size
+    e.q['reverse'] ||= 'reverse'
+    isRDF = e.format != 'text/html'
+    group = (e.q['group']||To).expand
+    size = g.keys.size
+    threads = {}
+    clusters = []
+    weight = {}
+
+    # pass 1. prune + analyze
+    g.map{|u,p|
+      recipients = p[To].justArray.map &:maybeURI
+      graph.delete u unless bodies # remove unsummarized
+      p[DC+'source'].justArray.map{|s|graph.delete s.uri}         # provenance
+      p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # author-description
+      recipients.map{|a|graph.delete a}                           # recipient-description
+
+      p[Title].do{|t|
+        title = t[0].sub ReExpr, '' # strip prefix
+        unless threads[title]
+          p[Size] = 0               # member-count
+          threads[title] = p        # thread
+        end
+        threads[title][Size] += 1}  # thread size
+
+      recipients.map{|a|            # address weight
+        weight[a] ||= 0
+        weight[a] += 1}}
+
+    # pass 2. cluster
+    threads.map{|title,post|
+      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # bind heaviest grouping-property value, by default should be recipient and therefore mailing-list
+        container = a.R.dir.uri.t
+        mid = URI.escape post[DC+'identifier'][0]
+
+        # thread (or message)
+        tags = []
+        title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
+        thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid , Title => title, Image => post[Image]}
+
+        if post[Size] > 1 # thread
+          thread.update({Size => post[Size],
+                         Type => R[SIOC+'Thread']})
+        else # singleton post
+          thread[Type] = R[SIOC+'MailMessage']
+          thread[Creator] = post[Creator]
+        end
+
+        if isRDF # give post a label based on Title, messageID-derived URI considerably less informative
+          graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]}
+        end
+
+        # create container for the cluster
+        unless graph[container]
+          clusters.push container
+          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
+        end
+        graph[container][LDP+'contains'].push thread }}
+  }
+
   ReExpr = /\b[rR][eE]: /
 
   MessagePath = -> id { # message Identifier -> path
@@ -162,72 +228,6 @@ class R
   rescue Exception => x
     puts ["MAILERROR",uri,x,x.backtrace[0..2]].join(' ')
   end
-
-  Abstract[SIOC+'MailMessage'] = -> graph, g, e {
-    if graph[e.uri]
-      graph[e.uri].delete LDP+'contains'
-    end
-    bodies = e.q.has_key? 'full'
-    e[:summarized] = true unless bodies || g.keys.size > 42
-    e.q['sort'] ||= Size
-    e.q['reverse'] ||= 'reverse'
-    isRDF = e.format != 'text/html'
-    group = (e.q['group']||To).expand
-    size = g.keys.size
-    threads = {}
-    clusters = []
-    weight = {}
-
-    # pass 1. prune + analyze
-    g.map{|u,p|
-      recipients = p[To].justArray.map &:maybeURI
-      graph.delete u unless bodies # remove unsummarized
-      p[DC+'source'].justArray.map{|s|graph.delete s.uri}         # provenance
-      p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # author-description
-      recipients.map{|a|graph.delete a}                           # recipient-description
-
-      p[Title].do{|t|
-        title = t[0].sub ReExpr, '' # strip prefix
-        unless threads[title]
-          p[Size] = 0               # member-count
-          threads[title] = p        # thread
-        end
-        threads[title][Size] += 1}  # thread size
-
-      recipients.map{|a|            # address weight
-        weight[a] ||= 0
-        weight[a] += 1}}
-
-    # pass 2. cluster
-    threads.map{|title,post|
-      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # bind heaviest grouping-property value, by default should be recipient and therefore mailing-list
-        container = a.R.dir.uri.t
-        mid = URI.escape post[DC+'identifier'][0]
-
-        # thread (or message)
-        tags = []
-        title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
-        thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid , Title => title, Image => post[Image]}
-
-        if post[Size] > 1 # thread
-          thread.update({Size => post[Size],
-                         Type => R[SIOC+'Thread']})
-        else # singleton post
-          thread[Type] = R[SIOC+'MailMessage']
-          thread[Creator] = post[Creator]
-        end
-
-        if isRDF # give post a label based on Title, messageID-derived URI considerably less informative
-          graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]}
-        end
-
-        # create container for the cluster
-        unless graph[container]
-          clusters.push container
-          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
-        end
-        graph[container][LDP+'contains'].push thread }}
-  }
 
   IndexMail = ->doc,graph,host {
     doc.roonga host
