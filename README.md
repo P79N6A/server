@@ -2,7 +2,7 @@
 
 ## MIMEs
 
-data is converted to a **JSON**-[subset](https://en.wikipedia.org/wiki/Subset) of [RDF](https://ruby-rdf.github.io/) with no [blank-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals, without a [mapping/expansion/rewriting](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms) stage. [predicate](http://www.w3.org/TR/rdf11-concepts/#dfn-predicate) [URIs](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) are stored in full, no searching inside strings for [base-URI](https://annevankesteren.nl/2005/08/base-examples) prefixes and no [mapping-frames](http://json-ld.org/spec/latest/json-ld-framing/). data is structured for [URI](https://www.ietf.org/rfc/rfc1630.txt)-lookup and [merger](ruby/JSON.rb.html) into a memory [Hash](http://docs.ruby-lang.org/en/2.0.0/Hash.html)-table. **URI-list** files have [a URI per line](http://amundsen.com/hypermedia/urilist/) as primitive [indexes](https://en.wikipedia.org/wiki/Database_index) and [triple](http://stackoverflow.com/questions/273218/whats-an-rdf-triple) building-blocks. the simplicity-optimized **JSON** and feed formats have [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interfaces and are merged to a full RDF-model before finally being serialized to the requested response-MIME
+data is converted to a **JSON**-[subset](https://en.wikipedia.org/wiki/Subset) of [RDF](https://ruby-rdf.github.io/) with no [blank-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals, without a [mapping/expansion/rewriting](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms) stage. [predicate](http://www.w3.org/TR/rdf11-concepts/#dfn-predicate) [URIs](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) are stored in full, no searching inside strings for [base-URI](https://annevankesteren.nl/2005/08/base-examples) prefixes or [mapping-frames](http://json-ld.org/spec/latest/json-ld-framing/). data is structured for [URI](https://www.ietf.org/rfc/rfc1630.txt)-lookup and [merger](ruby/JSON.rb.html) into a memory [Hash](http://docs.ruby-lang.org/en/2.0.0/Hash.html)-table. **URI-list** files have [a URI per line](http://amundsen.com/hypermedia/urilist/) as primitive [indexes](https://en.wikipedia.org/wiki/Database_index) and [triple](http://stackoverflow.com/questions/273218/whats-an-rdf-triple) building-blocks. simplicity-optimized **JSON** and feed formats have [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interfaces and are merged to a full RDF-model before finally being serialized to the requested response-MIME
 
 ## INTERFACES
 
@@ -13,9 +13,9 @@ data is converted to a **JSON**-[subset](https://en.wikipedia.org/wiki/Subset) o
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
-for streaming triples between functions we use the yield and do{block} features of Ruby to produce and consume a subset of RDF.
-argument 0 and 1 are expected to contain a URI in string-form.
-argument 2 follows our usual rules for disambiguating a resource (R|RDF::URI|JSON-object) and literal (JSON-value)
+for streaming triples between functions we use the yield and do{block} features of Ruby to <a href=ruby/JSON.rb.html>produce and consume</a> a subset of RDF.
+arguments 0 and 1 contain a URI in string-form.
+argument 2 follows our rules for disambiguating a resource (R|RDF::URI|JSON-object) and literal (JSON-value)
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>pages</b></td><td>
