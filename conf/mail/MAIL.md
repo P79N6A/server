@@ -1,10 +1,9 @@
-# webmail-system
+# webize mail
 
 make messages visible to the server, e.g.:
 
 ``` sh
-cd /var/www
-ln -s /home/subscriber/.mail/2016 domain/localhost
+ln -s ~/.mail/2016 domain/localhost
 ```
 
 browse messages. for example today's messages:
@@ -14,22 +13,19 @@ $ chromium localhost/today
 ```
 
 ## URL structure
-* person and message resources appear in **/address**
-* a dynamic-handler at **/thread** finds discussions
-* full-text-index is in **/index**
-* RDF-transcodes in **/cache**
+* author and message **resources** and indexed message-**containers** under **/address**
+* dynamic-handler at **/thread** reconstructs discussions
 
-to wipe out all content derived from browsing the original message-files:
+to wipe data generated while browsing rfc2822-message files
 
 ``` sh
 rm -rf address cache index
 ```
 
-RDF URIs are deterministically minted from the Message-ID. original message-files aren't pointed to and can be removed after being "seen" by the server:
+RDF URIs are deterministically minted from the Message-ID. message-files can be removed after being "seen" by the server
 
 ``` sh
-rm -rf ~/.mail/2016/01
+rm -rf ~/.mail
 ```
 
-to really kill messages you'd have to delete all of the above plus flush [tabulator](https://github.com/linkeddata/tabulator)'s knowledge-base and delete on other machines synced with [rsync](http://linux.die.net/man/1/rsync), [syncthing](https://syncthing.net/), [btsync](https://www.getsync.com/) or [gluster](http://www.gluster.org/) or they'll haunt you forever. it's by design that messages are at least a little hard to delete. ultimately the database is the filesystem, opening up replication to however you prefer - we are just adding a cached layer of rewriting
-
+messages can be cached client-side by [browsing](https://github.com/linkeddata/tabulator) them and on other devices by synchronizing files with [rsync](http://linux.die.net/man/1/rsync), [syncthing](https://syncthing.net/), [btsync](https://www.getsync.com/), [gluster](http://www.gluster.org/) etc
