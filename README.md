@@ -24,7 +24,11 @@ a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
-we serve standard RDF is so you can <a href="https://github.com/solid/solid-apps">bring your own</a> interface. <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a>-compatibility (non-JS hypertext-browsers) is important to us so we also provide classic <b>text/html</b>
+we serve standard RDF is so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface
+</td></tr>
+
+<tr><td><b>HTML</b></td><td>
+ <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a> (hypertext-browser) capability is important to us so we provide <b>text/html</b> on request. templates are defined on a class (a group of resources) or instance (resource) basis
 </td></tr>
 
 </table>
