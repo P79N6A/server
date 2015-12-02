@@ -215,16 +215,19 @@ class R
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
   ViewGroup[Container] = -> g,e {
-    cur = g.delete e.uri # main container at request-URI
+    cur = g.delete e.uri
     color = R.randomColor
-    [(if cur && cur[LDP+'contains']
+    [(if cur && cur[LDP+'contains'] # container at request-URI
+      children = {}
+      cur[LDP+'contains'].map{|c|
+        g.delete(c.uri).do{|c| # if we have data on child-node
+          children[c.uri] = c }} # add to child-graph
       {class: :container,
        c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color};color:#fff"}, style: "font-size: 2em;background-color:#{color}"},
            {class: :contents, style: "padding: .3em;background-color:#{color};color:#fff",
-            c: cur[LDP+'contains'].map{|c|
-              g.delete(c.uri).do{|c|ViewA[Container][c,e]}}}]}
+            c: TabularView[children,e]}]} # show children
       end),
-      g.map{|id,c|ViewA[Container][c,e]}]} # contained containers
+      g.map{|id,c|ViewA[Container][c,e]}]}
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
