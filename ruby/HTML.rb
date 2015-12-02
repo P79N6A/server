@@ -222,9 +222,9 @@ class R
       cur[LDP+'contains'].map{|c|
         g.delete(c.uri).do{|c| # if we have data on child-node
           children[c.uri] = c }} # add to child-graph
-      {class: :container,
-       c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color};color:#fff"}, style: "font-size: 2em;background-color:#{color}"},
-           {class: :contents, style: "padding: .3em;background-color:#{color};color:#fff",
+      {class: 'container main',
+       c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
+           {class: :contents, style: "background-color:#{color}",
             c: TabularView[children,e]}]} # show children
       end),
       g.map{|id,c|ViewA[Container][c,e]}]}
