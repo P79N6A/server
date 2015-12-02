@@ -217,12 +217,14 @@ class R
   ViewGroup[Container] = -> g,e {
     cur = g.delete e.uri # main container at request-URI
     color = R.randomColor
-    [({class: :container,
+    [(if cur && cur[LDP+'contains']
+      {class: :container,
        c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color};color:#fff"}, style: "font-size: 2em;background-color:#{color}"},
            {class: :contents, style: "padding: .3em;background-color:#{color};color:#fff",
             c: cur[LDP+'contains'].map{|c|
-              g.delete(c.uri).do{|c|ViewA[Container][c,e]}}}]} if cur && cur[LDP+'contains']),
-      g.map{|id,c|ViewA[Container][c,e]}]} # other containers
+              g.delete(c.uri).do{|c|ViewA[Container][c,e]}}}]}
+      end),
+      g.map{|id,c|ViewA[Container][c,e]}]} # contained containers
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
