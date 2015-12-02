@@ -5,7 +5,7 @@ a {text-decoration:none;font-weight: bold;color:#fff;background-color:#000;paddi
 .pager {float: left}
 .pager a {font-size:2em; color: #000;background-color:#fff;}
 .pager a[rel="prev"] {color:#ccc}
-.pager .dirname {color: #ddd}
+.pager .dirname {color: #d7d7d7}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
@@ -61,7 +61,8 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
 .container > .contents {border-radius: 0 .4em .4em .4em}
 .container.main > .label > a {font-size: 2em;color:#fff}
-.container.main td {color:#000}
+.container.main > .contents {padding: .3em} 
+.container.main table.tab td {background-color:#fff;color:#000}
 div.msgs > h1 {text-align:center}
 div.chatLog {margin-bottom: .7em}
 div.header a.title {font-size:1.2em;background-color:#000;color:#fff;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
