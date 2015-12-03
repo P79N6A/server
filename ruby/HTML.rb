@@ -215,12 +215,12 @@ class R
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
   ViewGroup[Container] = -> g,e {
-    cur = g.delete e.uri
+    cur = (g.delete e.uri) || (g.delete e.R.path)
     color = R.randomColor
     [(if cur && cur[LDP+'contains'] # container at request-URI
       children = {}
       cur[LDP+'contains'].map{|c|
-        g.delete(c.uri).do{|c| # if we have data on child-node
+        (g.delete(c.uri)||g.delete(c.R.path)).do{|c| # if we have data for child-path
           children[c.uri] = c }} # add to child-graph
       {class: 'container main',
        c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
