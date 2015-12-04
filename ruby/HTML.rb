@@ -116,8 +116,7 @@ class R
 
   DefaultView = -> d,e {
     seen = {}
-
-    # group resources on RDFtype
+    # group resources
     groups = {}
     d.map{|u,r|
       (r||{}).types.map{|type|
@@ -130,8 +129,6 @@ class R
     e[:label] ||= {} # resource labels
 
     path = e.R.justPath
-#    tabr = {_: :a, href: e.q.merge({'ui' => 'tabulator'}).qs, class: :tabr, c: {_: :img, src: '/css/misc/cube.svg'}, rel: :nofollow}
-
     [{_: :table, class: :pager, # direction pointers
       c: [{_: :tr,
            c: [{_: :td},{_: :td, c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},{_: :td}]}, # up
@@ -157,7 +154,6 @@ class R
       c: e[:label].map{|name,_| # label-colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-#     tabr, # upgrade to RDF-UI
      H.js('/js/ui',true) # keybinding-JS
     ]}
 
@@ -225,7 +221,8 @@ class R
       {class: 'container main',
        c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
            {class: :contents, style: "background-color:#{color}",
-            c: TabularView[children,e]}]} # show children
+            c: [{_: :style, c: ".container.main th a {background-color:#{color}}"},
+                TabularView[children,e]]}]} # show children
       end),
       g.map{|id,c|ViewA[Container][c,e]}]}
 
