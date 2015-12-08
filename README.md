@@ -32,7 +32,7 @@ a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
-we serve standard RDF is so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface
+we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface
 </td></tr>
 
 <tr><td><b>HTML</b></td><td>
