@@ -121,11 +121,9 @@ class R
     e[:filters] = []
 
     # call request-method
-#    puts "#{method} #{e.uri}"
     resource.setEnv(e).send(method).do{|s,h,b|
       # inspect response
       R.log e,s,h,b
-
       # return
       [s,h,b]
     }
