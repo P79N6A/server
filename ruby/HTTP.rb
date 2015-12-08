@@ -247,7 +247,7 @@ class R
 
 end
 
-module Th # methods which introspect request-environment
+module Th # methods on request-environment
 
   def accept; @accept ||= accept_ end
 
@@ -331,7 +331,7 @@ module Th # methods which introspect request-environment
 
   def SSLupgrade; [301,{'Location' => "https://" + host + self['REQUEST_URI']},[]] end
 
-  def q # memoized query keys/vals
+  def q # memoize key/vals
     @q ||=
       (if q = self['QUERY_STRING']
          R.parseQS q
@@ -343,7 +343,7 @@ module Th # methods which introspect request-environment
 end
 
 class Hash
-  def qs # serialize query-string
+  def qs # serialize to query-string
     '?'+map{|k,v|
       k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
     }.intersperse("&").join('')

@@ -54,16 +54,7 @@ class R
       end
       s }}
 
-  # rewrite URIs to local-cache
-  FileSet['localize'] = -> re,q,g {
-    FileSet[Resource][re.justPath,q,g].map{|r|
-      r.host ? R['/domain/' + r.host + r.hierPart].setEnv(re.env) : r }}
-
-  # local resource-cache with child-URIs rewritten to "stay local"
-  GET['/domain'] = -> e,r {
-    r[:container] = true if e.justPath.e # summarize containers
-    r.q['set'] = 'localize'
-    nil}
+  GET['/domain'] = -> e,r {e.justPath.response}
 
   # directory du jour
   GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}

@@ -3,7 +3,7 @@ class R
   # grep
   FileSet['grep'] = -> e,q,m { # grep in files
     q['q'].do{|query|
-      e.env[:filters].push 'grep'
+      e.env[:filters].push 'grep' unless q.has_key?('full')
       `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|
         R.unPOSIX r.chomp}}}
 
