@@ -1,4 +1,4 @@
-**[pw](http://src.whats-your.name/pw/)** is a [HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to the [filesystem](http://www.multicians.org/fjcc4.html). [search](https://en.wikipedia.org/wiki/Online_search) is available pre-indexed w/ [Groonga](http://groonga.org/) and last-second w/ [grep](http://www.gnu.org/software/grep/manual/grep.html) - with no server-side [crawlers](https://en.wikipedia.org/wiki/Web_crawler) one must [GET](ruby/read.rb.html) to trigger indexing. this zero-config launch-and-use server is one [author](http://mw.logbook.am/carmen/)'s take on a generic fs-backed webserver for purposes such as [mail](conf/mail/) and [news](conf/news/). it is written in [Ruby](https://www.ruby-lang.org/)
+**[pw](http://src.whats-your.name/pw/)** is a [HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to the [filesystem](http://www.multicians.org/fjcc4.html). [search](https://en.wikipedia.org/wiki/Online_search) is available pre-indexed w/ [Groonga](http://groonga.org/) and last-second w/ [grep](http://www.gnu.org/software/grep/manual/grep.html) - with no server-side [crawlers](https://en.wikipedia.org/wiki/Web_crawler) one must [GET](ruby/read.rb.html) to trigger indexing. this zero-config launch-and-use server is one [author](http://mw.logbook.am/carmen/)'s take on a generic fs-backed webserver for purposes such as [mail](conf/mail/) and [news](conf/news/)
 
 ## MIMEs
 
@@ -9,7 +9,7 @@ in the internal cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is
 <table>
 
 <tr><td><b>resources</b></td><td>
-<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI-string|JSON-object|File) by calling method R. it is an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. a bidirectional name-mapping with filesystem paths is used to map storage locations. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and is usable anywhere a <strong>RDF::URI</strong> is allowed
+<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI-string|JSON-object|File) by calling method R. it's an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. a bidirectional name-mapping with filesystem paths is used to map storage locations. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and is usable anywhere a <strong>RDF::URI</strong> is allowed
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
@@ -31,7 +31,7 @@ a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
-we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface
+we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but provide a default which is almost Javascript-free (<a href=http://d3js.org/>D3-vis</a> aside)
 </td></tr>
 
 <tr><td><b>HTML</b></td><td>
