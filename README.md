@@ -2,7 +2,7 @@
 
 ## MIMEs
 
-in the internal cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is used. for [simplicity](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms) this means no [blank-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals. indexes are built in **URI-list** files of [one URI per line](http://amundsen.com/hypermedia/urilist/). the **JSON** and Atom/RSS feed formats have [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interfaces and expand to a full RDF-model if requested, otherwise data stays in our optimized subset through to serialization.
+in the internal cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is used. for [simplicity](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms) this means no [unidentified-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals. indexes are built in **URI-list** files of [one URI per line](http://amundsen.com/hypermedia/urilist/). the **JSON** and Atom/RSS feed formats have [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interfaces and expand to a full RDF-model if requested, otherwise data stays in our optimized subset through to serialization.
 
 ## INTERFACES
 
