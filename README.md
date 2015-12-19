@@ -9,13 +9,12 @@ in the internal cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is
 <table>
 
 <tr><td><b>resources</b></td><td>
-<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI|String|JSON-object|File) by calling method R. this is an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. we add a bidirectional name-mapping with filesystem paths. the programmer is encouraged to think in terms of resources, with physical-paths mapped to and from behind the scenes as needed. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and inherits its methods &mdash; you can send <strong>R</strong> into the <strong>RDF</strong> framework anywhere a <strong>RDF::URI</strong> is expected
+<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI-string|JSON-object|File) by calling method R. it is an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. a bidirectional name-mapping with filesystem paths is used to map storage locations. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and is usable anywhere a <strong>RDF::URI</strong> is allowed
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
-for streaming triples between functions we use the yield and do{block} features of Ruby to <a href=ruby/JSON.rb.html>produce and consume</a> a subset of RDF.
-arguments 0 and 1 contain a URI in string-form.
-argument 2 follows our rules for disambiguating a resource (R|RDF::URI|JSON-object) and literal (JSON-value)
+for streaming triples between functions, <b>yield</b> and <b>do</b> keywords denote producing and consuming code.
+indexes 0,1 contain a URI in string arguments, index 2 a resource (R|RDF::URI) or literal (JSON-value)
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>pages</b></td><td>
@@ -37,6 +36,10 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 
 <tr><td><b>HTML</b></td><td>
  <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a> (hypertext-browser) capability is important to us so we provide <b>text/html</b> on request. templates are defined on a class (a group of resources) or instance (resource) basis
+</td></tr>
+
+<tr><td><b>future</b></td><td>
+we love interfaces, but prefer to not invent new ones. one possibility is offering our automated RDF-conversion in virtual Turtle-files to other daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> on a FUSE filesystem.
 </td></tr>
 
 </table>
