@@ -18,7 +18,7 @@ indexes 0,1 contain a URI in string arguments, index 2 a resource (R|RDF::URI) o
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>pages</b></td><td>
-there's no one way to break content into pages, in a directory you might want a depth-first or breadth-first traverse or content matching a regular-expression. we provide <a href=ruby/search.fs.rb.html>some ways</a> and hooks to add more
+how will you break content into pages? a depth-first or breadth-first traverse of directories, a narrowing of the default-set matching a regular-expression.. we provide <a href=ruby/search.fs.rb.html>some ideas</a> and hooks to add more
 </td></tr>
 
 <tr><td><b>abstracts</b></td><td>
@@ -35,7 +35,7 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td><b>HTML</b></td><td>
- <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a> (hypertext-browser) capability is important to us so we provide <b>text/html</b> on request. templates are defined on a class (a group of resources) or instance (resource) basis
+ <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a> compatibility is important to us so we provide <b>text/html</b> on request. templates are defined on a class (a group of resources) or instance (resource) basis
 </td></tr>
 
 <tr><td><b>future</b></td><td>
