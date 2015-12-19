@@ -31,7 +31,7 @@ a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
-we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but provide a default which is almost Javascript-free (<a href=http://d3js.org/>D3-vis</a> aside)
+we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but provide a default which is Javascript-free (<a href=http://d3js.org/>D3-vis</a> aside)
 </td></tr>
 
 <tr><td><b>HTML</b></td><td>
