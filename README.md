@@ -14,7 +14,7 @@ in the internal cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is
 
 <tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
 for streaming triples between functions, <b>yield</b> and <b>do</b> keywords denote producing and consuming code.
-indexes 0,1 contain a URI in string arguments, index 2 a resource (R|RDF::URI) or literal (JSON-value)
+indexes 0,1 are URI in string arguments, index 2 a resource (R|RDF::URI) or literal (JSON-value)
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>pages</b></td><td>
@@ -46,12 +46,12 @@ we love interfaces, but prefer to not invent new ones. one possibility is offeri
 
 ## REQUISITES
 
-### on [Debian](http://www.debian.org/)
+### [Debian](http://www.debian.org/)
 ``` sh
 apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
 ```
 
-### on [Voidlinux](http://www.voidlinux.eu/)
+### [Voidlinux](http://www.voidlinux.eu/)
 ``` sh
 xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
 ```
