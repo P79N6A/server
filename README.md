@@ -22,7 +22,7 @@ how will you break content into pages? a depth-first or breadth-first traverse o
 </td></tr>
 
 <tr><td><b>abstracts</b></td><td>
-content on a filesystem can be voluminous. summarizers to provide an index to a larger amount of content are <a href=ruby/message.mail.rb.html>defined</a> on RDF-types
+content on a filesystem can be voluminous. summarizers to index a larger amount of content are <a href=ruby/message.mail.rb.html>defined</a> on RDF-types
 </td></tr>
 
 <tr><td><b>HTTP</b></td><td>
