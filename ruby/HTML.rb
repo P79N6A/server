@@ -210,20 +210,23 @@ class R
      c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
-  ViewGroup[Container] = -> g,e {
+  ViewGroup[Container] = -> g,e { color = R.randomColor
+    # canonical URI
     cur = (g.delete e.uri) || (g.delete e.R.path)
-    color = R.randomColor
-    [(if cur && cur[LDP+'contains'] # container at request-URI
-      children = {}
+
+    [(if cur && cur[LDP+'contains'] # main URI is container
+      children = {}                 # move contained children to new graph for a tabular render
       cur[LDP+'contains'].map{|c|
-        (g.delete(c.uri)||g.delete(c.R.path)).do{|c| # if we have data for child-path
-          children[c.uri] = c }} # add to child-graph
+        (g.delete(c.uri)||g.delete(c.R.path)).do{|c| # child-node(s)
+          children[c.uri] = c }} # add to graph
+
       {class: 'container main',
        c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
            {class: :contents, style: "background-color:#{color}",
             c: [{_: :style, c: ".container.main th a {background-color:#{color}}"},
-                TabularView[children,e]]}]} # show children
+                TabularView[children,e]]}]}
       end),
+     # other containers (not contained by main)
       g.map{|id,c|ViewA[Container][c,e]}]}
 
   TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
@@ -237,7 +240,7 @@ class R
     keys.unshift 'uri' if show_id
     keys.unshift Type
     keys.unshift Size
-    rows = g.resources e         # sorted resources
+    rows = g.resources e # sort resources per environment preferences
     {_: :table, class: :tab,
      c: [({_: :thead,
            c: {_: :tr,
