@@ -42,15 +42,15 @@ body > form > input {float: right;border:0;font-weight:bold}
 body > table.tab , body > table.html {margin:auto}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold}
-td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal;background-color:#000;color: #eee}
+td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal;background-color:#000;color: #fff}
 td {vertical-align:top}
 td[property="uri"] {white-space: nowrap}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
 td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100%}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100%}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
-td[property="http://purl.org/dc/terms/tag"] a {color: #fff}
-td[property="http://rdfs.org/sioc/ns#has_creator"] a {background-color:#000;color: #fff}
+td[property="http://purl.org/dc/terms/tag"] a {color: #000}
+td[property="http://rdfs.org/sioc/ns#has_creator"] a {color: #fff}
 td.val {max-width: 100%; overflow: hidden}
 td.key img {max-height: 2em}
 img.tablePreview {max-height:14em;max-width:100%}

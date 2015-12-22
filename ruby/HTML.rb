@@ -293,7 +293,12 @@ class R
                  when DC+'tag'
                    l[k].justArray.map{|v|
                      e[:label][v] = true
-                     [{_: :a, href: '#', name: v, c: v},' ']}
+                     [{_: :a, href: this.uri, name: v, c: v},' ']}
+                 when SIOC+'has_creator'
+                   l[k].justArray.map{|v|
+                     name = v.R.fragment
+                     e[:label][name] = true
+                     [{_: :a, href: this.uri, name: name, c: name},' ']}
                  else
                    l[k].justArray.map{|v|
                      case v
