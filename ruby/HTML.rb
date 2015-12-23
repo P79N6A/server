@@ -210,7 +210,7 @@ class R
      c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
-  ViewGroup[Container] = -> g,e { color = R.randomColor
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e { color = R.randomColor
     # canonical URI
     cur = (g.delete e.uri) || (g.delete e.R.path)
 
@@ -229,7 +229,7 @@ class R
      # other containers (not contained by main)
       g.map{|id,c|ViewA[Container][c,e]}]}
 
-  TabularView = ViewGroup[Stat+'File'] = ViewGroup[Resource] = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
+  TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
     sort = (e.q['sort']||'uri').expand                      # sort property
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
