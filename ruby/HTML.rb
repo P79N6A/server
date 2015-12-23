@@ -128,21 +128,7 @@ class R
 
     e[:label] ||= {} # resource labels
 
-    path = e.R.justPath
-    [{_: :table, class: :pager, # direction pointers
-      c: [{_: :tr,
-           c: [{_: :td},{_: :td, c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},{_: :td}]}, # up
-          {_: :tr,
-           c: [{_: :td, c: e[:Links][:prev].do{|p|
-                  p = CGI.escapeHTML p.to_s
-                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
-               {_: :td, c: ({_: :a, class: :basename, href: path, title: path, c: path.basename} if e[:container] && !(d[e.uri] && d[e.uri][LDP+'contains']))}, # container-pointer
-               {_: :td, c: e[:Links][:next].do{|n|
-                  n = CGI.escapeHTML n.to_s
-                  {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}}]}, # right
-          {_: :tr,
-           c: [{_: :td},{_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])},{_: :td}]}]}, # down
-     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]), # search
+    [(ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]), # search
      groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # ungrouped
        if !seen[u]
@@ -154,8 +140,7 @@ class R
       c: e[:label].map{|name,_| # label-colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     H.js('/js/ui',true) # keybinding-JS
-    ]}
+     H.js('/js/ui',true)]} # keybinding-JS
 
   ViewA[BasicResource] = -> r,e {
     {_: :table, class: :html, id: r.R.fragment || r.uri,
@@ -210,17 +195,27 @@ class R
      c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {  color = R.randomColor
-    {class: 'container main',
-     c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
-         {class: :contents, style: "background-color:#{color}",
-          c: [{_: :style, c: ".container.main th a {background-color:#{color}}"},
-              if e[:floating]
-                g.map{|id,c|
-                  ViewA[Container][c,e]}
-              else
-                TabularView[g,e]
-              end]}]}}
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {
+    color = R.randomColor
+    path = e.R.justPath
+    g.delete e.uri
+    {_: :table, class: :pager, # direction pointers
+     c: [{_: :tr,
+          c: [{_: :td},{_: :td, c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},{_: :td}]}, # up
+         {_: :tr,
+          c: [{_: :td, c: e[:Links][:prev].do{|p|
+                 p = CGI.escapeHTML p.to_s
+                 {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
+              {_: :td, c: {class: 'container main', # container
+                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
+                               {class: :contents, style: "background-color:#{color}",
+                                c: [{_: :style, c: ".container.main th a {background-color:#{color}}"},
+                                    e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]]}]}},
+              {_: :td, c: e[:Links][:next].do{|n|
+                 n = CGI.escapeHTML n.to_s
+                 {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}}]}, # right
+         {_: :tr,
+          c: [{_: :td},{_: :td, c: ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])},{_: :td}]}]}} # down
 
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 

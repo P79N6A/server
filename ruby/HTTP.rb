@@ -31,7 +31,7 @@ class R
   def HEAD
     self.GET.
     do{| s, h, b |
-       [ s, h, []]} # just Status + Headers
+       [ s, h, []]} # just HEADer
   end
 
   def setEnv r
@@ -42,22 +42,14 @@ class R
   def getEnv; @r end
   alias_method :env, :getEnv
 
-  ENV2RDF = -> env, graph { # environment -> graph
-
-    # request resource
+  ENV2RDF = -> env, graph {
     subj = graph[env.uri] ||= {'uri' => env.uri}
-
-    # inspect query
     qs = graph['#query'] = {'uri' => '#query'}
     env.q.map{|key,val|
-      qs['#'+key.gsub(/\W+/,'_')] = val
-    }
-    env['SERVER_SOFTWARE'] = 'https://gitlab.com/ix/pw'.R
+      qs['#'+key.gsub(/\W+/,'_')] = val}
     [env, env[:Links], env[:Response]].compact.map{|db|
       db.map{|k,v|
-        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/
-      }}
-  }
+        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/ }}}
 
   def ldp
     @r[:Links][:acl] = aclURI
@@ -219,7 +211,7 @@ class R
       g.map{|u,r|
         {style: "border-radius: 2em; background-color:#eee;color:#000;display:inline-block",
          c: [{_: :a, class: :user, style: "font-size: 3em;text-decoration:none",
-              href: "http://linkeddata.github.io/profile-editor/#/profile/view?webid=" + CGI.escape(u)}, # enhanced profile-view
+              href: "http://linkeddata.github.io/profile-editor/#/profile/view?webid=" + CGI.escape(u)}, # 3rd-party profile UI
              ViewA[BasicResource][r,env]]}}
     else # no WebID found, link to onboarding-UI
       {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
