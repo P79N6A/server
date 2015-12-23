@@ -48,20 +48,23 @@ class R
     set = []
     graph = {}
 
-    # find generic-resource(s)
     rs = ResourceSet[q['set']]
+    fs = FileSet[q['set']]
+
+    # add generic-resource(s)
     rs[self,q,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
-    # find file(s)
-    fs = FileSet[q['set']]
+    # add file(s)
     fs[self,q,graph].do{|files|set.concat files} if fs
 
+    # default/fallback-set
     FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
 
     if set.empty?
       @r[404] = true
       return E404[self,@r,graph] unless init
     end
+#    puts set
 
     @r[:Response].
       update({'Content-Type' => @r.format + '; charset=UTF-8',
