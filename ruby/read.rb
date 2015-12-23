@@ -64,7 +64,7 @@ class R
       @r[404] = true
       return E404[self,@r,graph] unless init
     end
-#    puts set
+    puts set
 
     @r[:Response].
       update({'Content-Type' => @r.format + '; charset=UTF-8',

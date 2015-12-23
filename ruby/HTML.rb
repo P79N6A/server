@@ -210,24 +210,17 @@ class R
      c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e { color = R.randomColor
-    # canonical URI
-    cur = (g.delete e.uri) || (g.delete e.R.path)
-
-    [(if cur && cur[LDP+'contains'] # main URI is container
-      children = {}                 # move contained children to new graph for a tabular render
-      cur[LDP+'contains'].map{|c|
-        (g.delete(c.uri)||g.delete(c.R.path)).do{|c| # child-node(s)
-          children[c.uri] = c }} # add to graph
-
-      {class: 'container main',
-       c: [{class: :label, c: {_: :a, c: cur.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
-           {class: :contents, style: "background-color:#{color}",
-            c: [{_: :style, c: ".container.main th a {background-color:#{color}}"},
-                TabularView[children,e]]}]}
-      end),
-     # other containers (not contained by main)
-      g.map{|id,c|ViewA[Container][c,e]}]}
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {  color = R.randomColor
+    {class: 'container main',
+     c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
+         {class: :contents, style: "background-color:#{color}",
+          c: [{_: :style, c: ".container.main th a {background-color:#{color}}"},
+              if e[:floating]
+                g.map{|id,c|
+                  ViewA[Container][c,e]}
+              else
+                TabularView[g,e]
+              end]}]}}
 
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 

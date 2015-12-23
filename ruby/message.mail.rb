@@ -7,6 +7,7 @@ class R
     end
     bodies = e.q.has_key? 'full'
     e[:summarized] = true unless bodies || g.keys.size > 42
+    e[:floating] = true
     e.q['sort'] ||= Size
     e.q['reverse'] ||= 'reverse'
     isRDF = e.format != 'text/html'
