@@ -196,7 +196,6 @@ class R
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {
-    color = R.randomColor
     path = e.R.justPath
     g.delete e.uri
     {_: :table, class: :pager, # direction pointers
@@ -207,10 +206,9 @@ class R
                  p = CGI.escapeHTML p.to_s
                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
               {_: :td, c: {class: 'container main', # container
-                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page', style: "background-color:#{color}"}, style: "background-color:#{color}"},
-                               {class: :contents, style: "background-color:#{color}",
-                                c: [{_: :style, c: ".container.main th a {background-color:#{color}}"},
-                                    e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]]}]}},
+                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page'}},
+                               {class: :contents,
+                                c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]}},
               {_: :td, c: e[:Links][:next].do{|n|
                  n = CGI.escapeHTML n.to_s
                  {_: :a, rel: :next, c: '&#9654;', title: n, href: n}}}]}, # right
