@@ -55,11 +55,12 @@ class R
                 ts = l + hour + ':00'
                 pos = (ts.to_time.to_f - min) / range * 100
                 x = pos.to_s + '%'
-                [{_: :line, stroke: day ? '#555' : '#ccc', 'stroke-dasharray' => day ? '2,2' : '1,1', y1: 0, y2: '100%', x1: x, x2: x},
+                [{_: :line, stroke: day ? '#fff' : '#666',
+                  y1: 0, y2: '100%', x1: x, x2: x},
                  {_: :text, 'font-size'  =>'.8em',
-                  fill: day ? '#000' : '#bbb',
+                  fill: '#fff',
                   c: (day ? ts[0..9] : ts[11..12]),
-                  dy: day ? -3 : 7, y: 0, x: x,
+                  dy: day ? 1 : 7, y: 0, x: x,
                   onclick: day ? "window.location.href=\"/#{ts[0..9].gsub('-','/')}/\"" : ''}]}
             }}}
       ] if timegraph),
