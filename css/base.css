@@ -61,6 +61,7 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container > .contents {border-radius: 0 .4em .4em .4em}
 .container.main > .label, .container.main > .label a, .container.main > .contents {background-color:#fff;color:#000}
 .container.main > .label > a {font-size: 1.5em}
+.container.main > .contents > .tab > tbody > tr > td > a {color:#000;background-color:#fff}
 
 div.msgs > h1 {text-align:center}
 div.chatLog {margin-bottom: .7em}
@@ -71,7 +72,7 @@ td[property='uri'] a, div.chatLog span.body a, div.mail a {color:#fff;background
 div.body a {background-color:#000;color:#fff;border-radius:.2em}
 div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 0 0 .6em; margin-right:.13em}
 div.body span.quoted {padding-left:.18em}
-a.nextPage {color:#ddd;background-color:#fff;font-size:9.6em;margin-left:.15em}
+a.nextPage {color:#f9f9f9;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
 :target {background-color:#000;color:#fff;padding-top:10em}
 
