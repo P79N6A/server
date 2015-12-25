@@ -49,7 +49,8 @@ class R
      # filter control
      (a.map{|f,v|
        {class: :facet, facet: fid[f],
-        c: [{class: :predicate,
+        c: [{_: :span, c: :filter, style: 'background-color: #000;color:#999'},
+            {class: :predicate,
              c: f.shorten.split(':')[-1]},
             v.sort_by{|k,v|v}.reverse.map{|k,v| # sort by usage-weight
               name = k.respond_to?(:uri) ? ( k = k.R
