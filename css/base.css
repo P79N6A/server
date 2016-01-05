@@ -63,10 +63,10 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container.main > .label > a {font-size: 1.5em}
 .container.main > .contents > .tab > tbody > tr > td > a {color:#000;background-color:#fff}
 
-div.msgs > h1 {text-align:center}
+div.msgs > h1 {text-align:center;margin-top:0}
 div.chatLog {margin-bottom: .7em}
 div.chatLog span.creator a {color:#fff}
-div.header {margin-left:-.8em}
+div.header {margin-left:-.555em}
 div.header a.title {font-size:1.2em;background-color:#fff;color:#000;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
 div.mail {margin:auto;max-width:118ex}
 div.mail a.to {font-size:1.27em}
