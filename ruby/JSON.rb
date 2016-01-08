@@ -33,10 +33,10 @@ class R
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f| # RDF doc
       if @r && @r[:container] && file? # contained file
-        # add file-metadata
-        if self != f # skip native-storage
-          s = stripDoc.uri # strip to generic-resource
-          s = base.join(s).to_s if base # resolve URI
+        # file-metadata
+        if self != f # skip file-metadata for native (.e) storage
+          # expand relative file-reference
+          s = base ? base.join(uri).to_s : uri
           graph[s] ||= {'uri' => s} # graph
           mt = f.mtime
           graph[s][Size] = f.size

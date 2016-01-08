@@ -62,6 +62,25 @@ class R
   GET['/cache'] = E404
   GET['/index'] = E404
 
+  def triplrContainer
+    dir = uri.t
+    yield dir, Type, R[Container]
+    yield dir, SIOC+'has_container', dir.R.dir unless path=='/'
+    mt = mtime
+    yield dir, Mtime, mt.to_i
+    yield dir, Date, mt.iso8601
+    contained = c
+    yield dir, Size, contained.size
+    contained.map{|c|
+      if c.directory?
+        child = c.descend # trailing-slash directory-URI convention
+        yield dir, LDP+'contains', child
+      else # file/leaf
+        yield dir, LDP+'contains', c
+      end
+    } unless contained.size > 42
+  end
+
   def triplrUriList
     open(pathPOSIX).readlines.map{|l|
       yield l.chomp, Type, R[Resource] }

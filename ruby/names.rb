@@ -38,24 +38,6 @@ class R
   alias_method :c, :children
   def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
   def cascade; stripSlash.hierarchy end
-  def triplrContainer
-    dir = uri.t
-    yield dir, Type, R[Container]
-    yield dir, SIOC+'has_container', dir.R.dir unless path=='/'
-    mt = mtime
-    yield dir, Mtime, mt.to_i
-    yield dir, Date, mt.iso8601
-    contained = c
-    yield dir, Size, contained.size
-    contained.map{|c|
-      if c.directory?
-        child = c.descend # trailing-slash directory-URI convention
-        yield dir, LDP+'contains', child
-      else # doc
-        yield dir, LDP+'contains', c.stripDoc # link to generic resource
-      end
-    } unless contained.size > 42
-  end
 
   # POSIX-path mapping
   VHosts = 'domain'
