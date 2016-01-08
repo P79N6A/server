@@ -39,7 +39,7 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td><b>future</b></td><td>
-we love interfaces which enable modularity and reuse, but prefer to not invent new ones. one possibility is offering our automated RDF-conversion in (virtual) Turtle to other daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> on a FUSE filesystem. this server may be disappear as an actively-maintained project as functionality is factored out and replaced with an even-more-generic SoLiD/LDP server
+we love interfaces which enable modularity and reuse, but prefer to not invent new ones. one possibility is offering our RDF-conversion service in Turtle to other daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> on a FUSE filesystem. this server may be disappear as an actively-maintained project as functionality is factored out and replaced with an even-more-generic SoLiD/LDP server
 </td></tr>
 
 </table>
