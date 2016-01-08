@@ -2,7 +2,7 @@
 
 ## MIMEs
 
-in the internal cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is used. for [simplicity](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms) this means no [unidentified-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals. indexes are built in **URI-list** files of [one URI per line](http://amundsen.com/hypermedia/urilist/). the **JSON** and Atom/RSS feed formats have [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interfaces and expand to a full RDF-model if requested, otherwise data stays in our optimized subset through to serialization.
+in our cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is used. for [simplicity](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms) this means no [unidentified-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals. indexes consist of **URI-list** files with [one URI per line](http://amundsen.com/hypermedia/urilist/). internal **JSON** and non-RDF formats have [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interfaces and expand to a full RDF-model if requested, otherwise data stays in our optimized subset through to serialization.
 
 ## INTERFACES
 
@@ -35,7 +35,7 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td><b>HTML</b></td><td>
- <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a> compatibility is important to us so we provide <b>text/html</b> on request. rendering is defined on a class (a group of resources) or instance (resource) basis
+ <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a> compatibility is important to us so we provide <b>text/html</b> on request. rendering is defined on a class (group of resources) or instance (resource) basis
 </td></tr>
 
 <tr><td><b>future</b></td><td>
