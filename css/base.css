@@ -1,5 +1,5 @@
 body {font-family: sans-serif;background-color:#000;color:#fff}
-pre {white-space: pre-wrap}
+pre {white-space: pre-wrap;padding:.1em;margin:.1em}
 a {text-decoration:none;font-weight: bold;}
 
 .pager {float: left}
@@ -48,7 +48,6 @@ td[property="uri"] a:visited {color: #000;background-color:#fff}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
 td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100%}
 tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100%}
-tr[property="http://rdfs.org/sioc/ns#content"] > td.val pre {white-space: pre-wrap;background-color:#fff;color:#000}
 td[property="http://purl.org/dc/terms/tag"] a {color: #000}
 td[property="http://rdfs.org/sioc/ns#has_creator"] a {color: #fff}
 td.val {max-width: 100%; overflow: hidden}
