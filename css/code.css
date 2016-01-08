@@ -4,6 +4,8 @@ code {
 }
 
 .highlight {
+    background-color:#000;color:#fff;
+
     border: .1em dotted #ccc;
 }
 

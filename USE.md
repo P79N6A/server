@@ -1,0 +1,3 @@
+``` sh
+foreman start
+```
