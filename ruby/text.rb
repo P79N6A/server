@@ -68,13 +68,11 @@ class R
   def R.pencil; ['&#x270e;','&#x270f;','&#x2710;'][rand(3)] end
 
   def triplrContent
-    yield uri+'#', Type, R[Content]
-    yield uri+'#', Content, r
+    yield stripDoc.uri, Content, r
   end
-  ViewGroup[Content] = -> d,_ {d.values.map{|r|r[Content]}}
 
   def triplrHref enc=nil
-    yield uri+'#', Content,
+    yield stripDoc.uri, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: open(pathPOSIX).read.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
@@ -93,23 +91,23 @@ class R
   end
 
   def triplrMarkdown
-    yield uri+'#', Type, R[Content]
-    yield uri+'#', Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
+    yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
   def triplrOrg
     require 'org-ruby'
-    yield uri+'#', Content, Orgmode::Parser.new(r).to_html
+    yield stripDoc.uri, Content, Orgmode::Parser.new(r).to_html
   end
 
   def triplrPS
-    yield uri+'#', Type, (R MIMEtype+'application/postscript')
+    u = stripDoc.uri
+    yield u, Type, (R MIMEtype+'application/postscript')
     p = dir.child '.' + basename + '/'
     unless p.e
       p.mk
       `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
     end
-    p.children.map{|i|yield uri+'#', Image, i}
+    p.children.map{|i|yield u, Image, i}
   end
 
   def triplrCSV d
@@ -120,8 +118,8 @@ class R
               []
             end
     lines[0].do{|fields| # header-row
-      yield uri+'#', Type, R[CSVns+'Table']
-      yield uri+'#', CSVns+'rowCount', lines.size
+      yield uri, Type, R[CSVns+'Table']
+      yield uri, CSVns+'rowCount', lines.size
       lines[1..-1].each_with_index{|row,line|
         row.each_with_index{|field,i|
           id = uri + '#row:' + line.to_s
@@ -144,16 +142,16 @@ class R
        ViewA[MIMEtype+'application/postscript'][r,e]}]}
 
   def triplrRTF
-    yield uri+'#', Content, `which catdoc && catdoc #{sh}`.hrefs
+    yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs
   end
 
   def triplrTeX
-    yield uri+'#', Content, `cat #{sh} | tth -r`
+    yield stripDoc.uri, Content, `cat #{sh} | tth -r`
   end
 
   def triplrTextile
     require 'redcloth'
-    yield uri+'#', Content, RedCloth.new(r).to_html
+    yield stripDoc.uri, Content, RedCloth.new(r).to_html
   end
 
   Render[WikiText] = -> texts {
@@ -170,9 +168,9 @@ class R
 
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
-    yield uri+'#', Type, R[SIOC+'SourceCode']
+    yield uri, Type, R[SIOC+'SourceCode']
     if size < 128000 # skip huge source-code files
-      yield uri+'#', Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil]
+      yield uri, Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil]
     end
   end
 
