@@ -1,14 +1,10 @@
 code {
-    margin: .5em;
-    padding: .5em;
-    border: .1em dotted #ccf;
     white-space: pre-wrap;
     display: inline-block;
 }
 
 .highlight {
-    background-color:#eee;color:#000;padding:.5em;
-    border-radius: .5em;
+    border: .1em dotted #ccc;
 }
 
 p,pre {margin:.1em}
