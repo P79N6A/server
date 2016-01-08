@@ -1,4 +1,4 @@
-**[pw](http://src.whats-your.name/pw/)** is a [HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to the [filesystem](http://www.multicians.org/fjcc4.html). [search](https://en.wikipedia.org/wiki/Online_search) is available pre-indexed w/ [Groonga](http://groonga.org/) and last-second w/ [grep](http://www.gnu.org/software/grep/manual/grep.html) - with no server-side [crawlers](https://en.wikipedia.org/wiki/Web_crawler) one must [GET](ruby/read.rb.html) to trigger indexing. this zero-config launch-and-use server is one [author](http://mw.logbook.am/carmen/)'s take on a generic fs-backed webserver for purposes such as [mail](conf/mail/) and [news](conf/news/)
+**[pw](http://src.whats-your.name/pw/)** is a [HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to the [filesystem](http://www.multicians.org/fjcc4.html). [search](https://en.wikipedia.org/wiki/Online_search) is available pre-indexed w/ [Groonga](http://groonga.org/) and last-second w/ [grep](http://www.gnu.org/software/grep/manual/grep.html) - with no server-side [crawlers](https://en.wikipedia.org/wiki/Web_crawler) one must [GET](ruby/read.rb.html) to trigger indexing. this zero-config launch-and-use server is one [author](http://mw.logbook.am/carmen/)'s take on a generic fs-backed webserver
 
 ## MIMEs
 
@@ -39,7 +39,7 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td><b>future</b></td><td>
-we love interfaces, but prefer to not invent new ones. one possibility is offering our automated RDF-conversion in (virtual) Turtle to other daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> on a FUSE filesystem.
+we love interfaces which enable modularity and reuse, but prefer to not invent new ones. one possibility is offering our automated RDF-conversion in (virtual) Turtle to other daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> on a FUSE filesystem. this server may be disappear as an actively-maintained project as functionality is factored out and replaced with an even-more-generic SoLiD/LDP server
 </td></tr>
 
 </table>
