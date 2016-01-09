@@ -139,7 +139,7 @@ class R
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMailMessage],
     'text/csv'             => [:triplrCSV,/,/],
-    'text/html-fragment'   => [:triplrContent],
+    'text/html-fragment'   => [:triplrHTMLfragment],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
     'text/markdown'        => [:triplrMarkdown],

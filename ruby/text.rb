@@ -67,8 +67,8 @@ class R
 
   def R.pencil; ['&#x270e;','&#x270f;','&#x2710;'][rand(3)] end
 
-  def triplrContent
-    yield stripDoc.uri, Content, r
+  def triplrHTMLfragment
+    yield uri, Content, r
   end
 
   def triplrHref enc=nil
