@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html><head><meta charset='utf-8'/><link rel='icon' href='/.icon.png'/><link rel='parent' href='http://src.whats-your.name/'/><title>/pw/</title><link rel='acl' href='http://src.whats-your.name/.acl.pw'/><style>body {font-family: sans-serif;background-color:#000;color:#fff}
+pre {white-space: pre-wrap;padding:.1em;margin:.1em}
+a {text-decoration:none;font-weight: bold;}
+
+.pager {float: left}
+.pager a[rel="prev"], .pager a[rel="next"], .pager .dirname, .pager .expand {font-size:2em;padding-left:.3em;color:#fff}
+
+@font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
+a.comments:before { content:"\f0e6"; font-family: icons; }
+a.container:before { content:"\f187"; font-family: icons; }
+a.date:before { content:"\f073"; font-family: icons; }
+a.dir:before { content:"\f07c"; font-family: icons; }
+a.file:before { content:"\f15b"; font-family: icons; }
+a.graph:before { content:"\f1e0"; font-family: icons; }
+a.group:before { content:"\f0c0"; font-family: icons;}
+a.id:before { content:"\f02a"; font-family: icons; }
+a.identify:before { content:"\f235"; font-family: icons; }
+a.img:before { content:"\f03e"; font-family: icons; }
+a.key:before { content:"\f084"; font-family: icons; }
+a.link:before { content:"\f0c1"; font-family: icons; }
+a.up:before { content:"\f148"; font-family: icons; }
+a.cog:before { content:"\f013"; font-family: icons; }
+a.gears:before { content:"\f085"; font-family: icons; }
+a.cubes:before { content:"\f1b3"; font-family: icons; }
+a.wrench:before { content:"\f0ad"; font-family: icons; }
+a.pencil:before { content:"\f040"; font-family: icons; }
+a.person:before { content:"\f007"; font-family: icons; }
+a.rel:before { content:"\f0a5"; font-family: icons; }
+a.reply:before { content:"\f122"; font-family: icons; }
+a.scissors:before { content:"\f0c4"; font-family: icons; }
+a.size:before { content:"\f161"; font-family: icons; }
+a.tag:before { content:"\f02b"; font-family: icons; }
+a.thread:before { content:"\f03c"; font-family: icons; }
+a.envelope:before { content:"\f0e0"; font-family: icons; }
+a.time:before { content:"\f017"; font-family: icons; }
+a.user:before { content:"\f007"; font-family: icons;}
+
+body > form > input {float: right;border:0;font-weight:bold}
+
+table.html {max-width: 88ex;background-color:#fff;color:#000;display:inline-block;margin:.5em}
+table.html a.uri {font-size: 1.3em}
+table th a {font-size:1.5em;font-weight: normal}
+table td a {font-weight:bold}
+td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal;background-color:#000;color: #fff}
+td {vertical-align:top}
+td[property="uri"] {white-space: nowrap}
+td[property="uri"] a:visited {color: #000;background-color:#fff}
+td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
+td[property="http://www.w3.org/ns/ldp#contains"] {max-width: 100%}
+tr[property="http://rdfs.org/sioc/ns#content"] > td.val {max-width:100%}
+td[property="http://purl.org/dc/terms/tag"] a {color: #000}
+td[property="http://rdfs.org/sioc/ns#has_creator"] a {color: #fff}
+td.val {max-width: 100%; overflow: hidden}
+td.key img {max-height: 2em}
+img.tablePreview {max-height:14em;max-width:100%}
+.tabr {background-color:#fff;position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
+
+.container {margin:.2em;display:inline-block;font-family: sans-serif}
+.container > .label, .container > .label a, .container > .contents {background-color:#000;color:#fff}
+.container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
+.container > .contents {border-radius: 0 .4em .4em .4em}
+.container.main > .label, .container.main > .label a, .container.main > .contents {background-color:#fff;color:#000}
+.container.main > .label > a {font-size: 1.5em}
+.container.main > .contents > .tab > tbody > tr > td > a {color:#000;background-color:#fff}
+
+div.msgs > h1 {text-align:center;margin-top:0}
+div.chatLog {margin-bottom: .7em}
+div.chatLog span.creator a {color:#fff}
+div.header {margin-left:-.555em}
+div.header a.title {font-size:1.2em;background-color:#fff;color:#000;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
+div.mail {margin:auto;max-width:118ex}
+div.mail a.to {font-size:1.27em}
+td[property='uri'] a, div.chatLog span.body a, div.mail a {color:#fff;background-color:#000;padding-left:.1em;padding-right:.1em}
+div.body a {background-color:#000;color:#fff;border-radius:.2em}
+div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 0 0 .6em; margin-right:.13em}
+div.body span.quoted {padding-left:.18em}
+a.nextPage {color:#f9f9f9;font-size:9.6em;margin-left:.15em}
+img {max-width: 100%}
+:target {padding-top:10em;border-color: #333;border-style: solid; border-width: 0 0 0 .6em;padding: .6em}
+
+#timegraph > svg {overflow:visible;width:100%;height:8em;z-index:1}
+.link {fill: none;stroke: #333;stroke-width:.18em}
+rect {fill: #ccc;width:.3em;height:.3em;ry:.3em}
+</style></head><body><form action='/search/'><input name='q' placeholder='search' value=''/></form><table class='pager'><tr><td></td><td><a class='dirname' href='/'>&#9650;</a></td><td></td></tr><tr><td></td><td><div class='container main'><div class='label'><a href='?set=page'>pw</a></div><div class='contents'><table class='tab'><thead><tr><th property='http://www.w3.org/ns/posix/stat#size' style=''><a rel='nofollow' href='?sort=stat%3Asize&amp;reverse=' class='size'></a></th>
+<th property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type' style=''><a rel='nofollow' href='?sort=rdf%3Atype&amp;reverse=' class=''></a></th>
+<th property='uri' style='background-color:#0f0'><a rel='nofollow' href='?sort=uri&amp;reverse=' class='id'></a></th>
+<th property='http://www.w3.org/ns/posix/stat#mtime' style=''><a rel='nofollow' href='?sort=stat%3Amtime&amp;reverse=' class='time'></a></th>
+<th property='http://purl.org/dc/terms/date' style=''><a rel='nofollow' href='?sort=dc%3Adate&amp;reverse=' class='date'></a></th>
+<th property='http://rdfs.org/sioc/ns#has_container' style=''><a rel='nofollow' href='?sort=sioc%3Ahas_container&amp;reverse=' class='up'></a></th>
+<th property='http://www.w3.org/ns/ldp#contains' style=''><a rel='nofollow' href='?sort=ldp%3Acontains&amp;reverse=' class='container'></a></th>
+</tr></thead><tbody><tr id='/pw/conf/' href='http://src.whats-your.name/pw/conf/'>
+<td property='http://www.w3.org/ns/posix/stat#size'>8</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/conf/' class='dir'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/conf/'>conf</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1440387544</td>
+<td property='http://purl.org/dc/terms/date'>2015-08-24T03:39:04+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'><a href='http://src.whats-your.name/pw'>pw</a></td>
+<td property='http://www.w3.org/ns/ldp#contains'><a href='http://src.whats-your.name/pw/conf/Procfile.443'>Procfile.443</a> <a href='http://src.whats-your.name/pw/conf/local.rb'>local.rb</a> <a href='http://src.whats-your.name/pw/conf/apache.conf'>apache.conf</a> <a href='http://src.whats-your.name/pw/conf/Procfile.80'>Procfile.80</a> <a href='http://src.whats-your.name/pw/conf/mail/'>mail</a> <a href='http://src.whats-your.name/pw/conf/Procfile'>Procfile</a> <a href='http://src.whats-your.name/pw/conf/nginx.conf'>nginx.conf</a> <a href='http://src.whats-your.name/pw/conf/news/'>news</a> </td>
+</tr><tr id='/pw/js/' href='http://src.whats-your.name/pw/js/'>
+<td property='http://www.w3.org/ns/posix/stat#size'>6</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/js/' class='dir'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/js/'>js</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1449516669</td>
+<td property='http://purl.org/dc/terms/date'>2015-12-07T19:31:09+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'><a href='http://src.whats-your.name/pw'>pw</a></td>
+<td property='http://www.w3.org/ns/ldp#contains'><a href='http://src.whats-your.name/pw/js/timegraph.js'>timegraph.js</a> <a href='http://src.whats-your.name/pw/js/facets.js'>facets.js</a> <a href='http://src.whats-your.name/pw/js/d3.min.js'>d3.min.js</a> <a href='http://src.whats-your.name/pw/js/book.js'>book.js</a> <a href='http://src.whats-your.name/pw/js/ui.js'>ui.js</a> <a href='http://src.whats-your.name/pw/js/audio.js'>audio.js</a> </td>
+</tr><tr id='/pw/css/' href='http://src.whats-your.name/pw/css/'>
+<td property='http://www.w3.org/ns/posix/stat#size'>5</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/css/' class='dir'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/css/'>css</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452289725</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-08T21:48:45+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'><a href='http://src.whats-your.name/pw'>pw</a></td>
+<td property='http://www.w3.org/ns/ldp#contains'><a href='http://src.whats-your.name/pw/css/misc/'>misc</a> <a href='http://src.whats-your.name/pw/css/base.css'>base.css</a> <a href='http://src.whats-your.name/pw/css/man.css'>man.css</a> <a href='http://src.whats-your.name/pw/css/facets.css'>facets.css</a> <a href='http://src.whats-your.name/pw/css/code.css'>code.css</a> </td>
+</tr><tr id='/pw/ruby/' href='http://src.whats-your.name/pw/ruby/'>
+<td property='http://www.w3.org/ns/posix/stat#size'>20</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/ruby/' class='dir'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/ruby/'>ruby</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452314677</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T04:44:37+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'><a href='http://src.whats-your.name/pw'>pw</a></td>
+<td property='http://www.w3.org/ns/ldp#contains'><a href='http://src.whats-your.name/pw/ruby/search.fs.rb'>search.fs.rb</a> <a href='http://src.whats-your.name/pw/ruby/read.rb'>read.rb</a> <a href='http://src.whats-your.name/pw/ruby/Gemfile.lock'>Gemfile.lock</a> <a href='http://src.whats-your.name/pw/ruby/install'>install</a> <a href='http://src.whats-your.name/pw/ruby/MIME.rb'>MIME.rb</a> <a href='http://src.whats-your.name/pw/ruby/text.rb'>text.rb</a> <a href='http://src.whats-your.name/pw/ruby/names.rb'>names.rb</a> <a href='http://src.whats-your.name/pw/ruby/HTTP.rb'>HTTP.rb</a> <a href='http://src.whats-your.name/pw/ruby/write.rb'>write.rb</a> <a href='http://src.whats-your.name/pw/ruby/HTML.rb'>HTML.rb</a> <a href='http://src.whats-your.name/pw/ruby/search.text.rb'>search.text.rb</a> <a href='http://src.whats-your.name/pw/ruby/message.rb'>message.rb</a> <a href='http://src.whats-your.name/pw/ruby/R'>R</a> <a href='http://src.whats-your.name/pw/ruby/message.mail.rb'>message.mail.rb</a> <a href='http://src.whats-your.name/pw/ruby/message.news.rb'>message.news.rb</a> <a href='http://src.whats-your.name/pw/ruby/Gemfile'>Gemfile</a> <a href='http://src.whats-your.name/pw/ruby/message.chat.rb'>message.chat.rb</a> <a href='http://src.whats-your.name/pw/ruby/ww.rb'>ww.rb</a> <a href='http://src.whats-your.name/pw/ruby/search.ui.rb'>search.ui.rb</a> <a href='http://src.whats-your.name/pw/ruby/JSON.rb'>JSON.rb</a> </td>
+</tr><tr id='/pw/INTERFACES.md' href='http://src.whats-your.name/pw/INTERFACES.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>3359</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/INTERFACES.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/INTERFACES.md'>INTERFACES.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr id='/pw/TIPS.md' href='http://src.whats-your.name/pw/TIPS.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>708</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/TIPS.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/TIPS.md'>TIPS.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr id='/pw/USE.md' href='http://src.whats-your.name/pw/USE.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>222</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/USE.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/USE.md'>USE.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr id='/pw/REQUISITES.md' href='http://src.whats-your.name/pw/REQUISITES.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>661</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/REQUISITES.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/REQUISITES.md'>REQUISITES.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr id='/pw/MIRRORS.md' href='http://src.whats-your.name/pw/MIRRORS.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>363</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/MIRRORS.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/MIRRORS.md'>MIRRORS.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr id='/pw/INSTALL.md' href='http://src.whats-your.name/pw/INSTALL.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>511</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/INSTALL.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/INSTALL.md'>INSTALL.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr id='/pw/MIMES.md' href='http://src.whats-your.name/pw/MIMES.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>1139</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/MIMES.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/MIMES.md'>MIMES.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr id='/pw/LICENSE' href='http://src.whats-your.name/pw/LICENSE'>
+<td property='http://www.w3.org/ns/posix/stat#size'>1433</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/LICENSE' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/LICENSE'>LICENSE</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr><tr><td class='content' colspan='7'><pre style='white-space: pre-wrap'>This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to &lt;<a href="http://unlicense.org/">unlicense.org/</a>&gt;
+</pre></td></tr><tr id='/pw/README.md' href='http://src.whats-your.name/pw/README.md'>
+<td property='http://www.w3.org/ns/posix/stat#size'>933</td>
+<td property='http://www.w3.org/1999/02/22-rdf-syntax-ns#type'><a href='http://src.whats-your.name/pw/README.md' class='graph'></a></td>
+<td property='uri'><a href='http://src.whats-your.name/pw/README.md'>README.md</a></td>
+<td property='http://www.w3.org/ns/posix/stat#mtime'>1452349203</td>
+<td property='http://purl.org/dc/terms/date'>2016-01-09T14:20:03+00:00</td>
+<td property='http://rdfs.org/sioc/ns#has_container'></td>
+<td property='http://www.w3.org/ns/ldp#contains'></td>
+</tr></tbody></table></div></div></td><td></td></tr><tr><td></td><td></td><td></td></tr></table><table class='html' id='http://src.whats-your.name/pw/README'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/README'>README</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><p><strong><a href="http://src.whats-your.name/pw/">pw</a></strong> is a <a href="https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead">HTTP</a> interface to the <a href="http://www.multicians.org/fjcc4.html">filesystem</a>. <a href="https://en.wikipedia.org/wiki/Online_search">search</a> is available pre-indexed w/ <a href="http://groonga.org/">Groonga</a> and last-second w/ <a href="http://www.gnu.org/software/grep/manual/grep.html">grep</a> - with no server-side <a href="https://en.wikipedia.org/wiki/Web_crawler">crawlers</a> one must <a href="ruby/read.rb.html">GET</a> to trigger indexing. this zero-config launch-and-use server is one <a href="http://mw.logbook.am/carmen/">author</a>&#39;s take on a generic fs-backed webserver</p>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><table class='html' id='http://src.whats-your.name/pw/USE'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/USE'>USE</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><div class="highlight"><pre>foreman start
+</pre></div>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><table class='html' id='http://src.whats-your.name/pw/INTERFACES'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/INTERFACES'>INTERFACES</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><table>
+
+<tr><td><b>resources</b></td><td>
+<a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI-string|JSON-object|File) by calling method R. it's an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. a bidirectional name-mapping with filesystem paths is used to map storage locations. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and is usable anywhere a <strong>RDF::URI</strong> is allowed
+</td></tr>
+
+<tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
+for streaming triples between functions, <b>yield</b> and <b>do</b> keywords denote producing and consuming code.
+indexes 0,1 are URI in string arguments, index 2 a resource (R|RDF::URI) or literal (JSON-value)
+</td></tr>
+
+<tr><td style="white-space: nowrap"><b>pages</b></td><td>
+how will you break content into pages? a depth-first or breadth-first traverse of directories, a narrowing of the default-set matching a regular-expression.. we provide <a href=ruby/search.fs.rb.html>some ideas</a> and hooks to add more
+</td></tr>
+
+<tr><td><b>abstracts</b></td><td>
+content on a filesystem can be voluminous. summarizers to index a larger amount of content are <a href=ruby/message.mail.rb.html>defined</a> on RDF-types
+</td></tr>
+
+<tr><td><b>HTTP</b></td><td>
+a web-server &mdash; launch one with &#39;foreman start&#39;.
+a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server
+</td></tr>
+
+<tr><td><b>UI</b></td><td>
+we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but provide a default which is Javascript-free (<a href=http://d3js.org/>D3-vis</a> aside)
+</td></tr>
+
+<tr><td><b>HTML</b></td><td>
+ <a href="http://links.twibright.com/">links</a>/<a href="http://lynx.invisible-island.net/current/">lynx</a>/<a href="http://w3m.sourceforge.net/">w3m</a> compatibility is important to us so we provide <b>text/html</b> on request. rendering is defined on a class (group of resources) or instance (resource) basis
+</td></tr>
+
+<tr><td><b>future</b></td><td>
+we love interfaces which enable modularity and reuse, but prefer to not invent new ones. one possibility is offering our RDF-conversion service in Turtle to other daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> on a FUSE filesystem. this server may be disappear as an actively-maintained project as functionality is factored out and replaced with an even-more-generic SoLiD/LDP server
+</td></tr>
+
+</table>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><table class='html' id='http://src.whats-your.name/pw/MIRRORS'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/MIRRORS'>MIRRORS</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><p><a href="http://src.whats-your.name/pw/">src.whats-your.name/pw/</a>
+<a href="https://gitlab.com/ix/pw">gitlab.com/ix/pw</a>
+<a href="http://repo.or.cz/www">repo.or.cz/www</a></p>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><table class='html' id='http://src.whats-your.name/pw/TIPS'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/TIPS'>TIPS</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><ul>
+<li>files go in domain/$HOST/path/to/file or path/to/file</li>
+<li>daemon can run elsewhere, link or copy <a href="js/">js/</a> and <a href="css/">css/</a> directories to <a href=".">server-root</a></li>
+<li>one way to listen on port 80/443 as a non-root user:</li>
+</ul>
+<div class="highlight"><pre>setcap <span class="nv">cap_net_bind_service</span><span class="o">=</span>+ep <span class="k">$(</span>realpath <span class="sb">`</span>which ruby<span class="sb">`</span><span class="k">)</span>
+</pre></div>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><table class='html' id='http://src.whats-your.name/pw/REQUISITES'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/REQUISITES'>REQUISITES</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><h3><a href="http://www.debian.org/">Debian</a></h3>
+<div class="highlight"><pre>apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
+</pre></div>
+
+<h3><a href="http://www.voidlinux.eu/">Voidlinux</a></h3>
+<div class="highlight"><pre>xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel <span class="nb">source</span>-highlight python-Pygments <span class="o">&amp;&amp;</span> gem install bundler
+</pre></div>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><table class='html' id='http://src.whats-your.name/pw/INSTALL'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/INSTALL'>INSTALL</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><div class="highlight"><pre><span class="nb">cd </span>ruby
+bundle install     <span class="c"># install packages we depend on</span>
+ruby install       <span class="c"># install this package</span>
+<span class="nb">cd</span> ..
+cp conf/Procfile . <span class="c"># deamon configuration, edit to taste</span>
+</pre></div>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><table class='html' id='http://src.whats-your.name/pw/MIMES'><tr property='uri'><td class='uri' colspan='2'><a class='uri' href='http://src.whats-your.name/pw/MIMES'>MIMES</a></td></tr>
+<tr property='http://rdfs.org/sioc/ns#content'><td class='val' colspan='2'><p>in our cache a <strong>JSON</strong> subset of <a href="https://ruby-rdf.github.io/">RDF</a> is used. for <a href="http://www.w3.org/TR/json-ld-api/#context-processing-algorithms">simplicity</a> this means no <a href="http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/">unidentified-nodes</a> or <a href="http://www.w3.org/TR/turtle/#turtle-literals">special-syntax</a> <a href="http://www.w3.org/TR/rdf11-concepts/#section-Datatypes">literal-datatypes/languages</a>, just <a href="http://www.json.org/">JSON</a>-native literals. indexes consist of <strong>URI-list</strong> files with <a href="http://amundsen.com/hypermedia/urilist/">one URI per line</a>. internal <strong>JSON</strong> and non-RDF formats have <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader">RDF::Reader</a> interfaces and expand to a full RDF-model if requested, otherwise data stays in our optimized subset through to serialization.</p>
+<link href='/css/code.css' rel='stylesheet' type=''/></td></tr>
+</table><style></style><script>document.addEventListener("keydown",function(e){
+    
+    var jumpDoc = function(direction, start) {
+	var doc = document.querySelector("head > link[rel='"+direction+"']");
+	if(doc)
+	    window.location = doc.getAttribute('href') + start;
+    };
+    // pagination key-control
+    var key = e.keyCode;
+    if(e.getModifierState("Shift")) {
+	// <shift-p> goto prev-page
+	if(key==80)
+	    jumpDoc('prev','#last')
+	
+	// <shift-n> goto next-page
+	if(key==78)
+	    jumpDoc('next','#first');
+    };
+},false);
+
+// if JS support exists, switch to JS UI to resource
+document.addEventListener("DOMContentLoaded", function(){
+    var upgrade = function(){
+//	console.log('upgrade UI');
+	var id = window.location.hash.slice(1);
+	if(id) {
+//	    console.log('id',id);
+	    var resource = document.getElementById(id);
+	    if(resource) {
+//		console.log('resource',resource);
+		var ui = resource.getAttribute('upgrade');
+		if (ui) {
+		    window.location = ui;
+		};
+	    };
+	};
+    };
+  // goto UI
+    upgrade();
+    window.addEventListener('hashchange',upgrade);
+
+}, false);
+</script></body></html>
