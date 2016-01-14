@@ -5,11 +5,11 @@ if mail-server is local skip to [1.2](#1.2)
 * [OfflineIMAP](http://offlineimap.org/)
 * [getmail](http://pyropus.ca/software/getmail/)
 
-one may configure cron (task-scheduler) to do this regularly
+ideally cron (or a task-scheduler) does this automatically. after initial-setup jump right to [3](#3)
 
 ## <a id=1.2></a>1.2 place messages on the filesystem
 
-file-location is not important as data is converted to RDF and written at a location derived from the Message-ID. we like one directory per day -  our server has a special shortcut to [today](http://m.whats-your.name/today)'s directory, which is the closest thing to an Inbox:
+file-location is not important as data is converted to RDF and written to a location derived from Message-ID. we like one directory per day -  our server has a shortcut to [today](http://m.whats-your.name/today)'s directory, which is the closest thing to an Inbox:
 
 example **.procmailrc**:
 
@@ -20,7 +20,9 @@ DEFAULT=$D
 
 ```
 
-## 1.3 make files available on all devices
+## 1.3 make files available to all devices
+
+optional, but redundancy-purposes, your mail can be synchronized all of your devices with
 
 ## 2 serve messages
 
@@ -31,8 +33,8 @@ for the sake of demonstration, the [daemon](http://src.whats-your.name/pw/) is a
 ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ```
-ro combine with the previous step, change **$HOME** in procmailrc to **/var/www/domain/localhost/**
+to combine with the previous step, change **$HOME** in procmailrc to **/var/www/domain/localhost/**
 
-## 3 browse messages
+## <a id=3></a>3 browse messages
 
 messages are automatically indexed
