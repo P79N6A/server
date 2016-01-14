@@ -1,5 +1,4 @@
-as much as possible, tasks are delegated to 3rd-party tools. much of this HOWTO consists of pointers to them.
-if mail-server is local skip to [1.2](#1.2)
+as much as possible, tasks are delegated to 3rd-party tools - much of this HOWTO consists of pointers to them.
 
 ## 1.1 fetch mail from remote machine
 
@@ -42,10 +41,14 @@ ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ```
 
-## <a id=3></a>3 browse messages
+## <a id=3></a>3 read messages
 
 now that messages are being delivered and visible to the server, they can be browsed
 
 ``` sh
 $ chromium localhost/today
 ```
+
+## 4 write messages
+
+browser invokes your handler of choice for **mailto**-URIs. Android/iOS offer a built-in mail-composition app. on X11/Wayland, [mailto](mailto) can be a shell-script

@@ -1,7 +1,0 @@
-#!/bin/sh
-while true; do
-date
-getmail
-rsync -avz ~/.mail p:
-sleep 1600
-done
