@@ -34,14 +34,13 @@ for redundancy-purposes, files are replicated to other devices and servers with 
 
 ## 2 serve messages
 
-for the sake of demonstration, a [daemon](http://src.whats-your.name/pw/) is already running at **/var/www**. 
+for the sake of demonstration, a [daemon](http://src.whats-your.name/pw/) is launched at **/var/www**. 
 
 
 ``` sh
 ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ```
-or combine with [1.2](#1.2) by changing **$HOME** in procmailrc to **/var/www/domain/localhost/**
 
 ## <a id=3></a>3 browse messages
 
