@@ -1,4 +1,4 @@
-as much as possible, critical tasks are delegated to mature, stable 3rd-party tools. much of the HOWTO consists of pointers to them.
+as much as possible, tasks are delegated to 3rd-party tools. much of this HOWTO consists of pointers to them.
 if mail-server is local skip to [1.2](#1.2)
 
 ## 1.1 fetch mail from remote machine
@@ -10,9 +10,9 @@ ideally cron (or a task-scheduler) does this automatically. after initial-setup 
 
 ## <a id=1.2></a>1.2 put messages on the filesystem
 
-location isn't important as data is rewritten to a location derived from Message-ID. we like one directory per day
+location isn't important as data is rewritten to a location derived from Message-ID. one directory per day is simple enough:
 
-example **.procmailrc**:
+**.procmailrc**:
 
 ``` sh
 D=$HOME/.mail/`date +%Y/%m/%d`
