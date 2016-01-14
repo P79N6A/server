@@ -44,4 +44,8 @@ ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ## <a id=3></a>3 browse messages
 
-messages are automatically indexed
+now that messages are being delivered and visible to the server, they can be browsed
+
+``` sh
+$ chromium localhost/today
+```
