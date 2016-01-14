@@ -9,7 +9,7 @@ ideally cron (or a task-scheduler) does this automatically. after initial-setup 
 
 ## <a id=1.2></a>1.2 place messages on the filesystem
 
-file-location is not important as data is converted to RDF and written to a location derived from Message-ID. we like one directory per day -  our server has a shortcut to [today](http://m.whats-your.name/today)'s directory, which is the closest thing to an Inbox:
+location is not important as data is converted to RDF and written to a location derived from Message-ID. we like one directory per day -  our server has a shortcut to [today](http://m.whats-your.name/today)'s directory
 
 example **.procmailrc**:
 
@@ -33,7 +33,7 @@ for the sake of demonstration, the [daemon](http://src.whats-your.name/pw/) is a
 ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ```
-to combine with the previous step, change **$HOME** in procmailrc to **/var/www/domain/localhost/**
+or combine with [1.2](#1.2) by changing **$HOME** in procmailrc to **/var/www/domain/localhost/**
 
 ## <a id=3></a>3 browse messages
 
