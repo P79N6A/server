@@ -22,13 +22,17 @@ DEFAULT=$D
 
 ## 1.3 make files available on all devices
 
-## 2 link msg-directory to a servable location
+## 2 serve messages
 
-for the sake of demonstration, the [daemon](http://src.whats-your.name/pw/) is running at **/var/www**
+for the sake of demonstration, the [daemon](http://src.whats-your.name/pw/) is already running at **/var/www**. 
 
 
 ``` sh
 ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ```
-or combine with the previous step, change **$HOME** in procmailrc to **/var/www/domain/localhost/**
+ro combine with the previous step, change **$HOME** in procmailrc to **/var/www/domain/localhost/**
+
+## 3 browse messages
+
+messages are automatically indexed
