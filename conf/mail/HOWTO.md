@@ -1,3 +1,4 @@
+as much as possible, critical tasks are delegated to mature, stable 3rd-party tools. much of the HOWTO consists of pointers to them.
 if mail-server is local skip to [1.2](#1.2)
 
 ## 1.1 fetch mail from remote machine
@@ -7,9 +8,9 @@ if mail-server is local skip to [1.2](#1.2)
 
 ideally cron (or a task-scheduler) does this automatically. after initial-setup jump right to [3](#3)
 
-## <a id=1.2></a>1.2 place messages on the filesystem
+## <a id=1.2></a>1.2 put messages on the filesystem
 
-location is not important as data is converted to RDF and written to a location derived from Message-ID. we like one directory per day -  our server has a shortcut to [today](http://m.whats-your.name/today)'s directory
+location isn't important as data is rewritten to a location derived from Message-ID. we like one directory per day
 
 example **.procmailrc**:
 
@@ -20,13 +21,20 @@ DEFAULT=$D
 
 ```
 
-## 1.3 make files available to all devices
+## 1.3 make files available on all devices
 
-optional, but redundancy-purposes, your mail can be synchronized all of your devices with
+for redundancy-purposes, files are replicated to other devices and servers with one of:
+
+* [Gluster](http://www.gluster.org/)
+* [BTSync](https://wiki.archlinux.org/index.php/BitTorrent_Sync)
+* [rsync](https://rsync.samba.org/)
+* [SCP](https://en.wikipedia.org/wiki/Secure_copy)
+* [Syncthing](https://syncthing.net/)
+* [Unison](https://www.cis.upenn.edu/~bcpierce/unison/)
 
 ## 2 serve messages
 
-for the sake of demonstration, the [daemon](http://src.whats-your.name/pw/) is already running at **/var/www**. 
+for the sake of demonstration, a [daemon](http://src.whats-your.name/pw/) is already running at **/var/www**. 
 
 
 ``` sh
