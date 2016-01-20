@@ -1,4 +1,4 @@
-[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with a fast/low-dependency RDF-subset metadata-model in built-in Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled with [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling via lambdas/URI associations. [author](http://mw.logbook.am/carmen/)
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with a fast/low-dependency RDF-subset metadata-model in built-in Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled with [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling via lambdas/URI associations.
 
 ## Interface
 
@@ -35,7 +35,8 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td><b>future</b></td><td>
-we love interfaces which enable modularity and reuse. one plan is offering our RDF-ification as virtual-Turtle to daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> over a FUSE interface</td></tr>
+planned: RDFization by <b>1</b> virtual-turtle for LDP daemons on a FUSE interface <b>2</b> Ruby-code on a RDF-Repository interface. this would allow mixing our functionality into other web-servers in other ways beyond URI-path routing and Rack's interface. <a href=https://github.com/solid>Solid</a> apps require fairly-specific server-side behavior and we could free ourselves from having to pay attention to it. it's also good to have more compatible implementations in different languages, and we offer things that will never be in solid-spec, so this server isn't going away either. or both, ldnode in front for ACL-checks and Turtle-service with non-RDF falling through to us - over HTTP, as FUSE requires a kernel-module which limits its installability and adds a slightly-exotic dependency. also planned is a port of the Mail and Feed RDF-izers to JS, and an addon to ldnode to add the summarization (server-side reduction) and HTML-view features, and a port of the entire server, except with Irmin instead of VFS, to OCaml for deployment as a mirageOS unikernel, likely by adding Solid/LDP-features to their HTTP daemon rather than starting from scratch. if any of this sounds like stuff you want you could of course <a href=http://mw.logbook.am/carmen/>contact me</a> and sponsor it, otherwise i'll do what i feel like which may include nothing as this server's already perfectly adequate for my needs
+</td></tr>
 
 </table>
 
