@@ -1,17 +1,16 @@
 class R
 
   # grep
-  FileSet['grep'] = -> e,q,m { # grep in files
+  FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       e.env[:filters].push 'grep' unless q.has_key?('full')
-      `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|
-        R.unPOSIX r.chomp}}}
+      `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}
 
-  Filter['grep'] = -> d,e { # grep in-memory graph
+  Filter['grep'] = -> d,e { # grep memory-graph
     w = e.q['q']
-    if w && w.size > 1 # query-str
-      e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i # to regular-expression
-      d.map{|u,r| # check resource
+    if w && w.size > 1
+      e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i
+      d.map{|u,r|
         if r.to_s.match e[:grep] # matching resource
           r[Type] = R['#grep-result']
         else
@@ -19,12 +18,11 @@ class R
         end}
     end}
 
-  # groonga  https://github.com/groonga/groonga  https://github.com/ranguba/rroonga
-  # gem install rroonga
+  # gem install rroonga # https://github.com/ranguba/rroonga
   ResourceSet['groonga'] = ->d,e,m{
     R.groonga.do{|ga|
-      q = e['q']                     # search expression
-      g = e["context"] || d.env.host # context
+      q = e['q']     # expression
+      g = d.env.host # context
 
       # evaluate expression
       r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # query
@@ -45,12 +43,15 @@ class R
       d.env[:Links][:prev] = '/search/' + {'q' => q,
                                            'start' => start - c,
                                            'c' => c}.qs if up
-      # resource thunks
-      r.map{|r| R[r['.uri']] }}}
+      # returned resources
+      r.map{|r|
+        puts "found #{g} #{r['.uri']}"
+        R[r['.uri']]
+      }}}
 
-  # load DB
+  # open db
   def groonga
-    return Groonga::Database.open pathPOSIX if e # exists, return
+    return Groonga::Database.open pathPOSIX if e # exists
     dir.mk                                       # create
     Groonga::Database.create(:path => pathPOSIX)
     Groonga::Schema.define{|s|
@@ -66,7 +67,7 @@ class R
                                   %w{uri graph content}.map{|c| t.index("R." + c) }}}
   end
 
-  # load groonga
+  # db-reference
   def R.groonga
     @groonga ||=
       (begin require 'groonga'
@@ -81,6 +82,7 @@ class R
   def roonga graph="localhost", m = self.graph
     R.groonga.do{|g|
       m.map{|u,i|
+        puts "+ix #{graph} #{u}"
         r = g[u] || g.add(u) # create or load entry
         r.uri = u            # update data
         r.graph = graph.to_s
