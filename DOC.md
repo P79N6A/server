@@ -1,23 +1,23 @@
-[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with a fast/low-dependency RDF-subset metadata-model in built-in Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled with [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling via lambdas/URI associations.
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with a fast/low-dependency RDF-subset metadata-model in built-in Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled with [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling via lambda<>URI association
 
 ## Interface
 
 <table>
 
-<tr><td><b>resources</b></td><td>
+<tr><td><b>Resource</b></td><td>
 <a href="ruby/names.rb.html">R</a> is constructed or cast from convertible-types (URI-string|JSON-object|File) by calling method R. it's an identifier coupled with an environment (inherited from a <a href="http://tools.ietf.org/html/rfc7231#section-5">HTTP request</a>). the environment provides a base URI to <a href="https://tools.ietf.org/html/rfc3986#section-5.2">resolve relative-URIs</a>. a bidirectional name-mapping with filesystem paths is used to map storage locations. <strong>R</strong> is a <a href="http://rubylearning.com/satishtalim/ruby_inheritance.html">subclass</a> of <a href="http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/URI">RDF::URI</a> and is usable anywhere a <strong>RDF::URI</strong> is allowed
 </td></tr>
 
-<tr><td style="white-space: nowrap"><b>data-streams</b></td><td>
-for streaming triples between functions, <b>yield</b> and <b>do</b> keywords denote producing and consuming code.
+<tr><td style="white-space: nowrap"><b>Triple</b></td><td>
+<b>yield</b> and <b>do</b> keywords denote producing and consuming code.
 indexes 0,1 are URI in string arguments, index 2 a resource (R|RDF::URI) or literal (JSON-value)
 </td></tr>
 
-<tr><td style="white-space: nowrap"><b>pages</b></td><td>
+<tr><td style="white-space: nowrap"><b>Page</b></td><td>
 how will you break content into pages? a depth-first or breadth-first traverse of directories, a narrowing of the default-set matching a regular-expression.. we provide <a href=ruby/search.fs.rb.html>some ideas</a> and hooks to add more
 </td></tr>
 
-<tr><td><b>abstracts</b></td><td>
+<tr><td><b>Abstract</b></td><td>
 content on a filesystem can be voluminous. summarizers to index a larger amount of content are <a href=ruby/message.mail.rb.html>defined</a> on RDF-types
 </td></tr>
 
@@ -35,7 +35,7 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td><b>future</b></td><td>
-planned: RDFization by <b>1</b> virtual-turtle for LDP daemons on a FUSE interface <b>2</b> Ruby-code on a RDF-Repository interface. this would allow mixing our functionality into other web-servers in other ways beyond URI-path routing and Rack's interface. <a href=https://github.com/solid>Solid</a> apps require fairly-specific server-side behavior and we could free ourselves from having to pay attention to it. it's also good to have more compatible implementations in different languages, and we offer things that will never be in solid-spec, so this server isn't going away either. or both, ldnode in front for ACL-checks and Turtle-service with non-RDF falling through to us - over HTTP, as FUSE requires a kernel-module which limits its installability and adds a slightly-exotic dependency. also planned is a port of the email and Atom/RSS-feed RDF-izers to JS, and an addon to ldnode to add the summarization (server-side reduction), pagination, and HTML-view features, and a port of the entire server, except with Irmin instead of VFS, to OCaml for deployment as a mirageOS unikernel, likely by adding Solid/LDP-features to their HTTP daemon rather than starting from scratch. if any of this sounds like stuff you want you could of course <a href=http://mw.logbook.am/carmen/>contact me</a> and sponsor it, otherwise i'll do what i feel like which may include nothing as this server's already perfectly adequate for my needs
+planned: RDFization by <b>1</b> virtual-turtle for LDP daemons on a FUSE interface <b>2</b> Ruby-code on a RDF-Repository interface. this would allow mixing our functionality into other web-servers in other ways beyond URI-path routing and Rack's interface. <a href=https://github.com/solid>Solid</a> apps require fairly-specific server-side behavior and we could free ourselves from having to pay attention to it. it's also good to have more compatible implementations in different languages, and we offer things that will never be in solid-spec, so this server isn't going away either. or both, ldnode in front for ACL-checks and Turtle-service with non-RDF falling through to us - over HTTP, as FUSE requires a kernel-module which limits its installability and adds a slightly-exotic dependency. also planned is a port of the email and Atom/RSS-feed RDF-izers4 to JS, an addon to ldnode to add the summarization (server-side reduction), pagination, and HTML-view features, and a port of the entire server, except with Irmin instead of VFS, to OCaml for deployment as a mirageOS unikernel, likely by adding Solid/LDP-features to their HTTP daemon rather than starting from scratch. if any of this sounds like stuff you want you could of course <a href=http://mw.logbook.am/carmen/>contact me</a> and sponsor it, otherwise i'll do what i feel like which may include nothing as this server's already perfectly adequate for my needs
 </td></tr>
 
 </table>
