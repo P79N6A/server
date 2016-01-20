@@ -80,8 +80,8 @@ class R
          r[p].do{|v|v.map{|o| # objects exist?
              e.index p,o}}})) if u} # index property
     docs.map{|d,g| # each doc
-      d = d.R; puts "<#{d.docroot}>"
-      d.w g,true                    # write
+      d = d.R
+      d.w g, true                   # write
       indexer[d,g,host] if indexer} # index-update handler
   end
 
@@ -95,7 +95,6 @@ class R
           doc.dir.mk
           file = doc.pathPOSIX
           RDF::Writer.open(file){|f|f << graph}
-          puts "#{doc.docroot} #{graph.count}"
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
       end}
