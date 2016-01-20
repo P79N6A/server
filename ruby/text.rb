@@ -168,9 +168,9 @@ class R
 
   def triplrSourceCode
     m = mime.split(/\//)[-1].sub(/^x-/,'')
-    yield uri, Type, R[SIOC+'SourceCode']
-    if size < 128000 # skip huge source-code files
-      yield uri, Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil]
+    yield uri+'#', Type, R[SIOC+'SourceCode']
+    if size < 65535 # only inline small files
+      yield uri+'#', Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil]
     end
   end
 
@@ -190,7 +190,7 @@ class R
 
   MIMEsource['text/css'] ||= [:triplrSourceCode]
 
-  Man = -> e,r { # HTTP handler to serve manpages
+  Man = -> e,r { # handler to RDF-ize manpages
     graph = RDF::Graph.new
     uri = R['//'+r.host+r['REQUEST_URI']]
     manPath = '/usr/share/man'
