@@ -1,3 +1,7 @@
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with a simple/fast/low-dependency subset of RDF as the default metadata-model, implemented using Ruby's built-in Hash and JSON class. [search](https://en.wikipedia.org/wiki/Online_search) is enabled with [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific handling for RDF-types by associating lambdas with URIs. [author](http://mw.logbook.am/carmen/)
+
+## Interface
+
 <table>
 
 <tr><td><b>resources</b></td><td>
@@ -31,8 +35,11 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td><b>future</b></td><td>
-we love interfaces which enable modularity and reuse, but prefer to not invent new ones. one possibility is offering our RDF-conversion service in Turtle to other daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> on a FUSE filesystem. this server may be disappear as an actively-maintained project as functionality is factored out and replaced with an even-more-generic SoLiD/LDP server
-</td></tr>
+we love interfaces which enable modularity and reuse. one plan is offering our RDF-ification as virtual-Turtle to daemons like <a href=https://github.com/linkeddata/ldnode>ldnode</a>/<a href=https://github.com/linkeddata/gold>gold</a> over a FUSE interface</td></tr>
 
 </table>
+
+## MIMEs
+
+in our cache a **JSON** subset of [RDF](https://ruby-rdf.github.io/) is used. for [simplicity](http://www.w3.org/TR/json-ld-api/#context-processing-algorithms) this means no [unidentified-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) or [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes), just [JSON](http://www.json.org/)-native literals. indexes consist of **URI-list** files with [one URI per line](http://amundsen.com/hypermedia/urilist/). internal **JSON** and non-RDF formats have [RDF::Reader](http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Reader) interfaces and expand to a full RDF-model if requested, otherwise data stays in our optimized subset through to serialization.
 
