@@ -184,7 +184,7 @@ class R
 
   ViewA[FOAF+'Person'] = -> r,e {
     {_: :a, class: :person, id: r.R.fragment, href: r.uri,
-     upgrade: '//linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
+     upgrade: 'https://linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
      c: r[FOAF+'name'].justArray[0] || r.R.basename}}
 
   ViewGroup[BasicResource] = -> g,e {

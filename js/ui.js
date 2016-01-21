@@ -21,16 +21,14 @@ document.addEventListener("keydown",function(e){
 // if JS support exists, switch to JS UI to resource
 document.addEventListener("DOMContentLoaded", function(){
     var upgrade = function(){
-//	console.log('upgrade UI');
 	var id = window.location.hash.slice(1);
 	if(id) {
-//	    console.log('id',id);
 	    var resource = document.getElementById(id);
 	    if(resource) {
-//		console.log('resource',resource);
 		var ui = resource.getAttribute('upgrade');
 		if (ui) {
-		    window.location = ui;
+//		    window.location = ui;
+		    console.log('upgrade-UI at ' + ui)
 		};
 	    };
 	};
