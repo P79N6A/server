@@ -45,7 +45,7 @@ class R
                                            'c' => c}.qs if up
       # returned resources
       r.map{|r|
-        puts "found #{g} #{r['.uri']}"
+#        puts "found #{g} #{r['.uri']}"
         R[r['.uri']]
       }}}
 
@@ -82,7 +82,7 @@ class R
   def roonga graph="localhost", m = self.graph
     R.groonga.do{|g|
       m.map{|u,i|
-        puts "+ix #{graph} #{u}"
+        puts "ix+ #{graph} #{u}"
         r = g[u] || g.add(u) # create or load entry
         r.uri = u            # update data
         r.graph = graph.to_s
