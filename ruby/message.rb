@@ -92,7 +92,8 @@ class R
     # HTML
     [{class: :mail, id: r.uri, href: href,
       c: [{class: :header,
-           c: [(r[Title].justArray[0].do{|t| {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t)}} unless e[:thread]),
+           c: [(r[Title].justArray[0].do{|t|
+                  {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}} unless e[:thread]),
                r[To].justArray.map{|o|
                  o = o.R
                  {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
