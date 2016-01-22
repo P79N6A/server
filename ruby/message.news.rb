@@ -27,9 +27,8 @@ class R
   def getFeed h='localhost'
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
-  rescue Exception => e
-    puts uri, e, e.message
   end
+
   def getFeeds h='localhost'
     uris.map{|u|
       u.R.getFeed h}
@@ -83,7 +82,7 @@ class R
         send(*f){|s,p,o|
           content = p == Content
 
-          reddit = s.R.host.match(/reddit\.com$/)
+          reddit = o.class==String && s.R.host.match(/reddit\.com$/)
           # TODO host-specific hooks
 
           # predicate-specific extractions
