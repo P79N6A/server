@@ -62,7 +62,7 @@ class R
       end
       
       def each_statement &fn
-        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream transform pipeline
+        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream pipeline, processed right to left
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -82,15 +82,16 @@ class R
         send(*f){|s,p,o|
           content = p == Content
 
-          reddit = o.class==String && s.R.host.match(/reddit\.com$/)
+          reddit = o.class == String && s.R.host.match(/reddit\.com$/)
           # TODO host-specific hooks
 
           # predicate-specific extractions
           if content
-            submission = /.* submitted by /
+            submission = /.* submitted by/
             if reddit && o.match(submission)
-              (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|o|
-                links = o.css('a')
+              (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|sub|
+                o = CGI.unescapeHTML CGI.unescapeHTML o.sub(/submitted by.*/,'')
+                links = sub.css('a')
                 yield s, Creator, R[links[0].attr('href')]
                 yield s, To, R[links[1].attr('href')]
               }
@@ -203,8 +204,9 @@ class R
     module SniffContent
 
       def sniff
+        puts :sniff, self
         send (case self
-              when /^\s*<\!/m
+              when /^\s*<\!\[CDATA/m
                 :cdata
               when /</m
                 :id
