@@ -1,4 +1,4 @@
-this describes my full solution to email, all steps may not be needed in your use-case. everything except browsing is delegated to 3rd-party tools. 
+this describes a full solution to email, all steps may not be needed in your use-case. everything except browsing is delegated to 3rd-party tools. 
 
 ## 1.1 fetch mail from remote machine(s)
 
