@@ -22,7 +22,7 @@ you're at risk of filename-collisions. solutions include:
 
 ### i don't have getmail on my phone
 
-you probably havent installed a userspace yet. a simple way on Android is untarring a [Gentoo](//gentoo.org) or [VoidLinux](//voidlinux.eu) rootfs onto /data and chrooting into it, after bindmounting {dev,proc,sys}. Termux (in FDroid-store) keeps getting better, and may have these tools as well
+install it via a packagemanager. if you need one of those, a simple way on Android is untarring a [Gentoo](//gentoo.org) or [VoidLinux](//voidlinux.eu) rootfs onto /data and chrooting into it, after bindmounting {dev,proc,sys}. Termux (in FDroid-store) keeps getting better, and may have these tools as well
 
 ## <a id=1.2></a>1.2 write messages to files
 
@@ -94,7 +94,7 @@ now that messages are appearing, they can be browsed
 $ chromium localhost/today
 ```
 
-devices can connect to their own webserver, looking at local files, or other webservers on the VPN. to put private mail on servers on the global internet, there are a numerous 3rd-party auth solutions as Rack middleware - pick one and modify your config.ru as required. an express-router configuration using the WebID/ACL features of ldnode or our own WebID-support could also be used
+devices can connect to either their webserver or other webservers on the VPN. to put private mail on servers on the global internet, 3rd-party auth-solutions are available as Rack middleware. using a WebID/ACL frontend of ldnode is another possibility
 
 ## 4 write messages
 
