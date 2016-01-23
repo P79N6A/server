@@ -204,7 +204,7 @@ class R
     module SniffContent
 
       def sniff
-        puts :sniff, self
+#        puts :sniff, self
         send (case self
               when /^\s*<\!\[CDATA/m
                 :cdata
