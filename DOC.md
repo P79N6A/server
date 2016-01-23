@@ -1,4 +1,4 @@
-[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with a fast/low-dependency RDF-subset metadata-model in built-in Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled with [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling via lambda<>URI association
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with a fast/low-dependency RDF-subset metadata-model in built-in Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled with [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling via lambda<>URI association. [MAIL](conf/mail) and [NEWS](conf/news) domain-specific addons included
 
 ## Interface
 
