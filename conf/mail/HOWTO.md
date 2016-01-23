@@ -96,4 +96,4 @@ devices can connect to either their webserver or other webservers on the VPN. to
 
 ## 4 write messages
 
-reply-link is a mailto: URI. Android/iOS offer a built-in mail-composition UI, on X11/Wayland handled with a [shell-script](mailto)
+preconfigured reply-pointers are mailto URIs. Android/iOS offer a built-in mail-composition UI, on X11/Wayland handle with a [shell-script](mailto)
