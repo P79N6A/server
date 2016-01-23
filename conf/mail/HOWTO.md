@@ -22,7 +22,7 @@ you're at risk of filename-collisions, unless you rule it out somehow:
 
 ### i don't have getmail on my phone
 
-you probably havent installed a userspace yet. a simple way on Android is untarring a Gentoo or VoidLinux rootfs onto /data and chrooting into it, after bindmounting {dev,proc,sys}. Termux (in FDroid-store) keeps getting better, and may have these tools as well
+you probably havent installed a userspace yet. a simple way on Android is untarring a [Gentoo](//gentoo.org) or [VoidLinux](//voidlinux.eu) rootfs onto /data and chrooting into it, after bindmounting {dev,proc,sys}. Termux (in FDroid-store) keeps getting better, and may have these tools as well
 
 ## <a id=1.2></a>1.2 write messages to files
 
@@ -53,7 +53,7 @@ or direct networking on built-in Bluetooth, USB or HostAP/wifi interfaces
 
 ## 1.3.2 redundancy across all devices
 
-now that your devices are networked, you want your files everywhere
+now that your devices are networked, you'll want your files everywhere
 
 * [Gluster](http://www.gluster.org/)
 * [BTSync](https://wiki.archlinux.org/index.php/BitTorrent_Sync)
@@ -73,15 +73,20 @@ rsync laptop:.mail . && getmail && rsync .mail laptop:
 
 ## 2 serve messages
 
-for the sake of demonstration, a [daemon](http://src.whats-your.name/pw/) is launched at **/var/www**. 
-
+if messages arent visible to the server, make it so:
 
 ``` sh
 ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ```
 
-## <a id=3></a>3 read messages
+launch a server
+
+``` sh
+foreman start
+```
+
+## <a id=3></a>3 browse messages
 
 now that messages are appearing, they can be browsed
 
