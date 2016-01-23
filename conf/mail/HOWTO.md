@@ -15,10 +15,10 @@ phone as designated-fetcher is good, it's the most-likely of all your devices to
 
 ### i'm putting getmail in cron on all my devices, deal with it
 
-you're at risk of filename-collisions, unless you rule it out somehow:
+you're at risk of filename-collisions. solutions include:
 
-* add deviceID to the procmailrc path-template (server will de-dupe later, you just don't want to clobber msg.AAA with a different msg.AAA file)
-* use global locking or a consensus-algorithm to select a master
+* add a deviceID to .procmailrc path-template (server de-dupes during rewrite-phase, but you don't want to clobber raw 'msg.AAA' with another file)
+* use global locking or a consensus-algorithm to elect a master
 
 ### i don't have getmail on my phone
 
@@ -49,7 +49,7 @@ or mesh/peer-to-peer VPN:
 * [tinc](http://www.tinc-vpn.org/)
 * [n2n](https://github.com/meyerd/n2n)
 
-or direct networking on built-in Bluetooth, USB or HostAP/wifi interfaces
+or direct networking on built-in Bluetooth, USB or HostAP (Wi-Fi) interfaces
 
 ## 1.3.2 redundancy across all devices
 
@@ -73,7 +73,7 @@ rsync laptop:.mail . && getmail && rsync .mail laptop:
 
 ## 2 serve messages
 
-if messages arent visible to the server, make it so:
+if messages arent visible to the server, make it so
 
 ``` sh
 ln -s /home/archiver/.mail /var/www/domain/localhost/
@@ -94,6 +94,8 @@ now that messages are appearing, they can be browsed
 $ chromium localhost/today
 ```
 
+devices can connect to their own webserver, looking at local files, or other webservers on the VPN. to put private mail on servers on the global internet, there are a numerous 3rd-party auth solutions as Rack middleware - pick one and modify your config.ru as required. an express-router configuration using the WebID/ACL features of ldnode or our own WebID-support could also be used
+
 ## 4 write messages
 
-browser invokes your handler of choice for **mailto**-URIs. Android/iOS offer a built-in mail-composition app. on X11/Wayland, [mailto](mailto) can be a shell-script
+reply-link is a mailto: URI. Android/iOS offer a built-in mail-composition UI, on X11/Wayland handled with a [shell-script](mailto)
