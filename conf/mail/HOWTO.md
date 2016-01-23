@@ -1,13 +1,13 @@
-this describes a full solution to personal email, all steps may not be needed in your use-case. everything except browsing is delegated to 3rd-party tools. 
+this describes my full solution to email, all steps may not be needed in your use-case. everything except browsing is delegated to 3rd-party tools. 
 
 ## 1.1 fetch mail from remote machine(s)
 
-only required if SMTP isn't directly-delivering to a machine..
+only required if SMTP isn't directly-delivering to a machine
 
 * [OfflineIMAP](http://offlineimap.org/)
 * [getmail](http://pyropus.ca/software/getmail/)
 
-either cron/task-schedule or run **getmail** manually
+either cron/task-schedule it or run **getmail** manually
 
 ### which machine should run this?
 
@@ -28,7 +28,7 @@ you probably havent installed a userspace yet. a simple way on Android is untarr
 
 location or layout isn't important. day-dir is a simple solution
 
-**.procmailrc**:
+**.procmailrc**
 
 ``` sh
 D=$HOME/.mail/`date +%Y/%m/%d`
@@ -39,20 +39,21 @@ DEFAULT=$D
 
 ## 1.3.1 network other devices
 
-while your VPS or dedicated server, if you have one, likely has a stable address, your phone and laptops/tablets probably dont. a personal VPN is required. conventional offerings include
+while a VPS or dedicated server likely has a stable network, phones and laptops/tablets don't. VPN options include:
 
 * [OpenVPN](https://openvpn.net/)
 
-without a centralized server, a mesh/peer-to-peer VPN can be used, such as:
+or mesh/peer-to-peer VPN:
 
-* peervpn
-* tinc
-* n2n
+* [peervpn](http://www.peervpn.net/)
+* [tinc](http://www.tinc-vpn.org/)
+* [n2n](https://github.com/meyerd/n2n)
 
+or direct networking on built-in Bluetooth, USB or HostAP/wifi interfaces
 
-## 1.3.2 make files available on all devices
+## 1.3.2 redundancy across all devices
 
-replicate files to all your devices/servers with a synchronization-tool or distributed-fs
+now that your devices are networked, you want your files everywhere
 
 * [Gluster](http://www.gluster.org/)
 * [BTSync](https://wiki.archlinux.org/index.php/BitTorrent_Sync)
@@ -61,7 +62,7 @@ replicate files to all your devices/servers with a synchronization-tool or distr
 * [Syncthing](https://syncthing.net/)
 * [Unison](https://www.cis.upenn.edu/~bcpierce/unison/)
 
-a really-simple solution w/o automated fetching or sync:
+or if you hate automation, these scripts:
 
 ``` sh
 # on laptop
@@ -69,8 +70,6 @@ rsync phone:.mail . && getmail && rsync .mail phone:
 # on phone
 rsync laptop:.mail . && getmail && rsync .mail laptop:
 ```
-
-this fetches existing files to sync, and pushes new stuff to the other device
 
 ## 2 serve messages
 
@@ -84,13 +83,12 @@ ln -s /home/archiver/.mail /var/www/domain/localhost/
 
 ## <a id=3></a>3 read messages
 
-now that messages are being delivered and visible to the server, they can be browsed
+now that messages are appearing, they can be browsed
 
 ``` sh
 $ chromium localhost/today
 ```
 
-laptop can either connect to phone's webserver over VPN (or vice-versa), or their own server looking at local mirror of mail-files or remote files over NFS
 ## 4 write messages
 
 browser invokes your handler of choice for **mailto**-URIs. Android/iOS offer a built-in mail-composition app. on X11/Wayland, [mailto](mailto) can be a shell-script
