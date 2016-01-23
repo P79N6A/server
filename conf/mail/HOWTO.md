@@ -13,12 +13,12 @@ either cron/task-schedule it or run **getmail** manually
 
 phone as designated-fetcher is good, it's the most-likely of all your devices to be on and with you (probably). laptops/desktops can synchronize for backup/redundancy when up
 
-### i'm putting getmail in cron on all my devices, deal with it
+### i'm running getmail in cron on all my devices, deal with it
 
 you're at risk of filename-collisions. solutions include:
 
-* add a deviceID to .procmailrc path-template (server de-dupes during rewrite-phase, but you don't want to clobber raw 'msg.AAA' with another file)
-* use global locking or a consensus-algorithm to elect a master
+* add a device-id to .procmailrc path-template, hostname-slug or similar
+* use a consensus-algorithm to elect a designated-fetcher
 
 ### i don't have getmail on my phone
 
@@ -57,12 +57,10 @@ now that your devices are networked, you'll want your files everywhere
 
 * [Gluster](http://www.gluster.org/)
 * [BTSync](https://wiki.archlinux.org/index.php/BitTorrent_Sync)
-* [rsync](https://rsync.samba.org/)
-* [SCP](https://en.wikipedia.org/wiki/Secure_copy)
 * [Syncthing](https://syncthing.net/)
 * [Unison](https://www.cis.upenn.edu/~bcpierce/unison/)
 
-or if you hate automation, these scripts:
+or if you hate automation, these scripts using [rsync](https://rsync.samba.org/):
 
 ``` sh
 # on laptop
