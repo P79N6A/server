@@ -1,6 +1,6 @@
 this describes a full solution to email, all steps may not be needed in your use-case. everything except browsing is delegated to 3rd-party tools. 
 
-## 1.1 fetch mail from remote machine(s)
+## fetch mail
 
 only required if SMTP isn't directly-delivering to a machine
 
@@ -24,7 +24,7 @@ you're at risk of filename-collisions. solutions include:
 
 install it via a packagemanager. if you need one of those, a simple way on Android is untarring a [Gentoo](//gentoo.org) or [VoidLinux](//voidlinux.eu) rootfs onto /data and chrooting into it, after bindmounting {dev,proc,sys}. Termux (in FDroid-store) keeps getting better, and may have these tools as well
 
-## <a id=1.2></a>1.2 write messages to files
+## write messages to files
 
 location or layout isn't important. day-dir is a simple solution
 
@@ -37,7 +37,7 @@ DEFAULT=$D
 
 ```
 
-## 1.3.1 network other devices
+## network other devices
 
 while a VPS or dedicated server likely has a stable network, phones and laptops/tablets don't. VPN options include:
 
@@ -51,7 +51,7 @@ or mesh/peer-to-peer VPN:
 
 or direct networking on built-in Bluetooth, USB or HostAP (Wi-Fi) interfaces
 
-## 1.3.2 redundancy across all devices
+## file-redundancy across devices
 
 now that your devices are networked, you'll want your files everywhere
 
@@ -69,7 +69,7 @@ rsync phone:.mail . && getmail && rsync .mail phone:
 rsync laptop:.mail . && getmail && rsync .mail laptop:
 ```
 
-## 2 serve messages
+## serve messages to browser
 
 if messages arent visible to the server, make it so
 
@@ -84,7 +84,7 @@ launch a server
 foreman start
 ```
 
-## <a id=3></a>3 browse messages
+## read messages
 
 now that messages are appearing, they can be browsed
 
@@ -92,8 +92,8 @@ now that messages are appearing, they can be browsed
 $ chromium localhost/today
 ```
 
-devices can connect to either their webserver or other webservers on the VPN. to put private mail on servers on the global internet, 3rd-party auth-solutions are available as Rack middleware. using a WebID/ACL frontend of ldnode is another possibility
+devices can connect to either their webserver or other webservers on the VPN. to put private mail on servers on the global internet, auth-layers are available as Rack middleware. using a WebID/ACL frontend of ldnode is another possibility
 
-## 4 write messages
+## write messages
 
 reply-pointers are mailto URIs. Android/iOS offer a built-in mail-composition UI. for X11/Wayland here's an [example config](mailto)
