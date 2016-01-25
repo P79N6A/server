@@ -1,4 +1,4 @@
-this describes a full solution to email, all steps may not be needed in your use-case. everything except browsing is delegated to 3rd-party tools. 
+this describes a full solution for email with everything except viewing delegated to 3rd-party tools.
 
 ## fetch mail
 
@@ -26,7 +26,7 @@ install it via a packagemanager. if you need one of those, a simple way on Andro
 
 ## write messages to files
 
-location or layout isn't important. day-dir is a simple solution
+location or layout isn't important. day-dirs are a simple solution:
 
 **.procmailrc**
 
@@ -68,6 +68,8 @@ rsync phone:.mail . && getmail && rsync .mail phone:
 # on phone
 rsync laptop:.mail . && getmail && rsync .mail laptop:
 ```
+
+put just the raw-msgs dir on the distributed-fs, or also address/ (dir at server-root caching transcoded-RDF) 
 
 ## serve messages to browser
 
