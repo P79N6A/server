@@ -1,4 +1,4 @@
-this describes a full solution for email with everything except viewing delegated to 3rd-party tools.
+this describes a full solution for email with everything except [viewing](../../ruby/message.mail.rb.html) delegated to 3rd-party tools.
 
 ## fetch mail
 

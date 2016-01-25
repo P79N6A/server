@@ -52,7 +52,7 @@ td[property="http://purl.org/dc/terms/tag"] a {color: #000}
 td[property="http://rdfs.org/sioc/ns#has_creator"] a {color: #fff}
 td.val {max-width: 100%; overflow: hidden}
 td.key img {max-height: 2em}
-td.content {border-color:#333;border-style: dotted; border-width: 0 0 .1em 0}
+table.tab td.content {border-color:#888;border-style: dotted; border-width: 0 0 .1em 0}
 img.tablePreview {max-height:14em;max-width:100%}
 .tabr {background-color:#fff;position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 
