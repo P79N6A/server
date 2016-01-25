@@ -26,7 +26,7 @@ install it via a packagemanager. if you need one of those, a simple way on Andro
 
 ## write messages to files
 
-location or layout isn't important. day-dirs are a simple solution:
+location or layout isn't important - whatever you prefer. day-dirs are a simple solution. if used, a redirect-handler at [/today](http://m.whats-your.name/today) (bookmark/iconify this) takes you to something approximating an inbox
 
 **.procmailrc**
 
@@ -36,6 +36,8 @@ MKDIR=`test -d $D || mkdir -p $D`
 DEFAULT=$D
 
 ```
+
+no need to go crazy with procmail labels, though you can
 
 ## network other devices
 
@@ -98,4 +100,4 @@ devices can connect to either their webserver or other webservers on the VPN. to
 
 ## write messages
 
-reply-pointers are mailto URIs. Android/iOS offer a built-in mail-composition UI. for X11/Wayland here's an [example config](mailto)
+reply-pointers are **mailto** URIs. Android/iOS offer a built-in mail-composition UI. for X11/Wayland here's an [example config](mailto). modern-browsers allow handling by web-services in addition to native-apps
