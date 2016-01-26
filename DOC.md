@@ -9,7 +9,7 @@ web-protocol. a <a href="http://rack.github.io/">Rack</a> interface exposes our 
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
-we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but do provide a default which is Javascript-free (<a href=http://d3js.org/>D3-vis</a> aside)
+we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but do provide a default which is Javascript-free
 </td></tr>
 
 <tr><td><b>HTML</b></td><td>
@@ -30,11 +30,11 @@ a page could be a depth or breadth-first traverse of directories, or a narrowing
 </td></tr>
 
 <tr><td><b>Abstract</b></td><td>
-content on a filesystem can be voluminous. summarizers to index a larger amount of content are <a href=ruby/message.mail.rb.html>definable</a> on RDF-types
+content can be voluminous. summarizers are <a href=ruby/message.mail.rb.html>definable</a> on RDF-types
 </td></tr>
 
 <tr><td><b>future</b></td><td>
-planned: RDFization by <b>1</b> virtual-turtle for LDP daemons on a FUSE interface <b>2</b> Ruby-code on a RDF-Repository interface. this would allow mixing our functionality into other web-servers in other ways beyond URI-path routing and Rack's interface. <a href=https://github.com/solid>Solid</a> apps require fairly-specific server-side behavior and we could free ourselves from having to pay attention to it. it's also good to have more compatible implementations in different languages, and we offer things that will never be in solid-spec, so this server isn't going away either. or both, ldnode in front for ACL-checks and Turtle-service with non-RDF falling through to us - over HTTP, as FUSE requires a kernel-module which limits its installability and adds a slightly-exotic dependency. also planned is a port of the email and Atom/RSS-feed RDF-izers4 to JS, an addon to ldnode to add the summarization (server-side reduction), pagination, and HTML-view features, and a port of the entire server, except with Irmin instead of VFS, to OCaml for deployment as a mirageOS unikernel, likely by adding Solid/LDP-features to their HTTP daemon rather than starting from scratch. if any of this sounds like stuff you want you could of course <a href=http://mw.logbook.am/carmen/>contact me</a> and sponsor it, otherwise i'll do what i feel like which may include nothing as this server's already perfectly adequate for my needs
+planned: RDFization via virtual-turtle (for third-party LDP daemons) on a FUSE interface and a Ruby (RDF::Repository) interface. this would allow mixing our functionality into other web-servers in additional ways beyond URI-path routing or Rack's interface. <a href=https://github.com/solid>Solid</a> apps require fairly-specific server-side behavior and we could free ourselves from having to constantly tweak our server to match it. it's also good to have more compatible implementations in different languages, and we offer things that will never be in solid-spec, so this server isn't going away either. or both, ldnode in front for ACL-checks and Turtle-service with non-RDF falling through to us - over HTTP, as FUSE requires a kernel-module which limits its installability and adds a slightly-exotic dependency. also planned is a port of the email and Atom/RSS-feed RDFizer to JS, an addon to ldnode to bring it summarization (server-side reduction), pagination, and HTML-view features, and a port of the entire server, except with Irmin instead of VFS, to OCaml for deployment as a mirageOS unikernel - likely by adding Solid/LDP-features to their HTTP daemon rather than starting from scratch. if any of this sounds like stuff you want you could of course <a href=http://mw.logbook.am/carmen/>contact me</a> and sponsor it, otherwise i'll do what i feel like which may include nothing as this server's already perfectly adequate for my needs
 </td></tr>
 
 </table>
