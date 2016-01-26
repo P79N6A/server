@@ -1,4 +1,4 @@
-[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with fast/minimal-dependency RDF-subset metamodel built of Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling on lambda<>URI associations. [mail](conf/mail) and [news](conf/news) domain-specific extensions included
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with fast/minimal-dependency RDF-subset metamodel built of Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling on lambda<>URI associations, used to extend server with [mail](conf/mail) and [news](conf/news) functionality
 
 ## Interface
 
@@ -9,7 +9,7 @@ web-protocol. a <a href="http://rack.github.io/">Rack</a> interface exposes our 
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
-we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but provide a default which is Javascript-free (<a href=http://d3js.org/>D3-vis</a> aside)
+we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">bring your own</a> UI. we're not in the business of dictating your user-interface but do provide a default which is Javascript-free (<a href=http://d3js.org/>D3-vis</a> aside)
 </td></tr>
 
 <tr><td><b>HTML</b></td><td>
