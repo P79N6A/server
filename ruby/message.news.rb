@@ -83,12 +83,10 @@ class R
           content = p == Content
           host = s.R.host
           reddit = o.class == String && host && host.match(/reddit\.com$/)
-          # predicate-specific extractions
           if content
             submission = /.* submitted by/
             if reddit && o.match(submission)
               (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|sub|
-                o = o.sub(/submitted by.*/,'')
                 links = sub.css('a')
                 yield s, Creator, R[links[0].attr('href')]
                 yield s, To, R[links[1].attr('href')]
@@ -106,7 +104,7 @@ class R
             end
           end
 
-          # resolve URIs relative to origin doc
+          # resolve URIs
           yield s, p, content ?
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
