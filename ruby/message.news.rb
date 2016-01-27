@@ -81,8 +81,8 @@ class R
       def massage *f
         send(*f){|s,p,o|
           content = p == Content
-
-          reddit = o.class == String && s.R.host.match(/reddit\.com$/)
+          host = s.R.host
+          reddit = o.class == String && host && host.match(/reddit\.com$/)
           # TODO host-specific hooks
 
           # predicate-specific extractions
