@@ -83,14 +83,12 @@ class R
           content = p == Content
           host = s.R.host
           reddit = o.class == String && host && host.match(/reddit\.com$/)
-          # TODO host-specific hooks
-
           # predicate-specific extractions
           if content
             submission = /.* submitted by/
             if reddit && o.match(submission)
               (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|sub|
-                o = CGI.unescapeHTML CGI.unescapeHTML o.sub(/submitted by.*/,'')
+                o = o.sub(/submitted by.*/,'')
                 links = sub.css('a')
                 yield s, Creator, R[links[0].attr('href')]
                 yield s, To, R[links[1].attr('href')]
@@ -122,23 +120,19 @@ class R
 
       def mapPredicates *f
         send(*f){|s,p,o|
-          if ['http://search.yahoo.com/mrss/content', 'http://wellformedweb.org/CommentAPI/commentRss', RSS+'guid', RSS+'link', RSS+'comments', SIOC+'num_replies'].member? p
-            
-          else
-            yield s,
-                  { Purl+'dc/elements/1.1/creator' => Creator,
-                    Purl+'dc/elements/1.1/subject' => SIOC+'subject',
-                    Atom+'author' => Creator,
-                    RSS+'description' => Content,
-                    RSS+'encoded' => Content,
-                    RSS+'modules/content/encoded' => Content,
-                    RSS+'modules/slash/comments' => SIOC+'num_replies',
-                    Atom+'content' => Content,
-                    Atom+'summary' => Content,
-                    RSS+'title' => Title,
-                    Atom+'title' => Title,
-                  }[p] || p, o
-          end
+          yield s,
+                { Purl+'dc/elements/1.1/creator' => Creator,
+                  Purl+'dc/elements/1.1/subject' => SIOC+'subject',
+                  Atom+'author' => Creator,
+                  RSS+'description' => Content,
+                  RSS+'encoded' => Content,
+                  RSS+'modules/content/encoded' => Content,
+                  RSS+'modules/slash/comments' => SIOC+'num_replies',
+                  Atom+'content' => Content,
+                  Atom+'summary' => Content,
+                  RSS+'title' => Title,
+                  Atom+'title' => Title,
+                }[p] || p, o
         }
       end
 
