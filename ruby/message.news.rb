@@ -134,45 +134,55 @@ class R
         }
       end
 
-      def rawFeedTriples
+      def rawFeedTriples # we allow nonconformant XML, missing 's, arbitrary rss1/rss2/Atom feature-use mashup - real-world soup-mess
+
+        # regular-expression patterns
+        reHead = /<(rdf|rss|feed)([^>]+)/i
+        reXMLns = /xmlns:?([a-z]+)?=["']?([^'">\s]+)/
+        reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
+        reElement = %r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
+        reRDFid = /about=["']?([^'">\s]+)/            #    RDF @about
+        reLink = /<link>([^<]+)/                      # <link> inner-text
+        reLinkRef = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href-attribute
+        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            #   <id> inner-text
+        reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
+        reSrc = /(href|url|src)=['"]?([^'">\s]+)/
+        reRel = /rel=['"]?([^'">\s]+)/
+        
         x = {} # XML-namespace table
-        head = @doc.match(/<(rdf|rss|feed)([^>]+)/i)
-        head && head[2] && head[2].scan(/xmlns:?([a-z]+)?=["']?([^'">\s]+)/){|m|
+        head = @doc.match(reHead)
+        head && head[2] && head[2].scan(reXMLns){|m|
           prefix = m[0]
           base = m[1]
           base = base + '#' unless %w{/ #}.member? base [-1]
           x[prefix] = base}
 
-        # resources
-        @doc.scan(%r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi){|m|
-          # identifier search
+        @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-          u = attrs.do{|a| # RDF-style identifier (RSS 1.0)
-            a.match(/about=["']?([^'">\s]+)/).do{|s|
-              s[1] }} ||
-          (inner.match(/<link>([^<]+)/) || # <link> child-node or href attribute
-           inner.match(/<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/) ||
-           inner.match(/<(?:gu)?id[^>]*>([^<]+)/)).do{|s| s[1]} # <id> child 
 
-          if u
-            if !u.match /^http/
-              u = '/junk/'+u.gsub('/','.')
-            end
+          # post identifier
+          u = (attrs.do{|a|a.match(reRDFid)} ||
+               inner.match(reLink) ||
+               inner.match(reLinkRef) ||
+               inner.match(reGUID)).do{|s|
+            s[1]}
+
+          if u # we need a URI for the post, and gave you many chances
+
+            u = '/junk/'+u.gsub('/','.') unless u.match /^http/
+
             yield u, R::Type, R[R::BlogPost]
 
-            #links
-            inner.scan(%r{<(link|enclosure|media)([^>]+)>}mi){|e|
-              e[1].match(/(href|url|src)=['"]?([^'">\s]+)/).do{|url|
-                yield(u,R::Atom+((r=e[1].match(/rel=['"]?([^'">\s]+)/)) ? r[1] : e[0]), url[2].R)}}
+            inner.scan(reAttach){|e|
+              e[1].match(reSrc).do{|url|
+                yield(u, R::Atom+((r=e[1].match(reRel)) ? r[1] : e[0]), url[2].R)}}
 
-            #elements
-            inner.scan(%r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi){|e|
-              yield u,                           # s
-              (x[e[0] && e[0].chop]||R::RSS) + e[1], # p
-           e[3].extend(SniffContent).sniff.do{|o|# o
-                o.match(HTTP_URI) ? o.R : o
-              }}
+            inner.scan(reElement){|e|
+              yield u,                                     # s
+                    (x[e[0] && e[0].chop]||R::RSS) + e[1], # p
+                    e[3].extend(SniffContent).sniff.do{|o| # o
+                o.match(HTTP_URI) ? o.R : o }}
           end
         }
 
