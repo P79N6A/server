@@ -2,7 +2,7 @@
 
 news means all new posts you might want to read, mostly firstly appearing on other servers unless you're a prolific journalist, fetched through RSS/Atom feeds, CSS-based scrapers, or 3rd-party APIs or NNTP. [MAIL](../mail/HOWTO) is another way news might arrive - everything is marked to a [SIOC](http://sioc-project.org/) schema for a generic message/post and we don't care how they originated.
 
-## storage
+# storage
 
 the filesystem-db prefixes domain-names to the path in the URI to allow both virtual-hosting and mirroring of data from non-served (outside of our control) hosts. a brief introduction:
 
@@ -30,7 +30,7 @@ irb(main):012:0> post.pathPOSIX
 
 if you want to, you can write stuff to an appropriate path without using our tooling. for example to use **wget**, cd to domain/ and add the **-x** flag so directories are used
 
-## timeline
+# timeline
 
 in addition to storage at host-specific URI, posts are hardlinked to a timeline location, which is a path traversible on date-components. multiple hosts in a timeline and possibly multiple timelines on a server. as a consequence of allowing multiple timelines, a host-argument is required to provide a context for timeline-related operations.
 
@@ -55,24 +55,13 @@ as the default container-traverse is breadth-first, a [handler](../../ruby/messa
 
 metadata in response-headers links to continued pages of content, enabling mirroring of the entire archive and a backing-substrate for "infinite-scroll" user-interfaces
 
-## search
+# search
 
 a **q** argument to the timeline causes a search to run. [example](http://b.whats-your.name/news/?q=cambridge)
 
-## fetch
+# feeds
 
-a feed-parser is defined to [RDF](http://ruby-rdf.github.io/) library's Reader interface, so you can load a feed's current content into an RDF graph and use the full suite of RDF-libraries to do what you want with the data. we provide some functions: **getFeed** stores posts in local files, indexes them for search and links resources to the timeline, and **getFeeds** does this for a list of resources in a format of one URI per line
-
-``` sh
-~ R http://b.whats-your.name/feed getFeed localhost
-cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack shellwords 
-ix+ localhost http://www.reddit.com/r/boston/comments/43cyni/what_makes_you_uniquely_bostonian/
-```
-
-## feeds
-
-### consume
-
+## discover
 a nice side-effect of [Drupal](https://www.drupal.org/) and [Wordpress](https://wordpress.org/) providing a significant-portion of long-tail hosting is they provide a standard feed, taking out the guesswork of dealing with site-specific APIs. often times, the feed is simply at [/feed](http://b.whats-your.name/feed). if not, we've provided a resource-function named **feeds** which enumerates feeds mentioned in metadata-tags. you can use this from a REPL:
 
 ``` ruby
@@ -87,7 +76,17 @@ or from a shell using the [R](../../ruby/R.html) resource-function
 http://b.whats-your.name/feed/
 ```
 
-### produce
+## consume
+
+a feed-parser is defined to [RDF](http://ruby-rdf.github.io/) library's Reader interface, so you can load a feed's current content into an RDF graph and use the full suite of RDF-libraries to do what you want with the data. we provide some functions: **getFeed** stores posts in local files, indexes them for search and links resources to the timeline, and **getFeeds** does this for a list of resources in a format of one URI per line
+
+``` sh
+~ R http://b.whats-your.name/feed getFeed localhost
+cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack shellwords 
+ix+ localhost http://www.reddit.com/r/boston/comments/43cyni/what_makes_you_uniquely_bostonian/
+```
+
+## produce
 
 our handler at **/feed** fixes response MIME-type to **application/atom+xml** then defers to the timeline-handler. you can do a lot more than request the most recent 15 posts with it if you're an advanced user
 
