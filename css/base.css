@@ -37,7 +37,7 @@ a.user:before { content:"\f007"; font-family: icons;}
 
 body > form > input {float: right;border:0;font-weight:bold}
 
-table.html {max-width: 88ex;background-color:#fff;color:#000;display:inline-block;margin:.5em}
+table.html {max-width: 100ex;background-color:#fff;color:#000;display:inline-block;margin:.5em}
 table.html a.uri {font-size: 1.3em}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold}
