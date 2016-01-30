@@ -93,5 +93,5 @@ our handler at **/feed** fixes response MIME-type to **application/atom+xml** th
 ~ curl -I http://b.whats-your.name/feed/
 HTTP/1.1 200 OK
 Content-Type: application/atom+xml; charset=UTF-8
-Link: <http://b.whats-your.name/.acl.feed>; rel=acl, </news/?set=page&c=20&desc&offset=//b.whats-your.name/news/2016/01/30/04/00:49.reddit.roxbury.43cjke.orchestra_in_the_hood_crowd_funding.n3>; rel=next
+Link: </news/?set=page&c=20&desc&offset=//b.whats-your.name/news/2016/01/30/04/00:49.reddit.roxbury.43cjke.orchestra_in_the_hood_crowd_funding.n3>; rel=next
 ```
