@@ -4,7 +4,7 @@ news means all new posts you might want to read, mostly firstly appearing on oth
 
 ## storage
 
-our filesystem-db prefixes domain-names to the path-part of the URI, to allow both virtual-hosting and caching of data from non-served hosts (outside of our control). a brief introduction:
+the filesystem-db prefixes domain-names to the path-part of the URI, to allow both virtual-hosting and caching of data from non-served hosts (outside of our control). a brief introduction:
 
 launch a REPL:
 
@@ -28,7 +28,7 @@ irb(main):012:0> post.pathPOSIX
 => "/var/www/domain/datatherapy.org/2016/01/18/talking-visualization-literacy-at-rdfviz.n3"
 ```
 
-if you want to, you can write stuff to an appropriate path without using our tooling. for example to use **wget**, cd to domain/ and add the -x flag so that directories are used
+if you want to, you can write stuff to an appropriate path without using our tooling. for example to use **wget**, cd to domain/ and add the **-x** flag so directories are used
 
 ## timeline
 
@@ -50,7 +50,7 @@ irb(main):005:0> hours = days[-1].c
 
 you can hard-link stuff here and it will show up. builtin feed functions do this automatically when indexing content.
 
-as the default container-traverse is breadth-first, a [handler](../../ruby/message.news.rb.html) at /news configures to depth-first. this results in posts sorted on date-order. a date-offset can be provided in the querystring in **offset** parameter or request-header in the style of [Memento](http://mementoweb.org/about/). memento UI-tools allow you to see the news as-of a particular date via a calendar-interface rather than manual URL-hacking (which is supported and designed-for, if you prefer. just request a particular timeslice-container)
+as the default container-traverse is breadth-first, a [handler](../../ruby/message.news.rb.html) at /news configures to depth-first. this results in posts sorted on date-order. a date-offset can be provided in an **offset** argument in the query-string or in request-headers in the style of [Memento](http://mementoweb.org/about/). memento UI-tools allow you to see the news as-of a particular date via a calendar-interface rather than manual URL-hacking (which is supported and designed-for, if you prefer. just request a particular timeslice-container)
 
 ## search
 
@@ -58,3 +58,33 @@ a **q** argument to the timeline causes a search to run. [example](http://b.what
 
 ## fetch
 
+## feeds
+
+### consume
+
+a nice side-effect of [Drupal](https://www.drupal.org/) and [Wordpress](https://wordpress.org/) devouring a significant-portion of long-tail hosting is they provide a standard feed, taking out the guesswork of dealing with site-specific APIs. often times, the feed is simply at [/feed](http://b.whats-your.name/feed). if not, we've provided a resource-function called "feeds" which enumerates feeds mentioned in metadata-tags. you can use this from a REPL:
+
+``` ruby
+irb(main):001:0> 'http://b.whats-your.name/news/'.R.feeds
+=> [#<RDF::URI:0x2b29b39b8ec8 URI:http://b.whats-your.name/feed/>]
+```
+
+and from a shell using the [R](../../ruby/R.html) resource-function
+
+``` sh
+~ R http://b.whats-your.name/news/ feeds
+http://b.whats-your.name/feed/
+```
+
+### produce
+
+our handler at **/feed** fixes response MIME-type to **application/atom+xml** then defers to the timeline-handler. you can do a lot more than request the most recent 15 posts with it if you're an advanced user
+
+metadata in response-headers links to continued pages of content, enabling 3rd-party mirroring of the entire archive
+
+``` sh
+~ curl -I http://b.whats-your.name/feed/
+HTTP/1.1 200 OK
+Content-Type: application/atom+xml; charset=UTF-8
+Link: <http://b.whats-your.name/.acl.feed>; rel=acl, </news/?set=page&c=20&desc&offset=//b.whats-your.name/news/2016/01/30/04/00:49.reddit.roxbury.43cjke.orchestra_in_the_hood_crowd_funding.n3>; rel=next
+```
