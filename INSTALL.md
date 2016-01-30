@@ -1,9 +1,10 @@
 ``` sh
-cd ruby
-bundle install     # install packages we depend on
-ruby install       # install this package
-cd ..
-ln conf/Procfile . # deamon configuration, edit to taste
+git clone https://gitlab.com/ix/pw.git # get source
+cd pw/ruby                             # goto source-directory
+bundle install                         # install packages we depend on
+ruby install                           # install this package
+cd ..                                  # goto server-root
+ln conf/Procfile .                     # use deamon-configuration
 ```
 
 * files go in domain/$HOST/path/to/file or path/to/file

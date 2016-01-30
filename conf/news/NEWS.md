@@ -6,7 +6,7 @@ news means all new posts you might want to read, mostly firstly appearing on oth
 
 the filesystem-db prefixes domain-names to the path in the URI to allow both virtual-hosting and mirroring of data from non-served (outside of our control) hosts. a brief introduction:
 
-launch a REPL:
+launch a REPL. if you don't have this library installed already [start here](../..)
 
 ``` sh
 irb -rww
@@ -73,7 +73,7 @@ ix+ localhost http://www.reddit.com/r/boston/comments/43cyni/what_makes_you_uniq
 
 ### consume
 
-a nice side-effect of [Drupal](https://www.drupal.org/) and [Wordpress](https://wordpress.org/) devouring a significant-portion of long-tail hosting is they provide a standard feed, taking out the guesswork of dealing with site-specific APIs. often times, the feed is simply at [/feed](http://b.whats-your.name/feed). if not, we've provided a resource-function called "feeds" which enumerates feeds mentioned in metadata-tags. you can use this from a REPL:
+a nice side-effect of [Drupal](https://www.drupal.org/) and [Wordpress](https://wordpress.org/) providing a significant-portion of long-tail hosting is they provide a standard feed, taking out the guesswork of dealing with site-specific APIs. often times, the feed is simply at [/feed](http://b.whats-your.name/feed). if not, we've provided a resource-function named **feeds** which enumerates feeds mentioned in metadata-tags. you can use this from a REPL:
 
 ``` ruby
 irb(main):001:0> 'http://b.whats-your.name/news/'.R.feeds
