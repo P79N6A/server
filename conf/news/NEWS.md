@@ -1,6 +1,6 @@
 # NEWS
 
-news means all new posts you might want to read, mostly firstly appearing on other servers unless you're a prolific journalist, fetched through RSS/Atom feeds, CSS-based scrapers, or 3rd-party APIs or NNTP. [Mail](../mail/HOWTO) is another way news might arrive - everything is marked to a [SIOC](http://sioc-project.org/) schema for a generic message/post and we don't care how they originated.
+news means all new posts you might want to read, mostly firstly appearing on other servers unless you're a prolific journalist, fetched through RSS/Atom feeds, CSS-based scrapers, or 3rd-party APIs or NNTP. [MAIL](../mail/HOWTO) is another way news might arrive - everything is marked to a [SIOC](http://sioc-project.org/) schema for a generic message/post and we don't care how they originated.
 
 ## storage
 
