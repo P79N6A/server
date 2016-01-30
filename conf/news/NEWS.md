@@ -48,7 +48,7 @@ irb(main):005:0> hours = days[-1].c
 
 ```
 
-you can hard-link stuff here and it will show up. builtin feed functions do this automatically when indexing content.
+you can link stuff here and it will show up. builtin feed functions do this automatically when indexing content.
 
 as the default container-traverse is breadth-first, a [handler](../../ruby/message.news.rb.html) at /news configures to depth-first. this results in posts sorted on date-order. a date-offset can be provided in an **offset** argument in the query-string or in request-headers in the style of [Memento](http://mementoweb.org/about/). memento UI-tools allow you to see the news as-of a particular date via a calendar-interface rather than manual URL-hacking (which is supported and designed-for, if you prefer. just request a particular timeslice-container)
 
