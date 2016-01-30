@@ -61,6 +61,14 @@ a **q** argument to the timeline causes a search to run. [example](http://b.what
 
 ## fetch
 
+a feed-parser is defined to [RDF](http://ruby-rdf.github.io/) library's Reader interface, so you can load a feed's current content into an RDF graph and use the full suite of RDF-libraries to do what you want with the data. we provide some functions: **getFeed** stores posts in local files, indexes them for search and links resources to the timeline, and **getFeeds** does this for a list of resources in a format of one URI per line
+
+``` sh
+~ R http://b.whats-your.name/feed getFeed localhost
+cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack shellwords 
+ix+ localhost http://www.reddit.com/r/boston/comments/43cyni/what_makes_you_uniquely_bostonian/
+```
+
 ## feeds
 
 ### consume
