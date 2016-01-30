@@ -143,7 +143,8 @@ class R
         reElement = %r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
         reRDFid = /about=["']?([^'">\s]+)/            #    RDF @about
         reLink = /<link>([^<]+)/                      # <link> inner-text
-        reLinkRef = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href-attribute
+        reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @rel=alternate href
+        reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href
         reGUID = /<(?:gu)?id[^>]*>([^<]+)/            #   <id> inner-text
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
@@ -164,7 +165,8 @@ class R
           # post identifier
           u = (attrs.do{|a|a.match(reRDFid)} ||
                inner.match(reLink) ||
-               inner.match(reLinkRef) ||
+               inner.match(reLinkAlt) ||
+               inner.match(reLinkRel) ||
                inner.match(reGUID)).do{|s|
             s[1]}
 
