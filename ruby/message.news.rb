@@ -27,6 +27,9 @@ class R
   def getFeed h='localhost'
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
+  rescue Exception => e
+    puts [uri, e.class, e.message].join(' ')
+    self
   end
 
   def getFeeds h='localhost'
