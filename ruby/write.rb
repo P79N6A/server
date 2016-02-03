@@ -120,6 +120,10 @@ class R
     [200,@r[:Response],[]]
   end
 
+  def allowWrite
+    @r.signedIn
+  end
+
 end
 
 class Pathname
