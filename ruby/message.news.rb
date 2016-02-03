@@ -91,7 +91,6 @@ class R
             if reddit && o.match(submission)
               (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|sub|
                 links = sub.css('a')
-                yield s, Creator, R[links[0].attr('href')]
                 yield s, To, R[links[1].attr('href')]
               }
             else
