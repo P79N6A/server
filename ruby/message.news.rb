@@ -107,7 +107,7 @@ class R
           end
 
           # resolve URIs
-          yield s, p, content ?
+          yield s, p, (content && o.class==String) ?
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
               if a.has_attribute? 'href'
