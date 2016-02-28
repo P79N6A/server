@@ -13,7 +13,7 @@ either cron/task-schedule it or run **getmail** manually
 
 phone as designated-fetcher is good, it's probably the most-likely to be on and with you. laptops/tablets/desktops can synchronize for backup/redundancy when up. if youre going to fetch from multiple devices and feed them all into a unified distributed-filesystem, adjust the **MSGPREFIX** variable for procmail, adding some fetcher-unique data. the server will dedupe any messages seen more than once 
 
-install it via a packagemanager. if you need one of those, a simple way on Android is untarring a [Gentoo](//gentoo.org) or [VoidLinux](//voidlinux.eu) rootfs onto /data and chrooting into it, after bindmounting {dev,proc,sys}. Termux (in FDroid-store) keeps getting better, and may have these tools as well
+install getmail and/or procmail via your system's package-manager and if needed check out our sample conf-files in this directory
 
 ## write messages to files
 
