@@ -1,6 +1,29 @@
-[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with fast/minimal-dependency RDF-subset metamodel built of Hash and JSON objects. [search](https://en.wikipedia.org/wiki/Online_search) is enabled via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling on lambda<>URI associations, used to extend server with [MAIL](conf/mail) and [NEWS](conf/news/NEWS) functionality
+[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with fast/minimal-dependency RDF-subset metamodel in Hash and JSON. [search](https://en.wikipedia.org/wiki/Online_search) via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling on lambda-to-URI association, used to extend server with [MAIL](conf/mail) and [NEWS](conf/news/NEWS) functionality
 
-## Interface
+## Install
+``` sh
+git clone https://gitlab.com/ix/pw.git # get source
+cd pw/ruby                             # goto source-directory
+bundle install                         # install packages we depend on
+ruby install                           # install this package
+cd ..                                  # goto server-root
+ln conf/Procfile .                     # use deamon-configuration
+```
+
+* files go in domain/$HOST/path/to/file or path/to/file
+* daemon can run elsewhere, link or copy [js/](js/) and [css/](css/) directories to [server-root](.)
+* one way to listen on port 80/443 as a non-root user:
+
+``` sh
+setcap cap_net_bind_service=+ep $(realpath `which ruby`)
+```
+
+## RUN
+``` sh
+foreman start
+```
+
+## Interfaces
 
 <table>
 
@@ -42,3 +65,21 @@ planned: RDFization via virtual-turtle (for third-party LDP daemons) on a FUSE i
 ## MIMEs
 
 our **JSON** format omits [unidentified-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) and [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes) - if you want blank-nodes or can't express within [JSON](http://www.json.org/)-literals, full Turtle is also supported. indexes are actually **URI-list** files of [one URI per line](http://amundsen.com/hypermedia/urilist/). data expands to a full RDF-model if requested in **Accept**, otherwise stays in our accelerated subset through to serialization. if you are fully-futuristic and use only RDF, check out [ldnode](https://github.com/linkeddata/ldnode)
+
+## Requisites
+
+### [Debian](http://www.debian.org/)
+``` sh
+apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
+```
+
+### [Voidlinux](http://www.voidlinux.eu/)
+``` sh
+xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
+```
+
+## Mirrors
+
+[src.whats-your.name/pw/](http://src.whats-your.name/pw/)
+[gitlab.com/ix/pw](https://gitlab.com/ix/pw)
+[repo.or.cz/www](http://repo.or.cz/www)
