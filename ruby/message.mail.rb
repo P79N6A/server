@@ -8,10 +8,10 @@ class R
     bodies = e.q.has_key? 'full'
     e[:summarized] = true unless bodies || g.keys.size > 42
     e[:floating] = true
-    e.q['sort'] ||= Size
+    sort = (e.q['sort']||Size).expand
+    group = (e.q['group']||To).expand
     e.q['reverse'] ||= 'reverse'
     isRDF = e.format != 'text/html'
-    group = (e.q['group']||To).expand
     size = g.keys.size
     threads = {}
     clusters = []
@@ -20,10 +20,10 @@ class R
     # pass 1. prune + analyze
     g.map{|u,p|
       recipients = p[To].justArray.map &:maybeURI
-      graph.delete u unless bodies # remove unsummarized
-      p[DC+'source'].justArray.map{|s|graph.delete s.uri}         # provenance
-      p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # author-description
-      recipients.map{|a|graph.delete a}                           # recipient-description
+      graph.delete u unless bodies # hide unsummarized, unless full-bodies requested
+      p[DC+'source'].justArray.map{|s|graph.delete s.uri}         # hide provenance
+      p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # hide author resource
+      recipients.map{|a|graph.delete a}                           # hide recipient resource
 
       p[Title].do{|t|
         title = t[0].sub ReExpr, '' # strip prefix
@@ -39,33 +39,32 @@ class R
 
     # pass 2. cluster
     threads.map{|title,post|
-      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # bind heaviest grouping-property value, by default should be recipient and therefore mailing-list
+      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # bind heaviest group-weight
         container = a.R.dir.uri.t
         mid = URI.escape post[DC+'identifier'][0]
 
-        # thread (or message)
+        # create thread resource
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid , Title => title, Image => post[Image]}
-
-        if post[Size] > 1 # thread
+        thread[Date] ||= post[Date] if sort==Date
+        if post[Size] > 1 # multi-post thread
           thread.update({Size => post[Size],
                          Type => R[SIOC+'Thread']})
         else # singleton post
           thread[Type] = R[SIOC+'MailMessage']
           thread[Creator] = post[Creator]
         end
+        graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]} if isRDF # give post a label
 
-        if isRDF # give post a label based on Title, messageID-derived URI considerably less informative
-          graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]}
-        end
-
-        # create container for the cluster
+        # maybe create cluster-container
         unless graph[container]
           clusters.push container
           graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
         end
-        graph[container][LDP+'contains'].push thread }}
+        graph[container][LDP+'contains'].push thread
+      }
+    }
   }
 
   ReExpr = /\b[rR][eE]: /
