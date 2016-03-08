@@ -206,7 +206,7 @@ class R
                  p = CGI.escapeHTML p.to_s
                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
               {_: :td, c: {class: 'container main', # container
-                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page'}},
+                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page'}},((e[:floating] && !e.q.has_key?('sort')) ? {_: :a, class: :listview, href: '?group=rdf:type&sort=dc:date', c: '&#9776;'} : ''),
                                {class: :contents,
                                 c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]}},
               {_: :td, c: e[:Links][:next].do{|n|
