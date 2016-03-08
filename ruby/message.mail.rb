@@ -12,6 +12,7 @@ class R
     group = (e.q['group']||To).expand
     e.q['reverse'] ||= 'reverse'
     isRDF = e.format != 'text/html'
+    datesort = sort == Date
     size = g.keys.size
     threads = {}
     clusters = []
@@ -47,7 +48,7 @@ class R
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid , Title => title, Image => post[Image]}
-        thread[Date] ||= post[Date] if sort==Date
+        thread[Date] ||= post[Date] if datesort
         if post[Size] > 1 # multi-post thread
           thread.update({Size => post[Size],
                          Type => R[SIOC+'Thread']})
