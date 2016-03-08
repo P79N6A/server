@@ -136,7 +136,7 @@ class R
         }
       end
 
-      def rawFeedTriples # we allow nonconformant XML, missing 's, arbitrary rss1/rss2/Atom feature-use mashup - real-world soup-mess
+      def rawFeedTriples # we allow nonconformant XML, missing 's, arbitrary rss1/rss2/Atom feature-use mashup, aka real-world soup-mess
 
         # regular-expression patterns
         reHead = /<(rdf|rss|feed)([^>]+)/i
@@ -172,7 +172,7 @@ class R
                inner.match(reGUID)).do{|s|
             s[1]}
 
-          if u # we need a URI for the post, and gave you many chances
+          if u # still no URI found, toss in junk-heap
 
             u = '/junk/'+u.gsub('/','.') unless u.match /^http/
 
