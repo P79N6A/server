@@ -22,13 +22,13 @@ class R
   end
 
   def resourceGET
-    bases = [@r.host, ""] # specific host+path or just path
+    bases = [@r.host, ""] # host*path || path
     paths = justPath.cascade.map(&:to_s).map &:downcase
     bases.map{|b|
-      paths.map{|p|
-        GET[b + p].do{|fn| # handler bound
+      paths.map{|p| # bubble up to root
+        GET[b + p].do{|fn| # bind handler
           fn[self,@r].do{|r| # call
-        return r }}}} # non-nil return, stop cascading and finish
+        return r }}}} # non-nil result: stop cascade
     response
   end
 
@@ -74,7 +74,7 @@ class R
       if set.size==1 && @r.format == set[0].mime # one file in response, MIME preferred
         set[0] # no transcode, just return file
       else
-        loadGraph = -> {
+        loadGraph = -> { # model in JSON
           set.map{|r|r.nodeToGraph graph} # load resources
           @r[:filters].push Container if @r[:container] # container-summarize
           @r[:filters].push Title

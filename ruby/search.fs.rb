@@ -1,31 +1,30 @@
 class R
 
   # default fileset of a resource
-  FileSet[Resource] = -> e,q,g { this = g['']
-
-    # paginate date-dirs
+  FileSet[Resource] = -> e,q,g {
+    query = e.env['QUERY_STRING']
+    # add pagination-pointers on date-dirs
     e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m|
       t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # date object
-      query = e.env['QUERY_STRING']
       qs = query && !query.empty? && ('?' + query) || ''
       pp = (t-1).strftime('/%Y/%m/%d/') # previous day
       np = (t+1).strftime('/%Y/%m/%d/') # nex day
       e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
       e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
-
     if e.env[:container]
-      htmlFile = e.a 'index.html' # container-index in HTML-file
-      if e.env.format=='text/html' && htmlFile.e # exists?
-        [htmlFile.setEnv(e.env)] # index-file response
+      htmlFile = e.a 'index.html'
+      if e.env.format=='text/html' && !e.env['REQUEST_URI'].match(/\?/) && htmlFile.e
+        [htmlFile.setEnv(e.env)] # return index on-file
       else
-        cs = e.c # node children
+        cs = e.c # child-nodes
         size = cs.size
+        # inline small sets, reduce large-set data to pointers
         if size < 512 || q.has_key?('full')
           cs.map{|c|c.setEnv e.env}
           e.fileResources.concat cs
         else
           e.env[:summarized] = true
-          e.fileResources # child-pointers
+          e.fileResources
         end
       end
     else # resource
@@ -55,10 +54,7 @@ class R
       s }}
 
   GET['/domain'] = -> e,r {e.justPath.response}
-
-  # directory du jour
   GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
-
   GET['/cache'] = E404
   GET['/index'] = E404
 

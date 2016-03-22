@@ -3,9 +3,9 @@
 
 module Rack
   module Adapter
-    # don't guess, use rack
+    # we always use the rack-interface, with this config
     def self.guess _; :rack end
-    def self.load _ # load this configuration instead of config.ru file
+    def self.load _
       Rack::Builder.new {
         use Rack::Deflater # gzip response
         run R              # call R.call
@@ -67,7 +67,7 @@ class R
     self
   end
 
-  # coax debug-output through thin/foreman shell-buffering a bit
+  # coax output through thin/foreman/shell buffers
   $stdout.sync = true
   $stderr.sync = true
 
@@ -78,32 +78,33 @@ class R
       end }
   end
 
-  def R.call e # Rack calls request here
+  def R.call e # Rack calls resource
     method = e['REQUEST_METHOD']
 
-    # allow whitelisted methods
+    # allowable methods over HTTP
     return [405,{'Allow' => Allow},[]] unless AllowMethods.member? method
     return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
 
-    # add environment utility-functions to env Hash
+    # bind environment utility-functions
     e.extend Th
 
-    # check any development-mode files
+    # load changed source-code
     dev
 
-    # find canonical hostname
+    # preserve canonical hostname in proxy scenario
     e['HTTP_X_FORWARDED_HOST'].do{|h|
       e['SERVER_NAME']=h}
 
-    # strip junk in hostname, like .. and /
+    # clean-up hostname
     e['SERVER_NAME'] = e.host.gsub /[\.\/]+/, '.'
 
-    # interpret path, preserving trailing-slash
+    # interpret path
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/'
     path = Pathname.new(rawpath).expand_path.to_s
+    # preserve trailing-slash
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
-    # instantiate resource
+    # resource URI
     resource = R[e.scheme + "://" + e.host + path]
     e['uri'] = resource.uri
 
@@ -112,25 +113,22 @@ class R
     e[:Response] = {}
     e[:filters] = []
 
-    # call request-method
+    # call resource
     resource.setEnv(e).send(method).do{|s,h,b|
       # inspect response
       R.log e,s,h,b
-      # return
-      [s,h,b]
-    }
+      [s,h,b]}
   rescue Exception => x
     E500[x,e]
   end
 
   def R.log e, s, h, b
-    return unless e&&s&&h&&b
+    return unless e && s && h && b
     Stats['status'][s.to_s] ||= {'uri' => '/stat/status/'+s.to_s.t, Type => R[Resource], Size => 0}
     Stats['status'][s.to_s][Size] += 1
     Stats['host'][e.host] ||= {'uri' => e.scheme+'://'+e.host, Label => e.host, Size => 0}
     Stats['host'][e.host][Size] += 1
 
-    # log request to stdout
     puts [e['REQUEST_METHOD'], s, [e.scheme, '://', e.host, e['REQUEST_URI']].join,
           h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format, e['HTTP_REFERER']].
           flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
