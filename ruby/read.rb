@@ -66,13 +66,14 @@ class R
     end
 
     @r[:Response].
-      update({'Content-Type' => @r.format + '; charset=UTF-8',
+      update({'Content-Type' => @r.format,
+#               'Content-Type' => @r.format + '; charset=UTF-8',
               'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h})
 
     condResponse ->{ # lazy response-finisher
-      if set.size==1 && @r.format == set[0].mime # one file in response, MIME preferred
-        set[0] # no transcode, just return file
+      if set.size==1 && @r.format == set[0].mime # one file in response + MIME match
+        set[0] # return file
       else
         loadGraph = -> { # model in JSON
           set.map{|r|r.nodeToGraph graph} # load resources
