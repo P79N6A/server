@@ -1,2 +1,3 @@
-#!/bin/sh
-gnome-terminal -e "mutt \"$1\""
+#!/usr/bin/env ruby
+require 'uri'
+exec "mutt \"#{URI.unescape ARGV[0]}\""

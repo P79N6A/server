@@ -141,8 +141,9 @@ class R
         r2 = list ||                   # List
              m.reply_to.do{|t|t[0]} || # Reply-To
              f                         # Creator
+        target = URI.escape('<' + id + '>')
         yield e, SIOC+'reply_to',     # reply URI
-        R[URI.escape("mailto:#{r2}?References=<#{id}>&In-Reply-To=<#{id}>&Subject=#{m.subject}&")+'#reply']}}
+        R["mailto:#{URI.escape(r2)}?References=#{target}&In-Reply-To=#{target}&subject=#{URI.escape(m.subject)}&"+'#reply']}}
 
     m[:from].addrs.head.do{|a|# author resource
       author = AddrPath[a.address]
