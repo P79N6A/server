@@ -198,6 +198,14 @@ class R
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {
     path = e.R.justPath
     g.delete e.uri
+    nextsort = case (e.q['sort']||'').expand
+               when Size
+                 Date
+               when Date
+                 Title
+               else
+                 Size
+               end
     {_: :table, class: :pager, # direction pointers
      c: [{_: :tr,
           c: [{_: :td},{_: :td, c: ({_: :a, class: :dirname, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/')},{_: :td}]}, # up
@@ -206,7 +214,7 @@ class R
                  p = CGI.escapeHTML p.to_s
                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
               {_: :td, c: {class: 'container main', # container
-                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page'}},((e[:floating] && !e.q.has_key?('sort')) ? {_: :a, class: :listview, href: '?group=rdf:type&sort=dc:date', c: '&#9776;'} : ''),
+                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page'}}, {_: :a, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
                                {class: :contents,
                                 c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]}},
               {_: :td, c: e[:Links][:next].do{|n|

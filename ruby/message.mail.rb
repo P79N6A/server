@@ -7,13 +7,18 @@ class R
     end
     bodies = e.q.has_key? 'full'
     e[:summarized] = true unless bodies || g.keys.size > 42
-    e[:floating] = true
-    sort = (e.q['sort']||Size).expand
-    group = (e.q['group']||To).expand
-    e.q['reverse'] ||= 'reverse'
-    isRDF = e.format != 'text/html'
-    datesort = sort == Date
-    size = g.keys.size
+    e[:floating] = true # containers freely-float, don't force into tabular-view
+
+    # default sorting/grouping options
+    e.q['group'] = (!e.q['sort'] || e.q['sort'] == Title) ? To : 'rdf:type' # default group-by To: field (mailing-list)
+    e.q['sort'] ||= Size
+    e.q['reverse'] = 'reverse' unless e.q['sort'] == Title # newest + largest first
+
+    # expand URIs
+    sort = e.q['sort'].expand
+    group = e.q['group'].expand
+
+    # derived datastructures
     threads = {}
     clusters = []
     weight = {}
@@ -48,7 +53,7 @@ class R
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid , Title => title, Image => post[Image]}
-        thread[Date] ||= post[Date] if datesort
+        thread[Date] ||= post[Date] if sort == Date
         if post[Size] > 1 # multi-post thread
           thread.update({Size => post[Size],
                          Type => R[SIOC+'Thread']})
@@ -56,7 +61,7 @@ class R
           thread[Type] = R[SIOC+'MailMessage']
           thread[Creator] = post[Creator]
         end
-        graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]} if isRDF # give post a label
+        graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]} if e.format != 'text/html' # post-label in RDF
 
         # maybe create cluster-container
         unless graph[container]
