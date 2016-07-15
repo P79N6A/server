@@ -6,7 +6,7 @@ news means all new posts you might want to read, mostly firstly appearing on oth
 
 the filesystem-db prefixes domain-names to the path in the URI to allow both virtual-hosting and mirroring of data from non-served (outside of our control) hosts. a brief introduction:
 
-launch a REPL. if you don't have this library already installed [start here](../../INSTALL)
+launch a REPL. if you don't have this library already installed [start here](../../README)
 
 ``` sh
 irb -rww
