@@ -1,4 +1,4 @@
-body {font-family: sans-serif;background-color:#000;color:#fff}
+body {font-family: sans-serif}
 pre {white-space: pre-wrap;padding:.1em;margin:.1em}
 a {text-decoration:none;font-weight: bold;}
 
@@ -54,15 +54,14 @@ td.key img {max-height: 2em}
 table.tab td.content {border-color:#888;border-style: dotted; border-width: 0 0 .1em 0}
 img.tablePreview {max-height:14em;max-width:100%}
 .tabr {background-color:#fff;position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
-
 .container {margin:.4em;display:inline-block;font-family: sans-serif}
 .container > .listview {color:#fff;font-size:1.4em;margin-right:.2em;float: right}
-.container > .label, .container > .label a, .container > .contents {background-color:#000;color:#fff}
-.container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;}
-.container > .contents {border-radius: 0 .4em .4em .4em}
-.container.main > .label, .container.main > .label a, .container.main > .contents {background-color:#fff;color:#000}
+.container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;background-color:#eee;color:#000}
+.container > .label a {background-color:#eee;color: #000}
+.container > .contents {border-color:#444;border-style:dotted;border-width: .12em;border-radius: 0 .4em .4em .4em}
+.container.main > .label, .container.main > .label a, .container.main > .contents {background-color:#000;color:#fff}
 .container.main > .label > a {font-size: 1.5em}
-.container.main > .contents > .tab > tbody > tr > td > a {color:#000;background-color:#fff}
+
 
 div.msgs > h1 {text-align:center;margin-top:0}
 div.chatLog {margin-bottom: .7em}
@@ -75,7 +74,7 @@ td[property='uri'] a, div.chatLog span.body a, div.mail a {color:#fff;background
 div.body a {background-color:#000;color:#fff;border-radius:.2em}
 div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 0 0 .6em; margin-right:.13em}
 div.body span.quoted {padding-left:.18em}
-a.nextPage {color:#f9f9f9;font-size:9.6em;margin-left:.15em}
+a.nextPage {color:#111;background-color:#fff;font-size:9.6em;margin-left:.15em}
 img {max-width: 100%}
 :target {padding-top:10em;border-color: #333;border-style: solid; border-width: 0 0 0 .6em;padding: .6em}
 
