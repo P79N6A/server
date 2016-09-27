@@ -108,9 +108,7 @@ class R
       @r[:Status] ||= 200
       @r[:Response]['Content-Length'] ||= body.size.to_s
       if body.class == R
-        f = Rack::File.new nil
-        f.instance_variable_set '@path', body.pathPOSIX
-        f.serving(@r).do{|s,h,b|
+        (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|
           [s, h.update(@r[:Response]), b]}
       else
         [@r[:Status], @r[:Response], [body]]
