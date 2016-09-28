@@ -19,7 +19,7 @@ setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 ```
 
 * for code rendering install on your OS: source-highlight pygments
-* for fulltext search: gem install rroonga
+* for fulltext search: gem install groonga
 
 ``` sh
 # Debian
