@@ -1,12 +1,13 @@
 class R
 
-  # grep
+  # grep files
   FileSet['grep'] = -> e,q,m {
     q['q'].do{|query|
       e.env[:filters].push 'grep' unless q.has_key?('full')
       `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}
 
-  Filter['grep'] = -> d,e { # grep memory-graph
+  # grep in-memory graph
+  Filter['grep'] = -> d,e {
     w = e.q['q']
     if w && w.size > 1
       e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i
@@ -18,7 +19,7 @@ class R
         end}
     end}
 
-  # gem install rroonga # https://github.com/ranguba/rroonga
+  # set of search results
   ResourceSet['groonga'] = ->d,e,m{
     R.groonga.do{|ga|
       q = e['q']     # expression
@@ -43,13 +44,10 @@ class R
       d.env[:Links][:prev] = '/search/' + {'q' => q,
                                            'start' => start - c,
                                            'c' => c}.qs if up
-      # returned resources
-      r.map{|r|
-#        puts "found #{g} #{r['.uri']}"
-        R[r['.uri']]
-      }}}
+      # return first-class resources
+      r.map{|r| r['.uri'].R }}}
 
-  # open db
+  # open db at location
   def groonga
     return Groonga::Database.open pathPOSIX if e # exists
     dir.mk                                       # create
@@ -67,7 +65,7 @@ class R
                                   %w{uri graph content}.map{|c| t.index("R." + c) }}}
   end
 
-  # db-reference
+  # db handle
   def R.groonga
     @groonga ||=
       (begin require 'groonga'
@@ -78,9 +76,9 @@ class R
        end)
   end
   
-  # index resource
+  # add resource to index
   def roonga graph="localhost", m = self.graph
-    R.groonga.do{|g|
+    R.groonga.do{|g| # db
       m.map{|u,i|
         puts "ix+ #{graph} #{u}"
         r = g[u] || g.add(u) # create or load entry
@@ -92,7 +90,7 @@ class R
     self
   end
   
-  # unindex resource
+  # remove resource
   def unroonga
     g = R.groonga
     graph.keys.push(uri).map{|u|g[u].delete}
