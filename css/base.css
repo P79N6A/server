@@ -55,7 +55,7 @@ table.tab td.content {border-color:#888;border-style: dotted; border-width: 0 0 
 img.tablePreview {max-height:14em;max-width:100%}
 .tabr {background-color:#fff;position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 .container {margin:.4em;display:inline-block;font-family: sans-serif}
-.container > .listview {color:#fff;font-size:1.4em;margin-right:.2em;float: right}
+.container > .listview {color:#333;font-size:1.4em;margin-right:.2em;float: right}
 .container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;background-color:#eee;color:#000}
 .container > .label a {background-color:#eee;color: #000}
 .container > .contents {border-color:#444;border-style:dotted;border-width: .12em;border-radius: 0 .4em .4em .4em}
