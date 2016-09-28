@@ -1,5 +1,4 @@
-
-#Encoding.default_internal = Encoding.default_external = Encoding::UTF_8 # override environment locale
+Encoding.default_internal = Encoding.default_external = Encoding::UTF_8
 
 # add watch __FILE__ to file to enlist in change-surveillance
 def watch f

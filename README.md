@@ -18,6 +18,18 @@ ln conf/Procfile .                     # use deamon-configuration
 setcap cap_net_bind_service=+ep $(realpath `which ruby`)
 ```
 
+* for code rendering install on your OS: source-highlight pygments
+* for fulltext search: gem install rroonga
+
+``` sh
+# Debian
+apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments groonga
+# voidlinux
+xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
+```
+
+
+
 ## RUN
 ``` sh
 foreman start
@@ -26,6 +38,10 @@ foreman start
 ## Interfaces
 
 <table>
+
+<tr><td><b>MIME</b></td><td>
+our native <strong>JSON</strong> format omits <a href="http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/">unidentified-nodes</a> and <a href="http://www.w3.org/TR/turtle/#turtle-literals">special-syntax</a> <a href="http://www.w3.org/TR/rdf11-concepts/#section-Datatypes">literal-datatypes/languages</a> - if you want blank-nodes or can&#39;t express within <a href="http://www.json.org/">JSON</a>-literals, full Turtle is supported. indexes are implemented with <strong>URI-list</strong> files of <a href="http://amundsen.com/hypermedia/urilist/">one URI per line</a>. data expands to a full RDF-model if requested in <strong>Accept</strong>, otherwise stays in our accelerated subset through to serialization
+</td></tr>
 
 <tr><td><b>HTTP</b></td><td>
 web-protocol. a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server
@@ -56,27 +72,7 @@ a page could be a depth or breadth-first traverse of directories, or a narrowing
 content can be voluminous. summarizers are <a href=ruby/message.mail.rb.html>definable</a> on RDF-types
 </td></tr>
 
-<tr><td><b>future</b></td><td>
-planned: RDFization via virtual-turtle (for third-party LDP daemons) on a FUSE interface and a Ruby (RDF::Repository) interface. this would allow mixing our functionality into other web-servers in additional ways beyond URI-path routing or Rack's interface. <a href=https://github.com/solid>Solid</a> apps require fairly-specific server-side behavior and we could free ourselves from having to constantly tweak our server to match it. it's also good to have more compatible implementations in different languages, and we offer things that will never be in solid-spec, so this server isn't going away either. or both, ldnode in front for ACL-checks and Turtle-service with non-RDF falling through to us - over HTTP, as FUSE requires a kernel-module which limits its installability and adds a slightly-exotic dependency. also planned is a port of the email and Atom/RSS-feed RDFizer to JS, an addon to ldnode to bring it summarization (server-side reduction), pagination, and HTML-view features, and a port of the entire server, except with Irmin instead of VFS, to OCaml for deployment as a mirageOS unikernel - likely by adding Solid/LDP-features to their HTTP daemon rather than starting from scratch. if any of this sounds like stuff you want you could of course <a href=http://mw.logbook.am/carmen/>contact me</a> and sponsor it, otherwise i'll do what i feel like which may include nothing as this server's already perfectly adequate for my needs
-</td></tr>
-
 </table>
-
-## MIMEs
-
-our **JSON** format omits [unidentified-nodes](http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/) and [special-syntax](http://www.w3.org/TR/turtle/#turtle-literals) [literal-datatypes/languages](http://www.w3.org/TR/rdf11-concepts/#section-Datatypes) - if you want blank-nodes or can't express within [JSON](http://www.json.org/)-literals, full Turtle is also supported. indexes are actually **URI-list** files of [one URI per line](http://amundsen.com/hypermedia/urilist/). data expands to a full RDF-model if requested in **Accept**, otherwise stays in our accelerated subset through to serialization. if you are fully-futuristic and use only RDF, check out [ldnode](https://github.com/linkeddata/ldnode)
-
-## Requisites
-
-### [Debian](http://www.debian.org/)
-``` sh
-apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
-```
-
-### [Voidlinux](http://www.voidlinux.eu/)
-``` sh
-xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
-```
 
 ## Mirrors
 
