@@ -1,6 +1,5 @@
 class R
 
-  # default fileset of a resource
   FileSet[Resource] = -> e,q,g {
     query = e.env['QUERY_STRING']
     # add pagination-pointers on date-dirs
@@ -27,8 +26,20 @@ class R
           e.fileResources
         end
       end
-    else # resource
-      e.fileResources
+    else # resource(s)
+      stars = e.to_s.scan('*').size
+      if stars > 0 && stars < 3
+        FileSet['glob'][e,q,g]
+      else
+        e.fileResources
+      end
+    end}
+
+  FileSet['glob'] = -> path,query,model {
+    if path.to_s.scan('*').size < 3 # can't get too crazy w/ the *
+      path.glob.select(&:inside) # return paths inside server-root
+    else
+      []
     end}
 
   FileSet['find'] = -> e,q,m,x='' {
