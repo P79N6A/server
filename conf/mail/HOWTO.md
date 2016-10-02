@@ -11,9 +11,9 @@ either cron/task-schedule it or run **getmail** manually
 
 ### which machine should run this?
 
-phone as designated-fetcher is one idea, it's probably the most-likely to be on and with you - laptops/tablets/desktops can synchronize for backup/redundancy when up. if youre going to fetch from multiple devices onto a distributed-filesystem, adjust **MSGPREFIX** in .procmailrc to something like msg.hostA. msg.hostB. - multiple copies of source-message from different hosts will be deduplicated on Message-ID, you just want to avoid collision of source messages
+phone as designated-fetcher is one idea, it's probably the most-likely to be on and with you - laptops/tablets/desktops can synchronize for backup/redundancy when up. if youre going to fetch from multiple devices onto a distributed-filesystem, adjust **MSGPREFIX** in .procmailrc to something like msg.hostA. msg.hostB. - multiple copies of source-message from different hosts will be deduplicated on Message-ID, you just want to avoid name-collision of source files
 
-install getmail and/or procmail via your system's package-manager and check out our sample conf-files in this directory
+install getmail and/or procmail via your system's package-manager and check out the sample conf-files in this directory
 
 ## write messages to files
 
