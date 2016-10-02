@@ -147,8 +147,7 @@ class R
              m.reply_to.do{|t|t[0]} || # Reply-To
              f                         # Creator
         target = URI.escape('<' + id + '>')
-        yield e, SIOC+'reply_to',     # reply URI
-        R["mailto:#{URI.escape(r2)}?References=#{target}&In-Reply-To=#{target}&subject=#{URI.escape(m.subject)}&"+'#reply']}}
+        yield e, SIOC+'reply_to', R["mailto:#{URI.escape r2}?References=#{target}&In-Reply-To=#{target}&subject=#{(CGI.escape m.subject).gsub('+','%20')}&"+'#reply']}} # reply-to pointer
 
     m[:from].addrs.head.do{|a|# author resource
       author = AddrPath[a.address]
