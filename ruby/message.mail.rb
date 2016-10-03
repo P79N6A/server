@@ -211,7 +211,7 @@ class R
     htmlFiles.map{|p| # HTML content
       html = attache[].child "page#{htmlCount}.html"  # name
       yield e, DC+'hasFormat', html                   # message -> HTML resource
-      html.w p.decoded if !html.e                     # write content
+      html.w p.decoded  if !html.e                     # write content
       htmlCount += 1 }
 
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-container (digests + forwards)
@@ -224,6 +224,7 @@ class R
       select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
       file = attache[].child name                     # name
+      puts "attachment in #{uri} , #{file}"
       file.w p.body.decoded if !file.e                # write
       yield e, SIOC+'attachment', file                # message -> attached resource
       if p.main_type=='image'                         # image attachment?

@@ -42,7 +42,7 @@ class R
       f << (s ? o.to_json : o)}
     self
   rescue Exception => x
-    puts caller[0..2],x
+    puts x.class,x.message,caller[0..1]
     self
   end
   alias_method :w, :writeFile
