@@ -102,7 +102,9 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 H.css('/css/base',true)]},
+                 H.css('/css/base',true),
+#                 (H.js('https://getfirebug.com/firebug-lite') if e.q.has_key?('dbg')||e.q.has_key?('debug'))
+                ]},
             {_: :body,
              c: case e.q['ui']
                 when 'tabulator'
