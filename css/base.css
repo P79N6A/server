@@ -58,7 +58,7 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container > .listview {color:#333;font-size:1.4em;margin-right:.2em;float: right}
 .container > .label {border-radius: .4em .4em 0 0;font-size:1.2em;display:inline-block;padding: .1em .3em 0 .3em;font-weight:bold;background-color:#eee;color:#000}
 .container > .label a {background-color:#eee;color: #000}
-.container > .contents {border-color:#444;border-style:dotted;border-width: .12em;border-radius: 0 .4em .4em .4em}
+.container > .contents {border-radius: 0 .4em .4em .4em}
 .container.main > .label, .container.main > .label a, .container.main > .contents {background-color:#000;color:#fff}
 .container.main > .label > a {font-size: 1.5em}
 
