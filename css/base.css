@@ -54,11 +54,10 @@ td.key img {max-height: 2em}
 table.tab td.content {border-color:#888;border-style: dotted; border-width: 0 0 .1em 0}
 img.tablePreview {max-height:14em;max-width:100%}
 .tabr {background-color:#fff;position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
-.container {background-color:#000;color: #fff;margin:.3em;display:inline-block;font-family: sans-serif}
-.container > .listview {color:#fff;font-size:1.4em;margin-right:.2em;float: right}
+.container {background-color:#000;color: #fff;margin:1em;display:inline-block;font-family: sans-serif}
+.container > .listview {color:#fff;font-size:1.4em;float: right}
 .container > .label {font-size:1.2em;font-weight:bold;display:inline-block}
 .container > .label a {color:#000}
-.container > .contents {border-radius: 0 .4em .4em .4em}
 .container.main > .label > a {font-size: 1.5em}
 
 
