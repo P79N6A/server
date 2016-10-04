@@ -193,13 +193,17 @@ class R
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
 
   ViewA[Container] = -> container,e {
+    label = container.R.basename
+    e[:label][label] = true
     {class: :container,
-     c: [{class: :label, c: {_: :a, href: container.uri, c: container.R.basename}},
+     c: [{class: :label, c: {_: :a, href: container.uri, name: label, c: label}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {
     path = e.R.justPath
     g.delete e.uri
+    label = e.R.basename
+    e[:label][label] = true
     nextsort = case (e.q['sort']||'').expand
                when Size
                  Date
@@ -216,7 +220,7 @@ class R
                  p = CGI.escapeHTML p.to_s
                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
               {_: :td, c: {class: 'container main', # container
-                           c: [{class: :label, c: {_: :a, c: e.R.basename, href: '?set=page'}}, {_: :a, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
+                           c: [{class: :label, c: {_: :a, name: label, c: label, href: '?set=page'}}, {_: :a, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
                                {class: :contents,
                                 c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]}},
               {_: :td, c: e[:Links][:next].do{|n|

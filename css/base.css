@@ -3,7 +3,7 @@ pre {white-space: pre-wrap;padding:.1em;margin:.1em}
 a {text-decoration:none;font-weight: bold;}
 
 .pager {float: left}
-.pager a[rel="prev"], .pager a[rel="next"], .pager .dirname, .pager .expand {font-size:2em;padding:.2em;color:#eee;background-color:#000;border-style: solid; border-width:.05em; border-color: #222}
+.pager a[rel="prev"], .pager a[rel="next"], .pager .dirname, .pager .expand {font-size:2em;padding:.2em;color:#eee;background-color:#000;border-style: solid; border-width:.05em; border-color: #1a1a1a}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
@@ -56,8 +56,8 @@ img.tablePreview {max-height:14em;max-width:100%}
 .tabr {background-color:#fff;position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 .container {background-color:#000;color: #fff;margin:.3em;display:inline-block;font-family: sans-serif}
 .container > .listview {color:#fff;font-size:1.4em;margin-right:.2em;float: right}
-.container > .label {font-size:1.2em;font-weight:bold;display:inline-block;}
-.container > .label a {border-width: 0 0 .1em 0;border-style:dashed;border-color:#444}
+.container > .label {font-size:1.2em;font-weight:bold;display:inline-block}
+.container > .label a {color:#000}
 .container > .contents {border-radius: 0 .4em .4em .4em}
 .container.main > .label > a {font-size: 1.5em}
 
