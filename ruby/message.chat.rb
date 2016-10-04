@@ -21,7 +21,7 @@ class R
     graph = {}
     log[LDP+'contains'].map{|line| graph[line.uri] = line}
     [{_: :hr},
-     {class: :chatLog, name: log[Label], href: log.uri, id: log.uri,
+     {class: :chatLog, name: log[Label], href: log.uri , id: log.R.uri.gsub(/[^a-zA-Z0-9]/,''),
       c: [{_: :b, c: log[Label]},
           ViewGroup[SIOC+'InstantMessage'][graph,e]]}]}
 
@@ -31,8 +31,8 @@ class R
       creator = msg[Creator].justArray[0]
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
-      label = "#{date[11..12]}00"
-      uri = '/news/' + date[0..12].gsub(/\D/,'/') + '#' + label
+      label = date[0..12]
+      uri = '/news/' + date[0..12].gsub(/\D/,'/')
       graph[uri] ||= {'uri' => uri}
       graph[uri][SIOC+'addressed_to'] ||= chan
       graph[uri][Date] ||= date[0..12]+':30:00'
