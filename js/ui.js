@@ -27,7 +27,7 @@ document.addEventListener("keydown",function(e){
     };
     // pagination key-control
     var key = e.keyCode;
-//    document.querySelector('#stderr').innerText = key;
+    document.querySelector('#stderr').innerText = key;
     if(e.getModifierState("Shift")) {
 	// <shift-p> goto prev-page
 	if(key==80)
@@ -37,27 +37,39 @@ document.addEventListener("keydown",function(e){
 	if(key==78)
 	    jumpDoc('next','#first');
     };
-    if(key==37){
+    if(key==37||key==38){
 	loc = window.location.hash
-//	console.log(loc)
-	cur = document.querySelector(loc);
-	if(!cur)
-	    cur = first;
+	if(loc) {
+	    cur = document.querySelector(loc);
+	    if(!cur)
+		cur = first;
+	} else {
+	    cur = first
+	};
 	var p = cur.attr('prev');
-//	console.log(p);
 	window.location.hash = p;
     };
-    if(key==39){
+    if(key==39||key==40){
 	loc = window.location.hash
-//	console.log(loc)
-	cur = document.querySelector(loc);
-	if(!cur)
+	if(loc) {
+	    cur = document.querySelector(loc);
+	    if(!cur)
+		cur = first;
+	} else {
 	    cur = first;
+	};
 	var p = cur.attr('next');
-//	console.log(p);
 	window.location.hash = p;
     };
-
+    if(key==13){
+	loc = window.location.hash;
+	if(loc){
+	    cur = document.querySelector(loc);
+	    if(cur){
+		window.location = cur.attr('href');
+	    };
+	};
+    };
 },false);
 
 // if JS support exists, switch to JS UI to resource

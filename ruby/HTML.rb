@@ -197,7 +197,7 @@ class R
     label = container.R.basename
     lbl = label.downcase.gsub(/[^a-zA-Z_-]/,'')
     e[:label][lbl] = true
-    {class: :container, id: lbl,
+    {class: :container, id: lbl, href: container.uri,
      c: [{class: :label, c: {_: :a, href: container.uri, name: lbl, c: label}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
