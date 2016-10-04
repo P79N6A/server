@@ -57,7 +57,7 @@ img.tablePreview {max-height:14em;max-width:100%}
 .container {background-color:#000;color: #fff;margin:1em;display:inline-block;font-family: sans-serif}
 .container > .listview {color:#fff;font-size:1.4em;float: right}
 .container > .label {font-size:1.2em;font-weight:bold}
-.container > .label a {color:#000;padding: .1em;border-radius:.1em}
+.container > .label a {color:#000;padding: .1em}
 .container.main > .label > a {font-size: 1.5em}
 
 

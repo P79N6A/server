@@ -292,13 +292,15 @@ class R
                    Render[WikiText][l[k]]
                  when DC+'tag'
                    l[k].justArray.map{|v|
-                     e[:label][v.downcase] = true
-                     [{_: :a, href: this.uri, name: v.downcase, c: v},' ']}
+                     label = v.downcase.strip
+                     e[:label][label] = true
+                     [{_: :a, href: this.uri, name: label, c: v},' ']}
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
                      name = v.R.fragment
-                     e[:label][name.downcase] = true
-                     [{_: :a, href: this.uri, name: name.downcase, c: name},' ']}
+                     label = name.downcase.strip
+                     e[:label][label] = true
+                     [{_: :a, href: this.uri, name: label, c: name},' ']}
                  else
                    l[k].justArray.map{|v|
                      case v
