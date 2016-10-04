@@ -201,7 +201,7 @@ class R
           l.gsub('@','.').hrefs # obfuscate attributed address
         else # fresh line
           [l.hrefs(true){|p,o| # hyperlink plaintext
-             yield e, p, o}] # emit discovered link(s) as RDF
+             yield e, p, o}] # emit found links as RDF
         end}.compact.intersperse("<br>\n")
       yield e, Content, body}
 
