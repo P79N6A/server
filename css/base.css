@@ -2,8 +2,9 @@ body {font-family: sans-serif;background-color:#000;color:#fff;text-align:center
 pre {white-space: pre-wrap;padding:.1em;margin:.1em}
 a {text-decoration:none;font-weight: bold;}
 
-.pager {float: left}
-.pager a[rel="prev"], .pager a[rel="next"], .pager .dirname, .pager .expand {font-size:2em;padding:.2em;color:#eee;background-color:#000;border-style: solid; border-width:.05em; border-color: #1a1a1a}
+a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:2em;padding:.2em;color:#eee;background-color:#000;border-style: solid; border-width:.05em; border-color: #1a1a1a}
+a[rel="prev"] {float: left}
+a[rel="next"] {float: right}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }

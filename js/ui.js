@@ -1,3 +1,18 @@
+N = NodeList.prototype;
+E = Element.prototype;
+N.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a);return this};
+E.attr = function(a,v){
+    if(v){ this.setAttribute(a,String(v))
+	   return this
+	 } else { return this.getAttribute(a)}};
+var el = null;
+document.querySelectorAll('[id]').map(function(e){
+    if(el){
+	this.attr('prev',el.attr('id'));
+	el.attr('next',this.attr('id'));
+    };
+    el = this;
+});
 document.addEventListener("keydown",function(e){
     
     var jumpDoc = function(direction, start) {
@@ -7,6 +22,7 @@ document.addEventListener("keydown",function(e){
     };
     // pagination key-control
     var key = e.keyCode;
+//    document.querySelector('#stderr').innerText = key;
     if(e.getModifierState("Shift")) {
 	// <shift-p> goto prev-page
 	if(key==80)
@@ -16,7 +32,11 @@ document.addEventListener("keydown",function(e){
 	if(key==78)
 	    jumpDoc('next','#first');
     };
-    document.querySelector('#stderr').innerText = key;
+    if(key==37){
+
+
+    };
+
 },false);
 
 // if JS support exists, switch to JS UI to resource
