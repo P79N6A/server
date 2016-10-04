@@ -16,6 +16,7 @@ document.addEventListener("keydown",function(e){
 	if(key==78)
 	    jumpDoc('next','#first');
     };
+    document.querySelector('#stderr').innerText = key;
 },false);
 
 // if JS support exists, switch to JS UI to resource

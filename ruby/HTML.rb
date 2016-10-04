@@ -130,7 +130,8 @@ class R
 
     e[:label] ||= {} # resource labels
 
-    [(ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]), # search
+    [{id: :stderr},
+     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
      groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # ungrouped
        if !seen[u]
@@ -195,7 +196,7 @@ class R
   ViewA[Container] = -> container,e {
     label = container.R.basename
     e[:label][label.downcase] = true
-    {class: :container,
+    {class: :container, id: label,
      c: [{class: :label, c: {_: :a, href: container.uri, name: label.downcase, c: label}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
