@@ -80,8 +80,12 @@ class R
   def roonga graph="localhost", m = self.graph
     R.groonga.do{|g| # db
       m.map{|u,i|
-        puts "ix+ #{graph} #{u}"
-        r = g[u] || g.add(u) # create or load entry
+        puts '+ '+(if u.match(/^\/[^\/]/)
+                   "http://#{graph}#{u}"
+                  else
+                    u
+                   end)
+          r = g[u] || g.add(u) # create or load entry
         r.uri = u            # update data
         r.graph = graph.to_s
         r.content = i.to_json
