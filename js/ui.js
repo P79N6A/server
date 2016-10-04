@@ -10,7 +10,7 @@ var first = null;
 document.querySelectorAll('[id]').map(function(e){
     if(!first)
 	first = this;
-    this.attr('next',first);
+    this.attr('next',first.attr('id'));
     first.attr('prev',this.attr('id'));
     if(el){
 	this.attr('prev',el.attr('id'));
@@ -41,6 +41,8 @@ document.addEventListener("keydown",function(e){
 	loc = window.location.hash
 //	console.log(loc)
 	cur = document.querySelector(loc);
+	if(!cur)
+	    cur = first;
 	var p = cur.attr('prev');
 //	console.log(p);
 	window.location.hash = p;
@@ -49,6 +51,8 @@ document.addEventListener("keydown",function(e){
 	loc = window.location.hash
 //	console.log(loc)
 	cur = document.querySelector(loc);
+	if(!cur)
+	    cur = first;
 	var p = cur.attr('next');
 //	console.log(p);
 	window.location.hash = p;
