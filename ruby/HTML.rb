@@ -194,16 +194,16 @@ class R
 
   ViewA[Container] = -> container,e {
     label = container.R.basename
-    e[:label][label] = true
+    e[:label][label.downcase] = true
     {class: :container,
-     c: [{class: :label, c: {_: :a, href: container.uri, name: label, c: label}},
+     c: [{class: :label, c: {_: :a, href: container.uri, name: label.downcase, c: label}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {
     path = e.R.justPath
     g.delete e.uri
     label = e.R.basename
-    e[:label][label] = true
+    e[:label][label.downcase] = true
     nextsort = case (e.q['sort']||'').expand
                when Size
                  Date
@@ -220,7 +220,7 @@ class R
                  p = CGI.escapeHTML p.to_s
                  {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}}}, # left
               {_: :td, c: {class: 'container main', # container
-                           c: [{class: :label, c: {_: :a, name: label, c: label, href: '?set=page'}}, {_: :a, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
+                           c: [{class: :label, c: {_: :a, name: label.downcase, c: label, href: '?set=page'}}, {_: :a, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
                                {class: :contents,
                                 c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]}},
               {_: :td, c: e[:Links][:next].do{|n|
@@ -292,13 +292,13 @@ class R
                    Render[WikiText][l[k]]
                  when DC+'tag'
                    l[k].justArray.map{|v|
-                     e[:label][v] = true
-                     [{_: :a, href: this.uri, name: v, c: v},' ']}
+                     e[:label][v.downcase] = true
+                     [{_: :a, href: this.uri, name: v.downcase, c: v},' ']}
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
                      name = v.R.fragment
-                     e[:label][name] = true
-                     [{_: :a, href: this.uri, name: name, c: name},' ']}
+                     e[:label][name.downcase] = true
+                     [{_: :a, href: this.uri, name: name.downcase, c: name},' ']}
                  else
                    l[k].justArray.map{|v|
                      case v

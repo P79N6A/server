@@ -1,4 +1,4 @@
-body {font-family: sans-serif;background-color:#111;color:#fff}
+body {font-family: sans-serif;background-color:#000;color:#fff}
 pre {white-space: pre-wrap;padding:.1em;margin:.1em}
 a {text-decoration:none;font-weight: bold;}
 
@@ -56,8 +56,8 @@ img.tablePreview {max-height:14em;max-width:100%}
 .tabr {background-color:#fff;position:fixed;padding: .25em; color:#444;bottom:0;left:0;font-size:1.8em;width: 1.74em; height: 2em}
 .container {background-color:#000;color: #fff;margin:1em;display:inline-block;font-family: sans-serif}
 .container > .listview {color:#fff;font-size:1.4em;float: right}
-.container > .label {font-size:1.2em;font-weight:bold;display:inline-block}
-.container > .label a {color:#000}
+.container > .label {font-size:1.2em;font-weight:bold}
+.container > .label a {color:#000;padding: .1em;border-radius:.1em}
 .container.main > .label > a {font-size: 1.5em}
 
 
