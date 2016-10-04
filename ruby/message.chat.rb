@@ -9,13 +9,12 @@ class R
     label = name.gsub(/[^a-zA-Z0-9]/,'')
     e[:label][label] = true
     {href: r.uri,
-     id: r.uri,
      class: :ublog,
      c: [
        {_: :span, class: 'body', c: r[Content]},' ',
        {_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},' ',
        {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
-     ]}}
+     ]}.update(true ? {id: r.uri.gsub(/[^a-zA-Z0-9]/,'')} : {})}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}

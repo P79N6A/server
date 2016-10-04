@@ -90,7 +90,7 @@ class R
     discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
     # HTML
-    [{class: :mail, id: r.uri, href: href,
+    [{class: :mail, id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href,
       c: [{class: :header,
            c: [(r[Title].justArray[0].do{|t|
                   {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}} unless e[:thread]),
