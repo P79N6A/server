@@ -227,7 +227,7 @@ class R
           {_: :a, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
           {class: :contents,
            c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]},
-     ({_: :a, class: :expand, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])]}
+     ({_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])]}
 
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
