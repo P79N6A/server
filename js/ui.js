@@ -6,7 +6,12 @@ E.attr = function(a,v){
 	   return this
 	 } else { return this.getAttribute(a)}};
 var el = null;
+var first = null;
 document.querySelectorAll('[id]').map(function(e){
+    if(!first)
+	first = this;
+    this.attr('next',first);
+    first.attr('prev',this.attr('id'));
     if(el){
 	this.attr('prev',el.attr('id'));
 	el.attr('next',this.attr('id'));
@@ -33,8 +38,20 @@ document.addEventListener("keydown",function(e){
 	    jumpDoc('next','#first');
     };
     if(key==37){
-
-
+	loc = window.location.hash
+//	console.log(loc)
+	cur = document.querySelector(loc);
+	var p = cur.attr('prev');
+//	console.log(p);
+	window.location.hash = p;
+    };
+    if(key==39){
+	loc = window.location.hash
+//	console.log(loc)
+	cur = document.querySelector(loc);
+	var p = cur.attr('next');
+//	console.log(p);
+	window.location.hash = p;
     };
 
 },false);

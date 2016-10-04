@@ -195,9 +195,10 @@ class R
 
   ViewA[Container] = -> container,e {
     label = container.R.basename
-    e[:label][label.downcase] = true
-    {class: :container, id: label,
-     c: [{class: :label, c: {_: :a, href: container.uri, name: label.downcase, c: label}},
+    lbl = label.downcase.gsub(/[^a-zA-Z_-]/,'')
+    e[:label][lbl] = true
+    {class: :container, id: lbl,
+     c: [{class: :label, c: {_: :a, href: container.uri, name: lbl, c: label}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {
@@ -264,8 +265,8 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    [{_: :tr, id: this.path, href: l.uri,
-      c: ["\n",
+    [{_: :tr,
+       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
               c: case k
