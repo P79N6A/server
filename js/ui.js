@@ -39,7 +39,7 @@ document.addEventListener("keydown",function(e){
 	    jumpDoc('next','#first');
     };
 
-    if(key==38){
+    if(key==38){ // previous selection
 	loc = window.location.hash
 	if(loc) {
 	    cur = document.querySelector(loc);
@@ -51,7 +51,7 @@ document.addEventListener("keydown",function(e){
 	var p = cur.attr('prev');
 	window.location.hash = p;
     };
-    if(key==40){
+    if(key==40){ // next selection
 	loc = window.location.hash
 	if(loc) {
 	    cur = document.querySelector(loc);
@@ -63,9 +63,10 @@ document.addEventListener("keydown",function(e){
 	var p = cur.attr('next');
 	window.location.hash = p;
     };
-    if(key==37)
-	window.history.back;
-    if(key==13||key==39){
+    if(key==37) // exit
+	window.location = document.referrer;
+	//	window.history.back;
+    if(key==13||key==39){ // enter
 	loc = window.location.hash;
 	if(loc){
 	    cur = document.querySelector(loc);
