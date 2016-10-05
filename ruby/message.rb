@@ -12,14 +12,16 @@ class R
 
     # find timegraph arcs
     d.values.map{|s|
-      if s[SIOC+'has_parent'] # explicit parent
+      if s[SIOC+'has_parent']
         s[SIOC+'has_parent'].justArray.map{|o|
           d[o.uri].do{|t| # arc target
             sLabel = s[Creator].justArray[0].do{|c|c.R.fragment}
             tLabel = t[Creator].justArray[0].do{|c|c.R.fragment}
             e[:label][sLabel] = true
             e[:label][tLabel] = true
-            e[:arcs].push({source: s.uri, target: o.uri, sourceLabel: sLabel, targetLabel: tLabel})}}
+            source = s.uri.gsub(/[^a-zA-Z0-9]/,'')
+            target = o.uri.gsub(/[^a-zA-Z0-9]/,'')
+            e[:arcs].push({source: source, target: target, sourceLabel: sLabel, targetLabel: tLabel})}}
       end
     }
 
