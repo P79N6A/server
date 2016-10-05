@@ -17,11 +17,9 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     var force = d3.layout.force()
 	.nodes(d3.values(nodes))
-	.gravity(0)
+	.gravity(0.01)
 	.links(arcs)
 	.size([width,height])
-	.linkDistance(15)
-	.charge(-18)
 	.on("tick", tick)
 	.start();
 
