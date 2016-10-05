@@ -27,7 +27,7 @@ document.addEventListener("keydown",function(e){
     };
     // pagination key-control
     var key = e.keyCode;
-    document.querySelector('#stderr').innerText = key;
+
     if(e.getModifierState("Shift")) {
 	// <shift-p> goto prev-page
 	if(key==80)

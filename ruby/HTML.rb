@@ -130,8 +130,7 @@ class R
 
     e[:label] ||= {} # resource labels
 
-    [{id: :stderr},
-     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
+    [(ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
      groups.map{|view,graph|view[graph,e]}, # type-groups
      d.map{|u,r|                            # ungrouped
        if !seen[u]
