@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(){
     var svg = d3.select(".timegraph > svg")
     var nodes = {};
-    var width = svg[0][0].clientWidth || 360;
-    var height = svg[0][0].clientHeight || 720;
+    var width = svg[0][0].clientWidth || 400;
+    var height = svg[0][0].clientHeight || 800;
     var center = width / 2;
     var targetCount = {};
     arcs.forEach(function(link) { // bind node-table and link data
