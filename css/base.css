@@ -1,6 +1,6 @@
 body {font-family: sans-serif;background-color:#000;color:#fff;text-align:center}
 pre {white-space: pre-wrap;padding:.1em;margin:.1em}
-a {text-decoration:none;font-weight: bold;}
+a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 
 a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:2em;padding:.2em;color:#eee;background-color:#000;border-style: solid; border-width:.05em; border-color: #1a1a1a}
 a[rel="prev"] {float: left}
@@ -70,13 +70,12 @@ div.header {margin-left:-.555em}
 div.header a.title {font-size:1.2em;background-color:#fff;color:#000;border-radius: .2em .3em .3em .2em;padding-left:.2em;padding-right:.3em}
 div.mail {text-align: left;margin:auto;max-width:118ex}
 div.mail a.to {font-size:1.27em}
-td[property='uri'] a, div.chatLog span.body a, div.mail a {color:#fff;background-color:#000;padding-left:.1em;padding-right:.1em}
 div.body a {background-color:#000;color:#fff;border-radius:.2em}
 div.body span[name] {background-color:#fff;color:#000;border-style: solid; border-width: 0 0 0 .6em; margin-right:.13em}
 div.body span.quoted {padding-left:.18em}
 .nextPage {color:#fff;background-color:#000;font-size:8.8em}
 img {max-width: 100%}
-:target {background-color: #fff;color:#000}
+:target, :target a {background-color: #fff;color:#000}
 
 #timegraph > svg {overflow:visible;width:100%;height:8em;z-index:1}
 .link {fill: none;stroke: #333;stroke-width:.18em}
