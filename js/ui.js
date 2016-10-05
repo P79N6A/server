@@ -70,7 +70,9 @@ document.addEventListener("keydown",function(e){
 	if(loc){
 	    cur = document.querySelector(loc);
 	    if(cur){
-		window.location = cur.attr('href');
+		href = cur.attr('href');
+		if(href)
+		    window.location = href;
 	    };
 	};
     };

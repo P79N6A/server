@@ -194,7 +194,7 @@ class R
           if qp[3].empty?
             nil
           else
-            indent = "<span class='indent' name='quote#{depth}'> </span>"
+            indent = "<span name='quote#{depth}'>&gt;</span>"
             {_: :span, class: :quote, c: [indent * depth, {_: :span, class: :quoted, c: qp[3].gsub('@','.').hrefs}]}
           end
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution line
