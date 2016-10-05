@@ -30,7 +30,7 @@ class R
     [([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true),
-       {id: :timegraph,c: {_: :svg}}
+       {class: :timegraph,c: {_: :svg}}
       ] if e[:arcs].size > 1),
      {class: :msgs,
       c: [(d.values[0][Title].justArray[0].do{|t|

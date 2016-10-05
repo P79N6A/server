@@ -71,9 +71,10 @@ div.body span.quoted {padding-left:.18em}
 .nextPage {color:#fff;background-color:#000;font-size:8.8em}
 img {max-width: 100%}
 div:target {border-radius:.23em;padding:2.4em 1em 1em 1em}
+:target > td {padding-top:3em}
 :target, :target a {background-color: #fff;color:#000}
 
-#timegraph {position:absolute;top:0;left:0}
-#timegraph > svg {overflow:visible;width:360px;height:720px}
+.timegraph {position:absolute;top:0;left:0}
+.timegraph > svg {overflow:visible;width:360px;height:720px}
 .link {fill: none;stroke: #333;stroke-width:.18em}
 rect {fill: #ccc;width:.3em;height:.3em;ry:.3em}

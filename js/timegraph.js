@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
-    var svg = d3.select("#timegraph > svg")
+    var svg = d3.select(".timegraph > svg")
     var nodes = {};
     var width = svg[0][0].clientWidth || 360;
     var height = svg[0][0].clientHeight || 720;
