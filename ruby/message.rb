@@ -19,56 +19,24 @@ class R
             tLabel = t[Creator].justArray[0].do{|c|c.R.fragment}
             e[:label][sLabel] = true
             e[:label][tLabel] = true
-            arc = {source: s.uri, target: o.uri, sourceLabel: sLabel, targetLabel: tLabel}
-            s[Mtime].do{|mt| arc[:sourceTime] = mt[0]}
-            t[Mtime].do{|mt| arc[:targetTime] = mt[0]}
-            e[:arcs].push arc }}
+            e[:arcs].push({source: s.uri, target: o.uri, sourceLabel: sLabel, targetLabel: tLabel})}}
       end
     }
 
     # labels
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
 
-    resources = Facets[d,e]
-
-    # scale time-values
-    times = e[:arcs].map{|a|[a[:sourceTime],a[:targetTime]]}.flatten.compact.map(&:to_f)
-    min = times.min || 0
-    max = times.max || 1
-    range = (max - min).min(0.1)
-    e[:arcs].map{|a|
-      a[:sourcePos] = (a[:sourceTime].to_f - min) / range
-      a[:targetPos] = (a[:targetTime].to_f - min) / range
-      a.delete :sourceTime
-      a.delete :targetTime }
-    timegraph = e[:arcs].size > 1
-
     # HTML
     [([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true),
-       {id: :timegraph,
-        c: {_: :svg,
-            c: e[:day].map{|l,_|
-              %w{00 06 12 18}.map{|hour|
-                day = hour == '00'
-                ts = l + hour + ':00'
-                pos = (ts.to_time.to_f - min) / range * 100
-                x = pos.to_s + '%'
-                [{_: :line, stroke: day ? '#fff' : '#666',
-                  y1: 0, y2: '88%', x1: x, x2: x},
-                 {_: :text, 'font-size'  =>'.8em',
-                  fill: day ? '#111' : '#888',
-                  c: (day ? ts[0..9] : ts[11..12]),
-                  dy: day ? 1 : 8, y: 0, x: x,
-                  onclick: day ? "window.location.href=\"/#{ts[0..9].gsub('-','/')}/\"" : ''}]}
-            }}}
-      ] if timegraph),
+       {id: :timegraph,c: {_: :svg}}
+      ] if e[:arcs].size > 1),
      {class: :msgs,
       c: [(d.values[0][Title].justArray[0].do{|t|
              title = t.sub ReExpr, ''
              {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
-          resources,
+          Facets[d,e],
           e[:Links][:next].do{|n|
             {_: :a, id: :next, href: n, c: '&#9660;', class: :nextPage}}]}]}
 

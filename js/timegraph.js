@@ -1,27 +1,27 @@
 document.addEventListener("DOMContentLoaded", function(){
     var svg = d3.select("#timegraph > svg")
     var nodes = {};
-    var width = svg[0][0].clientWidth || 1920;
-    var height = svg[0][0].clientHeight || 128;
+    var width = svg[0][0].clientWidth || 360;
+    var height = svg[0][0].clientHeight || 720;
     var center = width / 2;
     var targetCount = {};
     arcs.forEach(function(link) { // bind node-table and link data
 	link.source = nodes[link.source] || (
 	    nodes[link.source] = {uri: link.source,
 				  name: link.sourceLabel,
-				  pos: link.sourcePos * width,
 				 });
 	link.target = nodes[link.target] || (
 	    nodes[link.target] = {uri: link.target,
 				  name: link.targetLabel,
-				  pos: link.targetPos * width,
 				 });
     });
     var force = d3.layout.force()
 	.nodes(d3.values(nodes))
+	.gravity(0)
 	.links(arcs)
 	.size([width,height])
-	.charge(-30)
+	.linkDistance(15)
+	.charge(-18)
 	.on("tick", tick)
 	.start();
 
@@ -56,15 +56,18 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function tick() {
 	link.attr("y1", function(d) {
-	    return d.source.y + 1.8;
+	    return d.source.y + 2;
 	})
-	    .attr("x1", function(d) { return (d.source.pos || 0); })
-	    .attr("y2", function(d) {
-		return d.target.y + 1.8;
+	    .attr("x1", function(d) {
+		return d.source.x;
 	    })
-	    .attr("x2", function(d) { return (d.target.pos || 0); });
-
-	node.attr("transform", function(d) { return "translate(" + (d.pos || 0) + "," + d.y + ")"; });
-    }
+	    .attr("y2", function(d) {
+		return d.target.y + 2;
+	    })
+	    .attr("x2", function(d) {
+		return d.target.x;
+	    });
+	node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    };
 
 }, false);
