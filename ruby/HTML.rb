@@ -145,7 +145,7 @@ class R
      H.js('/js/ui',true)]} # keybinding-JS
 
   ViewA[BasicResource] = -> r,e {
-    {_: :table, class: :html, id: r.R.fragment || r.uri,
+    {_: :table, class: :html,
      c: r.map{|k,v|
        [{_: :tr, property: k,
         c: case k
@@ -264,7 +264,7 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    [{_: :tr,
+    [{_: :tr, href: this.uri, id: 'x'+rand.to_s.h,
        c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
