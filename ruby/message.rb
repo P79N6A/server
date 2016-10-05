@@ -74,6 +74,7 @@ class R
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
+    navigateHeaders = r.R.path == e.R.path
     r[Date].do{|t| e[:day][t.justArray[0].to_time.iso8601[0..10]] = true }
     name = nil
     href = r.uri
@@ -85,18 +86,18 @@ class R
              else
                c.to_s
              end
-      [{_: :a, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'},' ']}
+      [{_: :a, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']}
 
     discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
     # HTML
-    [{class: :mail, id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href,
+    [{class: :mail,
       c: [{class: :header,
            c: [(r[Title].justArray[0].do{|t|
                   {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}} unless e[:thread]),
                r[To].justArray.map{|o|
                  o = o.R
-                 {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}}.intersperse({_: :span, class: :sep, c: ','}),
+                 {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {})}.intersperse({_: :span, class: :sep, c: ','}),
                # reply-of (direct)
                {_: :a, c: ' &larr; ',
                 href: r[SIOC+'has_parent'].justArray[0].do{|p|
@@ -105,11 +106,11 @@ class R
                author,
                r[Date].do{|d|[{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
                r[SIOC+'reply_to'].do{|c|
-                 [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'},' ']},
+                 [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']},
               ].intersperse("\n  ")},
           r[Content].justArray.map{|c|{class: :body, c: c}},
           r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
           [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}},
-         ]},'<br>']}
+         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),'<br>']}
 
 end
