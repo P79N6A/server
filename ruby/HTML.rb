@@ -214,19 +214,16 @@ class R
                  Size
                end
     [([{_: :a, class: :dirname, href: path.dirname, c: '&#9650;'},'<br>'] if e[:container] && path != '/'),
-     e[:Links][:prev].do{|p|
-       p = CGI.escapeHTML p.to_s
+     e[:Links][:prev].do{|p| p = CGI.escapeHTML p.to_s
        {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
-     e[:Links][:next].do{|n|
-       n = CGI.escapeHTML n.to_s
+     e[:Links][:next].do{|n| n = CGI.escapeHTML n.to_s
        {_: :a, rel: :next, c: '&#9654;', title: n, href: n}},
      {class: 'container main',
-      c: [{class: :label,
-           c: {_: :a, name: label.downcase, c: label, href: '?set=page'}},
+      c: [{class: :label, c: {_: :a, name: label.downcase, c: label, href: '?set=page'}},
           {_: :a, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
           {class: :contents,
            c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]},
-     ({_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow} if e[:summarized])]}
+     (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
