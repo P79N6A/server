@@ -261,7 +261,7 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    [{_: :tr, href: this.uri, id: 'x'+rand.to_s.h,
+    [{_: :tr,
        c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
@@ -281,7 +281,9 @@ class R
                        children.map{|c|childGraph[c.uri] = c}
                        TabularView[childGraph,e,false]
                      else
-                       children.map{|c|[c.R, ' ']}
+                       children.map{|c|
+                         child = c.R
+                         [{_: :a, href: child.uri, c: child.basename, id: rand.to_s.h}, ' ']}
                      end
                    }
                  when WikiText
@@ -306,7 +308,7 @@ class R
                        v
                      end
                    }.intersperse(' ')
-                 end}, "\n"]}]},
+                 end}, "\n"]}]}.update(l.has_key?(LDP+'contains') ? {} : {href: this.uri, id: 'x'+rand.to_s.h,}),
      l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}},
      l[Image].do{|c|
        {_: :tr,

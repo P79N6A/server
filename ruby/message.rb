@@ -94,7 +94,7 @@ class R
     [{class: :mail,
       c: [{class: :header,
            c: [(r[Title].justArray[0].do{|t|
-                  {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}} unless e[:thread]),
+                  {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {})} unless e[:thread]),
                r[To].justArray.map{|o|
                  o = o.R
                  {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {})}.intersperse({_: :span, class: :sep, c: ','}),
