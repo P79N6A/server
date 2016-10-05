@@ -70,7 +70,7 @@ class R
              {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
           resources,
           e[:Links][:next].do{|n|
-            {_: :a, href: n, c: '&#9660;', class: :nextPage}}]}]}
+            {_: :a, id: :next, href: n, c: '&#9660;', class: :nextPage}}]}]}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path

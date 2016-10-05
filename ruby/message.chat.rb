@@ -1,10 +1,10 @@
 #watch __FILE__
 class R
 
-  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e {
-    d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e]}}
+  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e,identifylines=false {
+    d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e,identifylines]}}
 
-  ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e {
+  ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e,identifylines=false {
     name = r[Label].justArray[0] || ''
     label = name.gsub(/[^a-zA-Z0-9]/,'')
     e[:label][label] = true
@@ -14,15 +14,16 @@ class R
        {_: :span, class: 'body', c: r[Content]},' ',
        {_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},' ',
        {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
-     ]}.update(true ? {id: r.uri.gsub(/[^a-zA-Z0-9]/,'')} : {})}
+     ]}.update(identifylines ? {id: r.uri.gsub(/[^a-zA-Z0-9]/,'')} : {})}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
     graph = {}
+    identifylines = log.R.descend.path == e.R.descend.path # selectable lines if navigated to log, rather than inlined elsewhere
     log[LDP+'contains'].map{|line| graph[line.uri] = line}
     [{_: :hr},
-     {class: :chatLog, name: log[Label], href: log.uri , id: log.R.uri.gsub(/[^a-zA-Z0-9]/,''),
+     {class: :chatLog, name: log[Label], href: log.uri,
       c: [{_: :b, c: log[Label]},
-          ViewGroup[SIOC+'InstantMessage'][graph,e]]}]}
+          ViewGroup[SIOC+'InstantMessage'][graph,e,identifylines]]}.update(identifylines ? {} : {id: log.R.uri.gsub(/[^a-zA-Z0-9]/,'')})]}
 
   # drop messages in channel-hour bins of type ChatLog
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
