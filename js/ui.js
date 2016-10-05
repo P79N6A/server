@@ -60,8 +60,11 @@ document.addEventListener("keydown",function(e){
 	} else {
 	    cur = first;
 	};
-	var p = cur.attr('next');
-	window.location.hash = p;
+	if(cur.attr('id')=='next'){
+	    window.location = cur.attr('href');
+	} else {
+	    window.location.hash = cur.attr('next');
+	};
     };
     if(key==37) // exit
 	window.location = document.referrer;
