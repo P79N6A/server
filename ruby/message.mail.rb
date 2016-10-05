@@ -195,7 +195,7 @@ class R
             nil
           else
             indent = "<span name='quote#{depth}'>&gt;</span>"
-            {_: :span, class: :quote, c: [indent * depth, {_: :span, class: :quoted, c: qp[3].gsub('@','.').hrefs}]}
+            {_: :span, class: :quote, c: [indent * depth,' ', {_: :span, class: :quoted, c: qp[3].gsub('@','.').hrefs}]}
           end
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution line
           l.gsub('@','.').hrefs # obfuscate attributed address
