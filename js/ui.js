@@ -49,18 +49,18 @@ document.addEventListener("keydown",function(e){
 	window.location.hash = p;
     };
     if(key==40){ // next selection
-	loc = window.location.hash
-	if(loc) {
+	var loc = window.location.hash;
+	var cur = null;
+	if(loc)
 	    cur = document.querySelector(loc);
-	    if(!cur)
-		cur = first;
+	if(!cur) {
+	    window.location.hash = first.attr('id');
 	} else {
-	    cur = first;
-	};
-	if(cur.attr('id')=='next'){
-	    window.location = cur.attr('href');
-	} else {
-	    window.location.hash = cur.attr('next');
+	    if(cur.attr('id')=='next'){
+		window.location = cur.attr('href'); // next element is on following page
+	    } else {
+		window.location.hash = cur.attr('next'); // next element in-page
+	    };
 	};
     };
     if(key==37) // exit
