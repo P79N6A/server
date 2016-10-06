@@ -5,19 +5,22 @@ E.attr = function(a,v){
     if(v){ this.setAttribute(a,String(v))
 	   return this
 	 } else { return this.getAttribute(a)}};
-var el = null;
+var prev = null;
 var first = null;
+
+// add navigation pointers to elements
 document.querySelectorAll('[id]').map(function(e){
     if(!first)
 	first = this;
     this.attr('next',first.attr('id'));
     first.attr('prev',this.attr('id'));
-    if(el){
-	this.attr('prev',el.attr('id'));
-	el.attr('next',this.attr('id'));
+    if(prev){
+	this.attr('prev',prev.attr('id'));
+	prev.attr('next',this.attr('id'));
     };
-    el = this;
+    prev = this;
 });
+
 document.addEventListener("keydown",function(e){
     
     var jumpDoc = function(direction, start) {
