@@ -284,7 +284,7 @@ class R
                      else
                        children.map{|c|
                          child = c.R
-                         [{_: :a, href: child.uri, c: child.basename, id: rand.to_s.h}, ' ']}
+                         [{_: :a, href: child.uri, c: child.basename, id: 'c'+rand.to_s.h[0..7]}, ' ']}
                      end
                    }
                  when WikiText
@@ -309,7 +309,7 @@ class R
                        v
                      end
                    }.intersperse(' ')
-                 end}, "\n"]}]}.update(l.has_key?(LDP+'contains') ? {} : {href: this.uri, id: 'x'+rand.to_s.h,}),
+                 end}, "\n"]}]}.update(l.has_key?(LDP+'contains') ? {} : {href: this.uri, id: 'x'+rand.to_s.h[0..7]}),
      l[Content].do{|c|{_: :tr, c: {_: :td, class: :content, colspan: keys.size, c: c}}},
      l[Image].do{|c|
        {_: :tr,

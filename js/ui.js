@@ -30,12 +30,9 @@ document.addEventListener("keydown",function(e){
 //    console.log(key);
 
     if(e.getModifierState("Shift")) {
-	// <shift-p> goto prev-page
-	if(key==80)
-	    jumpDoc('prev','#last')
-	
-	// <shift-n> goto next-page
-	if(key==78)
+	if(key==80) // previous page
+	    jumpDoc('prev','#last');
+	if(key==78) // next page
 	    jumpDoc('next','#first');
     };
 
