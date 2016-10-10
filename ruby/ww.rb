@@ -251,14 +251,14 @@ RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
    # Ruby: R('http://schema.org/docs/schema_org_rdfa.html').cacheSchema 'schema'
    # sh: R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
    def cacheSchema prefix
-    short = R['schema'].child(prefix).n3
-    if !short.e # already fetched, unlink shortcut to uncache
+    short = R['schema'].child(prefix).ttl
+    if !short.e # already fetched
       terms = RDF::Graph.load uri
       triples = terms.size
       if triples > 0
         puts "#{uri} :: #{triples} triples"
-        n3.w terms.dump :n3
-        n3.ln_s short
+        ttl.w terms.dump :ttl
+        ttl.ln_s short
       end
     end
    end

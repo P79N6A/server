@@ -84,7 +84,7 @@ class R
     @docroot ||= stripFrag.stripDoc.stripSlash
   end
   def stripFrag; R uri.split(/#/)[0] end
-  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|n3|ttl|txt)$/,''].setEnv(@r) end
+  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
   def stripSlash
     if uri[-1] == '/'
       if path == '/'
@@ -96,7 +96,6 @@ class R
       self
     end
   end
-  def n3; docroot.a '.n3' end
   def ttl; docroot.a '.ttl' end
   def jsonDoc; docroot.a '.e' end
 

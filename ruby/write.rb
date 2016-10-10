@@ -69,7 +69,7 @@ class R
 #      upload
     when /^application\/sparql-update/
       update
-    when /^text\/(n3|turtle)/
+    when /^text\/turtle/
       if @r.linkHeader['type'] == Container
         path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
         path.PUT

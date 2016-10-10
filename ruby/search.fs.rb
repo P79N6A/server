@@ -98,7 +98,7 @@ class R
   def fileResources
     r = [] # docs
     r.push self if e
-    %w{e ht html md n3 ttl txt}.map{|suffix|
+    %w{e ht html md ttl txt}.map{|suffix|
       doc = docroot.a '.' + suffix
       r.push doc.setEnv(@r) if doc.e
     }

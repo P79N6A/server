@@ -253,7 +253,7 @@ class R
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # trim normalized timezones
       base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-      doc.ln R["//#{host}/news/#{time}#{base}n3"]}} # link
+      doc.ln R["//#{host}/news/#{time}#{base}ttl"]}} # link
 
   Render['application/atom+xml'] = -> d,e {
     id = '//' + e.host + (CGI.escapeHTML e['REQUEST_URI'])

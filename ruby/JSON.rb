@@ -91,7 +91,7 @@ class R
     puts "store #{g.size} triples from #{uri}"
     g.each_graph.map{|graph|
       if graph.named?
-        doc = graph.name.n3
+        doc = graph.name.ttl
         unless doc.e
           doc.dir.mk
           file = doc.pathPOSIX

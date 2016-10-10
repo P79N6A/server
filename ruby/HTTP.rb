@@ -289,7 +289,7 @@ module Th # methods on request-environment
           query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{user}> :key [ :modulus ?m; :exponent ?e; ] . }"
           SPARQL.execute query, graph do |result|
             if x509.public_key.n.to_i == result[:m].value.to_i(16)
-              user.R.n3.w graph.dump(:n3) # cache user info locally
+              user.R.ttl.w graph.dump(:ttl) # cache user-info
               return user
             else
               puts "modulus mismatch for #{user}"

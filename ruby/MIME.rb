@@ -7,12 +7,7 @@ module Th
   end
 
   Prefer = { # tiebreaker order (lowest wins)
-    'text/html' => 0,
-    'text/turtle' => 1,
-    'text/n3' => 2,
-    'application/xhtml+xml' => 3,
-    'application/rdf+xml' => 4,
-  }
+    'text/html' => 0, 'text/turtle' => 1, 'application/xhtml+xml' => 2}
 
   def selectFormat
     # 1. query-string
@@ -21,8 +16,6 @@ module Th
     # 2. explicit suffix
     { '.html' => 'text/html',
       '.json' => 'application/json',
-      '.nt' => 'text/plain',
-      '.n3' => 'text/n3',
       '.ttl' => 'text/turtle',
     }[File.extname(self['REQUEST_PATH'])].do{|mime| return mime}
 
