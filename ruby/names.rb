@@ -82,7 +82,7 @@ class R
   def docroot
     h = host
     p = normalized_path
-    R[(h ? ('//' + h) : '') + (p ? p : '')].stripDoc.stripSlash
+    R[(h ? ('//' + h) : '') + (p ? (p=='/' ? '/index' : p) : '')].stripDoc.stripSlash
   end
   def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
   def stripSlash

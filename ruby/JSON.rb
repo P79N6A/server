@@ -88,15 +88,15 @@ class R
   # URI -> file
   def store options = {}
     g = RDF::Repository.load self, options
-    puts "store #{g.size} triples from #{uri}"
+#    puts "store #{g.size} triples from #{uri}"
     g.each_graph.map{|graph|
       if graph.named?
-        puts "graph #{graph.name}"
+#        puts "graph #{graph.name}"
         doc = graph.name.ttl
         unless doc.e
           doc.dir.mk
           file = doc.pathPOSIX
-          puts "storing in #{file}"
+#          puts "storage in #{file}"
           RDF::Writer.open(file){|f|f << graph}
           options[:hook][doc,graph,options[:hostname]] if options[:hook]
         end
