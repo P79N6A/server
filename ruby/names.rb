@@ -79,11 +79,11 @@ class R
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
 
-  # document URIs
   def docroot
-    @docroot ||= stripFrag.stripDoc.stripSlash
+    h = host
+    p = normalized_path
+    R[(h ? ('//' + h) : '') + (p ? p : '')].stripDoc.stripSlash
   end
-  def stripFrag; R uri.split(/#/)[0] end
   def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
   def stripSlash
     if uri[-1] == '/'
