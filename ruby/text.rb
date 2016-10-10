@@ -27,8 +27,6 @@ class String
 
   def to_utf8
     encode('UTF-8', undef: :replace)
-#  rescue Encoding::InvalidByteSequenceError
-#    ""
   end
 
   def utf8
