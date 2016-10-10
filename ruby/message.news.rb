@@ -72,7 +72,7 @@ class R
                                                                            end)
                                                          l.datatype=RDF.XMLLiteral if p == Content
                                                          l),
-                                     :context => s.R.docroot)}
+                                     :graph_name => s.R.docroot)}
       end
 
       def each_triple &block
