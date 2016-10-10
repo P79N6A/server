@@ -25,6 +25,7 @@ class R
     d.dir.child('news/').setEnv(e).response}  # return
 
   def getFeed h='localhost'
+    puts "get feed #{uri}"
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
   end
@@ -108,7 +109,7 @@ class R
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
               if a.has_attribute? 'href'
-                a.set_attribute 'href', (URI.join s, (a.attr 'href')) rescue a
+                ( a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
               end}
             o.to_xhtml} : o
 
