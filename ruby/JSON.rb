@@ -102,6 +102,9 @@ class R
         end
       end}
     g
+  rescue Exception => e
+    puts uri,e.class,e.message
+    g
   end
 
   # Reader class for RDF library
