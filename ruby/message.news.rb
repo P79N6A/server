@@ -51,7 +51,7 @@ class R
       format Format
 
       def initialize(input = $stdin, options = {}, &block)
-        @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
+        @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.to_utf8
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -108,7 +108,7 @@ class R
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
               if a.has_attribute? 'href'
-                a.set_attribute 'href', (URI.join s, (a.attr 'href'))
+                a.set_attribute 'href', (URI.join s, (a.attr 'href')) rescue a
               end}
             o.to_xhtml} : o
 
