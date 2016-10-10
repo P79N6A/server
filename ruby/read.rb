@@ -126,6 +126,8 @@ class R
     else
       nil
     end
+  rescue
+    nil
   end
   alias_method :r, :readFile
 
