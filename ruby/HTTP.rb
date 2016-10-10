@@ -99,7 +99,7 @@ class R
     e['SERVER_NAME'] = e.host.gsub /[\.\/]+/, '.'
 
     # interpret path
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') rescue '/'
+    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/')
     path = Pathname.new(rawpath).expand_path.to_s
     # preserve trailing-slash
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'
@@ -297,8 +297,6 @@ module Th # methods on request-environment
           end}}
     end
     nil
-  rescue Exception => x
-    puts [:verifyWebID,uri,x,x.class, x.message].join(' ')
   end
 
   def x509cert

@@ -62,7 +62,7 @@ class R
         yield s, Label,             m[2]
         yield s, Content,             m[3].hrefs(true)
         yield s, Type,                R[SIOC+'InstantMessage']
-      } rescue nil
+      }
     }
   end
 

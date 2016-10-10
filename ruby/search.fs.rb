@@ -148,8 +148,6 @@ class Pathname
   def c # children
     return [] unless directory?
     children.delete_if{|n| n.basename.to_s.match /^\./}
-    rescue
-      []
   end
 
   # range traverse w/ offset + limit

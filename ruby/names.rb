@@ -58,8 +58,6 @@ class R
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def realpath # follow all the links
     node.realpath
-  rescue Exception => x # warn on errors.. dangling-symlinks, permission failure
-    puts x
   end
   def realURI; realpath.do{|p|p.R} end
   def exist?; node.exist? end

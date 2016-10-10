@@ -27,8 +27,8 @@ class String
 
   def to_utf8
     encode('UTF-8', undef: :replace)
-  rescue Encoding::InvalidByteSequenceError
-    ""
+#  rescue Encoding::InvalidByteSequenceError
+#    ""
   end
 
   def utf8
@@ -37,27 +37,25 @@ class String
 
 end
 
-begin require 'redcarpet'
-  module Redcarpet
-    module Render
-      class Pygment < HTML
-        def block_code(code, lang)
-          if lang
-            IO.popen("pygmentize -l #{lang.downcase.sh} -f html",'r+'){|p|
-              p.puts code
-              p.close_write
-              p.read
-            }
-          else
-            code
-          end
+require 'redcarpet'
+module Redcarpet
+  module Render
+    class Pygment < HTML
+      def block_code(code, lang)
+        if lang
+          IO.popen("pygmentize -l #{lang.downcase.sh} -f html",'r+'){|p|
+            p.puts code
+            p.close_write
+            p.read
+          }
+        else
+          code
         end
       end
     end
   end
-rescue LoadError => e
-  puts e
 end
+
 
 class R
   # HTTP URIs in plain-text
@@ -76,9 +74,6 @@ class R
     H({_: :pre, style: 'white-space: pre-wrap',
         c: open(pathPOSIX).read.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
-  rescue
-    puts "error hyperlinking #{uri}"
-    nil
   end
 
   Render['text/uri-list'] = -> g,env {
@@ -111,12 +106,7 @@ class R
   end
 
   def triplrCSV d
-    lines = begin
-              CSV.read pathPOSIX
-            rescue
-              puts "CSV parse-error in #{uri}"
-              []
-            end
+    lines = CSV.read pathPOSIX
     lines[0].do{|fields| # header-row
       yield uri, Type, R[CSVns+'Table']
       yield uri, CSVns+'rowCount', lines.size
@@ -170,7 +160,7 @@ class R
     m = mime.split(/\//)[-1].sub(/^x-/,'')
     yield uri+'#', Type, R[SIOC+'SourceCode']
     if size < 65535 # only inline small files
-      yield uri+'#', Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil] rescue puts("error: source-highlight")
+      yield uri+'#', Content, StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`,nil,nil]
     end
   end
 

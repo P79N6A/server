@@ -119,12 +119,7 @@ class R
   def readFile parseJSON=false
     if f
       if parseJSON
-        begin
-          JSON.parse File.open(pathPOSIX).read
-        rescue Exception => x
-          puts "error reading JSON: #{caller} #{uri} #{x}"
-          {}
-        end
+        JSON.parse File.open(pathPOSIX).read
       else
         File.open(pathPOSIX).read
       end

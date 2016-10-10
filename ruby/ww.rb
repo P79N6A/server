@@ -79,8 +79,6 @@ class Object
   end
   def to_time
     time? ? self : Time.parse(self)
-  rescue
-    nil
   end
 end
 

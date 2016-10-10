@@ -232,8 +232,6 @@ class R
         yield e, Content,                             # image reference in HTML
           H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]})
       end }
-  rescue Exception => x
-    puts ["MAILERROR",uri,x,x.backtrace[0..2]].join(' ')
   end
 
   IndexMail = ->doc,graph,host {

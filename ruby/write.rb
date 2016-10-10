@@ -13,9 +13,6 @@ class R
     doc.ln main           # link current
     ldp
     [201,@r[:Response].update({Location: uri}),[]]
-  rescue Exception => e
-    puts e.class, e.message
-    [400,{},[]]
   end
 
   def DELETE
@@ -41,17 +38,11 @@ class R
     File.open(pathPOSIX,'w'){|f|
       f << (s ? o.to_json : o)}
     self
-  rescue Exception => x
-    puts x.class,x.message,caller[0..1]
-    self
   end
   alias_method :w, :writeFile
 
   def mkdir
     e || FileUtils.mkdir_p(pathPOSIX)
-    self
-  rescue Exception => x
-    puts x
     self
   end
   alias_method :mk, :mkdir

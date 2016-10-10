@@ -71,25 +71,16 @@ class R
     {_: :a, href: uri, c: name || fragment || basename}
   end
 
-  begin
-    require 'nokogiri'
-  rescue LoadError
-    puts "warning: nokogiri missing"
-  end
-
+  require 'nokogiri'
   def nokogiri
     Nokogiri::HTML.parse (open uri).read
   end
 
   StripHTML = -> body, loseTags=%w{script style}, keepAttr=%w{alt href rel src title type} {
-    begin
-      html = Nokogiri::HTML.fragment body
-      loseTags.map{|tag| html.css(tag).remove } if loseTags
-      html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
-      html.to_xhtml
-    rescue
-      ""
-    end}
+    html = Nokogiri::HTML.fragment body
+    loseTags.map{|tag| html.css(tag).remove } if loseTags
+    html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
+    html.to_xhtml}
 
   Render['text/html'] = -> d,e,view=nil {
     H ["<!DOCTYPE html>\n",

@@ -27,9 +27,6 @@ class R
   def getFeed h='localhost'
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
-  rescue Exception => e
-    puts [uri, e.class, e.message].join(' ')
-    self
   end
 
   def getFeeds h='localhost'
@@ -111,7 +108,7 @@ class R
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
               if a.has_attribute? 'href'
-                (a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
+                a.set_attribute 'href', (URI.join s, (a.attr 'href'))
               end}
             o.to_xhtml} : o
 
