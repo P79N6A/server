@@ -88,6 +88,7 @@ class R
   # URI -> file
   def store options = {}
     g = RDF::Repository.load self, options
+    puts "store #{g.size} triples from #{uri}"
     g.each_graph.map{|graph|
       if graph.named?
         doc = graph.name.n3
