@@ -25,7 +25,7 @@ class R
     d.dir.child('news/').setEnv(e).response}  # return
 
   def getFeed h='localhost'
-    puts "get feed #{uri}"
+#    puts "get feed #{uri}"
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
   end
