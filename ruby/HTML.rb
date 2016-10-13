@@ -137,7 +137,7 @@ class R
      H.js('/js/ui',true)]} # keybinding-JS
 
   ViewA[BasicResource] = -> r,e {
-    {_: :table, class: :html,
+    {_: :table, class: :html, id: 'h'+r.uri.h, href: r.uri,
      c: r.map{|k,v|
        [{_: :tr, property: k,
         c: case k
