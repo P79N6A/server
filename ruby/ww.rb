@@ -169,6 +169,7 @@ class R < RDF::URI
     RSS+'guid' => :id,
     RSS+'comments' => :comments,
     SIOC+'Usergroup' => :group,
+    SIOC+'SourceCode' => :code,
     SIOC+'wikiText' => :pencil,
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :up,

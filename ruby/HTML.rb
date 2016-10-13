@@ -192,7 +192,7 @@ class R
      c: [{class: :label, c: {_: :a, href: container.uri, name: lbl, c: label}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = -> g,e {
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     path = e.R.justPath
     g.delete e.uri
     label = e.R.basename
