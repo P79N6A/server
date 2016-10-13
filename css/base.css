@@ -48,7 +48,7 @@ table td a {font-weight:bold}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td[property="uri"] a:visited {color: #ccf}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
-td[property="http://www.w3.org/ns/ldp#contains"],td[property="http://www.w3.org/ns/posix/stat#mtime"],td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {border-style: solid; border-width: 0 0 .1em 0;border-color:#aaa}
+td[property="http://rdfs.org/sioc/ns#has_container"],td[property="http://www.w3.org/ns/ldp#contains"],td[property="http://www.w3.org/ns/posix/stat#mtime"],td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {border-style: solid; border-width: 0 0 .1em 0;border-color:#888}
 td.val {max-width: 100%; overflow: hidden}
 
 .container {margin:1em;display: inline-block;font-family: sans-serif}
