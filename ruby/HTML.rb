@@ -299,6 +299,7 @@ class R
                      end
                    }.intersperse(' ')
                  end}, "\n"]}]},
+     l[Content].do{|c|{_: :tr, id: :content, href: l.uri, c: {_: :td, colspan: keys.size, c: c}} unless e[:container]},
      l[Image].do{|c|
        {_: :tr,
         c: {_: :td, colspan: keys.size,
