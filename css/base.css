@@ -45,7 +45,7 @@ table td a {font-weight:bold}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td[property="uri"] a:visited {color: #000;background-color:#fff}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
-td.val {max-width: 100%; overflow: hidden}
+td.val {max-width: 100%; overflow: hidden;text-align:left}
 
 .container {margin:1em;display: inline-block;font-family: sans-serif}
 .container > .listview {color:#fff;font-size:1.4em;float:right}
@@ -54,6 +54,7 @@ td.val {max-width: 100%; overflow: hidden}
 .container.main > .label {float: left}
 .container.main > .label > a {font-size: 1.5em}
 
+div.header a.title {font-size:1.2em;background-color:#fff;color:#000}
 div.chatLog, div.mail {text-align: left;margin:auto;max-width:118ex;overflow:hidden}
 div.mail a.to {font-size:1.27em}
 
