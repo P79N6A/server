@@ -39,15 +39,16 @@ a.user:before { content:"\f007"; font-family: icons;}
 
 body > form > input {float: right;border:0;font-weight:bold;background-color:#000;color:#fff}
 
-td {text-align:left}
+td {text-align:left; vertical-align: top}
 table.tab {border-spacing:0}
-table.tab td.content > pre {max-height:10em;overflow:scroll}
+table.tab .content > pre {max-height:10em;overflow:scroll}
 table.html {max-width: 100ex;display:inline-block;margin:.5em}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td[property="uri"] a:visited {color: #ccf}
 td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
+td[property="http://www.w3.org/ns/ldp#contains"],td[property="http://www.w3.org/ns/posix/stat#mtime"],td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {border-style: dotted; border-width: 0 0 .1em 0;border-color:#999}
 td.val {max-width: 100%; overflow: hidden}
 
 .container {margin:1em;display: inline-block;font-family: sans-serif}

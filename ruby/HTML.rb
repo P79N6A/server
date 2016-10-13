@@ -266,7 +266,7 @@ class R
                      icon = Icons[t.uri]
                      {_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
-                   l[k].do{|children|
+                   [l[k].do{|children|
                      children = children.justArray
                      if children[0].keys.size > 1 # tabular-view of contained children
                        childGraph = {}
@@ -274,8 +274,8 @@ class R
                        TabularView[childGraph,e,false]
                      else
                        children.map{|c|[c.R, ' ']}
-                     end
-                   }
+                     end},
+                    l[Content].do{|c|{class: :content, c: c}}]
                  when WikiText
                    Render[WikiText][l[k]]
                  when DC+'tag'
