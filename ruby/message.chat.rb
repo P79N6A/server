@@ -20,10 +20,9 @@ class R
     graph = {}
     identifylines = log.R.descend.path == e.R.descend.path # selectable lines if navigated to log, rather than inlined elsewhere
     log[LDP+'contains'].map{|line| graph[line.uri] = line}
-    [{_: :hr},
-     {class: :chatLog, name: log[Label], href: log.uri,
-      c: [{_: :b, c: log[Label]},
-          ViewGroup[SIOC+'InstantMessage'][graph,e,identifylines]]}.update(identifylines ? {} : {id: log.R.uri.gsub(/[^a-zA-Z0-9]/,'')})]}
+    {class: :chatLog, name: log[Label], href: log.uri,
+     c: [{_: :b, c: log[Label]},
+         ViewGroup[SIOC+'InstantMessage'][graph,e,identifylines]]}.update(identifylines ? {} : {id: log.R.uri.gsub(/[^a-zA-Z0-9]/,'')})}
 
   # drop messages in channel-hour bins of type ChatLog
   Abstract[SIOC+'InstantMessage'] = Abstract[SIOC+'MicroblogPost'] = -> graph, msgs, e {
@@ -43,7 +42,7 @@ class R
       graph.delete msgid
     } unless e[:nosummary]}
 
-  # IRC
+  # IRC to RDF
   def triplrIRC &f
     i=-1 # line index
 

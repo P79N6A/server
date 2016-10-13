@@ -1,5 +1,5 @@
 body {font-family: sans-serif;background-color:#000;color:#fff}
-pre {white-space: pre-wrap;padding:.1em;margin:.1em}
+pre {white-space: pre-wrap}
 
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:2em;padding:.2em;color:#fff;background-color:#000}
@@ -43,7 +43,7 @@ body > form > input {float: right;border:0;font-weight:bold;background-color:#00
 td {vertical-align: top}
 table.tab {border-spacing:0}
 table.tab .content > pre {max-height:10em;overflow:scroll}
-table.html {max-width: 100ex;display:inline-block;margin:.5em}
+table.html {max-width: 100ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
@@ -60,7 +60,7 @@ td.val {max-width: 100%; overflow: hidden}
 .container.main > .label > a {font-size: 1.5em}
 
 div.header a.title {font-size:1.2em;background-color:#fff;color:#000}
-div.chatLog, div.mail {margin:auto;max-width:118ex;overflow:hidden}
+div.chatLog, div.mail {padding:.8em;margin:auto;max-width:118ex;overflow:hidden}
 div.mail a.to {font-size:1.27em}
 
 img {max-width: 100%}
