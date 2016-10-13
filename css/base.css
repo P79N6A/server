@@ -60,7 +60,9 @@ td.val {max-width: 100%; overflow: hidden}
 .container.main > .label > a {font-size: 1.5em}
 
 div.header a.title {font-size:1.2em;background-color:#fff;color:#000}
-div.chatLog, div.mail {padding:.8em;margin:auto;max-width:118ex;overflow:hidden}
+div.chatLog, div.mail {padding:.8em;margin:auto}
+td.creator {white-space: nowrap;text-align:right}
+div.mail {max-width:118ex;overflow:hidden}
 div.mail a.to {font-size:1.27em}
 
 img {max-width: 100%}
