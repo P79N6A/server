@@ -41,6 +41,7 @@ body > form > input {float: right;border:0;font-weight:bold;background-color:#00
 
 td {text-align:left}
 table.tab {border-spacing:0}
+table.tab td.content > pre {max-height:10em;overflow:scroll}
 table.html {max-width: 100ex;display:inline-block;margin:.5em}
 table th a {font-size:1.5em;font-weight: normal}
 table td a {font-weight:bold}

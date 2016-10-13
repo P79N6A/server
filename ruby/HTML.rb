@@ -253,7 +253,7 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    [{_: :tr,href: this.uri, id: 'x' + rand.to_s.h[0..7],
+    [{_: :tr,href: (l.has_key?(Content) ? (this.uri + '.html') : this.uri), id: 'x' + rand.to_s.h[0..7],
        c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
@@ -299,7 +299,6 @@ class R
                      end
                    }.intersperse(' ')
                  end}, "\n"]}]},
-     l[Content].do{|c|{_: :tr, id: 'h'+this.uri.h, href: this.uri + '.html', c: {_: :td, class: :content, colspan: keys.size, c: c}}},
      l[Image].do{|c|
        {_: :tr,
         c: {_: :td, colspan: keys.size,
