@@ -2,18 +2,18 @@
 class R
 
   ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> d,e,identifylines=false {
-    d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e,identifylines]}}
+    {_: :table, c: d.map{|u,r| ViewA[SIOC+'InstantMessage'][r,e,identifylines]}}}
 
   ViewA[SIOC+'InstantMessage'] = ViewA[SIOC+'MicroblogPost'] = -> r,e,identifylines=false {
     name = r[Label].justArray[0] || ''
     label = name.gsub(/[^a-zA-Z0-9]/,'')
     e[:label][label] = true
-    {href: r.uri,
+    {_: :tr, href: r.uri,
      class: :ublog,
      c: [
-       {_: :span, class: 'body', c: r[Content]},' ',
-       {_: :span, class: 'date', c: r[Date][0].split('T')[1][0..4]},' ',
-       {_: :span, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},' ',
+       {_: :td, class: :creator, c: {_: :a, href: r.uri, name: label, c: name}},
+       {_: :td, class: 'body', c: r[Content]},
+       {_: :td, class: 'date', c: r[Date][0].split('T')[1][0..4]},
      ]}.update(identifylines ? {id: r.uri.gsub(/[^a-zA-Z0-9]/,'')} : {})}
 
   ViewA[SIOC+'ChatLog'] = -> log,e {
