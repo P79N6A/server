@@ -69,7 +69,7 @@ img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
 
 div:target {border-radius:.23em}
-:target, :target a {background-color: #fff;color:#000}
+:target {background-color: #fff;color:#000}
 
 .timegraph {position:absolute;top:0;left:0}
 .timegraph > svg {overflow:visible;width:400px;height:800px}
