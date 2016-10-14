@@ -2,14 +2,17 @@ class R
 
   FileSet[Resource] = -> e,q,g {
     query = e.env['QUERY_STRING']
-    # add pagination-pointers on date-dirs
-    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/?$/).do{|m|
-      t = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" # date object
+
+    # pagination on date-dirs
+    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
+      date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
+      slug = m[4] || ''
       qs = query && !query.empty? && ('?' + query) || ''
-      pp = (t-1).strftime('/%Y/%m/%d/') # previous day
-      np = (t+1).strftime('/%Y/%m/%d/') # nex day
-      e.env[:Links][:prev] = pp + qs if R['//' + e.env.host + pp].e
-      e.env[:Links][:next] = np + qs if R['//' + e.env.host + np].e}
+      pp = (date-1).strftime('/%Y/%m/%d/')
+      np = (date+1).strftime('/%Y/%m/%d/')
+      e.env[:Links][:prev] = pp + slug + qs if R['//' + e.env.host + pp].e
+      e.env[:Links][:next] = np + slug + qs if R['//' + e.env.host + np].e}
+
     if e.env[:container]
       htmlFile = e.a 'index.html'
       if e.env.format=='text/html' && !e.env['REQUEST_URI'].match(/\?/) && htmlFile.e
@@ -66,7 +69,9 @@ class R
       s }}
 
   GET['/domain'] = -> e,r {e.justPath.response}
-  GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/?') + (r['QUERY_STRING']||'')}), []]}
+  GET['/today'] = -> e,r {[303,
+                           r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (r['QUERY_STRING']||'')}),
+                           []]}
   GET['/cache'] = E404
   GET['/index'] = E404
 
