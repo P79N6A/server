@@ -26,7 +26,7 @@ class String
   end
 
   def to_utf8
-    encode('UTF-8', undef: :replace)
+    encode('UTF-8', undef: :replace, invalid: :replace, replace: '?')
   end
 
   def utf8

@@ -1,4 +1,4 @@
-#watch __FILE__
+# coding: utf-8
 class R
 
   GET['/news'] = -> d,e {
@@ -25,7 +25,6 @@ class R
     d.dir.child('news/').setEnv(e).response}  # return
 
   def getFeed h='localhost'
-#    puts "get feed #{uri}"
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self
   end
@@ -52,7 +51,7 @@ class R
       format Format
 
       def initialize(input = $stdin, options = {}, &block)
-        @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.to_utf8
+        @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.utf8
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -208,7 +207,6 @@ class R
     module SniffContent
 
       def sniff
-#        puts :sniff, self
         send (case self
               when /^\s*<\!\[CDATA/m
                 :cdata
