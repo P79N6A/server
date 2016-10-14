@@ -253,8 +253,9 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
+    sourcecode = l.types.member? SIOC+'SourceCode'
     [{_: :tr,
-      href: this.uri,
+      href: (sourcecode ? (this.uri+'.html') : this.uri),
       id: 'x' + rand.to_s.h[0..7],
        c: ["\n",
           keys.map{|k|
