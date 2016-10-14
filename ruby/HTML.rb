@@ -205,7 +205,7 @@ class R
                else
                  Size
                end
-    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] if e[:container] && path != '/'),
+    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] unless path == '/'),
      e[:Links][:prev].do{|p| p = CGI.escapeHTML p.to_s
        {_: :a, rel: :prev, c: '&#9664;', title: p, href: p}},
      e[:Links][:next].do{|n| n = CGI.escapeHTML n.to_s
