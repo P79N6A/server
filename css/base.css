@@ -42,7 +42,6 @@ body > form > input {float: right;border:0;font-weight:bold;background-color:#00
 
 td {vertical-align: top}
 table.tab {border-spacing:0}
-table.tab .content > pre {max-height:10em;overflow:scroll}
 table.html {max-width: 100ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 table th.selected {background-color:#333}
@@ -61,7 +60,8 @@ td.val {max-width: 100%; overflow: hidden}
 .container.main > .label > a {font-size: 1.5em}
 
 
-div.sourcecode {background-color: #fff;color: #000;padding:.8em}
+div.sourcecode {background-color: #fff;color: #000;padding:.8em;border-radius:.2em}
+table.tab .content > div.sourcecode > pre {max-height:10em;overflow:scroll}
 div.header a.title {font-size:1.2em;background-color:#fff;color:#000}
 div.chatLog, div.mail {padding:.8em;margin:auto}
 td.creator {white-space: nowrap;text-align:right}
