@@ -45,6 +45,7 @@ table.tab {border-spacing:0}
 table.tab .content > pre {max-height:10em;overflow:scroll}
 table.html {max-width: 100ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
+table th.selected {background-color:#333}
 table td a {font-weight:bold}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td[property="uri"] a:visited {color: #ccf}
@@ -59,6 +60,8 @@ td.val {max-width: 100%; overflow: hidden}
 .container.main > .label {float: left}
 .container.main > .label > a {font-size: 1.5em}
 
+
+div.sourcecode {background-color: #fff;color: #000;padding:.8em}
 div.header a.title {font-size:1.2em;background-color:#fff;color:#000}
 div.chatLog, div.mail {padding:.8em;margin:auto}
 td.creator {white-space: nowrap;text-align:right}

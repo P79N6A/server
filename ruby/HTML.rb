@@ -241,7 +241,7 @@ class R
                      end
                      [{_: :th,
                        property: k,
-                       style: k == sort ? 'background-color:#0f0' : '',
+                       class: k == sort ? 'selected' : '',
                        c: {_: :a,
                            rel: :nofollow,
                            href: CGI.escapeHTML(q.qs),
