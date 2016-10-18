@@ -224,7 +224,7 @@ class R
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
     keys = keys - [Title, Label, Content, Image, Type, 'uri', Size]
-    sortables = ['uri',Size,Date]
+    sortables = ['uri',Size,Mtime]
     # put URI and typetag at beginning
     keys.unshift 'uri' if show_id
     keys.unshift Type
@@ -234,20 +234,24 @@ class R
      c: [({_: :thead,
            c: {_: :tr,
                c: [keys.map{|k|
+
                      q = e.q.merge({'sort' => k.shorten})
                      if direction == :reverse
                        q.delete 'reverse'
                      else
                        q['reverse'] = ''
                      end
+
+                     href = CGI.escapeHTML q.qs
+
                      [{_: :th,
                        property: k,
                        class: k == sort ? 'selected' : '',
                        c: {_: :a,
                            rel: :nofollow,
-                           href: CGI.escapeHTML(q.qs),
+                           href: href,
                            class: Icons[k]||'',
-                           c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}.update(sortables.member?(k) ? {id: 'sort'+rand.to_s.h} : {})}, "\n"]},
+                           c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}.update(sortables.member?(k) ? {href: href, id: 'sort'+rand.to_s.h} : {}), "\n"]},
                   ]}} if show_head),
          {_: :tbody, c: rows.map{|r|
             TableRow[r,e,sort,direction,keys]}}]}}
