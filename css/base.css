@@ -74,8 +74,8 @@ img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
 
 div:target {border-radius:.23em}
-:target {background-color: #fff;color:#000}
-.selectable:target a, .selectable:target td.selected {background-color:#fff;color:#000}
+
+:target, th:target a, .selectable:target a, .selectable:target td.selected {background-color:#fff;color:#000}
 
 .timegraph {position:absolute;top:0;left:0}
 .timegraph > svg {overflow:visible;width:400px;height:800px}
