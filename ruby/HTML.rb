@@ -224,6 +224,7 @@ class R
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
     keys = keys - [Title, Label, Content, Image, Type, 'uri', Size]
+    sortables = ['uri',Size,Date]
     # put URI and typetag at beginning
     keys.unshift 'uri' if show_id
     keys.unshift Type
@@ -246,7 +247,7 @@ class R
                            rel: :nofollow,
                            href: CGI.escapeHTML(q.qs),
                            class: Icons[k]||'',
-                           c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]},
+                           c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}.update(sortables.member?(k) ? {id: 'sort'+rand.to_s.h} : {})}, "\n"]},
                   ]}} if show_head),
          {_: :tbody, c: rows.map{|r|
             TableRow[r,e,sort,direction,keys]}}]}}
