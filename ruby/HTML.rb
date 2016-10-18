@@ -94,25 +94,13 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 H.css('/css/base',true),
-#                 (H.js('https://getfirebug.com/firebug-lite') if e.q.has_key?('dbg')||e.q.has_key?('debug'))
-                ]},
-            {_: :body,
-             c: case e.q['ui']
-                when 'tabulator'
-                  base = '//linkeddata.github.io/tabulator/'
-                  [H.css(base+'tabbedtab'), H.js(base+'js/mashup/mashlib'),
-                   {_: :script, c: "document.addEventListener('DOMContentLoaded', function(){tabulator.outline.GotoSubject(tabulator.kb.sym(window.location.href), true, undefined, true, undefined)})"},
-                   {class: :TabulatorOutline, id: :DummyUUID, c: {_: :table, id: :outline}}]
-                else
-                  DefaultView[d,e]
-                end}]}]}
+                 H.css('/css/base',true)]},
+            {_: :body, c: DefaultView[d,e]}]}]}
 
   DefaultView = -> d,e {
     seen = {}
-    # group resources
     groups = {}
-    d.map{|u,r|
+    d.map{|u,r| # group by type
       (r||{}).types.map{|type|
         if v = ViewGroup[type]
           groups[v] ||= {}
@@ -120,21 +108,20 @@ class R
           seen[u] = true
         end}}
 
-    e[:label] ||= {} # resource labels
+    e[:label] ||= {}
 
     [(ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
-     groups.map{|view,graph|view[graph,e]}, # type-groups
-     d.map{|u,r|                            # ungrouped
+     groups.map{|view,graph|view[graph,e]}, # grouped
+     d.map{|u,r|                            # singleton
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
-     {_: :style,
-      c: e[:label].map{|name,_| # label-colors
+     {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     H.js('/js/ui',true)]} # keybinding-JS
+     H.js('/js/ui',true)]}
 
   ViewA[BasicResource] = -> r,e {
     {_: :table, class: :html, id: 'h'+r.uri.h, href: r.uri,
