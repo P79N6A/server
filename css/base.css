@@ -44,12 +44,14 @@ td {vertical-align: top}
 table.tab {border-spacing:0}
 table.html {max-width: 100ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
-table th.selected {background-color:#333}
+table th.selected, table th.selected a {background-color:#fff;color:#000}
+table td.selected, table td.selected a {background-color:#333;color:#fff}
+
 table td a {font-weight:bold}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
 td[property="uri"] a:visited {color: #ccf}
-td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
-td[property="http://rdfs.org/sioc/ns#has_container"],td[property="http://www.w3.org/ns/ldp#contains"],td[property="http://www.w3.org/ns/posix/stat#mtime"],td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {border-style: solid; border-width: 0 0 .1em 0;border-color:#888}
+td[property="uri"], td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
+tr.selectable > td {border-style: solid; border-width: 0 0 .1em 0;border-color:#444}
 td.val {max-width: 100%; overflow: hidden}
 
 .container {margin:1em;display: inline-block;font-family: sans-serif}
@@ -73,7 +75,7 @@ img.preview {max-height:14em;max-width:100%}
 
 div:target {border-radius:.23em}
 :target {background-color: #fff;color:#000}
-.selectable:target a {background-color:#fff;color:#000}
+.selectable:target a, .selectable:target td.selected {background-color:#fff;color:#000}
 
 .timegraph {position:absolute;top:0;left:0}
 .timegraph > svg {overflow:visible;width:400px;height:800px}

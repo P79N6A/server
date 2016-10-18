@@ -259,7 +259,7 @@ class R
       id: 'x' + rand.to_s.h[0..7],
        c: ["\n",
           keys.map{|k|
-            [{_: :td, property: k,
+            [{_: :td, property: k, class: sort==k ? 'selected' : '',
               c: case k
                  when 'uri'
                    {_: :a, href: (CGI.escapeHTML l.uri),
