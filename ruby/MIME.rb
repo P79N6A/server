@@ -209,20 +209,4 @@ class R
     yield uri, Type, R[Image]
   end
 
-  ViewA[Image] = ->img,e{
-    image = img.R
-    {_: :a, href: image.uri,
-     c: {_: :img, class: :thumb,
-         src: if image.ext.downcase == 'gif'
-                image.uri
-              else
-                '/thumbnail' + image.path
-              end}}}
-
-  ViewGroup[Image] = -> g,e {
-    [{_: :style,
-      c: "img.thumb {max-width: 360px; max-height: 360px}"},
-     g.map{|u,r|
-       ViewA[Image][r,e]}]}
-
 end

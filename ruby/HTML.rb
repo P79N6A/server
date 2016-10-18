@@ -245,7 +245,9 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    sourcecode = l.types.member? SIOC+'SourceCode'
+    types = l.types
+    sourcecode = types.member? SIOC+'SourceCode'
+    image = types.member? Image
     [{_: :tr, class: :selectable,
       href: (sourcecode ? (this.uri+'.html') : this.uri),
       id: 'x' + rand.to_s.h[0..7],
@@ -295,10 +297,22 @@ class R
                    }.intersperse(' ')
                  end}, "\n"]}]},
      l[Content].do{|c|{_: :tr, id: :content, href: l.uri, c: {_: :td, colspan: keys.size, c: c}} unless e[:container]},
-     l[Image].do{|c|
+     # local image, show thumbnail
+     ({_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: ViewA[Image][l,e]}} if image),
+     l[Image].do{|c| # external image, inline
        {_: :tr,
         c: {_: :td, colspan: keys.size,
             c: c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}}}]}
+
+  ViewA[Image] = ->img,e{
+    image = img.R
+    {_: :a, href: image.uri,
+     c: {_: :img, class: :thumb,
+         src: if image.ext.downcase == 'gif'
+                image.uri
+              else
+                '/thumbnail' + image.path
+              end}}}
 
   def R.randomColor # fully saturated
 
