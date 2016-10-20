@@ -269,7 +269,7 @@ class R
                        childGraph = {}
                        children.map{|c|childGraph[c.uri] = c}
                        TabularView[childGraph,e,false]
-                     else
+                      else
                        children.map{|c|[c.R, ' ']}
                      end},
                     l[Content].do{|c|{class: :content, c: c}}]
