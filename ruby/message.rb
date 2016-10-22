@@ -34,6 +34,7 @@ class R
        H.js('/js/timegraph',true),
        {class: :timegraph,c: {_: :svg}}
       ] if e[:arcs].size > 1),
+     {_: :style, c: "body {background-color: white;color:black}"},
      {class: :msgs,
       c: [(d.values[0][Title].justArray[0].do{|t|
              title = t.sub ReExpr, ''

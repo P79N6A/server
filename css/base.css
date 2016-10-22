@@ -66,8 +66,8 @@ div.sourcecode {background-color: #fff;color: #000;padding-left:.5em;border-radi
 table.tab .content > div.sourcecode > pre {max-height:10em;overflow:scroll}
 div.header a.title {font-size:1.2em;background-color:#fff;color:#000}
 div.chatLog, div.mail {padding:.8em;margin:auto}
-td.creator {white-space: nowrap;text-align:right}
-div.mail {max-width:118ex;overflow:hidden}
+div.mail:target {background-color:#fff;color:#000}
+div.mail {float: right; max-width:118ex;overflow:hidden;margin:.4em; background-color: #000;color:#fff}
 div.mail a.to {font-size:1.27em}
 
 img {max-width: 100%}
