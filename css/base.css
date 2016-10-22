@@ -64,8 +64,7 @@ td.val {max-width: 100%; overflow: hidden}
 
 div.sourcecode {background-color: #fff;color: #000;padding-left:.5em;border-radius:.2em}
 table.tab .content > div.sourcecode > pre {max-height:10em;overflow:scroll}
-div.header a.title {font-size:1.2em;background-color:#fff;color:#000}
-div.chatLog, div.mail {padding:.8em;margin:auto}
+div.chatLog, div.mail {padding:.5em}
 div.mail:target {background-color:#fff;color:#000}
 div.mail {float: right; max-width:118ex;overflow:hidden;margin:.4em; background-color: #000;color:#fff}
 div.mail a.to {font-size:1.27em}
