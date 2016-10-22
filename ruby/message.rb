@@ -38,7 +38,7 @@ class R
      {class: :msgs,
       c: [(d.values[0][Title].justArray[0].do{|t|
              title = t.sub ReExpr, ''
-             {_: :h1, c: CGI.escapeHTML(title)}} if e[:thread]),
+             [{_: :h3,class: :title, c: CGI.escapeHTML(title)},'<br>']} if e[:thread]),
           d.map{|uri,msg|
             type = msg.types.find{|t|ViewA[t]}
             ViewA[type ? type : BasicResource][msg,e]
