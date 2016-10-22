@@ -64,9 +64,10 @@ td.val {max-width: 100%; overflow: hidden}
 
 div.sourcecode {background-color: #fff;color: #000;padding-left:.5em;border-radius:.2em}
 table.tab .content > div.sourcecode > pre {max-height:10em;overflow:scroll}
+div.msgs {text-align:center}
 div.chatLog, div.mail {padding:.5em}
-div.mail:target {background-color:#fff;color:#000}
-div.mail {float: right; max-width:118ex;overflow:hidden;margin:.4em; background-color: #000;color:#fff}
+div.mail:target {background-color:#dfb;color:#000}
+div.mail {display:inline-block;text-align:left; max-width:118ex;overflow:hidden;margin:.4em; background-color: #000;color:#fff}
 div.mail a.to {font-size:1.27em}
 
 img {max-width: 100%}
