@@ -210,12 +210,10 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
-    keys = keys - [Title, Label, Content, Image, Type, 'uri', Size]
+    keys = keys - [Title, Label, Content, Image, Type, 'uri']
     sortables = ['uri',Size,Mtime]
-    # put URI and typetag at beginning
-    keys.unshift 'uri' if show_id
+    keys.unshift 'uri' if show_id     # put URI and typetag at beginning
     keys.unshift Type
-    keys.unshift Size
     rows = g.resources e # sort resources per environment preferences
     {_: :table, class: :tab,
      c: [({_: :thead,
