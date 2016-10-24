@@ -8,7 +8,7 @@ E.attr = function(a,v){
 var prev = null;
 var first = null;
 
-// add navigation pointers to elements
+// link navigation pointers
 document.querySelectorAll('[id]').map(function(e){
     if(!first)
 	first = this;
@@ -28,15 +28,16 @@ document.addEventListener("keydown",function(e){
 	if(doc)
 	    window.location = doc.getAttribute('href') + start;
     };
-    // pagination key-control
+    // kbd navigation
     var key = e.keyCode;
-    console.log(key);
+//    console.log(key);
 
     if(e.getModifierState("Shift")) {
 	if(key==80) // previous page
 	    jumpDoc('prev','#last');
 	if(key==78) // next page
 	    jumpDoc('next','#first');
+	return null;
     };
 
     if(key==38||key==80){ // previous selection
