@@ -158,10 +158,6 @@ class R
      [Render[env.format].do{|fn|fn[graph,env]} ||
       graph.toRDF(base).dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
 
-  ViewGroup[HTTP+'500'] = -> graph, env {
-    [{_: :style, c: 'body {background-color:red}'},
-     ViewGroup[BasicResource][graph,env]]}
-
   E500 = -> x,e {
     errors = Stats['status']['500']
 
