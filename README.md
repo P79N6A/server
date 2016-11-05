@@ -1,4 +1,4 @@
-[HTTP](https://www.mnot.net/blog/2014/06/07/rfc2616_is_dead) interface to a [filesystem](http://www.multicians.org/fjcc4.html) with fast/minimal-dependency RDF-subset metamodel in Hash and JSON. [search](https://en.wikipedia.org/wiki/Online_search) via [Groonga](http://groonga.org/) and [grep](http://www.gnu.org/software/grep/manual/grep.html). domain-specific RDF-type handling on lambda-to-URI association, used to extend server with [MAIL](conf/mail) and [NEWS](conf/news/NEWS) functionality
+a webserver
 
 ## Install
 ``` sh
