@@ -68,7 +68,7 @@ h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:
 div.msgs {text-align:center}
 div.chatLog, div.mail {text-align:left; padding:.5em; margin:.4em}
 div.chatLog {float: left}
-div.mail:target {background-color:#dfb;color:#000}
+div.mail:target {background-color:#fff;color:#000}
 div.mail {display:inline-block; max-width:118ex;overflow:hidden; background-color: #000;color:#fff}
 div.mail a.to {font-size:1.27em}
 
