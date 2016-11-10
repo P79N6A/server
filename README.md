@@ -61,7 +61,7 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 
 <tr><td style="white-space: nowrap"><b>Triple</b></td><td>
 <b>yield</b> and <b>do</b> keywords denote producing and consuming code, stackable into pipelines <a href=ruby/message.news.rb.html>(feed example)</a>. 
-args[0,1] are URI in string form, arg[2] a resource or literal (JSON values)
+args[0,1] are URI strings, arg[2] a resource or literal (JSON value)
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>Page</b></td><td>
