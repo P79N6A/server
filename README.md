@@ -40,7 +40,7 @@ foreman start
 <table>
 
 <tr><td><b>MIME</b></td><td>
-our native <strong>JSON</strong> format omits <a href="http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/">unidentified-nodes</a> and <a href="http://www.w3.org/TR/turtle/#turtle-literals">special-syntax</a> <a href="http://www.w3.org/TR/rdf11-concepts/#section-Datatypes">literal-datatypes/languages</a> - if you want blank-nodes or can&#39;t express within <a href="http://www.json.org/">JSON</a>-literals, full Turtle is supported. indexes are implemented with <strong>URI-list</strong> files of <a href="http://amundsen.com/hypermedia/urilist/">one URI per line</a>. data expands to a full RDF-model if requested in <strong>Accept</strong>, otherwise stays in our accelerated subset through to serialization
+our native <strong>JSON</strong> format omits <a href="http://milicicvuk.com/blog/2011/07/14/problems-of-the-rdf-model-blank-nodes/">unidentified-nodes</a> and <a href="http://www.w3.org/TR/turtle/#turtle-literals">special-syntax</a> <a href="http://www.w3.org/TR/rdf11-concepts/#section-Datatypes">literal-datatypes/languages</a> - if you want blank-nodes or can&#39;t express within <a href="http://www.json.org/">JSON</a>-literals, <a href="https://www.w3.org/TR/turtle/">Turtle</a> is also supported. indexes are implemented with <strong>URI-list</strong> files of <a href="http://amundsen.com/hypermedia/urilist/">one URI per line</a>. data expands to a full RDF-model if requested in <strong>Accept</strong>, otherwise stays in our accelerated subset through to serialization
 </td></tr>
 
 <tr><td><b>HTTP</b></td><td>
