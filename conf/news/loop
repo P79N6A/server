@@ -1,5 +1,0 @@
-#!/bin/sh
-while true; do
-  conf/news/boston.rb localhost
-  sleep 8000
-done
