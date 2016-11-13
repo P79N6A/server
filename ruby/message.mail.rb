@@ -134,7 +134,6 @@ class R
       group = AddrPath[list]                    # list URI
       yield group, Type, R[SIOC+'Usergroup']    # list is a Group
       yield group, Label, name.gsub(/[<>&]/,'') # list name
-      yield group, SIOC+'has_container', group.R.dir
     }
 
     m.from.do{|f|                    # any authors?
@@ -153,7 +152,6 @@ class R
       author = AddrPath[a.address]
       yield author, Type, R[FOAF+'Person']
       yield author, FOAF+'name', (a.display_name || a.name)
-      yield author, SIOC+'has_container', author.R.dir
     }
 
     if m.date

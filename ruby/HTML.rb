@@ -268,7 +268,7 @@ class R
                        children.map{|c|childGraph[c.uri] = c}
                        TabularView[childGraph,e,false]
                       else
-                       children.map{|c|[c.R, ' ']}
+                       children.map{|c|[(CGI.escapeHTML c.R.basename), ' ']}
                      end},
                     l[Content].do{|c|{class: :content, c: c}}]
                  when WikiText
@@ -278,6 +278,7 @@ class R
                      label = v.downcase.strip
                      e[:label][label] = true
                      [{_: :a, href: this.uri, name: label, c: v},' ']}
+                 when SIOC+'has_container'
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
                      name = v.R.fragment
