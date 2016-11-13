@@ -78,7 +78,7 @@ class R
 
   StripHTML = -> body, loseTags=%w{script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
-    loseTags.map{|tag| html.css(tag).remove } if loseTags
+    loseTags.map{|tag| html.css(tag).remove} if loseTags
     html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
@@ -179,21 +179,12 @@ class R
     g.delete e.uri
     label = e.R.basename
     e[:label][label.downcase] = true
-    nextsort = case (e.q['sort']||'').expand
-               when Size
-                 Date
-               when Date
-                 Title
-               else
-                 Size
-               end
     [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] unless path == '/'),
      e[:Links][:prev].do{|p| p = CGI.escapeHTML p.to_s
        {_: :a, id: :prevpage, rel: :prev, c: '&#9664;', title: p, href: p}},
      e[:Links][:next].do{|n| n = CGI.escapeHTML n.to_s
        {_: :a, id: :nextpage, rel: :next, c: '&#9654;', title: n, href: n}},
      {_: :a, name: label.downcase, c: label, href: '?set=page'},
-     {_: :a, id: :listsort, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
      TabularView[g,e],
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 

@@ -43,6 +43,8 @@ h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:
 table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 
+td[property="uri"] {max-width:16em;overflow:hidden}
+td[property="uri"] {max-width:16em;overflow:hidden}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
@@ -52,6 +54,7 @@ div.mail a.to {font-size:1.27em}
 img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
 
+tr:target > td {padding-top: 3em}
 :target, div.mail:target, th:target a, .selectable:target a, .selectable:target td.selected {background-color:#fff;color:#000}
 
 .timegraph {position:absolute;top:0;left:0}
