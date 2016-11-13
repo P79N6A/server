@@ -38,17 +38,14 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 
-body > form > input {float: right;border:0;font-weight:bold;background-color:#000;color:#fff}
+h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:0}
 
-td {vertical-align: top}
-table.tab {border-spacing:0}
-table.html {max-width: 100ex;display:inline-block}
+table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 
 td[property="uri"], td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
-td.val {max-width: 100%; overflow: hidden}
 
-.container {margin:1em;display: inline-block;font-family: sans-serif}
+.container {margin:1em;display: inline-block}
 .container > .listview {font-size:1.4em;float:right}
 .container > .label {font-size:1.2em;font-weight:bold}
 .container > .label a {color:#000;padding: .1em}
@@ -56,20 +53,12 @@ td.val {max-width: 100%; overflow: hidden}
 .container.main > .label > a {font-size: 1.5em}
 
 
-div.sourcecode {background-color: #fff;color: #000;padding-left:.5em;border-radius:.2em}
-table.tab .content > div.sourcecode > pre {max-height:10em;overflow:scroll}
-h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:0}
-div.msgs {text-align:center}
-div.chatLog, div.mail {text-align:left; padding:.5em; margin:.4em}
-div.chatLog {float: left}
-div.mail:target {background-color:#fff;color:#000}
-div.mail {display:inline-block; max-width:118ex;overflow:hidden; background-color: #000;color:#fff}
+table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
+div.mail {display:inline-block; max-width:80ex; background-color: #000;color:#fff}
 div.mail a.to {font-size:1.27em}
 
 img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
-
-div:target {border-radius:.23em}
 
 :target, th:target a, .selectable:target a, .selectable:target td.selected {background-color:#fff;color:#000}
 

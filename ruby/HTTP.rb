@@ -193,8 +193,6 @@ class R
                      }
       }
     end
-
-    graph['..'] = {'uri' => '..', Type => R[Container]}
     e.q['sort'] ||= 'stat:size'
     e.q['reverse'] ||= true
     # render response
