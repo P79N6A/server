@@ -30,7 +30,7 @@ document.addEventListener("keydown",function(e){
     };
     // kbd navigation
     var key = e.keyCode;
-//    console.log(key);
+    console.log(key);
 
     if(e.getModifierState("Shift")) {
 	if(key==80) // previous page

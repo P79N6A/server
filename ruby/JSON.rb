@@ -32,15 +32,6 @@ class R
     return unless e
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f|
-      if @r && @r[:container] && file? # showing container, add files metadata
-        s = base ? base.join(uri).to_s : uri
-        graph[s] ||= {'uri' => s} # graph
-        mt = f.mtime
-        graph[s][Size] = f.size
-        graph[s][Mtime] = mt.to_i
-        graph[s][Date] = mt.iso8601
-        graph[s][Type] ||= R[Resource]
-      end
       ((f.r true) || {}). # load graph
         triples{|s,p,o|   # foreach triple
         if base           # base URI
