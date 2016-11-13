@@ -68,10 +68,6 @@ class R
       end
       s }}
 
-  GET['/today'] = -> e,r {[303,
-                           r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (r['QUERY_STRING']||'')}),
-                           []]}
-
   GET['/cache'] = E404
   GET['/domain'] = E404
   GET['/index'] = E404
