@@ -7,7 +7,6 @@ class R
     end
     bodies = e.q.has_key? 'full'
     e[:summarized] = true unless bodies || g.keys.size > 42
-    e[:floating] = true # containers freely-float, don't force into tabular-view
 
     # default sorting/grouping options
     e.q['group'] = (!e.q['sort'] || e.q['sort'] == Title) ? To : 'rdf:type' # default group-by To: field (mailing-list)
@@ -61,14 +60,7 @@ class R
           thread[Type] = R[SIOC+'MailMessage']
           thread[Creator] = post[Creator]
         end
-        graph[thread.uri] ||= {'uri' => thread.uri, Label => thread[Title]} if e.format != 'text/html' # post-label in RDF
-
-        # maybe create cluster-container
-        unless graph[container]
-          clusters.push container
-          graph[container] = {'uri' => container, Type => R[Container], LDP+'contains' => [], Label => a.R.fragment}
-        end
-        graph[container][LDP+'contains'].push thread
+        graph[thread.uri] = thread
       }
     }
   }

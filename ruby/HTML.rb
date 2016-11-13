@@ -192,11 +192,9 @@ class R
        {_: :a, id: :prevpage, rel: :prev, c: '&#9664;', title: p, href: p}},
      e[:Links][:next].do{|n| n = CGI.escapeHTML n.to_s
        {_: :a, id: :nextpage, rel: :next, c: '&#9654;', title: n, href: n}},
-     {class: 'container main',
-      c: [{class: :label, c: {_: :a, name: label.downcase, c: label, href: '?set=page'}},
-          {_: :a, id: :listsort, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
-          {class: :contents,
-           c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]},
+     {_: :a, name: label.downcase, c: label, href: '?set=page'},
+     {_: :a, id: :listsort, class: :listview, href: {'group' => e.q['group'], 'sort' => nextsort}.qs, c: '&#9776;'},
+     TabularView[g,e],
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
   
@@ -215,7 +213,7 @@ class R
      c: [
        {_: :tbody, c: rows.map{|r|
           TableRow[r,e,sort,direction,keys]}},
-       ({_: :tr,
+       {_: :tr,
          c: [keys.map{|k|
 
                q = e.q.merge({'sort' => k.shorten})
@@ -234,9 +232,7 @@ class R
                      rel: :nofollow,
                      href: href,
                      class: Icons[k]||'',
-                     c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}.update(sortables.member?(k) ? {href: href, id: 'sort'+rand.to_s.h} : {}), "\n"]},
-            ]} if show_head),
-     ]}}
+                     c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}.update(sortables.member?(k) ? {href: href, id: 'sort'+rand.to_s.h} : {}), "\n"]}]}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
