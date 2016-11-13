@@ -248,7 +248,7 @@ class R
                        children.map{|c|childGraph[c.uri] = c}
                        TabularView[childGraph,e,false]
                       else
-                       children.map{|c|[(CGI.escapeHTML c.R.basename[0..31]), ' ']}
+                       children.map{|c|[(CGI.escapeHTML c.R.basename[0..15]), ' ']}
                      end},
                     l[Content].do{|c|{class: :content, c: c}}]
                  when WikiText

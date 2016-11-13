@@ -36,6 +36,7 @@ a.tag:before { content:"\f02b"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
+a.title:before { content:"\f00b"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 
 h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:0}
@@ -54,7 +55,6 @@ div.mail a.to {font-size:1.27em}
 img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
 
-tr:target > td {padding: 3em}
 :target, div.mail:target, th:target a, .selectable:target a, .selectable:target td.selected {background-color:#fff;color:#000}
 
 .timegraph {position:absolute;top:0;left:0}
