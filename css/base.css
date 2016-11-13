@@ -43,7 +43,7 @@ h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:
 table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 
-td[property="uri"], td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
+td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
 div.mail {display:inline-block; max-width:80ex; background-color: #000;color:#fff}

@@ -59,10 +59,8 @@ class R
         send(*f){|s,p,o|
           content = p == Content
           host = s.R.host
-          reddit = o.class == String && host && host.match(/reddit\.com$/)
           if content
-            submission = /.* submitted by/
-            if reddit && o.match(submission)
+            if o.class == String && host && host.match(/reddit\.com$/) && o.match(/.* submitted by/)
               (Nokogiri::HTML.fragment o.sub(submission,' ')).do{|sub|
                 links = sub.css('a')
                 yield s, To, R[links[1].attr('href')]
