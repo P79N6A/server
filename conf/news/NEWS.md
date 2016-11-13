@@ -78,16 +78,11 @@ http://localhost/feed/
 
 ## consume
 
-an Atom/RSS-feed as [RDF](http://ruby-rdf.github.io/). usage: **getFeed** stores/indexes posts, or **getFeeds** for a host-list argument
-
-``` sh
-~ R http://localhost/feed getFeed localhost
-ix+ localhost http://www.reddit.com/r/boston/comments/43cyni/what_makes_you_uniquely_bostonian/
-```
+an Atom/RSS-feed as [RDF](http://ruby-rdf.github.io/). usage: **getFeed** stores/indexes posts from a host, or **getFeeds** for a host-list argument
 
 ## produce
 
-our handler at **/feed** fixes response MIME-type to **application/atom+xml** then defers to the timeline-handler. you can do a lot more than request the most recent 15 posts with it if you're an advanced user
+available as MIME **application/atom+xml**
 
 ``` sh
 ~ curl -I http://localhost/feed/

@@ -91,6 +91,7 @@ class R < RDF::URI
   HTTP_URI = /\A(\/|http)[\S]+\Z/
 
   ## URI constants
+
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"
@@ -98,7 +99,6 @@ class R < RDF::URI
   DC    = Purl + 'dc/terms/'
   SIOC  = RO + 'sioc/ns#'
   VOID  = RO + 'ns/void#'
-  Daemon   = 'http://src.whats-your.name/pw'
   MIMEtype = 'http://www.iana.org/assignments/media-types/'
   Schema   = 'http://schema.org/'
   Profile  = FOAF + 'PersonalProfileDocument'
