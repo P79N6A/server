@@ -1,11 +1,11 @@
-body {font-family: sans-serif;background-color:#000;color:#fff}
+body {font-family: sans-serif;background-color:#003;color:#fff}
 pre {white-space: pre-wrap}
 
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:2em;padding:.2em}
 a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
-.nextPage {font-size:8.8em}
+.nextPage {font-size:8em}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
@@ -44,14 +44,8 @@ td {vertical-align: top}
 table.tab {border-spacing:0}
 table.html {max-width: 100ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
-table th.selected, table th.selected a {background-color:#fff;color:#000}
-table td.selected, table td.selected a {background-color:#333;color:#fff}
 
-table td a {font-weight:bold}
-td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] a {font-weight: normal}
-td[property="uri"] a:visited {color: #ccf}
-td[property="uri"], td[property="http://purl.org/dc/terms/date"],td[property="http://rdfs.org/sioc/ns#has_creator"] {white-space:nowrap}
-tr.selectable > td {border-style: dotted; border-width: 0 0 .1em 0;border-color:#444}
+td[property="uri"], td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td.val {max-width: 100%; overflow: hidden}
 
 .container {margin:1em;display: inline-block;font-family: sans-serif}
