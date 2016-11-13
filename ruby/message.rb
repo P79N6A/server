@@ -41,9 +41,7 @@ class R
           d.map{|uri,msg|
             type = msg.types.find{|t|ViewA[t]}
             ViewA[type ? type : BasicResource][msg,e]
-          },
-          e[:Links][:next].do{|n|
-            {_: :a, id: :next, href: n, c: '&#9660;', class: :nextPage}}]}]}
+          }]}]}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
