@@ -203,15 +203,11 @@ class R
     sort = (e.q['sort']||'uri').expand                      # sort property
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq # base keys
-    keys = keys - [Title, Label, Content, Image, Type, 'uri']
-    sortables = ['uri',Size,Mtime]
-    keys.unshift 'uri' if show_id     # put URI and typetag at beginning
-    keys.unshift Type
-    rows = g.resources e # sort resources per environment preferences
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+
     {_: :table, class: :tab,
      c: [
-       {_: :tbody, c: rows.map{|r|
+       {_: :tbody, c: (g.resources e).map{|r|
           TableRow[r,e,sort,direction,keys]}},
        {_: :tr,
          c: [keys.map{|k|
@@ -225,14 +221,14 @@ class R
 
                href = CGI.escapeHTML q.qs
 
-               [{_: :th,
+               [{_: :th, id: 'sort'+rand.to_s.h, href: href,
                  property: k,
                  class: k == sort ? 'selected' : '',
                  c: {_: :a,
                      rel: :nofollow,
                      href: href,
                      class: Icons[k]||'',
-                     c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}.update(sortables.member?(k) ? {href: href, id: 'sort'+rand.to_s.h} : {}), "\n"]}]}]}}
+                     c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]}]}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
@@ -248,7 +244,7 @@ class R
               c: case k
                  when 'uri'
                    {_: :a, href: (CGI.escapeHTML l.uri),
-                    c: CGI.escapeHTML((l[Title]||l[Label]||this.basename).justArray[0])} if l.uri
+                    c: CGI.escapeHTML((l[Label]||this.basename).justArray[0])} if l.uri
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
