@@ -29,7 +29,7 @@ class R
       chan = msg[SIOC+'channel'].justArray[0] || ''
       date = msg[Date].justArray[0]
       label = date[0..12]
-      uri = '/news/' + date[0..12].gsub(/\D/,'/')
+      uri = '/' + date[0..12].gsub(/\D/,'/')
       graph[uri] ||= {'uri' => uri}
       graph[uri][SIOC+'addressed_to'] ||= chan
       graph[uri][Date] ||= date[0..12]+':30:00'

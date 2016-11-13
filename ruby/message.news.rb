@@ -1,29 +1,6 @@
 # coding: utf-8
 class R
 
-  GET['/news'] = -> d,e {
-    if d.path == '/news/'
-      e[:Links][:alternate] = '/feed/?'+e['QUERY_STRING']
-      if e.q.has_key?('q') # search
-        e.q['set'] = 'groonga'
-      else # subtree
-        e.q['set'] = 'page'
-        e.q['c'] ||= 22
-        e['HTTP_ACCEPT_DATETIME'].do{|dt|
-          t = Time.parse dt
-          e[:Response]['Memento-Datetime'] = dt
-          e.q['offset'] = d.join(t.strftime '%Y/%m/%d/').to_s}
-      end
-      nil
-    end}
-
-  GET['/feed'] = -> d,e {
-    e[:nosummary] = true                      # don't group/filter
-    e['HTTP_ACCEPT'] = 'application/atom+xml' # set feed MIME
-    e.q['set'] = 'page'                       # paginate news/ container
-    e.q['c'] ||= 20                           # post-count
-    d.dir.child('news/').setEnv(e).response}  # return
-
   def getFeed h='localhost'
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h
     self

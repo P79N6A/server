@@ -39,7 +39,7 @@ class R
     end}
 
   FileSet['glob'] = -> path,query,model {
-    if path.to_s.scan('*').size < 3 # can't get too crazy w/ the *
+    if path.to_s.scan('*').size < 3 # limit wildcard usage
       path.env[:container] = true # enable multiple-resource summarizae
       path.glob.select(&:inside) # return paths inside server-root
     else
