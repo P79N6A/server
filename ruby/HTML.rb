@@ -174,7 +174,7 @@ class R
   
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
   
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     path = e.R.justPath
     g.delete e.uri
     label = e.R.basename

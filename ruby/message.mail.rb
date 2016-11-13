@@ -51,19 +51,13 @@ class R
         # create thread resource
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
-        thread = {DC+'tag' => tags, 'uri' => '/thread/' + mid , Title => title, Image => post[Image]}
+        thread = {Type => R[SIOC+'Thread'], 'uri' => '/thread/' + mid , Title => title, DC+'tag' => tags, Image => post[Image]}
         thread[Date] ||= post[Date] if sort == Date
         if post[Size] > 1 # multi-post thread
-          thread.update({Size => post[Size],
-                         Type => R[SIOC+'Thread']})
-        else # singleton post
-          thread[Type] = R[SIOC+'MailMessage']
-          thread[Creator] = post[Creator]
+          thread.update({Size => post[Size]})
         end
         graph[thread.uri] = thread
-      }
-    }
-  }
+      }}}
 
   ReExpr = /\b[rR][eE]: /
 
