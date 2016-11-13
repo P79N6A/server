@@ -159,18 +159,19 @@ class R
                  end
                }.intersperse(' '), class: :val}, "\n"
              ]
-           end}, "\n"
-       ]
-     }}}
+           end}, "\n"]}}}
 
+  
   ViewA[FOAF+'Person'] = -> r,e {
     {_: :a, class: :person, id: r.R.fragment, href: r.uri,
      upgrade: 'https://linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
      c: r[FOAF+'name'].justArray[0] || r.R.basename}}
 
+  
   ViewGroup[BasicResource] = -> g,e {
     g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
 
+  
   ViewA[Container] = -> container,e {
     label = container.R.basename
     lbl = label.downcase.gsub(/[^a-zA-Z_-]/,'')
@@ -179,6 +180,7 @@ class R
      c: [{class: :label, c: {_: :a, href: container.uri, name: lbl, c: label}},
          {class: :contents, c: TabularView[{container.uri => container},e,false,false]}]}}
 
+  
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     path = e.R.justPath
     g.delete e.uri
@@ -204,6 +206,7 @@ class R
            c: e[:floating] ? g.map{|id,c|ViewA[Container][c,e]} : TabularView[g,e]}]},
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
+  
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
     sort = (e.q['sort']||'uri').expand                      # sort property
@@ -216,30 +219,31 @@ class R
     keys.unshift Type
     rows = g.resources e # sort resources per environment preferences
     {_: :table, class: :tab,
-     c: [({_: :thead,
-           c: {_: :tr,
-               c: [keys.map{|k|
+     c: [
+       {_: :tbody, c: rows.map{|r|
+          TableRow[r,e,sort,direction,keys]}},
+       ({_: :tr,
+         c: [keys.map{|k|
 
-                     q = e.q.merge({'sort' => k.shorten})
-                     if direction == :reverse
-                       q.delete 'reverse'
-                     else
-                       q['reverse'] = ''
-                     end
+               q = e.q.merge({'sort' => k.shorten})
+               if direction == :reverse
+                 q.delete 'reverse'
+               else
+                 q['reverse'] = ''
+               end
 
-                     href = CGI.escapeHTML q.qs
+               href = CGI.escapeHTML q.qs
 
-                     [{_: :th,
-                       property: k,
-                       class: k == sort ? 'selected' : '',
-                       c: {_: :a,
-                           rel: :nofollow,
-                           href: href,
-                           class: Icons[k]||'',
-                           c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}.update(sortables.member?(k) ? {href: href, id: 'sort'+rand.to_s.h} : {}), "\n"]},
-                  ]}} if show_head),
-         {_: :tbody, c: rows.map{|r|
-            TableRow[r,e,sort,direction,keys]}}]}}
+               [{_: :th,
+                 property: k,
+                 class: k == sort ? 'selected' : '',
+                 c: {_: :a,
+                     rel: :nofollow,
+                     href: href,
+                     class: Icons[k]||'',
+                     c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}.update(sortables.member?(k) ? {href: href, id: 'sort'+rand.to_s.h} : {}), "\n"]},
+            ]} if show_head),
+     ]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
