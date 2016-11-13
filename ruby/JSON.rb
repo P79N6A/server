@@ -58,7 +58,7 @@ class R
     graph
   end
 
-  # MITM triplr - caches and indexes previously-unseen resources as a side-effect
+  # Machine-In-The-Middle of triple-stream, caching on pass-through
   # non-destructive, only writes to new identifier
   def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
     graph = fromStream({},triplr) # bunch triples

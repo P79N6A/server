@@ -119,7 +119,7 @@ class R
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # bidirectional+recursive traverse on named predicate
+  # find all connections
   def walk pfull, pshort, g={}, v={}
     graph g       # graph
     v[uri] = true # mark this as visited
