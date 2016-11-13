@@ -68,6 +68,10 @@ class R
       end
       s }}
 
+  # goto TODAY's directory
+  GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (r['QUERY_STRING']||'')}), []]}
+  
+  # internal storage directories not exposed to HTTP clients
   GET['/cache'] = E404
   GET['/domain'] = E404
   GET['/index'] = E404
