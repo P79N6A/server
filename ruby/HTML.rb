@@ -299,7 +299,7 @@ class R
                      end
                    }.intersperse(' ')
                  end}, "\n"]}]},
-     l[Content].do{|c|{_: :tr, id: :content, href: l.uri, c: {_: :td, colspan: keys.size, c: c}} unless e[:container]},
+     l[Content].do{|c|{_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: c}} unless e[:container]},
      # local image, show thumbnail
      ({_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: ViewA[Image][l,e]}} if image),
      l[Image].do{|c| # external image, inline
