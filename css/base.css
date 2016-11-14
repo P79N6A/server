@@ -2,9 +2,10 @@ body {font-family: sans-serif;background-color:#003;color:#fff}
 pre {white-space: pre-wrap}
 
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
-a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:2em}
+a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:3em;background-color:#003}
 a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
+a.dirname {padding-left:1em}
 .nextPage {font-size:8em}
 a.uri {font-size:.9em;color:#888;background-color:#003;font-weight:normal}
 a.title {white-space: nowrap}

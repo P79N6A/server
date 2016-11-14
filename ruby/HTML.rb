@@ -195,6 +195,7 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+    keys = [DC+'tag', Type, *(keys - [DC+'tag',Type])]
 
     {_: :table, class: :tab,
      c: [
