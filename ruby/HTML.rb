@@ -184,7 +184,6 @@ class R
        {_: :a, id: :prevpage, rel: :prev, c: '&#9664;', title: p, href: p}},
      e[:Links][:next].do{|n| n = CGI.escapeHTML n.to_s
        {_: :a, id: :nextpage, rel: :next, c: '&#9654;', title: n, href: n}},
-     {_: :a, name: label.downcase, c: label, href: '?set=page'},
      TabularView[g,e],
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
@@ -195,7 +194,7 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [DC+'tag', Type, *(keys - [DC+'tag',Type])]
+    keys = [Size,DC+'tag', Type, *(keys - [Size,DC+'tag',Type])]
 
     {_: :table, class: :tab,
      c: [
@@ -238,8 +237,10 @@ class R
                    id = l.uri
                    if id
                      href = CGI.escapeHTML l.uri
-                     [{_: :a, class: :title, href: href, c: CGI.escapeHTML(l[Title].justArray[0]||'')},'<br>',
-                      {_: :a, class: :uri, href: href, c: CGI.escapeHTML((l[Label]||this.basename).justArray[0])}]
+                     title = l[Title].justArray[0]
+                     slug = this.basename
+                     [{_: :a, class: :title, href: href, c: CGI.escapeHTML(title||slug)},
+                      ({_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(slug)} if title)]
                    end
                  when Title # show in URI column
                  when Type

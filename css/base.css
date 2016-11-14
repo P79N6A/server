@@ -5,9 +5,9 @@ a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:3em;background-color:#003}
 a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
-a.dirname {padding-left:1em}
+a.dirname {margin-left:1em}
 .nextPage {font-size:8em}
-a.uri {font-size:.9em;color:#888;background-color:#003;font-weight:normal}
+a.uri {font-size:.9em;color:#448;background-color:#003;font-weight:normal}
 a.title {white-space: nowrap}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
@@ -47,6 +47,8 @@ table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
+td[property="http://purl.org/dc/terms/tag"] {max-width:14em; text-align: right}
+td[property="http://purl.org/dc/terms/tag"] a {color:#000;white-space: nowrap}
 
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
 div.mail {display:inline-block; max-width:80ex; background-color: #000;color:#fff}
