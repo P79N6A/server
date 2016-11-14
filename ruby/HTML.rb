@@ -234,8 +234,13 @@ class R
             [{_: :td, property: k, class: sort==k ? 'selected' : '',
               c: case k
                  when 'uri'
-                   {_: :a, href: (CGI.escapeHTML l.uri),
-                    c: CGI.escapeHTML((l[Label]||this.basename).justArray[0])} if l.uri
+                   id = l.uri
+                   if id
+                     href = CGI.escapeHTML l.uri
+                     [{_: :a, class: :title, href: href, c: CGI.escapeHTML(l[Title].justArray[0]||'')},'<br>',
+                      {_: :a, class: :uri, href: href, c: CGI.escapeHTML((l[Label]||this.basename).justArray[0])}]
+                   end
+                 when Title # show in URI column
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]

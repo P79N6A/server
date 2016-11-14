@@ -6,6 +6,8 @@ a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:2em}
 a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
 .nextPage {font-size:8em}
+a.uri {font-size:.9em;color:#888;background-color:#003;font-weight:normal}
+a.title {white-space: nowrap}
 
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
@@ -36,7 +38,6 @@ a.tag:before { content:"\f02b"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
-a.title:before { content:"\f00b"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 
 h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:0}
@@ -44,8 +45,6 @@ h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:
 table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 
-td[property="uri"] {max-width:16em;overflow:hidden}
-td[property="uri"] {max-width:16em;overflow:hidden}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
