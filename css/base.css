@@ -46,6 +46,7 @@ h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:20%;margin:
 table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 
+td {vertical-align:top}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://purl.org/dc/terms/tag"] {max-width:14em; text-align: right}
 td[property="http://purl.org/dc/terms/tag"] a {color:#000;white-space: nowrap}

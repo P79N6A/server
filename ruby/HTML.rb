@@ -194,7 +194,7 @@ class R
     direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Size,DC+'tag', Type, *(keys - [Size,DC+'tag',Type])]
+    keys = [Size,DC+'tag', Type, *(keys - [Size,Mtime,DC+'tag',Type])]
 
     {_: :table, class: :tab,
      c: [
@@ -240,7 +240,9 @@ class R
                      title = l[Title].justArray[0]
                      slug = this.basename
                      [{_: :a, class: :title, href: href, c: CGI.escapeHTML(title||slug)},
-                      ({_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(slug)} if title)]
+                      ({_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(slug)} if title),
+                      l[Image].do{|c|
+                        ['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
                  when Title # show in URI column
                  when Type
@@ -283,12 +285,8 @@ class R
                    }.intersperse(' ')
                  end}, "\n"]}]},
      l[Content].do{|c|{_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: c}} unless e[:container]},
-     # local image, show thumbnail
      ({_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: ViewA[Image][l,e]}} if image),
-     l[Image].do{|c| # external image, inline
-       {_: :tr,
-        c: {_: :td, colspan: keys.size,
-            c: c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}}}]}
+    ]}
 
   ViewA[Image] = ->img,e{
     image = img.R
