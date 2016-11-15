@@ -51,8 +51,7 @@ class R
         # create thread resource
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
-        thread = {Type => R[SIOC+'Thread'], 'uri' => '/thread/' + mid , Title => title, DC+'tag' => tags, Image => post[Image]}
-        thread[Date] ||= post[Date] if sort == Date
+        thread = {Type => R[SIOC+'Thread'], 'uri' => '/thread/' + mid , Title => title, Date => post[Date], DC+'tag' => tags, Image => post[Image]}
         if post[Size] > 1 # multi-post thread
           thread.update({Size => post[Size]})
         end

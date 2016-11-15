@@ -35,10 +35,11 @@ a.thread:before { content:"\f03c"; font-family: icons; }
 a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
-h3.title {position:fixed;background-color:#fff;color:#000;top:0;left:0;margin:0}
+h3.title {background-color:#fff;color:#000;margin:0}
+table {border-spacing:0}
 table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
-td {vertical-align:top}
+td {vertical-align:top;padding:.2em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://purl.org/dc/terms/tag"] {max-width:14em; text-align: right}
 td[property="http://purl.org/dc/terms/tag"] a {color:#000;white-space: nowrap}
