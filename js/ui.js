@@ -28,9 +28,10 @@ document.addEventListener("keydown",function(e){
 	if(doc)
 	    window.location = doc.getAttribute('href') + start;
     };
+
     // kbd navigation
     var key = e.keyCode;
-    console.log(key);
+//    console.log(key);
 
     if(e.getModifierState("Shift")) {
 	if(key==80) // previous page

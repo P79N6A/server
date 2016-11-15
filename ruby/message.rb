@@ -1,10 +1,7 @@
 # coding: utf-8
-#watch __FILE__
 class R
 
-  # generic message-view
-
-  ViewGroup[SIOC+'ChatLog'] = ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = ViewGroup[SIOC+'ChatLog'] = -> d,e {
     e[:arcs] = []
     e[:day] = {}
     e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
@@ -22,13 +19,10 @@ class R
             source = s.uri.gsub(/[^a-zA-Z0-9]/,'')
             target = o.uri.gsub(/[^a-zA-Z0-9]/,'')
             e[:arcs].push({source: source, target: target, sourceLabel: sLabel, targetLabel: tLabel})}}
-      end
-    }
-
+      end}
     # labels
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
 
-    # HTML
     [([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
        H.js('/js/d3.min'),
        H.js('/js/timegraph',true),
