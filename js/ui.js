@@ -8,7 +8,7 @@ E.attr = function(a,v){
 var prev = null;
 var first = null;
 
-// link navigation pointers
+// construct selection ring
 document.querySelectorAll('[id]').map(function(e){
     if(!first)
 	first = this;
@@ -19,6 +19,14 @@ document.querySelectorAll('[id]').map(function(e){
 	prev.attr('next',this.attr('id'));
     };
     prev = this;
+    this.addEventListener("click",function(e){
+	var id = this.attr('id');
+	if(window.location.hash.slice(1)==id){
+	    window.location = this.attr('href');
+	} else {
+	    window.location.hash = id;
+	};
+    },false);
 });
 
 document.addEventListener("keydown",function(e){
@@ -80,24 +88,3 @@ document.addEventListener("keydown",function(e){
 	};
     };
 },false);
-
-// if JS support exists, switch to JS UI to resource
-document.addEventListener("DOMContentLoaded", function(){
-    var upgrade = function(){
-	var id = window.location.hash.slice(1);
-	if(id) {
-	    var resource = document.getElementById(id);
-	    if(resource) {
-		var ui = resource.getAttribute('upgrade');
-		if (ui) {
-//		    window.location = ui;
-		    console.log('upgrade-UI at ' + ui)
-		};
-	    };
-	};
-    };
-  // goto UI
-    upgrade();
-    window.addEventListener('hashchange',upgrade);
-
-}, false);
