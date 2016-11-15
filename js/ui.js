@@ -49,7 +49,11 @@ document.addEventListener("keydown",function(e){
 	    jumpDoc('next','#first');
 	return null;
     };
-
+    if(key==85){
+	var up = document.querySelector('#up');
+	if(up)
+	    window.location = up.attr('href');
+    };
     if(key==80){ // (p)revious selectable
 	loc = window.location.hash
 	if(loc) {
