@@ -40,7 +40,7 @@ document.addEventListener("keydown",function(e){
 	return null;
     };
 
-    if(key==38||key==80){ // previous selection
+    if(key==80){ // (p)revious selectable
 	loc = window.location.hash
 	if(loc) {
 	    cur = document.querySelector(loc);
@@ -52,7 +52,7 @@ document.addEventListener("keydown",function(e){
 	var p = cur.attr('prev');
 	window.location.hash = p;
     };
-    if(key==40||key==78){ // next selection
+    if(key==78){ // (n)ext selectable
 	var loc = window.location.hash;
 	var cur = null;
 	if(loc)
@@ -67,10 +67,7 @@ document.addEventListener("keydown",function(e){
 	    };
 	};
     };
-    if(key==37) // exit
-	window.location = document.referrer;
-	//	window.history.back;
-    if(key==13||key==39){ // enter
+    if(key==13){ // goto
 	loc = window.location.hash;
 	if(loc){
 	    cur = document.querySelector(loc);
