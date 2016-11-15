@@ -8,8 +8,8 @@ E.attr = function(a,v){
 var prev = null;
 var first = null;
 
-// construct selection ring
 document.querySelectorAll('[id]').map(function(e){
+    // construct selection ring
     if(!first)
 	first = this;
     this.attr('next',first.attr('id'));
@@ -19,6 +19,7 @@ document.querySelectorAll('[id]').map(function(e){
 	prev.attr('next',this.attr('id'));
     };
     prev = this;
+    // tap to select
     this.addEventListener("click",function(e){
 	var id = this.attr('id');
 	if(window.location.hash.slice(1)==id){

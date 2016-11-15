@@ -8,7 +8,7 @@ class String
     pre,link,post = self.partition R::Href
     u = link.noHTML # escape URI
     pre.noHTML +    # escape pre-match
-      (link.empty? && '' || '<a id="link' + rand.to_s.h[0..7] + '" href="' + u + '">' + # hyperlink
+      (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
        (if images && u.match(/(gif|jpe?g|png|webp)$/i) # image?
         yield(R::DC+'Image',u.R) if b # emit image-link tuple
         "<img src='#{u}'/>"           # inline image

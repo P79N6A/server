@@ -30,7 +30,6 @@ class R
     threads.map{|title,post|
       post[groupBy].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|group|
         mid = URI.escape post[DC+'identifier'][0]
-        # create thread resource
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         tags = [group] if tags.empty?
