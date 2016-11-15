@@ -2,34 +2,18 @@
 class R
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
-    if graph[e.uri]
-      graph[e.uri].delete LDP+'contains'
-    end
+    threads = {}
+    weight = {}
     bodies = e.q.has_key? 'full'
     e[:summarized] = true unless bodies || g.keys.size > 42
+    groupBy = (e.q['group']||To).expand
 
-    # default sorting/grouping options
-    e.q['group'] = (!e.q['sort'] || e.q['sort'] == Title) ? To : 'rdf:type' # default group-by To: field (mailing-list)
-    e.q['sort'] ||= Size
-    e.q['reverse'] = 'reverse' unless e.q['sort'] == Title # newest + largest first
-
-    # expand URIs
-    sort = e.q['sort'].expand
-    group = e.q['group'].expand
-
-    # derived datastructures
-    threads = {}
-    clusters = []
-    weight = {}
-
-    # pass 1. prune + analyze
+    # pass 1. statistics
     g.map{|u,p|
       recipients = p[To].justArray.map &:maybeURI
       graph.delete u unless bodies # hide unsummarized, unless full-bodies requested
-      p[DC+'source'].justArray.map{|s|graph.delete s.uri}         # hide provenance
       p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # hide author resource
       recipients.map{|a|graph.delete a}                           # hide recipient resource
-
       p[Title].do{|t|
         title = t[0].sub ReExpr, '' # strip prefix
         unless threads[title]
@@ -44,19 +28,15 @@ class R
 
     # pass 2. cluster
     threads.map{|title,post|
-      post[group].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|a| # bind heaviest group-weight
-        container = a.R.dir.uri.t
+      post[groupBy].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|group|
         mid = URI.escape post[DC+'identifier'][0]
-
         # create thread resource
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
+        tags = [group] if tags.empty?
         thread = {Type => R[SIOC+'Thread'], 'uri' => '/thread/' + mid , Title => title, Date => post[Date], DC+'tag' => tags, Image => post[Image]}
-        if post[Size] > 1 # multi-post thread
-          thread.update({Size => post[Size]})
-        end
-        graph[thread.uri] = thread
-      }}}
+        thread.update({Size => post[Size]}) if post[Size] > 1
+        graph[thread.uri] = thread }}}
 
   ReExpr = /\b[rR][eE]: /
 

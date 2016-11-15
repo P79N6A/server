@@ -41,7 +41,7 @@ table.html {max-width: 80ex;display:inline-block}
 table th a {font-size:1.5em;font-weight: normal}
 td {vertical-align:top;padding:.2em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
-td[property="http://purl.org/dc/terms/tag"] {max-width:14em; text-align: right}
+td[property="http://purl.org/dc/terms/tag"] {max-width:16em; text-align: right}
 td[property="http://purl.org/dc/terms/tag"] a {color:#000;white-space: nowrap}
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
 div.msgs {writing-mode: vertical-lr}

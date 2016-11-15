@@ -264,9 +264,10 @@ class R
                    Render[WikiText][l[k]]
                  when DC+'tag'
                    l[k].justArray.map{|v|
-                     label = v.downcase.strip
-                     e[:label][label] = true
-                     [{_: :a, href: this.uri, name: label, c: v},' ']}
+                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
+                     lbl = label.downcase.strip
+                     e[:label][lbl] = true
+                     [{_: :a, href: this.uri, name: lbl, c: label},' ']}
                  when SIOC+'has_container'
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
