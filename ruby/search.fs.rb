@@ -10,19 +10,16 @@ class R
       slug = m[4] || ''
 
       # construct pointers
-      if slug.match(/^[0-2][0-9]\/?$/) # hour dir
+      if slug.match(/^[0-2][0-9]\/?$/) # hour context
         hour = slug.to_i
+        np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
+        pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
         if hour == 0
           pp = (date - 1).strftime('/%Y/%m/%d/23/')
-          np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
         elsif hour >= 23
-          pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
           np = (date+1).strftime('/%Y/%m/%d/00/')
-        else
-          pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
-          np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
         end
-      else # day dir
+      else # day context
         pp = (date-1).strftime('/%Y/%m/%d/') + slug
         np = (date+1).strftime('/%Y/%m/%d/') + slug
       end
