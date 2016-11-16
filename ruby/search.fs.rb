@@ -5,13 +5,31 @@ class R
 
     # pagination on date-dirs
     e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
+      qs = query && !query.empty? && ('?' + query) || ''
       date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
       slug = m[4] || ''
-      qs = query && !query.empty? && ('?' + query) || ''
-      pp = (date-1).strftime('/%Y/%m/%d/')
-      np = (date+1).strftime('/%Y/%m/%d/')
-      e.env[:Links][:prev] = pp + slug + qs if R['//' + e.env.host + pp].e
-      e.env[:Links][:next] = np + slug + qs if R['//' + e.env.host + np].e}
+
+      # construct pointers
+      if slug.match(/^[0-2][0-9]\/?$/) # hour dir
+        hour = slug.to_i
+        if hour == 0
+          pp = (date - 1).strftime('/%Y/%m/%d/23/')
+          np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
+        elsif hour >= 23
+          pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
+          np = (date+1).strftime('/%Y/%m/%d/00/')
+        else
+          pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
+          np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
+        end
+      else # day dir
+        pp = (date-1).strftime('/%Y/%m/%d/') + slug
+        np = (date+1).strftime('/%Y/%m/%d/') + slug
+      end
+
+      # return pointers in header
+      e.env[:Links][:prev] = pp + qs
+      e.env[:Links][:next] = np + qs}
 
     if e.env[:container]
       htmlFile = e.a 'index.html'
