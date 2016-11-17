@@ -8,23 +8,28 @@ class R
       qs = query && !query.empty? && ('?' + query) || ''
       date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
       slug = m[4] || ''
-
-      # construct pointers
-      if slug.match(/^[0-2][0-9]\/?$/) # hour context
+      if slug.match(/^[0-2][0-9]\/?$/) # hour dirs
         hour = slug.to_i
+        # next/prev hours
         np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
         pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
+        # wraparound hours to next/prev days
         if hour == 0
           pp = (date - 1).strftime('/%Y/%m/%d/23/')
         elsif hour >= 23
           np = (date+1).strftime('/%Y/%m/%d/00/')
         end
-      else # day context
-        pp = (date-1).strftime('/%Y/%m/%d/') + slug
-        np = (date+1).strftime('/%Y/%m/%d/') + slug
+        nPath = np
+        pPath = pp
+      else # day dirs
+        pPath = (date-1).strftime('/%Y/%m/%d/')
+        nPath = (date+1).strftime('/%Y/%m/%d/')
+        # slug persists across pages, can be unexpanded glob or actual dir
+        pp = pPath + slug
+        np = nPath + slug
       end
-
-      # return pointers in header
+      e.env[:nextEmpty] = true unless R['//' + e.env.host + nPath].e
+      e.env[:prevEmpty] = true unless R['//' + e.env.host + pPath].e
       e.env[:Links][:prev] = pp + qs
       e.env[:Links][:next] = np + qs}
 
