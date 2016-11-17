@@ -199,7 +199,7 @@ class R
     label = e.R.basename
     e[:label][label.downcase] = true
     g.delete e.uri
-    [TabularView[g,e],
+    [(TabularView[g,e] unless g.keys.size==0),
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
   
