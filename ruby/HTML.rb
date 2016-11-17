@@ -205,8 +205,8 @@ class R
   
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
-    sort = (e.q['sort']||'uri').expand                      # sort property
-    direction = e.q.has_key?('reverse') ? :reverse : :id    # sort direction
+    sort = (e.q['sort']||'dc:date').expand
+    direction = e.q.has_key?('ascending') ? :id : :reverse
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Size,DC+'tag', Type, *(keys - [Size,Mtime,DC+'tag',Type])]
@@ -219,10 +219,10 @@ class R
          c: [keys.map{|k|
 
                q = e.q.merge({'sort' => k.shorten})
-               if direction == :reverse
-                 q.delete 'reverse'
+               if direction == :id
+                 q.delete 'ascending'
                else
-                 q['reverse'] = ''
+                 q['ascending'] = ''
                end
 
                href = CGI.escapeHTML q.qs

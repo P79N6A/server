@@ -5,7 +5,6 @@ class R
     e[:arcs] = []
     e[:day] = {}
     e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
-    e.q['reverse'] ||= true
 
     # find timegraph arcs
     d.values.map{|s|
