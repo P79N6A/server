@@ -56,7 +56,7 @@ class R
     discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
     # HTML
-    {class: :mail,
+    [{class: :mail,
      c: [[(r[Title].justArray[0].do{|t|
              {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {})} unless e[:thread]),
           r[To].justArray.map{|o|
@@ -76,6 +76,8 @@ class R
            {class: :body, c: c}},
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
          [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}},
-        ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href})}
+        ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
+     ('<br>' if r.types.member?(SIOC+'MailMessage'))
+    ]}
 
 end
