@@ -198,6 +198,7 @@ class R
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     label = e.R.basename
     e[:label][label.downcase] = true
+    g.delete e.uri
     [TabularView[g,e],
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
