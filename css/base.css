@@ -5,7 +5,6 @@ a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:3em;background-color:
 a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
 a[rel="next"].weak, a[rel="prev"].weak {color:#227}
-.dirname, .expand {padding-left:.82em}
 a.uri {font-size:.9em;color:#448;background-color:#003;font-weight:normal}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
