@@ -111,6 +111,7 @@ class R
     e[:label] ||= {}
 
     [(ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
+     Pagelinks[d,e],
      groups.map{|view,graph|view[graph,e]}, # grouped
      d.map{|u,r|                            # singleton
        if !seen[u]
@@ -173,18 +174,31 @@ class R
 
   
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
-  
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
+
+  Pagelinks= -> g,e {
     path = e.R.justPath
-    g.delete e.uri
+    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] unless path == '/'),
+     e[:Links][:prev].do{|p|
+       p = CGI.escapeHTML p.to_s
+       {_: :a, id: :prevpage,
+        rel: :prev,
+        class: e[:prevEmpty] ? 'weak' : '',
+        c: '&#9664;',
+        title: p,
+        href: p}},
+     e[:Links][:next].do{|n|
+       n = CGI.escapeHTML n.to_s
+       {_: :a, id: :nextpage,
+        rel: :next,
+        class: e[:nextEmpty] ? 'weak' : '',
+        c: '&#9654;',
+        title: n,
+        href: n}}]}
+
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     label = e.R.basename
     e[:label][label.downcase] = true
-    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] unless path == '/'),
-     e[:Links][:prev].do{|p| p = CGI.escapeHTML p.to_s
-       {_: :a, id: :prevpage, rel: :prev, class: e[:prevEmpty] ? 'weak' : '', c: '&#9664;', title: p, href: p}},
-     e[:Links][:next].do{|n| n = CGI.escapeHTML n.to_s
-       {_: :a, id: :nextpage, rel: :next, class: e[:nextEmpty] ? 'weak' : '', c: '&#9654;', title: n, href: n}},
-     TabularView[g,e],
+    [TabularView[g,e],
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
   
