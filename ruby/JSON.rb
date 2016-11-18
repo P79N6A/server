@@ -141,7 +141,7 @@ class R
 
   Render['application/json'] = -> d,e { d.to_json }
 
-  # file-reference (non-RDF file) ->  file-reference (RDF file)
+  # return just RDF files of whitelisted formats, transcode non-RDF as necessary
   def justRDF pass = RDFsuffixes
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
       self # unchanged

@@ -40,7 +40,7 @@ class R
       else
         cs = e.c # child-nodes
         size = cs.size
-        # inline small sets, reduce large-set data to pointers
+        # inline small sets, limit large sets to pointers
         if size < 512 || q.has_key?('full')
           cs.map{|c|c.setEnv e.env}
           e.fileResources.concat cs
@@ -103,16 +103,8 @@ class R
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601
-    contained = c
-    yield dir, Size, contained.size
-    contained.map{|c|
-      if c.directory?
-        child = c.descend # trailing-slash directory-URI convention
-        yield dir, LDP+'contains', child
-      else # file/leaf
-        yield dir, LDP+'contains', c
-      end
-    } unless contained.size > 42
+    children = c
+    yield dir, Size, children.size
   end
 
   def triplrUriList
