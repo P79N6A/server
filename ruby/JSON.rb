@@ -54,7 +54,7 @@ class R
     self
   end
 
-  # Graph, host, predicates to index, indexer-lambda -> file(s) 
+  # graph, host, arcs to index, hook -> file(s)
   def R.store graph, host = 'localhost', p = nil, indexer = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -69,13 +69,12 @@ class R
     docs.map{|d,g| # each doc
       d = d.R
       d.w g, true                   # write
-      indexer[d,g,host] if indexer} # index-update handler
+      indexer[d,g,host] if indexer} # bespoke handler
   end
 
-  # URI -> file
+  # URI -> file(s)
   def store options = {}
     g = RDF::Repository.load self, options
-#    puts "store #{g.size} triples from #{uri}"
     g.each_graph.map{|graph|
       if graph.named?
         doc = graph.name.ttl
