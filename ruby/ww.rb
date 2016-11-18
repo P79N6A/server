@@ -150,6 +150,7 @@ class R < RDF::URI
   Icons = {
     'uri' => :id,
     Container => :dir,
+    Content => :pencil,
     Date => :date,
     Label => :tag,
     Title => :title,
@@ -170,6 +171,7 @@ class R < RDF::URI
     RSS+'comments' => :comments,
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
+    SIOC+'channel' => :exchange,
     SIOC+'wikiText' => :pencil,
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :up,
