@@ -41,10 +41,10 @@ h3.title {background-color:#fff;color:#000;margin:0}
 table.html {max-width: 80ex;display:inline-block}
 th {background-color:#224}
 th a {font-size:1.5em;font-weight: normal;background-color:#224}
-td {vertical-align:top}
+td, th {vertical-align:top;border-radius:.125em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
-td[property="http://purl.org/dc/terms/tag"] {max-width:22em; text-align: right}
-td[property="http://purl.org/dc/terms/tag"] a {color:#000;white-space: nowrap;border-radius:.14em}
+td[property="http://purl.org/dc/terms/tag"] {text-align: right}
+td[property="http://purl.org/dc/terms/tag"] a {color:#000;white-space: nowrap}
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
 div.msgs {writing-mode: vertical-lr}
 div.mail, div.chatLog {writing-mode: horizontal-tb}
