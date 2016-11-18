@@ -208,7 +208,7 @@ class R
 
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     label = e.R.basename
-    e[:label][label.downcase] = true
+    e[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
     g.delete e.uri # we're at this dir, don't list it as a selection
     [(TabularView[g,e] unless g.keys.size==0),
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
@@ -296,7 +296,7 @@ class R
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
                      name = v.R.fragment||''
-                     label = name.downcase.strip
+                     label = name.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                      e[:label][label] = true
                      [{_: :a, href: this.uri, name: label, c: name},' ']}
                  else
