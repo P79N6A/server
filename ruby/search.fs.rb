@@ -36,7 +36,7 @@ class R
     if e.env[:container]
       htmlFile = e.a 'index.html'
       if e.env.format=='text/html' && !e.env['REQUEST_URI'].match(/\?/) && htmlFile.e
-        [htmlFile.setEnv(e.env)] # return index on-file
+         [htmlFile.setEnv(e.env)] # found index.html, HTML requested, and no query -> use static-file
       else
         cs = e.c # child-nodes
         size = cs.size
