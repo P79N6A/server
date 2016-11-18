@@ -7,13 +7,13 @@ class R
     msgs.map{|id,msg|
       source = msg[DC+'source'].justArray[0]
       sources[source.uri] ||= source
-      graph.delete id # msg only visible when unsummarized
+      graph.delete id # only visible when unsummarized
     }
     # link to HTML rewrite of log-file
     sources.map{|id,src|
-      graph[id] = {'uri' => id,
-                   Type => R[Stat+'File'],
-                   DC+'hasFormat' => R[id+'.html']
+      graph[id] = {'uri' => R[id+'.html'],
+                   Type => R[Resource],
+                   DC+'formatOf' => id.R
                   }
     }
   }
