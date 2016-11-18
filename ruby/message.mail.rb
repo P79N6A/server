@@ -33,7 +33,7 @@ class R
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         tags = [group] if tags.empty?
-        thread = {Type => R[SIOC+'Thread'], 'uri' => '/thread/' + mid , Title => title, Date => post[Date], DC+'tag' => tags, Image => post[Image]}
+        thread = {Type => R[SIOC+'Thread'], 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Label => tags, Image => post[Image]}
         thread.update({Size => post[Size]}) if post[Size] > 1
         graph[thread.uri] = thread }}}
 

@@ -209,7 +209,7 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Size,DC+'tag', Type, *(keys - [Size,Mtime,DC+'tag',Type])]
+    keys = [Size, Label, Type, *(keys - [Size,Mtime,Label,Type])]
 
     {_: :table, class: :tab,
      c: [
@@ -277,7 +277,7 @@ class R
                     l[Content].do{|c|{class: :content, c: c}}]
                  when WikiText
                    Render[WikiText][l[k]]
-                 when DC+'tag'
+                 when Label
                    l[k].justArray.map{|v|
                      label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                      lbl = label.downcase.strip
@@ -286,7 +286,7 @@ class R
                  when SIOC+'has_container'
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
-                     name = v.R.fragment
+                     name = v.R.fragment||''
                      label = name.downcase.strip
                      e[:label][label] = true
                      [{_: :a, href: this.uri, name: label, c: name},' ']}
@@ -300,7 +300,6 @@ class R
                      end
                    }.intersperse(' ')
                  end}, "\n"]}]},
-     l[Content].do{|c|{_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: c}} unless e[:container]},
      ({_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: ViewA[Image][l,e]}} if image),
     ]}
 

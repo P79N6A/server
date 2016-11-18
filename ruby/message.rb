@@ -1,7 +1,7 @@
 # coding: utf-8
 class R
 
-  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = ViewGroup[SIOC+'ChatLog'] = -> d,e {
+  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     e[:arcs] = []
     e[:day] = {}
     e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
