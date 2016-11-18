@@ -109,9 +109,20 @@ class R
         end}}
 
     e[:label] ||= {}
+    path = e.R.justPath
 
     [(ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
-     Pagelinks[d,e],
+     ({_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'),
+     e[:Links][:prev].do{|p|
+       p = CGI.escapeHTML p.to_s
+       [{_: :a, id: :prevpage,
+         rel: :prev,
+         class: e[:prevEmpty] ? 'weak' : '',
+         c: '&#9664;',
+         title: p,
+         href: p},
+        {_: :a, href: p, class: :uri, c: CGI.escapeHTML(p)},'<br>']
+     },
      groups.map{|view,graph|view[graph,e]}, # grouped
      d.map{|u,r|                            # singleton
        if !seen[u]
@@ -119,6 +130,17 @@ class R
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
+     e[:Links][:next].do{|n|
+       n = CGI.escapeHTML n.to_s
+       ['<br>',
+        {_: :a, id: :nextpage,
+         rel: :next,
+         class: e[:nextEmpty] ? 'weak' : '',
+         c: '&#9654;',
+         title: n,
+         href: n},
+        {_: :a, href: n, class: :uri, c: CGI.escapeHTML(n)}]
+     },
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
@@ -176,29 +198,7 @@ class R
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
 
   Pagelinks= -> g,e {
-    path = e.R.justPath
-    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] if e[:container] && path != '/'),
-      e[:Links][:prev].do{|p|
-       p = CGI.escapeHTML p.to_s
-       [{_: :a, id: :prevpage,
-         rel: :prev,
-         class: e[:prevEmpty] ? 'weak' : '',
-         c: '&#9664;',
-         title: p,
-         href: p},
-        {_: :a, href: p, class: :uri, c: CGI.escapeHTML(p)}]
-     },
-     e[:Links][:next].do{|n|
-       n = CGI.escapeHTML n.to_s
-       [{_: :a, id: :nextpage,
-         rel: :next,
-         class: e[:nextEmpty] ? 'weak' : '',
-         c: '&#9654;',
-         title: n,
-         href: n},
-        {_: :a, href: n, class: :uri, c: CGI.escapeHTML(n)}]
-     }
-    ]
+
   }
 
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
