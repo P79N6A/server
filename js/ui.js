@@ -47,13 +47,14 @@ document.addEventListener("keydown",function(e){
 	    jumpDoc('prev','#last');
 	if(key==78) // next page
 	    jumpDoc('next','#first');
+	if(key==85){ // containing page
+	    var up = document.querySelector('#up');
+	    if(up)
+		window.location = up.attr('href');
+	};
 	return null;
     };
-    if(key==85){
-	var up = document.querySelector('#up');
-	if(up)
-	    window.location = up.attr('href');
-    };
+
     if(key==80){ // (p)revious selectable
 	loc = window.location.hash
 	if(loc) {

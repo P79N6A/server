@@ -1,5 +1,6 @@
-body {font-family: sans-serif; padding:0; margin: 0; background-color:#003; color:#fff;}
+body {font-family: sans-serif; background-color:#003; color:#fff;}
 pre {white-space: pre-wrap}
+input[name="q"] {background-color:#224;color:#fff;border-width:0}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:3em;background-color:#003;margin:.18em}
 a[rel="prev"] {float: left}
@@ -37,10 +38,10 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 h3.title {background-color:#fff;color:#000;margin:0}
-table {border-spacing:0}
 table.html {max-width: 80ex;display:inline-block}
-table th a {font-size:1.5em;font-weight: normal}
-td {vertical-align:top;padding:.2em}
+th {background-color:#224}
+th a {font-size:1.5em;font-weight: normal;background-color:#224}
+td {vertical-align:top}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://purl.org/dc/terms/tag"] {max-width:22em; text-align: right}
 td[property="http://purl.org/dc/terms/tag"] a {color:#000;white-space: nowrap;border-radius:.14em}
