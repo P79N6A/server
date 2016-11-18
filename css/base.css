@@ -1,4 +1,4 @@
-body {font-family: sans-serif; background-color:#003; color:#fff;writing-mode: vertical-lr}
+body {font-family: sans-serif; background-color:#003; color:#fff;writing-mode: vertical-lr;margin:0}
 pre {white-space: pre-wrap}
 input[name="q"] {background-color:#224;color:#fff;border-width:0}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
@@ -45,7 +45,7 @@ td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {white-space: nowrap}
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
 table, div.mail {writing-mode: horizontal-tb}
-div.mail {margin:.2em;display:inline-block; max-width:80ex; background-color: #000;color:#fff}
+div.mail {margin-left:.4em;display:inline-block; max-width:80ex; background-color: #000;color:#fff}
 div.mail a.title {background-color: #fff;color:#000}
 div.mail > a[class] {font-size:1.1em}
 img {max-width: 100%}

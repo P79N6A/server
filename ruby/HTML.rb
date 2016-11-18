@@ -176,7 +176,9 @@ class R
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
 
   Pagelinks= -> g,e {
-    [e[:Links][:prev].do{|p|
+    path = e.R.justPath
+    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] if e[:container] && path != '/'),
+      e[:Links][:prev].do{|p|
        p = CGI.escapeHTML p.to_s
        [{_: :a, id: :prevpage,
          rel: :prev,
@@ -202,10 +204,8 @@ class R
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     label = e.R.basename
     e[:label][label.downcase] = true
-    path = e.R.justPath
-    g.delete e.uri # we're at this dir, don't list as a selection in the table
-    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br>'] unless path == '/'),
-     (TabularView[g,e] unless g.keys.size==0),
+    g.delete e.uri # we're at this dir, don't list it as a selection
+    [(TabularView[g,e] unless g.keys.size==0),
      (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
   
