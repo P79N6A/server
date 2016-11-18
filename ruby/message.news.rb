@@ -39,7 +39,7 @@ class R
       end
       
       def each_statement &fn
-        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triple-stream pipeline, processed right to left
+        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # stacked pipeline, triples flow right-to-left
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -137,8 +137,9 @@ class R
                inner.match(reGUID)).do{|s|
             s[1]}
 
-          if u # still no URI found, toss in junk-heap
+          if u
 
+            # no URL found, headed for junk heap
             u = '/junk/'+u.gsub('/','.') unless u.match /^http/
 
             yield u, R::Type, R[R::BlogPost]
