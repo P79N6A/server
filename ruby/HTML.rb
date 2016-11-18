@@ -178,20 +178,26 @@ class R
   Pagelinks= -> g,e {
     [e[:Links][:prev].do{|p|
        p = CGI.escapeHTML p.to_s
-       {_: :a, id: :prevpage,
-        rel: :prev,
-        class: e[:prevEmpty] ? 'weak' : '',
-        c: '&#9664;',
-        title: p,
-        href: p}},
+       [{_: :a, id: :prevpage,
+         rel: :prev,
+         class: e[:prevEmpty] ? 'weak' : '',
+         c: '&#9664;',
+         title: p,
+         href: p},
+        {_: :a, href: p, class: :uri, c: CGI.escapeHTML(p)}]
+     },
      e[:Links][:next].do{|n|
        n = CGI.escapeHTML n.to_s
-       {_: :a, id: :nextpage,
-        rel: :next,
-        class: e[:nextEmpty] ? 'weak' : '',
-        c: '&#9654;',
-        title: n,
-        href: n}}]}
+       [{_: :a, id: :nextpage,
+         rel: :next,
+         class: e[:nextEmpty] ? 'weak' : '',
+         c: '&#9654;',
+         title: n,
+         href: n},
+        {_: :a, href: n, class: :uri, c: CGI.escapeHTML(n)}]
+     }
+    ]
+  }
 
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
     label = e.R.basename

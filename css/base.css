@@ -1,10 +1,8 @@
-body {font-family: sans-serif; background-color:#003; color:#fff;}
+body {font-family: sans-serif; background-color:#003; color:#fff;writing-mode: vertical-lr}
 pre {white-space: pre-wrap}
 input[name="q"] {background-color:#224;color:#fff;border-width:0}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], .dirname, .expand {font-size:3em;background-color:#003;margin:.18em}
-a[rel="prev"] {float: left}
-a[rel="next"] {float: right}
 a[rel="next"].weak, a[rel="prev"].weak {color:#227}
 a.uri {font-size:.9em;color:#448;background-color:#003;font-weight:normal}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
@@ -38,16 +36,15 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 h3.title {background-color:#fff;color:#000;margin:0}
-table.html {max-width: 80ex;display:inline-block}
+table {max-width: 80ex;display:inline-block}
 th {background-color:#224}
 th a {font-size:1.5em;font-weight: normal;background-color:#224}
 td, th {vertical-align:top;border-radius:.125em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
-td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color:#000;white-space: nowrap}
+td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {white-space: nowrap}
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
-div.msgs {writing-mode: vertical-lr}
-div.mail {writing-mode: horizontal-tb}
+table, div.mail {writing-mode: horizontal-tb}
 div.mail {margin:.2em;display:inline-block; max-width:80ex; background-color: #000;color:#fff}
 div.mail a.title {background-color: #fff;color:#000}
 div.mail > a[class] {font-size:1.1em}

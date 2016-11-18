@@ -76,7 +76,7 @@ class R
          r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
          [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}},
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
-     ('<br>' if r.types.member?(SIOC+'MailMessage'))
+#     '<br>'
     ]}
 
 end

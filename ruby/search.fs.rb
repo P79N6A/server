@@ -112,7 +112,6 @@ class R
       yield l.chomp, Type, R[Resource] }
   end
 
-  # files describing a resource
   def fileResources
     r = [] # docs
     r.push self if e
@@ -123,19 +122,19 @@ class R
     r
   end
 
-  def getIndex rev # match (? p o) using index-file
+  def getIndex rev # lookup (? p o) in index-file
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  def index p, o # append to (s,p,o) index-file
+  def index p, o # append (s,p,o) to reverse-link index
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # find all connections
+  # find all connected resources
   def walk pfull, pshort, g={}, v={}
     graph g       # graph
     v[uri] = true # mark this as visited
