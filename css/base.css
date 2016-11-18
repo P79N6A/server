@@ -46,7 +46,7 @@ td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {white-space: nowrap}
 table.tab .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
 table, div.mail {writing-mode: horizontal-tb}
-div.mail {margin-left:.4em;display:inline-block; max-width:80ex; background-color: #000;color:#fff}
+div.mail {margin:.2em;display:inline-block; max-width:80ex; background-color: #000;color:#fff}
 div.mail a.title {background-color: #fff;color:#000}
 div.mail > a[class] {font-size:1.1em}
 img {max-width: 100%}
