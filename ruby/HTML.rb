@@ -289,7 +289,7 @@ class R
                  when Label
                    l[k].justArray.map{|v|
                      label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                     lbl = label.downcase.strip
+                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                      e[:label][lbl] = true
                      [{_: :a, href: this.uri, name: lbl, c: label},' ']}
                  when SIOC+'has_container'
