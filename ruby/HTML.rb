@@ -209,7 +209,7 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Size, Label, Type, *(keys - [Size,Mtime,Label,Type])]
+    keys = [Label, Type, *(keys - [Mtime,Label,Type])]
 
     {_: :table, class: :tab,
      c: [
@@ -253,11 +253,9 @@ class R
                    if id
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
-                     slug = this.basename
-                     [{_: :a, class: :title, href: href, c: CGI.escapeHTML(title||slug)},
-                      ({_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(slug)} if title),
-                      l[Image].do{|c|
-                        ['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
+                     [{_: :a, class: :title, href: href, c: CGI.escapeHTML(title||this.fragment||this.basename)},
+                      ({_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(this.basename)} if title), # show URL and title
+                      l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
                  when Title # show in URI column
                  when Type
