@@ -121,7 +121,7 @@ class R
          c: '&#9664;',
          title: p,
          href: p},
-        {_: :a, href: p, class: :uri, c: CGI.escapeHTML(p)},'<br>']
+        {_: :a, href: p, class: :uri, c: CGI.escapeHTML(p.split('?')[0])},'<br>']
      },
      groups.map{|view,graph|view[graph,e]}, # grouped
      d.map{|u,r|                            # singleton
@@ -139,7 +139,7 @@ class R
          c: '&#9654;',
          title: n,
          href: n},
-        {_: :a, href: n, class: :uri, c: CGI.escapeHTML(n)}]
+        {_: :a, href: n, class: :uri, c: CGI.escapeHTML(n.split('?')[0])}]
      },
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor
