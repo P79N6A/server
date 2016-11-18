@@ -186,9 +186,14 @@ class R
 
   
   ViewA[FOAF+'Person'] = -> r,e {
-    {_: :a, class: :person, id: r.R.fragment, href: r.uri,
-     upgrade: 'https://linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
-     c: r[FOAF+'name'].justArray[0] || r.R.basename}}
+    ['<br>',
+      {_: :a, class: :person,
+      id: r.R.fragment,
+      href: 'https://linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
+      c: r[FOAF+'name'].justArray[0] || r.R.basename},
+     '<br>',
+     {_: :a, class: :nextpage, c: '&#9654;', href: r.R.dirname+'?set=page'}
+    ]}
 
   
   ViewGroup[BasicResource] = -> g,e {
