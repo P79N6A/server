@@ -164,14 +164,8 @@ class R
 
   MIMEsource['text/css'] ||= [:triplrSourceCode]
 
-  # two step process to enable otherwise crawlers could start littering /man on every host
-  # 1) "mount" man-handler on host+path or just path (all enabled hosts):
-  #  $SERVERROOT/local.rb:
-  #   GET['localhost/man'] = Man
-  #   GET['/man'] = Man
-  # 2) mkdir hostname/man for cache storage and whitelisting
-  Man = -> e,r {
-    puts "man"
+  # mkdir hostname/man to enable this
+  GET['/man'] = -> e,r {
     graph = RDF::Graph.new
     uri = R['//'+r.host+r['REQUEST_URI']]
     manPath = '/usr/share/man'
