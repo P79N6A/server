@@ -200,7 +200,6 @@ class R
         cached = path.exist? && doc.e && doc.m > path.stat.mtime
         if !cached
           uri = e.uri + '#'
-          txt = res + '.txt'
           html = res + '.html'
 
           graph = {
@@ -211,7 +210,7 @@ class R
               DC+'locale' => [],
               RDFs+'seeAlso' => [],
               SKOS+'related' => [],
-              DC+'hasFormat' => [html, txt]}}
+              DC+'hasFormat' => [html]}}
 
           locales = graph[uri][DC+'locale']
 
@@ -234,12 +233,10 @@ class R
           pageCmd = -> format,opts="" {"#{catcompressed}cat #{man} | groff #{preconv} -T #{format} -mandoc #{opts}"}
 
           page = `#{pageCmd['html',"-P -D -P #{imagePath}"]}`.to_utf8
-          `#{pageCmd['utf8',"-t -P -u -P -b"]} > #{txt.sh}`
+          graph[uri][Content] = '<pre>'+CGI.escapeHTML(`#{pageCmd['utf8',"-t -P -u -P -b"]}`.utf8)+'</pre>'
 
           body = Nokogiri::HTML.parse(page).css('body')[0]
           body ||= Nokogiri::HTML.parse('<body><body>').css('body')[0]
-          # CSS
-          body.add_child H H.css('/css/man')
           
           # webize image paths
           body.css('img').map{|i|
