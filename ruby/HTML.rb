@@ -111,8 +111,7 @@ class R
     e[:label] ||= {}
     path = e.R.justPath
 
-    [(ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
-     ({_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'),
+    [({_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'),
      e[:Links][:prev].do{|p|
        p = CGI.escapeHTML p.to_s
        [{_: :a, id: :prevpage,
@@ -121,7 +120,7 @@ class R
          c: '&#9664;',
          title: p,
          href: p},
-        {_: :a, href: p, class: :uri, c: CGI.escapeHTML(p.split('?')[0])},'<br>']
+        {_: :a, href: p, class: e[:prevEmpty] ? 'uri weak' : 'uri', c: CGI.escapeHTML(p.split('?')[0])},'<br>']
      },
      groups.map{|view,graph|view[graph,e]}, # grouped
      d.map{|u,r|                            # singleton
@@ -130,6 +129,7 @@ class R
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
+     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
      e[:Links][:next].do{|n|
        n = CGI.escapeHTML n.to_s
        ['<br>',
@@ -139,7 +139,7 @@ class R
          c: '&#9654;',
          title: n,
          href: n},
-        {_: :a, href: n, class: :uri, c: CGI.escapeHTML(n.split('?')[0])}]
+        {_: :a, class: e[:nextEmpty] ? 'uri weak' : 'uri', href: n, c: CGI.escapeHTML(n.split('?')[0])}]
      },
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor

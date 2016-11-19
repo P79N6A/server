@@ -176,7 +176,14 @@ class R
 
   MIMEsource['text/css'] ||= [:triplrSourceCode]
 
-  Man = -> e,r { # handler to RDF-ize manpages
+  # two step process to enable otherwise crawlers could start littering /man on every host
+  # 1) "mount" man-handler on host+path or just path (all enabled hosts):
+  #  $SERVERROOT/local.rb:
+  #   GET['localhost/man'] = Man
+  #   GET['/man'] = Man
+  # 2) mkdir hostname/man for cache storage and whitelisting
+  Man = -> e,r {
+    puts "man"
     graph = RDF::Graph.new
     uri = R['//'+r.host+r['REQUEST_URI']]
     manPath = '/usr/share/man'
@@ -187,7 +194,7 @@ class R
       name = p.post_match}
     if q = r.q['q']
       [303,{'Location'=>'/man/'+q},[]]
-    elsif !R['//'+r.host+'/man'].exist? # /man must exist in domain dir
+    elsif !R['//'+r.host+'/man'].exist? # hostname/man must exist
       nil
     elsif name.empty?
       input = {Type => R[SearchBox]}
