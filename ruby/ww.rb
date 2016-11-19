@@ -113,7 +113,6 @@ class R < RDF::URI
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
-  WikiText = SIOC + 'wikiText'
   Forum    = SIOC + 'Forum'
   BlogPost = SIOC + 'BlogPost'
   Wiki     = SIOC + 'Wiki'
@@ -172,7 +171,6 @@ class R < RDF::URI
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
     SIOC+'channel' => :exchange,
-    SIOC+'wikiText' => :pencil,
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :up,
     SIOC+'has_discussion' => :comments,

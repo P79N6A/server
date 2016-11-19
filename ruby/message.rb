@@ -71,9 +71,7 @@ class R
           r[SIOC+'reply_to'].do{|c|
             [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']},
          ].intersperse("\n"),
-         r[Content].justArray.map{|c|
-           {class: :body, c: c}},
-         r[WikiText].do{|c|{class: :body, c: Render[WikiText][c]}},
+         r[Content],
          [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}},
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
 #     '<br>'

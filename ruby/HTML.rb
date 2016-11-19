@@ -147,7 +147,7 @@ class R
      H.js('/js/ui',true)]}
 
   ViewA[BasicResource] = -> r,e {
-    {_: :table, class: :html, id: 'h'+r.uri.h, href: r.uri,
+    {_: :table, id: 'h'+r.uri.h, href: r.uri,
      c: r.map{|k,v|
        [{_: :tr, property: k,
         c: case k
@@ -156,8 +156,6 @@ class R
              {_: :td, class: :uri, colspan: 2, c: {_: :a, class: :uri, href: u, c: u.R.basename}}
            when Content
              {_: :td, class: :val, colspan: 2, c: v}
-           when WikiText
-             {_: :td, class: :val, colspan: 2, c: Render[WikiText][v]}
            when Atom+'enclosure'
              {_: :td, class: :val, colspan: 2, c: v.justArray.map{|v|
                 resource = v.R
@@ -222,7 +220,7 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Label, Type, *(keys - [Mtime,Label,Type])]
 
-    {_: :table, class: :tab,
+    {_: :table,
      c: [
        {_: :tbody, c: (g.resources e).map{|r|
           TableRow[r,e,sort,direction,keys]}},
@@ -284,8 +282,6 @@ class R
                        children.map{|c|[(CGI.escapeHTML c.R.basename[0..15]), ' ']}
                      end},
                     l[Content].do{|c|{class: :content, c: c}}]
-                 when WikiText
-                   Render[WikiText][l[k]]
                  when Label
                    l[k].justArray.map{|v|
                      label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
