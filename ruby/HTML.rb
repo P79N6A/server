@@ -191,7 +191,7 @@ class R
       c: r[FOAF+'name'].justArray[0] || r.R.basename},
      '<br>',
      {_: :a, id: 'posts'+rand.to_s.h, class: :nextpage, c: '&#9654;', href: r.R.dirname+'?set=page'}
-    ]}
+    ] if r.uri.match(/^http/)}
 
   
   ViewGroup[BasicResource] = -> g,e {
