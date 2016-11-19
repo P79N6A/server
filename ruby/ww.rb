@@ -219,9 +219,6 @@ JSON
 HTML
 HTTP
 message
-message.chat
-message.mail
-message.news
 read
 search
 text
