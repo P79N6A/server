@@ -5,7 +5,6 @@ class R
     e[:arcs] = []
     e[:day] = {}
     e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
-
     # find timegraph arcs
     d.values.map{|s|
       if s[SIOC+'has_parent']
@@ -19,22 +18,18 @@ class R
             target = o.uri.gsub(/[^a-zA-Z0-9]/,'')
             e[:arcs].push({source: source, target: target, sourceLabel: sLabel, targetLabel: tLabel})}}
       end}
-    # labels
+
     (1..15).map{|depth| e[:label]["quote"+depth.to_s] = true}
 
-    [([{_: :script, c: "var arcs = #{e[:arcs].to_json};"},
-       H.js('/js/d3.min'),
-       H.js('/js/timegraph',true),
+    [([{_: :script,
+        c: "var arcs = #{e[:arcs].to_json};"},
+       H.js('/js/d3.min'), H.js('/js/timegraph',true),
        {class: :timegraph,c: {_: :svg}}
       ] if e[:arcs].size > 1),
-     {class: :msgs,
-      c: [(d.values[0][Title].justArray[0].do{|t|
-             title = t.sub ReExpr, ''
-             {_: :h3,class: :title, c: CGI.escapeHTML(title)}} if e[:thread]),
-          d.map{|uri,msg|
-            type = msg.types.find{|t|ViewA[t]}
-            ViewA[type ? type : BasicResource][msg,e]
-          }]}]}
+     (d.values[0][Title].justArray[0].do{|t|
+        title = t.sub ReExpr, ''
+        {_: :h3,class: :title, c: CGI.escapeHTML(title)}} if e[:thread]),
+     d.map{|uri,msg| ViewA[SIOC+'BoardPost'][msg,e]}]}
 
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
