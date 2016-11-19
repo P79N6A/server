@@ -120,7 +120,7 @@ class R
          c: '&#9664;',
          title: p,
          href: p},
-        {_: :a, href: p, class: e[:prevEmpty] ? 'uri weak' : 'uri', c: CGI.escapeHTML(p.split('?')[0])},'<br>']
+        {_: :a, href: p, class: e[:prevEmpty] ? 'weak' : 'page', c: CGI.escapeHTML(p.split('?')[0])},'<br>']
      },
      groups.map{|view,graph|view[graph,e]}, # grouped
      d.map{|u,r|                            # singleton
@@ -139,7 +139,7 @@ class R
          c: '&#9654;',
          title: n,
          href: n},
-        {_: :a, class: e[:nextEmpty] ? 'uri weak' : 'uri', href: n, c: CGI.escapeHTML(n.split('?')[0])}]
+        {_: :a, class: e[:nextEmpty] ? 'weak' : 'page', href: n, c: CGI.escapeHTML(n.split('?')[0])}]
      },
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor

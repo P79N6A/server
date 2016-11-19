@@ -6,7 +6,8 @@ a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a.nextpage, a.dirname, a.expand {font-size:3em;margin:.18em}
 a.expand {float: right}
 a.weak {color:#333}
-a.uri {font-size:.9em;font-weight:normal;color:#888}
+a.page {font-weight: normal}
+a.uri {font-size:.9em;font-weight:normal;color:#888 }
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
