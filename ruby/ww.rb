@@ -223,9 +223,7 @@ message.chat
 message.mail
 message.news
 read
-search.fs
-search.text
-search.ui
+search
 text
 write
 }.map{|r|require_relative r}
