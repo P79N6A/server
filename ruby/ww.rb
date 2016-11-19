@@ -219,10 +219,8 @@ JSON
 HTML
 HTTP
 message
-read
 search
 text
-write
 }.map{|r|require_relative r}
 
 require './local.rb' if R['local.rb'].exist? # local configuration

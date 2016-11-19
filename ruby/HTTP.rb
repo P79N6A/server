@@ -3,7 +3,7 @@
 
 module Rack
   module Adapter
-    # we always use the rack-interface, with this config
+    # we always use rack's interface, hardcode config so "config.ru" file doesnt need to exist
     def self.guess _; :rack end
     def self.load _
       Rack::Builder.new {
@@ -223,7 +223,250 @@ class R
 
   def q; @r.q end
 
-end
+  def GET
+    ldp
+    if file? && !q.has_key?('data')
+      fileGET
+    elsif justPath.file?
+      justPath.fileGET
+    else
+      stripDoc.resourceGET
+    end
+  end
+
+  def fileGET
+    @r[:Response].
+      update({ 'Content-Type' => mime + '; charset=UTF-8',
+               'ETag' => [m,size].h })
+    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
+    condResponse ->{ self }
+  end
+
+  def resourceGET
+    bases = [@r.host, ""] # host*path || path
+    paths = justPath.cascade.map(&:to_s).map &:downcase
+    bases.map{|b|
+      paths.map{|p| # bubble up to root
+        GET[b + p].do{|fn| # bind handler
+          fn[self,@r].do{|r| # call
+        return r }}}} # non-nil result: stop cascade
+    response
+  end
+
+  def response
+    init = q.has_key? 'new'
+
+    if directory?
+      if uri[-1] == '/' # in the container
+        @r[:container] = true
+      else # enter container
+        qs = @r['QUERY_STRING']
+        @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
+        return [301, @r[:Response], []]
+      end
+    end
+
+    set = []
+    graph = {}
+
+    rs = ResourceSet[q['set']]
+    fs = FileSet[q['set']]
+
+    # add generic-resource(s)
+    rs[self,q,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
+
+    # add file(s)
+    fs[self,q,graph].do{|files|set.concat files} if fs
+
+    # default/fallback-set
+    FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
+
+    if set.empty?
+      @r[404] = true
+      return E404[self,@r,graph] unless init
+    end
+
+    @r[:Response].
+      update({'Content-Type' => @r.format,
+#               'Content-Type' => @r.format + '; charset=UTF-8',
+              'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
+              'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h})
+
+    condResponse ->{ # lazy response-finisher
+      if set.size==1 && @r.format == set[0].mime # one file in response + MIME match
+        set[0] # return file
+      else
+        loadGraph = -> { # model in JSON
+          set.map{|r|r.nodeToGraph graph} # load resources
+          @r[:filters].push Container if @r[:container] # container-summarize
+          @r[:filters].push Title
+          @r[:filters].push '#create' if @r.signedIn && init # create a resource
+          @r[:filters].justArray.map{|f|
+            Filter[f][graph,@r]} # transform
+          graph}
+
+        if NonRDF.member? @r.format
+          Render[@r.format][loadGraph[],@r]
+        else
+          base = @r.R.join uri
+          if @r[:container] # container
+            g = loadGraph[].toRDF
+          else # doc
+            g = RDF::Graph.new
+            set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
+          end
+          g.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
+        end
+      end}
+  end
+
+  def condResponse body
+    etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
+    if etags && (etags.include? @r[:Response]['ETag'])
+      [304, {}, []]
+    else
+      body = body.call
+      @r[:Status] ||= 200
+      @r[:Response]['Content-Length'] ||= body.size.to_s
+      if body.class == R
+        (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|
+          [s, h.update(@r[:Response]), b]}
+      else
+        [@r[:Status], @r[:Response], [body]]
+      end
+    end
+  end
+
+  def readFile parseJSON=false
+    if f
+      if parseJSON
+        JSON.parse File.open(pathPOSIX).read
+      else
+        File.open(pathPOSIX).read
+      end
+    else
+      nil
+    end
+  rescue
+    nil
+  end
+  alias_method :r, :readFile
+
+  def PUT
+    return [403,{},[]] unless allowWrite
+    ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s
+    versions = docroot.child '.v' # container for states
+    versions.mk
+    doc = versions.child Time.now.iso8601.gsub(/\W/,'') + '.' + ext 
+    doc.w @r['rack.input'].read
+    main = stripDoc.a('.' + ext)
+    main.delete if main.e # unlink prior
+    doc.ln main           # link current
+    ldp
+    [201,@r[:Response].update({Location: uri}),[]]
+  end
+
+  def DELETE
+    return [403, {}, ["Forbidden"]] unless allowWrite
+    return [409, {}, ["resource not found"]] unless exist?
+    puts "DELETE #{uri}"
+    delete
+    [200,{
+       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
+       'Access-Control-Allow-Credentials' => 'true',
+    },[]]
+  end
+
+  def delete; node.deleteNode if e; self end
+
+  def appendFile line
+    dir.mk
+    File.open(pathPOSIX,'a'){|f|f.write line + "\n"}
+  end
+
+  def writeFile o,s=false
+    dir.mk
+    File.open(pathPOSIX,'w'){|f|
+      f << (s ? o.to_json : o)}
+    self
+  end
+  alias_method :w, :writeFile
+
+  def mkdir
+    e || FileUtils.mkdir_p(pathPOSIX)
+    self
+  end
+  alias_method :mk, :mkdir
+
+  def ln t, y=:link
+    t = t.R.stripSlash
+    unless t.e || t.symlink?
+      t.dir.mk
+      FileUtils.send y, node, t.node
+    end
+  end
+
+  def ln_s t; ln t, :symlink end
+
+  def PATCH
+    update
+  end
+
+  def POST
+    return [403,{},[]] unless allowWrite
+    mime = @r['CONTENT_TYPE']
+    case mime
+#    when /^multipart\/form-data/
+#      upload
+    when /^application\/sparql-update/
+      update
+    when /^text\/turtle/
+      if @r.linkHeader['type'] == Container
+        path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
+        path.PUT
+        if path.e
+          [200,@r[:Response].update({Location: path.uri}),[]]
+        else
+          mk
+        end
+      else
+        self.PUT
+      end
+    else
+      [406,{'Accept-Post' => 'text/turtle'},[]]
+    end
+  end
+
+  def upload
+    p = (Rack::Request.new env).params
+    if file = p['file']
+      FileUtils.cp file[:tempfile], child(file[:filename]).pathPOSIX
+      file[:tempfile].unlink
+      ldp
+      [201,@r[:Response].update({Location: uri}),[]]
+    end
+  end
+
+  def update
+    puts "PATCH #{uri}"
+    query = @r['rack.input'].read
+    puts query
+    doc = ttl
+    puts "doc #{doc}"
+    model = RDF::Repository.new
+    model.load doc.pathPOSIX, :base_uri => uri if doc.e
+    sse = SPARQL.parse(query, update: true)
+    sse.execute(model)
+    doc.w model.dump(:ttl)
+    ldp
+    [200,@r[:Response],[]]
+  end
+
+  def allowWrite
+    @r.signedIn
+  end
+
+  end
 
 module Th # methods on request-environment
 
@@ -324,4 +567,14 @@ class Hash
       k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
     }.intersperse("&").join('')
   end
+end
+
+
+class Pathname
+
+  def deleteNode
+    FileUtils.send (file?||symlink?) ? :rm : :rmdir, self
+    parent.deleteNode if parent.c.empty? # parent now empty, delete it
+  end
+
 end
