@@ -1,4 +1,4 @@
-body {font-family: sans-serif; background-color:#000; color:#fff;writing-mode: vertical-lr}
+body {font-family: sans-serif; background-color:#000; color:#fff;writing-mode: vertical-lr;margin-left:0}
 pre {white-space: pre-wrap}
 input[name="q"] {border-radius:.12em;border-width:0;}
 form,input {display: inline-block}
@@ -45,7 +45,7 @@ th a {font-size:1.5em;font-weight: normal}
 td, th {vertical-align:top;border-radius:.125em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
-td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {white-space: nowrap}
+td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000; white-space: nowrap}
 .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
 table, div.mail {writing-mode: horizontal-tb}
 div.mail {margin:.2em;display:inline-block; max-width:80ex; background-color: #000;color:#fff}
