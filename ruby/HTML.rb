@@ -121,14 +121,6 @@ class R
         title: p,
         href: p}
      },
-     groups.map{|view,graph|view[graph,e]}, # grouped
-     d.map{|u,r|                            # singleton
-       if !seen[u]
-         types = (r||{}).types
-         type = types.find{|t|ViewA[t]}
-         ViewA[type ? type : BasicResource][(r||{}),e]
-       end},
-     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
      e[:Links][:next].do{|n|
        n = CGI.escapeHTML n.to_s
        {_: :a, id: :nextpage,
@@ -138,6 +130,14 @@ class R
         title: n,
         href: n}
      },
+     groups.map{|view,graph|view[graph,e]}, # grouped
+     d.map{|u,r|                            # singleton
+       if !seen[u]
+         types = (r||{}).types
+         type = types.find{|t|ViewA[t]}
+         ViewA[type ? type : BasicResource][(r||{}),e]
+       end},
+     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
