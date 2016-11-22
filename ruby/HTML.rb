@@ -111,16 +111,15 @@ class R
     e[:label] ||= {}
     path = e.R.justPath
 
-    [({_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'),
+    [([{_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'},'<br clear=all>'] if e[:container] && path != '/'),
      e[:Links][:prev].do{|p|
        p = CGI.escapeHTML p.to_s
-       [{_: :a, id: :prevpage,
-         rel: :prev,
-         class: e[:prevEmpty] ? 'weak' : '',
-         c: '&#9664;',
-         title: p,
-         href: p},
-        {_: :a, href: p, class: e[:prevEmpty] ? 'weak' : 'page', c: CGI.escapeHTML(p.split('?')[0])},'<br>']
+       {_: :a, id: :prevpage,
+        rel: :prev,
+        class: e[:prevEmpty] ? 'weak' : '',
+        c: '&#9664;',
+        title: p,
+        href: p}
      },
      groups.map{|view,graph|view[graph,e]}, # grouped
      d.map{|u,r|                            # singleton
@@ -132,14 +131,12 @@ class R
      (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
      e[:Links][:next].do{|n|
        n = CGI.escapeHTML n.to_s
-       ['<br>',
-        {_: :a, id: :nextpage,
-         rel: :next,
-         class: e[:nextEmpty] ? 'weak' : '',
-         c: '&#9654;',
-         title: n,
-         href: n},
-        {_: :a, class: e[:nextEmpty] ? 'weak' : 'page', href: n, c: CGI.escapeHTML(n.split('?')[0])}]
+       {_: :a, id: :nextpage,
+        rel: :next,
+        class: e[:nextEmpty] ? 'weak' : '',
+        c: '&#9654;',
+        title: n,
+        href: n}
      },
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor

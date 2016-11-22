@@ -1,10 +1,11 @@
-body {font-family: sans-serif; background-color:#000; color:#fff;writing-mode: vertical-lr;margin-left:0}
+body {font-family: sans-serif; background-color:#000; color:#fff;margin-left:0}
 pre {white-space: pre-wrap}
 input[name="q"] {border-radius:.12em;border-width:0;}
 form,input {display: inline-block}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a.nextpage, a.dirname, a.expand {font-size:3em;margin:.18em}
-a.expand {float: right}
+a.dirname,a[rel="prev"] {float: left}
+a[rel="next"] {float: right}
 a.weak {color:#333}
 a.page {font-weight: normal}
 a.uri {font-size:.9em;font-weight:normal;color:#888 }
@@ -40,15 +41,14 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 h3.title {background-color:#fff;color:#000;margin:0}
-table {display:inline-block}
+table, div.mail {display:inline-block;vertical-align:top}
 th a {font-size:1.5em;font-weight: normal}
 td, th {vertical-align:top;border-radius:.125em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000; white-space: nowrap}
 .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
-table, div.mail {writing-mode: horizontal-tb}
-div.mail {margin:.2em;display:inline-block; max-width:80ex; background-color: #000;color:#fff}
+div.mail {margin-left:.5em;max-width:80ex; background-color: #000;color:#fff}
 div.mail a.title {background-color: #fff;color:#000}
 div.mail > a[class] {font-size:1.1em}
 img {max-width: 100%}
