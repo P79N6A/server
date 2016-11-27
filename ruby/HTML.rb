@@ -137,7 +137,7 @@ class R
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end},
-     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
+#     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:container]),
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
