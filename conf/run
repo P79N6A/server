@@ -1,2 +1,0 @@
-#!/bin/sh
-exec thin -rww --threaded -p 80 -a 127.0.0.1 -c /w start
