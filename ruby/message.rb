@@ -67,7 +67,10 @@ class R
             [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']},
          ].intersperse("\n"),
          r[Content],
-         [DC+'hasFormat', SIOC+'attachment'].map{|p| r[p].justArray.map{|o|['<br>', {_: :a, class: :file, href: o.uri, c: o.R.basename}]}},
+         [DC+'hasFormat', SIOC+'attachment'].map{|p| # property
+           r[p].justArray.map{|o| # each attachment object
+             ['<br>',
+              {_: :a, id: rand.to_s.h[0..12], class: :file, href: o.uri, c: o.R.basename}]}},
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
     ]}
 
