@@ -8,6 +8,10 @@ E.attr = function(a,v){
 var prev = null;
 var first = null;
 
+document.querySelector('input[name="q"]').addEventListener("keydown",function(e){
+//    console.log(e);
+    e.stopPropagation();
+});
 document.querySelectorAll('[id]').map(function(e){
     // construct selection ring
     if(!first)
