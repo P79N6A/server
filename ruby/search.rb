@@ -258,6 +258,7 @@ class R
   GET['/search'] = -> d,e {
     e.q['set'] = 'groonga'
     e[:container] = true
+    e[:search] = true
     nil}
 
   # summarize contained-data on per-type basis
