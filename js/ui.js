@@ -8,12 +8,14 @@ E.attr = function(a,v){
 var prev = null;
 var first = null;
 
-document.querySelector('input[name="q"]').addEventListener("keydown",function(e){
-//    console.log(e);
-    e.stopPropagation();
-});
+// catch searchbox keypresses
+var searchbox = document.querySelector('input[name="q"]');
+if(searchbox){
+    searchbox.focus();
+    searchbox.addEventListener("keydown",function(e){e.stopPropagation();});
+};
+// inspect identified elements, constructing selection ring
 document.querySelectorAll('[id]').map(function(e){
-    // construct selection ring
     if(!first)
 	first = this;
     this.attr('next',first.attr('id'));
@@ -34,6 +36,8 @@ document.querySelectorAll('[id]').map(function(e){
     },false);
 });
 
+
+// keyboard navigation: <p> prev <n> next <shift-P> prev page <shift-N> next page <shift-U> up <Enter> goto
 document.addEventListener("keydown",function(e){
     
     var jumpDoc = function(direction, start) {
@@ -42,9 +46,7 @@ document.addEventListener("keydown",function(e){
 	    window.location = doc.getAttribute('href') + start;
     };
 
-    // kbd navigation
     var key = e.keyCode;
-//    console.log(key);
 
     if(e.getModifierState("Shift")) {
 	if(key==80) // previous page
