@@ -90,7 +90,6 @@ class R
                   }
     }
   }
-  ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = TabularView
   
   # IRC to RDF
   def triplrIRC &f

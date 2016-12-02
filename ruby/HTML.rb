@@ -105,9 +105,9 @@ class R
     d.map{|u,r| # group by type
       (r||{}).types.map{|type|
         if v = ViewGroup[type]
-          groups[v] ||= {}
-          groups[v][u] = r
-          seen[u] = true
+          groups[v] ||= {} ## init group
+          groups[v][u] = r ## add resource to group
+          seen[u] = true # mark selection
         end}}
 
     e[:label] ||= {}
@@ -203,7 +203,7 @@ class R
 
   }
 
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = -> g,e {
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> g,e {
     label = e.R.basename
     e[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
     g.delete e.uri # we're at this dir, don't list it as a selectable
