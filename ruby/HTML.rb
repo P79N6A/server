@@ -102,13 +102,18 @@ class R
   DefaultView = -> d,e {
     seen = {}
     groups = {}
-    d.map{|u,r| # group by type
-      (r||{}).types.map{|type|
-        if v = ViewGroup[type]
-          groups[v] ||= {} ## init group
-          groups[v][u] = r ## add resource to group
-          seen[u] = true # mark selection
-        end}}
+    table = e.q.has_key?('tab')
+    if table # tabular-view
+      groups[TabularView] = d
+    else # type-specific view
+      d.map{|u,r|
+        (r||{}).types.map{|type|
+          if v = ViewGroup[type]
+            groups[v] ||= {} ## init group
+            groups[v][u] = r ## add resource to group
+            seen[u] = true # mark selection
+          end}}
+    end
 
     e[:label] ||= {}
     path = e.R.justPath
@@ -134,12 +139,12 @@ class R
         href: n}
      },
      groups.map{|view,graph|view[graph,e]}, # grouped
-     d.map{|u,r|                            # singleton
+     (d.map{|u,r|                            # singleton
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
-       end},
+       end} unless table),
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},

@@ -168,6 +168,7 @@ class R < RDF::URI
     RSS+'link' => :link,
     RSS+'guid' => :id,
     RSS+'comments' => :comments,
+    SIOC+'BlogPost' => :pencil,
     SIOC+'MicroblogPost' => :comments,
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,

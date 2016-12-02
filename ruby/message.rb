@@ -3,7 +3,6 @@ class R
 
   ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
     e[:arcs] = []
-    e[:day] = {}
     e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
     # find timegraph arcs
     d.values.map{|s|
@@ -34,7 +33,6 @@ class R
   ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
     localPath = r.uri == r.R.path
     navigateHeaders = r.R.path == e.R.path
-    r[Date].do{|t| e[:day][t.justArray[0].to_time.iso8601[0..10]] = true }
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
