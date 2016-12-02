@@ -261,8 +261,8 @@ class R
                    if id
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
-                     [{_: :a, class: :title, href: href, c: CGI.escapeHTML(title||this.fragment||this.basename)},
-                      ({_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(this.basename)} if title), # show URL and title
+                     [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title),
+                      {_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(this.basename)},
                       l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
                  when Title # show in URI column
