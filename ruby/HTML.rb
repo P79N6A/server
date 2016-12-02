@@ -79,7 +79,9 @@ class R
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
     loseTags.map{|tag| html.css(tag).remove} if loseTags
-    html.traverse{|e|e.attribute_nodes.map{|a|a.unlink unless keepAttr.member? a.name}} if keepAttr
+    html.traverse{|e|
+      e.attribute_nodes.map{|a|
+        a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
   Render['text/html'] = -> d,e,view=nil {
