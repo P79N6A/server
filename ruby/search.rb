@@ -24,7 +24,7 @@ class R
       else # day dirs
         pPath = (date-1).strftime('/%Y/%m/%d/')
         nPath = (date+1).strftime('/%Y/%m/%d/')
-        # slug persists across pages, can be unexpanded glob or actual dir
+        # persist slug across pages
         pp = pPath + slug
         np = nPath + slug
       end
@@ -119,7 +119,6 @@ class R
       doc = docroot.a '.' + suffix
       r.push doc.setEnv(@r) if doc.e
     }
-#    puts "file resources: " + r.map{|r|r.uri}.join(" ")
     r
   end
 
