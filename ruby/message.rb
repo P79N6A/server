@@ -73,20 +73,18 @@ class R
     ]}
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, e {
-    # find unique log-files to summarize (could add stats here as we get a pass on raw messages)
+    # find unique log-file sources
     sources = {}
     msgs.map{|id,msg|
       source = msg[DC+'source'].justArray[0]
       sources[source.uri] ||= source
-      graph.delete id # only visible when unsummarized
+      graph.delete id # drop full-message in summarized mode
     }
-    # link to HTML rewrite of log-file
+    # link to HTML reformat of log files
     sources.map{|id,src|
       graph[id] = {'uri' => R[id+'.html'],
-                   Type => R[Resource],
-                   DC+'formatOf' => id.R
-                  }
-    }
+                   Type => R[Resource], DC+'formatOf' => id.R
+                  }}
   }
   
   # IRC to RDF

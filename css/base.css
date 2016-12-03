@@ -8,7 +8,7 @@ a.dirname,a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
 a.dirname, a.weak {color:#333}
 a.page {font-weight: normal}
-a.uri {font-size:.9em;font-weight:normal;color:#888 }
+a.uri {font-size:.9em;font-weight:normal;color:#aaa }
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
