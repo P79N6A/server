@@ -153,6 +153,7 @@ class R < RDF::URI
     Date => :date,
     Label => :tag,
     Title => :title,
+    Sound => :speaker,
     FOAF+'Person' => :person,
     Image => :img,
     LDP+'contains' => :container,
