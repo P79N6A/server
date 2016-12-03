@@ -150,6 +150,12 @@ class R
     end
   end
 
+  Abstract[SIOC+'SourceCode'] = -> graph, subgraph, env {
+    subgraph.map{|id,source|
+      graph[id].delete Content
+    }
+  }
+
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
  desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript
  key_string langdef latex ldap lisp logtalk lsm lua m4 makefile manifest nohilite
