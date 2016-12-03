@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     audio.addEventListener('canplay',audio.play,false);
 
-    document.body.addEventListener('keypress',function(e){
+    document.addEventListener('keypress',function(e){
 	if(e.keyCode == 32){
 	    if(audio.paused){
 		audio.play()
@@ -14,7 +14,9 @@ document.addEventListener("DOMContentLoaded", function(){
     },false);
 
     window.addEventListener('hashchange',function(){
-	audio.src = decodeURIComponent(window.location.hash.slice(1))
+	var id = window.location.hash;
+	var href = document.querySelector(id).attr('href');
+	audio.src = href;
     });
 
 }, false);

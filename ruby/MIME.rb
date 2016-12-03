@@ -171,11 +171,8 @@ class R
     yield uri, Title, bare
   end
 
-  Abstract[Sound] = -> graph, g, e { # put sounds in playlist container, add player resource
-    graph['#snd'] = {'uri' => '#snd', Type => R[Container],
-                  LDP+'contains' => g.values.map{|s| graph.delete s.uri
-                    s.update({'uri' => '#'+URI.escape(s.R.path)})}} # playlist-entry
-    graph['#audio'] = {Type => R[Sound+'Player']}} # player
+  Abstract[Sound] = -> graph, g, e {
+    graph['#audio'] = {Type => R[Sound+'Player']}} # just add a player resource
 
   ViewGroup[Sound+'Player'] = -> g,e {
     [H.js('/js/audio'),
