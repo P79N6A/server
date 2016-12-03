@@ -122,22 +122,12 @@ class R
      (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:search]),
      e[:Links][:prev].do{|p|
        p = CGI.escapeHTML p.to_s
-       {_: :a, id: :prevpage,
-        rel: :prev,
-        class: e[:prevEmpty] ? 'weak' : '',
-        c: '&#9664;',
-        title: p,
-        href: p}
-     },
+       {_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',
+        c: '&#9664;', title: p, rel: :prev, href: p}},
      e[:Links][:next].do{|n|
        n = CGI.escapeHTML n.to_s
-       {_: :a, id: :nextpage,
-        rel: :next,
-        class: e[:nextEmpty] ? 'weak' : '',
-        c: '&#9654;',
-        title: n,
-        href: n}
-     },
+       {_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',
+        c: '&#9654;', title: n, rel: :next, href: n}},
      groups.map{|view,graph|view[graph,e]}, # grouped
      (d.map{|u,r|                            # singleton
        if !seen[u]
@@ -207,9 +197,10 @@ class R
   ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> g,e {
     label = e.R.basename
     e[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
-    g.delete e.uri # we're at this dir, don't list it as a selectable
-    [(TabularView[g,e] unless g.keys.size==0),
-     (['<br>',{_: :a, class: :expand, id: :enter, href: e.q.merge({'full' => ''}).qs, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
+    [TabularView[g,e],
+     (['<br>',
+       {_: :a, id: :enter, href: e.q.merge({'full' => ''}).qs,
+        class: :expand, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
 
   
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {

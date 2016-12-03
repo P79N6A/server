@@ -119,6 +119,7 @@ class R
       doc = docroot.a '.' + suffix
       r.push doc.setEnv(@r) if doc.e
     }
+#    puts "file resources: " + r.map{|r|r.uri}.join(" ")
     r
   end
 
