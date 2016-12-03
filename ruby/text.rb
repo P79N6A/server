@@ -68,7 +68,9 @@ class R
   end
 
   def triplrHref enc=nil
-    yield stripDoc.uri, Content,
+    id = stripDoc.uri
+    yield id, Type, R[SIOC+'TextFile']
+    yield id, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: open(pathPOSIX).read.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
@@ -150,8 +152,16 @@ class R
     end
   end
 
+  Abstract[SIOC+'TextFile'] = -> graph, subgraph, env {
+    subgraph.map{|id,data|
+      graph[id][DC+'hasFormat'] = R[id+'.html']
+      graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}
+    }
+  }
+  
   Abstract[SIOC+'SourceCode'] = -> graph, subgraph, env {
     subgraph.map{|id,source|
+      graph[id][DC+'hasFormat'] = R[id+'.html']
       graph[id].delete Content
     }
   }

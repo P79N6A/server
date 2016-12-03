@@ -204,11 +204,7 @@ class R
   
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
 
-  Pagelinks= -> g,e {
-
-  }
-
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> g,e {
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> g,e {
     label = e.R.basename
     e[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
     g.delete e.uri # we're at this dir, don't list it as a selectable
