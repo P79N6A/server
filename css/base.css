@@ -3,7 +3,7 @@ pre {white-space: pre-wrap}
 input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-radius:.2em;display: inline-block}
 form,input {display: inline-block}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
-a[rel="prev"], a[rel="next"], a.nextpage, a.dirname, a.expand {font-size:3em;margin:.5em}
+a[rel="prev"], a[rel="next"], a.nextpage, a.dirname, a.expand {font-size:3em;margin:.42em}
 a.dirname,a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
 a.dirname, a.weak {color:#333}
