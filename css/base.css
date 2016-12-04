@@ -43,7 +43,7 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 h3.title {background-color:#fff;color:#000;margin:0}
-table, div.mail {display:inline-block;vertical-align:top}
+table, div.mail {background-color:#000;color:#fff;display:inline-block;vertical-align:top}
 th a {font-size:1.5em;font-weight: normal}
 td, th {vertical-align:top;border-radius:.125em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
