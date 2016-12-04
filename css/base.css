@@ -2,8 +2,9 @@ body {font-family: sans-serif; background-color:#111; color:#fff;margin:0}
 pre {white-space: pre-wrap}
 input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-radius:.2em;display: inline-block}
 form,input {display: inline-block}
-a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
-a[rel="prev"], a[rel="next"], a.nextpage, a.expand {font-size:3em;margin:.2em}
+a {text-decoration:none;font-weight: bold}
+div a, table a {background-color:#000;color:#fff}
+a[rel="prev"], a[rel="next"], a.nextpage, a.expand {font-size:3em;margin:.2em;background-color:#000;color:#fff}
 a.dirname,a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
 a.dirname {position:absolute;top:-.2em;font-size:2em;left:1.3em}
