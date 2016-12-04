@@ -8,12 +8,6 @@ E.attr = function(a,v){
 var prev = null;
 var first = null;
 
-// catch searchbox keypresses
-var searchbox = document.querySelector('input[name="q"]');
-if(searchbox){
-    searchbox.focus();
-    searchbox.addEventListener("keydown",function(e){e.stopPropagation();});
-};
 // inspect identified elements, constructing selection ring
 document.querySelectorAll('[id]').map(function(e){
     if(!first)
@@ -100,3 +94,11 @@ document.addEventListener("keydown",function(e){
 	};
     };
 },false);
+
+
+// stop searchbox input from bubbling
+var searchbox = document.querySelector('input[name="q"]');
+if(searchbox){
+    searchbox.focus();
+    searchbox.addEventListener("keydown",function(e){e.stopPropagation();});
+};

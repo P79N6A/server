@@ -7,7 +7,7 @@ div a, table a {background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a.nextpage, a.expand {font-size:3em;margin:.2em;background-color:#000;color:#fff}
 a.dirname,a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
-a.dirname {position:absolute;top:-.2em;font-size:2em;left:1.3em}
+a.dirname {margin-left:.3em;font-size:2em;float:left}
 a.dirname, a.weak {color:#333}
 a.page {font-weight: normal}
 a.uri {font-size:.9em;font-weight:normal;color:#aaa }
