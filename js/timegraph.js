@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(){
     var svg = d3.select(".timegraph > svg")
     var nodes = {};
-    var width = svg[0][0].clientWidth || 400;
-    var height = svg[0][0].clientHeight || 800;
+    var width = svg[0][0].clientWidth || 320;
+    var height = svg[0][0].clientHeight || 640;
     var center = width / 2;
     var targetCount = {};
     arcs.forEach(function(link) { // bind node-table and link data
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     var force = d3.layout.force()
 	.nodes(d3.values(nodes))
-	.gravity(0.01)
+	.gravity(0.02)
 	.links(arcs)
 	.size([width,height])
 	.on("tick", tick)
