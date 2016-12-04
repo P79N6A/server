@@ -241,7 +241,7 @@ class R
     types = l.types
     sourcecode = types.member? SIOC+'SourceCode'
     image = types.member? Image
-    here = e.R.uri == this.uri
+    thisDir = this.uri[-1]=='/' && e.R.uri == this.uri
     [{_: :tr, class: :selectable,
       href: (sourcecode ? (this.uri+'.html') : this.uri),
       id: 'x' + rand.to_s.h[0..7],
@@ -254,7 +254,7 @@ class R
                    if id
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
-                     here ? '.' : [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title),
+                     thisDir ? '' : [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title),
                                    {_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(this.basename)},
                                    l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
