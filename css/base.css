@@ -3,10 +3,10 @@ pre {white-space: pre-wrap}
 input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-radius:.2em;display: inline-block}
 form,input {display: inline-block}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
-a[rel="prev"], a[rel="next"], a.nextpage, a.expand {font-size:3em;margin:.42em}
+a[rel="prev"], a[rel="next"], a.nextpage, a.expand {font-size:3em;margin:.2em}
 a.dirname,a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
-a.dirname {position:absolute;top:-.2em;font-size:2em;left:1em}
+a.dirname {position:absolute;top:-.2em;font-size:2em;left:1.3em}
 a.dirname, a.weak {color:#333}
 a.page {font-weight: normal}
 a.uri {font-size:.9em;font-weight:normal;color:#aaa }
@@ -50,7 +50,7 @@ td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000; white-space: nowrap}
 .content > div.sourcecode > pre {max-height:12em;overflow:scroll}
-div.mail {margin:.5em;max-width:80ex; background-color: #000;color:#fff}
+div.mail {margin:.5em;max-width:80ex; background-color: #000;color:#fff;border-radius:.382em}
 div.mail a.title {background-color: #fff;color:#000}
 div.mail > a[class] {font-size:1.1em}
 img {max-width: 100%}
