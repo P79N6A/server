@@ -118,13 +118,13 @@ class R
     e[:label] ||= {}
     path = e.R.justPath
 
-    [{id: :statusbar},
-     ({_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'),
+    [{id: :statusbar},    
      (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:search]),
      e[:Links][:prev].do{|p|
        p = CGI.escapeHTML p.to_s
        {_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',
         c: '&#9664;', title: p, rel: :prev, href: p}},
+     ({_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'),
      e[:Links][:next].do{|n|
        n = CGI.escapeHTML n.to_s
        {_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',
