@@ -63,7 +63,7 @@ class R
           r[Date].do{|d|[{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
           r[SIOC+'reply_to'].do{|c|
             [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']},
-         ].intersperse("\n"),
+         ].intersperse("\n"),"<br>",
          r[Content],
          [DC+'hasFormat', SIOC+'attachment'].map{|p| # property
            r[p].justArray.map{|o| # each attachment object
