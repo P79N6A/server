@@ -160,9 +160,11 @@ class R
   }
   
   Abstract[SIOC+'SourceCode'] = -> graph, subgraph, env {
+    full = env.q.has_key? 'full'
+    env[:summarized] = true unless full
     subgraph.map{|id,source|
       graph[id][DC+'hasFormat'] = R[id+'.html']
-      graph[id].delete Content
+      graph[id].delete Content unless full
     }
   }
 
