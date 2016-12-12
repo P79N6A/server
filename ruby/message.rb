@@ -361,7 +361,7 @@ class R
   end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
-  alias_method :feeds, :listFeeds
+  alias_method  :feeds, :listFeeds
 
   module Feed
     
@@ -480,7 +480,9 @@ class R
               u = (URI.join @base, u).to_s
             end
 
-            if u.match /\/comments\//
+            commentRe = /\/comments\//
+            if u.match commentRe
+              yield u, R::SIOC+'channel', u.R.path.match(commentRe).pre_match.tail
               yield u, R::Type, R[R::SIOC+'MicroblogPost']
             else
               yield u, R::Type, R[R::BlogPost]
