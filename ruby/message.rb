@@ -493,7 +493,7 @@ class R
             inner.scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
               yield u,p,e[3].extend(SniffContent).sniff.do{|o|
-                o.match(HTTP_URI) ? o.R : o } unless p==Atom+'id'
+                o.match(HTTP_URI) ? o.R : o } unless (p==Atom+'id' || p==Atom+'link')
             }
           end
         }
