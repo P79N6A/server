@@ -406,30 +406,14 @@ class R
 
       def massage *f
         send(*f){|s,p,o|
-          content = p == Content
-          host = s.R.host
-          if content
-            createdBy = /.* submitted by/
-            if o.class == String && host && host.match(/reddit\.com$/) && o.match(createdBy)
-              (Nokogiri::HTML.fragment o.sub(createdBy,' ')).do{|sub|
-                links = sub.css('a')
-                yield s, To, R[links[1].attr('href')]
-              }
-            else
-              yield s, To, s.R.hostPart.R
-            end
-          end
-
-          # resolve URIs
-          yield s, p, (content && o.class==String) ?
+          # resolve URIs in content
+          yield s, p, (p==Content && o.class==String) ?
           (Nokogiri::HTML.fragment o).do{|o|
             o.css('a').map{|a|
               if a.has_attribute? 'href'
                 ( a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
               end}
-            o.to_xhtml} : o
-
-        }
+            o.to_xhtml} : o }
       end
 
       def mapPredicates *f
@@ -507,10 +491,10 @@ class R
                 yield(u, R::Atom+((r=e[1].match(reRel)) ? r[1] : e[0]), url[2].R)}}
 
             inner.scan(reElement){|e|
-              yield u,                                     # s
-                    (x[e[0] && e[0].chop]||R::RSS) + e[1], # p
-                    e[3].extend(SniffContent).sniff.do{|o| # o
-                o.match(HTTP_URI) ? o.R : o }}
+              p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
+              yield u,p,e[3].extend(SniffContent).sniff.do{|o|
+                o.match(HTTP_URI) ? o.R : o } unless p==Atom+'id'
+            }
           end
         }
 
