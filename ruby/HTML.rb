@@ -137,7 +137,7 @@ class R
          type = types.find{|t|ViewA[t]}
          ViewA[type ? type : BasicResource][(r||{}),e]
        end} unless table),
-     {_: :style, c: e[:label].map{|name,_| # label colors
+     {_: :style, c: e[:label].map{|name,_| # colorize labels
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
      H.js('/js/ui',true),
@@ -259,8 +259,9 @@ class R
                    if id
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
-                     [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title),
-                                   {_: :a, class: :uri, href: href, c: ' '+CGI.escapeHTML(this.basename)},
+                     name = CGI.escapeHTML this.basename
+                     [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title),' ',
+                      (title ? {_: :span, class: :name, c: name} : {_: :a, class: :uri, href: href, c: name}),
                                    l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
                  when Title # show in URI column
