@@ -87,11 +87,11 @@ class R
       end}
     g
   rescue Exception => e
-    puts uri,e.class,e.message
+    puts uri,e.class,e.message,e.backtrace[0..2]
     g
   end
 
-  # Reader class for RDF library
+  # native-JSON-format RDF interface
   module Format
 
     class Format < RDF::Format

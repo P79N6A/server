@@ -3,7 +3,7 @@
 
 module Rack
   module Adapter
-    # we always use rack's interface, hardcode config so "config.ru" file doesnt need to exist
+    # load this config so "config.ru" file doesnt need to exist
     def self.guess _; :rack end
     def self.load _
       Rack::Builder.new {

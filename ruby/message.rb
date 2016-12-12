@@ -349,8 +349,8 @@ class R
     triplrCache :triplrMail, @r.do{|r|r.host}, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  def getFeed h='localhost'
-    store :format => :feed, :hook => IndexFeedRDF, :hostname => h
+  def getFeed h = 'localhost' # index-context (hostname)
+    store :format => :feed, :hook => IndexFeedRDF, :hostname => h, :base_uri => uri
     self
   end
 
@@ -377,6 +377,7 @@ class R
 
       def initialize(input = $stdin, options = {}, &block)
         @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.utf8
+        @base = options[:base_uri]
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -487,8 +488,9 @@ class R
 
           if u
 
-            # no URL found, headed for junk heap
-            u = '/junk/'+u.gsub('/','.') unless u.match /^http/
+            unless u.match /^http/ # resolve to fully-expanded URI
+              u = (URI.join @base, u).to_s
+            end
 
             yield u, R::Type, R[R::BlogPost]
 
@@ -547,7 +549,7 @@ class R
   end
 
   def triplrFeed
-    RDF::Reader.open(pathPOSIX, :format => :feed){|r|
+    RDF::Reader.open(pathPOSIX, :format => :feed, :base_uri => uri){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s, o.class == R ? o : o.value}}
   end
