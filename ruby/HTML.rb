@@ -117,20 +117,21 @@ class R
 
     e[:label] ||= {}
     path = e.R.justPath
-
+    parent = {_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'
+    prevPage = e[:Links][:prev].do{|p|
+      p = CGI.escapeHTML p.to_s
+      {_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',
+       c: '&#9664;', title: p, rel: :prev, href: p}}
+    nextPage = e[:Links][:next].do{|n|
+      n = CGI.escapeHTML n.to_s
+      {_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',
+       c: '&#9654;', title: n, rel: :next, href: n}}
+    
     [{id: :statusbar},    
      (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:search]),
-     e[:Links][:prev].do{|p|
-       p = CGI.escapeHTML p.to_s
-       {_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',
-        c: '&#9664;', title: p, rel: :prev, href: p}},
-     ({_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'),
-     e[:Links][:next].do{|n|
-       n = CGI.escapeHTML n.to_s
-       {_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',
-        c: '&#9654;', title: n, rel: :next, href: n}},
-     groups.map{|view,graph|view[graph,e]}, # grouped
-     (d.map{|u,r|                            # singleton
+     prevPage, parent, nextPage,
+     groups.map{|view,graph|view[graph,e]}, # resource groups
+     (d.map{|u,r|                           # singleton resources
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
@@ -139,7 +140,10 @@ class R
      {_: :style, c: e[:label].map{|name,_| # label colors
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     H.js('/js/ui',true)]}
+     H.js('/js/ui',true),
+     nextPage,
+     prevPage,
+    ]}
 
   ViewA[BasicResource] = -> r,e {
     {_: :table, id: 'h'+r.uri.h, href: r.uri,
