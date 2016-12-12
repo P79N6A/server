@@ -243,18 +243,17 @@ class R
   end
 
   def resourceGET
-    bases = [@r.host, ""] # host*path || path
+    bases = [@r.host, ""] # host, path
     paths = justPath.cascade.map(&:to_s).map &:downcase
     bases.map{|b|
       paths.map{|p| # bubble up to root
-        GET[b + p].do{|fn| # bind handler
+        GET[b + p].do{|fn| # bind
           fn[self,@r].do{|r| # call
-        return r }}}} # non-nil result: stop cascade
+        return r }}}} # found handler, terminate search
     response
   end
 
   def response
-    init = q.has_key? 'new'
 
     if directory?
       if uri[-1] == '/' # in the container
@@ -278,32 +277,27 @@ class R
     # add file(s)
     fs[self,q,graph].do{|files|set.concat files} if fs
 
-    # default/fallback-set
+    # default set
     FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
 
-    if set.empty?
-      @r[404] = true
-      return E404[self,@r,graph] unless init
-    end
+    return E404[self,@r,graph] if set.empty?
 
     @r[:Response].
       update({'Content-Type' => @r.format,
-#               'Content-Type' => @r.format + '; charset=UTF-8',
               'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h})
 
-    condResponse ->{ # lazy response-finisher
-      if set.size==1 && @r.format == set[0].mime # one file in response + MIME match
-        set[0] # return file
+    condResponse ->{ # lazy finish of body. unused on HEAD and cache hit
+      if set.size==1 && @r.format == set[0].mime # one file in set & MIME match
+        set[0] # file response
       else
         loadGraph = -> { # model in JSON
           set.map{|r|r.nodeToGraph graph} # load resources
           @r[:filters].push Container if @r[:container] # container-summarize
           @r[:filters].push Title
-          @r[:filters].push '#create' if @r.signedIn && init # create a resource
           @r[:filters].justArray.map{|f|
-            Filter[f][graph,@r]} # transform
-          graph}
+            Filter[f][graph,@r]} # arbitrary transform
+          graph }
 
         if NonRDF.member? @r.format
           Render[@r.format][loadGraph[],@r]

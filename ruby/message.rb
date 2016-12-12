@@ -452,16 +452,20 @@ class R
 
       def rawFeedTriples # we allow nonconformant XML, missing 's, arbitrary rss1/rss2/Atom feature-use mashup, aka real-world soup-mess
 
-        # regular-expression patterns
+        # base elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
         reXMLns = /xmlns:?([a-z]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
         reElement = %r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
-        reRDFid = /about=["']?([^'">\s]+)/            #    RDF @about
+
+        # node identifiers
+        reRDFid = /about=["']?([^'">\s]+)/            # RDF @about
         reLink = /<link>([^<]+)/                      # <link> inner-text
         reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @rel=alternate href
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href
-        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            #   <id> inner-text
+        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> inner-text
+
+        # media links
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
@@ -492,7 +496,11 @@ class R
               u = (URI.join @base, u).to_s
             end
 
-            yield u, R::Type, R[R::BlogPost]
+            if u.match /\/comments\//
+              yield u, R::Type, R[R::SIOC+'MicroblogPost']
+            else
+              yield u, R::Type, R[R::BlogPost]
+            end
 
             inner.scan(reAttach){|e|
               e[1].match(reSrc).do{|url|
@@ -549,7 +557,8 @@ class R
   end
 
   def triplrFeed
-    RDF::Reader.open(pathPOSIX, :format => :feed, :base_uri => uri){|r|
+    base = @r.R.join uri
+    RDF::Reader.open(pathPOSIX, :format => :feed, :base_uri => base){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s, o.class == R ? o : o.value}}
   end
