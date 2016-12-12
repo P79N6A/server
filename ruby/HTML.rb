@@ -261,7 +261,7 @@ class R
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML this.basename
                      [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title),' ',
-                      (title ? {_: :span, class: :name, c: name} : {_: :a, class: :uri, href: href, c: name}),
+                      (title ? {_: :span, class: :name, c: {_: :font, color: '#555555', c: name}} : {_: :a, class: :uri, href: href, c: name}),
                                    l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
                  when Title # show in URI column
