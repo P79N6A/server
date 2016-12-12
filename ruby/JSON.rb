@@ -87,7 +87,7 @@ class R
       end}
     g
   rescue Exception => e
-    puts uri,e.class,e.message,e.backtrace[0..2]
+    puts uri, e.class, e.message #, e.backtrace[0..2]
     g
   end
 
