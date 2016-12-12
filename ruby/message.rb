@@ -488,12 +488,17 @@ class R
 
             inner.scan(reAttach){|e|
               e[1].match(reSrc).do{|url|
-                yield(u, R::Atom+((r=e[1].match(reRel)) ? r[1] : e[0]), url[2].R)}}
+                rel = e[1].match reRel
+                yield(u, R::Atom+rel[1], url[2].R) if rel}}
 
             inner.scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
-              yield u,p,e[3].extend(SniffContent).sniff.do{|o|
-                o.match(HTTP_URI) ? o.R : o } unless (p==Atom+'id' || p==Atom+'link')
+              if p==Atom+'id' || p==Atom+'link'
+                # identifier predicates bound to subject-URI
+              else
+                yield u,p,e[3].extend(SniffContent).sniff.do{|o|
+                  o.match(HTTP_URI) ? o.R : o }
+              end
             }
           end
         }
