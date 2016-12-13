@@ -146,7 +146,7 @@ class R
     ]}
 
   ViewA[BasicResource] = -> r,e {
-    {_: :table, id: 'h'+r.uri.h, href: r.uri,
+    {_: :table, id: e.selector, href: r.uri,
      c: r.map{|k,v|
        [{_: :tr, property: k,
         c: case k
@@ -189,7 +189,7 @@ class R
       href: 'https://linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
       c: r[FOAF+'name'].justArray[0] || r.R.basename},
      '<br>',
-     {_: :a, id: 'posts'+rand.to_s.h, class: :nextpage, c: '&#9654;', href: r.R.dirname+'?set=page'}
+     {_: :a, id: e.selector, class: :nextpage, c: '&#9654;', href: r.R.dirname+'?set=page'}
     ] if r.uri.match(/^http/)}
 
   
@@ -232,7 +232,7 @@ class R
 
                href = CGI.escapeHTML q.qs
 
-               [{_: :th, id: 'sort'+rand.to_s.h, href: href,
+               [{_: :th, id: e.selector, href: href,
                  property: k,
                  class: k == sort ? 'selected' : '',
                  c: {_: :a,
@@ -248,7 +248,7 @@ class R
     thisDir = this.uri[-1]=='/' && e.R.uri == this.uri # hide children-list for navigated-to "this" dir as members are included as rows
     thisDir ? '' : {_: :tr, class: :selectable,
       href: this.uri,
-      id: 'x' + rand.to_s.h[0..7],
+      id: e.selector,
        c: ["\n",
           keys.map{|k|
             [{_: :td, property: k, class: sort==k ? 'selected' : '',

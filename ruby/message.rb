@@ -43,27 +43,27 @@ class R
              else
                c.to_s
              end
-      [{_: :a, class: :user, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']}
+      [{_: :a, class: :user, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'}.update(navigateHeaders ? {id: e.selector} : {}),' ']}
 
     discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
     # HTML
     [{class: :mail,
      c: [[(r[Title].justArray[0].do{|t|
-             {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {})} unless e[:thread]),
+             {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}.update(navigateHeaders ? {id: e.selector} : {})} unless e[:thread]),
           r[To].justArray.map{|o|
             o = o.R
-            {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {})}.intersperse({_: :span, class: :sep, c: ','}),
+            {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}.update(navigateHeaders ? {id: e.selector} : {})}.intersperse({_: :span, class: :sep, c: ','}),
           author,
           r[Date].do{|d|[{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
           r[SIOC+'reply_to'].do{|c|
-            [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']},
+            [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: e.selector} : {}),' ']},
          ].intersperse("\n"),"<br>",
          r[Content],
          [DC+'hasFormat', SIOC+'attachment'].map{|p| # property
            r[p].justArray.map{|o| # each attachment object
              ['<br>',
-              {_: :a, id: rand.to_s.h[0..12], class: :file, href: o.uri, c: o.R.basename}]}},
+              {_: :a, id: e.selector, class: :file, href: o.uri, c: o.R.basename}]}},
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
     ]}
 

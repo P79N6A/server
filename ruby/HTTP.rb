@@ -460,7 +460,7 @@ class R
 
   end
 
-module Th # methods on request-environment
+module Th # request-time environment
 
   def accept; @accept ||= accept_ end
 
@@ -533,6 +533,11 @@ module Th # methods on request-environment
               p[2..-3],
               p[-2..-1].join(' ')].join "\n" unless p.size < 5 }
     nil
+  end
+
+  def selector
+    @idCount ||= 0
+    'O' + (@idCount += 1).to_s
   end
 
   def user_DNS
