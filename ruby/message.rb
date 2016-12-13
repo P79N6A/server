@@ -443,6 +443,7 @@ class R
         reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @rel=alternate href
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href
         reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> inner-text
+        commentRe = /\/comments\//
 
         # media links
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
@@ -475,11 +476,12 @@ class R
               u = (URI.join @base, u).to_s
             end
 
-            commentRe = /\/comments\//
+            resource = u.R
             if u.match commentRe
-              yield u, R::SIOC+'channel', u.R.path.match(commentRe).pre_match.tail
+              yield u, R::SIOC+'channel', resource.path.match(commentRe).pre_match.tail
               yield u, R::Type, R[R::SIOC+'MicroblogPost']
             else
+              yield u, R::To, R[resource.schemePart + resource.hostPart]
               yield u, R::Type, R[R::BlogPost]
             end
 
