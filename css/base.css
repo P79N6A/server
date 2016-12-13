@@ -47,6 +47,7 @@ h3.title {background-color:#fff;color:#000;margin:0}
 table, div.mail {margin:.42em;display:inline-block;vertical-align:top}
 td {border-color: #555;border-width: 0 0 .1em 0;border-style: solid}
 th a {font-size:1.5em;font-weight: normal}
+th span.label {font-size:.6em;color:#ddd}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000; white-space: nowrap}

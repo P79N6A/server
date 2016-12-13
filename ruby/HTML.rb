@@ -239,7 +239,7 @@ class R
                      rel: :nofollow,
                      href: href,
                      class: Icons[k]||'',
-                     c: k == Type ? '' : Icons[k] ? '' : (k.R.fragment||k.R.basename)}}, "\n"]}]}]}}
+                     c: k == Type ? '' : {_: :span, class: :label, c: k.R.fragment||k.R.basename}}}, "\n"]}]}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
