@@ -246,8 +246,9 @@ class R
     types = l.types
     sourcecode = types.member? SIOC+'SourceCode'
     image = types.member? Image
+    monospace = types.member? SIOC+'InstantMessage'
     thisDir = this.uri[-1]=='/' && e.R.uri == this.uri # hide '.' when navigated to it and showing its content
-    thisDir ? '' : [{_: :tr, class: :selectable,
+    thisDir ? '' : {_: :tr, class: :selectable,
       href: (sourcecode ? (this.uri+'.html') : this.uri),
       id: 'x' + rand.to_s.h[0..7],
        c: ["\n",
@@ -270,7 +271,7 @@ class R
                      icon = Icons[t.uri]
                      {_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
-                   [l[k].do{|children|
+                   l[k].do{|children|
                      children = children.justArray
                      if children[0].keys.size > 1 # tabular-view of contained children
                        childGraph = {}
@@ -278,8 +279,9 @@ class R
                        TabularView[childGraph,e,false]
                       else
                        children.map{|c|[(CGI.escapeHTML c.R.basename[0..15]), ' ']}
-                     end},
-                    l[Content].do{|c|{class: :content, c: c}}]
+                     end}
+                 when Content
+                   l[k].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c }
                  when Label
                    l[k].justArray.map{|v|
                      label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
@@ -302,9 +304,7 @@ class R
                        v
                      end
                    }.intersperse(' ')
-                 end}, "\n"]}]},
-     ({_: :tr, href: l.uri, c: {_: :td, colspan: keys.size, c: ViewA[Image][l,e]}} if image),
-    ]}
+                 end}, "\n"]}]}}
 
   ViewA[Image] = ->img,e{
     image = img.R
