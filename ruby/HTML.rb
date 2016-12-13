@@ -244,12 +244,10 @@ class R
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
     types = l.types
-    sourcecode = types.member? SIOC+'SourceCode'
-    image = types.member? Image
     monospace = types.member? SIOC+'InstantMessage'
-    thisDir = this.uri[-1]=='/' && e.R.uri == this.uri # hide '.' when navigated to it and showing its content
+    thisDir = this.uri[-1]=='/' && e.R.uri == this.uri # hide children-list for navigated-to "this" dir as members are included as rows
     thisDir ? '' : {_: :tr, class: :selectable,
-      href: (sourcecode ? (this.uri+'.html') : this.uri),
+      href: this.uri,
       id: 'x' + rand.to_s.h[0..7],
        c: ["\n",
           keys.map{|k|
@@ -265,7 +263,7 @@ class R
                       (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}),
                                    l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
-                 when Title # show in URI column
+                 when Title # use in URI column
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
