@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function(){
     // stop searchbox input from bubbling
     var searchbox = document.querySelector('input[name="q"]');
     if(searchbox){
-	searchbox.focus();
+//	searchbox.focus();
 	searchbox.addEventListener("keydown",function(e){e.stopPropagation();});
     };
 
