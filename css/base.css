@@ -46,7 +46,6 @@ a.user:before { content:"\f007"; font-family: icons;}
 h3.title {background-color:#fff;color:#000;margin:0}
 table, div.mail {margin:.42em;display:inline-block;vertical-align:top}
 th a {font-size:1.5em;font-weight: normal}
-td, th {vertical-align:top;border-radius:.125em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000; white-space: nowrap}

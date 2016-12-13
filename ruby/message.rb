@@ -43,7 +43,7 @@ class R
              else
                c.to_s
              end
-      [{_: :a, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']}
+      [{_: :a, class: :user, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {}),' ']}
 
     discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
@@ -54,11 +54,6 @@ class R
           r[To].justArray.map{|o|
             o = o.R
             {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}.update(navigateHeaders ? {id: 'h'+rand.to_s.h} : {})}.intersperse({_: :span, class: :sep, c: ','}),
-          # reply-of (direct)
-          {_: :a, c: ' &larr; ',
-           href: r[SIOC+'has_parent'].justArray[0].do{|p|
-             p.uri + '#' + p.uri
-           }||'#'},
           author,
           r[Date].do{|d|[{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
           r[SIOC+'reply_to'].do{|c|
