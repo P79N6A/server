@@ -148,10 +148,8 @@ class R
     graph[user] = {'uri' => user, Type => R[FOAF+'Person']}
     graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
     seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
-
-    # containment
-    base.cascade.reverse.map{|p|
-      p.e && seeAlso.push(p)}
+    base.cascade.reverse.map{|p|p.e && seeAlso.push(p)}
+    env[:search] = true
 
     ENV2RDF[env, graph]
     [404,{'Content-Type' => env.format},
