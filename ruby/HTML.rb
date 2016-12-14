@@ -128,8 +128,9 @@ class R
        c: '&#9654;', title: n, rel: :next, href: n}}
     
     [{id: :statusbar},    
+     prevPage, parent,
      (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:search]),
-     prevPage, parent, nextPage,
+     nextPage,
      groups.map{|view,graph|view[graph,e]}, # resource groups
      (d.map{|u,r|                           # singleton resources
        if !seen[u]
@@ -141,6 +142,7 @@ class R
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
      H.js('/js/ui',true),
+     '<br clear=all>',
      nextPage,
      prevPage,
     ]}
@@ -152,7 +154,7 @@ class R
         c: case k
            when 'uri'
              u = CGI.escapeHTML r.uri
-             {_: :td, class: :uri, colspan: 2, c: {_: :a, class: :uri, href: u, c: u.R.basename}}
+             {_: :td, class: :uri, colspan: 2, c: {_: :a, style: 'font-size:2em', href: u, c: u.R.basename}}
            when Content
              {_: :td, class: :val, colspan: 2, c: v}
            when Atom+'enclosure'

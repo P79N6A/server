@@ -3,7 +3,7 @@ pre {white-space: pre-wrap}
 span.monospace {font-family: monospace}
 input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-radius:.2em;display: inline-block}
 #statusbar {position:fixed;border-radius:.16em;color:#fff;background-color:#666;padding: 0 .15em 0 .15em}
-form,input {display: inline-block}
+form,input {display: inline-block;margin:.4em}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a.nextpage, a.expand {font-size:3em;margin:.2em}
 a.dirname,a[rel="prev"] {float: left}
@@ -45,7 +45,7 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 h3.title {background-color:#fff;color:#000;margin:0}
-table, div.mail {margin:.42em;display:inline-block;vertical-align:top}
+table, div.mail {display:inline-block;vertical-align:top}
 td {border-color: #555;border-width: 0 0 .1em 0;border-style: solid}
 th a {font-size:1.5em;font-weight: normal}
 th span.label {font-size:.6em;color:#ddd}
