@@ -245,17 +245,18 @@ class R
     this = l.R
     types = l.types
     monospace = types.member? SIOC+'InstantMessage'
-    thisDir = this.uri[-1]=='/' && e.R.uri == this.uri # hide children-list for navigated-to "this" dir as members are included as rows
-    thisDir ? '' : {_: :tr, class: :selectable,
+    thisDir = this.uri[-1]=='/' && e.R.uri == this.uri
+    {_: :tr, class: :selectable,
       href: this.uri,
-      id: e.selector,
+      id: thisDir ? 'this' : e.selector,
        c: ["\n",
           keys.map{|k|
             [{_: :td, property: k, class: sort==k ? 'selected' : '',
               c: case k
                  when 'uri'
-                   id = l.uri
-                   if id
+                   if thisDir
+                     {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
+                   else
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML this.basename
@@ -265,7 +266,7 @@ class R
                    end
                  when Title # use in URI column
                  when Type
-                   l[Type].justArray.map{|t|
+                   thisDir ? '' : l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
                      {_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
