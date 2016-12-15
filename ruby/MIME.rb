@@ -7,7 +7,7 @@ module Th
   end
 
   Prefer = { # tiebreaker order (lowest wins)
-    'text/html' => 0, 'text/turtle' => 1, 'application/xhtml+xml' => 2}
+    'text/html' => 0, 'text/turtle' => 1}
 
   def selectFormat
     # 1. query-string
@@ -153,8 +153,9 @@ class R
 
   def triplrMIME &b
     mime.do{|mime|
-      (MIMEsource[mime]||
-       MIMEsource[mime.split(/\//)[0]]).do{|s|
+      (MIMEsource[mime]||                # exact match
+       MIMEsource[mime.split(/\//)[0]]|| # category
+       :triplrFile).do{|s|               # nothing found, basic file metadata
         send *s,&b }}
   end
 

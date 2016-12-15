@@ -106,6 +106,14 @@ class R
     yield dir, Size, children.size
   end
 
+  def triplrFile
+    yield uri, Type, R[Stat+'File']
+    mt = mtime
+    yield uri, Mtime, mt.to_i
+    yield uri, Date, mt.iso8601
+    yield uri, Size, size
+  end
+
   def triplrUriList
     open(pathPOSIX).readlines.map{|l|
       yield l.chomp, Type, R[Resource] }
