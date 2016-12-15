@@ -279,6 +279,7 @@ class R
     FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
 
     return E404[self,@r,graph] if set.empty?
+#    puts set
 
     @r[:Response].
       update({'Content-Type' => @r.format,

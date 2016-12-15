@@ -3,8 +3,7 @@ class R
   FileSet[Resource] = -> e,q,g {
     query = e.env['QUERY_STRING']
 
-    # pagination on date-dirs
-    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
+    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m| # day dirs
       qs = query && !query.empty? && ('?' + query) || ''
       date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
       slug = m[4] || ''
@@ -13,15 +12,15 @@ class R
         # next/prev hours
         np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
         pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
-        # wraparound hours to next/prev days
+        # wraparound to next/prev day
         if hour == 0
           pp = (date - 1).strftime('/%Y/%m/%d/23/')
         elsif hour >= 23
-          np = (date+1).strftime('/%Y/%m/%d/00/')
+          np = (date + 1).strftime('/%Y/%m/%d/00/')
         end
         nPath = np
         pPath = pp
-      else # day dirs
+      else
         pPath = (date-1).strftime('/%Y/%m/%d/')
         nPath = (date+1).strftime('/%Y/%m/%d/')
         # persist slug across pages
@@ -49,7 +48,7 @@ class R
           e.fileResources
         end
       end
-    else # resource(s)
+    else
       stars = e.to_s.scan('*').size
       if stars > 0 && stars < 3
         FileSet['glob'][e,q,g]
@@ -61,7 +60,7 @@ class R
   FileSet['glob'] = -> path,query,model {
     if path.to_s.scan('*').size < 3 # limit wildcard usage
       path.env[:container] = true # enable multiple-resource summarizae
-      path.glob.select(&:inside) # return paths inside server-root
+      path.glob.select(&:inside) # stay inside server-root
     else
       []
     end}
@@ -91,7 +90,7 @@ class R
   GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (r['QUERY_STRING']||'')}), []]}
   GET['/now'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + '?' + (r['QUERY_STRING']||'')}), []]}
   
-  # internal storage directories not exposed to HTTP clients
+  # internal storage not exposed on HTTP
   GET['/cache'] = E404
   GET['/domain'] = E404
   GET['/index'] = E404
@@ -174,8 +173,7 @@ class R
         end}
     end}
 
-  # set of search results
-  ResourceSet['groonga'] = ->d,e,m{
+  ResourceSet['groonga'] = ->d,e,m{ # results from third-party search-engine Groonga
     R.groonga.do{|ga|
       q = e['q']     # expression
       g = d.env.host # context
