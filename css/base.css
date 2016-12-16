@@ -11,7 +11,7 @@ a[rel="next"] {float: right}
 a.dirname {margin-left:.3em;font-size:2em;float:left}
 a.dirname, a.weak {color:#333}
 a.page {font-weight: normal}
-a.uri, span.name {font-size:.9em;font-weight:normal;color:#aaa }
+a.uri, span.name {font-weight:normal;color:#bbb}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comments:before { content:"\f0e6"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }
