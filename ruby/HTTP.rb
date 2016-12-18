@@ -111,7 +111,7 @@ class R
 
   def R.log re, s, h, b
     puts [re.uri,
-          h['Location'] ? ['->',h['Location']] : nil, '<'+re.user+'>', re.format, re.env['HTTP_REFERER'], re.env['HTTP_USER_AGENT']].
+          h['Location'] ? ['->',h['Location']] : nil, '<'+re.user_id+'>', re.format, re.env['HTTP_REFERER'], re.env['HTTP_USER_AGENT']].
           flatten.compact.map(&:to_s).join ' '
   end
 
@@ -123,23 +123,15 @@ class R
     h
   end
 
-  ENV2RDF = -> re, graph {
-    env = re.env
-    subj = graph[env.uri] ||= {'uri' => env.uri}
-    qs = graph['#query'] = {'uri' => '#query'}
-    re.q.map{|key,val|
-      qs['#'+key.gsub(/\W+/,'_')] = val}
-    [env, env[:Links], env[:Response]].compact.map{|db|
-      db.map{|k,v|
-        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/ }}}
-
   def notfound
     graph = {}
-    graph[uri] = {'uri' => uri, Type => R[BasicResource]}
-    seeAlso = graph[uri][RDFs+'seeAlso'] = []
+    this = graph[uri] = {'uri' => uri, Type => R[BasicResource]}
+    seeAlso = this[RDFs+'seeAlso'] = []
     cascade.reverse.map{|p|p.e && seeAlso.push(p)}
     env[:search] = true
-    ENV2RDF[re, graph]
+    [env, env[:Links], env[:Response]].compact.map{|db|
+      db.map{|k,v|
+        this[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/ }}
     [404,{'Content-Type' => format},
      [Render[format].do{|fn|fn[graph,self]} ||
       graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
@@ -464,15 +456,15 @@ class R
     lh
   end
 
-  def user
-    @user ||= (user_WebID || user_DNS)
+  def user_id
+    @user ||= (user_cert || user_DNS)
   end
 
   def signedIn
     @signedIn ||= user.uri.match /^http/
   end
 
-  def user_WebID
+  def user_cert
     x509cert.do{|c|
       cert = R['/cache/uid/' + R.dive(c.h)] # cert URI
       verifyWebID.do{|id| cert.w id } unless cert.exist? # update cache
