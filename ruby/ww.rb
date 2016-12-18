@@ -216,8 +216,6 @@ class R < RDF::URI
   ViewGroup = {}   # HTML template (resources of RDF type)
   Watch = {}       # source-files to check for changes
 
-  Stats = {'host' => {}, 'status' => {'500' => {}}}
-
 %w{
 MIME
 names

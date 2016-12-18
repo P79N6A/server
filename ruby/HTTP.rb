@@ -106,7 +106,7 @@ class R
       R.log resource,s,h,b
       [s,h,b]}
   rescue Exception => x
-    E500[x,resource]
+   [500,{'Content-Type' => 'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
   end
 
   def R.log re, s, h, b
@@ -137,32 +137,6 @@ class R
       graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
   end
 
-  E500 = -> x,re {
-    [500,{'Content-Type' => 'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]}
-
-  GET['/stat'] = -> e,r {
-    graph = {}
-    x = Stats # tree
-    e.path.sub(/^\/stat\//,'').split('/').map{|name|
-      n = x[name]  # try name
-      x = n if n } # found
-
-    if x.uri # leaf
-      graph[x.uri] = x
-    else # container
-      x.keys.map{|child|
-        uri = x[child]['uri']  || (e.uri.t + child.t)
-        graph[uri] = {'uri' => uri,
-                      Type => R[x[child].uri ? Resource : Container],
-                      Size => x[child][Size] || x[child].keys.size,
-                      Label => x[child][Label],
-                      Content => x[child][Content],
-                     }
-      }
-    end
-    e.q['sort'] ||= 'stat:size'
-    [200,{'Content-Type' => r.format}, [Render[r.format].do{|p|p[graph,r]} || graph.toRDF(e).dump(RDF::Writer.for(:content_type => r.format).to_sym)]]}
-  
   ViewGroup[User] = -> g,env {
     if env.signedIn
       g.map{|u,r|
