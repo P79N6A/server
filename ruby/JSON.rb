@@ -138,7 +138,7 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  Render['application/json'] = -> d,e { d.to_json }
+  Render['application/json'] = -> graph,_ { graph.to_json }
 
   # return just RDF files of whitelisted formats, transcode non-RDF as necessary
   def justRDF pass = RDFsuffixes
