@@ -85,14 +85,10 @@ class R
     # allowable methods over HTTP
     return [405,{'Allow' => Allow},[]] unless AllowMethods.member? method
     return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-
-    # bind environment utility-functions
-    e.extend Th
-
     # load changed source-code
     dev
 
-    # preserve canonical hostname in proxy scenario
+    # restore canonical hostname
     e['HTTP_X_FORWARDED_HOST'].do{|h|
       e['SERVER_NAME']=h}
 
@@ -114,9 +110,8 @@ class R
     e[:Response] = {}
     e[:filters] = []
 
-    # call resource
+    # continue call on actual resource
     resource.setEnv(e).send(method).do{|s,h,b|
-      # inspect response
       R.log e,s,h,b
       [s,h,b]}
   rescue Exception => x
