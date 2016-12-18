@@ -50,7 +50,7 @@ class R
         end
       end
     else
-      stars = e.to_s.scan('*').size
+      stars = re.uri.scan('*').size
       if stars > 0 && stars < 3
         FileSet['glob'][re,g]
       else
@@ -270,7 +270,7 @@ class R
 
   # summarize contained-data on per-type basis
   Filter[Container] = -> g,e {
-    e[:title] ||= e.R.path
+    e.env[:title] ||= e.path
     groups = {}
     g.map{|u,r|
       r.types.map{|type| # RDF types
@@ -283,7 +283,7 @@ class R
   # set a request-level Title from the RDF-model
   Filter[Title] = -> g,e {
     g.values.find{|r|r[Title]}.do{|r|
-       e[:title] ||= r[Title].justArray[0].to_s}}
+       e.env[:title] ||= r[Title].justArray[0].to_s}}
 
   # wrap nodes in facet-containers
   Facets = -> m,e { # CSS rules are updated at runtime to control visible-set

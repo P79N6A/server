@@ -272,7 +272,7 @@ class R
           @r[:filters].push Container if @r[:container] # container-summarize
           @r[:filters].push Title
           @r[:filters].justArray.map{|f|
-            Filter[f][graph,@r]} # arbitrary transform
+            Filter[f][graph,self]} # arbitrary transform
           graph }
 
         if NonRDF.member? format

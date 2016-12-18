@@ -1,3 +1,4 @@
+watch __FILE__
 # coding: utf-8
 class R
 
@@ -133,7 +134,7 @@ class R
     threads = {}
     weight = {}
     bodies = e.q.has_key? 'full'
-    e[:summarized] = true unless bodies || g.keys.size > 42
+    e.env[:summarized] = true unless bodies || g.keys.size > 42
     groupBy = (e.q['group']||To).expand
 
     # pass 1. statistics
@@ -341,7 +342,7 @@ class R
             doc.ln target }}}}} # link message to index directory
 
   def triplrMailMessage &f
-    triplrCache :triplrMail, @r.do{|r|r.host}, [SIOC+'reply_of'], IndexMail, &f
+    triplrCache :triplrMail, host, [SIOC+'reply_of'], IndexMail, &f
   end
 
   def getFeed h = 'localhost' # index-context (hostname)
