@@ -180,7 +180,7 @@ class R
         end}
     end}
 
-  ResourceSet['groonga'] = ->d,m{ # results from third-party search-engine Groonga
+  ResourceSet['groonga'] = ->d{ # third-party search-engine Groonga
     e = d.q
     R.groonga.do{|ga|
       q = e['q'] # expression

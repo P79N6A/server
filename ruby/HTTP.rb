@@ -190,9 +190,9 @@ class R
 
     rs = ResourceSet[q['set']]
     fs = FileSet[q['set']]
-    rs[self,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
-    fs[self,graph].do{|files|set.concat files} if fs
-    FileSet[Resource][self,graph].do{|f|set.concat f} unless rs||fs
+    rs[self].do{|l|l.map{|r|set.concat r.fileResources}} if rs
+    fs[self].do{|files|set.concat files} if fs
+    FileSet[Resource][self].do{|f|set.concat f} unless rs||fs
 
     return notfound if set.empty?
 
