@@ -1,7 +1,7 @@
 watch __FILE__
 class R
 
-  FileSet[Resource] = -> re,g {
+  FileSet[Resource] = -> re {
     query = re.env['QUERY_STRING']
 
     re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m| # day dirs
@@ -52,28 +52,28 @@ class R
     else
       stars = re.uri.scan('*').size
       if stars > 0 && stars < 3
-        FileSet['glob'][re,g]
+        FileSet['glob'][re]
       else
         re.fileResources
       end
     end}
 
-  FileSet['glob'] = -> r,_ {
+  FileSet['glob'] = -> r {
     if r.uri.scan('*').size < 3 # limit wildcard usage
-      r.env[:container] = true # enable multiple-resource summarizae
+      r.env[:container] = true # multiple-resource hint
       r.glob.select(&:inside) # stay inside server-root
     else
       []
     end}
 
-  FileSet['find'] = -> e,m,x='' {
+  FileSet['find'] = -> e {
     e.exist? && e.q['q'].do{|q|
-      r = '-iregex ' + ('.*' + q + '.*' + x).sh
+      r = '-iregex ' + ('.*' + q + '.*').sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  FileSet['page'] = -> d,m {
+  FileSet['page'] = -> d {
     # count
     c = ((d.q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
     # direction
@@ -156,15 +156,15 @@ class R
     node.take(*a).map &:R
   end
 
-  FileSet['rev'] = -> e,req,model { # find incoming-arcs via index-file
+  FileSet['rev'] = -> e { # find incoming-arcs via index-file
     (e.dir.child '.' + e.basename + '*.rev').glob.map{|rev|
       rev.node.readlines.map{|r|
         r.chomp.R.fileResources
       }}.flatten}
 
-  FileSet['grep'] = -> e,q,m {
-    q['q'].do{|query|
-      e.env[:filters].push 'grep' unless q.has_key?('full')
+  FileSet['grep'] = -> e {
+    e.q['q'].do{|query|
+      e.env[:filters].push 'grep' unless e.q.has_key?('full')
       `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}
 
   # grep in-memory graph
