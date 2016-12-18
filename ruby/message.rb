@@ -45,7 +45,7 @@ class R
              else
                c.to_s
              end
-      [{_: :a, class: :user, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'}.update(navigateHeaders ? {id: e.selector} : {}),' ']}
+      [{_: :a, class: :user, name: name, c: name, href: authorURI ? (localPath ? c.R.dir : c.uri) : '#'}.update(navigateHeaders ? {id: re.selector} : {}),' ']}
 
     discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
@@ -59,7 +59,7 @@ class R
           author,
           r[Date].do{|d|[{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
           r[SIOC+'reply_to'].do{|c|
-            [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: e.selector} : {}),' ']},
+            [{_: :a, class: :pencil, title: :reply, href: CGI.escapeHTML(c.justArray[0].maybeURI||'#'), c: 'reply'}.update(navigateHeaders ? {id: re.selector} : {}),' ']},
          ].intersperse("\n"),"<br>",
          r[Content],
          [DC+'hasFormat', SIOC+'attachment'].map{|p| # property
@@ -195,7 +195,7 @@ class R
   GET['/thread'] = -> e { # construct thread
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
-    return E404[e,{}] if m.empty?                                       # nothing found?
+    return e.notfound if m.empty?                                      # nothing found
     e.env[:Response]['ETag'] = [m.keys.sort, e.format].h
     e.env[:Response]['Content-Type'] = e.format + '; charset=UTF-8'
     e.condResponse ->{

@@ -147,10 +147,8 @@ class R
     [H.js('/js/audio'),
      {_: :audio, id: :audio, controls: true}]}
 
-  GET['/thumbnail'] = -> e,r {
-    path = e.path.sub /^.thumbnail/, ''
-    path = '//' + r.host + path unless path.match /^.domain/
-    i = R path
+  GET['/thumbnail'] = -> e {
+    i = R['//' + e.host + e.path.sub(/^.thumbnail/,'')]
     if i.file? && i.size > 0
       if i.ext.match /SVG/i
         path = i
@@ -166,9 +164,9 @@ class R
           end
         end
       end
-      path.e ? path.setEnv(r).fileGET : E404[e,r]
+      path.e ? path.setEnv(e.env).fileGET : e.notfound
     else
-      E404[e,r]
+      e.notfound
     end}
 
   def triplrImage &f

@@ -43,16 +43,6 @@ class R
     @r
   end
 
-  ENV2RDF = -> re, graph {
-    env = re.env
-    subj = graph[env.uri] ||= {'uri' => env.uri}
-    qs = graph['#query'] = {'uri' => '#query'}
-    re.q.map{|key,val|
-      qs['#'+key.gsub(/\W+/,'_')] = val}
-    [env, env[:Links], env[:Response]].compact.map{|db|
-      db.map{|k,v|
-        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/ }}}
-
   def ldp
     @r[:Links][:acl] = aclURI
     @r[:Response].update({
@@ -133,20 +123,27 @@ class R
     h
   end
 
-  E404 = -> re, graph=nil {
+  ENV2RDF = -> re, graph {
     env = re.env
-    graph ||= {}
-    user = re.user.to_s
-    graph[user] = {'uri' => user, Type => R[FOAF+'Person']}
-    graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
-    seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
-    re.cascade.reverse.map{|p|p.e && seeAlso.push(p)}
-    env[:search] = true
+    subj = graph[env.uri] ||= {'uri' => env.uri}
+    qs = graph['#query'] = {'uri' => '#query'}
+    re.q.map{|key,val|
+      qs['#'+key.gsub(/\W+/,'_')] = val}
+    [env, env[:Links], env[:Response]].compact.map{|db|
+      db.map{|k,v|
+        subj[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/ }}}
 
+  def notfound
+    graph = {}
+    graph[uri] = {'uri' => uri, Type => R[BasicResource]}
+    seeAlso = graph[uri][RDFs+'seeAlso'] = []
+    cascade.reverse.map{|p|p.e && seeAlso.push(p)}
+    env[:search] = true
     ENV2RDF[re, graph]
-    [404,{'Content-Type' => re.format},
-     [Render[re.format].do{|fn|fn[graph,re]} ||
-      graph.toRDF(re).dump(RDF::Writer.for(:content_type => re.format).to_sym, :prefixes => Prefixes)]]}
+    [404,{'Content-Type' => format},
+     [Render[format].do{|fn|fn[graph,self]} ||
+      graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
+  end
 
   E500 = -> x,re {
     [500,{'Content-Type' => 'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]}
@@ -256,7 +253,7 @@ class R
     # default set
     FileSet[Resource][self,graph].do{|f|set.concat f} unless rs||fs
 
-    return E404[self,graph] if set.empty?
+    return notfound if set.empty?
 
     env[:Response].
       update({'Content-Type' => format,
@@ -264,7 +261,7 @@ class R
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
     condResponse ->{ # lazy finish of body. unused on HEAD and cache hit
-      if set.size==1 && @r.format == set[0].mime # one file in set & MIME match
+      if set.size==1 && format == set[0].mime # one file in set & MIME match
         set[0] # file response
       else
         loadGraph = -> { # model in JSON

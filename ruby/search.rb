@@ -92,6 +92,7 @@ class R
   GET['/now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   
   # internal storage not exposed on HTTP
+  E404 = -> e {e.notfound}
   GET['/cache'] = E404
   GET['/domain'] = E404
   GET['/index'] = E404
