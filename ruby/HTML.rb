@@ -196,13 +196,13 @@ class R
   
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
 
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> g,e {
-    label = e.R.basename
-    e[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
-    [TabularView[g,e],
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> g,re {
+    label = re.basename
+    re.env[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
+    [TabularView[g,re],
      (['<br>',
-       {_: :a, id: :enter, href: e.q.merge({'full' => ''}).qs,
-        class: :expand, c: "&#9660;", rel: :nofollow}] if e[:summarized])]}
+       {_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs,
+        class: :expand, c: "&#9660;", rel: :nofollow}] if re.env[:summarized])]}
 
   
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {

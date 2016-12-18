@@ -248,20 +248,20 @@ class R
     fs = FileSet[q['set']]
 
     # add generic-resource(s)
-    rs[self,q,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
+    rs[self,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
 
     # add file(s)
-    fs[self,q,graph].do{|files|set.concat files} if fs
+    fs[self,graph].do{|files|set.concat files} if fs
 
     # default set
-    FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
+    FileSet[Resource][self,graph].do{|f|set.concat f} unless rs||fs
 
     return E404[self,graph] if set.empty?
 
-    @r[:Response].
-      update({'Content-Type' => @r.format,
-              'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
-              'ETag' => [set.sort.map{|r|[r,r.m]}, @r.format].h})
+    env[:Response].
+      update({'Content-Type' => format,
+              'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
+              'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
     condResponse ->{ # lazy finish of body. unused on HEAD and cache hit
       if set.size==1 && @r.format == set[0].mime # one file in set & MIME match
@@ -275,8 +275,8 @@ class R
             Filter[f][graph,@r]} # arbitrary transform
           graph }
 
-        if NonRDF.member? @r.format
-          Render[@r.format][loadGraph[],self]
+        if NonRDF.member? format
+          Render[format][loadGraph[],self]
         else
           base = @r.R.join uri
           if @r[:container] # container

@@ -1,10 +1,10 @@
 watch __FILE__
 class R
 
-  FileSet[Resource] = -> e,q,g {
-    query = e.env['QUERY_STRING']
+  FileSet[Resource] = -> re,g {
+    query = re.env['QUERY_STRING']
 
-    e.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m| # day dirs
+    re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m| # day dirs
       qs = query && !query.empty? && ('?' + query) || ''
       date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
       slug = m[4] || ''
@@ -28,33 +28,33 @@ class R
         pp = pPath + slug
         np = nPath + slug
       end
-      e.env[:nextEmpty] = true unless R['//' + e.host + nPath].e
-      e.env[:prevEmpty] = true unless R['//' + e.host + pPath].e
-      e.env[:Links][:prev] = pp + qs
-      e.env[:Links][:next] = np + qs}
+      re.env[:nextEmpty] = true unless R['//' + re.host + nPath].e
+      re.env[:prevEmpty] = true unless R['//' + re.host + pPath].e
+      re.env[:Links][:prev] = pp + qs
+      re.env[:Links][:next] = np + qs}
 
-    if e.env[:container]
-      htmlFile = e.a 'index.html'
-      if e.env.format=='text/html' && !e.env['REQUEST_URI'].match(/\?/) && htmlFile.e
-         [htmlFile.setEnv(e.env)] # found index.html, HTML requested, and no query -> use static-file
+    if re.env[:container]
+      htmlFile = re.a 'index.html'
+      if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
+         [htmlFile.setEnv(re.env)] # found index.html, HTML requested, and no query -> use static-file
       else
-        cs = e.c # child-nodes
+        cs = re.c # child-nodes
         size = cs.size
         # inline small sets, limit large sets to pointers
-        if size < 512 || q.has_key?('full')
-          cs.map{|c|c.setEnv e.env}
-          e.fileResources.concat cs
+        if size < 512 || re.q.has_key?('full')
+          cs.map{|c|c.setEnv re.env}
+          re.fileResources.concat cs
         else
-          e.env[:summarized] = true
-          e.fileResources
+          re.env[:summarized] = true
+          re.fileResources
         end
       end
     else
       stars = e.to_s.scan('*').size
       if stars > 0 && stars < 3
-        FileSet['glob'][e,q,g]
+        FileSet['glob'][re,g]
       else
-        e.fileResources
+        re.fileResources
       end
     end}
 
