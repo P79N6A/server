@@ -70,49 +70,30 @@ class R
       end }
   end
 
-  def R.call e # Rack calls resource
-    method = e['REQUEST_METHOD']
-
-    # allowable methods over HTTP
-    return [405,{'Allow' => Allow},[]] unless AllowMethods.member? method
+  def R.call e
+    return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD']
     return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-    # load changed source-code
     dev
-
-    # restore canonical hostname
-    e['HTTP_X_FORWARDED_HOST'].do{|h|
-      e['SERVER_NAME']=h}
-
-    # clean-up hostname
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
-
-    # interpret path
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/')
     path = Pathname.new(rawpath).expand_path.to_s
     # preserve trailing-slash
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'
-
     # resource URI
     resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path]
     e['uri'] = resource.uri
-
-    # header-field containers
+    # response header
     e[:Links] = {}
     e[:Response] = {}
     e[:filters] = []
-
     # continue call on actual resource
-    resource.setEnv(e).send(method).do{|s,h,b|
-      R.log resource,s,h,b
+    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
+      puts [resource.uri, h['Location'] ? ['->',h['Location']] : nil, '<'+resource.user_id+'>', resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
+             flatten.compact.map(&:to_s).join ' '
       [s,h,b]}
   rescue Exception => x
    [500,{'Content-Type' => 'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
-  end
-
-  def R.log re, s, h, b
-    puts [re.uri,
-          h['Location'] ? ['->',h['Location']] : nil, '<'+re.user_id+'>', re.format, re.env['HTTP_REFERER'], re.env['HTTP_USER_AGENT']].
-          flatten.compact.map(&:to_s).join ' '
   end
 
   def R.parseQS qs
@@ -195,9 +176,9 @@ class R
   def response
 
     if directory?
-      if uri[-1] == '/' # in the container
+      if uri[-1] == '/'
         @r[:container] = true
-      else # enter container
+      else
         qs = @r['QUERY_STRING']
         @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
         return [301, @r[:Response], []]
@@ -209,14 +190,8 @@ class R
 
     rs = ResourceSet[q['set']]
     fs = FileSet[q['set']]
-
-    # add generic-resource(s)
     rs[self,graph].do{|l|l.map{|r|set.concat r.fileResources}} if rs
-
-    # add file(s)
     fs[self,graph].do{|files|set.concat files} if fs
-
-    # default set
     FileSet[Resource][self,graph].do{|f|set.concat f} unless rs||fs
 
     return notfound if set.empty?
@@ -230,7 +205,7 @@ class R
       if set.size==1 && format == set[0].mime # one file in set & MIME match
         set[0] # file response
       else
-        loadGraph = -> { # model in JSON
+        loadGraph = -> {
           set.map{|r|r.nodeToGraph graph} # load resources
           @r[:filters].push Container if @r[:container] # container-summarize
           @r[:filters].push Title
@@ -248,7 +223,7 @@ class R
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
           end
-          g.dump (RDF::Writer.for :content_type => @r.format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
+          g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
         end
       end}
   end

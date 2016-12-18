@@ -92,11 +92,8 @@ class R
   GET['/now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   
   # internal storage not exposed on HTTP
-  E404 = -> e {e.notfound}
-  GET['/cache'] = E404
-  GET['/domain'] = E404
-  GET['/index'] = E404
-  
+  GET['/cache'] = GET['/domain'] = GET['/index'] = -> e {e.notfound}
+
   def triplrContainer
     dir = uri.t
     yield dir, Type, R[Container]
@@ -183,10 +180,11 @@ class R
         end}
     end}
 
-  ResourceSet['groonga'] = ->d,e,m{ # results from third-party search-engine Groonga
+  ResourceSet['groonga'] = ->d,m{ # results from third-party search-engine Groonga
+    e = d.q
     R.groonga.do{|ga|
-      q = e['q']     # expression
-      g = d.env.host # context
+      q = e['q'] # expression
+      g = d.host # context
 
       # evaluate expression
       r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # query
@@ -263,10 +261,10 @@ class R
     graph.keys.push(uri).map{|u|g[u].delete}
   end
 
-  GET['/search'] = -> d,e {
+  GET['/search'] = -> e {
     e.q['set'] = 'groonga'
-    e[:container] = true
-    e[:search] = true
+    e.env[:container] = true
+    e.env[:search] = true
     nil}
 
   # summarize contained-data on per-type basis
