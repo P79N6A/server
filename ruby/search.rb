@@ -171,9 +171,9 @@ class R
   Filter['grep'] = -> d,e {
     w = e.q['q']
     if w && w.size > 1
-      e[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i
+      e.env[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i
       d.map{|u,r|
-        if r.to_s.match e[:grep] # matching resource
+        if r.to_s.match e.env[:grep] # matching resource
           r[Type] = R['#grep-result']
         else
           d.delete u
@@ -300,7 +300,7 @@ class R
      g.map{|u,r| # matching resources
        r.values.flatten.select{|v|v.class==String}.map{|str| # string values
          str.lines.map{|ls|ls.gsub(/<[^>]+>/,'')}}.flatten.  # lines within strings
-         grep(e[:grep]).do{|lines|                           # matching lines
+         grep(e.env[:grep]).do{|lines|                           # matching lines
          [{_: :h5, c: r.R.href}, # match URI
             lines[0..5].map{|line| # HTML-render of first 6 matching-lines
               line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
