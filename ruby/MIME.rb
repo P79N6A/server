@@ -140,8 +140,7 @@ class R
     yield uri, Title, bare
   end
 
-  Abstract[Sound] = -> graph, g, e {
-    graph['#audio'] = {Type => R[Sound+'Player']}} # just add a player resource
+  Abstract[Sound] = -> graph, g, e {graph['#audio'] = {Type => R[Sound+'Player']}} # add player
 
   ViewGroup[Sound+'Player'] = -> g,e {
     [H.js('/js/audio'),

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 class String
 
@@ -155,18 +155,14 @@ class R
   Abstract[SIOC+'TextFile'] = -> graph, subgraph, env {
     subgraph.map{|id,data|
       graph[id][DC+'hasFormat'] = R[id+'.html']
-      graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}
-    }
-  }
+      graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}}}
   
-  Abstract[SIOC+'SourceCode'] = -> graph, subgraph, env {
-    full = env.q.has_key? 'full'
-    env[:summarized] = true unless full
+  Abstract[SIOC+'SourceCode'] = -> graph, subgraph, re {
+    full = re.q.has_key? 'full'
+    re.env[:summarized] = true unless full
     subgraph.map{|id,source|
       graph[id][DC+'hasFormat'] = R[id+'.html']
-      graph[id].delete Content unless full
-    }
-  }
+      graph[id].delete Content unless full}}
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
  desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript
