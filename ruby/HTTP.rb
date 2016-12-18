@@ -458,11 +458,6 @@ class R
   def allowWrite
     @r.signedIn
   end
-
-  end
-
-module Th # request-time environment
-
   def accept; @accept ||= accept_ end
 
   def accept_ k=''
@@ -557,7 +552,9 @@ module Th # request-time environment
        end)
   end
 
-end
+  end
+
+
 
 class Hash
   def qs # serialize to query-string
