@@ -31,7 +31,7 @@ class R
   def HEAD
     self.GET.
     do{| s, h, b |
-       [ s, h, []]} # just HEADer
+       [ s, h, []]}
   end
 
   def setEnv r
@@ -39,8 +39,9 @@ class R
     self
   end
 
-  def getEnv; @r end
-  alias_method :env, :getEnv
+  def env
+    @r
+  end
 
   ENV2RDF = -> env, graph {
     subj = graph[env.uri] ||= {'uri' => env.uri}
@@ -218,8 +219,6 @@ class R
   def allowRead
     true
   end
-
-  def q; @r.q end
 
   def GET
     ldp
@@ -458,11 +457,22 @@ class R
   def allowWrite
     @r.signedIn
   end
-  def accept; @accept ||= accept_ end
 
-  def accept_ k=''
+  def reqHost
+    env['SERVER_NAME']
+  end
+
+  def reqScheme
+    env['rack.url_scheme']
+  end
+
+  def accept
+    @accept ||= acceptParse
+  end
+
+  def acceptParse k=''
     d={}
-    self['HTTP_ACCEPT'+k].do{|k|
+    env['HTTP_ACCEPT'+k].do{|k|
       (k.split /,/).map{|e| # each pair
         f,q = e.split /;/   # split MIME from q value
         i = q && q.split(/=/)[1].to_f || 1.0 # q || default
@@ -472,7 +482,7 @@ class R
 
   def linkHeader
     lh = {}
-    self['HTTP_LINK'].do{|links|
+    env['HTTP_LINK'].do{|links|
       links.split(', ').map{|link|
         uri,rel = nil
         link.split(';').map{|a|
@@ -523,7 +533,7 @@ class R
   end
 
   def x509cert
-    self['rack.peer_cert'].do{|v|
+    env['rack.peer_cert'].do{|v|
       p = v.split /[\s\n]/
       return [p[0..1].join(' '),
               p[2..-3],
@@ -537,19 +547,42 @@ class R
   end
 
   def user_DNS
-    addr = self['HTTP_ORIGIN_ADDR'] || self['REMOTE_ADDR'] || '0.0.0.0'
+    addr = env['HTTP_ORIGIN_ADDR'] || env['REMOTE_ADDR'] || '0.0.0.0'
     R['dns:' + addr]
   end
 
-  def SSLupgrade; [301,{'Location' => "https://" + host + self['REQUEST_URI']},[]] end
+  def SSLupgrade; [301,{'Location' => "https://" + host + env['REQUEST_URI']},[]] end
 
   def q # memoize key/vals
     @q ||=
-      (if q = self['QUERY_STRING']
+      (if q = env['QUERY_STRING']
          R.parseQS q
        else
          {}
        end)
+  end
+
+  def format # memoized MIME
+    @format ||= selectFormat
+  end
+
+  Prefer = { # tiebreaker order (lowest wins)
+    'text/html' => 0, 'text/turtle' => 1}
+
+  def selectFormat
+
+    # request by adding a URL suffix
+    { '.html' => 'text/html',
+      '.json' => 'application/json',
+      '.ttl' => 'text/turtle',
+    }[File.extname(env['REQUEST_PATH'])].do{|mime| return mime}
+
+    # Accept parameter in request header
+    accept.sort.reverse.map{|q,mimes| # MIMES in descending q-order
+      mimes.sort_by{|m|Prefer[m]||2}.map{|mime| # apply tiebreakers
+        return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}}
+
+    'text/html'
   end
 
   end

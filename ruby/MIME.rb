@@ -1,38 +1,6 @@
-#watch __FILE__
-
-module Th
-
-  def format # memoized MIME
-    @format ||= selectFormat
-  end
-
-  Prefer = { # tiebreaker order (lowest wins)
-    'text/html' => 0, 'text/turtle' => 1}
-
-  def selectFormat
-    # 1. query-string
-    return 'text/turtle' if q.has_key? 'rdf'
-
-    # 2. explicit suffix
-    { '.html' => 'text/html',
-      '.json' => 'application/json',
-      '.ttl' => 'text/turtle',
-    }[File.extname(self['REQUEST_PATH'])].do{|mime| return mime}
-
-    # 3. Accept-Header
-    accept.sort.reverse.map{|q,mimes| # MIMES in descending q-order
-      mimes.sort_by{|m|Prefer[m]||2}.map{|mime| # apply tiebreakers
-        return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}}
-
-    'text/html' # default
-  end
-
-end
-
-
 class R
 
-  def mime # MIME-type of associated fs node
+  def mime
     @mime ||=
       (p = realpath # dereference links
        unless p     # broken link
@@ -48,7 +16,7 @@ class R
          elsif Rack::Mime::MIME_TYPES['.'+t]
            Rack::Mime::MIME_TYPES['.'+t]
          else
-           puts "unknown MIME #{p}" # Warn when file(1) is invoked
+           puts "unknown MIME #{p}"
            `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
          end
        end )
