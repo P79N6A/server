@@ -58,29 +58,29 @@ class R
       end
     end}
 
-  FileSet['glob'] = -> path,query,model {
-    if path.to_s.scan('*').size < 3 # limit wildcard usage
-      path.env[:container] = true # enable multiple-resource summarizae
-      path.glob.select(&:inside) # stay inside server-root
+  FileSet['glob'] = -> r,_ {
+    if r.uri.scan('*').size < 3 # limit wildcard usage
+      r.env[:container] = true # enable multiple-resource summarizae
+      r.glob.select(&:inside) # stay inside server-root
     else
       []
     end}
 
-  FileSet['find'] = -> e,q,m,x='' {
-    e.exist? && q['q'].do{|q|
+  FileSet['find'] = -> e,m,x='' {
+    e.exist? && e.q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*' + x).sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  FileSet['page'] = -> d,r,m {
+  FileSet['page'] = -> d,m {
     # count
-    c = ((r['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
+    c = ((d.q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
     # direction
-    o = r.has_key?('asc') ? :asc : :desc
+    o = d.q.has_key?('asc') ? :asc : :desc
 
-    (d.take c, o, r['offset'].do{|o|o.R}).do{|s| # get elements
-      if r['offset'] && head = s[0] # create direction-reversing link
+    (d.take c, o, d.q['offset'].do{|o|o.R}).do{|s| # get elements
+      if d.q['offset'] && head = s[0] # create direction-reversing link
         d.env[:Links][:prev] = d.path + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
       end
       if edge = s.size >= c && s.pop # lookahead-node (and therefore another page) exists
@@ -88,7 +88,7 @@ class R
       end
       s }}
 
-  GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (r['QUERY_STRING']||'')}), []]}
+  GET['/today'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   GET['/now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   
   # internal storage not exposed on HTTP

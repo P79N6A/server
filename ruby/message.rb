@@ -2,9 +2,10 @@ watch __FILE__
 # coding: utf-8
 class R
 
-  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,e {
+  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,re {
+    e = re.env
     e[:arcs] = []
-    e.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
+    re.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
     # find timegraph arcs
     d.values.map{|s|
       if s[SIOC+'has_parent']
@@ -29,11 +30,11 @@ class R
      (d.values[0][Title].justArray[0].do{|t|
         title = t.sub ReExpr, ''
         {_: :h3,class: :title, c: CGI.escapeHTML(title)}} if e[:thread]),
-     d.map{|uri,msg| ViewA[SIOC+'BoardPost'][msg,e]}]}
+     d.map{|uri,msg| ViewA[SIOC+'BoardPost'][msg,re]}]}
 
-  ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,e {
+  ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,re {
     localPath = r.uri == r.R.path
-    navigateHeaders = r.R.path == e.R.path
+    navigateHeaders = r.R.path == re.path
     name = nil
     href = r.uri
     author = r[Creator].justArray[0].do{|c|
@@ -51,10 +52,10 @@ class R
     # HTML
     [{class: :mail,
      c: [[(r[Title].justArray[0].do{|t|
-             {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}.update(navigateHeaders ? {id: e.selector} : {})} unless e[:thread]),
+             {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}.update(navigateHeaders ? {id: re.selector} : {})} unless re.env[:thread]),
           r[To].justArray.map{|o|
             o = o.R
-            {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}.update(navigateHeaders ? {id: e.selector} : {})}.intersperse({_: :span, class: :sep, c: ','}),
+            {_: :a, class: :to, href: localPath ? o.dir : o.uri, c: o.fragment || o.path || o.host}.update(navigateHeaders ? {id: re.selector} : {})}.intersperse({_: :span, class: :sep, c: ','}),
           author,
           r[Date].do{|d|[{_: :a, class: :date, href: r.uri, c: d[0].sub('T',' ')},' ']},
           r[SIOC+'reply_to'].do{|c|
@@ -64,7 +65,7 @@ class R
          [DC+'hasFormat', SIOC+'attachment'].map{|p| # property
            r[p].justArray.map{|o| # each attachment object
              ['<br>',
-              {_: :a, id: e.selector, class: :file, href: o.uri, c: o.R.basename}]}},
+              {_: :a, id: re.selector, class: :file, href: o.uri, c: o.R.basename}]}},
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
     ]}
 
@@ -189,19 +190,19 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-  GET['/address'] = -> e,r {e.justPath.response} # hostname unbound
+  GET['/address'] = -> e {e.justPath.response} # hostname unbound
 
-  GET['/thread'] = -> e,r { # construct thread
+  GET['/thread'] = -> e { # construct thread
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
-    return E404[e,r] if m.empty?                                       # nothing found?
-    r[:Response]['ETag'] = [m.keys.sort, r.format].h
-    r[:Response]['Content-Type'] = r.format + '; charset=UTF-8'
+    return E404[e,{}] if m.empty?                                       # nothing found?
+    e.env[:Response]['ETag'] = [m.keys.sort, e.format].h
+    e.env[:Response]['Content-Type'] = e.format + '; charset=UTF-8'
     e.condResponse ->{
-      m.values[0][Title].justArray[0].do{|t| r[:title] = t.sub ReExpr, '' }
-      r[:thread] = true
-      Render[r.format].do{|p|p[m,r]} ||
-        m.toRDF.dump(RDF::Writer.for(:content_type => r.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
+      m.values[0][Title].justArray[0].do{|t| e.env[:title] = t.sub ReExpr, '' }
+      e.env[:thread] = true
+      Render[e.format].do{|p|p[m,e]} ||
+        m.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
 
   def mail; Mail.read node if f end
 
