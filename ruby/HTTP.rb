@@ -1,5 +1,5 @@
 # coding: utf-8
-#watch __FILE__
+watch __FILE__
 
 module Rack
   module Adapter
@@ -43,10 +43,11 @@ class R
     @r
   end
 
-  ENV2RDF = -> env, graph {
+  ENV2RDF = -> re, graph {
+    env = re.env
     subj = graph[env.uri] ||= {'uri' => env.uri}
     qs = graph['#query'] = {'uri' => '#query'}
-    env.q.map{|key,val|
+    re.q.map{|key,val|
       qs['#'+key.gsub(/\W+/,'_')] = val}
     [env, env[:Links], env[:Response]].compact.map{|db|
       db.map{|k,v|
@@ -62,7 +63,7 @@ class R
       'Access-Control-Expose-Headers' => "User, Location, Link, Vary, Last-Modified",
       'Allow' => Allow,
       'MS-Author-Via' => 'SPARQL',
-      'User' => [@r.user],
+      'User' => [user],
       'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
     })
     self
@@ -93,7 +94,7 @@ class R
       e['SERVER_NAME']=h}
 
     # clean-up hostname
-    e['SERVER_NAME'] = e.host.gsub /[\.\/]+/, '.'
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
 
     # interpret path
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/')
@@ -102,7 +103,7 @@ class R
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
     # resource URI
-    resource = R[e.scheme + "://" + e.host + path]
+    resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path]
     e['uri'] = resource.uri
 
     # header-field containers
@@ -112,22 +113,16 @@ class R
 
     # continue call on actual resource
     resource.setEnv(e).send(method).do{|s,h,b|
-      R.log e,s,h,b
+      R.log resource,s,h,b
       [s,h,b]}
   rescue Exception => x
-    E500[x,e]
+    E500[x,resource]
   end
 
-  def R.log e, s, h, b
-    return unless e && s && h && b
-    Stats['status'][s.to_s] ||= {'uri' => '/stat/status/'+s.to_s.t, Type => R[Resource], Size => 0}
-    Stats['status'][s.to_s][Size] += 1
-    Stats['host'][e.host] ||= {'uri' => e.scheme+'://'+e.host, Label => e.host, Size => 0}
-    Stats['host'][e.host][Size] += 1
-
-    puts [e['REQUEST_METHOD'], s, [e.scheme, '://', e.host, e['REQUEST_URI']].join,
-          h['Location'] ? ['->',h['Location']] : nil, '<'+e.user+'>', e.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
-          flatten.compact.map(&:to_s).map(&:to_utf8).join ' '
+  def R.log re, s, h, b
+    puts [re.uri,
+          h['Location'] ? ['->',h['Location']] : nil, '<'+re.user+'>', re.format, re.env['HTTP_REFERER'], re.env['HTTP_USER_AGENT']].
+          flatten.compact.map(&:to_s).join ' '
   end
 
   def R.parseQS qs
@@ -138,34 +133,23 @@ class R
     h
   end
 
-  E404 = -> base, env, graph=nil {
+  E404 = -> re, graph=nil {
+    env = re.env
     graph ||= {}
-    user = env.user.to_s
+    user = re.user.to_s
     graph[user] = {'uri' => user, Type => R[FOAF+'Person']}
     graph[env.uri] ||= {'uri' => env.uri, Type => R[BasicResource]}
     seeAlso = graph[env.uri][RDFs+'seeAlso'] = []
-    base.cascade.reverse.map{|p|p.e && seeAlso.push(p)}
+    re.cascade.reverse.map{|p|p.e && seeAlso.push(p)}
     env[:search] = true
 
-    ENV2RDF[env, graph]
-    [404,{'Content-Type' => env.format},
-     [Render[env.format].do{|fn|fn[graph,env]} ||
-      graph.toRDF(base).dump(RDF::Writer.for(:content_type => env.format).to_sym, :prefixes => Prefixes)]]}
+    ENV2RDF[re, graph]
+    [404,{'Content-Type' => re.format},
+     [Render[re.format].do{|fn|fn[graph,re]} ||
+      graph.toRDF(re).dump(RDF::Writer.for(:content_type => re.format).to_sym, :prefixes => Prefixes)]]}
 
-  E500 = -> x,e {
-    errors = Stats['status']['500']
-
-    error = errors[e.uri.h] ||= {
-      'uri' => '//' + e.host + e['REQUEST_URI'],
-      Type => R[HTTP+'500'],
-      Label => [x.class,x.message.noHTML].join(' '),
-      Content => '<pre>' + x.backtrace.join("\n").noHTML + '</pre>',
-      Size => 0}
-
-    error[Size] += 1
-
-    graph = {'' => error}
-    [500,{'Content-Type' => e.format},[Render[e.format].do{|p|p[graph,e]} || graph.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym)]]}
+  E500 = -> x,re {
+    [500,{'Content-Type' => 'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]}
 
   GET['/stat'] = -> e,r {
     graph = {}
@@ -235,12 +219,12 @@ class R
   end
 
   def resourceGET
-    bases = [@r.host, ""] # host, path
+    bases = [host, ""] # host, path
     paths = justPath.cascade.map(&:to_s).map &:downcase
     bases.map{|b|
       paths.map{|p| # bubble up to root
         GET[b + p].do{|fn| # bind
-          fn[self,@r].do{|r| # call
+          fn[self].do{|r| # call
         return r }}}} # found handler, terminate search
     response
   end
@@ -272,8 +256,7 @@ class R
     # default set
     FileSet[Resource][self,q,graph].do{|f|set.concat f} unless rs||fs
 
-    return E404[self,@r,graph] if set.empty?
-#    puts set
+    return E404[self,graph] if set.empty?
 
     @r[:Response].
       update({'Content-Type' => @r.format,
@@ -293,7 +276,7 @@ class R
           graph }
 
         if NonRDF.member? @r.format
-          Render[@r.format][loadGraph[],@r]
+          Render[@r.format][loadGraph[],self]
         else
           base = @r.R.join uri
           if @r[:container] # container
@@ -451,14 +434,6 @@ class R
 
   def allowWrite
     @r.signedIn
-  end
-
-  def reqHost
-    env['SERVER_NAME']
-  end
-
-  def reqScheme
-    env['rack.url_scheme']
   end
 
   def accept

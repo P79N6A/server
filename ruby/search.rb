@@ -1,3 +1,4 @@
+watch __FILE__
 class R
 
   FileSet[Resource] = -> e,q,g {
@@ -27,8 +28,8 @@ class R
         pp = pPath + slug
         np = nPath + slug
       end
-      e.env[:nextEmpty] = true unless R['//' + e.env.host + nPath].e
-      e.env[:prevEmpty] = true unless R['//' + e.env.host + pPath].e
+      e.env[:nextEmpty] = true unless R['//' + e.host + nPath].e
+      e.env[:prevEmpty] = true unless R['//' + e.host + pPath].e
       e.env[:Links][:prev] = pp + qs
       e.env[:Links][:next] = np + qs}
 
@@ -88,7 +89,7 @@ class R
       s }}
 
   GET['/today'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (r['QUERY_STRING']||'')}), []]}
-  GET['/now'] = -> e,r {[303, r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + '?' + (r['QUERY_STRING']||'')}), []]}
+  GET['/now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   
   # internal storage not exposed on HTTP
   GET['/cache'] = E404

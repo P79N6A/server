@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
+watch __FILE__
 
 def H x # Ruby values to HTML
   case x
@@ -84,36 +84,31 @@ class R
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
-  Render['text/html'] = -> d,e,view=nil {
+  Render['text/html'] = -> d,re,view=nil {
+    env = re && re.env || {} 
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'},
                  {_: :link, rel: :icon, href: '/.icon.png'},
-                 {_: :link, rel: :parent, href: e.R.parentURI},
-                 {_: :link, rel: :referer, href: e['HTTP_REFERER']},
-                 e[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
-                 e[:Links].do{|links|
+                 env[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
+                 env[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
-            {_: :body, c: DefaultView[d,e]}]}]}
+            {_: :body, c: DefaultView[d,re]}]}]}
 
-  DefaultView = -> d,e {
+  DefaultView = -> d,re {
+    e = re && re.env || {}
     seen = {}
     groups = {}
-    table = e.q.has_key?('tab')
-    if table # tabular-view
-      groups[TabularView] = d
-    else # type-specific view
-      d.map{|u,r|
-        (r||{}).types.map{|type|
-          if v = ViewGroup[type]
-            groups[v] ||= {} ## init group
-            groups[v][u] = r ## add resource to group
-            seen[u] = true # mark selection
-          end}}
-    end
+    d.map{|u,r|
+      (r||{}).types.map{|type|
+        if v = ViewGroup[type]
+          groups[v] ||= {} ## init group
+          groups[v][u] = r ## add resource to group
+          seen[u] = true # mark selection
+        end}}
 
     e[:label] ||= {}
     path = e.R.justPath
@@ -129,15 +124,15 @@ class R
     
     [{id: :statusbar},    
      prevPage, parent,
-     (ViewA[SearchBox][{'uri' => '/search/'},e] if e[:search]),
+     (ViewA[SearchBox][{'uri' => '/search/'},re] if e[:search]),
      nextPage,
-     groups.map{|view,graph|view[graph,e]}, # resource groups
-     (d.map{|u,r|                           # singleton resources
+     groups.map{|view,graph|view[graph,re]}, # resource groups
+     d.map{|u,r|                           # singleton resources
        if !seen[u]
          types = (r||{}).types
          type = types.find{|t|ViewA[t]}
-         ViewA[type ? type : BasicResource][(r||{}),e]
-       end} unless table),
+         ViewA[type ? type : BasicResource][(r||{}),re]
+       end},
      {_: :style, c: e[:label].map{|name,_| # colorize labels
         c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
