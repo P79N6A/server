@@ -76,11 +76,6 @@ class R
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
   end
 
-  Render['text/uri-list'] = -> g,env {
-    g.map{|subjURI,resource|
-      resource[LDP+'contains'].justArray.map &:maybeURI
-    }.flatten.compact.join "\n"}
-
   def uris
     graph.keys.select{|u|u.match /^http/}
   end
@@ -178,27 +173,26 @@ class R
 
   MIMEsource['text/css'] ||= [:triplrSourceCode]
 
-  # mkdir hostname/man to enable this
-  GET['/man'] = -> e,r {
+  GET['/man'] = -> e {
     graph = RDF::Graph.new
-    uri = R['//'+r.host+r['REQUEST_URI']]
+    uri = R['//'+e.host+e.env['REQUEST_URI']]
     manPath = '/usr/share/man'
     name = e.justPath.stripSlash.uri.sub(/^\/man/,'').tail || ''
     section = nil
-    name.match(/^([0-9])(\/|$)/).do{|p| # optional section
+    name.match(/^([0-9])(\/|$)/).do{|p| # section (optional)
       section = p[1]
       name = p.post_match}
-    if q = r.q['q']
+    if q = e.q['q']
       [303,{'Location'=>'/man/'+q},[]]
-    elsif !R['//'+r.host+'/man'].exist? # hostname/man must exist
+    elsif !R['//'+e.host+'/man'].exist? # ./domain/hostname/man must be created by administrator
       nil
     elsif name.empty?
       input = {Type => R[SearchBox]}
-      [200,{'Content-Type' => 'text/html'},[Render['text/html'][{'/man' => input},r]]] 
+      [200,{'Content-Type' => 'text/html'},[Render['text/html'][{'/man' => input},e]]] 
     else
 
-      superLang = r.q['lang'].do{|l| (l.split /[_-]/)[0] }
-      lang = r.q['lang'].do{|l|'-L ' + l.sub('-','_').sh }
+      superLang = e.q['lang'].do{|l| (l.split /[_-]/)[0] }
+      lang = e.q['lang'].do{|l|'-L ' + l.sub('-','_').sh }
       man = `man #{lang} -w #{section} #{name.sh}`.lines[0]
 
       if !man || man.empty?
@@ -206,7 +200,7 @@ class R
       else
         man = man.chomp
         roff = man.R
-        dir = R['//' + r.host + roff.dirname.sub(/.*\/share/,'')]
+        dir = R['//' + e.host + roff.dirname.sub(/.*\/share/,'')]
         res = dir.child roff.bare
         doc = res + '.e'
         path = Pathname man
@@ -266,12 +260,12 @@ class R
               graph[uri][RDFs+'seeAlso'].push R[href] unless href.match(/^#/)}}
 
           # localization links
-          locales.push r['REQUEST_PATH'].R unless localesAvail.empty?
+          locales.push e.env['REQUEST_PATH'].R unless localesAvail.empty?
           (body.css('h1')[0] ||
            body.css('p')[0]).
             do{|top|
               top.add_previous_sibling H localesAvail.map{|l|
-                locale = r['REQUEST_PATH']+'?lang='+l
+                locale = e.env['REQUEST_PATH']+'?lang='+l
                 locales.push R[locale]
                 {_: :a, class: :lang, href: locale, c: l}}}
 
@@ -289,7 +283,7 @@ class R
           doc.w graph, true
         end
 
-        res.setEnv(r).response
+        res.setEnv(e.env).response
       end
     end
   }
