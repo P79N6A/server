@@ -211,7 +211,7 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Label, Type, *(keys - [Mtime,Label,Type])]
+    keys = [Label, Type, *(keys - [Mtime,Label,Type,Title,Image])]
 
     {_: :table,
      c: [
@@ -261,7 +261,8 @@ class R
                       (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}),
                                    l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
-                 when Title # use in URI column
+                 when Title # used in URI column
+                 when Image
                  when Type
                    thisDir ? '' : l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
