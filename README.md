@@ -12,7 +12,7 @@ ln conf/Procfile .                     # use deamon-configuration
 
 * files go in domain/$HOST/path/to/file or path/to/file
 * daemon can run elsewhere, link or copy [js/](js/) and [css/](css/) directories to [server-root](.)
-* one way to listen on port 80/443 as a non-root user:
+* dont use superuser to listen on port80/443. if you want to do that, enable it for nonroot users:
 
 ``` sh
 setcap cap_net_bind_service=+ep $(realpath `which ruby`)
