@@ -210,7 +210,7 @@ class R < RDF::URI
   FileSet = {}     # files in GET
   ResourceSet = {} # resources in GET
   Filter = {}      # graph-transform (whole graph)
-  Abstract = {}    # graph-transform (subgraph of RDF type)
+  Abstract = {}    # graph-transform (RDF-type constrained subgraph)
   Render = {}      # MIME renderer
   ViewA = {}       # HTML template (one resource)
   ViewGroup = {}   # HTML template (resources of RDF type)

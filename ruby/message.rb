@@ -1,4 +1,4 @@
-watch __FILE__
+#watch __FILE__
 # coding: utf-8
 class R
 
