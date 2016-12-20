@@ -257,8 +257,8 @@ class R
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
-                     [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ',
-                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}),
+                     [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ', # explicit Title
+                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : (l[Content] ? '' : {_: :a, class: :uri, href: href, c: name})), # URI detail
                       l[Content].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c }
                      ]
                    end

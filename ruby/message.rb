@@ -77,7 +77,11 @@ class R
       graph[chansel] ||= {'uri' => chansel, Title => chan, Type => R[Resource]}
       graph[chansel][Image] ||= []
       graph[chansel][Image].concat(msg[Image]||[])
-      graph.delete id unless ch == chan
+      if ch == chan # selected channel
+        msg.delete DC+'source'
+      else
+        graph.delete id # not selected, drop
+      end
     }
   }
   
