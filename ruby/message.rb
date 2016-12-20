@@ -69,13 +69,15 @@ class R
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
     ]}
 
-  Abstract[SIOC+'InstantMessage'] = -> graph, msgs, e {
-    msgs.map{|id,msg| # just show images
-      out = msg[DC+'source'].justArray[0].uri + '.html'
-      graph[out] ||= {'uri' => out, Type => R[Resource]}
-      graph[out][Image] ||= []
-      graph[out][Image].concat(msg[Image]||[])
-      graph.delete id
+  Abstract[SIOC+'InstantMessage'] = -> graph, msgs, env {
+    ch = env.q['ch']
+    msgs.map{|id,msg| # group into channels, show images on all channels, content on selected channel
+      chan = msg[SIOC+'channel'].justArray[0]
+      chansel = {'ch' => chan}.qs
+      graph[chansel] ||= {'uri' => chansel, Type => R[Resource]}
+      graph[chansel][Image] ||= []
+      graph[chansel][Image].concat(msg[Image]||[])
+      graph.delete id unless ch == chan
     }
   }
   

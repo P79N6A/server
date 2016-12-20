@@ -306,8 +306,7 @@ class R
         c: [{_: :td},
             {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
                {_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}
-           ]
-       }}]}
+           ]}}]}
 
   ViewA[Image] = ->img,e{
     image = img.R
