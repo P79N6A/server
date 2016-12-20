@@ -71,17 +71,13 @@ class R
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, e {
     # find unique log-file sources
-    sources = {}
     msgs.map{|id,msg|
-      source = msg[DC+'source'].justArray[0]
-      sources[source.uri] ||= source
-      graph.delete id # drop full-message in summarized mode
+      out = msg[DC+'source'].justArray[0].uri + '.html'
+      graph[out] ||= {'uri' => out, Type => R[Resource]}
+      graph[out][Image] ||= []
+      graph[out][Image].concat(msg[Image]||[])
+      graph.delete id
     }
-    # link to HTML reformat of log files
-    sources.map{|id,src|
-      graph[id] = {'uri' => R[id+'.html'],
-                   Type => R[Resource], DC+'formatOf' => id.R
-                  }}
   }
   
 
@@ -112,7 +108,7 @@ formats = {
         yield s, SIOC+'channel', channel
         yield s, Creator, m[2]
         yield s, Label, m[2]
-        yield s, Content, m[3].hrefs{|type,res| yield res, Type, type.R}
+        yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, DC+'source', source
       }
