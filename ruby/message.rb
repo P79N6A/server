@@ -100,23 +100,21 @@ formats = {
 
 =end
   def triplrIRC &f
-    i=-1 # line index
-
-    day = dirname.split('/')[-3..-1].do{|dp| dp.join('-') if dp[0].match(/^\d{4}$/)}||''
     doc = uri.gsub '#','%23'
+    linenum = -1
+    day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/)[1].gsub('/','-')
     channel = bare
-    file = doc.R
-    
+    source = doc.R
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
-        s = doc + '#' + (i+=1).to_s
+        s = doc + '#' + (linenum += 1).to_s
         yield s, Date,day+'T'+m[0]+':'+m[1]+':00'
         yield s, SIOC+'channel', channel
         yield s, Creator, m[2]
         yield s, Label, m[2]
         yield s, Content, m[3].hrefs(true)
         yield s, Type, R[SIOC+'InstantMessage']
-        yield s, DC+'source', file
+        yield s, DC+'source', source
       }
     }
   end
