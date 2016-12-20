@@ -112,7 +112,7 @@ class R
 
     e[:label] ||= {}
     path = e.R.justPath
-    parent = {_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if e[:container] && path != '/'
+    parent = {_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} unless path == '/'
     prevPage = e[:Links][:prev].do{|p|
       p = CGI.escapeHTML p.to_s
       {_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',
@@ -256,8 +256,8 @@ class R
                    else
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
-                     name = CGI.escapeHTML this.basename
-                     [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title),' ',
+                     name = CGI.escapeHTML (this.fragment || this.basename)
+                     [(title ? {_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} : ''), ' ',
                       (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}),
                                    l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
                    end
