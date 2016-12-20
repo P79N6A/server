@@ -211,7 +211,7 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Label, Type, *(keys - [Mtime,Label,Type,Title,Image])]
+    keys = [Label, Type, *(keys - [Mtime,Label,Type,Title,Image,Content])]
 
     {_: :table,
      c: [
@@ -258,10 +258,10 @@ class R
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
                      [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ',
-                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name})]
+                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}),
+                      l[Content].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c }
+                     ]
                    end
-                 when Title
-                 when Image
                  when Type
                    thisDir ? '' : l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
@@ -276,8 +276,6 @@ class R
                       else
                        children.map{|c|[(CGI.escapeHTML c.R.basename[0..15]), ' ']}
                      end}
-                 when Content
-                   l[k].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c }
                  when Label
                    l[k].justArray.map{|v|
                      label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s

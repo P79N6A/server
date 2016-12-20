@@ -74,7 +74,7 @@ class R
     msgs.map{|id,msg| # group into channels, show images on all channels, content on selected channel
       chan = msg[SIOC+'channel'].justArray[0]
       chansel = {'ch' => chan}.qs
-      graph[chansel] ||= {'uri' => chansel, Type => R[Resource]}
+      graph[chansel] ||= {'uri' => chansel, Title => chan, Type => R[Resource]}
       graph[chansel][Image] ||= []
       graph[chansel][Image].concat(msg[Image]||[])
       graph.delete id unless ch == chan
