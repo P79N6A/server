@@ -243,7 +243,7 @@ class R
     types = l.types
     monospace = types.member? SIOC+'InstantMessage'
     thisDir = this.uri[-1]=='/' && e.R.uri == this.uri
-    {_: :tr, class: :selectable,
+    [{_: :tr, class: :selectable,
       href: this.uri,
       id: thisDir ? 'this' : e.selector,
        c: ["\n",
@@ -257,11 +257,10 @@ class R
                      href = CGI.escapeHTML l.uri
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
-                     [(title ? {_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} : ''), ' ',
-                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}),
-                                   l[Image].do{|c|['<br>',c.justArray.map{|i|{_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')]}]
+                     [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ',
+                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name})]
                    end
-                 when Title # used in URI column
+                 when Title
                  when Image
                  when Type
                    thisDir ? '' : l[Type].justArray.map{|t|
@@ -301,7 +300,14 @@ class R
                        v
                      end
                    }.intersperse(' ')
-                 end}, "\n"]}]}}
+                 end}, "\n"]}]},
+     l[Image].do{|c|
+       {_: :tr,
+        c: [{_: :td},
+            {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
+               {_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}
+           ]
+       }}]}
 
   ViewA[Image] = ->img,e{
     image = img.R

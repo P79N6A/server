@@ -70,8 +70,7 @@ class R
     ]}
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, e {
-    # find unique log-file sources
-    msgs.map{|id,msg|
+    msgs.map{|id,msg| # just show images
       out = msg[DC+'source'].justArray[0].uri + '.html'
       graph[out] ||= {'uri' => out, Type => R[Resource]}
       graph[out][Image] ||= []
