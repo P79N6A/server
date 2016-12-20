@@ -4,19 +4,19 @@
 class String
 
   # HTML from plaintext
-  def hrefs images=false, &b
+  def hrefs &b
     pre,link,post = self.partition R::Href
     u = link.noHTML # escape URI
     pre.noHTML +    # escape pre-match
       (link.empty? && '' || '<a id="t' + rand.to_s.h[0..3] + '" href="' + u + '">' + # hyperlink
-       (if images && u.match(/(gif|jpe?g|png|webp)$/i) # image?
+       (if u.match(/(gif|jpe?g|png|webp)$/i) # image?
         yield(R::DC+'Image',u.R) if b # emit image-link tuple
         "<img src='#{u}'/>"           # inline image
        else
          yield(R::DC+'link',u.R) if b # emit link tuple
          u.sub(/^https?.../,'')       # text
         end) + '</a>') +
-      (post.empty? && '' || post.hrefs(images,&b)) # process post-match tail
+      (post.empty? && '' || post.hrefs(&b)) # process post-match tail
   end
 
   def noHTML

@@ -307,7 +307,7 @@ class R
     image = img.R
     {_: :a, href: image.uri,
      c: {_: :img, class: :thumb,
-         src: if image.ext.downcase == 'gif'
+         src: if (image.host != e.host) || image.ext.downcase == 'gif'
                 image.uri
               else
                 '/thumbnail' + image.path

@@ -112,7 +112,7 @@ formats = {
         yield s, SIOC+'channel', channel
         yield s, Creator, m[2]
         yield s, Label, m[2]
-        yield s, Content, m[3].hrefs(true)
+        yield s, Content, m[3].hrefs{|type,res| yield res, Type, type.R}
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, DC+'source', source
       }
@@ -304,7 +304,7 @@ formats = {
         elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution line
           l.gsub('@','.').hrefs # obfuscate attributed address
         else # fresh line
-          [l.hrefs(true){|p,o| # hyperlink plaintext
+          [l.hrefs{|p,o| # hyperlink plaintext
              yield e, p, o}] # emit found links as RDF
         end}.compact.intersperse("<br>\n")
       yield e, Content, body}
