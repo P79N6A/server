@@ -385,7 +385,7 @@ class R
       end
       
       def each_statement &fn
-        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # stacked pipeline, triples flow right-to-left
+        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triples emitted from right-to-left in function list
           fn.call RDF::Statement.new(s.R, p.R,
                                      o.class == R ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
