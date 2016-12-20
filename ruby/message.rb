@@ -84,7 +84,21 @@ class R
                   }}
   }
   
-  # IRC to RDF
+
+=begin perl
+
+formats = {
+  "fe-common/core" = {
+    pubmsg = "{pubmsgnick $2 {pubnick \00311$[-9]0%n}}$1";
+    pubmsg_channel = "{pubmsgnick $3 {pubnick \00311$[-9]0}%n%m({msgchannel $1})%n}$2";
+  };
+  "fe-common/irc" = {
+    action_public = "{pubaction \00307$[-9]0 %n}$1";
+    action_public_channel = "{pubaction \00307$[-9]0 %m({msgchannel $1})%n}$2";
+  };
+};
+
+=end
   def triplrIRC &f
     i=-1 # line index
 
