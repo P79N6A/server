@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", function(){
 	};
 
 	var key = e.keyCode;
-
+//	console.log(key)
+	
 	if(e.getModifierState("Shift")) {
 	    if(key==80) // previous page
 		jumpDoc('prev','#last');
@@ -83,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		};
 	    };
 	};
-	if(key==13){ // goto
+	if(key==13){ // goto selection canonical-location
 	    loc = window.location.hash;
 	    if(loc){
 		cur = document.querySelector(loc);
@@ -93,6 +94,9 @@ document.addEventListener("DOMContentLoaded", function(){
 			window.location = href;
 		};
 	    };
+	};
+	if(key==27){ // exit query-context
+	   window.location = window.location.pathname;
 	};
     },false);
 
