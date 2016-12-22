@@ -25,7 +25,6 @@ a.id:before { content:"\f02a"; font-family: icons; }
 a.identify:before { content:"\f235"; font-family: icons; }
 a.img:before { content:"\f03e"; font-family: icons; }
 a.key:before { content:"\f084"; font-family: icons; }
-a.link:before { content:"\f0c1"; font-family: icons; }
 a.up:before { content:"\f148"; font-family: icons; }
 a.cog:before { content:"\f013"; font-family: icons; }
 a.speaker:before { content:"\f028"; font-family: icons; }
@@ -48,6 +47,7 @@ a.openenvelope:before { content:"\f2b6"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
+a.link:before { content:"\f0c1"; font-family: icons; color: #ccf }
 h3.title {background-color:#fff;color:#000;margin:0}
 table, div.mail {display:inline-block;}
 div, td {vertical-align:top}

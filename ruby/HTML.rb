@@ -212,7 +212,7 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
 
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Label, Type, *(keys - [Mtime,Label,Type,Title,Image,Content])]
+    keys = [Label, Type, *(keys - [Mtime,Label,Type,Title,Image,Content,DC+'link'])]
 
     {_: :table,
      c: [
@@ -260,7 +260,12 @@ class R
                      name = CGI.escapeHTML (this.fragment || this.basename)
                      [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ', # explicit Title
                       (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : (l[Content] ? '' : {_: :a, class: :uri, href: href, c: name})), # URI detail
-                      l[Content].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c }
+                      l[Content].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c },
+                      l[DC+'link'].do{|links|
+                        big = links.size > 8
+                        links.map{|link|
+                          id = link.R.uri
+                          [(big ? ' ' : '<br>'),{_: :a, id: big ? '#' : e.selector, class: :link, href: id, c: (CGI.escapeHTML id)}]}},
                      ]
                    end
                  when Type
