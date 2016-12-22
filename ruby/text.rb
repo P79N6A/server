@@ -13,7 +13,7 @@ class String
         yield(R::DC+'Image',u.R) if b # emit image as triple
         "<img src='#{u}'/>"           # inline image
        else
-#         yield(R::DC+'link',u.R) if b # emit hypertextified link
+         yield(R::DC+'link',u.R) if b # emit hypertexted link
          u.sub(/^https?.../,'')       # text
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # process post-match tail

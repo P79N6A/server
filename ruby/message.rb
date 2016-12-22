@@ -67,24 +67,7 @@ class R
              ['<br>',
               {_: :a, id: re.selector, class: :file, href: o.uri, c: o.R.basename}]}},
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
-    ]}
-
-  Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
-    full = re.q.has_key? 'full'
-    re.env[:summarized] = true unless full
-    ch = re.q['ch']
-    msgs.map{|uri,msg| # group on channel
-      chan = msg[SIOC+'channel'].justArray[0]
-      id = {'ch' => chan}.qs
-      graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
-      graph[id][Size] += 1
-      msg[Image].do{|images|
-        graph[id][Image] ||= []
-        graph[id][Image].concat images}
-        graph.delete uri unless full || ch==chan
-    }
-  }
-  
+    ]}  
 
 =begin perl
 
@@ -100,6 +83,7 @@ formats = {
 };
 
 =end
+
   def triplrIRC &f
     doc = uri.gsub '#','%23'
     linenum = -1
@@ -117,6 +101,25 @@ formats = {
       }
     }
   end
+
+  Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
+    full = re.q.has_key? 'full'
+    re.env[:summarized] = true unless full
+    ch = re.q['ch']
+    msgs.map{|uri,msg| # group on channel
+      chan = msg[SIOC+'channel'].justArray[0]
+      id = {'ch' => chan}.qs
+      graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
+      graph[id][Size] += 1
+      msg[Image].do{|images|
+        graph[id][Image] ||= []
+        graph[id][Image].concat images}
+      msg[DC+'link'].do{|links|
+        graph[id][DC+'link'] ||= []
+        graph[id][DC+'link'].concat links}
+      graph.delete uri unless full || ch==chan
+    }
+  }
 
   def triplrTwitter
     base = 'https://twitter.com'
