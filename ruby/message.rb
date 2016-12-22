@@ -75,8 +75,9 @@ class R
       chan = msg[SIOC+'channel'].justArray[0]
       chansel = {'ch' => chan}.qs
       graph[chansel] ||= {'uri' => chansel, Title => chan, Type => R[Resource]}
-      graph[chansel][Image] ||= []
-      graph[chansel][Image].concat(msg[Image]||[])
+      msg[Image].do{|images|
+        graph[chansel][Image] ||= []
+        graph[chansel][Image].concat images}
       if ch == chan # selected channel
         msg.delete DC+'source'
       else
