@@ -42,10 +42,14 @@ a.size:before { content:"\f161"; font-family: icons; }
 a.tag:before { content:"\f02b"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.envelope:before { content:"\f0e0"; font-family: icons; }
+a.newspaper:before { content:"\f1ea"; font-family: icons; }
+a.openenvelope:before { content:"\f2b6"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
+a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 h3.title {background-color:#fff;color:#000;margin:0}
-table, div.mail {display:inline-block;vertical-align:top}
+table, div.mail {display:inline-block;}
+div, td {vertical-align:top}
 td {border-color: #555;border-width: 0 0 .1em 0;border-style: solid}
 th a {font-size:1.5em;font-weight: normal}
 th span.label {font-size:.6em;color:#ddd}

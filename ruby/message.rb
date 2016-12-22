@@ -74,7 +74,7 @@ class R
     msgs.map{|id,msg| # group into channels, show images on all channels, content on selected channel
       chan = msg[SIOC+'channel'].justArray[0]
       chansel = {'ch' => chan}.qs
-      graph[chansel] ||= {'uri' => chansel, Title => chan, Type => R[Resource]}
+      graph[chansel] ||= {'uri' => chansel, Title => chan, Type => R[SIOC+'Discussion']}
       msg[Image].do{|images|
         graph[chansel][Image] ||= []
         graph[chansel][Image].concat images}
@@ -125,7 +125,7 @@ formats = {
     base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
-      yield s, Type, R[SIOC+'MicroblogPost']
+      yield s, Type, R[SIOC+'Tweet']
       yield s, SIOC+'channel', 'twitter'
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
 
@@ -493,12 +493,14 @@ formats = {
             end
 
             resource = u.R
+
             if u.match commentRe
+              yield u, R::Type, R[R::Post]
               yield u, R::SIOC+'channel', resource.path.match(commentRe).pre_match.tail
-              yield u, R::Type, R[R::SIOC+'MicroblogPost']
             else
-              yield u, R::To, R[resource.schemePart + resource.hostPart]
               yield u, R::Type, R[R::BlogPost]
+              yield u, R::SIOC+'channel', resource.host
+              yield u, R::To, R[resource.schemePart + resource.hostPart]
             end
 
             inner.scan(reAttach){|e|

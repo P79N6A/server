@@ -196,7 +196,8 @@ class R
   
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
 
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] = ViewGroup[SIOC+'MicroblogPost'] = -> g,re {
+  ## TODO, make this view opt-out..
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] =  ViewGroup[SIOC+'Post'] = ViewGroup[SIOC+'MicroblogPost'] = ViewGroup[SIOC+'Tweet'] = ViewGroup[SIOC+'Discussion'] = -> g,re {
     label = re.basename
     re.env[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
     [TabularView[g,re],
