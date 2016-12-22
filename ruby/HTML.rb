@@ -263,7 +263,7 @@ class R
                       l[Content].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c },
                       l[DC+'link'].do{|links|
                         big = links.size > 8
-                        links.map{|link|
+                        links[0..32].map{|link|
                           id = link.R.uri
                           [(big ? ' ' : '<br>'),{_: :a, id: big ? '#' : e.selector, class: :link, href: id, c: (CGI.escapeHTML id)}]}},
                      ]
