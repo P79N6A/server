@@ -230,10 +230,8 @@ formats = {
 
     e = MessagePath[id]
     yield e, DC+'identifier', id
-    yield e, DC+'source', self # pointer to origin-file
-
-    [R[SIOC+'MailMessage'], R[SIOC+'Post']].        # SIOC types
-      map{|t|yield e, Type, t}
+    yield e, DC+'source', self # reference to origin-file
+    yield e, Type, R[SIOC+'MailMessage']
 
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
 
