@@ -69,8 +69,9 @@ class R
         ]}.update(navigateHeaders ? {} : {id: r.uri.gsub(/[^a-zA-Z0-9]/,''), href: href}),
     ]}
 
-  Abstract[SIOC+'InstantMessage'] = -> graph, msgs, env {
-    ch = env.q['ch']
+  Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
+    full = re.q.has_key? 'full'
+    ch = re.q['ch']
     msgs.map{|uri,msg| # group on channel
       chan = msg[SIOC+'channel'].justArray[0]
       id = {'ch' => chan}.qs
@@ -82,9 +83,10 @@ class R
       if ch == chan # selected channel
         msg.delete DC+'source'
       else
-        graph.delete uri
+        graph.delete uri unless full
       end
     }
+    re.env[:summarized] = true
   }
   
 
