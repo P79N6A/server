@@ -71,6 +71,7 @@ class R
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
     full = re.q.has_key? 'full'
+    re.env[:summarized] = true unless full
     ch = re.q['ch']
     msgs.map{|uri,msg| # group on channel
       chan = msg[SIOC+'channel'].justArray[0]
@@ -80,13 +81,12 @@ class R
       msg[Image].do{|images|
         graph[id][Image] ||= []
         graph[id][Image].concat images}
-      if ch == chan # selected channel
+      if ch == chan # selected
         msg.delete DC+'source'
       else
         graph.delete uri unless full
       end
     }
-    re.env[:summarized] = true
   }
   
 
