@@ -10,10 +10,10 @@ class String
     pre.noHTML +    # escape pre-match
       (link.empty? && '' || '<a id="t' + rand.to_s.h[0..3] + '" href="' + u + '">' + # hyperlink
        (if u.match(/(gif|jpe?g|png|webp)$/i) # image?
-        yield(R::DC+'Image',u.R) if b # emit image-link tuple
+        yield(R::DC+'Image',u.R) if b # emit image as triple
         "<img src='#{u}'/>"           # inline image
        else
-         yield(R::DC+'link',u.R) if b # emit link tuple
+#         yield(R::DC+'link',u.R) if b # emit hypertextified link
          u.sub(/^https?.../,'')       # text
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # process post-match tail

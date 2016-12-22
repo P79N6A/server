@@ -81,11 +81,7 @@ class R
       msg[Image].do{|images|
         graph[id][Image] ||= []
         graph[id][Image].concat images}
-      if ch == chan # selected
-        msg.delete DC+'source'
-      else
-        graph.delete uri unless full
-      end
+        graph.delete uri unless full || ch==chan
     }
   }
   
@@ -109,7 +105,6 @@ formats = {
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/)[1].gsub('/','-')
     channel = bare
-    source = doc.R
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = doc + '#' + (linenum += 1).to_s
@@ -119,7 +114,6 @@ formats = {
         yield s, Label, m[2]
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, Type, R[SIOC+'InstantMessage']
-        yield s, DC+'source', source
       }
     }
   end
