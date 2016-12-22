@@ -71,17 +71,18 @@ class R
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, env {
     ch = env.q['ch']
-    msgs.map{|id,msg| # group into channels, show images on all channels, content on selected channel
+    msgs.map{|uri,msg| # group on channel
       chan = msg[SIOC+'channel'].justArray[0]
-      chansel = {'ch' => chan}.qs
-      graph[chansel] ||= {'uri' => chansel, Title => chan, Type => R[SIOC+'Discussion']}
+      id = {'ch' => chan}.qs
+      graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
+      graph[id][Size] += 1
       msg[Image].do{|images|
-        graph[chansel][Image] ||= []
-        graph[chansel][Image].concat images}
+        graph[id][Image] ||= []
+        graph[id][Image].concat images}
       if ch == chan # selected channel
         msg.delete DC+'source'
       else
-        graph.delete id # not selected, drop
+        graph.delete uri
       end
     }
   }
@@ -177,8 +178,8 @@ formats = {
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         tags = [group] if tags.empty?
-        thread = {Type => R[SIOC+'Thread'], 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Label => tags, Image => post[Image]}
-        thread.update({Size => post[Size]}) if post[Size] > 1
+        thread = {Type => R[Post], 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Label => tags, Image => post[Image]}
+        thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
         graph[thread.uri] = thread }}}
 
   ReExpr = /\b[rR][eE]: /
