@@ -265,7 +265,7 @@ class R
                         big = links.size > 8
                         links[0..32].map{|link|
                           id = link.R.uri
-                          [(big ? ' ' : '<br>'),{_: :a, id: big ? '#' : e.selector, class: :link, href: id, c: (CGI.escapeHTML id)}]}},
+                          [(big ? ' ' : '<br>'),{_: :a, class: :link, href: id, c: (CGI.escapeHTML id)}.update(big ? {} : {id: e.selector})]}},
                      ]
                    end
                  when Type
