@@ -113,6 +113,14 @@ class R
     yield uri, Size, size
   end
 
+  def triplrArchive
+    yield uri, Type, R[Stat+'CompressedFile']
+    mt = mtime
+    yield uri, Mtime, mt.to_i
+    yield uri, Date, mt.iso8601
+    yield uri, Size, size
+  end
+
   def triplrUriList
     open(pathPOSIX).readlines.map{|l|
       yield l.chomp, Type, R[Resource] }
@@ -284,7 +292,7 @@ class R
     g.values.find{|r|r[Title]}.do{|r|
        e.env[:title] ||= r[Title].justArray[0].to_s}}
 
-  ViewGroup['#grep-result'] = -> g,e {
+  View['#grep-result'] = -> g,e {
     c = {}
     w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
     w.each_with_index{|w,i|c[w] = i} # enumerated words
@@ -305,9 +313,7 @@ class R
             lines[0..5].map{|line| # HTML-render of first 6 matching-lines
               line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
 
-  ViewA[SearchBox] = -> _,env {
-    # search current URI context
-    {_: :form, c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
+  View[SearchBox] = -> _,env {{_: :form, c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
 
 end
 

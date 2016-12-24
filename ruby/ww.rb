@@ -187,6 +187,7 @@ class R < RDF::URI
     SIOC+'has_parent' => :reply,
     SIOC+'reply_to' => :reply,
     Stat+'File' => :file,
+    Stat+'CompressedFile' => :archive,
   }
 
   Prefix={ # String -> String
@@ -214,8 +215,7 @@ class R < RDF::URI
   Filter = {}      # graph-transform (whole graph)
   Abstract = {}    # graph-transform (RDF-type constrained subgraph)
   Render = {}      # MIME renderer
-  ViewA = {}       # HTML template (one resource)
-  ViewGroup = {}   # HTML template (resources of RDF type)
+  View = {}       # HTML template
   Watch = {}       # source-files to check for changes
 
 %w{

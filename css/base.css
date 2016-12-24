@@ -1,7 +1,7 @@
 body {font-family: sans-serif; background-color:#000; color:#fff;margin:0}
 pre {white-space: pre-wrap}
 span.monospace {font-family: monospace}
-input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-radius:.2em;display: inline-block}
+input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-width:0;display: inline-block}
 #statusbar {position:fixed;border-radius:.16em;color:#fff;background-color:#666;padding: 0 .15em 0 .15em}
 form,input {display: inline-block;margin:.4em}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
@@ -19,6 +19,7 @@ a.container:before { content:"\f187"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }
 a.dir:before { content:"\f07c"; font-family: icons; }
 a.file:before { content:"\f15b"; font-family: icons; }
+a.archive:before { content:"\f187"; font-family: icons; }
 a.graph:before { content:"\f1e0"; font-family: icons; }
 a.group:before { content:"\f0c0"; font-family: icons;}
 a.id:before { content:"\f02a"; font-family: icons; }

@@ -84,26 +84,12 @@ class R
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml}
 
-  Render['text/html'] = -> d,re,view=nil {
-    env = re && re.env || {} 
-    H ["<!DOCTYPE html>\n",
-       {_: :html,
-        c: [{_: :head,
-             c: [{_: :meta, charset: 'utf-8'},
-                 {_: :link, rel: :icon, href: '/.icon.png'},
-                 env[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
-                 env[:Links].do{|links|
-                   links.map{|type,uri|
-                     {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 H.css('/css/base',true)]},
-            {_: :body, c: View[d,re]}]}]}
-
-  View = -> graph, re {
+  Render['text/html'] = -> graph,re,view=nil {
     e = re.env
     groups = {}
     graph.map{|u,r|
       r.types.map{|type|
-        if v = ViewGroup[type]
+        if v = View[type]
           groups[v] ||= {}
           groups[v][u] = r
           graph.delete u
@@ -114,13 +100,21 @@ class R
     children = {_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]
     prevPage = e[:Links][:prev].do{|p|{_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
-
-    [prevPage, parent,nextPage,
-     TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
-     {_: :style, c: e[:label].map{|name,_| c = randomColor
-        "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
-     prevPage,children,ViewA[SearchBox][{'uri' => '/search/'},re],nextPage,
-     {id: :statusbar}]}
+    H ["<!DOCTYPE html>\n",
+       {_: :html,
+        c: [{_: :head,
+             c: [{_: :meta, charset: 'utf-8'},
+                 {_: :link, rel: :icon, href: '/.icon.png'},
+                 e[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
+                 e[:Links].do{|links|
+                   links.map{|type,uri|
+                     {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
+                 H.css('/css/base',true)]},
+            {_: :body,
+             c: [prevPage, parent, nextPage, TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
+                 {_: :style, c: e[:label].map{|name,_| c = randomColor
+                    "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
+                 prevPage, children, View[SearchBox][{'uri' => '/search/'},re], nextPage, {id: :statusbar}]}]}]}
 
   TabularView = -> g, e, show_head = true, show_id = true {
 

@@ -27,6 +27,7 @@ class R
     'asc' => 'text/plain',
     'atom' => 'application/atom+xml',
     'avi' => 'video/avi',
+    'bz2' => 'application/bzip2',
     'e' => 'application/json+rdf',
     'eml' => 'message/rfc822',
     'coffee' => 'text/plain',
@@ -39,6 +40,7 @@ class R
     'gemspec' => 'application/ruby',
     'gif' => 'image/gif',
     'go' => 'text/x-c',
+    'gz' => 'application/gzip',
     'haml' => 'application/haml',
     'hs' => 'application/haskell',
     'html' => 'text/html',
@@ -91,11 +93,15 @@ class R
     'wmv' => 'video/wmv',
     'xlsx' => 'application/excel',
     'xml' => 'application/atom+xml',
+    'zip' => 'application/zip',
   }
   
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
     'application/org'      => [:triplrOrg],
+    'application/bzip2'    => [:triplrArchive],
+    'application/gzip'     => [:triplrArchive],
+    'application/zip'     => [:triplrArchive],
     'audio/mpeg'           => [:triplrAudio],
     'image'                => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
@@ -141,9 +147,8 @@ class R
 
   Abstract[Sound] = -> graph, g, e {graph['#audio'] = {Type => R[Sound+'Player']}} # add player
 
-  ViewGroup[Sound+'Player'] = -> g,e {
-    [H.js('/js/audio'),
-     {_: :audio, id: :audio, controls: true}]}
+  View[Sound+'Player'] = -> g,e {
+    [H.js('/js/audio'),{_: :audio, id: :audio, controls: true}]}
 
   GET['/thumbnail'] = -> e {
     i = R['//' + e.host + e.path.sub(/^.thumbnail/,'')]

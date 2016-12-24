@@ -2,7 +2,7 @@
 # coding: utf-8
 class R
 
-  ViewGroup[SIOC+'BlogPost'] =  ViewGroup[SIOC+'BoardPost'] = ViewGroup[SIOC+'MailMessage'] = -> d,re {
+  View[SIOC+'BlogPost'] =  View[SIOC+'BoardPost'] = View[SIOC+'MailMessage'] = -> d,re {
     e = re.env
     e[:arcs] = []
     re.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
@@ -30,9 +30,10 @@ class R
      (d.values[0][Title].justArray[0].do{|t|
         title = t.sub ReExpr, ''
         {_: :h3,class: :title, c: CGI.escapeHTML(title)}} if e[:thread]),
-     d.map{|uri,msg| ViewA[SIOC+'BoardPost'][msg,re]}]}
+     d.map{|uri,msg|
+       MessageView[msg,re]}]}
 
-  ViewA[SIOC+'BlogPost'] = ViewA[SIOC+'BoardPost'] = ViewA[SIOC+'MailMessage'] = -> r,re {
+  MessageView = -> r,re {
     localPath = r.uri == r.R.path
     navigateHeaders = r.R.path == re.path
     name = nil
