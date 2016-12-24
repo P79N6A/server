@@ -89,17 +89,6 @@ class R
     yield stripDoc.uri, Content, Orgmode::Parser.new(r).to_html
   end
 
-  def triplrPS
-    u = stripDoc.uri
-    yield u, Type, (R MIMEtype+'application/postscript')
-    p = dir.child '.' + basename + '/'
-    unless p.e
-      p.mk
-      `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r300 -sOutputFile='#{p.sh}%03d.png' -dTextAlphaBits=4 #{sh}`
-    end
-    p.children.map{|i|yield u, Image, i}
-  end
-
   def triplrCSV d
     lines = CSV.read pathPOSIX
     lines[0].do{|fields| # header-row
@@ -111,20 +100,6 @@ class R
           yield id, fields[i], field
           yield id, Type, R[CSVns+'Row']}}}
   end
-
-  ViewA[MIMEtype+'application/postscript']=->d,e{
-    d[Image].do{|is|
-      is = is.sort_by(&:uri)
-      {type: :book,
-       c: [{_: :img, style:'float:left;max-width:100%', src: is[0].uri},
-           {name: :pages,
-            c: is.map{|i|{_: :a,href: i.uri, c: i.R.bare}}}]}}}
-
-  ViewGroup[MIMEtype+'application/postscript']=->g,e{
-    [{_: :style, c: 'div[type="book"] a {background-color:#ccc;color:#fff;float:left;margin:.16em}'},
-     (H.js '/js/book'),
-      g.map{|u,r|
-       ViewA[MIMEtype+'application/postscript'][r,e]}]}
 
   def triplrRTF
     yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs

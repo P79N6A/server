@@ -96,7 +96,6 @@ class R
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
     'application/org'      => [:triplrOrg],
-    'application/postscript'=> [:triplrPS],
     'audio/mpeg'           => [:triplrAudio],
     'image'                => [:triplrImage],
     'inode/directory'      => [:triplrContainer],

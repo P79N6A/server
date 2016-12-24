@@ -138,7 +138,6 @@ class R < RDF::URI
   Property = RDFns + 'Property'
   HTML     = RDFns + 'HTML'
   Resource = RDFs + 'Resource'
-  BasicResource = W3 + 'ns/rdf#Resource'
   Label    = RDFs + 'label'
   Size     = Stat + 'size'
   Mtime    = Stat + 'mtime'

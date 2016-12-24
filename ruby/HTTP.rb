@@ -106,7 +106,7 @@ class R
 
   def notfound
     graph = {}
-    this = graph[uri] = {'uri' => uri, Type => R[BasicResource]}
+    this = graph[uri] = {'uri' => uri}
     seeAlso = this[RDFs+'seeAlso'] = []
     cascade.reverse.map{|p|p.e && seeAlso.push(p)}
     env[:search] = true
@@ -117,17 +117,6 @@ class R
      [Render[format].do{|fn|fn[graph,self]} ||
       graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
   end
-
-  ViewGroup[User] = -> g,env {
-    if env.signedIn
-      g.map{|u,r|
-        {style: "border-radius: 2em; background-color:#eee;color:#000;display:inline-block",
-         c: [{_: :a, class: :user, style: "font-size: 3em;text-decoration:none",
-              href: "http://linkeddata.github.io/profile-editor/#/profile/view?webid=" + CGI.escape(u)}, # 3rd-party profile UI
-             ViewA[BasicResource][r,env]]}}
-    else # no WebID found, link to onboarding-UI
-      {_: :h2, c: {_: :a, c: 'Sign In', href: 'http://linkeddata.github.io/signup/'}}
-    end}
 
   def aclURI
     if basename.index('.acl') == 0

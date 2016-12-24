@@ -96,108 +96,33 @@ class R
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
-            {_: :body, c: DefaultView[d,re]}]}]}
+            {_: :body, c: View[d,re]}]}]}
 
-  DefaultView = -> d,re {
-    e = re && re.env || {}
-    seen = {}
+  View = -> graph, re {
+    e = re.env
     groups = {}
-    d.map{|u,r|
-      (r||{}).types.map{|type|
+    graph.map{|u,r|
+      r.types.map{|type|
         if v = ViewGroup[type]
-          groups[v] ||= {} ## init group
-          groups[v][u] = r ## add resource to group
-          seen[u] = true # mark selection
+          groups[v] ||= {}
+          groups[v][u] = r
+          graph.delete u
         end}}
-
     e[:label] ||= {}
     path = e.R.justPath
     parent = {_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} unless path == '/'
-    prevPage = e[:Links][:prev].do{|p|
-      p = CGI.escapeHTML p.to_s
-      {_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',
-       c: '&#9664;', title: p, rel: :prev, href: p}}
-    nextPage = e[:Links][:next].do{|n|
-      n = CGI.escapeHTML n.to_s
-      {_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',
-       c: '&#9654;', title: n, rel: :next, href: n}}
-    
-    [{id: :statusbar},    
-     prevPage, parent,
-     (ViewA[SearchBox][{'uri' => '/search/'},re] if e[:search]),
-     nextPage,
-     groups.map{|view,graph|view[graph,re]}, # resource groups
-     d.map{|u,r|                           # singleton resources
-       if !seen[u]
-         types = (r||{}).types
-         type = types.find{|t|ViewA[t]}
-         ViewA[type ? type : BasicResource][(r||{}),re]
-       end},
-     {_: :style, c: e[:label].map{|name,_| # colorize labels
-        c = randomColor
-        "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
-     H.js('/js/ui',true),
-     '<br clear=all>',
-     prevPage,
-     ({_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]),
-     nextPage,
-    ]}
+    children = {_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]
+    prevPage = e[:Links][:prev].do{|p|{_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
+    nextPage = e[:Links][:next].do{|n|{_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
 
-  ViewA[BasicResource] = -> r,e {
-    {_: :table, id: e.selector, href: r.uri,
-     c: r.map{|k,v|
-       [{_: :tr, property: k,
-        c: case k
-           when 'uri'
-             u = CGI.escapeHTML r.uri
-             {_: :td, class: :uri, colspan: 2, c: {_: :a, style: 'font-size:2em', href: u, c: u.R.basename}}
-           when Content
-             {_: :td, class: :val, colspan: 2, c: v}
-           when Atom+'enclosure'
-             {_: :td, class: :val, colspan: 2, c: v.justArray.map{|v|
-                resource = v.R
-                if %w{png jpg gif}.member? resource.ext
-                  {_: :img, src: resource.uri}
-                else
-                  resource
-                end
-              }}
-           else
-             icon = Icons[k]
-             ["\n ",
-              {_: :td,
-               c: {_: :a, href: k, class: icon,
-                   c: icon ? '' : (k.R.fragment||k.R.basename)}, class: :key}, "\n ",
-              {_: :td, c: v.justArray.map{|v|
-                 case v
-                 when Hash
-                   v.R
-                 else
-                   v
-                 end
-               }.intersperse(' '), class: :val}, "\n"
-             ]
-           end}, "\n"]}}}
+    [prevPage, parent,ViewA[SearchBox][{'uri' => '/search/'},re],nextPage,
+     TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
+     {_: :style, c: e[:label].map{|name,_| c = randomColor
+        "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
+     prevPage,children,nextPage,
+     {id: :statusbar}]}
 
-  
-  ViewA[FOAF+'Person'] = ViewA[SIOC+'Usergroup'] = -> r,e {
-    ['<br>',
-      {_: :a, class: :person,
-      id: r.R.fragment,
-      href: 'https://linkeddata.github.io/profile-editor/#/profile/view?webid='+URI.escape(r.uri),
-      c: r[FOAF+'name'].justArray[0] || r.R.basename},
-     '<br>',
-     {_: :a, id: e.selector, class: :nextpage, c: '&#9654;', href: r.R.dirname+'?set=page'}
-    ] if r.uri.match(/^http/)}
-
-  
-  ViewGroup[BasicResource] = -> g,e {
-    g.resources(e).reverse.map{|r|ViewA[BasicResource][r,e]}}
-
-  
-  ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
-  
-  TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
+  TabularView = -> g, e, show_head = true, show_id = true {
 
     sort = (e.q['sort']||'dc:date').expand
     direction = e.q.has_key?('ascending') ? :id : :reverse
@@ -302,9 +227,6 @@ class R
             {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
                {_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}
            ]}}]}
-
-  ## TODO, make this view opt-out..
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] =  ViewGroup[SIOC+'Post'] = ViewGroup[SIOC+'MicroblogPost'] = ViewGroup[SIOC+'Tweet'] = ViewGroup[SIOC+'Discussion'] = TabularView
 
   ViewA[Image] = ->img,e{
     image = img.R
