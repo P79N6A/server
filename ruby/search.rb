@@ -51,7 +51,7 @@ class R
       end
     else
       stars = re.uri.scan('*').size
-      if stars > 0 && stars < 3
+      if stars > 0 && stars <= 3
         FileSet['glob'][re]
       else
         re.fileResources
@@ -59,7 +59,7 @@ class R
     end}
 
   FileSet['glob'] = -> r {
-    if r.uri.scan('*').size < 3 # limit wildcard usage
+    if r.uri.scan('*').size <= 3 # limit wildcard usage
       r.env[:container] = true # multiple-resource hint
       r.glob.select(&:inside) # stay inside server-root
     else
@@ -307,8 +307,7 @@ class R
 
   ViewA[SearchBox] = -> _,env {
     # search current URI context
-    {_: :form, c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}
-  }
+    {_: :form, c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
 
 end
 

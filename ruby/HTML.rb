@@ -138,8 +138,9 @@ class R
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}},
      H.js('/js/ui',true),
      '<br clear=all>',
-     nextPage,
      prevPage,
+     ({_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]),
+     nextPage,
     ]}
 
   ViewA[BasicResource] = -> r,e {
@@ -195,16 +196,6 @@ class R
 
   
   ViewA[Container] = -> container,e {TabularView[{container.uri => container},e,false,false]}
-
-  ## TODO, make this view opt-out..
-  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] =  ViewGroup[SIOC+'Post'] = ViewGroup[SIOC+'MicroblogPost'] = ViewGroup[SIOC+'Tweet'] = ViewGroup[SIOC+'Discussion'] = -> g,re {
-    label = re.basename
-    re.env[:label][label.downcase.gsub(/[^a-zA-Z0-9_]/,'')] = true
-    [TabularView[g,re],
-     (['<br>',
-       {_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs,
-        class: :expand, c: "&#9660;", rel: :nofollow}] if re.env[:summarized])]}
-
   
   TabularView = ViewGroup[CSVns+'Row'] = -> g, e, show_head = true, show_id = true {
 
@@ -311,6 +302,9 @@ class R
             {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
                {_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}
            ]}}]}
+
+  ## TODO, make this view opt-out..
+  ViewGroup[Container] = ViewGroup[Resource] = ViewGroup[Stat+'File'] = ViewGroup[Sound] = ViewGroup[SIOC+'Thread'] = ViewGroup[SIOC+'SourceCode'] = ViewGroup[SIOC+'TextFile'] = ViewGroup[SIOC+'InstantMessage'] =  ViewGroup[SIOC+'Post'] = ViewGroup[SIOC+'MicroblogPost'] = ViewGroup[SIOC+'Tweet'] = ViewGroup[SIOC+'Discussion'] = TabularView
 
   ViewA[Image] = ->img,e{
     image = img.R
