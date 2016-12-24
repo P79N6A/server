@@ -332,7 +332,7 @@ formats = {
       file.w p.body.decoded if !file.e                # write
       yield e, SIOC+'attachment', file                # message -> attached resource
       if p.main_type=='image'                         # image attachment?
-        yield e, DC+'Image', file                     # image reference in RDF
+        yield e, Image, file                     # image reference in RDF
         yield e, Content,                             # image reference in HTML
           H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]})
       end }

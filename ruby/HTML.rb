@@ -115,11 +115,11 @@ class R
     prevPage = e[:Links][:prev].do{|p|{_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
 
-    [prevPage, parent,ViewA[SearchBox][{'uri' => '/search/'},re],nextPage,
+    [prevPage, parent,nextPage,
      TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
      {_: :style, c: e[:label].map{|name,_| c = randomColor
         "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
-     prevPage,children,nextPage,
+     prevPage,children,ViewA[SearchBox][{'uri' => '/search/'},re],nextPage,
      {id: :statusbar}]}
 
   TabularView = -> g, e, show_head = true, show_id = true {
@@ -159,6 +159,7 @@ class R
     this = l.R
     types = l.types
     monospace = types.member? SIOC+'InstantMessage'
+    isImg = types.member? Image
     thisDir = this.uri[-1]=='/' && e.R.uri == this.uri
     [{_: :tr, class: :selectable,
       href: this.uri,
@@ -177,6 +178,13 @@ class R
                      [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ', # explicit Title
                       (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : (l[Content] ? '' : {_: :a, class: :uri, href: href, c: name})), # URI detail
                       l[Content].justArray.map{|c| monospace ? {_: :span, class: :monospace, c: c} : c },
+                      (['<br>',{_: :a, href: this.uri,
+                        c: {_: :img, class: :thumb,
+                            src: if (this.host != e.host) || this.ext.downcase == 'gif'
+                             this.uri
+                           else
+                             '/thumbnail' + this.path
+                            end}}] if isImg),
                       l[DC+'link'].do{|links|
                         big = links.size > 8
                         links[0..32].map{|link|
@@ -227,16 +235,6 @@ class R
             {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
                {_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}
            ]}}]}
-
-  ViewA[Image] = ->img,e{
-    image = img.R
-    {_: :a, href: image.uri,
-     c: {_: :img, class: :thumb,
-         src: if (image.host != e.host) || image.ext.downcase == 'gif'
-                image.uri
-              else
-                '/thumbnail' + image.path
-              end}}}
 
   def R.randomColor # fully saturated
 

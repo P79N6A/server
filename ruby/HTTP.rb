@@ -105,17 +105,7 @@ class R
   end
 
   def notfound
-    graph = {}
-    this = graph[uri] = {'uri' => uri}
-    seeAlso = this[RDFs+'seeAlso'] = []
-    cascade.reverse.map{|p|p.e && seeAlso.push(p)}
-    env[:search] = true
-    [env, env[:Links], env[:Response]].compact.map{|db|
-      db.map{|k,v|
-        this[HTTP+k.to_s.sub(/^HTTP_/,'')] = v.class==String ? v.noHTML : v unless k.to_s.match /^rack/ }}
-    [404,{'Content-Type' => format},
-     [Render[format].do{|fn|fn[graph,self]} ||
-      graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
+    [404,{},[]]
   end
 
   def aclURI
