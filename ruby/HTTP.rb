@@ -105,7 +105,7 @@ class R
   end
 
   def notfound
-    [404,{},[]]
+    [404,{'Content-Type' => format},[Render[format].do{|fn|fn[graph,self]} || graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
   end
 
   def aclURI

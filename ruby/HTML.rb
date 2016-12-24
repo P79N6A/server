@@ -87,6 +87,7 @@ class R
   Render['text/html'] = -> graph,re,view=nil {
     e = re.env
     groups = {}
+    empty = graph.empty?
     graph.map{|u,r|
       r.types.map{|type|
         if v = View[type]
@@ -111,7 +112,7 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
             {_: :body,
-             c: [prevPage, parent, nextPage, TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
+             c: [prevPage, parent, nextPage,empty ? {_: :span, style: 'font-size:8em', c: 404} : '', TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
                  {_: :style, c: e[:label].map{|name,_| c = randomColor
                     "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
                  prevPage, children, View[SearchBox][{'uri' => '/search/'},re], nextPage, {id: :statusbar}]}]}]}
