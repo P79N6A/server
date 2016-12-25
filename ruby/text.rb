@@ -162,8 +162,7 @@ class R
     elsif !R['//'+e.host+'/man'].exist? # ./domain/hostname/man must be created by administrator
       nil
     elsif name.empty?
-      input = {Type => R[SearchBox]}
-      [200,{'Content-Type' => 'text/html'},[Render['text/html'][{'/man' => input},e]]] 
+      [200,{'Content-Type' => 'text/html'},[H[SearchBox[e]]]] 
     else
 
       superLang = e.q['lang'].do{|l| (l.split /[_-]/)[0] }

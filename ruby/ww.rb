@@ -143,7 +143,6 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
   Search   = 'http://sindice.com/vocab/search#'
-  SearchBox= Search+'Input'
 
   Icons = {
     'uri' => :id,

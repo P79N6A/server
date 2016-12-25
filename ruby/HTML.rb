@@ -115,7 +115,7 @@ class R
              c: [prevPage, parent, nextPage,empty ? {_: :span, style: 'font-size:8em', c: 404} : '', TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
                  {_: :style, c: e[:label].map{|name,_| c = randomColor
                     "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
-                 prevPage, children, View[SearchBox][{'uri' => '/search/'},re], nextPage, {id: :statusbar}]}]}]}
+                 prevPage, children, SearchBox[re], nextPage, {id: :statusbar}]}]}]}
 
   TabularView = -> g, e, show_head = true, show_id = true {
 

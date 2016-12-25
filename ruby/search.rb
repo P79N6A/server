@@ -313,7 +313,7 @@ class R
             lines[0..5].map{|line| # HTML-render of first 6 matching-lines
               line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
 
-  View[SearchBox] = -> _,env {{_: :form, c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
+  SearchBox = -> env {{_: :form, c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
 
 end
 
