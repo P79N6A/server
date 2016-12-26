@@ -166,11 +166,17 @@ class R
 
     set = []
     graph = {}
+    if q.has_key?('q')
+      q['set'] ||= 'groonga' if path=='/search' || path=='/' 
+      q['set'] ||= 'grep'
+    end
 
     rs = ResourceSet[q['set']]
     fs = FileSet[q['set']]
+
     rs[self].do{|l|l.map{|r|set.concat r.fileResources}} if rs
     fs[self].do{|files|set.concat files} if fs
+
     FileSet[Resource][self].do{|f|set.concat f} unless rs||fs
 
     return notfound if set.empty?
