@@ -190,13 +190,12 @@ class R
 
   ResourceSet['groonga'] = ->d{ # third-party search-engine Groonga
     e = d.q
-    R.groonga.do{|ga|
-      q = e['q'] # expression
+    q = e['q'] # expression
+    q && R.groonga.do{|ga|
       g = d.host # context
 
       # evaluate expression
-      r = (q && !q.empty?) ? ga.select{|r|(r['graph'] == g) & r["content"].match(q)} : # query
-      ga.select{|r| r['graph'] == g}                                 # or just ordered set
+      r = ga.select{|r|(r['graph'] == g) & r["content"].match(q)}
       start = e['start'].do{|c| c.to_i.max(r.size - 1).min 0 } || 0  # offset
       c = (e['c']||e['count']).do{|c|c.to_i.max(10000).min(0)} || 16 # count
       down = r.size > start+c                                        # prev
