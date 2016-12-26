@@ -97,7 +97,7 @@ class R
         end}}
     e[:label] ||= {}
     path = e.R.justPath
-    parent = {_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} unless path == '/'
+    parent = {_: :a, class: :dirname, id: :up, href: path.dirname, c: '&#9650;'} if re.env[:container] && path != '/'
     children = {_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]
     prevPage = e[:Links][:prev].do{|p|{_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
@@ -112,10 +112,10 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
             {_: :body,
-             c: [prevPage, parent, nextPage,empty ? {_: :span, style: 'font-size:8em', c: 404} : '', TabularView[graph,re], groups.map{|view,graph|view[graph,re]},
+             c: [prevPage, parent, nextPage,empty ? {_: :span, style: 'font-size:8em', c: 404} : '', (TabularView[graph,re] if graph.keys.size > 0), groups.map{|view,graph|view[graph,re]},
                  {_: :style, c: e[:label].map{|name,_| c = randomColor
                     "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
-                 prevPage, children, SearchBox[re], nextPage, {id: :statusbar}]}]}]}
+                 prevPage, SearchBox[re], nextPage, '<br>', children, {id: :statusbar}]}]}]}
 
   TabularView = -> g, e, show_head = true, show_id = true {
 
