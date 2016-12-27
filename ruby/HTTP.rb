@@ -153,15 +153,12 @@ class R
   end
 
   def response
+    containerURI = uri[-1] == '/'
 
-    if directory?
-      if uri[-1] == '/'
-        @r[:container] = true
-      else
-        qs = @r['QUERY_STRING']
-        @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
-        return [301, @r[:Response], []]
-      end
+    if directory? && !containerURI
+      qs = @r['QUERY_STRING']
+      @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
+      return [301, @r[:Response], []]
     end
 
     set = []
@@ -186,13 +183,13 @@ class R
               'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
-    condResponse ->{ # lazy finish of body. unused on HEAD and cache hit
+    condResponse ->{ # lazy finisher lambda-closure. uncalled on HEAD or cache-hit
       if set.size==1 && format == set[0].mime # one file in set & MIME match
         set[0] # file response
       else
         loadGraph = -> {
           set.map{|r|r.nodeToGraph graph} # load resources
-          @r[:filters].push Container if @r[:container] # container-summarize
+          @r[:filters].push Container if containerURI # contained-content summarize
           @r[:filters].push Title
           @r[:filters].justArray.map{|f|
             Filter[f][graph,self]} # arbitrary transform
@@ -202,9 +199,9 @@ class R
           Render[format][loadGraph[],self]
         else
           base = @r.R.join uri
-          if @r[:container] # container
+          if containerURI
             g = loadGraph[].toRDF
-          else # doc
+          else
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
           end

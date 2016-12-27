@@ -33,7 +33,7 @@ class R
       re.env[:Links][:prev] = pp + qs
       re.env[:Links][:next] = np + qs}
 
-    if re.env[:container]
+    if re.path[-1] == '/'
       htmlFile = re.a 'index.html'
       if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
          [htmlFile.setEnv(re.env)] # found index.html, HTML requested, and no query -> use static-file
@@ -60,8 +60,7 @@ class R
 
   FileSet['glob'] = -> r {
     if r.uri.scan('*').size <= 3 # limit wildcard usage
-      r.env[:container] = true # multiple-resource hint
-      r.glob.select(&:inside) # stay inside server-root
+      r.glob.select(&:inside) # match and jail matches
     else
       []
     end}
@@ -188,7 +187,7 @@ class R
         end}
     end}
 
-  ResourceSet['groonga'] = ->d{ # third-party search-engine Groonga
+  ResourceSet['groonga'] = ->d{ # third-party search-engine handles
     e = d.q
     q = e['q'] # expression
     q && R.groonga.do{|ga|
@@ -270,8 +269,6 @@ class R
 
   GET['/search'] = -> e {
     e.q['set'] = 'groonga'
-    e.env[:container] = true
-    e.env[:search] = true
     nil}
 
   # summarize contained-data on per-type basis
@@ -312,7 +309,9 @@ class R
             lines[0..5].map{|line| # HTML-render of first 6 matching-lines
               line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
 
-  SearchBox = -> env {{_: :form, c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
+  SearchBox = -> env {
+    {_: :form,
+     c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
 
 end
 
