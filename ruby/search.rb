@@ -261,15 +261,11 @@ class R
     self
   end
   
-  # remove resource
+  # remove resource from index
   def unroonga
     g = R.groonga
     graph.keys.push(uri).map{|u|g[u].delete}
   end
-
-  GET['/search'] = -> e {
-    e.q['set'] = 'groonga'
-    nil}
 
   # summarize contained-data on per-type basis
   Filter[Container] = -> g,e {

@@ -154,28 +154,18 @@ class R
 
   def response
     containerURI = uri[-1] == '/'
-
     if directory? && !containerURI
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
       return [301, @r[:Response], []]
     end
-
+    q['set'] ||= (path=='/'||path.match(/^\/search/)) ? 'groonga' : 'grep' if q.has_key?('q')
     set = []
-    graph = {}
-    if q.has_key?('q')
-      q['set'] ||= 'groonga' if path=='/search' || path=='/' 
-      q['set'] ||= 'grep'
-    end
-
     rs = ResourceSet[q['set']]
     fs = FileSet[q['set']]
-
     rs[self].do{|l|l.map{|r|set.concat r.fileResources}} if rs
     fs[self].do{|files|set.concat files} if fs
-
     FileSet[Resource][self].do{|f|set.concat f} unless rs||fs
-
     return notfound if set.empty?
 
     env[:Response].
@@ -188,11 +178,11 @@ class R
         set[0] # file response
       else
         loadGraph = -> {
-          set.map{|r|r.nodeToGraph graph} # load resources
+          graph = {}
+          set.map{|r|r.nodeToGraph graph}
           @r[:filters].push Container if containerURI # contained-content summarize
           @r[:filters].push Title
-          @r[:filters].justArray.map{|f|
-            Filter[f][graph,self]} # arbitrary transform
+          @r[:filters].justArray.map{|f|Filter[f][graph,self]} # run named transforms
           graph }
 
         if NonRDF.member? format
