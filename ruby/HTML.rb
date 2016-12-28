@@ -166,7 +166,7 @@ class R
                    if thisDir
                      {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
                    else
-                     href = CGI.escapeHTML l.uri
+                     href = CGI.escapeHTML(l.uri||'')
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
                      [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ', # explicit Title

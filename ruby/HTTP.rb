@@ -180,9 +180,9 @@ class R
         loadGraph = -> {
           graph = {}
           set.map{|r|r.nodeToGraph graph}
-          @r[:filters].push Container if containerURI # contained-content summarize
+          @r[:filters].push Container if containerURI
           @r[:filters].push Title
-          @r[:filters].justArray.map{|f|Filter[f][graph,self]} # run named transforms
+          @r[:filters].justArray.map{|f|Filter[f][graph,self]} # run named-transforms
           graph }
 
         if NonRDF.member? format

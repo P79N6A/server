@@ -174,20 +174,27 @@ class R
       e.env[:filters].push 'grep' unless e.q.has_key?('full')
       `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}
 
-  # grep in-memory graph
-  Filter['grep'] = -> d,e {
-    w = e.q['q']
-    if w && w.size > 1
-      e.env[:grep] = /#{w.scan(/[\w]+/).join '.*'}/i
-      d.map{|u,r|
-        if r.to_s.match e.env[:grep] # matching resource
-          r[Type] = R['#grep-result']
-        else
-          d.delete u
-        end}
-    end}
+  Filter['grep'] = -> graph, re {
+    wordIndex = {}
+    query = re.q['q']
+    words = query.scan(/[\w]+/).map(&:downcase).uniq
+    words.each_with_index{|word,i|wordIndex[word] = i}
+    pattern = /#{words.join '.*'}/i
+    highlight = /(#{words.join '|'})/i
+    graph.map{|u,r|
+      r.values.flatten.select{|v|v.class==String}.map{|v|v.lines.map{|l|l.gsub(/<[^>]+>/,'')}}.flatten.grep(pattern).do{|lines| # matching HTML-tag stripped lines
+        lines[0..5].map{|line|
+          r[Content] ||= []
+          r[Content].unshift line[0..400].gsub(highlight){|g|
+            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}}
 
-  ResourceSet['groonga'] = ->d{ # third-party search-engine handles
+    graph['#grepCSS'] = {Content => H({_: :style,
+                                       c: wordIndex.values.map{|i|
+                                         bg = rand 16777216
+                                         fg = bg > 8388608 ? :black : :white
+                                         ".w#{i} {background-color: #{'#%06x' % bg}; color: #{fg}}\n"}})}}
+
+  ResourceSet['groonga'] = ->d{ # third-party search-engine handler
     e = d.q
     q = e['q'] # expression
     q && R.groonga.do{|ga|
@@ -283,27 +290,6 @@ class R
   Filter[Title] = -> g,e {
     g.values.find{|r|r[Title]}.do{|r|
        e.env[:title] ||= r[Title].justArray[0].to_s}}
-
-  View['#grep-result'] = -> g,e {
-    c = {}
-    w = e.q['q'].scan(/[\w]+/).map(&:downcase).uniq # words
-    w.each_with_index{|w,i|c[w] = i} # enumerated words
-    a = /(#{w.join '|'})/i           # highlight-pattern
-
-    [{_: :style,
-      c: ["h5 a {background-color: #fff;color:#000}\n h5 {margin:.3em}\n",
-          c.values.map{|i|
-            b = rand(16777216)                # word color
-            f = b > 8388608 ? :black : :white # keep contrasty
-            ".w#{i} {background-color: #{'#%06x' % b}; color: #{f}}\n"}]}, # word-color CSS
-
-     g.map{|u,r| # matching resources
-       r.values.flatten.select{|v|v.class==String}.map{|str| # string values
-         str.lines.map{|ls|ls.gsub(/<[^>]+>/,'')}}.flatten.  # lines within strings
-         grep(e.env[:grep]).do{|lines|                           # matching lines
-         [{_: :h5, c: r.R.href}, # match URI
-            lines[0..5].map{|line| # HTML-render of first 6 matching-lines
-              line[0..400].gsub(a){|g|H({_: :span, class: "w w#{c[g.downcase]}", c: g})}}]}}]} # match
 
   SearchBox = -> env {
     {_: :form,
