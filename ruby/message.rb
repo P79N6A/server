@@ -88,7 +88,11 @@ formats = {
   def triplrIRC &f
     doc = uri.gsub '#','%23'
     linenum = -1
-    day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/)[1].gsub('/','-')
+    # datetime stored as strftime-format pathname
+    # autolog_path = "~/Sync/%Y/%m/%d/%H/$tag$0.log";
+    day = dirname.match /\/(\d{4}\/\d{2}\/\d{2})/
+    return unless day
+    day = day[1].gsub('/','-')
     channel = bare
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
