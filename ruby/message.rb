@@ -497,7 +497,7 @@ formats = {
               yield u, R::Type, R[R::Post]
               yield u, R::SIOC+'channel', resource.path.match(commentRe).pre_match.tail
             else
-              yield u, R::Type, R[R::BlogPost]
+              yield u, R::Type, R[R::SIOC+'BlogPost']
               yield u, R::SIOC+'channel', resource.host
               yield u, R::To, R[resource.schemePart + resource.hostPart]
             end

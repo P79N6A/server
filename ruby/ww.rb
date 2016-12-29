@@ -95,54 +95,30 @@ class R < RDF::URI
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"
-  RO    = 'http://rdfs.org/'
   DC    = Purl + 'dc/terms/'
-  SIOC  = RO + 'sioc/ns#'
-  VOID  = RO + 'ns/void#'
-  MIMEtype = 'http://www.iana.org/assignments/media-types/'
-  Schema   = 'http://schema.org/'
-  Profile  = FOAF + 'PersonalProfileDocument'
-  Mu       = Purl + 'ontology/mo/'
-  Sound    = Mu + 'Sound'
+  SIOC  = 'http://rdfs.org/sioc/ns#'
+  Sound    = Purl + 'ontology/mo/Sound'
   Image    = DC + 'Image'
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
-  User     = SIOC + 'UserAccount'
   Post     = SIOC + 'Post'
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
-  Forum    = SIOC + 'Forum'
-  BlogPost = SIOC + 'BlogPost'
-  Wiki     = SIOC + 'Wiki'
-  Blog     = SIOC + 'Blog'
-  WikiArticle = SIOC + 'WikiArticle'
-  Auth     = W3   + 'ns/auth/'
-  ACL      = Auth + 'acl#'
-  Key      = Auth + 'cert#RSAPublicKey'
   LDP      = W3   + 'ns/ldp#'
   Stat     = W3   + 'ns/posix/stat#'
   CSVns    = W3   + 'ns/csv#'
   RDFns    = W3   + '1999/02/22-rdf-syntax-ns#'
   RDFs     = W3   + '2000/01/rdf-schema#'
-  OWL      = W3   + '2002/07/owl#'
   SKOS     = W3   + '2004/02/skos/core#'
   Atom     = W3   + '2005/Atom#'
-  HTTP     = W3   + '2011/http#'
-  Header   = W3   + '2011/http-headers#'
-  Next     = LDP  + 'nextPage'
-  Prev     = LDP  + 'prevPage'
-  RDFClass = RDFs + 'Class'
   Type     = RDFns + 'type'
-  Property = RDFns + 'Property'
-  HTML     = RDFns + 'HTML'
   Resource = RDFs + 'Resource'
   Label    = RDFs + 'label'
   Size     = Stat + 'size'
   Mtime    = Stat + 'mtime'
   Container= LDP + 'Container'
-  Search   = 'http://sindice.com/vocab/search#'
 
   Icons = {
     'uri' => :id,
@@ -158,8 +134,6 @@ class R < RDF::URI
     Size => :size,
     Mtime => :time,
     Resource => :graph,
-    Forum => :comments,
-    WikiArticle => :pencil,
     DC+'hasFormat' => :file,
     Atom+'self' => :graph,
     Atom+'alternate' => :file,
@@ -172,6 +146,7 @@ class R < RDF::URI
     SIOC+'Discussion' => :comments,
     SIOC+'InstantMessage' => :comment,
     SIOC+'MicroblogPost' => :newspaper,
+    SIOC+'WikiArticle' => :pencil,
     SIOC+'Tweet' => :tweet,
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
@@ -189,7 +164,7 @@ class R < RDF::URI
     Stat+'CompressedFile' => :archive,
   }
 
-  Prefix={ # String -> String
+  Prefix={
     "dc" => DC,
     "foaf" => FOAF,
     "ldp" => LDP,
@@ -199,22 +174,16 @@ class R < RDF::URI
     "stat" => Stat,
   }
 
-  Prefixes = { # Symbol -> URI
-    :http => RDF::URI(HTTP),
-    :ldp => RDF::URI(LDP),
-    :rdf => RDF::URI(RDFns),
-    :rdfs => RDF::URI(RDFs),
-    :stat => RDF::URI(Stat),
-  }
+  Prefixes = {:ldp => RDF::URI(LDP),:rdf => RDF::URI(RDFns),:rdfs => RDF::URI(RDFs),:stat => RDF::URI(Stat)}
 
-  ## user-customize tables
+  # URI-indexed lambdas for behavior customization
   GET = {}         # GET handler
   FileSet = {}     # files in GET
   ResourceSet = {} # resources in GET
   Filter = {}      # graph-transform (whole graph)
   Abstract = {}    # graph-transform (RDF-type constrained subgraph)
   Render = {}      # MIME renderer
-  View = {}       # HTML template
+  View = {}        # HTML template
   Watch = {}       # source-files to check for changes
 
 %w{

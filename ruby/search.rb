@@ -182,7 +182,7 @@ class R
     pattern = /#{words.join '.*'}/i
     highlight = /(#{words.join '|'})/i
     graph.map{|u,r|
-      r.values.flatten.select{|v|v.class==String}.map{|v|v.lines.map{|l|l.gsub(/<[^>]+>/,'')}}.flatten.grep(pattern).do{|lines| # matching HTML-tag stripped lines
+      r.values.flatten.select{|v|v.class==String}.map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines| # match lines
         r[Content] = []
         lines[0..5].map{|line|
           r[Content].unshift line[0..400].gsub(highlight){|g|
