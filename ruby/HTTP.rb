@@ -44,7 +44,6 @@ class R
   end
 
   def ldp
-    @r[:Links][:acl] = aclURI
     @r[:Response].update({
       'Accept-Patch' => 'application/ld+patch, application/sparql-update',
       'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/turtle',
@@ -249,12 +248,10 @@ class R
   def DELETE
     return [403, {}, ["Forbidden"]] unless allowWrite
     return [409, {}, ["resource not found"]] unless exist?
-    puts "DELETE #{uri}"
     delete
     [200,{
        'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-       'Access-Control-Allow-Credentials' => 'true',
-    },[]]
+       'Access-Control-Allow-Credentials' => 'true'},[]]
   end
 
   def delete; node.deleteNode if e; self end
@@ -296,8 +293,8 @@ class R
     return [403,{},[]] unless allowWrite
     mime = @r['CONTENT_TYPE']
     case mime
-#    when /^multipart\/form-data/
-#      upload
+    when /^multipart\/form-data/
+      upload
     when /^application\/sparql-update/
       update
     when /^text\/turtle/
@@ -328,11 +325,8 @@ class R
   end
 
   def update
-    puts "PATCH #{uri}"
     query = @r['rack.input'].read
-    puts query
     doc = ttl
-    puts "doc #{doc}"
     model = RDF::Repository.new
     model.load doc.pathPOSIX, :base_uri => uri if doc.e
     sse = SPARQL.parse(query, update: true)
@@ -343,7 +337,7 @@ class R
   end
 
   def allowWrite
-    @r.signedIn
+    @r.signedIn # user ID required
   end
 
   def accept

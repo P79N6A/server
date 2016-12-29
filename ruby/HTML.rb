@@ -96,7 +96,7 @@ class R
           graph.delete u
         end}}
     e[:label] ||= {}
-    parent = {_: :a, class: :dirname, id: :up, href: re.justPath.dirname, c: '&#9650;'} if re.path[-1] == '/' && re.path != '/'
+    parent = {_: :a, class: :dirname, id: :up, href: re.justPath.dirname+'?'+re.env['QUERY_STRING'], c: '&#9650;'} if re.path[-1] == '/' && re.path != '/'
     children = {_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]
     prevPage = e[:Links][:prev].do{|p|{_: :a, id: :prevpage, class: e[:prevEmpty] ? 'weak' : '',c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, id: :nextpage, class: e[:nextEmpty] ? 'weak' : '',c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
