@@ -45,6 +45,17 @@ class R
     graph
   end
 
+  def pack
+    return unless directory?
+    res = child('*.e').glob
+    return unless res.size > 0
+    graph = {}
+    res.map{|r|r.nodeToGraph graph}
+    child('index.e').w graph, true
+    res.map &:delete
+    self
+  end
+
   # streaming triples Machine-In-The-Middle - populates resource-cache in local-store
   def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
     graph = fromStream({},triplr) # collect triples into resource-groups
