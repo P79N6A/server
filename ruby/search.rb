@@ -186,7 +186,9 @@ class R
         r[Content] = []
         lines[0..5].map{|line|
           r[Content].unshift line[0..400].gsub(highlight){|g|
-            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}}
+            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
+      graph.delete u if r[Content].empty?
+    }
 
     graph['#grepCSS'] = {Content => H({_: :style,
                                        c: wordIndex.values.map{|i|
