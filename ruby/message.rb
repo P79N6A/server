@@ -111,11 +111,16 @@ formats = {
     full = re.q.has_key? 'full'
     re.env[:summarized] = true unless full
     ch = re.q['ch']
-    msgs.map{|uri,msg| # group on channel
+    msgs.map{|uri,msg|
       chan = msg[SIOC+'channel'].justArray[0]
       id = {'ch' => chan}.qs
       graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
+      if re.q['set'] == 'grep'
+        msg[Content].do{|c|
+          graph[id][Content] ||= []
+          graph[id][Content].concat c}
+      end
       msg[Image].do{|images|
         graph[id][Image] ||= []
         graph[id][Image].concat images}
