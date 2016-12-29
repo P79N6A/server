@@ -357,13 +357,13 @@ formats = {
             container = address.R.dirname + '/' + month
             target = R[container + name + '.e']
             target = R[container + name + ' ' + rand.to_s.h[0..2] + '.e'] if target.e
-            doc.ln target }}}}} # link message to index directory
+            doc.ln target }}}}} # link message into index container
 
   def triplrMailMessage &f
     triplrCache :triplrMail, host, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  def getFeed h = 'localhost' # index-context (hostname)
+  def getFeed h = 'localhost'
     store :format => :feed, :hook => IndexFeedRDF, :hostname => h, :base_uri => uri
     self
   end

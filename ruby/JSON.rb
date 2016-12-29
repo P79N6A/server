@@ -45,10 +45,9 @@ class R
     graph
   end
 
-  # Machine-In-The-Middle of triple-stream, caching on pass-through
-  # non-destructive, only writes to new identifier
+  # streaming triples Machine-In-The-Middle - populates resource-cache in local-store
   def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
-    graph = fromStream({},triplr) # bunch triples
+    graph = fromStream({},triplr) # collect triples into resource-groups
     R.store graph, host, properties, indexer # cache
     graph.triples &b if b # emit triples
     self

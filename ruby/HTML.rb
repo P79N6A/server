@@ -154,7 +154,7 @@ class R
     types = l.types
     monospace = types.member? SIOC+'InstantMessage'
     isImg = types.member? Image
-    thisDir = this.uri[-1]=='/' && e.R.uri == this.uri
+    thisDir = this.uri[-1]=='/' && e.path == this.path
     [{_: :tr, class: :selectable,
       href: this.uri,
       id: thisDir ? 'this' : e.selector,
