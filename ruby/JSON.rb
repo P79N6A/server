@@ -47,12 +47,13 @@ class R
 
   def pack
     return unless directory?
-    res = child('*.e').glob
+    res = child('*.e').glob.concat child('*.log').glob
     return unless res.size > 0
     graph = {}
-    res.map{|r|r.nodeToGraph graph}
+    res.map{|r|
+      r.nodeToGraph graph
+      r.delete}
     child('index.e').w graph, true
-    res.map &:delete
     self
   end
 
