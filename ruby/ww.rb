@@ -197,8 +197,6 @@ search
 text
 }.map{|r|require_relative r}
 
-require './local.rb' if R['local.rb'].exist? # local configuration
-
 RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
   NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
 
