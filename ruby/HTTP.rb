@@ -181,7 +181,7 @@ class R
           set.map{|r|r.nodeToGraph graph}
           graph.values.find{|r|r[Title]}.do{|r|env[:title] ||= r[Title].justArray[0].to_s}
           unless q.has_key? 'full'
-            Summarize[graph,self] if containerURI || q.has_key?('abbrev')
+            Summarize[graph,self] if containerURI || q.has_key?('abbr')
             Grep[graph,self] if setF == 'grep'
           end
           graph }
@@ -442,23 +442,16 @@ class R
     @format ||= selectFormat
   end
 
-  Prefer = { # tiebreaker order (lowest wins)
-    'text/html' => 0, 'text/turtle' => 1}
-
   def selectFormat
-
-    # request by adding a URL suffix
-    { '.html' => 'text/html',
-      '.json' => 'application/json',
-      '.ttl' => 'text/turtle',
-    }[File.extname(env['REQUEST_PATH'])].do{|mime| return mime}
-
-    # Accept parameter in request header
-    accept.sort.reverse.map{|q,mimes| # MIMES in descending q-order
-      mimes.sort_by{|m|Prefer[m]||2}.map{|mime| # apply tiebreakers
-        return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}}
-
-    'text/html'
+    # explicit URI suffix
+    { '.html' => 'text/html', '.json' => 'application/json', '.ttl' => 'text/turtle',
+    }[File.extname(env['REQUEST_PATH'])].do{|m|return m}
+    # environment (request header-fields)
+    accept.sort.reverse.map{|q,mimes| # highest Qval bound first
+      # if multiple MIMEs remain, tiebreak
+      mimes.sort_by{|m|{'text/html' => 0, 'text/turtle' => 1}[m]||2}.map{|mime|
+        return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}} # native or RDF-library renderer exists
+    'text/html' # default
   end
 
   end
