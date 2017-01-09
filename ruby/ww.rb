@@ -1,9 +1,3 @@
-
-def watch f
-  R::Watch[f] = File.mtime f # add source to reload-on-change watchlist
-  puts 'developing '+f
-end
-
 %w{
 cgi
 csv
@@ -16,12 +10,7 @@ mail
 open-uri
 pathname
 rack
-shellwords}.map{|r|
-  print r, ' '
-  require r
-}
-
-print "\n"
+shellwords}.map{|r|require r}
 
 class RDF::URI
   def R
@@ -90,8 +79,7 @@ class R < RDF::URI
   FSbase = `pwd`.chomp ; BaseLen = FSbase.size
   HTTP_URI = /\A(\/|http)[\S]+\Z/
 
-  ## URI constants
-
+  # URI constants
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
   FOAF  = "http://xmlns.com/foaf/0.1/"

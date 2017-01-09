@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-#watch __FILE__
-
 class String
 
   # HTML from plaintext

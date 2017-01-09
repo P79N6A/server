@@ -1,5 +1,4 @@
 # coding: utf-8
-#watch __FILE__
 
 module Rack
   module Adapter
@@ -58,21 +57,9 @@ class R
     self
   end
 
-  # coax output through thin/foreman/shell buffers
-  $stdout.sync = true
-  $stderr.sync = true
-
-  def R.dev # scan watched-files for changes
-    Watch.each{|f,ts|
-      if ts < File.mtime(f)
-        load f
-      end }
-  end
-
   def R.call e
     return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD']
     return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-    dev
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/')
