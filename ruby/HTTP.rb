@@ -103,10 +103,6 @@ class R
     end
   end
 
-  def allowRead
-    true
-  end
-
   def GET
     ldp
     if file? && !q.has_key?('data')
@@ -216,29 +212,6 @@ class R
   end
   alias_method :r, :readFile
 
-  def PUT
-    return [403,{},[]] unless allowWrite
-    ext = MIME.invert[@r['CONTENT_TYPE'].split(';')[0]].to_s
-    versions = docroot.child '.v' # container for states
-    versions.mk
-    doc = versions.child Time.now.iso8601.gsub(/\W/,'') + '.' + ext 
-    doc.w @r['rack.input'].read
-    main = stripDoc.a('.' + ext)
-    main.delete if main.e # unlink prior
-    doc.ln main           # link current
-    ldp
-    [201,@r[:Response].update({Location: uri}),[]]
-  end
-
-  def DELETE
-    return [403, {}, ["Forbidden"]] unless allowWrite
-    return [409, {}, ["resource not found"]] unless exist?
-    delete
-    [200,{
-       'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|o.match(HTTP_URI) && o } || '*',
-       'Access-Control-Allow-Credentials' => 'true'},[]]
-  end
-
   def delete; node.deleteNode if e; self end
 
   def appendFile line
@@ -269,61 +242,6 @@ class R
   end
 
   def ln_s t; ln t, :symlink end
-
-  def PATCH
-    update
-  end
-
-  def POST
-    return [403,{},[]] unless allowWrite
-    mime = @r['CONTENT_TYPE']
-    case mime
-    when /^multipart\/form-data/
-      upload
-    when /^application\/sparql-update/
-      update
-    when /^text\/turtle/
-      if @r.linkHeader['type'] == Container
-        path = child(@r['HTTP_SLUG'] || rand.to_s.h[0..6]).setEnv(@r)
-        path.PUT
-        if path.e
-          [200,@r[:Response].update({Location: path.uri}),[]]
-        else
-          mk
-        end
-      else
-        self.PUT
-      end
-    else
-      [406,{'Accept-Post' => 'text/turtle'},[]]
-    end
-  end
-
-  def upload
-    p = (Rack::Request.new env).params
-    if file = p['file']
-      FileUtils.cp file[:tempfile], child(file[:filename]).pathPOSIX
-      file[:tempfile].unlink
-      ldp
-      [201,@r[:Response].update({Location: uri}),[]]
-    end
-  end
-
-  def update
-    query = @r['rack.input'].read
-    doc = ttl
-    model = RDF::Repository.new
-    model.load doc.pathPOSIX, :base_uri => uri if doc.e
-    sse = SPARQL.parse(query, update: true)
-    sse.execute(model)
-    doc.w model.dump(:ttl)
-    ldp
-    [200,@r[:Response],[]]
-  end
-
-  def allowWrite
-    @r.signedIn # user ID required
-  end
 
   def accept
     @accept ||= acceptParse
@@ -356,61 +274,10 @@ class R
     lh
   end
 
-  def user_id
-    @user ||= (user_cert || user_DNS)
-  end
-
-  def signedIn
-    @signedIn ||= user.uri.match /^http/
-  end
-
-  def user_cert
-    x509cert.do{|c|
-      cert = R['/cache/uid/' + R.dive(c.h)] # cert URI
-      verifyWebID.do{|id| cert.w id } unless cert.exist? # update cache
-      return R[cert.r] if cert.exist?} # validated user-URI
-  end
-
-  def verifyWebID pem = x509cert
-    if pem
-      OpenSSL::X509::Certificate.new(pem).do{|x509|
-        x509.extensions.find{|x|x.oid == 'subjectAltName'}.do{|user|
-          user = user.value.sub /^URI./, ''
-          head = {'Accept' => 'text/turtle, application/ld+json;q=0.8, text/html;q=0.5, application/xhtml+xml;q=0.5, application/rdf+xml;q=0.3'}
-          graph = RDF::Repository.load user, headers: head
-          query = "PREFIX : <http://www.w3.org/ns/auth/cert#> SELECT ?m ?e WHERE { <#{user}> :key [ :modulus ?m; :exponent ?e; ] . }"
-          SPARQL.execute query, graph do |result|
-            if x509.public_key.n.to_i == result[:m].value.to_i(16)
-              user.R.ttl.w graph.dump(:ttl) # cache user-info
-              return user
-            else
-              puts "modulus mismatch for #{user}"
-            end
-          end}}
-    end
-    nil
-  end
-
-  def x509cert
-    env['rack.peer_cert'].do{|v|
-      p = v.split /[\s\n]/
-      return [p[0..1].join(' '),
-              p[2..-3],
-              p[-2..-1].join(' ')].join "\n" unless p.size < 5 }
-    nil
-  end
-
   def selector
     @idCount ||= 0
     'O' + (@idCount += 1).to_s
   end
-
-  def user_DNS
-    addr = env['HTTP_ORIGIN_ADDR'] || env['REMOTE_ADDR'] || '0.0.0.0'
-    R['dns:' + addr]
-  end
-
-  def SSLupgrade; [301,{'Location' => "https://" + host + env['REQUEST_URI']},[]] end
 
   def q # memoize key/vals
     @q ||=
