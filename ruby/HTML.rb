@@ -120,7 +120,8 @@ class R
                  (nextPage && nextPage.merge({id: :nextpage})),
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
                  (TabularView[graph,re] if graph.keys.size > 0), groups.map{|view,graph|view[graph,re]},
-                 {_: :style, c: e[:label].map{|name,_| c = randomColor
+                 {_: :style, c: e[:label].map{|name,_|
+                    c = '#%06x' % (rand 16777216)
                     "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'),
                  (SearchBox[re] if dir),
@@ -130,13 +131,10 @@ class R
                  {id: :statusbar}]}]}]}
 
   TabularView = -> g, e, show_head = true, show_id = true {
-
     sort = (e.q['sort']||'dc:date').expand
     direction = e.q.has_key?('ascending') ? :id : :reverse
-
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Label, Type, *(keys - [Mtime,Label,Type,Title,Image,Content,DC+'link'])]
-
     {_: :table,
      c: [
        {_: :tbody, c: (g.resources e).map{|r|
@@ -242,23 +240,5 @@ class R
             {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
                {_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}
            ]}}]}
-
-  def R.randomColor # fully saturated
-
-    hsv2rgb = -> h,s,v {
-      i = h.floor
-      f = h - i
-      p = v * (1 - s)
-      q = v * (1 - (s * f))
-      t = v * (1 - (s * (1 - f)))
-      r,g,b=[[v,t,p],
-             [q,v,p],
-             [p,v,t],
-             [p,q,v],
-             [t,p,v],
-             [v,p,q]][i].map{|q|q*255.0}}
-
-    '#%02x%02x%02x' % hsv2rgb[rand*6,1,1]
-  end
 
 end
