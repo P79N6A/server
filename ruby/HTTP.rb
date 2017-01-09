@@ -15,17 +15,8 @@ end
 
 class R
 
-  AllowMethods = %w{HEAD GET PUT PATCH POST OPTIONS DELETE}
+  AllowMethods = %w{HEAD GET POST}
   Allow = AllowMethods.join ', '
- 
-  def OPTIONS
-    ldp
-    method = @r['HTTP_ACCESS_CONTROL_REQUEST_METHOD']
-    headers = @r['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
-    head = {'Access-Control-Allow-Methods' => (AllowMethods.member? method) ? method : Allow}
-    head['Access-Control-Allow-Headers'] = headers if headers
-    [200,(@r[:Response].update head), []]
-  end
 
   def HEAD
     self.GET.
@@ -40,21 +31,6 @@ class R
 
   def env
     @r
-  end
-
-  def ldp
-    @r[:Response].update({
-      'Accept-Patch' => 'application/ld+patch, application/sparql-update',
-      'Accept-Post'  => 'application/ld+json, application/x-www-form-urlencoded, text/turtle',
-      'Access-Control-Allow-Credentials' => 'true',
-      'Access-Control-Allow-Origin' => @r['HTTP_ORIGIN'].do{|o|(o.match HTTP_URI) && o } || '*',
-      'Access-Control-Expose-Headers' => "User, Location, Link, Vary, Last-Modified",
-      'Allow' => Allow,
-      'MS-Author-Via' => 'SPARQL',
-      'User' => [user],
-      'Vary' => 'Accept,Accept-Datetime,Origin,If-None-Match',
-    })
-    self
   end
 
   def R.call e
@@ -74,7 +50,7 @@ class R
     e[:Response] = {}
     # continue call on actual resource
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
-      puts [resource.uri, h['Location'] ? ['->',h['Location']] : nil, '<'+resource.user_id+'>', resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
+      puts [resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
              flatten.compact.map(&:to_s).join ' '
       [s,h,b]}
   rescue Exception => x
@@ -104,7 +80,6 @@ class R
   end
 
   def GET
-    ldp
     if file? && !q.has_key?('data')
       fileGET
     elsif justPath.file?
