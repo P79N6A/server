@@ -5,11 +5,11 @@ input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-width:0
 #statusbar {position:fixed;border-radius:.16em;color:#fff;background-color:#666;padding: 0 .15em 0 .15em}
 form,input {display: inline-block;margin:.4em}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
-a[rel="prev"], a[rel="next"], a.nextpage, a.expand {font-size:3em;margin:.2em}
-a.dirname,a[rel="prev"] {float: left}
+a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.1em;color:#eee;background-color:#000;border-radius:.03em}
+#up, a[rel="prev"] {float: left}
+#up, #down {margin-left:1em}
 a[rel="next"] {float: right}
-a.dirname {margin-left:.3em;font-size:2em;float:left}
-a.dirname, a.weak {color:#333}
+a.weak {color:#333}
 a.page {font-weight: normal}
 a.uri, span.name {font-weight:normal;color:#bbb}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}

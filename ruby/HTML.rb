@@ -97,8 +97,12 @@ class R
           graph.delete u
         end}}
     e[:label] ||= {}
-    parent = {_: :a, class: :dirname, id: :up, href: re.justPath.dirname+'?'+re.env['QUERY_STRING'], c: '&#9650;'} if dir && re.path != '/'
-    children = {_: :a, id: :enter, href: re.q.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]
+    up = if re.q.has_key? 'full'
+           re.q.reject{|k|k=='full'}.merge({'abbr' => ''}).qs
+         elsif dir && re.path != '/'
+           re.justPath.dirname + '?' + re.env['QUERY_STRING']
+         end
+    expanded = {_: :a, id: :down, href: re.q.reject{|k|k=='abbr'}.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:summarized]
     prevPage = e[:Links][:prev].do{|p|{_: :a, class: e[:prevEmpty] ? 'weak' : '',c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, class: e[:nextEmpty] ? 'weak' : '',c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     H ["<!DOCTYPE html>\n",
@@ -112,12 +116,19 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  H.css('/css/base',true)]},
             {_: :body,
-             c: [(prevPage && prevPage.merge({id: :prevpage})), parent, (nextPage && nextPage.merge({id: :nextpage})),
+             c: [([{_: :a, id: :up, href: up, c: '&#9650;'},'<br clear=all>'] if up),
+                 (prevPage && prevPage.merge({id: :prevpage})),
+                 (nextPage && nextPage.merge({id: :nextpage})),
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
                  (TabularView[graph,re] if graph.keys.size > 0), groups.map{|view,graph|view[graph,re]},
                  {_: :style, c: e[:label].map{|name,_| c = randomColor
                     "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
-                 prevPage, (SearchBox[re] if dir), nextPage, '<br>', children, {id: :statusbar}]}]}]}
+                 (prevPage unless re.q.has_key? 'abbr'),
+                 (SearchBox[re] if dir),
+                 (nextPage unless re.q.has_key? 'abbr'),
+                 '<br clear=all>',
+                 expanded,
+                 {id: :statusbar}]}]}]}
 
   TabularView = -> g, e, show_head = true, show_id = true {
 

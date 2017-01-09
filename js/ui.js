@@ -42,17 +42,22 @@ document.addEventListener("DOMContentLoaded", function(){
 	};
 
 	var key = e.keyCode;
-//	console.log(key)
+//	console.log(key);
 	
 	if(e.getModifierState("Shift")) {
 	    if(key==80) // previous page
 		jumpDoc('prev','#last');
 	    if(key==78) // next page
 		jumpDoc('next','#first');
-	    if(key==85){ // containing page
+	    if(key==85){
 		var up = document.querySelector('#up');
 		if(up)
 		    window.location = up.attr('href');
+	    };
+	    if(key==68){
+		var down = document.querySelector('#down');
+		if(down)
+		    window.location = down.attr('href');
 	    };
 	    return null;
 	};
