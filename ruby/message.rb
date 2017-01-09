@@ -50,7 +50,6 @@ class R
 
     discussionURI = r[SIOC+'has_discussion'].justArray[0].do{|d|d.uri+'#'+r.R.hierPart}
 
-    # HTML
     [{class: :mail,
      c: [[(r[Title].justArray[0].do{|t|
              {_: :a, class: :title, href: discussionURI || r.uri, c: CGI.escapeHTML(t.to_s)}.update(navigateHeaders ? {id: re.selector} : {})} unless re.env[:thread]),
@@ -71,7 +70,6 @@ class R
     ]}  
 
 =begin perl
-
 formats = {
   "fe-common/core" = {
     pubmsg = "{pubmsgnick $2 {pubnick \00311$[-9]0%n}}$1";
@@ -82,7 +80,6 @@ formats = {
     action_public_channel = "{pubaction \00307$[-9]0 %m({msgchannel $1})%n}$2";
   };
 };
-
 =end
 
   def triplrIRC &f

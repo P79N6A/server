@@ -166,12 +166,10 @@ class R
     fs[self].do{|files|set.concat files} if fs
     FileSet[Resource][self].do{|f|set.concat f} unless rs||fs
     return notfound if set.empty?
-
     env[:Response].
       update({'Content-Type' => format,
               'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
-
     condResponse ->{ # lazy-body lambda. uncalled on HEAD and cache-hit
       if set.size==1 && format == set[0].mime # one file in set and MIME matches?
         set[0] # return static-file
@@ -179,13 +177,11 @@ class R
         loadGraph = -> {
           graph = {}
           set.map{|r|r.nodeToGraph graph}
-          graph.values.find{|r|r[Title]}.do{|r|env[:title] ||= r[Title].justArray[0].to_s}
           unless q.has_key? 'full'
             Summarize[graph,self] if containerURI || q.has_key?('abbr')
             Grep[graph,self] if setF == 'grep'
           end
           graph }
-
         if NonRDF.member? format
           Render[format][loadGraph[],self]
         else
