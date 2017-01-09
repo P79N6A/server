@@ -171,10 +171,9 @@ class R
 
   FileSet['grep'] = -> e {
     e.q['q'].do{|query|
-      e.env[:filters].push 'grep' unless e.q.has_key?('full')
       `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}
 
-  Filter['grep'] = -> graph, re {
+  Grep = -> graph, re {
     wordIndex = {}
     query = re.q['q']
     words = query.scan(/[\w]+/).map(&:downcase).uniq
@@ -276,8 +275,7 @@ class R
     graph.keys.push(uri).map{|u|g[u].delete}
   end
 
-  # summarize contained-data on per-type basis
-  Filter[Container] = -> g,e {
+  Summarize = -> g,e {
     e.env[:title] ||= e.path
     groups = {}
     g.map{|u,r|
@@ -287,11 +285,6 @@ class R
           groups[v][u] = r # resource -> group
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer(s)
-
-  # find request-level Title in the RDF-model
-  Filter[Title] = -> g,e {
-    g.values.find{|r|r[Title]}.do{|r|
-       e.env[:title] ||= r[Title].justArray[0].to_s}}
 
   SearchBox = -> env {
     {_: :form,

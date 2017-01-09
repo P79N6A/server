@@ -85,7 +85,6 @@ class R
     # response header
     e[:Links] = {}
     e[:Response] = {}
-    e[:filters] = []
     # continue call on actual resource
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
       puts [resource.uri, h['Location'] ? ['->',h['Location']] : nil, '<'+resource.user_id+'>', resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
@@ -159,9 +158,10 @@ class R
       return [301, @r[:Response], []]
     end
     q['set'] ||= (path=='/'||path.match(/^\/search/)) ? 'groonga' : 'grep' if q.has_key?('q')
+    setF = q['set']
     set = []
-    rs = ResourceSet[q['set']]
-    fs = FileSet[q['set']]
+    rs = ResourceSet[setF]
+    fs = FileSet[setF]
     rs[self].do{|l|l.map{|r|set.concat r.fileResources}} if rs
     fs[self].do{|files|set.concat files} if fs
     FileSet[Resource][self].do{|f|set.concat f} unless rs||fs
@@ -172,16 +172,18 @@ class R
               'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
-    condResponse ->{ # lazy finisher lambda-closure. uncalled on HEAD or cache-hit
-      if set.size==1 && format == set[0].mime # one file in set & MIME match
-        set[0] # file response
+    condResponse ->{ # lazy-body lambda. uncalled on HEAD and cache-hit
+      if set.size==1 && format == set[0].mime # one file in set and MIME matches?
+        set[0] # return static-file
       else
         loadGraph = -> {
           graph = {}
           set.map{|r|r.nodeToGraph graph}
-          @r[:filters].push Container if containerURI
-          @r[:filters].push Title
-          @r[:filters].justArray.map{|f|Filter[f][graph,self]} # run named-transforms
+          graph.values.find{|r|r[Title]}.do{|r|env[:title] ||= r[Title].justArray[0].to_s}
+          unless q.has_key? 'full'
+            Summarize[graph,self] if containerURI || q.has_key?('abbrev')
+            Grep[graph,self] if setF == 'grep'
+          end
           graph }
 
         if NonRDF.member? format

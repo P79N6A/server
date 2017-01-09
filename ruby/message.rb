@@ -117,7 +117,7 @@ formats = {
       graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
       if re.q['set'] == 'grep'
-        msg[Content].do{|c|
+        msg[Content].do{|c| # keep content to be grepped
           graph[id][Content] ||= []
           graph[id][Content].concat c}
       end

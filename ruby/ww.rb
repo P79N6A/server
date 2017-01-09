@@ -180,11 +180,10 @@ class R < RDF::URI
   GET = {}         # GET handler
   FileSet = {}     # files in GET
   ResourceSet = {} # resources in GET
-  Filter = {}      # graph-transform (whole graph)
-  Abstract = {}    # graph-transform (RDF-type constrained subgraph)
+  Abstract = {}    # summarize
   Render = {}      # MIME renderer
   View = {}        # HTML template
-  Watch = {}       # source-files to check for changes
+  Watch = {}       # check source-code for change
 
 %w{
 MIME
