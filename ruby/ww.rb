@@ -167,7 +167,6 @@ class R < RDF::URI
   # URI-indexed lambdas for behavior customization
   GET = {}         # GET handler
   FileSet = {}     # files in GET
-  ResourceSet = {} # resources in GET
   Abstract = {}    # summarize
   Render = {}      # MIME renderer
   View = {}        # HTML template

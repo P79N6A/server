@@ -115,23 +115,22 @@ class R
       @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
       return [301, @r[:Response], []]
     end
+
     q['set'] ||= 'grep' if q.has_key?('q')
     setF = q['set']
     set = []
-    rs = ResourceSet[setF]
-    fs = FileSet[setF]
-    rs[self].do{|l|l.map{|r|set.concat r.fileResources}} if rs
-    fs[self].do{|files|set.concat files} if fs
-    FileSet[Resource][self].do{|f|set.concat f} unless rs||fs
+    (FileSet[setF]||FileSet[Resource])[self].do{|f|set.concat f}
     return notfound if set.empty?
-    env[:Response].
-      update({'Content-Type' => format,
+
+    env[:Response].update({'Content-Type' => format,
               'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
+
     condResponse ->{ # lazy-body lambda. uncalled on HEAD and cache-hit
       if set.size==1 && format == set[0].mime # one file in set and MIME matches?
         set[0] # return static-file
       else
+
         loadGraph = -> {
           graph = {}
           set.map{|r|r.nodeToGraph graph}
@@ -140,6 +139,7 @@ class R
             Grep[graph,self] if setF == 'grep'
           end
           graph }
+
         if NonRDF.member? format
           Render[format][loadGraph[],self]
         else
