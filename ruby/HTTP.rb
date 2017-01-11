@@ -48,7 +48,7 @@ class R
     # response header
     e[:Links] = {}
     e[:Response] = {}
-    # continue call on actual resource
+    # continue call on resource instance
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
       puts [resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
              flatten.compact.map(&:to_s).join ' '

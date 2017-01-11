@@ -44,7 +44,7 @@ our native <strong>JSON</strong> format omits <a href="http://milicicvuk.com/blo
 </td></tr>
 
 <tr><td><b>HTTP</b></td><td>
-web-protocol. a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/read.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server
+web-protocol. a <a href="http://rack.github.io/">Rack</a> interface exposes our <a href="ruby/HTTP.rb.html">handlers</a> to low-level socket-engines like <a href="http://code.macournoyer.com/thin/">Thin</a> and <a href="http://unicorn.bogomips.org/">Unicorn</a> which complete a full web-server
 </td></tr>
 
 <tr><td><b>UI</b></td><td>
@@ -60,16 +60,16 @@ we serve standard RDF so you can <a href="https://github.com/solid/solid-apps">b
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>Triple</b></td><td>
-<b>yield</b> and <b>do</b> keywords denote producing and consuming code, stackable into pipelines <a href=ruby/message.news.rb.html>(feed example)</a>. 
+<b>yield</b> and <b>do</b> keywords denote producing and consuming code, stackable into pipelines <a href=ruby/message.rb.html>(feed example)</a>. 
 args[0,1] are URI strings, arg[2] a resource or literal (JSON value)
 </td></tr>
 
 <tr><td style="white-space: nowrap"><b>Page</b></td><td>
-a page could be a depth or breadth-first traverse of directories, or a narrowing of the default-set matching a regular-expression. we provide <a href=ruby/search.fs.rb.html>some defaults</a> and hooks to add more
+a page could be a depth or breadth-first traverse of directories, or a narrowing of the default-set matching a regular-expression. we provide <a href=ruby/search.rb.html>some defaults</a> and hooks to add more
 </td></tr>
 
 <tr><td><b>Abstract</b></td><td>
-content can be voluminous. summarizers are <a href=ruby/message.mail.rb.html>definable</a> on RDF-types
+content can be voluminous. summarizers can be defined per RDF-type
 </td></tr>
 
 </table>
