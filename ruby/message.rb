@@ -345,7 +345,6 @@ formats = {
   end
 
   IndexMail = ->doc,graph,host {
-    doc.roonga host
     graph.map{|u,r|
       addresses = []
       r[Creator].do{|from|addresses.concat from}
@@ -576,7 +575,6 @@ formats = {
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
 
   IndexFeedJSON = -> doc, graph, host {
-    doc.roonga host
     graph.map{|u,r|
       r[Date].do{|t|
         t = t[0].gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
@@ -585,7 +583,6 @@ formats = {
     doc}
 
   IndexFeedRDF = -> doc, graph, host {
-    doc.roonga host
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # trim normalized timezones
       base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'

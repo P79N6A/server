@@ -33,7 +33,7 @@ class Array
   def justArray; self end
 end
 
-class Fixnum
+class Integer
   def max i; i > self ? self : i end
   def min i; i < self ? self : i end
 end

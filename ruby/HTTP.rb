@@ -115,7 +115,7 @@ class R
       @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
       return [301, @r[:Response], []]
     end
-    q['set'] ||= (path=='/'||path.match(/^\/search/)) ? 'groonga' : 'grep' if q.has_key?('q')
+    q['set'] ||= 'grep' if q.has_key?('q')
     setF = q['set']
     set = []
     rs = ResourceSet[setF]

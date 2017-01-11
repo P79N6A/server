@@ -26,9 +26,7 @@ def H x # Ruby values to HTML
     x.map{|n|H n}.join
   when Float
     x.to_s
-  when Bignum
-    x.to_s
-  when Fixnum
+  when Integer
     x.to_s
   when NilClass
     ''
