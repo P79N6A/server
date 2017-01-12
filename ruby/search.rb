@@ -87,10 +87,8 @@ class R
       s }}
 
   GET['/today'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
+
   GET['/now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + '?' + (e.env['QUERY_STRING']||'')}), []]}
-  
-  # internal storage not exposed on HTTP
-  GET['/cache'] = GET['/domain'] = GET['/index'] = -> e {e.notfound}
 
   def triplrContainer
     dir = uri.t

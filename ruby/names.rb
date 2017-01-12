@@ -75,7 +75,8 @@ class R
     s[0..2] + '/' + s[3..-1]
   end
   
-  # squashed names
+  # squashable URIs
+  Prefix = {"dc" => DC, "foaf" => FOAF, "ldp" => LDP, "rdf" => RDFns, "rdfs" => RDFs, "sioc" => SIOC, "stat" => Stat}
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
 

@@ -152,27 +152,17 @@ class R < RDF::URI
     Stat+'CompressedFile' => :archive,
   }
 
-  Prefix={
-    "dc" => DC,
-    "foaf" => FOAF,
-    "ldp" => LDP,
-    "rdf" => RDFns,
-    "rdfs" => RDFs,
-    "sioc" => SIOC,
-    "stat" => Stat,
-  }
-
   Prefixes = {:ldp => RDF::URI(LDP),:rdf => RDF::URI(RDFns),:rdfs => RDF::URI(RDFs),:stat => RDF::URI(Stat)}
 
-  # URI-indexed lambdas for behavior customization
-  GET = {}         # GET handler
-  FileSet = {}     # files in GET
-  Abstract = {}    # summarize
-  Render = {}      # MIME renderer
-  View = {}        # HTML template
-  Watch = {}       # check source-code for change
+  # lambda-tables for customization
+  GET = {}
+  GET['/cache'] = GET['/domain'] = -> e {e.notfound} # internal storage paths, can't GET directly
+  FileSet = {}
+  Abstract = {} # summarize
+  Render = {}   # MIME renderer
+  View = {}     # HTML template
 
-%w{
+  %w{
 MIME
 names
 JSON
@@ -183,36 +173,7 @@ search
 text
 }.map{|r|require_relative r}
 
-RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
+  RDFsuffixes = %w{e html jsonld n3 nt owl rdf ttl}
   NonRDF = %w{application/atom+xml application/json text/html text/uri-list}
-
-  def R.schemas # list schemas
-    table = {}
-    open('http://prefix.cc/popular/all.file.txt').each_line{|l|
-      unless l.match /^#/ # skip
-        prefix, uri = l.split(/\t/)
-        table[prefix] = uri.chomp
-      end}
-    table
-   end
-
-   def R.cacheSchemas # cache all the schemas
-     R.schemas.map{|prefix,uri| uri.R.cacheSchema prefix }
-   end
-
-   # Ruby: R('http://schema.org/docs/schema_org_rdfa.html').cacheSchema 'schema'
-   # sh: R http://schema.org/docs/schema_org_rdfa.html cacheSchema schema
-   def cacheSchema prefix
-    short = R['schema'].child(prefix).ttl
-    if !short.e # already fetched
-      terms = RDF::Graph.load uri
-      triples = terms.size
-      if triples > 0
-        puts "#{uri} :: #{triples} triples"
-        ttl.w terms.dump :ttl
-        ttl.ln_s short
-      end
-    end
-   end
 
 end
