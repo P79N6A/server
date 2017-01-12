@@ -215,7 +215,6 @@ class R
                      lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                      e.env[:label][lbl] = true
                      [{_: :a, href: this.uri, name: lbl, c: label},' ']}
-                 when SIOC+'has_container'
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
                      name = v.R.fragment||''

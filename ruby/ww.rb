@@ -141,7 +141,6 @@ class R < RDF::URI
     SIOC+'TextFile' => :file,
     SIOC+'channel' => :exchange,
     SIOC+'has_creator' => :user,
-    SIOC+'has_container' => :up,
     SIOC+'has_discussion' => :comments,
     SIOC+'Thread' => :openenvelope,
     SIOC+'Post' => :newspaper,

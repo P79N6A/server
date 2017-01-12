@@ -93,7 +93,6 @@ class R
   def triplrContainer
     dir = uri.t
     yield dir, Type, R[Container]
-    yield dir, SIOC+'has_container', dir.R.dir unless path=='/'
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601
