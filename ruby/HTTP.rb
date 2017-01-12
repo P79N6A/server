@@ -35,22 +35,18 @@ class R
 
   def R.call e
     return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD']
-    return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/')
-    path = Pathname.new(rawpath).expand_path.to_s
-    # preserve trailing-slash
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/'
-    # resource URI
-    resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path]
-    e['uri'] = resource.uri
-    # response header
-    e[:Links] = {}
-    e[:Response] = {}
-    # continue call on resource instance
-    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b|
-      puts [resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
+    return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # drop request for PHP file
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h} # restore hostname
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # clean hostname
+    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # clean path
+    path = Pathname.new(rawpath).expand_path.to_s # expand path
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
+    resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path] # resource
+    e['uri'] = resource.uri # resource identifier to environment
+    e[:Response] = {} # response header fields
+    e[:Links] = {} # response header Link field
+    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # inspect response
+      puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
              flatten.compact.map(&:to_s).join ' '
       [s,h,b]}
   rescue Exception => x
@@ -119,7 +115,8 @@ class R
     q['set'] ||= 'grep' if q.has_key?('q')
     setF = q['set']
     set = []
-    (FileSet[setF]||FileSet[Resource])[self].do{|f|set.concat f}
+    (FileSet[setF]||
+     FileSet[Resource])[self].do{|f|set.concat f}
     return notfound if set.empty?
 
     env[:Response].update({'Content-Type' => format,

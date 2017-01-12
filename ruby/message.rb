@@ -579,7 +579,7 @@ formats = {
       r[Date].do{|t|
         t = t[0].gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
         b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
-puts "http://#{host}/#{t}#{b[0..-2]}"
+        puts "< http://#{host}/#{t}#{b[0..-2]}"
         doc.ln R["//#{host}/#{t}#{b}e"]}} # link to timeline
     doc}
 
@@ -587,7 +587,7 @@ puts "http://#{host}/#{t}#{b[0..-2]}"
     graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
       time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # trim normalized timezones
       base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-puts "http://#{host}/#{time}#{base[0..-2]}"
+      puts "< http://#{host}/#{time}#{base[0..-2]}"
       doc.ln R["//#{host}/#{time}#{base}ttl"]}} # link
 
   Render['application/atom+xml'] = -> d,e {
@@ -606,5 +606,13 @@ puts "http://#{host}/#{time}#{base[0..-2]}"
                      {_: :content, type: :xhtml,
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                            c: d[Content]}}]}}]}])}
+
+  GET['/feed'] = -> e {
+    set = FileSet['page'][R('//'+e.host+Time.now.strftime('/%Y')).setEnv(e.env)]
+    e.env[:Response].update({'Content-Type' => 'application/atom+xml', 'ETag' => set.sort.h})
+    e.condResponse -> {
+      graph = {}
+      set.map{|r|r.nodeToGraph graph}
+      Render['application/atom+xml'][graph,e]}}
 
 end
