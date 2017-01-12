@@ -1,6 +1,5 @@
 body {font-family: sans-serif; background-color:#000; color:#fff;margin:0}
-pre {white-space: pre-wrap}
-span.monospace {font-family: monospace}
+pre {white-space: pre-wrap;margin:0}
 input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-width:0;display: inline-block}
 #statusbar {position:fixed;border-radius:.16em;color:#fff;background-color:#666;padding: 0 .15em 0 .15em}
 form,input {display: inline-block;margin:.4em}
