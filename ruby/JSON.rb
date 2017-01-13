@@ -1,17 +1,8 @@
 class R
-=begin
-  JSON graph
+#  JSON graph
+#  {subjectURI => {predicateURI => [objectA..]}}
 
-  {subject => {predicate => object}}
-
-  subject+predicate are URIs in a text field
-  object is R or RDF::URI or RDF::Literal or JSON literal or
-   Hash/Object with 'uri' key or
-   [objectA, objectB..]
-
-=end
-
-  # Stream -> Graph
+  # tripleStream -> Graph
   def fromStream m,*i
     send(*i) do |s,p,o|
       m[s] = {'uri' => s} unless m[s].class == Hash 
@@ -45,7 +36,7 @@ class R
     graph
   end
 
-  def pack
+  def pack # consolidate directory contents into single file
     return unless directory?
     res = child('*.e').glob.concat child('*.log').glob
     return unless res.size > 0
@@ -57,7 +48,7 @@ class R
     self
   end
 
-  # streaming triples Machine-In-The-Middle - populates resource-cache in local-store
+  # streaming triples machine-in-the-middle - populates local-store
   def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
     graph = fromStream({},triplr) # collect triples into resource-groups
     R.store graph, host, properties, indexer # cache
