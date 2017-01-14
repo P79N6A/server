@@ -56,7 +56,7 @@ class R
     self
   end
 
-  # graph, host, arcs to index, hook -> file(s)
+  # fetch resource and store locally - JSON version
   def R.store graph, host = 'localhost', p = nil, indexer = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
@@ -74,7 +74,7 @@ class R
       indexer[d,g,host] if indexer} # bespoke handler
   end
 
-  # URI -> file(s)
+  # fetch resource and store locally - RDF version
   def store options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
