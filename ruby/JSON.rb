@@ -1,6 +1,6 @@
 class R
-#  JSON graph
-#  {subjectURI => {predicateURI => [objectA..]}}
+#  graph in JSON:
+#  {subjURI(str) => {predURI(str) => [objectA..]}}
 
   # tripleStream -> Graph
   def fromStream m,*i
@@ -36,9 +36,9 @@ class R
     graph
   end
 
-  def pack # consolidate directory contents into single file
+  def pack # consolidate native docs to single file
     return unless directory?
-    res = child('*.e').glob.concat child('*.log').glob
+    res = (child '*.e').glob
     return unless res.size > 0
     graph = {}
     res.map{|r|

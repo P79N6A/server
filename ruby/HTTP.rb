@@ -34,21 +34,20 @@ class R
   end
 
   def R.call e
-    return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD']
+    return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD'] # disallow arbitrary methods
     return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # drop request for PHP file
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h} # restore hostname
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # clean hostname
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # clean path
-    path = Pathname.new(rawpath).expand_path.to_s # expand path
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-    resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path] # resource
-    e['uri'] = resource.uri # resource identifier to environment
-    e[:Response] = {} # response header fields
-    e[:Links] = {} # response header Link field
-    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # inspect response
-      puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].
-             flatten.compact.map(&:to_s).join ' '
-      [s,h,b]}
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h} # restore proxied hostname
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # strip directory special-chars from hostname field
+    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # drop consecutive /s in path
+    path = Pathname.new(rawpath).expand_path.to_s # evaluate path
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # restore trailing-slash
+    resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path] # init resource-instance
+    e['uri'] = resource.uri # add identifier to environment
+    e[:Response] = {} # init response-header fields
+    e[:Links] = {} # init response-header Link vars
+    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request and inspect response
+      puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].join ' '
+      [s,h,b]} # return
   rescue Exception => x
    [500,{'Content-Type' => 'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
   end
@@ -76,11 +75,11 @@ class R
   end
 
   def GET
-    if file? && !q.has_key?('data')
+    if file? # host-specific path
       fileGET
-    elsif justPath.file?
+    elsif justPath.file? # path on any host
       justPath.fileGET
-    else
+    else # doc extension is eaten for Content-Type preference if static-file version doesn't exist
       stripDoc.resourceGET
     end
   end
