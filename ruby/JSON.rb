@@ -36,7 +36,7 @@ class R
     graph
   end
 
-  def pack # consolidate native docs to single file
+  def pack # consolidate native docs in a dir to a single file
     return unless directory?
     res = (child '*.e').glob
     return unless res.size > 0

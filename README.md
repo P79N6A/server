@@ -12,23 +12,14 @@ ln conf/Procfile .                     # use deamon-configuration
 
 * files go in domain/$HOST/path/to/file or path/to/file
 * daemon can run elsewhere, link or copy [js/](js/) and [css/](css/) directories to [server-root](.)
-* dont use superuser to listen on port80/443. if you want to do that, enable it for nonroot users:
 
-``` sh
-setcap cap_net_bind_service=+ep $(realpath `which ruby`)
-```
-
-* for code rendering install on your OS: source-highlight pygments
-* for fulltext search: gem install groonga
 
 ``` sh
 # Debian
-apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments groonga
+apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
 # voidlinux
 xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
 ```
-
-
 
 ## RUN
 ``` sh
