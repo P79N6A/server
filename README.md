@@ -3,18 +3,18 @@ a webserver
 ## Install
 ``` sh
 git clone https://gitlab.com/ix/pw.git # get source
+
 cd pw/ruby                             # goto source-directory
 bundle install                         # install packages we depend on
 ruby install                           # install this package
-cd ..                                  # goto server-root
-ln conf/Procfile .                     # use deamon-configuration
 ```
 
 * files go in domain/$HOST/path/to/file or path/to/file
-* daemon can run elsewhere, link or copy [js/](js/) and [css/](css/) directories to [server-root](.)
+* link or copy [js/](js/) and [css/](css/) to [server-root](.)
 
 
 ``` sh
+# OS-dependencies
 # Debian
 apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
 # voidlinux
@@ -23,7 +23,9 @@ xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highl
 
 ## RUN
 ``` sh
-foreman start
+unicorn -rww -o 127.0.0.1 -p 80 --no-default-middleware # Unicorn, on localhost
+
+thin -rww --threaded -p 80 -a 127.0.0.1 start # thin
 ```
 
 ## Interfaces
