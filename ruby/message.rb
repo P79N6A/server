@@ -101,6 +101,8 @@ formats = {
         yield s, Type, R[SIOC+'InstantMessage']
       }
     }
+  rescue
+    puts 'error scanning ' + uri
   end
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {

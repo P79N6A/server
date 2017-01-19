@@ -49,7 +49,9 @@ class R
       puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].join ' '
       [s,h,b]} # return
   rescue Exception => x
-   [500,{'Content-Type' => 'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
+    out = [x.class,x.message,x.backtrace].join "\n"
+    puts out
+    [500,{'Content-Type' => 'text/plain'},[out]]
   end
 
   def R.parseQS qs
