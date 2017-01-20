@@ -116,11 +116,6 @@ class R
     yield uri, Size, size
   end
 
-  def triplrUriList
-    open(pathPOSIX).readlines.map{|l|
-      yield l.chomp, Type, R[Resource] }
-  end
-
   def fileResources
     r = [] # docs
     r.push self if e

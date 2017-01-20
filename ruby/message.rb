@@ -145,13 +145,13 @@ formats = {
         a.set_attribute('href',base + u) if u.match /^\//}
       yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
   end
-  def tw g
+
+  def tw
     node.readlines.shuffle.each_slice(22){|s|
-      u = 'https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
-      u.R.twGET g}
+      R['https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].twGET}
   end
 
-  def twGET g; triplrCache :triplrTwitter, g, nil, IndexFeedJSON end
+  def twGET; triplrCache :triplrTwitter, nil, IndexFeed end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     threads = {}
@@ -346,7 +346,7 @@ formats = {
       end }
   end
 
-  IndexMail = ->doc,graph,host {
+  IndexMail = ->doc,graph {
     graph.map{|u,r|
       addresses = []
       r[Creator].do{|from|addresses.concat from}
@@ -362,18 +362,17 @@ formats = {
             doc.ln target }}}}} # link message into index container
 
   def triplrMailMessage &f
-    triplrCache :triplrMail, host, [SIOC+'reply_of'], IndexMail, &f
+    triplrCache :triplrMail, [SIOC+'reply_of'], IndexMail, &f
   end
 
-  def getFeed h = 'localhost'
-    store :format => :feed, :hook => IndexFeedRDF, :hostname => h, :base_uri => uri
+  def getFeed
+    store :format => :feed, :base_uri => uri
     self
   end
 
-  def getFeeds h='localhost'
-    uris.map{|u|
-      u.R.getFeed h}
-    nil
+  def getFeeds
+    uris.map &:getFeed
+    self
   end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
@@ -576,21 +575,14 @@ formats = {
 
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
 
-  IndexFeedJSON = -> doc, graph, host {
+  IndexFeed = -> doc, graph {
     graph.map{|u,r|
       r[Date].do{|t|
         t = t[0].gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
         b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
-        puts "< http://#{host}/#{t}#{b[0..-2]}"
-        doc.ln R["//#{host}/#{t}#{b}e"]}} # link to timeline
+        puts "< http://localhost/#{t}#{b[0..-2]}"
+        doc.ln R["//localhost/#{t}#{b}e"]}} # link to timeline
     doc}
-
-  IndexFeedRDF = -> doc, graph, host {
-    graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
-      time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # trim normalized timezones
-      base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-      puts "< http://#{host}/#{time}#{base[0..-2]}"
-      doc.ln R["//#{host}/#{time}#{base}ttl"]}} # link
 
   Render['application/atom+xml'] = -> d,e {
     H(['<?xml version="1.0" encoding="utf-8"?>',

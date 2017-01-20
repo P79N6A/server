@@ -74,8 +74,13 @@ class R
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
   end
 
+  def triplrUriList
+    open(pathPOSIX).readlines.map{|l|
+      yield l.chomp, Type, R[Resource] }
+  end
+
   def uris
-    graph.keys.select{|u|u.match /^http/}
+    graph.keys.select{|u|u.match /^http/}.map &:R
   end
 
   def triplrMarkdown

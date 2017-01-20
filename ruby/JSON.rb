@@ -48,33 +48,28 @@ class R
     self
   end
 
-  # streaming triples machine-in-the-middle - populates local-store
-  def triplrCache triplr, host = 'localhost', properties = nil, indexer = nil, &b
+  # copy triples in stream to local store
+  def triplrCache triplr, p = nil, indexer = nil, &b
     graph = fromStream({},triplr) # collect triples into resource-groups
-    R.store graph, host, properties, indexer # cache
-    graph.triples &b if b # emit triples
-    self
-  end
-
-  # fetch resource and store locally - JSON version
-  def R.store graph, host = 'localhost', p = nil, indexer = nil
     docs = {} # document bin
     graph.map{|u,r| # each resource
      (e = u.R                 # resource URI
       doc = e.jsonDoc         # doc URI
       doc.e ||                # cache hit ||
-      (docs[doc.uri] ||= {}   # doc graph
+      (docs[doc.uri] ||= {}   #  init doc graph
        docs[doc.uri][u] = r   # resource -> graph
        p && p.map{|p|         # index predicates
          r[p].do{|v|v.map{|o| # objects exist?
              e.index p,o}}})) if u} # index property
-    docs.map{|d,g| # each doc
+    docs.map{|d,g| # each doc-URI
       d = d.R
-      d.w g, true                   # write
-      indexer[d,g,host] if indexer} # bespoke handler
+      d.w g, true # write doc
+      indexer[d,g] if indexer}
+    graph.triples &b if b # emit triples
+    self
   end
 
-  # fetch resource and store locally - RDF version
+  # copy remote resource to local store
   def store options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -84,7 +79,11 @@ class R
           doc.dir.mk
           file = doc.pathPOSIX
           RDF::Writer.open(file){|f|f << graph}
-          options[:hook][doc,graph,options[:hostname]] if options[:hook]
+          graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # query for timestamp
+            time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time to pathname
+            base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+            puts "< http://localhost/#{time}#{base[0..-2]}"
+            doc.ln R["//localhost/#{time}#{base}ttl"]} # link to timeline
         end
       end}
     g
