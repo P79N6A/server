@@ -64,7 +64,7 @@ class R
     docs.map{|d,g| # each doc
       doc = d.R
       doc.w g, true # write doc
-      indexDate = !doc.path.tail.match?(/^(address|\d{4})\//) # mail and date-dirs already on timeline
+      indexDate = !doc.path.tail.match(/^(address|\d{4})\//) # mail and date-dirs already on timeline
       g.map{|u,r| # inspect resources
         r[Date].do{|t| # date attribute
           t = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
