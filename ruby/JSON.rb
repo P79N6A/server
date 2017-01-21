@@ -36,7 +36,7 @@ class R
     graph
   end
 
-  def pack # consolidate native docs in a dir to a single file
+  def pack # consolidate JSON docs to single file
     return unless directory?
     res = (child '*.e').glob
     return unless res.size > 1
@@ -48,7 +48,7 @@ class R
     self
   end
 
-  # copy triples in stream to local store
+  # write tripleStream to local-store
   def triplrWrite triplr, &b
     graph = fromStream({},triplr) # stream triples into Hash-graph
     docs = {}
@@ -76,7 +76,7 @@ class R
     self
   end
 
-  # copy remote resource to local store
+  # copy remote resource to local-store
   def store options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -99,7 +99,6 @@ class R
     g
   end
 
-  # native-JSON-format RDF interface
   module Format
 
     class Format < RDF::Format
