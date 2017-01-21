@@ -58,7 +58,7 @@ td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000}
 div.sourcecode {background-color:#fff;color:#000;padding:.5em}
-div.mail {max-width:98ex;margin:.3em}
+div.mail {max-width:98ex;padding:.3em;margin:.3em}
 div.mail a.title {background-color: #fff;color:#000}
 img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}

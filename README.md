@@ -10,11 +10,11 @@ git clone https://gitlab.com/ix/pw.git # get source
 
 cd pw/ruby                             # goto source-directory
 bundle install                         # install ruby dependencies
-ruby install                           # install this package
+ruby install                           # install this
 ```
 
-* files go in domain/$HOSTNAME/path/to/file or path/to/file
-* link or copy [js/](js/) and [css/](css/) to [server-root](.)
+* files in domain/$HOSTNAME/path/to/file or path/to/file
+* link [js/](js/) and [css/](css/) to [server-root](.)
 
 ## RUN
 ``` sh
