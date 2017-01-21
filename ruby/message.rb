@@ -152,7 +152,7 @@ formats = {
   end
 
   def twGET
-    triplrCache :triplrTwitter
+    triplrWrite :triplrTwitter
   end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
@@ -349,7 +349,7 @@ formats = {
   end
 
   def triplrMailMessage &f
-    triplrCache :triplrMail, &f
+    triplrWrite :triplrMail, &f
   end
 
   def getFeed

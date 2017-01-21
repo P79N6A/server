@@ -49,7 +49,7 @@ class R
   end
 
   # copy triples in stream to local store
-  def triplrCache triplr, &b
+  def triplrWrite triplr, &b
     graph = fromStream({},triplr) # stream triples into Hash-graph
     docs = {}
     rel = SIOC+'reply_of'
