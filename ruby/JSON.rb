@@ -39,7 +39,7 @@ class R
   def pack # consolidate native docs in a dir to a single file
     return unless directory?
     res = (child '*.e').glob
-    return unless res.size > 0
+    return unless res.size > 1
     graph = {}
     res.map{|r|
       r.nodeToGraph graph
