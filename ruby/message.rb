@@ -151,7 +151,9 @@ formats = {
       R['https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].twGET}
   end
 
-  def twGET; triplrCache :triplrTwitter, nil, IndexFeed end
+  def twGET
+    triplrCache :triplrTwitter
+  end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     threads = {}
@@ -346,23 +348,8 @@ formats = {
       end }
   end
 
-  IndexMail = ->doc,graph {
-    graph.map{|u,r|
-      addresses = []
-      r[Creator].do{|from|addresses.concat from}
-      r[To].do{|to|       addresses.concat to}
-      r[Date].do{|date|
-        r[Title].do{|title|
-          name = title[0].gsub(/\W+/,' ').strip
-          month = date[0][0..7].gsub '-','/'
-          addresses.map{|address|
-            container = address.R.dirname + '/' + month
-            target = R[container + name + '.e']
-            target = R[container + name + ' ' + rand.to_s.h[0..2] + '.e'] if target.e
-            doc.ln target }}}}} # link message into index container
-
   def triplrMailMessage &f
-    triplrCache :triplrMail, [SIOC+'reply_of'], IndexMail, &f
+    triplrCache :triplrMail, &f
   end
 
   def getFeed
@@ -574,15 +561,6 @@ formats = {
   end
 
   FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
-
-  IndexFeed = -> doc, graph {
-    graph.map{|u,r|
-      r[Date].do{|t|
-        t = t[0].gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
-        b = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
-        puts "< http://localhost/#{t}#{b[0..-2]}"
-        doc.ln R["//localhost/#{t}#{b}e"]}} # link to timeline
-    doc}
 
   Render['application/atom+xml'] = -> d,e {
     H(['<?xml version="1.0" encoding="utf-8"?>',
