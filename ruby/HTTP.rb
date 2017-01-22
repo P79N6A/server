@@ -66,16 +66,6 @@ class R
     [404,{'Content-Type' => format},[Render[format].do{|fn|fn[graph,self]} || graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
   end
 
-  def aclURI
-    if basename.index('.acl') == 0
-      self
-    elsif hierPart == '/'
-      child '.acl'
-    else
-      dir.child '.acl.' + basename
-    end
-  end
-
   def GET
     if file? # host-specific path
       fileGET

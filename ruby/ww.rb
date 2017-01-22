@@ -155,7 +155,6 @@ class R < RDF::URI
 
   # lambda-tables for customization
   GET = {}
-  GET['/cache'] = GET['/domain'] = -> e {e.notfound} # internal storage paths, can't GET directly
   FileSet = {}
   Abstract = {} # summarize
   Render = {}   # MIME renderer
