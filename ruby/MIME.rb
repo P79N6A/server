@@ -157,17 +157,16 @@ class R
         path = i
       else
         stat = i.node.stat
-        path = R['/cache/thumbnail/' + (R.dive [stat.ino,stat.mtime].h) + '.png']
-        if !path.e
-          path.dir.mk
+        thmb = i.dir.child '.' + i.basename + '.png'
+        if !thmb.e
           if i.mime.match(/^video/)
-            `ffmpegthumbnailer -s 360 -i #{i.sh} -o #{path.sh}`
+            `ffmpegthumbnailer -s 360 -i #{i.sh} -o #{thmb.sh}`
           else
-            `gm convert #{i.ext.match(/^jpg/) ? 'jpg:' : ''}#{i.sh} -thumbnail "360x360" #{path.sh}`
+            `gm convert #{i.ext.match(/^jpg/) ? 'jpg:' : ''}#{i.sh} -thumbnail "360x360" #{thmb.sh}`
           end
         end
       end
-      path.e ? path.setEnv(e.env).fileGET : e.notfound
+      thmb.e ? thmb.setEnv(e.env).fileGET : e.notfound
     else
       e.notfound
     end}
