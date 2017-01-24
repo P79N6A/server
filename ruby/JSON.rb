@@ -14,12 +14,12 @@ class R
 
   # URI -> Graph
   def graph graph = {}
-    fileResources.map{|d|d.nodeToGraph graph}
+    fileResources.map{|d|d.loadGraph graph}
     graph
   end
 
   # file -> Graph
-  def nodeToGraph graph
+  def loadGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f|
@@ -42,7 +42,7 @@ class R
     return unless res.size > 1
     graph = {}
     res.map{|r|
-      r.nodeToGraph graph
+      r.loadGraph graph
       r.delete}
     child('index.e').w graph, true
     self

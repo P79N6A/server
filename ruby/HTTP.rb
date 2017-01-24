@@ -113,7 +113,7 @@ class R
 
         loadGraph = -> {
           graph = {}
-          set.map{|r|r.nodeToGraph graph}
+          set.map{|r|r.loadGraph graph}
           unless q.has_key? 'full'
             Summarize[graph,self] if containerURI || q.has_key?('abbr')
             Grep[graph,self] if setF == 'grep'

@@ -584,7 +584,7 @@ formats = {
     e.env[:Response].update({'Content-Type' => 'application/atom+xml', 'ETag' => set.sort.h})
     e.condResponse -> {
       graph = {}
-      set.map{|r|r.nodeToGraph graph}
+      set.map{|r|r.loadGraph graph}
       Render['application/atom+xml'][graph,e]}}
 
 end
