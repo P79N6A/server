@@ -2,7 +2,7 @@
 
 def H x # Ruby values to HTML
   case x
-  when Hash # Hash as DOM-node
+  when Hash
     void = [:img, :input, :link, :meta].member? x[:_]
     '<' + (x[:_] || 'div').to_s +                        # name
       (x.keys - [:_,:c]).map{|a|                         # attribute name
@@ -12,12 +12,8 @@ def H x # Ruby values to HTML
          '<'=>'%3C'}[c]||c}.join + "'"}.join +
       (void ? '/' : '') + '>' + (H x[:c]) +              # children or void
       (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # closer
-  when R # resource
+  when R
     H x.href
-  when TrueClass
-    '<input type="checkbox" title="True" checked="checked"/>'
-  when FalseClass
-    '<input type="checkbox" title="True"/>'
   when String
     x
   when Symbol
@@ -30,16 +26,7 @@ def H x # Ruby values to HTML
     x.to_s
   when NilClass
     ''
-  when StringIO
-    'StringIO'
-  when IO
-    'IO'
-  when Method
-    'function'
-  when EventMachine::DefaultDeferrable
-    'event'
   else
-    puts ["undefined HTML-serialization for",x.class].join ' '
     x.to_s.noHTML
   end
 end
