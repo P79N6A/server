@@ -15,7 +15,7 @@ end
 
 class R
 
-  AllowMethods = %w{HEAD GET POST}
+  AllowMethods = %w{HEAD GET}
   Allow = AllowMethods.join ', '
 
   def HEAD
