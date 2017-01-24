@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-def H x # Ruby values to HTML
+def H x # Ruby to HTML
   case x
   when Hash
     void = [:img, :input, :link, :meta].member? x[:_]

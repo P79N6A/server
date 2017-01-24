@@ -54,14 +54,6 @@ class R
     [500,{'Content-Type' => 'text/plain'},[out]]
   end
 
-  def R.parseQS qs
-    h = {}
-    qs.split(/&/).map{|e|
-      k, v = e.split(/=/,2).map{|x| CGI.unescape x }
-      h[(k||'').downcase] = v }
-    h
-  end
-
   def notfound
     [404,{'Content-Type' => format},[Render[format].do{|fn|fn[graph,self]} || graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
   end
@@ -207,17 +199,14 @@ class R
   def ln_s t; ln t, :symlink end
 
   def accept
-    @accept ||= acceptParse
-  end
-
-  def acceptParse k=''
-    d={}
-    env['HTTP_ACCEPT'+k].do{|k|
-      (k.split /,/).map{|e| # each pair
-        f,q = e.split /;/   # split MIME from q value
-        i = q && q.split(/=/)[1].to_f || 1.0 # q || default
-        d[i] ||= []; d[i].push f.strip}} # append
-    d
+    @accept ||= (
+      d={}
+      env['HTTP_ACCEPT'].do{|k|
+        (k.split /,/).map{|e| # each pair
+          f,q = e.split /;/   # split MIME from q value
+          i = q && q.split(/=/)[1].to_f || 1.0 # q || default
+          d[i] ||= []; d[i].push f.strip}} # append
+      d)
   end
 
   def selector
@@ -228,9 +217,13 @@ class R
   def q # memoize key/vals
     @q ||=
       (if q = env['QUERY_STRING']
-         R.parseQS q
-       else
-         {}
+       h = {}
+       q.split(/&/).map{|e|
+         k, v = e.split(/=/,2).map{|x|CGI.unescape x}
+         h[(k||'').downcase] = v}
+       h
+      else
+        {}
        end)
   end
 
