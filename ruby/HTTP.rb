@@ -220,23 +220,6 @@ class R
     d
   end
 
-  def linkHeader
-    lh = {}
-    env['HTTP_LINK'].do{|links|
-      links.split(', ').map{|link|
-        uri,rel = nil
-        link.split(';').map{|a|
-          a = a.strip
-          if a[0] == '<' && a[-1] == '>'
-            uri = a[1..-2]
-          else
-            rel = a.match(/\s*rel="?([^"]+)"?/)[1]
-          end
-        }
-        lh[rel] = uri }}
-    lh
-  end
-
   def selector
     @idCount ||= 0
     'O' + (@idCount += 1).to_s
@@ -268,8 +251,6 @@ class R
   end
 
   end
-
-
 
 class Hash
   def qs # serialize to query-string
