@@ -147,14 +147,14 @@ class R
 
   Render['application/json'] = -> graph,_ { graph.to_json }
 
-  # return just RDF files of whitelisted formats, transcode non-RDF as necessary
+  # return a RDF-doc reference - cached transcode of non-RDF to format readable by RDF or our JSON library
   def justRDF pass = RDFsuffixes
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
-      self # unchanged
+      self
     else
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # cache URI
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache
-      doc # mapped doc
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # doc URI
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
+      doc
     end
   end
 
