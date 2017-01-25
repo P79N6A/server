@@ -55,11 +55,9 @@ end
 
 class R
   # HTTP URIs in plain-text
-  #  ) only matches with an opener
-  # ,. only match mid-URI
+  #  ) only matches with an opening (
+  # ,. only match mid-URI as a URI seems to more often be used as a word in a sentence than end with those chars
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
-
-  def R.pencil; ['&#x270e;','&#x270f;','&#x2710;'][rand(3)] end
 
   def triplrHTMLfragment
     yield uri, Content, r
