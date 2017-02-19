@@ -1,20 +1,22 @@
-a webserver
+a webserver to "webize" a filesystem's content via on-the-fly conversion to RDF
 
 ## Install
 ``` sh
-                                       # install non-ruby dependencies
-apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments # Debian
-xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler # voidlinux
+# Debian                               # non-ruby dependencies
+apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
 
-git clone https://gitlab.com/ix/pw.git # get source
+# voidlinux
+xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
+
+git clone https://gitlab.com/ix/pw.git # source-code
 
 cd pw/ruby                             # goto source-directory
-bundle install                         # install ruby dependencies
-ruby install                           # install this
+bundle install                         # ruby dependencies
+ruby install                           # this library
 ```
 
-* files in domain/$HOSTNAME/path/to/file or path/to/file
-* link [js/](js/) and [css/](css/) to [server-root](.)
+* rewriteable and static files in domain/$HOSTNAME/path/to/file. static files may reside in path/to/file for access all hostnames
+* [js/](js/) and [css/](css/) should be linked or copied to the working-directory of the server
 
 ## RUN
 ``` sh
