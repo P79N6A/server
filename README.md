@@ -1,4 +1,4 @@
-a webserver to "webize" a filesystem's content via on-the-fly conversion to RDF
+a webserver to "webize" a filesystem's content via on-the-fly conversion to [RDF](https://www.w3.org/RDF/)
 
 ## Install
 ``` sh
