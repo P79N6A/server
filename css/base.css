@@ -66,5 +66,3 @@ img.preview {max-height:14em;max-width:100%}
 .timegraph, .timegraph > svg {float: left;overflow:visible;width:300px;height:512px}
 .link {fill: none;stroke: #333;stroke-width:.18em}
 rect {fill: #ccc;width:.3em;height:.3em;ry:.3em}
-dt {float: left;min-width:9em;white-space: nowrap;margin: .15em;clear:left;text-align: right}
-dd {margin-left:9em}
