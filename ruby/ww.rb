@@ -85,6 +85,7 @@ class R < RDF::URI
   FOAF  = "http://xmlns.com/foaf/0.1/"
   DC    = Purl + 'dc/terms/'
   SIOC  = 'http://rdfs.org/sioc/ns#'
+  Schema = 'http://schema.org/'
   Sound    = Purl + 'ontology/mo/Sound'
   Image    = DC + 'Image'
   RSS      = Purl + 'rss/1.0/'

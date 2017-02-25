@@ -203,6 +203,10 @@ class R
                      lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                      e.env[:label][lbl] = true
                      [{_: :a, href: this.uri, name: lbl, c: label},' ']}
+                 when Schema+'logo'
+                   l[k].justArray.map{|l|
+                     {_: :img, src: l.uri} if l.respond_to?(:uri)
+                   }
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
                      name = v.R.fragment||''
