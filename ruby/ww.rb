@@ -149,6 +149,7 @@ class R < RDF::URI
     SIOC+'reply_to' => :reply,
     Stat+'File' => :file,
     Stat+'CompressedFile' => :archive,
+    "http://rdfs.org/resume-rdf/cv.rdfs#Entry" => :hands,
   }
 
   Prefixes = {:ldp => RDF::URI(LDP),:rdf => RDF::URI(RDFns),:rdfs => RDF::URI(RDFs),:stat => RDF::URI(Stat)}
