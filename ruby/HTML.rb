@@ -165,8 +165,9 @@ class R
                      href = CGI.escapeHTML(l.uri||'')
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
-                     [(title ? {_: :a,    class: :title, href: href, c: CGI.escapeHTML(title)}    : ''),' ', # explicit Title
-                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : (l[Content] ? '' : {_: :a, class: :uri, href: href, c: name})), # URI detail
+                     [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ', # title
+                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}), # URI
+                      (title ? '<br>' : ' '),
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       (['<br>',{_: :a, href: this.uri,
                         c: {_: :img, class: :thumb,
@@ -179,7 +180,7 @@ class R
                         big = links.size > 8
                         links[0..32].map{|link|
                           id = link.R.uri
-                          [(big ? ' ' : '<br>'),{_: :a, class: :link, href: id, c: (CGI.escapeHTML id)}.update(big ? {} : {id: e.selector})]}},
+                          [{_: :a, class: :link, href: id, c: (CGI.escapeHTML id)}.update(big ? {} : {id: e.selector}),(big ? ' ' : '<br>')]}},
                      ]
                    end
                  when Type
