@@ -166,7 +166,7 @@ class R
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
                      [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ', # title
-                      (title ? {_: :span, class: :name, c: {_: :font, color: '#777777', c: name}} : {_: :a, class: :uri, href: href, c: name}), # URI
+                      {_: title ? :span : :a, class: :uri, href: href, c: name}, # URI
                       (title ? '<br>' : ' '),
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       (['<br>',{_: :a, href: this.uri,

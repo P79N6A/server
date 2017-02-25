@@ -10,7 +10,7 @@ a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.
 a[rel="next"] {float: right}
 a.weak {color:#333}
 a.page {font-weight: normal}
-a.uri, span.name {font-weight:normal;color:#bbb}
+.uri {font-weight:normal;color:#bbb;float: right}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comment:before { content:"\f0e5"; font-family: icons; }
 a.comments:before { content:"\f086"; font-family: icons; }
