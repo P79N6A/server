@@ -33,6 +33,7 @@ a.hands:before { content:"\f2b5"; font-family: icons; }
 a.code:before { content:"\f126"; font-family: icons; }
 a.cubes:before { content:"\f1b3"; font-family: icons; }
 a.wrench:before { content:"\f0ad"; font-family: icons; }
+a.location:before { content:"\f041"; font-family: icons; }
 a.pencil:before { content:"\f040"; font-family: icons; }
 a.exchange:before { content:"\f0ec"; font-family: icons; }
 a.person:before { content:"\f007"; font-family: icons; }
@@ -54,9 +55,10 @@ table, div.mail {display:inline-block;}
 div, td {vertical-align:top}
 td {border-color: #555;border-width: 0 0 .1em 0;border-style: solid}
 th a {font-size:1.5em;font-weight: normal}
-th span.label {font-size:.6em;color:#ddd}
+th span.label {font-size:.6em;color:#ddd;margin-left:.18em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
+td[property="http://schema.org/logo"] {text-align: center}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000}
 div.sourcecode {background-color:#fff;color:#000;padding:.5em}
 div.mail {max-width:98ex;padding:.3em;margin:.3em}

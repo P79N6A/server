@@ -131,6 +131,7 @@ class R < RDF::URI
     RSS+'link' => :link,
     RSS+'guid' => :id,
     RSS+'comments' => :comments,
+    Schema+'location' => :location,
     SIOC+'BlogPost' => :pencil,
     SIOC+'Discussion' => :comments,
     SIOC+'InstantMessage' => :comment,
