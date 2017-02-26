@@ -59,13 +59,14 @@ th span.label {font-size:.6em;color:#ddd;margin-left:.18em}
 td[property="http://purl.org/dc/terms/date"] {white-space:nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] {text-align: right}
 td[property="http://schema.org/logo"] {text-align: center}
+td[property="http://schema.org/location"] {white-space: nowrap}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000}
 div.sourcecode {background-color:#fff;color:#000;padding:.5em}
 div.mail {max-width:98ex;padding:.3em;margin:.3em}
 div.mail a.title {background-color: #fff;color:#000}
 img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
-img.logo {max-height:4em}
+img.logo {max-height:100%}
 :target a, :target, .selectable:target td.selected {background-color:#fff;color:#000}
 .timegraph, .timegraph > svg {float: left;overflow:visible;width:300px;height:512px}
 .link {fill: none;stroke: #333;stroke-width:.18em}
