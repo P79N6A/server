@@ -82,7 +82,9 @@ class R
   end
 
   def triplrMarkdown
-    yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
+    s = stripDoc.uri
+    yield s, Type, R[SIOC+'MarkdownContent']
+    yield s, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H(H.css '/css/code')
   end
 
   def triplrOrg

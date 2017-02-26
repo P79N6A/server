@@ -1,7 +1,7 @@
 # coding: utf-8
 class R
 
-  View[SIOC+'BlogPost'] =  View[SIOC+'BoardPost'] = View[SIOC+'MailMessage'] = -> d,re {
+  View[SIOC+'MarkdownContent'] = View[SIOC+'BlogPost'] =  View[SIOC+'BoardPost'] = View[SIOC+'MailMessage'] = -> d,re {
     e = re.env
     e[:arcs] = []
     re.q['a'] ||= (e[:thread] ? Creator : 'sioc:addressed_to')
