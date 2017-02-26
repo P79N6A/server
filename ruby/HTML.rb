@@ -118,6 +118,7 @@ class R
   TabularView = -> g, e, show_head = true, show_id = true {
     sort = (e.q['sort']||'dc:date').expand
     direction = e.q.has_key?('ascending') ? :id : :reverse
+    g[e.uri].do{|t|t.delete Size;t.delete Date}
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Label, Type, *(keys - [Mtime,Label,Type,Title,Image,Content,DC+'link'])]
     {_: :table,
@@ -184,7 +185,7 @@ class R
                      ]
                    end
                  when Type
-                   thisDir ? '' : l[Type].justArray.map{|t|
+                   l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
                      {_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
