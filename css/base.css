@@ -65,7 +65,7 @@ div.mail {max-width:98ex;padding:.3em;margin:.3em}
 div.mail a.title {background-color: #fff;color:#000}
 img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
-img.logo {max-height:4.2em}
+img.logo {max-height:5em}
 :target a, :target, .selectable:target td.selected {background-color:#fff;color:#000}
 .timegraph, .timegraph > svg {float: left;overflow:visible;width:300px;height:512px}
 .link {fill: none;stroke: #333;stroke-width:.18em}

@@ -109,7 +109,7 @@ class R
                     c = '#%06x' % (rand 16777216)
                     "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'),
-                 (SearchBox[re] if dir),
+#                 (SearchBox[re] if dir),
                  (nextPage unless re.q.has_key? 'abbr'),
                  '<br clear=all>',
                  expanded,
