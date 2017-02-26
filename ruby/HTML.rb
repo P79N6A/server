@@ -105,7 +105,8 @@ class R
                  (prevPage && prevPage.merge({id: :prevpage})),
                  (nextPage && nextPage.merge({id: :nextpage})),
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
-                 (TabularView[graph,re] if graph.keys.size > 0), groups.map{|view,graph|view[graph,re]},
+                 groups.map{|view,graph|view[graph,re]},
+                 (TabularView[graph,re] if graph.keys.size > 0),
                  {_: :style, c: e[:label].map{|name,_|
                     c = '#%06x' % (rand 16777216)
                     "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
