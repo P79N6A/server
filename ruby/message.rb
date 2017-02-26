@@ -137,10 +137,9 @@ formats = {
     nokogiri.css('div.tweet > div.content').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
       yield s, Type, R[SIOC+'Tweet']
+      yield s, Label, t.css('.fullname')[0].inner_text
       yield s, SIOC+'channel', 'twitter'
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
-
-      yield s, Label, t.css('.fullname')[0].inner_text
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       content = t.css('.tweet-text')[0]
       content.css('a').map{|a| # bind hostname to paths
@@ -190,7 +189,7 @@ formats = {
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         tags = [group] if tags.empty?
-        thread = {Type => R[Post], 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Label => tags, Image => post[Image], Content => e.q['set']=='grep' ? post[Content] : []}
+        thread = {Type => R[Post], Label => tags, 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Image => post[Image], Content => e.q['set']=='grep' ? post[Content] : []}
         thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
         graph[thread.uri] = thread }}}
 
