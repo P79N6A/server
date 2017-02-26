@@ -48,7 +48,7 @@ a.openenvelope:before { content:"\f2b6"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
-a.link:before { content:"\f0c1"; font-family: icons; color: #ccf }
+a.link:before { content:"\f08e"; font-family: icons; color: #ccf; margin: 0 .14em 0 .2em }
 h3.title {background-color:#fff;color:#000;margin:0}
 table, div.mail {display:inline-block;}
 div, td {vertical-align:top}
