@@ -204,8 +204,11 @@ class R
                      e.env[:label][lbl] = true
                      [{_: :a, href: this.uri, name: lbl, c: label},' ']}
                  when Schema+'logo'
-                   l[k].justArray.map{|l|
-                     {_: :img, src: l.uri} if l.respond_to?(:uri)
+                   l[k].justArray.map{|logo|
+                     if logo.respond_to?(:uri)
+                       {_: :a, href: l[DC+'link'].justArray[0].do{|l|l.uri}||'#',
+                        c: {_: :img, class: :logo, src: logo.uri}}
+                     end
                    }
                  when SIOC+'has_creator'
                    l[k].justArray.map{|v|
