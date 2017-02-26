@@ -3,7 +3,8 @@ class R
   FileSet[Resource] = -> re {
     query = re.env['QUERY_STRING']
 
-    re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m| # day dirs
+    # traversal pointers for datetime dirs
+    re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
       qs = query && !query.empty? && ('?' + query) || ''
       date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
       slug = m[4] || ''
@@ -12,7 +13,7 @@ class R
         # next/prev hours
         np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
         pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
-        # wraparound to next/prev day
+        # wraparound on next/prev day
         if hour == 0
           pp = (date - 1).strftime('/%Y/%m/%d/23/')
         elsif hour >= 23
@@ -20,15 +21,17 @@ class R
         end
         nPath = np
         pPath = pp
-      else
+      else # day dirs
         pPath = (date-1).strftime('/%Y/%m/%d/')
         nPath = (date+1).strftime('/%Y/%m/%d/')
-        # persist slug across pages
+        # slug persists across pages - file or glob within date-dir
         pp = pPath + slug
         np = nPath + slug
       end
+      # empty hints for CSS dimming
       re.env[:nextEmpty] = true unless R['//' + re.host + nPath].e
       re.env[:prevEmpty] = true unless R['//' + re.host + pPath].e
+      # add to HTTP response headers
       re.env[:Links][:prev] = pp + qs
       re.env[:Links][:next] = np + qs}
 
