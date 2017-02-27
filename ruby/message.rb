@@ -354,13 +354,18 @@ formats = {
     triplrWrite :triplrMail, &f
   end
 
+  # GET Atom/RSS feed(s) unconditionally
   def getFeed
     store :format => :feed, :base_uri => uri
     self
   end
-
   def getFeeds
     uris.map &:getFeed
+    self
+  end
+  # fetch Atom/RSS feed(s) consulting local-cache for conditional GET
+  def fetchFeed
+    
     self
   end
 
