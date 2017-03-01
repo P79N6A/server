@@ -6,7 +6,7 @@ class R
     # traversal pointers for datetime dirs
     re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
       qs = query && !query.empty? && ('?' + query) || ''
-      date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}"
+      date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" rescue Time.now
       slug = m[4] || ''
       if slug.match(/^[0-2][0-9]\/?$/) # hour dirs
         hour = slug.to_i
