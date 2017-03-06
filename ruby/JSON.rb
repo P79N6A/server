@@ -48,8 +48,8 @@ class R
     self
   end
 
-  # write tripleStream to local-store
-  def triplrWrite triplr, &b
+  # pass-through tripleStream, writing new resources to local-store
+  def triplrStore triplr, &b
     graph = fromStream({},triplr) # stream triples into Hash-graph
     docs = {}
     rel = SIOC+'reply_of'

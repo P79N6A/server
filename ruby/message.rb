@@ -154,7 +154,7 @@ formats = {
   end
 
   def twGET
-    triplrWrite :triplrTwitter
+    triplrStore :triplrTwitter
   end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
@@ -351,7 +351,7 @@ formats = {
   end
 
   def triplrMailMessage &f
-    triplrWrite :triplrMail, &f
+    triplrStore :triplrMail, &f
   end
 
   # GET Atom/RSS feed(s) unconditionally
@@ -365,7 +365,13 @@ formats = {
   end
   # fetch Atom/RSS feed(s) consulting local-cache for conditional GET
   def fetchFeed
-    
+    open(uri){|feed|
+# feed.last_modified
+      etag = feed.meta['etag']
+      cache = R['/cache/'+uri.h]
+      cache.mk unless cache.e
+      puts cache
+    }
     self
   end
 
