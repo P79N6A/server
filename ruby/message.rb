@@ -373,29 +373,31 @@ formats = {
     cache = R['/cache/'+uri.h] # cache URI
     cache.mk unless cache.e    # init cache if empty
 
-    etag = cache.child 'etag'                 # cached etag URI
-    mtime = cache.child 'mtime'               # cached mtime URI
-    body = cache.child 'body.atom'            # cached body URI
+    etag = cache.child 'etag'                 # etag URI
+    mtime = cache.child 'mtime'               # mtime URI
+    body = cache.child 'body.atom'            # body URI
 
-    priorEtag = etag.e ? etag.r : rand.to_s.h                      # cached etag
-    priorMtime = (mtime.e ? mtime.r.to_time : Time.at(0)).httpdate # cached mtime
+    priorEtag = etag.e ? etag.r : rand.to_s.h                      # cache etag
+    priorMtime = (mtime.e ? mtime.r.to_time : Time.at(0)).httpdate # cache mtime
 
     begin # conditional GET
       open(uri, "If-None-Match" => priorEtag, "If-Modified-Since" => priorMtime ) do |response|
 
-        # full response, update cache
+        # response headers
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now
-        resp = response.read
-        mtime.w curMtime.iso8601
+        # write to cache
         etag.w curEtag if curEtag && !curEtag.empty?
+        mtime.w curMtime.iso8601
+
+        # body
+        resp = response.read
         if body.e && body.r.h == resp.h
-        # conditional parameters unheeded by server, got same body again
+        # body identical to cache (aka 304 unimplemented on remote)
         else
           # got new body but not necessarily new posts
           body.w resp
-          puts "news #{uri} #{curEtag} #{curMtime}"
-          # give body-reference to RDF parser for contained-post indexing
+          # give body-ref to RDF parser for post indexing
           ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
         end
       end
