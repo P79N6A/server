@@ -370,22 +370,27 @@ formats = {
     self
   end
   def fetchFeed
-    cache = R['/cache/'+uri.h]     # cache URI
-    cache.mk unless cache.e        # init cache if empty
-    etag = cache.child 'etag'      # cached etag URI
-    body = cache.child 'body.atom' # cached body URI
+    cache = R['/cache/'+uri.h] # cache URI
+    cache.mk unless cache.e    # init cache if empty
 
-    # conditional GET
-    begin
-      priorEtag = etag.e ? etag.r : rand.to_s.h
-      open(uri, "If-None-Match" => priorEtag) do |response|
+    etag = cache.child 'etag'                 # cached etag URI
+    mtime = cache.child 'mtime'               # cached mtime URI
+    body = cache.child 'body.atom'            # cached body URI
+
+    priorEtag = etag.e ? etag.r : rand.to_s.h                      # cached etag
+    priorMtime = (mtime.e ? mtime.r.to_time : Time.at(0)).httpdate # cached mtime
+
+    begin # conditional GET
+      open(uri, "If-None-Match" => priorEtag, "If-Modified-Since" => priorMtime ) do |response|
 
         # fresh response, update cache
         curEtag = response.meta['etag']
-        puts "news in #{uri} #{curEtag}"
-        body.w response.read # store body
-        etag.w curEtag       # store etag
-        # pass body reference to RDF library for post storage/indexing
+        curMtime = response.last_modified
+        mtime.w curMtime.iso8601 if curMtime
+        etag.w curEtag if curEtag && !curEtag.empty?
+        body.w response.read
+        puts "news #{uri} #{curEtag} #{curMtime}"
+        # pass cache-reference to RDF library for contained-post indexing
         ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
       end
 
@@ -394,6 +399,8 @@ formats = {
       puts error.message + ' ' + uri
     end
     self
+  rescue Exception => e
+    puts [uri, e.class, e.message].join " "
   end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
