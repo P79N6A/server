@@ -390,11 +390,12 @@ formats = {
         mtime.w curMtime.iso8601
         etag.w curEtag if curEtag && !curEtag.empty?
         if body.e && body.r.h == resp.h
-          puts "#{response.meta['server']} server at #{host} returned same body again"
+        # conditional parameters unheeded by server, got same body again
         else
-          puts "news #{uri} #{curEtag} #{curMtime}"
+          # got new body but not necessarily new posts
           body.w resp
-          # pass cache-ref to RDF library for contained-post indexing
+          puts "news #{uri} #{curEtag} #{curMtime}"
+          # give body-reference to RDF parser for contained-post indexing
           ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
         end
       end
