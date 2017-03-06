@@ -365,12 +365,15 @@ formats = {
   end
   # fetch Atom/RSS feed(s) consulting local-cache for conditional GET
   def fetchFeed
-    open(uri){|feed|
-# feed.last_modified
-      etag = feed.meta['etag']
-      cache = R['/cache/'+uri.h]
-      cache.mk unless cache.e
-      puts cache
+    cache = R['/cache/'+uri.h]    # cache URI
+    cache.mk unless cache.e       # init if empty
+    etag = cache.child 'etag'     # cached etag URI
+    body = cache.child 'body.ttl' # cached body URI
+
+    priorEtag = etag.e ? etag.r : rand.to_s.h
+    open(uri, "If-None-Match" => priorEtag){|response|
+      body.write response.read
+      etag.write response.meta['etag']
     }
     self
   end
