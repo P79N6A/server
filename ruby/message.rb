@@ -386,12 +386,17 @@ formats = {
         # fresh response, update cache
         curEtag = response.meta['etag']
         curMtime = response.last_modified
+        resp = response.read
         mtime.w curMtime.iso8601 if curMtime
         etag.w curEtag if curEtag && !curEtag.empty?
-        body.w response.read
-        puts "news #{uri} #{curEtag} #{curMtime}"
-        # pass cache-reference to RDF library for contained-post indexing
-        ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
+        if body.e && body.r.h == resp.h
+          puts "#{response.meta['server']} server at #{host} returned same body again"
+        else
+          puts "news #{uri} #{curEtag} #{curMtime}"
+          body.w resp
+          # pass cache-ref to RDF library for contained-post indexing
+          ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
+        end
       end
 
     # likely a 304 Not Modified response
