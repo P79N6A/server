@@ -354,17 +354,21 @@ formats = {
     triplrStore :triplrMail, &f
   end
 
-  # GET Atom/RSS feed(s) unconditionally
-  def getFeed
-    store :format => :feed, :base_uri => uri
-    self
-  end
+  # GET Atom/RSS feed(s) (uncached)
   def getFeeds
     uris.map &:getFeed
     self
   end
+  def getFeed
+    store :format => :feed, :base_uri => uri
+    self
+  end
 
-  # fetch Atom/RSS feed(s). cached w/ conditional GET
+  # fetch Atom/RSS feed(s) (cached)
+  def fetchFeeds
+    uris.map &:fetchFeed
+    self
+  end
   def fetchFeed
     cache = R['/cache/'+uri.h]     # cache URI
     cache.mk unless cache.e        # init cache if empty
@@ -375,13 +379,17 @@ formats = {
     begin
       priorEtag = etag.e ? etag.r : rand.to_s.h
       open(uri, "If-None-Match" => priorEtag) do |response|
-        # got new response, update cache
+
+        # fresh response, update cache
         curEtag = response.meta['etag']
         puts "news in #{uri} #{curEtag}"
-        body.w response.read
-        etag.w curEtag
+        body.w response.read # store body
+        etag.w curEtag       # store etag
+        # pass body reference to RDF library for post storage/indexing
         ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
       end
+
+    # likely a 304 Not Modified response
     rescue OpenURI::HTTPError => error
       puts error.message + ' ' + uri
     end
