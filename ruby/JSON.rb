@@ -76,7 +76,7 @@ class R
     self
   end
 
-  # copy remote resource to local-store
+  # import/index resource to local-store
   def store options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|

@@ -363,18 +363,28 @@ formats = {
     uris.map &:getFeed
     self
   end
-  # fetch Atom/RSS feed(s) consulting local-cache for conditional GET
-  def fetchFeed
-    cache = R['/cache/'+uri.h]    # cache URI
-    cache.mk unless cache.e       # init if empty
-    etag = cache.child 'etag'     # cached etag URI
-    body = cache.child 'body.ttl' # cached body URI
 
-    priorEtag = etag.e ? etag.r : rand.to_s.h
-    open(uri, "If-None-Match" => priorEtag){|response|
-      body.write response.read
-      etag.write response.meta['etag']
-    }
+  # fetch Atom/RSS feed(s). cached w/ conditional GET
+  def fetchFeed
+    cache = R['/cache/'+uri.h]     # cache URI
+    cache.mk unless cache.e        # init cache if empty
+    etag = cache.child 'etag'      # cached etag URI
+    body = cache.child 'body.atom' # cached body URI
+
+    # conditional GET
+    begin
+      priorEtag = etag.e ? etag.r : rand.to_s.h
+      open(uri, "If-None-Match" => priorEtag) do |response|
+        # got new response, update cache
+        curEtag = response.meta['etag']
+        puts "news in #{uri} #{curEtag}"
+        body.w response.read
+        etag.w curEtag
+        ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
+      end
+    rescue OpenURI::HTTPError => error
+      puts error.message + ' ' + uri
+    end
     self
   end
 
