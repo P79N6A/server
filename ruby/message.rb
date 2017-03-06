@@ -383,11 +383,11 @@ formats = {
     begin # conditional GET
       open(uri, "If-None-Match" => priorEtag, "If-Modified-Since" => priorMtime ) do |response|
 
-        # fresh response, update cache
+        # full response, update cache
         curEtag = response.meta['etag']
-        curMtime = response.last_modified
+        curMtime = response.last_modified || Time.now
         resp = response.read
-        mtime.w curMtime.iso8601 if curMtime
+        mtime.w curMtime.iso8601
         etag.w curEtag if curEtag && !curEtag.empty?
         if body.e && body.r.h == resp.h
           puts "#{response.meta['server']} server at #{host} returned same body again"
@@ -401,7 +401,7 @@ formats = {
 
     # likely a 304 Not Modified response
     rescue OpenURI::HTTPError => error
-      puts error.message + ' ' + uri
+#      puts error.message + ' ' + uri
     end
     self
   rescue Exception => e
