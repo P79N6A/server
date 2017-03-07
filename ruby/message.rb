@@ -391,7 +391,7 @@ formats = {
         # read response body
         resp = response.read
         if body.e && body.r.h == resp.h
-        # body cached already
+        # body cached already, 304 likely unimplemented or broken on remote
         else
           # update cached body
           body.w resp
@@ -402,7 +402,7 @@ formats = {
 
     # handle 304 Not Modified, thrown as HTTPError
     rescue OpenURI::HTTPError => error
-      print error.message + ': ' + uri + ' . '
+      print error.message
     end
     self
   rescue Exception => e
