@@ -89,7 +89,7 @@ class R
           graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # query for timestamp
             time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time to pathname
             base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-            puts "< http://localhost/#{time}#{base[0..-2]}"
+            print "+ http://localhost/#{time}#{base[0..-2]} "
             doc.ln R["//localhost/#{time}#{base}ttl"]} # link to timeline
         end
       end}

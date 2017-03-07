@@ -371,40 +371,38 @@ formats = {
   end
   def fetchFeed
     cache = R['/cache/'+uri.h] # cache URI
-    cache.mk unless cache.e    # init cache if empty
+    etag = cache.child 'etag'      # cached etag URI
+    mtime = cache.child 'mtime'    # cached mtime URI
+    body = cache.child 'body.atom' # cached body URI
 
-    etag = cache.child 'etag'                 # etag URI
-    mtime = cache.child 'mtime'               # mtime URI
-    body = cache.child 'body.atom'            # body URI
-
-    priorEtag = etag.e ? etag.r : rand.to_s.h                      # cache etag
-    priorMtime = (mtime.e ? mtime.r.to_time : Time.at(0)).httpdate # cache mtime
+    priorEtag = etag.e ? etag.r : rand.to_s.h           # read cached etag
+    priorMtime = mtime.e ? mtime.r.to_time : Time.at(0) # read cached mtime
 
     begin # conditional GET
-      open(uri, "If-None-Match" => priorEtag, "If-Modified-Since" => priorMtime ) do |response|
+      open(uri, "If-None-Match" => priorEtag, "If-Modified-Since" => priorMtime.httpdate ) do |response|
 
-        # response headers
+        # read response headers
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now
-        # write to cache
-        etag.w curEtag if curEtag && !curEtag.empty?
-        mtime.w curMtime.iso8601
+        # update cached etag and mtime
+        etag.w curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
+        mtime.w curMtime.iso8601 if curMtime != priorMtime
 
-        # body
+        # read response body
         resp = response.read
         if body.e && body.r.h == resp.h
-        # body identical to cache (aka 304 unimplemented on remote)
+        # body cached already
         else
-          # got new body but not necessarily new posts
+          # update cached body
           body.w resp
-          # give body-ref to RDF parser for post indexing
+          # pass body-ref to RDF parser for post indexing
           ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
         end
       end
 
-    # likely a 304 Not Modified response
+    # handle 304 Not Modified, thrown as HTTPError
     rescue OpenURI::HTTPError => error
-#      puts error.message + ' ' + uri
+      print error.message + ': ' + uri + ' . '
     end
     self
   rescue Exception => e
