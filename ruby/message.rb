@@ -384,14 +384,14 @@ formats = {
         # read response headers
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now rescue Time.now
-        # update cached etag and mtime
+        # update cached headers
         etag.w curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
         mtime.w curMtime.iso8601 if curMtime != priorMtime
 
         # read response body
         resp = response.read
         if body.e && body.r.h == resp.h
-        # body cached already, 304 likely unimplemented or broken on remote
+        # body cached already, 304 not implemented on remote
         else
           # update cached body
           body.w resp
@@ -400,9 +400,9 @@ formats = {
         end
       end
 
-    # handle 304 Not Modified, thrown as HTTPError
+    # handle 304 Not Modified thrown as HTTPError
     rescue OpenURI::HTTPError => error
-      print error.message
+      print error.message + ' '
     end
     self
   rescue Exception => e
