@@ -383,7 +383,7 @@ formats = {
 
         # read response headers
         curEtag = response.meta['etag']
-        curMtime = response.last_modified || Time.now
+        curMtime = response.last_modified || Time.now rescue Time.now
         # update cached etag and mtime
         etag.w curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
         mtime.w curMtime.iso8601 if curMtime != priorMtime
@@ -406,7 +406,7 @@ formats = {
     end
     self
   rescue Exception => e
-    puts [uri, e.class, e.message].join " "
+    puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
   end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
