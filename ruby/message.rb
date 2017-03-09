@@ -378,7 +378,7 @@ formats = {
     priorMtime = nil               # cached mtime
     body = cache.child 'body.atom' # cached body URI
 
-    # prefer etag if it exists https://tools.ietf.org/html/rfc7232#section-3.3
+    # prefer etag over mtime https://tools.ietf.org/html/rfc7232#section-3.3
     if etag.e
       priorEtag = etag.r
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -389,15 +389,14 @@ formats = {
 
     begin # conditional GET
       open(uri, head) do |response|
-
-        # read response headers
+        # response header values
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now rescue Time.now
-        # update cached headers
+        # update cached values
         etag.w curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
         mtime.w curMtime.iso8601 if curMtime != priorMtime
 
-        # read response body
+        # body
         resp = response.read
         if body.e && body.r.h == resp.h
         # body cached already, 304 not implemented on remote
@@ -411,7 +410,7 @@ formats = {
 
     # handle 304 Not Modified thrown as HTTPError
     rescue OpenURI::HTTPError => error
-      print error.message + ' '
+#      puts error.message
     end
     self
   rescue Exception => e
