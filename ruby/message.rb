@@ -370,16 +370,25 @@ formats = {
     self
   end
   def fetchFeed
+    head = {}
     cache = R['/cache/'+uri.h] # cache URI
     etag = cache.child 'etag'      # cached etag URI
+    priorEtag = nil                # cached etag
     mtime = cache.child 'mtime'    # cached mtime URI
+    priorMtime = nil               # cached mtime
     body = cache.child 'body.atom' # cached body URI
 
-    priorEtag = etag.e ? etag.r : rand.to_s.h           # read cached etag
-    priorMtime = mtime.e ? mtime.r.to_time : Time.at(0) # read cached mtime
+    # prefer etag if it exists https://tools.ietf.org/html/rfc7232#section-3.3
+    if etag.e
+      priorEtag = etag.r
+      head["If-None-Match"] = priorEtag unless priorEtag.empty?
+    elsif mtime.e
+      priorMtime = mtime.r.to_time
+      head["If-Modified-Since"] = priorMtime.httpdate
+    end
 
     begin # conditional GET
-      open(uri, "If-None-Match" => priorEtag, "If-Modified-Since" => priorMtime.httpdate ) do |response|
+      open(uri, head) do |response|
 
         # read response headers
         curEtag = response.meta['etag']
