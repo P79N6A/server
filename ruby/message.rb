@@ -563,6 +563,8 @@ formats = {
                   o.match(HTTP_URI) ? o.R : o }
               end
             }
+          else
+            puts "no identifier found for post in #{@base}"
           end
         }
 
