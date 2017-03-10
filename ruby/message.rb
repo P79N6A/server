@@ -491,20 +491,23 @@ formats = {
         }
       end
 
-      def rawFeedTriples # we allow nonconformant XML, missing 's, arbitrary rss1/rss2/Atom feature-use mashup, aka real-world soup-mess
+      def rawFeedTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup, aka real-world soup-mess
 
-        # base elements
+        # SGMLy elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
         reXMLns = /xmlns:?([a-z]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
         reElement = %r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
 
-        # node identifiers
+        # potential entry identifiers
         reRDFid = /about=["']?([^'">\s]+)/            # RDF @about
-        reLink = /<link>([^<]+)/                      # <link> inner-text
+        reLink = /<link>([^<]+)/                      # <link> inner text
+        reLinkCD = /<link><\!\[CDATA\[([^\]]+)/       # <link> inner text in CDATA block
         reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @rel=alternate href
-        reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href
-        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> inner-text
+        reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href attribute
+        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> inner text
+
+        # URI heuristic to differentiate BlogPost vs replies
         commentRe = /\/comments\//
 
         # media links
@@ -526,9 +529,8 @@ formats = {
 
           # post identifier
           u = (attrs.do{|a|a.match(reRDFid)} ||
-               inner.match(reLink) ||
-               inner.match(reLinkAlt) ||
-               inner.match(reLinkRel) ||
+               inner.match(reLink) || inner.match(reLinkCD) ||
+               inner.match(reLinkAlt) || inner.match(reLinkRel) ||
                inner.match(reGUID)).do{|s|
             s[1]}
 
