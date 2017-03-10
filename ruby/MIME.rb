@@ -77,6 +77,7 @@ class R
     'rev' => 'text/uri-list+index',
     'ru' => 'application/ruby',
     'rdf' => 'application/rdf+xml',
+    'rss' => 'application/atom+xml',
     'rtf' => 'text/rtf',
     'ssv' => 'text/semicolon-separated-values',
     't' => 'application/perl',
