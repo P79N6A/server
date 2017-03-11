@@ -566,7 +566,7 @@ formats = {
               end
             }
           else
-            puts "no identifier found for post in #{@base}"
+            puts "no identifier found for post in #{@base} #{inner}"
           end
         }
 
@@ -613,8 +613,9 @@ formats = {
   end
 
   def triplrFeed
-    base = @r.R.join uri
-    RDF::Reader.open(pathPOSIX, :format => :feed, :base_uri => base){|r|
+    opts = {:format => :feed}
+    opts[:base_uri] = @r.R.join uri if @r
+    RDF::Reader.open(pathPOSIX, opts){|r|
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s, o.class == R ? o : o.value}}
   end
