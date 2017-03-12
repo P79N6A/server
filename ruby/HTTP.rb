@@ -127,14 +127,15 @@ class R
 
         if NonRDF.member? format
           Render[format][loadGraph[],self]
-        else # use RDF library for normal resources, native RDFlite for container w/ summarization
+        else # use RDF library for normal resources, lambda for container w/ summarization
           base = @r.R.join uri
-          if containerURI
+          if containerURI # load via lambda
             g = loadGraph[].toRDF
-          else
+          else # load full RDF graph
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
           end
+          # return serialized graph
           g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
         end
       end}

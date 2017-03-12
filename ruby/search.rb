@@ -54,17 +54,10 @@ class R
     else
       stars = re.uri.scan('*').size
       if stars > 0 && stars <= 3
-        FileSet['glob'][re]
+        re.glob.select &:inside
       else
         re.fileResources
       end
-    end}
-
-  FileSet['glob'] = -> r {
-    if r.uri.scan('*').size <= 3 # limit wildcard usage
-      r.glob.select(&:inside) # match and jail matches
-    else
-      []
     end}
 
   FileSet['find'] = -> e {
