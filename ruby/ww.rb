@@ -158,7 +158,7 @@ class R < RDF::URI
 
   # lambda-tables for customization
   GET = {}
-  FileSet = {}
+  Set = {}
   Abstract = {} # summarize
   Render = {}   # MIME renderer
   View = {}     # HTML template

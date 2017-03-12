@@ -1,6 +1,6 @@
 class R
 
-  FileSet[Resource] = -> re {
+  Set[Resource] = -> re {
     query = re.env['QUERY_STRING']
 
     # traversal pointers for datetime dirs
@@ -40,15 +40,19 @@ class R
       if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
          [htmlFile.setEnv(re.env)] # HTML requested, index file exists, and no query -> static response
       else
-        cs = re.c # child-nodes
-        size = cs.size
-        # inline small sets, limit large sets to pointers
-        if size < 512 || re.q.has_key?('full')
-          cs.map{|c|c.setEnv re.env}
-          re.fileResources.concat cs
+        if re.env[:grep]
+          `grep -ril #{re.q['q'].sh} #{re.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
         else
-          re.env[:summarized] = true
-          re.fileResources
+          cs = re.c # child-nodes
+          size = cs.size
+          # inline small sets, limit large sets to pointers
+          if size < 512 || re.q.has_key?('full')
+            cs.map{|c|c.setEnv re.env}
+            re.fileResources.concat cs
+          else
+            re.env[:summarized] = true
+            re.fileResources
+          end
         end
       end
     else
@@ -60,14 +64,14 @@ class R
       end
     end}
 
-  FileSet['find'] = -> e {
+  Set['find'] = -> e {
     e.exist? && e.q['q'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*').sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
-  FileSet['page'] = -> d {
+  Set['page'] = -> d {
     # count
     c = ((d.q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
     # direction
@@ -149,10 +153,6 @@ class R
   def take *a
     node.take(*a).map &:R
   end
-
-  FileSet['grep'] = -> e {
-    e.q['q'].do{|query|
-      `grep -ril #{query.sh} #{e.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}}
 
   Grep = -> graph, re {
     wordIndex = {}

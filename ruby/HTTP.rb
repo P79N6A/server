@@ -94,13 +94,12 @@ class R
       @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
       return [301, @r[:Response], []]
     end
+    @r[:grep] = true if q.has_key? 'q'
 
     # find resource set
-    q['set'] ||= 'grep' if q.has_key?('q')
-    setF = q['set'] # set-generation function
-    set = []        # set members
-    (FileSet[setF]||
-     FileSet[Resource])[self].do{|f|set.concat f}
+    set = []
+    (Set[q['set']]||Set[Resource])[self].do{|f|
+      set.concat f}
     return notfound if set.empty?
 
     # generate etag from set fingerprint
@@ -108,30 +107,29 @@ class R
               'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
-
     # lazy response-body constructor, uncalled on HEAD and etag match
     condResponse ->{
       if set.size==1 && format == set[0].mime # single file in set and MIME is requested
         set[0] # static-file
       else
 
-        # lambda loads graph
+        # (lambda) load and massage graph
         loadGraph = -> {
           graph = {}
           set.map{|r|r.loadGraph graph}
           unless q.has_key? 'full'
             Summarize[graph,self] if containerURI || q.has_key?('abbr')
-            Grep[graph,self] if setF == 'grep'
+            Grep[graph,self] if @r[:grep]
           end
           graph }
 
         if NonRDF.member? format
           Render[format][loadGraph[],self]
-        else # use RDF library for normal resources, lambda for container w/ summarization
+        else # use RDF library for normal resources, lambda for container summarization
           base = @r.R.join uri
           if containerURI # load via lambda
             g = loadGraph[].toRDF
-          else # load full RDF graph
+          else # RDF graph
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
           end

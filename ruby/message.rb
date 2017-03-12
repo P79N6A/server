@@ -117,7 +117,7 @@ formats = {
       id = {'ch' => chan}.qs
       graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
-      if re.q['set'] == 'grep'
+      if re.env[:grep]
         msg[Content].do{|c| # keep content to be grepped
           graph[id][Content] ||= []
           graph[id][Content].concat c}
@@ -189,7 +189,7 @@ formats = {
         tags = []
         title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
         tags = [group] if tags.empty?
-        thread = {Type => R[Post], Label => tags, 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Image => post[Image], Content => e.q['set']=='grep' ? post[Content] : []}
+        thread = {Type => R[Post], Label => tags, 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Image => post[Image], Content => e.env[:grep] ? post[Content] : []}
         thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
         graph[thread.uri] = thread }}}
 
@@ -640,7 +640,7 @@ formats = {
                            c: d[Content]}}]}}]}])}
 
   GET['/feed'] = -> e {
-    set = FileSet['page'][R('//'+e.host+Time.now.strftime('/%Y')).setEnv(e.env)]
+    set = Set['page'][R('//'+e.host+Time.now.strftime('/%Y')).setEnv(e.env)]
     e.env[:Response].update({'Content-Type' => 'application/atom+xml', 'ETag' => set.sort.h})
     e.condResponse -> {
       graph = {}
