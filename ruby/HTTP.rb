@@ -95,18 +95,20 @@ class R
       return [301, @r[:Response], []]
     end
 
+    # find resource set
     q['set'] ||= 'grep' if q.has_key?('q')
-    setF = q['set']
-    set = []
+    setF = q['set'] # set-generation function
+    set = []        # set members
     (FileSet[setF]||
      FileSet[Resource])[self].do{|f|set.concat f}
     return notfound if set.empty?
 
+    # generate etag from set fingerprint
     env[:Response].update({'Content-Type' => format,
               'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
-    condResponse ->{ # lazy-body lambda. uncalled on HEAD and cache-hit
+    condResponse ->{ # lazy body-constructor. uncalled on HEAD and etag match
       if set.size==1 && format == set[0].mime # one file in set and MIME matches?
         set[0] # return static-file
       else

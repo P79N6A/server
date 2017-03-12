@@ -38,7 +38,7 @@ class R
     if re.path[-1] == '/'
       htmlFile = re.a 'index.html'
       if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
-         [htmlFile.setEnv(re.env)] # found index.html, HTML requested, and no query -> use static-file
+         [htmlFile.setEnv(re.env)] # HTML requested, index file exists, and no query -> static response
       else
         cs = re.c # child-nodes
         size = cs.size
@@ -156,12 +156,6 @@ class R
   def take *a
     node.take(*a).map &:R
   end
-
-  FileSet['rev'] = -> e { # find incoming-arcs via index-file
-    (e.dir.child '.' + e.basename + '*.rev').glob.map{|rev|
-      rev.node.readlines.map{|r|
-        r.chomp.R.fileResources
-      }}.flatten}
 
   FileSet['grep'] = -> e {
     e.q['q'].do{|query|
