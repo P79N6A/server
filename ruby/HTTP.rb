@@ -108,11 +108,14 @@ class R
               'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
               'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
-    condResponse ->{ # lazy body-constructor. uncalled on HEAD and etag match
-      if set.size==1 && format == set[0].mime # one file in set and MIME matches?
-        set[0] # return static-file
+
+    # lazy response-body constructor, uncalled on HEAD and etag match
+    condResponse ->{
+      if set.size==1 && format == set[0].mime # single file in set and MIME is requested
+        set[0] # static-file
       else
 
+        # lambda loads graph
         loadGraph = -> {
           graph = {}
           set.map{|r|r.loadGraph graph}
@@ -124,7 +127,7 @@ class R
 
         if NonRDF.member? format
           Render[format][loadGraph[],self]
-        else
+        else # use RDF library for normal resources, native RDFlite for container w/ summarization
           base = @r.R.join uri
           if containerURI
             g = loadGraph[].toRDF
