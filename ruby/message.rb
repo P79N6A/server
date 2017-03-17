@@ -360,7 +360,7 @@ formats = {
     self
   end
   def getFeed
-    store :format => :feed, :base_uri => uri
+    timelineAdd :format => :feed, :base_uri => uri
     self
   end
 
@@ -370,15 +370,16 @@ formats = {
     self
   end
   def fetchFeed
-    head = {}
-    cache = R['/cache/'+uri.h] # cache URI
+    head = {} # request header
+    cache = R['/cache/'+uri.h]     # cache URI
     etag = cache.child 'etag'      # cached etag URI
-    priorEtag = nil                # cached etag
+    priorEtag = nil                # cached etag value
     mtime = cache.child 'mtime'    # cached mtime URI
-    priorMtime = nil               # cached mtime
+    priorMtime = nil               # cached mtime value
     body = cache.child 'body.atom' # cached body URI
 
-    # prefer etag over mtime https://tools.ietf.org/html/rfc7232#section-3.3
+    # prefer etag over mtime for version-match
+    #  https://tools.ietf.org/html/rfc7232#section-3.3
     if etag.e
       priorEtag = etag.r
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -387,30 +388,24 @@ formats = {
       head["If-Modified-Since"] = priorMtime.httpdate
     end
 
-    begin # conditional GET
-      open(uri, head) do |response|
-        # response header values
+    begin # run conditional GET
+      open(uri, head) do |response| # got a new response
+        # read headers
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now rescue Time.now
-        # update cached values
+        # write any changes to header-cache
         etag.w curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
         mtime.w curMtime.iso8601 if curMtime != priorMtime
-
-        # body
+        # read body
         resp = response.read
-        if body.e && body.r.h == resp.h
-        # body cached already, 304 not implemented on remote
-        else
-          # update cached body
-          body.w resp
-          # pass body-ref to RDF parser for post indexing
-          ('file://'+body.pathPOSIX).R.store :format => :feed, :base_uri => uri
+        unless body.e && body.r == resp
+          body.w resp # update body-cache
+          ('file://'+body.pathPOSIX).R.timelineAdd :format => :feed, :base_uri => uri # index posts
         end
       end
-
-    # handle 304 Not Modified thrown as HTTPError
     rescue OpenURI::HTTPError => error
-#      puts error.message
+      msg = error.message
+      puts msg unless msg.match(/304/) # print unusual errors
     end
     self
   rescue Exception => e

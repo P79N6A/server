@@ -44,8 +44,8 @@ class R
     resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path] # final requested-resource
     e['uri'] = resource.uri # bind URI attribute to environment
     e[:Response] = {} # init response-header fields
-    e[:Links] = {} # init response-header Link vars
-    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request and inspect response
+    e[:Links] = {} # init Link header map
+    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request, inspecting response
       puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].join ' '
       [s,h,b]} # return
   rescue Exception => x

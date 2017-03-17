@@ -74,8 +74,7 @@ class R
     self
   end
 
-  # import/index resource to local-store
-  def store options = {}
+  def timelineAdd options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       if graph.named?
