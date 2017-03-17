@@ -496,13 +496,13 @@ formats = {
 
         # potential entry identifiers
         reRDFid = /about=["']?([^'">\s]+)/            # RDF @about
-        reLink = /<link>([^<]+)/                      # <link> inner text
-        reLinkCD = /<link><\!\[CDATA\[([^\]]+)/       # <link> inner text in CDATA block
-        reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @rel=alternate href
+        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> element innertext
+        reLink = /<link>([^<]+)/                      # <link> element innertext
+        reLinkCD = /<link><\!\[CDATA\[([^\]]+)/       # <link> CDATA block innertext
+        reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> href attribute of type rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href attribute
-        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> inner text
 
-        # URI heuristic to differentiate BlogPost vs BlogComment type-tag
+        # URI heuristic to differentiate Post vs Comment type-tag
         commentRe = /\/comments\//
 
         # media links
