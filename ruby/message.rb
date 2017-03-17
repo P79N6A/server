@@ -486,7 +486,7 @@ formats = {
         }
       end
 
-      def rawFeedTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup, aka real-world soup-mess
+      def rawFeedTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup
 
         # SGMLy elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
@@ -502,7 +502,7 @@ formats = {
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href attribute
         reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> inner text
 
-        # URI heuristic to differentiate BlogPost vs replies
+        # URI heuristic to differentiate BlogPost vs BlogComment type-tag
         commentRe = /\/comments\//
 
         # media links

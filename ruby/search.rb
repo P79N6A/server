@@ -138,6 +138,29 @@ class R
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
+  # copy resource to timeline container
+  def timelineAdd options = {}
+    g = RDF::Repository.load self, options
+    g.each_graph.map{|graph| # each resource in graph
+      if graph.named?
+        doc = graph.name.ttl
+        unless doc.e
+          doc.dir.mk
+          file = doc.pathPOSIX
+          RDF::Writer.open(file){|f|f << graph}
+          graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # query for timestamp
+            time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time to pathname
+            base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+            puts "+ http://localhost/#{time}#{base[0..-2]} "
+            doc.ln R["//localhost/#{time}#{base}ttl"]} # link to timeline
+        end
+      end}
+    g
+  rescue Exception => e
+    puts uri, e.class, e.message #, e.backtrace[0..2]
+    g
+  end
+
   # find all connected resources
   def walk pfull, pshort, g={}, v={}
     graph g       # graph
