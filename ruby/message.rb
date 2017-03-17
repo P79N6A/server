@@ -448,8 +448,7 @@ formats = {
                                                                              o.gsub(/<[^>]*>/,' ')
                                                                            end)
                                                          l.datatype=RDF.XMLLiteral if p == Content
-                                                         l),
-                                     :graph_name => s.R.docroot)}
+                                                         l), :graph_name => s.R)}
       end
 
       def each_triple &block
