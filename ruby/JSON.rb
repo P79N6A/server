@@ -36,15 +36,13 @@ class R
     graph
   end
 
-  def pack # consolidate JSON docs to single file
+  def pack # consolidate native docs in container to a single file (nonrecursive)
     return unless directory?
-    res = (child '*.e').glob
-    return unless res.size > 1
-    graph = {}
-    res.map{|r|
-      r.loadGraph graph
-      r.delete}
-    child('index.e').w graph, true
+    res = (child '*.e').glob   # find children
+    return unless res.size > 1 # already zero/one docs, done
+    graph = {}                 # init combined graph
+    res.map{|r|r.loadGraph graph; r.delete} # combine
+    child('index.e').w graph, true # write combined graph to doc
     self
   end
 
