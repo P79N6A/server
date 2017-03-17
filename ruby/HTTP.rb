@@ -35,14 +35,14 @@ class R
 
   def R.call e
     return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD'] # disallow arbitrary methods
-    return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # drop request for PHP file
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h} # restore proxied hostname
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # strip directory special-chars from hostname field
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # drop consecutive /s in path
-    path = Pathname.new(rawpath).expand_path.to_s # evaluate path
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # restore trailing-slash
-    resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path] # init resource-instance
-    e['uri'] = resource.uri # add identifier to environment
+    return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # drop requests for PHP, logspammy and 404 anyway
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}     # use requested hostname
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'  # strip hostname field
+    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # pathnames can contain URI special-chars
+    path = Pathname.new(rawpath).expand_path.to_s # evaluate path expression
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash if necessary
+    resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path] # final requested-resource
+    e['uri'] = resource.uri # bind URI attribute to environment
     e[:Response] = {} # init response-header fields
     e[:Links] = {} # init response-header Link vars
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request and inspect response
@@ -55,7 +55,9 @@ class R
   end
 
   def notfound
-    [404,{'Content-Type' => format},[Render[format].do{|fn|fn[graph,self]} || graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym, :prefixes => Prefixes)]]
+    [404,{'Content-Type' => format},
+     [Render[format].do{|fn|fn[graph,self]} ||
+      graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym)]]
   end
 
   def GET
