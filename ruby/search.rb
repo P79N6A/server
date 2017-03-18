@@ -142,10 +142,13 @@ class R
   def timelineAdd options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
-      graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
-        time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # pathname
+      # read timestamp
+      graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
+        # mint URI
+        time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
         doc =  R["//localhost/#{time}#{slug}ttl"]
+        # store resource
         unless doc.e
           doc.dir.mk
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
