@@ -66,7 +66,7 @@ class R
       g.map{|u,r| # inspect resources
         r[Date].do{|t| # date attribute
           t = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
-          base = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
+          base = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
           print "+ http://localhost/#{t}#{base[0..-2]} "
           doc.ln R["//localhost/#{t}#{base}e"]}} if indexDate # link to timeline
     }

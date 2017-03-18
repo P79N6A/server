@@ -138,23 +138,22 @@ class R
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # copy resource to timeline container
+  # add resource(s) to timeline
   def timelineAdd options = {}
     g = RDF::Repository.load self, options
-    g.each_graph.map{|graph| # each resource in graph
-      if graph.named?
-        doc = graph.name.ttl
+    g.each_graph.map{|graph|
+      graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
+        time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # pathname
+        slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+        doc =  R["//localhost/#{time}#{slug}ttl"]
         unless doc.e
           doc.dir.mk
-          file = doc.pathPOSIX
-          RDF::Writer.open(file){|f|f << graph}
-          graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # query for timestamp
-            time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time to pathname
-            base = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(FeedStop,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-            puts "+ http://localhost/#{time}#{base[0..-2]} "
-            doc.ln R["//localhost/#{time}#{base}ttl"]} # link to timeline
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
+          puts "+ http:" + doc.stripDoc
         end
-      end}
+        true
+      } || puts("warning, #{uri} missing timestamp")
+    }
     g
   rescue Exception => e
     puts uri, e.class, e.message #, e.backtrace[0..2]

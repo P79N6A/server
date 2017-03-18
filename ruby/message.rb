@@ -614,7 +614,7 @@ formats = {
         yield s.to_s, p.to_s, o.class == R ? o : o.value}}
   end
 
-  FeedStop = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
+  SlugStopper = /\b(at|blog|com(ments)?|html|info|org|photo|p|post|r|status|tag|twitter|wordpress|www|1999|2005)\b/
 
   Render['application/atom+xml'] = -> d,e {
     H(['<?xml version="1.0" encoding="utf-8"?>',
