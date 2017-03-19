@@ -157,8 +157,8 @@ formats = {
     timelineAddStream :triplrTwitter
   end
 
-  # uncached (first visit) indexer
-  def triplrMailMessage &f
+  # wrapped triple-emitter which indexes previously-unseen messages
+  def triplrMailIndexer &f
     timelineAddStream :triplrMail, &f
   end
 

@@ -106,7 +106,7 @@ class R
     'audio/mpeg'           => [:triplrAudio],
     'image'                => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
-    'message/rfc822'       => [:triplrMailMessage],
+    'message/rfc822'       => [:triplrMailIndexer],
     'text/csv'             => [:triplrCSV,/,/],
     'text/html-fragment'   => [:triplrHTMLfragment],
     'text/log'             => [:triplrIRC],
