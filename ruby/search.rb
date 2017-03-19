@@ -126,35 +126,38 @@ class R
     r
   end
 
-  def getIndex rev # lookup (? p o) in index-file
+  def getIndex rev # find (? p o) triple
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  # index a triple
+  # index a triple in local store
   def index p, o
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # index streaming triples
+  # index streaming triples in local-store
   def indexStream triplr, &b
     graph = fromStream({},triplr) # collect triples
     docs = {}
     rel = SIOC+'reply_of'
-    graph.map{|u,r| # each resource
-     (e = u.R          # resource URI
-      doc = e.jsonDoc     # doc URI
-      doc.e ||               # cache hit ||
-      (docs[doc.uri] ||= {}     # init doc graph
-       docs[doc.uri][u] = r        # resource to doc-graph
-       r[rel].do{|v|v.map{|o|         # objects exist?
-                 e.index rel,o}})) if u} # index property
-    docs.map{|d,g| # each doc
-      doc = d.R
-      doc.w g, true # write doc
+
+    # group triples into document-graphs
+    graph.map{|u,r|    # foreach resource
+      e = u.R          # resource reference
+      doc = e.jsonDoc  # doc reference
+      doc.e || # doc already exists
+      (docs[doc.uri] ||= {} # blank graph
+       docs[doc.uri][u] = r # add resource to graph
+       r[rel].do{|v|v.map{|o| e.index rel,o}})} # index triple
+
+    # write documents
+    docs.map{|d,g|  # foreach document
+      doc = d.R     # document reference
+      doc.w g, true # write document
       indexDate = !doc.path.tail.match(/^(address|\d{4})\//) # mail and date-dirs already on timeline
       g.map{|u,r| # inspect resources
         r[Date].do{|t| # date attribute
@@ -167,7 +170,7 @@ class R
     self
   end
 
-  # index resource(s)
+  # index resource in local store
   def indexResource options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
