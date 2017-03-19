@@ -154,7 +154,12 @@ formats = {
   end
 
   def twGET
-    triplrStore :triplrTwitter
+    timelineAddStream :triplrTwitter
+  end
+
+  # uncached (first visit) indexer
+  def triplrMailMessage &f
+    timelineAddStream :triplrMail, &f
   end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
@@ -348,10 +353,6 @@ formats = {
         yield e, Content,                             # image reference in HTML
           H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]})
       end }
-  end
-
-  def triplrMailMessage &f
-    triplrStore :triplrMail, &f
   end
 
   # GET Atom/RSS feed(s) (uncached)

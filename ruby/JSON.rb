@@ -46,34 +46,6 @@ class R
     self
   end
 
-  # pass-through tripleStream, writing new resources to local-store
-  def triplrStore triplr, &b
-    graph = fromStream({},triplr) # stream triples into Hash-graph
-    docs = {}
-    rel = SIOC+'reply_of'
-    graph.map{|u,r| # each resource
-     (e = u.R          # resource URI
-      doc = e.jsonDoc     # doc URI
-      doc.e ||               # cache hit ||
-      (docs[doc.uri] ||= {}     # init doc graph
-       docs[doc.uri][u] = r        # resource to doc-graph
-       r[rel].do{|v|v.map{|o|         # objects exist?
-                 e.index rel,o}})) if u} # index property
-    docs.map{|d,g| # each doc
-      doc = d.R
-      doc.w g, true # write doc
-      indexDate = !doc.path.tail.match(/^(address|\d{4})\//) # mail and date-dirs already on timeline
-      g.map{|u,r| # inspect resources
-        r[Date].do{|t| # date attribute
-          t = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
-          base = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
-          print "+ http://localhost/#{t}#{base[0..-2]} "
-          doc.ln R["//localhost/#{t}#{base}e"]}} if indexDate # link to timeline
-    }
-    graph.triples &b if b # emit triples
-    self
-  end
-
   module Format
 
     class Format < RDF::Format
