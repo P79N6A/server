@@ -132,15 +132,16 @@ class R
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  def index p, o # append (s,p,o) to reverse-link index
+  # index a triple
+  def index p, o
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # add resource(s) in streaming triples to timeline
-  def timelineAddStream triplr, &b
-    graph = fromStream({},triplr) # stream triples into Hash-graph
+  # index streaming triples
+  def indexStream triplr, &b
+    graph = fromStream({},triplr) # collect triples
     docs = {}
     rel = SIOC+'reply_of'
     graph.map{|u,r| # each resource
@@ -166,8 +167,8 @@ class R
     self
   end
 
-  # add resource(s) to timeline
-  def timelineAdd options = {}
+  # index resource(s)
+  def indexResource options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
       # read timestamp

@@ -154,12 +154,12 @@ formats = {
   end
 
   def twGET
-    timelineAddStream :triplrTwitter
+    indexStream :triplrTwitter
   end
 
   # wrapped triple-emitter which indexes previously-unseen messages
   def triplrMailIndexer &f
-    timelineAddStream :triplrMail, &f
+    indexStream :triplrMail, &f
   end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
@@ -361,7 +361,7 @@ formats = {
     self
   end
   def getFeed
-    timelineAdd :format => :feed, :base_uri => uri
+    indexResource :format => :feed, :base_uri => uri
     self
   end
 
@@ -401,7 +401,7 @@ formats = {
         resp = response.read
         unless body.e && body.r == resp
           body.w resp # update body-cache
-          ('file://'+body.pathPOSIX).R.timelineAdd :format => :feed, :base_uri => uri # index posts
+          ('file://'+body.pathPOSIX).R.indexResource :format => :feed, :base_uri => uri # index posts
         end
       end
     rescue OpenURI::HTTPError => error

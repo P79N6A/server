@@ -94,7 +94,7 @@ class R
 
   Render['application/json'] = -> graph,_ { graph.to_json }
 
-  # return RDF-document reference. cached transcode of non-RDF to RDF format if needed
+  # normalize returned reference to RDF docs only - cached transcode as needed
   def justRDF pass = RDFsuffixes
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
       self
