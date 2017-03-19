@@ -489,9 +489,9 @@ formats = {
 
         # SGMLy elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
-        reXMLns = /xmlns:?([a-z]+)?=["']?([^'">\s]+)/
+        reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
-        reElement = %r{<([a-z]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
+        reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
 
         # potential entry identifiers
         reRDFid = /about=["']?([^'">\s]+)/            # RDF @about
@@ -553,7 +553,7 @@ formats = {
             inner.scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
               if p==Atom+'id' || p==Atom+'link'
-                # identifier predicates bound to subject-URI
+                # bound as subject URI, don't emit Atom:id triple
               else
                 yield u,p,e[3].extend(SniffContent).sniff.do{|o|
                   o.match(HTTP_URI) ? o.R : o }
