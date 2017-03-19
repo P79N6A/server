@@ -96,7 +96,7 @@ class R
       @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
       return [301, @r[:Response], []]
     end
-    @r[:grep] = true if q.has_key? 'q'
+    @r[:grep] = true if (q.has_key? 'q') && q['set'] != 'find'
 
     # find resource set
     set = []
