@@ -135,7 +135,7 @@ class R
   ## ingestion and indexing of information resources
   # very lightweight but could be expanded, currently:
   # - write document to local store
-  # - reverse-link indexing for finding "incoming" triples to a resource. used for serverside thread-reconstruction
+  # - reverse-link indexing for finding "incoming" triples to a resource. used for server-side thread-reconstruction currently
 
   # index triple in local store
   def index p, o
@@ -163,7 +163,11 @@ class R
       docs[doc][u] = r # add resource
       r[Re].do{|v|v.map{|o|this.index Re,o}}} # index triple
 
-    docs.map{|doc,graph| doc.R.w graph, true unless doc.R.e } # write documents
+    docs.map{|doc,graph| # write documents
+      unless doc.R.e
+        doc.R.w graph, true
+        puts "+ http:" + doc.stripDoc
+      end}
     graph.triples &b if b # emit triples
     self
   end
