@@ -132,10 +132,10 @@ class R
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  ## indexing aka "ingestion" of information resources
+  ## ingestion and indexing of information resources
   # very lightweight but could be expanded, currently:
   # - write document to local store
-  # - reverse-link indexing for finding "incoming" triples to a resource
+  # - reverse-link indexing for finding "incoming" triples to a resource. used for serverside thread-reconstruction
 
   # index triple in local store
   def index p, o
@@ -163,9 +163,7 @@ class R
       docs[doc][u] = r # add resource
       r[Re].do{|v|v.map{|o|this.index Re,o}}} # index triple
 
-    # write documents
-    docs.map{|doc,graph| doc.R.w graph, true unless doc.R.e }
-
+    docs.map{|doc,graph| doc.R.w graph, true unless doc.R.e } # write documents
     graph.triples &b if b # emit triples
     self
   end
