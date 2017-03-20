@@ -204,16 +204,12 @@ class R
   def walk pfull, pshort, g={}, v={}
     graph g       # graph
     v[uri] = true # mark this as visited
-    rel = g[uri].do{|s|s[pfull]} ||[] # outbound arcs (via doc)
-    rev = getIndex(pshort) ||[]       # inbound arcs (via index)
+    rel = g[uri].do{|s|s[pfull]} ||[] # outbound arcs (from doc)
+    rev = getIndex(pshort) ||[]       # inbound arcs (from index)
     rel.concat(rev).map{|r|
-      v[r.uri] || (r.R.walk pfull,pshort,g,v)} # walk unvisited
-    g # graph
-  end
-
-  # recursive child-nodes
-  def take *a
-    node.take(*a).map &:R
+      v[r.uri] || # visited, terminate recursion
+        r.R.walk(pfull,pshort,g,v)} # walk
+    g # accumulated graph
   end
 
   Grep = -> graph, re {
@@ -253,6 +249,12 @@ class R
     {_: :form,
      c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
 
+
+  # recursive child-nodes, work happens in Pathname context, see below
+  def take *a
+    node.take(*a).map &:R
+  end
+  
 end
 
 class Pathname
