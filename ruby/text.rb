@@ -129,16 +129,12 @@ class R
     subgraph.map{|id,data|
       graph[id][DC+'hasFormat'] = R[id+'.html']
       graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}}}
-  
+
   Abstract[SIOC+'SourceCode'] = -> graph, subgraph, re {
-    full = re.q.has_key? 'full'
-    re.env[:summarized] = true unless full
     subgraph.map{|id,source|
       html = id + '.html'
       graph[html] = source.update({DC+'formatOf' => R[id], 'uri' => html})
-      graph.delete id
-    } unless full
-  }
+      graph.delete id}}
 
   %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
  desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript

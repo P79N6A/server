@@ -50,7 +50,6 @@ class R
             cs.map{|c|c.setEnv re.env}
             re.fileResources.concat cs
           else
-            re.env[:summarized] = true
             re.fileResources
           end
         end
@@ -221,7 +220,7 @@ class R
             H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
       graph.delete u if r[Content].empty?
     }
-
+    re.env[:abbreviated] = true unless re.q.has_key?('full')
     graph['#grepCSS'] = {Content => H({_: :style,
                                        c: wordIndex.values.map{|i|
                                          bg = rand 16777216
@@ -237,6 +236,7 @@ class R
           groups[v] ||= {} # type-group
           groups[v][u] = r # resource -> group
         end}}
+    e.env[:abbreviated] = true unless groups.empty? || e.q.has_key?('full')
     groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer(s)
 
   # recursive child-nodes, work happens in Pathname context, see below

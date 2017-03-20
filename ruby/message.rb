@@ -110,7 +110,6 @@ formats = {
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
     full = re.q.has_key? 'full'
-    re.env[:summarized] = true unless full
     ch = re.q['ch']
     msgs.map{|uri,msg|
       chan = msg[SIOC+'channel'].justArray[0]
@@ -165,14 +164,12 @@ formats = {
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
-    bodies = e.q.has_key? 'full'
-    e.env[:summarized] = true unless bodies || g.keys.size > 42
     groupBy = (e.q['group']||To).expand
 
     # pass 1. statistics
     g.map{|u,p|
       recipients = p[To].justArray.map &:maybeURI
-      graph.delete u unless bodies # hide unsummarized, unless full-bodies requested
+      graph.delete u unless e.q.has_key? 'full'
       p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # hide author resource
       recipients.map{|a|graph.delete a}                           # hide recipient resource
       p[Title].do{|t|
