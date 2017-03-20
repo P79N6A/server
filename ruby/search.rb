@@ -132,20 +132,25 @@ class R
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  # index a triple in local store
+  ## indexing aka "ingestion" of information resources
+  # very lightweight but could be expanded, currently:
+  # - write document to local store. currently doesnt overwrite, suggesting new URIs for new versions
+  # - reverse-link indexing for finding "incoming" triples to a resource
+
+  # index triple in local store
   def index p, o
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # index streaming triples in local-store
+  # index stream of triples in local-store
   def indexStream triplr, &b
     graph = fromStream({},triplr) # collect triples
     docs = {}
     rel = SIOC+'reply_of'
 
-    # group triples into document-graphs
+    # group by graph-doc URIs and index triples while we're walking the graph
     graph.map{|u,r|    # foreach resource
       e = u.R          # resource reference
       doc = e.jsonDoc  # doc reference
@@ -159,7 +164,7 @@ class R
       doc = d.R     # document reference
       doc.w g, true # write document
       indexDate = !doc.path.tail.match(/^(address|\d{4})\//) # mail and date-dirs already on timeline
-      g.map{|u,r| # inspect resources
+       g.map{|u,r| # inspect resources
         r[Date].do{|t| # date attribute
           t = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
           base = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
