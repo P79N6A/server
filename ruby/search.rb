@@ -239,11 +239,6 @@ class R
         end}}
     groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer(s)
 
-  SearchBox = -> env {
-    {_: :form,
-     c: {_: :input, name: :q, placeholder: :search, value: env.q['q']}}}
-
-
   # recursive child-nodes, work happens in Pathname context, see below
   def take *a
     node.take(*a).map &:R
