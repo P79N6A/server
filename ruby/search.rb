@@ -164,9 +164,10 @@ class R
       r[Re].do{|v|v.map{|o|this.index Re,o}}} # index triple
 
     docs.map{|doc,graph| # write documents
-      unless doc.R.e
-        doc.R.w graph, true
-        puts "+ http:" + doc.R.stripDoc
+      doc = doc.R
+      unless doc.e
+        doc.w graph, true
+        puts "+ http:" + doc.stripDoc
       end}
     graph.triples &b if b # emit triples
     self
