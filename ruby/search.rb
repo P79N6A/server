@@ -174,16 +174,13 @@ class R
   def indexResource options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
-      # read timestamp
-      graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
-        # mint URI
+      graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
         time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..96].sub(/\.$/,'')
         doc =  R["//localhost/#{time}#{slug}.ttl"]
-        # store resource
         unless doc.e
           doc.dir.mk
-          RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # store resource
           puts "+ http:" + doc.stripDoc
         end
         true
