@@ -146,24 +146,22 @@ class R
 
   # index stream of triples in local-store
   def indexStream triplr, &b
+    docs = {} # document index
     graph = fromStream({},triplr) # collect triples
-    docs = {}
 
     # group by document URI + index triples while we're walking the graph
     graph.map{|u,r|    # foreach resource
       this = u.R       # resource reference
       doc = this.jsonDoc.uri # document URI
-      # choose location for nonlocal paths, currently the time-index on modification or fetch-time
       if this.host
-        r[Date].do{|t|
+        r[Date].do{|t| # if remote resource has datetime, place it on the timeline
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           doc = "//localhost/#{time}#{slug}e"}
       end
       docs[doc] ||= {} # document graph
-      docs[doc][u] = r # resource to graph
-      r[Re].do{|v|v.map{|o|this.index Re,o}} # index triple
-    }
+      docs[doc][u] = r # add resource
+      r[Re].do{|v|v.map{|o|this.index Re,o}}} # index triple
 
     # write documents
     docs.map{|doc,graph| doc.R.w graph, true unless doc.R.e }
@@ -191,10 +189,9 @@ class R
         true
       } || puts("warning, #{uri} missing timestamp")
     }
-    g
+    self
   rescue Exception => e
     puts uri, e.class, e.message , e.backtrace[0..2]
-    g
   end
 
   # find all connected resources
