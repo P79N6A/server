@@ -194,16 +194,6 @@ class R
   end
   alias_method :mk, :mkdir
 
-  def ln t, y=:link
-    t = t.R.stripSlash
-    unless t.e || t.symlink?
-      t.dir.mk
-      FileUtils.send y, node, t.node
-    end
-  end
-
-  def ln_s t; ln t, :symlink end
-
   def accept
     @accept ||= (
       d={}
