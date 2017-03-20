@@ -134,7 +134,7 @@ class R
 
   ## indexing aka "ingestion" of information resources
   # very lightweight but could be expanded, currently:
-  # - write document to local store. currently doesnt overwrite, suggesting new URIs for new versions
+  # - write document to local store
   # - reverse-link indexing for finding "incoming" triples to a resource
 
   # index triple in local store
@@ -148,29 +148,26 @@ class R
   def indexStream triplr, &b
     graph = fromStream({},triplr) # collect triples
     docs = {}
-    rel = SIOC+'reply_of'
 
-    # group by graph-doc URIs and index triples while we're walking the graph
+    # group by document URI + index triples while we're walking the graph
     graph.map{|u,r|    # foreach resource
-      e = u.R          # resource reference
-      doc = e.jsonDoc  # doc reference
-      doc.e || # doc already exists
-      (docs[doc.uri] ||= {} # blank graph
-       docs[doc.uri][u] = r # add resource to graph
-       r[rel].do{|v|v.map{|o| e.index rel,o}})} # index triple
+      this = u.R       # resource reference
+      doc = this.jsonDoc.uri # document URI
+      # choose location for nonlocal paths, currently the time-index on modification or fetch-time
+      if this.host
+        r[Date].do{|t|
+          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
+          slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+          doc = "//localhost/#{time}#{slug}e"}
+      end
+      docs[doc] ||= {} # document graph
+      docs[doc][u] = r # resource to graph
+      r[Re].do{|v|v.map{|o|this.index Re,o}} # index triple
+    }
 
     # write documents
-    docs.map{|d,g|  # foreach document
-      doc = d.R     # document reference
-      doc.w g, true # write document
-      indexDate = !doc.path.tail.match(/^(address|\d{4})\//) # mail and date-dirs already on timeline
-       g.map{|u,r| # inspect resources
-        r[Date].do{|t| # date attribute
-          t = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # iso8601 to date-path, for timeline
-          base = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.' # clean name slug
-          print "+ http://localhost/#{t}#{base[0..-2]} "
-          doc.ln R["//localhost/#{t}#{base}e"]}} if indexDate # link to timeline
-    }
+    docs.map{|doc,graph| doc.R.w graph, true unless doc.R.e }
+
     graph.triples &b if b # emit triples
     self
   end

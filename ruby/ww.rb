@@ -91,6 +91,7 @@ class R < RDF::URI
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
+  Re       = SIOC + 'reply_of'
   Post     = SIOC + 'Post'
   To       = SIOC + 'addressed_to'
   Creator  = SIOC + 'has_creator'
