@@ -166,7 +166,7 @@ class R
     docs.map{|doc,graph| # write documents
       unless doc.R.e
         doc.R.w graph, true
-        puts "+ http:" + doc.stripDoc
+        puts "+ http:" + doc.R.stripDoc
       end}
     graph.triples &b if b # emit triples
     self
