@@ -220,7 +220,6 @@ class R
             H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
       graph.delete u if r[Content].empty?
     }
-    re.env[:abbreviated] = true unless re.q.has_key?('full')
     graph['#grepCSS'] = {Content => H({_: :style,
                                        c: wordIndex.values.map{|i|
                                          bg = rand 16777216
@@ -228,16 +227,14 @@ class R
                                          ".w#{i} {background-color: #{'#%06x' % bg}; color: #{fg}}\n"}})}}
 
   Summarize = -> g,e {
-    e.env[:title] ||= e.path
     groups = {}
     g.map{|u,r|
-      r.types.map{|type| # RDF types
-        if v = Abstract[type] # summarizer
-          groups[v] ||= {} # type-group
+      r.types.map{|type| # each type
+        if v = Abstract[type] # summarizer function
+          groups[v] ||= {} # create type-group
           groups[v][u] = r # resource -> group
         end}}
-    e.env[:abbreviated] = true unless groups.empty? || e.q.has_key?('full')
-    groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer(s)
+    groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer
 
   # recursive child-nodes, work happens in Pathname context, see below
   def take *a

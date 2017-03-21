@@ -87,7 +87,7 @@ class R
            re.justPath.dirname + '?' + re.env['QUERY_STRING']
          end
     print = re.q.has_key? 'print'
-    expanded = {_: :a, id: :down, href: re.q.reject{|k|k=='abbr'}.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if re.env[:abbreviated]
+    expand = {_: :a, id: :down, href: re.q.reject{|k|k=='abbr'}.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if dir && !re.q.has_key?('full')
     prevPage = e[:Links][:prev].do{|p|{_: :a, class: e[:prevEmpty] ? 'weak' : '',c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, class: e[:nextEmpty] ? 'weak' : '',c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     H ["<!DOCTYPE html>\n",
@@ -113,7 +113,7 @@ class R
                  (prevPage unless re.q.has_key? 'abbr'),
                  (nextPage unless re.q.has_key? 'abbr'),
                  '<br clear=all>',
-                 expanded,
+                 expand,
                  {id: :statusbar}]}]}]}
 
   TabularView = -> g, e, show_head = true, show_id = true {
