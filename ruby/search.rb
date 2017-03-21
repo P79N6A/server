@@ -53,8 +53,7 @@ class R
         end
       end
     else
-      stars = re.uri.scan('*').size
-      if stars > 0 && stars <= 3
+      if re.env[:glob]
         re.glob.select &:inside
       else
         re.fileResources

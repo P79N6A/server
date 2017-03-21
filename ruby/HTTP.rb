@@ -90,13 +90,19 @@ class R
   end
 
   def response
-    containerURI = uri[-1] == '/'
-    if directory? && !containerURI
+
+    # support graph filter and file-set patterns
+    stars = uri.scan('*').size
+    @r[:glob] = true if stars > 0 && stars <= 3
+    @r[:grep] = true if q.has_key?('q') && q['set'] != 'find'
+
+    # enforce trailing-slash as we allow relative-URIs and inline child-nodes
+    container = directory?
+    if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
       return [301, @r[:Response], []]
     end
-    @r[:grep] = true if (q.has_key? 'q') && q['set'] != 'find'
 
     # find resource set
     set = []
@@ -114,22 +120,19 @@ class R
       if set.size==1 && format == set[0].mime # single file in set and MIME is requested
         set[0] # static-file
       else
-
-        # (lambda) load and massage graph
         loadGraph = -> {
           graph = {}
           set.map{|r|r.loadGraph graph}
           unless q.has_key? 'full'
-            Summarize[graph,self] if containerURI || q.has_key?('abbr')
+            Summarize[graph,self] if @r[:glob] || container || q.has_key?('abbr')
             Grep[graph,self] if @r[:grep]
           end
-          graph }
-
+          graph}
         if NonRDF.member? format
           Render[format][loadGraph[],self]
-        else # use RDF library for normal resources, lambda for container summarization
+        else
           base = @r.R.join uri
-          if containerURI # load via lambda
+          if container # native graph
             g = loadGraph[].toRDF
           else # RDF graph
             g = RDF::Graph.new
