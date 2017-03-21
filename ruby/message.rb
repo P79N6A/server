@@ -109,7 +109,6 @@ formats = {
     graph.map{|uri,res| res[Content]}}
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
-    full = re.q.has_key? 'full'
     ch = re.q['ch']
     msgs.map{|uri,msg|
       chan = msg[SIOC+'channel'].justArray[0]
@@ -117,7 +116,7 @@ formats = {
       graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
       if re.env[:grep]
-        msg[Content].do{|c| # keep content to be grepped
+        msg[Content].do{|c| # keep content here as Grep will reduce it later
           graph[id][Content] ||= []
           graph[id][Content].concat c}
       end
@@ -127,7 +126,7 @@ formats = {
       msg[DC+'link'].do{|links|
         graph[id][DC+'link'] ||= []
         graph[id][DC+'link'].concat links}
-      graph.delete uri unless full || ch==chan
+      graph.delete uri unless ch==chan
     }
   }
 
@@ -168,8 +167,8 @@ formats = {
 
     # pass 1. statistics
     g.map{|u,p|
+      graph.delete u # drop full resource from graph
       recipients = p[To].justArray.map &:maybeURI
-      graph.delete u unless e.q.has_key? 'full'
       p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # hide author resource
       recipients.map{|a|graph.delete a}                           # hide recipient resource
       p[Title].do{|t|

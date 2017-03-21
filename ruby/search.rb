@@ -44,9 +44,7 @@ class R
           `grep -ril #{re.q['q'].sh} #{re.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
         else
           cs = re.c # child-nodes
-          size = cs.size
-          # inline small sets, limit large sets to pointers
-          if size < 512 || re.q.has_key?('full')
+          if cs.size < 512
             cs.map{|c|c.setEnv re.env}
             re.fileResources.concat cs
           else
