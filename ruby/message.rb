@@ -267,11 +267,12 @@ formats = {
         target = URI.escape('<' + id + '>')
         yield e, SIOC+'reply_to', R["mailto:#{URI.escape r2}?References=#{target}&In-Reply-To=#{target}&subject=#{(CGI.escape m.subject).gsub('+','%20')}&"+'#reply']}} # reply-to pointer
 
-    m[:from].addrs.head.do{|a|# author resource
+    m[:from].do{|fr|
+      fr.addrs.head.do{|a|# author resource
       author = AddrPath[a.address]
       yield author, Type, R[FOAF+'Person']
       yield author, FOAF+'name', (a.display_name || a.name)
-    }
+    }}
 
     if m.date
       date = m.date.to_time.utc
