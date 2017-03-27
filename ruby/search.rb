@@ -37,8 +37,9 @@ class R
 
     if re.path[-1] == '/'
       htmlFile = re.a 'index.html'
+       # if HTML requested, file exists, and no query
       if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
-         [htmlFile.setEnv(re.env)] # HTML requested, index file exists, and no query -> static response
+         [htmlFile.setEnv(re.env)] # static response
       else
         if re.env[:grep]
           `grep -ril #{re.q['q'].sh} #{re.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
