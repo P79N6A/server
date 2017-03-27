@@ -35,7 +35,7 @@ class R
 
   def R.call e
     return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD'] # disallow arbitrary methods
-    return [400,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # drop requests for PHP, logspammy and 404 anyway
+    return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # 404 requests for PHP
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}     # use requested hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'  # strip hostname field
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # pathnames can contain URI special-chars
