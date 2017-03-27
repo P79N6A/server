@@ -192,12 +192,12 @@ class R
 
   # find all connected resources
   def walk pfull, pshort, g={}, v={}
-    graph g       # graph
-    v[uri] = true # mark this as visited
+    graph g
+    v[uri] = true # mark visited
     rel = g[uri].do{|s|s[pfull]} ||[] # outbound arcs (from doc)
     rev = getIndex(pshort) ||[]       # inbound arcs (from index)
     rel.concat(rev).map{|r|
-      v[r.uri] || # visited, terminate recursion
+      v[r.uri] || # visited
         r.R.walk(pfull,pshort,g,v)} # walk
     g # accumulated graph
   end

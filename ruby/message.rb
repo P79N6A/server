@@ -155,7 +155,6 @@ formats = {
     indexStream :triplrTwitter
   end
 
-  # wrapped triple-emitter which indexes previously-unseen messages
   def triplrMailIndexer &f
     indexStream :triplrMail, &f
   end

@@ -25,11 +25,9 @@ class R
     justRDF(%w{e}).do{|f|
       ((f.r true) || {}). # load graph
         triples{|s,p,o|   # foreach triple
-        if base           # base URI
-          s = base.join(s).to_s     # resolve subject-URI
-          if o.class==Hash && o.uri # resolve object-URI
-            o['uri'] = base.join(o.uri).to_s
-          end
+        if base           # resolve ID
+          s = base.join(s).to_s
+          o['uri'] = base.join(o.uri).to_s if o.class==Hash && o.uri          
         end
         graph[s] ||= {'uri' => s}
         graph[s][p] = (graph[s][p]||[]).justArray.push o}}
