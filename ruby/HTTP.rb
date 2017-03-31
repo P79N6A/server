@@ -36,19 +36,25 @@ class R
   def R.call e
     return [405,{'Allow' => Allow},[]] unless AllowMethods.member? e['REQUEST_METHOD'] # disallow arbitrary methods
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # 404 requests for PHP
+
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}     # use requested hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'  # strip hostname field
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # pathnames can contain URI special-chars
     path = Pathname.new(rawpath).expand_path.to_s # evaluate path expression
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash if necessary
     resource = R[e['rack.url_scheme'] + "://" + e['SERVER_NAME'] + path] # final requested-resource
+
     e['uri'] = resource.uri # bind URI attribute to environment
     e[:Response] = {} # init response-header fields
     e[:Links] = {} # init Link header map
-    e.map{|k,v|puts k.to_s + "\t" + v.to_s}
+
+    #    e.map{|k,v|puts k.to_s + "\t" + v.to_s}
+
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request, inspecting response
       puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].join ' '
-      h.map{|k,v|puts k.to_s + "\t" + v.to_s}
+
+#      h.map{|k,v|puts k.to_s + "\t" + v.to_s}
+
       [s,h,b]} # return
   rescue Exception => x
     out = [x.class,x.message,x.backtrace].join "\n"
