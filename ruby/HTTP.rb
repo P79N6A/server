@@ -65,7 +65,7 @@ class R
       fileGET
     elsif justPath.file? # path on any host
       justPath.fileGET
-    else # doc extension is eaten for Content-Type preference if static-file version doesn't exist
+    else
       stripDoc.resourceGET
     end
   end
