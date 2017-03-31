@@ -45,8 +45,10 @@ class R
     e['uri'] = resource.uri # bind URI attribute to environment
     e[:Response] = {} # init response-header fields
     e[:Links] = {} # init Link header map
+    e.map{|k,v|puts k.to_s + "\t" + v.to_s}
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request, inspecting response
       puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].join ' '
+      h.map{|k,v|puts k.to_s + "\t" + v.to_s}
       [s,h,b]} # return
   rescue Exception => x
     out = [x.class,x.message,x.backtrace].join "\n"
