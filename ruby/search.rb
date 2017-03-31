@@ -83,9 +83,9 @@ class R
       end
       s }}
 
-  GET['/today'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[7..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
+  GET['/today'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/')    + (e.path[7..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
 
-  GET['/now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
+  GET['/now']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
 
   def triplrContainer
     dir = uri.t
