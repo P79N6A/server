@@ -3,12 +3,14 @@ class R
   Set[Resource] = -> re {
     query = re.env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
-    parts = re.path.split('/').tail
+
+    # date parts
     dp = []
-    n = nil; p = nil
+    parts = re.path.split('/').tail
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
+    n = nil; p = nil
     case dp.length
     when 1 # Y
       year = dp[0]
@@ -34,7 +36,7 @@ class R
 
     if re.path[-1] == '/'
       htmlFile = re.a 'index.html'
-       # if HTML requested, file exists, and no query
+       # HTML requested, file exists, and no query
       if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
          [htmlFile.setEnv(re.env)] # static response
       else
