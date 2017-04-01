@@ -6,7 +6,7 @@ class R
 
     # date parts
     dp = []
-    parts = re.path.split('/').tail
+    parts = re.path.tail.split '/'
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
