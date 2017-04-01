@@ -8,7 +8,6 @@ a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.
 #up, a[rel="prev"] {float: left}
 #up, #down {margin-left:1em}
 a[rel="next"] {float: right}
-a.weak {color:#333}
 a.page {font-weight: normal}
 .uri {font-weight:normal;color:#bbb;float: right}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
