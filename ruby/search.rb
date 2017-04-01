@@ -5,53 +5,32 @@ class R
     qs = query && !query.empty? && ('?' + query) || ''
     parts = re.path.split('/').tail
     dp = []
-    n = nil
-    p = nil
+    n = nil; p = nil
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
     case dp.length
     when 1 # Y
-      y = dp[0]
-      n = '/' + (y + 1).to_s
-      p = '/' + (y - 1).to_s
+      year = dp[0]
+      n = '/' + (year + 1).to_s
+      p = '/' + (year - 1).to_s
     when 2 # Y-m
-      y = dp[0]
+      year = dp[0]
       m = dp[1]
-      n = '/' + m == 12 ? "#{y + 1}/#{01}/" : "#{y}/#{'%02d' % (m + 1)}"
-      puts n
+      n = m >= 12 ? "/#{year + 1}/#{01}/" : "/#{year}/#{'%02d' % (m + 1)}/"
+      p = m <=  1 ? "/#{year - 1}/#{12}/" : "/#{year}/#{'%02d' % (m - 1)}/"
     when 3 # Y-m-d
-      puts "day"
+      day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue Time.now
+      p = (day-1).strftime('/%Y/%m/%d/')
+      n = (day+1).strftime('/%Y/%m/%d/')
     when 4 # Y-m-d-H
-      puts "hour"
+      day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue Time.now
+      hour = dp[3]
+      p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour-1)))
+      n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
     end
     re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
     re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
-
-=begin
-      date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" rescue Time.now
-      slug = m[4] || ''
-      if slug.match(/^[0-2][0-9]\/?$/) # hour dirs
-        hour = slug.to_i
-        # next/prev hours
-        np = date.strftime('/%Y/%m/%d/') + ('%02d' % (hour+1))
-        pp = date.strftime('/%Y/%m/%d/') +  ('%02d' % (hour-1))
-        # wraparound on next/prev day
-        if hour == 0
-          pp = (date - 1).strftime('/%Y/%m/%d/23/')
-        elsif hour >= 23
-          np = (date + 1).strftime('/%Y/%m/%d/00/')
-        end
-        nPath = np
-        pPath = pp
-      else # day dirs
-        pPath = (date-1).strftime('/%Y/%m/%d/')
-        nPath = (date+1).strftime('/%Y/%m/%d/')
-        # slug persists across pages - file or glob within date-dir
-        pp = pPath + slug
-        np = nPath + slug
-      end
-=end
 
     if re.path[-1] == '/'
       htmlFile = re.a 'index.html'
