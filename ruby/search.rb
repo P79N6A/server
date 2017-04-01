@@ -3,7 +3,7 @@ class R
   Set[Resource] = -> re {
     query = re.env['QUERY_STRING']
 
-    # traversal pointers for datetime dirs
+    # construct metadata for datetime dirs
     re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
       qs = query && !query.empty? && ('?' + query) || ''
       date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" rescue Time.now
@@ -28,12 +28,12 @@ class R
         pp = pPath + slug
         np = nPath + slug
       end
-      # empty hints for CSS dimming
+      # UI dimming of empty directories
       re.env[:nextEmpty] = true unless R['//' + re.host + nPath].e
       re.env[:prevEmpty] = true unless R['//' + re.host + pPath].e
-      # add to HTTP response headers
       re.env[:Links][:prev] = pp + qs
-      re.env[:Links][:next] = np + qs}
+      re.env[:Links][:next] = np + qs
+    }
 
     if re.path[-1] == '/'
       htmlFile = re.a 'index.html'
