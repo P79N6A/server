@@ -28,11 +28,8 @@ class R
         pp = pPath + slug
         np = nPath + slug
       end
-      # UI dimming of empty directories
-      re.env[:nextEmpty] = true unless R['//' + re.host + nPath].e
-      re.env[:prevEmpty] = true unless R['//' + re.host + pPath].e
-      re.env[:Links][:prev] = pp + qs
-      re.env[:Links][:next] = np + qs
+      re.env[:Links][:prev] = pp + qs if R['//' + re.host + pPath].e
+      re.env[:Links][:next] = np + qs if R['//' + re.host + nPath].e
     }
 
     if re.path[-1] == '/'
