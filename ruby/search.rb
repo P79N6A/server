@@ -2,7 +2,21 @@ class R
 
   Set[Resource] = -> re {
     query = re.env['QUERY_STRING']
-
+    parts = re.path.split('/').tail
+    dp = []
+    while parts[0] && parts[0].match(/^[0-9]+$/) do
+      dp.push parts.shift.to_i
+    end
+    case dp.length
+    when 1
+      puts "year"
+    when 2
+      puts "month"
+    when 3
+      puts "day"
+    when 4
+      puts "hour"
+    end
     # construct metadata for datetime dirs
     re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
       qs = query && !query.empty? && ('?' + query) || ''
