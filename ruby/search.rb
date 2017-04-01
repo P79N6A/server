@@ -4,12 +4,15 @@ class R
     query = re.env['QUERY_STRING']
     parts = re.path.split('/').tail
     dp = []
+    n = nil
+    p = nil
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
     case dp.length
-    when 1
-      puts "year"
+    when 1 # Y
+      n = '/' + (dp[1]+1).to_s
+      p = '/' + (dp[1]-1).to_s
     when 2
       puts "month"
     when 3
@@ -42,8 +45,9 @@ class R
         pp = pPath + slug
         np = nPath + slug
       end
-      re.env[:Links][:prev] = pp + qs if R['//' + re.host + pPath].e
-      re.env[:Links][:next] = np + qs if R['//' + re.host + nPath].e
+
+      re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
+      re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
     }
 
     if re.path[-1] == '/'
