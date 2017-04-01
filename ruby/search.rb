@@ -2,6 +2,7 @@ class R
 
   Set[Resource] = -> re {
     query = re.env['QUERY_STRING']
+    qs = query && !query.empty? && ('?' + query) || ''
     parts = re.path.split('/').tail
     dp = []
     n = nil
@@ -11,18 +12,23 @@ class R
     end
     case dp.length
     when 1 # Y
-      n = '/' + (dp[1]+1).to_s
-      p = '/' + (dp[1]-1).to_s
-    when 2
-      puts "month"
-    when 3
+      y = dp[0]
+      n = '/' + (y + 1).to_s
+      p = '/' + (y - 1).to_s
+    when 2 # Y-m
+      y = dp[0]
+      m = dp[1]
+      n = '/' + m == 12 ? "#{y + 1}/#{01}/" : "#{y}/#{'%02d' % (m + 1)}"
+      puts n
+    when 3 # Y-m-d
       puts "day"
-    when 4
+    when 4 # Y-m-d-H
       puts "hour"
     end
-    # construct metadata for datetime dirs
-    re.path.match(/^\/([0-9]{4})\/([0-9]{2})\/([0-9]{2})\/(.*)?$/).do{|m|
-      qs = query && !query.empty? && ('?' + query) || ''
+    re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
+    re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
+
+=begin
       date = ::Date.parse "#{m[1]}-#{m[2]}-#{m[3]}" rescue Time.now
       slug = m[4] || ''
       if slug.match(/^[0-2][0-9]\/?$/) # hour dirs
@@ -45,10 +51,7 @@ class R
         pp = pPath + slug
         np = nPath + slug
       end
-
-      re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
-      re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
-    }
+=end
 
     if re.path[-1] == '/'
       htmlFile = re.a 'index.html'

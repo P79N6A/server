@@ -117,11 +117,8 @@ class R
     (Set[q['set']]||Set[Resource])[self].do{|f|
       set.concat f}
     return notfound if set.empty?
-
-    # generate etag from set fingerprint
-    env[:Response].update({'Content-Type' => format,
-              'Link' => env[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join,
-              'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
+    @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
+    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
     # lazy response-body constructor, uncalled on HEAD and etag match
     condResponse ->{
