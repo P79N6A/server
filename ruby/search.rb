@@ -26,8 +26,8 @@ class R
     when 4 # Y-m-d-H
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue Time.now
       hour = dp[3]
-      p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour-1)))
-      n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
+      p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour-1)))
+      n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
     end
     re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
     re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
