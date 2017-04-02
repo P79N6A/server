@@ -94,6 +94,7 @@ class R < RDF::URI
   Re       = SIOC + 'reply_of'
   Post     = SIOC + 'Post'
   To       = SIOC + 'addressed_to'
+  From     = SIOC + 'has_creator'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
   LDP      = W3   + 'ns/ldp#'

@@ -118,7 +118,7 @@ class R
                  {id: :statusbar}]}]}]}
   
   # properties used in default view so not given redundant column in tabular-view
-  InlineMeta = [Mtime,Type,Title,Image,Content]
+  InlineMeta = [Mtime,Type,Title,Image,Content,To]
   # unshown in non-verbose tabular-view, mainly rarely-used feed metadata
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', RSS+'comments', RSS+'em', RSS+'category',
                      Atom+'edit',Atom+'self',Atom+'replies',Atom+'alternate',
@@ -224,12 +224,17 @@ class R
                         c: {_: :img, class: :logo, src: logo.uri}}
                      end
                    }
-                 when SIOC+'has_creator'
-                   l[k].justArray.map{|v|
-                     name = v.R.fragment||''
-                     label = name.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                     e.env[:label][label] = true
-                     [{_: :a, href: this.uri, name: label, c: name},' ']}
+                 when From
+                   [[From,'from'],[To,'to']].map{|p,pl|
+                     l[p].do{|o|
+                       [{_: :b, c: pl + ' '},
+                        o.justArray.map{|v|
+                          name = v.R.fragment||''
+                          label = name.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                          e.env[:label][label] = true
+                          {_: :a, href: this.uri, name: label, c: name}}.intersperse(' '),
+                        '<br>'
+                       ]}}
                  else
                    l[k].justArray.map{|v|
                      case v
