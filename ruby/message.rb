@@ -454,7 +454,7 @@ class R
 
             inner.scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
-              if p==Atom+'id' || p==Atom+'link'
+              if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p 
                 # bound as subject URI, don't emit Atom:id triple
               else
                 yield u,p,e[3].extend(SniffContent).sniff.do{|o|
