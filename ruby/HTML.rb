@@ -131,7 +131,7 @@ class R
     g[e.uri].do{|t|t.delete Size;t.delete Date}
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     # typetag first
-    keys = [Type, *(keys - InlinedMetadata - VerboseMetadata)]
+    keys = [Type, *(keys - InlinedMetadata - VerboseMetadata)] unless e.q.has_key? 'full'
 
     {_: :table,
      c: [
