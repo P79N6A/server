@@ -14,9 +14,8 @@ class R
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = doc + '#' + (linenum += 1).to_s
         yield s, Date,day+'T'+m[0]+':'+m[1]+':00'
-        yield s, SIOC+'channel', channel
         yield s, Creator, m[2]
-        yield s, Label, m[2]
+        yield s, Label, channel
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, Type, R[SIOC+'InstantMessage']
       }
@@ -31,9 +30,9 @@ class R
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
     ch = re.q['ch']
     msgs.map{|uri,msg|
-      chan = msg[SIOC+'channel'].justArray[0]
-      id = {'ch' => chan}.qs
-      graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
+      label = msg[Label].justArray[0]
+      id = {'ch' => label}.qs
+      graph[id] ||= {'uri' => id, Title => label, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
       if re.env[:grep]
         msg[Content].do{|c| # keep content here as Grep will reduce it later
@@ -46,7 +45,7 @@ class R
       msg[DC+'link'].do{|links|
         graph[id][DC+'link'] ||= []
         graph[id][DC+'link'].concat links}
-      graph.delete uri unless ch==chan
+      graph.delete uri unless ch==label
     }
   }
 
@@ -56,7 +55,6 @@ class R
       s = base + t.css('.js-permalink').attr('href') # subject URI
       yield s, Type, R[SIOC+'Tweet']
       yield s, Label, t.css('.fullname')[0].inner_text
-      yield s, SIOC+'channel', 'twitter'
       yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       content = t.css('.tweet-text')[0]
@@ -440,10 +438,8 @@ class R
 
             if u.match commentRe
               yield u, R::Type, R[R::Post]
-              yield u, R::SIOC+'channel', resource.path.match(commentRe).pre_match.tail
             else
               yield u, R::Type, R[R::SIOC+'BlogPost']
-              yield u, R::SIOC+'channel', resource.host
               yield u, R::To, R[resource.schemePart + resource.hostPart]
             end
 

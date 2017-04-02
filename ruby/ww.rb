@@ -142,7 +142,6 @@ class R < RDF::URI
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
     SIOC+'TextFile' => :file,
-    SIOC+'channel' => :exchange,
     SIOC+'has_creator' => :user,
     SIOC+'has_discussion' => :comments,
     SIOC+'Thread' => :openenvelope,

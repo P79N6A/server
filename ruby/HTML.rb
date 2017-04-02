@@ -116,20 +116,23 @@ class R
                  '<br clear=all>',
                  expand,
                  {id: :statusbar}]}]}]}
-
-  # omitted from tabular view in non-verbose mode
-  VerboseMetadata = [DC+'identifier', DC+'source', RSS+'comments', RSS+'em', RSS+'category',
+  
+  # properties used in default view so not given redundant column in tabular-view
+  InlinedMetadata = [Mtime,Type,Title,Image,Content]
+  # unshown in non-verbose tabular-view, mainly rarely-used feed metadata
+  VerboseMetadata = [DC+'identifier', DC+'link', DC+'source', RSS+'comments', RSS+'em', RSS+'category',
                      Atom+'edit',Atom+'self',Atom+'replies',Atom+'alternate',
   "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",
                      SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', SIOC+'has_parent']
-
+  
   TabularView = -> g, e, show_head = true, show_id = true {
     sort = (e.q['sort']||'dc:date').expand
     direction = e.q.has_key?('ascending') ? :id : :reverse
     g[e.uri].do{|t|t.delete Size;t.delete Date}
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Type, *(keys - [Mtime,Type,Title,Image,Content,DC+'link',*VerboseMetadata])]
-    puts keys
+    # typetag first
+    keys = [Type, *(keys - InlinedMetadata - VerboseMetadata)]
+
     {_: :table,
      c: [
        {_: :tbody, c: (g.resources e).map{|r|
