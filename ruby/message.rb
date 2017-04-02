@@ -187,10 +187,7 @@ class R
       yield e, Mtime, date.to_i
     end
 
-    m.subject.do{|s| # subject
-      s = s.to_utf8
-      yield e, Label, s
-      yield e, Title, s}
+    m.subject.do{|s| yield e, Title, s.to_utf8}
 
     yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
 
