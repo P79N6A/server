@@ -121,7 +121,7 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
     g[e.uri].do{|t|t.delete Size;t.delete Date}
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys = [Type, *(keys - [Mtime,Type,Title,Image,Content,DC+'link'])]
+    keys = [Type, *(keys - [Mtime,Type,Title,Image,Content,DC+'link',DC+'identifier',DC+'source',SIOC+'has_discussion',SIOC+'reply_of',SIOC+'has_parent'])]
     {_: :table,
      c: [
        {_: :tbody, c: (g.resources e).map{|r|

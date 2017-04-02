@@ -167,13 +167,6 @@ class R
 
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
 
-    list && list.match(/@/) && m['List-Id'].do{|name| # list resource
-      name = name.decoded
-      group = AddrPath[list]                    # list URI
-      yield group, Type, R[SIOC+'Usergroup']    # list is a Group
-      yield group, Label, name.gsub(/[<>&]/,'') # list name
-    }
-
     m.from.do{|f|                    # any authors?
       f.justArray.map{|f|             # each author
         f = f.to_utf8.downcase        # author address
@@ -186,12 +179,7 @@ class R
         target = URI.escape('<' + id + '>')
         yield e, SIOC+'reply_to', R["mailto:#{URI.escape r2}?References=#{target}&In-Reply-To=#{target}&subject=#{(CGI.escape m.subject).gsub('+','%20')}&"+'#reply']}} # reply-to pointer
 
-    m[:from].do{|fr|
-      fr.addrs.head.do{|a|# author resource
-      author = AddrPath[a.address]
-      yield author, Type, R[FOAF+'Person']
-      yield author, FOAF+'name', (a.display_name || a.name)
-    }}
+#    m[:from].do{|fr|fr.addrs.head.do{|a|yield AddrPath[a.address],Label, a.display_name||a.name}}
 
     if m.date
       date = m.date.to_time.utc
