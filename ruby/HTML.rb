@@ -172,8 +172,8 @@ class R
           keys.map{|k|
             [{_: :td, property: k, class: sort==k ? 'selected' : '',
               c: case k
-                 when 'uri'
-                   if thisDir
+                 when 'uri' # not-so-sortable (attachments, body) fields are shown here to reduce column bloat
+                   if thisDir # already here, show a label rather than locator
                      {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
                    else
                      href = CGI.escapeHTML(l.uri||'')
@@ -182,7 +182,7 @@ class R
                      [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ', # title
                       {_: title ? :span : :a, class: :uri, href: href, c: name}, # URI
                       (title ? '<br>' : ' '),
-                      l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
+                      l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c }, # body
                       (['<br>',{_: :a, href: this.uri,
                         c: {_: :img, class: :thumb,
                             src: if (this.host != e.host) || this.ext.downcase == 'gif'
@@ -225,15 +225,13 @@ class R
                      end
                    }
                  when From
-                   [[From,'from'],[To,'to']].map{|p,pl|
+                   [[From,''],[To,' &rarr; '],].map{|p,pl|
                      l[p].do{|o|
-                       [{_: :b, c: pl + ' '},
+                       [{_: :b, c: pl},
                         o.justArray.map{|v|
-                          name = v.R.fragment||''
-                          label = name.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                          label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
                           e.env[:label][label] = true
-                          {_: :a, href: this.uri, name: label, c: name}}.intersperse(' '),
-                        '<br>'
+                          {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),
                        ]}}
                  else
                    l[k].justArray.map{|v|

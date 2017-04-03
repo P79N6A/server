@@ -53,10 +53,11 @@ class R
     base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
+      author = R[base+'/'+t.css('.username b')[0].inner_text]
       yield s, Type, R[SIOC+'Tweet']
-      yield s, Label, t.css('.fullname')[0].inner_text
-      yield s, Creator, R(base+'/'+t.css('.username b')[0].inner_text)
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
+      yield s, Creator, author
+      yield author.uri, Label, t.css('.fullname')[0].inner_text
       content = t.css('.tweet-text')[0]
       content.css('a').map{|a| # bind hostname to paths
         u = a.attr 'href'
