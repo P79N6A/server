@@ -123,7 +123,7 @@ class R
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', RSS+'comments', RSS+'em', RSS+'category',
                      Atom+'edit',Atom+'self',Atom+'replies',Atom+'alternate',
   "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",
-                     SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', SIOC+'has_parent']
+                     SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent']
   
   TabularView = -> g, e, show_head = true, show_id = true {
     sort = (e.q['sort']||'dc:date').expand
@@ -225,13 +225,15 @@ class R
                      end
                    }
                  when From
-                   [[From,''],[To,' &rarr; '],].map{|p,pl|
+                   [[From,'from'],
+                    [To,'to'],
+                    [SIOC+'reply_to','re']].map{|p,pl|
                      l[p].do{|o|
-                       [{_: :b, c: pl},
+                       [{_: :b, c: pl + ' '},
                         o.justArray.map{|v|
                           label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
                           e.env[:label][label] = true
-                          {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),
+                          {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),'<br>'
                        ]}}
                  else
                    l[k].justArray.map{|v|
