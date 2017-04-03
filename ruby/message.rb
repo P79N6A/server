@@ -15,7 +15,7 @@ class R
         s = doc + '#' + (linenum += 1).to_s
         yield s, Date,day+'T'+m[0]+':'+m[1]+':00'
         yield s, Creator, m[2]
-        yield s, Label, channel
+        yield s, To, channel
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, Type, R[SIOC+'InstantMessage']
       }

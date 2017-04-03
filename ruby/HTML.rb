@@ -168,7 +168,7 @@ class R
            o.justArray.map{|v|
              label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
              e.env[:label][label] = true
-             {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),'<br>']}})}
+             {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),' ']}})}
 
     [{_: :tr, class: :selectable,
       href: this.uri,
