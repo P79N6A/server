@@ -53,6 +53,7 @@ h3.title {background-color:#fff;color:#000;margin:0}
 table, div.mail {display:inline-block;}
 div, td {vertical-align:top}
 td {border-color: #555;border-width: 0 0 .1em 0;border-style: solid}
+th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
 td[property="http://purl.org/dc/terms/date"], td[property="http://schema.org/location"] {white-space:nowrap}
 td[property="http://schema.org/logo"] {text-align: center}
