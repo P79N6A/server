@@ -439,6 +439,7 @@ class R
 
             if u.match commentRe
               yield u, R::Type, R[R::Post]
+              yield u, R::To, R[resource.uri.match(commentRe).pre_match]
             else
               yield u, R::Type, R[R::SIOC+'BlogPost']
               yield u, R::To, R[resource.schemePart + resource.hostPart]
