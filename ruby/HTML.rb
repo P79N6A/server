@@ -120,10 +120,10 @@ class R
   # properties used in default view
   InlineMeta = [Mtime,Type,Title,Image,Content,Label]
   # extra properties for verbose mode
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', RSS+'comments', RSS+'em', RSS+'category',
-                     Atom+'edit',Atom+'self',Atom+'replies',Atom+'alternate',
-  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",
-                     SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent']
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category',
+                 Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',
+  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
   
   TabularView = -> g, e, show_head = true, show_id = true {
     sort = (e.q['sort']||'dc:date').expand
@@ -200,11 +200,12 @@ class R
                            else
                              '/thumbnail' + this.path
                             end}}] if isImg),
-                      l[DC+'link'].do{|links|
+                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
+                        l[p].do{|links|
                         big = links.size > 8
                         links[0..32].map{|link|
-                          id = link.R.uri
-                          [{_: :a, class: :link, href: id, c: (CGI.escapeHTML id)}.update(big ? {} : {id: e.selector}),(big ? ' ' : '<br>')]}},
+                          link = link.R
+                          [{_: :a, class: :link, href: link.uri, c: CGI.escapeHTML(link.fragment||link.basename)}.update(big ? {} : {id: e.selector}),(big ? ' ' : '<br>')]}}},
                      ]
                    end
                  when Type
