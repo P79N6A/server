@@ -57,7 +57,7 @@ class R
       yield s, Type, R[SIOC+'Tweet']
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Creator, author
-      yield author.uri, Label, t.css('.fullname')[0].inner_text
+     #yield author.uri, Label, t.css('.fullname')[0].inner_text
       content = t.css('.tweet-text')[0]
       content.css('a').map{|a| # bind hostname to paths
         u = a.attr 'href'
