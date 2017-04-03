@@ -166,9 +166,15 @@ class R
         l[p].do{|o|
           [{_: :b, c: pl + ' '},
            o.justArray.map{|v|
-             label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
-             e.env[:label][label] = true
-             {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),' ']}})}
+             if v.respond_to?(:uri)
+               v = v.R
+               label = (v.fragment||v.basename && v.basename.size > 1 && v.basename || v.host.split('.')[0..-2].join).downcase.gsub(/[^a-zA-Z0-9_]/,'')
+               e.env[:label][label] = true
+               {_: :a, href: v.uri, name: label, c: label}
+             else
+               v.to_s
+             end
+           }.intersperse(' '),' ']}})}
 
     [{_: :tr, class: :selectable,
       href: this.uri,
