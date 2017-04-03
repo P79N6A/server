@@ -117,9 +117,9 @@ class R
                  expand,
                  {id: :statusbar}]}]}]}
   
-  # properties used in default view so not given redundant column in tabular-view
-  InlineMeta = [Mtime,Type,Title,Image,Content]
-  # unshown in non-verbose tabular-view, mainly rarely-used feed metadata
+  # properties used in default view
+  InlineMeta = [Mtime,Type,Title,Image,Content,Label]
+  # extra properties for verbose mode
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', RSS+'comments', RSS+'em', RSS+'category',
                      Atom+'edit',Atom+'self',Atom+'replies',Atom+'alternate',
   "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",
@@ -184,7 +184,12 @@ class R
                      href = CGI.escapeHTML(l.uri||'')
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
-                     [({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ', # title
+                     [l[Label].justArray.map{|v|
+                        label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
+                        lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                        e.env[:label][lbl] = true
+                        [{_: :a, href: this.uri, name: lbl, c: label},' ']},
+                      ({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ', # title
                       {_: title ? :span : :a, class: :uri, href: href, c: name}, # URI
                       (title ? '<br>' : ' '),
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c }, # body
@@ -216,12 +221,6 @@ class R
                       else
                        children.map{|c|[(CGI.escapeHTML c.R.basename[0..15]), ' ']}
                      end}
-                 when Label
-                   l[k].justArray.map{|v|
-                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                     e.env[:label][lbl] = true
-                     [{_: :a, href: this.uri, name: lbl, c: label},' ']}
                  when Schema+'logo'
                    l[k].justArray.map{|logo|
                      if logo.respond_to?(:uri)
