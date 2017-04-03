@@ -30,9 +30,9 @@ class R
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
     ch = re.q['ch']
     msgs.map{|uri,msg|
-      label = msg[Label].justArray[0]
-      id = {'ch' => label}.qs
-      graph[id] ||= {'uri' => id, Title => label, Type => R[SIOC+'Discussion'], Size => 0}
+      chan = msg[To].justArray[0]
+      id = {'ch' => chan}.qs
+      graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
       if re.env[:grep]
         msg[Content].do{|c| # keep content here as Grep will reduce it later
@@ -45,7 +45,7 @@ class R
       msg[DC+'link'].do{|links|
         graph[id][DC+'link'] ||= []
         graph[id][DC+'link'].concat links}
-      graph.delete uri unless ch==label
+      graph.delete uri unless chan==ch
     }
   }
 
