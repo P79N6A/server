@@ -105,10 +105,10 @@ class R
     threads.map{|title,post|
       post[groupBy].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|group|
         mid = URI.escape post[DC+'identifier'][0]
-        tags = []
-        title = title.gsub(/\[[^\]]+\]/){|tag|tags.push tag[1..-2];nil}
-        tags = [group] if tags.empty?
-        thread = {Type => R[Post], Label => tags, 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Image => post[Image], Content => e.env[:grep] ? post[Content] : []}
+        labels = []
+        title = title.gsub(/\[[^\]]+\]/){|l|labels.push l[1..-2];nil}
+        thread = {Type => R[Post], To => group, 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Image => post[Image], Content => e.env[:grep] ? post[Content] : []}
+        thread.update({Label => labels}) unless labels.empty?
         thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
         graph[thread.uri] = thread }}}
 

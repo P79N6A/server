@@ -54,7 +54,6 @@ table, div.mail {display:inline-block;}
 div, td {vertical-align:top}
 td {border-color: #555;border-width: 0 0 .1em 0;border-style: solid}
 th a {font-size:1.5em;font-weight: normal}
-th span.label {font-size:.6em;color:#ddd;margin-left:.18em}
 td[property="http://purl.org/dc/terms/date"], td[property="http://schema.org/location"] {white-space:nowrap}
 td[property="http://schema.org/logo"] {text-align: center}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000}

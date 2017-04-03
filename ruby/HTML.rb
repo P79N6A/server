@@ -118,7 +118,7 @@ class R
                  {id: :statusbar}]}]}]}
   
   # properties used in default view so not given redundant column in tabular-view
-  InlineMeta = [Mtime,Type,Title,Image,Content,To]
+  InlineMeta = [Mtime,Type,Title,Image,Content]
   # unshown in non-verbose tabular-view, mainly rarely-used feed metadata
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', RSS+'comments', RSS+'em', RSS+'category',
                      Atom+'edit',Atom+'self',Atom+'replies',Atom+'alternate',
@@ -150,14 +150,9 @@ class R
 
                href = CGI.escapeHTML q.qs
 
-               [{_: :th, id: e.selector, href: href,
-                 property: k,
+               [{_: :th, id: e.selector, href: href, property: k,
                  class: k == sort ? 'selected' : '',
-                 c: {_: :a,
-                     rel: :nofollow,
-                     href: href,
-                     class: Icons[k]||'',
-                     c: k == Type ? '' : {_: :span, class: :label, c: k.R.fragment||k.R.basename}}}, "\n"]}]}]}}
+                 c: {_: :a, rel: :nofollow, href: href, class: Icons[k]||''}}, "\n"]}]}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
@@ -169,11 +164,19 @@ class R
       href: this.uri,
       id: thisDir ? 'this' : e.selector,
        c: ["\n",
-          keys.map{|k|
+           keys.map{|k|
+             actors = -> {
+               [[From,''],[To,'to'],[SIOC+'reply_to','re']].map{|p,pl|
+                 l[p].do{|o|
+                   [{_: :b, c: pl + ' '},
+                    o.justArray.map{|v|
+                      label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                      e.env[:label][label] = true
+                      {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),'<br>']}}}
             [{_: :td, property: k, class: sort==k ? 'selected' : '',
               c: case k
-                 when 'uri' # not-so-sortable (attachments, body) fields are shown here to reduce column bloat
-                   if thisDir # already here, show a label rather than locator
+                 when 'uri' # URI, Title, body + attachment fields are shown here to reduce column bloat
+                   if thisDir # located here, show label rather than locator
                      {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
                    else
                      href = CGI.escapeHTML(l.uri||'')
@@ -225,16 +228,9 @@ class R
                      end
                    }
                  when From
-                   [[From,'from'],
-                    [To,'to'],
-                    [SIOC+'reply_to','re']].map{|p,pl|
-                     l[p].do{|o|
-                       [{_: :b, c: pl + ' '},
-                        o.justArray.map{|v|
-                          label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                          e.env[:label][label] = true
-                          {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),'<br>'
-                       ]}}
+                   actors[]
+                 when To
+                   actors[] unless l[From]
                  else
                    l[k].justArray.map{|v|
                      case v
