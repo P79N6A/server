@@ -160,22 +160,24 @@ class R
     monospace = types.member? SIOC+'InstantMessage'
     isImg = types.member? Image
     thisDir = this.uri[-1]=='/' && e.path == this.path
+    shownActors = false
+    actors = -> {
+      shownActors ? '' : ((shownActors = true) && [[From,''],[To,'to'],[SIOC+'reply_to','re']].map{|p,pl|
+        l[p].do{|o|
+          [{_: :b, c: pl + ' '},
+           o.justArray.map{|v|
+             label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
+             e.env[:label][label] = true
+             {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),'<br>']}})}
+
     [{_: :tr, class: :selectable,
       href: this.uri,
       id: thisDir ? 'this' : e.selector,
        c: ["\n",
            keys.map{|k|
-             actors = -> {
-               [[From,''],[To,'to'],[SIOC+'reply_to','re']].map{|p,pl|
-                 l[p].do{|o|
-                   [{_: :b, c: pl + ' '},
-                    o.justArray.map{|v|
-                      label = (v.R.fragment||v.R.basename||'').downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                      e.env[:label][label] = true
-                      {_: :a, href: this.uri, name: label, c: label}}.intersperse(' '),'<br>']}}}
-            [{_: :td, property: k, class: sort==k ? 'selected' : '',
-              c: case k
-                 when 'uri' # URI, Title, body + attachment fields are shown here to reduce column bloat
+             [{_: :td, property: k, class: sort==k ? 'selected' : '',
+               c: case k
+                  when 'uri' # URI, Title, body + attachment fields are shown here to reduce column bloat
                    if thisDir # located here, show label rather than locator
                      {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
                    else
@@ -230,7 +232,7 @@ class R
                  when From
                    actors[]
                  when To
-                   actors[] unless l[From]
+                   actors[]
                  else
                    l[k].justArray.map{|v|
                      case v
