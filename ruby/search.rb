@@ -129,14 +129,14 @@ class R
   # - write document to local store.
   # - reverse-link indexing for finding incoming arcs.
 
-  # add index-triple
+  # add index :: triple
   def index p, o
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # index triple-stream in local-store
+  # add index :: triple-stream
   def indexStream triplr, &b
     docs = {} # document index
     graph = fromStream({},triplr) # collect triples
@@ -213,7 +213,7 @@ class R
             H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
       graph.delete u if r[Content].empty?
     }
-    graph['#grepCSS'] = {Content => H({_: :style,
+    graph['#grep.CSS'] = {Content => H({_: :style,
                                        c: wordIndex.values.map{|i|
                                          bg = rand 16777216
                                          fg = bg > 8388608 ? :black : :white
