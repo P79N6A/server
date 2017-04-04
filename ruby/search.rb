@@ -163,7 +163,7 @@ class R
       doc = doc.R
       unless doc.e
         doc.w graph, true
-        puts "+ http:" + doc.stripDoc
+        puts "+ " + doc.stripDoc
       end}
     graph.triples &b if b # emit triples
     self
@@ -180,7 +180,7 @@ class R
         unless doc.e
           doc.dir.mk
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # store resource
-          puts "+ http:" + doc.stripDoc
+          puts "+ " + doc.stripDoc
         end
         true
       } || puts("warning, #{uri} missing timestamp")
