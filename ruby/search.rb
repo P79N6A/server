@@ -125,24 +125,23 @@ class R
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  ## ingestion and indexing of information resources
-  # very lightweight but could be expanded, currently:
-  # - write document to local store
-  # - reverse-link indexing for finding "incoming" triples to a resource. used for server-side thread-reconstruction currently
+  ## ingestion and indexing of information resource, currently:
+  # - write document to local store.
+  # - reverse-link indexing for finding incoming arcs.
 
-  # index triple in local store
+  # add index-triple
   def index p, o
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # index stream of triples in local-store
+  # index triple-stream in local-store
   def indexStream triplr, &b
     docs = {} # document index
     graph = fromStream({},triplr) # collect triples
 
-    # group by document URI + index triples while we're walking the graph
+    # group by document URI + index triples while walking the graph
     graph.map{|u,r|    # foreach resource
       this = u.R       # resource reference
       doc = this.jsonDoc.uri # document URI
@@ -154,7 +153,7 @@ class R
       end
       docs[doc] ||= {} # document graph
       docs[doc][u] = r # add resource
-      r[Re].do{|v|v.map{|o|this.index Re,o}}} # index triple
+      r[Re].do{|v|v.map{|o|this.index Re,o}}} # index write
 
     docs.map{|doc,graph| # write documents
       doc = doc.R
