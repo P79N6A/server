@@ -117,9 +117,9 @@ class R
                  expand,
                  {id: :statusbar}]}]}]}
   
-  # properties used in default view
+  # properties in default view
   InlineMeta = [Mtime,Type,Title,Image,Content,Label]
-  # extra properties for verbose mode
+  # hide unless verbose
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category',
                  Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',
@@ -131,7 +131,7 @@ class R
     g[e.uri].do{|t|t.delete Size;t.delete Date}
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    # show typetag first and hide inlined fields
+    # show typetag first, hide inlined columns
     keys = [Type, *(keys - InlineMeta)]
 
     {_: :table,
