@@ -35,7 +35,7 @@ class R
       graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
       if re.env[:grep]
-        msg[Content].do{|c| # keep content here as Grep will reduce it later
+        msg[Content].do{|c| # thread-through content here as Grep will reduce it later
           graph[id][Content] ||= []
           graph[id][Content].concat c}
       end
