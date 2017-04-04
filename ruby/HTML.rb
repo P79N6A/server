@@ -129,27 +129,21 @@ class R
     sort = (e.q['sort']||'dc:date').expand
     direction = e.q.has_key?('ascending') ? :id : :reverse
     g[e.uri].do{|t|t.delete Size;t.delete Date}
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
-    keys -= VerboseMeta unless e.q.has_key? 'full'
     # show typetag first, hide inlined columns
+    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Type, *(keys - InlineMeta)]
+    keys -= VerboseMeta unless e.q.has_key? 'full'
 
     {_: :table,
-     c: [
-       {_: :tbody, c: (g.resources e).map{|r|
-          TableRow[r,e,sort,direction,keys]}},
-       {_: :tr,
-         c: [keys.map{|k|
-
+     c: [{_: :tbody, c: g.resources(e).map{|r| TableRow[r,e,sort,direction,keys] }},
+         {_: :tr, c: [keys.map{|k|
                q = e.q.merge({'sort' => k.shorten})
                if direction == :id
                  q.delete 'ascending'
                else
                  q['ascending'] = ''
                end
-
                href = CGI.escapeHTML q.qs
-
                [{_: :th, id: e.selector, href: href, property: k,
                  class: k == sort ? 'selected' : '',
                  c: {_: :a, rel: :nofollow, href: href, class: Icons[k]||''}}, "\n"]}]}]}}
@@ -183,22 +177,27 @@ class R
            keys.map{|k|
              [{_: :td, property: k, class: sort==k ? 'selected' : '',
                c: case k
-                  when 'uri' # URI, Title, body + attachment fields are shown here to reduce column bloat
-                   if thisDir # located here, show label rather than locator
+                  when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
+                   if thisDir # you're here, show label rather than locator
                      {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
                    else
                      href = CGI.escapeHTML(l.uri||'')
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
-                     [l[Label].justArray.map{|v|
+                     [# labels
+                       l[Label].justArray.map{|v|
                         label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                         lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                         e.env[:label][lbl] = true
                         [{_: :a, href: this.uri, name: lbl, c: label},' ']},
-                      ({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ', # title
-                      {_: title ? :span : :a, class: :uri, href: href, c: name}, # URI
+                      # title
+                      ({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ',
+                      # URL
+                      {_: title ? :span : :a, class: :uri, href: href, c: name},
                       (title ? '<br>' : ' '),
-                      l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c }, # body
+                      # body
+                      l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
+                      # images
                       (['<br>',{_: :a, href: this.uri,
                         c: {_: :img, class: :thumb,
                             src: if (this.host != e.host) || this.ext.downcase == 'gif'
@@ -206,13 +205,16 @@ class R
                            else
                              '/thumbnail' + this.path
                             end}}] if isImg),
-                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
-                        l[p].do{|links|
-                        big = links.size > 8
-                        links[0..32].map{|link|
-                          link = link.R
-                          [{_: :a, class: :link, href: link.uri, c: CGI.escapeHTML(link.fragment||link.basename)}.update(big ? {} : {id: e.selector}),(big ? ' ' : '<br>')]}}},
-                     ]
+                      # files
+                      {class: :files,
+                       c: [DC+'link',
+                           SIOC+'attachment',
+                           DC+'hasFormat'].map{|p|
+                         l[p].do{|links|
+                           big = links.size > 8
+                           links[0..32].map{|link|
+                             link = link.R
+                             [{_: :a, class: :link, href: link.uri, c: CGI.escapeHTML(link.fragment||link.basename)}.update(big ? {} : {id: e.selector}),(big ? ' ' : '<br>')]}}}}]
                    end
                  when Type
                    l[Type].justArray.map{|t|
