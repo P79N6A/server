@@ -200,12 +200,11 @@ class R
                        c: [DC+'link',
                            SIOC+'attachment',
                            DC+'hasFormat'].map{|p|
-                         l[p].do{|links|
-                           links[0..32].map{|link|
+                         l[p].justArray.map{|link|
                              link = link.R
                              [{_: :a, class: :link, id: e.selector, href: link.uri,
                                c: CGI.escapeHTML(link.fragment||link.basename=='/' ? link.host : link.basename)},
-                              '<br>']}}}},
+                              '<br>']}}},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
