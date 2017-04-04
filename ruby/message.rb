@@ -306,7 +306,7 @@ class R
       end
     rescue OpenURI::HTTPError => error
       msg = error.message
-      puts msg unless msg.match(/304/) # print unusual errors
+      puts [uri,msg].join("\t") unless msg.match(/304/) # print unusual errors
     end
     self
   rescue Exception => e
