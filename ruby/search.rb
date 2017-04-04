@@ -72,12 +72,11 @@ class R
     c = ((d.q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
     # direction
     o = d.q.has_key?('asc') ? :asc : :desc
-
-    (d.take c, o, d.q['offset'].do{|o|o.R}).do{|s| # get elements
-      if d.q['offset'] && head = s[0] # create direction-reversing link
+    (d.take c, o, d.q['offset'].do{|o|o.R}).do{|s| # search
+      if d.q['offset'] && head = s[0] # direction-reversal link
         d.env[:Links][:prev] = d.path + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
       end
-      if edge = s.size >= c && s.pop # lookahead-node (and therefore another page) exists
+      if edge = s.size >= c && s.pop # lookahead node, and therefore another page, exists. point to it
         d.env[:Links][:next] = d.path + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
       end
       s }}
@@ -148,7 +147,7 @@ class R
       this = u.R       # resource reference
       doc = this.jsonDoc.uri # document URI
       if this.host
-        r[Date].do{|t| # if remote resource has datetime, place it on the timeline
+        r[Date].do{|t| # if resource has timestamp, link to timeline
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           doc = "//localhost/#{time}#{slug}e"}
