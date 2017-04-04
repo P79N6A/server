@@ -195,6 +195,17 @@ class R
                       # URL
                       {_: title ? :span : :a, class: :uri, href: href, c: name},
                       (title ? '<br>' : ' '),
+                      # files
+                      {class: :files,
+                       c: [DC+'link',
+                           SIOC+'attachment',
+                           DC+'hasFormat'].map{|p|
+                         l[p].do{|links|
+                           links[0..32].map{|link|
+                             link = link.R
+                             [{_: :a, class: :link, id: e.selector, href: link.uri,
+                               c: CGI.escapeHTML(link.fragment||link.basename=='/' ? link.host : link.basename)},
+                              '<br>']}}}},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
@@ -205,16 +216,7 @@ class R
                            else
                              '/thumbnail' + this.path
                             end}}] if isImg),
-                      # files
-                      {class: :files,
-                       c: [DC+'link',
-                           SIOC+'attachment',
-                           DC+'hasFormat'].map{|p|
-                         l[p].do{|links|
-                           big = links.size > 8
-                           links[0..32].map{|link|
-                             link = link.R
-                             [{_: :a, class: :link, href: link.uri, c: CGI.escapeHTML(link.fragment||link.basename)}.update(big ? {} : {id: e.selector}),(big ? ' ' : '<br>')]}}}}]
+                     ]
                    end
                  when Type
                    l[Type].justArray.map{|t|

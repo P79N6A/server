@@ -223,7 +223,7 @@ class R
         else # fresh line
           [l.hrefs{|p,o| # hyperlink plaintext
              yield e, p, o}] # emit found links as RDF
-        end}.compact.intersperse("<br>\n")
+        end}.compact.intersperse("\n")
       yield e, Content, body}
 
     attache = -> {e.R.a('.attache').mk} # container for attachments & parts
