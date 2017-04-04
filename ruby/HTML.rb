@@ -151,7 +151,7 @@ class R
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
     types = l.types
-    monospace = types.member? SIOC+'InstantMessage'
+    monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
     thisDir = this.uri[-1]=='/' && e.path == this.path
     shownActors = false
