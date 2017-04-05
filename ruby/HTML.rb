@@ -128,7 +128,7 @@ class R
   TabularView = -> g, e, show_head = true, show_id = true {
     sort = (e.q['sort']||'dc:date').expand
     direction = e.q.has_key?('ascending') ? :id : :reverse
-    g[e.uri].do{|t|t.delete Size;t.delete Date}
+
     # show typetag first, hide inlined columns
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Type, *(keys - InlineMeta)]
@@ -204,7 +204,7 @@ class R
                              link = link.R
                              [{_: :a, class: :link, id: e.selector, href: link.uri,
                                c: CGI.escapeHTML(link.fragment||link.basename=='/' ? link.host : link.basename)},
-                              '<br>']}}},
+                              ' ']}}},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
