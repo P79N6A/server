@@ -124,6 +124,7 @@ class R < RDF::URI
     LDP+'contains' => :container,
     Size => :size,
     Mtime => :time,
+    To => :user,
     Resource => :graph,
     DC+'hasFormat' => :file,
     Atom+'self' => :graph,
