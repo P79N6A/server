@@ -4,8 +4,7 @@ class R
   def triplrIRC &f
     doc = uri.gsub '#','%23'
     linenum = -1
-    # strftime-format pathname:
-    # autolog_path = "~/Sync/%Y/%m/%d/%H/$tag$0.log";
+    # read date from strftime-path "~/Sync/%Y/%m/%d/%H/$tag$0.log"
     day = dirname.match /\/(\d{4}\/\d{2}\/\d{2})/
     return unless day
     day = day[1].gsub('/','-')
