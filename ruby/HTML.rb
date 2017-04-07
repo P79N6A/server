@@ -156,7 +156,7 @@ class R
     thisDir = this.uri[-1]=='/' && e.path == this.path
     shownActors = false
     actors = -> {
-      shownActors ? '' : ((shownActors = true) && [[From,''],[To,'to'],[SIOC+'reply_to','re']].map{|p,pl|
+      shownActors ? '' : ((shownActors = true) && [[From,''],[To,'to']].map{|p,pl|
         l[p].do{|o|
           [{_: :b, c: pl + ' '},
            o.justArray.map{|v|
