@@ -4,7 +4,7 @@ class R
   def triplrIRC &f
     doc = uri.gsub '#','%23'
     linenum = -1
-    # read date from strftime-path "~/Sync/%Y/%m/%d/%H/$tag$0.log"
+    # read date from strftime-path "%Y/%m/%d/%H/$net$chan.log"
     day = dirname.match /\/(\d{4}\/\d{2}\/\d{2})/
     return unless day
     day = day[1].gsub('/','-')
@@ -80,7 +80,6 @@ class R
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     threads = {}
     weight = {}
-    groupBy = (e.q['group']||To).expand
 
     # pass 1. statistics
     g.map{|u,p|
@@ -102,13 +101,19 @@ class R
 
     # pass 2. cluster
     threads.map{|title,post|
-      post[groupBy].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|group|
-        mid = URI.escape post[DC+'identifier'][0]
+      # select heaviest recipient
+      post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|to|
+        # thread ID
+        id = '/thread/' + URI.escape(post[DC+'identifier'][0])
         labels = []
         title = title.gsub(/\[[^\]]+\]/){|l|labels.push l[1..-2];nil}
-        thread = {Type => R[Post], To => group, 'uri' => '/thread/' + mid , Title => title, Date => post[Date], Image => post[Image], Content => e.env[:grep] ? post[Content] : []}
+        thread = {Type => R[Post], To => to, 'uri' => id , Title => title, Date => post[Date], Image => post[Image], Content => e.env[:grep] ? post[Content] : []}
         thread.update({Label => labels}) unless labels.empty?
-        thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
+        if post[Size] > 1
+          thread.update({Size => post[Size], Type => R[SIOC+'Thread']})
+        else
+          #thread[Creator] = post[Creator]
+        end
         graph[thread.uri] = thread }}}
 
   ReExpr = /\b[rR][eE]: /
