@@ -112,7 +112,7 @@ class R
         if post[Size] > 1
           thread.update({Size => post[Size], Type => R[SIOC+'Thread']})
         else
-          #thread[Creator] = post[Creator]
+          thread[Creator] = post[Creator]
         end
         graph[thread.uri] = thread }}}
 
