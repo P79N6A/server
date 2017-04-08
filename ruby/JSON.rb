@@ -12,19 +12,13 @@ class R
     m
   end
 
-  # URI -> Graph
-  def graph graph = {}
-    fileResources.map{|d|d.loadGraph graph}
-    graph
-  end
-
   # normalize set to RDF docs only
   def justRDF pass = RDFsuffixes
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
       self # return
     else # non RDF, transcode
       doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache check
       doc
     end
   end

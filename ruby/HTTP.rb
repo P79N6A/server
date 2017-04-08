@@ -142,9 +142,9 @@ class R
         if NonRDF.member? format
           # return serialized non-RDF
           Render[format][loadGraph[],self]
-        else
+        else # RDF format
           base = @r.R.join uri
-          if container # summarized graph
+          if container # summarize contained graph
             g = loadGraph[].toRDF
           else # full RDF graph
             g = RDF::Graph.new
