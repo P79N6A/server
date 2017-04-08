@@ -18,6 +18,17 @@ class R
     graph
   end
 
+  # normalize set to RDF docs only
+  def justRDF pass = RDFsuffixes
+    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
+      self # return
+    else # non RDF, transcode
+      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r
+      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
+      doc
+    end
+  end
+
   # file -> Graph
   def loadGraph graph
     return unless e
@@ -91,17 +102,6 @@ class R
   end
 
   Render['application/json'] = -> graph,_ { graph.to_json }
-
-  # normalize returned reference to RDF docs only - cached transcode as needed
-  def justRDF pass = RDFsuffixes
-    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
-      self
-    else
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r # doc URI
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # update cache
-      doc
-    end
-  end
 
 end
 

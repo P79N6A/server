@@ -144,7 +144,7 @@ class R
           Render[format][loadGraph[],self]
         else
           base = @r.R.join uri
-          if container # call lambda for summarized graph
+          if container # summarized graph
             g = loadGraph[].toRDF
           else # full RDF graph
             g = RDF::Graph.new
