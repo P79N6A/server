@@ -120,12 +120,14 @@ class R
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
-    # lazy response-body constructor, uncalled on HEAD and etag match
+    # lazy body-serialize, uncalled on HEAD and etag match
     condResponse ->{
-      if set.size==1 && format == set[0].mime # single file in set and MIME is requested
-        set[0] # static-file
+      # if set has one file and its MIME is preferred
+      if set.size==1 && format == set[0].mime
+        set[0] # return file handle
       else
-        loadGraph = -> {
+
+        loadGraph = -> { # graph loader
           graph = {}
           set.map{|r|r.loadGraph graph}
           unless q.has_key? 'full'
@@ -133,17 +135,18 @@ class R
             Grep[graph,self] if @r[:grep]
           end
           graph}
-        if NonRDF.member? format
+
+        if NonRDF.member? format # return serialized non-RDF
           Render[format][loadGraph[],self]
         else
           base = @r.R.join uri
-          if container # native graph
+          if container # use loadGraph lambda for summarization
             g = loadGraph[].toRDF
-          else # RDF graph
+          else # load to RDF graph
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
           end
-          # return serialized graph
+          # return serialized RDF
           g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
         end
       end}
