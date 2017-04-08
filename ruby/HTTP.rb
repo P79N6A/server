@@ -112,15 +112,18 @@ class R
       return [301, @r[:Response], []]
     end
 
-    # find resource set
+    # search for resource set
     set = []
     (Set[q['set']]||Set[Resource])[self].do{|f|
       set.concat f}
     return notfound if set.empty?
-    @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
-    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
 
-    # lazy body-serialize, uncalled on HEAD and etag match
+    # set response-head values
+    @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
+    @r[:Response].update({'Content-Type' => format,
+                          'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
+
+    # lazy body-serialize, uncalled on HEAD and ETag hit
     condResponse ->{
       # if set has one file and its MIME is preferred
       if set.size==1 && format == set[0].mime
