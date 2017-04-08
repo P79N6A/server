@@ -49,9 +49,9 @@ class R
     return unless directory?
     res = (child '*.e').glob   # find children
     return unless res.size > 1 # already zero/one docs, done
-    graph = {}                 # init combined graph
-    res.map{|r|r.loadGraph graph; r.delete} # combine
-    child('index.e').w graph, true # write combined graph to doc
+    graph = {}                 # graph
+    res.map{|r|r.loadGraph graph; r.delete} # load
+    child('index.e').w graph, true # write doc
     self
   end
 
