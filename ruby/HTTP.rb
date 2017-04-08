@@ -136,13 +136,14 @@ class R
           end
           graph}
 
-        if NonRDF.member? format # return serialized non-RDF
+        if NonRDF.member? format
+          # return serialized non-RDF
           Render[format][loadGraph[],self]
         else
           base = @r.R.join uri
-          if container # use loadGraph lambda for summarization
+          if container # call lambda for summarized graph
             g = loadGraph[].toRDF
-          else # load to RDF graph
+          else # full RDF graph
             g = RDF::Graph.new
             set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
           end
