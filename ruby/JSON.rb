@@ -28,14 +28,18 @@ class R
     return unless e
     base = @r.R.join(stripDoc) if @r
     justRDF(%w{e}).do{|f|
-      ((f.r true) || {}). # load graph
-        triples{|s,p,o|   # foreach triple
-        if base           # resolve ID
+      ((f.r true) || {}). # read file into hashtable
+        triples{|s,p,o|   # visit triples
+        if base           # bind identifiers
+          # subject URI
           s = base.join(s).to_s
+          # object URI
           o['uri'] = base.join(o.uri).to_s if o.class==Hash && o.uri          
         end
+        # add triples to graph
         graph[s] ||= {'uri' => s}
-        graph[s][p] = (graph[s][p]||[]).justArray.push o}}
+        graph[s][p] = (graph[s][p]||[]).justArray.push o
+      }}
     graph
   end
 
