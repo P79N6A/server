@@ -22,7 +22,7 @@ class R
       doc
     end
   end
-
+  
   # file -> Graph
   def loadGraph graph
     return unless e
@@ -36,6 +36,13 @@ class R
         end
         graph[s] ||= {'uri' => s}
         graph[s][p] = (graph[s][p]||[]).justArray.push o}}
+    graph
+  end
+
+  # files -> Graph
+  def graph graph = {}
+    fileResources.map{|d|
+      d.loadGraph graph}
     graph
   end
 
