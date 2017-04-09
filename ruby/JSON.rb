@@ -12,8 +12,8 @@ class R
     m
   end
 
-  # normalize set to RDF docs only
-  def justRDF pass = RDFsuffixes
+  # normalize file handles to RDF
+  def justRDF pass = %w{e}
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
       self # return
     else # non RDF, transcode
@@ -27,10 +27,10 @@ class R
   def loadGraph graph
     return unless e
     base = @r.R.join(stripDoc) if @r
-    justRDF(%w{e}).do{|f|
-      ((f.r true) || {}). # read file into hashtable
-        triples{|s,p,o|   # visit triples
-        if base           # bind identifiers
+    justRDF.do{|f| # maybe transcode to RDF
+      ((f.r true)||{}). # read file into hashtable
+        triples{|s,p,o| # visit triples
+        if base         # bind identifiers
           # subject URI
           s = base.join(s).to_s
           # object URI

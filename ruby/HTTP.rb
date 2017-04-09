@@ -148,7 +148,9 @@ class R
             g = loadGraph[].toRDF
           else # full RDF graph
             g = RDF::Graph.new
-            set.map{|f|f.justRDF.do{|doc|g.load doc.pathPOSIX, :base_uri => base}}
+            set.map{|f|
+              f.justRDF(RDFsuffixes).do{|doc| # transcode non-RDF
+                g.load doc.pathPOSIX, :base_uri => base}}
           end
           # return serialized RDF
           g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes

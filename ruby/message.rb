@@ -305,7 +305,7 @@ class R
         resp = response.read
         unless body.e && body.r == resp
           body.w resp # update body-cache
-          ('file://'+body.pathPOSIX).R.indexResource :format => :feed, :base_uri => uri # index posts
+          ('file://'+body.pathPOSIX).R.indexResource :format => :feed, :base_uri => uri # index post(s)
         end
       end
     rescue OpenURI::HTTPError => error
@@ -375,30 +375,27 @@ class R
       def mapPredicates *f
         send(*f){|s,p,o|
           yield s,
-                { Purl+'dc/elements/1.1/creator' => Creator,
-                  Purl+'dc/elements/1.1/subject' => SIOC+'subject',
-                  Atom+'author' => Creator,
-                  RSS+'description' => Content,
-                  RSS+'encoded' => Content,
-                  RSS+'modules/content/encoded' => Content,
-                  RSS+'modules/slash/comments' => SIOC+'num_replies',
-                  Atom+'content' => Content,
-                  Atom+'summary' => Content,
-                  RSS+'title' => Title,
-                  Atom+'title' => Title,
-                }[p] || p, o
-        }
+                {Purl+'dc/elements/1.1/subject' => SIOC+'subject',
+                 RSS+'description' => Content,
+                 RSS+'encoded' => Content,
+                 RSS+'modules/content/encoded' => Content,
+                 RSS+'modules/slash/comments' => SIOC+'num_replies',
+                 Atom+'content' => Content,
+                 Atom+'summary' => Content,
+                 RSS+'title' => Title,
+                 Atom+'title' => Title,
+                }[p]||p, o }
       end
 
       def rawFeedTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup
 
-        # SGMLy elements
+        # elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
         reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
 
-        # potential entry identifiers
+        # identifiers
         reRDFid = /about=["']?([^'">\s]+)/            # RDF @about
         reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> element innertext
         reLink = /<link>([^<]+)/                      # <link> element innertext
@@ -406,15 +403,15 @@ class R
         reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> href attribute of type rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href attribute
 
-        # URI heuristic to differentiate Post vs Comment type-tag
-        commentRe = /\/comments\//
-
         # media links
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
-        
+
+        commentRe = /\/comments\//
+
         x = {} # XML-namespace table
+
         head = @doc.match(reHead)
         head && head[2] && head[2].scan(reXMLns){|m|
           prefix = m[0]
@@ -426,21 +423,19 @@ class R
           attrs = m[2]
           inner = m[3]
 
-          # post identifier
+          # find post identifier
           u = (attrs.do{|a|a.match(reRDFid)} ||
-               inner.match(reLink) || inner.match(reLinkCD) ||
-               inner.match(reLinkAlt) || inner.match(reLinkRel) ||
-               inner.match(reGUID)).do{|s|
-            s[1]}
+               inner.match(reLink) || inner.match(reLinkCD) || inner.match(reLinkAlt) || inner.match(reLinkRel) || inner.match(reGUID)).do{|s|s[1]}
 
           if u
 
-            unless u.match /^http/ # resolve to fully-expanded URI
+            unless u.match /^http/ # bind paths to full URI
               u = (URI.join @base, u).to_s
             end
 
             resource = u.R
 
+            # typetag
             if u.match commentRe
               yield u, R::Type, R[R::Post]
               yield u, R::To, R[resource.uri.match(commentRe).pre_match]
@@ -449,22 +444,40 @@ class R
               yield u, R::To, R[resource.schemePart + resource.hostPart]
             end
 
+            # media attachments
             inner.scan(reAttach){|e|
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
                 yield(u, R::Atom+rel[1], url[2].R) if rel}}
 
+            # elements
             inner.scan(reElement){|e|
+
+              # expand property-name
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
+
+              # custom element-type handle
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p 
-                # bound as subject URI, don't emit Atom:id triple
-              else
-                yield u,p,e[3].extend(SniffContent).sniff.do{|o|
-                  o.match(HTTP_URI) ? o.R : o }
+                # bound as subject URI, drop redundant identifier-triple
+
+              elsif [Atom+'author', RSS+'author', RSS+'creator', Purl+'dc/elements/1.1/creator'].member? p
+                # author URI and name
+                uri = e[3].match /<uri>([^<]+)</
+                name = e[3].match /<name>([^<]+)</
+                yield u, Creator, e[3].extend(SniffContent).sniff.do{|o|o.match(HTTP_URI) ? o.R : o } unless name||uri
+                yield u, Creator, uri[1].R if uri
+                if name
+                  name = name[1]
+                  yield u, Creator, (CGI.escapeHTML name) unless uri && uri[1].index(name.sub('/u/','/user/'))
+                end
+
+
+              else # generic element
+                yield u,p,e[3].extend(SniffContent).sniff.do{|o|o.match(HTTP_URI) ? o.R : o }
               end
             }
           else
-            puts "no identifier found for post in #{@base} #{inner}"
+            puts "can't find identifier in #{@base}: #{inner}"
           end
         }
 
