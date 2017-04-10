@@ -50,7 +50,7 @@ a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.link:before { content:"\f08e"; font-family: icons; color: #ccf; margin: 0 .14em 0 .2em }
 h3.title {background-color:#fff;color:#000;margin:0}
-table, div.mail {display:inline-block;}
+table {margin:auto}
 div, td {vertical-align:top}
 td {border-color: #555;border-width: 0 0 .1em 0;border-style: solid}
 th {text-align: left}
@@ -60,8 +60,6 @@ td[property="http://schema.org/logo"] {text-align: center}
 td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000}
 div.sourcecode {background-color:#fff;color:#000;padding:.5em}
 div.files {float: right;max-width: 42em}
-div.mail {max-width:98ex;padding:.3em;margin:.3em}
-div.mail a.title {background-color: #fff;color:#000}
 img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
 img.logo {max-height:3.7em}

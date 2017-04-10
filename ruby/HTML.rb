@@ -193,7 +193,7 @@ class R
                       # title
                       ({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ',
                       # URL
-                      {_: title ? :span : :a, class: :uri, href: href, c: name},
+                      {_: :a, class: :uri, href: href, c: name},
                       (title ? '<br>' : ' '),
                       # files
                       {class: :files,
