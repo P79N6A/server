@@ -150,11 +150,12 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
+    href = this.host == e.env['SERVER_NAME'] ? this.path : this.uri
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
-    thisDir = this.uri[-1]=='/' && e.path == this.path
     shownActors = false
+
     actors = -> {
       shownActors ? '' : ((shownActors = true) && [[From,''],[To,'to']].map{|p,pl|
         l[p].do{|o|
@@ -170,18 +171,15 @@ class R
              end
            }.intersperse(' '),' ']}})}
 
-    [{_: :tr, class: :selectable,
-      href: this.uri,
-      id: thisDir ? 'this' : e.selector,
+    [{_: :tr, class: :selectable, href: href, id: e.selector,
        c: ["\n",
            keys.map{|k|
              [{_: :td, property: k, class: sort==k ? 'selected' : '',
                c: case k
                   when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
-                   if thisDir # you're here, show label rather than locator
+                   if this.uri[-1]=='/' && e.path==this.path # you're here, show label rather than locator
                      {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
                    else
-                     href = CGI.escapeHTML(l.uri||'')
                      title = l[Title].justArray[0]
                      name = CGI.escapeHTML (this.fragment || this.basename)
                      [# labels
@@ -189,7 +187,7 @@ class R
                         label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                         lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                         e.env[:label][lbl] = true
-                        [{_: :a, href: this.uri, name: lbl, c: label},' ']},
+                        [{_: :a, href: href, name: lbl, c: label},' ']},
                       # title
                       ({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ',
                       # URL
@@ -208,19 +206,21 @@ class R
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
-                      (['<br>',{_: :a, href: this.uri,
-                        c: {_: :img, class: :thumb,
-                            src: if (this.host != e.host) || this.ext.downcase == 'gif'
-                             this.uri
-                           else
-                             '/thumbnail' + this.path
-                            end}}] if isImg),
+                      (['<br>', {_: :a, href: href,
+                                 c: {_: :img, class: :thumb,
+                                     src: if this.host != e.host
+                                      this.uri
+                                    elsif this.ext.downcase == 'gif'
+                                      href
+                                    else
+                                      '/thumbnail' + this.path
+                                     end}}] if isImg),
                      ]
                    end
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]
-                     {_: :a, href: CGI.escapeHTML(l.uri), c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
+                     {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
                    l[k].do{|children|
                      children = children.justArray
