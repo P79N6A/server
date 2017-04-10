@@ -109,7 +109,7 @@ class R
     container = directory?
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
-      @r[:Response].update({'Location' => uri + '/' + (qs && !qs.empty? && ('?' + qs) || '')})
+      @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
       return [301, @r[:Response], []]
     end
 
@@ -126,12 +126,13 @@ class R
 
     # lazy body-serialize, uncalled on HEAD and ETag hit
     condResponse ->{
-      # if set has one file and its MIME is preferred
+      # if set has one file and its MIME won preference
       if set.size==1 && format == set[0].mime
-        set[0] # return file handle
-      else
+        set[0] # static response
+      else # compile response
 
-        loadGraph = -> { # graph loader
+        # loader lambda
+        loadGraph = -> {
           graph = {}
           set.map{|r|r.loadGraph graph}
           unless q.has_key? 'full'
@@ -151,7 +152,7 @@ class R
             g = RDF::Graph.new
             set.map{|f|
               f.justRDF(RDFsuffixes).do{|doc| # transcode non-RDF
-                g.load doc.pathPOSIX, :base_uri => base}}
+                g.load doc.pathPOSIX, :base_uri => base}} # load RDF
           end
           # return serialized RDF
           g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
