@@ -1,3 +1,0 @@
-set sendmail="/usr/bin/msmtp"
-set envelope_from=yes
-set editor=vim
