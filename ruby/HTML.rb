@@ -150,7 +150,7 @@ class R
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
-    href = this.host == e.env['SERVER_NAME'] ? this.path : this.uri
+    href = this.host == e.host ? this.path : this.uri
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
@@ -256,7 +256,6 @@ class R
        {_: :tr,
         c: [{_: :td},
             {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
-               {_: :a, href: l.uri, c: {_: :img, src: i.uri, class: :preview}}}.intersperse(' ')}
-           ]}}]}
+               {_: :a, href: href, c: {_: :img, src: i.R.host == e.host ? i.R.path : i.uri, class: :preview}}}.intersperse(' ')}]}}]}
 
 end
