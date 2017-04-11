@@ -165,7 +165,7 @@ class R
                v = v.R
                label = (v.fragment||v.basename && v.basename.size > 1 && v.basename || v.host.split('.')[0..-2].join).downcase.gsub(/[^a-zA-Z0-9_]/,'')
                e.env[:label][label] = true
-               {_: :a, href: v.uri, name: label, c: label}
+               {_: :a, href: v.host == e.host ? v.path : v.uri, name: label, c: label}
              else
                v.to_s
              end
