@@ -126,9 +126,12 @@ class R
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
-  ## ingestion and indexing of information resource, currently:
-  # - write document to local store.
-  # - reverse-link indexing for finding incoming arcs.
+=begin
+   ingestion and indexing. variants for triple, stream of triples and fetchable resource
+   - write document to local store
+   - link to time index
+   - reverse-link indexing (incoming arcs)
+=end
 
   # index a triple
   def index p, o
