@@ -130,14 +130,14 @@ class R
   # - write document to local store.
   # - reverse-link indexing for finding incoming arcs.
 
-  # add index :: triple
+  # index a triple
   def index p, o
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # add index :: triple-stream
+  # index resources in stream
   def indexStream triplr, &b
     docs = {} # document index
     graph = fromStream({},triplr) # collect triples
@@ -166,7 +166,7 @@ class R
     self
   end
 
-  # index resource in local store
+  # index resource
   def indexResource options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
