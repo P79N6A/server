@@ -34,6 +34,7 @@ class R
     re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
     re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
 
+    # directory handler
     if re.path[-1] == '/'
       htmlFile = re.a 'index.html'
        # HTML requested, file exists, and no query
@@ -52,10 +53,10 @@ class R
           end
         end
       end
-    else
+    else # glob set
       if re.env[:glob]
         re.glob.select &:inside
-      else
+      else # base set
         re.fileResources
       end
     end}
