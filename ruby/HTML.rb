@@ -126,6 +126,7 @@ class R
   "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
   
   TabularView = -> g, e, show_head = true, show_id = true {
+    titles = {}
     sort = (e.q['sort']||'dc:date').expand
     direction = e.q.has_key?('ascending') ? :id : :reverse
 
@@ -135,7 +136,7 @@ class R
     keys -= VerboseMeta unless e.q.has_key? 'full'
 
     {_: :table,
-     c: [{_: :tbody, c: g.resources(e).map{|r| TableRow[r,e,sort,direction,keys] }},
+     c: [{_: :tbody, c: g.resources(e).map{|r| TableRow[r,e,sort,direction,keys,titles]}},
          {_: :tr, c: [keys.map{|k|
                q = e.q.merge({'sort' => k.shorten})
                if direction == :id
@@ -148,13 +149,21 @@ class R
                  class: k == sort ? 'selected' : '',
                  c: {_: :a, href: href, class: Icons[k]||''}}, "\n"]}]}]}}
 
-  TableRow = -> l,e,sort,direction,keys {
+  TableRow = -> l,e,sort,direction,keys,titles {
     this = l.R
+    loc = e.path==this.path
     href = this.host == e.host ? this.path : this.uri
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
+    fsResource = types.member?(Stat+'File') || types.member?(Container)
     shownActors = false
+    title = l[Title].justArray[0].do{|t|t.sub ReExpr, ''}
+    if titles[title]
+      title = nil
+    else
+      titles[title] = true
+    end
 
     actors = -> {
       shownActors ? '' : ((shownActors = true) && [[From,''],[To,'&rarr;']].map{|p,pl|
@@ -177,7 +186,6 @@ class R
              [{_: :td, property: k, class: sort==k ? 'selected' : '',
                c: case k
                   when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
-                    title = l[Title].justArray[0]
                     [# labels
                       l[Label].justArray.map{|v|
                         label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
@@ -185,7 +193,7 @@ class R
                         e.env[:label][lbl] = true
                         [{_: :a, href: href, name: lbl, c: label},' ']},
                       # Title
-                      {_: :a, class: title ? :title : (e.path==this.path ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))},
+                      ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||fsResource),
                       (title ? '<br>' : ' '),
                       # links
                       {class: :files,
