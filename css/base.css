@@ -8,7 +8,7 @@ a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.
 #up, #down {margin-left:1em}
 a[rel="next"] {float: right}
 a.page {font-weight: normal}
-.uri {font-weight:normal;color:#ccc;float: right}
+.uri {font-weight:normal;float: right}
 a.this {font-size:1.2em}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comment:before { content:"\f0e5"; font-family: icons; }

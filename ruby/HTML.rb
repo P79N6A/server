@@ -158,12 +158,13 @@ class R
     isImg = types.member? Image
     fsResource = types.member?(Stat+'File') || types.member?(Container)
     shownActors = false
-    title = l[Title].justArray[0].do{|t|t.sub ReExpr, ''}
-    if titles[title]
-      title = nil
-    else
-      titles[title] = true
-    end
+    title = l[Title].justArray[0].do{|t|
+      t = t.sub ReExpr, ''
+      if titles[t]
+        nil
+      else
+        titles[t] = t
+      end}
 
     actors = -> {
       shownActors ? '' : ((shownActors = true) && [[From,''],[To,'&rarr;']].map{|p,pl|
