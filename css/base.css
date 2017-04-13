@@ -1,6 +1,5 @@
 body {font-family: sans-serif; background-color:#000; color:#fff;margin:0}
 pre {white-space: pre-wrap;margin:0;max-width:111ex}
-input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-width:0;display: inline-block}
 #statusbar {position:fixed;font-size:1.08em;padding: .13em;color:#000;background-color:#6ff;border-radius:0 .5em .5em 0}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.1em;color:#eee;background-color:#000;border-radius:.03em}
@@ -50,15 +49,12 @@ a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.link:before { content:"\f08e"; font-family: icons; color: #ccf; margin: 0 .14em 0 .2em }
 a[name] {color:#000;border-radius:.28em;padding:.1em .18em .1em .18em}
-h3.title {background-color:#fff;color:#000;margin:0}
 table {margin:auto}
 div, td {vertical-align:top}
 td {border-color: #222;border-width: 0 0 .1em 0;padding:.16em;border-style: solid}
 th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
-td[property="http://purl.org/dc/terms/date"], td[property="http://schema.org/location"] {white-space:nowrap}
 td[property="http://schema.org/logo"] {text-align: center}
-td[property="http://www.w3.org/2000/01/rdf-schema#label"] a {color: #000}
 div.sourcecode {background-color:#fff;color:#000;padding:.5em}
 div.files {float: right;max-width: 42em}
 img {max-width: 100%}
