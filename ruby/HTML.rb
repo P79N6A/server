@@ -108,9 +108,9 @@ class R
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
                  groups.map{|view,graph|view[graph,re]},
                  (TabularView[graph,re] if graph.keys.size > 0),
-                 {_: :style, c: e[:label].map{|name,_|
-                    c = '#%06x' % (rand 16777216)
-                    "[name=\"#{name}\"] {background-color: #{c}; border-color: #{c}; fill: #{c}; stroke: #{c}}\n"}}, H.js('/js/ui',true), '<br clear=all>',
+                 {_: :style, c: e[:label].map{|name,_|"[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
+                 H.js('/js/ui',true),
+                 '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'),
                  (nextPage unless re.q.has_key? 'abbr'),
                  '<br clear=all>',
@@ -157,7 +157,7 @@ class R
     shownActors = false
 
     actors = -> {
-      shownActors ? '' : ((shownActors = true) && [[From,''],[To,'to']].map{|p,pl|
+      shownActors ? '' : ((shownActors = true) && [[From,''],[To,'&rarr;']].map{|p,pl|
         l[p].do{|o|
           [{_: :b, c: pl + ' '},
            o.justArray.map{|v|
