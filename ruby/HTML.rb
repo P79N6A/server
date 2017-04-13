@@ -88,7 +88,7 @@ class R
          end
     print = re.q.has_key? 'print'
     (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
-    expand = {_: :a, id: :down, href: re.q.reject{|k|k=='abbr'}.merge({'full' => ''}).qs, class: :expand, c: "&#9660;", rel: :nofollow} if (dir || e[:glob]) && !re.q.has_key?('full')
+    expand = {_: :a, id: :down, href: re.q.reject{|k|k=='abbr'}.merge({'full' => ''}).qs, class: :expand, c: "&#9660;"} if (dir || e[:glob]) && !re.q.has_key?('full')
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     H ["<!DOCTYPE html>\n",
@@ -144,9 +144,9 @@ class R
                  q['ascending'] = ''
                end
                href = CGI.escapeHTML q.qs
-               [{_: :th, id: e.selector, href: href, property: k,
+               [{_: :th, href: href, property: k,
                  class: k == sort ? 'selected' : '',
-                 c: {_: :a, rel: :nofollow, href: href, class: Icons[k]||''}}, "\n"]}]}]}}
+                 c: {_: :a, href: href, class: Icons[k]||''}}, "\n"]}]}]}}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
