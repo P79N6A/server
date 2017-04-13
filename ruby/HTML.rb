@@ -177,32 +177,25 @@ class R
              [{_: :td, property: k, class: sort==k ? 'selected' : '',
                c: case k
                   when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
-                   if this.uri[-1]=='/' && e.path==this.path # you're here, show label rather than locator
-                     {_: :span, style: 'font-size:2em;font-weight:bold', c: this.basename}
-                   else
-                     title = l[Title].justArray[0]
-                     name = CGI.escapeHTML (this.fragment || this.basename)
-                     [# labels
-                       l[Label].justArray.map{|v|
+                    title = l[Title].justArray[0]
+                    [# labels
+                      l[Label].justArray.map{|v|
                         label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                         lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                         e.env[:label][lbl] = true
                         [{_: :a, href: href, name: lbl, c: label},' ']},
-                      # title
-                      ({_: :a, class: :title, href: href, c: CGI.escapeHTML(title)} if title), ' ',
-                      # URL
-                      {_: :a, class: :uri, href: href, c: name},
+                      # Title
+                      {_: :a, class: title ? :title : (e.path==this.path ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))},
                       (title ? '<br>' : ' '),
-                      # files
+                      # links
                       {class: :files,
-                       c: [DC+'link',
-                           SIOC+'attachment',
+                       c: [DC+'link', SIOC+'attachment',
                            DC+'hasFormat'].map{|p|
                          l[p].justArray.map{|link|
-                             link = link.R
-                             [{_: :a, class: :link, id: e.selector, href: link.uri,
-                               c: CGI.escapeHTML(link.fragment||link.basename=='/' ? link.host : link.basename)},
-                              ' ']}}},
+                           link = link.R
+                           [{_: :a, class: :link, id: e.selector, href: link.uri,
+                             c: CGI.escapeHTML(link.fragment||link.basename=='/' ? link.host : link.basename)},
+                            ' ']}}},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
@@ -214,9 +207,7 @@ class R
                                       href
                                     else
                                       '/thumbnail' + this.path
-                                     end}}] if isImg),
-                     ]
-                   end
+                                     end}}] if isImg)]
                  when Type
                    l[Type].justArray.map{|t|
                      icon = Icons[t.uri]

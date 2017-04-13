@@ -1,7 +1,7 @@
 body {font-family: sans-serif; background-color:#000; color:#fff;margin:0}
 pre {white-space: pre-wrap;margin:0}
 input[name="q"] {background-color:#000;color:#fff;font-size:1.8em;border-width:0;display: inline-block}
-#statusbar {position:fixed;font-size:1.08em;padding: .13em;margin-top:-.1em;color:#aff;background-color:#000;border-width: .1em 0 .1em 0;border-style: dotted;border-color:#7cc}
+#statusbar {position:fixed;font-size:1.08em;padding: .13em;color:#000;background-color:#6ff;border-radius:0 .5em .5em 0}
 a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.1em;color:#eee;background-color:#000;border-radius:.03em}
 #up, a[rel="prev"] {float: left}
@@ -9,6 +9,7 @@ a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.
 a[rel="next"] {float: right}
 a.page {font-weight: normal}
 .uri {font-weight:normal;color:#ccc;float: right}
+a.this {font-size:1.2em}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comment:before { content:"\f0e5"; font-family: icons; }
 a.comments:before { content:"\f086"; font-family: icons; }
@@ -51,7 +52,7 @@ a.link:before { content:"\f08e"; font-family: icons; color: #ccf; margin: 0 .14e
 h3.title {background-color:#fff;color:#000;margin:0}
 table {margin:auto}
 div, td {vertical-align:top}
-td {border-color: #555;border-width: 0 0 .1em 0;padding:.16em;border-style: solid}
+td {border-color: #222;border-width: 0 0 .1em 0;padding:.16em;border-style: solid}
 th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
 td[property="http://purl.org/dc/terms/date"], td[property="http://schema.org/location"] {white-space:nowrap}
