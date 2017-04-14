@@ -130,7 +130,7 @@ class R
 =begin
    ingestion and indexing. variants for triple, stream of triples and fetchable resource
    - write document to local store
-   - link to time index
+   - link to time-index
    - reverse-link indexing (incoming arcs)
 =end
 

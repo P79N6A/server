@@ -55,6 +55,7 @@ td {border-color: #222;border-width: 0 0 .1em 0;padding:.16em;border-style: soli
 th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
 td[property="http://schema.org/logo"] {text-align: center}
+td[property="http://purl.org/dc/terms/date"] {font-size:.8em}
 div.sourcecode {background-color:#fff;color:#000;padding:.5em}
 div.files {float: right;max-width: 42em}
 img {max-width: 100%}
