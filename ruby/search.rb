@@ -128,14 +128,16 @@ class R
   end
 
 =begin
-   ingestion and indexing. variants for triple, stream of triples and fetchable resource
+   indexing. variants for triple, stream of triples and fetchable resource
+   outgoing arcs from resource:
    - write document to local store
-   - link to time-index
-   - reverse-link indexing (incoming arcs)
+   - link to time-index structure
+   incoming arcs to resource:
+   - index in URI-list files (.rev)
 =end
 
   # index a triple
-  def index p, o
+  def index p, o # (s)ubject is implicit non-passed "self" argument
     o = o.R
     path = o.path
     R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
