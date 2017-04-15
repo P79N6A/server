@@ -129,11 +129,16 @@ class R
 
 =begin
    indexing. variants for triple, stream of triples and fetchable resource
+
    outgoing arcs from resource:
-   - write document to local store
-   - link to time-index structure
-   incoming arcs to resource:
-   - index in URI-list files (.rev)
+   (s p _) (s _ o) (s _ _) triple-patterns matchable from (s)ubject's doc-graph
+   - write document to local store at findable, URI-derived canonical location
+
+   incoming arcs to resource, multiple techniques:
+   - index triples in URI-list files, in a derived path ending in .rev
+   - hard-link document to index container(s)
+     rsync, Syncthing (file-level util) have varying symlink handling, thus
+     hardlinks are preferred. plus theyre faster with less indirection
 =end
 
   # index a triple
@@ -148,19 +153,25 @@ class R
     docs = {} # document index
     graph = fromStream({},triplr) # collect triples
 
-    # group by document URI + index triples while walking the graph
-    graph.map{|u,r|    # foreach resource
-      this = u.R       # resource reference
+    # arrange triples in document graphs
+    graph.map{|u,r| # visit resource
+      this = u.R
       doc = this.jsonDoc.uri # document URI
       if this.host
-        r[Date].do{|t| # if resource has timestamp, link to timeline
+        r[Date].do{|t| # resource has timestamp - link to timeline
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           doc = "//localhost/#{time}#{slug}e"}
       end
       docs[doc] ||= {} # document graph
       docs[doc][u] = r # add resource
-      r[Re].do{|v|v.map{|o|this.index Re,o}}} # index write
+      ## properties - index triples
+      r[To].justArray.map{|o|
+        puts p
+      }
+      # reply-of. used for finding discussions
+      r[Re].do{|v|v.map{|o|this.index Re,o}}
+    }
 
     docs.map{|doc,graph| # write documents
       doc = doc.R
