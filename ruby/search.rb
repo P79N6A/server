@@ -129,16 +129,18 @@ class R
 
 =begin
    indexing. variants for triple, stream of triples and fetchable resource
+   using the RDF library and a triple-store online database is of course an option,
+   the following techniques allow us to sidestep that dependency using only the fs
 
-   outgoing arcs from resource:
-   (s p _) (s _ o) (s _ _) triple-patterns matchable from (s)ubject's doc-graph
-   - write document to local store at findable, URI-derived canonical location
+   outgoing arcs from re(s)ource (s p o) (s p _) (s _ o) (s _ _)
+    matchable from (s)ubject's doc-graph, when this is findable, so:
+   - write document to local store at subject-URI derived location
 
-   incoming arcs to resource, multiple techniques:
-   - index triples in URI-list files, in a derived path ending in .rev
+   incoming arcs to res(o)urce (_ p o) (_ _ o)
+   - index triples in URI-list files
    - hard-link document to index container(s)
      rsync, Syncthing (file-level util) have varying symlink handling, thus
-     hardlinks are preferred. plus theyre faster with less indirection
+      hardlinks are preferred. plus they're faster with less indirection
 =end
 
   # index a triple
