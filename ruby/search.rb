@@ -155,19 +155,19 @@ class R
     docs = {} # document index
     # collect triples
     graph = fromStream({},triplr)
-    # arrange triples in document graphs
+    # visit resources
     graph.map{|u,r| this = u.R
-      # canonical URL for document
+      # document URI
       doc = this.jsonDoc.uri
-      if this.host
+      if this.host # host attribute exists
         r[Date].do{|t| # date attribute exists
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-          doc = "//localhost/#{time}#{slug}e"} # link to timeline
+          doc = "//localhost/#{time}#{slug}e"} # doc-uri on timeline
       end
-      docs[doc] ||= {} # document graph
-      docs[doc][u] = r # resource to graph
-
+      # add resource to doc-graph
+      docs[doc] ||= {}
+      docs[doc][u] = r
       # index triples
       [To,Creator].map{|p|
 
