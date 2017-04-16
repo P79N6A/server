@@ -144,35 +144,36 @@ class R
 =end
 
   # index a triple
-  def index p, o # (s)ubject is implicit non-passed "self" argument
-    o = o.R
-    path = o.path
-    R(File.dirname(path) + '/.' + File.basename(path) + '.' + p.R.shorten + '.rev').appendFile uri
+  def index p, o # (s)ubject is implicit "self" argument
+    o = o.R.path
+    # append to incoming-link index
+    R(File.dirname(o) + '/.' + File.basename(o) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
   # index resources in stream
   def indexStream triplr, &b
     docs = {} # document index
-    graph = fromStream({},triplr) # collect triples
-
+    # collect triples
+    graph = fromStream({},triplr)
     # arrange triples in document graphs
-    graph.map{|u,r| # visit resource
-      this = u.R
-      doc = this.jsonDoc.uri # document URI
+    graph.map{|u,r| this = u.R
+      # canonical URL for document
+      doc = this.jsonDoc.uri
       if this.host
-        r[Date].do{|t| # resource has timestamp - link to timeline
+        r[Date].do{|t| # date attribute exists
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-          doc = "//localhost/#{time}#{slug}e"}
+          doc = "//localhost/#{time}#{slug}e"} # link to timeline
       end
       docs[doc] ||= {} # document graph
-      docs[doc][u] = r # add resource
-      ## properties - index triples
-      r[To].justArray.map{|o|
-        puts p
+      docs[doc][u] = r # resource to graph
+
+      # index triples
+      [To,Creator].map{|p|
+
       }
-      # reply-of. used for finding discussions
-      r[Re].do{|v|v.map{|o|this.index Re,o}}
+      # reply-of
+      r[Re].justArray.map{|o|this.index Re,o}
     }
 
     docs.map{|doc,graph| # write documents
