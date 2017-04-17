@@ -108,13 +108,15 @@ class R
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
                  groups.map{|view,graph|view[graph,re]},
                  (TabularView[graph,re] if graph.keys.size > 0),
-                 {_: :style, c: e[:label].map{|name,_|"[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
+                 {_: :style,
+                  c: [e[:label].map{|name,_|"[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"},
+                      print ? "body {background-color:#fff; color:#000}\na {background-color:#fff;color:#000}" : "body {background-color:#000; color:#fff}\na {background-color:#000;color:#fff}"]},
                  H.js('/js/ui',true),
                  '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'),
                  (nextPage unless re.q.has_key? 'abbr'),
                  '<br clear=all>',
-                 expand,
+                 (expand unless print),
                  {id: :statusbar}]}]}]}
   
   # properties in default view

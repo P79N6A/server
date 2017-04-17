@@ -1,7 +1,7 @@
-body {font-family: sans-serif; background-color:#000; color:#fff;margin:0}
+body {font-family: sans-serif; margin:0}
+a {text-decoration:none; font-weight: bold;}
 pre {white-space: pre-wrap;margin:0;max-width:111ex}
 #statusbar {position:fixed;font-size:1.08em;padding: .13em;color:#000;background-color:#6ff;border-radius:0 .5em .5em 0}
-a {text-decoration:none;font-weight: bold;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;padding:.1em;color:#eee;background-color:#000;border-radius:.03em}
 #up, a[rel="prev"] {float: left}
 #up, #down {margin-left:1em}
@@ -55,7 +55,7 @@ td {border-color: #222;border-width: 0 0 .1em 0;padding:.16em;border-style: soli
 th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
 td[property="http://schema.org/logo"] {text-align: center}
-td[property="http://purl.org/dc/terms/date"] {font-size:.8em}
+td[property="http://purl.org/dc/terms/date"] {font-size:.86em}
 div.sourcecode {background-color:#fff;color:#000;padding:.5em}
 div.files {float: right;max-width: 42em}
 img {max-width: 100%}

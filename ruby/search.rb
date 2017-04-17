@@ -164,6 +164,7 @@ class R
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           doc = "//localhost/#{time}#{slug}e"} # doc-uri on timeline
+        # you could use a remote doc's "canonical" location, which puts it in domain/ , but this domain isn't served directly
       end
       # add resource to doc-graph
       docs[doc] ||= {}
