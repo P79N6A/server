@@ -165,10 +165,12 @@ class R
           doc = "//localhost/#{time}#{slug}e" # timeline entry URI
         else # local
           month = t[0][0..7].gsub '-','/'
-          [To,Creator].map{|p|
-            r[p].justArray.map{|a|
+          [To,Creator].map{|p| # address properties
+            r[p].justArray.map{|a| # address
+              # summary resource
               summary = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To],
                                    Title => r[Title], DC+'identifier' => r[DC+'identifier']}}
+              # write summary
               a.dir.child(month+r.uri.h+'.e').w summary, true
             }
           }
