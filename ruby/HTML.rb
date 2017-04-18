@@ -110,7 +110,7 @@ class R
                  (TabularView[graph,re] if graph.keys.size > 0),
                  {_: :style,
                   c: [e[:label].map{|name,_|"[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"},
-                      print ? "body {background-color:#fff; color:#000}\na {background-color:#fff;color:#000}" : "body {background-color:#000; color:#fff}\na {background-color:#000;color:#fff}"]},
+                      print ? "body, a {background-color:#fff;color:#000}" : "body, a  {background-color:#000;color:#fff}"]},
                  H.js('/js/ui',true),
                  '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'),
@@ -158,7 +158,7 @@ class R
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
-    fsResource = types.member?(Stat+'File') || types.member?(Container)
+    basicResource = types.member?(Stat+'File') || types.member?(Container) || types.member?(Resource)
     shownActors = false
     title = l[Title].justArray[0].do{|t|t = t.sub ReExpr, ''
       titles[t] ? nil : (titles[t] = t)}
@@ -191,7 +191,7 @@ class R
                         e.env[:label][lbl] = true
                         [{_: :a, href: href, name: lbl, c: label},' ']},
                       # Title
-                      ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||fsResource),
+                      ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||basicResource),
                       (title ? '<br>' : ' '),
                       # links
                       {class: :files,
