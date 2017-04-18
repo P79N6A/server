@@ -133,11 +133,11 @@ class R
    the following methods allow us to fulfill index needs using only the fs
 
    outgoing arcs from re(s)ource: (s p o) (s p _) (s _ o) (s _ _) patterns
-    matchable in subject doc-graph, assuming this is findable, so:
-   - write document to local store at subject-URI derived location
+    matchable in subject doc-graph, assuming this is findable, so write:
+   - document to local store at subject-URI derived location
 
    incoming arcs to res(o)urce: (_ p o) (_ _ o) patterns
-   - incoming triples in URI-list file stored alongside resource
+   - incoming triples to URI-list file stored alongside resource
 
 =end
 
@@ -155,27 +155,31 @@ class R
     graph = fromStream({},triplr)
     # visit resources
     graph.map{|u,r| this = u.R
-      # document URI
+      # mint document-URI
       doc = this.jsonDoc.uri
-      if this.host # host attribute exists
-        r[Date].do{|t| # date attribute exists
+      # date attribute required for timeline links and address-month index
+      r[Date].do{|t|
+        if this.host # global
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-          doc = "//localhost/#{time}#{slug}e"} # doc-uri on timeline
-        # you could use a remote doc's "canonical" location, which puts it in domain/ , but this domain isn't served directly
-      end
-      # add resource to doc-graph
-      docs[doc] ||= {}
-      docs[doc][u] = r
-      # index triples
-      [To,Creator].map{|p|
-
+          doc = "//localhost/#{time}#{slug}e" # timeline entry URI
+        else # local
+          month = t[0][0..7].gsub '-','/'
+          [To,Creator].map{|p|
+            r[p].justArray.map{|a|
+              summarygraph = {r.uri => {'uri' => r.uri, Title => r[Title], Date => r[Date]}}
+              a.dir.child(month+r.uri.h+'.e').w summarygraph,true
+            }
+          }
+          # index "reply of" references
+          r[Re].justArray.map{|o|this.index Re,o}
+        end
       }
-      # reply-of
-      r[Re].justArray.map{|o|this.index Re,o}
-    }
-
-    docs.map{|doc,graph| # write documents
+      # add resource to document-graph
+      docs[doc] ||= {}
+      docs[doc][u] = r }
+    # write documents
+    docs.map{|doc,graph|
       doc = doc.R
       unless doc.e
         doc.w graph, true
