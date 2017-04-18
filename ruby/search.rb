@@ -150,14 +150,14 @@ class R
 
   # index resources in stream
   def indexStream triplr, &b
-    docs = {} # document index
+    docs = {}
     # collect triples
     graph = fromStream({},triplr)
     # visit resources
     graph.map{|u,r| this = u.R
       # mint document-URI
       doc = this.jsonDoc.uri
-      # date attribute required for timeline links and address-month index
+      # date attribute required for timeline links and address/month index
       r[Date].do{|t|
         if this.host # global
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
@@ -167,8 +167,9 @@ class R
           month = t[0][0..7].gsub '-','/'
           [To,Creator].map{|p|
             r[p].justArray.map{|a|
-              summarygraph = {r.uri => {'uri' => r.uri, Title => r[Title], Date => r[Date]}}
-              a.dir.child(month+r.uri.h+'.e').w summarygraph,true
+              summary = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To],
+                                   Title => r[Title], DC+'identifier' => r[DC+'identifier']}}
+              a.dir.child(month+r.uri.h+'.e').w summary, true
             }
           }
           # index "reply of" references
