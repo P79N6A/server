@@ -100,7 +100,9 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 H.css('/css/base',true)]},
+                 H.css('/css/base',true),
+                 {_: :style, c: print ? "body, a {background-color:#fff;color:#000}" : "body, a  {background-color:#000;color:#fff}"},
+                ]},
             {_: :body,
              c: [([{_: :a, id: :up, href: up, c: '&#9650;'},'<br clear=all>'] if up && !print),
                  (prevPage && prevPage.merge({id: :prevpage})),
@@ -108,10 +110,9 @@ class R
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
                  groups.map{|view,graph|view[graph,re]},
                  (TabularView[graph,re] if graph.keys.size > 0),
-                 {_: :style,
-                  c: [e[:label].map{|name,_|"[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"},
-                      print ? "body, a {background-color:#fff;color:#000}" : "body, a  {background-color:#000;color:#fff}"]},
                  H.js('/js/ui',true),
+                 {_: :style, c: e[:label].map{|name,_|
+                        "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'),
                  (nextPage unless re.q.has_key? 'abbr'),
