@@ -168,6 +168,7 @@ class R
               [Type,Date,Creator,To,Title,DC+'identifier'].map{|p|
                 r[p].do{|o|
                   aindex[p] = o}}
+              aindex[Content] = r[Content] if r.types.member?(SIOC+'Tweet')
               docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => aindex}
             end}}
         if this.host # global
