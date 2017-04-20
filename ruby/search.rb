@@ -155,30 +155,30 @@ class R
     graph = fromStream({},triplr)
     # visit resources
     graph.map{|u,r| this = u.R
-      # mint document-URI
+      # document-URI
       doc = this.jsonDoc.uri
-      r[Date].do{|t| # datetime required for timeline link and address index
-        # path parts
+      r[Date].do{|t| # datetime for timeline link and address index
         month = t[0][0..7].gsub '-','/'
         time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-        # addresses
-        [To,Creator].map{|p| r[p].justArray.map{|a|
-            # index entry
-            docs[a.R.dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To], Title => r[Title], DC+'identifier' => r[DC+'identifier']}} if a.respond_to?(:uri)}}
+        # address index
+        [To,Creator].map{|p| # address predicates
+          r[p].justArray.map{|a| # address values
+            if a.respond_to? :uri
+              # index entry
+              a = a.R
+              dir = a.fragment ? a.path : a # strip fragment 
+              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To], Title => r[Title], DC+'identifier' => r[DC+'identifier']}}
+            end}}
         if this.host # global
-          # place doc in datetime index, rather than in unreachable for remote-hosts /domain/ directory
+          # place doc in datetime index rather than in unreachable for remote-hosts /domain/ directory
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           doc = "//localhost/#{time}#{slug}e"
-        else # local resource, leave where it is
-          r[Re].justArray.map{|o|this.index Re,o} # index references for discussion search
-        end
-      }
-      # add resource to document
-      docs[doc] ||= {}
-      docs[doc][u] = r }
+        else # local
+          r[Re].justArray.map{|o|this.index Re,o} # index message-references for thread search
+        end}
+      docs[doc] ||= {}; docs[doc][u] = r } # resource to document
 
-    # write documents
-    docs.map{|doc,graph|
+    docs.map{|doc,graph| # write documents
       doc = doc.R
       unless doc.e
         doc.w graph, true
