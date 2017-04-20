@@ -157,30 +157,26 @@ class R
     graph.map{|u,r| this = u.R
       # mint document-URI
       doc = this.jsonDoc.uri
-      # date attribute required for timeline links and address/month index
-      r[Date].do{|t|
+      r[Date].do{|t| # datetime required for timeline link and address index
+        # path parts
+        month = t[0][0..7].gsub '-','/'
+        time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
+        # addresses
+        [To,Creator].map{|p| r[p].justArray.map{|a|
+            # index entry
+            docs[a.R.dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To], Title => r[Title], DC+'identifier' => r[DC+'identifier']}} if a.respond_to?(:uri)}}
         if this.host # global
-          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
+          # place doc in datetime index, rather than in unreachable for remote-hosts /domain/ directory
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-          doc = "//localhost/#{time}#{slug}e" # timeline entry URI
-        else # local
-          month = t[0][0..7].gsub '-','/'
-          [To,Creator].map{|p| # address properties
-            r[p].justArray.map{|a| # address
-              # summary resource
-              summary = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To],
-                                   Title => r[Title], DC+'identifier' => r[DC+'identifier']}}
-              # write summary
-              a.dir.child(month+r.uri.h+'.e').w summary, true
-            }
-          }
-          # index "reply of" references
-          r[Re].justArray.map{|o|this.index Re,o}
+          doc = "//localhost/#{time}#{slug}e"
+        else # local resource, leave where it is
+          r[Re].justArray.map{|o|this.index Re,o} # index references for discussion search
         end
       }
-      # add resource to document-graph
+      # add resource to document
       docs[doc] ||= {}
       docs[doc][u] = r }
+
     # write documents
     docs.map{|doc,graph|
       doc = doc.R
