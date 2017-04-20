@@ -163,7 +163,7 @@ class R
               a = a.R             # address resource
               dir = a.fragment ? a.path.R : a # address-index path
               aindex = {'uri' => r.uri} # address-index resource
-              [Type,Date,Creator,To,Title,DC+'identifier'].map{|p|
+              [Type,Date,Creator,To,Title,DC+'identifier',Image].map{|p|
                 r[p].do{|o| aindex[p] = o}} # preserved properties in index-overview resource 
               aindex[Content] = r[Content] if r.types.member?(SIOC+'Tweet') # keep content if tiny
               docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => aindex} # index-entry to graph
