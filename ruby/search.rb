@@ -151,24 +151,22 @@ class R
   # index resources in stream
   def indexStream triplr, &b
     docs = {}
-    # collect triples
-    graph = fromStream({},triplr)
-    # visit resources
-    graph.map{|u,r| this = u.R
-      doc = this.jsonDoc.uri # document-URI
-      r[Date].do{|t| # datetime for timeline link and address index
+    graph = fromStream({},triplr) # collect triples
+    graph.map{|u,r| this = u.R    # visit resources
+      doc = this.jsonDoc.uri      # document-URI
+      r[Date].do{|t|              # datetime for timeline link and address index
         month = t[0][0..7].gsub '-','/' # month-slug
         time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # datetime-slug
-        [To,Creator].map{|p| # address predicates
-          r[p].justArray.map{|a| # address values
+        [To,Creator].map{|p|      # address predicates
+          r[p].justArray.map{|a|  # address values
             if a.respond_to? :uri # identifiable values only
-              a = a.R # address resource
+              a = a.R             # address resource
               dir = a.fragment ? a.path.R : a # address-index path
               aindex = {'uri' => r.uri} # address-index resource
               [Type,Date,Creator,To,Title,DC+'identifier'].map{|p|
-                r[p].do{|o| aindex[p] = o}} # preserve whitelisted properties in index-overview resource 
+                r[p].do{|o| aindex[p] = o}} # preserved properties in index-overview resource 
               aindex[Content] = r[Content] if r.types.member?(SIOC+'Tweet') # keep content if tiny
-              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => aindex} # index-entry to doc
+              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => aindex} # index-entry to graph
             end}}
         if this.host # global
           # doc in datetime index rather than in unreachable for remote-hosts /domain/ directory
@@ -176,7 +174,7 @@ class R
           doc = "//localhost/#{time}#{slug}e"
         else # local
           r[Re].justArray.map{|o|this.index Re,o} # index message-references for thread search
-        end} # datetime-dependent section
+        end}
       docs[doc] ||= {}; docs[doc][u] = r } # resource to doc
     docs.map{|doc,graph| # write documents
       doc = doc.R
