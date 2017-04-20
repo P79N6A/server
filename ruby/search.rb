@@ -163,8 +163,12 @@ class R
           r[p].justArray.map{|a| # address values
             if a.respond_to? :uri # identifiable values only
               a = a.R
-              dir = a.fragment ? a.path : a # address-index path
-              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To], Title => r[Title], DC+'identifier' => r[DC+'identifier']}}
+              dir = a.fragment ? a.path.R : a # address-index path
+              aindex = {'uri' => r.uri}
+              [Type,Date,Creator,To,Title,DC+'identifier'].map{|p|
+                r[p].do{|o|
+                  aindex[p] = o}}
+              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => aindex}
             end}}
         if this.host # global
           # doc in datetime index rather than in unreachable for remote-hosts /domain/ directory
