@@ -162,14 +162,13 @@ class R
         [To,Creator].map{|p| # address predicates
           r[p].justArray.map{|a| # address values
             if a.respond_to? :uri # identifiable values only
-              a = a.R
+              a = a.R # address resource
               dir = a.fragment ? a.path.R : a # address-index path
-              aindex = {'uri' => r.uri}
+              aindex = {'uri' => r.uri} # address-index resource
               [Type,Date,Creator,To,Title,DC+'identifier'].map{|p|
-                r[p].do{|o|
-                  aindex[p] = o}}
-              aindex[Content] = r[Content] if r.types.member?(SIOC+'Tweet')
-              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => aindex}
+                r[p].do{|o| aindex[p] = o}} # preserve whitelisted properties in index-overview resource 
+              aindex[Content] = r[Content] if r.types.member?(SIOC+'Tweet') # keep content if tiny
+              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => aindex} # index-entry to doc
             end}}
         if this.host # global
           # doc in datetime index rather than in unreachable for remote-hosts /domain/ directory
@@ -178,7 +177,7 @@ class R
         else # local
           r[Re].justArray.map{|o|this.index Re,o} # index message-references for thread search
         end} # datetime-dependent section
-      docs[doc] ||= {}; docs[doc][u] = r } # resource to document
+      docs[doc] ||= {}; docs[doc][u] = r } # resource to doc
     docs.map{|doc,graph| # write documents
       doc = doc.R
       unless doc.e
