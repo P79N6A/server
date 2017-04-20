@@ -155,29 +155,25 @@ class R
     graph = fromStream({},triplr)
     # visit resources
     graph.map{|u,r| this = u.R
-      # document-URI
-      doc = this.jsonDoc.uri
+      doc = this.jsonDoc.uri # document-URI
       r[Date].do{|t| # datetime for timeline link and address index
-        month = t[0][0..7].gsub '-','/'
-        time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-        # address index
+        month = t[0][0..7].gsub '-','/' # month-slug
+        time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # datetime-slug
         [To,Creator].map{|p| # address predicates
           r[p].justArray.map{|a| # address values
-            if a.respond_to? :uri
-              # index entry
+            if a.respond_to? :uri # identifiable values only
               a = a.R
-              dir = a.fragment ? a.path : a # strip fragment 
+              dir = a.fragment ? a.path : a # address-index path
               docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = {r.uri => {'uri' => r.uri, Type => R[SIOC+'MailMessage'], Date => r[Date], Creator => r[Creator], To => r[To], Title => r[Title], DC+'identifier' => r[DC+'identifier']}}
             end}}
         if this.host # global
-          # place doc in datetime index rather than in unreachable for remote-hosts /domain/ directory
+          # doc in datetime index rather than in unreachable for remote-hosts /domain/ directory
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           doc = "//localhost/#{time}#{slug}e"
         else # local
           r[Re].justArray.map{|o|this.index Re,o} # index message-references for thread search
-        end}
+        end} # datetime-dependent section
       docs[doc] ||= {}; docs[doc][u] = r } # resource to document
-
     docs.map{|doc,graph| # write documents
       doc = doc.R
       unless doc.e
