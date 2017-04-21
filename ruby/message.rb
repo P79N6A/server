@@ -144,8 +144,6 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-  GET['/address'] = -> e {e.justPath.response} # hostname unbound
-
   GET['/thread'] = -> e { # construct thread
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk

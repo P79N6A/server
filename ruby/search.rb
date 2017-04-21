@@ -157,7 +157,7 @@ class R
       r[Date].do{|t|              # timestamp
         if this.host              # global-location resource
           # link to location on our host as remote-host requests normally flow to someone else's server, not /domain
-          # with properly crafted Host header, daemon will serve cached remote in /domain, if you have cache/proxy ideas
+          # with properly crafted Host header, daemon can serve cached remote from /domain, if you have cache/proxy ideas
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time slug
           doc = "//localhost/#{time}#{slug}e"
@@ -166,7 +166,7 @@ class R
           # index message-reference backlinks, for discussion finding
           r[Re].justArray.map{|o|this.index Re,o}
 
-          # summarize resource for index entry
+          # summarize resource
           s = {'uri' => r.uri}   # summary resource
           [Type,Date,Creator,To,Title,DC+'identifier',Image].map{|p| r[p].do{|o| s[p]=o }} # preserved properties
           s[Content]=r[Content] if r.types.member? SIOC+'Tweet' # keep tiny content values
