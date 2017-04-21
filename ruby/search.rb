@@ -154,15 +154,17 @@ class R
     graph = fromStream({},triplr) # collect triples
     graph.map{|u,r| this = u.R    # visit resources
       doc = this.jsonDoc.uri      # resource-storage URI
-      r[Date].do{|t|              # timestamp for timeline link and address index
+      r[Date].do{|t|              # timestamp
         if this.host              # global-location resource
-          # link to location on our host as remote-host requests flow to someone else's server, not /domain
-          # note daemon will serve cache of remote resource with a crafted Host header, if you have cache/proxy ideas
+          # link to location on our host as remote-host requests normally flow to someone else's server, not /domain
+          # with properly crafted Host header, daemon will serve cached remote in /domain, if you have cache/proxy ideas
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # datetime slug
+          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time slug
           doc = "//localhost/#{time}#{slug}e"
         else # local resource
           # document already has a local path
+          # index message-reference backlinks, for discussion finding
+          r[Re].justArray.map{|o|this.index Re,o}
 
           # summarize resource for index entry
           s = {'uri' => r.uri}   # summary resource
@@ -170,7 +172,7 @@ class R
           s[Content]=r[Content] if r.types.member? SIOC+'Tweet' # keep tiny content values
           summary = {r.uri => s} # summary graph
 
-          # point to resource in address-month index
+          # link summary to address-month index
           month = t[0][0..7].gsub '-','/' # month slug
           [To,Creator].map{|p|    # address predicates
           r[p].justArray.map{|a|  # address objects
@@ -179,24 +181,25 @@ class R
               dir = a.fragment ? a.path.R : a # index path
               docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = summary # add index-entry for writing
             end}}
-
-          # index message-reference backlinks, for discussion finding
-          r[Re].justArray.map{|o|this.index Re,o}
         end }
+
       # add resource for writing
       docs[doc] ||= {}
       docs[doc][u]=r }
+    
     # store documents
     docs.map{|doc,graph| doc = doc.R
       unless doc.e
         doc.w graph, true
         puts "+ " + doc.path
       end}
-    graph.triples &b if b # emit triples
+
+    # emit triples if a consumer exists
+    graph.triples &b if b
     self
   end
 
-  # index resource
+  # index a resource
   def indexResource options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
