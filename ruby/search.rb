@@ -37,20 +37,20 @@ class R
 
     if path[-1] == '/' # container
       htmlFile = a 'index.html'
-       # HTML requested, file exists, and no query
+       # HTML requested, index file exists, and no querystring supplied
       if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e
          [htmlFile.setEnv(env)] # static response
-      else
-        if env[:find] # find names matching
+      else # container
+        if env[:find] # find matching node-names
           query = q['find']
           expression = '-iregex ' + ('.*' + query + '.*').sh
           size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
           freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
           loc = exist? ? self : justPath
           `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}
-        elsif env[:grep] # find content matching
+        elsif env[:grep] # find matching content
           `grep -ril #{q['q'].sh} #{sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
-        elsif env[:walk]
+        elsif env[:walk] # ordered node traversal
           count = ((q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
           orient = q.has_key?('asc') ? :asc : :desc
           (take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
@@ -61,10 +61,9 @@ class R
               env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
             end
             s }
-        else
-          # child nodes host-specific and non
-          childnodes = [*c, *(path=='/' ? [] : justPath.c)]
-          if childnodes.size < 512 # small set, inline
+        else # basic container
+          childnodes = [*c, *(path=='/' ? [] : justPath.c)] # host-specific and non
+          if childnodes.size < 512
             childnodes.map{|c|c.setEnv env}
             fileResources.concat childnodes
           else
@@ -75,7 +74,7 @@ class R
     else
       if env[:glob] # glob pattern
         glob.select &:inside
-      else # basic
+      else # basic resource
         fileResources
       end
     end
