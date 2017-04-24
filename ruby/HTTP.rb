@@ -132,7 +132,7 @@ class R
           end
           graph}
 
-        if NonRDF.member? format
+        if %w{application/atom+xml application/json text/html text/uri-list}.member? format
           # return serialized non-RDF
           Render[format][loadGraph[],self]
         else # RDF format
@@ -142,7 +142,7 @@ class R
           else # full RDF graph
             g = RDF::Graph.new
             set.map{|f|
-              f.justRDF(RDFsuffixes).do{|doc| # transcode non-RDF
+              f.justRDF(%w{e html jsonld n3 nt owl rdf ttl}).do{|doc| # transcode non-RDF
                 g.load doc.pathPOSIX, :base_uri => base}} # load RDF
           end
           # return serialized RDF
