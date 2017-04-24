@@ -46,7 +46,8 @@ class R
           expression = '-iregex ' + ('.*' + q + '.*').sh
           size = re.q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
           freshness = re.q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-          `find #{re.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}
+          loc = re.exist? ? re : re.justPath
+          `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}
         elsif re.env[:grep] # find content matching
           `grep -ril #{re.q['q'].sh} #{re.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
         else
