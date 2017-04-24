@@ -51,6 +51,7 @@ class R
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
+  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
   def sh; pathPOSIX.utf8.sh end # shell-escape path
   def glob; (Pathname.glob pathPOSIX).map &:R end
@@ -77,10 +78,6 @@ class R
   Prefix = {"dc" => DC, "foaf" => FOAF, "ldp" => LDP, "rdf" => RDFns, "rdfs" => RDFs, "sioc" => SIOC, "stat" => Stat}
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
-
-  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
-  def ttl; stripDoc.a '.ttl' end
-  def jsonDoc; stripDoc.a '.e' end
 
 end
 

@@ -152,7 +152,7 @@ class R
     docs = {}
     graph = fromStream({},triplr) # collect triples
     graph.map{|u,r| this = u.R    # visit resources
-      doc = this.jsonDoc.uri      # resource-storage URI
+      doc = this.stripDoc.a('.e').uri # storage URI
       r[Date].do{|t|              # timestamp
         if this.host              # global-location resource
           # link to location on our host as remote-host requests normally flow to someone else's server, not /domain
