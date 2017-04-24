@@ -97,7 +97,7 @@ class R
     @r[:grep] = true if q.has_key? 'q'
 
     # 'cd' into named container via 301 redirect so we can trivially inline child-node relative references
-    container = directory?
+    container = directory? || justPath.directory?
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
