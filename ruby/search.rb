@@ -62,7 +62,7 @@ class R
     end}
 
   Set['find'] = -> e {
-    e.exist? && e.q['q'].do{|q|
+    e.exist? && e.q['find'].do{|q|
       r = '-iregex ' + ('.*' + q + '.*').sh
       s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""

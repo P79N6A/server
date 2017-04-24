@@ -100,12 +100,13 @@ class R
 
   def response
 
-    # support graph filter and file-set patterns
+    # file-set arguments
     stars = uri.scan('*').size
     @r[:glob] = true if stars > 0 && stars <= 3
-    @r[:grep] = true if q.has_key?('q') && q['set'] != 'find'
+    @r[:grep] = true if q.has_key? 'q'
+    q['set'] = 'find' if q.has_key? 'find'
 
-    # enforce trailing-slash as we allow relative-URIs and inline child-nodes
+    # 'cd' into named container via 301 redirect so we can trivially inline child-node relative references
     container = directory?
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
