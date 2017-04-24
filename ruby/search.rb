@@ -50,10 +50,11 @@ class R
         elsif re.env[:grep] # find content matching
           `grep -ril #{re.q['q'].sh} #{re.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
         else
-          cs = re.c # child references
-          if cs.size < 512 # small set, inline
-            cs.map{|c|c.setEnv re.env}
-            re.fileResources.concat cs
+          # child nodes host-specific and non
+          childnodes = [*re.c, *(re.path=='/' ? [] : re.justPath.c)]
+          if childnodes.size < 512 # small set, inline
+            childnodes.map{|c|c.setEnv re.env}
+            re.fileResources.concat childnodes
           else
             re.fileResources
           end
