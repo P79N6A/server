@@ -157,7 +157,7 @@ class R
       r[Date].do{|t|              # timestamp
         if this.host              # global-location resource
           # link to location on our host as remote-host requests normally flow to someone else's server, not /domain
-          # with properly crafted Host header, daemon can serve cached remote from /domain, if you have cache/proxy ideas
+          # note w/ properly crafted Host header daemon can serve cached remote from /domain, if you have cache/proxy ideas
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time slug
           doc = "//localhost/#{time}#{slug}e"
@@ -172,7 +172,7 @@ class R
           s[Content]=r[Content] if r.types.member? SIOC+'Tweet' # keep tiny content values
           summary = {r.uri => s} # summary graph
 
-          # link summary to address-month index
+          # file summary in address-month index
           month = t[0][0..7].gsub '-','/' # month slug
           [To,Creator].map{|p|    # address predicates
           r[p].justArray.map{|a|  # address objects
@@ -183,7 +183,7 @@ class R
             end}}
         end }
 
-      # add resource for writing
+      # add base resource for writing
       docs[doc] ||= {}
       docs[doc][u]=r }
     
