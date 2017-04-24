@@ -4,13 +4,13 @@ class R
     query = re.env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
 
-    # date parts
+    # add next+prev month/day/year/hour pointers to header
     dp = []
     parts = re.path.tail.split '/'
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
-    n = nil; p = nil
+    n = nil; p = nil # next + prev pointers
     case dp.length
     when 1 # Y
       year = dp[0]
@@ -31,6 +31,7 @@ class R
       p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour-1)))
       n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
     end
+    # preserve URI after datepart. this could be glob or file pattern
     re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
     re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
 
@@ -53,7 +54,7 @@ class R
           end
         end
       end
-    else # glob set
+    else # glob
       if re.env[:glob]
         re.glob.select &:inside
       else # base set
