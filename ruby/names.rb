@@ -36,8 +36,6 @@ class R
   def parentURI; R schemePart + hostPart + Pathname.new(hierPart).parent.to_s end
   def children; node.c.map &:R end
   alias_method :c, :children
-  def hierarchy; hierPart.match(/^[.\/]+$/) ? [self] : [self].concat(parentURI.hierarchy) end
-  def cascade; stripSlash.hierarchy end
 
   # POSIX-path mapping
   VHosts = 'domain'
@@ -80,25 +78,9 @@ class R
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
 
-  def docroot
-    h = host
-    p = normalized_path
-    R[(h ? ('//' + h) : '') + (p ? (p=='/' ? '/index' : p) : '')].stripDoc.stripSlash
-  end
   def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
-  def stripSlash
-    if uri[-1] == '/'
-      if path == '/'
-        self
-      else
-        uri[0..-2].R
-      end
-    else
-      self
-    end
-  end
-  def ttl; docroot.a '.ttl' end
-  def jsonDoc; docroot.a '.e' end
+  def ttl; stripDoc.a '.ttl' end
+  def jsonDoc; stripDoc.a '.e' end
 
 end
 

@@ -82,8 +82,8 @@ class R
       end
       s }}
 
-  GET['/d']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[3..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
-  GET['/now']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
+  GET['d']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[3..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
+  GET['now']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
 
   def triplrContainer
     dir = uri.t
@@ -112,13 +112,12 @@ class R
   end
 
   def fileResources
-    r = [] # docs
-    r.push self if e
-    %w{e ht html md ttl txt}.map{|suffix|
-      doc = docroot.a '.' + suffix
-      r.push doc.setEnv(@r) if doc.e
-    }
-    r
+    files = []
+    [self,justPath].map{|base| files.push base if base.e # exact match
+      %w{e html md ttl txt}.map{|suffix| # appended-suffix match
+        doc = base.a '.'+suffix
+        files.push doc.setEnv(@r) if doc.e}}
+    files
   end
 
   def getIndex rev # find (? p o) triple

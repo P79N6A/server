@@ -149,7 +149,7 @@ class R
   View[Sound+'Player'] = -> g,e {
     [H.js('/js/audio'),{_: :audio, id: :audio, controls: true}]}
 
-  GET['/thumbnail'] = -> e {
+  GET['thumbnail'] = -> e {
     thumb = nil
     path = e.path.sub /^.thumbnail/, ''
     i = R['//' + e.host + path]

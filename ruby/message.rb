@@ -144,7 +144,7 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-  GET['/thread'] = -> e { # construct thread
+  GET['thread'] = -> e { # construct thread
     m = {}
     R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
     return e.notfound if m.empty?                                      # nothing found
@@ -553,7 +553,7 @@ class R
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                            c: d[Content]}}]}}]}])}
 
-  GET['/feed'] = -> e {
+  GET['feed'] = -> e {
     set = Set['page'][R('//'+e.host+Time.now.strftime('/%Y')).setEnv(e.env)]
     e.env[:Response].update({'Content-Type' => 'application/atom+xml', 'ETag' => set.sort.h})
     e.condResponse -> {

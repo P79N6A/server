@@ -70,12 +70,13 @@ class R
   end
 
   def GET
-    if file? # host-specific path
+    if file?
       fileGET
-    elsif justPath.file? # path on any host
+    elsif justPath.file?
       justPath.fileGET
     else
-      stripDoc.resourceGET
+      GET[path.tail.split('/')[0]].do{|handler| handler[self].do{|r| return r }}
+      response
     end
   end
 
@@ -85,17 +86,6 @@ class R
                'ETag' => [m,size].h })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     condResponse ->{ self }
-  end
-
-  def resourceGET
-    bases = [host, ""] # host, path
-    paths = justPath.cascade.map(&:to_s).map &:downcase
-    bases.map{|b|
-      paths.map{|p| # bubble up to root
-        GET[b + p].do{|fn| # bind
-          fn[self].do{|r| # call
-        return r }}}} # found handler, terminate search
-    response
   end
 
   def response
