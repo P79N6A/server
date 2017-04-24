@@ -554,7 +554,8 @@ class R
                            c: d[Content]}}]}}]}])}
 
   GET['feed'] = -> e {
-    set = Set['page'][R('//'+e.host+Time.now.strftime('/%Y')).setEnv(e.env)]
+    e.env[:walk] = true
+    set = R('//'+e.host+Time.now.strftime('/%Y')).setEnv(e.env).nodeset
     e.env[:Response].update({'Content-Type' => 'application/atom+xml', 'ETag' => set.sort.h})
     e.condResponse -> {
       graph = {}

@@ -89,28 +89,23 @@ class R
   end
 
   def response
-
-    # file-set arguments
-    stars = uri.scan('*').size
-    @r[:find] = true if q.has_key? 'find'
-    @r[:glob] = true if stars > 0 && stars <= 3
-    @r[:grep] = true if q.has_key? 'q'
-
-    # 'cd' into named container via 301 redirect so we can trivially inline child-node relative references
+    # enter container for relative-URI startpoint
     container = directory? || justPath.directory?
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
       return [301, @r[:Response], []]
     end
+    # file-set options
+    stars = uri.scan('*').size
+    @r[:find] = true if q.has_key? 'find'
+    @r[:glob] = true if stars > 0 && stars <= 3
+    @r[:grep] = true if q.has_key? 'q'
+    @r[:walk] = true if q.has_key? 'walk'
 
-    # search for resource set
-    set = []
-    (Set[q['set']]||Set[Resource])[self].do{|f|
-      set.concat f}
-    return notfound if set.empty?
+    set = nodeset
+    return notfound if !set || set.empty?
 
-    # set response-head values
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format,
                           'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})

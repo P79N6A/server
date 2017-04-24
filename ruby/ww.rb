@@ -158,9 +158,8 @@ class R < RDF::URI
 
   Prefixes = {:ldp => RDF::URI(LDP),:rdf => RDF::URI(RDFns),:rdfs => RDF::URI(RDFs),:stat => RDF::URI(Stat)}
 
-  # lambda-tables for customization
+  # lambda tables
   GET = {}
-  Set = {}
   Abstract = {} # summarize
   Render = {}   # MIME renderer
   View = {}     # HTML template

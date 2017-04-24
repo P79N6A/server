@@ -1,12 +1,12 @@
 class R
 
-  Set[Resource] = -> re {
-    query = re.env['QUERY_STRING']
+  def nodeset
+    query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
 
     # add next+prev month/day/year/hour pointers to header
     dp = []
-    parts = re.path.tail.split '/'
+    parts = path.tail.split '/'
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
@@ -32,56 +32,54 @@ class R
       n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
     end
     # preserve URI after datepart. this could be glob or file pattern
-    re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
-    re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
+    env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + host + p].e
+    env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + host + n].e
 
-    if re.path[-1] == '/' # container
-      htmlFile = re.a 'index.html'
+    if path[-1] == '/' # container
+      htmlFile = a 'index.html'
        # HTML requested, file exists, and no query
-      if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
-         [htmlFile.setEnv(re.env)] # static response
+      if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e
+         [htmlFile.setEnv(env)] # static response
       else
-        if re.env[:find] # find names matching
-          q = re.q['find']
-          expression = '-iregex ' + ('.*' + q + '.*').sh
-          size = re.q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
-          freshness = re.q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-          loc = re.exist? ? re : re.justPath
+        if env[:find] # find names matching
+          query = q['find']
+          expression = '-iregex ' + ('.*' + query + '.*').sh
+          size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+          freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+          loc = exist? ? self : justPath
           `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}
-        elsif re.env[:grep] # find content matching
-          `grep -ril #{re.q['q'].sh} #{re.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
+        elsif env[:grep] # find content matching
+          `grep -ril #{q['q'].sh} #{sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
+        elsif env[:walk]
+          count = ((q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
+          orient = q.has_key?('asc') ? :asc : :desc
+          (take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
+            if q['offset'] && head = s[0] # direction-reversal link
+              env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
+            end
+            if edge = s.size >= count && s.pop # lookahead node, and therefore another page, exists. point to it
+              env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
+            end
+            s }
         else
           # child nodes host-specific and non
-          childnodes = [*re.c, *(re.path=='/' ? [] : re.justPath.c)]
+          childnodes = [*c, *(path=='/' ? [] : justPath.c)]
           if childnodes.size < 512 # small set, inline
-            childnodes.map{|c|c.setEnv re.env}
-            re.fileResources.concat childnodes
+            childnodes.map{|c|c.setEnv env}
+            fileResources.concat childnodes
           else
-            re.fileResources
+            fileResources
           end
         end
       end
     else
-      if re.env[:glob] # glob pattern
-        re.glob.select &:inside
+      if env[:glob] # glob pattern
+        glob.select &:inside
       else # basic
-        re.fileResources
+        fileResources
       end
-    end}
-
-  Set['page'] = -> d {
-    # count
-    c = ((d.q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
-    # direction
-    o = d.q.has_key?('asc') ? :asc : :desc
-    (d.take c, o, d.q['offset'].do{|o|o.R}).do{|s| # search
-      if d.q['offset'] && head = s[0] # direction-reversal link
-        d.env[:Links][:prev] = d.path + "?set=page&c=#{c-1}&#{o == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-      end
-      if edge = s.size >= c && s.pop # lookahead node, and therefore another page, exists. point to it
-        d.env[:Links][:next] = d.path + "?set=page&c=#{c-1}&#{o}&offset=" + (URI.escape edge.uri)
-      end
-      s }}
+    end
+  end
 
   GET['d']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[3..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   GET['now']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
