@@ -102,9 +102,9 @@ class R
 
     # file-set arguments
     stars = uri.scan('*').size
+    @r[:find] = true if q.has_key? 'find'
     @r[:glob] = true if stars > 0 && stars <= 3
     @r[:grep] = true if q.has_key? 'q'
-    q['set'] = 'find' if q.has_key? 'find'
 
     # 'cd' into named container via 301 redirect so we can trivially inline child-node relative references
     container = directory?

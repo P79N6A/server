@@ -35,18 +35,23 @@ class R
     re.env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + re.host + p].e
     re.env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + re.host + n].e
 
-    # directory handler
-    if re.path[-1] == '/'
+    if re.path[-1] == '/' # container
       htmlFile = re.a 'index.html'
        # HTML requested, file exists, and no query
       if re.format=='text/html' && !re.env['REQUEST_URI'].match(/\?/) && htmlFile.e
          [htmlFile.setEnv(re.env)] # static response
       else
-        if re.env[:grep]
+        if re.env[:find] # find names matching
+          q = re.q['find']
+          expression = '-iregex ' + ('.*' + q + '.*').sh
+          size = re.q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+          freshness = re.q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+          `find #{re.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}
+        elsif re.env[:grep] # find content matching
           `grep -ril #{re.q['q'].sh} #{re.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
         else
-          cs = re.c # child-nodes
-          if cs.size < 512
+          cs = re.c # child references
+          if cs.size < 512 # small set, inline
             cs.map{|c|c.setEnv re.env}
             re.fileResources.concat cs
           else
@@ -54,20 +59,13 @@ class R
           end
         end
       end
-    else # glob
-      if re.env[:glob]
+    else
+      if re.env[:glob] # glob pattern
         re.glob.select &:inside
-      else # base set
+      else # basic
         re.fileResources
       end
     end}
-
-  Set['find'] = -> e {
-    e.exist? && e.q['find'].do{|q|
-      r = '-iregex ' + ('.*' + q + '.*').sh
-      s = q['size'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
-      t = q['day'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-      `find #{e.sh} #{t} #{s} #{r} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}}
 
   Set['page'] = -> d {
     # count
