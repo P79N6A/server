@@ -217,7 +217,6 @@ class R
                                      end}}] if isImg)]
                   when Type
                    l[Type].justArray.uniq.map{|t|
-                     puts t
                      icon = Icons[t.uri]
                      {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
