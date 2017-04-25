@@ -168,7 +168,7 @@ class R
       shownActors ? '' : ((shownActors = true) && [[From,''],[To,'&rarr;']].map{|p,pl|
         l[p].do{|o|
           [{_: :b, c: pl + ' '},
-           o.justArray.map{|v|
+           o.justArray.uniq.map{|v|
              if v.respond_to?(:uri)
                v = v.R
                label = (v.fragment||v.basename && v.basename.size > 1 && v.basename || v.host.split('.')[0..-2].join).downcase.gsub(/[^a-zA-Z0-9_]/,'')
@@ -215,8 +215,9 @@ class R
                                     else
                                       '/thumbnail' + this.path
                                      end}}] if isImg)]
-                 when Type
-                   l[Type].justArray.map{|t|
+                  when Type
+                   l[Type].justArray.uniq.map{|t|
+                     puts t
                      icon = Icons[t.uri]
                      {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
                  when LDP+'contains'
