@@ -65,9 +65,9 @@ class R
           childnodes = [*c, *(path=='/' ? [] : justPath.c)] # host-specific and non
           if childnodes.size < 512
             childnodes.map{|c|c.setEnv env}
-            fileResources.concat childnodes
+            documents.concat childnodes
           else
-            fileResources
+            documents
           end
         end
       end
@@ -75,7 +75,7 @@ class R
       if env[:glob] # glob pattern
         glob.select &:inside
       else # basic resource
-        fileResources
+        documents
       end
     end
   end
@@ -109,7 +109,7 @@ class R
     yield uri, Size, size
   end
 
-  def fileResources
+  def documents
     files = []
     [self,justPath].map{|base| files.push base if base.e # exact match
       %w{e html md ttl txt}.map{|suffix| # appended-suffix match

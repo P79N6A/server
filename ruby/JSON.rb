@@ -45,8 +45,7 @@ class R
 
   # files -> Graph
   def graph graph = {}
-    fileResources.map{|d|
-      d.loadGraph graph}
+    documents.map{|d|d.loadGraph graph}
     graph
   end
 
