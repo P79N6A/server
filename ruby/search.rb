@@ -74,8 +74,9 @@ class R
     else
       if env[:glob] # glob pattern
         glob.select &:inside
-      else # basic resource
-        documents
+      else # base resource
+        # file didnt exist, take extension as content-type preference
+        stripDoc.documents
       end
     end
   end
