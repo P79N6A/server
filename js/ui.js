@@ -49,12 +49,12 @@ document.addEventListener("DOMContentLoaded", function(){
 		jumpDoc('prev','#last');
 	    if(key==78) // next page
 		jumpDoc('next','#first');
-	    if(key==85){
+	    if(key==85){ // parent
 		var up = document.querySelector('#up');
 		if(up)
 		    window.location = up.attr('href');
 	    };
-	    if(key==68){
+	    if(key==68){ // children
 		var down = document.querySelector('#down');
 		if(down)
 		    window.location = down.attr('href');
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		};
 	    };
 	};
-	if(key==13){ // goto selection canonical-location
+	if(key==13){ // goto URL
 	    loc = window.location.hash;
 	    if(loc){
 		cur = document.querySelector(loc);
@@ -99,6 +99,9 @@ document.addEventListener("DOMContentLoaded", function(){
 			window.location = href;
 		};
 	    };
+	};
+	if(key==83){ // sort
+	    window.location = '?sort=sioc:addressed_to'
 	};
 	if(key==27){ // exit query-context
 	   window.location = window.location.pathname;
