@@ -17,10 +17,8 @@ bundle install # ruby dependencies
 ruby install   # this
 ```
 
-see [conf/](conf/) for invocation scripts and configuration for third party utilities like procmail to deliver into a time-based directory structure
+see [conf/](conf/) for invocation and configuration for third party utilities like procmail to deliver into a time-based directory structure
 
-for a personal webserver, try domain/localhost as a symlink to a directory synchronized between all your devices via some other utility, like Syncthing, rsync, or scp
-
-
+for a personal webserver, try domain/localhost as a symlink to a directory synchronized between all your devices via a utility like Syncthing, rsync, or scp
 
 [src.whats-your.name/pw/](http://src.whats-your.name/pw/) [gitlab.com/ix/pw](https://gitlab.com/ix/pw) [repo.or.cz/www](http://repo.or.cz/www)
