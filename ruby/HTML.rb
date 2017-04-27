@@ -198,11 +198,8 @@ class R
                       {class: :files,
                        c: [DC+'link', SIOC+'attachment',
                            DC+'hasFormat'].map{|p|
-                         l[p].justArray.map{|link|
-                           link = link.R
-                           [{_: :a, class: :link, id: e.selector, href: link.uri,
-                             c: CGI.escapeHTML(link.fragment||link.basename=='/' ? link.host : link.basename)},
-                            ' ']}}},
+                         l[p].justArray.sort_by(&:uri).map{|link|
+                           [{_: :a, class: :link, id: e.selector, href: link.uri,c: CGI.escapeHTML(link.uri)},' ']}}},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
