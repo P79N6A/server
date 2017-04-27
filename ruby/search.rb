@@ -46,10 +46,11 @@ class R
           expression = '-iregex ' + ('.*' + query + '.*').sh
           size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
           freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-          loc = exist? ? self : justPath
-          `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}
+          [self,justPath].map{|loc|
+            `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
         elsif env[:grep] # find matching content
-          `grep -ril #{q['q'].sh} #{sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}
+          [self,justPath].map{|loc|
+            `grep -ril #{q['q'].sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
         elsif env[:walk] # ordered node traversal
           count = ((q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
           orient = q.has_key?('asc') ? :asc : :desc
