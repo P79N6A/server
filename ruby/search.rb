@@ -207,7 +207,7 @@ class R
         time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
         doc =  R["//localhost/#{time}#{slug}.ttl"]
-        unless doc.e || doc.justPath.e
+        unless doc.e
           doc.dir.mk
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # store resource
           puts "+ " + doc.stripDoc
