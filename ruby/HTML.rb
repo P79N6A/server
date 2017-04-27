@@ -195,9 +195,8 @@ class R
                       ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||basicResource),
                       (title ? '<br>' : ' '),
                       # links
-                      {class: :files,
-                       c: [DC+'link', SIOC+'attachment',
-                           DC+'hasFormat'].map{|p|
+                      {class: :links,
+                       c: [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                          l[p].justArray.sort_by(&:uri).map{|link|
                            [{_: :a, class: :link, id: e.selector, href: link.uri,c: CGI.escapeHTML(link.uri)},' ']}}},
                       # body
