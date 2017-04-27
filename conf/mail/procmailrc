@@ -1,3 +1,4 @@
-D=$HOME/.mail/`date +%Y/%m/%d`
+D=$HOME/Sync/`date +%Y/%m/%d/%H`
 MKDIR=`test -d $D || mkdir -p $D`
+MSGPREFIX=msg.user.
 DEFAULT=$D
