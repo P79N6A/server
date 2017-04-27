@@ -74,7 +74,8 @@ class R
       end
     else
       if env[:glob] # glob pattern
-        glob.select &:inside
+        [self,justPath].map{|loc|
+          loc.glob.select &:inside}.flatten
       else # base resource
         # file didnt exist, take extension as content-type preference
         stripDoc.documents
