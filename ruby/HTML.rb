@@ -148,9 +148,8 @@ class R
                  q['ascending'] = ''
                end
                href = CGI.escapeHTML q.qs
-               [{_: :th, href: href, property: k,
-                 class: k == sort ? 'selected' : '',
-                 c: {_: :a, href: href, class: Icons[k]||''}}, "\n"]}]}]}}
+               {_: :th, href: href, property: k, class: k == sort ? 'selected' : '',
+                 c: {_: :a, href: href, class: Icons[k]||''}}}]}]}}
 
   TableRow = -> l,e,sort,direction,keys,titles {
     this = l.R
@@ -179,7 +178,7 @@ class R
              end
            }.intersperse(' '),' ']}})}
 
-    [{_: :tr, class: :selectable, href: href, id: e.selector,
+    [{_: :tr, href: href, id: e.selector,
        c: ["\n",
            keys.map{|k|
              [{_: :td, property: k,

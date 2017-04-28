@@ -101,7 +101,14 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	};
 	if(key==83){ // sort
-	    window.location = '?sort=sioc:addressed_to'
+	    var sel = document.querySelector('.selected');
+	    if(sel){
+		var next = sel.nextSibling;
+		if(!next)
+		    next = document.querySelector('tr > th[href]');
+		if(next)
+		    window.location = next.getAttribute('href');
+	    };
 	};
 	if(key==27){ // exit query-context
 	   window.location = window.location.pathname;
