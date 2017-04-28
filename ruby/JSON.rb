@@ -116,7 +116,7 @@ class Array
     compact.sort_by{|i|
       ((if i.class==Hash
         if sort == 'uri'
-          i[R::Label] || i.uri
+          i[R::Title] || i[R::Label] || i.uri
         else
           i[sort]
         end

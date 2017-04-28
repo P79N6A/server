@@ -103,12 +103,13 @@ document.addEventListener("DOMContentLoaded", function(){
 	if(key==83){ // sort
 	    var sel = document.querySelector('.selected');
 	    if(sel){
-		var next = sel.nextSibling;
-		if(!next)
-		    next = document.querySelector('tr > th[href]');
+		var next = sel.nextSibling || document.querySelector('tr > th[href]');
 		if(next)
 		    window.location = next.getAttribute('href');
 	    };
+	};
+	if(key==82){
+	    window.location = document.querySelector('.selected').getAttribute('href');
 	};
 	if(key==27){ // exit query-context
 	   window.location = window.location.pathname;
