@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		    window.location = next.getAttribute('href');
 	    };
 	};
-	if(key==82){
+	if(key==82){ // reverse sort
 	    window.location = document.querySelector('.selected').getAttribute('href');
 	};
 	if(key==27){ // exit query-context
