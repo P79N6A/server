@@ -173,7 +173,7 @@ class R
                v = v.R
                label = (v.fragment||v.basename && v.basename.size > 1 && v.basename || v.host.split('.')[0..-2].join).downcase.gsub(/[^a-zA-Z0-9_]/,'')
                e.env[:label][label] = true
-               {_: :a, href: v.host == e.host ? v.path : (v.host ? v.uri : v.dir.path), name: label, c: label}
+               {_: :a, href: v.host == e.host ? v.path : (v.host ? v.uri : v.dir.path), name: label, c: label}.update(loc ? {id: e.selector} : {})
              else
                v.to_s
              end
@@ -182,7 +182,7 @@ class R
     [{_: :tr, class: :selectable, href: href, id: e.selector,
        c: ["\n",
            keys.map{|k|
-             [{_: :td, property: k, class: sort==k ? 'selected' : '',
+             [{_: :td, property: k,
                c: case k
                   when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
                     [# labels
