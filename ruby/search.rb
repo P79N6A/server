@@ -177,9 +177,7 @@ class R
           [To,Creator].map{|p|    # address predicates
           r[p].justArray.map{|a|  # address objects
             if a.respond_to? :uri # identifier please
-              a = a.R             # address resource
-              dir = a.fragment ? a.path.R : a # index path
-              docs[dir.child(month+r.uri.h[0..12]+'.e').uri] = summary # add index-entry for writing
+              docs[a.R.dir.child(month+r.uri.h[0..12]+'.e').uri] = summary # add index-entry for writing
             end}}
         end }
 
