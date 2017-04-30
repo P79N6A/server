@@ -37,8 +37,8 @@ class R
 
     if path[-1] == '/' # container
       htmlFile = a 'index.html'
-      if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e # HTML requested, index file exists, and no query arguments
-         [htmlFile.setEnv(env)] # static container index
+      if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e # HTML requested and exists + null query argument
+         [htmlFile.setEnv(env)] # static container-index
       else # dynamic container
         if env[:find] # match name
           query = q['find']
