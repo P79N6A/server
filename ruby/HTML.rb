@@ -236,7 +236,7 @@ class R
                  when To
                    actors[]
                  when Size
-                   l[k].do{|sizes|sizes.sum}
+                   l[k].do{|sz|sz.justArray.sum}
                  else
                    l[k].justArray.map{|v|
                      case v
