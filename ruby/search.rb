@@ -40,17 +40,17 @@ class R
       if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e # HTML requested, index file exists, and no query arguments
          [htmlFile.setEnv(env)] # static container index
       else # dynamic container
-        if env[:find] # find matching node-names
+        if env[:find] # match name
           query = q['find']
           expression = '-iregex ' + ('.*' + query + '.*').sh
           size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
           freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
           locs.map{|loc|
             `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
-        elsif env[:grep] # find matching content
+        elsif env[:grep] # match content
           locs.map{|loc|
             `grep -ril #{q['q'].sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
-        elsif env[:walk] # ordered node traversal
+        elsif env[:walk] # ordered tree traversal
           count = ((q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
           orient = q.has_key?('asc') ? :asc : :desc
           (take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
@@ -62,7 +62,7 @@ class R
             end
             s }
         else # basic container
-          childnodes = [*c, *(path=='/' ? [] : justPath.c)] # host-specific and non
+          childnodes = locs.map(&:c).flatten
           if childnodes.size < 512
             childnodes.map{|c|c.setEnv env}
             documents.concat childnodes
@@ -72,11 +72,11 @@ class R
         end
       end
     else
-      if env[:glob] # glob pattern
+      if env[:glob] # name pattern
         locs.map{|loc|
           loc.glob.select &:inside}.flatten
-      else # base resource
-        # file didnt exist, take extension as content-type preference
+      else # basic resource
+        # eat extension for content-type preference
         stripDoc.documents
       end
     end
