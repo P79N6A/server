@@ -23,7 +23,6 @@ def R uri
 end
 
 class Array
-  def cr; intersperse "\n" end
   def head; self[0] end
   def tail; self[1..-1] end
   def h; join.h end
