@@ -62,7 +62,7 @@ class R
             end
             s }
         else # basic container
-          childnodes = locs.map(&:c).flatten
+          childnodes = locs.-(['/'.R]).map(&:c).flatten
           if childnodes.size < 512
             childnodes.map{|c|c.setEnv env}
             documents.concat childnodes
