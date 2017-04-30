@@ -3,6 +3,7 @@ class R
   def nodeset
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
+    locs = [self, justPath].uniq
 
     # add next+prev month/day/year/hour pointers to header
     dp = []
@@ -31,25 +32,23 @@ class R
       p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour-1)))
       n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
     end
-    # preserve URI after datepart. this could be glob or file pattern
     env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + host + p].e
     env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + host + n].e
 
     if path[-1] == '/' # container
       htmlFile = a 'index.html'
-       # HTML requested, index file exists, and no querystring supplied
-      if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e
-         [htmlFile.setEnv(env)] # static response
-      else # container
+      if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e # HTML requested, index file exists, and no query arguments
+         [htmlFile.setEnv(env)] # static container index
+      else # dynamic container
         if env[:find] # find matching node-names
           query = q['find']
           expression = '-iregex ' + ('.*' + query + '.*').sh
           size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
           freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-          [self,justPath].map{|loc|
+          locs.map{|loc|
             `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
         elsif env[:grep] # find matching content
-          [self,justPath].map{|loc|
+          locs.map{|loc|
             `grep -ril #{q['q'].sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
         elsif env[:walk] # ordered node traversal
           count = ((q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
@@ -74,7 +73,7 @@ class R
       end
     else
       if env[:glob] # glob pattern
-        [self,justPath].map{|loc|
+        locs.map{|loc|
           loc.glob.select &:inside}.flatten
       else # base resource
         # file didnt exist, take extension as content-type preference
@@ -114,7 +113,7 @@ class R
 
   def documents
     files = []
-    [self,justPath].map{|base| files.push base if base.e # exact match
+    [self,justPath].uniq.map{|base| files.push base if base.e # exact match
       %w{e html md ttl txt}.map{|suffix| # appended-suffix match
         doc = base.a '.'+suffix
         files.push doc.setEnv(@r) if doc.e}}
