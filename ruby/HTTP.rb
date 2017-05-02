@@ -64,6 +64,7 @@ class R
   end
 
   def notfound
+    @r[404]=true
     [404,{'Content-Type' => format},
      [Render[format].do{|fn|fn[graph,self]} ||
       graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym)]]
