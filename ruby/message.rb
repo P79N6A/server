@@ -182,7 +182,12 @@ class R
         target = URI.escape('<' + id + '>')
         yield e, SIOC+'reply_to', R["mailto:#{URI.escape r2}?References=#{target}&In-Reply-To=#{target}&subject=#{(CGI.escape m.subject).gsub('+','%20')}&"+'#reply']}} # reply-to pointer
 
-#    m[:from].do{|fr|fr.addrs.head.do{|a|yield AddrPath[a.address],Label, a.display_name||a.name}}
+    m[:from].do{|fr|
+      fr.addrs.head.do{|a|
+        author = AddrPath[a.address]
+        yield author, Label, a.display_name||a.name
+        yield author, SIOC+'has_container', author.R.dir
+      }}
 
     if m.date
       date = m.date.to_time.utc

@@ -14,7 +14,7 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # URI parts nil -> ""
+  # URI with empty-string for null components
   def schemePart; scheme ? scheme + ':' : '' end
   def hostPart; host ? '//' + host : '' end
   def hierPart; path || '/' end
