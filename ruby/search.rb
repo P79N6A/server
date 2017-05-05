@@ -49,7 +49,7 @@ class R
             `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
         elsif env[:grep] # match content
           locs.map{|loc|
-            `grep -ril #{q['q'].sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
+            `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
         elsif env[:walk] # ordered tree traversal
           count = ((q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
           orient = q.has_key?('asc') ? :asc : :desc
@@ -127,27 +127,25 @@ class R
   end
 
 =begin
-   indexers. variants for triple, stream of triples and resource reference
+   indexers. variants for triple, stream of triples and resource (reference)
    using RDF library and graph-database is of course an option,
-   the following methods allow us to fulfill index needs using only the fs
+   the following methods allow us to fulfill index needs using only the fs:
 
    outgoing arcs from re(s)ource: (s p o) (s p _) (s _ o) (s _ _) patterns
     matchable in subject doc-graph, assuming this is findable, so write:
    - document to local store at subject-URI derived location
 
-   incoming arcs to res(o)urce: (_ p o) (_ _ o) patterns
-   - incoming triples to URI-list file stored alongside resource
+   incoming arcs to res(o)urce (_ p o) (_ _ o) not in doc, so write:
+   - inbound triples to URI-list file stored alongside resource
 
 =end
 
-  # index a triple
-  def index p, o # (s)ubject is implicit "self" argument
+  def index p, o # triple (s)ubject is implicit via "self" attribute
     o = o.R.path
     # append to incoming-link index
     R(File.dirname(o) + '/.' + File.basename(o) + '.' + p.R.shorten + '.rev').appendFile uri
   end
 
-  # index resources in stream
   def indexStream triplr, &b
     docs = {}
     graph = fromStream({},triplr) # collect triples
@@ -191,12 +189,11 @@ class R
         puts "+ " + doc.path
       end}
 
-    # emit triples if a consumer exists
+    # emit triples if consumer exists
     graph.triples &b if b
     self
   end
 
-  # index a resource
   def indexResource options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
