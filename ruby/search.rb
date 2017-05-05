@@ -131,12 +131,12 @@ class R
    using RDF library and graph-database is of course an option,
    the following methods allow us to fulfill index needs using only the fs:
 
-   outgoing arcs from re(s)ource: (s p o) (s p _) (s _ o) (s _ _) patterns
-    matchable in subject doc-graph, assuming this is findable, so write:
-   - document to local store at subject-URI derived location
+   outbound arcs from re(s)ource: (s p o) (s p _) (s _ o) (s _ _)
+   in (s)ubject document, assuming this is findable, so write:
+   - document at subject-URI mapped location
 
-   incoming arcs to res(o)urce (_ p o) (_ _ o) not in doc, so write:
-   - inbound triples to URI-list file stored alongside resource
+   inbound arcs to res(o)urce (_ p o) (_ _ o) not in its doc, so write:
+   - inbound triples to URI-list index file stored next to resource
 
 =end
 
@@ -150,38 +150,37 @@ class R
     docs = {}
     graph = fromStream({},triplr) # collect triples
     graph.map{|u,r| this = u.R    # visit resources
-      doc = u.split('#')[0].R.stripDoc.a('.e').uri # storage URI
+      doc = u.split('#')[0].R.stripDoc.a('.e').uri # storage location
       r[Date].do{|t|              # timestamp
         if this.host              # global-location resource
-          # link to location on our host as remote-host requests normally flow to someone else's server, not /domain
-          # note w/ properly crafted Host header daemon can serve cached remote from /domain, if you have cache/proxy ideas
+          # change doc location to our host as remote-host requests normally flow to someone else's server, not /domain
           slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time slug
+          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time-parts
           doc = "//localhost/#{time}#{slug}e"
         else # local resource
-          # document already has a local path
-          # index message-reference backlinks, for discussion finding
+          # document already local path, no need to update location to localize
+
+          # index inbound triples
           r[Re].justArray.map{|o|this.index Re,o}
 
-          # summarize resource
+          # resource summary for index
           s = {'uri' => r.uri}   # summary resource
           [Type,Date,Creator,To,Title,DC+'identifier',Image].map{|p| r[p].do{|o| s[p]=o }} # preserved properties
           s[Content]=r[Content] if r.types.member? SIOC+'Tweet' # keep tiny content values
           summary = {r.uri => s} # summary graph
 
-          # file summary in address-month index
+          # link summary to index container
           month = t[0][0..7].gsub '-','/' # month slug
           [To,Creator].map{|p|    # address predicates
           r[p].justArray.map{|a|  # address objects
             if a.respond_to? :uri # identifier please
-              docs[a.R.dir.child(month+r.uri.h[0..12]+'.e').uri] = summary # add index-entry for writing
+              docs[a.R.dir.child(month+r.uri.h[0..12]+'.e').uri] = summary
             end}}
         end }
-
-      # add base resource for writing
+      # add resource to document
       docs[doc] ||= {}
-      docs[doc][u]=r }
-    
+      docs[doc][u] = r}
+
     # store documents
     docs.map{|doc,graph| doc = doc.R
       unless doc.e
