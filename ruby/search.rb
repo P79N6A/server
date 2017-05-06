@@ -238,13 +238,9 @@ class R
         lines[0..5].map{|line|
           r[Content].unshift line[0..400].gsub(highlight){|g|
             H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
-      graph.delete u if r[Content].empty?
-    }
-    graph['#grep.CSS'] = {Content => H({_: :style,
-                                       c: wordIndex.values.map{|i|
-                                         bg = rand 16777216
-                                         fg = bg > 8388608 ? :black : :white
-                                         ".w#{i} {background-color: #{'#%06x' % bg}; color: #{fg}}\n"}})}}
+      graph.delete u if r[Content].empty?}
+    graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
+                                          ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
 
   Summarize = -> g,e {
     groups = {}

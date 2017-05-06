@@ -66,7 +66,7 @@ class R
     html.traverse{|e|
       e.attribute_nodes.map{|a|
         a.unlink unless keepAttr.member? a.name}} if keepAttr
-    html.to_xhtml}
+    html.to_xhtml(:indent => 0)}
 
   Render['text/html'] = -> graph,re,view=nil {
     e = re.env
