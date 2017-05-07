@@ -14,9 +14,7 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  def queryPart; query ? '?' + query : '' end
-  def fragPart; fragment ? '#' + fragment : '' end
-  def pathPart; (path || '/') + queryPart + fragPart end
+  def pathPart; (path || '/') + (query ? '?' + query : '') + (fragment ? '#' + fragment : '') end
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
   def basename suffix = nil
