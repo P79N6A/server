@@ -31,6 +31,32 @@ class String
     force_encoding 'UTF-8'
   end
 
+  def h; Digest::SHA1.hexdigest self end
+  def tail; self[1..-1] end
+  def t; match(/\/$/) ? self : self+'/' end
+  def R
+    R.new self
+  end
+
+  Expand={}
+  def expand
+   (Expand.has_key? self) ?
+    Expand[self] :
+   (Expand[self] =
+     match(/([^:]+):([^\/].*)/).do{|e|
+      ( R::Prefix[e[1]] || e[1]+':' )+e[2]} ||
+     gsub('|','/')) # no prefix found, squash to basename
+  end
+
+  def shorten
+    R::Prefix.map{|p,f|
+      return p + ':' + self[f.size..-1]  if (index f) == 0
+    }
+    gsub('/','|')
+  end
+
+  def sh; Shellwords.escape self end
+
 end
 
 require 'redcarpet'

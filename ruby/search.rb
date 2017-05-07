@@ -263,6 +263,10 @@ end
 
 class Pathname
 
+  def R
+    R.unPOSIX to_s.utf8
+  end
+
   def c # children
     return [] unless directory?
     children.delete_if{|n| n.basename.to_s.match /^\./}

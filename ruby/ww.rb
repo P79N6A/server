@@ -163,9 +163,59 @@ class R < RDF::URI
   Render = {}   # MIME renderer
   View = {}     # HTML template
 
+  # constructors
+  def R uri = nil
+    uri ? (R.new uri) : self
+  end
+  def R.[] uri; R.new uri end
+
+  # equality / comparison
+  def ==  u; to_s == u.to_s end
+  def <=> c; to_s <=> c.to_s end
+
+  # append
+  def + u; R uri + u.to_s end
+  alias_method :a, :+
+
+  def justPath; (path || '/').R.setEnv(@r) end
+  def child u; R[uri.t + u.to_s] end
+  def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
+  def dir; dirname.R end
+  def children; node.c.map &:R end
+  alias_method :c, :children
+
+  def ext; (File.extname uri).tail || '' end
+  def basename suffix = nil
+    suffix ? (File.basename path, suffix) : (File.basename path) end
+  def pathPOSIX; FSbase + '/' +
+                   (if h = host
+                     'domain/' + h + path
+                    else
+                     uri[0] == '/' ? uri.tail : uri
+                    end)
+  end
+  def node; Pathname.new pathPOSIX end
+  def R.unPOSIX p, skip = R::BaseLen
+    p[skip..-1].do{|p| R[ p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} || p]}
+  end
+  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
+  def sh; pathPOSIX.utf8.sh end # shell-escape path
+  def exist?; node.exist? end
+  alias_method :e, :exist?
+  def file?; node.file? end
+  alias_method :f, :file?
+  def mtime; node.stat.mtime if e end
+  alias_method :m, :mtime
+  def size; node.size end
+  
+  # squashable URIs
+  Prefix = {"dc" => DC, "foaf" => FOAF, "ldp" => LDP, "rdf" => RDFns, "rdfs" => RDFs, "sioc" => SIOC, "stat" => Stat}
+  def expand;   uri.expand.R end
+  def shorten;  uri.shorten.R end
+
   %w{
 MIME
-names
 JSON
 HTML
 HTTP
