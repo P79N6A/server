@@ -81,13 +81,9 @@ end
 
 class R
   # HTTP URIs in plain-text
-  #  ) only matches with an opening (
-  # ,. only match mid-URI as a URI seems to more often be used as a word in a sentence than end with those chars
+  # opening ( required for ) match
+  # [,.] only match mid-URI
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
-
-  def triplrHTMLfragment
-    yield uri, Content, r
-  end
 
   def triplrHref enc=nil
     id = stripDoc.uri
