@@ -14,32 +14,28 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # container traverses
   def justPath; (path || '/').R.setEnv(@r) end
   def descend; uri.t.R end
   def child u; descend + u.to_s end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
-  def parentURI; R (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + Pathname.new(path || '/').parent.to_s end
   def children; node.c.map &:R end
   alias_method :c, :children
 
-  # POSIX-path mapping
   VHosts = 'domain'
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
   def basename suffix = nil
     suffix ? (File.basename path, suffix) : (File.basename path) end
   def bare; basename suffix end
-  def pathPOSIX; FSbase + '/' + pathPOSIXrel end
-  def node; Pathname.new pathPOSIX end
-  def pathPOSIXrel
-    if h = host
-      VHosts + '/' + h + path
-    else
-      uri[0] == '/' ? uri.tail : uri
-    end
+  def pathPOSIX; FSbase + '/' +
+                   (if h = host
+                     VHosts + '/' + h + path
+                    else
+                     uri[0] == '/' ? uri.tail : uri
+                    end)
   end
+  def node; Pathname.new pathPOSIX end
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
