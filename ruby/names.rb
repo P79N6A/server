@@ -21,25 +21,23 @@ class R
   def children; node.c.map &:R end
   alias_method :c, :children
 
-  VHosts = 'domain'
   def ext; (File.extname uri).tail || '' end
   def basename suffix = nil
     suffix ? (File.basename path, suffix) : (File.basename path) end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
-                     VHosts + '/' + h + path
+                     'domain/' + h + path
                     else
                      uri[0] == '/' ? uri.tail : uri
                     end)
   end
   def node; Pathname.new pathPOSIX end
   def R.unPOSIX p, skip = R::BaseLen
-    p[skip..-1].do{|p| R[ p.match(/^\/#{R::VHosts}\/+(.*)/).do{|m|'//'+m[1]} || p]}
+    p[skip..-1].do{|p| R[ p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
   def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
   def sh; pathPOSIX.utf8.sh end # shell-escape path
-  def glob; (Pathname.glob pathPOSIX).map &:R end
   def exist?; node.exist? end
   alias_method :e, :exist?
   def file?; node.file? end

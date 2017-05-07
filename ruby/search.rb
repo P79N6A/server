@@ -85,6 +85,8 @@ class R
   GET['d']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/') + (e.path[3..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   GET['now']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
 
+  def glob; (Pathname.glob pathPOSIX).map &:R end
+  
   def triplrContainer
     dir = uri.t
     yield dir, Type, R[Container]
