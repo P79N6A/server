@@ -1,16 +1,4 @@
-%w{
-cgi
-csv
-date
-digest/sha1
-fileutils
-json
-linkeddata
-mail
-open-uri
-pathname
-rack
-shellwords}.map{|r|require r}
+%w{cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack shellwords}.map{|r|require r}
 
 class RDF::URI
   def R
@@ -187,7 +175,16 @@ class R < RDF::URI
 
   def ext; (File.extname uri).tail || '' end
   def basename suffix = nil
-    suffix ? (File.basename path, suffix) : (File.basename path) end
+    if path
+      if suffix
+        File.basename path, suffix
+      else
+        File.basename path
+      end
+    else
+      ''
+    end
+  end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
                      'domain/' + h + path
