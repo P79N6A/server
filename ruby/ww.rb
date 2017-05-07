@@ -177,6 +177,7 @@ class R < RDF::URI
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
+  # POSIX path mapping
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri.t + u.to_s] end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end

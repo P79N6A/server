@@ -50,16 +50,6 @@ class R
     graph
   end
 
-  def pack # consolidate native docs in container to a single file (nonrecursive)
-    return unless node.directory?
-    res = (child '*.e').glob   # find children
-    return unless res.size > 1 # already zero/one docs, done
-    graph = {}                 # graph
-    res.map{|r|r.loadGraph graph; r.delete} # load
-    child('index.e').w graph, true # write doc
-    self
-  end
-
   module Format
 
     class Format < RDF::Format
