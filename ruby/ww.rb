@@ -187,7 +187,7 @@ class R < RDF::URI
   end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
-                     'domain/' + h + path
+                     'domain/' + h + (path || '')
                     else
                      uri[0] == '/' ? uri.tail : uri
                     end)
