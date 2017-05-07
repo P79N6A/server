@@ -5,7 +5,7 @@ class R
     doc = uri.gsub '#','%23'
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    channel = bare
+    channel = basename '.log'
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = doc + '#' + (linenum += 1).to_s

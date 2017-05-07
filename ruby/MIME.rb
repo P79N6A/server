@@ -141,7 +141,6 @@ class R
 
   def triplrAudio &f
     yield uri, Type, R[Sound]
-    yield uri, Title, bare
   end
 
   Abstract[Sound] = -> graph, g, e {graph['#audio'] = {Type => R[Sound+'Player']}} # add player

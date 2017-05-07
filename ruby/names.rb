@@ -25,7 +25,6 @@ class R
   def ext; (File.extname uri).tail || '' end
   def basename suffix = nil
     suffix ? (File.basename path, suffix) : (File.basename path) end
-  def bare; basename '.' + ext end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
                      VHosts + '/' + h + path
@@ -45,7 +44,6 @@ class R
   alias_method :e, :exist?
   def file?; node.file? end
   alias_method :f, :file?
-  def symlink?; node.symlink? end
   def mtime; node.stat.mtime if e end
   alias_method :m, :mtime
   def size; node.size end
