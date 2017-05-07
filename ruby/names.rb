@@ -18,7 +18,7 @@ class R
   def justPath; (path || '/').R.setEnv(@r) end
   def descend; uri.t.R end
   def child u; descend + u.to_s end
-  def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname pathPart) end
+  def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
   def parentURI; R (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + Pathname.new(path || '/').parent.to_s end
   def children; node.c.map &:R end
@@ -26,17 +26,16 @@ class R
 
   # POSIX-path mapping
   VHosts = 'domain'
-  def pathPart; (path || '/') + (query ? '?' + query : '') + (fragment ? '#' + fragment : '') end
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
   def basename suffix = nil
-    suffix ? (File.basename pathPart, suffix) : (File.basename pathPart) end
+    suffix ? (File.basename path, suffix) : (File.basename path) end
   def bare; basename suffix end
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def node; Pathname.new pathPOSIX end
   def pathPOSIXrel
     if h = host
-      VHosts + '/' + h + pathPart
+      VHosts + '/' + h + path
     else
       uri[0] == '/' ? uri.tail : uri
     end
