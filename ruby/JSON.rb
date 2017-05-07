@@ -14,7 +14,7 @@ class R
 
   # normalize file handles to RDF
   def justRDF pass = %w{e}
-    if pass.member? realpath.do{|p|p.extname.tail} # already RDF
+    if pass.member? node.realpath.do{|p|p.extname.tail} # already RDF
       self # return
     else # non RDF, transcode
       h = uri.h
@@ -51,7 +51,7 @@ class R
   end
 
   def pack # consolidate native docs in container to a single file (nonrecursive)
-    return unless directory?
+    return unless node.directory?
     res = (child '*.e').glob   # find children
     return unless res.size > 1 # already zero/one docs, done
     graph = {}                 # graph

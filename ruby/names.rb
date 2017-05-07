@@ -41,13 +41,8 @@ class R
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
   def sh; pathPOSIX.utf8.sh end # shell-escape path
   def glob; (Pathname.glob pathPOSIX).map &:R end
-  def realpath # follow all the links
-    node.realpath
-  end
-  def realURI; realpath.do{|p|p.R} end
   def exist?; node.exist? end
   alias_method :e, :exist?
-  def directory?; node.directory? end
   def file?; node.file? end
   alias_method :f, :file?
   def symlink?; node.symlink? end

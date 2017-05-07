@@ -91,7 +91,7 @@ class R
 
   def response
     # enter container for relative-URI startpoint
-    container = directory? || justPath.directory?
+    container = node.directory? || justPath.node.directory?
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})

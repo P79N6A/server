@@ -2,8 +2,8 @@ class R
 
   def mime
     @mime ||=
-      (p = realpath # dereference links
-       unless p     # broken link
+      (p = node.realpath # dereference link(s)
+       unless p
          nil
        else
          t = ((File.extname p).tail || '').downcase
