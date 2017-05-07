@@ -14,13 +14,6 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  def pathPart; (path || '/') + (query ? '?' + query : '') + (fragment ? '#' + fragment : '') end
-  def ext; (File.extname uri).tail || '' end
-  def suffix; '.' + ext end
-  def basename suffix = nil
-    suffix ? (File.basename pathPart, suffix) : (File.basename pathPart) end
-  def bare; basename suffix end
-
   # container traverses
   def justPath; (path || '/').R.setEnv(@r) end
   def descend; uri.t.R end
@@ -33,6 +26,12 @@ class R
 
   # POSIX-path mapping
   VHosts = 'domain'
+  def pathPart; (path || '/') + (query ? '?' + query : '') + (fragment ? '#' + fragment : '') end
+  def ext; (File.extname uri).tail || '' end
+  def suffix; '.' + ext end
+  def basename suffix = nil
+    suffix ? (File.basename pathPart, suffix) : (File.basename pathPart) end
+  def bare; basename suffix end
   def pathPOSIX; FSbase + '/' + pathPOSIXrel end
   def node; Pathname.new pathPOSIX end
   def pathPOSIXrel
