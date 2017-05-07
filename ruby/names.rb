@@ -54,11 +54,6 @@ class R
   def mtime; node.stat.mtime if e end
   alias_method :m, :mtime
   def size; node.size end
-
-  # balanced-containers. hash as string-arg
-  def R.dive s
-    s[0..2] + '/' + s[3..-1]
-  end
   
   # squashable URIs
   Prefix = {"dc" => DC, "foaf" => FOAF, "ldp" => LDP, "rdf" => RDFns, "rdfs" => RDFs, "sioc" => SIOC, "stat" => Stat}

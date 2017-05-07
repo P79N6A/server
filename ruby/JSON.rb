@@ -17,7 +17,8 @@ class R
     if pass.member? realpath.do{|p|p.extname.tail} # already RDF
       self # return
     else # non RDF, transcode
-      doc = R['/cache/RDF/'+R.dive(uri.h)+'.e'].setEnv @r
+      h = uri.h
+      doc = R['/cache/RDF/'+h[0..2]+'/'+h[3..-1]+'.e'].setEnv @r
       doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache check
       doc
     end
