@@ -351,7 +351,7 @@ class R
       def each_statement &fn
         dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triples emitted from right-to-left in function list
           fn.call RDF::Statement.new(s.R, p.R,
-                                     o.class == R ? o : (l = RDF::Literal (if p == Content
+                                     (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
                                                                            else
                                                                              o.gsub(/<[^>]*>/,' ')
