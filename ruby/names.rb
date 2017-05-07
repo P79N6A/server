@@ -15,8 +15,7 @@ class R
   alias_method :a, :+
 
   def justPath; (path || '/').R.setEnv(@r) end
-  def descend; uri.t.R end
-  def child u; descend + u.to_s end
+  def child u; R[uri.t + u.to_s] end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
   def children; node.c.map &:R end
@@ -24,10 +23,9 @@ class R
 
   VHosts = 'domain'
   def ext; (File.extname uri).tail || '' end
-  def suffix; '.' + ext end
   def basename suffix = nil
     suffix ? (File.basename path, suffix) : (File.basename path) end
-  def bare; basename suffix end
+  def bare; basename '.' + ext end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
                      VHosts + '/' + h + path
