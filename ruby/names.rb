@@ -14,13 +14,9 @@ class R
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # URI with empty-string for null components
-  def schemePart; scheme ? scheme + ':' : '' end
-  def hostPart; host ? '//' + host : '' end
-  def hierPart; path || '/' end
   def queryPart; query ? '?' + query : '' end
   def fragPart; fragment ? '#' + fragment : '' end
-  def pathPart; hierPart + queryPart + fragPart end
+  def pathPart; (path || '/') + queryPart + fragPart end
   def ext; (File.extname uri).tail || '' end
   def suffix; '.' + ext end
   def basename suffix = nil
@@ -28,12 +24,12 @@ class R
   def bare; basename suffix end
 
   # container traverses
-  def justPath; hierPart.R.setEnv(@r) end
+  def justPath; (path || '/').R.setEnv(@r) end
   def descend; uri.t.R end
   def child u; descend + u.to_s end
-  def dirname; schemePart + hostPart + (File.dirname pathPart) end
+  def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname pathPart) end
   def dir; dirname.R end
-  def parentURI; R schemePart + hostPart + Pathname.new(hierPart).parent.to_s end
+  def parentURI; R (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + Pathname.new(path || '/').parent.to_s end
   def children; node.c.map &:R end
   alias_method :c, :children
 
