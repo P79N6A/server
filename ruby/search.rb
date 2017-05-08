@@ -3,7 +3,8 @@ class R
   def nodeset
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
-    locs = [self, justPath].uniq.select &:exist?
+    paths = [self, justPath].uniq
+    locs = paths.select &:exist?
 
     # add next+prev month/day/year/hour pointers to header
     dp = []
@@ -76,8 +77,7 @@ class R
       end
     else
       if env[:glob] # name pattern
-        locs.map{|loc|
-          loc.glob.select &:inside}.flatten
+        paths.map{|pat|pat.glob.select &:inside}.flatten
       else # basic resource
         # eat extension for content-type preference
         stripDoc.documents
