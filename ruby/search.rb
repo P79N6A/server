@@ -3,7 +3,7 @@ class R
   def nodeset
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
-    locs = [self, justPath].uniq
+    locs = [self, justPath].uniq.select &:exist?
 
     # add next+prev month/day/year/hour pointers to header
     dp = []

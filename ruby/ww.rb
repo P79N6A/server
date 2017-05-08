@@ -158,19 +158,8 @@ class R < RDF::URI
   def dir; dirname.R end
   def children; node.c.map &:R end
   alias_method :c, :children
-
   def ext; (File.extname uri).tail || '' end
-  def basename suffix = nil
-    if path
-      if suffix
-        File.basename path, suffix
-      else
-        File.basename path
-      end
-    else
-      ''
-    end
-  end
+  def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
                      'domain/' + h + uri.split('//'+h)[1]
@@ -192,20 +181,10 @@ class R < RDF::URI
   def mtime; node.stat.mtime if e end
   alias_method :m, :mtime
   def size; node.size end
-  
-  # squashable URIs
   Prefix = {"dc" => DC, "foaf" => FOAF, "ldp" => LDP, "rdf" => RDFns, "rdfs" => RDFs, "sioc" => SIOC, "stat" => Stat}
   def expand;   uri.expand.R end
   def shorten;  uri.shorten.R end
 
-  %w{
-MIME
-JSON
-HTML
-HTTP
-message
-search
-text
-}.map{|r|require_relative r}
+  %w{MIME JSON HTML HTTP message search text}.map{|r|require_relative r}
 
 end
