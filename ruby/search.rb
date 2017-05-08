@@ -51,7 +51,9 @@ class R
           locs.map{|loc|
             `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
         elsif env[:walk] # ordered tree traversal
-          count = ((q['c'].do{|c|c.to_i} || 12) + 1).max(1024).min 2
+          count = (q['c'].do{|c|c.to_i} || 12) + 1
+          count = 1024 if count > 1024
+          count = 2 if count < 2
           orient = q.has_key?('asc') ? :asc : :desc
           (take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
             if q['offset'] && head = s[0] # direction-reversal link
