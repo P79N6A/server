@@ -19,16 +19,6 @@ class Array
   def justArray; self end
 end
 
-class Integer
-  def max i; i > self ? self : i end
-  def min i; i < self ? self : i end
-end
-
-class Float
-  def max i; i > self ? self : i end
-  def min i; i < self ? self : i end
-end
-
 class FalseClass
   def do; false end
 end
@@ -49,11 +39,8 @@ class Object
   def do; yield self end
   def maybeURI; nil end
   def justArray; [self] end
-  def time?
-    (self.class == Time) || (self.class == DateTime)
-  end
   def to_time
-    time? ? self : Time.parse(self)
+    [Time, DateTime].member?(self.class) ? self : Time.parse(self)
   end
 end
 
