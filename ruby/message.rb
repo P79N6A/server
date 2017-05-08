@@ -537,30 +537,4 @@ class R
 
   SlugStopper = /\b(at|blog|com(ments)?|html|info|medium|org|photo|p|post|r|rss|source|status|tag|twitter|utm|wordpress|www|1999|2005)\b/
 
-  Render['application/atom+xml'] = -> d,e {
-    H(['<?xml version="1.0" encoding="utf-8"?>',
-       {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
-         c: [{_: :id, c: e.uri},
-             {_: :title, c: "Atom feed for " + e.uri},
-             {_: :link, rel: :self, href: e.uri},
-             {_: :updated, c: Time.now.iso8601},
-             d.map{|u,d|
-               {_: :entry,
-                 c: [{_: :id, c: u}, {_: :link, href: u},
-                     d[Date].do{|d|   {_: :updated, c: d[0]}},
-                     d[Title].do{|t|  {_: :title,   c: t}},
-                     d[Creator].do{|c|{_: :author,  c: c[0]}},
-                     {_: :content, type: :xhtml,
-                       c: {xmlns:"http://www.w3.org/1999/xhtml",
-                           c: d[Content]}}]}}]}])}
-
-  GET['feed'] = -> e {
-    e.env[:walk] = true
-    set = R('//'+e.host+Time.now.strftime('/%Y')).setEnv(e.env).nodeset
-    e.env[:Response].update({'Content-Type' => 'application/atom+xml', 'ETag' => set.sort.h})
-    e.condResponse -> {
-      graph = {}
-      set.map{|r|r.loadGraph graph}
-      Render['application/atom+xml'][graph,e]}}
-
 end
