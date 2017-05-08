@@ -53,6 +53,7 @@ class R
         elsif env[:walk] # ordered tree traversal
           count = (q['c'].do{|c|c.to_i} || 12) + 1
           count = 1024 if count > 1024
+          # want at least 1 result and a lookahead-node for start of next page
           count = 2 if count < 2
           orient = q.has_key?('asc') ? :asc : :desc
           (take count, orient, q['offset'].do{|o|o.R}).do{|s| # search

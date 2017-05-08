@@ -100,23 +100,6 @@ class R
 
 end
 
-class Array
-  def sortRDF env
-    sort = (env.q['sort']||'dc:date').expand
-    sortType = [R::Size, R::Stat+'mtime'].member?(sort) ? :to_i : :to_s
-    compact.sort_by{|i|
-      ((if i.class==Hash
-        if sort == 'uri'
-          i[R::Title] || i[R::Label] || i.uri
-        else
-          i[sort]
-        end
-       else
-         i.uri
-        end).justArray[0]||0).send sortType}.send(env.q.has_key?('ascending') ? :id : :reverse)
-  end
-end
-
 class Hash
 
   def triples &f
@@ -130,7 +113,18 @@ class Hash
   end
 
   def resources env
-    values.sortRDF env
+    sort = (env.q['sort']||'dc:date').expand
+    sortType = [R::Size, R::Stat+'mtime'].member?(sort) ? :to_i : :to_s
+    values.compact.sort_by{|i|
+      ((if i.class==Hash
+        if sort == 'uri'
+          i[R::Title] || i[R::Label] || i.uri
+        else
+          i[sort]
+        end
+       else
+         i.uri
+        end).justArray[0]||0).send sortType}.send(env.q.has_key?('ascending') ? :id : :reverse)
   end
 
   # convert to RDF::Graph
