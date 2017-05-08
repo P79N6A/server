@@ -31,31 +31,20 @@ class R
   end
 
   def R.call e
-    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD'] # disallow arbitrary methods. try https://github.com/solid/node-solid-server for writing (Check git history if you want our mostly compatible implementation)
-    return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # we don't have PHP, no need to go further
-
+    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD'] # disallow arbitrary methods. use https://github.com/solid/node-solid-server or similar for PUT/PATCH
+    return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # we don't serve PHP, no need to continue
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}           # unproxy hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'        # strip hostname field of gunk
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # path
     path = Pathname.new(rawpath).expand_path.to_s                  # evaluate path-expression
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'           # preserve trailing-slash
     resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # instantiate request object
-
     e['uri'] = resource.uri # bind URI
-    e[:Response] = {} # init response-header fields
-    e[:Links] = {} # init Link header map
-
-    # header inspect (Request)
-#    e.map{|k,v|puts k.to_s + "\t" + v.to_s}
-    
+    e[:Response] = {} # init response header
+    e[:Links] = {} # init Link-header map
     resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request, bind response for inspection/logging
-
       # basic request log
       puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].join ' '
-
-      # header inspect (Response)
-#      h.map{|k,v|puts k.to_s + "\t" + v.to_s}
-
       [s,h,b]} # return unmodified response when done
   rescue Exception => x
     out = [x.class,x.message,x.backtrace].join "\n"
@@ -90,8 +79,8 @@ class R
   end
 
   def response
-    # enter container for relative-URI startpoint
     container = node.directory? || justPath.node.directory?
+    # enter container for relative-URI startpoint
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
