@@ -179,8 +179,6 @@ class R
   end
   alias_method :r, :readFile
 
-  def delete; node.deleteNode if e; self end
-
   def appendFile line
     dir.mk
     File.open(pathPOSIX,'a'){|f|f.write line + "\n"}
@@ -253,14 +251,4 @@ class Hash
       k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
     }.intersperse("&").join('')
   end
-end
-
-
-class Pathname
-
-  def deleteNode
-    FileUtils.send (file?||symlink?) ? :rm : :rmdir, self
-    parent.deleteNode if parent.c.empty? # parent now empty, delete it
-  end
-
 end
