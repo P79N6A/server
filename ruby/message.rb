@@ -5,10 +5,10 @@ class R
     doc = uri.gsub '#','%23'
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    channel = basename '.log'
+    channel = uri.split('/')[-1].sub(/\.log$/,'')
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
-        s = doc + '#' + (linenum += 1).to_s
+        s = uri + '#' + (linenum += 1).to_s
         yield s, Date,day+'T'+m[0]+':'+m[1]+':00'
         yield s, Creator, m[2]
         yield s, To, channel

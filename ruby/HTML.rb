@@ -154,7 +154,7 @@ class R
   TableRow = -> l,e,sort,direction,keys,titles {
     this = l.R
     loc = e.path==this.path
-    href = this.host == e.host ? this.path : this.uri
+    href = this.host == e.host ? this.stripHost : this.uri
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image

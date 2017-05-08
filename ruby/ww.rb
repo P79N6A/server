@@ -162,7 +162,7 @@ class R < RDF::URI
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
-                     'domain/' + h + uri.split('//'+h)[1]
+                     'domain/' + h + stripHost
                     else
                      uri[0] == '/' ? uri.tail : uri
                     end)
@@ -171,6 +171,7 @@ class R < RDF::URI
   def R.unPOSIX p, skip = R::BaseLen
     p[skip..-1].do{|p| R[ p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} || p]}
   end
+  def stripHost; uri.split('//'+host,2)[1] end
   def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
   def sh; pathPOSIX.utf8.sh end # shell-escape path
