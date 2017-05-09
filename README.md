@@ -1,5 +1,3 @@
-this is the webserver that someone on the internet wanted. 
-
 ``` sh
 git clone https://gitlab.com/ix/pw.git
 cd pw/ruby
@@ -17,8 +15,6 @@ bundle install # ruby dependencies
 ruby install   # this
 ```
 
-see [conf/](conf/) for invocation and configuration for third party utilities like procmail to deliver into a time-based directory structure
-
-for a personal webserver, try domain/localhost as a symlink to a directory synchronized between all your devices via a utility like Syncthing, rsync, or scp
+see [conf/](conf/)
 
 [src.whats-your.name/pw/](http://src.whats-your.name/pw/) [gitlab.com/ix/pw](https://gitlab.com/ix/pw) [repo.or.cz/www](http://repo.or.cz/www)
