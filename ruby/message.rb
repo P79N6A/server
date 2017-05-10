@@ -142,7 +142,7 @@ class R
 
   GET['thread'] = -> e { # construct thread
     m = {}
-    R[MessagePath[e.basename]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
+    R[MessagePath[e.uri.split('/thread/')[1]]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
     return e.notfound if m.empty?                                      # nothing found
     e.env[:Response]['ETag'] = [m.keys.sort, e.format].h
     e.env[:Response]['Content-Type'] = e.format + '; charset=UTF-8'
