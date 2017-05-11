@@ -149,7 +149,7 @@ class R < RDF::URI
 
   # POSIX path mapping
   def justPath; (path || '/').R.setEnv(@r) end
-  def child u; R[uri.t + u.to_s] end
+  def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
   def children; node.c.map &:R end

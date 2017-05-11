@@ -26,7 +26,6 @@ class String
   end
 
   def h; Digest::SHA1.hexdigest self end
-  def t; match(/\/$/) ? self : self+'/' end
   def R
     R.new self
   end
