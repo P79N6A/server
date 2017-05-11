@@ -7,7 +7,7 @@ class String
     u = link.noHTML # escape URI
     pre.noHTML +    # escape pre-match
       (link.empty? && '' || '<a id="t' + rand.to_s.h[0..3] + '" href="' + u + '">' + # hyperlink
-       (if u.match(/(gif|jpe?g|png|webp)$/i) # image?
+       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
         yield(R::Image,u.R) if b # emit image as triple
         "<img src='#{u}'/>"           # inline image
        else
