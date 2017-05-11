@@ -91,7 +91,7 @@ class R
   def glob; (Pathname.glob pathPOSIX).map &:R end
   
   def triplrContainer
-    dir = uri.t
+    dir = uri + (uri[-1] == '/' ? '' : '/')
     yield dir, Type, R[Container]
     mt = mtime
     yield dir, Mtime, mt.to_i
