@@ -65,7 +65,7 @@ class R
     elsif justPath.file?
       justPath.fileGET
     else
-      GET[path.tail.split('/')[0]].do{|handler| handler[self].do{|r| return r }}
+      GET[path[1..-1].split('/')[0]].do{|handler| handler[self].do{|r| return r }}
       response
     end
   end

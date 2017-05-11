@@ -14,7 +14,7 @@ class R
 
   # normalize file handles to RDF
   def justRDF pass = %w{e}
-    if pass.member? node.realpath.do{|p|p.extname.tail} # already RDF
+    if pass.member? node.realpath.do{|p|p.extname[1..-1]} # already RDF
       self # return
     else # non RDF, transcode
       h = uri.h

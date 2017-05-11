@@ -11,7 +11,6 @@ def R uri
 end
 
 class Array
-  def tail; self[1..-1] end
   def h; join.h end
   def intersperse i
     inject([]){|a,b|a << b << i}[0..-2]
@@ -155,13 +154,13 @@ class R < RDF::URI
   def dir; dirname.R end
   def children; node.c.map &:R end
   alias_method :c, :children
-  def ext; (File.extname uri).tail || '' end
+  def ext; (File.extname uri)[1..-1] || '' end
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
   def pathPOSIX; FSbase + '/' +
                    (if h = host
                      'domain/' + h + stripHost
                     else
-                     uri[0] == '/' ? uri.tail : uri
+                     uri[0] == '/' ? uri[1..-1] : uri
                     end)
   end
   def node; Pathname.new pathPOSIX end

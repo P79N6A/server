@@ -6,7 +6,7 @@ class R
        unless p
          nil
        else
-         t = ((File.extname p).tail || '').downcase
+         t = ((File.extname p)[1..-1] || '').downcase
          if p.directory?
            "inode/directory"
          elsif (File.basename p).index('msg.')==0
