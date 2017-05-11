@@ -27,7 +27,7 @@ def H x # Ruby to HTML
   when NilClass
     ''
   else
-    x.to_s.noHTML
+    x.to_s.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;')
   end
 end
 

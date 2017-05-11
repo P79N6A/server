@@ -4,8 +4,8 @@ class String
   # HTML from plaintext
   def hrefs &b
     pre,link,post = self.partition R::Href
-    u = link.noHTML # escape URI
-    pre.noHTML +    # escape pre-match
+    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
       (link.empty? && '' || '<a id="t' + rand.to_s.h[0..3] + '" href="' + u + '">' + # hyperlink
        (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
         yield(R::Image,u.R) if b # emit image as triple
@@ -15,12 +15,6 @@ class String
          u.sub(/^https?.../,'')       # text
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # process post-match tail
-  end
-
-  def noHTML
-    gsub('&','&amp;').
-    gsub('<','&lt;').
-    gsub('>','&gt;')
   end
 
   def to_utf8
