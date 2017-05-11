@@ -24,9 +24,8 @@ class FalseClass
 end
 
 class Hash
-  def R; R.new uri end
+  def R; R.new self["uri"] end
   def uri; self["uri"] end
-  alias_method :maybeURI, :uri
 end
 
 class NilClass
@@ -37,7 +36,6 @@ end
 class Object
   def id; self end
   def do; yield self end
-  def maybeURI; nil end
   def justArray; [self] end
   def to_time
     [Time, DateTime].member?(self.class) ? self : Time.parse(self)
@@ -47,7 +45,6 @@ end
 class R < RDF::URI
 
   alias_method :uri, :to_s
-  alias_method :maybeURI, :uri
 
   FSbase = `pwd`.chomp ; BaseLen = FSbase.size
   HTTP_URI = /\A(\/|http)[\S]+\Z/

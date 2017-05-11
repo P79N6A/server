@@ -109,7 +109,7 @@ class Hash
   end
 
   def types
-    self[R::Type].justArray.map(&:maybeURI).compact
+    self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri
   end
 
   def resources env

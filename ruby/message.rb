@@ -80,8 +80,8 @@ class R
     # pass 1. statistics
     g.map{|u,p|
       graph.delete u # drop full resource from graph
-      recipients = p[To].justArray.map &:maybeURI
-      p[Creator].justArray.map(&:maybeURI).map{|a|graph.delete a} # hide author resource
+      recipients = p[To].justArray.select{|t|t.respond_to? :uri}.map &:uri
+      p[Creator].justArray.select{|t|t.respond_to? :uri}.map{|a|graph.delete a.uri} # hide author resource
       recipients.map{|a|graph.delete a}                           # hide recipient resource
       p[Title].do{|t|
         title = t[0].sub ReExpr, '' # strip prefix
@@ -98,7 +98,7 @@ class R
     # pass 2. cluster
     threads.map{|title,post|
       # select heaviest recipient
-      post[To].justArray.select(&:maybeURI).sort_by{|a|weight[a.uri]}[-1].do{|to|
+      post[To].justArray.select{|t|t.respond_to? :uri}.sort_by{|a|weight[a.uri]}[-1].do{|to|
         # thread identifier
         id = '/thread/' + URI.escape(post[DC+'identifier'][0])
         # parse labels in subject
