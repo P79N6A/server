@@ -35,12 +35,6 @@ class H
 
   def H.[] h; H h end
 
-  def H.js a,inline=false # script tag
-    p = a + '.js'
-    inline ? {_: :script, c: p.R.r} :
-    {_: :script, type: "text/javascript", src: p}
-  end
-
   def H.css a,inline=false # stylesheet
     p = a + '.css'
     inline ? {_: :style, c: p.R.r} :
@@ -110,7 +104,7 @@ class R
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
                  groups.map{|view,graph|view[graph,re]},
                  (TabularView[graph,re] if graph.keys.size > 0),
-                 H.js('/js/ui',true),
+                 {_: :script, c: R['/js/ui.js'].r},
                  {_: :style, c: e[:label].map{|name,_|
                         "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  '<br clear=all>',

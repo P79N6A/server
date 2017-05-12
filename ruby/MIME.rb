@@ -144,7 +144,7 @@ class R
   Abstract[Sound] = -> graph, g, e {graph['#audio'] = {Type => R[Sound+'Player']}} # add player
 
   View[Sound+'Player'] = -> g,e {
-    [H.js('/js/audio'),{_: :audio, id: :audio, controls: true}]}
+    [{_: :script, type: "text/javascript", src: '/js/audio.js'},{_: :audio, id: :audio, controls: true}]}
 
   GET['thumbnail'] = -> e {
     thumb = nil
