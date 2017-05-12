@@ -150,7 +150,7 @@ class R
       m.values[0][Title].justArray[0].do{|t| e.env[:title] = t.sub ReExpr, '' }
       Grep[m,e] if e.q.has_key? 'q'
       Render[e.format].do{|p|p[m,e]} ||
-        m.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym, :standard_prefixes => true, :prefixes => Prefixes)}}
+        m.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym, :standard_prefixes => true)}}
 
   def mail; Mail.read node if f end
 
@@ -280,7 +280,7 @@ class R
   end
   def fetchFeed
     head = {} # request header
-    cache = R['/cache/'+uri.sha1]     # cache URI
+    cache = R['/cache/'+uri.sha1]  # cache URI
     etag = cache.child 'etag'      # cached etag URI
     priorEtag = nil                # cached etag value
     mtime = cache.child 'mtime'    # cached mtime URI

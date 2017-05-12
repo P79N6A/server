@@ -131,7 +131,7 @@ class R
                 g.load doc.pathPOSIX, :base_uri => base}} # load RDF
           end
           # return serialized RDF
-          g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true,:prefixes => Prefixes
+          g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
         end
       end}
   end

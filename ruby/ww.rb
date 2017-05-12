@@ -115,8 +115,6 @@ class R < RDF::URI
     "http://rdfs.org/resume-rdf/cv.rdfs#Entry" => :hands,
   }
 
-  Prefixes = {:ldp => RDF::URI(LDP),:rdf => RDF::URI(RDFns),:rdfs => RDF::URI(RDFs),:stat => RDF::URI(Stat)}
-
   # lambda tables
   GET = {}
   Abstract = {} # summarize
