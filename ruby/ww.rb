@@ -170,7 +170,6 @@ class R < RDF::URI
   def size; node.size end
   Prefix = {"dc" => DC, "foaf" => FOAF, "ldp" => LDP, "rdf" => RDFns, "rdfs" => RDFs, "sioc" => SIOC, "stat" => Stat}
   def expand;   uri.expand.R end
-  def shorten;  uri.shorten.R end
 
   %w{MIME JSON HTML HTTP message search text}.map{|r|require_relative r}
 

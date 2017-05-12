@@ -125,9 +125,9 @@ class R
     files
   end
 
-  def getIndex rev # find (? p o) triple
+  def getIndex # lookup source(s) of inbound arcs
     p = path
-    f = R(File.dirname(p) + '/.' + File.basename(p) + '.' + rev + '.rev').node
+    f = R(File.dirname(p) + '/.' + File.basename(p) + '.rev').node
     f.readlines.map{|l|R l.chomp} if f.exist?
   end
 
@@ -145,10 +145,9 @@ class R
 
 =end
 
-  def index p, o # triple (s)ubject is implicit via "self" attribute
+  def index o # append pointer to source node
     o = o.R.path
-    # append to incoming-link index
-    R(File.dirname(o) + '/.' + File.basename(o) + '.' + p.R.shorten + '.rev').appendFile uri
+    R(File.dirname(o) + '/.' + File.basename(o) + '.rev').appendFile uri
   end
 
   def indexStream triplr, &b
@@ -166,7 +165,7 @@ class R
           # document already local path, no need to update location to localize
 
           # index inbound triples
-          r[Re].justArray.map{|o|this.index Re,o}
+          r[Re].justArray.map{|o|this.index o}
 
           # resource summary for index
           s = {'uri' => r.uri}   # summary resource
@@ -219,14 +218,14 @@ class R
   end
 
   # find all connected resources
-  def walk pfull, pshort, g={}, v={}
+  def walk p, g={}, v={}
     graph g
     v[uri] = true # mark visited
-    rel = g[uri].do{|s|s[pfull]} ||[] # outbound arcs (from doc)
-    rev = getIndex(pshort) ||[]       # inbound arcs (from index)
+    rel = g[uri].do{|s|s[p]} || [] # outbound arcs (from doc)
+    rev = getIndex || []           # inbound arcs (from index)
     rel.concat(rev).map{|r|
       v[r.uri] || # visited
-        r.R.walk(pfull,pshort,g,v)} # walk
+        r.R.walk(p,g,v)} # walk
     g # accumulated graph
   end
 

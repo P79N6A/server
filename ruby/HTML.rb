@@ -141,7 +141,7 @@ class R
     {_: :table,
      c: [{_: :tbody, c: g.resources(e).map{|r| TableRow[r,e,sort,direction,keys,titles]}},
          {_: :tr, c: [keys.map{|k|
-               q = e.q.merge({'sort' => k.shorten})
+               q = e.q.merge({'sort' => k})
                if direction == :id
                  q.delete 'ascending'
                else

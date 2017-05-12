@@ -32,13 +32,6 @@ class String
      gsub('|','/')) # no prefix found, squash to basename
   end
 
-  def shorten
-    R::Prefix.map{|p,f|
-      return p + ':' + self[f.size..-1]  if (index f) == 0
-    }
-    gsub('/','|')
-  end
-
   def sh; Shellwords.escape self end
 
 end
