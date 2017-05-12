@@ -23,6 +23,7 @@ class R
   end
 
   MIME={
+    '3gpp' => 'audio/3gpp',
     'aif' => 'audio/aif',
     'asc' => 'text/plain',
     'atom' => 'application/atom+xml',
@@ -103,6 +104,7 @@ class R
     'application/gzip'     => [:triplrArchive],
     'application/zip'     => [:triplrArchive],
     'audio/mpeg'           => [:triplrAudio],
+    'audio/3gpp'           => [:triplrAudio],
     'image'                => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMailIndexer],
