@@ -21,17 +21,6 @@ class String
   def sha1; Digest::SHA1.hexdigest self end
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
   def utf8; force_encoding 'UTF-8' end
-
-  Expand={}
-  def expand
-   (Expand.has_key? self) ?
-    Expand[self] :
-   (Expand[self] =
-     match(/([^:]+):([^\/].*)/).do{|e|
-      ( R::Prefix[e[1]] || e[1]+':' )+e[2]} ||
-     gsub('|','/')) # no prefix found, squash to basename
-  end
-
   def sh; Shellwords.escape self end
 
 end

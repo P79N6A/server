@@ -113,7 +113,7 @@ class Hash
   end
 
   def resources env
-    sort = (env.q['sort']||'dc:date').expand
+    sort = env.q['sort'] || Date
     sortType = [R::Size, R::Stat+'mtime'].member?(sort) ? :to_i : :to_s
     values.compact.sort_by{|i|
       ((if i.class==Hash

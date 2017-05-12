@@ -130,7 +130,7 @@ class R
   
   TabularView = -> g, e, show_head = true, show_id = true {
     titles = {}
-    sort = (e.q['sort']||'dc:date').expand
+    sort = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
 
     # show typetag first, hide inlined columns
