@@ -1,37 +1,27 @@
 %w{cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack shellwords}.map{|r|require r}
-
 class RDF::URI
   def R
     R.new to_s
   end
 end
-
 def R uri
   R.new uri
 end
-
 class Array
-  def h; join.h end
-  def intersperse i
-    inject([]){|a,b|a << b << i}[0..-2]
-  end
+  def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
   def justArray; self end
 end
-
 class FalseClass
   def do; false end
 end
-
 class Hash
   def R; R.new self["uri"] end
   def uri; self["uri"] end
 end
-
 class NilClass
   def do; nil end
   def justArray; [] end
 end
-
 class Object
   def id; self end
   def do; yield self end

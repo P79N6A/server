@@ -73,7 +73,7 @@ class R
   def fileGET
     @r[:Response].
       update({ 'Content-Type' => mime + '; charset=UTF-8',
-               'ETag' => [m,size].h })
+               'ETag' => [m,size].join.sha1 })
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     condResponse ->{ self }
   end
@@ -98,7 +98,7 @@ class R
 
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format,
-                          'ETag' => [set.sort.map{|r|[r,r.m]}, format].h})
+                          'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
     # lazy body-serialize, uncalled on HEAD and ETag hit
     condResponse ->{

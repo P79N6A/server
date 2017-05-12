@@ -179,7 +179,7 @@ class R
           [To,Creator].map{|p|    # address predicates
           r[p].justArray.map{|a|  # address objects
             if a.respond_to? :uri # identifier please
-              docs[a.R.dir.child(month+r.uri.h[0..12]+'.e').uri] = summary
+              docs[a.R.dir.child(month+r.uri.sha1[0..12]+'.e').uri] = summary
             end}}
         end }
       # add resource to document

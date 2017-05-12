@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 class String
+  def R; R.new self end
 
-  # HTML from plaintext
+  # plaintext to HTML, emit URIs as RDF
   def hrefs &b
     pre,link,post = self.partition R::Href
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
-      (link.empty? && '' || '<a id="t' + rand.to_s.h[0..3] + '" href="' + u + '">' + # hyperlink
+      (link.empty? && '' || '<a id="t' + rand.to_s.sha1[0..3] + '" href="' + u + '">' + # hyperlink
        (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
         yield(R::Image,u.R) if b # emit image as triple
         "<img src='#{u}'/>"           # inline image
@@ -17,18 +18,9 @@ class String
       (post.empty? && '' || post.hrefs(&b)) # process post-match tail
   end
 
-  def to_utf8
-    encode('UTF-8', undef: :replace, invalid: :replace, replace: '?')
-  end
-
-  def utf8
-    force_encoding 'UTF-8'
-  end
-
-  def h; Digest::SHA1.hexdigest self end
-  def R
-    R.new self
-  end
+  def sha1; Digest::SHA1.hexdigest self end
+  def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
+  def utf8; force_encoding 'UTF-8' end
 
   Expand={}
   def expand

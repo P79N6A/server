@@ -17,7 +17,7 @@ class R
     if pass.member? node.realpath.do{|p|p.extname[1..-1]} # already RDF
       self # return
     else # non RDF, transcode
-      h = uri.h
+      h = uri.sha1
       doc = R['/cache/RDF/'+h[0..2]+'/'+h[3..-1]+'.e'].setEnv @r
       doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache check
       doc

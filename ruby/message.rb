@@ -130,7 +130,7 @@ class R
     end
     tld = dname[0]
     domain = dname[1]
-    ['', 'address', tld, domain[0], domain, *dname[2..-1], id.h[0..1], msg].join('/')}
+    ['', 'address', tld, domain[0], domain, *dname[2..-1], id.sha1[0..1], msg].join('/')}
 
   AddrPath = ->address{ # email-address -> path
     address = address.downcase
@@ -144,7 +144,7 @@ class R
     m = {}
     R[MessagePath[e.uri.split('/thread/')[1]]].walk SIOC+'reply_of','sioc:reply_of', m # recursive walk
     return e.notfound if m.empty?                                      # nothing found
-    e.env[:Response]['ETag'] = [m.keys.sort, e.format].h
+    e.env[:Response]['ETag'] = [m.keys.sort, e.format].join.sha1
     e.env[:Response]['Content-Type'] = e.format + '; charset=UTF-8'
     e.condResponse ->{
       m.values[0][Title].justArray[0].do{|t| e.env[:title] = t.sub ReExpr, '' }
@@ -159,7 +159,7 @@ class R
     id = m.message_id || m.resent_message_id
     unless id
       puts "missing Message-ID in #{uri}"
-      id = rand.to_s.h
+      id = rand.to_s.sha1
     end
 
     e = MessagePath[id]
@@ -244,14 +244,14 @@ class R
       htmlCount += 1 }
 
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-container (digests + forwards)
-      f = attache[].child 'msg.' + rand.to_s.h
+      f = attache[].child 'msg.' + rand.to_s.sha1
       f.w m.body.decoded if !f.e
       f.triplrMail &b
     }
 
     m.attachments.                                    # attached
       select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
-      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.h + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
+      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.sha1 + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
       file = attache[].child name                     # name
       puts "attachment in #{uri} , #{file}"
       file.w p.body.decoded if !file.e                # write
@@ -280,7 +280,7 @@ class R
   end
   def fetchFeed
     head = {} # request header
-    cache = R['/cache/'+uri.h]     # cache URI
+    cache = R['/cache/'+uri.sha1]     # cache URI
     etag = cache.child 'etag'      # cached etag URI
     priorEtag = nil                # cached etag value
     mtime = cache.child 'mtime'    # cached mtime URI
