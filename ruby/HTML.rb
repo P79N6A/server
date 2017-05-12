@@ -32,15 +32,7 @@ def H x # Ruby to HTML
 end
 
 class H
-
   def H.[] h; H h end
-
-  def H.css a,inline=false # stylesheet
-    p = a + '.css'
-    inline ? {_: :style, c: p.R.r} :
-    {_: :link, href: p, rel: :stylesheet, type: R::MIME[:css]}
-  end
-
 end
 
 class R
@@ -94,7 +86,7 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 H.css('/css/base',true),
+                 {_: :style, c: R['/css/base.css'].r},
                  {_: :style, c: print ? "body, a {background-color:#fff;color:#000}" : "body, a  {background-color:#000;color:#fff}"},
                 ]},
             {_: :body,
