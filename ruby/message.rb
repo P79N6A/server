@@ -263,16 +263,6 @@ class R
       end }
   end
 
-  # GET Atom/RSS feed(s) (uncached)
-  def getFeeds
-    uris.map &:getFeed
-    self
-  end
-  def getFeed
-    indexResource :format => :feed, :base_uri => uri
-    self
-  end
-
   # fetch Atom/RSS feed(s) (cached)
   def fetchFeeds
     uris.map &:fetchFeed
