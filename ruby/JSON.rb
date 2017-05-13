@@ -103,31 +103,15 @@ end
 class Hash
 
   def triples &f
-    map{|s,r|
-      (r||{}).map{|p,o|
-        o.justArray.map{|o|yield s,p,o} unless p=='uri'}}
+    map{|s,resource|
+      resource.map{|p,o|
+        o.justArray.map{|o|yield s,p,o} if p != 'uri'}}
   end
 
   def types
     self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri
   end
 
-  def resources env
-    sort = env.q['sort'] || Date
-    sortType = [R::Size, R::Stat+'mtime'].member?(sort) ? :to_i : :to_s
-    values.compact.sort_by{|i|
-      ((if i.class==Hash
-        if sort == 'uri'
-          i[R::Title] || i[R::Label] || i.uri
-        else
-          i[sort]
-        end
-       else
-         i.uri
-        end).justArray[0]||0).send sortType}.send(env.q.has_key?('ascending') ? :id : :reverse)
-  end
-
-  # convert to RDF::Graph
   def toRDF base=nil
     graph = RDF::Graph.new
     triples{|s,p,o|

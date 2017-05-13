@@ -116,16 +116,24 @@ class R
   
   TabularView = -> g, e, show_head = true, show_id = true {
     titles = {}
-    sort = e.q['sort'] || Date
+    p = e.env[:sort]
     direction = e.q.has_key?('ascending') ? :id : :reverse
-
+    datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
+    
     # show typetag first, hide inlined columns
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Type, *(keys - InlineMeta)]
     keys -= VerboseMeta unless e.q.has_key? 'full'
 
     {_: :table,
-     c: [{_: :tbody, c: g.resources(e).map{|r| TableRow[r,e,sort,direction,keys,titles]}},
+     c: [{_: :tbody,
+          c: g.values.sort_by{|s|
+            ((if p == 'uri'
+              s[Title] || s[Label] || s.uri
+             else
+               s[p]
+              end).justArray[0]||0).send datatype}.send(direction).map{|r|
+            TableRow[r,e,p,direction,keys,titles]}},
          {_: :tr, c: [keys.map{|k|
                q = e.q.merge({'sort' => k})
                if direction == :id
@@ -134,7 +142,7 @@ class R
                  q['ascending'] = ''
                end
                href = CGI.escapeHTML q.qs
-               {_: :th, href: href, property: k, class: k == sort ? 'selected' : '',
+               {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
                  c: {_: :a, href: href, class: Icons[k]||''}}}]}]}}
 
   TableRow = -> l,e,sort,direction,keys,titles {

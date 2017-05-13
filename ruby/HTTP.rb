@@ -65,6 +65,15 @@ class R
     elsif justPath.file?
       justPath.fileGET
     else
+      # options
+      stars = uri.scan('*').size
+      @r[:find] = true if q.has_key? 'find'
+      @r[:glob] = true if stars > 0 && stars <= 3
+      @r[:grep] = true if q.has_key? 'q'
+      @r[:walk] = true if q.has_key? 'walk'
+      @r[:sort] = q['sort'] || Date
+
+      # find custom handler or default response
       GET[path[1..-1].split('/')[0]].do{|handler| handler[self].do{|r| return r }}
       response
     end
@@ -79,19 +88,13 @@ class R
   end
 
   def response
+    # container requested, enter inlined child-node relative-URI base
     container = node.directory? || justPath.node.directory?
-    # enter container for relative-URI startpoint
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
       return [301, @r[:Response], []]
     end
-    # file-set options
-    stars = uri.scan('*').size
-    @r[:find] = true if q.has_key? 'find'
-    @r[:glob] = true if stars > 0 && stars <= 3
-    @r[:grep] = true if q.has_key? 'q'
-    @r[:walk] = true if q.has_key? 'walk'
 
     set = nodeset
     return notfound if !set || set.empty?
