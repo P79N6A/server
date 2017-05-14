@@ -27,7 +27,7 @@ class R
     ch = re.q['ch']
     msgs.map{|uri,msg|
       chan = msg[To].justArray[0]
-      id = {'ch' => chan}.qs
+      id = R.qs({'ch' => chan})
       graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
       graph[id][Size] += 1
       if re.env[:grep]

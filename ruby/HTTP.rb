@@ -206,7 +206,7 @@ class R
     'O' + (@idCount += 1).to_s
   end
 
-  def q # memoize key/vals
+  def q # memoize query args
     @q ||=
       (if q = env['QUERY_STRING']
        h = {}
@@ -219,6 +219,11 @@ class R
        end)
   end
 
+  def R.qs h # serialize Hash to querystring
+    '?'+h.map{|k,v|
+      k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
+  end
+  
   def format # memoized MIME
     @format ||= selectFormat
   end
@@ -236,11 +241,3 @@ class R
   end
 
   end
-
-class Hash
-  def qs # serialize to query-string
-    '?'+map{|k,v|
-      k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
-    }.intersperse("&").join('')
-  end
-end

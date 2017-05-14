@@ -68,13 +68,13 @@ class R
         end}}
     e[:label] ||= {}
     up = if re.q.has_key? 'full'
-           re.q.reject{|k|k=='full'}.merge({'abbr' => ''}).qs
+           R.qs re.q.reject{|k|k=='full'}.merge({'abbr' => ''})
          elsif (dir||e[404]) && re.path != '/'
            re.justPath.dirname + '?' + re.env['QUERY_STRING']
          end
     print = re.q.has_key? 'print'
     (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
-    expand = {_: :a, id: :down, href: re.q.reject{|k|k=='abbr'}.merge({'full' => ''}).qs, class: :expand, c: "&#9660;"} if (dir || e[:glob]) && !re.q.has_key?('full')
+    expand = {_: :a, id: :down, href: (R.qs re.q.reject{|k|k=='abbr'}.merge({'full' => ''})), class: :expand, c: "&#9660;"} if (dir || e[:glob]) && !re.q.has_key?('full')
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     H ["<!DOCTYPE html>\n",
@@ -141,7 +141,7 @@ class R
                else
                  q['ascending'] = ''
                end
-               href = CGI.escapeHTML q.qs
+               href = CGI.escapeHTML R.qs q
                {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
                  c: {_: :a, href: href, class: Icons[k]||''}}}]}]}}
 
