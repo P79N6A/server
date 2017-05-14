@@ -16,6 +16,9 @@ class String
          u.sub(/^https?.../,'')       # text
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # process post-match tail
+  rescue Exception => x
+    puts [x.class,x.message,x.backtrace].join("\n")
+    ""
   end
 
   def sha1; Digest::SHA1.hexdigest self end
