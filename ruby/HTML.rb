@@ -154,7 +154,8 @@ class R
     isImg = types.member? Image
     basicResource = types.member?(Stat+'File') || types.member?(Container) || types.member?(Resource)
     shownActors = false
-    title = l[Title].justArray[0].do{|t|t = t.sub ReExpr, ''
+    title = l[Title].justArray.select{|t|t.class==String}[0].do{|t|
+      t = t.sub ReExpr, ''
       titles[t] ? nil : (titles[t] = t)}
 
     actors = -> {
