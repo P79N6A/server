@@ -11,10 +11,7 @@ class R
     @r = r
     self
   end
-
-  def env
-    @r
-  end
+  def env; @r end
 
   def R.call e
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD'] # disallow arbitrary methods. use https://github.com/solid/node-solid-server or similar for PUT/PATCH
@@ -59,7 +56,7 @@ class R
       @r[:walk] = true if q.has_key? 'walk'
       @r[:sort] = q['sort'] || Date
 
-      # find custom handler or default response
+      # custom handler or default response
       GET[path[1..-1].split('/')[0]].do{|handler| handler[self].do{|r| return r }}
       response
     end
@@ -74,7 +71,7 @@ class R
   end
 
   def response
-    # container requested, enter inlined child-node relative-URI base
+    # enter container/ so we can include children with relative URIs
     container = node.directory? || justPath.node.directory?
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
