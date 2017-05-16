@@ -22,17 +22,19 @@ bundle install # third-party libraries
 ruby install   # this
 
 ```
-# CONFIG
+# CONFIG (adjust to taste)
 ``` sh
-cd
-mkdir web && cd web # create server-root container
-ln -s ../pw/{js,css} . # create CSS and JS paths
-mkdir domain # create vhost container
-ln -s ../Sync domain/localhost # create host container
+cd ../..
+mkdir web && cd web # server-root container
+ln -s ../pw/{js,css} # CSS and JS paths
+mkdir domain # vhost container
+ln -s ~/Sync domain/localhost # host container
+ln -s ../pw/conf/config.ru # server config
+ln -s ../pw/conf/unicorn # server launcher
 ```
 # RUN
 ``` sh
-
+./unicorn
 ```
 
 
