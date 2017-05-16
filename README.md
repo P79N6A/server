@@ -1,7 +1,6 @@
 # SOURCE
 ``` sh
 git clone https://gitlab.com/ix/pw.git
-cd pw/ruby
 ```
 # INSTALL
 ## dependencies (distro-specific)
@@ -17,15 +16,15 @@ packages install autoconf automake binutils clang git iconv pkg-config ruby ruby
 ```
 ## dependencies (ruby)
 ``` sh
-gem install bundler # install bundler if missing
+cd pw/ruby
+gem install bundler # if missing
 bundle config build.nokogiri --use-system-libraries
 bundle install # third-party libraries
 ruby install   # this
-
+cd ../..
 ```
 # CONFIG (adjust to taste)
 ``` sh
-cd ../..
 mkdir web && cd web # server-root container
 ln -s ../pw/{js,css} # CSS and JS paths
 mkdir domain # vhost container
