@@ -79,9 +79,11 @@ class R
       return [301, @r[:Response], []]
     end
 
+    # find data
     set = nodeset
     return notfound if !set || set.empty?
 
+    # response metadata
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format,
                           'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
@@ -113,8 +115,8 @@ class R
           else # full RDF graph
             g = RDF::Graph.new
             set.map{|f|
-              f.justRDF(%w{e html jsonld n3 nt owl rdf ttl}).do{|doc| # transcode non-RDF
-                g.load doc.pathPOSIX, :base_uri => base}} # load RDF
+              f.justRDF(%w{e html jsonld n3 nt owl rdf ttl}).do{|doc|
+                g.load doc.pathPOSIX, :base_uri => base}} # load RDF data
           end
           # return serialized RDF
           g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
@@ -206,11 +208,9 @@ class R
     '?'+h.map{|k,v|
       k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end
-  
-  def format # memoized MIME
-    @format ||= selectFormat
-  end
 
+  # memoized response-MIME
+  def format; @format ||= selectFormat end
   def selectFormat
     # explicit URI suffix
     { '.html' => 'text/html', '.json' => 'application/json', '.ttl' => 'text/turtle',
