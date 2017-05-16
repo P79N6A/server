@@ -1,7 +1,11 @@
+# SOURCE
 ``` sh
 git clone https://gitlab.com/ix/pw.git
 cd pw/ruby
-
+```
+# INSTALL
+## dependencies (distro-specific)
+``` sh
 #debian <http://www.debian.org/>
 apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
 
@@ -10,11 +14,29 @@ xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highl
 
 #termux <https://termux.com/>
 packages install autoconf automake binutils clang git iconv pkg-config ruby ruby-dev libxslt-dev && gem install bundler
-
-bundle install # ruby dependencies
+```
+## dependencies (ruby)
+``` sh
+bundle config build.nokogiri --use-system-libraries
+bundle install # third-party libraries
 ruby install   # this
+
+```
+# CONFIG
+``` sh
+cd
+mkdir web && cd web # create server-root container
+ln -s ../pw/{js,css} . # create CSS and JS paths
+mkdir domain # create vhost container
+ln -s ../Sync domain/localhost # create host container
+```
+# RUN
+``` sh
+
 ```
 
-see [conf/](conf/)
 
-[src.whats-your.name/pw/](http://src.whats-your.name/pw/) [gitlab.com/ix/pw](https://gitlab.com/ix/pw) [repo.or.cz/www](http://repo.or.cz/www)
+# MIRRORS
+[src.whats-your.name/pw/](http://src.whats-your.name/pw/)
+[gitlab.com/ix/pw](https://gitlab.com/ix/pw)
+[repo.or.cz/www](http://repo.or.cz/www)
