@@ -5,13 +5,11 @@ git clone https://gitlab.com/ix/pw.git
 # INSTALL
 ## dependencies (distro-specific)
 ``` sh
-#debian <http://www.debian.org/>
+# debian <http://www.debian.org/>
 apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
-
-#voidlinux <http://www.voidlinux.eu/>
+# void <http://www.voidlinux.eu/>
 xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments
-
-#termux <https://termux.com/>
+# termux <https://termux.com/>
 packages install autoconf automake binutils clang git iconv pkg-config ruby ruby-dev libxslt-dev
 ```
 ## dependencies (ruby)
@@ -35,8 +33,6 @@ ln -s ../pw/conf/config.ru ../pw/conf/unicorn # server config
 ``` sh
 ./unicorn
 ```
-
-
 # MIRRORS
 [src.whats-your.name/pw/](http://src.whats-your.name/pw/)
 [gitlab.com/ix/pw](https://gitlab.com/ix/pw)
