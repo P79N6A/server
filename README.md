@@ -7,16 +7,17 @@ cd pw/ruby
 ## dependencies (distro-specific)
 ``` sh
 #debian <http://www.debian.org/>
-apt-get install ruby bundler libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
+apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
 
 #voidlinux <http://www.voidlinux.eu/>
-xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments && gem install bundler
+xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments
 
 #termux <https://termux.com/>
-packages install autoconf automake binutils clang git iconv pkg-config ruby ruby-dev libxslt-dev && gem install bundler
+packages install autoconf automake binutils clang git iconv pkg-config ruby ruby-dev libxslt-dev
 ```
 ## dependencies (ruby)
 ``` sh
+gem install bundler # install bundler if missing
 bundle config build.nokogiri --use-system-libraries
 bundle install # third-party libraries
 ruby install   # this
