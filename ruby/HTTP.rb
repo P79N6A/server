@@ -1,18 +1,4 @@
 # coding: utf-8
-
-module Rack
-  module Adapter
-    # load this config so "config.ru" file doesnt need to exist
-    def self.guess _; :rack end
-    def self.load _
-      Rack::Builder.new {
-        use Rack::Deflater # gzip response
-        run R              # call R.call
-      }.to_app
-    end
-  end
-end
-
 class R
 
   def HEAD

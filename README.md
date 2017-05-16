@@ -29,8 +29,7 @@ mkdir web && cd web # server-root container
 ln -s ../pw/{js,css} # CSS and JS paths
 mkdir domain # vhost container
 ln -s ~/Sync domain/localhost # host container
-ln -s ../pw/conf/config.ru # server config
-ln -s ../pw/conf/unicorn # server launcher
+ln -s ../pw/conf/config.ru ../pw/conf/unicorn # server config
 ```
 # RUN
 ``` sh
