@@ -207,7 +207,7 @@ class R
         unless doc.e
           doc.dir.mk
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # store resource
-          puts "+ " + doc.stripDoc
+          puts "+ " + doc.path
         end
         true
       } || puts("warning, #{uri} missing timestamp")
