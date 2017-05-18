@@ -5,14 +5,14 @@ class R
     doc = uri.gsub('#','%23').R
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    channel = uri.split('/')[-1].sub(/\.log$/,'')
+    chan = R['#'+uri.split('#')[-1].sub(/\.log$/,'')]
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = uri + '#' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
         yield s, Creator, R['#'+m[2]]
-        yield s, To, channel
+        yield s, To, chan
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, DC + 'source', doc
       }
@@ -26,11 +26,10 @@ class R
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
     msgs.map{|uri,msg|
-      chan = msg[To].justArray[0]
-      bin = msg[DC+'source'].justArray[0].uri
 
       # init channel bin
-      graph[bin] ||= {'uri' => bin+'.html', Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
+      bin = msg[DC+'source'].justArray[0].uri
+      graph[bin] ||= {'uri' => bin+'.html', Title => msg[To].justArray[0].R.fragment, Type => R[SIOC+'Discussion'], Size => 0}
       graph[bin][Size] += 1
 
       if re.env[:grep] # keep content, grep filter will reduce later for query-args
