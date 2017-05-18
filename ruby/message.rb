@@ -29,10 +29,14 @@ class R
 
       # init channel bin
       bin = msg[DC+'source'].justArray[0].uri
-      graph[bin] ||= {'uri' => bin+'.html', Title => msg[To].justArray[0].R.fragment, Type => R[SIOC+'Discussion'], Size => 0}
+      graph[bin] ||= {'uri' => bin+'.html',
+                      Type => R[SIOC+'Discussion'],
+                      Title => msg[To].justArray[0].R.fragment,
+                      Size => 0}
+      # increment bin size
       graph[bin][Size] += 1
 
-      if re.env[:grep] # keep content, grep filter will reduce later for query-args
+      if re.env[:grep] # keep content for grep filtering
         msg[Content].do{|c|
           graph[bin][Content] ||= []
           graph[bin][Content].concat c}
