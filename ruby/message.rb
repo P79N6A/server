@@ -2,46 +2,53 @@
 class R
 
   def triplrIRC &f
-    doc = uri.gsub '#','%23'
+    doc = uri.gsub('#','%23').R
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
     channel = uri.split('/')[-1].sub(/\.log$/,'')
     r.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = uri + '#' + (linenum += 1).to_s
-        yield s, Date,day+'T'+m[0]+':'+m[1]+':00'
-        yield s, Creator, m[2]
+        yield s, Type, R[SIOC+'InstantMessage']
+        yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
+        yield s, Creator, R['#'+m[2]]
         yield s, To, channel
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
-        yield s, Type, R[SIOC+'InstantMessage']
+        yield s, DC + 'source', doc
       }
     }
   rescue
-    puts 'error scanning ' + uri
+    puts 'error scanning IRC log ' + uri
   end
 
   View[SIOC+'MarkdownContent'] = -> graph, env {
     graph.map{|uri,res| res[Content]}}
 
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
-    ch = re.q['ch']
     msgs.map{|uri,msg|
       chan = msg[To].justArray[0]
-      id = R.qs({'ch' => chan})
-      graph[id] ||= {'uri' => id, Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
-      graph[id][Size] += 1
-      if re.env[:grep]
-        msg[Content].do{|c| # preserve content - grep filter will reduce
-          graph[id][Content] ||= []
-          graph[id][Content].concat c}
+      bin = msg[DC+'source'].justArray[0].uri
+
+      # init channel bin
+      graph[bin] ||= {'uri' => bin+'.html', Title => chan, Type => R[SIOC+'Discussion'], Size => 0}
+      graph[bin][Size] += 1
+
+      if re.env[:grep] # keep content, grep filter will reduce later for query-args
+        msg[Content].do{|c|
+          graph[bin][Content] ||= []
+          graph[bin][Content].concat c}
       end
+
+      # add images and links to channel bin
       msg[Image].do{|images|
-        graph[id][Image] ||= []
-        graph[id][Image].concat images}
+        graph[bin][Image] ||= []
+        graph[bin][Image].concat images}
       msg[DC+'link'].do{|links|
-        graph[id][DC+'link'] ||= []
-        graph[id][DC+'link'].concat links}
-      graph.delete uri unless chan==ch
+        graph[bin][DC+'link'] ||= []
+        graph[bin][DC+'link'].concat links}
+
+      # drop raw message
+      graph.delete uri
     }
   }
 
