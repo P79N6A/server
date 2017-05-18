@@ -33,8 +33,8 @@ class R
                       Type => R[SIOC+'Discussion'],
                       Title => msg[To].justArray[0].R.fragment,
                       Size => 0}
-      # increment bin size
-      graph[bin][Size] += 1
+
+      graph[bin][Size] += 1 # increment bin size
 
       if re.env[:grep] # keep content for grep filtering
         msg[Content].do{|c|
@@ -42,7 +42,7 @@ class R
           graph[bin][Content].concat c}
       end
 
-      # add images and links to channel bin
+      # add images and links to bin
       msg[Image].do{|images|
         graph[bin][Image] ||= []
         graph[bin][Image].concat images}
