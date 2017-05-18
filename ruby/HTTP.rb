@@ -43,11 +43,13 @@ class R
   end
 
   def GET
-    if file?
+
+    if file? # static response
       fileGET
     elsif justPath.file?
       justPath.fileGET
     else
+
       # options
       stars = uri.scan('*').size
       @r[:find] = true if q.has_key? 'find'

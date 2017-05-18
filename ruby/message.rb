@@ -297,9 +297,10 @@ class R
         mtime.w curMtime.iso8601 if curMtime != priorMtime
         # read body
         resp = response.read
-        unless body.e && body.r == resp
-          body.w resp # update body-cache
-          ('file://'+body.pathPOSIX).R.indexResource :format => :feed, :base_uri => uri # index post(s)
+        unless body.e && body.r == resp # cache hit
+          # new body, pass to indexer  on cache miss
+          body.w resp
+          ('file://'+body.pathPOSIX).R.indexResource :format => :feed, :base_uri => uri
         end
       end
     rescue OpenURI::HTTPError => error
