@@ -8,7 +8,7 @@ class R
 
     # add next+prev month/day/year/hour pointers to header
     dp = []
-    parts = path[1..-1].split '/'
+    parts = stripHost[1..-1].gsub('#','%23').split '/'
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
