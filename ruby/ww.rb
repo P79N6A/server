@@ -1,4 +1,7 @@
-%w{cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack shellwords}.map{|r|require r}
+%w{cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack rdf shellwords}.map{|r|
+#  puts "loading #{r}"
+  require r
+}
 class RDF::URI
   def R
     R.new to_s
