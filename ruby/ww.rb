@@ -2,11 +2,7 @@
 #  puts "loading #{r}"
   require r
 }
-class RDF::URI
-  def R
-    R.new to_s
-  end
-end
+
 def R uri
   R.new uri
 end
@@ -172,4 +168,10 @@ class R < RDF::URI
 
   %w{MIME JSON HTML HTTP message search text}.map{|r|require_relative r}
 
+end
+
+class RDF::URI
+  def R
+    R.new to_s
+  end
 end
