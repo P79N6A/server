@@ -25,9 +25,6 @@ class Object
   def id; self end
   def do; yield self end
   def justArray; [self] end
-  def to_time
-    [Time, DateTime].member?(self.class) ? self : Time.parse(self)
-  end
 end
 
 class R < RDF::URI
