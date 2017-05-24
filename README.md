@@ -5,14 +5,14 @@ git clone https://gitlab.com/ix/pw.git
 # INSTALL
 ## dependencies (distro-specific)
 ``` sh
-# debian <http://www.debian.org/>
+# debian http://www.debian.org/
 apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
 
-# void <http://www.voidlinux.eu/>
+# void   http://www.voidlinux.eu/
 xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments
 
-# termux <https://termux.com/>
-packages install autoconf automake binutils clang file git iconv pkg-config ruby ruby-dev libxslt-dev
+# termux https://termux.com/
+packages install autoconf automake binutils clang file findutils git iconv pkg-config ruby ruby-dev libxslt-dev
 ```
 ## dependencies (ruby)
 ``` sh
