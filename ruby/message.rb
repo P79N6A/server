@@ -200,7 +200,6 @@ class R
 
     if m.date
       date = m.date.to_time.utc
-#     date = ([Time,DateTime].member?(m.date.class) ? m.date : Time.parse(m.date)).utc
       yield e, Date, date.iso8601
       yield e, Mtime, date.to_i
     end
@@ -295,7 +294,6 @@ class R
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
     elsif mtime.e
       priorMtime = mtime.r.to_time
-#     priorMtime = Time.parse mtime.r
       head["If-Modified-Since"] = priorMtime.httpdate
     end
 
