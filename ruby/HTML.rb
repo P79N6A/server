@@ -125,7 +125,7 @@ class R
     keys = [Type, *(keys - InlineMeta)]
     keys -= VerboseMeta unless e.q.has_key? 'full'
 
-    [{_: :style, c: "td[property=\"#{p}\"] {background-color:#282828}"},
+    [{_: :style, c: "td[property=\"#{p}\"] {color:#000;background-color:#fff}"},
      {_: :table,
      c: [{_: :tbody,
           c: g.values.sort_by{|s|
@@ -143,8 +143,7 @@ class R
                  q['ascending'] = ''
                end
                href = CGI.escapeHTML R.qs q
-               {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
-                 c: {_: :a, href: href, class: Icons[k]||''}}}]}]}]}
+               {_: :th, href: href, property: k, class: k == p ? 'selected' : '', c: {_: :a, href: href, class: Icons[k]||''}}}]}]}]}
 
   TableRow = -> l,e,sort,direction,keys,titles {
     this = l.R
