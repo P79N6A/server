@@ -49,7 +49,6 @@ a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.link:before { content:"\f08e"; font-family: icons; color: #88f}
 a[name] {color:#000;border-radius:.28em;padding:.1em .18em .1em .18em}
-table {border-spacing: 0; margin:auto}
 div, td {vertical-align:top}
 td {padding:.16em}
 th {text-align: left}

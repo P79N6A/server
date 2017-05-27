@@ -64,9 +64,10 @@ class R
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Creator, author
       content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # resolve URIs relative to remote base
-        u = a.attr 'href'
-        a.set_attribute('href',base + u) if u.match /^\//}
+      content.css('a').map{|a| # resolve paths with remote base
+        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
+        yield s, DC+'link', R[a.attr 'href']
+      }
       yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
   end
 
