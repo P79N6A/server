@@ -49,9 +49,9 @@ a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.link:before { content:"\f08e"; font-family: icons; color: #88f}
 a[name] {color:#000;border-radius:.28em;padding:.1em .18em .1em .18em}
-table {margin:auto}
+table {border-spacing: 0; margin:auto}
 div, td {vertical-align:top}
-td {border-color: #222;border-width: 0 0 .1em 0;padding:.16em;border-style: solid}
+td {padding:.16em}
 th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
 td[property="http://schema.org/logo"] {text-align: center}
@@ -62,5 +62,4 @@ img {max-width: 100%}
 img.preview {max-height:14em;max-width:100%}
 img.logo {max-height:3.7em}
 :target, :target a {background-color:#fff;color:#000}
-th.selected, th.selected a {background-color: #222}
-
+th.selected, th.selected a {background-color: #333}
