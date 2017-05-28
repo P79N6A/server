@@ -9,16 +9,16 @@ a[rel="next"] {float: right}
 a.page, .uri {font-weight: normal}
 a.this {font-size:1.2em}
 a[name] {color:#000;border-radius:.28em;padding:.1em .18em .1em .18em}
+img {max-width: 100%}
+img.preview {max-height:14em}
+img.logo {max-height:3.7em}
+div.links {float: right;max-width: 32em}
 div, td {vertical-align:top}
-table {margin: auto}
+table {margin: auto;border-spacing:0}
 th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
 td[property="http://schema.org/logo"] {text-align: center}
 td[property="http://purl.org/dc/terms/date"] {font-size:.86em}
-div.links {float: right;max-width: 32em;overflow:hidden}
-img {max-width: 100%}
-img.preview {max-height:14em;max-width:100%}
-img.logo {max-height:3.7em}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.comment:before { content:"\f0e5"; font-family: icons; }
