@@ -10,10 +10,10 @@ class R
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = uri + '#' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
-        yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
         yield s, Creator, R['#'+m[2]]
         yield s, To, chan
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
+        yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
         yield s, DC + 'source', doc
       }
     }
