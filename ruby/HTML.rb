@@ -106,13 +106,8 @@ class R
                  (expand unless print),
                  {id: :statusbar}]}]}]}
   
-  # properties in default view
   InlineMeta = [Mtime,Type,Title,Image,Content,Label]
-  # hide unless verbose
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category',
-                 Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
-                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',
-  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',"http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
   
   TabularView = -> g, e, show_head = true, show_id = true {
     titles = {}
@@ -120,12 +115,12 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
     
-    # show typetag first, hide inlined columns
+    # show typetag first
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys = [Type, *(keys - InlineMeta)]
     keys -= VerboseMeta unless e.q.has_key? 'full'
 
-    [{_: :style, c: "[property=\"#{p}\"] {color:#fff;background-color:#282828}"},
+    [{_: :style, c: "[property=\"#{p}\"] {border-color:#333;border-style: solid; border-width: 0 0 .1em 0}"},
      {_: :table,
      c: [{_: :tbody,
           c: g.values.sort_by{|s|
