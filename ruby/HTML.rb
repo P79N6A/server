@@ -125,7 +125,7 @@ class R
     keys = [Type, *(keys - InlineMeta)]
     keys -= VerboseMeta unless e.q.has_key? 'full'
 
-    [{_: :style, c: "[property=\"#{p}\"] {color:#ffnf;background-color:#333}"},
+    [{_: :style, c: "[property=\"#{p}\"] {color:#fff;background-color:#282828}"},
      {_: :table,
      c: [{_: :tbody,
           c: g.values.sort_by{|s|
