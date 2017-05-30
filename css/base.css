@@ -14,10 +14,11 @@ img.preview {max-height:14em}
 img.logo {max-height:3.7em}
 div.links {float: right;max-width: 28em}
 div.linkHost {background-color:#181818;padding:.2em;margin:.1em; border-radius:.5em;display: inline-block;max-width: 32em}
-div.linkHost span {color: #bbb}
-div.linkHost a {font-size: .8em;font-weight: normal}
+div.linkHost span {color: #ccc}
+div.linkHost a {color:#000;background-color:#fff;border-radius:.2em;font-size: .8em;font-weight: normal;padding:0 .2em 0 .2em}
 div, td {vertical-align:top}
-table {margin: auto}
+table {margin: auto;border-spacing:0}
+td {padding:.1em}
 th {text-align: left}
 th a {font-size:1.5em;font-weight: normal}
 td[property="http://schema.org/logo"] {text-align: center}
