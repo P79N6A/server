@@ -366,13 +366,18 @@ class R
         send(*f){|s,p,o|
           if p==Content && o.class==String
             content = Nokogiri::HTML.fragment o
+            # resolve relative-URIs with remote base
             content.css('a').map{|a|
               a.set_attribute 'href', (URI.join s, (a.attr 'href')) if a.has_attribute? 'href' rescue nil}
+            # emit link element as triple
             content.css('span > a').map{|a|
-              yield s, DC+'link', a.attr('href').R if a.inner_text=='[link]'
-            }
+              if a.inner_text=='[link]'
+                yield s, DC+'link', a.attr('href').R 
+                a.remove
+              end}
+            # serialize HTML and emit
             yield s, p, content.to_xhtml
-          else
+          else # unmodified
             yield s, p, o
           end
         }
