@@ -186,8 +186,15 @@ class R
                       # links
                       {class: l.has_key?(Content) ? :links : '',
                        c: [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
-                         l[p].justArray.sort_by(&:uri).map{|link|
-                           [{_: :a, class: :link, id: e.selector, href: link.uri,c: CGI.escapeHTML(link.uri)},' ']}}},
+                         l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
+                           if links.size == 1
+                             {_: :a, class: :link, id: e.selector, href: links[0].uri, c: CGI.escapeHTML(links[0].uri.sub(/^https?:\/\//,''))}
+                           else
+                             {class: :linkHost, c: [{_: :span, c: host}, ' ', links.map{|link|
+                                                      [{_: :a, href: link.uri,
+                                                        c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)},' ']}]}
+                           end
+                         }}},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images

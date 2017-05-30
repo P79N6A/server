@@ -60,7 +60,6 @@ class R < RDF::URI
   CSVns    = W3   + 'ns/csv#'
   RDFns    = W3   + '1999/02/22-rdf-syntax-ns#'
   RDFs     = W3   + '2000/01/rdf-schema#'
-  SKOS     = W3   + '2004/02/skos/core#'
   Atom     = W3   + '2005/Atom#'
   Type     = RDFns + 'type'
   Resource = RDFs + 'Resource'

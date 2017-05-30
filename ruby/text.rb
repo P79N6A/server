@@ -50,7 +50,7 @@ end
 
 class R
   # scan for HTTP URIs in plain-text
-  # as you can see on the site (https://suchlike) and find the full info https://stuffshere.com.
+  # as you can see on the site (https://suchlike) and find full info at https://stuffshere.com.
   # these decisions were made:
   # opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s
   # and , and . only match mid-URI. the usage of <> to wrap the URLis also supported
