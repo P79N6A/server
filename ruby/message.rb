@@ -349,9 +349,9 @@ class R
         end
         nil
       end
-      
-      def each_statement &fn
-        dateNormalize(:massage,:mapPredicates,:rawFeedTriples){|s,p,o| # triples emitted from right-to-left in function list
+      def each_triple &block; each_statement{|s| block.call *s.to_triple} end      
+      def each_statement &fn # triples flow from right to left
+        dateNormalize(:resolveURIs, :mapPredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -362,20 +362,20 @@ class R
                                                          l), :graph_name => s.R)}
       end
 
-      def each_triple &block
-        each_statement{|s| block.call *s.to_triple}
-      end
-
-      def massage *f
+      def resolveURIs *f
         send(*f){|s,p,o|
-          # resolve URIs in content
-          yield s, p, (p==Content && o.class==String) ?
-          (Nokogiri::HTML.fragment o).do{|o|
-            o.css('a').map{|a|
-              if a.has_attribute? 'href'
-                ( a.set_attribute 'href', (URI.join s, (a.attr 'href'))) rescue nil
-              end}
-            o.to_xhtml} : o }
+          if p==Content && o.class==String
+            content = Nokogiri::HTML.fragment o
+            content.css('a').map{|a|
+              a.set_attribute 'href', (URI.join s, (a.attr 'href')) if a.has_attribute? 'href' rescue nil}
+            content.css('span > a').map{|a|
+              yield s, DC+'link', a.attr('href').R if a.inner_text=='[link]'
+            }
+            yield s, p, content.to_xhtml
+          else
+            yield s, p, o
+          end
+        }
       end
 
       def mapPredicates *f
@@ -393,7 +393,7 @@ class R
                 }[p]||p, o }
       end
 
-      def rawFeedTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup
+      def rawTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup
 
         # elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
