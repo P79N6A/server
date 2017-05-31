@@ -190,9 +190,11 @@ class R
                            if links.size == 1
                              {_: :a, class: :link, id: e.selector, href: links[0].uri, c: CGI.escapeHTML(links[0].uri.sub(/^https?:\/\//,''))}
                            else
-                             {class: :linkHost, c: [{_: :span, c: host.sub(/\.com$/,'')}, ' ', links.map{|link|
-                                                      [{_: :a, href: link.uri,
-                                                        c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)},' ']}]}
+                             group = host.sub /\.com$/, ''
+                             e.env[:label][group] = true
+                             [{_: :a, href: '//'+host, name: group, c: group}, ' ', links.map{|link|
+                                [{_: :a, class: :link, href: link.uri,
+                                  c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)},' ']}]
                            end
                          }}},
                       # body
