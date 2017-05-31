@@ -93,9 +93,9 @@ document.addEventListener("DOMContentLoaded", function(){
 		cur = document.querySelector(loc);
 		if(cur){
 		    href = cur.attr('href');
-		    console.log(cur.nodeName,cur);
-		    if(href && cur.nodeName.toLowerCase != 'a')
+		    if(href && cur.nodeName.toLowerCase() != 'a') {
 			window.location = href;
+		    };
 		};
 	    };
 	};
