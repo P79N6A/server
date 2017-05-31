@@ -364,6 +364,7 @@ class R
 
       def resolveURIs *f
         send(*f){|s,p,o|
+          # find Content field
           if p==Content && o.class==String
             content = Nokogiri::HTML.fragment o
             # resolve relative-URIs with remote base
