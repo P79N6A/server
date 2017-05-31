@@ -93,7 +93,8 @@ document.addEventListener("DOMContentLoaded", function(){
 		cur = document.querySelector(loc);
 		if(cur){
 		    href = cur.attr('href');
-		    if(href)
+		    console.log(cur.nodeName,cur);
+		    if(href && cur.nodeName.toLowerCase != 'a')
 			window.location = href;
 		};
 	    };

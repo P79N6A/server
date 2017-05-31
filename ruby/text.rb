@@ -110,37 +110,9 @@ class R
     yield stripDoc.uri, Content, RedCloth.new(r).to_html
   end
 
-  def triplrSourceCode
-    m = mime.split(/\//)[-1].sub(/^x-/,'')
-    yield uri, Type, R[SIOC+'SourceCode']
-    if size < 65535 # only inline small files
-      yield uri, Content, '<div class=sourcecode>'+StripHTML[`source-highlight -f html -s #{m} -i #{sh} -o STDOUT`+'</div>',nil,nil]
-    end
-  end
-
   Abstract[SIOC+'TextFile'] = -> graph, subgraph, env {
     subgraph.map{|id,data|
       graph[id][DC+'hasFormat'] = R[id+'.html']
       graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}}}
-
-  Abstract[SIOC+'SourceCode'] = -> graph, subgraph, re {
-    subgraph.map{|id,source|
-      html = id + '.html'
-      graph[html] = source.update({DC+'formatOf' => R[id], 'uri' => html})
-      graph.delete id}}
-
-  %w{ada applescript asm awk bat bib bison caml changelog c clipper cobol conf cpp csharp
- desktop diff d erlang errors flex fortran function glsl haskell haxe java javascript
- key_string langdef latex ldap lisp logtalk lsm lua m4 makefile manifest nohilite
- number outlang oz pascal pc perl php prolog properties proto python ruby scala sh
- shellscript slang sml spec sql style symbols tcl texinfo todo vala vbscript}
-    .map{|l|# ls /usr/share/source-highlight/*.lang | xargs -i basename {} .lang | tr "\n" " "
-    ma = 'application/' + l
-    mt = 'text/x-' + l
-    MIME[l.to_sym] ||= ma # suffix -> MIME
-    [ma,mt].map{|m| # MIME -> triplr
-      MIMEsource[m] ||= [:triplrSourceCode]}}
-
-  MIMEsource['text/css'] ||= [:triplrSourceCode]
 
 end
