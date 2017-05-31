@@ -13,6 +13,7 @@ img {max-width: 100%}
 img.preview {max-height:14em}
 img.logo {max-height:3.7em}
 div.links {float: right;overflow:hidden}
+div.linkGroup {padding:.13em;max-width:32em;border-radius:.2em;margin:.1em}
 div, td {vertical-align:top}
 table {margin: auto;border-spacing:0}
 td {padding:.1em}
@@ -22,7 +23,7 @@ td[property="http://schema.org/logo"] {text-align: center}
 td[property="http://purl.org/dc/terms/date"], a.link {font-size:.9em}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
-a.link:before { content:"\f08e"; font-family: icons; color: #ddd}
+a.link:before { content:"\f08e"; font-family: icons; color: #ccf}
 a.comment:before { content:"\f0e5"; font-family: icons; }
 a.comments:before { content:"\f086"; font-family: icons; }
 a.container:before { content:"\f187"; font-family: icons; }

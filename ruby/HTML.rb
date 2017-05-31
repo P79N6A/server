@@ -192,9 +192,9 @@ class R
                            else
                              group = host.sub /\.com$/, ''
                              e.env[:label][group] = true
-                             [{_: :a, href: '//'+host, name: group, c: group}, ' ', links.map{|link|
+                             {name: group, class: :linkGroup, c: [group, ' ', links.map{|link|
                                 [{_: :a, href: link.uri,
-                                  c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)},' ']}]
+                                  c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)},' ']}]}
                            end
                          }}},
                       # body
