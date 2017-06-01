@@ -210,16 +210,6 @@ class R
                    l[Type].justArray.uniq.map{|t|
                      icon = Icons[t.uri]
                      {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
-                 when LDP+'contains'
-                   l[k].do{|children|
-                     children = children.justArray
-                     if children[0].keys.size > 1 # tabular-view of contained children
-                       childGraph = {}
-                       children.map{|c|childGraph[c.uri] = c}
-                       TabularView[childGraph,e,false]
-                     else
-                       children.map{|c|[(CGI.escapeHTML c.R.basename[0..15]), ' ']}
-                     end}
                  when Schema+'logo'
                    l[k].justArray.map{|logo|
                      if logo.respond_to?(:uri)

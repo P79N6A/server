@@ -49,7 +49,6 @@ class R < RDF::URI
   From     = SIOC + 'has_creator'
   Creator  = SIOC + 'has_creator'
   Content  = SIOC + 'content'
-  LDP      = W3   + 'ns/ldp#'
   Stat     = W3   + 'ns/posix/stat#'
   CSVns    = W3   + 'ns/csv#'
   RDFns    = W3   + '1999/02/22-rdf-syntax-ns#'
@@ -60,7 +59,7 @@ class R < RDF::URI
   Label    = RDFs + 'label'
   Size     = Stat + 'size'
   Mtime    = Stat + 'mtime'
-  Container= LDP + 'Container'
+  Container= W3   + 'ns/ldp#Container'
 
   Icons = {
     'uri' => :id,
@@ -72,7 +71,6 @@ class R < RDF::URI
     Sound => :speaker,
     FOAF+'Person' => :person,
     Image => :img,
-    LDP+'contains' => :container,
     Size => :size,
     Mtime => :time,
     To => :user,
@@ -96,6 +94,7 @@ class R < RDF::URI
     SIOC+'SourceCode' => :code,
     SIOC+'TextFile' => :file,
     SIOC+'has_creator' => :user,
+    SIOC+'has_container' => :dir,
     SIOC+'has_discussion' => :comments,
     SIOC+'Thread' => :openenvelope,
     SIOC+'Post' => :newspaper,
