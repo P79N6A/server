@@ -186,7 +186,7 @@ class R
                       # links
                       [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                          l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
-                           group = host.sub(/^www./,'').sub(/\.com$/,'')
+                           group = (host||'').sub(/^www./,'').sub(/\.com$/,'')
                            e.env[:label][group] = true
                            {name: group, class: :links,
                             c: [group, ' ', links.map{|link|
