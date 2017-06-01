@@ -1,6 +1,6 @@
 class R
-  #  graph JSON:
-  #  {subjURI(str) => {predURI(str) => [objectA..]}}
+  # graph JSON:
+  # {subjURI(str) => {predURI(str) => [objectA..]}}
 
   # tripleStream -> Graph
   def fromStream m,*i

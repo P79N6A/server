@@ -143,6 +143,104 @@ class R
     end
   end
 
+  # find file-system nodes for response
+  def nodeset
+    query = env['QUERY_STRING']
+    qs = query && !query.empty? && ('?' + query) || ''
+    paths = [self, justPath].uniq
+    locs = paths.select &:exist?
+
+    # add next+prev month/day/year/hour pointers to header
+    dp = []
+    parts = stripHost[1..-1].gsub('#','%23').split '/'
+    while parts[0] && parts[0].match(/^[0-9]+$/) do
+      dp.push parts.shift.to_i
+    end
+    n = nil; p = nil # next + prev pointers
+    case dp.length
+    when 1 # Y
+      year = dp[0]
+      n = '/' + (year + 1).to_s
+      p = '/' + (year - 1).to_s
+    when 2 # Y-m
+      year = dp[0]
+      m = dp[1]
+      n = m >= 12 ? "/#{year + 1}/#{01}/" : "/#{year}/#{'%02d' % (m + 1)}/"
+      p = m <=  1 ? "/#{year - 1}/#{12}/" : "/#{year}/#{'%02d' % (m - 1)}/"
+    when 3 # Y-m-d
+      day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue Time.now
+      p = (day-1).strftime('/%Y/%m/%d/')
+      n = (day+1).strftime('/%Y/%m/%d/')
+    when 4 # Y-m-d-H
+      day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue Time.now
+      hour = dp[3]
+      p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour-1)))
+      n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
+    end
+    env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + host + p].e
+    env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + host + n].e
+
+    if path[-1] == '/' # container
+      htmlFile = a 'index.html'
+      if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e # HTML requested and exists + null query argument
+         [htmlFile.setEnv(env)] # static container-index
+      else # dynamic container
+        if env[:find] # match name
+          query = q['find']
+          expression = '-iregex ' + ('.*' + query + '.*').sh
+          size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+          freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+          locs.map{|loc|
+            `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
+        elsif env[:grep] # match content
+          locs.map{|loc|
+            `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
+        elsif env[:walk] # ordered tree traversal
+          count = (q['c'].do{|c|c.to_i} || 12) + 1
+          count = 1024 if count > 1024
+          # want at least 1 result and a lookahead-node for start of next page
+          count = 2 if count < 2
+          orient = q.has_key?('asc') ? :asc : :desc
+          (take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
+            if q['offset'] && head = s[0] # direction-reversal link
+              env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
+            end
+            if edge = s.size >= count && s.pop # lookahead node, and therefore another page, exists. point to it
+              env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
+            end
+            s }
+        else # basic container
+          childnodes = locs.-(['/'.R]).map(&:c).flatten
+          if childnodes.size < 512
+            childnodes.map{|c|c.setEnv env}
+            documents.concat childnodes
+          else
+            documents
+          end
+        end
+      end
+    else
+      if env[:glob] # name pattern
+        paths.map{|pat|pat.glob.select &:inside}.flatten
+      else # basic resource
+        # eat extension for content-type preference
+        stripDoc.documents
+      end
+    end
+  end
+
+  def documents
+    files = []
+    [self,justPath].uniq.map{|base| files.push base if base.e # exact hit
+      %w{e html md ttl txt}.map{|suffix| # suffixes
+        doc = base.a '.'+suffix
+        files.push doc.setEnv(@r) if doc.e}}
+    files
+  end
+
+  GET['now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
+  GET['d']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/')    + (e.path[3..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
+  
   def readFile parseJSON=false
     if f
       if parseJSON
@@ -215,8 +313,7 @@ class R
   def format; @format ||= selectFormat end
   def selectFormat
     # explicit URI suffix
-    { '.html' => 'text/html', '.json' => 'application/json', '.ttl' => 'text/turtle',
-    }[File.extname(env['REQUEST_PATH'])].do{|m|return m}
+    { '.html' => 'text/html', '.json' => 'application/json', '.ttl' => 'text/turtle'}[File.extname(env['REQUEST_PATH'])].do{|m|return m}
     # environment (request header-fields)
     accept.sort.reverse.map{|q,mimes| # highest Qval bound first
       # if multiple MIMEs remain, tiebreak
@@ -224,5 +321,5 @@ class R
         return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}} # renderer exists
     'text/html' # default
   end
-
+  
   end

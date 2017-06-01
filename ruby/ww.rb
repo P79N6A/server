@@ -145,6 +145,7 @@ class R < RDF::URI
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
   def children; node.c.map &:R end
+  def glob; (Pathname.glob pathPOSIX).map &:R end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
   def stripHost; host ? uri.split('//'+host,2)[1] : uri end

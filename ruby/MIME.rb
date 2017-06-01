@@ -131,6 +131,32 @@ class R
         send *s,&b }}
   end
 
+  def triplrContainer
+    dir = uri + (uri[-1] == '/' ? '' : '/')
+    yield dir, Type, R[Container]
+    mt = mtime
+    yield dir, Mtime, mt.to_i
+    yield dir, Date, mt.iso8601
+    children = c
+    yield dir, Size, children.size
+  end
+
+  def triplrFile
+    yield uri, Type, R[Stat+'File']
+    mt = mtime
+    yield uri, Mtime, mt.to_i
+    yield uri, Date, mt.iso8601
+    yield uri, Size, size
+  end
+
+  def triplrArchive
+    yield uri, Type, R[Stat+'CompressedFile']
+    mt = mtime
+    yield uri, Mtime, mt.to_i
+    yield uri, Date, mt.iso8601
+    yield uri, Size, size
+  end
+
   def triplrRDF f
     RDF::Reader.open(pathPOSIX, :format => f, :base_uri => stripDoc){|r|
       r.each_triple{|s,p,o|

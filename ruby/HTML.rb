@@ -1,32 +1,31 @@
 # -*- coding: utf-8 -*-
 
-def H x # Ruby to HTML
+def H x # HTML output
   case x
-  when Hash
+  when Hash # element
     void = [:img, :input, :link, :meta].member? x[:_]
-    '<' + (x[:_] || 'div').to_s +                        # name
+    '<' + (x[:_] || 'div').to_s +                        # element name
       (x.keys - [:_,:c]).map{|a|                         # attribute name
       ' ' + a.to_s + '=' + "'" + x[a].to_s.chars.map{|c| # attribute value
-        {"'"=>'%27',
-         '>'=>'%3E',
+        {"'"=>'%27', '>'=>'%3E',
          '<'=>'%3C'}[c]||c}.join + "'"}.join +
-      (void ? '/' : '') + '>' + (H x[:c]) +              # children or void
-      (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # closer
-  when R
+      (void ? '/' : '') + '>' + (H x[:c]) +              # children
+      (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # element closer
+  when Array # structure
+    x.map{|n|H n}.join
+  when R # hyperlink
     H x.href
   when String
     x
   when Symbol
     x.to_s
-  when Array
-    x.map{|n|H n}.join
   when Float
     x.to_s
   when Integer
     x.to_s
   when NilClass
     ''
-  else
+  else # call native #to_s and escape output
     x.to_s.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;')
   end
 end
