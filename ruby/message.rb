@@ -179,6 +179,12 @@ class R
     yield e, Type, R[SIOC+'MailMessage']
 
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
+    list && list.match(/@/) && m['List-Id'].do{|name|
+      group = AddrPath[list]                            # list URI
+      yield group, Type, R[SIOC+'Usergroup']            # list type
+      yield group, Label, name.decoded.gsub(/[<>&]/,'') # list name
+      yield group, SIOC+'has_container', group.R.dir    # list container
+    }
 
     m.from.do{|f|                    # any authors?
       f.justArray.map{|f|             # each author
