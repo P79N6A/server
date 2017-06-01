@@ -53,6 +53,10 @@ class R
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml(:indent => 0)}
 
+  def R.ungunk host
+    host.sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
+  end
+
   Render['text/html'] = -> graph,re,view=nil {
     e = re.env
     dir = re.path[-1] == '/'
@@ -158,7 +162,7 @@ class R
                                o.justArray.uniq.map{|v|
                                  if v.respond_to?(:uri)
                                    v = v.R
-                                   label = (v.fragment||v.basename && v.basename.size > 1 && v.basename || v.host.split('.')[0..-2].join).downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                                   label = (v.fragment||(v.basename && v.basename.size > 1 && v.basename)||R.ungunk(v.host)).downcase.gsub(/[^a-zA-Z0-9_]/,'')
                                    e.env[:label][label] = true
                                    {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label}.update(loc ? {id: e.selector} : {})
                                  else
@@ -184,7 +188,7 @@ class R
                      # links
                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
-                         group = (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
+                         group = R.ungunk (host||'')
                          e.env[:label][group] = true
                          {name: group, class: :links,
                           c: [group, ' ', links.map{|link|
