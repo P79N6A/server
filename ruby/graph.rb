@@ -27,17 +27,9 @@ class R
   # file -> Graph
   def loadGraph graph
     return unless e
-    base = @r.R.join(stripDoc) if @r
     justRDF.do{|f| # maybe transcode to RDF
-      ((f.r true)||{}). # read file into hashtable
-        triples{|s,p,o| # visit triples
-        if base         # bind identifiers
-          # subject URI
-          s = base.join(s).to_s
-          # object URI
-          o['uri'] = base.join(o.uri).to_s if o.class==Hash && o.uri          
-        end
-        # add triples to graph
+      ((f.r true)||{}). # read JSON file
+        triples{|s,p,o| # add triples to graph
         graph[s] ||= {'uri' => s}
         graph[s][p] = (graph[s][p]||[]).justArray.push o
       }}
