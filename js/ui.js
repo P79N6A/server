@@ -49,16 +49,17 @@ document.addEventListener("DOMContentLoaded", function(){
 		jumpDoc('prev','#last');
 	    if(key==78) // next page
 		jumpDoc('next','#first');
-	    if(key==85){ // parent
+	    if(key==85){ // up
 		var up = document.querySelector('#up');
 		if(up)
 		    window.location = up.attr('href');
 	    };
-	    if(key==68){ // children
+	    if(key==68){ // down
 		var down = document.querySelector('#down');
 		if(down)
 		    window.location = down.attr('href');
 	    };
+
 	    return null;
 	};
 
@@ -89,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		};
 	    };
 	};
-	if(key==13){ // goto URL
+	if(key==13){ // goto
 	    loc = window.location.hash;
 	    if(loc){
 		cur = document.querySelector(loc);
