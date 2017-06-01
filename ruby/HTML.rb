@@ -186,16 +186,12 @@ class R
                       # links
                       [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                          l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
-                           if links.size == 1
-                             {_: :a, class: :link, id: e.selector, href: links[0].uri, c: CGI.escapeHTML(links[0].uri.sub(/^https?:\/\//,''))}
-                           else
-                             group = host.sub /\.com$/, ''
-                             e.env[:label][group] = true
-                             {name: group, class: :linkGroup, c: [group, ' ', links.map{|link|
-                                [{_: :a, href: link.uri,
-                                  c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)},' ']}]}
-                           end
-                         }},
+                           group = host.sub /\.com$/, ''
+                           e.env[:label][group] = true
+                           {name: group, class: :links,
+                            c: [group, ' ', links.map{|link|
+                                  [{_: :a, href: link.uri, c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)}.
+                                     update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
