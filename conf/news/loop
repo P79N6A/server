@@ -1,7 +1,0 @@
-#!/bin/sh
-while true; do
-    /src/pw/conf/news/boston.rb localhost
-    getmail
-    date
-    sleep 1800
-done

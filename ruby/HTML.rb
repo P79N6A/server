@@ -154,56 +154,56 @@ class R
 
     actors = -> {
       shownActors ? '' : ((shownActors = true) && [[From,''],[To,'&rarr;']].map{|p,pl|
-        l[p].do{|o|
-          [{_: :b, c: pl + ' '},
-           o.justArray.uniq.map{|v|
-             if v.respond_to?(:uri)
-               v = v.R
-               label = (v.fragment||v.basename && v.basename.size > 1 && v.basename || v.host.split('.')[0..-2].join).downcase.gsub(/[^a-zA-Z0-9_]/,'')
-               e.env[:label][label] = true
-               {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label}.update(loc ? {id: e.selector} : {})
-             else
-               v.to_s
-             end
-           }.intersperse(' '),' ']}})}
+                            l[p].do{|o|
+                              [{_: :b, c: pl + ' '},
+                               o.justArray.uniq.map{|v|
+                                 if v.respond_to?(:uri)
+                                   v = v.R
+                                   label = (v.fragment||v.basename && v.basename.size > 1 && v.basename || v.host.split('.')[0..-2].join).downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                                   e.env[:label][label] = true
+                                   {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label}.update(loc ? {id: e.selector} : {})
+                                 else
+                                   v.to_s
+                                 end
+                               }.intersperse(' '),' ']}})}
 
     [{_: :tr, href: href, id: e.selector,
-       c: ["\n",
-           keys.map{|k|
-             [{_: :td, property: k,
-               c: case k
-                  when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
-                    [# labels
-                      l[Label].justArray.map{|v|
-                        label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                        lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                        e.env[:label][lbl] = true
-                        [{_: :a, href: href, name: lbl, c: label},' ']},
-                      # Title
-                      ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||basicResource),
-                      (title ? '<br>' : ' '),
-                      # links
-                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
-                         l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
-                           group = (host||'').sub(/^www./,'').sub(/\.com$/,'')
-                           e.env[:label][group] = true
-                           {name: group, class: :links,
-                            c: [group, ' ', links.map{|link|
-                                  [{_: :a, href: link.uri, c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)}.
-                                     update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
-                      # body
-                      l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
-                      # images
-                      (['<br>', {_: :a, href: href,
-                                 c: {_: :img, class: :thumb,
-                                     src: if this.host != e.host
-                                      this.uri
-                                    elsif this.ext.downcase == 'gif'
-                                      href
-                                    else
-                                      '/thumbnail' + this.path
-                                     end}}] if isImg)]
-                  when Type
+      c: ["\n",
+          keys.map{|k|
+            [{_: :td, property: k,
+              c: case k
+                 when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
+                   [# labels
+                     l[Label].justArray.map{|v|
+                       label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
+                       lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                       e.env[:label][lbl] = true
+                       [{_: :a, href: href, name: lbl, c: label},' ']},
+                     # Title
+                     ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||basicResource),
+                     (title ? '<br>' : ' '),
+                     # links
+                     [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
+                       l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
+                         group = (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
+                         e.env[:label][group] = true
+                         {name: group, class: :links,
+                          c: [group, ' ', links.map{|link|
+                                [{_: :a, href: link.uri, c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)}.
+                                   update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
+                     # body
+                     l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
+                     # images
+                     (['<br>', {_: :a, href: href,
+                                c: {_: :img, class: :thumb,
+                                    src: if this.host != e.host
+                                     this.uri
+                                   elsif this.ext.downcase == 'gif'
+                                     href
+                                   else
+                                     '/thumbnail' + this.path
+                                    end}}] if isImg)]
+                 when Type
                    l[Type].justArray.uniq.map{|t|
                      icon = Icons[t.uri]
                      {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
@@ -214,7 +214,7 @@ class R
                        childGraph = {}
                        children.map{|c|childGraph[c.uri] = c}
                        TabularView[childGraph,e,false]
-                      else
+                     else
                        children.map{|c|[(CGI.escapeHTML c.R.basename[0..15]), ' ']}
                      end}
                  when Schema+'logo'
