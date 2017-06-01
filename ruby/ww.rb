@@ -29,11 +29,7 @@ class Object
 end
 
 class R < RDF::URI
-
   alias_method :uri, :to_s
-
-  FSbase = `pwd`.chomp ; BaseLen = FSbase.size
-  HTTP_URI = /\A(\/|http)[\S]+\Z/
 
   # URI constants
   W3    = 'http://www.w3.org/'
@@ -130,6 +126,9 @@ class R < RDF::URI
   # append
   def + u; R uri + u.to_s end
   alias_method :a, :+
+
+  FSbase = `pwd`.chomp
+  BaseLen = FSbase.size
 
   # POSIX path acrobatics
   def pathPOSIX; FSbase + '/' +

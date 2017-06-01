@@ -476,7 +476,7 @@ class R
                 # author URI and name
                 uri = e[3].match /<uri>([^<]+)</
                 name = e[3].match /<name>([^<]+)</
-                yield u, Creator, e[3].extend(SniffContent).sniff.do{|o|o.match(HTTP_URI) ? o.R : o } unless name||uri
+                yield u, Creator, e[3].extend(SniffContent).sniff.do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri
                 yield u, Creator, uri[1].R if uri
                 if name
                   name = name[1]
@@ -485,7 +485,7 @@ class R
 
 
               else # generic element
-                yield u,p,e[3].extend(SniffContent).sniff.do{|o|o.match(HTTP_URI) ? o.R : o }
+                yield u,p,e[3].extend(SniffContent).sniff.do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o }
               end
             }
           else
