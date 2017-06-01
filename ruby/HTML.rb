@@ -103,8 +103,7 @@ class R
                  (prevPage unless re.q.has_key? 'abbr'),
                  (nextPage unless re.q.has_key? 'abbr'),
                  '<br clear=all>',
-                 (expand unless print),
-                 {id: :statusbar}]}]}]}
+                 (expand unless print)]}]}]}
   
   InlineMeta = [Mtime,Type,Title,Image,Content,Label]
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',"http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]

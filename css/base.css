@@ -1,7 +1,6 @@
 body {font-family: sans-serif}
 a {text-decoration:none; font-weight: bold; border-radius:.2em}
 pre {white-space: pre-wrap;margin:0;max-width:111ex}
-#statusbar {position:fixed;font-size:1.08em;padding: .13em;color:#000;background-color:#cee;border-radius:0 .5em .5em 0}
 a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;color:#eee;background-color:#000}
 #up, a[rel="prev"] {float: left}
 a[rel="next"] {float: right}

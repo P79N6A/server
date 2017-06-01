@@ -117,22 +117,4 @@ document.addEventListener("DOMContentLoaded", function(){
 	};
     },false);
 
-    // show selection change in statusbar
-    var status = document.querySelector('#statusbar');
-    window.addEventListener('hashchange',function(){
-	var id = window.location.hash;
-	var el = document.querySelector(id);
-	var href = el.attr('href');
-	status.textContent = href;
-	status.style.top = el.getBoundingClientRect().top+'px';
-	status.style.left = el.getBoundingClientRect().right+'px';
-    });
-
-    // stop searchbox input from bubbling
-    var searchbox = document.querySelector('input[name="q"]');
-    if(searchbox){
-//	searchbox.focus();
-	searchbox.addEventListener("keydown",function(e){e.stopPropagation();});
-    };
-
 }, false);
