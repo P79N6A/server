@@ -23,7 +23,9 @@ document.addEventListener("DOMContentLoaded", function(){
 	// bind tap-to-select handler
 	this.addEventListener("click",function(e){
 	    var id = this.attr('id');
-	    if(window.location.hash.slice(1)!=id){
+	    if(window.location.hash.slice(1)==id){
+		window.location = this.attr('href');
+	    } else {
 		window.location.hash = id;
 	    };
 	},false);
