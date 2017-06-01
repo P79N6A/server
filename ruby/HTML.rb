@@ -184,8 +184,7 @@ class R
                       ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||basicResource),
                       (title ? '<br>' : ' '),
                       # links
-                      {class: l.has_key?(Content) ? :links : '',
-                       c: [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
+                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                          l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
                            if links.size == 1
                              {_: :a, class: :link, id: e.selector, href: links[0].uri, c: CGI.escapeHTML(links[0].uri.sub(/^https?:\/\//,''))}
@@ -196,7 +195,7 @@ class R
                                 [{_: :a, href: link.uri,
                                   c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)},' ']}]}
                            end
-                         }}},
+                         }},
                       # body
                       l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
                       # images
