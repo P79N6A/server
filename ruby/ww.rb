@@ -131,15 +131,7 @@ class R < RDF::URI
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # POSIX path mapping
-  def justPath; (path || '/').R.setEnv(@r) end
-  def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
-  def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
-  def dir; dirname.R end
-  def children; node.c.map &:R end
-  alias_method :c, :children
-  def ext; (File.extname uri)[1..-1] || '' end
-  def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
+  # POSIX path acrobatics
   def pathPOSIX; FSbase + '/' +
                    (if h = host
                      'domain/' + h + stripHost
@@ -147,30 +139,36 @@ class R < RDF::URI
                      uri[0] == '/' ? uri[1..-1] : uri
                     end)
   end
+  def R.unPOSIX p, skip = R::BaseLen; p[skip..-1].do{|p| R[p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} || p]} end
   def node; Pathname.new pathPOSIX end
-  def R.unPOSIX p, skip = R::BaseLen
-    p[skip..-1].do{|p| R[ p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} || p]}
-  end
+  def justPath; (path || '/').R.setEnv(@r) end
+  def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
+  def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
+  def dir; dirname.R end
+  def children; node.c.map &:R end
+  def ext; (File.extname uri)[1..-1] || '' end
+  def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
   def stripHost; host ? uri.split('//'+host,2)[1] : uri end
   def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
-  def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path to server-root
   def sh; pathPOSIX.utf8.sh end # shell-escape path
   def exist?; node.exist? end
-  alias_method :e, :exist?
   def file?; node.file? end
-  alias_method :f, :file?
   def mtime; node.stat.mtime if e end
-  alias_method :m, :mtime
   def size; node.size end
+  alias_method :c, :children
+  alias_method :f, :file?
+  alias_method :e, :exist?
+  alias_method :m, :mtime
 
-  %w{MIME JSON HTML HTTP message search}.map{|r|require_relative r}
-  # scan for HTTP URIs in plain-text
-  # as you can see on the site (https://suchlike) and find full info at https://stuffshere.com.
+  %w{MIME HTML HTTP graph message search}.map{|r|require_relative r}
+
+  # scan for HTTP URIs in plain-text. example:
+  # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
   # these decisions were made:
   # opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s
-  # and , and . only match mid-URI. the usage of <> to wrap the URLis also supported
+  # and , and . only match mid-URI to allow substitution of URLs with words in sentences. <> wrapped URIs are supported
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
-
   def triplrHref enc=nil
     id = stripDoc.uri
     yield id, Type, R[SIOC+'TextFile']
@@ -234,9 +232,8 @@ class RDF::URI
 end
 
 class String
-  def R; R.new self end
-
-  # plaintext to HTML, emit URIs as RDF
+  def R; R.new self end # cast to URI
+  # text to HTML, emit URIs as RDF
   def hrefs &b
     pre,link,post = self.partition R::Href
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
@@ -254,12 +251,10 @@ class String
     puts [x.class,x.message,x.backtrace].join("\n")
     ""
   end
-
   def sha1; Digest::SHA1.hexdigest self end
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
   def utf8; force_encoding 'UTF-8' end
   def sh; Shellwords.escape self end
-
 end
 
 module Redcarpet
