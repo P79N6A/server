@@ -132,7 +132,7 @@ class R
   end
 
   def triplrContainer
-    dir = uri + (uri[-1] == '/' ? '' : '/')
+    dir = path + (path[-1] == '/' ? '' : '/')
     yield dir, Type, R[Container]
     mt = mtime
     yield dir, Mtime, mt.to_i

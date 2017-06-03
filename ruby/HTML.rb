@@ -122,7 +122,7 @@ class R
     keys = [Type, *(keys - InlineMeta)]
     keys -= VerboseMeta unless e.q.has_key? 'full'
 
-    [{_: :style, c: "[property=\"#{p}\"] {border-color:#fff;border-style: dotted; border-width: 0 0 .1em 0}"},
+    [{_: :style, c: "[property=\"#{p}\"] {border-color:#eee;border-style: solid; border-width: 0 0 .1em 0}"},
      {_: :table,
      c: [{_: :tbody,
           c: g.values.sort_by{|s|
@@ -149,7 +149,7 @@ class R
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
-    basicResource = types.member?(Stat+'File') || types.member?(Container) || types.member?(Resource)
+    fileResource = types.member?(Stat+'File') || types.member?(Container) || types.member?(Resource)
     shownActors = false
     title = l[Title].justArray.select{|t|t.class==String}[0].do{|t|
       t = t.sub ReExpr, ''
@@ -175,7 +175,7 @@ class R
           keys.map{|k|
             [{_: :td, property: k,
               c: case k
-                 when 'uri' # URI, Title, body + attachment fields shown here to reduce column-bloat
+                 when 'uri' # URI/Title/body/link fields consumed to reduce column-bloat
                    [# labels
                      l[Label].justArray.map{|v|
                        label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
@@ -183,7 +183,13 @@ class R
                        e.env[:label][lbl] = true
                        [{_: :a, href: href, name: lbl, c: label},' ']},
                      # Title
-                     ({_: :a, class: title ? :title : (loc ? :this : :uri), href: href, c: CGI.escapeHTML(title ? title : (this.fragment||this.basename))} if title||basicResource),
+                     (if title
+                      {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
+                     elsif fileResource
+                       dir = File.dirname this.path
+                       dir += '/' unless dir[-1] == '/'
+                       {_: :a, href: href, c: [{_: :span, class: :gray, c: CGI.escapeHTML(dir)},{_: :span, class: (loc ? :this : :uri), c: CGI.escapeHTML(this.basename)}]}
+                      end),
                      (title ? '<br>' : ' '),
                      # links
                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
