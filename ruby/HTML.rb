@@ -197,7 +197,7 @@ class R
                          group = R.ungunk (host||'')
                          e.env[:label][group] = true
                          {name: group, class: :links,
-                          c: [group, ' ', links.map{|link|
+                          c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
                                 [{_: :a, href: link.uri, c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)}.
                                    update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
                      # body
