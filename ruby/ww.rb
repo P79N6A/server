@@ -188,7 +188,6 @@ class R < RDF::URI
 
   def triplrMarkdown
     s = stripDoc.uri
-    yield s, Type, R[SIOC+'MarkdownContent']
     yield s, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H({_: :link, href: '/css/code.css', rel: :stylesheet, type: MIME[:css]})
   end
 

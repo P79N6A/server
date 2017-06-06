@@ -21,9 +21,6 @@ class R
     puts 'error scanning IRC log ' + uri
   end
 
-  View[SIOC+'MarkdownContent'] = -> graph, env {
-    graph.map{|uri,res| res[Content]}}
-
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
     msgs.map{|uri,msg|
 
