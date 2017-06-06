@@ -62,13 +62,6 @@ class R
     dir = re.path[-1] == '/'
     groups = {}
     empty = graph.empty?
-    graph.map{|u,r|
-      r.types.map{|type|
-        if v = View[type]
-          groups[v] ||= {}
-          groups[v][u] = r
-          graph.delete u
-        end}}
     e[:label] ||= {}
     up = if re.q.has_key? 'full'
            R.qs re.q.reject{|k|k=='full'}.merge({'abbr' => ''})
@@ -90,28 +83,26 @@ class R
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :style, c: R['/css/base.css'].r},
-                 {_: :style, c: print ? "body, a {background-color:#fff;color:#000}" : "body, a  {background-color:#000;color:#fff}"},
+                 {_: :style, c: "body, a  {background-color:#000;color:#fff}"},
                 ]},
             {_: :body,
-             c: [([{_: :a, id: :up, href: up, c: '&#9650;'},'<br clear=all>'] if up && !print),
+             c: [([{_: :a, id: :up, href: up, c: '&#9650;'},'<br clear=all>'] if up),
                  (prevPage && prevPage.merge({id: :prevpage})),
                  (nextPage && nextPage.merge({id: :nextpage})),
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
-                 groups.map{|view,graph|view[graph,re]},
-                 (TabularView[graph,re] if graph.keys.size > 0),
+                 TabularView[graph,re],
                  {_: :script, c: R['/js/ui.js'].r},
                  {_: :style, c: e[:label].map{|name,_|
                         "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'),
                  (nextPage unless re.q.has_key? 'abbr'),
-                 '<br clear=all>',
-                 (expand unless print)]}]}]}
+                 '<br clear=all>',expand]}]}]}
   
   InlineMeta = [Mtime,Type,Title,Image,Content,Label]
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',"http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
   
-  TabularView = -> g, e, show_head = true, show_id = true {
+  TabularView = -> g, e {
     titles = {}
     p = e.env[:sort]
     direction = e.q.has_key?('ascending') ? :id : :reverse
@@ -141,6 +132,9 @@ class R
                end
                href = CGI.escapeHTML R.qs q
                {_: :th, href: href, property: k, class: k == p ? 'selected' : '', c: {_: :a, href: href, class: Icons[k]||''}}}]}]}]}
+
+#  View[Sound+'Player'] = -> g,e {
+#    [{_: :script, type: "text/javascript", src: '/js/audio.js'},{_: :audio, id: :audio, controls: true}]}
 
   TableRow = -> l,e,sort,direction,keys,titles {
     this = l.R

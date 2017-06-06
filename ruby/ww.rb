@@ -108,9 +108,8 @@ class R < RDF::URI
 
   # lambda tables
   GET = {}
-  Abstract = {} # summarize
-  Render = {}   # MIME renderer
-  View = {}     # HTML template
+  Abstract = {} # RDF type
+  Render = {}   # MIME type
 
   # constructors
   def R uri = nil
