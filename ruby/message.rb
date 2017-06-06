@@ -108,21 +108,25 @@ class R
 
     # pass 2. cluster
     threads.map{|title,post|
-      # select heaviest recipient
+      # find heaviest recipient
       post[To].justArray.select{|t|t.respond_to? :uri}.sort_by{|a|weight[a.uri]}[-1].do{|to|
-        # thread identifier
+
+        # thread URI
         id = '/thread/' + URI.escape(post[DC+'identifier'][0])
+
         # parse labels in subject
         labels = []
         title = title.gsub(/\[[^\]]+\]/){|l|labels.push l[1..-2];nil}
+
         # thread resource
         thread = {Type => R[Post], To => to, 'uri' => id , Title => title, Date => post[Date], Image => post[Image], Content => e.env[:grep] ? post[Content] : []}
         thread.update({Label => labels}) unless labels.empty?
+
         if post[Size] > 1
           # thread aka discussion, omit author-list
           thread.update({Size => post[Size], Type => R[SIOC+'Thread']})
         else
-          # single message, show author
+          # single message
           thread[Creator] = post[Creator]
         end
         # add thread resource to responsegraph
