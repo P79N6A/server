@@ -223,7 +223,6 @@ class R
       if env[:glob] # name pattern
         paths.map{|pat|pat.glob.select &:inside}.flatten
       else # basic resource
-        # eat extension for content-type preference
         stripDoc.documents
       end
     end
