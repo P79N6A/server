@@ -1,26 +1,6 @@
 # coding: utf-8
 class R
 
-  def triplrIRC &f
-    doc = uri.gsub('#','%23').R
-    linenum = -1
-    day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    chan = R['#'+uri.split('#')[-1].sub(/\.log$/,'')]
-    r.lines.map{|l|
-      l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
-        s = uri + '#' + (linenum += 1).to_s
-        yield s, Type, R[SIOC+'InstantMessage']
-        yield s, Creator, R['#'+m[2]]
-        yield s, To, chan
-        yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
-        yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
-        yield s, DC + 'source', doc
-      }
-    }
-  rescue
-    puts 'error scanning IRC log ' + uri
-  end
-
   Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
     msgs.map{|uri,msg|
 
@@ -51,35 +31,6 @@ class R
       graph.delete uri
     }
   }
-
-  def triplrTwitter
-    base = 'https://twitter.com'
-    nokogiri.css('div.tweet > div.content').map{|t|
-      s = base + t.css('.js-permalink').attr('href') # subject URI
-      author = R[base+'/'+t.css('.username b')[0].inner_text]
-      yield s, Type, R[SIOC+'Tweet']
-      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
-      yield s, Creator, author
-      content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # resolve paths with remote base
-        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
-        yield s, DC+'link', R[a.attr 'href']
-      }
-      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
-  end
-
-  def tw
-    node.readlines.shuffle.each_slice(22){|s|
-      R['https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].twGET}
-  end
-
-  def twGET
-    indexStream :triplrTwitter
-  end
-
-  def triplrMailIndexer &f
-    indexStream :triplrMail, &f
-  end
 
   Abstract[SIOC+'MailMessage'] = -> graph, g, e {
     threads = {}
@@ -164,10 +115,56 @@ class R
       Render[e.format].do{|p|p[m,e]} ||
         m.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym, :standard_prefixes => true)}}
 
-  def mail; Mail.read node if f end
+  def triplrIRC &f
+    doc = uri.gsub('#','%23').R
+    linenum = -1
+    day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
+    chan = R['#'+uri.split('#')[-1].sub(/\.log$/,'')]
+    r.lines.map{|l|
+      l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
+        s = uri + '#' + (linenum += 1).to_s
+        yield s, Type, R[SIOC+'InstantMessage']
+        yield s, Creator, R['#'+m[2]]
+        yield s, To, chan
+        yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
+        yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
+        yield s, DC + 'source', doc
+      }
+    }
+  rescue
+    puts 'error scanning IRC log ' + uri
+  end
+
+  def twGET; indexStream :triplrTwitter end
+
+  def triplrTwitter
+    base = 'https://twitter.com'
+    nokogiri.css('div.tweet > div.content').map{|t|
+      s = base + t.css('.js-permalink').attr('href') # subject URI
+      author = R[base+'/'+t.css('.username b')[0].inner_text]
+      yield s, Type, R[SIOC+'Tweet']
+      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
+      yield s, Creator, author
+      content = t.css('.tweet-text')[0]
+      content.css('a').map{|a| # resolve paths with remote base
+        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
+        yield s, DC+'link', R[a.attr 'href']
+      }
+      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
+  end
+
+  def tw
+    node.readlines.shuffle.each_slice(22){|s|
+      R['https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].twGET}
+  end
+
+  def triplrMailIndexer &f; indexStream :triplrMail, &f end
 
   def triplrMail &b
-    m = mail; return unless m # parse
+    m = Mail.read node # call parser
+    return unless m
+
+    # mint identifier for message and emit graph-ized data as RDF triples
     id = m.message_id || m.resent_message_id
     unless id
       puts "missing Message-ID in #{uri}"
@@ -261,7 +258,7 @@ class R
       html.w p.decoded  if !html.e                     # write content
       htmlCount += 1 }
 
-    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-container (digests + forwards)
+    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-containers (digests + forwards)
       f = attache[].child 'msg.' + rand.to_s.sha1
       f.w m.body.decoded if !f.e
       f.triplrMail &b
