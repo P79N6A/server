@@ -164,13 +164,14 @@ class R
     m = Mail.read node # call parser
     return unless m
 
-    # mint identifier for message and emit graph-ized data as RDF triples
+    # mint identifier for message
     id = m.message_id || m.resent_message_id
     unless id
       puts "missing Message-ID in #{uri}"
       id = rand.to_s.sha1
     end
 
+    # emit graph-ized data as RDF triples
     e = MessagePath[id]
     yield e, DC+'identifier', id
     yield e, DC+'source', self # reference to origin-file
@@ -330,7 +331,7 @@ class R
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method  :feeds, :listFeeds
 
-  module Feed
+  module Feed # feed parser defined as RDF library method
     
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom
@@ -353,9 +354,11 @@ class R
         end
         nil
       end
+
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end      
-      def each_statement &fn # triples flow from right to left
-        dateNormalize(:resolveURIs, :mapPredicates,:rawTriples){|s,p,o|
+
+      def each_statement &fn # triples flow from right to left across stacked stream-transformers
+        rebaseURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -366,7 +369,7 @@ class R
                                                          l), :graph_name => s.R)}
       end
 
-      def resolveURIs *f
+      def rebaseURIs *f
         send(*f){|s,p,o|
           # find Content field
           if p==Content && o.class==String
@@ -388,7 +391,7 @@ class R
         }
       end
 
-      def mapPredicates *f
+      def normalizePredicates *f
         send(*f){|s,p,o|
           yield s,
                 {Purl+'dc/elements/1.1/subject' => SIOC+'subject',
@@ -401,6 +404,19 @@ class R
                  RSS+'title' => Title,
                  Atom+'title' => Title,
                 }[p]||p, o }
+      end
+
+      def normalizeDates *f
+        send(*f){|s,p,o|
+          yield *({'CreationDate' => true,
+                    'Date' => true,
+                    RSS+'pubDate' => true,
+                    Date => true,
+                    Purl+'dc/elements/1.1/date' => true,
+                    Atom+'published' => true,
+                    Atom+'updated' => true
+                  }[p] ?
+                  [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
       end
 
       def rawTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup
@@ -497,19 +513,6 @@ class R
           end
         }
 
-      end
-      
-      def dateNormalize *f
-        send(*f){|s,p,o|
-          yield *({'CreationDate' => true,
-                    'Date' => true,
-                    RSS+'pubDate' => true,
-                    Date => true,
-                    Purl+'dc/elements/1.1/date' => true,
-                    Atom+'published' => true,
-                    Atom+'updated' => true
-                  }[p] ?
-                  [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
       end
 
     end
