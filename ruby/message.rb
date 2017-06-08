@@ -39,17 +39,15 @@ class R
     # pass 1. statistics & prune
     g.map{|u,p|
 
-      # full resources not in summarized graph
+      # trim fat from summarized graph
       graph.delete u
       p[Creator].justArray.select{|t|t.respond_to? :uri}.map{|r|graph.delete r.uri}
       recipients = p[To].justArray.select{|r|r.respond_to? :uri}.map &:uri
       recipients.map{|r|graph.delete r}
 
-      # group by @title
+      # group by subject
       p[Title].do{|t|
-
         title = t[0].sub ReExpr, '' # strip reply-prefix
-
         if threads[title] # add to group
           threads[title][Size] += 1
           threads[title][Creator].concat p[Creator]
@@ -58,13 +56,13 @@ class R
           threads[title] = p  #  title
         end}
 
-      recipients.map{|a|            # address weight
+      recipients.map{|a| # recipient weights
         weight[a] ||= 0
         weight[a] += 1}}
 
-    # pass 2. finish thread/discussion resources
+    # pass 2. complete thread/discussion resources, add to graph
     threads.map{|title,post|
-      # find heaviest recipient
+      # heaviest recipient wins
       post[To].justArray.select{|t|t.respond_to? :uri}.sort_by{|a|weight[a.uri]}[-1].do{|to|
         labels = []
         # resource pointing to post(s)
