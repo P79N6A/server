@@ -14,6 +14,31 @@ end
 class Hash
   def R; R.new self["uri"] end
   def uri; self["uri"] end
+  def triples &f
+    map{|s,resource|
+      resource.map{|p,o|
+        o.justArray.map{|o|yield s,p,o} if p != 'uri'}}
+  end
+  def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
+  def toRDF base=nil
+    graph = RDF::Graph.new
+    triples{|s,p,o|
+      s = if base
+            base.join s
+          else
+            RDF::URI s
+          end
+      p = RDF::URI p
+      o = if [R,Hash].member?(o.class) && o.uri
+            RDF::URI o.uri
+          else
+            l = RDF::Literal o
+            l.datatype=RDF.XMLLiteral if p == R::Content
+            l
+          end
+      graph << (RDF::Statement.new s,p,o)}
+    graph
+  end
 end
 class NilClass
   def do; nil end
@@ -159,7 +184,7 @@ class R < RDF::URI
   alias_method :e, :exist?
   alias_method :m, :mtime
 
-  %w{MIME HTML HTTP graph message search}.map{|r|require_relative r}
+  %w{MIME HTML HTTP message search}.map{|r|require_relative r}
 
   # scan for HTTP URIs in plain-text. example:
   # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
