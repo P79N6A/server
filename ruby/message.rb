@@ -36,18 +36,19 @@ class R
     threads = {}
     weight = {}
 
-    # pass 1. statistics
+    # pass 1. statistics & prune
     g.map{|u,p|
+
       # full resources not in summarized graph
       graph.delete u
       p[Creator].justArray.select{|t|t.respond_to? :uri}.map{|r|graph.delete r.uri}
       recipients = p[To].justArray.select{|r|r.respond_to? :uri}.map &:uri
       recipients.map{|r|graph.delete r}
 
-      # cleaned Title is first-pass group key (threads w/ subject-changes contain posts with both subjects + both subjects appear in overview listing)
+      # group by @title
       p[Title].do{|t|
-        # strip reply prefix
-        title = t[0].sub ReExpr, ''
+
+        title = t[0].sub ReExpr, '' # strip reply-prefix
 
         if threads[title] # add to group
           threads[title][Size] += 1
@@ -61,7 +62,7 @@ class R
         weight[a] ||= 0
         weight[a] += 1}}
 
-    # pass 2. cluster
+    # pass 2. finish thread/discussion resources
     threads.map{|title,post|
       # find heaviest recipient
       post[To].justArray.select{|t|t.respond_to? :uri}.sort_by{|a|weight[a.uri]}[-1].do{|to|
@@ -75,9 +76,9 @@ class R
                   Creator => post[Creator],
                   Image => post[Image],
                   Content => e.env[:grep] ? post[Content] : []}
-        # labels from subject text
+        # extract labels from subject text to RDF
         thread.update({Label => labels}) unless labels.empty?
-        # thread typetag and size-attribute
+        # if >1 post add discussion typetag and size-attribute
         thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
 
         # link resource to graph
