@@ -44,14 +44,18 @@ class R
       recipients = p[To].justArray.select{|r|r.respond_to? :uri}.map &:uri
       recipients.map{|r|graph.delete r}
 
-      # cleaned Title is first-pass index key (thread subject-changes still find all posts in thread but both subjects appear in summary)
+      # cleaned Title is first-pass group key (threads w/ subject-changes contain posts with both subjects + both subjects appear in overview listing)
       p[Title].do{|t|
-        title = t[0].sub ReExpr, '' # strip reply prefix
-        unless threads[title] # new group
-          p[Size] = 0         #  member-count
+        # strip reply prefix
+        title = t[0].sub ReExpr, ''
+
+        if threads[title] # add to group
+          threads[title][Size] += 1
+          threads[title][Creator].concat p[Creator]
+        else # initialize group
+          p[Size] = 1         #  member-count
           threads[title] = p  #  title
-        end
-        threads[title][Size] += 1}  # thread size
+        end}
 
       recipients.map{|a|            # address weight
         weight[a] ||= 0
@@ -61,9 +65,8 @@ class R
     threads.map{|title,post|
       # find heaviest recipient
       post[To].justArray.select{|t|t.respond_to? :uri}.sort_by{|a|weight[a.uri]}[-1].do{|to|
-        labels = [] # labels from subject text
-
-        # create resource pointing to post(s)
+        labels = []
+        # resource pointing to post(s)
         thread = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]),
                   Type => R[Post],
                   To => to,
@@ -72,9 +75,9 @@ class R
                   Creator => post[Creator],
                   Image => post[Image],
                   Content => e.env[:grep] ? post[Content] : []}
+        # labels from subject text
         thread.update({Label => labels}) unless labels.empty?
-
-        # add thread typetag and size-attribute
+        # thread typetag and size-attribute
         thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
 
         # link resource to graph
