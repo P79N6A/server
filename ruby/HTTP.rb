@@ -177,8 +177,8 @@ class R
       p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour-1)))
       n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
     end
-    env[:Links][:prev] = p + parts.join('/') + qs if p && R['//' + host + p].e
-    env[:Links][:next] = n + parts.join('/') + qs if n && R['//' + host + n].e
+    env[:Links][:prev] = p + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
+    env[:Links][:next] = n + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
 
     if path[-1] == '/' # container
       htmlFile = a 'index.html'
