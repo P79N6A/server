@@ -476,7 +476,7 @@ class R
             else
               yield u, R::Type, R[R::SIOC+'BlogPost']
               blogs = [resource.join('/')]
-              # include provenance of reblogs. as w/ http://cambridgehappenings.org
+              # include provenance of reblogs, as on http://cambridgehappenings.org
               blogs.push @base.R.join('/') if @base.R.host != resource.host
               blogs.map{|blog|
                 yield u, R::To, blog}
