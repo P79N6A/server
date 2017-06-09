@@ -475,7 +475,11 @@ class R
               yield u, R::To, R[resource.uri.match(commentRe).pre_match]
             else
               yield u, R::Type, R[R::SIOC+'BlogPost']
-              yield u, R::To, resource.join('/')
+              blogs = [resource.join('/')]
+              # include provenance of reblogs. as w/ http://cambridgehappenings.org
+              blogs.push @base.R.join('/') if @base.R.host != resource.host
+              blogs.map{|blog|
+                yield u, R::To, blog}
             end
 
             # media attachments
