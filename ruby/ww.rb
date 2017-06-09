@@ -59,7 +59,6 @@ class R < RDF::URI
   # URI constants
   W3    = 'http://www.w3.org/'
   Purl  = 'http://purl.org/'
-  FOAF  = "http://xmlns.com/foaf/0.1/"
   DC    = Purl + 'dc/terms/'
   SIOC  = 'http://rdfs.org/sioc/ns#'
   Schema = 'http://schema.org/'
@@ -84,7 +83,7 @@ class R < RDF::URI
   Label    = RDFs + 'label'
   Size     = Stat + 'size'
   Mtime    = Stat + 'mtime'
-  Container= W3   + 'ns/ldp#Container'
+  Container = W3  + 'ns/ldp#Container'
 
   Icons = {
     'uri' => :id,
@@ -94,20 +93,12 @@ class R < RDF::URI
     Label => :tag,
     Title => :title,
     Sound => :speaker,
-    FOAF+'Person' => :person,
     Image => :img,
     Size => :size,
     Mtime => :time,
     To => :user,
     Resource => :graph,
     DC+'hasFormat' => :file,
-    Atom+'self' => :graph,
-    Atom+'alternate' => :file,
-    Atom+'edit' => :pencil,
-    Atom+'replies' => :comments,
-    RSS+'link' => :link,
-    RSS+'guid' => :id,
-    RSS+'comments' => :comments,
     Schema+'location' => :location,
     SIOC+'BlogPost' => :pencil,
     SIOC+'Discussion' => :comments,
@@ -186,65 +177,6 @@ class R < RDF::URI
 
   %w{MIME HTML HTTP message search}.map{|r|require_relative r}
 
-  # scan for HTTP URIs in plain-text. example:
-  # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
-  # these decisions were made:
-  # opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s
-  # and , and . only match mid-URI to allow substitution of URLs with words in sentences. <> wrapped URIs are supported
-  Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
-  def triplrHref enc=nil
-    id = stripDoc.uri
-    yield id, Type, R[SIOC+'TextFile']
-    yield id, Content,
-    H({_: :pre, style: 'white-space: pre-wrap',
-        c: open(pathPOSIX).read.do{|r|
-          enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
-  end
-
-  def triplrUriList
-    open(pathPOSIX).readlines.map{|l|
-      yield l.chomp, Type, R[Resource] }
-  end
-
-  def uris
-    graph.keys.select{|u|u.match /^http/}.map &:R
-  end
-
-  def triplrMarkdown
-    s = stripDoc.uri
-    yield s, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H({_: :link, href: '/css/code.css', rel: :stylesheet, type: MIME[:css]})
-  end
-
-  def triplrOrg
-    require 'org-ruby'
-    yield stripDoc.uri, Content, Orgmode::Parser.new(r).to_html
-  end
-
-  def triplrCSV d
-    lines = CSV.read pathPOSIX
-    lines[0].do{|fields| # header-row
-      yield uri, Type, R[CSVns+'Table']
-      yield uri, CSVns+'rowCount', lines.size
-      lines[1..-1].each_with_index{|row,line|
-        row.each_with_index{|field,i|
-          id = uri + '#row:' + line.to_s
-          yield id, fields[i], field
-          yield id, Type, R[CSVns+'Row']}}}
-  end
-
-  def triplrRTF
-    yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs
-  end
-
-  def triplrTeX
-    yield stripDoc.uri, Content, `cat #{sh} | tth -r`
-  end
-
-  Abstract[SIOC+'TextFile'] = -> graph, subgraph, env {
-    subgraph.map{|id,data|
-      graph[id][DC+'hasFormat'] = R[id+'.html']
-      graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}}}
-
 end
 
 class RDF::URI
@@ -279,20 +211,3 @@ class String
   def sh; Shellwords.escape self end
 end
 
-module Redcarpet
-  module Render
-    class Pygment < HTML
-      def block_code(code, lang)
-        if lang
-          IO.popen("pygmentize -l #{lang.downcase.sh} -f html",'r+'){|p|
-            p.puts code
-            p.close_write
-            p.read
-          }
-        else
-          code
-        end
-      end
-    end
-  end
-end

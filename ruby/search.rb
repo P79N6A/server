@@ -58,8 +58,13 @@ class R
       docs[doc][u] = r}
 
     # store documents
-    docs.map{|doc,graph| doc = doc.R
-      unless doc.e
+    docs.map{|doc,graph|
+      doc = doc.R
+      if doc.e
+#        puts "cached #{doc}"
+      elsif doc.justPath.e
+#        puts "cached #{doc.justPath}"
+      else
         doc.w graph, true
         puts "+ " + doc.path
       end}
@@ -76,9 +81,14 @@ class R
         time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
         doc =  R["//localhost/#{time}#{slug}.ttl"]
-        unless doc.e
+        # store document
+        if doc.e
+#          puts "cached #{doc}"
+        elsif doc.justPath.e
+#          puts "cached #{doc.justPath}"
+        else
           doc.dir.mk
-          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # store resource
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
           puts "+ " + doc.path
         end
         true
