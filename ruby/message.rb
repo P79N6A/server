@@ -459,8 +459,8 @@ class R
           attrs = m[2]
           inner = m[3]
 
-          # find post identifier
-          u = (attrs.do{|a|a.match(reRDF)} || inner.match(reId) || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkAlt) || inner.match(reLinkRel)).do{|s|s[1]}
+          # find post id. try RDF identifier first, then <link> with 0 relation-attributes as it's less likely to be nonresolving gunk (tag: URI etc) than what's in <id> element
+          u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reId) || inner.match(reLinkCData) || inner.match(reLinkAlt) || inner.match(reLinkRel)).do{|s|s[1]}
 
           if u
 
