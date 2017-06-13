@@ -54,7 +54,7 @@ class R
     html.to_xhtml(:indent => 0)}
 
   def R.ungunk host
-    host.sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
+    (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
   end
 
   Render['text/html'] = -> graph,re,view=nil {

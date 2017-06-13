@@ -460,7 +460,7 @@ class R
           inner = m[3]
 
           # find post identifier
-          u = (inner.match(reId) || attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkAlt) || inner.match(reLinkRel)).do{|s|s[1]}
+          u = (attrs.do{|a|a.match(reRDF)} || inner.match(reId) || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkAlt) || inner.match(reLinkRel)).do{|s|s[1]}
 
           if u
 
