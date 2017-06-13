@@ -432,12 +432,12 @@ class R
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
 
         # identifiers
-        reId = /<(?:gu)?id[^>]*>([^<]+)/           # <id> element innertext
-        reRDF = /about=["']?([^'">\s]+)/           # RDF @about
-        reLink = /<link>([^<]+)/                   # <link> element innertext
-        reLinkCData = /<link><\!\[CDATA\[([^\]]+)/ # <link> CDATA block innertext
-        reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> href @rel=alternate
-        reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href attribute
+        reRDF = /about=["']?([^'">\s]+)/              # RDF @about
+        reLink = /<link>([^<]+)/                      # <link> element
+        reLinkCData = /<link><\!\[CDATA\[([^\]]+)/    # <link> CDATA block
+        reLinkHref = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @href @rel=alternate
+        reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
+        reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
 
         # media links
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
@@ -460,7 +460,7 @@ class R
           inner = m[3]
 
           # find post id. try RDF identifier, then <link> as it's more likely to be resolving hyperlink than gunk (tag: URI etc) in <id> element
-          u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkAlt) || inner.match(reId) || inner.match(reLinkRel)).do{|s|s[1]}
+          u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
 
           if u
 
