@@ -99,22 +99,31 @@ class R
                  (nextPage unless re.q.has_key? 'abbr'),
                  '<br clear=all>',expand]}]}]}
   
-  # RDF types shown by default view no matter what
+  # RDF types used by default view
   InlineMeta = [Mtime, Type, Title, Image, Content, Label]
-  # RDF types collapsed in summarized view
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',"http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+
+  # RDF types collapsed in abbreviated view
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat',
+                 RSS+'comments', RSS+'em', RSS+'category',
+                 Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',
+                 "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
   
   TabularView = -> g, e {
     titles = {}
+    # sorting attribute
     p = e.env[:sort]
+    # sorting direction
     direction = e.q.has_key?('ascending') ? :id : :reverse
+    # sorting datatype
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    
-    # show typetag first
+    # columns
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+    # show typetag first
     keys = [Type, *(keys - InlineMeta)]
+    # abbreviate
     keys -= VerboseMeta unless e.q.has_key? 'full'
-
+    # render
     [{_: :style, c: "[property=\"#{p}\"] {border-color:#eee;border-style: solid; border-width: 0 0 .1em 0}"},
      {_: :table,
      c: [{_: :tbody,
@@ -171,14 +180,14 @@ class R
           keys.map{|k|
             [{_: :td, property: k,
               c: case k
-                 when 'uri' # URI/Title/body/link fields consumed to reduce column-bloat
-                   [# labels
+                 when 'uri'
+                   [# label
                      l[Label].justArray.map{|v|
                        label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                        lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                        e.env[:label][lbl] = true
                        [{_: :a, href: href, name: lbl, c: label},' ']},
-                     # Title
+                     # title
                      (if title
                       {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
                      elsif fileResource
@@ -191,13 +200,17 @@ class R
                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
                          group = R.ungunk (host||'')
-                         e.env[:label][group] = true
-                         {name: group, class: :links,
-                          c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
-                                [{_: :a, href: link.uri, c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)}.
-                                   update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
+                         unless %w{t.co tinyurl}.member? group
+                           e.env[:label][group] = true
+                           {name: group, class: :links,
+                            c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
+                                  [{_: :a, href: link.uri, c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)}.
+                                     update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}
+                         end
+                       }},
                      # body
-                     l[Content].justArray.map{|c| monospace ? {_: :pre, c: c} : c },
+                     l[Content].justArray.map{|c|
+                       monospace ? {_: :pre, c: c} : c },
                      # images
                      (['<br>', {_: :a, href: href,
                                 c: {_: :img, class: :thumb,
