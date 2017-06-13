@@ -459,7 +459,7 @@ class R
           attrs = m[2]
           inner = m[3]
 
-          # find post id. try RDF identifier, then <link> as it's more likely to be resolving hyperlink than gunk (tag: URI etc) in <id> element
+          # find post id. try RDF identifier then <link> as they're more likely to be a resolving hyperlink than gunk (tag: URI etc) in <id> element
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
 
           if u
