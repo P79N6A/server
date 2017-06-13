@@ -329,6 +329,7 @@ class R
   rescue Exception => e
     puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
   end
+  alias_method :getFeed, :fetchFeed
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method  :feeds, :listFeeds
@@ -400,6 +401,7 @@ class R
                  RSS+'description' => Content,
                  RSS+'encoded' => Content,
                  RSS+'modules/content/encoded' => Content,
+                 RSS+'category' => Label,
                  RSS+'modules/slash/comments' => SIOC+'num_replies',
                  Atom+'content' => Content,
                  Atom+'summary' => Content,
@@ -430,11 +432,11 @@ class R
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
 
         # identifiers
-        reRDFid = /about=["']?([^'">\s]+)/            # RDF @about
-        reGUID = /<(?:gu)?id[^>]*>([^<]+)/            # <id> element innertext
-        reLink = /<link>([^<]+)/                      # <link> element innertext
-        reLinkCD = /<link><\!\[CDATA\[([^\]]+)/       # <link> CDATA block innertext
-        reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> href attribute of type rel=alternate
+        reId = /<(?:gu)?id[^>]*>([^<]+)/           # <id> element innertext
+        reRDF = /about=["']?([^'">\s]+)/           # RDF @about
+        reLink = /<link>([^<]+)/                   # <link> element innertext
+        reLinkCData = /<link><\!\[CDATA\[([^\]]+)/ # <link> CDATA block innertext
+        reLinkAlt = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> href @rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> href attribute
 
         # media links
@@ -458,12 +460,11 @@ class R
           inner = m[3]
 
           # find post identifier
-          u = (attrs.do{|a|a.match(reRDFid)} ||
-               inner.match(reLink) || inner.match(reLinkCD) || inner.match(reLinkAlt) || inner.match(reLinkRel) || inner.match(reGUID)).do{|s|s[1]}
+          u = (inner.match(reId) || attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkAlt) || inner.match(reLinkRel)).do{|s|s[1]}
 
           if u
 
-            unless u.match /^http/ # bind paths to full URI
+            unless u.match /^http/ # resolve relative reference
               u = (URI.join @base, u).to_s
             end
 
