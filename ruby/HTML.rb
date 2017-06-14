@@ -73,6 +73,11 @@ class R
     expand = {_: :a, id: :down, href: (R.qs re.q.reject{|k|k=='abbr'}.merge({'full' => ''})), class: :expand, c: "&#9660;"} if (dir || e[:glob]) && !re.q.has_key?('full')
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
+    size = graph.keys.size
+    images = graph.keys.grep /\.(jpg|png)$/i
+    renderer = (images.size.to_f / size.to_f) > 0.96 ? ImageView : TabularView
+    data = renderer == ImageView ? images : graph
+    # render
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -90,7 +95,7 @@ class R
                  (prevPage && prevPage.merge({id: :prevpage})),
                  (nextPage && nextPage.merge({id: :nextpage})),
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
-                 TabularView[graph,re],
+                 renderer[data,re],
                  {_: :script, c: R['/js/ui.js'].r},
                  {_: :style, c: e[:label].map{|name,_|
                         "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
@@ -108,7 +113,12 @@ class R
                  Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
-  
+  ImageView = -> images, e {
+    images.map{|image|
+      {_: :a, href: image, c: {_: :img, class: :thumb, src: '/thumbnail' + image.R.path}}
+    }
+  }
+
   TabularView = -> g, e {
     titles = {}
     # sorting attribute

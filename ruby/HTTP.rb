@@ -201,7 +201,7 @@ class R
           # want at least 1 result and a lookahead-node for start of next page
           count = 2 if count < 2
           orient = q.has_key?('asc') ? :asc : :desc
-          (take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
+          ((exist? ? self : justPath).take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
             if q['offset'] && head = s[0] # direction-reversal link
               env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
             end
