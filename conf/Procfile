@@ -1,2 +1,0 @@
-HTTP: thin -rww --threaded -p 80 start
-HTTPS: thin -rww --threaded --ssl -p 443 --ssl-key-file /etc/ssl/localcerts/server.key --ssl-cert-file /etc/ssl/localcerts/server.crt start
