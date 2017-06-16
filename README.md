@@ -1,9 +1,5 @@
-# SOURCE
-``` sh
-git clone https://gitlab.com/ix/pw.git
-```
 # INSTALL
-## dependencies (distro-specific)
+## dependencies
 ``` sh
 # debian http://www.debian.org/
 apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
@@ -17,10 +13,10 @@ packages install autoconf automake binutils clang file findutils git iconv pkg-c
 ## dependencies (ruby)
 ``` sh
 cd pw/ruby
-gem install bundler # if missing
+gem install bundler
 bundle config build.nokogiri --use-system-libraries
-bundle install # third-party libraries
-ruby install   # this
+bundle install
+ruby install
 cd ../..
 ```
 # CONFIG (adjust to taste)
