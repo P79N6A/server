@@ -110,17 +110,29 @@ class R
 
     # lazy body-serialize, uncalled on HEAD and client-side cache hit via ETag match
     condResponse ->{
-      if set.size==1 && format == set[0].mime
+      if set.size==1 && set[0].mime == format
         set[0] # static response
       else # compile response
-
         base = @r.R.join uri
         graph = RDF::Graph.new
         # gather document graphs
         set.map{|file|
-          graph.load file.pathPOSIX, :base_uri => base}
+          if file.file?
+            if RDF::Reader.for :content_type => file.mime
+              graph.load file.pathPOSIX, :base_uri => base
+            else
+              puts "no reader for #{file} type #{file.mime}"
+            end
+          end
+        }
         # output
-        g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
+        if format=='text/html'
+          "HTML"
+        elsif writer = (RDF::Writer.for :content_type => format)
+          graph.dump writer.to_sym, :base_uri => base, :standard_prefixes => true
+        else
+          "no writer for #{format}"
+        end
       end}
   end
 
@@ -203,37 +215,24 @@ class R
         end
         s }
     else
-      [self,justPath].uniq.map{|base|base.a('*').glob}.flatten      
+      [self,justPath].uniq.map{|base|base.a('.*').glob}.flatten      
     end
   end
   
-  def readFile parseJSON=false
-    if f
-      if parseJSON
-        JSON.parse File.open(pathPOSIX).read
-      else
-        File.open(pathPOSIX).read
-      end
-    else
-      nil
-    end
-  rescue
-    nil
+  def readFile
+    File.open(pathPOSIX).read if f
   end
-  alias_method :r, :readFile
 
   def appendFile line
     dir.mk
     File.open(pathPOSIX,'a'){|f|f.write line + "\n"}
   end
 
-  def writeFile o,s=false
+  def writeFile o
     dir.mk
-    File.open(pathPOSIX,'w'){|f|
-      f << (s ? o.to_json : o)}
+    File.open(pathPOSIX,'w'){|f|f << o}
     self
   end
-  alias_method :w, :writeFile
 
   def mkdir
     e || FileUtils.mkdir_p(pathPOSIX)
