@@ -279,29 +279,6 @@ class R
 
   Abstract[Sound] = -> graph, g, e {graph['#audio'] = {Type => R[Sound+'Player']}} # add player
 
-  GET['thumbnail'] = -> e {
-    thumb = nil
-    path = e.path.sub /^.thumbnail/, ''
-    i = R['//' + e.host + path]
-    i = R[path] unless i.file? && i.size > 0
-    if i.file? && i.size > 0
-      if i.ext.match /SVG/i
-        thumb = i
-      else
-        thumb = i.dir.child '.' + i.basename + '.png'
-        if !thumb.e
-          if i.mime.match(/^video/)
-            `ffmpegthumbnailer -s 360 -i #{i.sh} -o #{thumb.sh}`
-          else
-            `gm convert #{i.ext.match(/^jpg/) ? 'jpg:' : ''}#{i.sh} -thumbnail "360x360" #{thumb.sh}`
-          end
-        end
-      end
-      thumb && thumb.e && thumb.setEnv(e.env).fileGET || e.notfound
-    else
-      e.notfound
-    end}
-
   def triplrImage &f
     yield uri, Type, R[Image]
   end

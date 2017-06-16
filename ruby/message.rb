@@ -105,17 +105,6 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-  GET['thread'] = -> e { # construct thread
-    m = {}
-    R[MessagePath[e.uri.split('/thread/')[1]]].walk SIOC+'reply_of', m # recursive walk
-    return e.notfound if m.empty?                                      # nothing found
-    e.env[:Response]['ETag'] = [m.keys.sort, e.format].join.sha1
-    e.env[:Response]['Content-Type'] = e.format + '; charset=UTF-8'
-    e.condResponse ->{
-      m.values[0][Title].justArray[0].do{|t| e.env[:title] = t.sub ReExpr, '' }
-      Grep[m,e] if e.q.has_key? 'q'
-      Render[e.format].do{|p|p[m,e]} ||
-        m.toRDF.dump(RDF::Writer.for(:content_type => e.format).to_sym, :standard_prefixes => true)}}
 
   def triplrIRC &f
     doc = uri.gsub('#','%23').R

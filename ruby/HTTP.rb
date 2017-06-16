@@ -58,8 +58,6 @@ class R
       @r[:walk] = true if q.has_key? 'walk'
       @r[:sort] = q['sort'] || Date
 
-      # custom handler or default response
-      GET[path[1..-1].split('/')[0]].do{|handler| handler[self].do{|r| return r }}
       response
     end
   end
@@ -71,6 +69,31 @@ class R
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     condResponse ->{ self }
   end
+
+=begin
+  GET['thumbnail'] = -> e {
+    thumb = nil
+    path = e.path.sub /^.thumbnail/, ''
+    i = R['//' + e.host + path]
+    i = R[path] unless i.file? && i.size > 0
+    if i.file? && i.size > 0
+      if i.ext.match /SVG/i
+        thumb = i
+      else
+        thumb = i.dir.child '.' + i.basename + '.png'
+        if !thumb.e
+          if i.mime.match(/^video/)
+            `ffmpegthumbnailer -s 360 -i #{i.sh} -o #{thumb.sh}`
+          else
+            `gm convert #{i.ext.match(/^jpg/) ? 'jpg:' : ''}#{i.sh} -thumbnail "360x360" #{thumb.sh}`
+          end
+        end
+      end
+      thumb && thumb.e && thumb.setEnv(e.env).fileGET || e.notfound
+    else
+      e.notfound
+    end}
+=end
 
   def response
     # enter container/ so we can include children with relative URIs
@@ -236,9 +259,6 @@ class R
         files.push doc.setEnv(@r) if doc.e}}
     files
   end
-
-  GET['now'] = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/') + (e.path[5..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
-  GET['d']   = -> e {[303, e.env[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/')    + (e.path[3..-1] || '') + '?' + (e.env['QUERY_STRING']||'')}), []]}
   
   def readFile parseJSON=false
     if f
