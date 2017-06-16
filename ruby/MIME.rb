@@ -22,80 +22,6 @@ class R
          end
        end )
   end
-
-  MIME={
-    '3gpp' => 'audio/3gpp',
-    'aif' => 'audio/aif',
-    'asc' => 'text/plain',
-    'atom' => 'application/atom+xml',
-    'avi' => 'video/avi',
-    'bz2' => 'application/bzip2',
-    'e' => 'application/json+rdf',
-    'eml' => 'message/rfc822',
-    'coffee' => 'text/plain',
-    'conf' => 'text/plain',
-    'css' => 'text/css',
-    'csv' => 'text/csv',
-    'eps' => 'application/postscript',
-    'flv' => 'video/flv',
-    'for' => 'application/fortran',
-    'gemspec' => 'application/ruby',
-    'gif' => 'image/gif',
-    'go' => 'text/x-c',
-    'gz' => 'application/gzip',
-    'haml' => 'application/haml',
-    'hs' => 'application/haskell',
-    'html' => 'text/html',
-    'ico' => 'image/x-ico',
-    'ini' => 'application/ini',
-    'jpeg' => 'image/jpeg',
-    'jpg' => 'image/jpeg',
-    'jpg-large' => 'image/jpeg',
-    'js' => 'application/javascript',
-    'json' => 'application/json',
-    'jsonld' => 'application/ld+json',
-    'log' => 'text/log',
-    'm4a' => 'audio/mp4',
-    'markdown' => 'text/markdown',
-    'md' => 'text/markdown',
-    'mkv' => 'video/matroska',
-    'mp3' => 'audio/mpeg',
-    'mp4' => 'video/mp4',
-    'mpg' => 'video/mpg',
-    'n3' => 'text/n3',
-    'nfo' => 'text/nfo',
-    'nt' => 'text/ntriples',
-    'org' => 'application/org',
-    'owl' => 'application/rdf+xml',
-    'pdf' => 'application/pdf',
-    'php' => 'application/php',
-    'pl' => 'application/perl',
-    'pm' => 'application/perl',
-    'png' => 'image/png',
-    'ps' => 'application/postscript',
-    'py' => 'application/python',
-    'rb' => 'application/ruby',
-    'rev' => 'text/uri-list+index',
-    'ru' => 'application/ruby',
-    'rdf' => 'application/rdf+xml',
-    'rss' => 'application/atom+xml',
-    'rtf' => 'text/rtf',
-    'ssv' => 'text/semicolon-separated-values',
-    't' => 'application/perl',
-    'tex' => 'text/x-tex',
-    'tsv' => 'text/tab-separated-values',
-    'ttf' => 'font/truetype',
-    'ttl' => 'text/turtle',
-    'txt' => 'text/plain',
-    'u' => 'text/uri-list',
-    'url' => 'text/plain',
-    'wav' => 'audio/wav',
-    'webp' => 'image/webp',
-    'wmv' => 'video/wmv',
-    'xlsx' => 'application/excel',
-    'xml' => 'application/atom+xml',
-    'zip' => 'application/zip',
-  }
   
   MIMEsource={
     'application/atom+xml' => [:triplrFeed],
@@ -123,14 +49,6 @@ class R
     'text/uri-list'        => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
   }
-
-  def triplrMIME &b
-    mime.do{|mime|
-      (MIMEsource[mime]||                # exact match
-       MIMEsource[mime.split(/\//)[0]]|| # category
-       :triplrFile).do{|s|               # nothing found, basic file metadata
-        send *s,&b }}
-  end
 
   def triplrContainer
     dir = path || ''
@@ -168,6 +86,7 @@ class R
   def triplrAudio &f
     yield uri, Type, R[Sound]
   end
+
   # scan for HTTP URIs in plain-text. example:
   # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
   # these decisions were made:
@@ -227,49 +146,6 @@ class R
     subgraph.map{|id,data|
       graph[id][DC+'hasFormat'] = R[id+'.html']
       graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}}}
-
-  # graph as JSON:
-  # {subjURI(str) => {predURI(str) => [objectA..]}}
-
-  # tripleStream -> Graph
-  def fromStream m,*i
-    send(*i) do |s,p,o|
-      m[s] = {'uri' => s} unless m[s].class == Hash 
-      m[s][p] ||= []
-      m[s][p].push o unless m[s][p].class != Array || m[s][p].member?(o)
-    end
-    m
-  end
-
-  # normalize file references to RDF-file references, transcode as needed
-  def justRDF pass = %w{e} # whitelisted formats. by default our native JSON format optimized for speed
-    if pass.member? node.realpath.do{|p|p.extname[1..-1]} # already RDF
-      self # return
-    else # non RDF, transcode
-      h = uri.sha1
-      doc = R['/cache/RDF/'+h[0..2]+'/'+h[3..-1]+'.e'].setEnv @r
-      doc.w fromStream({},:triplrMIME),true unless doc.e && doc.m > m # cache check
-      doc
-    end
-  end
-  
-  # file -> Graph
-  def loadGraph graph
-    return unless e
-    justRDF.do{|f| # maybe transcode to RDF
-      ((f.r true)||{}). # read JSON file
-        triples{|s,p,o| # add triples to graph
-        graph[s] ||= {'uri' => s}
-        graph[s][p] = (graph[s][p]||[]).justArray.push o
-      }}
-    graph
-  end
-
-  # files -> Graph
-  def graph graph = {}
-    documents.map{|d|d.loadGraph graph}
-    graph
-  end
 
   def to_json *a
     {'uri' => uri}.to_json *a

@@ -37,16 +37,11 @@ class R
 
   def notfound
     @r[404]=true
-    [404,{'Content-Type' => format},
-     [Render[format].do{|fn|fn[graph,self]} ||
-      graph.toRDF(self).dump(RDF::Writer.for(:content_type => format).to_sym)]]
+    [404,{'Content-Type' => format},[]]
   end
 
   def GET
-
-    if file? # static response
-      fileGET
-    elsif justPath.file?
+    if justPath.file?
       justPath.fileGET
     else
 
@@ -113,39 +108,19 @@ class R
     @r[:Response].update({'Content-Type' => format,
                           'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
-    # lazy body-serialize, uncalled on HEAD and ETag hit
+    # lazy body-serialize, uncalled on HEAD and client-side cache hit via ETag match
     condResponse ->{
-      # if set has one file and its MIME won preference
       if set.size==1 && format == set[0].mime
         set[0] # static response
       else # compile response
 
-        # loader lambda
-        loadGraph = -> {
-          graph = {}
-          set.map{|r|r.loadGraph graph}
-          unless q.has_key? 'full'
-            Summarize[graph,self] if @r[:glob] || container || q.has_key?('abbr')
-            Grep[graph,self] if @r[:grep]
-          end
-          graph}
-
-        if %w{application/atom+xml application/json text/html text/uri-list}.member? format
-          # return serialized non-RDF
-          Render[format][loadGraph[],self]
-        else # RDF format
-          base = @r.R.join uri
-          if container # summarize contained graph
-            g = loadGraph[].toRDF
-          else # full RDF graph
-            g = RDF::Graph.new
-            set.map{|f|
-              f.justRDF(%w{e html jsonld n3 nt owl rdf ttl}).do{|doc|
-                g.load doc.pathPOSIX, :base_uri => base}} # load RDF data
-          end
-          # return serialized RDF
-          g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
-        end
+        base = @r.R.join uri
+        graph = RDF::Graph.new
+        # gather document graphs
+        set.map{|file|
+          graph.load file.pathPOSIX, :base_uri => base}
+        # output
+        g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
       end}
   end
 
