@@ -1,3 +1,0 @@
-#!/usr/bin/env ruby
-require 'uri'
-exec "mutt \"#{URI.unescape ARGV[0]}\""

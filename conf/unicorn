@@ -1,2 +1,0 @@
-#!/bin/sh
-unicorn -rww -o 127.0.0.1 -p 8000 --no-default-middleware
