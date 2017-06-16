@@ -113,21 +113,28 @@ class R
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # compile response
+        puts set.join " "
         base = @r.R.join uri
         graph = RDF::Graph.new
         # gather document graphs
         set.map{|file|
           if file.file?
             if RDF::Reader.for :content_type => file.mime
+              puts "load RDF #{file}"
               graph.load file.pathPOSIX, :base_uri => base
             else
               puts "no reader for #{file} type #{file.mime}"
             end
+          else
+            puts "not a file: #{file}"
           end
         }
         # output
         if format=='text/html'
-          "HTML"
+          g = {}
+          puts "Render HTML"
+          graph.each_triple{|s,p,o|puts s,p,o}
+          "HHHTML"
         elsif writer = (RDF::Writer.for :content_type => format)
           graph.dump writer.to_sym, :base_uri => base, :standard_prefixes => true
         else
