@@ -328,17 +328,16 @@ class R
       k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end
 
-  # memoized response-MIME
   def format; @format ||= selectFormat end
+
   def selectFormat
-    # explicit URI suffix
-    { '.html' => 'text/html', '.json' => 'application/json', '.ttl' => 'text/turtle'}[File.extname(env['REQUEST_PATH'])].do{|m|return m}
-    # environment (request header-fields)
-    accept.sort.reverse.map{|q,mimes| # highest Qval bound first
-      # if multiple MIMEs remain, tiebreak
-      mimes.sort_by{|m|{'text/html' => 0, 'text/turtle' => 1}[m]||2}.map{|mime|
-        return mime if R::Render[mime]||RDF::Writer.for(:content_type => mime)}} # renderer exists
-    'text/html' # default
+    { '.html' => 'text/html',
+      '.json' => 'application/json',
+      '.ttl' => 'text/turtle'}[File.extname(env['REQUEST_PATH'])].do{|m|return m} # URI suffix mapping
+    accept.sort.reverse.map{|q,formats|
+      formats.map{|mime|
+        return mime if R::Render[mime] || RDF::Writer.for(:content_type => mime)}} # renderer found
+    'text/html'
   end
   
   end
