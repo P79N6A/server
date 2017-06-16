@@ -137,29 +137,6 @@ class R
     puts 'error scanning IRC log ' + uri
   end
 
-  def twGET; indexStream :triplrTwitter end
-
-  def triplrTwitter
-    base = 'https://twitter.com'
-    nokogiri.css('div.tweet > div.content').map{|t|
-      s = base + t.css('.js-permalink').attr('href') # subject URI
-      author = R[base+'/'+t.css('.username b')[0].inner_text]
-      yield s, Type, R[SIOC+'Tweet']
-      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
-      yield s, Creator, author
-      content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # resolve paths with remote base
-        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
-        yield s, DC+'link', R[a.attr 'href']
-      }
-      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
-  end
-
-  def tw
-    node.readlines.shuffle.each_slice(22){|s|
-      R['https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].twGET}
-  end
-
   def triplrMailIndexer &f; indexStream :triplrMail, &f end
 
   def triplrMail &b
@@ -281,7 +258,6 @@ class R
       end }
   end
 
-  # fetch Atom/RSS feed(s) (cached)
   def fetchFeeds
     uris.map &:fetchFeed
     self
@@ -295,8 +271,6 @@ class R
     priorMtime = nil               # cached mtime value
     body = cache.child 'body.atom' # cached body URI
 
-    # prefer etag over mtime for version-match
-    #  https://tools.ietf.org/html/rfc7232#section-3.3
     if etag.e
       priorEtag = etag.r
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -305,19 +279,15 @@ class R
       head["If-Modified-Since"] = priorMtime.httpdate
     end
 
-    begin # run conditional GET
-      open(uri, head) do |response| # got a new response
-        # read headers
+    begin # conditional GET
+      open(uri, head) do |response|
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now rescue Time.now
-        # write any changes to header-cache
         etag.w curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
         mtime.w curMtime.iso8601 if curMtime != priorMtime
-        # read body
         resp = response.read
-        unless body.e && body.r == resp # cache hit
-          # new body, pass to indexer  on cache miss
-          body.w resp
+        unless body.e && body.r == resp
+          body.w resp # store to local file
           ('file://'+body.pathPOSIX).R.indexResource :format => :feed, :base_uri => uri
         end
       end
@@ -361,7 +331,7 @@ class R
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end      
 
       def each_statement &fn # triples flow from right to left across stacked stream-transformers
-        rebaseURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
+        resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
                                                                              R::StripHTML[o]
@@ -372,23 +342,19 @@ class R
                                                          l), :graph_name => s.R)}
       end
 
-      def rebaseURIs *f
+      def resolveURIs *f
         send(*f){|s,p,o|
-          # find Content field
-          if p==Content && o.class==String
+          if Content==p && o.class==String
             content = Nokogiri::HTML.fragment o
-            # resolve relative-URIs with remote base
             content.css('a').map{|a|
               a.set_attribute 'href', (URI.join s, (a.attr 'href')) if a.has_attribute? 'href' rescue nil}
-            # emit link element as triple
             content.css('span > a').map{|a|
               if a.inner_text=='[link]'
                 yield s, DC+'link', a.attr('href').R 
                 a.remove
               end}
-            # serialize HTML and emit
             yield s, p, content.to_xhtml
-          else # unmodified
+          else
             yield s, p, o
           end
         }
@@ -556,7 +522,5 @@ class R
       r.each_triple{|s,p,o|
         yield s.to_s, p.to_s, o.class == R ? o : o.value}}
   end
-
-  SlugStopper = /\b(at|blog|com(ments)?|html|info|medium|org|photo|p|post|r|rss|source|status|tag|twitter|utm|wordpress|www|1999|2005)\b/
 
 end

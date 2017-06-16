@@ -28,30 +28,12 @@ class R
     graph.map{|u,r| this = u.R    # visit resources
       doc = u.split('#')[0].R.stripDoc.a('.e').uri # storage location
       r[Date].do{|t|              # timestamp
-        if this.host              # global-location resource
-          # change doc location to our host as remote-host requests normally flow to someone else's server, not /domain
-          slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
+        if this.host
+          slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time-parts
           doc = "//localhost/#{time}#{slug}e"
         else # local resource
-          # document already local path, no need to update location to localize
-
-          # index inbound triples
           r[Re].justArray.map{|o|this.index o}
-
-          # resource summary for index
-          s = {'uri' => r.uri}   # summary resource
-          [Type,Date,Creator,To,Title,DC+'identifier',Image].map{|p| r[p].do{|o| s[p]=o }} # preserved properties
-          s[Content]=r[Content] if r.types.member? SIOC+'Tweet' # keep tiny content values
-          summary = {r.uri => s} # summary graph
-
-          # link summary to index container
-          month = t[0][0..7].gsub '-','/' # month slug
-          [To,Creator].map{|p|    # address predicates
-          r[p].justArray.map{|a|  # address objects
-            if a.respond_to? :uri # identifier please
-              docs[a.R.dir.child(month+r.uri.sha1[0..12]+'.e').uri] = summary
-            end}}
         end }
       # add resource to document
       docs[doc] ||= {}
@@ -61,16 +43,15 @@ class R
     docs.map{|doc,graph|
       doc = doc.R
       if doc.e
-#        puts "cached #{doc}"
       elsif doc.justPath.e
-#        puts "cached #{doc.justPath}"
       else
         doc.w graph, true
         puts "+ " + doc.path
       end}
 
-    # emit triples if consumer exists
+    # emit triples to consumer
     graph.triples &b if b
+
     self
   end
 
@@ -79,21 +60,16 @@ class R
     g.each_graph.map{|graph|
       graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
         time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-        slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').gsub(SlugStopper,'').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
+        slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
         doc =  R["//localhost/#{time}#{slug}.ttl"]
-        # store document
         if doc.e
-#          puts "cached #{doc}"
         elsif doc.justPath.e
-#          puts "cached #{doc.justPath}"
         else
           doc.dir.mk
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
           puts "+ " + doc.path
         end
-        true
-      } || puts("warning, #{uri} missing timestamp")
-    }
+        true}}
     self
   rescue Exception => e
     puts uri, e.class, e.message , e.backtrace[0..2]
