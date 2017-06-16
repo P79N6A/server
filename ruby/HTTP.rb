@@ -204,48 +204,43 @@ class R
     env[:Links][:next] = n + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
 
     if path[-1] == '/' # container
-      htmlFile = a 'index.html'
-      if format=='text/html' && !env['REQUEST_URI'].match(/\?/) && htmlFile.e # HTML requested and exists + null query argument
-         [htmlFile.setEnv(env)] # static container-index
-      else # dynamic container
-        if env[:find] # match name
-          query = q['find']
-          expression = '-iregex ' + ('.*' + query + '.*').sh
-          size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
-          freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-          locs.map{|loc|
-            `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
-        elsif env[:grep] # match content
-          locs.map{|loc|
-            `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
-        elsif env[:walk]
-          count = (q['c'].do{|c|c.to_i} || 12) + 1
-          count = 1024 if count > 1024
-          # at least 1 result plus lookahead-node startpoint of next page
-          count = 2 if count < 2
-          orient = q.has_key?('asc') ? :asc : :desc
-          ((exist? ? self : justPath).take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
-            if q['offset'] && head = s[0] # direction-reversal link
-              env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-            end
-            if edge = s.size >= count && s.pop # lookahead node, and therefore another page, exists. point to it
-              env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
-            end
-            s }
-        else # basic container
-          childnodes = locs.-(['/'.R]).map(&:c).flatten
-          if childnodes.size < 512
-            childnodes.map{|c|c.setEnv env}
-            documents.concat childnodes
-          else
-            documents
+      if env[:find] # match name
+        query = q['find']
+        expression = '-iregex ' + ('.*' + query + '.*').sh
+        size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+        freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+        locs.map{|loc|
+          `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
+      elsif env[:grep] # match content
+        locs.map{|loc|
+          `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
+      elsif env[:walk]
+        count = (q['c'].do{|c|c.to_i} || 12) + 1
+        count = 1024 if count > 1024
+        # at least 1 result plus lookahead-node startpoint of next page
+        count = 2 if count < 2
+        orient = q.has_key?('asc') ? :asc : :desc
+        ((exist? ? self : justPath).take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
+          if q['offset'] && head = s[0] # direction-reversal link
+            env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
           end
+          if edge = s.size >= count && s.pop # lookahead node at next-page start
+            env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
+          end
+          s }
+      else # basic container
+        childnodes = locs.-(['/'.R]).map(&:c).flatten
+        if childnodes.size < 512
+          childnodes.map{|c|c.setEnv env}
+          documents.concat childnodes
+        else
+          documents
         end
       end
     else
       if env[:glob] # name pattern
         paths.map{|pat|pat.glob.select &:inside}.flatten
-      else # basic resource
+      else
         stripDoc.documents
       end
     end
@@ -254,7 +249,7 @@ class R
   def documents
     files = []
     [self,justPath].uniq.map{|base| files.push base if base.e # exact hit
-      %w{e html md ttl txt}.map{|suffix| # suffixes
+      %w{e html md pdf ttl txt}.map{|suffix| # suffixes
         doc = base.a '.'+suffix
         files.push doc.setEnv(@r) if doc.e}}
     files

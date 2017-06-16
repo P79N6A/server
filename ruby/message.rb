@@ -129,20 +129,18 @@ class R
   def triplrMailIndexer &f; indexStream :triplrMail, &f end
 
   def triplrMail &b
-    m = Mail.read node # call parser
+    m = Mail.read node
     return unless m
 
-    # mint identifier for message
     id = m.message_id || m.resent_message_id
     unless id
       puts "missing Message-ID in #{uri}"
       id = rand.to_s.sha1
     end
 
-    # emit graph-ized data as RDF triples
     e = MessagePath[id]
     yield e, DC+'identifier', id
-    yield e, DC+'source', self # reference to origin-file
+    yield e, DC+'source', self
     yield e, Type, R[SIOC+'MailMessage']
 
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
