@@ -9,12 +9,15 @@ class R
        else
          t = ((File.extname p)[1..-1] || '').downcase
          if p.directory?
-           "inode/directory"
+           'inode/directory'
          elsif (File.basename p).index('msg.')==0
-           "message/rfc822"
+           'message/rfc822'
+         elsif t=='ttl'
+           'text/turtle'
          elsif Rack::Mime::MIME_TYPES['.'+t]
            Rack::Mime::MIME_TYPES['.'+t]
          else
+           puts "#{p} missing extension, sniffing content (WARNING SLOW)"
            `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
          end
        end )

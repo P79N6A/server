@@ -44,15 +44,10 @@ class R
     if justPath.file?
       justPath.fileGET
     else
-
-      # options
-      stars = uri.scan('*').size
       @r[:find] = true if q.has_key? 'find'
-      @r[:glob] = true if stars > 0 && stars <= 3
       @r[:grep] = true if q.has_key? 'q'
       @r[:walk] = true if q.has_key? 'walk'
       @r[:sort] = q['sort'] || Date
-
       response
     end
   end
@@ -99,7 +94,6 @@ class R
       return [301, @r[:Response], []]
     end
 
-    # find data
     set = nodeset
     return notfound if !set || set.empty?
 
@@ -108,7 +102,7 @@ class R
     @r[:Response].update({'Content-Type' => format,
                           'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
-    # lazy body-serialize, uncalled on HEAD and client-side cache hit via ETag match
+    # lazy body-serialize, uncalled on HEAD and client-side cache hit (ETag match)
     condResponse ->{
       if set.size==1 && set[0].mime == format
         set[0] # static response
@@ -119,8 +113,9 @@ class R
         # gather document graphs
         set.map{|file|
           if file.file?
-            if RDF::Reader.for :content_type => file.mime
-              puts "load RDF #{file}"
+            reader = (RDF::Reader.for :content_type => file.mime)
+            if reader
+              puts "load RDF #{file} #{file.mime} from #{file.pathPOSIX} as #{reader}"
               graph.load file.pathPOSIX, :base_uri => base
             else
               puts "no reader for #{file} type #{file.mime}"
@@ -130,7 +125,7 @@ class R
           end
         }
         # output
-        if format=='text/html'
+        if format=='tex t/html'
           g = {}
           puts "Render HTML"
           graph.each_triple{|s,p,o|puts s,p,o}
@@ -222,7 +217,7 @@ class R
         end
         s }
     else
-      [self,justPath].uniq.map{|base|base.a('.*').glob}.flatten      
+      [self,justPath].uniq.map{|base|base.a('*').glob}.flatten      
     end
   end
   

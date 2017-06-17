@@ -20,25 +20,6 @@ class Hash
         o.justArray.map{|o|yield s,p,o} if p != 'uri'}}
   end
   def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
-  def toRDF base=nil
-    graph = RDF::Graph.new
-    triples{|s,p,o|
-      s = if base
-            base.join s
-          else
-            RDF::URI s
-          end
-      p = RDF::URI p
-      o = if [R,Hash].member?(o.class) && o.uri
-            RDF::URI o.uri
-          else
-            l = RDF::Literal o
-            l.datatype=RDF.XMLLiteral if p == R::Content
-            l
-          end
-      graph << (RDF::Statement.new s,p,o)}
-    graph
-  end
 end
 class NilClass
   def do; nil end
@@ -141,18 +122,17 @@ class R < RDF::URI
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  FSbase = `pwd`.chomp
-  BaseLen = FSbase.size
-
   # POSIX path acrobatics
-  def pathPOSIX; FSbase + '/' +
-                   (if h = host
-                     'domain/' + h + stripHost
-                    else
-                     uri[0] == '/' ? uri[1..-1] : uri
-                    end)
+  def pathPOSIX
+    (if h = host
+      'domain/' + h + stripHost
+    else
+      uri[0] == '/' ? uri[1..-1] : uri
+    end).gsub('#','%23')
   end
-  def R.unPOSIX p, skip = R::BaseLen; p[skip..-1].do{|p| R[p.match(/^\/domain\/+(.*)/).do{|m|'//'+m[1]} || p]} end
+  def R.unPOSIX p
+    R[p.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || p]
+  end
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end

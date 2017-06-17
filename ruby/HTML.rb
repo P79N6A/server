@@ -70,7 +70,7 @@ class R
          end
     print = re.q.has_key? 'print'
     (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
-    expand = {_: :a, id: :down, href: (R.qs re.q.reject{|k|k=='abbr'}.merge({'full' => ''})), class: :expand, c: "&#9660;"} if (dir || e[:glob]) && !re.q.has_key?('full')
+    expand = {_: :a, id: :down, href: (R.qs re.q.reject{|k|k=='abbr'}.merge({'full' => ''})), class: :expand, c: "&#9660;"} if dir && !re.q.has_key?('full')
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     size = graph.keys.size
