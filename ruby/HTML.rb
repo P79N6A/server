@@ -57,7 +57,7 @@ class R
     (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
   end
 
-  Render['text/html'] = -> graph,re,view=nil {
+  HTML = -> graph,re {
     e = re.env
     dir = re.path[-1] == '/'
     groups = {}
@@ -87,7 +87,7 @@ class R
                  e[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 {_: :style, c: R['/css/base.css'].r},
+                 {_: :style, c: R['/css/base.css'].readFile},
                  {_: :style, c: "body, a  {background-color:#000;color:#fff}"},
                 ]},
             {_: :body,
@@ -96,7 +96,7 @@ class R
                  (nextPage && nextPage.merge({id: :nextpage})),
                  empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
                  renderer[data,re],
-                 {_: :script, c: R['/js/ui.js'].r},
+                 {_: :script, c: R['/js/ui.js'].readFile},
                  {_: :style, c: e[:label].map{|name,_|
                         "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  '<br clear=all>',

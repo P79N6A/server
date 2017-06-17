@@ -115,7 +115,7 @@ class R
           if file.file?
             reader = (RDF::Reader.for :content_type => file.mime)
             if reader
-              puts "load RDF #{file} #{file.mime} from #{file.pathPOSIX} as #{reader}"
+              puts "load #{file.pathPOSIX} using #{reader}"
               graph.load file.pathPOSIX, :base_uri => base
             else
               puts "no reader for #{file} type #{file.mime}"
@@ -125,12 +125,19 @@ class R
           end
         }
         # output
-        if format=='tex t/html'
+        if format=='text/html'
           g = {}
-          puts "Render HTML"
-          graph.each_triple{|s,p,o|puts s,p,o}
-          "HHHTML"
+          graph.each_triple{|s,p,o|
+            subject = s.to_s
+            pred = p.to_s
+            g[subject] ||= {'uri' => subject.to_s}
+            g[subject][pred] ||= []
+            g[subject][pred].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value
+#            puts "tuple #{subject} #{pred} #{o.class} #{o}"
+          }
+          HTML[g,self]
         elsif writer = (RDF::Writer.for :content_type => format)
+          puts "using writer #{writer}"
           graph.dump writer.to_sym, :base_uri => base, :standard_prefixes => true
         else
           "no writer for #{format}"

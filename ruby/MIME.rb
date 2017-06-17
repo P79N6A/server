@@ -38,13 +38,11 @@ class R
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],
     'text/markdown'        => [:triplrMarkdown],
-    'text/n3'              => [:triplrRDF,:n3],
     'text/nfo'             => [:triplrHref,'cp437'],
     'text/plain'           => [:triplrHref],
     'text/rtf'             => [:triplrRTF],
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
-    'text/turtle'          => [:triplrRDF,:turtle],
     'text/tw'              => [:triplrTwUsers],
     'text/uri-list'        => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
@@ -75,12 +73,6 @@ class R
     yield uri, Mtime, mt.to_i
     yield uri, Date, mt.iso8601
     yield uri, Size, size
-  end
-
-  def triplrRDF f
-    RDF::Reader.open(pathPOSIX, :format => f, :base_uri => stripDoc){|r|
-      r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s,[RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}}
   end
 
   def triplrAudio &f
