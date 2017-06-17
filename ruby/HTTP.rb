@@ -291,7 +291,7 @@ class R
       '.ttl' => 'text/turtle'}[File.extname(env['REQUEST_PATH'])].do{|m|return m} # URI suffix mapping
     accept.sort.reverse.map{|q,formats|
       formats.map{|mime|
-        return mime if R::Render[mime] || RDF::Writer.for(:content_type => mime)}} # renderer found
+        return mime if RDF::Writer.for(:content_type => mime)}} # renderer found
     'text/html'
   end
   

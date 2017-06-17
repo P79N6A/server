@@ -106,7 +106,6 @@ class R < RDF::URI
   # lambda tables
   GET = {}
   Abstract = {} # RDF type
-  Render = {}   # MIME type
 
   # constructors
   def R uri = nil

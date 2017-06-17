@@ -143,8 +143,6 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  Render['application/json'] = -> graph,_ { graph.to_json }
-
   Abstract[Sound] = -> graph, g, e {graph['#audio'] = {Type => R[Sound+'Player']}} # add player
 
   def triplrImage &f
