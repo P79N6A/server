@@ -162,16 +162,15 @@ class R
     end
   end
 
-  # find file-system nodes for response
-  def nodeset
+  def nodeset # fs nodes to include in response
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
     paths = [self, justPath].uniq
     locs = paths.select &:exist?
 
-    # add next+prev month/day/year/hour pointers to header
+    # next+prev month/day/year/hour references
     dp = []
-    parts = stripHost[1..-1].gsub('#','%23').split '/'
+    parts = path[1..-1].split '/'
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
@@ -229,25 +228,25 @@ class R
   end
   
   def readFile
-    File.open(pathPOSIX).read if f
+    File.open(pathPOSIX).read if file?
   end
 
   def appendFile line
-    dir.mk
+    dir.mkdir
     File.open(pathPOSIX,'a'){|f|f.write line + "\n"}
+    self
   end
 
   def writeFile o
-    dir.mk
+    dir.mkdir
     File.open(pathPOSIX,'w'){|f|f << o}
     self
   end
 
   def mkdir
-    e || FileUtils.mkdir_p(pathPOSIX)
+    FileUtils.mkdir_p(pathPOSIX) unless exist?
     self
   end
-  alias_method :mk, :mkdir
 
   def accept
     @accept ||= (

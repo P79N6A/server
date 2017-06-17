@@ -121,13 +121,8 @@ class R < RDF::URI
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  # POSIX path acrobatics
   def pathPOSIX
-    (if h = host
-      'domain/' + h + stripHost
-    else
-      uri[0] == '/' ? uri[1..-1] : uri
-    end).gsub('#','%23')
+    (host ? ('domain/' + host) : '.') + path
   end
   def R.unPOSIX p
     R[p.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || p]
@@ -141,7 +136,6 @@ class R < RDF::URI
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
-  def stripHost; host ? uri.split('//'+host,2)[1] : uri end
   def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path to server-root
   def sh; pathPOSIX.utf8.sh end # shell-escape path

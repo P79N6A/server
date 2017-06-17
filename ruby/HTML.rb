@@ -159,8 +159,8 @@ class R
 
   TableRow = -> l,e,sort,direction,keys,titles {
     this = l.R
-    loc = e.path==this.path
-    href = this.host == e.host ? this.stripHost : this.uri
+    loc = e.path == this.path
+    href = this.uri
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
@@ -214,7 +214,7 @@ class R
                            e.env[:label][group] = true
                            {name: group, class: :links,
                             c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
-                                  [{_: :a, href: link.uri, c: CGI.escapeHTML(link.stripHost[1..-1]||link.uri)}.
+                                  [{_: :a, href: link.uri, c: CGI.escapeHTML(link.uri)}.
                                      update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}
                          end
                        }},
