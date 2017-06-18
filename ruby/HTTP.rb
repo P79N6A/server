@@ -87,6 +87,7 @@ class R
 
     set = nodeset
     return notfound if !set || set.empty?
+    puts nodeset.join ' '
     
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format,
@@ -181,7 +182,7 @@ class R
         end
         s }
     else
-      [self,justPath].uniq.map{|base|base.a('*').glob}.flatten      
+      [self,justPath].uniq.map{|base|base.a('*').glob}.flatten
     end
   end
   

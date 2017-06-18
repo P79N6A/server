@@ -21,9 +21,6 @@ class R
   Triplr = {
     'application/atom+xml' => [:triplrFeed],
     'application/org'      => [:triplrOrg],
-    'application/bzip2'    => [:triplrArchive],
-    'application/gzip'     => [:triplrArchive],
-    'application/zip'     => [:triplrArchive],
     'audio/mpeg'           => [:triplrAudio],
     'audio/3gpp'           => [:triplrAudio],
     'image/png'            => [:triplrImage],
@@ -74,17 +71,10 @@ class R
     s = '/'+s unless s[0] == '/'
     yield s, Type, R[Stat+'File']
     mt = mtime
+    puts "uri #{s} #{mt}"
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     yield s, Size, size
-  end
-
-  def triplrArchive
-    yield uri, Type, R[Stat+'CompressedFile']
-    mt = mtime
-    yield uri, Mtime, mt.to_i
-    yield uri, Date, mt.iso8601
-    yield uri, Size, size
   end
 
   def triplrAudio &f

@@ -99,7 +99,6 @@ class R < RDF::URI
     SIOC+'has_parent' => :reply,
     SIOC+'reply_to' => :reply,
     Stat+'File' => :file,
-    Stat+'CompressedFile' => :archive,
     "http://rdfs.org/resume-rdf/cv.rdfs#Entry" => :hands,
   }
 
@@ -120,8 +119,8 @@ class R < RDF::URI
   # append
   def + u; R uri + u.to_s end
   alias_method :a, :+
-  def pathPOSIX; host ? ('domain/' + host + path) : path.sub(/^\//,'') end
-  def R.unPOSIX path; R[path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || path.sub(Base,'')] end
+  def pathPOSIX; (host ? ('domain/' + host + path) : path.sub(/^\//,'')).gsub('%23','#') end
+  def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || path.sub(Base,'')).gsub('#','%23').R end
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
