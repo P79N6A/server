@@ -268,12 +268,12 @@ class R
       open(uri, head) do |response|
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now rescue Time.now
-        etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
-        mtime.writeFile curMtime.iso8601 if curMtime != priorMtime
+        etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag header
+        mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified header
         resp = response.read
         unless body.e && body.r == resp
-          body.w resp # store to local file
-          ('file://'+body.pathPOSIX).R.indexResource :format => :feed, :base_uri => uri
+          body.w resp # new body
+          ('file://'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri
         end
       end
     rescue OpenURI::HTTPError => error
@@ -285,6 +285,26 @@ class R
     puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
   end
   alias_method :getFeed, :fetchFeed
+
+  def indexFeed options = {}
+    g = RDF::Repository.load self, options
+    g.each_graph.map{|graph|
+      graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
+        time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
+        slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
+        doc =  R["//localhost/#{time}#{slug}.ttl"]
+        if doc.e
+        elsif doc.justPath.e
+        else
+          doc.dir.mk
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
+          puts "+ " + doc.path
+        end
+        true}}
+    self
+  rescue Exception => e
+    puts uri, e.class, e.message , e.backtrace[0..2]
+  end
 
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method  :feeds, :listFeeds

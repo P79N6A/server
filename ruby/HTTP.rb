@@ -243,6 +243,21 @@ class R
 
   def format; @format ||= selectFormat end
 
+  Summarize = -> g,e {
+    groups = {}
+    g.map{|u,r|
+      r.types.map{|type| # each type
+        if v = Abstract[type] # summarizer function
+          groups[v] ||= {} # create type-group
+          groups[v][u] = r # resource -> group
+        end}}
+    groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer
+
+  # recursive child-nodes, work happens in Pathname context, see below
+  def take *a
+    node.take(*a).map &:R
+  end
+
   def selectFormat
     { '.html' => 'text/html',
       '.json' => 'application/json',

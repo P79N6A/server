@@ -57,6 +57,22 @@ class R
     (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
   end
 
+  Grep = -> graph, re {
+    wordIndex = {}
+    query = re.q['q']
+    words = query.scan(/[\w]+/).map(&:downcase).uniq
+    words.each_with_index{|word,i|wordIndex[word] = i}
+    pattern = /#{words.join '.*'}/i
+    highlight = /(#{words.join '|'})/i
+    graph.map{|u,r|
+      r.values.flatten.select{|v|v.class==String}.map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines| # match lines
+        r[Content] = []
+        lines[0..5].map{|line|
+          r[Content].unshift line[0..400].gsub(highlight){|g|
+            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
+      graph.delete u if r[Content].empty?}
+    graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
+                                          ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
   HTML = -> g,re {
     # extract graph data to a tree
     graph = {}
