@@ -3,27 +3,22 @@ class R
 
   def mime
     @mime ||=
-      (p = node.realpath # dereference link(s)
-       unless p
-         nil
+      (ext = ((File.extname path)[1..-1] || '').downcase
+       if node.directory?
+         'inode/directory'
+       elsif (File.basename path).index('msg.') == 0
+         'message/rfc822'
+       elsif ext == 'ttl'
+         'text/turtle'
+       elsif Rack::Mime::MIME_TYPES['.'+ext]
+         Rack::Mime::MIME_TYPES['.'+ext]
        else
-         t = ((File.extname p)[1..-1] || '').downcase
-         if p.directory?
-           'inode/directory'
-         elsif (File.basename p).index('msg.')==0
-           'message/rfc822'
-         elsif t=='ttl'
-           'text/turtle'
-         elsif Rack::Mime::MIME_TYPES['.'+t]
-           Rack::Mime::MIME_TYPES['.'+t]
-         else
-           puts "#{p} missing extension, sniffing content (WARNING SLOW)"
-           `file --mime-type -b #{Shellwords.escape p.to_s}`.chomp
-         end
-       end )
+         puts "#{pathPOSIX} of unknown MIME, sniffing content (WARNING SLOW)"
+         `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
+       end)
   end
   
-  MIMEsource={
+  Triplr = {
     'application/atom+xml' => [:triplrFeed],
     'application/org'      => [:triplrOrg],
     'application/bzip2'    => [:triplrArchive],
@@ -31,7 +26,8 @@ class R
     'application/zip'     => [:triplrArchive],
     'audio/mpeg'           => [:triplrAudio],
     'audio/3gpp'           => [:triplrAudio],
-    'image'                => [:triplrImage],
+    'image/png'            => [:triplrImage],
+    'image/jpeg'           => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMailIndexer],
     'text/csv'             => [:triplrCSV,/,/],
@@ -43,10 +39,26 @@ class R
     'text/rtf'             => [:triplrRTF],
     'text/semicolon-separated-values'=>[:triplrCSV,/;/],
     'text/tab-separated-values'=>[:triplrCSV,/\t/],
-    'text/tw'              => [:triplrTwUsers],
     'text/uri-list'        => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
   }
+
+  def toRDF
+    return self if %w{e html n3 rdf owl ttl}.member?(ext)
+    hash = uri.sha1
+    doc = R['/cache/RDF/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
+    unless doc.e && doc.m > m
+      graph = {}
+      triplr = Triplr[mime]
+      send(*triplr){|s,p,o|
+        graph[s] ||= {'uri' => s}
+        graph[s][p] ||= []
+        graph[s][p].push o} if triplr
+      puts "no triplr for #{path} #{mime}" unless triplr
+      doc.writeFile graph.to_json
+    end
+    doc
+  end
 
   def triplrContainer
     dir = path || ''
@@ -55,8 +67,6 @@ class R
     mt = mtime
     yield dir, Mtime, mt.to_i
     yield dir, Date, mt.iso8601
-    children = c
-    yield dir, Size, children.size
   end
 
   def triplrFile
