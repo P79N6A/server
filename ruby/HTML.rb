@@ -70,7 +70,7 @@ class R
     e[:label] ||= {}
     up = if re.q.has_key? 'full'
            R.qs re.q.reject{|k|k=='full'}.merge({'abbr' => ''})
-         elsif (dir||e[404]) && re.path != '/'
+         elsif dir && re.path != '/'
            re.justPath.dirname + '?' + re.env['QUERY_STRING']
          end
     print = re.q.has_key? 'print'

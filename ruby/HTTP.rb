@@ -2,9 +2,7 @@
 class R
 
   def HEAD
-    self.GET.
-    do{| s, h, b |
-       [ s, h, []]}
+    self.GET.do{| s, h, b |[ s, h, []]}
   end
 
   def setEnv r
@@ -36,7 +34,6 @@ class R
   end
 
   def notfound
-    @r[404]=true
     [404,{'Content-Type' => 'text/html'},[HTML[RDF::Graph.new,self]]]
   end
 
@@ -99,32 +96,10 @@ class R
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # compiled response
-        puts set.join " "
         base = @r.R.join uri
         graph = RDF::Graph.new
-        # gather document graphs
-        set.map{|file|
-          if file.file?
-            reader = (RDF::Reader.for :content_type => file.mime)
-            if reader
-              puts "load #{file.pathPOSIX} using #{reader}"
-              graph.load file.pathPOSIX, :base_uri => base
-            else
-              puts "no reader for #{file} type #{file.mime}"
-            end
-          else
-            puts "not a file: #{file}"
-          end
-        }
-        # output
-        if format=='text/html'
-          HTML[graph,self]
-        elsif writer = (RDF::Writer.for :content_type => format)
-          puts "using writer #{writer}"
-          graph.dump writer.to_sym, :base_uri => base, :standard_prefixes => true
-        else
-          "no writer for #{format}"
-        end
+        set.map{|f| graph.load f.toRDF.pathPOSIX, :base_uri => base}
+        format == 'text/html' ? HTML[graph,self] : (graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true)
       end}
   end
 
