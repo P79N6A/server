@@ -49,8 +49,7 @@ class R
     doc = R['/cache/RDF/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
     unless doc.e && doc.m > m
       graph = {}
-      triplr = Triplr[mime]
-      puts "no triplr for #{uri} #{mime}" unless triplr
+      triplr = Triplr[mime] || :triplrFile
       send(*triplr){|s,p,o|
         graph[s] ||= {'uri' => s}
         graph[s][p] ||= []
@@ -71,11 +70,13 @@ class R
   end
 
   def triplrFile
-    yield uri, Type, R[Stat+'File']
+    s = path
+    s = '/'+s unless s[0] == '/'
+    yield s, Type, R[Stat+'File']
     mt = mtime
-    yield uri, Mtime, mt.to_i
-    yield uri, Date, mt.iso8601
-    yield uri, Size, size
+    yield s, Mtime, mt.to_i
+    yield s, Date, mt.iso8601
+    yield s, Size, size
   end
 
   def triplrArchive
@@ -102,8 +103,8 @@ class R
     yield id, Type, R[SIOC+'TextFile']
     yield id, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
-        c: open(pathPOSIX).read.do{|r|
-          enc ? r.force_encoding(enc).to_utf8 : r}.hrefs}) if f
+        c: readFile.do{|r|
+          enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
   end
 
   def triplrUriList

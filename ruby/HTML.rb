@@ -153,7 +153,6 @@ class R
 
   TableRow = -> l,e,sort,direction,keys,titles {
     this = l.R
-    loc = e.path == this.path
     href = this.uri
     types = l.types
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
@@ -173,7 +172,7 @@ class R
                                    v = v.R
                                    label = (v.fragment||(v.basename && v.basename.size > 1 && v.basename)||R.ungunk(v.host)).downcase.gsub(/[^a-zA-Z0-9_]/,'')
                                    e.env[:label][label] = true
-                                   {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label}.update(loc ? {id: e.selector} : {})
+                                   {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label, id: e.selector}
                                  else
                                    v.to_s
                                  end
@@ -195,8 +194,7 @@ class R
                      (if title
                       {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
                      elsif fileResource
-                       {_: :a, href: href, c: [{_: :span, class: :gray, c: CGI.escapeHTML(File.dirname this.path)},
-                                               {_: :span, class: (loc ? :this : :uri), c: CGI.escapeHTML(File.basename this.path)}]}
+                       {_: :a, href: href, c: [{_: :span, class: :gray, c: CGI.escapeHTML(File.dirname(this.path).gsub('/',' '))}, ' ', CGI.escapeHTML(File.basename this.path)]}
                       end),
                      (title ? '<br>' : ' '),
                      # links
@@ -242,7 +240,8 @@ class R
                  when Size
                    l[k].do{|sz|
                      sum = 0
-                     sz.justArray.map{|v|sum += v}
+                     sz.justArray.map{|v|
+                       sum += v.to_i}
                      sum}
                  else
                    l[k].justArray.map{|v|
