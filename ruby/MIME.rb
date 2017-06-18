@@ -50,23 +50,24 @@ class R
     unless doc.e && doc.m > m
       graph = {}
       triplr = Triplr[mime]
+      puts "no triplr for #{uri} #{mime}" unless triplr
       send(*triplr){|s,p,o|
         graph[s] ||= {'uri' => s}
         graph[s][p] ||= []
         graph[s][p].push o} if triplr
-      puts "no triplr for #{path} #{mime}" unless triplr
       doc.writeFile graph.to_json
     end
     doc
   end
 
   def triplrContainer
-    dir = path || ''
-    dir += '/' unless dir[-1] == '/'
-    yield dir, Type, R[Container]
+    s = path
+    s = s+'/' unless s[-1] == '/'
+    s = '/'+s unless s[0] == '/'
     mt = mtime
-    yield dir, Mtime, mt.to_i
-    yield dir, Date, mt.iso8601
+    yield s, Type, R[Container]
+    yield s, Mtime, mt.to_i
+    yield s, Date, mt.iso8601
   end
 
   def triplrFile
