@@ -36,12 +36,12 @@ end
 
 class R < RDF::URI
   alias_method :uri, :to_s
-
   # URI constants
-  W3    = 'http://www.w3.org/'
-  Purl  = 'http://purl.org/'
-  DC    = Purl + 'dc/terms/'
-  SIOC  = 'http://rdfs.org/sioc/ns#'
+  Base = `pwd`.chomp
+  W3   = 'http://www.w3.org/'
+  Purl = 'http://purl.org/'
+  DC   = Purl + 'dc/terms/'
+  SIOC = 'http://rdfs.org/sioc/ns#'
   Schema = 'http://schema.org/'
   Sound    = Purl + 'ontology/mo/Sound'
   Image    = DC + 'Image'
@@ -120,9 +120,8 @@ class R < RDF::URI
   # append
   def + u; R uri + u.to_s end
   alias_method :a, :+
-
-  def pathPOSIX; (host ? ('domain/' + host) : '.') + path end
-  def R.unPOSIX p; R[p.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || p] end
+  def pathPOSIX; host ? ('domain/' + host + path) : path.sub(/^\//,'') end
+  def R.unPOSIX path; R[path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || path.sub(Base,'')] end
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end

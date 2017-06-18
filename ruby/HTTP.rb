@@ -186,7 +186,7 @@ class R
   end
   
   def readFile
-    File.open(pathPOSIX).read if file?
+    File.open(pathPOSIX).read
   end
 
   def appendFile line

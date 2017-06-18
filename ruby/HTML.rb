@@ -195,9 +195,8 @@ class R
                      (if title
                       {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
                      elsif fileResource
-                       dir = File.dirname this.path
-                       dir += '/' unless dir[-1] == '/'
-                       {_: :a, href: href, c: [{_: :span, class: :gray, c: CGI.escapeHTML(dir)},{_: :span, class: (loc ? :this : :uri), c: CGI.escapeHTML(this.basename)}]}
+                       {_: :a, href: href, c: [{_: :span, class: :gray, c: CGI.escapeHTML(File.dirname this.path)},
+                                               {_: :span, class: (loc ? :this : :uri), c: CGI.escapeHTML(File.basename this.path)}]}
                       end),
                      (title ? '<br>' : ' '),
                      # links
