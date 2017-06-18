@@ -37,19 +37,7 @@ class R
 
   def notfound
     @r[404]=true
-    [404,{'Content-Type' => format},[]]
-  end
-
-  def GET
-    if justPath.file?
-      justPath.fileGET
-    else
-      @r[:find] = true if q.has_key? 'find'
-      @r[:grep] = true if q.has_key? 'q'
-      @r[:walk] = true if q.has_key? 'walk'
-      @r[:sort] = q['sort'] || Date
-      response
-    end
+    [404,{'Content-Type' => 'text/html'},[HTML[RDF::Graph.new,self]]]
   end
 
   def fileGET
@@ -85,28 +73,32 @@ class R
     end}
 =end
 
-  def response
-    # enter container/ so we can include children with relative URIs
-    container = node.directory? || justPath.node.directory?
+  def GET
+    return justPath.fileGET if justPath.file? # static response
+
+    container = node.directory? || justPath.node.directory? # container found, direct to
     if container && uri[-1] != '/'
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
       return [301, @r[:Response], []]
     end
 
+    @r[:find] = true if q.has_key? 'find'
+    @r[:grep] = true if q.has_key? 'q'
+    @r[:walk] = true if q.has_key? 'walk'
+    @r[:sort] = q['sort'] || Date
+
     set = nodeset
     return notfound if !set || set.empty?
 
-    # response metadata
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format,
                           'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
-    # lazy body-serialize, uncalled on HEAD and client-side cache hit (ETag match)
-    condResponse ->{
+    condResponse ->{ # body closure uncalled on HEAD or cache hit
       if set.size==1 && set[0].mime == format
         set[0] # static response
-      else # compile response
+      else # compiled response
         puts set.join " "
         base = @r.R.join uri
         graph = RDF::Graph.new
@@ -126,16 +118,7 @@ class R
         }
         # output
         if format=='text/html'
-          g = {}
-          graph.each_triple{|s,p,o|
-            subject = s.to_s
-            pred = p.to_s
-            g[subject] ||= {'uri' => subject.to_s}
-            g[subject][pred] ||= []
-            g[subject][pred].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value
-#            puts "tuple #{subject} #{pred} #{o.class} #{o}"
-          }
-          HTML[g,self]
+          HTML[graph,self]
         elsif writer = (RDF::Writer.for :content_type => format)
           puts "using writer #{writer}"
           graph.dump writer.to_sym, :base_uri => base, :standard_prefixes => true

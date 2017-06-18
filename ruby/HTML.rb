@@ -57,7 +57,12 @@ class R
     (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
   end
 
-  HTML = -> graph,re {
+  HTML = -> g,re {
+    graph = {}
+    g.each_triple{|s,p,o| s=s.to_s; p=p.to_s
+      graph[s] ||= {'uri' => s}
+      graph[s][p] ||= []
+      graph[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
     e = re.env
     dir = re.path[-1] == '/'
     groups = {}
