@@ -10,6 +10,8 @@ class R
          'message/rfc822'
        elsif ext == 'ttl'
          'text/turtle'
+       elsif ext == 'u'
+         'text/uri-list'
        elsif Rack::Mime::MIME_TYPES['.'+ext]
          Rack::Mime::MIME_TYPES['.'+ext]
        else
