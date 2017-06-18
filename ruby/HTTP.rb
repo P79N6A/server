@@ -34,7 +34,7 @@ class R
   end
 
   def notfound
-    [404,{'Content-Type' => 'text/html'},[HTML[RDF::Graph.new,self]]]
+    [404,{'Content-Type' => 'text/html'},[HTML[RDF::Graph.new, self]]]
   end
 
   def fileGET

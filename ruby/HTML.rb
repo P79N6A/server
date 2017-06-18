@@ -58,31 +58,26 @@ class R
   end
 
   HTML = -> g,re {
+    # extract graph data to a tree
     graph = {}
     g.each_triple{|s,p,o| s=s.to_s; p=p.to_s
       graph[s] ||= {'uri' => s}
       graph[s][p] ||= []
       graph[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
+
     e = re.env
+    e[:label] ||= {}; (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
     dir = re.path[-1] == '/'
-    groups = {}
-    empty = graph.empty?
-    e[:label] ||= {}
     up = if re.q.has_key? 'full'
            R.qs re.q.reject{|k|k=='full'}.merge({'abbr' => ''})
          elsif dir && re.path != '/'
            re.justPath.dirname + '?' + re.env['QUERY_STRING']
          end
-    print = re.q.has_key? 'print'
-    (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
     expand = {_: :a, id: :down, href: (R.qs re.q.reject{|k|k=='abbr'}.merge({'full' => ''})), class: :expand, c: "&#9660;"} if dir && !re.q.has_key?('full')
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
-    size = graph.keys.size
-    images = graph.keys.grep /\.(jpg|png)$/i
-    renderer = (images.size.to_f / size.to_f) > 0.96 ? ImageView : TabularView
-    data = renderer == ImageView ? images : graph
-    # render
+
+    # massage JSON tree into HTML tree then call H to output characters
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -97,32 +92,26 @@ class R
                 ]},
             {_: :body,
              c: [([{_: :a, id: :up, href: up, c: '&#9650;'},'<br clear=all>'] if up),
-                 (prevPage && prevPage.merge({id: :prevpage})),
-                 (nextPage && nextPage.merge({id: :nextpage})),
-                 empty ? {_: :span, style: 'font-size:8em', c: 404} : '',
-                 renderer[data,re],
+                 (prevPage && prevPage.merge({id: :prevpage})), (nextPage && nextPage.merge({id: :nextpage})),
+                 graph.empty? ? {_: :span, style: 'font-size:8em', c: 404} : '',
+                 graph.keys.grep(/\.(jpg|png)$/i).map{|img|
+                   {_: :a, href: image, c: {_: :img, class: :thumb, src: image}}},
+                 TabularView[graph,re],
                  {_: :script, c: R['/js/ui.js'].readFile},
                  {_: :style, c: e[:label].map{|name,_|
                         "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  '<br clear=all>',
-                 (prevPage unless re.q.has_key? 'abbr'),
-                 (nextPage unless re.q.has_key? 'abbr'),
+                 (prevPage unless re.q.has_key? 'abbr'), (nextPage unless re.q.has_key? 'abbr'),
                  '<br clear=all>',expand]}]}]}
   
-  # RDF types used by default view
+  # RDF types used in default view
   InlineMeta = [Mtime, Type, Title, Image, Content, Label]
-
   # RDF types collapsed in abbreviated view
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat',
                  RSS+'comments', RSS+'em', RSS+'category',
                  Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
-  ImageView = -> images, e {
-    images.map{|image|
-      {_: :a, href: image, c: {_: :img, class: :thumb, src: '/thumbnail' + image.R.path}}
-    }
-  }
 
   TabularView = -> g, e {
     titles = {}

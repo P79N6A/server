@@ -121,18 +121,14 @@ class R < RDF::URI
   def + u; R uri + u.to_s end
   alias_method :a, :+
 
-  def pathPOSIX
-    (host ? ('domain/' + host) : '.') + path
-  end
-  def R.unPOSIX p
-    R[p.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || p]
-  end
+  def pathPOSIX; (host ? ('domain/' + host) : '.') + path end
+  def R.unPOSIX p; R[p.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || p] end
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
-  def children; node.c.map &:R end
+  def children; node.children.map &:R end
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
@@ -143,8 +139,6 @@ class R < RDF::URI
   def file?; node.file? end
   def mtime; node.stat.mtime if e end
   def size; node.size end
-  alias_method :c, :children
-  alias_method :f, :file?
   alias_method :e, :exist?
   alias_method :m, :mtime
 
