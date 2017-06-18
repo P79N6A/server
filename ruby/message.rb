@@ -126,8 +126,6 @@ class R
     puts 'error scanning IRC log ' + uri
   end
 
-  def triplrMailIndexer &f; indexStream :triplrMail, &f end
-
   def triplrMail &b
     m = Mail.read node
     return unless m
@@ -216,18 +214,18 @@ class R
         end}.compact.intersperse("\n")
       yield e, Content, body}
 
-    attache = -> {e.R.a('.attache').mk} # container for attachments & parts
+    attache = -> {e.R.a('.attache').mkdir} # container for attachments
 
     htmlCount = 0
     htmlFiles.map{|p| # HTML content
       html = attache[].child "page#{htmlCount}.html"  # name
       yield e, DC+'hasFormat', html                   # message -> HTML resource
-      html.w p.decoded  if !html.e                     # write content
+      html.writeFile p.decoded  if !html.e            # write content
       htmlCount += 1 }
 
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-containers (digests + forwards)
       f = attache[].child 'msg.' + rand.to_s.sha1
-      f.w m.body.decoded if !f.e
+      f.writeFile m.body.decoded if !f.e
       f.triplrMail &b
     }
 
@@ -236,7 +234,7 @@ class R
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.sha1 + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
       file = attache[].child name                     # name
       puts "attachment in #{uri} , #{file}"
-      file.w p.body.decoded if !file.e                # write
+      file.writeFile p.body.decoded if !file.e        # write
       yield e, SIOC+'attachment', file                # message -> attached resource
       if p.main_type=='image'                         # image attachment?
         yield e, Image, file                     # image reference in RDF
@@ -270,8 +268,8 @@ class R
       open(uri, head) do |response|
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now rescue Time.now
-        etag.w curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
-        mtime.w curMtime.iso8601 if curMtime != priorMtime
+        etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag
+        mtime.writeFile curMtime.iso8601 if curMtime != priorMtime
         resp = response.read
         unless body.e && body.r == resp
           body.w resp # store to local file

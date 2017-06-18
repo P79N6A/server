@@ -26,7 +26,7 @@ class R
     'image/png'            => [:triplrImage],
     'image/jpeg'           => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
-    'message/rfc822'       => [:triplrMailIndexer],
+    'message/rfc822'       => [:triplrMail],
     'text/csv'             => [:triplrCSV,/,/],
     'text/log'             => [:triplrIRC],
     'text/man'             => [:triplrMan],

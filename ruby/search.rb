@@ -1,15 +1,4 @@
 class R
-=begin
-   indexer variants for triple, stream of triples and resource-reference
-
-   outbound arcs from re(s)ource: (s p o) (s p _) (s _ o) (s _ _)
-   in (s)ubject document, assuming this is findable, so write:
-   - document at subject-URI mapped location
-
-   inbound arcs to res(o)urce (_ p o) (_ _ o) not in its doc, so write:
-   - reference to inbound-links doc in index-file stored alongside resource
-
-=end
 
   def index o
     o = o.R.path
@@ -20,39 +9,6 @@ class R
     p = path
     f = R(File.dirname(p) + '/.' + File.basename(p) + '.rev').node
     f.readlines.map{|l|R l.chomp} if f.exist?
-  end
-
-  def indexStream triplr, &b
-    docs = {}
-    graph = fromStream({},triplr) # collect triples
-    graph.map{|u,r| this = u.R    # visit resources
-      doc = u.split('#')[0].R.stripDoc.a('.e').uri # storage location
-      r[Date].do{|t|              # timestamp
-        if this.host
-          slug = (u.sub(/https?:\/\//,'.').gsub(/\W/,'..').sub(/\d{12,}/,'')+'.').gsub /\.+/,'.'
-          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, '' # time-parts
-          doc = "//localhost/#{time}#{slug}e"
-        else # local resource
-          r[Re].justArray.map{|o|this.index o}
-        end }
-      # add resource to document
-      docs[doc] ||= {}
-      docs[doc][u] = r}
-
-    # store documents
-    docs.map{|doc,graph|
-      doc = doc.R
-      if doc.e
-      elsif doc.justPath.e
-      else
-        doc.w graph, true
-        puts "+ " + doc.path
-      end}
-
-    # emit triples to consumer
-    graph.triples &b if b
-
-    self
   end
 
   def indexResource options = {}
