@@ -73,8 +73,8 @@ class R
   def GET
     return justPath.fileGET if justPath.file? # static response
 
-    container = node.directory? || justPath.node.directory? # container found, direct to
-    if container && uri[-1] != '/'
+    container = node.directory? || justPath.node.directory?
+    if container && uri[-1] != '/' # container found, direct to using 301 response
       qs = @r['QUERY_STRING']
       @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
       return [301, @r[:Response], []]
@@ -87,7 +87,7 @@ class R
 
     set = nodeset
     return notfound if !set || set.empty?
-    puts nodeset.join ' '
+#    puts nodeset.join ' '
     
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format,

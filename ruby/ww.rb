@@ -66,42 +66,6 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
 
-  Icons = {
-    'uri' => :id,
-    Container => :dir,
-    Content => :pencil,
-    Date => :date,
-    Label => :tag,
-    Title => :title,
-    Sound => :speaker,
-    Image => :img,
-    Size => :size,
-    Mtime => :time,
-    To => :user,
-    Resource => :graph,
-    DC+'hasFormat' => :file,
-    Schema+'location' => :location,
-    SIOC+'BlogPost' => :pencil,
-    SIOC+'Discussion' => :comments,
-    SIOC+'InstantMessage' => :comment,
-    SIOC+'MicroblogPost' => :newspaper,
-    SIOC+'WikiArticle' => :pencil,
-    SIOC+'Tweet' => :tweet,
-    SIOC+'Usergroup' => :group,
-    SIOC+'SourceCode' => :code,
-    SIOC+'TextFile' => :file,
-    SIOC+'has_creator' => :user,
-    SIOC+'has_container' => :dir,
-    SIOC+'has_discussion' => :comments,
-    SIOC+'Thread' => :openenvelope,
-    SIOC+'Post' => :newspaper,
-    SIOC+'MailMessage' => :envelope,
-    SIOC+'has_parent' => :reply,
-    SIOC+'reply_to' => :reply,
-    Stat+'File' => :file,
-    "http://rdfs.org/resume-rdf/cv.rdfs#Entry" => :hands,
-  }
-
   # lambda tables
   GET = {}
   Abstract = {} # RDF type
@@ -130,7 +94,7 @@ class R < RDF::URI
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
-  def stripDoc;  R[uri.sub /\.(e|ht|html|json|md|ttl|txt)$/,''].setEnv(@r) end
+  def stripDoc;  R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path to server-root
   def sh; pathPOSIX.utf8.sh end # shell-escape path
   def exist?; node.exist? end

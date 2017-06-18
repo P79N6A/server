@@ -105,25 +105,25 @@ class R
     domain = dname[1] || 'localdomain'
     ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
 
-
-  def triplrIRC &f
-    doc = uri.gsub('#','%23').R
+  def triplrChatLog &f
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    chan = R['#'+uri.split('#')[-1].sub(/\.log$/,'')]
-    r.lines.map{|l|
+    chan = R['#'+stripDoc.basename.split('%23')[-1]]
+
+    readFile.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
-        s = uri + '#' + (linenum += 1).to_s
+        s = stripDoc + '#' + (linenum += 1).to_s
+        puts "#{chan} line #{s}"
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, Creator, R['#'+m[2]]
         yield s, To, chan
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
-        yield s, DC + 'source', doc
+        yield s, DC + 'source', self
       }
     }
-  rescue
-    puts 'error scanning IRC log ' + uri
+  rescue Exception => e
+    puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
   end
 
   def triplrMail &b
