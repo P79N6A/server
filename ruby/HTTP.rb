@@ -88,16 +88,17 @@ class R
       else # compiled response
         base = @r.R.join uri
         graph = RDF::Graph.new
-        if format == 'text/html'
+        if format == 'text/html' # strictly a mature-optimization. delete this clause and use RDF for everything if you like
           set.map{|f| graph.load f.toRDF.pathPOSIX, :base_uri => base}
           g = {}
+          # use our renderer which takes a tree of graph-data
           graph.each_triple{|s,p,o|s = s.to_s; p = p.to_s
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
             g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
           HTML[g,self]
-        else
-          set.map{|f| graph.load f.toRDF.pathPOSIX, :base_uri => base}
+        else # RDF output
+          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => base}
           graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
         end
       end}
