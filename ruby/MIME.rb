@@ -44,8 +44,9 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
+  def isRDF; %w{e html n3 rdf owl ttl}.member? ext end
   def toRDF
-    return self if %w{e html n3 rdf owl ttl}.member?(ext)
+    return self if isRDF
     hash = uri.sha1
     doc = R['/cache/RDF/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
     unless doc.e && doc.m > m
