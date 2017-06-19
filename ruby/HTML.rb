@@ -73,14 +73,7 @@ class R
       graph.delete u if r[Content].empty?}
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
                                           ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
-  HTML = -> g,re {
-    # populate tree of triples indexed on subj/pred URIs
-    graph = {}
-    g.each_triple{|s,p,o| s=s.to_s; p=p.to_s
-      graph[s] ||= {'uri' => s}
-      graph[s][p] ||= []
-      graph[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
-
+  HTML = -> graph, re {
     e = re.env
     e[:label] ||= {}; (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
     dir = re.path[-1] == '/'
@@ -126,7 +119,7 @@ class R
   TabularView = -> g, e {
     titles = {}
     # sorting attribute
-    p = e.env[:sort]
+    p = e.q['sort'] || Date
     # sorting direction
     direction = e.q.has_key?('ascending') ? :id : :reverse
     # sorting datatype
@@ -138,7 +131,7 @@ class R
     # abbreviate
     keys -= VerboseMeta unless e.q.has_key? 'full'
     # render
-    [{_: :style, c: "[property=\"#{p}\"] {border-color:#eee;border-style: solid; border-width: 0 0 .1em 0}"},
+    [{_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"},
      {_: :table,
      c: [{_: :tbody,
           c: g.values.sort_by{|s|

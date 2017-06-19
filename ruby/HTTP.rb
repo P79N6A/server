@@ -88,8 +88,18 @@ class R
       else # compiled response
         base = @r.R.join uri
         graph = RDF::Graph.new
-        set.map{|f| graph.load f.toRDF.pathPOSIX, :base_uri => base}
-        format == 'text/html' ? HTML[graph,self] : (graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true)
+        if format == 'text/html'
+          set.map{|f| graph.load f.toRDF.pathPOSIX, :base_uri => base}
+          g = {}
+          graph.each_triple{|s,p,o|s = s.to_s; p = p.to_s
+            g[s] ||= {'uri' => s}
+            g[s][p] ||= []
+            g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
+          HTML[g,self]
+        else
+          set.map{|f| graph.load f.toRDF.pathPOSIX, :base_uri => base}
+          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
+        end
       end}
   end
 
