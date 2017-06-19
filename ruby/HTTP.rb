@@ -24,9 +24,9 @@ class R
     e[:Response] = {}; e[:Links] = {} # response header storage
     (resource.setEnv e).send e['REQUEST_METHOD']
   rescue Exception => x
-    out = [x.class,x.message,x.backtrace].join "\n"
-    puts out
-    [500,{'Content-Type' => 'text/plain'},[out]]
+    msg = [x.class,x.message,x.backtrace].join "\n"
+    puts msg
+    [500,{'Content-Type' => 'text/plain'},[msg]]
   end
 
   def notfound

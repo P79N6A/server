@@ -174,7 +174,6 @@ class R
     mtime = cache.child 'mtime'    # cached mtime URI
     priorMtime = nil               # cached mtime value
     body = cache.child 'body.atom' # cached body URI
-
     if etag.e
       priorEtag = etag.r
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -182,7 +181,6 @@ class R
       priorMtime = mtime.r.to_time
       head["If-Modified-Since"] = priorMtime.httpdate
     end
-
     begin # conditional GET
       open(uri, head) do |response|
         curEtag = response.meta['etag']
@@ -197,7 +195,7 @@ class R
       end
     rescue OpenURI::HTTPError => error
       msg = error.message
-      puts [uri,msg].join("\t") unless msg.match(/304/) # print unusual errors
+      puts [uri,msg].join("\t") unless msg.match(/304/) # print return-type unless OK or cache-hit (304)
     end
     self
   rescue Exception => e
@@ -235,9 +233,7 @@ class R
     end
 
     class Reader < RDF::Reader
-
       format Format
-
       def initialize(input = $stdin, options = {}, &block)
         @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.utf8
         @base = options[:base_uri]
@@ -249,9 +245,7 @@ class R
         end
         nil
       end
-
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end      
-
       def each_statement &fn # triples flow from right to left across stacked stream-transformers
         resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
@@ -263,7 +257,6 @@ class R
                                                          l.datatype=RDF.XMLLiteral if p == Content
                                                          l), :graph_name => s.R)}
       end
-
       def resolveURIs *f
         send(*f){|s,p,o|
           if Content==p && o.class==String
@@ -281,7 +274,6 @@ class R
           end
         }
       end
-
       def normalizePredicates *f
         send(*f){|s,p,o|
           yield s,
@@ -297,7 +289,6 @@ class R
                  Atom+'title' => Title,
                 }[p]||p, o }
       end
-
       def normalizeDates *f
         send(*f){|s,p,o|
           yield *({'CreationDate' => true,
@@ -310,15 +301,12 @@ class R
                   }[p] ?
                   [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
       end
-
-      def rawTriples # regex allowing nonconformant XML, missing ' around values, arbitrary rss1/rss2/Atom feature-use mashup
-
+      def rawTriples # allow broken XML, missing quotes around values, and arbitrary feature-use mashup
         # elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
         reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
-
         # identifiers
         reRDF = /about=["']?([^'">\s]+)/              # RDF @about
         reLink = /<link>([^<]+)/                      # <link> element
@@ -326,38 +314,28 @@ class R
         reLinkHref = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @href @rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
-
         # media links
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
-
         commentRe = /\/comments\//
-
         x = {} # XML-namespace table
-
         head = @doc.match(reHead)
         head && head[2] && head[2].scan(reXMLns){|m|
           prefix = m[0]
           base = m[1]
           base = base + '#' unless %w{/ #}.member? base [-1]
           x[prefix] = base}
-
         @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-
-          # find post id. try RDF identifier then <link> as they're more likely to be a resolving hyperlink than gunk (tag: URI etc) in <id> element
+          # find post link. try RDF then <link> as they're more likely to be a resolving hyperlink than what's in <id> element ("tag" URIs, hashes etc)
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
-
           if u
-
             unless u.match /^http/ # resolve relative reference
               u = (URI.join @base, u).to_s
             end
-
             resource = u.R
-
             # typetag
             if u.match commentRe
               yield u, R::Type, R[R::Post]
@@ -370,79 +348,45 @@ class R
               blogs.map{|blog|
                 yield u, R::To, blog}
             end
-
             # media attachments
             inner.scan(reAttach){|e|
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
                 yield(u, R::Atom+rel[1], url[2].R) if rel}}
-
             # elements
             inner.scan(reElement){|e|
-
               # expand property-name
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
-
               # custom element-type handle
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p 
                 # bound as subject URI, drop redundant identifier-triple
-
               elsif [Atom+'author', RSS+'author', RSS+'creator', Purl+'dc/elements/1.1/creator'].member? p
                 # author URI and name
                 uri = e[3].match /<uri>([^<]+)</
                 name = e[3].match /<name>([^<]+)</
-                yield u, Creator, e[3].extend(SniffContent).sniff.do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri
+                yield u, Creator, e[3].do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri
                 yield u, Creator, uri[1].R if uri
                 if name
                   name = name[1]
                   yield u, Creator, (CGI.escapeHTML name) unless uri && uri[1].index(name.sub('/u/','/user/'))
                 end
-
-
               else # generic element
-                yield u,p,e[3].extend(SniffContent).sniff.do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o }
+                yield u,p,e[3].do{|o|
+                  case o
+                  when /^\s*<\!\[CDATA/m
+                    o.sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'
+                  when /</m
+                    o
+                  else
+                    CGI.unescapeHTML o
+                  end
+                }.do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o }
               end
             }
           else
-            puts "can't find identifier in #{@base}: #{inner}"
-          end
-        }
-
+            puts "no identifier found in #{@base}: #{inner}"
+          end}
       end
-
     end
-
-    module SniffContent
-
-      def sniff
-        send (case self
-              when /^\s*<\!\[CDATA/m
-                :cdata
-              when /</m
-                :id
-              else
-                :html
-              end)
-      end
-
-      def html
-        CGI.unescapeHTML self
-      end
-
-      def cdata
-        sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'
-      end
-
-    end
-
   end
-
-  def triplrFeed
-    opts = {:format => :feed}
-    opts[:base_uri] = @r.R.join uri if @r
-    RDF::Reader.open(pathPOSIX, opts){|r|
-      r.each_triple{|s,p,o|
-        yield s.to_s, p.to_s, o.class == R ? o : o.value}}
-  end
-
 end
