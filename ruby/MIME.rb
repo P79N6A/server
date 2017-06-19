@@ -141,16 +141,9 @@ class R
     yield stripDoc.uri, Content, `cat #{sh} | tth -r`
   end
 
-  Abstract[SIOC+'TextFile'] = -> graph, subgraph, env {
-    subgraph.map{|id,data|
-      graph[id][DC+'hasFormat'] = R[id+'.html']
-      graph[id][Content] = graph[id][Content].justArray.map{|c|c.lines[0..8].join}}}
-
   def to_json *a
     {'uri' => uri}.to_json *a
   end
-
-  Abstract[Sound] = -> graph, g, e {graph['#audio'] = {Type => R[Sound+'Player']}} # add player
 
   def triplrImage &f
     yield uri, Type, R[Image]

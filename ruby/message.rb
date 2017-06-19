@@ -1,87 +1,6 @@
 # coding: utf-8
 class R
 
-  Abstract[SIOC+'InstantMessage'] = -> graph, msgs, re {
-    msgs.map{|uri,msg|
-
-      # init channel bin
-      bin = msg[DC+'source'].justArray[0].uri
-      graph[bin] ||= {'uri' => bin+'.html',
-                      Type => R[SIOC+'Discussion'],
-                      Title => msg[To].justArray[0].R.fragment,
-                      Size => 0}
-
-      graph[bin][Size] += 1 # increment bin size
-
-      if re.env[:grep] # keep content for grep filtering
-        msg[Content].do{|c|
-          graph[bin][Content] ||= []
-          graph[bin][Content].concat c}
-      end
-
-      # add images and links to bin
-      msg[Image].do{|images|
-        graph[bin][Image] ||= []
-        graph[bin][Image].concat images}
-      msg[DC+'link'].do{|links|
-        graph[bin][DC+'link'] ||= []
-        graph[bin][DC+'link'].concat links}
-
-      # drop raw message
-      graph.delete uri
-    }
-  }
-
-  Abstract[SIOC+'MailMessage'] = -> graph, g, e {
-    threads = {}
-    weight = {}
-
-    # pass 1. statistics & prune
-    g.map{|u,p|
-
-      # trim fat from summarized graph
-      graph.delete u
-      p[Creator].justArray.select{|t|t.respond_to? :uri}.map{|r|graph.delete r.uri}
-      recipients = p[To].justArray.select{|r|r.respond_to? :uri}.map &:uri
-      recipients.map{|r|graph.delete r}
-
-      # group by subject
-      p[Title].do{|t|
-        title = t[0].sub ReExpr, '' # strip reply-prefix
-        if threads[title] # add to group
-          threads[title][Size] += 1
-          threads[title][Creator].concat p[Creator]
-        else # initialize group
-          p[Size] = 1         #  member-count
-          threads[title] = p  #  title
-        end}
-
-      recipients.map{|a| # recipient weights
-        weight[a] ||= 0
-        weight[a] += 1}}
-
-    # pass 2. complete thread/discussion resources, add to graph
-    threads.map{|title,post|
-      # heaviest recipient wins
-      post[To].justArray.select{|t|t.respond_to? :uri}.sort_by{|a|weight[a.uri]}[-1].do{|to|
-        labels = []
-        # resource pointing to post(s)
-        thread = {'uri' => '/thread/' + URI.escape(post[DC+'identifier'][0]),
-                  Type => R[Post],
-                  To => to,
-                  Title => title.gsub(/\[[^\]]+\]/){|l|labels.push l[1..-2];nil},
-                  Date => post[Date],
-                  Creator => post[Creator],
-                  Image => post[Image],
-                  Content => e.env[:grep] ? post[Content] : []}
-        # extract labels from subject text to RDF
-        thread.update({Label => labels}) unless labels.empty?
-        # if >1 post add discussion typetag and size-attribute
-        thread.update({Size => post[Size], Type => R[SIOC+'Thread']}) if post[Size] > 1
-
-        # link resource to graph
-        graph[thread.uri] = thread }}}
-
   ReExpr = /\b[rR][eE]: /
 
   MessagePath = -> id { # message Identifier -> path
@@ -293,9 +212,7 @@ class R
         time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
         doc =  R["//localhost/#{time}#{slug}.ttl"]
-        if doc.e
-        elsif doc.justPath.e
-        else
+        unless doc.e || doc.justPath.e
           doc.dir.mk
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
           puts "+ " + doc.path

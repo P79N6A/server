@@ -12,21 +12,17 @@ class R
   def env; @r end
 
   def R.call e
-    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD'] # disallow arbitrary methods. use https://github.com/solid/node-solid-server or similar for PUT/PATCH
-    return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i) # we don't serve PHP, no need to continue
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}           # unproxy hostname
+    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
+    return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}           # find original hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'        # strip hostname field of gunk
     rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # path
     path = Pathname.new(rawpath).expand_path.to_s                  # evaluate path-expression
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'           # preserve trailing-slash
     resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # instantiate request object
-    e['uri'] = resource.uri # bind URI
-    e[:Response] = {} # init response header
-    e[:Links] = {} # init Link-header map
-    resource.setEnv(e).send(e['REQUEST_METHOD']).do{|s,h,b| # run request, bind response for inspection/logging
-      # basic request log
-      puts [s, resource.uri, h['Location'] ? ['->',h['Location']] : nil, resource.format, e['HTTP_REFERER'], e['HTTP_USER_AGENT']].join ' '
-      [s,h,b]} # return unmodified response when done
+    e['uri'] = resource.uri # reference normalized URI in environment
+    e[:Response] = {}; e[:Links] = {} # response header storage
+    (resource.setEnv e).send e['REQUEST_METHOD']
   rescue Exception => x
     out = [x.class,x.message,x.backtrace].join "\n"
     puts out
@@ -38,11 +34,9 @@ class R
   end
 
   def fileGET
-    @r[:Response].
-      update({ 'Content-Type' => mime + '; charset=UTF-8',
-               'ETag' => [m,size].join.sha1 })
+    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha1})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    condResponse ->{ self }
+    condResponse
   end
 
 =begin
@@ -72,7 +66,8 @@ class R
 
   def GET
     return justPath.fileGET if justPath.file? # static response
-
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')}),[]] if path=='/'
+    
     container = node.directory? || justPath.node.directory?
     if container && uri[-1] != '/' # container found, direct to using 301 response
       qs = @r['QUERY_STRING']
@@ -80,14 +75,8 @@ class R
       return [301, @r[:Response], []]
     end
 
-    @r[:find] = true if q.has_key? 'find'
-    @r[:grep] = true if q.has_key? 'q'
-    @r[:walk] = true if q.has_key? 'walk'
-    @r[:sort] = q['sort'] || Date
-
     set = nodeset
     return notfound if !set || set.empty?
-#    puts nodeset.join ' '
     
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format,
@@ -104,7 +93,8 @@ class R
       end}
   end
 
-  def condResponse body
+  def condResponse body=nil
+    body ||= -> {self}
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])
       [304, {}, []]
@@ -127,7 +117,7 @@ class R
     paths = [self, justPath].uniq
     locs = paths.select &:exist?
 
-    # next+prev month/day/year/hour references
+    # next+prev month/day/year/hour refs
     dp = []
     parts = path[1..-1].split '/'
     while parts[0] && parts[0].match(/^[0-9]+$/) do
@@ -157,23 +147,23 @@ class R
     env[:Links][:prev] = p + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
     
-    if env[:find] # match names
+    if q.has_key? 'find' # match names
       query = q['find']
       expression = '-iregex ' + ('.*' + query + '.*').sh
       size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       locs.map{|loc|
         `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
-    elsif env[:grep] # match content
+    elsif q.has_key? 'q' # match content
       locs.map{|loc|
         `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
-    elsif env[:walk] # tree walk
+    elsif q.has_key? 'walk' # tree walk
       count = (q['c'].do{|c|c.to_i} || 12) + 1
       count = 1024 if count > 1024
       # at least 1 result plus lookahead-node startpoint of next page
       count = 2 if count < 2
       orient = q.has_key?('asc') ? :asc : :desc
-      ((exist? ? self : justPath).take count, orient, q['offset'].do{|o|o.R}).do{|s| # search
+      ((exist? ? self : justPath).node.take count, orient, q['offset'].do{|o|o.R}).map(&:R).do{|s| # search
         if q['offset'] && head = s[0] # direction-reversal link
           env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
         end
@@ -186,9 +176,7 @@ class R
     end
   end
   
-  def readFile
-    File.open(pathPOSIX).read
-  end
+  def readFile; File.open(pathPOSIX).read end
 
   def appendFile line
     dir.mkdir
@@ -242,21 +230,6 @@ class R
   end
 
   def format; @format ||= selectFormat end
-
-  Summarize = -> g,e {
-    groups = {}
-    g.map{|u,r|
-      r.types.map{|type| # each type
-        if v = Abstract[type] # summarizer function
-          groups[v] ||= {} # create type-group
-          groups[v][u] = r # resource -> group
-        end}}
-    groups.map{|fn,gr|fn[g,gr,e]}} # call summarizer
-
-  # recursive child-nodes, work happens in Pathname context, see below
-  def take *a
-    node.take(*a).map &:R
-  end
 
   def selectFormat
     { '.html' => 'text/html',

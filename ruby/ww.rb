@@ -66,11 +66,7 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
 
-  # lambda tables
-  GET = {}
-  Abstract = {} # RDF type
-
-  # constructors
+  # constructor
   def R uri = nil
     uri ? (R.new uri) : self
   end
