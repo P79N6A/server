@@ -156,7 +156,7 @@ class R
                  q['ascending'] = ''
                end
                href = CGI.escapeHTML R.qs q
-               {_: :th, href: href, property: k, class: k == p ? 'selected' : '', c: {_: :a, href: href, class: Icons[k]||''}}}]}]}]}
+               {_: :th, href: href, property: k, class: k == p ? 'selected' : '', c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}]}]}]}
 
 #  View[Sound+'Player'] = -> g,e {
 #    [{_: :script, type: "text/javascript", src: '/js/audio.js'},{_: :audio, id: :audio, controls: true}]}
@@ -168,25 +168,22 @@ class R
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
     fileResource = types.member?(Stat+'File') || types.member?(Container) || types.member?(Resource)
-    shownActors = false
     title = l[Title].justArray.select{|t|t.class==String}[0].do{|t|
       t = t.sub ReExpr, ''
       titles[t] ? nil : (titles[t] = t)}
 
-    actors = -> {
-      shownActors ? '' : ((shownActors = true) && [[From,''],[To,'&rarr;']].map{|p,pl|
-                            l[p].do{|o|
-                              [{_: :b, c: pl + ' '},
-                               o.justArray.uniq.map{|v|
-                                 if v.respond_to?(:uri)
-                                   v = v.R
-                                   label = (v.fragment||(v.basename && v.basename.size > 1 && v.basename)||R.ungunk(v.host)).downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                                   e.env[:label][label] = true
-                                   {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label, id: e.selector}
-                                 else
-                                   v.to_s
-                                 end
-                               }.intersperse(' '),' ']}})}
+    actors = -> p {
+      l[p].do{|o|
+        o.justArray.uniq.map{|v|
+          if v.respond_to?(:uri)
+            v = v.R
+            label = (v.fragment||(v.basename && v.basename.size > 1 && v.basename)||R.ungunk(v.host)).downcase.gsub(/[^a-zA-Z0-9_]/,'')
+            e.env[:label][label] = true
+            {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label, id: e.selector}
+          else
+            v.to_s
+          end
+        }.intersperse(' ')}}
 
     [{_: :tr, href: href, id: e.selector,
       c: ["\n",
@@ -244,9 +241,9 @@ class R
                      end
                    }
                  when From
-                   actors[]
+                   actors[From]
                  when To
-                   actors[]
+                   actors[To]
                  when Size
                    l[k].do{|sz|
                      sum = 0
