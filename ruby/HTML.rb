@@ -74,7 +74,7 @@ class R
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
                                           ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
   HTML = -> g,re {
-    # extract graph data to a tree
+    # populate tree of triples indexed on subj/pred URIs
     graph = {}
     g.each_triple{|s,p,o| s=s.to_s; p=p.to_s
       graph[s] ||= {'uri' => s}
@@ -84,16 +84,11 @@ class R
     e = re.env
     e[:label] ||= {}; (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
     dir = re.path[-1] == '/'
-    up = if re.q.has_key? 'full'
-           R.qs re.q.reject{|k|k=='full'}.merge({'abbr' => ''})
-         elsif dir && re.path != '/'
-           re.justPath.dirname + '?' + re.env['QUERY_STRING']
-         end
-    expand = {_: :a, id: :down, href: (R.qs re.q.reject{|k|k=='abbr'}.merge({'full' => ''})), class: :expand, c: "&#9660;"} if dir && !re.q.has_key?('full')
+    up = re.justPath.dirname+'?'+re.env['QUERY_STRING'] if dir && re.path!='/'
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
 
-    # massage JSON tree into HTML tree then call H to output characters
+    # rewrite JSONGraph tree to HTML tree and call H for character output
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -117,9 +112,8 @@ class R
                  {_: :style, c: e[:label].map{|name,_|
                         "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  '<br clear=all>',
-                 (prevPage unless re.q.has_key? 'abbr'), (nextPage unless re.q.has_key? 'abbr'),
-                 '<br clear=all>',expand]}]}]}
-  
+                 (prevPage unless re.q.has_key? 'abbr'), (nextPage unless re.q.has_key? 'abbr')]}]}]}
+
   # RDF types used in default view
   InlineMeta = [Mtime, Type, Title, Image, Content, Label]
   # RDF types collapsed in abbreviated view

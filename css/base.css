@@ -1,6 +1,6 @@
 body {font-family: sans-serif}
 a {text-decoration:none; font-weight: bold; border-radius:.2em}
-pre {white-space: pre-wrap;margin:0;max-width:111ex}
+pre {white-space: pre-wrap;margin:0;min-width:64ex;max-width:127ex;overflow:hidden}
 a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;color:#eee;background-color:#000}
 #up, a[rel="prev"] {float: left}
 a[rel="next"] {float: right}
