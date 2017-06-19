@@ -28,11 +28,10 @@ class R
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
     chan = R['#'+stripDoc.basename.split('%23')[-1]]
-
     readFile.lines.map{|l|
+#19:02 <    mngrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = stripDoc + '#' + (linenum += 1).to_s
-        puts "#{chan} line #{s}"
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, Creator, R['#'+m[2]]
         yield s, To, chan
