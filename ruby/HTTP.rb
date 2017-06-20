@@ -66,40 +66,44 @@ class R
 
   def GET
     return justPath.fileGET if justPath.file? # static response
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')}),[]] if path=='/'
-    
-    container = node.directory? || justPath.node.directory?
-    if container && uri[-1] != '/' # container found, direct to using 301 response
-      qs = @r['QUERY_STRING']
-      @r[:Response].update({'Location' => @r['REQUEST_PATH'] + '/' + (qs && !qs.empty? && ('?'+qs) || '')})
-      return [301, @r[:Response], []]
-    end
-
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')}),[]] if path=='/' # go to now
     set = nodeset
-    return notfound if !set || set.empty?
+    return notfound if !set || set.empty? # not found
     
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
-    @r[:Response].update({'Content-Type' => format,
-                          'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
+    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
     condResponse ->{ # body closure uncalled on HEAD or cache hit
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # compiled response
-        base = @r.R.join uri
         graph = RDF::Graph.new
-        if format == 'text/html' # strictly a mature-optimization. delete this clause and use RDF for everything if you like
-          set.map{|f| graph.load f.toRDF.pathPOSIX, :base_uri => base}
-          g = {}
-          # use our renderer which takes a tree of graph-data
-          graph.each_triple{|s,p,o|s = s.to_s; p = p.to_s
+        if format == 'text/html' # can delete this clause and use RDFa output from RDF response below
+          g = {} # JSON graph
+          rdf, nonRDF = set.partition &:isRDF
+          # load RDF
+          rdf.map{|n|graph.load n.pathPOSIX, :base_uri => uri}
+          graph.each_triple{|s,p,o|
+            s = s.to_s
+            p = p.to_s
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
             g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
+          # load nonRDF
+          nonRDF.map{|n|
+            (JSON.parse n.toJSON.readFile).map{|s,re|
+              re.map{|p,o|
+                unless p == 'uri'
+                  o.justArray.map{|o|# triple bound
+                    g[s] ||= {'uri' => s}
+                    g[s][p] ||= []
+                    g[s][p].push o }
+                end}}}
+          # call renderer
           HTML[g,self]
-        else # RDF output
-          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => base}
-          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => base, :standard_prefixes => true
+        else # RDF response
+          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => uri}
+          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => uri, :standard_prefixes => true
         end
       end}
   end

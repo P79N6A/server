@@ -44,20 +44,27 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  def isRDF; %w{e html n3 rdf owl ttl}.member? ext end
-  def toRDF
-    return self if isRDF
+  def isRDF; %w{html n3 rdf owl ttl}.member? ext end
+
+  def toRDF; isRDF ? self : toJSON end
+  # convert to JSON format readable as RDF
+  def toJSON
+    return self if ext == 'e'
     hash = uri.sha1
-    doc = R['/cache/RDF/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
+    doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
     unless doc.e && doc.m > m
-      graph = {}
-      triplr = Triplr[mime] || :triplrFile
-      puts "RDFizing #{uri} with #{triplr}"
-      send(*triplr){|s,p,o|
-        graph[s] ||= {'uri' => s}
-        graph[s][p] ||= []
-        graph[s][p].push o} if triplr
-      doc.writeFile graph.to_json
+      tree = {}
+      triplr = Triplr[mime] #|| :triplrFile
+      if triplr
+        puts "reading #{uri} as RDF with #{triplr}"
+        send(*triplr){|s,p,o|
+          tree[s] ||= {'uri' => s}
+          tree[s][p] ||= []
+          tree[s][p].push o}
+      else
+        puts "no triplr found for #{uri} #{mime}"
+      end
+      doc.writeFile tree.to_json
     end
     doc
   end

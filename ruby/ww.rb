@@ -14,11 +14,6 @@ end
 class Hash
   def R; R.new self["uri"] end
   def uri; self["uri"] end
-  def triples &f
-    map{|s,resource|
-      resource.map{|p,o|
-        o.justArray.map{|o|yield s,p,o} if p != 'uri'}}
-  end
   def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
 end
 class NilClass
