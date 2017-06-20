@@ -84,7 +84,7 @@ class R < RDF::URI
   def dir; dirname.R end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r} end
   def ext; (File.extname uri)[1..-1] || '' end
-  def basename; File.basename path end
+  def basename; File.basename (path||'') end
   def stripDoc;  R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path to server-root
   def sh; pathPOSIX.utf8.sh end # shell-escape path

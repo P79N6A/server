@@ -71,13 +71,7 @@ class R
       f.justArray.map{|f|             # each author
         f = f.to_utf8.downcase        # author address
         creator = AddrPath[f]         # author URI
-        yield e, Creator, R[creator]  # message -> author
-                                      # reply target:
-        r2 = list ||                   # List
-             m.reply_to.do{|t|t[0]} || # Reply-To
-             f                         # Creator
-        target = URI.escape('<' + id + '>')
-        yield e, SIOC+'reply_to', R["mailto:#{URI.escape r2}?References=#{target}&In-Reply-To=#{target}&subject=#{(CGI.escape m.subject).gsub('+','%20')}&"+'#reply']}} # reply-to pointer
+        yield e, Creator, R[creator]}}
 
     m[:from].do{|fr|
       fr.addrs[0].do{|a|
