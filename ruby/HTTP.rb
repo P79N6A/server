@@ -40,7 +40,7 @@ class R
 
     # load RDF
     rdf.map{|n|
-      graph.load n.pathPOSIX, :base_uri => uri}
+      graph.load n.pathPOSIX, :base_uri => n}
     graph.each_triple{|s,p,o|
       s = s.to_s
       p = p.to_s
@@ -75,8 +75,8 @@ class R
           HTML[R.load(set),self] # load and render
         else # RDF
           graph = RDF::Graph.new
-          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => uri} # load
-          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => uri, :standard_prefixes => true # render
+          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => self} # load
+          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true # render
         end
       end}
   end

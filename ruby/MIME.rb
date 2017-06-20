@@ -79,7 +79,8 @@ class R
     g = {}
     (R.load children).map{|u,r|
       if r[Title]
-        r.delete Content
+        [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|
+          r.delete p}
         g[u] = r
       end
     }
@@ -232,14 +233,14 @@ class R
       end
 
       def each_statement &fn
-        @graph.triples{|s,p,o|
-          fn.call RDF::Statement.new(
-                    @base.join(s),
-                    RDF::URI(p),
-                    o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
-                                                         l.datatype=RDF.XMLLiteral if p == Content
-                                                         l)
-                  )}
+        @graph.map{|s,re|
+          re.map{|p,o|
+            fn.call RDF::Statement.new(
+                      @base.join(s),
+                      RDF::URI(p),
+                      o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
+                                                              l.datatype=RDF.XMLLiteral if p == Content
+                                                              l))}}
       end
 
       def each_triple &block

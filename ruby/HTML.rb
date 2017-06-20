@@ -152,6 +152,7 @@ class R
 #    [{_: :script, type: "text/javascript", src: '/js/audio.js'},{_: :audio, id: :audio, controls: true}]}
 
   TableRow = -> l,e,sort,direction,keys,titles {
+    e.env[:label] ||= {}
     this = l.R
     href = this.uri
     types = l.types
@@ -201,7 +202,6 @@ class R
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
                          group = R.ungunk (host||'')
                          unless %w{t.co tinyurl}.member? group
-                           e.env[:label] ||= {}
                            e.env[:label][group] = true
                            {name: group, class: :links,
                             c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
