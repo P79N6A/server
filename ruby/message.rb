@@ -92,7 +92,12 @@ class R
       yield e, Mtime, date.to_i
     end
 
-    m.subject.do{|s| yield e, Title, s.to_utf8}
+    m.subject.do{|s|
+      s = s.to_utf8
+      s = s.gsub(/\[[^\]]+\]/){|l|
+        yield e, Label, l[1..-2]
+        nil}
+      yield e, Title, s}
 
     yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
 
