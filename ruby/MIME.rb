@@ -76,6 +76,14 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
+    g = {}
+    (R.load children).map{|u,r|
+      if r[Title]
+        r.delete Content
+        g[u] = r
+      end
+    }
+    yield s, Content, (H TabularView[g,self])
   end
 
   def triplrFile
@@ -83,7 +91,6 @@ class R
     s = '/'+s unless s[0] == '/'
     yield s, Type, R[Stat+'File']
     mt = mtime
-    puts "uri #{s} #{mt}"
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     yield s, Size, size

@@ -70,15 +70,16 @@ class R < RDF::URI
   alias_method :uri, :to_s
   def ==  u; to_s == u.to_s end
   def <=> c; to_s <=> c.to_s end
-  def + u; R uri + u.to_s end
+  def + u; R[uri + u.to_s].setEnv @r end
   def pathPOSIX; (host ? ('domain/' + host + path) : path.sub(/^\//,'')).gsub('%23','#') end
   def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || path.sub(Base,'')).gsub('#','%23').R end
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
+  def children; node.children.map{|c|c.R.setEnv @r} end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
-  def glob; (Pathname.glob pathPOSIX).map &:R end
+  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r} end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename; File.basename path end
   def stripDoc;  R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end

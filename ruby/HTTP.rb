@@ -33,13 +33,37 @@ class R
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     condResponse
   end
+  def R.load set
+    rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
+    g = {}                              # JSON
+    graph = RDF::Graph.new              # RDF
 
+    # load RDF
+    rdf.map{|n|
+      graph.load n.pathPOSIX, :base_uri => uri}
+    graph.each_triple{|s,p,o|
+      s = s.to_s
+      p = p.to_s
+      g[s] ||= {'uri' => s}; g[s][p] ||= []
+      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
+
+    # load non-RDF
+    nonRDF.map{|n|
+      (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
+        re.map{|p,o|
+          o.justArray.map{|o|# triple(s) found
+            g[s] ||= {'uri' => s}
+            g[s][p] ||= []
+            g[s][p].push o} unless p == 'uri' }}}
+    # return graph in tree
+    g
+  end
   def GET
     return justPath.fileGET if justPath.file? # static response
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')}),[]] if path=='/' # go to now
     set = nodeset
     return notfound if !set || set.empty? # not found
-    
+
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
@@ -47,27 +71,9 @@ class R
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # compile response
-        if format == 'text/html' # graph in tree for custom renderer. optional, delete for RDF::RDFa handler
-          rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
-          g = {}                              # JSON tree
-          graph = RDF::Graph.new              # RDF graph
-          # load (RDF)
-          rdf.map{|n|graph.load n.pathPOSIX, :base_uri => uri}
-          graph.each_triple{|s,p,o| s = s.to_s;  p = p.to_s
-            g[s] ||= {'uri' => s}; g[s][p] ||= []
-            g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
-          # load (non-RDF)
-          nonRDF.map{|n| # load JSON tree
-            (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
-              re.map{|p,o|
-                unless p == 'uri'
-                  o.justArray.map{|o|# triple(s) found
-                    g[s] ||= {'uri' => s}
-                    g[s][p] ||= []
-                    g[s][p].push o}
-                end}}}
-          HTML[g,self] # render
-        else # RDF response
+        if format == 'text/html' # custom renderer. optional, delete for RDF::RDFa handler
+          HTML[R.load(set),self] # load and render
+        else # RDF
           graph = RDF::Graph.new
           set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => uri} # load
           graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => uri, :standard_prefixes => true # render
@@ -97,7 +103,6 @@ class R
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
     paths = [self, justPath].uniq
-    locs = paths.select &:exist?
 
     # next+prev month/day/year/hour refs
     dp = []
@@ -134,10 +139,10 @@ class R
       expression = '-iregex ' + ('.*' + query + '.*').sh
       size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-      locs.map{|loc|
+      paths.select(&:exist?).map{|loc|
         `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
     elsif q.has_key? 'q' # match content
-      locs.map{|loc|
+      paths.select(&:exist?).map{|loc|
         `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
     elsif q.has_key? 'walk' # tree walk
       count = (q['c'].do{|c|c.to_i} || 12) + 1
@@ -154,9 +159,7 @@ class R
         end
         s }
     else
-      [self,justPath].uniq.map{|p|
-        (p + '*').glob
-      }.flatten
+      [self,justPath].uniq.map{|p| (p + '*').glob }.flatten
     end
   end
   

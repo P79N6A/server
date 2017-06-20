@@ -84,7 +84,7 @@ class R
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
 
-    # rewrite JSONGraph tree to HTML tree and call H for character output
+    # rewrite graph-in-tree to HTML-in-tree and call H for character output
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -176,7 +176,7 @@ class R
           end
         }.intersperse(' ')}}
 
-    # fragment identifiers from multiple docs (container) can't directly be used as elementID due to collisions, so generate a new one
+    # fragment identifiers from multiple docs (container) can't directly be used as elementID due to collisions, so generate a fresh one pointing to the original element
     [{_: :tr, href: href, id: e.path[-1]!='/' && this.fragment || e.selector,
       c: ["\n",
           keys.map{|k|
@@ -201,6 +201,7 @@ class R
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
                          group = R.ungunk (host||'')
                          unless %w{t.co tinyurl}.member? group
+                           e.env[:label] ||= {}
                            e.env[:label][group] = true
                            {name: group, class: :links,
                             c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
