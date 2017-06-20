@@ -62,9 +62,9 @@ class R
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
     list && list.match(/@/) && m['List-Id'].do{|name|
       group = AddrPath[list]                            # list URI
-      yield group, Type, R[SIOC+'Usergroup']            # list type
-      yield group, Label, name.decoded.gsub(/[<>&]/,'') # list name
-      yield group, SIOC+'has_container', group.R.dir    # list container
+#      yield group, Type, R[SIOC+'Usergroup']            # list type
+#      yield group, Label, name.decoded.gsub(/[<>&]/,'') # list name
+#      yield group, SIOC+'has_container', group.R.dir    # list container
     }
 
     m.from.do{|f|                    # any authors?
@@ -82,8 +82,8 @@ class R
     m[:from].do{|fr|
       fr.addrs[0].do{|a|
         author = AddrPath[a.address]
-        yield author, Label, a.display_name||a.name
-        yield author, SIOC+'has_container', author.R.dir
+ #       yield author, Label, a.display_name||a.name
+ #       yield author, SIOC+'has_container', author.R.dir
       }}
 
     if m.date
