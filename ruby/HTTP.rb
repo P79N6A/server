@@ -5,12 +5,6 @@ class R
     self.GET.do{| s, h, b |[ s, h, []]}
   end
 
-  def setEnv r
-    @r = r
-    self
-  end
-  def env; @r end
-
   def R.call e
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)

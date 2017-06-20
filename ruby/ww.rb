@@ -30,7 +30,7 @@ class Object
 end
 
 class R < RDF::URI
-  alias_method :uri, :to_s
+
   # URI constants
   Base = `pwd`.chomp
   W3   = 'http://www.w3.org/'
@@ -66,6 +66,9 @@ class R < RDF::URI
     uri ? (R.new uri) : self
   end
   def R.[] uri; R.new uri end
+  def setEnv r; @r = r; self end
+  def env; @r end
+  alias_method :uri, :to_s
 
   # equality / comparison
   def ==  u; to_s == u.to_s end
