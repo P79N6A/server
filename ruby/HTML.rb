@@ -176,7 +176,8 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: this.fragment || e.selector,
+    # fragment identifiers from multiple docs (container) can't directly be used as elementID due to collisions, so generate a new one
+    [{_: :tr, href: href, id: e.path[-1]!='/' && this.fragment || e.selector,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
