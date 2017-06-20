@@ -77,29 +77,30 @@ class R
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # compile response
-        graph = RDF::Graph.new
-        if format == 'text/html'
-          g = {} # graph as tree
-          rdf, nonRDF = set.partition &:isRDF
-          # load RDF
+        if format == 'text/html' # graph in tree for custom renderer. optional, delete for RDF::RDFa handler
+          rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
+          g = {}                              # JSON tree
+          graph = RDF::Graph.new              # RDF graph
+          # load (RDF)
           rdf.map{|n|graph.load n.pathPOSIX, :base_uri => uri}
           graph.each_triple{|s,p,o| s = s.to_s;  p = p.to_s
             g[s] ||= {'uri' => s}; g[s][p] ||= []
             g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
-          # load nonRDF
-          nonRDF.map{|n|
-            (JSON.parse n.toJSON.readFile).map{|s,re|
+          # load (non-RDF)
+          nonRDF.map{|n| # load JSON tree
+            (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
               re.map{|p,o|
                 unless p == 'uri'
-                  o.justArray.map{|o|# triple bound
+                  o.justArray.map{|o|# triple(s) found
                     g[s] ||= {'uri' => s}
                     g[s][p] ||= []
                     g[s][p].push o}
                 end}}}
-          HTML[g,self] # call renderer
+          HTML[g,self] # render
         else # RDF response
-          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => uri}
-          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => uri, :standard_prefixes => true
+          graph = RDF::Graph.new
+          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => uri} # load
+          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => uri, :standard_prefixes => true # render
         end
       end}
   end
