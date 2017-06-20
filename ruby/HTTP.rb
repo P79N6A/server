@@ -76,18 +76,15 @@ class R
     condResponse ->{ # body closure uncalled on HEAD or cache hit
       if set.size==1 && set[0].mime == format
         set[0] # static response
-      else # compiled response
+      else # compile response
         graph = RDF::Graph.new
-        if format == 'text/html' # can delete this clause and use RDFa output from RDF response below
-          g = {} # JSON graph
+        if format == 'text/html'
+          g = {} # graph as tree
           rdf, nonRDF = set.partition &:isRDF
           # load RDF
           rdf.map{|n|graph.load n.pathPOSIX, :base_uri => uri}
-          graph.each_triple{|s,p,o|
-            s = s.to_s
-            p = p.to_s
-            g[s] ||= {'uri' => s}
-            g[s][p] ||= []
+          graph.each_triple{|s,p,o| s = s.to_s;  p = p.to_s
+            g[s] ||= {'uri' => s}; g[s][p] ||= []
             g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
           # load nonRDF
           nonRDF.map{|n|
@@ -97,10 +94,9 @@ class R
                   o.justArray.map{|o|# triple bound
                     g[s] ||= {'uri' => s}
                     g[s][p] ||= []
-                    g[s][p].push o }
+                    g[s][p].push o}
                 end}}}
-          # call renderer
-          HTML[g,self]
+          HTML[g,self] # call renderer
         else # RDF response
           set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => uri}
           graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => uri, :standard_prefixes => true
