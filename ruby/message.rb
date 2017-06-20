@@ -132,7 +132,7 @@ class R
         end}.compact.intersperse("\n")
       yield e, Content, body}
 
-    attache = -> {e.R.a('.attache').mkdir} # container for attachments
+    attache = -> {(e.R+'.attache').mkdir} # container for attachments
 
     htmlCount = 0
     htmlFiles.map{|p| # HTML content

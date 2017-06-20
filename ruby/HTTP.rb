@@ -10,10 +10,10 @@ class R
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}           # find original hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'        # strip hostname field of gunk
-    rawpath = URI.unescape(e['REQUEST_PATH'].utf8).gsub(/\/+/,'/') # path
+    rawpath = e['REQUEST_PATH'].utf8                               # pathname
     path = Pathname.new(rawpath).expand_path.to_s                  # evaluate path-expression
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'           # preserve trailing-slash
-    resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # instantiate request object
+    resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # resource instance
     e['uri'] = resource.uri # reference normalized URI in environment
     e[:Response] = {}; e[:Links] = {} # response header storage
     puts (e['HTTP_USER_AGENT']||'') + ' ' + (e['HTTP_ACCEPT']||'')
@@ -154,7 +154,9 @@ class R
         end
         s }
     else
-      [self,justPath].uniq.map{|base|base.a('*').glob}.flatten
+      [self,justPath].uniq.map{|p|
+        (p + '*').glob
+      }.flatten
     end
   end
   
@@ -206,7 +208,7 @@ class R
        end)
   end
 
-  def R.qs h # serialize Hash to querystring
+  def R.qs h # {k: v} -> query-string
     '?'+h.map{|k,v|
       k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end
@@ -214,12 +216,9 @@ class R
   def format; @format ||= selectFormat end
 
   def selectFormat
-    { '.html' => 'text/html',
-      '.json' => 'application/json',
-      '.ttl' => 'text/turtle'}[File.extname(env['REQUEST_PATH'])].do{|m|return m} # URI suffix mapping
     accept.sort.reverse.map{|q,formats|
       formats.map{|mime|
-        return mime if RDF::Writer.for(:content_type => mime)}} # renderer found
+        return mime if RDF::Writer.for(:content_type => mime)}}
     'text/html'
   end
   

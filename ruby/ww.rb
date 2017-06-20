@@ -61,7 +61,6 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
 
-  # constructor
   def R uri = nil
     uri ? (R.new uri) : self
   end
@@ -69,14 +68,9 @@ class R < RDF::URI
   def setEnv r; @r = r; self end
   def env; @r end
   alias_method :uri, :to_s
-
-  # equality / comparison
   def ==  u; to_s == u.to_s end
   def <=> c; to_s <=> c.to_s end
-
-  # append
   def + u; R uri + u.to_s end
-  alias_method :a, :+
   def pathPOSIX; (host ? ('domain/' + host + path) : path.sub(/^\//,'')).gsub('%23','#') end
   def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || path.sub(Base,'')).gsub('#','%23').R end
   def node; Pathname.new pathPOSIX end
@@ -85,7 +79,10 @@ class R < RDF::URI
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
   def children; node.children.map &:R end
-  def glob; (Pathname.glob pathPOSIX).map &:R end
+  def glob
+    puts "glob #{pathPOSIX}"
+    (Pathname.glob pathPOSIX).map &:R
+  end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
   def stripDoc;  R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
@@ -103,9 +100,7 @@ class R < RDF::URI
 end
 
 class RDF::URI
-  def R
-    R.new to_s
-  end
+  def R; R.new to_s end
 end
 
 class String
