@@ -84,7 +84,7 @@ class R
         g[u] = r
       end
     }
-    yield s, Content, (H TabularView[g,self])
+    yield s, Content, (H TabularView[g,self,true])
   end
 
   def triplrFile

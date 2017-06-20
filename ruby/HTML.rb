@@ -115,7 +115,7 @@ class R
   # RDF types collapsed in abbreviated view
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
-  TabularView = -> g, e {
+  TabularView = -> g, e, static=false {
     titles = {}
     # sorting attribute
     p = e.q['sort'] || Date
@@ -137,8 +137,8 @@ class R
              else
                s[p]
               end).justArray[0]||0).send datatype}.send(direction).map{|r|
-            TableRow[r,e,p,direction,keys,titles]}},
-         {_: :tr, c: [keys.map{|k|
+            TableRow[r,e,p,direction,keys,titles,static]}},
+         ({_: :tr, c: keys.map{|k|
                q = e.q.merge({'sort' => k})
                if direction == :id
                  q.delete 'ascending'
@@ -146,12 +146,14 @@ class R
                  q['ascending'] = ''
                end
                href = CGI.escapeHTML R.qs q
-               {_: :th, href: href, property: k, class: k == p ? 'selected' : '', c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}]}]}]}
+               {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
+                c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)
+        ]}]}
 
 #  View[Sound+'Player'] = -> g,e {
 #    [{_: :script, type: "text/javascript", src: '/js/audio.js'},{_: :audio, id: :audio, controls: true}]}
 
-  TableRow = -> l,e,sort,direction,keys,titles {
+  TableRow = -> l,e,sort,direction,keys,titles,static {
     e.env[:label] ||= {}
     this = l.R
     href = this.uri
@@ -177,8 +179,8 @@ class R
           end
         }.intersperse(' ')}}
 
-    # fragment identifiers from multiple docs (container) can't directly be used as elementID due to collisions, so generate a fresh one pointing to the original element
-    [{_: :tr, href: href, id: e.path[-1]!='/' && this.fragment || e.selector,
+    # fragment identifiers from multiple docs (container) can't directly be used as elementID due to collisions, so generate a unique for pointing to the original element
+    [{_: :tr, href: href,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
@@ -252,7 +254,7 @@ class R
                        v
                      end
                    }.intersperse(' ')
-                 end}, "\n"]}]},
+                 end}, "\n"]}]}.update(static ? {} : {id: e.path[-1]!='/' && this.fragment || e.selector}),
      l[Image].do{|c|
        {_: :tr,
         c: [{_: :td},
