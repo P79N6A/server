@@ -32,7 +32,6 @@ end
 class R < RDF::URI
 
   # URI constants
-  Base = `pwd`.chomp
   W3   = 'http://www.w3.org/'
   Purl = 'http://purl.org/'
   DC   = Purl + 'dc/terms/'
@@ -68,11 +67,15 @@ class R < RDF::URI
   def setEnv r; @r = r; self end
   def env; @r end
   alias_method :uri, :to_s
+  def pathPOSIX
+    (host ? ('domain/' + host + path) : path.sub(/^\//,'')).gsub('%23','#')
+  end
+  def R.unPOSIX path
+    (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub('#','%23').R
+  end
   def ==  u; to_s == u.to_s end
   def <=> c; to_s <=> c.to_s end
   def + u; R[uri + u.to_s].setEnv @r end
-  def pathPOSIX; (host ? ('domain/' + host + path) : path.sub(/^\//,'')).gsub('%23','#') end
-  def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || path.sub(Base,'')).gsub('#','%23').R end
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end

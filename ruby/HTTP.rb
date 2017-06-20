@@ -63,6 +63,7 @@ class R
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')}),[]] if path=='/' # go to now
     set = nodeset
     return notfound if !set || set.empty? # not found
+#    puts nodeset.join ' '
 
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
