@@ -79,10 +79,7 @@ class R < RDF::URI
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
   def children; node.children.map &:R end
-  def glob
-    puts "glob #{pathPOSIX}"
-    (Pathname.glob pathPOSIX).map &:R
-  end
+  def glob; (Pathname.glob pathPOSIX).map &:R end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
   def stripDoc;  R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end

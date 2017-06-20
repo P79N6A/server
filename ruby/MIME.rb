@@ -56,7 +56,6 @@ class R
       tree = {}
       triplr = Triplr[mime] #|| :triplrFile
       if triplr
-        puts "reading #{uri} as RDF with #{triplr}"
         send(*triplr){|s,p,o|
           tree[s] ||= {'uri' => s}
           tree[s][p] ||= []
