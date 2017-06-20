@@ -16,6 +16,7 @@ class R
     resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # instantiate request object
     e['uri'] = resource.uri # reference normalized URI in environment
     e[:Response] = {}; e[:Links] = {} # response header storage
+    puts (e['HTTP_USER_AGENT']||'') + ' ' + (e['HTTP_ACCEPT']||'')
     (resource.setEnv e).send e['REQUEST_METHOD']
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"

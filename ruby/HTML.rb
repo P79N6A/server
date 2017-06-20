@@ -107,13 +107,11 @@ class R
                  '<br clear=all>',
                  (prevPage unless re.q.has_key? 'abbr'), (nextPage unless re.q.has_key? 'abbr')]}]}]}
 
-  # RDF types used in default view
-  InlineMeta = [Mtime, Type, Title, Image, Content, Label]
+  # RDF types shown in main column
+  InlineMeta = [Title, Image, Content, Label]
   # RDF types collapsed in abbreviated view
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat',
-                 RSS+'comments', RSS+'em', RSS+'category',
-                 Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
-                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment',
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime,
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   TabularView = -> g, e {
