@@ -133,15 +133,15 @@ class R
     end
     env[:Links][:prev] = p + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
-    
-    if q.has_key? 'find' # match names
+    dir = paths.find{|p|p.node.directory?}
+    if dir && (q.has_key? 'find') # match names
       query = q['find']
       expression = '-iregex ' + ('.*' + query + '.*').sh
       size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
       freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
       paths.select(&:exist?).map{|loc|
         `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
-    elsif q.has_key? 'q' # match content
+    elsif dir && (q.has_key? 'q') # match content
       paths.select(&:exist?).map{|loc|
         `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
     elsif q.has_key? 'walk' # tree walk
