@@ -78,10 +78,9 @@ class R < RDF::URI
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
-  def children; node.children.map &:R end
   def glob; (Pathname.glob pathPOSIX).map &:R end
   def ext; (File.extname uri)[1..-1] || '' end
-  def basename x = nil; path ? (x ? (File.basename path, x) : (File.basename path)) : '' end
+  def basename; File.basename path end
   def stripDoc;  R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path to server-root
   def sh; pathPOSIX.utf8.sh end # shell-escape path

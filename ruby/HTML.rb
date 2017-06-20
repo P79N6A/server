@@ -78,7 +78,9 @@ class R
     e = re.env
     e[:label] ||= {}; (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
     dir = re.path[-1] == '/'
-    up = re.justPath.dirname+'?'+re.env['QUERY_STRING'] if dir && re.path!='/'
+    unless re.path == '/'
+      up = (re.path[-1]=='/' ? re.path[0..-2] : (re.justPath.dirname+'/'))+'?'+re.env['QUERY_STRING']
+    end
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
 

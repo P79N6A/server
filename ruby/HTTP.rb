@@ -8,6 +8,7 @@ class R
   def R.call e
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
+#    puts (e['HTTP_USER_AGENT']||'') + ' ' + (e['HTTP_ACCEPT']||'')
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}           # find original hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'        # strip hostname field of gunk
     rawpath = e['REQUEST_PATH'].utf8                               # pathname
@@ -16,7 +17,6 @@ class R
     resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # resource instance
     e['uri'] = resource.uri # reference normalized URI in environment
     e[:Response] = {}; e[:Links] = {} # response header storage
-    puts (e['HTTP_USER_AGENT']||'') + ' ' + (e['HTTP_ACCEPT']||'')
     (resource.setEnv e).send e['REQUEST_METHOD']
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
