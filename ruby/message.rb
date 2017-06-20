@@ -27,11 +27,11 @@ class R
   def triplrChatLog &f
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    chan = R['#'+stripDoc.basename.split('%23')[-1]]
+    chan = R[stripDoc.basename]
     readFile.lines.map{|l|
-#19:02 <    mngrif(:#logbook)> good deal
+# 19:02 <    mngrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
-        s = stripDoc + '#' + (linenum += 1).to_s
+        s = stripDoc + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, Creator, R['#'+m[2]]
         yield s, To, chan
@@ -328,39 +328,31 @@ class R
         @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-          # find post link. try RDF then <link> as they're more likely to be a resolving hyperlink than what's in <id> element ("tag" URIs, hashes etc)
+          # identifier search. try RDF then <link> as they're more likely to be a href than <id> ("tag" URIs, hashes etc)
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u
-            unless u.match /^http/ # resolve relative reference
+            unless u.match /^http/ # resolve relative-reference
               u = (URI.join @base, u).to_s
             end
             resource = u.R
-            # typetag
             if u.match commentRe
               yield u, R::Type, R[R::Post]
               yield u, R::To, R[resource.uri.match(commentRe).pre_match]
             else
               yield u, R::Type, R[R::SIOC+'BlogPost']
               blogs = [resource.join('/')]
-              # include provenance of reblogs, as on http://cambridgehappenings.org
               blogs.push @base.R.join('/') if @base.R.host != resource.host
-              blogs.map{|blog|
-                yield u, R::To, blog}
+              blogs.map{|blog| yield u, R::To, blog}
             end
-            # media attachments
-            inner.scan(reAttach){|e|
+            inner.scan(reAttach){|e| # media links
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
                 yield(u, R::Atom+rel[1], url[2].R) if rel}}
-            # elements
-            inner.scan(reElement){|e|
-              # expand property-name
-              p = (x[e[0] && e[0].chop]||R::RSS) + e[1]
-              # custom element-type handle
-              if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p 
-                # bound as subject URI, drop redundant identifier-triple
-              elsif [Atom+'author', RSS+'author', RSS+'creator', Purl+'dc/elements/1.1/creator'].member? p
-                # author URI and name
+            inner.scan(reElement){|e| # elements
+              p = (x[e[0] && e[0].chop]||R::RSS) + e[1]              # expand property-name
+              if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p # custom element-type handlers
+                # used in subject URI search
+              elsif [Atom+'author', RSS+'author', RSS+'creator', Purl+'dc/elements/1.1/creator'].member? p # author
                 uri = e[3].match /<uri>([^<]+)</
                 name = e[3].match /<name>([^<]+)</
                 yield u, Creator, e[3].do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri

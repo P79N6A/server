@@ -74,6 +74,7 @@ class R
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
                                           ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
   HTML = -> graph, re {
+    Grep[graph,re] if re.q.has_key? 'q'
     e = re.env
     e[:label] ||= {}; (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
     dir = re.path[-1] == '/'
@@ -110,9 +111,7 @@ class R
   # RDF types shown in main column
   InlineMeta = [Title, Image, Content, Label]
   # RDF types collapsed in abbreviated view
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
-                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime,
-                 "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   TabularView = -> g, e {
     titles = {}
@@ -166,15 +165,16 @@ class R
         o.justArray.uniq.map{|v|
           if v.respond_to?(:uri)
             v = v.R
-            label = (v.fragment||(v.basename && v.basename.size > 1 && v.basename)||R.ungunk(v.host)).downcase.gsub(/[^a-zA-Z0-9_]/,'')
-            e.env[:label][label] = true
-            {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: label, c: label, id: e.selector}
+            label = v.fragment || (v.basename && URI.unescape(v.basename)) || R.ungunk(v.host)
+            lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+            e.env[:label][lbl] = true
+            {_: :a, href: v.host == e.host ? (v.fragment ? v.dir.path : v.path) : v.uri, name: lbl, c: label}
           else
             v.to_s
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: e.selector,
+    [{_: :tr, href: href, id: this.fragment || e.selector,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
