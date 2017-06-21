@@ -35,10 +35,10 @@ document.addEventListener("DOMContentLoaded", function(){
     // keyboard navigation: <p> prev <n> next <shift-P> prev page <shift-N> next page <shift-U> up <Enter> goto
     document.addEventListener("keydown",function(e){
 	
-	var jumpDoc = function(direction, start) {
+	var jumpDoc = function(direction) {
 	    var doc = document.querySelector("head > link[rel='"+direction+"']");
 	    if(doc)
-		window.location = doc.getAttribute('href') + start;
+		window.location = doc.getAttribute('href');
 	};
 
 	var key = e.keyCode;
@@ -46,13 +46,13 @@ document.addEventListener("DOMContentLoaded", function(){
 	
 	if(e.getModifierState("Shift")) {
 	    if(key==80) // [p]revious
-		jumpDoc('prev','#last');
+		jumpDoc('prev');
 	    if(key==78) // [n]ext
-		jumpDoc('next','#first');
+		jumpDoc('next');
 	    if(key==85) // [u]p
-		jumpDoc('up','#first');
+		jumpDoc('up');
 	    if(key==68) // [d]own
-		jumpDoc('down','#first');
+		jumpDoc('down');
 
 	    return null;
 	};
