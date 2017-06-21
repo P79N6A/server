@@ -75,6 +75,7 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
+    # overview of contained
     graph = {}
     (R.load children).map{|u,r|
       if r[Title]
@@ -83,6 +84,7 @@ class R
       end
       if r[Image]
         graph[s] ||= {}
+        graph[s][Title] ||= ''
         graph[s][Image] ||= []
         graph[s][Image].concat r[Image]
       end

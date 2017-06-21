@@ -74,9 +74,8 @@ class R
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
                                           ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
   HTML = -> graph, re {
-    Grep[graph,re] if re.q.has_key? 'q'
     e = re.env
-    e[:label] ||= {}; (1..10).map{|i|e[:label]["quote"+i.to_s] = true}
+    Grep[graph,re] if re.q.has_key? 'q'
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']}
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
@@ -87,18 +86,14 @@ class R
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'},
                  {_: :link, rel: :icon, href: '/.icon.png'},
-                 e[:title].do{|t|{_: :title, c: CGI.escapeHTML(t)}},
                  e[:Links].do{|links|
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 {_: :style, c: R['/css/base.css'].readFile},
-                 {_: :style, c: "body, a  {background-color:#000;color:#fff}"},
-                ]},
+                 {_: :script, c: R['/js/ui.js'].readFile},
+                 {_: :style, c: R['/css/base.css'].readFile}]},
             {_: :body,
              c: [upPage, prevPage, nextPage,
                  TabularView[graph,re], ({_: :span, style: 'font-size:8em', c: 404} if graph.empty?),
-                 {_: :script, c: R['/js/ui.js'].readFile},
-                 {_: :style, c: e[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, '<br clear=all>',
                  ([prevPage, nextPage] if graph.keys.size > 12), downPage]}]}]}
 
   # types shown in main column
@@ -108,6 +103,9 @@ class R
 
   TabularView = -> g, e, static=false {
     titles = {}
+    e.env[:label] = {}
+    (1..10).map{|i|
+      e.env[:label]["quote"+i.to_s] = true}
     # sorting attribute
     p = e.q['sort'] || Date
     # sorting direction
@@ -118,30 +116,33 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    # render
     [{_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"},
      {_: :table,
-     c: [{_: :tbody,
-          c: g.values.sort_by{|s|
-            ((if p == 'uri'
-              s[Title] || s[Label] || s.uri
-             else
-               s[p]
-              end).justArray[0]||0).send datatype}.send(direction).map{|r|
-            TableRow[r,e,p,direction,keys,titles,static]}},
-         ({_: :tr, c: keys.map{|k|
-               q = e.q.merge({'sort' => k})
-               if direction == :id
-                 q.delete 'ascending'
-               else
-                 q['ascending'] = ''
-               end
-               href = CGI.escapeHTML R.qs q
-               {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
-                c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)]}]}
+      c: [{_: :tbody,
+           c: g.values.sort_by{|s|
+             ((if p == 'uri'
+               s[Title] || s[Label] || s.uri
+              else
+                s[p]
+               end).justArray[0]||0).send datatype}.send(direction).map{|r|
+             title = r[Title].justArray.select{|t|t.class==String}[0].do{|t|
+               t = t.sub ReExpr, ''
+               titles[t] ? nil : (titles[t] = t)}
+             TableRow[r,e,p,direction,keys,title,static] unless static && !title
+           }},
+          ({_: :tr, c: keys.map{|k|
+              q = e.q.merge({'sort' => k})
+              if direction == :id
+                q.delete 'ascending'
+              else
+                q['ascending'] = ''
+              end
+              href = CGI.escapeHTML R.qs q
+              {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
+               c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)]},
+     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}]}
 
-  TableRow = -> l,e,sort,direction,keys,titles,static {
-    e.env[:label] ||= {}
+  TableRow = -> l,e,sort,direction,keys,title,static {
     this = l.R
     href = this.uri
     types = l.types
@@ -157,9 +158,6 @@ class R
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
     fileResource = types.member?(Stat+'File') || types.member?(Container) || types.member?(Resource)
-    title = l[Title].justArray.select{|t|t.class==String}[0].do{|t|
-      t = t.sub ReExpr, ''
-      titles[t] ? nil : (titles[t] = t)}
 
     actors = -> p {
       l[p].do{|o|

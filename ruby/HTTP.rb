@@ -33,12 +33,11 @@ class R
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     condResponse
   end
-  def R.load set; puts set.join ' '
+  def R.load set
     rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
     g = {}                              # JSON
     graph = RDF::Graph.new              # RDF
-
-    # load RDF
+    # RDF
     rdf.map{|n|
       graph.load n.pathPOSIX, :base_uri => n}
     graph.each_triple{|s,p,o|
@@ -46,8 +45,7 @@ class R
       p = p.to_s
       g[s] ||= {'uri' => s}; g[s][p] ||= []
       g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
-
-    # load non-RDF
+    # non-RDF
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
         re.map{|p,o|
@@ -55,8 +53,7 @@ class R
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
             g[s][p].push o} unless p == 'uri' }}}
-    # return graph in tree
-    g
+    g # graph in tree
   end
   def GET
     return justPath.fileGET if justPath.file? # static response
