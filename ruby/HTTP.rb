@@ -139,6 +139,7 @@ class R
     # container handlers
     if paths.find{|p|p.node.directory?}
       if q.has_key? 'find' # match name
+        env[:Links][:up] = justPath.dirname + '/' + qs
         query = q['find']
         expression = '-iregex ' + ('.*' + query + '.*').sh
         size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
@@ -146,6 +147,7 @@ class R
         paths.select(&:exist?).map{|loc|
           `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
       elsif q.has_key? 'q' # match content
+        env[:Links][:up] = justPath.dirname + '/' + qs
         paths.select(&:exist?).map{|loc|
           `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
       elsif q.has_key? 'walk' # tree range

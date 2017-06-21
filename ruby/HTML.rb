@@ -76,14 +76,11 @@ class R
   HTML = -> graph, re {
     Grep[graph,re] if re.q.has_key? 'q'
     e = re.env
-    e[:label] ||= {}; (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
-
-    # pointers every which way
+    e[:label] ||= {}; (1..10).map{|i|e[:label]["quote"+i.to_s] = true}
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']}
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', rel: :down, href: (CGI.escapeHTML d.to_s)}]}
-
     # rewrite graph-in-tree to HTML-in-tree and call H for character output
     H ["<!DOCTYPE html>\n",
        {_: :html,
@@ -101,13 +98,12 @@ class R
              c: [upPage, prevPage, nextPage,
                  TabularView[graph,re], ({_: :span, style: 'font-size:8em', c: 404} if graph.empty?),
                  {_: :script, c: R['/js/ui.js'].readFile},
-                 {_: :style, c: e[:label].map{|name,_|
-                        "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},'<br clear=all>',
-                 prevPage, nextPage, downPage]}]}]}
+                 {_: :style, c: e[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, '<br clear=all>',
+                 ([prevPage, nextPage] if graph.keys.size > 12), downPage]}]}]}
 
-  # RDF types shown in main column
+  # types shown in main column
   InlineMeta = [Title, Image, Content, Label]
-  # RDF types collapsed in abbreviated view
+  # types collapsed in abbreviated view
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   TabularView = -> g, e, static=false {
@@ -142,11 +138,7 @@ class R
                end
                href = CGI.escapeHTML R.qs q
                {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
-                c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)
-        ]}]}
-
-#  View[Sound+'Player'] = -> g,e {
-#    [{_: :script, type: "text/javascript", src: '/js/audio.js'},{_: :audio, id: :audio, controls: true}]}
+                c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)]}]}
 
   TableRow = -> l,e,sort,direction,keys,titles,static {
     e.env[:label] ||= {}

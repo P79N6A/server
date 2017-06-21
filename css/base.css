@@ -4,7 +4,7 @@ pre {white-space: pre-wrap;margin:0;min-width:64ex;max-width:127ex;overflow:hidd
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
-a[rel="up"], a[rel="down"] {margin-left:.2em}
+a[rel="up"], a[rel="down"] {margin-left:1em}
 a.page, .uri {font-weight: normal}
 .this {font-size:1.2em}
 .gray {font-weight: normal; color:#888;}
