@@ -33,7 +33,7 @@ class R
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     condResponse
   end
-  def R.load set
+  def R.load set; puts set.join ' '
     rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
     g = {}                              # JSON
     graph = RDF::Graph.new              # RDF
@@ -60,19 +60,18 @@ class R
   end
   def GET
     return justPath.fileGET if justPath.file? # static response
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')}),[]] if path=='/' # go to now
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # go to now
     set = nodeset
-    return notfound if !set || set.empty? # not found
-#    puts nodeset.join ' '
+    return notfound if !set || set.empty?
 
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
-    condResponse ->{ # body closure uncalled on HEAD or cache hit
+    condResponse ->{# no call on HEAD or cache hit
       if set.size==1 && set[0].mime == format
         set[0] # static response
-      else # compile response
-        if format == 'text/html' # custom renderer. optional, delete for RDF::RDFa handler
+      else # dynamic response
+        if format == 'text/html'
           HTML[R.load(set),self] # load and render
         else # RDF
           graph = RDF::Graph.new
@@ -100,18 +99,19 @@ class R
     end
   end
 
-  def nodeset # fs nodes to include in response
+  def nodeset
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
     paths = [self, justPath].uniq
 
-    # next+prev month/day/year/hour refs
-    dp = []
+    # month/day/year/hour dirs
     parts = path[1..-1].split '/'
+    # find date-parts
+    dp = []
     while parts[0] && parts[0].match(/^[0-9]+$/) do
       dp.push parts.shift.to_i
     end
-    n = nil; p = nil # next + prev pointers
+    n = nil; p = nil # pointers
     case dp.length
     when 1 # Y
       year = dp[0]
@@ -132,55 +132,57 @@ class R
       p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour-1)))
       n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
     end
+    # add pointers to environment
     env[:Links][:prev] = p + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
-    dir = paths.find{|p|p.node.directory?}
-    if dir && (q.has_key? 'find') # match names
-      query = q['find']
-      expression = '-iregex ' + ('.*' + query + '.*').sh
-      size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
-      freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-      paths.select(&:exist?).map{|loc|
-        `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
-    elsif dir && (q.has_key? 'q') # match content
-      paths.select(&:exist?).map{|loc|
-        `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
-    elsif q.has_key? 'walk' # tree walk
-      count = (q['c'].do{|c|c.to_i} || 12) + 1
-      count = 1024 if count > 1024
-      # at least 1 result plus lookahead-node startpoint of next page
-      count = 2 if count < 2
-      orient = q.has_key?('asc') ? :asc : :desc
-      ((exist? ? self : justPath).node.take count, orient, q['offset'].do{|o|o.R}).map(&:R).do{|s| # search
-        if q['offset'] && head = s[0] # direction-reversal link
-          env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-        end
-        if edge = s.size >= count && s.pop # lookahead node at next-page start
-          env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
-        end
-        s }
-    else
-      [self,justPath].uniq.map{|p| (p + '*').glob }.flatten
+
+    # container handlers
+    if paths.find{|p|p.node.directory?}
+      if q.has_key? 'find' # match name
+        query = q['find']
+        expression = '-iregex ' + ('.*' + query + '.*').sh
+        size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+        freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+        paths.select(&:exist?).map{|loc|
+          `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
+      elsif q.has_key? 'q' # match content
+        paths.select(&:exist?).map{|loc|
+          `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
+      elsif q.has_key? 'walk' # tree range
+        count = (q['c'].do{|c|c.to_i} || 11) + 1
+        count = 1024 if count > 1024
+        count = 2 if count < 2  # take >=1 plus lookahead-node for start of next page
+        orient = q.has_key?('asc') ? :asc : :desc
+        ((exist? ? self : justPath).node.take count, orient, q['offset'].do{|o|o.R}).map(&:R).do{|s| # search
+          if q['offset'] && head = s[0] # direction-reversal link
+            env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
+          end
+          if edge = s.size >= count && s.pop # lookahead node at next-page start
+            env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
+          end
+          s }
+      else # basic container
+        paths.map{|p|
+          if p.node.directory?
+            if uri[-1] == '/' # include children
+              env[:Links][:up] = path[0..-2] + qs
+              [p, p.children]
+            else
+              env[:Links][:up] = justPath.dirname + '/' + qs
+              env[:Links][:down] = path + '/' + qs
+              p
+            end
+          end
+        }.flatten.compact
+      end
+    else # basic resource
+      paths.map{|p|
+        # search for filetype-extension of base URI
+        # allow user override of default pattern
+        pattern = p.uri.match(/\*/) ? p : (p+'.*')
+        pattern.glob
+      }.flatten
     end
-  end
-  
-  def readFile; File.open(pathPOSIX).read end
-
-  def appendFile line
-    dir.mkdir
-    File.open(pathPOSIX,'a'){|f|f.write line + "\n"}
-    self
-  end
-
-  def writeFile o
-    dir.mkdir
-    File.open(pathPOSIX,'w'){|f|f << o}
-    self
-  end
-
-  def mkdir
-    FileUtils.mkdir_p(pathPOSIX) unless exist?
-    self
   end
 
   def accept

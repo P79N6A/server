@@ -77,12 +77,12 @@ class R
     Grep[graph,re] if re.q.has_key? 'q'
     e = re.env
     e[:label] ||= {}; (1..15).map{|i|e[:label]["quote"+i.to_s] = true}
-    dir = re.path[-1] == '/'
-    unless re.path == '/'
-      up = (re.path[-1]=='/' ? re.path[0..-2] : (re.justPath.dirname+'/'))+'?'+re.env['QUERY_STRING']
-    end
+
+    # pointers every which way
+    upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']}
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
+    downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', rel: :down, href: (CGI.escapeHTML d.to_s)}]}
 
     # rewrite graph-in-tree to HTML-in-tree and call H for character output
     H ["<!DOCTYPE html>\n",
@@ -98,17 +98,12 @@ class R
                  {_: :style, c: "body, a  {background-color:#000;color:#fff}"},
                 ]},
             {_: :body,
-             c: [([{_: :a, id: :up, href: up, c: '&#9650;'},'<br clear=all>'] if up),
-                 (prevPage && prevPage.merge({id: :prevpage})), (nextPage && nextPage.merge({id: :nextpage})),
-                 graph.empty? ? {_: :span, style: 'font-size:8em', c: 404} : '',
-                 graph.keys.grep(/\.(jpg|png)$/i).map{|img|
-                   {_: :a, href: image, c: {_: :img, class: :thumb, src: image}}},
-                 TabularView[graph,re],
+             c: [upPage, prevPage, nextPage,
+                 TabularView[graph,re], ({_: :span, style: 'font-size:8em', c: 404} if graph.empty?),
                  {_: :script, c: R['/js/ui.js'].readFile},
                  {_: :style, c: e[:label].map{|name,_|
-                        "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
-                 '<br clear=all>',
-                 (prevPage unless re.q.has_key? 'abbr'), (nextPage unless re.q.has_key? 'abbr')]}]}]}
+                        "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},'<br clear=all>',
+                 prevPage, nextPage, downPage]}]}]}
 
   # RDF types shown in main column
   InlineMeta = [Title, Image, Content, Label]
@@ -179,7 +174,6 @@ class R
           end
         }.intersperse(' ')}}
 
-    # fragment identifiers from multiple docs (container) can't directly be used as elementID due to collisions, so generate a unique for pointing to the original element
     [{_: :tr, href: href,
       c: ["\n",
           keys.map{|k|
@@ -253,7 +247,7 @@ class R
                      else
                        v
                      end
-                   }.intersperse(' ')
+                   }.intersperse(' ') # generate a unique id to avoid fragment-clash from multiple inlined resources (container scenario)
                  end}, "\n"]}]}.update(static ? {} : {id: e.path[-1]!='/' && this.fragment || e.selector}),
      l[Image].do{|c|
        {_: :tr,

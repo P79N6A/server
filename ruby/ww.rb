@@ -94,6 +94,10 @@ class R < RDF::URI
   def size; node.size end
   alias_method :e, :exist?
   alias_method :m, :mtime
+  def readFile; File.open(pathPOSIX).read end
+  def appendFile line; dir.mkdir; File.open(pathPOSIX,'a'){|f|f.write line + "\n"}; self end
+  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
+  def mkdir; FileUtils.mkdir_p(pathPOSIX) unless exist?; self end
 
   %w{MIME HTML HTTP message}.map{|r|require_relative r}
 

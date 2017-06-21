@@ -1,10 +1,10 @@
 body {font-family: sans-serif}
 a {text-decoration:none; font-weight: bold; border-radius:.2em}
 pre {white-space: pre-wrap;margin:0;min-width:64ex;max-width:127ex;overflow:hidden}
-a[rel="prev"], a[rel="next"], a.nextpage, #up, a.expand {font-size:3em;color:#eee;background-color:#000}
-#up, a[rel="prev"] {float: left}
+a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}
+a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
-#up, #down {margin-left:1em}
+a[rel="up"], a[rel="down"] {margin-left:.2em}
 a.page, .uri {font-weight: normal}
 .this {font-size:1.2em}
 .gray {font-weight: normal; color:#888;}
@@ -39,7 +39,6 @@ a.id:before { content:"\f02a"; font-family: icons; }
 a.identify:before { content:"\f235"; font-family: icons; }
 a.img:before { content:"\f03e"; font-family: icons; }
 a.key:before { content:"\f084"; font-family: icons; }
-a.up:before { content:"\f148"; font-family: icons; }
 a.cog:before { content:"\f013"; font-family: icons; }
 a.speaker:before { content:"\f028"; font-family: icons; }
 a.gears:before { content:"\f085"; font-family: icons; }

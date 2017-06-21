@@ -45,20 +45,14 @@ document.addEventListener("DOMContentLoaded", function(){
 //	console.log(key);
 	
 	if(e.getModifierState("Shift")) {
-	    if(key==80) // previous page
+	    if(key==80) // [p]revious
 		jumpDoc('prev','#last');
-	    if(key==78) // next page
+	    if(key==78) // [n]ext
 		jumpDoc('next','#first');
-	    if(key==85){ // up
-		var up = document.querySelector('#up');
-		if(up)
-		    window.location = up.attr('href');
-	    };
-	    if(key==68){ // down
-		var down = document.querySelector('#down');
-		if(down)
-		    window.location = down.attr('href');
-	    };
+	    if(key==85) // [u]p
+		jumpDoc('up','#first');
+	    if(key==68) // [d]own
+		jumpDoc('down','#first');
 
 	    return null;
 	};
