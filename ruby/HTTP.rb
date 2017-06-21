@@ -100,14 +100,11 @@ class R
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
     paths = [self, justPath].uniq
+    parts = path[1..-1].split '/'
 
     # month/day/year/hour dirs
-    parts = path[1..-1].split '/'
-    # find date-parts
-    dp = []
-    while parts[0] && parts[0].match(/^[0-9]+$/) do
-      dp.push parts.shift.to_i
-    end
+    dp = [] # date parts
+    dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil # pointers
     case dp.length
     when 1 # Y
@@ -117,21 +114,22 @@ class R
     when 2 # Y-m
       year = dp[0]
       m = dp[1]
-      n = m >= 12 ? "/#{year + 1}/#{01}/" : "/#{year}/#{'%02d' % (m + 1)}/"
-      p = m <=  1 ? "/#{year - 1}/#{12}/" : "/#{year}/#{'%02d' % (m - 1)}/"
+      n = m >= 12 ? "/#{year + 1}/#{01}" : "/#{year}/#{'%02d' % (m + 1)}"
+      p = m <=  1 ? "/#{year - 1}/#{12}" : "/#{year}/#{'%02d' % (m - 1)}"
     when 3 # Y-m-d
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue Time.now
-      p = (day-1).strftime('/%Y/%m/%d/')
-      n = (day+1).strftime('/%Y/%m/%d/')
+      p = (day-1).strftime('/%Y/%m/%d')
+      n = (day+1).strftime('/%Y/%m/%d')
     when 4 # Y-m-d-H
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue Time.now
       hour = dp[3]
-      p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour-1)))
-      n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00/') : (day.strftime('/%Y/%m/%d/')+('%02d/' % (hour+1)))
+      p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour-1)))
+      n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
     end
     # add pointers to environment
-    env[:Links][:prev] = p + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
-    env[:Links][:next] = n + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
+    s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
+    env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
+    env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
 
     # container handlers
     if paths.find{|p|p.node.directory?}

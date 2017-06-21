@@ -14,7 +14,7 @@ img.preview {max-height:14em}
 img.logo {max-height:3.7em}
 div.links {padding:.13em;max-width:36em;overflow: hidden;float:right;border-radius:.22em;margin:.1em}
 div, td {vertical-align:top}
-table {margin: auto;border-spacing:0}
+table {border-spacing:0}
 td {padding:.1em}
 th {text-align: left}
 th a {font-size:.9em}
