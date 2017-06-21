@@ -60,9 +60,7 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
 
-  def R uri = nil
-    uri ? (R.new uri) : self
-  end
+  def R uri=nil; uri ? (R.new uri) : self end
   def R.[] uri; R.new uri end
   def setEnv r; @r = r; self end
   def env; @r end
@@ -87,7 +85,7 @@ class R < RDF::URI
   def basename; File.basename (path||'') end
   def stripDoc;  R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path to server-root
-  def sh; pathPOSIX.utf8.sh end # shell-escape path
+  def sh; pathPOSIX.utf8.sh end # shell-escaped local path
   def exist?; node.exist? end
   def file?; node.file? end
   def mtime; node.stat.mtime if e end

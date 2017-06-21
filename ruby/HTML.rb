@@ -116,8 +116,7 @@ class R
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    [{_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"},
-     {_: :table,
+    [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|
              ((if p == 'uri'
@@ -140,7 +139,8 @@ class R
               href = CGI.escapeHTML R.qs q
               {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
                c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)]},
-     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}]}
+     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}},
+     {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]}
 
   TableRow = -> l,e,sort,direction,keys,title,static {
     this = l.R
