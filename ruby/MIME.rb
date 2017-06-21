@@ -47,7 +47,6 @@ class R
   def isRDF; %w{html n3 rdf owl ttl}.member? ext end
 
   def toRDF; isRDF ? self : toJSON end
-  # convert to JSON format readable as RDF
   def toJSON
     return self if ext == 'e'
     hash = uri.sha1
@@ -56,7 +55,7 @@ class R
       tree = {}
       triplr = Triplr[mime] #|| :triplrFile
       if triplr
-        puts "#{uri} #{mime}"
+        puts "#{mime} #{uri}"
         send(*triplr){|s,p,o|
           tree[s] ||= {'uri' => s}
           tree[s][p] ||= []
@@ -71,21 +70,24 @@ class R
 
   def triplrContainer
     s = path
-    s = s+'/' unless s[-1] == '/'
     s = '/'+s unless s[0] == '/'
     mt = mtime
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    g = {}
+    graph = {}
     (R.load children).map{|u,r|
       if r[Title]
-        [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|
-          r.delete p}
-        g[u] = r
+        [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
+        graph[u] = r
+      end
+      if r[Image]
+        graph[s] ||= {}
+        graph[s][Image] ||= []
+        graph[s][Image].concat r[Image]
       end
     }
-    yield s, Content, (H TabularView[g,self,true])
+    yield s, Content, (H TabularView[graph,self,true])
   end
 
   def triplrFile
@@ -123,9 +125,7 @@ class R
       yield l.chomp, Type, R[Resource] }
   end
 
-  def uris
-    graph.keys.select{|u|u.match /^http/}.map &:R
-  end
+  def uris; graph.keys.select{|u|u.match /^http/}.map &:R end
 
   def triplrMarkdown
     s = stripDoc.uri
@@ -234,14 +234,13 @@ class R
       end
 
       def each_statement &fn
-        @graph.map{|s,re|
-          re.map{|p,o|
-            fn.call RDF::Statement.new(
-                      @base.join(s),
-                      RDF::URI(p),
-                      o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
+        @graph.map{|s,r|
+          r.map{|p,o|
+            o.justArray.map{|o|
+              fn.call RDF::Statement.new(@base.join(s), RDF::URI(p),
+                        o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
                                                               l.datatype=RDF.XMLLiteral if p == Content
-                                                              l))}}
+                                                              l))}}}
       end
 
       def each_triple &block

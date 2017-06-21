@@ -178,6 +178,7 @@ class R
         }.flatten.compact
       end
     else # basic resource
+      env[:Links][:up] = justPath.dirname + '/' + qs
       paths.map{|p|
         # search for filetype-extension of base URI
         # allow user override of default pattern

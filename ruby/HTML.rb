@@ -250,10 +250,11 @@ class R
                      end
                    }.intersperse(' ') # generate a unique id to avoid fragment-clash from multiple inlined resources (container scenario)
                  end}, "\n"]}]},
-     l[Image].do{|c|
+     l[Image].do{|images|
        {_: :tr,
-        c: [{_: :td},
-            {_: :td, colspan: (keys.size - 1), c: c.justArray.map{|i|
-               {_: :a, href: href, c: {_: :img, src: i.R.host == e.host ? i.R.path : i.uri, class: :preview}}}.intersperse(' ')}]}}]}
+        c: [{_: :td, colspan: keys.size,
+             c: images.justArray.map{|i|
+               {_: :a, href: href,
+                c: {_: :img, src: i.R.host == e.host ? i.R.path : i.uri, class: :preview}}}.intersperse(' ')}]}}]}
 
 end
