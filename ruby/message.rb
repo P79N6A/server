@@ -29,7 +29,7 @@ class R
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
     chan = R[stripDoc.basename]
     readFile.lines.map{|l|
-# 19:02 <    mngrif(:#logbook)> good deal
+      #       19:02 <mngrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = stripDoc + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
@@ -45,16 +45,16 @@ class R
   end
 
   def triplrMail &b
-    m = Mail.read node
+    m = Mail.read node # read mail
     return unless m
 
     id = m.message_id || m.resent_message_id
-    unless id
-      puts "missing Message-ID in #{uri}"
-      id = rand.to_s.sha1
-    end
+    id = rand.to_s.sha1 unless id
+    e = MessagePath[id] # identifier
+    canonicalLocation = e.R + '.msg'
+    canonicalLocation.dir.mkdir
+    FileUtils.ln pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e
 
-    e = MessagePath[id]
     yield e, DC+'identifier', id
     yield e, DC+'source', self
     yield e, Type, R[SIOC+'MailMessage']
@@ -348,7 +348,7 @@ class R
                 rel = e[1].match reRel
                 yield(u, R::Atom+rel[1], url[2].R) if rel}}
             inner.scan(reElement){|e| # elements
-              p = (x[e[0] && e[0].chop]||R::RSS) + e[1]              # expand property-name
+              p = (x[e[0] && e[0].chop]||R::RSS) + e[1]                  # expand property-name
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p # custom element-type handlers
                 # used in subject URI search
               elsif [Atom+'author', RSS+'author', RSS+'creator', Purl+'dc/elements/1.1/creator'].member? p # author

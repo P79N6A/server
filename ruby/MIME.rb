@@ -6,7 +6,7 @@ class R
       (ext = ((File.extname path)[1..-1] || '').downcase
        if node.directory?
          'inode/directory'
-       elsif (File.basename path).index('msg.') == 0
+       elsif ext == 'msg' || File.basename(path).index('msg.')==0
          'message/rfc822'
        elsif ext == 'ttl'
          'text/turtle'
