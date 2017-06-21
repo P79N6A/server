@@ -145,6 +145,15 @@ class R
     this = l.R
     href = this.uri
     types = l.types
+    rowID = if static
+              'h' + rand.to_s.sha1 # random identifier which won't collide when mashed
+            else
+              if e.path[-1] == '/' # container
+                e.selector # ordinal identifier
+              else # doc
+                this.fragment # resource identifier
+              end
+            end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
     fileResource = types.member?(Stat+'File') || types.member?(Container) || types.member?(Resource)
@@ -166,7 +175,7 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href,
+    [{_: :tr, href: href, id: rowID,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
@@ -240,7 +249,7 @@ class R
                        v
                      end
                    }.intersperse(' ') # generate a unique id to avoid fragment-clash from multiple inlined resources (container scenario)
-                 end}, "\n"]}]}.update(static ? {} : {id: e.path[-1]!='/' && this.fragment || e.selector}),
+                 end}, "\n"]}]},
      l[Image].do{|c|
        {_: :tr,
         c: [{_: :td},
