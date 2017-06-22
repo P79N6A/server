@@ -53,7 +53,7 @@ class R
     e = MessagePath[id] # identifier
     canonicalLocation = e.R + '.msg'
     canonicalLocation.dir.mkdir
-    FileUtils.ln pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e
+    FileUtils.cp pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e
 
     yield e, DC+'identifier', id
     yield e, DC+'source', self
