@@ -16,6 +16,8 @@ class R
          'text/chatlog'
        elsif ext == 'md'
          'text/markdown'
+       elsif %w{rb}.member? ext
+         'text/plain'
        elsif Rack::Mime::MIME_TYPES['.'+ext]
          Rack::Mime::MIME_TYPES['.'+ext]
        else
