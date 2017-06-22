@@ -161,7 +161,7 @@ class R
   end
 
   def fetchFeeds
-    uris.map &:fetchFeed
+    uris.map(&:R).map(&:fetchFeed)
     self
   end
   def fetchFeed

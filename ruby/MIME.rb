@@ -123,12 +123,13 @@ class R
   end
 
   def triplrUriList
-    open(pathPOSIX).readlines.map{|l|
-      yield l.chomp, Type, R[Resource] }
+    uris.map{|u|yield u,Type,R[Resource]}
   end
 
 
-  def uris; graph.keys.select{|u|u.match /^http/}.map &:R end
+  def uris
+    (open pathPOSIX).readlines.map &:chomp
+  end
 
   def triplrMarkdown
     s = stripDoc.uri
