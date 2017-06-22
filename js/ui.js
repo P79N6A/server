@@ -43,21 +43,24 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	var key = e.keyCode;
 //	console.log(key);
-	
+
+	// page switch
 	if(e.getModifierState("Shift")) {
 	    if(key==80) // [p]revious
 		jumpDoc('prev');
 	    if(key==78) // [n]ext
 		jumpDoc('next');
-	    if(key==85) // [u]p
+	    if(key==85) // [u]p to parent
 		jumpDoc('up');
-	    if(key==68) // [d]own
+	    if(key==68) // [d]own to children
 		jumpDoc('down');
 
 	    return null;
 	};
+	if(key==37)
+	    jumpDoc('up');
 
-	if(key==80){ // (p)revious selectable
+	if(key==80||key==38){ // (p)revious selection
 	    loc = window.location.hash
 	    if(loc) {
 		cur = document.querySelector(loc);
@@ -68,8 +71,9 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	    var p = cur.attr('prev');
 	    window.location.hash = p;
+	    e.preventDefault();
 	};
-	if(key==78){ // (n)ext selectable
+	if(key==78||key==40){ // (n)ext selection
 	    var loc = window.location.hash;
 	    var cur = null;
 	    if(loc)
@@ -77,22 +81,21 @@ document.addEventListener("DOMContentLoaded", function(){
 	    if(!cur) {
 		window.location.hash = first.attr('id');
 	    } else {
-		if(cur.attr('id')=='next'){
-		    window.location = cur.attr('href'); // next element is on following page
-		} else {
-		    window.location.hash = cur.attr('next'); // next element in-page
-		};
+		window.location.hash = cur.attr('next');
 	    };
+	    e.preventDefault();
 	};
-	if(key==13){ // goto
+	if(key==13||key==39){ // select
 	    loc = window.location.hash;
 	    if(loc){
+		// find selected element in doc
 		cur = document.querySelector(loc);
 		if(cur){
+		    // find href attribute
 		    href = cur.attr('href');
-		    if(href && cur.nodeName.toLowerCase() != 'a') {
+		    // go
+		    if(href && cur.nodeName.toLowerCase() != 'a')
 			window.location = href;
-		    };
 		};
 	    };
 	};
@@ -104,11 +107,11 @@ document.addEventListener("DOMContentLoaded", function(){
 		    window.location = next.getAttribute('href');
 	    };
 	};
-	if(key==82){ // reverse sort
+	if(key==82){ // reverse sort-direction
 	    window.location = document.querySelector('.selected').getAttribute('href');
 	};
-	if(key==27){ // exit query-context
-	   window.location = window.location.pathname;
+	if(key==27){ // exit context
+	    jumpDoc('up');
 	};
     },false);
 

@@ -211,7 +211,7 @@ class R
         unless doc.e || doc.justPath.e
           doc.dir.mkdir
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
-          puts "+ " + doc.path
+          puts "+ " + doc.stripDoc.uri
         end
         true}}
     self
