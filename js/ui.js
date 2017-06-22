@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		    // find href attribute
 		    href = cur.attr('href');
 		    // go
-		    if(href && cur.nodeName.toLowerCase() != 'a')
+		    if(href)
 			window.location = href;
 		};
 	    };

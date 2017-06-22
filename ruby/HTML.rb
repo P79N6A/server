@@ -196,14 +196,11 @@ class R
                      [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
                          group = R.ungunk (host||'')
-                         unless %w{t.co tinyurl}.member? group
-                           e.env[:label][group] = true
-                           {name: group, class: :links,
-                            c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
-                                  [{_: :a, href: link.uri, c: CGI.escapeHTML(link.uri)}.
-                                     update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}
-                         end
-                       }},
+                         e.env[:label][group] = true
+                         {name: group, class: :links,
+                          c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
+                                [{_: :a, href: link.uri, c: CGI.escapeHTML(link.uri)}.
+                                   update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
                      # body
                      l[Content].justArray.map{|c|
                        monospace ? {_: :pre, c: c} : c },
