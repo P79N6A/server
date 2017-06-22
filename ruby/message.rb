@@ -30,7 +30,7 @@ class R
     chan = R[stripDoc.basename]
     readFile.lines.map{|l|
       #       19:02 <mngrif(:#logbook)> good deal
-      l.scan(/(\d\d):(\d\d) <[\s@]*([^\(>]+)[^>]*> (.*)/){|m|
+      l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = stripDoc + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, Creator, R['#'+m[2]]

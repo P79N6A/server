@@ -55,7 +55,7 @@ class R
       tree = {}
       triplr = Triplr[mime] #|| :triplrFile
       if triplr
-        puts "#{mime} #{uri}"
+        puts "#{mime} #{stripDoc.uri}"
         send(*triplr){|s,p,o|
           tree[s] ||= {'uri' => s}
           tree[s][p] ||= []
