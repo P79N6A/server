@@ -127,6 +127,7 @@ class R
       yield l.chomp, Type, R[Resource] }
   end
 
+
   def uris; graph.keys.select{|u|u.match /^http/}.map &:R end
 
   def triplrMarkdown

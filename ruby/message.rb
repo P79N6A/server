@@ -173,10 +173,10 @@ class R
     priorMtime = nil               # cached mtime value
     body = cache.child 'body.atom' # cached body URI
     if etag.e
-      priorEtag = etag.r
+      priorEtag = etag.readFile
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
     elsif mtime.e
-      priorMtime = mtime.r.to_time
+      priorMtime = mtime.readFile.to_time
       head["If-Modified-Since"] = priorMtime.httpdate
     end
     begin # conditional GET
@@ -186,9 +186,9 @@ class R
         etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag header
         mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified header
         resp = response.read
-        unless body.e && body.r == resp
-          body.w resp # new body
-          ('file://'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri
+        unless body.e && body.readFile == resp
+          body.writeFile resp
+          ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri
         end
       end
     rescue OpenURI::HTTPError => error
@@ -209,7 +209,7 @@ class R
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
         doc =  R["//localhost/#{time}#{slug}.ttl"]
         unless doc.e || doc.justPath.e
-          doc.dir.mk
+          doc.dir.mkdir
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
           puts "+ " + doc.path
         end
