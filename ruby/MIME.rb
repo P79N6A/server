@@ -14,6 +14,8 @@ class R
          'text/uri-list'
        elsif ext == 'log'
          'text/chatlog'
+       elsif ext == 'md'
+         'text/markdown'
        elsif Rack::Mime::MIME_TYPES['.'+ext]
          Rack::Mime::MIME_TYPES['.'+ext]
        else
@@ -133,7 +135,9 @@ class R
 
   def triplrMarkdown
     s = stripDoc.uri
-    yield s, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(r) + H({_: :link, href: '/css/code.css', rel: :stylesheet, type: MIME[:css]})
+    yield s, Content,
+          ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) +
+          H({_: :link, href: '/css/code.css', rel: :stylesheet, type: 'text/css'})
   end
 
   def triplrOrg
