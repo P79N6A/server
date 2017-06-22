@@ -37,6 +37,7 @@ class R < RDF::URI
   DC   = Purl + 'dc/terms/'
   SIOC = 'http://rdfs.org/sioc/ns#'
   Schema = 'http://schema.org/'
+  Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
   Sound    = Purl + 'ontology/mo/Sound'
   Image    = DC + 'Image'
   RSS      = Purl + 'rss/1.0/'

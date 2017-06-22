@@ -280,6 +280,8 @@ class R
                  RSS+'encoded' => Content,
                  RSS+'modules/content/encoded' => Content,
                  RSS+'category' => Label,
+                 Podcast+'keywords' => Label,
+                 Podcast+'author' => Creator,
                  RSS+'modules/slash/comments' => SIOC+'num_replies',
                  Atom+'content' => Content,
                  Atom+'summary' => Content,
