@@ -1,16 +1,24 @@
-N = NodeList.prototype;
-E = Element.prototype;
-N.map = function(f,a){for(var i=0,l=this.length;i<l;i++) f.apply(this[i],a);return this};
-E.attr = function(a,v){
-    if(v){ this.setAttribute(a,String(v))
-	   return this
-	 } else { return this.getAttribute(a)}};
-var prev = null;
-var first = null;
+NodeList.prototype.map = function(f,a){
+    for(var i=0, l=this.length; i<l; i++)
+	f.apply(this[i],a);
+    return this;
+};
+Element.prototype.attr = function(a,v){
+    if(v){
+	this.setAttribute(a,String(v));
+	return this;
+    } else {
+	return this.getAttribute(a);
+    };
+};
 document.addEventListener("DOMContentLoaded", function(){
 
-    // visit identified elements to construct selection ring
+    var prev = null;
+    var first = null;
+
+    // construct selection-ring
     document.querySelectorAll('[id]').map(function(e){
+
 	if(!first)
 	    first = this;
 	this.attr('next',first.attr('id'));
@@ -20,7 +28,8 @@ document.addEventListener("DOMContentLoaded", function(){
 	    prev.attr('next',this.attr('id'));
 	};
 	prev = this;
-	// bind tap-to-select handler
+
+	// tap-to-select handler
 	this.addEventListener("click",function(e){
 	    var id = this.attr('id');
 	    if(window.location.hash.slice(1)==id){
@@ -32,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
 
-    // keyboard navigation: <p> prev <n> next <shift-P> prev page <shift-N> next page <shift-U> up <Enter> goto
+    // keyboard navigation
     document.addEventListener("keydown",function(e){
 	
 	var jumpDoc = function(direction) {
@@ -42,13 +51,11 @@ document.addEventListener("DOMContentLoaded", function(){
 	};
 
 	var key = e.keyCode;
-//	console.log(key);
 
-	// page switch
 	if(e.getModifierState("Shift")) {
-	    if(key==80) // [p]revious
+	    if(key==80) // [p]rev page
 		jumpDoc('prev');
-	    if(key==78) // [n]ext
+	    if(key==78) // [n]ext page
 		jumpDoc('next');
 	    if(key==85) // [u]p to parent
 		jumpDoc('up');
@@ -57,10 +64,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	    return null;
 	};
-	if(key==37)
-	    jumpDoc('up');
-
-	if(key==80||key==38){ // (p)revious selection
+	
+	if(key==80||key==38){ // [p]revious selection
 	    loc = window.location.hash
 	    if(loc) {
 		cur = document.querySelector(loc);
@@ -73,7 +78,8 @@ document.addEventListener("DOMContentLoaded", function(){
 	    window.location.hash = p;
 	    e.preventDefault();
 	};
-	if(key==78||key==40){ // (n)ext selection
+
+	if(key==78||key==40){ // [n]ext selection
 	    var loc = window.location.hash;
 	    var cur = null;
 	    if(loc)
@@ -85,13 +91,15 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	    e.preventDefault();
 	};
-	if(key==13||key==39){ // select
+
+	if(key==13||key==39){ // [enter] go
+	    // find identifier
 	    loc = window.location.hash;
 	    if(loc){
-		// find selected element in doc
+		// find element
 		cur = document.querySelector(loc);
 		if(cur){
-		    // find href attribute
+		    // find href
 		    href = cur.attr('href');
 		    // go
 		    if(href)
@@ -99,7 +107,8 @@ document.addEventListener("DOMContentLoaded", function(){
 		};
 	    };
 	};
-	if(key==83){ // sort
+
+	if(key==83){ // [s]ort type
 	    var sel = document.querySelector('.selected');
 	    if(sel){
 		var next = sel.nextSibling || document.querySelector('tr > th[href]');
@@ -107,10 +116,12 @@ document.addEventListener("DOMContentLoaded", function(){
 		    window.location = next.getAttribute('href');
 	    };
 	};
-	if(key==82){ // reverse sort-direction
+
+	if(key==82){ // [r]everse sort
 	    window.location = document.querySelector('.selected').getAttribute('href');
 	};
-	if(key==27){ // exit context
+
+	if(key==27||key==37){ // [esc] exit
 	    jumpDoc('up');
 	};
     },false);
