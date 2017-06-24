@@ -132,10 +132,9 @@ class R
       yield e, Content, body}
 
     attache = -> {(e.R+'.attache').mkdir} # container for attachments
-
     htmlCount = 0
     htmlFiles.map{|p| # HTML content
-      html = attache[].child "page#{htmlCount}.html"  # name
+      html = attache[].child "#{htmlCount}.html"  # name
       yield e, DC+'hasFormat', html                   # message -> HTML resource
       html.writeFile p.decoded  if !html.e            # write content
       htmlCount += 1 }
@@ -143,8 +142,7 @@ class R
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-containers (digests + forwards)
       f = attache[].child 'msg.' + rand.to_s.sha1
       f.writeFile m.body.decoded if !f.e
-      f.triplrMail &b
-    }
+      f.triplrMail &b}
 
     m.attachments.                             # attachments
       select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p| # decodable?

@@ -30,7 +30,9 @@ class R
     'application/atom+xml' => [:triplrFeed],
     'application/org'      => [:triplrOrg],
     'audio/mpeg'           => [:triplrAudio],
+    'audio/x-wav'           => [:triplrAudio],
     'audio/3gpp'           => [:triplrAudio],
+    'image/gif'            => [:triplrImage],
     'image/png'            => [:triplrImage],
     'image/jpeg'           => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
@@ -57,16 +59,15 @@ class R
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
     unless doc.e && doc.m > m
       tree = {}
-      triplr = Triplr[mime] #|| :triplrFile
-      if triplr
-#        puts "#{mime} #{stripDoc.uri}"
-        send(*triplr){|s,p,o|
-          tree[s] ||= {'uri' => s}
-          tree[s][p] ||= []
-          tree[s][p].push o}
-      else
-        puts "WARNING no triplr for #{mime} #{uri}"
+      triplr = Triplr[mime]
+      unless triplr
+        puts "WARNING missing #{mime} triplr for #{uri}"
+        triplr = :triplrFile
       end
+      send(*triplr){|s,p,o|
+        tree[s] ||= {'uri' => s}
+        tree[s][p] ||= []
+        tree[s][p].push o}
       doc.writeFile tree.to_json
     end
     doc
