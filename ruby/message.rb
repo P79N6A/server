@@ -146,16 +146,16 @@ class R
       f.triplrMail &b
     }
 
-    m.attachments.                                    # attached
-      select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
-      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || (rand.to_s.sha1 + '.' + (MIME.invert[p.mime_type] || 'bin').to_s)
-      file = attache[].child name                     # name
-      puts "attachment in #{uri} , #{file}"
-      file.writeFile p.body.decoded if !file.e        # write
-      yield e, SIOC+'attachment', file                # message -> attached resource
-      if p.main_type=='image'                         # image attachment?
-        yield e, Image, file                     # image reference in RDF
-        yield e, Content,                             # image reference in HTML
+    m.attachments.                             # attachments
+      select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p| # decodable?
+      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || # supplied filename
+             (rand.to_s.sha1 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generated name
+      file = attache[].child name              # name
+      file.writeFile p.body.decoded if !file.e # write
+      yield e, SIOC+'attachment', file         # message -> attached resource
+      if p.main_type=='image'                  # image attachment?
+        yield e, Image, file                   # image for RDF
+        yield e, Content,                      # image for HTML
           H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]})
       end }
   end

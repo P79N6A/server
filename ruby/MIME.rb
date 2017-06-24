@@ -3,7 +3,7 @@ class R
 
   def mime
     @mime ||=
-      (ext = ((File.extname path)[1..-1] || '').downcase
+      (ext = (File.extname(path)[1..-1]||'').downcase
        if node.directory?
          'inode/directory'
        elsif ext == 'msg' || File.basename(path).index('msg.')==0
@@ -16,7 +16,7 @@ class R
          'text/chatlog'
        elsif ext == 'md'
          'text/markdown'
-       elsif %w{rb}.member? ext
+       elsif %w{asc rb}.member? ext
          'text/plain'
        elsif Rack::Mime::MIME_TYPES['.'+ext]
          Rack::Mime::MIME_TYPES['.'+ext]
@@ -59,13 +59,13 @@ class R
       tree = {}
       triplr = Triplr[mime] #|| :triplrFile
       if triplr
-        puts "#{mime} #{stripDoc.uri}"
+#        puts "#{mime} #{stripDoc.uri}"
         send(*triplr){|s,p,o|
           tree[s] ||= {'uri' => s}
           tree[s][p] ||= []
           tree[s][p].push o}
       else
-        puts "no triplr found for #{uri} #{mime}"
+        puts "WARNING no triplr for #{mime} #{uri}"
       end
       doc.writeFile tree.to_json
     end
