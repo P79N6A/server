@@ -147,12 +147,12 @@ class R
     href = this.uri
     types = l.types
     rowID = if static
-              'h' + rand.to_s.sha1 # random identifier which won't collide when mashed
-            else
-              if e.path[-1] == '/' # container
-                e.selector # ordinal identifier
+              'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
+            else # runtime binding
+              if e.path[-1]=='/' # container
+                e.selector # late bind of ordinal identifier. more readable/hackable than hash
               else # doc
-                this.fragment # resource identifier
+                this.fragment # original identifier can be re-used
               end
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
@@ -243,7 +243,7 @@ class R
                      else
                        v
                      end
-                   }.intersperse(' ') # generate a unique id to avoid fragment-clash from multiple inlined resources (container scenario)
+                   }.intersperse(' ')
                  end}, "\n"]}]},
      l[Image].do{|images|
        {_: :tr,

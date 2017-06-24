@@ -8,7 +8,7 @@ a[rel="up"], a[rel="down"] {margin-left:1em}
 a.page, .uri {font-weight: normal}
 .this {font-size:1.2em}
 .gray {font-weight: normal; color:#bbb;}
-a[name] {color:#000;padding:.08em}
+a[name] {color:#000;padding:.08em;white-space:nowrap}
 img {max-width: 100%}
 img.preview {max-height:14em}
 img.logo {max-height:3.7em}
