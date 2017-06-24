@@ -67,7 +67,7 @@ class R < RDF::URI
   def env; @r end
   alias_method :uri, :to_s
   def pathPOSIX
-    (host ? ('domain/' + host + path) : path.sub(/^\//,'')).gsub('%23','#')
+    (host ? ('domain/' + host + (path||'')) : (path||'').sub(/^\//,'')).gsub('%23','#')
   end
   def R.unPOSIX path
     (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub('#','%23').R
@@ -90,7 +90,7 @@ class R < RDF::URI
   def exist?; node.exist? end
   def file?; node.file? end
   def mtime; node.stat.mtime if e end
-  def size; node.size end
+  def size; node.size rescue 0 end
   alias_method :e, :exist?
   alias_method :m, :mtime
   def readFile; File.open(pathPOSIX).read end

@@ -3,10 +3,10 @@ class R
 
   def mime
     @mime ||=
-      (ext = (File.extname(path)[1..-1]||'').downcase
+      (ext = (File.extname(path||'')[1..-1]||'').downcase
        if node.directory?
          'inode/directory'
-       elsif ext == 'msg' || File.basename(path).index('msg.')==0
+       elsif ext == 'msg' || File.basename(path||'').index('msg.')==0
          'message/rfc822'
        elsif ext == 'ttl'
          'text/turtle'
@@ -16,7 +16,7 @@ class R
          'text/chatlog'
        elsif ext == 'md'
          'text/markdown'
-       elsif %w{asc rb}.member? ext
+       elsif %w{asc cabal hs rb yaml}.member? ext
          'text/plain'
        elsif Rack::Mime::MIME_TYPES['.'+ext]
          Rack::Mime::MIME_TYPES['.'+ext]
@@ -34,6 +34,7 @@ class R
     'audio/mpeg'           => [:triplrAudio],
     'audio/x-wav'           => [:triplrAudio],
     'audio/3gpp'           => [:triplrAudio],
+    'image/bmp'            => [:triplrImage],
     'image/gif'            => [:triplrImage],
     'image/png'            => [:triplrImage],
     'image/jpeg'           => [:triplrImage],
@@ -77,6 +78,7 @@ class R
 
   def triplrContainer
     s = path
+    s += '/' unless s[-1] == '/'
     s = '/'+s unless s[0] == '/'
     mt = mtime
     yield s, Type, R[Container]
@@ -85,7 +87,7 @@ class R
     # overview of contained
     graph = {}
     (R.load children).map{|u,r|
-      if r[Title]
+      if r[Title] # show titled resources in overview
         [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
         graph[u] = r
       end
@@ -100,13 +102,14 @@ class R
   end
 
   def triplrFile
-    s = path
+    s = path || ''
     s = '/'+s unless s[0] == '/'
     yield s, Type, R[Stat+'File']
-    mt = mtime
-    yield s, Mtime, mt.to_i
-    yield s, Date, mt.iso8601
-    yield s, Size, size
+    mtime.do{|mt|
+      yield s, Mtime, mt.to_i
+      yield s, Date, mt.iso8601}
+    size.do{|sz|
+      yield s, Size, sz}
   end
 
   def triplrAudio &f
