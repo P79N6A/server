@@ -29,6 +29,8 @@ class R
   Triplr = {
     'application/atom+xml' => [:triplrFeed],
     'application/org'      => [:triplrOrg],
+    'application/pdf'      => [:triplrFile],
+    'application/pkcs7-signature' => [:triplrFile],
     'audio/mpeg'           => [:triplrAudio],
     'audio/x-wav'           => [:triplrAudio],
     'audio/3gpp'           => [:triplrAudio],
@@ -39,6 +41,7 @@ class R
     'message/rfc822'       => [:triplrMail],
     'text/chatlog'         => [:triplrChatLog],
     'text/csv'             => [:triplrCSV,/,/],
+    'text/html'            => [:triplrFile],
     'text/man'             => [:triplrMan],
     'text/markdown'        => [:triplrMarkdown],
     'text/nfo'             => [:triplrHref,'cp437'],
@@ -50,8 +53,7 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  def isRDF; %w{html n3 rdf owl ttl}.member? ext end
-
+  def isRDF; %w{n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : toJSON end
   def toJSON
     return self if ext == 'e'
