@@ -44,7 +44,7 @@ class R
       s = s.to_s
       p = p.to_s
       g[s] ||= {'uri' => s}; g[s][p] ||= []
-      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? R(o) : o.value}
+      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value}
     # non-RDF
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree

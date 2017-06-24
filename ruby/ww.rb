@@ -66,8 +66,12 @@ class R < RDF::URI
   def setEnv r; @r = r; self end
   def env; @r end
   alias_method :uri, :to_s
-  def pathPOSIX
-    (host ? ('domain/' + host + (path||'')) : (path||'').sub(/^\//,'')).gsub('%23','#')
+  def pathPOSIX # storage path relative to server-root
+    (if host
+     'domain/' + host + (path||'')
+     else
+      (path||'').sub /^\//, ''
+     end).gsub('%23','#')
   end
   def R.unPOSIX path
     (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub('#','%23').R

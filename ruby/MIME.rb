@@ -86,7 +86,8 @@ class R
     yield s, Date, mt.iso8601
     # overview of contained
     graph = {}
-    (R.load children).map{|u,r|
+    leafNodes = children.select{|e|!e.node.directory?}
+    (R.load leafNodes).map{|u,r|
       if r[Title] # show titled resources in overview
         [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
         graph[u] = r
