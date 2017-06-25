@@ -1,33 +1,40 @@
 # coding: utf-8
 class R
-
+  MIMEs = {
+    'asc' => 'text/plain',
+    'eot' => 'application/font',
+    'hs' => 'text/plain',
+    'md' => 'text/markdown',
+    'msg' => 'message/rfc822',
+    'log' => 'text/chatlog',
+    'rb' => 'text/plain',
+    'ttl' => 'text/turtle',
+    'u' => 'text/uri-list',
+    'woff' => 'application/font',
+    'yaml' => 'text/plain',
+  }
   def mime
     @mime ||=
-      (ext = (File.extname(path||'')[1..-1]||'').downcase
+      (name = path || ''
+       ext = ((File.extname name)[1..-1]||'').downcase
        if node.directory?
          'inode/directory'
-       elsif ext == 'msg' || File.basename(path||'').index('msg.')==0
+       elsif (File.basename name).index('msg.')==0 # oddly procmail does PREFIX rather than SUFFIX
          'message/rfc822'
-       elsif ext == 'ttl'
-         'text/turtle'
-       elsif ext == 'u'
-         'text/uri-list'
-       elsif ext == 'log'
-         'text/chatlog'
-       elsif ext == 'md'
-         'text/markdown'
-       elsif %w{asc cabal hs rb yaml}.member? ext
-         'text/plain'
-       elsif Rack::Mime::MIME_TYPES['.'+ext]
+       elsif MIMEs[ext]                      # MIME mapping
+         MIMEs[ext]
+       elsif Rack::Mime::MIME_TYPES['.'+ext] # Rack MIME mapping
          Rack::Mime::MIME_TYPES['.'+ext]
        else
-         puts "#{pathPOSIX} of unknown MIME, sniffing content (WARNING SLOW)"
+         puts "WARNING unknown MIME of #{pathPOSIX}, sniffing (SLOW)"
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
   end
   
   Triplr = {
     'application/atom+xml' => [:triplrFeed],
+    'application/font'      => [:triplrFile],
+    'application/octet-stream'      => [:triplrFile],
     'application/org'      => [:triplrOrg],
     'application/pdf'      => [:triplrFile],
     'application/pkcs7-signature' => [:triplrFile],
@@ -41,6 +48,7 @@ class R
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMail],
     'text/chatlog'         => [:triplrChatLog],
+    'text/css'             => [:triplrFile],
     'text/csv'             => [:triplrCSV,/,/],
     'text/html'            => [:triplrFile],
     'text/man'             => [:triplrMan],
