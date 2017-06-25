@@ -157,7 +157,7 @@ class R
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
-    fileResource = types.member?(Stat+'File') || types.member?(Stat+'CompressedFile') || types.member?(Container) || types.member?(Resource)
+    fileResource = types.member?(Stat+'File') || types.member?(Stat+'CompressedFile') || types.member?(Stat+'HTMLFile') || types.member?(Container) || types.member?(Resource)
 
     actors = -> p {
       l[p].do{|o|

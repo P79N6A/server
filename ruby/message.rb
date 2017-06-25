@@ -220,8 +220,8 @@ class R
   def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
   alias_method  :feeds, :listFeeds
 
-  module Feed # feed parser defined as RDF library method
-    
+  module Feed # feed parser defined as RDF parser
+
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom
       content_encoding 'utf-8'
@@ -242,7 +242,7 @@ class R
         nil
       end
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end      
-      def each_statement &fn # triples flow from right to left across stacked stream-transformers
+      def each_statement &fn # triples flow left ← right across stream-transformer stack
         resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content

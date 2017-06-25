@@ -52,7 +52,7 @@ class R
     'text/chatlog'         => [:triplrChatLog],
     'text/css'             => [:triplrFile],
     'text/csv'             => [:triplrCSV,/,/],
-    'text/html'            => [:triplrFile],
+    'text/html'            => [:triplrHTML],
     'text/man'             => [:triplrMan],
     'text/markdown'        => [:triplrMarkdown],
     'text/nfo'             => [:triplrHref,'cp437'],
@@ -135,6 +135,11 @@ class R
 
   def triplrAudio &f
     yield uri, Type, R[Sound]
+    triplrFile false,&f
+  end
+
+  def triplrHTML &f
+    yield uri, Type, R[Stat+'HTMLFile']
     triplrFile false,&f
   end
 
@@ -226,7 +231,7 @@ class R
 
   Icons = {
     'uri' => :id, Container => :dir, Content => :pencil, Date => :date, Label => :tag, Title => :title, Sound => :speaker, Image => :img, Size => :size, Mtime => :time, To => :user, Resource => :graph,
-    DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file, Stat+'CompressedFile' => :archive,
+    DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file, Stat+'CompressedFile' => :archive, Stat+'HTMLFile' => :html,
     SIOC+'BlogPost' => :pencil,
     SIOC+'Discussion' => :comments,
     SIOC+'InstantMessage' => :comment,
