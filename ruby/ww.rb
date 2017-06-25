@@ -103,7 +103,7 @@ class RDF::URI
 end
 
 class String
-  def R; R.new self end # cast to URI
+  def R; R.new self end
   # text to HTML, emit URIs as RDF
   def hrefs &b
     pre,link,post = self.partition R::Href
