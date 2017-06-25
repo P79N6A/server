@@ -1,9 +1,5 @@
 # coding: utf-8
 %w{cgi csv date digest/sha1 fileutils json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
-
-def R uri
-  R.new uri
-end
 class Array
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
   def justArray; self end
@@ -28,9 +24,7 @@ class Object
     [Time, DateTime].member?(self.class) ? self : Time.parse(self)
   end
 end
-
 class R < RDF::URI
-
   # URI constants
   W3   = 'http://www.w3.org/'
   Purl = 'http://purl.org/'
@@ -61,7 +55,7 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
 
-  def R uri=nil; uri ? (R.new uri) : self end
+  def R; self end
   def R.[] uri; R.new uri end
   def setEnv r; @r = r; self end
   def env; @r end
