@@ -93,7 +93,7 @@ class R
         nil}
       yield e, Title, s}
 
-    yield e, SIOC+'has_discussion', R['/thread/'+id] # thread
+    yield e, SIOC+'has_discussion', R[e+'?rev']
 
     %w{to cc bcc resent_to}.map{|p|           # reciever fields
       m.send(p).justArray.map{|to|            # each recipient
