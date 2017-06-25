@@ -60,12 +60,11 @@ class R
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto "now" container
     set = nodeset
     return notfound if !set || set.empty?
-    puts "set "+set.join(' ')
+#    puts "set "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
     condResponse ->{ # lazy thunk
       if set.size==1 && set[0].mime == format
-        puts "static response #{set[0].mime} #{set[0]} #{format} #{@r['HTTP_ACCEPT']}"
         set[0] # static response
       else # dynamic response
         if format == 'text/html'
@@ -84,7 +83,7 @@ class R
       [304, {}, []]
     else
       body = body ? body.call : self
-      if body.class == R # hand path reference to Rack::File handler
+      if body.class == R # hand path reference to Rack::File handler            attach our headers
         (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
       else
         [(@r[:Status]||200), @r[:Response], [body]]
