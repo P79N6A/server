@@ -174,14 +174,18 @@ class R
 
   def triplrMarkdown
     s = stripDoc.uri
-    yield s, Content,
-          ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) +
-          H({_: :link, href: '/css/code.css', rel: :stylesheet, type: 'text/css'})
+    yield s, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
   end
 
   def triplrOrg
     require 'org-ruby'
     yield stripDoc.uri, Content, Orgmode::Parser.new(r).to_html
+  end
+
+  def triplrSourceCode &f
+    yield uri, Type, R[SIOC+'SourceCode']
+    yield uri, Content, `pygmentize -f html #{sh}`
+    triplrFile false,&f
   end
 
   def triplrCSV d
