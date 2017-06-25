@@ -40,7 +40,6 @@ class R
     {_: :a, href: uri, c: name || fragment || basename}
   end
 
-  require 'nokogiri'
   def nokogiri
     Nokogiri::HTML.parse (open uri).read
   end

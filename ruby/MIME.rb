@@ -53,7 +53,7 @@ class R
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMail],
     'text/chatlog'         => [:triplrChatLog],
-    'text/css'             => [:triplrFile],
+    'text/css'             => [:triplrSourceCode],
     'text/csv'             => [:triplrCSV,/,/],
     'text/html'            => [:triplrHTML],
     'text/man'             => [:triplrMan],

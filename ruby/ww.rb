@@ -1,5 +1,5 @@
 # coding: utf-8
-%w{cgi csv date digest/sha1 fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
+%w{cgi csv date digest/sha1 fileutils json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 
 def R uri
   R.new uri
@@ -66,7 +66,7 @@ class R < RDF::URI
   def setEnv r; @r = r; self end
   def env; @r end
   alias_method :uri, :to_s
-  def pathPOSIX # storage path relative to server-root
+  def pathPOSIX
     (if host
      'domain/' + host + (path||'')
      else
@@ -82,7 +82,7 @@ class R < RDF::URI
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
-  def children; node.children.map{|c|c.R.setEnv @r} end
+  def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
   def dir; dirname.R end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r} end
@@ -138,14 +138,7 @@ end
 
 class Pathname
 
-  def R
-    R.unPOSIX to_s.utf8
-  end
-
-  def c # children
-    return [] unless directory?
-    children.delete_if{|n| n.basename.to_s.match /^\./}
-  end
+  def R; R.unPOSIX to_s.utf8 end
 
   # range traverse w/ offset + limit
   def take count=1000, direction=:desc, offset=nil
@@ -164,7 +157,7 @@ class Pathname
          !offset || # no offset required
          (sz = [ns,offset].map(&:size).min # size of compared region
           ns[0..sz-1].send(m,offset[0..sz-1]))) && # path-compare
-        (if !(c = n.c).empty? # has children?
+        (if !(c = n.children).empty? # has children?
            visit.(c)          # visit children
          else
            count = count - 1 # decrement nodes-left count
