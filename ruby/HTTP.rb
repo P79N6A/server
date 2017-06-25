@@ -11,7 +11,7 @@ class R
 #    puts (e['HTTP_USER_AGENT']||'') + ' ' + (e['HTTP_ACCEPT']||'')
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}           # find original hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'        # strip hostname field of gunk
-    rawpath = e['REQUEST_PATH'].utf8                               # pathname
+    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'             # pathname
     path = Pathname.new(rawpath).expand_path.to_s                  # evaluate path-expression
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'           # preserve trailing-slash
     resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # resource instance
