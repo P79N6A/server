@@ -58,15 +58,14 @@ class R
     return notfound if path.match /^\/(cache|domain)/ # internal storage
     return justPath.fileGET if justPath.file?         # static response
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto "now" container
-
     set = nodeset
     return notfound if !set || set.empty?
-
+    puts "set "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
-
     condResponse ->{ # lazy thunk
       if set.size==1 && set[0].mime == format
+        puts "static response #{set[0].mime} #{set[0]} #{format} #{@r['HTTP_ACCEPT']}"
         set[0] # static response
       else # dynamic response
         if format == 'text/html'

@@ -2,6 +2,7 @@
 class R
   MIMEs = {
     'asc' => 'text/plain',
+    'e' => 'application/json',
     'eot' => 'application/font',
     'hs' => 'application/haskell',
     'md' => 'text/markdown',
