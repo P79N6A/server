@@ -34,12 +34,14 @@ class R
   Triplr = {
     'application/atom+xml' => [:triplrFeed],
     'application/font'      => [:triplrFile],
-    'application/octet-stream'      => [:triplrFile],
+    'application/javascript' => [:triplrFile],
+    'application/octet-stream' => [:triplrFile],
     'application/org'      => [:triplrOrg],
     'application/pdf'      => [:triplrFile],
     'application/pkcs7-signature' => [:triplrFile],
+    'application/x-gzip'   => [:triplrArchive],
     'audio/mpeg'           => [:triplrAudio],
-    'audio/x-wav'           => [:triplrAudio],
+    'audio/x-wav'          => [:triplrAudio],
     'audio/3gpp'           => [:triplrAudio],
     'image/bmp'            => [:triplrImage],
     'image/gif'            => [:triplrImage],
@@ -110,10 +112,10 @@ class R
     yield s, Content, (H TabularView[graph,self,true])
   end
 
-  def triplrFile
+  def triplrFile basicFile=true
     s = path || ''
     s = '/'+s unless s[0] == '/'
-    yield s, Type, R[Stat+'File']
+    yield s, Type, R[Stat+'File'] if basicFile
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
@@ -121,8 +123,19 @@ class R
       yield s, Size, sz}
   end
 
+  def triplrArchive &f
+    yield uri, Type, R[Stat+'CompressedFile']
+    triplrFile false,&f
+  end
+
+  def triplrImage &f
+    yield uri, Type, R[Image]
+    triplrFile false,&f
+  end
+
   def triplrAudio &f
     yield uri, Type, R[Sound]
+    triplrFile false,&f
   end
 
   # scan for HTTP URIs in plain-text. example:
@@ -186,9 +199,6 @@ class R
     {'uri' => uri}.to_json *a
   end
 
-  def triplrImage &f
-    yield uri, Type, R[Image]
-  end
 =begin
   GET['thumbnail'] = -> e {
     thumb = nil
@@ -216,7 +226,7 @@ class R
 
   Icons = {
     'uri' => :id, Container => :dir, Content => :pencil, Date => :date, Label => :tag, Title => :title, Sound => :speaker, Image => :img, Size => :size, Mtime => :time, To => :user, Resource => :graph,
-    DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file,
+    DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file, Stat+'CompressedFile' => :archive,
     SIOC+'BlogPost' => :pencil,
     SIOC+'Discussion' => :comments,
     SIOC+'InstantMessage' => :comment,
