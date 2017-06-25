@@ -13,23 +13,17 @@ Element.prototype.attr = function(a,v){
 };
 document.addEventListener("DOMContentLoaded", function(){
 
-    var prev = null;
-    var first = null;
-
     // construct selection-ring
+    var first = null;
+    var last = null;
     document.querySelectorAll('[id]').map(function(e){
-
 	if(!first)
 	    first = this;
-	this.attr('next',first.attr('id'));
-	first.attr('prev',this.attr('id'));
-	if(prev){
-	    this.attr('prev',prev.attr('id'));
-	    prev.attr('next',this.attr('id'));
+	if(last){
+	    this.attr('prev',last.attr('id'));
+	    last.attr('next',this.attr('id'));
 	};
-	prev = this;
-
-	// tap-to-select handler
+	// tap-to-select
 	this.addEventListener("click",function(e){
 	    var id = this.attr('id');
 	    if(window.location.hash.slice(1)==id){
@@ -38,8 +32,10 @@ document.addEventListener("DOMContentLoaded", function(){
 		window.location.hash = id;
 	    };
 	},false);
+	last = this;
     });
-
+    last.attr('next',first.attr('id'));
+    first.attr('prev',last.attr('id'));
 
     // keyboard navigation
     document.addEventListener("keydown",function(e){

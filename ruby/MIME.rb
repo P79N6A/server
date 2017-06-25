@@ -58,6 +58,7 @@ class R
     'text/html'            => [:triplrHTML],
     'text/man'             => [:triplrMan],
     'text/x-ruby'          => [:triplrSourceCode],
+    'text/x-script.ruby'   => [:triplrSourceCode],
     'text/markdown'        => [:triplrMarkdown],
     'text/nfo'             => [:triplrHref,'cp437'],
     'text/plain'           => [:triplrHref],
@@ -91,7 +92,7 @@ class R
   end
 
   def triplrContainer
-    s = path
+    s = path || ''
     s += '/' unless s[-1] == '/'
     s = '/'+s unless s[0] == '/'
     mt = mtime

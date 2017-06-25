@@ -58,7 +58,7 @@ class R
   def GET
     return justPath.fileGET if justPath.file? # static response
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # go to now
-    return notfound if path.match /^\/cache/
+    return notfound if path.match /^\/(cache|domain)/
 
     set = nodeset
     return notfound if !set || set.empty?
