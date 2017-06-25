@@ -217,8 +217,7 @@ class R
     puts uri, e.class, e.message , e.backtrace[0..2]
   end
 
-  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|R (URI uri).merge(u.attr :href)} end
-  alias_method  :feeds, :listFeeds
+  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
   module Feed # feed parser defined as RDF parser
 
