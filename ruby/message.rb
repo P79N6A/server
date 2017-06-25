@@ -199,6 +199,36 @@ class R
   end
   alias_method :getFeed, :fetchFeed
 
+  def triplrTwitter
+    base = 'https://twitter.com'
+    nokogiri.css('div.tweet > div.content').map{|t|
+      s = base + t.css('.js-permalink').attr('href') # subject URI
+      author = R[base+'/'+t.css('.username b')[0].inner_text]
+      yield s, Type, R[SIOC+'Tweet']
+      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
+      yield s, Creator, author
+      content = t.css('.tweet-text')[0]
+      content.css('a').map{|a| # resolve paths with remote base
+        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
+        yield s, DC+'link', R[a.attr 'href']
+      }
+      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
+  end
+
+  def indexTweets; graph = {}
+    triplrTwitter do |s,p,o|
+      graph[s] ||= {'uri' => s}
+      graph[s][p] ||= []
+      graph[s][p].push o
+    end
+    graph.map{|u,r|
+      r[Date].do{|t|
+          slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
+          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
+          doc = "//localhost/#{time}#{slug}.e".R
+          doc.writeFile({u => r}.to_json) unless doc.e || doc.justPath.e}}
+  end
+
   def indexFeed options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -217,7 +247,7 @@ class R
     puts uri, e.class, e.message , e.backtrace[0..2]
   end
 
-  def listFeeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
+  def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
   module Feed # feed parser defined as RDF parser
 
