@@ -79,19 +79,15 @@ class R
   end
 
   def condResponse body=nil
-    body ||= -> {self}
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])
       [304, {}, []]
     else
-      body = body.call
-      @r[:Status] ||= 200
-      @r[:Response]['Content-Length'] ||= body.size.to_s
-      if body.class == R
-        (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|
-          [s, h.update(@r[:Response]), b]}
+      body = body ? body.call : self
+      if body.class == R # hand path reference to Rack::File handler
+        (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
       else
-        [@r[:Status], @r[:Response], [body]]
+        [(@r[:Status]||200), @r[:Response], [body]]
       end
     end
   end
