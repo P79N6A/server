@@ -18,7 +18,7 @@ class R
     @mime ||=
       (name = path || ''
        ext = ((File.extname name)[1..-1]||'').downcase
-       if node.directory?
+       if node.directory?                    # directory
          'inode/directory'
        elsif (File.basename name).index('msg.')==0 # oddly procmail does PREFIX rather than SUFFIX
          'message/rfc822'
@@ -36,7 +36,7 @@ class R
     'application/atom+xml' => [:triplrFeed],
     'application/font'      => [:triplrFile],
     'application/haskell'   => [:triplrSourceCode],
-    'application/javascript' => [:triplrFile],
+    'application/javascript' => [:triplrSourceCode],
     'application/octet-stream' => [:triplrFile],
     'application/org'      => [:triplrOrg],
     'application/pdf'      => [:triplrFile],

@@ -35,30 +35,29 @@ class R
   end
   def R.load set
     rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
-    g = {}                              # JSON
+    g = {}                              # tree
     graph = RDF::Graph.new              # RDF
     # RDF
-    rdf.map{|n|
-      graph.load n.pathPOSIX, :base_uri => n}
-    graph.each_triple{|s,p,o|
+    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
+    graph.each_triple{|s,p,o| # triple bound
       s = s.to_s
       p = p.to_s
       g[s] ||= {'uri' => s}; g[s][p] ||= []
-      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value}
+      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value} # to tree
     # non-RDF
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
         re.map{|p,o|
-          o.justArray.map{|o|# triple(s) found
+          o.justArray.map{|o| # triple bound
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
-            g[s][p].push o} unless p == 'uri' }}}
-    g # graph in tree
+            g[s][p].push o} unless p == 'uri' }}} # to tree
+    g # tree
   end
   def GET
-    return justPath.fileGET if justPath.file? # static response
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # go to now
-    return notfound if path.match /^\/(cache|domain)/
+    return notfound if path.match /^\/(cache|domain)/ # internal storage
+    return justPath.fileGET if justPath.file?         # static response
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto "now" container
 
     set = nodeset
     return notfound if !set || set.empty?
@@ -66,7 +65,7 @@ class R
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
 
-    condResponse ->{# no call on HEAD or cache hit
+    condResponse ->{ # lazy thunk
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # dynamic response
