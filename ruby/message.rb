@@ -223,9 +223,12 @@ class R
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           doc = "//localhost/#{time}#{slug}.e".R # doc URI
-          unless doc.e || doc.justPath.e
-            doc.writeFile({u => r}.to_json) # write doc
-            puts doc
+          docP = doc.justPath
+          unless doc.e || docP.e
+            docP.dir.mkdir
+            doc.writeFile({u => r}.to_json) # hosted doc
+            FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # local doc
+            puts docP
           end}}
   end
 
@@ -239,8 +242,8 @@ class R
         docP = doc.justPath
         unless doc.e || docP.e
           [doc,docP].map{|d|d.dir.mkdir} # container
-          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # hosted doc (GC'd after sync-interval)
-          FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # doc path (hard local copy)
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # hosted link (GC after sync)
+          FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # local link
           puts docP
         end
         true}}
