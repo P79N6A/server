@@ -151,7 +151,7 @@ class R
               if e.path[-1]=='/' # container
                 e.selector # late bind of ordinal identifier. more readable/hackable than hash
               else # doc
-                this.fragment # original identifier can be re-used
+                this.fragment || ('r'+rand.to_s.sha1) # original identifier can be re-used
               end
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
