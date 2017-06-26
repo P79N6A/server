@@ -223,7 +223,10 @@ class R
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           doc = "//localhost/#{time}#{slug}.e".R # doc URI
-          doc.writeFile({u => r}.to_json) unless doc.e||doc.justPath.e}} # write doc
+          unless doc.e || doc.justPath.e
+            doc.writeFile({u => r}.to_json) # write doc
+            puts doc
+          end}}
   end
 
   def indexFeed options = {}
@@ -233,10 +236,12 @@ class R
         time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
         doc =  R["//localhost/#{time}#{slug}.ttl"]
-        unless doc.e || doc.justPath.e
-          doc.dir.mkdir
-          RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
-          puts "+ " + doc.stripDoc.uri
+        docP = doc.justPath
+        unless doc.e || docP.e
+          [doc,docP].map{|d|d.dir.mkdir} # container
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # hosted doc (GC'd after sync-interval)
+          FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # doc path (hard local copy)
+          puts docP
         end
         true}}
     self
