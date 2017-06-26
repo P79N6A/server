@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function(){
     document.querySelectorAll('[id]').map(function(e){
 	if(!first)
 	    first = this;
+	// link the list
 	if(last){
 	    this.attr('prev',last.attr('id'));
 	    last.attr('next',this.attr('id'));
@@ -34,8 +35,11 @@ document.addEventListener("DOMContentLoaded", function(){
 	},false);
 	last = this;
     });
-    last.attr('next',first.attr('id'));
-    first.attr('prev',last.attr('id'));
+    // complete the ring
+    if(first && last){
+	last.attr('next',first.attr('id'));
+	first.attr('prev',last.attr('id'));
+    };
 
     // keyboard navigation
     document.addEventListener("keydown",function(e){
