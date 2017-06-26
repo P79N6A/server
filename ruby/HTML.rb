@@ -147,11 +147,11 @@ class R
     types = l.types
     rowID = if static
               'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
-            else # runtime binding
+            else # request-time
               if e.path[-1]=='/' # container
-                e.selector # late bind of ordinal identifier. more readable/hackable than hash
+                e.selector # late bind of ordinal (ordered integer) identifier
               else # doc
-                this.fragment || ('r'+rand.to_s.sha1) # original identifier can be re-used
+                this.fragment || ('r'+rand.to_s.sha1) # source fragment-id unchanged (if exists)
               end
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')

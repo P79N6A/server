@@ -51,7 +51,7 @@ class R
           o.justArray.map{|o| # triple bound
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
-            g[s][p].push o} unless p == 'uri' }}} # to tree
+            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # to tree
     g # tree
   end
   def GET
