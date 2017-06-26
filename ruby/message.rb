@@ -216,17 +216,14 @@ class R
   end
 
   def indexTweets; graph = {}
-    triplrTwitter do |s,p,o|
-      graph[s] ||= {'uri' => s}
-      graph[s][p] ||= []
-      graph[s][p].push o
-    end
+    triplrTwitter{|s,p,o|
+      graph[s] ||= {'uri' => s}; graph[s][p]||=[]; graph[s][p].push o}
     graph.map{|u,r|
-      r[Date].do{|t|
+      r[Date].do{|t|# timestamp required to place on timeline
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-          doc = "//localhost/#{time}#{slug}.e".R
-          doc.writeFile({u => r}.to_json) unless doc.e || doc.justPath.e}}
+          doc = "//localhost/#{time}#{slug}.e".R # doc URI
+          doc.writeFile({u => r}.to_json) unless doc.e||doc.justPath.e}} # write doc
   end
 
   def indexFeed options = {}
