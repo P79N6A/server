@@ -312,6 +312,7 @@ class R
                  RSS+'encoded' => Content,
                  RSS+'modules/content/encoded' => Content,
                  RSS+'category' => Label,
+                 RSS+'source' => DC+'source',
                  Podcast+'keywords' => Label,
                  Podcast+'author' => Creator,
                  RSS+'modules/slash/comments' => SIOC+'num_replies',
