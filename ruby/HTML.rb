@@ -144,6 +144,7 @@ class R
   TableRow = -> l,e,sort,direction,keys,title,static {
     this = l.R
     href = this.uri
+    puts "row #{l.uri} #{this.host} #{e.host}"
     types = l.types
     rowID = if static
               'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
@@ -207,12 +208,10 @@ class R
                      # images
                      (['<br>', {_: :a, href: href,
                                 c: {_: :img, class: :thumb,
-                                    src: if this.host != e.host
-                                     this.uri
-                                   elsif this.ext.downcase == 'gif'
-                                     href
+                                    src: if !this.host || e.host==this.host # local image. thumbnailable
+                                     this.path + '?thumb'
                                    else
-                                     '/thumbnail' + this.path
+                                     this.uri
                                     end}}] if isImg)]
                  when Type
                    l[Type].justArray.uniq.map{|t|

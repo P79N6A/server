@@ -31,8 +31,21 @@ class R
   def fileGET
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha1})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    condResponse
+    if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
+      thumb = dir.child '.' + basename + '.png'
+      if !thumb.e
+        if mime.match(/^video/)
+          `ffmpegthumbnailer -s 360 -i #{sh} -o #{thumb.sh}`
+        else
+          `gm convert #{ext.match(/^jpg/) ? 'jpg:' : ''}#{sh} -thumbnail "360x360" #{thumb.sh}`
+        end
+      end
+      thumb.e && thumb.setEnv(env).condResponse || notfound
+    else
+      condResponse
+    end
   end
+
   def R.load set
     rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
     g = {}                              # tree
