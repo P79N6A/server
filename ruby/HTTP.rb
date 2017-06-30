@@ -35,9 +35,9 @@ class R
       thumb = dir.child '.' + basename + '.png'
       if !thumb.e
         if mime.match(/^video/)
-          `ffmpegthumbnailer -s 360 -i #{sh} -o #{thumb.sh}`
+          `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
         else
-          `gm convert #{ext.match(/^jpg/) ? 'jpg:' : ''}#{sh} -thumbnail "360x360" #{thumb.sh}`
+          `gm convert #{ext.match(/^jpg/) ? 'jpg:' : ''}#{sh} -thumbnail "256x256" #{thumb.sh}`
         end
       end
       thumb.e && thumb.setEnv(env).condResponse || notfound

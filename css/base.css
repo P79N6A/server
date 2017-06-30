@@ -10,6 +10,7 @@ a.page, .uri {font-weight: normal}
 .gray {font-weight: normal; color:#bbb;}
 a[name] {color:#000;padding:.08em;white-space:nowrap}
 img {max-width: 100%}
+.thumb {height:360px}
 img.preview {max-height:14em}
 img.logo {max-height:3.7em}
 div.links {padding:.13em;max-width:36em;overflow: hidden;float:right;border-radius:.22em;margin:.1em}

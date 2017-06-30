@@ -80,7 +80,7 @@ class R
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     # rewrite graph-in-tree to HTML-in-tree and call H for character output
-    H ["<!DOCTYPE html>\n",
+    H re.q.has_key?('gallery') ? Gallery[graph,re] : ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'},
@@ -89,16 +89,13 @@ class R
                    links.map{|type,uri|
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: R['/js/ui.js'].readFile},
-                 {_: :style, c: R['/css/base.css'].readFile}]},
+                 {_: :style, c: R['/css/base.css'].readFile},
+                ]},
             {_: :body,
-             c: if re.q.has_key? 'gallery'
-              Gallery[graph,re]
-            else
-              [upPage, prevPage, nextPage,
+             c: [upPage, prevPage, nextPage,
                TabularView[graph,re],
                ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?),
-               ([prevPage,nextPage] if graph.keys.size > 12), downPage]
-             end}]}]}
+               ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]}
 
   # types shown in main column
   InlineMeta = [Title, Image, Content, Label]
@@ -147,28 +144,28 @@ class R
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]}
 
   Gallery = -> graph,e {
-    [{_: :link, rel: :stylesheet, href: '/css/photoswipe.css'},
-     {_: :link, rel: :stylesheet, href: '/css/default-skin/default-skin.css'},
+    images = graph.keys.grep /(jpg|png)$/i
+    {_: :html,
+     c: [{_: :head,
+          c: [#{_: :style, c: R['/css/photoswipe.css'].readFile},
+            #{_: :style, c: R['/css/default-skin/default-skin.css'].readFile},
+            #              {_: :script, c: R['/js/photoswipe.min.js'].readFile},
+#              {_: :script, c: R['/js/photoswipe-ui-default.min.js'].readFile},
+              {_: :link, rel: :stylesheet, href: '/css/photoswipe.css'},
+              {_: :link, rel: :stylesheet, href: '/css/default-skin/default-skin.css'},
      {_: :script, src: '/js/photoswipe.min.js'},
      {_: :script, src: '/js/photoswipe-ui-default.min.js'},
-     %q(<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"> <!-- Background of PhotoSwipe.          It's a separate element as animating opacity is faster than rgba(). --> <div class="pswp__bg"></div> <!-- Slides wrapper with overflow:hidden. --> <div class="pswp__scroll-wrap"> <!-- Container that holds slides.             PhotoSwipe keeps only 3 of them in the DOM to save memory.             Don't modify these 3 pswp__item elements, data is added later on. --> <div class="pswp__container"> <div class="pswp__item"></div> <div class="pswp__item"></div> <div class="pswp__item"></div> </div> <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. --> <div class="pswp__ui pswp__ui--hidden"> <div class="pswp__top-bar"> <!--  Controls are self-explanatory. Order can be changed. --> <div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button> <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR --> <!-- element will get class pswp__preloader--active when preloader is running --> <div class="pswp__preloader"> <div class="pswp__preloader__icn"> <div class="pswp__preloader__cut"> <div class="pswp__preloader__donut"></div> </div> </div> </div> </div> <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"> <div class="pswp__share-tooltip"></div> </div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button> <div class="pswp__caption"> <div class="pswp__caption__center"></div> </div> </div> </div> </div>),
      {_: :script, c: "
-      var items = [
-      {src: 'IMG_20170614_164947.jpg', w: 3264, h: 2448},
-      {src: 'IMG_20170614_164935.jpg', w: 3264, h: 2448},
-      ];
-      var options = {index: 0};
-      var pswpElement = document.querySelectorAll('.pswp')[0];
-      var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+      var items = #{images.map{|k|{src: k, w: 3264, h: 2448}}.to_json};
+      var gallery = new PhotoSwipe( document.querySelectorAll('.pswp')[0], PhotoSwipeUI_Default, items, {index: 0});
       gallery.init();
-"}
-    ]
-  }
-
+"}]},
+         {_: :body,
+          c: [images.map{|k|{_: :a, href: k, c: {_: :img, src: k+'?thumb', style: 'height:20em'}}},%q{<!-- Root element of PhotoSwipe. Must have class pswp. --> <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"> <!-- Background of PhotoSwipe.          It's a separate element as animating opacity is faster than rgba(). --> <div class="pswp__bg"></div> <!-- Slides wrapper with overflow:hidden. --> <div class="pswp__scroll-wrap"> <!-- Container that holds slides.             PhotoSwipe keeps only 3 of them in the DOM to save memory.             Don't modify these 3 pswp__item elements, data is added later on. --> <div class="pswp__container"> <div class="pswp__item"></div> <div class="pswp__item"></div> <div class="pswp__item"></div> </div> <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. --> <div class="pswp__ui pswp__ui--hidden"> <div class="pswp__top-bar"> <!--  Controls are self-explanatory. Order can be changed. --> <div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button> <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR --> <!-- element will get class pswp__preloader--active when preloader is running --> <div class="pswp__preloader"> <div class="pswp__preloader__icn"> <div class="pswp__preloader__cut"> <div class="pswp__preloader__donut"></div> </div> </div> </div> </div> <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"> <div class="pswp__share-tooltip"></div> </div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button> <div class="pswp__caption"> <div class="pswp__caption__center"></div> </div> </div> </div> </div>}]}]}}
+  
   TableRow = -> l,e,sort,direction,keys,title,static {
     this = l.R
     href = this.uri
-    puts "row #{l.uri} #{this.host} #{e.host}"
     types = l.types
     rowID = if static
               'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
@@ -231,7 +228,7 @@ class R
                        monospace ? {_: :pre, c: c} : c },
                      # images
                      (['<br>', {_: :a, href: href,
-                                c: {_: :img, class: :thumb,
+                                c: {_: :img,
                                     src: if !this.host || e.host==this.host # local image. thumbnailable
                                      this.path + '?thumb'
                                    else
