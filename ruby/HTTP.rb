@@ -48,35 +48,34 @@ class R
 
   def R.load set
     rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
-    g = {}                              # tree
-    graph = RDF::Graph.new              # RDF
+    g = {}                              # tree of RDF graph
+    graph = RDF::Graph.new              # RDF graph
     # RDF
     rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
     graph.each_triple{|s,p,o| # triple bound
       s = s.to_s
       p = p.to_s
       g[s] ||= {'uri' => s}; g[s][p] ||= []
-      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value} # to tree
+      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value} # triple to tree
     # non-RDF
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
         re.map{|p,o|
-          o.justArray.map{|o| # triple bound
+          o.justArray.map{|o| # triple found
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
-            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # to tree
-    g # tree
+            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # triple to tree
+    g
   end
   def GET
-    return notfound if path.match /^\/(cache|domain)/ # internal storage
+    return notfound if path.match /^\/(cache|domain)/ # internal storage paths
     return justPath.fileGET if justPath.file?         # static response
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto "now" container
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto "now" node
     set = nodeset
     return notfound if !set || set.empty?
-#    puts "set "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
-    condResponse ->{ # lazy thunk
+    condResponse ->{ # lazy body-producer. unused in HEAD requests and 304 responses
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # dynamic response
