@@ -79,7 +79,7 @@ class R
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', rel: :down, href: (CGI.escapeHTML d.to_s)}]}
-    # rewrite graph-in-tree to HTML-in-tree and call H for character output
+    # rewrite graph (as tree) to HTML (as tree) and call H for character output
     H re.q.has_key?('gallery') ? Gallery[graph,re] : ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -97,9 +97,9 @@ class R
                ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?),
                ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]}
 
-  # types shown in main column
+  # types used by main column
   InlineMeta = [Title, Image, Content, Label]
-  # types collapsed in abbreviated view
+  # types hidden in abbreviated view
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', Podcast+'subtitle', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   TabularView = -> g, e, static=false {
@@ -107,13 +107,13 @@ class R
     e.env[:label] = {}
     (1..10).map{|i|
       e.env[:label]["quote"+i.to_s] = true}
-    # sorting attribute
+    # sort field
     p = e.q['sort'] || Date
-    # sorting direction
+    # sort direction
     direction = e.q.has_key?('ascending') ? :id : :reverse
-    # sorting datatype
+    # sort datatype
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    # column heading
+    # column head
     keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
@@ -147,7 +147,7 @@ class R
     this = l.R
     href = this.uri
     types = l.types
-    # potentially inlining many docs, mint new doc-local identifiers for selection (originating node as link target)
+    # potentially inlining many docs, mint new identifiers for item-selection
     rowID = if static
               'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
             else # request-time, late bind
