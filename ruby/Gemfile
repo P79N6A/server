@@ -1,5 +1,5 @@
 source "https://rubygems.org/"
-
+gem 'dimensions'
 gem 'foreman'
 gem 'linkeddata'
 gem 'mail'

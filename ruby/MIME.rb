@@ -1,13 +1,28 @@
 # coding: utf-8
 class R
-  MIMEs = {
+
+  MIMEprefix = {
+    'dockerfile' => 'text/plain',
+    'capfile' => 'text/plain',
+    'gemfile' => 'text/plain',
+    'msg' => 'message/rfc822',
+    'rakefile' => 'application/ruby',
+  }
+
+  MIMEsuffix = {
     'asc' => 'text/plain',
+    'chk' => 'text/plain',
+    'dat' => 'application/octet-stream',
     'e' => 'application/json',
     'eot' => 'application/font',
+    'haml' => 'text/plain',
     'hs' => 'application/haskell',
+    'ini' => 'text/plain',
     'md' => 'text/markdown',
     'msg' => 'message/rfc822',
+    'list' => 'text/plain',
     'log' => 'text/chatlog',
+    'ru' => 'text/plain',
     'rb' => 'application/ruby',
     'tmp' => 'application/octet-stream',
     'ttl' => 'text/turtle',
@@ -15,19 +30,21 @@ class R
     'woff' => 'application/font',
     'yaml' => 'text/plain',
   }
+
   def mime
     @mime ||=
       (name = path || ''
-       ext = ((File.extname name)[1..-1]||'').downcase
-       if node.directory?                    # directory
+       prefix = (File.basename name).split('.')[0].downcase
+       suffix = ((File.extname name)[1..-1]||'').downcase
+       if node.directory? # container
          'inode/directory'
-       elsif (File.basename name).index('msg.')==0 # oddly procmail does PREFIX rather than SUFFIX
-         'message/rfc822'
-       elsif MIMEs[ext]                      # MIME mapping
-         MIMEs[ext]
-       elsif Rack::Mime::MIME_TYPES['.'+ext] # Rack MIME mapping
-         Rack::Mime::MIME_TYPES['.'+ext]
-       else
+       elsif MIMEprefix[prefix] # prefix mapping
+         MIMEprefix[prefix]
+       elsif MIMEsuffix[suffix] # suffix mapping (built-in)
+         MIMEsuffix[suffix]
+       elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
+         Rack::Mime::MIME_TYPES['.'+suffix]
+       else # FILE(1) sniff content
          puts "WARNING unknown MIME of #{pathPOSIX}, sniffing (SLOW)"
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
@@ -43,6 +60,8 @@ class R
     'application/pdf'      => [:triplrFile],
     'application/pkcs7-signature' => [:triplrFile],
     'application/ruby'     => [:triplrSourceCode],
+    'application/x-sh'     => [:triplrSourceCode],
+    'application/xml'     => [:triplrSourceCode],
     'application/x-gzip'   => [:triplrArchive],
     'audio/mpeg'           => [:triplrAudio],
     'audio/x-wav'          => [:triplrAudio],
@@ -53,6 +72,7 @@ class R
     'image/jpeg'           => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMail],
+    'text/cache-manifest'  => [:triplrHref],
     'text/chatlog'         => [:triplrChatLog],
     'text/css'             => [:triplrSourceCode],
     'text/csv'             => [:triplrCSV,/,/],
@@ -139,6 +159,23 @@ class R
     triplrFile false,&f
   end
 
+  Gallery = -> graph,e {
+    images = graph.keys.grep /(jpg|png)$/i
+    {_: :html,
+     c: [{_: :head,
+          c: [{_: :style, c: R['/css/photoswipe.css'].readFile},{_: :style, c: R['/css/default-skin/default-skin.css'].readFile},{_: :script, c: R['/js/photoswipe.min.js'].readFile},{_: :script, c: R['/js/photoswipe-ui-default.min.js'].readFile},
+             #{_: :link, rel: :stylesheet, href: '/css/photoswipe.css'}, {_: :link, rel: :stylesheet, href: '/css/default-skin/default-skin.css'}, {_: :script, src: '/js/photoswipe.min.js'}, {_: :script, src: '/js/photoswipe-ui-default.min.js'},
+          ]},
+         {_: :body,
+          c: [images.map{|i|
+                {_: :a, href: i, c: {_: :img, src: i+'?thumb', style: 'height:20em'}}},
+              %q{<!-- Root element of PhotoSwipe. Must have class pswp. --> <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"> <!-- Background of PhotoSwipe.          It's a separate element as animating opacity is faster than rgba(). --> <div class="pswp__bg"></div> <!-- Slides wrapper with overflow:hidden. --> <div class="pswp__scroll-wrap"> <!-- Container that holds slides.             PhotoSwipe keeps only 3 of them in the DOM to save memory.             Don't modify these 3 pswp__item elements, data is added later on. --> <div class="pswp__container"> <div class="pswp__item"></div> <div class="pswp__item"></div> <div class="pswp__item"></div> </div> <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. --> <div class="pswp__ui pswp__ui--hidden"> <div class="pswp__top-bar"> <!--  Controls are self-explanatory. Order can be changed. --> <div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button> <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR --> <!-- element will get class pswp__preloader--active when preloader is running --> <div class="pswp__preloader"> <div class="pswp__preloader__icn"> <div class="pswp__preloader__cut"> <div class="pswp__preloader__donut"></div> </div> </div> </div> </div> <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"> <div class="pswp__share-tooltip"></div> </div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button> <div class="pswp__caption"> <div class="pswp__caption__center"></div> </div> </div> </div> </div>},
+              {_: :script, c: "
+      var items = #{images.map{|k|{src: k, w: graph[k][Stat+'width'].justArray[0].to_i, h: graph[k][Stat+'height'].justArray[0].to_i}}.to_json};
+      var gallery = new PhotoSwipe( document.querySelectorAll('.pswp')[0], PhotoSwipeUI_Default, items, {index: 0});
+      gallery.init();
+"}]}]}}
+  
   def triplrAudio &f
     yield uri, Type, R[Sound]
     triplrFile false,&f
