@@ -134,12 +134,12 @@ class R
       p = hour <=  0 ? (day - 1).strftime('/%Y/%m/%d/23') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour-1)))
       n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
     end
-    # add pointers to environment
+    # datetime-node pointers. don't point to 404s
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
 
-    # container handlers
+    # file-system handlers
     if paths.find{|p|p.node.directory?}
       if q.has_key? 'find' # match name
         env[:Links][:up] = justPath.dirname + '/' + qs
@@ -153,23 +153,10 @@ class R
         env[:Links][:up] = justPath.dirname + '/' + qs
         paths.select(&:exist?).map{|loc|
           `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
-      elsif q.has_key? 'walk' # tree range
-        count = (q['c'].do{|c|c.to_i} || 11) + 1
-        count = 1024 if count > 1024
-        count = 2 if count < 2  # take >=1 plus lookahead-node for start of next page
-        orient = q.has_key?('asc') ? :asc : :desc
-        ((exist? ? self : justPath).node.take count, orient, q['offset'].do{|o|o.R}).map(&:R).do{|s| # search
-          if q['offset'] && head = s[0] # direction-reversal link
-            env[:Links][:prev] = path + "?walk&c=#{count-1}&#{orient == :asc ? 'de' : 'a'}sc&offset=" + (URI.escape head.uri)
-          end
-          if edge = s.size >= count && s.pop # lookahead node at next-page start
-            env[:Links][:next] = path + "?walk&c=#{count-1}&#{orient}&offset=" + (URI.escape edge.uri)
-          end
-          s }
-      else # basic container
+      else # container
         paths.map{|p|
           if p.node.directory?
-            if uri[-1] == '/' # include children
+            if uri[-1] == '/'
               env[:Links][:up] = path[0..-2] + qs
               [p, p.children]
             else
@@ -180,7 +167,7 @@ class R
           end
         }.flatten.compact
       end
-    else # basic resource
+    else # file(s)
       env[:Links][:up] = justPath.dirname + '/' + qs
       paths.map{|p|
         # search for filetype-extension of base URI

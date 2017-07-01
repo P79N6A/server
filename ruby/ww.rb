@@ -129,36 +129,5 @@ class String
 end
 
 class Pathname
-
   def R; R.unPOSIX to_s.utf8 end
-
-  # range traverse w/ offset + limit
-  def take count=1000, direction=:desc, offset=nil
-    offset = offset.pathPOSIX if offset
-
-    ok = false    # in-range mark
-    set=[]
-    v,m={asc:      [:id,:>=],
-        desc: [:reverse,:<=]}[direction]
-
-    visit=->nodes{
-      nodes.sort_by(&:to_s).send(v).each{|n|
-        ns = n.to_s
-        return if 0 >= count
-        (ok || # already in-range
-         !offset || # no offset required
-         (sz = [ns,offset].map(&:size).min # size of compared region
-          ns[0..sz-1].send(m,offset[0..sz-1]))) && # path-compare
-        (if !(c = n.children).empty? # has children?
-           visit.(c)          # visit children
-         else
-           count = count - 1 # decrement nodes-left count
-           set.push n        # add node to result-set
-           ok = true         # mark iterator as within range
-        end )}}
-
-    visit.(c)
-    set
-  end
-
 end
