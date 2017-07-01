@@ -147,13 +147,14 @@ class R
     this = l.R
     href = this.uri
     types = l.types
+    # potentially inlining many docs, mint new doc-local identifiers for selection (originating node as link target)
     rowID = if static
               'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
-            else # request-time
+            else # request-time, late bind
               if e.path[-1]=='/' # container
-                e.selector # late bind of ordinal (ordered integer) identifier
-              else # doc
-                this.fragment || ('r'+rand.to_s.sha1) # source fragment-id unchanged (if exists)
+                e.selector # ordinal integer-based identifier
+              else # resource
+                this.fragment || ('r'+rand.to_s.sha1) # fragment identifier from source doc
               end
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
