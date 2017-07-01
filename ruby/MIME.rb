@@ -32,24 +32,6 @@ class R
     'yaml' => 'text/plain',
   }
 
-  def mime
-    @mime ||=
-      (name = path || ''
-       prefix = (File.basename name).split('.')[0].downcase
-       suffix = ((File.extname name)[1..-1]||'').downcase
-       if node.directory? # container
-         'inode/directory'
-       elsif MIMEprefix[prefix] # prefix mapping
-         MIMEprefix[prefix]
-       elsif MIMEsuffix[suffix] # suffix mapping (built-in)
-         MIMEsuffix[suffix]
-       elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
-         Rack::Mime::MIME_TYPES['.'+suffix]
-       else # FILE(1) sniff content
-         puts "WARNING unknown MIME of #{pathPOSIX}, sniffing (SLOW)"
-         `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
-       end)
-  end
   
   Triplr = {
     'application/atom+xml' => [:triplrFeed],
@@ -92,8 +74,29 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
+  def mime
+    @mime ||=
+      (name = path || ''
+       prefix = (File.basename name).split('.')[0].downcase
+       suffix = ((File.extname name)[1..-1]||'').downcase
+       if node.directory? # container
+         'inode/directory'
+       elsif MIMEprefix[prefix] # prefix mapping
+         MIMEprefix[prefix]
+       elsif MIMEsuffix[suffix] # suffix mapping (built-in)
+         MIMEsuffix[suffix]
+       elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
+         Rack::Mime::MIME_TYPES['.'+suffix]
+       else # FILE(1) sniff content
+         puts "WARNING unknown MIME of #{pathPOSIX}, sniffing (SLOW)"
+         `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
+       end)
+  end
+
   def isRDF; %w{n3 rdf owl ttl}.member? ext end
+
   def toRDF; isRDF ? self : toJSON end
+
   def toJSON
     return self if ext == 'e'
     hash = uri.sha1
