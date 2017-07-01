@@ -5,6 +5,7 @@ class R
     'dockerfile' => 'text/plain',
     'capfile' => 'text/plain',
     'gemfile' => 'text/plain',
+    'license' => 'text/plain',
     'msg' => 'message/rfc822',
     'rakefile' => 'application/ruby',
   }
@@ -55,6 +56,7 @@ class R
     'application/font'      => [:triplrFile],
     'application/haskell'   => [:triplrSourceCode],
     'application/javascript' => [:triplrSourceCode],
+    'application/json'      => [:triplrSourceCode],
     'application/octet-stream' => [:triplrFile],
     'application/org'      => [:triplrOrg],
     'application/pdf'      => [:triplrFile],
