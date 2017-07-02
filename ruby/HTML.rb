@@ -153,7 +153,6 @@ class R
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
-    fileResource = types.member?(Stat+'File') || types.member?(Stat+'CompressedFile') || types.member?(Stat+'HTMLFile') || types.member?(SIOC+'SourceCode') || types.member?(Container) || types.member?(Resource)
 
     actors = -> p {
       l[p].do{|o|
@@ -184,7 +183,7 @@ class R
                      # title
                      (if title
                       {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
-                     elsif fileResource
+                     else
                        name = this.path || ''
                        {_: :a, href: href, c: [{_: :span, class: :gray, c: CGI.escapeHTML(File.dirname(name).gsub('/',' '))}, ' ', CGI.escapeHTML(File.basename name)]}
                       end),

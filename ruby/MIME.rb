@@ -4,10 +4,11 @@ class R
   MIMEprefix = {
     'dockerfile' => 'text/plain',
     'capfile' => 'text/plain',
-    'gemfile' => 'text/plain',
     'license' => 'text/plain',
-    'msg' => 'message/rfc822',
+    'install' => 'text/plain',
+    'gemfile' => 'application/ruby',
     'rakefile' => 'application/ruby',
+    'msg' => 'message/rfc822',
   }
 
   MIMEsuffix = {
@@ -203,13 +204,14 @@ class R
   # and , and . only match mid-URI to allow usage of URLs as words in sentences ending in a period.
   # <> wrapped URIs are supported
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
-  def triplrHref enc=nil
+  def triplrHref enc=nil, &f
     id = stripDoc.uri
     yield id, Type, R[SIOC+'TextFile']
     yield id, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: readFile.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
+    triplrFile false,&f
   end
 
   def triplrUriList
