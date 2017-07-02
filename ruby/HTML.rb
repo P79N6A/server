@@ -183,7 +183,7 @@ class R
                      # title
                      (if title
                       {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
-                     else
+                     elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
                        name = this.path || ''
                        {_: :a, href: href, c: [{_: :span, class: :gray, c: CGI.escapeHTML(File.dirname(name).gsub('/',' '))}, ' ', CGI.escapeHTML(File.basename name)]}
                       end),

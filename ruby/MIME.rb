@@ -2,13 +2,14 @@
 class R
 
   MIMEprefix = {
-    'dockerfile' => 'text/plain',
     'capfile' => 'text/plain',
-    'license' => 'text/plain',
-    'install' => 'text/plain',
+    'dockerfile' => 'text/plain',
     'gemfile' => 'application/ruby',
-    'rakefile' => 'application/ruby',
+    'install' => 'text/plain',
+    'license' => 'text/plain',
     'msg' => 'message/rfc822',
+    'rakefile' => 'application/ruby',
+    'readme' => 'text/plain',
   }
 
   MIMEsuffix = {
