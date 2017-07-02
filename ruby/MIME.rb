@@ -53,6 +53,7 @@ class R
     'image/bmp'            => [:triplrImage],
     'image/gif'            => [:triplrImage],
     'image/png'            => [:triplrImage],
+    'image/svg+xml'        => [:triplrImage],
     'image/jpeg'           => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMail],
@@ -164,7 +165,7 @@ class R
     triplrFile false,&f
   end
 
-  Gallery = -> graph,e {
+  GalleryView = -> graph,e {
     images = graph.keys.grep /(jpg|png)$/i
     {_: :html,
      c: [{_: :head,
