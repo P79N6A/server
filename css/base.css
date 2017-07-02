@@ -13,13 +13,13 @@ img {max-width: 100%}
 img.preview {max-height:14em}
 img.logo {max-height:3.7em}
 div.links {padding:.13em;max-width:36em;overflow: hidden;float:right;border-radius:.22em;margin:.1em}
-div, td {vertical-align:top;padding:.1em}
 table {margin:.3em; border-radius:.38em;background-color:#f0f0f0;color:#000}
 body > table {background-color:#000;color:#fff}
 th {text-align: left}
 th a {font-size:.9em}
 th a:before {font-size:1.8em;font-weight: normal}
 a.title, td[property="http://purl.org/dc/terms/date"] {white-space: nowrap}
+td {vertical-align:top}
 td[property="http://schema.org/logo"] {text-align: center}
 td[property="http://rdfs.org/sioc/ns#has_creator"] {text-align:right}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}

@@ -90,8 +90,7 @@ class R
                  e[:Links].do{|links|links.map{|type,uri|{_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: R['/js/ui.js'].readFile},{_: :style, c: R['/css/base.css'].readFile}]},
             {_: :body,
-             c: [upPage, prevPage, nextPage, template[graph,re], ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?), ([prevPage,nextPage] if graph.keys.size > 12), downPage, # view and pagination links
-                 {_: :style, c: e[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}]}]}]} # color labels
+             c: [upPage, prevPage, nextPage, template[graph,re], ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?), ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]} # view and pagination links
 
   # types used by main column
   InlineMeta = [Title, Image, Content, Label]
@@ -135,6 +134,7 @@ class R
               href = CGI.escapeHTML R.qs q
               {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
                c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)]},
+     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # bind CSS to color labels
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # bind CSS to highlighted sort property
 
   TableRow = -> l,e,sort,direction,keys,title,static {

@@ -133,7 +133,8 @@ class R
     graph = {}
     leafNodes = children.select{|e|!e.node.directory?}
     (R.load leafNodes).map{|u,r|
-      if r[Title] || !r.has_key?(Content) # drop content, just show title and crucial meta
+      types = r.types
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet')
         [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
         graph[u] = r
       end
