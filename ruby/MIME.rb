@@ -19,6 +19,7 @@ class R
     'haml' => 'text/plain',
     'hs' => 'application/haskell',
     'ini' => 'text/plain',
+    'ino' => 'application/ino',
     'md' => 'text/markdown',
     'msg' => 'message/rfc822',
     'list' => 'text/plain',
@@ -38,6 +39,7 @@ class R
     'application/font'      => [:triplrFile],
     'application/haskell'   => [:triplrSourceCode],
     'application/javascript' => [:triplrSourceCode],
+    'application/ino'      => [:triplrSourceCode],
     'application/json'      => [:triplrSourceCode],
     'application/octet-stream' => [:triplrFile],
     'application/org'      => [:triplrOrg],
@@ -131,7 +133,7 @@ class R
     graph = {}
     leafNodes = children.select{|e|!e.node.directory?}
     (R.load leafNodes).map{|u,r|
-      if r[Title] # show titled resources in overview
+      if r[Title] || !r.has_key?(Content) # drop content, just show title and crucial meta
         [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
         graph[u] = r
       end

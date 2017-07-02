@@ -124,8 +124,7 @@ class R
              title = r[Title].justArray.select{|t|t.class==String}[0].do{|t|
                t = t.sub ReExpr, ''
                titles[t] ? nil : (titles[t] = t)}
-             TableRow[r,e,p,direction,keys,title,static] unless static && !title
-           }},
+             TableRow[r,e,p,direction,keys,title,static]}},
           ({_: :tr, c: keys.map{|k|
               q = e.q.merge({'sort' => k})
               if direction == :id
