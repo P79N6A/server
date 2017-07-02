@@ -119,7 +119,7 @@ class String
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # process post-match tail
   rescue Exception => x
-    puts [x.class,x.message,x.backtrace].join("\n")
+    puts [x.class,x.message,self[0..127]].join(" ")
     ""
   end
   def sha1; Digest::SHA1.hexdigest self end

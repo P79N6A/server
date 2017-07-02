@@ -46,6 +46,7 @@ class R
     'application/ruby'     => [:triplrSourceCode],
     'application/x-sh'     => [:triplrSourceCode],
     'application/xml'     => [:triplrSourceCode],
+    'application/x-executable' => [:triplrFile],
     'application/x-gzip'   => [:triplrArchive],
     'audio/mpeg'           => [:triplrAudio],
     'audio/x-wav'          => [:triplrAudio],

@@ -142,14 +142,14 @@ class R
     this = l.R
     href = this.uri
     types = l.types
-    # potentially inlining many docs, mint new identifiers for item-selection
-    rowID = if static
+    # potentially inlining many docs, mint identifiers for item-selection
+    rowID = if static # compiled HTML for future requests
               'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
             else # request-time, late bind
               if e.path[-1]=='/' # container
-                e.selector # ordinal integer-based identifier
-              else # resource
-                this.fragment || ('r'+rand.to_s.sha1) # fragment identifier from source doc
+                e.selector # ordinal-integer identifier
+              else # use fragment identity if one exists
+                this.fragment || ('r'+rand.to_s.sha1)
               end
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
