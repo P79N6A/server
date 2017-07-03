@@ -1,7 +1,7 @@
 # coding: utf-8
 =begin
  MIME mappings, RDF::Readers, and triplrs (yielding a 3-tuple of id,attribute,value) which emit
- non-RDF as RDF. typically the results are stashed in JSON (upon which a RDF::Reader is defined)
+ non-RDF as RDF. typically the triples are stashed in JSON (a RDF::Reader instance is defined for our cache format)
 =end
 class R
 
@@ -12,8 +12,9 @@ class R
     'install' => 'text/plain',
     'license' => 'text/plain',
     'msg' => 'message/rfc822',
+    'r' => 'text/plain',
     'rakefile' => 'application/ruby',
-    'readme' => 'text/plain',
+    'readme' => 'text/markdown',
   }
 
   MIMEsuffix = {
@@ -219,11 +220,6 @@ class R
     triplrFile false,&f
   end
 
-  def triplrMarkdown
-    s = stripDoc.uri
-    yield s, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
-  end
-
   def triplrSourceCode &f
     yield uri, Type, R[SIOC+'SourceCode']
     yield uri, Content, `pygmentize -f html #{sh}`
@@ -243,6 +239,7 @@ class R
   end
 
   def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
+  def triplrMarkdown; yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrRTF; yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
   def triplrTeX; yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
   def uris; (open pathPOSIX).readlines.map &:chomp end
