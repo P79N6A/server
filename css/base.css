@@ -5,7 +5,7 @@ th a:before {font-size:1.8em;font-weight: normal}
 td {vertical-align:top}
 td[property="http://rdfs.org/sioc/ns#has_creator"] {text-align:right}
 a.title, td[property="http://purl.org/dc/terms/date"] {white-space: nowrap}
-a.title {color:#000;background-color:#fff;font-size:1.1em;padding:.1em}
+a.title {color:#000;background-color:#fff;font-size:1.1em;padding:.06em}
 a {text-decoration:none; font-weight: bold; border-radius:.2em;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
