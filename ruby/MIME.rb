@@ -219,23 +219,9 @@ class R
     triplrFile false,&f
   end
 
-  def triplrUriList
-    uris.map{|u|yield u,Type,R[Resource]}
-  end
-
-
-  def uris
-    (open pathPOSIX).readlines.map &:chomp
-  end
-
   def triplrMarkdown
     s = stripDoc.uri
     yield s, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
-  end
-
-  def triplrOrg
-    require 'org-ruby'
-    yield stripDoc.uri, Content, Orgmode::Parser.new(r).to_html
   end
 
   def triplrSourceCode &f
@@ -256,17 +242,11 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  def triplrRTF
-    yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs
-  end
-
-  def triplrTeX
-    yield stripDoc.uri, Content, `cat #{sh} | tth -r`
-  end
-
-  def to_json *a
-    {'uri' => uri}.to_json *a
-  end
+  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
+  def triplrRTF; yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
+  def triplrTeX; yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
+  def uris; (open pathPOSIX).readlines.map &:chomp end
+  def to_json *a; {'uri' => uri}.to_json *a end
 
   module Format
 
