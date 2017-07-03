@@ -58,16 +58,7 @@ class R < RDF::URI
   def setEnv r; @r = r; self end
   def env; @r end
   alias_method :uri, :to_s
-  def pathPOSIX
-    (if host
-     'domain/' + host + (path||'')
-     else
-      (path||'').sub /^\//, ''
-     end).gsub('%23','#')
-  end
-  def R.unPOSIX path
-    (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub('#','%23').R
-  end
+  def to_json *a; {'uri' => uri}.to_json *a end
   def ==  u; to_s == u.to_s end
   def <=> c; to_s <=> c.to_s end
   def + u; R[uri + u.to_s].setEnv @r end
@@ -93,6 +84,14 @@ class R < RDF::URI
   def appendFile line; dir.mkdir; File.open(pathPOSIX,'a'){|f|f.write line + "\n"}; self end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
   def mkdir; FileUtils.mkdir_p(pathPOSIX) unless exist?; self end
+  def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub('#','%23').R end
+  def pathPOSIX
+    (if host
+     'domain/' + host + (path||'')
+     else
+      (path||'').sub /^\//, ''
+     end).gsub('%23','#')
+  end
 
   %w{MIME HTML HTTP}.map{|r|require_relative r}
 
