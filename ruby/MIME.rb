@@ -1,4 +1,8 @@
 # coding: utf-8
+=begin
+ MIME mappings, RDF::Readers, and triplrs (yielding a 3-tuple of id,attribute,value) which emit
+ non-RDF as RDF. typically the results are stashed in JSON (upon which a RDF::Reader is defined)
+=end
 class R
 
   MIMEprefix = {
