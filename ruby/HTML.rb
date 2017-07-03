@@ -72,6 +72,26 @@ class R
       graph.delete u if r[Content].empty?}
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
                                           ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
+  Icons = {
+    'uri' => :id, Type => :type, Container => :dir, Content => :pencil, Date => :date, Label => :tag, Title => :title, Sound => :speaker, Image => :img, Size => :size, Mtime => :time, To => :user, Resource => :graph,
+    DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file, Stat+'CompressedFile' => :archive, Stat+'HTMLFile' => :html,
+    SIOC+'BlogPost' => :pencil,
+    SIOC+'Discussion' => :comments,
+    SIOC+'InstantMessage' => :comment,
+    SIOC+'MicroblogPost' => :newspaper,
+    SIOC+'WikiArticle' => :pencil,
+    SIOC+'Tweet' => :tweet,
+    SIOC+'Usergroup' => :group,
+    SIOC+'SourceCode' => :code,
+    SIOC+'TextFile' => :file,
+    SIOC+'has_creator' => :user,
+    SIOC+'has_container' => :dir,
+    SIOC+'has_discussion' => :comments,
+    SIOC+'Thread' => :openenvelope,
+    SIOC+'Post' => :newspaper,
+    SIOC+'MailMessage' => :envelope,
+    SIOC+'has_parent' => :reply,
+    SIOC+'reply_to' => :reply}
 
   # rewrite graph-as-tree to HTML-as-tree and call H to rewrite to characters
   HTML = -> graph, re {
@@ -133,7 +153,7 @@ class R
               end
               href = CGI.escapeHTML R.qs q
               {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
-               c: {_: :a, href: href, class: Icons[k]||'', c: k.R.fragment||k.R.basename}}}} unless static)]},
+               c: {_: :a, href: href, class: Icons[k] || '', c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}} unless static)]},
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # bind CSS to color labels
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # bind CSS to highlighted sort property
 
