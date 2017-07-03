@@ -96,7 +96,7 @@ class R
   # rewrite graph-as-tree to HTML-as-tree and call H to rewrite to characters
   HTML = -> graph, re {
     e = re.env
-    Grep[graph,re] if re.q.has_key? 'q'
+    Grep[graph,re] if re.q.has_key?('q') && !re.q.has_key?('full')
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']}
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
