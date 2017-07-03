@@ -1,30 +1,22 @@
-body {font-family: sans-serif;background-color:#000;color:#fff}
+body, table {font-family: sans-serif;background-color:#000;color:#fff;border-radius:.3em;margin:.2em}
+th {text-align: left}
+th a {font-size:.9em}
+th a:before {font-size:1.8em;font-weight: normal}
+td {vertical-align:top}
+td[property="http://rdfs.org/sioc/ns#has_creator"] {text-align:right}
+a.title, td[property="http://purl.org/dc/terms/date"] {white-space: nowrap}
 a {text-decoration:none; font-weight: bold; border-radius:.2em;background-color:#000;color:#fff}
-pre {white-space: pre-wrap;margin:0;min-width:64ex;max-width:127ex;overflow:hidden}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
-a.page, .uri {font-weight: normal}
-.this {font-size:1.2em}
-.gray {font-weight: normal; color:#bbb;}
 a[name] {color:#000;padding:.08em;white-space:nowrap}
 img {max-width: 100%}
 img.preview {max-height:14em}
-img.logo {max-height:3.7em}
 div.links {padding:.13em;max-width:36em;overflow: hidden;float:right;border-radius:.22em;margin:.1em}
-table {margin:.3em; border-radius:.38em;background-color:#f0f0f0;color:#000}
-body > table {background-color:#000;color:#fff}
-th {text-align: left}
-th a {font-size:.9em}
-th a:before {font-size:1.8em;font-weight: normal}
-a.title, td[property="http://purl.org/dc/terms/date"] {white-space: nowrap}
-td {vertical-align:top}
-td[property="http://schema.org/logo"] {text-align: center}
-td[property="http://rdfs.org/sioc/ns#has_creator"] {text-align:right}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
+pre {white-space: pre-wrap;margin:0;min-width:64ex;max-width:127ex;overflow:hidden}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
-a.link {font-size:.9em}
 a.link:before { content:"\f08e"; font-family: icons; }
 a.comment:before { content:"\f0e5"; font-family: icons; }
 a.comments:before { content:"\f086"; font-family: icons; }
@@ -45,17 +37,13 @@ a.speaker:before { content:"\f028"; font-family: icons; }
 a.gears:before { content:"\f085"; font-family: icons; }
 a.hands:before { content:"\f2b5"; font-family: icons; }
 a.code:before { content:"\f126"; font-family: icons; }
-a.cubes:before { content:"\f1b3"; font-family: icons; }
-a.wrench:before { content:"\f0ad"; font-family: icons; }
 a.location:before { content:"\f041"; font-family: icons; }
 a.pencil:before { content:"\f040"; font-family: icons; }
-a.exchange:before { content:"\f0ec"; font-family: icons; }
 a.person:before { content:"\f007"; font-family: icons; }
 a.rel:before { content:"\f0a5"; font-family: icons; }
 a.reply:before { content:"\f122"; font-family: icons; }
 a.scissors:before { content:"\f0c4"; font-family: icons; }
 a.size:before { content:"\f161"; font-family: icons; }
-a.tag:before { content:"\f02b"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.newspaper:before { content:"\f1ea"; font-family: icons; }
@@ -63,7 +51,6 @@ a.openenvelope:before { content:"\f2b6"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
 a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
-
 .highlight .c { color: #586e75 } /* Comment */
 .highlight .err { color: #93a1a1 } /* Error */
 .highlight .g { color: #93a1a1 } /* Generic */
