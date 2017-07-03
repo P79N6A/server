@@ -5,7 +5,7 @@ td {vertical-align:top}
 td[property='uri'] > table {border-style: solid;border-width: 0 0 0 1em;border-color:#ccc;width:100%}
 td[property="http://rdfs.org/sioc/ns#has_creator"] {text-align:right}
 a.title, td[property="http://purl.org/dc/terms/date"] {white-space: nowrap}
-a.title {color:#000;background-color:#fff;font-size:1.1em;padding:.06em}
+a.title {color:#000;background-color:#fff;font-size:1.05em;border-radius:.12em;padding:.06em}
 a.thumb {padding:.18em}
 a {text-decoration:none; font-weight: bold; border-radius:.2em;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}

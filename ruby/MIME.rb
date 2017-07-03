@@ -530,17 +530,19 @@ class R
         send(*f){|s,p,o|
           yield s,
                 {Purl+'dc/elements/1.1/subject' => SIOC+'subject',
+                 RSS+'title' => Title,
                  RSS+'description' => Content,
                  RSS+'encoded' => Content,
+                 RSS+'modules/slash/comments' => SIOC+'num_replies',
                  RSS+'modules/content/encoded' => Content,
                  RSS+'category' => Label,
                  RSS+'source' => DC+'source',
                  Podcast+'keywords' => Label,
                  Podcast+'author' => Creator,
-                 RSS+'modules/slash/comments' => SIOC+'num_replies',
+                 Atom+'displaycategories' => Label,
                  Atom+'content' => Content,
                  Atom+'summary' => Content,
-                 RSS+'title' => Title,
+                 Atom+'enclosure' => SIOC+'attachment',
                  Atom+'title' => Title,
                 }[p]||p, o }
       end
