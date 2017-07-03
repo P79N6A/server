@@ -230,7 +230,7 @@ class R
                          e.env[:label][group] = true
                          {name: group, class: :links,
                           c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
-                                [{_: :a, href: link.uri, c: CGI.escapeHTML(link.path)}.
+                                [{_: :a, href: link.uri, c: CGI.escapeHTML(link.path[1..-1])}.
                                    update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
                      # body
                      l[Content].justArray.map{|c|

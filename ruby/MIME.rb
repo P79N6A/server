@@ -114,8 +114,11 @@ class R
     yield s, Date, mt.iso8601
     # overview of contained
     graph = {}
-    leafNodes = children.select{|e|!e.node.directory?}
-    (R.load leafNodes).map{|u,r|
+    dirs,files = children.partition{|e|e.node.directory?}
+    dirs.map{|d|
+      u = d.uri + '/'
+      graph[u] = {'uri' => u, Type => R[Container]}}
+    (R.load files).map{|u,r|
       types = r.types
       unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet')
         [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
@@ -126,8 +129,7 @@ class R
         graph[s][Title] ||= ''
         graph[s][Image] ||= []
         graph[s][Image].concat r[Image]
-      end
-    }
+      end}
     yield s, Content, (H TabularView[graph,self,true])
   end
 
