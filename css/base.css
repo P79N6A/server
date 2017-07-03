@@ -1,4 +1,5 @@
 body, table {font-family: sans-serif;background-color:#000;color:#fff;border-radius:.3em;margin:.2em}
+table table, td[property='uri'] p {background-color:#fff;color:#000;border-radius:.2em}
 th {text-align: left}
 th a {font-size:.9em}
 th a:before {font-size:1.8em;font-weight: normal}
@@ -27,22 +28,12 @@ a.file:before { content:"\f15b"; font-family: icons; }
 a.html:before { content:"\f13b"; font-family: icons; }
 a.archive:before { content:"\f019"; font-family: icons; }
 a.graph:before { content:"\f1e0"; font-family: icons; }
-a.group:before { content:"\f0c0"; font-family: icons;}
-a.id:before { content:"\f02a"; font-family: icons; }
-a.identify:before { content:"\f235"; font-family: icons; }
 a.img:before { content:"\f03e"; font-family: icons; }
-a.key:before { content:"\f084"; font-family: icons; }
-a.cog:before { content:"\f013"; font-family: icons; }
-a.speaker:before { content:"\f028"; font-family: icons; }
-a.gears:before { content:"\f085"; font-family: icons; }
-a.hands:before { content:"\f2b5"; font-family: icons; }
 a.code:before { content:"\f126"; font-family: icons; }
 a.location:before { content:"\f041"; font-family: icons; }
 a.pencil:before { content:"\f040"; font-family: icons; }
-a.person:before { content:"\f007"; font-family: icons; }
 a.rel:before { content:"\f0a5"; font-family: icons; }
 a.reply:before { content:"\f122"; font-family: icons; }
-a.scissors:before { content:"\f0c4"; font-family: icons; }
 a.size:before { content:"\f161"; font-family: icons; }
 a.thread:before { content:"\f03c"; font-family: icons; }
 a.envelope:before { content:"\f0e0"; font-family: icons; }

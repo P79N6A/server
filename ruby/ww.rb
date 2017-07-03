@@ -94,7 +94,7 @@ class R < RDF::URI
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
   def mkdir; FileUtils.mkdir_p(pathPOSIX) unless exist?; self end
 
-  %w{MIME HTML HTTP message}.map{|r|require_relative r}
+  %w{MIME HTML HTTP}.map{|r|require_relative r}
 
 end
 
