@@ -131,7 +131,7 @@ class R
         graph[s][Image].concat r[Image]
       end}
     imgs = files.size == files.grep(/(jpg|png|gif)$/).size
-    yield s, Content, (H (imgs ? GalleryView : TabularView)[graph,self,true])
+    yield s, Content, (H (imgs ? Gallery : TabularView)[graph,self,true])
   end
 
   def triplrFile basicFile=true

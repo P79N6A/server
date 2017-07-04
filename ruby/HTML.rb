@@ -101,7 +101,7 @@ class R
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', rel: :down, href: (CGI.escapeHTML d.to_s)}]}
-    template = re.q.has_key?('gallery') ? GalleryView : TabularView
+    template = re.q.has_key?('gallery') ? Gallery : TabularView
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -157,7 +157,7 @@ class R
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # bind CSS to color labels
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # bind CSS to highlighted sort property
 
-  GalleryView = -> graph,e,_=true {
+  Gallery = -> graph,e,_=true {
     images = graph.keys.grep /(jpg|png)$/i
     {_: :html,
      c: [{_: :head,
