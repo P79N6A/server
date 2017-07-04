@@ -112,7 +112,7 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    # overview of contained
+    # preview of children
     graph = {}
     dirs,files = children.partition{|e|e.node.directory?}
     dirs.map{|d|
@@ -130,7 +130,8 @@ class R
         graph[s][Image] ||= []
         graph[s][Image].concat r[Image]
       end}
-    yield s, Content, (H TabularView[graph,self,true])
+    imgs = files.size == files.grep(/(jpg|png|gif)$/).size
+    yield s, Content, (H (imgs ? GalleryView : TabularView)[graph,self,true])
   end
 
   def triplrFile basicFile=true
