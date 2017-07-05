@@ -161,7 +161,7 @@ class R
     images = graph.keys.grep /(jpg|png)$/i
     {_: :html,
      c: [{_: :head,
-          c: [{_: :style, c: R['/css/photo.css'].readFile},{_: :style, c: R['/css/misc/default-skin.css'].readFile},{_: :script, c: R['/js/photoswipe.min.js'].readFile},{_: :script, c: R['/js/photoswipe-ui-default.min.js'].readFile}]},
+          c: [{_: :style, c: R['/css/photo.css'].readFile},{_: :style, c: R['/css/misc/default-skin.css'].readFile},{_: :script, c: R['/js/photoswipe.min.js'].readFile},{_: :script, c: R['/js/photoswipe-ui.min.js'].readFile}]},
          {_: :body,
           c: [images.map{|i|
                 {_: :a, class: :thumb, id: 'a'+rand.to_s.sha1[0..7], href: i, c: {_: :img, src: i+'?thumb', style: 'height:20em'}}},
