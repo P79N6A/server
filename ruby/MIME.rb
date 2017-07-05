@@ -286,57 +286,72 @@ class R
   end
 
   def triplrMail &b
-    m = Mail.read node # read mail
+
+    # load
+    m = Mail.read node
     return unless m
-    id = m.message_id || m.resent_message_id
-    id = rand.to_s.sha1 unless id
-    e = MessagePath[id] # identifier
+
+    # URI
+    id = m.message_id || m.resent_message_id || rand.to_s.sha1
+    e = MessagePath[id]
     canonicalLocation = e.R + '.msg'
     canonicalLocation.dir.mkdir
-    FileUtils.cp pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e
-    yield e, DC+'identifier', id
-    yield e, DC+'source', self
-    yield e, Type, R[SIOC+'MailMessage']
+    FileUtils.cp pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e # maybe test for ln capability and same-device at startup-time to optimize storage space
+    yield e, DC+'identifier', id                # preserve pre-webize identifier
+    yield e, DC+'source', self                  # point to source file
+    yield e, Type, R[SIOC+'MailMessage']        # RDF typetag
+    yield e, SIOC+'has_discussion', R[e+'?rev'] # discussion link
+    indexAddrs = []
+
+    # mailing-list metadata
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
     list && list.match(/@/) && m['List-Id'].do{|name|
-      group = AddrPath[list]                            # list URI
-#      yield group, Type, R[SIOC+'Usergroup']            # list type
-#      yield group, Label, name.decoded.gsub(/[<>&]/,'') # list name
-#      yield group, SIOC+'has_container', group.R.dir    # list container
-    }
-    m.from.do{|f|                    # any authors?
-      f.justArray.map{|f|             # each author
-        f = f.to_utf8.downcase        # author address
-        creator = AddrPath[f]         # author URI
-        yield e, Creator, R[creator]}}
+      group = AddrPath[list]                             # list id
+      yield group, Type, R[SIOC+'Usergroup']             # list type
+      yield group, Label, name.decoded.gsub(/[<>&]/,'')} # list name
+
+    # From
+    m.from.do{|f|f.justArray.map{|f|
+                f = f.to_utf8.downcase        # source address
+                creator = AddrPath[f]         # source URI
+                yield e, Creator, R[creator]}}# source provenance
     m[:from].do{|fr|
-      fr.addrs[0].do{|a|
-        author = AddrPath[a.address]
- #       yield author, Label, a.display_name||a.name
- #       yield author, SIOC+'has_container', author.R.dir
-      }}
+      fr.addrs.map{|a|
+        address = a.address
+        indexAddrs.push address
+        addr = AddrPath[address]
+        yield addr, Label, a.display_name || a.name }} # source name
+
+    # To
+    %w{to cc bcc resent_to}.map{|p|           # reciever fields
+      m.send(p).justArray.map{|to|            # each recipient
+        yield e, To, AddrPath[to.to_utf8].R}} # to URI
+    m['X-BeenThere'].justArray.map{|to| # to URI via antiloop header
+      yield e, To, AddrPath[to.to_s].R }
+
+    # Date
     if m.date
       date = m.date.to_time.utc
       yield e, Date, date.iso8601
       yield e, Mtime, date.to_i
     end
+
+    # Subject
     m.subject.do{|s|
       s = s.to_utf8
       s = s.gsub(/\[[^\]]+\]/){|l|
         yield e, Label, l[1..-2]
         nil}
       yield e, Title, s}
-    yield e, SIOC+'has_discussion', R[e+'?rev']
-    %w{to cc bcc resent_to}.map{|p|           # reciever fields
-      m.send(p).justArray.map{|to|            # each recipient
-        yield e, To, AddrPath[to.to_utf8].R}} # recipient URI
-    m['X-BeenThere'].justArray.map{|to|
-      yield e, To, AddrPath[to.to_s].R }
+
+    # references
     %w{in_reply_to references}.map{|ref|             # reference predicates
      m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
       yield e, SIOC+'reply_of', R[MessagePath[r]]}}} # reference URI
     m.in_reply_to.do{|r|                             # direct-reference predicate
       yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
+
+    # body
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
     parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') && # if text &&
                  Mail::Encodings.defined?(p.body.encoding)                     #    decodable
@@ -351,37 +366,35 @@ class R
             indent = "<span name='quote#{depth}'>&gt;</span>"
             {_: :span, class: :quote, c: [indent * depth,' ', {_: :span, class: :quoted, c: qp[3].gsub('@','.').hrefs}]}
           end
-        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution line
-          l.gsub('@','.').hrefs # obfuscate attributed address
+        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution
+          l.gsub('@','.').hrefs # obfuscate addresses
         else # fresh line
-          [l.hrefs{|p,o| # hyperlink plaintext
-             yield e, p, o}] # emit found links as RDF
+          [l.hrefs{|p,o| # hypertextify plaintext
+             yield e, p, o}] # links in RDF
         end}.compact.intersperse("\n")
       yield e, Content, body}
 
+    # attachments
     attache = -> {(e.R+'.attache').mkdir} # container for attachments
     htmlCount = 0
-    htmlFiles.map{|p| # HTML content
-      html = attache[].child "#{htmlCount}.html"  # name
-      yield e, DC+'hasFormat', html                   # message -> HTML resource
-      html.writeFile p.decoded  if !html.e            # write content
-      htmlCount += 1 }
-
+    htmlFiles.map{|p| # HTML
+      html = attache[].child "#{htmlCount}.html" # file-path
+      yield e, DC+'hasFormat', html              # point to HTML format
+      html.writeFile p.decoded  if !html.e       # store to node
+      htmlCount += 1 } # increment file-count
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-containers (digests + forwards)
-      f = attache[].child 'msg.' + rand.to_s.sha1
-      f.writeFile m.body.decoded if !f.e
-      f.triplrMail &b}
-
-    m.attachments.                             # attachments
-      select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p| # decodable?
-      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || # supplied filename
-             (rand.to_s.sha1 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generated name
-      file = attache[].child name              # name
-      file.writeFile p.body.decoded if !file.e # write
-      yield e, SIOC+'attachment', file         # message -> attached resource
+      f = attache[].child 'msg.' + rand.to_s.sha1 # file path
+      f.writeFile m.body.decoded if !f.e # store to node
+      f.triplrMail &b} # recur
+    m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
+      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || # supplied file-name
+             (rand.to_s.sha1 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generate name
+      file = attache[].child name              # file path
+      file.writeFile p.body.decoded if !file.e # store to node
+      yield e, SIOC+'attachment', file         # point to attachment
       if p.main_type=='image'                  # image attachment?
-        yield e, Image, file                   # image for RDF
-        yield e, Content,                      # image for HTML
+        yield e, Image, file                   # image link (RDF)
+        yield e, Content,                      # image link (HTML)
           H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]})
       end }
   end
