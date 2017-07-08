@@ -341,13 +341,16 @@ class R
       dstr = date.iso8601
       yield e, Date, dstr
       yield e, Mtime, date.to_i
-      dpath = '/' + dstr[0..9].gsub('-','/') + '/addr/'
-      indexAddrs.map{|addr|
-        apath = dpath + addr.sub('@','.') + '/'
+      # link message to date-address index
+      dpath = '/' + dstr[0..6].gsub('-','/') + '/addr/' # date part
+      indexAddrs.map{|addr| # addresses
+        apath = dpath + addr.sub('@','.') + '/' # address part
         if subject
-          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')
-          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg'
-          puts mpath
+          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.') # subject part
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filename extension
+          mloc = mpath.R # file resource
+          mloc.dir.mkdir # containing directory
+          FileUtils.cp pathPOSIX, mloc.pathPOSIX unless mloc.e # write
         end}
     end
 
