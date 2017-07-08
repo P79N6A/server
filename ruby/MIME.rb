@@ -296,9 +296,9 @@ class R
     e = MessagePath[id]
     canonicalLocation = e.R + '.msg'
     canonicalLocation.dir.mkdir
-    FileUtils.cp pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e # maybe test for ln capability and same-device at startup-time to optimize storage space
-    yield e, DC+'identifier', id                # preserve pre-webize identifier
-    yield e, DC+'source', self                  # point to source file
+    FileUtils.cp pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e # maybe test for ln capability and same-device limitation at startup to optimize storage space
+    yield e, DC+'identifier', id                # preserve pre-web identifier
+    yield e, DC+'source', self                  # point to originating file
     yield e, Type, R[SIOC+'MailMessage']        # RDF typetag
     yield e, SIOC+'has_discussion', R[e+'?rev'] # discussion link
     indexAddrs = []
@@ -307,25 +307,24 @@ class R
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
     list && list.match(/@/) && m['List-Id'].do{|name|
       group = AddrPath[list]                             # list id
-      yield group, Type, R[SIOC+'Usergroup']             # list type
+      yield group, Type, R[SIOC+'Usergroup']             # user-group typetag
       yield group, Label, name.decoded.gsub(/[<>&]/,'')} # list name
 
     # From
-    m.from.do{|f|f.justArray.map{|f|
-                f = f.to_utf8.downcase        # source address
-                creator = AddrPath[f]         # source URI
-                yield e, Creator, R[creator]}}# source provenance
-    m[:from].do{|fr|
-      fr.addrs.map{|a|
-        address = a.address
-        indexAddrs.push address
-        addr = AddrPath[address]
-        yield addr, Label, a.display_name || a.name }} # source name
+    m.from.do{|f|f.justArray.map{|f|         # source
+                address = f.to_utf8.downcase # source address
+                yield e, Creator, AddrPath[address].R # source triple
+                indexAddrs.push address      # mark for address-indexing
+              }}
+    m[:from].do{|fr|fr.addrs.map{|a|yield AddrPath[a.address], Label, a.display_name||a.name}} # source name
 
     # To
-    %w{to cc bcc resent_to}.map{|p|           # reciever fields
-      m.send(p).justArray.map{|to|            # each recipient
-        yield e, To, AddrPath[to.to_utf8].R}} # to URI
+    %w{to cc bcc resent_to}.map{|p|      # header fields
+      m.send(p).justArray.map{|to|       # recipient
+        address = to.to_utf8.downcase    # recipient address
+        yield e, To, AddrPath[address].R # recipient triple
+        indexAddrs.push address          # mark for address-indexing
+      }}
     m['X-BeenThere'].justArray.map{|to| # to URI via antiloop header
       yield e, To, AddrPath[to.to_s].R }
 
@@ -350,6 +349,9 @@ class R
       yield e, SIOC+'reply_of', R[MessagePath[r]]}}} # reference URI
     m.in_reply_to.do{|r|                             # direct-reference predicate
       yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
+    indexAddrs.map{|addr|
+      puts "index #{addr}"
+    }
 
     # body
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
