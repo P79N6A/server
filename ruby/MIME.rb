@@ -303,7 +303,7 @@ class R
     yield e, SIOC+'has_discussion', R[e+'?rev'] # discussion link
     indexAddrs = []
 
-    # mailing-list metadata
+    # mailing-list fields
     list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
     list && list.match(/@/) && m['List-Id'].do{|name|
       group = AddrPath[list]                             # list id
@@ -328,20 +328,28 @@ class R
     m['X-BeenThere'].justArray.map{|to| # to URI via antiloop header
       yield e, To, AddrPath[to.to_s].R }
 
+    # Subject
+    subject = nil
+    m.subject.do{|s|
+      subject = s.to_utf8.gsub(/\[[^\]]+\]/){|l|
+        yield e, Label, l[1..-2]; nil} # strip bracketed tags and emit as RDF
+      yield e, Title, subject}
+
     # Date
     if m.date
       date = m.date.to_time.utc
-      yield e, Date, date.iso8601
+      dstr = date.iso8601
+      yield e, Date, dstr
       yield e, Mtime, date.to_i
+      dpath = '/' + dstr[0..9].gsub('-','/') + '/addr/'
+      indexAddrs.map{|addr|
+        apath = dpath + addr.sub('@','.') + '/'
+        if subject
+          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg'
+          puts mpath
+        end}
     end
-
-    # Subject
-    m.subject.do{|s|
-      s = s.to_utf8
-      s = s.gsub(/\[[^\]]+\]/){|l|
-        yield e, Label, l[1..-2]
-        nil}
-      yield e, Title, s}
 
     # references
     %w{in_reply_to references}.map{|ref|             # reference predicates
@@ -349,9 +357,6 @@ class R
       yield e, SIOC+'reply_of', R[MessagePath[r]]}}} # reference URI
     m.in_reply_to.do{|r|                             # direct-reference predicate
       yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
-    indexAddrs.map{|addr|
-      puts "index #{addr}"
-    }
 
     # body
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
