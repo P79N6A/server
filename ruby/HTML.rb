@@ -34,6 +34,32 @@ class H
   def H.[] h; H h end
 end
 
+class String
+  def R; R.new self end
+  # text to HTML, emit URIs as RDF
+  def hrefs &b
+    pre,link,post = self.partition R::Href
+    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
+      (link.empty? && '' || '<a id="t' + rand.to_s.sha1[0..3] + '" href="' + u + '">' + # hyperlink
+       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
+        yield(R::Image,u.R) if b # emit image as triple
+        "<img src='#{u}'/>"           # inline image
+       else
+         yield(R::DC+'link',u.R) if b # emit hypertexted link
+         u.sub(/^https?.../,'')       # text
+        end) + '</a>') +
+      (post.empty? && '' || post.hrefs(&b)) # process post-match tail
+  rescue Exception => x
+    puts [x.class,x.message,self[0..127]].join(" ")
+    ""
+  end
+  def sha1; Digest::SHA1.hexdigest self end
+  def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
+  def utf8; force_encoding 'UTF-8' end
+  def sh; Shellwords.escape self end
+end
+
 class R
 
   def href name = nil

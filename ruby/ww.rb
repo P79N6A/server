@@ -24,6 +24,12 @@ class Object
     [Time, DateTime].member?(self.class) ? self : Time.parse(self)
   end
 end
+class RDF::URI
+  def R; R.new to_s end
+end
+class Pathname
+  def R; R.unPOSIX to_s.utf8 end
+end
 class R < RDF::URI
   # URI constants
   W3   = 'http://www.w3.org/'
@@ -52,7 +58,6 @@ class R < RDF::URI
   Size     = Stat + 'size'
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
-
   def R; self end
   def R.[] uri; R.new uri end
   def setEnv r; @r = r; self end
@@ -92,41 +97,5 @@ class R < RDF::URI
       (path||'').sub /^\//, ''
      end).gsub('%23','#')
   end
-
   %w{MIME HTML HTTP}.map{|r|require_relative r}
-
-end
-
-class RDF::URI
-  def R; R.new to_s end
-end
-
-class String
-  def R; R.new self end
-  # text to HTML, emit URIs as RDF
-  def hrefs &b
-    pre,link,post = self.partition R::Href
-    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
-      (link.empty? && '' || '<a id="t' + rand.to_s.sha1[0..3] + '" href="' + u + '">' + # hyperlink
-       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
-        yield(R::Image,u.R) if b # emit image as triple
-        "<img src='#{u}'/>"           # inline image
-       else
-         yield(R::DC+'link',u.R) if b # emit hypertexted link
-         u.sub(/^https?.../,'')       # text
-        end) + '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # process post-match tail
-  rescue Exception => x
-    puts [x.class,x.message,self[0..127]].join(" ")
-    ""
-  end
-  def sha1; Digest::SHA1.hexdigest self end
-  def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
-  def utf8; force_encoding 'UTF-8' end
-  def sh; Shellwords.escape self end
-end
-
-class Pathname
-  def R; R.unPOSIX to_s.utf8 end
 end
