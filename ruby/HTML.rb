@@ -119,7 +119,8 @@ class R
     SIOC+'has_parent' => :reply,
     SIOC+'reply_to' => :reply}
 
-  # rewrite graph-as-tree to HTML-as-tree and call H to rewrite to characters
+  # 1 translate graph-in-JSON to HTML-in-Ruby
+  # 2 translate HTML-in-Ruby to HTML
   HTML = -> graph, re {
     e = re.env
     Grep[graph,re] if re.q.has_key?('q') && !re.q.has_key?('full')
@@ -140,7 +141,7 @@ class R
 
   # types used by main column
   InlineMeta = [Title, Image, Content, Label]
-  # types hidden in abbreviated view
+  # abbreviated view reductions
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', Podcast+'subtitle', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   TabularView = -> g, e, static=false {
