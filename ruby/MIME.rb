@@ -1,15 +1,15 @@
 # coding: utf-8
 =begin triplrs
 
- We map from a file handle to a triple-emitter function, keying on the MIME type, itself derived from filename extension.
+ We map from a file handle to a triple-emitter function, keyed on the MIME type, itself derived from filename-extension.
  A triple-emitter function uses #yield to return intermediate results (triples) before the call returns, which
- yields 3 values, the first two are URI strings, the final is a value (RDF::Literal or castable), RDF::URI or R,
- so it's similar to a file read() call but yields triples instead of bytes.
- this usage predates the RDF library and is now relegated for quick one-liner RDFizations of obscure formats, without the boilerplate of
- a RDF::Reader instance, now preferred for its greater compatibility with 3rd-party tools and coding styles.
+ yields 3 values, the first two are URI strings, the third a RDF::Literal-compatible value, RDF::URI or R
+ so it's similar to a file read() call yielding triples instead of bytes.
+ triplrs predate the RDF library, now relegated for quick one-liner RDFizations of obscure formats without the boilerplate of
+ a RDF::Reader instance, which is preferred for its greater compatibility with 3rd-party code
 
- non-RDF formats usually aren't capable of expressing the full RDF model (even our JSON graph omits blank-nodes) and editing
- is nondestructive, so we never "write back" to a non-RDF file (versions + edits can be Turtle) so no RDF::Writer definitions follow
+ non-RDF formats usually can't express the full RDF model (even our JSON graph omits blank-nodes), and editing is nondestructive:
+ we never "write back" to a non-RDF file (versions + edits can be Turtle) thus no RDF::Writer definitions have been added
 =end
 class R
 
