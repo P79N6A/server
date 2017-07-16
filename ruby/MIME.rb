@@ -9,7 +9,7 @@
  a RDF::Reader instance, which is preferred for its greater compatibility with 3rd-party code
 
  non-RDF formats usually can't express the full RDF model (even our JSON graph omits blank-nodes), and editing is nondestructive:
- we never "write back" to a non-RDF file (versions + edits can be Turtle) thus no RDF::Writer definitions have been added
+ we never "write back" to a non-RDF file (versions + edits can be Turtle) thus no RDF::Writer definitions are found here
 =end
 class R
 
@@ -122,7 +122,8 @@ class R
     yield s, Date, mt.iso8601
     # preview of children
     graph = {}
-    dirs,files = children.partition{|e|e.node.directory?}
+    # if we triplrize dirs inside dirs it visits the entire tree on a cold cache, so stay on this level
+    dirs,files = children.partition{|e|e.node.directory?} # leaf nodes in this dir
     dirs.map{|d|
       u = d.uri + '/'
       graph[u] = {'uri' => u, Type => R[Container]}}
