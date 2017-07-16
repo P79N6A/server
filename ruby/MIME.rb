@@ -1,7 +1,7 @@
 # coding: utf-8
 =begin triplrs
 
- We map from a file handle to a triple-emitter function, keyed on the MIME type, itself derived from a filename-extension (unless none
+ We map from a file-ref to a triple-emitter function, keyed on the MIME type, itself derived from a filename-extension (unless none
  exists in which case FILE(1) runs). A triple-emitter uses #yield to return intermediate results (triples) before the call returns,
  yielding 3 values, the first two are URI strings, the third a RDF::Literal-compatible value, RDF::URI or R (our resource-class).
  It's like a file read() call but reading triples instead of bytes. triplrs allow quick one-liner RDFizations of obscure formats
