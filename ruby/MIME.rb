@@ -303,7 +303,7 @@ class R
     e = MessagePath[id] # derive path from Message-ID field
     canonicalLocation = e.R + '.msg' # storage location
     canonicalLocation.dir.mkdir # link to canonical location if found elsewhere
-    FileUtils.ln pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e
+    FileUtils.ln pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e rescue nil
     yield e, DC+'identifier', id                # preserve Message-ID
     yield e, DC+'source', self                  # point to originating file
     yield e, Type, R[SIOC+'MailMessage']        # RDF typetag
