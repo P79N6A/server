@@ -269,7 +269,11 @@ class R
   def triplrChatLog &f
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    chan = R[stripDoc.basename]
+    log = stripDoc
+    yield log.uri, Type, R[SIOC+'ChatLog']
+    yield log.uri, Label, log.uri.split('%23')[-1]
+    yield log.uri, Title, ''
+    chan = R[log.basename]
     readFile.lines.map{|l|
       #       19:02 <mngrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
@@ -497,7 +501,7 @@ class R
 
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
-  module Feed # feed parser defined as RDF parser
+  module Feed
 
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom
@@ -579,7 +583,7 @@ class R
                   }[p] ?
                   [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
       end
-      def rawTriples # allow broken XML, missing quotes around values, and arbitrary feature-use mashup
+      def rawTriples
         # elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
         reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/

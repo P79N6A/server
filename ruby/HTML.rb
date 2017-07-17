@@ -102,6 +102,7 @@ class R
     'uri' => :id, Type => :type, Container => :dir, Content => :pencil, Date => :date, Label => :tag, Title => :title, Sound => :speaker, Image => :img, Size => :size, Mtime => :time, To => :user, Resource => :graph,
     DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file, Stat+'CompressedFile' => :archive, Stat+'HTMLFile' => :html,
     SIOC+'BlogPost' => :pencil,
+    SIOC+'ChatLog' => :comments,
     SIOC+'Discussion' => :comments,
     SIOC+'InstantMessage' => :comment,
     SIOC+'MicroblogPost' => :newspaper,
