@@ -146,7 +146,6 @@ class R
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', Podcast+'subtitle', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   TabularView = -> g, e, static=false {
-    titles = {}
     e.env[:label] = {}
     (1..10).map{|i|
       e.env[:label]["quote"+i.to_s] = true}
@@ -168,9 +167,7 @@ class R
               else
                 s[p]
                end).justArray[0]||0).send datatype}.send(direction).map{|r|
-             title = r[Title].justArray.select{|t|t.class==String}[0].do{|t|
-               t = t.sub ReExpr, ''
-               titles[t] ? nil : (titles[t] = t)}
+             title = r[Title].justArray.select{|t|t.class==String}[0].do{|t| t = t.sub ReExpr, ''}
              TableRow[r,e,p,direction,keys,title,static]}},
           ({_: :tr, c: keys.map{|k|
               q = e.q.merge({'sort' => k})

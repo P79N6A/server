@@ -286,7 +286,7 @@ class R
       yield log.uri, Type, R[SIOC+'ChatLog']
       yield log.uri, Label, name
       yield log.uri, Title, name
-      yield log.uri, Size, linenum 
+      yield log.uri, Size, linenum
     end
   rescue Exception => e
     puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
