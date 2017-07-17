@@ -73,9 +73,9 @@ class R
   end
 
   def GET
-    return notfound if path.match /^\/(cache|domain)/ # internal storage paths
+    return notfound if path.match /^\/(cache|domain)/ # hide internal storage paths
     return justPath.fileGET if justPath.file?         # static response
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto "now" node
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
     set = nodeset # find nodes
     return notfound if !set || set.empty? # 404
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
@@ -99,8 +99,8 @@ class R
       [304, {}, []]
     else
       body = body ? body.call : self
-      if body.class == R # hand path reference to Rack::File handler            attach our headers
-        (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
+      if body.class == R # file-ref. use Rack::File handler                           but with our headers
+        (Rack::File.new nil).serving((Rack::Request.new @r), body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
       else
         [(@r[:Status]||200), @r[:Response], [body]]
       end
