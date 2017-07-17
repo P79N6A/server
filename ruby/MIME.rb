@@ -321,7 +321,7 @@ class R
     m['X-BeenThere'].justArray.map{|to|  # anti-loop address
       yield e, To, AddrPath[to.to_s].R }
     m['List-Id'].do{|name|
-      yield e, To, name.decoded.gsub(/[<>&]/,'')} # list name
+      yield e, To, name.decoded.sub(/<[^>]+>/,'').gsub(/[<>&]/,'')} # list name
 
     # Subject
     subject = nil
