@@ -1,13 +1,13 @@
 # coding: utf-8
 =begin triplrs
 
- We map from a file-ref to a triple-emitter function, keyed on the MIME type, itself derived from a name extension or prefix (unless
+ We map from a file-ref to a triple-emitter function keyed on its MIME type which is derived from a name suffix or prefix (unless
  neither exists in which case FILE(1) runs). A tripler uses #yield to relay intermediate results (triples) before the call returns,
- yielding 3 values, the first two URI strings, the third a RDF::Literal-compatible value, RDF::URI or R (our resource-class).
- It's like a file read() call but reading triples instead of bytes. triplrs allow quick one-liner RDFizations of obscure formats
- without the boilerplate of a RDF::Reader instance now preferred for its greater interoperability with 3rd-party libraries.
+ yielding 3 values, the first two being URI strings, the third a RDF::Literal-compatible value, RDF::URI or R (our resource-class).
+ It's like a file read() call but for reading triples instead of bytes. triplrs allow quick one-line RDFizations of obscure formats
+ without the boilerplate of a RDF::Reader instance, the latter now preferred for its greater interoperability with 3rd-party tools.
  We have a JSON format for a subset of RDF and use this for caching transcodes in a format readable by RDF parsers. As non-RDF
- formats usually can't express the full RDF model (even our JSON format omits blank-nodes), and editing is nondestructive,
+ formats usually can't express the full RDF model (even our JSON format omits blank-nodes), and editing is also nondestructive,
  we never "write back" to a non-RDF file (versions + edits can be Turtle) thus no RDF::Writer instances are defined here.
 =end
 class R
