@@ -351,7 +351,7 @@ class R
           mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # extension
           mloc = mpath.R # file-ref
           mloc.dir.mkdir # containing directory
-          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e # write
+          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # write
         end}
     end
 
