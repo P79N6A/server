@@ -131,12 +131,14 @@ class R
     # listing of children, using RDF Metadata
     dirs,files = children.partition{|e|e.node.directory?} # terminal nodes
     dirs.map{|d|yield d.uri, Type, R[Container]} # container nodes
-    (R.load files).map{|u,r| # contained RDF
+    (R.load files).map{|s,r| # load children
       types = r.types
-      # select nodes to summarize
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # we could also select nodes that have a Title attribute or are files
-        [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
-        graph[u] = r
+      # find nodes to summarize. just discard IMs for now, could select nodes that have a Title property or are files
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet')
+        r.map{|p,o| # visit resources
+          o.justArray.map{|o|
+            yield s, p, o
+          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p}
       end}
   end
 
