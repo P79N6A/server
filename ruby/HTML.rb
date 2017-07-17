@@ -286,11 +286,15 @@ class R
                  when To
                    actors[To]
                  when Size
-                   l[k].do{|sz|
+                   l[Size].do{|sz|
                      sum = 0
                      sz.justArray.map{|v|
                        sum += v.to_i}
                      sum}
+                 when Date
+                   l[Date].justArray.map{|v|
+                     {_: :span, class: :date, c: v}
+                   }.intersperse(' ')
                  else
                    l[k].justArray.map{|v|
                      case v
