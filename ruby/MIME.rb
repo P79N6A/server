@@ -270,13 +270,9 @@ class R
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
     log = stripDoc
-    yield log.uri, Type, R[SIOC+'ChatLog']
-    name = log.uri.split('%23')[-1]
-    yield log.uri, Label, name
-    yield log.uri, Title, name
     chan = R[log.basename]
     readFile.lines.map{|l|
-      #       19:02 <mngrif(:#logbook)> good deal
+      # 19:02 <mngrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = stripDoc + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
@@ -285,7 +281,13 @@ class R
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
         yield s, DC + 'source', self }}
-    yield log.uri, Size, linenum if linenum > 0
+    if linenum > 0
+      name = log.uri.split('%23')[-1]
+      yield log.uri, Type, R[SIOC+'ChatLog']
+      yield log.uri, Label, name
+      yield log.uri, Title, name
+      yield log.uri, Size, linenum 
+    end
   rescue Exception => e
     puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
   end
