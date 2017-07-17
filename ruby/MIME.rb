@@ -110,6 +110,16 @@ class R
        end)
   end
 
+  def triplrArchive &f; yield uri, Type, R[Stat+'CompressedFile']; triplrFile false,&f end
+  def triplrAudio &f; yield uri, Type, R[Sound]; triplrFile false,&f end
+  def triplrHTML &f; yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
+  def triplrImage &f; yield uri, Type, R[Image]; triplrFile false,&f end
+  def triplrMarkdown; yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
+  def triplrRTF; yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
+  def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
+  def triplrTeX; yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
+  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
+
   def triplrContainer
     s = path # subject URI
     return unless s
@@ -146,8 +156,8 @@ class R
   # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
   # these decisions were made:
   # opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s [citation needed]
-  # and , and . only match mid-URI to allow usage of URLs as words in sentences ending in a period.
-  # <> wrapped URIs are supported
+  # , and . only match mid-URI to allow usage of URIs as words in sentences ending in a period.
+  # <> wrapping is supported
   Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
   def triplrHref enc=nil, &f
     id = stripDoc.uri
@@ -171,15 +181,6 @@ class R
           yield id, Type, R[CSVns+'Row']}}}
   end
 
-  def triplrArchive &f; yield uri, Type, R[Stat+'CompressedFile']; triplrFile false,&f end
-  def triplrAudio &f; yield uri, Type, R[Sound]; triplrFile false,&f end
-  def triplrHTML &f; yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
-  def triplrImage &f; yield uri, Type, R[Image]; triplrFile false,&f end
-  def triplrMarkdown; yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
-  def triplrRTF; yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
-  def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
-  def triplrTeX; yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
-  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
   def uris; (open pathPOSIX).readlines.map &:chomp end
   def isRDF; %w{n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : toJSON end
