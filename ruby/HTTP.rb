@@ -76,19 +76,18 @@ class R
     return notfound if path.match /^\/(cache|domain)/ # internal storage paths
     return justPath.fileGET if justPath.file?         # static response
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto "now" node
-    set = nodeset
-    return notfound if !set || set.empty?
+    set = nodeset # find nodes
+    return notfound if !set || set.empty? # 404
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
-    condResponse ->{ # lazy body-producer. unused in HEAD requests and 304 responses
+    condResponse ->{ # body continuation (unless HEAD or 304 response)
       if set.size==1 && set[0].mime == format
         set[0] # static response
       else # dynamic response
-        if format == 'text/html'
-          HTML[R.load(set),self] # load and render
+        if format == 'text/html' # HTML
+          HTML[R.load(set),self] # render <- load
         else # RDF
-          graph = RDF::Graph.new
-          set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => self} # load
+          graph = RDF::Graph.new; set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => self} # load
           graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true # render
         end
       end}
