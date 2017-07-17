@@ -288,13 +288,13 @@ class R
     m = Mail.read node
     return unless m
 
-    # URI
-    id = m.message_id || m.resent_message_id || rand.to_s.sha1
-    e = MessagePath[id]
-    canonicalLocation = e.R + '.msg'
-    canonicalLocation.dir.mkdir
-    FileUtils.cp pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e # maybe test for ln capability and same-device limitation at startup to optimize storage space
-    yield e, DC+'identifier', id                # preserve pre-web identifier
+    # identifier and storage
+    id = m.message_id || m.resent_message_id || rand.to_s.sha1 # find Message-ID
+    e = MessagePath[id] # derive path from Message-ID field
+    canonicalLocation = e.R + '.msg' # storage location
+    canonicalLocation.dir.mkdir # link to canonical location if found elsewhere
+    FileUtils.ln pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e
+    yield e, DC+'identifier', id                # preserve Message-ID
     yield e, DC+'source', self                  # point to originating file
     yield e, Type, R[SIOC+'MailMessage']        # RDF typetag
     yield e, SIOC+'has_discussion', R[e+'?rev'] # discussion link
@@ -347,7 +347,7 @@ class R
           mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filename extension
           mloc = mpath.R # file resource
           mloc.dir.mkdir # containing directory
-          FileUtils.cp pathPOSIX, mloc.pathPOSIX unless mloc.e # write
+          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e # write
         end}
     end
 
