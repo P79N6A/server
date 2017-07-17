@@ -304,36 +304,30 @@ class R
     yield e, SIOC+'has_discussion', R[e+'?rev'] # discussion link
     indexAddrs = []
 
-    # mailing-list fields
-    list = m['List-Post'].do{|l|l.decoded.sub(/.*?<?mailto:/,'').sub(/>$/,'').downcase} # list address
-    list && list.match(/@/) && m['List-Id'].do{|name|
-      group = AddrPath[list]                             # list id
-      yield group, Type, R[SIOC+'Usergroup']             # user-group typetag
-      yield group, Label, name.decoded.gsub(/[<>&]/,'')} # list name
-
     # From
     m.from.do{|f|f.justArray.map{|f|         # source
                 address = f.to_utf8.downcase # source address
                 yield e, Creator, AddrPath[address].R # source triple
                 indexAddrs.push address      # mark for address-indexing
               }}
-    m[:from].do{|fr|fr.addrs.map{|a|yield AddrPath[a.address], Label, a.display_name||a.name}} # source name
+    m[:from].do{|fr|fr.addrs.map{|a|yield e, Creator, a.display_name||a.name}} # source name
 
     # To
     %w{to cc bcc resent_to}.map{|p|      # header fields
       m.send(p).justArray.map{|to|       # recipient
         address = to.to_utf8.downcase    # recipient address
         yield e, To, AddrPath[address].R # recipient triple
-        indexAddrs.push address          # mark for address-indexing
-      }}
-    m['X-BeenThere'].justArray.map{|to| # to URI via antiloop header
+        indexAddrs.push address }}       # mark for address-indexing
+    m['X-BeenThere'].justArray.map{|to|  # anti-loop address
       yield e, To, AddrPath[to.to_s].R }
+    m['List-Id'].do{|name|
+      yield e, To, name.decoded.gsub(/[<>&]/,'')} # list name
 
     # Subject
     subject = nil
     m.subject.do{|s|
       subject = s.to_utf8.gsub(/\[[^\]]+\]/){|l|
-        yield e, Label, l[1..-2]; nil} # strip bracketed tags and emit as RDF
+        yield e, Label, l[1..-2]; nil} # emit bracketed portions as RDF labels
       yield e, Title, subject}
 
     # Date
@@ -613,7 +607,7 @@ class R
         @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-          # identifier search. try RDF then <link> as they're more likely to be a href than <id> ("tag" URIs, hashes etc)
+          # identifier search. try RDF identifier then <link> as they're more likely to be a href than <id>
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u
             unless u.match /^http/ # resolve relative-reference
