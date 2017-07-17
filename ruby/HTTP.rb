@@ -49,17 +49,18 @@ class R
     end
   end
 
+  # load RDF and non-RDF to a JSON graph
   def R.load set
     rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
-    g = {}                              # tree of RDF graph
+    g = {}                              # JSON graph-in-tree
     graph = RDF::Graph.new              # RDF graph
     # RDF
     rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
-    graph.each_triple{|s,p,o| # triple bound
+    graph.each_triple{|s,p,o| # visit graph components
       s = s.to_s
       p = p.to_s
       g[s] ||= {'uri' => s}; g[s][p] ||= []
-      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value} # triple to tree
+      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value} # triple to JSON-graph
     # non-RDF
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
@@ -67,9 +68,10 @@ class R
           o.justArray.map{|o| # triple found
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
-            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # triple to tree
-    g
+            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # triple to JSON-graph
+    g # return graph
   end
+
   def GET
     return notfound if path.match /^\/(cache|domain)/ # internal storage paths
     return justPath.fileGET if justPath.file?         # static response

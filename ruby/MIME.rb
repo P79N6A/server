@@ -1,7 +1,7 @@
 # coding: utf-8
 =begin triplrs
 
- We map from a file-ref to a triple-emitter function keyed on its MIME type which is derived from a name suffix or prefix (unless
+ We map from a file-ref to a triple-emitter function keyed on a MIME type which is derived from a filename suffix or prefix (unless
  neither exists in which case FILE(1) runs). A tripler uses #yield to relay intermediate results (triples) before the call returns,
  yielding 3 values, the first two being URI strings, the third a RDF::Literal-compatible value, RDF::URI or R (our resource-class).
  It's like a file read() call but for reading triples instead of bytes. triplrs allow quick one-line RDFizations of obscure formats
@@ -111,34 +111,24 @@ class R
   end
 
   def triplrContainer
-    s = path || ''
-    s += '/' unless s[-1] == '/'
-    s = '/'+s unless s[0] == '/'
+    s = path # subject URI
+    return unless s
+    s += '/' unless s[-1] == '/' # give dirs a trailing-slash
+    s = '/'+s unless s[0] == '/' # and a leading slash
     mt = mtime
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    # preview of children
-    graph = {}
-    # if we triplrize dirs inside dirs it visits the entire tree on a cold cache, so stay on this level
-    dirs,files = children.partition{|e|e.node.directory?} # leaf nodes in this dir
-    dirs.map{|d|
-      u = d.uri + '/'
-      graph[u] = {'uri' => u, Type => R[Container]}}
-    (R.load files).map{|u,r|
+    # listing of children, using RDF Metadata
+    dirs,files = children.partition{|e|e.node.directory?} # terminal nodes
+    dirs.map{|d|yield d.uri, Type, R[Container]} # container nodes
+    (R.load files).map{|u,r| # contained RDF
       types = r.types
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet')
+      # select nodes to summarize
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # we could also select nodes that have a Title attribute or are files
         [DC+'link', SIOC+'attachment', DC+'hasFormat', Content].map{|p|r.delete p}
         graph[u] = r
-      end
-      if r[Image]
-        graph[s] ||= {}
-        graph[s][Title] ||= ''
-        graph[s][Image] ||= []
-        graph[s][Image].concat r[Image]
       end}
-    imgs = files.size == files.grep(/(jpg|png|gif)$/).size
-    yield s, Content, (H (imgs ? Gallery : TabularView)[graph,self,true])
   end
 
   def triplrFile basicFile=true
