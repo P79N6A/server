@@ -3,7 +3,6 @@ th {text-align: left}
 th a:before {font-size:1.6em;font-weight: normal}
 td {vertical-align:top}
 td[property="http://rdfs.org/sioc/ns#has_creator"] {text-align:right}
-a.title, td[property="http://purl.org/dc/terms/date"] {white-space: nowrap}
 a.title {color:#000;background-color:#fff;font-size:1.05em;border-radius:.12em;padding:.06em}
 a.thumb {padding:.18em}
 a {text-decoration:none; font-weight: bold; border-radius:.2em;background-color:#000;color:#fff}
@@ -11,7 +10,7 @@ a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#e
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
-a[name] {color:#000;padding:.08em;white-space:nowrap}
+a[name] {color:#000;padding:.08em}
 img {max-width: 100%}
 img.preview {max-height:14em}
 div.links {padding:.13em;max-width:36em;overflow: hidden;float:right;border-radius:.22em;margin:.1em}
