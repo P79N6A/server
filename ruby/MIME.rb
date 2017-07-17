@@ -347,9 +347,9 @@ class R
       indexAddrs.map{|addr| # addresses
         apath = dpath + addr.sub('@','.') + '/' # address part
         if subject
-          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.') # subject part
-          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filename extension
-          mloc = mpath.R # file resource
+          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # subject-derived slug
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # extension
+          mloc = mpath.R # file-ref
           mloc.dir.mkdir # containing directory
           FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e # write
         end}
