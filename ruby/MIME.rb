@@ -111,14 +111,13 @@ class R
   end
 
   def triplrArchive &f; yield uri, Type, R[Stat+'CompressedFile']; triplrFile false,&f end
-  def triplrAudio &f; yield uri, Type, R[Sound]; triplrFile false,&f end
-  def triplrHTML &f; yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
-  def triplrImage &f; yield uri, Type, R[Image]; triplrFile false,&f end
-  def triplrMarkdown; yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
-  def triplrRTF; yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
+  def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
+  def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
+  def triplrImage &f;   yield uri, Type, R[Image]; triplrFile false,&f end
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
-  def triplrTeX; yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
-  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
+  def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
+  def triplrRTF;        yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
+  def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
 
   def triplrContainer
     s = path # subject URI
@@ -182,10 +181,12 @@ class R
   end
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
+  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
+
   def isRDF; %w{n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : toJSON end
 
-  def toJSON # cache RDF-translation of resource as JSON (just another RDF file to reader, see below)
+  def toJSON # RDF-translation of resource (in JSON as RDF due to reader instance)
     return self if ext == 'e'
     hash = uri.sha1
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
