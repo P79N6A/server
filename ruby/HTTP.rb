@@ -49,9 +49,9 @@ class R
     end
   end
 
-  # load RDF and non-RDF to a JSON graph
+  # load RDF and non-RDF to JSON tree
   def R.load set
-    rdf, nonRDF = set.partition &:isRDF # partition set on RDFness
+    rdf, nonRDF = set.partition &:isRDF # partition nodes on type
     g = {}                              # JSON graph-in-tree
     graph = RDF::Graph.new              # RDF graph
     # RDF
@@ -74,7 +74,7 @@ class R
 
   def GET
     return notfound if path.match /^\/(cache|domain)/ # hide internal storage paths
-    return justPath.fileGET if justPath.file?         # static response
+    return justPath.fileGET if justPath.file?         # static result
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
     set = nodeset # find nodes
     return notfound if !set || set.empty? # 404
@@ -82,7 +82,7 @@ class R
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
     condResponse ->{ # body continuation (unless HEAD or 304 response)
       if set.size==1 && set[0].mime == format
-        set[0] # static response
+        set[0] # static result
       else # dynamic response
         if format == 'text/html' # HTML
           HTML[R.load(set),self] # render <- load
