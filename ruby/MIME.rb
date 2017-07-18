@@ -272,7 +272,7 @@ class R
     log = stripDoc
     chan = R[log.basename]
     readFile.lines.map{|l|
-      # 19:02 <mngrif(:#logbook)> good deal
+      # 19:02 <mrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = stripDoc + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
@@ -282,10 +282,9 @@ class R
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
         yield s, DC + 'source', self }}
     if linenum > 0
-      name = log.uri.split('%23')[-1]
       yield log.uri, Type, R[SIOC+'ChatLog']
-      yield log.uri, Label, name
-      yield log.uri, Title, name
+      yield log.uri, Label, chan.uri.split('%23')[0]
+      yield log.uri, Title, log.uri.split('%23')[-1]
       yield log.uri, Size, linenum
     end
   rescue Exception => e
@@ -410,7 +409,7 @@ class R
       end }
   end
 
-  def fetchFeeds; uris.map(&:R).map(&:fetchFeed).join ' ' end
+  def fetchFeeds; uris.map(&:R).map(&:fetchFeed); nil end
   def fetchFeed
     updated = false
     head = {} # request header
