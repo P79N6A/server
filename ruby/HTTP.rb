@@ -78,7 +78,7 @@ class R
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
     set = nodeset # find nodes
     return notfound if !set || set.empty? # 404
-    puts "found "+set.join(' ')
+    #puts "found "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
     condResponse ->{ # body continuation (unless HEAD or 304 response)
@@ -164,7 +164,7 @@ class R
         `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
     else
       set = []
-      set.concat paths.map{|p|
+      set.concat paths.map{|p| # container
         if p.node.directory?
           if trailingSlash
             env[:Links][:up] = path[0..-2] + qs # up to dir summary (no trailing-slash)
@@ -175,12 +175,12 @@ class R
           end
         end
       }.flatten.compact
-      set.concat paths.map{|p|
+      set.concat paths.map{|p| # docs
         isGlob = p.uri.match(/\*/) # bespoke glob
         pattern = isGlob ? p : (p.stripSlash + '.*') # document glob
-        pattern.glob
+        pattern.glob # find
       }.flatten
-      env[:Links][:up] ||= justPath.dirname + '/' + qs
+      env[:Links][:up] ||= justPath.dirname + '/' + qs # parent
       set
     end
   end
