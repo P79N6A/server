@@ -90,13 +90,7 @@ class R < RDF::URI
   def appendFile line; dir.mkdir; File.open(pathPOSIX,'a'){|f|f.write line + "\n"}; self end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
   def mkdir; FileUtils.mkdir_p(pathPOSIX) unless exist?; self end
-  def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub('#','%23').R end
-  def pathPOSIX
-    (if host
-     'domain/' + host + (path||'')
-     else
-      (path||'').sub /^\//, ''
-     end).gsub('%23','#')
-  end
+  def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub(' ','%20').gsub('#','%23').R end
+  def pathPOSIX; URI.unescape(host ? ('domain/'+host+(path||'')) : ((path||'').sub /^\//,'')) end # vhost or strip leading-/ to start at server base
   %w{MIME HTML HTTP}.map{|r|require_relative r}
 end
