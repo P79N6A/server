@@ -410,7 +410,7 @@ class R
       end }
   end
 
-  def fetchFeeds; uris.map(&:R).map &:fetchFeed end
+  def fetchFeeds; uris.map(&:R).map(&:fetchFeed).join ' ' end
   def fetchFeed
     updated = false
     head = {} # request header
