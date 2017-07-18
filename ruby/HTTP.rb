@@ -78,6 +78,7 @@ class R
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
     set = nodeset # find nodes
     return notfound if !set || set.empty? # 404
+    puts "found "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
     condResponse ->{ # body continuation (unless HEAD or 304 response)
@@ -112,8 +113,10 @@ class R
     qs = query && !query.empty? && ('?' + query) || ''
     paths = [self, justPath].uniq
     parts = path[1..-1].split '/'
+    trailingSlash = uri[-1]=='/'
+    container = paths.find{|p|p.node.directory?}
 
-    # month/day/year/hour dirs
+    # month/day/year/hour pagination
     dp = [] # date parts
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil # pointers
@@ -141,47 +144,44 @@ class R
         n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
       end
     end
-    # datetime-node pointers. don't point to 404s
+    # add pointers, but don't point to 404s
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
 
-    # file-system handlers
-    if paths.find{|p|p.node.directory?}
-      if q.has_key? 'find' # match name
-        env[:Links][:up] = justPath.dirname + '/' + qs
-        query = q['find']
-        expression = '-iregex ' + ('.*' + query + '.*').sh
-        size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
-        freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-        paths.select(&:exist?).map{|loc|
-          `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
-      elsif q.has_key? 'q' # match content
-        env[:Links][:up] = justPath.dirname + '/' + qs
-        paths.select(&:exist?).map{|loc|
-          `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
-      else # container
-        paths.map{|p|
-          if p.node.directory?
-            if uri[-1] == '/'
-              env[:Links][:up] = path[0..-2] + qs
-              [p, p.children]
-            else
-              env[:Links][:up] = justPath.dirname + '/' + qs
-              env[:Links][:down] = path + '/' + qs
-              p
-            end
-          end
-        }.flatten.compact
-      end
-    else # file(s)
+    # find nodes
+    if q.has_key?('find') && container # find name
       env[:Links][:up] = justPath.dirname + '/' + qs
-      paths.map{|p|
-        # search for filetype-extension of base URI
-        # allow user override of default pattern
-        pattern = p.uri.match(/\*/) ? p : (p+'.*')
+      query = q['find']
+      expression = '-iregex ' + ('.*' + query + '.*').sh
+      size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
+      freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
+      paths.select(&:exist?).map{|loc|
+        `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
+    elsif q.has_key?('q') && container # find matching content
+      env[:Links][:up] = justPath.dirname + '/' + qs
+      paths.select(&:exist?).map{|loc|
+        `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
+    else
+      set = []
+      set.concat paths.map{|p|
+        if p.node.directory?
+          if trailingSlash
+            env[:Links][:up] = path[0..-2] + qs # up to dir summary (no trailing-slash)
+            [p, p.children]
+          else
+            env[:Links][:down] = path + '/' + qs # down to inlined children (trailing-slash)
+            p
+          end
+        end
+      }.flatten.compact
+      set.concat paths.map{|p|
+        isGlob = p.uri.match(/\*/) # bespoke glob
+        pattern = isGlob ? p : (p.stripSlash + '.*') # document glob
         pattern.glob
       }.flatten
+      env[:Links][:up] ||= justPath.dirname + '/' + qs
+      set
     end
   end
 

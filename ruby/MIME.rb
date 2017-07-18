@@ -92,6 +92,7 @@ class R
   }
 
   def mime
+    puts "mime #{uri}"
     @mime ||=
       (name = path || ''
        prefix = (File.basename name).split('.')[0].downcase
