@@ -145,7 +145,7 @@ class R
   # abbreviated view reductions
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', Podcast+'subtitle', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
-  TabularView = -> g, e, static=false {
+  TabularView = -> g, e {
     e.env[:label] = {}
     (1..10).map{|i|
       e.env[:label]["quote"+i.to_s] = true}
@@ -168,17 +168,17 @@ class R
                 s[p]
                end).justArray[0]||0).send datatype}.send(direction).map{|r|
              title = r[Title].justArray.select{|t|t.class==String}[0].do{|t| t = t.sub ReExpr, ''}
-             TableRow[r,e,p,direction,keys,title,static]}},
-          ({_: :tr, c: keys.map{|k|
-              q = e.q.merge({'sort' => k})
-              if direction == :id
-                q.delete 'ascending'
-              else
-                q['ascending'] = ''
-              end
-              href = CGI.escapeHTML R.qs q
-              {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
-               c: {_: :a, href: href, class: Icons[k] || '', c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}} unless static)]},
+             TableRow[r,e,p,direction,keys,title]}},
+          {_: :tr, c: keys.map{|k|
+             q = e.q.merge({'sort' => k})
+             if direction == :id
+               q.delete 'ascending'
+             else
+               q['ascending'] = ''
+             end
+             href = CGI.escapeHTML R.qs q
+             {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
+              c: {_: :a, href: href, class: Icons[k] || '', c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # bind CSS to color labels
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # bind CSS to highlighted sort property
 
@@ -197,20 +197,17 @@ class R
 //      gallery.init();
 "}]}]}}
 
-  TableRow = -> l,e,sort,direction,keys,title,static {
+  TableRow = -> l,e,sort,direction,keys,title {
     this = l.R
     href = this.uri
     types = l.types
-    # potentially inlining many docs, mint identifiers for item-selection
-    rowID = if static # compiled HTML for future requests
-              'h' + rand.to_s.sha1 # random identifier which won't collide when mashed later on
-            else # request-time, late bind
-              if e.path[-1]=='/' # container
-                e.selector # ordinal-integer identifier
-              else # use fragment identity if one exists
-                this.fragment || ('r'+rand.to_s.sha1)
-              end
+    # potentially inlining many docs, mint new identifiers for item-selection in multiple-doc situation (container)
+    rowID = if e.path[-1]=='/' # container
+              e.selector # ordinal-integer
+            else # fragment or generated via hash
+              this.fragment || ('r'+rand.to_s.sha1)
             end
+    abbr = e.q.has_key? 'abbr'
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
 
@@ -249,17 +246,16 @@ class R
                       end),
                      (title ? '<br>' : ' '),
                      # links
-                     [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
+                     ([DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
                          group = R.ungunk (host||'')
                          e.env[:label][group] = true
                          {name: group, class: :links,
                           c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
                                 [{_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
-                                   update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}},
+                                   update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}} unless abbr),
                      # body
-                     l[Content].justArray.map{|c|
-                       monospace ? {_: :pre, c: c} : c },
+                     (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless abbr),
                      # images
                      (['<br>', {_: :a, href: href,
                                 c: {_: :img,

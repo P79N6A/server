@@ -386,7 +386,7 @@ class R
       yield e, Content, body}
 
     # attachments
-    attache = -> {(e.R+'.attache').mkdir} # container for attachments
+    attache = -> {e.R.mkdir} # container for attachments (on-demand creation)
     htmlCount = 0
     htmlFiles.map{|p| # HTML
       html = attache[].child "#{htmlCount}.html" # file-path
