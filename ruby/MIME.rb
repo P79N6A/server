@@ -270,7 +270,8 @@ class R
     linenum = -1
     day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
     log = stripDoc
-    chan = R[log.basename]
+    chan = log.basename.R
+    network = chan.uri.split('%23')[0].R
     readFile.lines.map{|l|
       # 19:02 <mrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
@@ -283,8 +284,9 @@ class R
         yield s, DC + 'source', self }}
     if linenum > 0
       yield log.uri, Type, R[SIOC+'ChatLog']
-      yield log.uri, Label, chan.uri.split('%23')[0]
-      yield log.uri, Title, log.uri.split('%23')[-1]
+      yield log.uri, To, network+'*'
+      yield log.uri, Label, network.uri
+      yield log.uri, Title, chan.uri.split('%23')[-1]
       yield log.uri, Size, linenum
     end
   rescue Exception => e
