@@ -477,7 +477,7 @@ class R
             docP.dir.mkdir
             doc.writeFile({u => r}.to_json) # hosted doc
             FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # local doc
-            puts 'http:'+doc
+            puts 'http:'+doc.stripDoc
           end}}
   end
 
@@ -493,7 +493,7 @@ class R
           [doc,docP].map{|d|d.dir.mkdir} # container
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # hosted link (GC after sync)
           FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # local link
-          puts 'http:'+doc
+          puts 'http:'+doc.stripDoc
         end
         true}}
     self
