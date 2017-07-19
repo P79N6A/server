@@ -130,12 +130,12 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    # listing of children, using RDF Metadata
+    # preview children using RDF and file-system metadata
     dirs,files = children.partition{|e|e.node.directory?} # terminal nodes
     dirs.map{|d|yield d.uri, Type, R[Container]} # container nodes
-    (R.load files).map{|s,r| # load children
+    (R.load files.select &:e).map{|s,r|
       types = r.types
-      # find nodes to summarize. just discard IMs for now, could select nodes that have a Title property or are files
+      # filter nodes not appearing in listing
       unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet')
         r.map{|p,o| # visit resources
           o.justArray.map{|o|

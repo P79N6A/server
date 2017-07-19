@@ -85,7 +85,7 @@ class R
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
     set = nodeset # find nodes
     return notfound if !set || set.empty? # 404
-    #puts "found "+set.join(' ')
+#    puts "found "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
     condResponse ->{ # body continuation (unless HEAD or 304 response)
@@ -159,20 +159,17 @@ class R
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
 
     # find nodes
+    set = []
     if container && find
       env[:Links][:up] = justPath.dirname + '/' + qs
-      query = q['find']
-      expression = '-iregex ' + ('.*' + query + '.*').sh
-      size = q['min_sizeM'].do{|s| s.match(/^\d+$/) && '-size +' + s + 'M'} || ""
-      freshness = q['max_days'].do{|d| d.match(/^\d+$/) && '-ctime -' + d } || ""
-      paths.select(&:exist?).map{|loc|
-        `find #{loc.sh} #{freshness} #{size} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
+      expression = '-iregex ' + ('.*' + q['find'] + '.*').sh
+      set.concat paths.select(&:exist?).map{|loc|
+        `find #{loc.sh} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
     elsif container && grep
       env[:Links][:up] = justPath.dirname + '/' + qs
-      paths.select(&:exist?).map{|loc|
+      set.concat paths.select(&:exist?).map{|loc|
         `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
     else
-      set = []
       # container
       set.concat paths.map{|p|
         if p.node.directory?
@@ -191,8 +188,11 @@ class R
         pattern = glob ? p : (p.stripSlash + '.*') # bespoke glob or document glob
         pattern.glob
       }.flatten
-      set
     end
+    set_ = set.select &:exist?
+    eaccess = set - set_
+    puts "WARNING can't access: "+eaccess.join(' ') unless eaccess.empty?
+    set_
   end
 
   def accept
