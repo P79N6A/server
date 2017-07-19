@@ -153,13 +153,6 @@ class R
       yield s, Size, sz}
   end
 
-  # scan for HTTP URIs in plain-text. example:
-  # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
-  # these decisions were made:
-  # opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s [citation needed]
-  # , and . only match mid-URI to allow usage of URIs as words in sentences ending in a period.
-  # <> wrapping is supported
-  Href = /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
   def triplrHref enc=nil, &f
     id = stripDoc.uri
     yield id, Type, R[SIOC+'TextFile']

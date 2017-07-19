@@ -36,9 +36,15 @@ end
 
 class String
   def R; R.new self end
-  # text to HTML, emit URIs as RDF
+  # scan for HTTP URIs in string. example:
+  # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
+
+  # these decisions were made:
+  #  opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s [citation needed]
+  #  , and . only match mid-URI to allow usage of URIs as words in sentences ending in a period.
+  # <> wrapping is stripped off
   def hrefs &b
-    pre,link,post = self.partition R::Href
+    pre,link,post = self.partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
       (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
@@ -46,8 +52,8 @@ class String
         yield(R::Image,u.R) if b # emit image as triple
         "<img src='#{u}'/>"           # inline image
        else
-         yield(R::DC+'link',u.R) if b # emit hypertexted link
-         u.sub(/^https?.../,'')       # text
+         yield(R::DC+'link',u.R) if b # emit link
+         u.sub(/^https?.../,'')       # innertext
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # process post-match tail
   rescue Exception => x
