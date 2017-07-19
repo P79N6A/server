@@ -258,7 +258,7 @@ class R
     domain = dname[1]
     ['', 'address', tld, domain[0], domain, *dname[2..-1], id.sha1[0..1], msg].join('/')}
 
-  AddrPath = ->address{ # email-address -> path
+  AddrPath = -> address { # email-address -> path
     address = address.downcase
     person, domainname = address.split '@'
     dname = (domainname||'').split('.').reverse
@@ -268,26 +268,30 @@ class R
 
   def triplrChatLog &f
     linenum = -1
-    day = dirname.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')} || Time.now.iso8601[0..9]
-    log = stripDoc
-    chan = log.basename.R
-    network = chan.uri.split('%23')[0].R
+    base = justPath.stripDoc
+    dir = base.dir
+    log = base.uri
+    basename = base.basename
+    channelPart = basename.split('%23')[-1]
+    networkPart = basename.split('%23')[0]
+    channel = dir + '/' + basename
+    network = dir + '/' + networkPart + '*'
+    day = dir.uri.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')}
     readFile.lines.map{|l|
-      # 19:02 <mrif(:#logbook)> good deal
       l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
-        s = stripDoc + '#l' + (linenum += 1).to_s
+        s = base + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, Creator, R['#'+m[2]]
-        yield s, To, chan
+        yield s, To, channel
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
-        yield s, Date, day+'T'+m[0]+':'+m[1]+':00'
-        yield s, DC + 'source', self }}
+        yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day
+        yield s, DC + 'source', self}}
     if linenum > 0
-      yield log.uri, Type, R[SIOC+'ChatLog']
-      yield log.uri, To, network+'*'
-      yield log.uri, Label, network.uri
-      yield log.uri, Title, chan.uri.split('%23')[-1]
-      yield log.uri, Size, linenum
+      yield log, Type, R[SIOC+'ChatLog']
+      yield log, Creator, channel
+      yield log, To, network
+      yield log, Title, channelPart
+      yield log, Size, linenum
     end
   rescue Exception => e
     puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "

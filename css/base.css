@@ -2,7 +2,6 @@ body {font-family: sans-serif;background-color:#000;color:#fff}
 th {text-align: left}
 th a:before {font-size:1.6em;font-weight: normal}
 td {vertical-align:top}
-td[property="http://rdfs.org/sioc/ns#has_creator"] {text-align:right}
 a.title {color:#000;background-color:#fff;font-size:1.05em;border-radius:.12em;padding:.06em}
 a.thumb {padding:.18em}
 a {text-decoration:none; font-weight: bold; border-radius:.2em;background-color:#000;color:#fff}
