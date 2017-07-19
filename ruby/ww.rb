@@ -82,12 +82,11 @@ class R < RDF::URI
   def sh; pathPOSIX.utf8.sh end # shell-escaped local path
   def exist?; node.exist? end
   def file?; node.file? end
-  def mtime; node.stat.mtime if e end
+  def mtime; node.stat.mtime end
   def size; node.size rescue 0 end
   alias_method :e, :exist?
   alias_method :m, :mtime
   def readFile; File.open(pathPOSIX).read end
-  def appendFile line; dir.mkdir; File.open(pathPOSIX,'a'){|f|f.write line + "\n"}; self end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
   def mkdir; FileUtils.mkdir_p(pathPOSIX) unless exist?; self end
   def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub(' ','%20').gsub('#','%23').R end
