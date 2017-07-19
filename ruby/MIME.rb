@@ -178,8 +178,10 @@ class R
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
   def isRDF; %w{n3 rdf owl ttl}.member? ext end
-  def toRDF; isRDF ? self : toJSON end # non-RDF written to JSON format below
-  def toJSON # RDF::Reader is defined for this RDF-subset format
+
+  # convert to RDF, return reference to transcoded or original if unchanged
+  def toRDF; isRDF ? self : toJSON end
+  def toJSON # RDF subset, readable as RDF by Reader instance
     return self if ext == 'e'
     hash = uri.sha1
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
