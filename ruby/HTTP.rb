@@ -49,8 +49,7 @@ class R
     end
   end
 
-  # load RDF and non-RDF to JSON tree
-  def R.load set
+  def R.load set # RDF and non
     rdf, nonRDF = set.partition &:isRDF # partition nodes on type
     g = {}                              # JSON graph-in-tree
     graph = RDF::Graph.new              # RDF graph
@@ -59,17 +58,25 @@ class R
     graph.each_triple{|s,p,o|
       s = s.to_s
       p = p.to_s
-      g[s] ||= {'uri' => s}; g[s][p] ||= [] # triple to JSON graph-tree
-      g[s][p].push [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value}
-    # non-RDF
+      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value
+      g[s] ||= {'uri' => s}
+      g[s][p] ||= []
+      g[s][p].push o unless g[s][p].member? o}
+    # non
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
         re.map{|p,o|
           o.justArray.map{|o| # each triple
             g[s] ||= {'uri' => s}
-            g[s][p] ||= [] # triple to JSON graph-tree
+            g[s][p] ||= []
             g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
-    g # return graph-tree
+    g
+  end
+
+  def load set # just RDF
+    g = RDF::Graph.new
+    set.map{|n| g.load n.toRDF.pathPOSIX, :base_uri => self}
+    g
   end
 
   def GET
@@ -83,13 +90,12 @@ class R
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
     condResponse ->{ # body continuation (unless HEAD or 304 response)
       if set.size==1 && set[0].mime == format
-        set[0] # static result
+        set[0] # static response
       else # dynamic response
         if format == 'text/html' # HTML
           HTML[R.load(set),self] # render <- load
         else # RDF
-          graph = RDF::Graph.new; set.map{|n| graph.load n.toRDF.pathPOSIX, :base_uri => self} # load
-          graph.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true # render
+          load(set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
         end
       end}
   end
