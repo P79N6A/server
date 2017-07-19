@@ -60,7 +60,7 @@ class R
       s = s.to_s
       p = p.to_s
       g[s] ||= {'uri' => s}; g[s][p] ||= [] # triple to JSON graph-tree
-      g[s][p].push [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : (o.respond_to?(:value) ? o.value : o)}
+      g[s][p].push [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value}
     # non-RDF
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
