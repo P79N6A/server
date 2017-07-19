@@ -41,7 +41,7 @@ class String
     pre,link,post = self.partition R::Href
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
-      (link.empty? && '' || '<a id="t' + rand.to_s.sha1[0..3] + '" href="' + u + '">' + # hyperlink
+      (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
        (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
         yield(R::Image,u.R) if b # emit image as triple
         "<img src='#{u}'/>"           # inline image

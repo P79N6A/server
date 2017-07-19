@@ -284,9 +284,8 @@ class R
         yield s, Creator, R['#'+m[2]]
         yield s, To, channel
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
-        yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day
-        yield s, DC + 'source', self}}
-    if linenum > 0
+        yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day}}
+    if linenum > 0 # only show nonempty logs in dir-list
       yield log, Type, R[SIOC+'ChatLog']
       yield log, Creator, channel
       yield log, To, network

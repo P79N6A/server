@@ -56,20 +56,20 @@ class R
     graph = RDF::Graph.new              # RDF graph
     # RDF
     rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
-    graph.each_triple{|s,p,o| # visit graph components
+    graph.each_triple{|s,p,o|
       s = s.to_s
       p = p.to_s
-      g[s] ||= {'uri' => s}; g[s][p] ||= []
-      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value} # triple to JSON-graph
+      g[s] ||= {'uri' => s}; g[s][p] ||= [] # triple to JSON graph-tree
+      g[s][p].push [RDF::Node, RDF::URI].member?(o.class) ? o.R : o.value}
     # non-RDF
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
         re.map{|p,o|
-          o.justArray.map{|o| # triple found
+          o.justArray.map{|o| # each triple
             g[s] ||= {'uri' => s}
-            g[s][p] ||= []
-            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # triple to JSON-graph
-    g # return graph
+            g[s][p] ||= [] # triple to JSON graph-tree
+            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
+    g # return graph-tree
   end
 
   def GET
