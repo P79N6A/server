@@ -118,6 +118,7 @@ class R
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrRTF;        yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
+  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
 
   def triplrContainer
     s = path # subject URI
@@ -176,8 +177,6 @@ class R
   end
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
-  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
-
   def isRDF; %w{n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : toJSON end
 
@@ -658,8 +657,6 @@ class R
                 }.do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o }
               end
             }
-          else
-            puts "no identifier found in #{@base}: #{inner}"
           end}
       end
     end
