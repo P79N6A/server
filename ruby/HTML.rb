@@ -271,6 +271,7 @@ class R
                                      this.uri
                                     end}}] if isImg)]
                  when Type
+                   puts this.uri,l[Type]
                    l[Type].justArray.uniq.map{|t|
                      icon = Icons[t.uri]
                      {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}

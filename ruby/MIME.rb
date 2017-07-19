@@ -48,7 +48,6 @@ class R
   }
 
   Triplr = {
-    'application/atom+xml' => [:triplrFeed],
     'application/font'      => [:triplrFile],
     'application/haskell'   => [:triplrSourceCode],
     'application/javascript' => [:triplrSourceCode],
@@ -109,6 +108,8 @@ class R
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
   end
+
+  def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
   def triplrArchive &f; yield uri, Type, R[Stat+'CompressedFile']; triplrFile false,&f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
@@ -177,7 +178,6 @@ class R
   end
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
-  def isRDF; %w{n3 rdf owl ttl}.member? ext end
 
   # convert to RDF returning reference to transcoded or (unchanged) original
   def toRDF; isRDF ? self : toJSON end
@@ -615,7 +615,7 @@ class R
           # identifier search. try RDF identifier then <link> as they're more likely to be a href than <id>
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u
-            unless u.match /^http/ # resolve relative-reference
+            unless u.match /^http/ # resolve relative references
               u = (URI.join @base, u).to_s
             end
             resource = u.R
@@ -623,15 +623,28 @@ class R
               yield u, R::Type, R[R::Post]
               yield u, R::To, R[resource.uri.match(commentRe).pre_match]
             else
-              yield u, R::Type, R[R::SIOC+'BlogPost']
+              yield u, Type, R[SIOC+'BlogPost']
               blogs = [resource.join('/')]
               blogs.push @base.R.join('/') if @base.R.host != resource.host
               blogs.map{|blog| yield u, R::To, blog}
             end
+
             inner.scan(reAttach){|e| # media links
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
-                yield(u, R::Atom+rel[1], url[2].R) if rel}}
+                if rel
+                  o = url[2].R
+                  p = case o.ext.downcase
+                      when 'jpg'
+                        R::Image
+                      when 'png'
+                        R::Image
+                      else
+                        R::Atom + rel[1]
+                      end
+                  yield u, p, o
+                end}}
+
             inner.scan(reElement){|e| # elements
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]                  # expand property-name
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p # custom element-type handlers
