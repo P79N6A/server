@@ -14,7 +14,7 @@ class R
 
   MIMEprefix = {
     'capfile' => 'text/plain',
-    'config' => 'application/sh',
+    'config' => 'application/config',
     'dockerfile' => 'text/plain',
     'gemfile' => 'application/ruby',
     'install' => 'text/plain',
@@ -29,6 +29,8 @@ class R
   MIMEsuffix = {
     'asc' => 'text/plain',
     'chk' => 'text/plain',
+    'conf' => 'application/config',
+    'desktop' => 'application/config',
     'doc' => 'application/msword',
     'docx' => 'application/msword+xml',
     'dat' => 'application/octet-stream',
@@ -45,6 +47,8 @@ class R
     'log' => 'text/chatlog',
     'ru' => 'text/plain',
     'rb' => 'application/ruby',
+    'rst' => 'text/restructured',
+    'terminfo' => 'application/config',
     'tmp' => 'application/octet-stream',
     'ttl' => 'text/turtle',
     'u' => 'text/uri-list',
@@ -53,6 +57,7 @@ class R
   }
 
   Triplr = {
+    'application/config'   => [:triplrDataFile],
     'application/font'      => [:triplrFile],
     'application/haskell'   => [:triplrSourceCode],
     'application/javascript' => [:triplrSourceCode],
@@ -84,7 +89,7 @@ class R
     'image/jpeg'           => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMail],
-    'text/cache-manifest'  => [:triplrHref],
+    'text/cache-manifest'  => [:triplrText],
     'text/chatlog'         => [:triplrChatLog],
     'text/css'             => [:triplrSourceCode],
     'text/csv'             => [:triplrCSV,/,/],
@@ -94,8 +99,9 @@ class R
     'text/x-ruby'          => [:triplrSourceCode],
     'text/x-script.ruby'   => [:triplrSourceCode],
     'text/markdown'        => [:triplrMarkdown],
-    'text/nfo'             => [:triplrHref,'cp437'],
-    'text/plain'           => [:triplrHref],
+    'text/nfo'             => [:triplrText,'cp437'],
+    'text/plain'           => [:triplrText],
+    'text/restructured'    => [:triplrMarkdown],
     'text/rtf'             => [:triplrRTF],
     'text/semicolon-separated-values' => [:triplrCSV,/;/],
     'text/tab-separated-values' => [:triplrCSV,/\t/],
@@ -115,7 +121,6 @@ class R
     Size => :size,
     Mtime => :time,
     To => :user,
-    Resource => :graph,
     DC+'hasFormat' => :file,
     Schema+'location' => :location,
     Stat+'File' => :file,
@@ -123,6 +128,7 @@ class R
     Stat+'HTMLFile' => :html,
     Stat+'WordDocument' => :word,
     Stat+'DataFile' => :tree,
+    Stat+'TextFile' => :textfile,
     SIOC+'BlogPost' => :pencil,
     SIOC+'ChatLog' => :comments,
     SIOC+'Discussion' => :comments,
@@ -132,7 +138,6 @@ class R
     SIOC+'Tweet' => :tweet,
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
-    SIOC+'TextFile' => :file,
     SIOC+'has_creator' => :user,
     SIOC+'has_container' => :dir,
     SIOC+'has_discussion' => :comments,
@@ -171,7 +176,7 @@ class R
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
-  def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
+  def triplrUriList; uris.map{|u|yield u,Type,R[W3+'2000/01/rdf-schema#Resource']} end
 
   def triplrContainer
     s = path # subject URI
@@ -220,9 +225,9 @@ class R
                         '</pre>'
   end
 
-  def triplrHref enc=nil, &f
+  def triplrText enc=nil, &f
     id = stripDoc.uri
-    yield id, Type, R[SIOC+'TextFile']
+    yield id, Type, R[Stat+'TextFile']
     yield id, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: readFile.do{|r|

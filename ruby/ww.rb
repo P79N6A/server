@@ -53,7 +53,6 @@ class R < RDF::URI
   CSVns    = W3   + 'ns/csv#'
   Atom     = W3   + '2005/Atom#'
   Type     = W3 + '1999/02/22-rdf-syntax-ns#type'
-  Resource = W3 + '2000/01/rdf-schema#Resource'
   Label    = W3 + '2000/01/rdf-schema#label'
   Size     = Stat + 'size'
   Mtime    = Stat + 'mtime'
