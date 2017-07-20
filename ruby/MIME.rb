@@ -131,9 +131,9 @@ class R
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     # preview children using RDF and file-system metadata
-    dirs,files = children.partition{|e|e.node.directory?} # terminal nodes
-    dirs.map{|d|yield d.uri, Type, R[Container]} # container nodes
-    (R.load files.select &:e).map{|s,r|
+    dirs,files = children.partition{|e|e.node.directory?}
+    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # branching nodes
+    (R.load files.select &:e).map{|s,r| # leaf nodes
       types = r.types
       # filter nodes not appearing in listing
       unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet')
