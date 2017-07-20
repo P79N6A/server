@@ -97,26 +97,7 @@ class R
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
                                           ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
   Icons = {
-    'uri' => :id, Type => :type, Container => :dir, Content => :pencil, Date => :date, Label => :tag, Title => :title, Sound => :speaker, Image => :img, Size => :size, Mtime => :time, To => :user, Resource => :graph,
-    DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file, Stat+'CompressedFile' => :archive, Stat+'HTMLFile' => :html,
-    SIOC+'BlogPost' => :pencil,
-    SIOC+'ChatLog' => :comments,
-    SIOC+'Discussion' => :comments,
-    SIOC+'InstantMessage' => :comment,
-    SIOC+'MicroblogPost' => :newspaper,
-    SIOC+'WikiArticle' => :pencil,
-    SIOC+'Tweet' => :tweet,
-    SIOC+'Usergroup' => :group,
-    SIOC+'SourceCode' => :code,
-    SIOC+'TextFile' => :file,
-    SIOC+'has_creator' => :user,
-    SIOC+'has_container' => :dir,
-    SIOC+'has_discussion' => :comments,
-    SIOC+'Thread' => :openenvelope,
-    SIOC+'Post' => :newspaper,
-    SIOC+'MailMessage' => :envelope,
-    SIOC+'has_parent' => :reply,
-    SIOC+'reply_to' => :reply}
+    'uri' => :id, Type => :type, Container => :dir, Content => :pencil, Date => :date, Label => :tag, Title => :title, Sound => :speaker, Image => :img, Size => :size, Mtime => :time, To => :user, Resource => :graph, DC+'hasFormat' => :file, Schema+'location' => :location, Stat+'File' => :file, Stat+'CompressedFile' => :archive, Stat+'HTMLFile' => :html, Stat+'WordDocument' => :word, SIOC+'BlogPost' => :pencil, SIOC+'ChatLog' => :comments, SIOC+'Discussion' => :comments, SIOC+'InstantMessage' => :comment, SIOC+'MicroblogPost' => :newspaper, SIOC+'WikiArticle' => :pencil, SIOC+'Tweet' => :tweet, SIOC+'Usergroup' => :group, SIOC+'SourceCode' => :code, SIOC+'TextFile' => :file, SIOC+'has_creator' => :user, SIOC+'has_container' => :dir, SIOC+'has_discussion' => :comments, SIOC+'Thread' => :openenvelope, SIOC+'Post' => :newspaper, SIOC+'MailMessage' => :envelope, SIOC+'has_parent' => :reply, SIOC+'reply_to' => :reply}
 
   # 1 translate graph-in-JSON to HTML-in-Ruby
   # 2 translate HTML-in-Ruby to HTML

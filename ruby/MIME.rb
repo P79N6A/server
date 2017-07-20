@@ -30,6 +30,7 @@ class R
     'doc' => 'application/msword',
     'docx' => 'application/msword+xml',
     'dat' => 'application/octet-stream',
+    'db' => 'application/octet-stream',
     'e' => 'application/json',
     'eot' => 'application/font',
     'haml' => 'text/plain',
@@ -58,9 +59,10 @@ class R
     'application/octet-stream' => [:triplrFile],
     'application/org'      => [:triplrOrg],
     'application/pdf'      => [:triplrFile],
-    'application/msword'   => [:triplrWord],
+    'application/msword'   => [:triplrWordDoc],
     'application/msword+xml' => [:triplrWordXML],
     'application/pkcs7-signature' => [:triplrFile],
+    'application/rtf'      => [:triplrRTF],
     'application/ruby'     => [:triplrSourceCode],
     'application/x-sh'     => [:triplrSourceCode],
     'application/xml'     => [:triplrSourceCode],
@@ -119,11 +121,8 @@ class R
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
   def triplrImage &f;   yield uri, Type, R[Image]; triplrFile false,&f end
-  def triplrWord;       yield uri, Content, '<pre>' + `antiword #{sh}` + '</pre>' end
-  def triplrWordXML;    yield uri, Content, '<pre>' + `docx2txt #{sh} -` + '</pre>' end
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
-  def triplrRTF;        yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
   def triplrUriList; uris.map{|u|yield u,Type,R[Resource]} end
 
@@ -159,6 +158,18 @@ class R
       yield s, Date, mt.iso8601}
     size.do{|sz|
       yield s, Size, sz}
+  end
+
+  def triplrRTF &f; triplrWord :catdoc, &f end
+  def triplrWordDoc &f; triplrWord :antiword, &f end
+  def triplrWordXML &f; triplrWord :docx2txt, '-', &f end
+
+  def triplrWord conv, out='', &f
+    triplrFile false, &f
+    yield uri, Type, R[Stat+'WordDocument']
+    yield uri, Content, '<pre>' +
+                        `#{conv} #{sh} #{out}` +
+                        '</pre>'
   end
 
   def triplrHref enc=nil, &f
