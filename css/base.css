@@ -31,6 +31,7 @@ a.archive:before { content:"\f019"; font-family: icons; }
 a.graph:before { content:"\f1e0"; font-family: icons; }
 a.img:before { content:"\f03e"; font-family: icons; }
 a.code:before { content:"\f126"; font-family: icons; }
+a.tree:before { content:"\f0e8"; font-family: icons; }
 a.location:before { content:"\f041"; font-family: icons; }
 a.pencil:before { content:"\f040"; font-family: icons; }
 a.rel:before { content:"\f0a5"; font-family: icons; }

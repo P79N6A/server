@@ -55,7 +55,7 @@ class R
     'application/haskell'   => [:triplrSourceCode],
     'application/javascript' => [:triplrSourceCode],
     'application/ino'      => [:triplrSourceCode],
-    'application/json'      => [:triplrSourceCode],
+    'application/json'      => [:triplrDataFile],
     'application/octet-stream' => [:triplrFile],
     'application/org'      => [:triplrOrg],
     'application/pdf'      => [:triplrFile],
@@ -65,7 +65,7 @@ class R
     'application/rtf'      => [:triplrRTF],
     'application/ruby'     => [:triplrSourceCode],
     'application/x-sh'     => [:triplrSourceCode],
-    'application/xml'     => [:triplrSourceCode],
+    'application/xml'     => [:triplrDataFile],
     'application/x-executable' => [:triplrFile],
     'application/x-gzip'   => [:triplrArchive],
     'application/vnd.oasis.opendocument.text' => [:triplrOpenDocument],
@@ -76,6 +76,7 @@ class R
     'image/gif'            => [:triplrImage],
     'image/png'            => [:triplrImage],
     'image/svg+xml'        => [:triplrImage],
+    'image/tiff'           => [:triplrImage],
     'image/jpeg'           => [:triplrImage],
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMail],
@@ -96,7 +97,46 @@ class R
     'text/uri-list'        => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
   }
-
+  Icons = {
+    'uri' => :id,
+    Type => :type,
+    Container => :dir,
+    Content => :pencil,
+    Date => :date,
+    Label => :tag,
+    Title => :title,
+    Sound => :speaker,
+    Image => :img,
+    Size => :size,
+    Mtime => :time,
+    To => :user,
+    Resource => :graph,
+    DC+'hasFormat' => :file,
+    Schema+'location' => :location,
+    Stat+'File' => :file,
+    Stat+'Archive' => :archive,
+    Stat+'HTMLFile' => :html,
+    Stat+'WordDocument' => :word,
+    Stat+'DataFile' => :tree,
+    SIOC+'BlogPost' => :pencil,
+    SIOC+'ChatLog' => :comments,
+    SIOC+'Discussion' => :comments,
+    SIOC+'InstantMessage' => :comment,
+    SIOC+'MicroblogPost' => :newspaper,
+    SIOC+'WikiArticle' => :pencil,
+    SIOC+'Tweet' => :tweet,
+    SIOC+'Usergroup' => :group,
+    SIOC+'SourceCode' => :code,
+    SIOC+'TextFile' => :file,
+    SIOC+'has_creator' => :user,
+    SIOC+'has_container' => :dir,
+    SIOC+'has_discussion' => :comments,
+    SIOC+'Thread' => :openenvelope,
+    SIOC+'Post' => :newspaper,
+    SIOC+'MailMessage' => :envelope,
+    SIOC+'has_parent' => :reply,
+    SIOC+'reply_to' => :reply,
+  }
   def mime
     @mime ||=
       (name = path || ''
@@ -118,10 +158,11 @@ class R
 
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
-  def triplrArchive &f; yield uri, Type, R[Stat+'CompressedFile']; triplrFile false,&f end
+  def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
   def triplrImage &f;   yield uri, Type, R[Image]; triplrFile false,&f end
+  def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile false,&f end
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
