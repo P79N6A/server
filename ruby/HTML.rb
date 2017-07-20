@@ -42,14 +42,14 @@ class String
   # these decisions were made:
   #  opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s [citation needed]
   #  , and . only match mid-URI to allow usage of URIs as words in sentences ending in a period.
-  # <> wrapping is stripped off
+  # <> wrapping is stripped
   def hrefs &b
     pre,link,post = self.partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
       (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
        (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
-        yield(R::Image,u.R) if b # emit image as triple
+        yield(R::Image,u.R) if b # emit image
         "<img src='#{u}'/>"           # inline image
        else
          yield(R::DC+'link',u.R) if b # emit link
@@ -68,13 +68,9 @@ end
 
 class R
 
-  def href name = nil
-    {_: :a, href: uri, c: name || fragment || basename}
-  end
-
-  def nokogiri
-    Nokogiri::HTML.parse (open uri).read
-  end
+  def href name=nil; {_: :a, href: uri, c: name || fragment || basename} end
+  def nokogiri; Nokogiri::HTML.parse (open uri).read end
+  def R.ungunk host; (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'') end
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
@@ -83,10 +79,6 @@ class R
       e.attribute_nodes.map{|a|
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml(:indent => 0)}
-
-  def R.ungunk host
-    (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'')
-  end
 
   Grep = -> graph, re {
     wordIndex = {}
@@ -248,7 +240,7 @@ class R
                       {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
                      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
                        name = this.path || ''
-                       {_: :a, href: href, c: (CGI.escapeHTML (File.basename name))}
+                       {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)))}
                       end),
                      (title ? '<br>' : ' '),
                      # links
