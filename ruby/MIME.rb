@@ -129,6 +129,7 @@ class R
     Stat+'WordDocument' => :word,
     Stat+'DataFile' => :tree,
     Stat+'TextFile' => :textfile,
+    Stat+'container' => :dir,
     SIOC+'BlogPost' => :pencil,
     SIOC+'ChatLog' => :comments,
     SIOC+'Discussion' => :comments,
@@ -139,7 +140,6 @@ class R
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
     SIOC+'has_creator' => :user,
-    SIOC+'has_container' => :dir,
     SIOC+'has_discussion' => :comments,
     SIOC+'Thread' => :openenvelope,
     SIOC+'Post' => :newspaper,
@@ -204,6 +204,7 @@ class R
   def triplrFile basicFile=true
     s = path || ''
     s = '/'+s unless s[0] == '/'
+    yield s, Stat+'container', dir
     yield s, Type, R[Stat+'File'] if basicFile
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
