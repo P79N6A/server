@@ -27,6 +27,8 @@ class R
   MIMEsuffix = {
     'asc' => 'text/plain',
     'chk' => 'text/plain',
+    'doc' => 'application/msword',
+    'docx' => 'application/msword+xml',
     'dat' => 'application/octet-stream',
     'e' => 'application/json',
     'eot' => 'application/font',
@@ -56,6 +58,8 @@ class R
     'application/octet-stream' => [:triplrFile],
     'application/org'      => [:triplrOrg],
     'application/pdf'      => [:triplrFile],
+    'application/msword'   => [:triplrWord],
+    'application/msword+xml' => [:triplrWordXML],
     'application/pkcs7-signature' => [:triplrFile],
     'application/ruby'     => [:triplrSourceCode],
     'application/x-sh'     => [:triplrSourceCode],
@@ -115,6 +119,8 @@ class R
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
   def triplrImage &f;   yield uri, Type, R[Image]; triplrFile false,&f end
+  def triplrWord;       yield uri, Content, '<pre>' + `antiword #{sh}` + '</pre>' end
+  def triplrWordXML;    yield uri, Content, '<pre>' + `docx2txt #{sh} -` + '</pre>' end
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrRTF;        yield stripDoc.uri, Content, `which catdoc && catdoc #{sh}`.hrefs end
