@@ -226,9 +226,8 @@ class R
   end
 
   def triplrText enc=nil, &f
-    id = stripDoc.uri
-    yield id, Type, R[Stat+'TextFile']
-    yield id, Content,
+    yield uri, Type, R[Stat+'TextFile']
+    yield uri, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: readFile.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
