@@ -68,6 +68,7 @@ class R
     'application/xml'     => [:triplrSourceCode],
     'application/x-executable' => [:triplrFile],
     'application/x-gzip'   => [:triplrArchive],
+    'application/vnd.oasis.opendocument.text' => [:triplrOpenDocument],
     'audio/mpeg'           => [:triplrAudio],
     'audio/x-wav'          => [:triplrAudio],
     'audio/3gpp'           => [:triplrAudio],
@@ -160,9 +161,10 @@ class R
       yield s, Size, sz}
   end
 
-  def triplrRTF &f; triplrWord :catdoc, &f end
-  def triplrWordDoc &f; triplrWord :antiword, &f end
-  def triplrWordXML &f; triplrWord :docx2txt, '-', &f end
+  def triplrRTF          &f; triplrWord :catdoc,        &f end
+  def triplrWordDoc      &f; triplrWord :antiword,      &f end
+  def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
+  def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
 
   def triplrWord conv, out='', &f
     triplrFile false, &f
