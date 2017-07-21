@@ -190,15 +190,13 @@ class R
     yield s, Date, mt.iso8601
     # preview children using RDF and file-system metadata
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # branching nodes
+    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # containers in this container
     (R.load files.select &:e).map{|s,r| # leaf nodes
       types = r.types
-      # filter nodes not appearing in listing
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet')
-        r.map{|p,o| # visit resources
-          o.justArray.map{|o|
-            yield s, p, o
-          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p}
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node types to drop (dropped types can emit summary nodes of different type)
+        r.map{|p,o| o.justArray.map{|o| # visit triples
+            yield s, p, o # emit summary-triple to directory-listing graph
+          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # predicates to drop
       end}
   end
 
@@ -561,8 +559,8 @@ class R
         docP = doc.justPath
         unless doc.e || docP.e
           [doc,docP].map{|d|d.dir.mkdir} # container
-          RDF::Writer.open(doc.pathPOSIX){|f|f << graph} # hosted link (GC after sync)
-          FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # local link
+          RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
+          FileUtils.ln doc.pathPOSIX, docP.pathPOSIX
           puts 'http:'+doc.stripDoc
         end
         true}}
