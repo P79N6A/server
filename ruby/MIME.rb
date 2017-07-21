@@ -182,6 +182,7 @@ class R
   def triplrContainer
     s = path # subject URI
     return unless s
+    # so we don't potentially get 4 identifiers for the same resource, normalize URI
     s += '/' unless s[-1] == '/' # give dirs a trailing-slash
     s = '/'+s unless s[0] == '/' # and a leading slash
     mt = mtime
@@ -193,10 +194,10 @@ class R
     dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load them, otherwise infinite load->triplr recursion of entire subtree would ensue 
     (R.load files.select &:e).map{|s,r| # leaf nodes
       types = r.types
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node types to drop (dropped types can emit summary nodes of different type)
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node types to drop (dropped nodes can still emit summary nodes of different type, at triplr or load stage)
         r.map{|p,o| o.justArray.map{|o| # visit triples
             yield s, p, o # emit summary-triple to directory-listing graph
-          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # predicates to drop
+          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # arcs to drop
       end}
   end
 
