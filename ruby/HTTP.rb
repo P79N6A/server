@@ -49,11 +49,11 @@ class R
     end
   end
 
-  def R.load set # RDF and non
+  # load JSON graph-as-tree
+  def R.load set
     rdf, nonRDF = set.partition &:isRDF # partition nodes on type
-    g = {}                              # JSON graph-in-tree
+    g = {}                              # JSON graph
     graph = RDF::Graph.new              # RDF graph
-    # RDF
     rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
     graph.each_triple{|s,p,o|
       s = s.to_s
@@ -62,7 +62,6 @@ class R
       g[s] ||= {'uri' => s}
       g[s][p] ||= []
       g[s][p].push o unless g[s][p].member? o}
-    # non
     nonRDF.map{|n|
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
         re.map{|p,o|
@@ -74,9 +73,11 @@ class R
     g
   end
 
-  def load set # just RDF
+  # load RDF-graph
+  def load set
     g = RDF::Graph.new
-    set.map{|n| g.load n.toRDF.pathPOSIX, :base_uri => self}
+    set.map{|n|
+      g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
     g
   end
 

@@ -191,10 +191,10 @@ class R
     yield s, Date, mt.iso8601
     # preview children using RDF and filesystem metadata
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load them, otherwise infinite load->triplr recursion of entire subtree would ensue 
-    (R.load files.select &:e).map{|s,r| # leaf nodes
+    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load otherwise infinite load->triplr recursion of entire subtree would ensue 
+    (R.load files.select &:e).map{|s,r| # leaf nodes. fetch RDF
       types = r.types
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node types to drop (dropped nodes can still emit summary nodes of different type, at triplr or load stage)
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node types to drop (dropped nodes can emit summary nodes of different type at triplr stage)
         r.map{|p,o| o.justArray.map{|o| # visit triples
             yield s, p, o # emit summary-triple to directory-listing graph
           } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # arcs to drop
@@ -348,8 +348,10 @@ class R
         yield s, To, channel
         yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day}}
-    if linenum > 0 # only show nonempty logs in dir-list
+    # emit summary
+    if linenum > 0 # only show non-empty
       yield log, Type, R[SIOC+'ChatLog']
+      yield log, Date, mtime.iso8601
       yield log, Creator, channel
       yield log, To, network
       yield log, Title, channelPart
