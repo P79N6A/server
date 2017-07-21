@@ -67,6 +67,7 @@ class R
       (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
         re.map{|p,o|
           o.justArray.map{|o| # each triple
+            o = o.R if o.class==Hash
             g[s] ||= {'uri' => s}
             g[s][p] ||= []
             g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}

@@ -48,6 +48,7 @@ class R
     'ru' => 'text/plain',
     'rb' => 'application/ruby',
     'rst' => 'text/restructured',
+    'sample' => 'application/config',
     'terminfo' => 'application/config',
     'tmp' => 'application/octet-stream',
     'ttl' => 'text/turtle',
