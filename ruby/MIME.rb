@@ -188,9 +188,9 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    # preview children using RDF and file-system metadata
+    # preview children using RDF and filesystem metadata
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # containers in this container
+    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load them, otherwise infinite load->triplr recursion of entire subtree would ensue 
     (R.load files.select &:e).map{|s,r| # leaf nodes
       types = r.types
       unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node types to drop (dropped types can emit summary nodes of different type)
