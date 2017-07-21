@@ -249,9 +249,9 @@ class R
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
 
-  # convert to RDF returning reference to transcoded or (unchanged) original
+  # file-ref to RDF-file-ref: returns transcode or unchanged RDF-file-ref
   def toRDF; isRDF ? self : toJSON end
-  def toJSON # RDF subset, readable as RDF by Reader instance below
+  def toJSON # RDF-in-JSON, readable by RDF::Reader
     return self if ext == 'e'
     hash = uri.sha1
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
