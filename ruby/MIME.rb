@@ -637,6 +637,7 @@ class R
                  Podcast+'keywords' => Label,
                  Podcast+'author' => Creator,
                  Atom+'displaycategories' => Label,
+                 'http://newsoffice.mit.edu/ns/tags' => Label,
                  Atom+'content' => Content,
                  Atom+'summary' => Content,
                  Atom+'enclosure' => SIOC+'attachment',

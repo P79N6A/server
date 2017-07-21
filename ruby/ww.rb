@@ -40,6 +40,7 @@ class R < RDF::URI
   Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
   Sound    = Purl + 'ontology/mo/Sound'
   Image    = DC + 'Image'
+  OA = 'https://www.w3.org/ns/oa#'
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
