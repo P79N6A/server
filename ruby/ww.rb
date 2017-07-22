@@ -32,15 +32,16 @@ class Pathname
 end
 class R < RDF::URI
   # URI constants
-  W3   = 'http://www.w3.org/'
+  W3 = 'http://www.w3.org/'
+  OA = 'https://www.w3.org/ns/oa#'
   Purl = 'http://purl.org/'
   DC   = Purl + 'dc/terms/'
   SIOC = 'http://rdfs.org/sioc/ns#'
   Schema = 'http://schema.org/'
   Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
+  Harvard  = 'http://harvard.edu/'
   Sound    = Purl + 'ontology/mo/Sound'
   Image    = DC + 'Image'
-  OA = 'https://www.w3.org/ns/oa#'
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'

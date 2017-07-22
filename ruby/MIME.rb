@@ -121,7 +121,7 @@ class R
     Image => :img,
     Size => :size,
     Mtime => :time,
-    To => :user,
+    To => :userB,
     DC+'hasFormat' => :file,
     Schema+'location' => :location,
     Stat+'File' => :file,
@@ -182,7 +182,7 @@ class R
   def triplrContainer
     s = path # subject URI
     return unless s
-    # so we don't potentially get 4 identifiers for the same resource, normalize URI
+    # so we don't get 4 identifiers for the resource, normalize URI
     s += '/' unless s[-1] == '/' # give dirs a trailing-slash
     s = '/'+s unless s[0] == '/' # and a leading slash
     mt = mtime
@@ -191,10 +191,10 @@ class R
     yield s, Date, mt.iso8601
     # preview children using RDF and filesystem metadata
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load otherwise infinite load->triplr recursion of entire subtree would ensue 
+    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load otherwise load->triplr recursion of entire subtree ensues
     (R.load files.select &:e).map{|s,r| # leaf nodes. fetch RDF
       types = r.types
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node types to drop (dropped nodes can emit summary nodes of different type at triplr stage)
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop. dropped classes can (should) emit summary-nodes, see triplrChatLog
         r.map{|p,o| o.justArray.map{|o| # visit triples
             yield s, p, o # emit summary-triple to directory-listing graph
           } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # arcs to drop
@@ -633,7 +633,12 @@ class R
                  RSS+'modules/content/encoded' => Content,
                  RSS+'category' => Label,
                  RSS+'source' => DC+'source',
+                 Harvard+'author' => Creator,
+                 Harvard+'subtitle' => Title,
+                 Harvard+'WPID' => Label,
+                 Harvard+'affiliation' => Creator,
                  Podcast+'keywords' => Label,
+                 Podcast+'subtitle' => Title,
                  Podcast+'author' => Creator,
                  Atom+'displaycategories' => Label,
                  'http://newsoffice.mit.edu/ns/tags' => Label,

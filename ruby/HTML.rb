@@ -120,7 +120,7 @@ class R
   # types used by main column
   InlineMeta = [Title, Image, Content, Label]
   # abbreviated view reductions
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', Podcast+'subtitle', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
     e.env[:label] = {}
@@ -143,9 +143,7 @@ class R
                s[Title] || s[Label] || s.uri
               else
                 s[p]
-               end).justArray[0]||0).send datatype}.send(direction).map{|r|
-             title = r[Title].justArray.select{|t|t.class==String}[0].do{|t| t = t.sub ReExpr, ''}
-             TableRow[r,e,p,direction,keys,title]}},
+               end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}},
           {_: :tr, c: keys.map{|k|
              q = e.q.merge({'sort' => k})
              if direction == :id
@@ -174,7 +172,7 @@ class R
 //      gallery.init();
 "}]}]}}
 
-  TableRow = -> l,e,sort,direction,keys,title {
+  TableRow = -> l,e,sort,direction,keys {
     this = l.R
     href = this.uri
     types = l.types
@@ -215,13 +213,13 @@ class R
                        e.env[:label][lbl] = true
                        [{_: :a, href: href, name: lbl, c: label},' ']},
                      # title
-                     (if title
-                      {_: :a, class: :title, href: href, c: (CGI.escapeHTML title)}
+                     (if titles = l[Title]
+                      [titles.justArray.map{|title|
+                         {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' '), '<br>']
                      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
                        name = this.path || ''
                        {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)))}
                       end),
-                     (title ? '<br>' : ' '),
                      # links
                      ([DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
