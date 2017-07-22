@@ -335,10 +335,8 @@ class R
     dir = base.dir
     log = base.uri
     basename = base.basename
-    channelPart = basename.split('%23')[-1]
-    networkPart = basename.split('%23')[0]
     channel = dir + '/' + basename
-    network = dir + '/' + networkPart + '*'
+    network = dir + '/' + basename.split('%23')[0] + '*'
     day = dir.uri.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')}
     readFile.lines.map{|l|
       l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
@@ -354,7 +352,7 @@ class R
       yield log, Date, mtime.iso8601
       yield log, Creator, channel
       yield log, To, network
-      yield log, Title, channelPart
+      yield log, Title, basename.split('%23')[-1] # channel
       yield log, Size, linenum
     end
   rescue Exception => e
