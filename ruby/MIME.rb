@@ -148,6 +148,7 @@ class R
     SIOC+'has_parent' => :reply,
     SIOC+'reply_to' => :reply,
   }
+
   def mime
     @mime ||=
       (name = path || ''
@@ -166,7 +167,6 @@ class R
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
   end
-
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
@@ -178,7 +178,10 @@ class R
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
   def triplrUriList; uris.map{|u|yield u,Type,R[W3+'2000/01/rdf-schema#Resource']} end
-
+  def triplrRTF          &f; triplrWord :catdoc,        &f end
+  def triplrWordDoc      &f; triplrWord :antiword,      &f end
+  def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
+  def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
   def triplrContainer
     s = path # subject URI
     return unless s
@@ -213,11 +216,6 @@ class R
       yield s, Size, sz}
   end
 
-  def triplrRTF          &f; triplrWord :catdoc,        &f end
-  def triplrWordDoc      &f; triplrWord :antiword,      &f end
-  def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
-  def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-
   def triplrWord conv, out='', &f
     triplrFile false, &f
     yield uri, Type, R[Stat+'WordDocument']
@@ -249,13 +247,12 @@ class R
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
 
-  # file-ref to RDF-file-ref: returns transcode or unchanged RDF-file-ref
-  def toRDF; isRDF ? self : toJSON end
+  def toRDF; isRDF ? self : toJSON end # file-ref to file-ref maybe swapped for transcode
   def toJSON # RDF-in-JSON, readable by RDF::Reader
     return self if ext == 'e'
     hash = uri.sha1
-    doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
-    unless doc.e && doc.m > m
+    doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
+    unless doc.e && doc.m > m # update cache
       tree = {}
       triplr = Triplr[mime]
       unless triplr
