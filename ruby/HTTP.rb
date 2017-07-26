@@ -166,7 +166,7 @@ class R
       env[:Links][:up] = justPath.dirname + '/' + qs
       expression = '-iregex ' + ('.*' + q['find'] + '.*').sh
       set.concat paths.select(&:exist?).map{|loc|
-        `find #{loc.sh} #{expression} | head -n 255`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
+        `find #{loc.sh} #{expression} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
     elsif container && grep
       env[:Links][:up] = justPath.dirname + '/' + qs
       set.concat paths.select(&:exist?).map{|loc|
@@ -187,7 +187,7 @@ class R
       env[:Links][:up] ||= justPath.dirname + '/' + qs # parent
       # docs
       set.concat paths.map{|p|
-        pattern = glob ? p : (p.stripSlash + '.*') # bespoke glob or document glob
+        pattern = glob ? p : (p.stripSlash + '.*') # bespoke or document glob
         pattern.glob
       }.flatten
     end
