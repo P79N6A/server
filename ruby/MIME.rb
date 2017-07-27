@@ -394,7 +394,7 @@ class R
     subject = nil
     m.subject.do{|s|
       subject = s.to_utf8.gsub(/\[[^\]]+\]/){|l|
-        yield e, Label, l[1..-2]; nil} # emit bracketed portions as RDF labels
+        yield e, Label, l[1..-2]; nil} # emit []-wrapped tokens as RDF labels
       yield e, Title, subject}
 
     # Date
@@ -409,9 +409,9 @@ class R
         apath = dpath + addr.sub('@','.') + '/' # address part
         if subject
           mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # subject-derived slug
-          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # extension
-          mloc = mpath.R # file-ref
-          mloc.dir.mkdir # containing directory
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filename-extension
+          mloc = mpath.R # file-reference
+          mloc.dir.mkdir # create container
           FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # write
         end}
     end
