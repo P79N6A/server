@@ -185,22 +185,22 @@ class R
   def triplrContainer
     s = path # subject URI
     return unless s
-    # so we don't get 4 identifiers for the resource, normalize URI
-    s += '/' unless s[-1] == '/' # give dirs a trailing-slash
-    s = '/'+s unless s[0] == '/' # and a leading slash
+    # so we don't get 4 id for 1 resource, normalize URI
+    s += '/' unless s[-1] == '/' # trailing slash
+    s = '/'+s unless s[0] == '/' # leading slash
     mt = mtime
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     # preview children using RDF and filesystem metadata
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load otherwise load->triplr recursion of entire subtree ensues
+    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load contents until user requests its URI
     (R.load files.select &:e).map{|s,r| # leaf nodes. fetch RDF
       types = r.types
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop. dropped classes can (should) emit summary-nodes, see triplrChatLog
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop. dropped classes emit summary-nodes, as seen in triplrChatLog
         r.map{|p,o| o.justArray.map{|o| # visit triples
-            yield s, p, o # emit summary-triple to directory-listing graph
-          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # arcs to drop
+            yield s, p, o # emit summary triples for directory-data graph
+          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # arc types to drop
       end}
   end
 
