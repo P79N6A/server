@@ -4,8 +4,8 @@
  neither exists in which case FILE(1) runs). A tripler produces a trio of values (a triple) repeateadly before the call terminates.
  Of the 3 yielded values, the first two are URI strings, the third a RDF::Literal-compatible value | RDF::URI | R ("resource").
  We define a JSON format for a subset of RDF, and its RDF::Reader instance, to cache rewrites readable by any RDF consumer. Reading
- JSON with the stdlib parser is much faster than unnecessarily running Ruby triplr code over and over again even if the file hasn't
- changed. It's ~3-4x faster than the Turtle-parser so we use it wherever blank-nodes, language-tags or textual editing aren't needed
+ JSON with the stdlib parser is much faster than unnecessarily running Ruby triplr code over and over again when the file hasn't
+ changed. It's ~3-4x faster than the Turtle-parser so we use it wherever blank-nodes, language-tags or human editing aren't needed.
 =end
 class R
 
@@ -180,6 +180,7 @@ class R
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
   def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
+
   def triplrContainer
     s = path # subject URI
     return unless s
@@ -245,8 +246,10 @@ class R
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
 
-  def toRDF; isRDF ? self : toJSON end # file-ref to file-ref maybe swapped for transcode
-  def toJSON # RDF-in-JSON, readable by RDF::Reader
+  # file-reference to file-reference maybe swapped for transcode
+  def toRDF; isRDF ? self : toJSON end
+  # non-RDF file-reference to JSON-RDF file-reference
+  def toJSON
     return self if ext == 'e'
     hash = uri.sha1
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
@@ -265,18 +268,15 @@ class R
     end
     doc
   end
-
+  # Reader for minimalist JSON-RDF format used by cache
   module Format
-
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
       content_encoding 'utf-8'
       reader { R::Format::Reader }
     end
-
     class Reader < RDF::Reader
       format Format
-
       def initialize(input = $stdin, options = {}, &block)
         @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
         @base = options[:base_uri]
@@ -302,7 +302,6 @@ class R
   end
 
   ReExpr = /\b[rR][eE]: /
-
   MessagePath = -> id { # message Identifier -> path
     msg, domainname = id.downcase.sub(/^</,'').sub(/>.*/,'').gsub(/[^a-zA-Z0-9\.\-@]/,'').split '@'
     dname = (domainname||'').split('.').reverse
