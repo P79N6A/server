@@ -416,48 +416,52 @@ class R
         end}
     end
 
-    # references
-    %w{in_reply_to references}.map{|ref|             # reference predicates
-     m.send(ref).do{|rs| rs.justArray.map{|r|        # indirect-references
-      yield e, SIOC+'reply_of', R[MessagePath[r]]}}} # reference URI
-    m.in_reply_to.do{|r|                             # direct-reference predicate
-      yield e, SIOC+'has_parent', R[MessagePath[r]]} # reference URI
+    # message references, stronger and weaker, direct and indirect
+    # map In-Reply-To -> sioc:has_parent
+    #     References  -> sioc:reply_of
+    %w{in_reply_to references}.map{|ref|
+      m.send(ref).do{|rs|
+        rs.justArray.map{|r|
+          yield e, SIOC+'reply_of', R[MessagePath[r]]
+        }}}
+    m.in_reply_to.do{|r|
+      yield e, SIOC+'has_parent', R[MessagePath[r]]
+    }
 
     # body
-    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # parts
-    parts.select{|p| (!p.mime_type || p.mime_type=='text/plain') && # if text &&
-                 Mail::Encodings.defined?(p.body.encoding)                     #    decodable
-    }.map{|p|
-      body = H p.decoded.to_utf8.lines.to_a.map{|l|
-        l = l.chomp
+    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # multipart message
+    parts.select{|p|
+      (!p.mime_type || p.mime_type == 'text/plain') && # find text parts
+        Mail::Encodings.defined?(p.body.encoding)      # decoder must be defined to continue
+    }.map{|p| # each text part
+      body = H p.decoded.to_utf8.lines.to_a.map{|l| # decode line
+        l = l.chomp # strip any remaining [\n\r]
         if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
-          depth = (qp[1].scan /[>|]/).size
-          if qp[3].empty?
+          depth = (qp[1].scan /[>|]/).size # count > occurrences
+          if qp[3].empty? # drop empty-string lines while inside quoted portion
             nil
-          else
-            indent = "<span name='quote#{depth}'>&gt;</span>"
-            {_: :span, class: :quote, c: [indent * depth,' ', {_: :span, class: :quoted, c: qp[3].gsub('@','.').hrefs}]}
+          else # wrap quotes in <span>
+            indent = "<span name='quote#{depth}'>&gt;</span>" # indentation marker with depth label
+            {_: :span, class: :quote, c: [indent * depth,' ', {_: :span, class: :quoted, c: qp[3].hrefs}]}
           end
-        elsif l.match(/^((At|On)\b.*wrote:|_+|[a-zA-Z\-]+ mailing list)$/) # attribution
-          l.gsub('@','.').hrefs # obfuscate addresses
         else # fresh line
-          [l.hrefs{|p,o| # hypertextify plaintext
-             yield e, p, o}] # links in RDF
-        end}.compact.intersperse("\n")
-      yield e, Content, body}
+          [l.hrefs{|p,o| # hypertextify
+             yield e, p, o}] # emit found links as RDF
+        end}.compact.intersperse("\n") # join lines
+      yield e, Content, body} # emit body as RDF
 
     # attachments
-    attache = -> {e.R.mkdir} # container for attachments (on-demand creation)
+    attache = -> {e.R.mkdir} # create container for attachments, called if needed
     htmlCount = 0
     htmlFiles.map{|p| # HTML
       html = attache[].child "#{htmlCount}.html" # file-path
       yield e, DC+'hasFormat', html              # point to HTML format
       html.writeFile p.decoded  if !html.e       # store to node
       htmlCount += 1 } # increment file-count
-    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # recursive mail-containers (digests + forwards)
+    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # message(s)-in-message (i.e digests + forwards)
       f = attache[].child 'msg.' + rand.to_s.sha1 # file path
-      f.writeFile m.body.decoded if !f.e # store to node
-      f.triplrMail &b} # recur
+      f.writeFile m.body.decoded if !f.e # store message
+      f.triplrMail &b} # recursion on message parts
     m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || # supplied file-name
              (rand.to_s.sha1 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generate name
