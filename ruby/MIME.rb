@@ -1,14 +1,11 @@
 # coding: utf-8
-=begin triplrs
-
+=begin mapping "non-RDF" to RDF
  We map from a file-ref to a triple-emitter function keyed on a MIME type which is derived from a filename suffix or prefix (unless
- neither exists in which case FILE(1) runs). A tripler uses #yield to relay intermediate results (triples) before the call returns,
- yielding 3 values, the first two being URI strings, the third a RDF::Literal-compatible value, RDF::URI or R (our resource-class).
- It's like a file read() call but for reading triples instead of bytes. triplrs allow quick one-line RDFizations of obscure formats
- without the boilerplate of a RDF::Reader instance, the latter now preferred for its greater interoperability with 3rd-party tools.
- We have a JSON format for a subset of RDF and use this for caching transcodes in a format readable by RDF parsers. As non-RDF
- formats usually can't express the full RDF model (even our JSON format omits blank-nodes), and editing is also nondestructive,
- we never "write back" to a non-RDF file (versions + edits can be Turtle) thus no RDF::Writer instances are defined here.
+ neither exists in which case FILE(1) runs). A tripler produces a trio of values (a triple) repeateadly before the call terminates.
+ Of the 3 yielded values, the first two are URI strings, the third a RDF::Literal-compatible value | RDF::URI | R ("resource").
+ We define a JSON format for a subset of RDF, and its RDF::Reader instance, to cache rewrites readable by any RDF consumer. Reading
+ JSON with the stdlib parser is much faster than unnecessarily running Ruby triplr code over and over again even if the file hasn't
+ changed. It's ~3-4x faster than the Turtle-parser so we use it wherever blank-nodes, language-tags or textual editing aren't needed
 =end
 class R
 
@@ -109,6 +106,7 @@ class R
     'text/uri-list'        => [:triplrUriList],
     'text/x-tex'           => [:triplrTeX],
   }
+
   Icons = {
     'uri' => :id,
     Type => :type,

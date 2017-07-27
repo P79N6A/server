@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-
+# coding: utf-8
 def H x # HTML output
   case x
   when Hash # element
