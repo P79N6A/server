@@ -132,7 +132,7 @@ class R
     # sort datatype
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
     # column head
-    keys = g.values.select{|v|v.respond_to? :keys}.map(&:keys).flatten.uniq
+    keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
     [{_: :table,

@@ -233,15 +233,16 @@ class R
   end
 
   def triplrCSV d
+    ns    = W3 + 'ns/csv#'
     lines = CSV.read pathPOSIX
     lines[0].do{|fields| # header-row
-      yield uri, Type, R[CSVns+'Table']
-      yield uri, CSVns+'rowCount', lines.size
+      yield uri, Type, R[ns+'Table']
+      yield uri, ns+'rowCount', lines.size
       lines[1..-1].each_with_index{|row,line|
         row.each_with_index{|field,i|
           id = uri + '#row:' + line.to_s
           yield id, fields[i], field
-          yield id, Type, R[CSVns+'Row']}}}
+          yield id, Type, R[ns+'Row']}}}
   end
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
