@@ -615,7 +615,9 @@ class R
               a.set_attribute 'href', (URI.join s, (a.attr 'href')) if a.has_attribute? 'href' rescue nil}
             content.css('span > a').map{|a|
               if a.inner_text=='[link]'
-                yield s, DC+'link', a.attr('href').R
+                link = a.attr('href').R
+                yield s, DC+'link', link
+                yield s, Image, link if %w{jpg png}.member? link.ext
                 a.remove
               end}
             yield s, p, content.to_xhtml
@@ -704,7 +706,7 @@ class R
             else
               yield u, Type, R[SIOC+'BlogPost']
               blogs = [resource.join('/')]
-              blogs.push @base.R.join('/') if @base.R.host != resource.host
+              blogs.push @base.R.join('/') if @base.R.host != resource.host # reblog
               blogs.map{|blog| yield u, R::To, blog}
             end
 
