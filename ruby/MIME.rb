@@ -611,11 +611,12 @@ class R
         send(*f){|s,p,o|
           if Content==p && o.class==String
             content = Nokogiri::HTML.fragment o
+            content.css('img').map{|i|yield s, Image, (i.attr 'src').R}
             content.css('a').map{|a|
               a.set_attribute 'href', (URI.join s, (a.attr 'href')) if a.has_attribute? 'href' rescue nil}
             content.css('span > a').map{|a|
               if a.inner_text=='[link]'
-                link = a.attr('href').R
+                link = (a.attr 'href').R
                 yield s, DC+'link', link
                 yield s, Image, link if %w{jpg png}.member? link.ext
                 a.remove
