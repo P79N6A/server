@@ -119,7 +119,7 @@ class R
   # types used by main column
   InlineMeta = [Title, Image, Content, Label]
   # abbreviated view reductions
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
     e.env[:label] = {}
@@ -240,11 +240,14 @@ class R
                                     end}}] if isImg)]
                  when Type
                    l[Type].justArray.uniq.map{|t|
-                     icon = Icons[t.uri]
-                     {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}}
+                     if t.respond_to? :uri
+                       icon = Icons[t.uri]
+                       {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}
+                     end
+                   }
                  when Schema+'logo'
                    l[k].justArray.map{|logo|
-                     if logo.respond_to?(:uri)
+                     if logo.respond_to? :uri
                        {_: :a, href: l[DC+'link'].justArray[0].do{|l|l.uri}||'#',
                         c: {_: :img, class: :logo, src: logo.uri}}
                      end

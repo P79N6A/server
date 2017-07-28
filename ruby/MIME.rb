@@ -627,7 +627,8 @@ class R
       def normalizePredicates *f
         send(*f){|s,p,o|
           yield s,
-                {DCe+'subject' => SIOC+'subject',
+                {DCe+'subject' => Title,
+                 DCe+'type' => Type,
                  RSS+'title' => Title,
                  RSS+'description' => Content,
                  RSS+'encoded' => Content,
