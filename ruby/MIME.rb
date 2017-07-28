@@ -420,7 +420,7 @@ class R
         end}
     end
 
-    # message references, stronger and weaker, direct and indirect
+    # message references
     # map In-Reply-To -> sioc:has_parent
     #     References  -> sioc:reply_of
     %w{in_reply_to references}.map{|ref|
