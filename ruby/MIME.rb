@@ -624,7 +624,7 @@ class R
       def normalizePredicates *f
         send(*f){|s,p,o|
           yield s,
-                {Purl+'dc/elements/1.1/subject' => SIOC+'subject',
+                {DCe+'subject' => SIOC+'subject',
                  RSS+'title' => Title,
                  RSS+'description' => Content,
                  RSS+'encoded' => Content,
@@ -653,7 +653,7 @@ class R
                     'Date' => true,
                     RSS+'pubDate' => true,
                     Date => true,
-                    Purl+'dc/elements/1.1/date' => true,
+                    DCe+'date' => true,
                     Atom+'published' => true,
                     Atom+'updated' => true
                   }[p] ?
@@ -724,7 +724,7 @@ class R
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]                  # expand property-name
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p # custom element-type handlers
                 # used in subject URI search
-              elsif [Atom+'author', RSS+'author', RSS+'creator', Purl+'dc/elements/1.1/creator'].member? p # author
+              elsif [Atom+'author', RSS+'author', RSS+'creator', DCe+'creator'].member? p # author
                 uri = e[3].match /<uri>([^<]+)</
                 name = e[3].match /<name>([^<]+)</
                 yield u, Creator, e[3].do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri
