@@ -78,8 +78,8 @@ class R < RDF::URI
   def basename; File.basename (path||'') end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
   def stripSlash; uri[-1]=='/' ? uri[0..-2].R.setEnv(@r) : self end
-  def inside; node.expand_path.to_s.index(FSbase) == 0 end # jail path to server-root
-  def sh; pathPOSIX.utf8.sh end # shell-escaped local path
+  def inside; node.expand_path.to_s.index(FSbase) == 0 end
+  def sh; pathPOSIX.utf8.sh end
   def exist?; node.exist? end
   def file?; node.file? end
   def mtime; node.stat.mtime end
@@ -90,6 +90,6 @@ class R < RDF::URI
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
   def mkdir; FileUtils.mkdir_p(pathPOSIX) unless exist?; self end
   def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub(' ','%20').gsub('#','%23').R end
-  def pathPOSIX; URI.unescape(host ? ('domain/'+host+(path||'')) : ((path||'').sub /^\//,'')) end # vhost or strip leading-/ to start at server base
+  def pathPOSIX; URI.unescape(host ? ('domain/'+host+(path||'')) : ((path||'').sub /^\//,'')) end
   %w{MIME HTML HTTP}.map{|r|require_relative r}
 end

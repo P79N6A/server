@@ -199,7 +199,7 @@ class R
       unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop. dropped classes emit summary-nodes, as seen in triplrChatLog
         r.map{|p,o| o.justArray.map{|o| # visit triples
             yield s, p, o # emit summary triples for directory-data graph
-          } unless [Content,'uri',DC+'hasFormat',DC+'link'].member? p} # arc types to drop
+          } unless [Content,'uri',DC+'hasFormat'].member? p} # arc types to drop
       end}
   end
 
@@ -339,7 +339,10 @@ class R
         yield s, Type, R[SIOC+'InstantMessage']
         yield s, Creator, R['#'+m[2]]
         yield s, To, channel
-        yield s, Content, m[3].hrefs{|p, o| yield s, p, o}
+        yield s, Content, m[3].hrefs{|p, o|
+          yield log, p, o
+          yield s, p, o
+        }
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day}}
     # emit summary
     if linenum > 0 # only show non-empty

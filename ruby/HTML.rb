@@ -213,8 +213,8 @@ class R
                        [{_: :a, href: href, name: lbl, c: label},' ']},
                      # title
                      (if titles = l[Title]
-                      [titles.justArray.map{|title|
-                         {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' '), '<br>']
+                      titles.justArray.map{|title|
+                        {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
                      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
                        name = this.path || ''
                        {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)))}
