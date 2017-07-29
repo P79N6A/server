@@ -1,11 +1,15 @@
 # coding: utf-8
-=begin mapping "non-RDF" to RDF
- We map from a file-ref to a triple-emitter function keyed on a MIME type which is derived from a filename suffix or prefix (unless
- neither exists in which case FILE(1) runs). A tripler produces a trio of values (a triple) repeateadly before the call terminates.
- Of the 3 yielded values, the first two are URI strings, the third a RDF::Literal-compatible value | RDF::URI | R ("resource").
- We define a JSON format for a subset of RDF, and its RDF::Reader instance, to cache rewrites readable by any RDF consumer. Reading
- JSON with the stdlib parser is much faster than unnecessarily running Ruby triplr code over and over again when the file hasn't
- changed. It's ~3-4x faster than the Turtle-parser so we use it wherever blank-nodes, language-tags or human editing aren't needed.
+=begin formats
+
+ We define a JSON format and its RDF::Reader instance, used for internal caching and leveraging the optimized
+ nature of the standard-library JSON parser and the Hash-class in-memory representation and utility functions,
+
+ and enable non-RDF to RDF conversion of documents via triplr functions defined on non-RDF MIMEs. these yield
+ (rather than return) trios of values: two URI strings describing the resource and an attribute, + a RDF::Literal
+ or RDF::URI (or trivially-convertible value: basic string/numeric values and R, our RDF::URI derived "resource").
+ 
+ the HTTP daemon swaps non-RDF file-references w/ cached RDF substitutes and uses the stock abstract RDF-loader.
+
 =end
 class R
 
