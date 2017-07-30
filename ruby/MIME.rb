@@ -306,18 +306,10 @@ class R
   end
 
   ReExpr = /\b[rR][eE]: /
-  MessagePath = -> id { # message Identifier -> path
-    msg, domainname = id.downcase.sub(/^</,'').sub(/>.*/,'').gsub(/[^a-zA-Z0-9\.\-@]/,'').split '@'
-    dname = (domainname||'').split('.').reverse
-    case dname.size
-    when 0
-      dname.unshift 'none','nohost'
-    when 1
-      dname.unshift 'none'
-    end
-    tld = dname[0]
-    domain = dname[1]
-    ['', 'address', tld, domain[0], domain, *dname[2..-1], id.sha1[0..1], msg].join('/')}
+
+  MessageId = -> id { # Message-ID to RDF resource-identifier
+    h = id.sha1
+    ['', 'msg', h[0], h[1], h[2], h[3..-1], '#this'].join('/').R}
 
   AddrPath = -> address { # email-address -> path
     address = address.downcase
@@ -361,29 +353,29 @@ class R
   end
 
   def triplrMail &b
-
     # read
     m = Mail.read node
     return unless m
-
-    # identifier and storage
-    id = m.message_id || m.resent_message_id || rand.to_s.sha1 # Message-ID
-    e = MessagePath[id] # derive path from Message-ID
-    canonicalLocation = e.R + '.msg' # storage location
-    canonicalLocation.dir.mkdir # store to canonical location
-    FileUtils.ln pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e rescue nil
-    yield e, DC+'identifier', id                # Message-ID in RDF
-    yield e, DC+'source', self                  # originating-file pointer
-    yield e, Type, R[SIOC+'MailMessage']        # RDF type-tag
+    # identifier
+    id = m.message_id || m.resent_message_id || rand.to_s.sha1 # Message-ID string
+    resource = MessageId[id]                 # message resource
+    e = resource.uri                         # message URI
+    srcDir = resource.justPath; srcDir.mkdir # message container
+    srcFile = srcDir + 'this.msg'            # message location
+    # link to canonical location if sourced elsewhere
+    puts "new message #{id} in #{srcFile}" unless srcFile.e
+    FileUtils.ln pathPOSIX, srcFile.pathPOSIX unless srcFile.e rescue nil
+    yield e, DC+'identifier', id         # Message-ID
+    yield e, DC+'source', srcFile        # source reference
+    yield e, Type, R[SIOC+'MailMessage'] # type-tag
     addrs = [] # addresses to index
 
     # From
-    m.from.do{|f|f.justArray.map{|f|# source
-                address = f.to_utf8.downcase # source address
-                yield e, Creator, AddrPath[address].R # source triple
-                addrs.push address # queue for indexing
-              }}
-    m[:from].do{|fr|fr.addrs.map{|a|yield e, Creator, a.display_name||a.name}} # source name
+    m.from.do{|f|f.justArray.map{|f|# creators
+                address = f.to_utf8.downcase # creator address
+                yield e, Creator, AddrPath[address].R # creator triple
+                addrs.push address }} # index on creator
+    m[:from].do{|fr|fr.addrs.map{|a|yield e, Creator, a.display_name||a.name}} # creator name
 
     # To
     %w{to cc bcc resent_to}.map{|p|      # header fields
@@ -410,7 +402,7 @@ class R
       yield e, Date, dstr
       yield e, Mtime, date.to_i
       # month-address index
-      dpath = '/' + dstr[0..6].gsub('-','/') + '/addr/' # month
+      dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month
       addrs.map{|addr| # addresses
         user, domain = addr.split '@'
         apath = dpath + domain + '/' + user + '/' # address components
@@ -419,6 +411,7 @@ class R
           mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filetype
           mloc = mpath.R # storage reference
           mloc.dir.mkdir # index container
+          yield e, SIOC+'has_container', mloc.dir
           FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index
         end}
     end
@@ -427,22 +420,20 @@ class R
     # map In-Reply-To -> sioc:reply_of, sioc:has_parent
     #     References  -> sioc:reply_of
     %w{in_reply_to references}.map{|ref|
+      # indirect references
       m.send(ref).do{|rs|
-        # references
         rs.justArray.map{|r|
-          target = R[MessagePath[r]]
-          targetFile = target + '.msg'
-          yield e, SIOC+'reply_of', target + '/'
-          rev = target + '/' + id.sha1 + '.msg'
-          rel = e.R + '/' + r.sha1 + '.msg'
-          rel.dir.mkdir
-          rev.dir.mkdir
-          FileUtils.ln targetFile.pathPOSIX, rel.pathPOSIX if !rel.e && targetFile.e
-          FileUtils.ln pathPOSIX, rev.pathPOSIX if !rev.e
-        }}}
+          dest = MessageId[r]
+          yield e, SIOC+'reply_of', dest
+          # bidirectional link to/from references
+          destDir = dest.justPath; destDir.mkdir
+          destFile = destDir + 'this.msg'
+          rev = destDir + id.sha1 + '.referencing.msg'
+          rel = srcDir + r.sha1 + '.referenced.msg'
+          FileUtils.ln destFile.pathPOSIX, rel.pathPOSIX if !rel.e && destFile.e
+          FileUtils.ln  srcFile.pathPOSIX, rev.pathPOSIX if !rev.e }}}
     # direct reference
-    m.in_reply_to.do{|r|
-      yield e, SIOC+'has_parent', R[MessagePath[r]]}
+    m.in_reply_to.do{|r| yield e, SIOC+'has_parent', MessageId[r]}
 
     # body
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # multipart message
@@ -466,28 +457,32 @@ class R
         end}.compact.intersperse("\n") # join lines
       yield e, Content, body} # emit body as RDF
 
-    # attachments
-    attache = -> {e.R.mkdir} # create container for attachments, called when needed
+    # HTML parts
     htmlCount = 0
     htmlFiles.map{|p| # HTML
-      html = attache[].child "#{htmlCount}.html" # file-path
-      yield e, DC+'hasFormat', html              # point to HTML format
-      html.writeFile p.decoded  if !html.e       # store to node
+      html = srcDir + "#{htmlCount}.html"  # file location
+      yield e, DC+'hasFormat', html        # file pointer
+      html.writeFile p.decoded  if !html.e # store
       htmlCount += 1 } # increment file-count
-    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m| # message(s)-in-message (i.e digests + forwards)
-      f = attache[].child 'msg.' + rand.to_s.sha1 # file path
-      f.writeFile m.body.decoded if !f.e # store message
-      f.triplrMail &b} # recursion on message parts
+
+    # included messages, message as container for other messages
+    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|
+      content = m.body.decoded                   # decode message-part
+      f = srcDir + content.sha1 + '.inlined.msg' # message location
+      f.writeFile content if !f.e                # store message
+      f.triplrMail &b}                           # recursion on message-part
+
+    # attachments
     m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
-      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} || # supplied file-name
-             (rand.to_s.sha1 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generate name
-      file = attache[].child name              # file path
-      file.writeFile p.body.decoded if !file.e # store to node
-      yield e, SIOC+'attachment', file         # point to attachment
-      if p.main_type=='image'                  # image attachment?
-        yield e, Image, file                   # image link (RDF)
-        yield e, Content,                      # image link (HTML)
-          H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]})
+      name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} ||                           # explicit name
+             (rand.to_s.sha1 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generated name
+      file = srcDir + name                     # file location
+      file.writeFile p.body.decoded if !file.e # store
+      yield e, SIOC+'attachment', file         # file pointer
+      if p.main_type=='image'                  # image attachments
+        yield e, Image, file                   # image link represented in RDF
+        yield e, Content,                      # image link represented in HTML
+          H({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]}) # render HTML
       end }
   end
 

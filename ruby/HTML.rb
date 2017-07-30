@@ -220,7 +220,7 @@ class R
                        {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)))}
                       end),
                      # links
-                     ([DC+'link', SIOC+'attachment', SIOC+'reply_of', DC+'hasFormat'].map{|p|
+                     ([DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
                        l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
                          group = R.ungunk (host||'')
                          e.env[:label][group] = true
