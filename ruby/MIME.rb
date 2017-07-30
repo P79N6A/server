@@ -424,16 +424,21 @@ class R
     end
 
     # message references
-    # map In-Reply-To -> sioc:has_parent
+    # map In-Reply-To -> sioc:reply_of, sioc:has_parent
     #     References  -> sioc:reply_of
     %w{in_reply_to references}.map{|ref|
       m.send(ref).do{|rs|
+        # references
         rs.justArray.map{|r|
-          yield e, SIOC+'reply_of', R[MessagePath[r]]
+          target = R[MessagePath[r]]
+          yield e, SIOC+'reply_of', target
+          rev = target + '/' + id.sha1 + '.msg'
+          rev.dir.mkdir
+          FileUtils.ln pathPOSIX, rev.pathPOSIX unless rev.e
         }}}
+    # direct reference
     m.in_reply_to.do{|r|
-      yield e, SIOC+'has_parent', R[MessagePath[r]]
-    }
+      yield e, SIOC+'has_parent', R[MessagePath[r]]}
 
     # body
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # multipart message
@@ -458,7 +463,7 @@ class R
       yield e, Content, body} # emit body as RDF
 
     # attachments
-    attache = -> {e.R.mkdir} # create container for attachments, called if needed
+    attache = -> {e.R.mkdir} # create container for attachments, called when needed
     htmlCount = 0
     htmlFiles.map{|p| # HTML
       html = attache[].child "#{htmlCount}.html" # file-path
@@ -577,7 +582,7 @@ class R
 
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
-  module Feed
+  module Feed # as RDF
 
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom

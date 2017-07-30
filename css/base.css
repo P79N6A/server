@@ -2,10 +2,11 @@ body {font-family: sans-serif;background-color:#000;color:#fff}
 table {border-spacing:0}
 th a:before {font-size:1.6em;font-weight: normal}
 a.title {color:#000;background-color:#fff;font-size:1.1em}
-tr.here td, tr.here td a {background-color:#242424;font-size:1.3em;color:#fff}
+tr.here td, tr.here td a {background-color:#242424;color:#fff}
+tr.here > td[property="uri"] > a:first-child {font-size:1.6em}
 td {vertical-align:top;padding:.13em}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
-a {text-decoration:none; font-weight: bold; border-radius:.16em;background-color:#000;color:#fff}
+a {text-decoration:none; font-weight: bold; background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}

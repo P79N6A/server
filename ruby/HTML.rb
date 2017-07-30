@@ -119,7 +119,7 @@ class R
   # arc-types not mapped to columns
   InlineMeta = [Title, Image, Content, Label]
   # arc-types hidden in overview
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
+  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
     e.env[:label] = {}
@@ -199,7 +199,7 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: rowID, class: (this.path==e.path && this.path[-1]=='/') ? 'here' : '',
+    [{_: :tr, href: href, id: rowID, class: this.path==e.path ? 'here' : '',
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
