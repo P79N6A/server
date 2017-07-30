@@ -175,11 +175,11 @@ class R
     this = l.R
     href = this.uri
     types = l.types
-    # potentially inlining many docs, mint new identifiers for item-selection in multiple-doc situation (container)
-    rowID = if e.path[-1]=='/' # container
-              e.selector # ordinal-integer
-            else # fragment or generated via hash
-              this.fragment || ('r'+rand.to_s.sha1)
+    # node-identifier for selection ring
+    rowID = if e.path[-1]=='/' # container and multiple docs: mint new identifier
+              e.selector
+            else # document fragment, if exists
+              this.fragment || e.selector
             end
     abbr = e.q.has_key? 'abbr'
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
