@@ -420,7 +420,7 @@ class R
     # map In-Reply-To -> sioc:reply_of, sioc:has_parent
     #     References  -> sioc:reply_of
     %w{in_reply_to references}.map{|ref|
-      # indirect references
+      # indirect and direct references
       m.send(ref).do{|rs|
         rs.justArray.map{|r|
           dest = MessageId[r]
@@ -435,13 +435,22 @@ class R
     # direct reference
     m.in_reply_to.do{|r| yield e, SIOC+'has_parent', MessageId[r]}
 
-    # body
-    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # multipart message
+    # HTML parts
+    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # decant HTML parts
+    htmlCount = 0
+    htmlFiles.map{|p| # HTML
+      html = srcDir + "#{htmlCount}.html"  # file location
+      yield e, DC+'hasFormat', html        # file pointer
+      html.writeFile p.decoded  if !html.e # store
+      htmlCount += 1 } # increment counter
+
+    # text parts
     parts.select{|p|
       (!p.mime_type || p.mime_type == 'text/plain') && # find text parts
-        Mail::Encodings.defined?(p.body.encoding)      # decoder must be defined to continue
-    }.map{|p| # each text part
-      body = H p.decoded.to_utf8.lines.to_a.map{|l| # decode line
+        Mail::Encodings.defined?(p.body.encoding)      # ensure decoder is defined
+    }.map{|p| # part
+      # represent part as RDF
+      yield e, Content, H[p.decoded.to_utf8.lines.to_a.map{|l| # split lines
         l = l.chomp # strip any remaining [\n\r]
         if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
           depth = (qp[1].scan /[>|]/).size # count > occurrences
@@ -453,19 +462,10 @@ class R
           end
         else # fresh line
           [l.hrefs{|p,o| # hypertextify
-             yield e, p, o}] # emit found links as RDF
-        end}.compact.intersperse("\n") # join lines
-      yield e, Content, body} # emit body as RDF
+             yield e, p, o}] # found links as RDF
+        end}.compact.intersperse("\n")]} # join lines
 
-    # HTML parts
-    htmlCount = 0
-    htmlFiles.map{|p| # HTML
-      html = srcDir + "#{htmlCount}.html"  # file location
-      yield e, DC+'hasFormat', html        # file pointer
-      html.writeFile p.decoded  if !html.e # store
-      htmlCount += 1 } # increment file-count
-
-    # included messages, message as container for other messages
+    # message parts
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|
       content = m.body.decoded                   # decode message-part
       f = srcDir + content.sha1 + '.inlined.msg' # message location
