@@ -116,9 +116,9 @@ class R
             {_: :body,
              c: [upPage, prevPage, nextPage, template[graph,re], ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?), ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]} # view and pagination links
 
-  # types used by main column
+  # arc-types not mapped to columns
   InlineMeta = [Title, Image, Content, Label]
-  # abbreviated view reductions
+  # arc-types hidden in overview
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
@@ -131,7 +131,7 @@ class R
     direction = e.q.has_key?('ascending') ? :id : :reverse
     # sort datatype
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    # column head
+    # column heading
     keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
@@ -153,8 +153,8 @@ class R
              href = CGI.escapeHTML R.qs q
              {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
               c: {_: :a, href: href, class: Icons[k] || '', c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
-     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # bind CSS to color labels
-     {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # bind CSS to highlighted sort property
+     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label CSS
+     {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # sorting-property CSS
 
   Gallery = -> graph,e,_=true {
     images = graph.keys.grep /(jpg|png)$/i
