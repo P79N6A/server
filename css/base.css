@@ -2,7 +2,7 @@ body {font-family: sans-serif;background-color:#000;color:#fff}
 table {border-spacing:0}
 th a:before {font-size:1.6em;font-weight: normal}
 a.title {color:#000;background-color:#fff;font-size:1.1em}
-tr.here td, tr.here td a {background-color:#242424;color:#fff}
+tr.here td, tr.here td a {background-color:#222;color:#fff}
 tr.here > td[property="uri"] > a:first-child {font-size:1.6em}
 td {vertical-align:top;padding:.13em}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
@@ -15,7 +15,8 @@ a[name] {color:#000}
 img {max-width: 100%}
 img.preview {max-height:14em}
 span.date {font-size:.9em;white-space: nowrap}
-div.links {padding:.13em;max-width:80em;overflow: hidden;float:right;border-radius:.2em;margin:.1em}
+div.links {padding:.13em;max-width:80em;overflow: hidden;float:right;margin:.1em}
+div.links, div.links a {border-radius:.2em}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
 pre {white-space: pre-wrap;margin:0;max-width:180ex;overflow:hidden;display:inline-block}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
