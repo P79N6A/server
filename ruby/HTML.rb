@@ -227,7 +227,7 @@ class R
                          {name: group, class: :links,
                           c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
                                 [{_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
-                                   update(links.size < 9 ? {id: e.selector} : {}), ' ']}]}}} unless abbr),
+                                   update(links.size < 9 ? {id: e.selector} : {}), host ? ' ' : '<br>']}]}}} unless abbr),
                      # body
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless abbr),
                      # images
