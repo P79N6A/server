@@ -12,7 +12,6 @@ Element.prototype.attr = function(a,v){
     };
 };
 document.addEventListener("DOMContentLoaded", function(){
-
     // construct selection-ring
     var first = null;
     var last = null;
@@ -35,36 +34,29 @@ document.addEventListener("DOMContentLoaded", function(){
 	},false);
 	last = this;
     });
-    // complete the ring
-    if(first && last){
+    if(first && last){ // complete the ring
 	last.attr('next',first.attr('id'));
 	first.attr('prev',last.attr('id'));
     };
-
     // keyboard navigation
     document.addEventListener("keydown",function(e){
-	
 	var jumpDoc = function(direction) {
 	    var doc = document.querySelector("head > link[rel='"+direction+"']");
 	    if(doc)
 		window.location = doc.getAttribute('href');
 	};
-
 	var key = e.keyCode;
-
 	if(e.getModifierState("Shift")) {
-	    if(key==80) // [p]rev page
+	    if(key==80) // [shift-p]rev page
 		jumpDoc('prev');
-	    if(key==78) // [n]ext page
+	    if(key==78) // [shift-n]ext page
 		jumpDoc('next');
-	    if(key==85) // [u]p to parent
+	    if(key==85) // [shift-u]p to parent
 		jumpDoc('up');
-	    if(key==68) // [d]own to children
+	    if(key==68) // [shift-d]own to children
 		jumpDoc('down');
-
 	    return null;
-	};
-	
+	};	
 	if(key==80||key==38){ // [p]revious selection
 	    loc = window.location.hash
 	    if(loc) {
@@ -78,7 +70,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	    window.location.hash = p;
 	    e.preventDefault();
 	};
-
 	if(key==78||key==40){ // [n]ext selection
 	    var loc = window.location.hash;
 	    var cur = null;
@@ -91,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	    e.preventDefault();
 	};
-
 	if(key==13||key==39){ // [enter] go
 	    // find identifier
 	    loc = window.location.hash;
@@ -107,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		};
 	    };
 	};
-
 	if(key==83){ // [s]ort type
 	    var sel = document.querySelector('.selected');
 	    if(sel){
@@ -116,14 +105,8 @@ document.addEventListener("DOMContentLoaded", function(){
 		    window.location = next.getAttribute('href');
 	    };
 	};
-
 	if(key==82){ // [r]everse sort
 	    window.location = document.querySelector('.selected').getAttribute('href');
 	};
-
-	if(key==27||key==37){ // [esc] exit
-	    jumpDoc('up');
-	};
     },false);
-
 }, false);
