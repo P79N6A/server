@@ -197,7 +197,7 @@ class R
     yield s, Date, mt.iso8601
     # preview children using RDF and filesystem metadata
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. point to but don't load contents until user requests its URI
+    dirs.map{|d|yield d.uri + d.uri[-1]=='/' ? '' : '/', Type, R[Container]} # container in container. don't inline recursively here, emit a pointer
     (R.load files.select &:e).map{|s,r| # leaf nodes. fetch RDF
       types = r.types
       unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop. dropped classes emit summary-nodes, as seen in triplrChatLog

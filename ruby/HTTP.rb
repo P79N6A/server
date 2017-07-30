@@ -108,7 +108,7 @@ class R
       [304, {}, []]
     else
       body = body ? body.call : self
-      if body.class == R # file-ref. use Rack::File handler                           but with our headers
+      if body.class == R # file-ref. use Rack::File handler                                       add our headers
         (Rack::File.new nil).serving((Rack::Request.new @r), body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
       else
         [(@r[:Status]||200), @r[:Response], [body]]
