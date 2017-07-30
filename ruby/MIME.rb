@@ -412,13 +412,14 @@ class R
       # month-address index
       dpath = '/' + dstr[0..6].gsub('-','/') + '/addr/' # month
       addrs.map{|addr| # addresses
-        apath = dpath + addr.sub('@','.') + '/' # address
+        user, domain = addr.split '@'
+        apath = dpath + domain + '/' + user + '/' # address components
         if subject
           mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # date + subject
           mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filetype
           mloc = mpath.R # storage reference
-          mloc.dir.mkdir # create container
-          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index location
+          mloc.dir.mkdir # index container
+          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index
         end}
     end
 
@@ -482,7 +483,7 @@ class R
   end
 
   def fetchFeeds; uris.map(&:R).map(&:fetchFeed); nil end
-  def fetchFeed
+  def fetchFeed # keep metadata for conditional-fetch
     updated = false
     head = {} # request header
     cache = R['/cache/'+uri.sha1]  # cache URI
