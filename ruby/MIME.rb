@@ -375,13 +375,13 @@ class R
     yield e, DC+'identifier', id                # Message-ID in RDF
     yield e, DC+'source', self                  # originating-file pointer
     yield e, Type, R[SIOC+'MailMessage']        # RDF type-tag
-    indexAddrs = [] # addresses to index
+    addrs = [] # addresses to index
 
     # From
-    m.from.do{|f|f.justArray.map{|f|         # source
+    m.from.do{|f|f.justArray.map{|f|# source
                 address = f.to_utf8.downcase # source address
                 yield e, Creator, AddrPath[address].R # source triple
-                indexAddrs.push address      # mark for address-indexing
+                addrs.push address # queue for indexing
               }}
     m[:from].do{|fr|fr.addrs.map{|a|yield e, Creator, a.display_name||a.name}} # source name
 
@@ -390,10 +390,10 @@ class R
       m.send(p).justArray.map{|to|       # recipient
         address = to.to_utf8.downcase    # recipient address
         yield e, To, AddrPath[address].R # recipient triple
-        indexAddrs.push address }}       # mark for address-indexing
-    m['X-BeenThere'].justArray.map{|to|  # anti-loop address
-      yield e, To, AddrPath[to.to_s].R }
-    m['List-Id'].do{|name|
+        addrs.push address }}            # queue for indexing
+    m['X-BeenThere'].justArray.map{|to|  # anti-loop addresses
+      yield e, To, AddrPath[to.to_s].R } # recipient triple
+    m['List-Id'].do{|name|                                          # list id
       yield e, To, name.decoded.sub(/<[^>]+>/,'').gsub(/[<>&]/,'')} # list name
 
     # Subject
@@ -411,7 +411,7 @@ class R
       yield e, Mtime, date.to_i
       # month-address index
       dpath = '/' + dstr[0..6].gsub('-','/') + '/addr/' # month
-      indexAddrs.map{|addr| # addresses
+      addrs.map{|addr| # addresses
         apath = dpath + addr.sub('@','.') + '/' # address
         if subject
           mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # date + subject
