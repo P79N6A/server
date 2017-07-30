@@ -199,7 +199,7 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: rowID, class: (this.path==e.path && this.path[-1]=='/') ? 'here' : 'elsewhere',
+    [{_: :tr, href: href, id: rowID, class: (this.path==e.path && this.path[-1]=='/') ? 'here' : '',
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
