@@ -251,10 +251,9 @@ class R
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
 
-  # file-reference to file-reference maybe swapped for transcode
+  # substitute non-RDF file reference with a RDF transcode
   def toRDF; isRDF ? self : toJSON end
-  # non-RDF file-reference to JSON-RDF file-reference
-  def toJSON
+  def toJSON # non-RDF file to JSON+RDF-file
     return self if ext == 'e'
     hash = uri.sha1
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
@@ -348,8 +347,8 @@ class R
           yield s, p, o
         }
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day}}
-    # emit summary
-    if linenum > 0 # only show non-empty
+    # summary
+    if linenum > 0#, if non-empty
       yield log, Type, R[SIOC+'ChatLog']
       yield log, Date, mtime.iso8601
       yield log, Creator, channel
@@ -363,21 +362,20 @@ class R
 
   def triplrMail &b
 
-    # load
+    # read
     m = Mail.read node
     return unless m
 
     # identifier and storage
-    id = m.message_id || m.resent_message_id || rand.to_s.sha1 # find Message-ID
-    e = MessagePath[id] # derive path from Message-ID field
+    id = m.message_id || m.resent_message_id || rand.to_s.sha1 # Message-ID
+    e = MessagePath[id] # derive path from Message-ID
     canonicalLocation = e.R + '.msg' # storage location
-    canonicalLocation.dir.mkdir # link to canonical location if found elsewhere
+    canonicalLocation.dir.mkdir # store to canonical location
     FileUtils.ln pathPOSIX, canonicalLocation.pathPOSIX unless canonicalLocation.e rescue nil
-    yield e, DC+'identifier', id                # preserve Message-ID
-    yield e, DC+'source', self                  # point to originating file
-    yield e, Type, R[SIOC+'MailMessage']        # RDF typetag
-    yield e, SIOC+'has_discussion', R[e+'?rev'] # discussion link
-    indexAddrs = []
+    yield e, DC+'identifier', id                # Message-ID in RDF
+    yield e, DC+'source', self                  # originating-file pointer
+    yield e, Type, R[SIOC+'MailMessage']        # RDF type-tag
+    indexAddrs = [] # addresses to index
 
     # From
     m.from.do{|f|f.justArray.map{|f|         # source
@@ -416,11 +414,11 @@ class R
       indexAddrs.map{|addr| # addresses
         apath = dpath + addr.sub('@','.') + '/' # address part
         if subject
-          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # subject-derived slug
-          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filename-extension
-          mloc = mpath.R # file-reference
+          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # date + subject name-slugs
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # name-extension
+          mloc = mpath.R # storage reference
           mloc.dir.mkdir # create container
-          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # write
+          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index location
         end}
     end
 
@@ -532,7 +530,7 @@ class R
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Creator, author
       content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # resolve paths with remote base
+      content.css('a').map{|a| # absolutize URIs relative to remote base
         a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
         yield s, DC+'link', R[a.attr 'href']
       }
