@@ -409,13 +409,13 @@ class R
       dstr = date.iso8601
       yield e, Date, dstr
       yield e, Mtime, date.to_i
-      # link message to date-address index
-      dpath = '/' + dstr[0..6].gsub('-','/') + '/addr/' # date part
+      # month-address index
+      dpath = '/' + dstr[0..6].gsub('-','/') + '/addr/' # month
       indexAddrs.map{|addr| # addresses
-        apath = dpath + addr.sub('@','.') + '/' # address part
+        apath = dpath + addr.sub('@','.') + '/' # address
         if subject
-          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # date + subject name-slugs
-          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # name-extension
+          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # date + subject
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filetype
           mloc = mpath.R # storage reference
           mloc.dir.mkdir # create container
           FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index location
