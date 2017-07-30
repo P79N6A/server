@@ -1,8 +1,8 @@
 body {font-family: sans-serif;background-color:#000;color:#fff}
 table {border-spacing:0}
-th a:before {font-size:1.6em;font-weight: normal}
+th a:before {font-size:1.6em;font-weight: normal;float:left}
 a.title {color:#000;background-color:#fff;font-size:1.1em}
-tr.here td, tr.here td a {background-color:#1a1a1a;color:#fff}
+tr.here td {background-color:#1a1a1a;color:#fff}
 tr.here > td[property="uri"] > a:first-child {font-size:1.6em}
 td {vertical-align:top;padding:.13em}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}

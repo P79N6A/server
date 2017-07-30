@@ -431,10 +431,14 @@ class R
         # references
         rs.justArray.map{|r|
           target = R[MessagePath[r]]
-          yield e, SIOC+'reply_of', target
+          targetFile = target + '.msg'
+          yield e, SIOC+'reply_of', target + '/'
           rev = target + '/' + id.sha1 + '.msg'
+          rel = e.R + '/' + r.sha1 + '.msg'
+          rel.dir.mkdir
           rev.dir.mkdir
-          FileUtils.ln pathPOSIX, rev.pathPOSIX unless rev.e
+          FileUtils.ln targetFile.pathPOSIX, rel.pathPOSIX if !rel.e && targetFile.e
+          FileUtils.ln pathPOSIX, rev.pathPOSIX if !rev.e
         }}}
     # direct reference
     m.in_reply_to.do{|r|
