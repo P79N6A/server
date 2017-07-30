@@ -1,9 +1,13 @@
 body {font-family: sans-serif;background-color:#000;color:#fff}
+table {border-spacing:0}
 th {text-align: left}
 th a:before {font-size:1.6em;font-weight: normal}
 td {vertical-align:top}
 a.title {color:#000;background-color:#fff;font-size:1.05em;border-radius:.12em;padding:.06em}
 a.thumb {padding:.18em}
+tr.here td, tr.here td a {background-color:#333;font-size:1.3em;color:#fff}
+tr.elsewhere td {padding:.15em}
+td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
 a {text-decoration:none; font-weight: bold; border-radius:.2em;background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}

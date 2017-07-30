@@ -199,7 +199,7 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: rowID,
+    [{_: :tr, href: href, id: rowID, class: (this.path==e.path && this.path[-1]=='/') ? 'here' : 'elsewhere',
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
@@ -233,7 +233,7 @@ class R
                      # images
                      (['<br>', {_: :a, href: href,
                                 c: {_: :img,
-                                    src: if !this.host || e.host==this.host # local image. thumbnailable
+                                    src: if !this.host || e.host==this.host # local image thumbnail
                                      this.path + '?thumb'
                                    else
                                      this.uri
