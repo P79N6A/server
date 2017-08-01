@@ -181,7 +181,6 @@ class R
             else # document fragment, if exists
               this.fragment || e.selector
             end
-    abbr = e.q.has_key? 'abbr'
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
 
@@ -220,16 +219,18 @@ class R
                        {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)))}
                       end),
                      # links
-                     ([DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|
-                       l[p].justArray.map(&:R).group_by(&:host).map{|host,links|
+                     (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map &:R
+                      {_: :table, class: :links,
+                       c: links.group_by(&:host).map{|host,links|
                          group = R.ungunk (host||'')
                          e.env[:label][group] = true
-                         {name: group, class: :links,
-                          c: [{_: :a, name: group, href: host ? ('//'+host) : '/', c: group}, ' ', links.map{|link|
-                                [{_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
-                                   update(links.size < 9 ? {id: e.selector} : {}), host ? ' ' : '<br>']}]}}} unless abbr),
+                         {_: :tr,
+                          c: [{_: :td, class: :group, c: {_: :span, name: group, c: group}},
+                              {_: :td, c: links.map{|link|
+                                 {_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
+                                   update(links.size < 9 ? {id: e.selector} : {})}},"\n"]}}}),
                      # body
-                     (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless abbr),
+                     (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'abbr'),
                      # images
                      (['<br>', {_: :a, href: href,
                                 c: {_: :img,
