@@ -11,15 +11,13 @@ a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#e
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
-a[name] {color:#000}
 img {max-width: 100%}
 img.preview {max-height:14em}
 span.date {font-size:.9em;white-space: nowrap}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
 pre {white-space: pre-wrap;margin:0;max-width:180ex;overflow:hidden;display:inline-block}
 table.links {display:inline-block}
-table.links td.group {font-weight: bold;font-size:.8em;text-align: right;color:#000}
-table.links a.link {background-color:#ddd;color:#000;border-radius:.2em}
+table.links td.group {font-weight: bold;font-size:.8em;text-align: right;}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }

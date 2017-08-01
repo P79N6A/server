@@ -156,7 +156,7 @@ class R
              href = CGI.escapeHTML R.qs q
              {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
               c: {_: :a, href: href, class: Icons[k] || '', c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
-     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label CSS
+     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label CSS
      {_: :style, c: e.env[:ilabel].map{|name,_| "[name=\"#{name}\"] {color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label (inverted) CSS
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # sorting-property CSS
 
@@ -226,12 +226,12 @@ class R
                      (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map &:R
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
-                         tld = (host||'').split('.')[-1]
-                         e.env[:ilabel][tld] = true
+                         label = (host||'').split('.')[-1]
+                         e.env[:ilabel][label] = true
                          {_: :tr,
-                          c: [{_: :td, class: :group, c: {_: :span, name: tld, c: (host||'').sub(/^www\./,'')}},
+                          c: [{_: :td, class: :group, c: {_: :span, name: label, c: (host||'').sub(/^www\./,'')}},
                               {_: :td, c: links.map{|link|
-                                 [{_: :a, class: :link, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
+                                 [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
                                    update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
                      # body
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'abbr'),
