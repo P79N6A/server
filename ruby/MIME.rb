@@ -308,9 +308,9 @@ class R
 
   ReExpr = /\b[rR][eE]: /
 
-  MessageId = -> id { # Message-ID to RDF resource-identifier
+  MessageId = -> id { # message-id -> path
     h = id.sha1
-    ['', 'msg', h[0], h[1], h[2], h[3..-1], '#this'].join('/').R}
+    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.'), '#this'].join('/').R}
 
   AddrPath = -> address { # email-address -> path
     address = address.downcase
