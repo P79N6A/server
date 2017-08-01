@@ -121,7 +121,7 @@ class R
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
-    e.env[:label] = {}
+    e.env[:label] = {}; e.env[:ilabel] = {}
     (1..10).map{|i|
       e.env[:label]["quote"+i.to_s] = true}
     # sort field
@@ -157,6 +157,7 @@ class R
              {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
               c: {_: :a, href: href, class: Icons[k] || '', c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label CSS
+     {_: :style, c: e.env[:ilabel].map{|name,_| "[name=\"#{name}\"] {color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label (inverted) CSS
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # sorting-property CSS
 
   Gallery = -> graph,e,_=true {
@@ -226,7 +227,7 @@ class R
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
                          tld = (host||'').split('.')[-1]
-                         e.env[:label][tld] = true
+                         e.env[:ilabel][tld] = true
                          {_: :tr,
                           c: [{_: :td, class: :group, c: {_: :span, name: tld, c: host}},
                               {_: :td, c: links.map{|link|
