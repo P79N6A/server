@@ -229,7 +229,7 @@ class R
                          tld = (host||'').split('.')[-1]
                          e.env[:ilabel][tld] = true
                          {_: :tr,
-                          c: [{_: :td, class: :group, c: {_: :span, name: tld, c: host}},
+                          c: [{_: :td, class: :group, c: {_: :span, name: tld, c: (host||'').sub(/^www\./,'')}},
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
                                    update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
