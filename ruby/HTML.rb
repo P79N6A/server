@@ -69,7 +69,6 @@ class R
 
   def href name=nil; {_: :a, href: uri, c: name || fragment || basename} end
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
-  def R.ungunk host; (host||'').sub(/^www./,'').sub(/\.(com|edu|net|org)$/,'') end
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
@@ -189,7 +188,7 @@ class R
         o.justArray.uniq.map{|v|
           if v.respond_to?(:uri)
             v = v.R
-            label = v.fragment || (v.basename && v.basename != '/' && (URI.unescape v.basename)) || (R.ungunk v.host)
+            label = v.fragment || (v.basename && v.basename != '/' && (URI.unescape v.basename)) || v.host
             lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
             e.env[:label][lbl] = true
             {_: :a, href: v.uri, name: lbl, c: label}
@@ -222,7 +221,7 @@ class R
                      (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map &:R
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
-                         group = R.ungunk (host||'')
+                         group = host||''
                          e.env[:label][group] = true
                          {_: :tr,
                           c: [{_: :td, class: :group, c: {_: :span, name: group, c: group}},
