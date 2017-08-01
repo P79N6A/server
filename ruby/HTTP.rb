@@ -15,7 +15,7 @@ class R
     path = Pathname.new(rawpath).expand_path.to_s           # evaluate path
     path += '/' if path[-1] != '/' && rawpath[-1] == '/'    # preserve trailing-slash
     resource = R["//"+e['SERVER_NAME']+path] # resource instance
-    e['uri'] = resource.uri # add normalized URI to request environment
+    e['uri'] = resource.uri                  # resource URI
     e[:Response] = {}; e[:Links] = {} # init response headers
     (resource.setEnv e).send e['REQUEST_METHOD']
   rescue Exception => x

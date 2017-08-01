@@ -18,7 +18,8 @@ span.date {font-size:.9em;white-space: nowrap}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
 pre {white-space: pre-wrap;margin:0;max-width:180ex;overflow:hidden;display:inline-block}
 table.links {display:inline-block}
-table.links td.group {color: #000;text-align: right}
+table.links td.group {font-weight: normal;text-align: right}
+table.links a.link {background-color:#fff;color:#000}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }

@@ -134,6 +134,10 @@ class R
     keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
+    # abbr view cleanup
+    if e.q.has_key? 'abbr'
+      g['#links'] = {DC+'link' => [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|g.map{|u,r|r.delete p}}.flatten.compact.uniq}
+    end
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|
@@ -221,13 +225,13 @@ class R
                      (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map &:R
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
-                         group = host||''
-                         e.env[:label][group] = true
+                         tld = (host||'').split('.')[-1]
+                         e.env[:label][tld] = true
                          {_: :tr,
-                          c: [{_: :td, class: :group, c: {_: :span, name: group, c: group}},
+                          c: [{_: :td, class: :group, c: {_: :span, name: tld, c: host}},
                               {_: :td, c: links.map{|link|
-                                 {_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
-                                   update(links.size < 9 ? {id: e.selector} : {})}},"\n"]}}}),
+                                 [{_: :a, class: :link, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
+                                   update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
                      # body
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'abbr'),
                      # images
