@@ -71,7 +71,7 @@ class R < RDF::URI
   def justPath; (path || '/').R.setEnv(@r) end
   def child u; R[uri + (uri[-1] == '/' ? '' : '/') + u.to_s] end
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
-  def dirname; (scheme ? scheme + ':' : '') + (host ? '//' + host : '') + (File.dirname path) end
+  def dirname; File.dirname path end
   def dir; dirname.R end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r} end
   def ext; (File.extname uri)[1..-1] || '' end

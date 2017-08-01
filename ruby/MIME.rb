@@ -430,7 +430,13 @@ class R
           destFile = destDir + 'this.msg'
           rev = destDir + id.sha1 + '.referencing.msg'
           rel = srcDir + r.sha1 + '.referenced.msg'
-          FileUtils.ln destFile.pathPOSIX, rel.pathPOSIX if !rel.e && destFile.e
+          if !rel.e
+            if destFile.e
+              FileUtils.ln destFile.pathPOSIX, rel.pathPOSIX rescue nil
+            else
+              FileUtils.ln_s destFile.pathPOSIX, rel.pathPOSIX rescue nil
+            end
+          end
           FileUtils.ln  srcFile.pathPOSIX, rev.pathPOSIX if !rev.e }}}
     # direct reference
     m.in_reply_to.do{|r| yield e, SIOC+'has_parent', MessageId[r]}

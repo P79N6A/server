@@ -9,14 +9,14 @@ class R
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
 #    puts (e['HTTP_USER_AGENT']||'') + ' ' + (e['HTTP_ACCEPT']||'')
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}           # find original hostname
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.'        # strip hostname field of gunk
-    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'             # pathname
-    path = Pathname.new(rawpath).expand_path.to_s                  # evaluate path-expression
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/'           # preserve trailing-slash
-    resource = R[e['rack.url_scheme']+"://"+e['SERVER_NAME']+path] # resource instance
-    e['uri'] = resource.uri # reference normalized URI in environment
-    e[:Response] = {}; e[:Links] = {} # response header storage
+    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}    # hostname
+    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # strip path chars
+    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'      # collapse sequence of /
+    path = Pathname.new(rawpath).expand_path.to_s           # evaluate path
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/'    # preserve trailing-slash
+    resource = R["//"+e['SERVER_NAME']+path] # resource instance
+    e['uri'] = resource.uri # add normalized URI to request environment
+    e[:Response] = {}; e[:Links] = {} # init response headers
     (resource.setEnv e).send e['REQUEST_METHOD']
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
@@ -163,12 +163,12 @@ class R
     # find nodes
     set = []
     if container && find
-      env[:Links][:up] = justPath.dirname + '/' + qs
+      env[:Links][:up] = dirname + '/' + qs
       expression = '-iregex ' + ('.*' + q['find'] + '.*').sh
       set.concat paths.select(&:exist?).map{|loc|
         `find #{loc.sh} #{expression} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
     elsif container && grep
-      env[:Links][:up] = justPath.dirname + '/' + qs
+      env[:Links][:up] = dirname + '/' + qs
       set.concat paths.select(&:exist?).map{|loc|
         `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
     else
@@ -184,7 +184,7 @@ class R
           end
         end
       }.flatten.compact
-      env[:Links][:up] ||= justPath.dirname + '/' + qs # parent
+      env[:Links][:up] ||= dirname + '/' + qs # parent
       # docs
       set.concat paths.map{|p|
         pattern = glob ? p : (p.stripSlash + '.*') # bespoke or document glob
