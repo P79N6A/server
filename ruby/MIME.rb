@@ -133,6 +133,7 @@ class R
     Stat+'DataFile' => :tree,
     Stat+'TextFile' => :textfile,
     Stat+'container' => :dir,
+    SIOC+'has_container' => :dir,
     SIOC+'BlogPost' => :pencil,
     SIOC+'ChatLog' => :comments,
     SIOC+'Discussion' => :comments,
@@ -363,7 +364,6 @@ class R
     srcDir = resource.justPath; srcDir.mkdir # message container
     srcFile = srcDir + 'this.msg'            # message location
     # link to canonical location if sourced elsewhere
-    puts "new message #{id} in #{srcFile}" unless srcFile.e
     FileUtils.ln pathPOSIX, srcFile.pathPOSIX unless srcFile.e rescue nil
     yield e, DC+'identifier', id         # Message-ID
     yield e, DC+'source', srcFile        # source reference
