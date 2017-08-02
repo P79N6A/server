@@ -67,7 +67,7 @@ end
 
 class R
 
-  def href name=nil; {_: :a, href: uri, c: name || fragment || basename} end
+  def href name=nil; {_: :a, href: uri, c: (name || fragment || basename)[0..48]} end
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
@@ -211,13 +211,14 @@ class R
                        lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                        e.env[:label][lbl] = true
                        [{_: :a, href: href, name: lbl, c: label},' ']},
-                     # title
                      (if titles = l[Title]
+                      # title
                       titles.justArray.map{|title|
                         {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
                      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
+                       # basename
                        name = this.path || ''
-                       {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)))}
+                       {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)[0..64]))}
                       end),
                      # links
                      (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map &:R
@@ -228,7 +229,7 @@ class R
                          {_: :tr,
                           c: [{_: :td, class: :group, c: {_: :span, name: label, c: (host||'').sub(/^www\./,'')}},
                               {_: :td, c: links.map{|link|
-                                 [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
+                                 [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML(host && link.path || link.basename)}.
                                    update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
                      # body
                      l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c},
