@@ -115,9 +115,9 @@ class R
             {_: :body,
              c: [upPage, prevPage, nextPage, template[graph,re], ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?), ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]} # view and pagination links
 
-  # arc-types not mapped to columns
+  # arc-types used in main column
   InlineMeta = [Title, Image, Content, Label]
-  # arc-types hidden in overview
+  # arc-types hidden in overview (default) table
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
@@ -195,7 +195,7 @@ class R
             e.env[:label][lbl] = true
             {_: :a, href: v.uri, name: lbl, c: label}
           else
-            v.to_s
+            {_: :span, c: v.to_s}
           end
         }.intersperse(' ')}}
 

@@ -6,6 +6,7 @@ tr.here td {background-color:#1a1a1a;color:#fff}
 tr.here > td[property="uri"] > a:first-child {font-size:1.6em}
 td {vertical-align:top}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
+td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span {font-size: .88em}
 a {text-decoration:none; font-weight: bold; background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#eee;background-color:#000}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
