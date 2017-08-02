@@ -105,6 +105,11 @@ class R
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     template = re.q.has_key?('gallery') ? Gallery : TabularView
+    graph = {'#links' => {'uri' => '#links',
+                          DC+'link' => [DC + 'link',
+                                        SIOC + 'attachment',
+                                        DC + 'hasFormat'].map{|p|
+                            graph.map{|u,r|r[p]}}.flatten.compact.uniq}} if re.q.has_key? 'links'
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -134,7 +139,6 @@ class R
     keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    g['#links'] = {DC+'link' => [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|g.map{|u,r|r.delete p}}.flatten.compact.uniq} if e.q.has_key? 'links'
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|
