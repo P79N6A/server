@@ -311,14 +311,6 @@ class R
     h = id.sha1
     ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.'), '#this'].join('/').R}
 
-  AddrPath = -> address { # email-address -> path
-    address = address.downcase
-    person, domainname = address.split '@'
-    dname = (domainname||'').split('.').reverse
-    tld = dname[0]
-    domain = dname[1] || 'localdomain'
-    ['', 'address', tld, domain[0], domain, *dname[2..-1], person,''].join('/') + person + '#' + person}
-
   def triplrChatLog &f
     linenum = -1
     base = justPath.stripDoc
@@ -353,13 +345,12 @@ class R
   end
 
   def triplrMail &b
-    # read
-    m = Mail.read node
-    return unless m
+    m = Mail.read node; return unless m
     # identifier
     id = m.message_id || m.resent_message_id || rand.to_s.sha1 # Message-ID string
     resource = MessageId[id]                 # message resource
     e = resource.uri                         # message URI
+    # storage paths
     srcDir = resource.justPath; srcDir.mkdir # message container
     srcFile = srcDir + 'this.msg'            # message location
     # link to canonical location if sourced elsewhere
@@ -367,25 +358,19 @@ class R
     yield e, DC+'identifier', id         # Message-ID
     yield e, DC+'source', srcFile        # source reference
     yield e, Type, R[SIOC+'MailMessage'] # type-tag
-    addrs = [] # addresses to index
 
     # From
-    m.from.do{|f|f.justArray.map{|f|# creators
-                address = f.to_utf8.downcase # creator address
-                yield e, Creator, AddrPath[address].R # creator triple
-                addrs.push address }} # index on creator
+    from = []
+    m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase }} # queue for indexing
     m[:from].do{|fr|fr.addrs.map{|a|yield e, Creator, a.display_name||a.name}} # creator name
 
     # To
-    %w{to cc bcc resent_to}.map{|p|      # header fields
-      m.send(p).justArray.map{|to|       # recipient
-        address = to.to_utf8.downcase    # recipient address
-        yield e, To, AddrPath[address].R # recipient triple
-        addrs.push address }}            # queue for indexing
-    m['X-BeenThere'].justArray.map{|to|  # anti-loop addresses
-      yield e, To, AddrPath[to.to_s].R } # recipient triple
-    m['List-Id'].do{|name|                                          # list id
-      yield e, To, name.decoded.sub(/<[^>]+>/,'').gsub(/[<>&]/,'')} # list name
+    to = []
+    %w{to cc bcc resent_to}.map{|p|      # recipient fields
+      m.send(p).justArray.map{|r|        # recipient
+        to.push r.to_utf8.downcase }}    # queue for indexing
+    m['X-BeenThere'].justArray.map{|r|to.push r.to_s} # anti-loop recipient
+    m['List-Id'].do{|name|yield e, To, name.decoded.sub(/<[^>]+>/,'').gsub(/[<>&]/,'')} # mailinglist name
 
     # Subject
     subject = nil
@@ -395,25 +380,21 @@ class R
       yield e, Title, subject}
 
     # Date
-    if m.date
-      date = m.date.to_time.utc
-      dstr = date.iso8601
-      yield e, Date, dstr
-      yield e, Mtime, date.to_i
-      # month-address index
-      dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month
-      addrs.map{|addr| # addresses
-        user, domain = addr.split '@'
-        apath = dpath + domain + '/' + user + '/' # address components
-        if subject
-          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # date + subject
-          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filetype
-          mloc = mpath.R # storage reference
-          mloc.dir.mkdir # index container
-          yield e, Stat+'container', mloc.dir
-          FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index
-        end}
-    end
+    date = (m.date || Time.now).to_time.utc
+    dstr = date.iso8601
+    yield e, Date, dstr; #yield e, Mtime, date.to_i
+    dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month container
+    [*from,*to].map{|addr| # address
+      user, domain = addr.split '@' # split address parts
+      apath = dpath + domain + '/' + user # address container
+      yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # address triple
+      if subject
+        mpath = apath + '/' + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # append time & subject
+        mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # append filetype extension
+        mloc = mpath.R # index entry
+        mloc.dir.mkdir # index container
+        FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index
+      end}
 
     # message references
     # map In-Reply-To -> sioc:reply_of, sioc:has_parent
