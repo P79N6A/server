@@ -309,7 +309,7 @@ class R
 
   MessageId = -> id { # message-id -> path
     h = id.sha1
-    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.'), '#this'].join('/').R}
+    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
 
   def triplrChatLog &f
     linenum = -1
