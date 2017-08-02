@@ -134,10 +134,7 @@ class R
     keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    # abbr view cleanup
-    if e.q.has_key? 'abbr'
-      g['#links'] = {DC+'link' => [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|g.map{|u,r|r.delete p}}.flatten.compact.uniq}
-    end
+    g['#links'] = {DC+'link' => [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|g.map{|u,r|r.delete p}}.flatten.compact.uniq} if e.q.has_key? 'links'
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|
@@ -234,15 +231,15 @@ class R
                                  [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML((link.path||'')[1..-1]||'')}.
                                    update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
                      # body
-                     (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'abbr'),
+                     l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c},
                      # images
-                     (['<br>', {_: :a, href: href,
-                                c: {_: :img,
-                                    src: if !this.host || e.host==this.host # local image thumbnail
-                                     this.path + '?thumb'
-                                   else
-                                     this.uri
-                                    end}}] if isImg)]
+                     ({_: :a, href: href,
+                       c: {_: :img,
+                           src: if !this.host || e.host==this.host # local image thumbnail
+                            this.path + '?thumb'
+                          else
+                            this.uri
+                           end}} if isImg)]
                  when Type
                    l[Type].justArray.uniq.map{|t|
                      if t.respond_to? :uri
