@@ -121,7 +121,7 @@ class R
   VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
-    e.env[:label] = {}; e.env[:ilabel] = {}
+    e.env[:label] = {}; e.env[:ilabel] = {}; e.env[:links] = []
     (1..10).map{|i|
       e.env[:label]["quote"+i.to_s] = true}
     # sort field
@@ -220,8 +220,9 @@ class R
                        name = this.path || ''
                        {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)[0..64]))}
                       end),
-                     # links
-                     (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map &:R
+                     # links, deduplicate across resources
+                     (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l}
+                      links.map{|l|e.env[:links].push l} # add to link-list
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
                          label = (host||'').split('.')[-1]
@@ -231,16 +232,18 @@ class R
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML(host && link.path || link.basename)}.
                                    update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
-                     # body
                      l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c},
-                     # images
+                     # resource is an image. show thumbnail if local file
                      ({_: :a, href: href,
                        c: {_: :img,
                            src: if !this.host || e.host==this.host # local image thumbnail
                             this.path + '?thumb'
                           else
                             this.uri
-                           end}} if isImg)]
+                           end}} if isImg),
+                     # image-pointers
+                     l[Image].do{|is|is.justArray.map{|i|{_: :a,href: href,c: {_: :img,src: i.uri,class: :preview}}}}
+                   ]
                  when Type
                    l[Type].justArray.uniq.map{|t|
                      if t.respond_to? :uri
@@ -279,11 +282,6 @@ class R
                      end
                    }.intersperse(' ')
                  end}, "\n"]}]},
-     l[Image].do{|images|
-       {_: :tr,
-        c: [{_: :td, colspan: keys.size,
-             c: images.justArray.map{|i|
-               {_: :a, href: href,
-                c: {_: :img, src: i.R.host == e.host ? i.R.path : i.uri, class: :preview}}}.intersperse(' ')}]}}]}
+    ]}
 
 end
