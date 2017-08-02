@@ -133,7 +133,6 @@ class R
     Stat+'DataFile' => :tree,
     Stat+'TextFile' => :textfile,
     Stat+'container' => :dir,
-    SIOC+'has_container' => :dir,
     SIOC+'BlogPost' => :pencil,
     SIOC+'ChatLog' => :comments,
     SIOC+'Discussion' => :comments,
@@ -411,7 +410,7 @@ class R
           mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # filetype
           mloc = mpath.R # storage reference
           mloc.dir.mkdir # index container
-          yield e, SIOC+'has_container', mloc.dir
+          yield e, Stat+'container', mloc.dir
           FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index
         end}
     end
