@@ -417,7 +417,7 @@ class R
               FileUtils.ln_s destFile.pathPOSIX, rel.pathPOSIX rescue nil
             end
           end
-          FileUtils.ln  srcFile.pathPOSIX, rev.pathPOSIX if !rev.e }}}
+          FileUtils.ln  srcFile.pathPOSIX, rev.pathPOSIX if !rev.e rescue nil}}}
     # direct reference
     m.in_reply_to.do{|r| yield e, SIOC+'has_parent', MessageId[r]}
 
