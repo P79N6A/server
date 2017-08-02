@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		jumpDoc('down');
 	    return null;
 	};	
-	if(key==80||key==38){ // [p]revious selection
+	if(key==80){ // [p]revious selection
 	    loc = window.location.hash
 	    if(loc) {
 		cur = document.querySelector(loc);
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	    window.location.hash = p;
 	    e.preventDefault();
 	};
-	if(key==78||key==40){ // [n]ext selection
+	if(key==78){ // [n]ext selection
 	    var loc = window.location.hash;
 	    var cur = null;
 	    if(loc)
