@@ -83,6 +83,7 @@ class R < RDF::URI
   def sh; pathPOSIX.utf8.sh end
   def exist?; node.exist? end
   def file?; node.file? end
+  def inode; node.stat.ino end
   def mtime; node.stat.mtime end
   def size; node.size rescue 0 end
   alias_method :e, :exist?
