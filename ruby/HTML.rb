@@ -176,11 +176,10 @@ class R
     this = l.R
     href = this.uri
     types = l.types
-    # node-identifier for selection ring
-    rowID = if e.path[-1]=='/' # container and multiple docs: mint new identifier
+    rowID = if e.path == this.path && this.fragment
+              this.fragment
+            else
               e.selector
-            else # document fragment, if exists
-              this.fragment || e.selector
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
@@ -199,7 +198,7 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: rowID, class: this.path==e.path ? 'here' : '',
+    [{_: :tr, href: href, id: rowID,
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,
