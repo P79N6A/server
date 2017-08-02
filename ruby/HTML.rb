@@ -232,7 +232,7 @@ class R
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML(host && link.path || link.basename)}.
                                    update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
-                     l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c},
+                     (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
                      # resource is an image. show thumbnail if local file
                      ({_: :a, href: href,
                        c: {_: :img,
