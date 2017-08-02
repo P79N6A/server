@@ -231,7 +231,8 @@ class R
                            label = ''
                          end
                          {_: :tr,
-                          c: [{_: :td, class: :group, c: {_: :span, name: label, c: (host||'').sub(/^www\./,'')}},
+                          c: [{_: :td, class: :group,
+                               c: ({_: :a, name: label, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML(host && link.path || link.basename)}.
                                    update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
