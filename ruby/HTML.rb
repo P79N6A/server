@@ -224,8 +224,12 @@ class R
                       links.map{|l|e.env[:links].push l} # add to link-list
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
-                         label = (host||'').split('.')[-1]
-                         e.env[:ilabel][label] = true
+                         if host
+                           label = ('//'+host).R.tld
+                           e.env[:ilabel][label] = true
+                         else
+                           label = ''
+                         end
                          {_: :tr,
                           c: [{_: :td, class: :group, c: {_: :span, name: label, c: (host||'').sub(/^www\./,'')}},
                               {_: :td, c: links.map{|link|
