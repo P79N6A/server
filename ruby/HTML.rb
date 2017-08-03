@@ -203,7 +203,7 @@ class R
             label = v.fragment || (v.basename && v.basename != '/' && (URI.unescape v.basename)) || v.host
             lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
             e.env[:label][lbl] = true
-            {_: :a, href: v.uri, name: lbl, c: label}
+            {_: :a, id: e.selector, href: v.uri, name: lbl, c: label}
           else
             {_: :span, c: v.to_s}
           end
