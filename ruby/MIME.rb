@@ -147,8 +147,6 @@ class R
     SIOC+'Thread' => :openenvelope,
     SIOC+'Post' => :newspaper,
     SIOC+'MailMessage' => :envelope,
-    SIOC+'has_parent' => :reply,
-    SIOC+'reply_to' => :reply,
   }
 
   def mime
@@ -396,30 +394,24 @@ class R
         FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index
       end}
 
-    # message references
-    # map In-Reply-To -> sioc:reply_of, sioc:has_parent
-    #     References  -> sioc:reply_of
+    # references
     %w{in_reply_to references}.map{|ref|
-      # indirect and direct references
       m.send(ref).do{|rs|
         rs.justArray.map{|r|
           dest = MessageId[r]
           yield e, SIOC+'reply_of', dest
-          # bidirectional link to/from references
-          destDir = dest.justPath; destDir.mkdir
-          destFile = destDir + 'this.msg'
+          destDir = dest.justPath; destDir.mkdir; destFile = destDir+'this.msg'
+          # bidirectional reference link
           rev = destDir + id.sha1 + '.referencing.msg'
           rel = srcDir + r.sha1 + '.referenced.msg'
-          if !rel.e
-            if destFile.e
+          if !rel.e # link missing
+            if destFile.e # exists, create link
               FileUtils.ln destFile.pathPOSIX, rel.pathPOSIX rescue nil
-            else
+            else # point to message anyway in case it appears
               FileUtils.ln_s destFile.pathPOSIX, rel.pathPOSIX rescue nil
             end
           end
           FileUtils.ln  srcFile.pathPOSIX, rev.pathPOSIX if !rev.e rescue nil}}}
-    # direct reference
-    m.in_reply_to.do{|r| yield e, SIOC+'has_parent', MessageId[r]}
 
     # HTML parts
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # decant HTML parts

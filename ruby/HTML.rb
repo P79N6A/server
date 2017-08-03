@@ -118,12 +118,14 @@ class R
                  e[:Links].do{|links|links.map{|type,uri|{_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: R['/js/ui.js'].readFile},{_: :style, c: R['/css/base.css'].readFile}]},
             {_: :body,
-             c: [upPage, prevPage, nextPage, template[graph,re], ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?), ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]} # view and pagination links
+             c: [upPage, prevPage, nextPage, template[graph,re], # pagination links + main view-body
+                 ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?), # 404 feedback
+                 ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]} # show pager controls at bottom on large docs
 
-  # arc-types used in main column
-  InlineMeta = [Title, Image, Content, Label]
-  # arc-types hidden in overview (default) table
-  VerboseMeta = [DC+'identifier', DC+'link', DC+'source', DC+'hasFormat', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'reply_to', SIOC+'num_replies', SIOC+'has_parent', SIOC+'attachment', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
+  # arc-types: main column
+  InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment']
+  # arc-types: verbose-view only
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
     e.env[:label] = {}; e.env[:ilabel] = {}; e.env[:links] = []
@@ -139,6 +141,7 @@ class R
     keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
+    # output
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|
@@ -146,20 +149,24 @@ class R
                s[Title] || s[Label] || s.uri
               else
                 s[p]
-               end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}},
-          {_: :tr, c: keys.map{|k|
+               end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}}, # sort and render rows
+          {_: :tr, c: keys.map{|k| # arc types
+             # sort attr
              q = e.q.merge({'sort' => k})
+             # direction: select again to flip
              if direction == :id
                q.delete 'ascending'
              else
                q['ascending'] = ''
              end
+             # arguments to querystring
              href = CGI.escapeHTML R.qs q
-             {_: :th, href: href, property: k, class: k == p ? 'selected' : '',
-              c: {_: :a, href: href, class: Icons[k] || '', c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
-     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label CSS
-     {_: :style, c: e.env[:ilabel].map{|name,_| "[name=\"#{name}\"] {color: #{'#%06x' % (rand 16777216)}}\n"}}, # color-label (inverted) CSS
-     {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]} # sorting-property CSS
+             # column heading
+             {_: :th,href: href,property: k,class: k==p ? 'selected' : '',c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
+     # labels and sorting CSS
+     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
+     {_: :style, c: e.env[:ilabel].map{|name,_| "[name=\"#{name}\"] {color: #{'#%06x' % (rand 16777216)}}\n"}},
+     {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]}
 
   Gallery = -> graph,e,_=true {
     images = graph.keys.grep /(jpg|png)$/i
