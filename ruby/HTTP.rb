@@ -32,7 +32,7 @@ class R
   end
 
   def fileGET
-    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha1})
+    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
       thumb = dir.child '.' + basename + '.png'
@@ -89,7 +89,7 @@ class R
     return notfound if !set || set.empty? # 404
 #    puts "found "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
-    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha1})
+    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
     condResponse ->{ # body continuation (unless HEAD or 304 response)
       if set.size==1 && set[0].mime == format
         set[0] # static response

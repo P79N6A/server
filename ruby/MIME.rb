@@ -253,7 +253,7 @@ class R
   def toRDF; isRDF ? self : toJSON end
   def toJSON # non-RDF file to JSON+RDF-file
     return self if ext == 'e'
-    hash = inode.to_s.sha1
+    hash = inode.to_s.sha2
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
     unless doc.e && doc.m > m # update cache
       tree = {}
@@ -306,7 +306,7 @@ class R
   ReExpr = /\b[rR][eE]: /
 
   MessageId = -> id { # message-id -> path
-    h = id.sha1
+    h = id.sha2
     ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
 
   def triplrChatLog &f
@@ -345,7 +345,7 @@ class R
   def triplrMail &b
     m = Mail.read node; return unless m
     # identifier
-    id = m.message_id || m.resent_message_id || rand.to_s.sha1 # Message-ID string
+    id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID string
     resource = MessageId[id]                 # message resource
     e = resource.uri                         # message URI
     # storage paths
@@ -402,8 +402,8 @@ class R
           yield e, SIOC+'reply_of', dest
           destDir = dest.justPath; destDir.mkdir; destFile = destDir+'this.msg'
           # bidirectional reference link
-          rev = destDir + id.sha1 + '.referencing.msg'
-          rel = srcDir + r.sha1 + '.referenced.msg'
+          rev = destDir + id.sha2 + '.referencing.msg'
+          rel = srcDir + r.sha2 + '.referenced.msg'
           if !rel.e # link missing
             if destFile.e # exists, create link
               ln destFile, rel rescue nil
@@ -446,14 +446,14 @@ class R
     # message parts
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|
       content = m.body.decoded                   # decode message-part
-      f = srcDir + content.sha1 + '.inlined.msg' # message location
+      f = srcDir + content.sha2 + '.inlined.msg' # message location
       f.writeFile content if !f.e                # store message
       f.triplrMail &b}                           # recursion on message-part
 
     # attachments
     m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} ||                           # explicit name
-             (rand.to_s.sha1 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generated name
+             (rand.to_s.sha2 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generated name
       file = srcDir + name                     # file location
       file.writeFile p.body.decoded if !file.e # store
       yield e, SIOC+'attachment', file         # file pointer
@@ -468,7 +468,7 @@ class R
   def fetchFeed # keep metadata for conditional-fetch
     updated = false
     head = {} # request header
-    cache = R['/cache/'+uri.sha1]  # cache URI
+    cache = R['/cache/'+uri.sha2]  # cache URI
     etag = cache.child 'etag'      # cached etag URI
     priorEtag = nil                # cached etag value
     mtime = cache.child 'mtime'    # cached mtime URI
