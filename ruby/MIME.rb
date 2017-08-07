@@ -596,7 +596,9 @@ class R
         send(*f){|s,p,o|
           if Content==p && o.class==String
             content = Nokogiri::HTML.fragment o
-            content.css('img').map{|i|yield s, Image, (i.attr 'src').R}
+            content.css('img').map{|i|
+              (i.attr 'src').do{|src|
+                yield s, Image, src.R }}
             content.css('a').map{|a|
               a.set_attribute 'href', (URI.join s, (a.attr 'href')) if a.has_attribute? 'href' rescue nil}
             content.css('span > a').map{|a|
