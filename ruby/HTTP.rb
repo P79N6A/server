@@ -8,7 +8,6 @@ class R
   def R.call e
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-#    puts (e['HTTP_USER_AGENT']||'') + ' ' + (e['HTTP_ACCEPT']||'')
     e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}    # hostname
     e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # strip path chars
     rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'      # collapse sequence of /
@@ -84,10 +83,9 @@ class R
   def GET
     return notfound if path.match /^\/(cache|domain)/ # hide internal storage paths
     return justPath.fileGET if justPath.file?         # static result
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
     set = nodeset # find nodes
     return notfound if !set || set.empty? # 404
-#    puts "found "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
     condResponse ->{ # body continuation (unless HEAD or 304 response)
