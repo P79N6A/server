@@ -90,7 +90,9 @@ class R < RDF::URI
   alias_method :m, :mtime
   def readFile; File.open(pathPOSIX).read end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
-  def mkdir; FileUtils.mkdir_p(pathPOSIX) unless exist?; self end
+  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
+  def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
+  def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
   def R.unPOSIX path; (path.match(/domain\/+(.*)/).do{|m|'//'+m[1]} || ('/'+path)).gsub(' ','%20').gsub('#','%23').R end
   def pathPOSIX; URI.unescape(host ? ('domain/'+host+(path||'')) : ((path||'').sub /^\//,'')) end
   %w{MIME HTML HTTP}.map{|r|require_relative r}

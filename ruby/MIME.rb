@@ -352,7 +352,7 @@ class R
     srcDir = resource.justPath; srcDir.mkdir # message container
     srcFile = srcDir + 'this.msg'            # message location
     # link to canonical location if sourced elsewhere
-    FileUtils.ln pathPOSIX, srcFile.pathPOSIX unless srcFile.e rescue nil
+    ln self, srcFile unless srcFile.e rescue nil
     yield e, DC+'identifier', id         # Message-ID
     yield e, DC+'source', srcFile        # source reference
     yield e, Type, R[SIOC+'MailMessage'] # type-tag
@@ -391,7 +391,7 @@ class R
         mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # append filetype extension
         mloc = mpath.R # index entry
         mloc.dir.mkdir # index container
-        FileUtils.ln pathPOSIX, mloc.pathPOSIX unless mloc.e rescue nil # link to index
+        ln self, mloc unless mloc.e rescue nil # link to index
       end}
 
     # references
@@ -406,12 +406,12 @@ class R
           rel = srcDir + r.sha1 + '.referenced.msg'
           if !rel.e # link missing
             if destFile.e # exists, create link
-              FileUtils.ln destFile.pathPOSIX, rel.pathPOSIX rescue nil
+              ln destFile, rel rescue nil
             else # point to message anyway in case it appears
-              FileUtils.ln_s destFile.pathPOSIX, rel.pathPOSIX rescue nil
+              ln_s destFile, rel rescue nil
             end
           end
-          FileUtils.ln  srcFile.pathPOSIX, rev.pathPOSIX if !rev.e rescue nil}}}
+          ln srcFile, rev if !rev.e rescue nil}}}
 
     # HTML parts
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # decant HTML parts
@@ -531,8 +531,8 @@ class R
           docP = doc.justPath
           unless doc.e || docP.e
             docP.dir.mkdir
-            doc.writeFile({u => r}.to_json) # hosted doc
-            FileUtils.ln doc.pathPOSIX, docP.pathPOSIX # local doc
+            doc.writeFile({u => r}.to_json) # doc at host
+            ln doc, docP # doc local path
             puts 'http:'+doc.stripDoc
           end}}
   end
@@ -548,7 +548,7 @@ class R
         unless doc.e || docP.e
           [doc,docP].map{|d|d.dir.mkdir}
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
-          FileUtils.ln doc.pathPOSIX, docP.pathPOSIX
+          ln doc, docP
           puts 'http:'+doc.stripDoc
         end
         true}}
