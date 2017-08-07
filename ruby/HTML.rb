@@ -284,9 +284,8 @@ class R
                        sum += v.to_i}
                      sum}
                  when Date
-                   l[Date].justArray.map{|v|
-                     {_: :span, class: :date, c: v}
-                   }.intersperse(' ')
+                   l[Date].justArray.sort[-1].do{|v|
+                     {_: :span, class: :date, c: v}}
                  else
                    l[k].justArray.map{|v|
                      case v

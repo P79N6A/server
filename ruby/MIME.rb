@@ -193,10 +193,14 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    # preview children using RDF and filesystem metadata
+    # contained nodes
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d| yield d.uri, Type, R[Container]} # another container. don't inline recursively, just emit a pointer
-    (R.load files.select &:e).map{|s,r| # leaf node. load data for listing
+    dirs.map{|d| # containers
+      yield d.uri, Type, R[Container]
+      yield d.uri, Date, mtime.iso8601
+    }
+    # load file data to summarize for listing
+    (R.load files.select &:e).map{|s,r|
       types = r.types
       unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop. dropped classes can emit summary-nodes, see triplrChatLog
         r.map{|p,o| o.justArray.map{|o| # visit triples
