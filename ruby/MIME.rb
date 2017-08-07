@@ -208,7 +208,7 @@ class R
   def triplrFile basicFile=true
     s = path || ''
     s = '/'+s unless s[0] == '/'
-    yield s, Stat+'container', dir
+    yield s, Stat+'container', s.R.dir
     yield s, Type, R[Stat+'File'] if basicFile
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
@@ -339,7 +339,7 @@ class R
       yield log, Size, linenum
     end
   rescue Exception => e
-    puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
+    puts uri, e.class, e.message, e.backtrace
   end
 
   def triplrMail &b
@@ -500,7 +500,7 @@ class R
     end
     updated ? self : nil
   rescue Exception => e
-    puts [uri, e.class, e.message, e.backtrace[0..2].join("\n")].join " "
+    puts uri, e.class, e.message, e.backtrace
   end
   alias_method :getFeed, :fetchFeed
 
@@ -546,7 +546,7 @@ class R
         doc =  R["//localhost/#{time}#{slug}.ttl"]
         docP = doc.justPath
         unless doc.e || docP.e
-          [doc,docP].map{|d|d.dir.mkdir} # container
+          [doc,docP].map{|d|d.dir.mkdir}
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
           FileUtils.ln doc.pathPOSIX, docP.pathPOSIX
           puts 'http:'+doc.stripDoc
@@ -554,7 +554,7 @@ class R
         true}}
     self
   rescue Exception => e
-    puts uri, e.class, e.message , e.backtrace[0..2]
+    puts uri, e.class, e.message , e.backtrace
   end
 
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
