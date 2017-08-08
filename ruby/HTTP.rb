@@ -183,9 +183,9 @@ class R
         end
       }.flatten.compact
       env[:Links][:up] ||= dirname + '/' + qs # parent
-      # docs
+      # document(s)
       set.concat paths.map{|p|
-        pattern = glob ? p : (p.stripSlash + '.*') # bespoke or document glob
+        pattern = glob ? p : ((p.uri[-1]=='/' ? (p+'index') : p) + '.*')
         pattern.glob
       }.flatten
     end
