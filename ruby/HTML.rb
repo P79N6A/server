@@ -236,7 +236,7 @@ class R
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
                          if host
-                           label = ('//'+host).R.tld
+                           label = host.split('.')[-1]
                            e.env[:ilabel][label] = true
                          else
                            label = ''

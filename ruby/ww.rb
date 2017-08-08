@@ -76,7 +76,6 @@ class R < RDF::URI
   def ext; (File.extname uri)[1..-1] || '' end
   def basename; File.basename (path||'') end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
-  def tld; host.split('.')[-1] end
   def inside; node.expand_path.to_s.index(FSbase) == 0 end
   def sh; pathPOSIX.utf8.sh end
   def exist?; node.exist? end
