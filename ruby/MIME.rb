@@ -184,27 +184,24 @@ class R
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
 
   def triplrContainer
-    s = path # subject URI
+    s = path # subject
     return unless s
-    # so we don't get 4 id for 1 resource, normalize URI
-    s += '/' unless s[-1] == '/' # trailing slash
-    s = '/'+s unless s[0] == '/' # leading slash
     mt = mtime
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     # contained nodes
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d| # containers
+    dirs.map{|d| # containers inside this container
       yield d.uri, Type, R[Container]
       yield d.uri, Date, mtime.iso8601
     }
-    # load file data to summarize for listing
+    # leaf node, load RDF and summarize
     (R.load files.select &:e).map{|s,r|
       types = r.types
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop. dropped classes can emit summary-nodes, see triplrChatLog
+      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop
         r.map{|p,o| o.justArray.map{|o| # visit triples
-            yield s, p, o # emit summary triples for directory-data graph
+            yield s, p, o # triple for overview graph
           } unless [Content,'uri',DC+'hasFormat'].member? p} # arc types to drop
       end}
   end
