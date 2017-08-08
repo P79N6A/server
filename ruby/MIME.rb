@@ -403,8 +403,8 @@ class R
           yield e, SIOC+'reply_of', dest
           destDir = dest.justPath; destDir.mkdir; destFile = destDir+'this.msg'
           # bidirectional reference link
-          rev = destDir + id.sha2 + '.referencing.msg'
-          rel = srcDir + r.sha2 + '.referenced.msg'
+          rev = destDir + id.sha2 + '.msg'
+          rel = srcDir + r.sha2 + '.msg'
           if !rel.e # link missing
             if destFile.e # exists, create link
               ln destFile, rel rescue nil
