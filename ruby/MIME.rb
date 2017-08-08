@@ -469,12 +469,12 @@ class R
   def fetchFeed # keep metadata for conditional-fetch
     updated = false
     head = {} # request header
-    cache = R['/cache/'+uri.sha2]  # cache URI
-    etag = cache.child 'etag'      # cached etag URI
-    priorEtag = nil                # cached etag value
-    mtime = cache.child 'mtime'    # cached mtime URI
-    priorMtime = nil               # cached mtime value
-    body = cache.child 'body.atom' # cached body URI
+    cache = R['/cache/'+uri.sha2+'/']  # cache storage
+    etag = cache + 'etag'      # cached etag URI
+    priorEtag = nil            # cached etag value
+    mtime = cache + 'mtime'    # cached mtime URI
+    priorMtime = nil           # cached mtime value
+    body = cache + 'body.atom' # cached body URI
     if etag.e
       priorEtag = etag.readFile
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
