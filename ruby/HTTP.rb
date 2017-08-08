@@ -183,10 +183,12 @@ class R
       }.flatten.compact
       env[:Links][:up] ||= dirname + '/' + qs # parent container
       # document(s)
-      isGlob = uri.match /\*/
-      isDir = p.uri[-1] == '/'
-      set.concat paths.map{|p|
-        (Pathname.glob (isGlob ? p : ((isDir ? (p+'index') : p) + '.*')).pathPOSIX).map{|p|p.R.setEnv @r}
+      set.concat paths.map{|path|
+        dir = path.uri[-1] == '/'
+        glob = uri.match /\*/
+        base = dir ? (path+'index') : path
+        pattern = glob ? path : (base + '.*')
+        Pathname.glob(pattern.pathPOSIX).map{|p|p.R.setEnv @r}
       }.flatten
     end
     set.select &:exist?
