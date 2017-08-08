@@ -72,11 +72,9 @@ class R < RDF::URI
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dirname; File.dirname path end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
-  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r} end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename; File.basename (path||'') end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
-  def inside; node.expand_path.to_s.index(FSbase) == 0 end
   def sh; pathPOSIX.utf8.sh end
   def exist?; node.exist? end
   def file?; node.file? end

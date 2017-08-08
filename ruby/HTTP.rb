@@ -122,7 +122,6 @@ class R
     trailingSlash = uri[-1]=='/'
     container = paths.find{|p|p.node.directory?}
     find = q.has_key? 'find'
-    glob = uri.match /\*/
     grep = q.has_key? 'q'
 
     # month/day/year/hour pagination
@@ -182,17 +181,15 @@ class R
           end
         end
       }.flatten.compact
-      env[:Links][:up] ||= dirname + '/' + qs # parent
+      env[:Links][:up] ||= dirname + '/' + qs # parent container
       # document(s)
+      isGlob = uri.match /\*/
+      isDir = p.uri[-1] == '/'
       set.concat paths.map{|p|
-        pattern = glob ? p : ((p.uri[-1]=='/' ? (p+'index') : p) + '.*')
-        pattern.glob
+        (Pathname.glob (isGlob ? p : ((isDir ? (p+'index') : p) + '.*')).pathPOSIX).map{|p|p.R.setEnv @r}
       }.flatten
     end
-    set_ = set.select &:exist?
-    eaccess = set - set_
-    puts "WARNING can't access: "+eaccess.join(' ') unless eaccess.empty?
-    set_
+    set.select &:exist?
   end
 
   def accept
