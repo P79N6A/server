@@ -1,10 +1,6 @@
 # coding: utf-8
 class R
 
-  def HEAD
-    self.GET.do{| s, h, b |[ s, h, []]}
-  end
-
   def R.call e
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
@@ -80,6 +76,7 @@ class R
     g
   end
 
+  def HEAD; self.GET.do{|s,h,b|[ s, h, []]} end
   def GET
     return notfound if path.match /^\/(cache|domain)/ # hide internal storage paths
     return justPath.fileGET if justPath.file?         # static result
