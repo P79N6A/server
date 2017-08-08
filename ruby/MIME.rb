@@ -254,7 +254,7 @@ class R
   def toRDF; isRDF ? self : toJSON end
   def toJSON # non-RDF file to JSON+RDF-file
     return self if ext == 'e'
-    hash = inode.to_s.sha2
+    hash = node.stat.ino.to_s.sha2
     doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
     unless doc.e && doc.m > m # update cache
       tree = {}
