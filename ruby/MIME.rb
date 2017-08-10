@@ -1,14 +1,12 @@
 # coding: utf-8
 =begin formats
 
- We define a JSON format and its RDF::Reader instance, used for internal caching and leveraging the optimized
- nature of the standard-library JSON parser and the Hash-class in-memory representation and utility functions,
+ We define a JSON format and its RDF::Reader instance, for data caching w/ stdlib JSON functionality.
 
- and enable non-RDF to RDF conversion of documents via triplr functions defined on non-RDF MIMEs. these yield
- (rather than return) trios of values: two URI strings describing the resource and an attribute, + a RDF::Literal
- or RDF::URI (or trivially-convertible value: basic string/numeric values and R, our RDF::URI derived "resource").
- 
- the HTTP daemon swaps non-RDF file-references w/ cached RDF substitutes and uses the stock abstract RDF-loader.
+ non-RDF to RDF triplr functions are defined on non-RDF MIMEs and yield (rather than return) three vals
+  1 URI(string) entity 2 URI(string) attribute 3 value of RDF::URI, RDF::Literal, string, or number.
+
+ #toRDF called on file URI returns a cached-transcode URI
 
 =end
 class R
@@ -340,7 +338,7 @@ class R
       yield log, Size, linenum
     end
   rescue Exception => e
-    puts uri, e.class, e.message, e.backtrace
+    puts uri, e.class, e.message
   end
 
   def triplrMail &b
@@ -501,7 +499,7 @@ class R
     end
     updated ? self : nil
   rescue Exception => e
-    puts uri, e.class, e.message, e.backtrace
+    puts uri, e.class, e.message
   end
   alias_method :getFeed, :fetchFeed
 
@@ -555,7 +553,7 @@ class R
         true}}
     self
   rescue Exception => e
-    puts uri, e.class, e.message , e.backtrace
+    puts uri, e.class, e.message
   end
 
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
