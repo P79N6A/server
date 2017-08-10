@@ -158,13 +158,13 @@ class R
     set = []
     if container && find
       env[:Links][:up] = dirname + '/' + qs
-      expression = '-iregex ' + ('.*' + q['find'] + '.*').sh
+      expression = '-ipath ' + ('*' + q['find'] + '*').sh
       set.concat paths.select(&:exist?).map{|loc|
         `find #{loc.sh} #{expression} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
     elsif container && grep
       env[:Links][:up] = dirname + '/' + qs
       set.concat paths.select(&:exist?).map{|loc|
-        `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 255`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
+        `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
     else
       # container
       set.concat paths.map{|p|
