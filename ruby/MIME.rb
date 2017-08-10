@@ -3,10 +3,8 @@
 
  We define a JSON format and its RDF::Reader instance, for data caching w/ stdlib JSON functionality.
 
- non-RDF to RDF triplr functions are defined on non-RDF MIMEs and yield (rather than return) three vals
-  1 URI(string) entity 2 URI(string) attribute 3 value of RDF::URI, RDF::Literal, string, or number.
-
- #toRDF called on file URI returns a cached-transcode URI
+ functions from non-RDF files to a stream of RDF triples yield (rather than return) three values:
+  1 URI-string entity 2 URI-string attribute 3 RDF::URI, RDF::Literal, String, or numeric value.
 
 =end
 class R
