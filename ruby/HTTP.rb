@@ -170,10 +170,10 @@ class R
       set.concat paths.map{|p|
         if p.node.directory?
           if trailingSlash
-            env[:Links][:up] = path[0..-2] + qs # up to dir summary (no trailing-slash)
+            env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (no trailing-slash)
             [p, p.children]
           else
-            env[:Links][:down] = path + '/' + qs # down to inlined children (trailing-slash)
+            env[:Links][:down] = path + '/' + qs # pointer to full-content URI (trailing-slash)
             p
           end
         end
