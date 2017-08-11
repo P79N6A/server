@@ -261,7 +261,7 @@ class R
                             this.uri
                            end}} if isImg),
                      # image-pointers
-                     l[Image].do{|is|is.justArray.map{|i|{_: :a,href: href,c: {_: :img,src: i.uri,class: :preview}}}}
+                     l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}
                    ]
                  when Type
                    l[Type].justArray.uniq.map{|t|
