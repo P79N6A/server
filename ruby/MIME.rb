@@ -169,7 +169,6 @@ class R
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
-  def triplrImage &f;   yield uri, Type, R[Image]; triplrFile false,&f end
   def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile false,&f end
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
@@ -179,7 +178,13 @@ class R
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
   def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-
+  def triplrImage &f
+    yield uri, Type, R[Image]
+    w,h = Dimensions.dimensions pathPOSIX
+    yield uri, Stat+'width', w
+    yield uri, Stat+'height', h
+    triplrFile false,&f
+  end
   def triplrContainer
     s = path # subject
     return unless s
