@@ -190,6 +190,7 @@ class R
     dirs,files = children.partition{|e|e.node.directory?}
     dirs.map{|d| # containers inside this container
       yield d.uri, Type, R[Container]
+      yield d.uri, Stat+'container', s.R
       yield d.uri, Date, mtime.iso8601
     }
     # leaf node, load RDF and summarize

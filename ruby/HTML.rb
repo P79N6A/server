@@ -104,12 +104,13 @@ class R
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', rel: :down, href: (CGI.escapeHTML d.to_s)}]}
-    template = re.q.has_key?('gallery') ? Gallery : TabularView
     graph = {'#links' => {'uri' => '#links',
                           DC+'link' => [DC + 'link',
                                         SIOC + 'attachment',
                                         DC + 'hasFormat'].map{|p|
                             graph.map{|u,r|r[p]}}.flatten.compact.uniq}} if re.q.has_key? 'links'
+    images = graph.keys.grep /(jpg|png)$/i
+    template = images.size==graph.keys.size ? Gallery : TabularView
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
@@ -118,8 +119,10 @@ class R
                  e[:Links].do{|links|links.map{|type,uri|{_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: R['/js/ui.js'].readFile},{_: :style, c: R['/css/base.css'].readFile}]},
             {_: :body,
-             c: [upPage, prevPage, nextPage, template[graph,re], # pagination links + main view-body
-                 ({_: :span,style: 'font-size:8em',c: 404} if graph.empty?), # 404 feedback
+             c: [upPage, prevPage, nextPage, # pagination links
+                 template[graph,re], # render items
+                 ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},
+                   {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?), # 404
                  ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]} # show pager controls at bottom on large docs
 
   # arc-types: main column
@@ -163,30 +166,31 @@ class R
              href = CGI.escapeHTML R.qs q
              # column heading
              {_: :th,href: href,property: k,class: k==p ? 'selected' : '',c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
-     # labels and sorting CSS
+     # label CSS
+     {_: :style, c: ".focus, .focus a {background-color:##{'%06x' % (rand 16777216)};color:#000}\n"},
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: e.env[:ilabel].map{|name,_| "[name=\"#{name}\"] {color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]}
 
   Gallery = -> graph,e,_=true {
-    images = graph.keys.grep /(jpg|png)$/i
-    {_: :html,
-     c: [{_: :head,
-          c: [{_: :style, c: R['/css/photo.css'].readFile},{_: :style, c: R['/css/misc/default-skin.css'].readFile},{_: :script, c: R['/js/photoswipe.min.js'].readFile},{_: :script, c: R['/js/photoswipe-ui.min.js'].readFile}]},
-         {_: :body,
-          c: [images.map{|i|
-                {_: :a, class: :thumb, id: 'a'+rand.to_s.sha2[0..7], href: i, c: {_: :img, src: i+'?thumb', style: 'height:20em'}}},
-              %q{<!-- Root element of PhotoSwipe. Must have class pswp. --> <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"> <!-- Background of PhotoSwipe.          It's a separate element as animating opacity is faster than rgba(). --> <div class="pswp__bg"></div> <!-- Slides wrapper with overflow:hidden. --> <div class="pswp__scroll-wrap"> <!-- Container that holds slides.             PhotoSwipe keeps only 3 of them in the DOM to save memory.             Don't modify these 3 pswp__item elements, data is added later on. --> <div class="pswp__container"> <div class="pswp__item"></div> <div class="pswp__item"></div> <div class="pswp__item"></div> </div> <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. --> <div class="pswp__ui pswp__ui--hidden"> <div class="pswp__top-bar"> <!--  Controls are self-explanatory. Order can be changed. --> <div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button> <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR --> <!-- element will get class pswp__preloader--active when preloader is running --> <div class="pswp__preloader"> <div class="pswp__preloader__icn"> <div class="pswp__preloader__cut"> <div class="pswp__preloader__donut"></div> </div> </div> </div> </div> <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"> <div class="pswp__share-tooltip"></div> </div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button> <div class="pswp__caption"> <div class="pswp__caption__center"></div> </div> </div> </div> </div>},
-              {_: :script, c: "
-      var items = #{images.map{|k|{src: k, w: graph[k][Stat+'width'].justArray[0].to_i, h: graph[k][Stat+'height'].justArray[0].to_i}}.to_json};
+    [{_: :style, c: R['/css/photo.css'].readFile},
+     {_: :style, c: R['/css/misc/default-skin.css'].readFile},
+     {_: :script, c: R['/js/photoswipe.min.js'].readFile},
+     {_: :script, c: R['/js/photoswipe-ui.min.js'].readFile},
+     {_: :style, c: "body {writing-mode: vertical-lr}"},
+     graph.keys.map{|i|{_: :a, class: :thumb, id: 'a'+rand.to_s.sha2[0..7], href: i, c: {_: :img, src: i+'?thumb'}}},
+     %q{<!-- Root element of PhotoSwipe. Must have class pswp. --> <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"> <!-- Background of PhotoSwipe.          It's a separate element as animating opacity is faster than rgba(). --> <div class="pswp__bg"></div> <!-- Slides wrapper with overflow:hidden. --> <div class="pswp__scroll-wrap"> <!-- Container that holds slides.             PhotoSwipe keeps only 3 of them in the DOM to save memory.             Don't modify these 3 pswp__item elements, data is added later on. --> <div class="pswp__container"> <div class="pswp__item"></div> <div class="pswp__item"></div> <div class="pswp__item"></div> </div> <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. --> <div class="pswp__ui pswp__ui--hidden"> <div class="pswp__top-bar"> <!--  Controls are self-explanatory. Order can be changed. --> <div class="pswp__counter"></div> <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title="Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button> <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR --> <!-- element will get class pswp__preloader--active when preloader is running --> <div class="pswp__preloader"> <div class="pswp__preloader__icn"> <div class="pswp__preloader__cut"> <div class="pswp__preloader__donut"></div> </div> </div> </div> </div> <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"> <div class="pswp__share-tooltip"></div> </div> <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"> </button> <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"> </button> <div class="pswp__caption"> <div class="pswp__caption__center"></div> </div> </div> </div> </div>},
+     {_: :script, c: "
+      var items = #{graph.keys.map{|k|{src: k, w: graph[k][Stat+'width'].justArray[0].to_i, h: graph[k][Stat+'height'].justArray[0].to_i}}.to_json};
 //      var gallery = new PhotoSwipe( document.querySelectorAll('.pswp')[0], PhotoSwipeUI_Default, items, {index: 0});
 //      gallery.init();
-"}]}]}}
+"}]}
 
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
     href = this.uri
     types = l.types
+    focus = !this.fragment && this.path==e.path
     rowID = if e.path == this.path && this.fragment
               this.fragment
             else
@@ -209,7 +213,7 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: rowID,
+    [{_: :tr, href: href, id: rowID, class: focus ? 'focus' : '',
       c: ["\n",
           keys.map{|k|
             [{_: :td, property: k,

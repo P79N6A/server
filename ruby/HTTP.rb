@@ -171,7 +171,7 @@ class R
         if p.node.directory?
           if trailingSlash
             env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (no trailing-slash)
-            [p, p.children]
+            p.children
           else
             env[:Links][:down] = path + '/' + qs # pointer to full-content URI (trailing-slash)
             p
