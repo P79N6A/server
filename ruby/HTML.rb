@@ -291,7 +291,7 @@ class R
                    l[Date].justArray.sort[-1].do{|v|
                      {_: :span, class: :date, c: v}}
                  when Stat+'contains'
-                   l[k].sort_by(&:uri).map{|c|[c.R, ' ']}
+                   l[k].justArray.sort_by(&:uri).map{|c|[c.R, ' ']}
                  else
                    l[k].justArray.map{|v|
                      case v
