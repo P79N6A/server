@@ -167,7 +167,7 @@ class R
              # column heading
              {_: :th,href: href,property: k,class: k==p ? 'selected' : '',c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
      # label CSS
-     {_: :style, c: ".focus, .focus a {background-color:##{'%06x' % (rand 16777216)};color:#000}\n"},
+     {_: :style, c: ".focus, .focus a {background-color:##{'%06x' % (rand 16777216)};color:#fff;font-size:1.2em}\n"},
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: e.env[:ilabel].map{|name,_| "[name=\"#{name}\"] {color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]}
@@ -290,6 +290,8 @@ class R
                  when Date
                    l[Date].justArray.sort[-1].do{|v|
                      {_: :span, class: :date, c: v}}
+                 when Stat+'contains'
+                   l[k].sort_by(&:uri).map{|c|[c.R, ' ']}
                  else
                    l[k].justArray.map{|v|
                      case v

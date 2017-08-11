@@ -129,6 +129,7 @@ class R
     Stat+'DataFile' => :tree,
     Stat+'TextFile' => :textfile,
     Stat+'container' => :dir,
+    Stat+'contains' => :dir,
     SIOC+'BlogPost' => :pencil,
     SIOC+'ChatLog' => :comments,
     SIOC+'Discussion' => :comments,
@@ -189,10 +190,7 @@ class R
     # contained nodes
     dirs,files = children.partition{|e|e.node.directory?}
     dirs.map{|d| # containers inside this container
-      yield d.uri, Type, R[Container]
-      yield d.uri, Stat+'container', s.R
-      yield d.uri, Date, mtime.iso8601
-    }
+      yield s, Stat+'contains', d.justPath }
     # leaf node, load RDF and summarize
     (R.load files.select &:e).map{|f,r|
       types = r.types
