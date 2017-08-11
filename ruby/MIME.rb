@@ -194,11 +194,13 @@ class R
       yield d.uri, Date, mtime.iso8601
     }
     # leaf node, load RDF and summarize
-    (R.load files.select &:e).map{|s,r|
+    (R.load files.select &:e).map{|f,r|
       types = r.types
-      unless types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'Tweet') # node-types to drop
+      if types.member? Image
+        yield s, Image, f.R + '?thumb'
+      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet') # drop chat messages. more generally anything that omits a Title attribute could be dropped here
         r.map{|p,o| o.justArray.map{|o| # visit triples
-            yield s, p, o # triple for overview graph
+            yield f, p, o # triple for overview graph
           } unless [Content,'uri',DC+'hasFormat'].member? p} # arc types to drop
       end}
   end
