@@ -203,12 +203,10 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    # preview content on this level
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d| yield s, Stat+'contains', d.justPath } # child container pointer
-    # terminal node (leaf/file), load + summarize
-    (R.load files.select &:e).map{|f,r|
-      types = r.types
+    dirs.map{|d| yield s, Stat+'contains', d.justPath } # child container
+    (R.load files.select &:e).map{|f,r| # summarize leaf-node for listing
+      types = r.types # RDF type
       if types.member? Image
         yield s, Image, f.R + '?thumb'
       elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet') # drop chat messages. more generally anything that omits a Title or filename could be dropped here
