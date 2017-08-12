@@ -17,9 +17,13 @@ class R
     msg = [x.class,x.message,x.backtrace].join "\n"
     puts msg
     [500,{'Content-Type' => 'text/html'},
-     ['<html><head><style>',"\nbody {background-color:#222;font-size:1.2em;text-align:center}\npre {text-align:left;display:inline-block;background-color:#000;color:#fff;font-weight:bold;border-radius:.6em;padding:1em}\n.number {color:#0f0;font-weight:normal;font-size:1.1em}\n",'</style></head><body><pre>',
+     ["<html><head><style>","
+body {background-color:#222; font-size:1.2em; text-align:center}
+pre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}
+.number {color:#0f0; font-weight:normal; font-size:1.1em}",
+      '</style></head><body><pre>',
       msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),
-     '</pre></body></html>']]
+      '</pre></body></html>']]
   end
 
   def notfound
@@ -45,31 +49,28 @@ class R
     end
   end
 
-  # load JSON graph-as-tree
+  # JSON-tree-graph loader
   def R.load set
-    rdf, nonRDF = set.partition &:isRDF # partition nodes on type
-    g = {}                              # JSON graph
-    graph = RDF::Graph.new              # RDF graph
-    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
-    graph.each_triple{|s,p,o|
-      s = s.to_s
-      p = p.to_s
-      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value
-      g[s] ||= {'uri' => s}
-      g[s][p] ||= []
-      g[s][p].push o unless g[s][p].member? o}
-    nonRDF.map{|n|
-      (JSON.parse n.toJSON.readFile).map{|s,re| # walk tree
-        re.map{|p,o|
+    rdf, nonRDF = set.partition &:isRDF # partition node types
+    g = {}                 # output graph
+    graph = RDF::Graph.new # RDF graph
+    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n} # load RDF
+    graph.each_triple{|s,p,o| # RDF-sourced triples to tree
+      s = s.to_s; p = p.to_s # stringify URI keys
+      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # cast resource classes to R
+      g[s] ||= {'uri' => s}; g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} # add triple
+    nonRDF.map{|n| # nonRDF-sourced triples to tree
+      (JSON.parse n.toJSON.readFile).map{|s,re| # load JSON
+        re.map{|p,o| # each resource
           o.justArray.map{|o| # each triple
-            o = o.R if o.class==Hash
-            g[s] ||= {'uri' => s}
-            g[s][p] ||= []
-            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
+            o = o.R if o.class==Hash # cast resource represented as Hash to R
+            g[s] ||= {'uri' => s} # resource node
+            g[s][p] ||= [] # predicate node
+            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add triple
     g
   end
 
-  # load RDF-graph
+  # pure-RDF loader
   def load set
     g = RDF::Graph.new
     set.map{|n|
