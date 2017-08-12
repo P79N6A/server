@@ -1,14 +1,16 @@
 # coding: utf-8
 =begin
- An adjunct to format support from the standard RDF library.
+ formats beyond the standard RDF library
+ We define RDF::Reader instances for Atom/RSS feeds and a RDF-subset emphasizing speed and JSON serializability.
+ There's no Writer for this format as it can't roundtrip RDF non-destructively. On modern hardware Turtle may be suitably
+ fast. subset performs 3x as fast as Turtle and its in-memory Hash representation matches the input to our HTML renderer.
 
- We define a RDF::Reader instance for a JSON RDF-subset format emphasizing speed and ease of use.
- note there's no Writer for this format as it can't roundtrip RDF. It's used in caching data
- extracted from non-RDF, and its in-memory representation as input to our HTML renderer.
+ RDFizing
+ if a RDF::Reader is defined on a non-RDF format, such as for Atom and our JSON format, nothing additional needs to be done
+ if not, the file is rewritten to something readable, namely the JSON cache-format, by calling a triplr and dumping to file':
 
- functions from non-RDF files to a stream of RDF triples yield (rather than return) three values:
-  1 URI-identified entity 2 URI-identified attribute 3 URI or Literal (string or numeric) value.
-
+ triplr functions emit triple-streams yielding (rather than returning) repeatedly three values until EOF:
+ 1. URI-identified entity 2. URI-identified attribute 3. URI-identified value or RDF::Literal (basic string/numeric) value
 =end
 class R
 
