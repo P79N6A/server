@@ -6,11 +6,9 @@
  fast. subset performs 3x as fast as Turtle and its in-memory Hash representation matches the input to our HTML renderer.
 
  RDFizing
- if a RDF::Reader is defined on a non-RDF format, such as for Atom and our JSON format, nothing additional needs to be done
- if not, the file is rewritten to something readable, namely the JSON cache-format, by calling a triplr and dumping to file':
+ if a RDF::Reader is defined on a non-RDF format (eg. Atom and JSON-cache) RDF library can be called as if it's actually RDF.
+ else the file is rewritten to a JSON cache-file by calling triplrMIME and dumping collected triples to JSON then proceed as above
 
- triplr functions emit triple-streams yielding (rather than returning) repeatedly three values until EOF:
- 1. URI-identified entity 2. URI-identified attribute 3. URI-identified value or RDF::Literal (basic string/numeric) value
 =end
 class R
 
@@ -175,8 +173,11 @@ class R
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
   end
+
+  # files directly readable by RDF::REader
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
+  # triple-emitters for non-RDF resources
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
@@ -283,7 +284,8 @@ class R
     end
     doc
   end
-  # Reader for minimalist JSON-RDF format used by cache
+
+  # Reader for JSON-format used by caching layer
   module Format
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
@@ -315,12 +317,6 @@ class R
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
     end
   end
-
-  ReExpr = /\b[rR][eE]: /
-
-  MessageId = -> id { # message-id -> path
-    h = id.sha2
-    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
 
   def triplrChatLog &f
     linenum = -1
@@ -355,20 +351,25 @@ class R
     puts uri, e.class, e.message
   end
 
+  # email triplr
+  ReExpr = /\b[rR][eE]: /
+  # Message-ID -> URI mapping
+  MessageId = -> id {
+    h = id.sha2
+    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
     m = Mail.read node; return unless m
-    # identifier
-    id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID string
-    resource = MessageId[id]                 # message resource
-    e = resource.uri                         # message URI
+    id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
+    resource = MessageId[id]                 # message URI
+    e = resource.uri                         # URI as string
     # storage paths
-    srcDir = resource.justPath; srcDir.mkdir # message container
-    srcFile = srcDir + 'this.msg'            # message location
+    srcDir = resource.justPath; srcDir.mkdir # container
+    srcFile = srcDir + 'this.msg'            # location
     # link to canonical location if sourced elsewhere
     ln self, srcFile unless srcFile.e rescue nil
-    yield e, DC+'identifier', id         # Message-ID
-    yield e, DC+'source', srcFile        # source reference
-    yield e, Type, R[SIOC+'MailMessage'] # type-tag
+    yield e, DC+'identifier', id         # pre-web identifier
+    yield e, DC+'source', srcFile        # source provenance
+    yield e, Type, R[SIOC+'MailMessage'] # RDF typetag
 
     # From
     from = []
