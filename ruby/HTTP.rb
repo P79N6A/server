@@ -49,25 +49,22 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     end
   end
 
-  # JSON-tree-graph loader
+  # JSON-tree loader
   def R.load set
-    rdf, nonRDF = set.partition &:isRDF # partition node types
-    g = {}                 # output graph
-    graph = RDF::Graph.new # RDF graph
+    graph = RDF::Graph.new # input graph
+    g = {}                 # output tree
+    rdf,nonRDF = set.partition &:isRDF # partition node types
     rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n} # load RDF
-    graph.each_triple{|s,p,o| # RDF-sourced triples to tree
-      s = s.to_s; p = p.to_s # stringify URI keys
-      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # cast resource classes to R
-      g[s] ||= {'uri' => s}; g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} # add triple
-    nonRDF.map{|n| # nonRDF-sourced triples to tree
-      (JSON.parse n.toJSON.readFile).map{|s,re| # load JSON
+    graph.each_triple{|s,p,o| # each triple
+      s = s.to_s; p = p.to_s # normalize URI keys to strings
+      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # normalize resource classes to R
+      g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} # add triple
+    nonRDF.map{|n| (JSON.parse n.toJSON.readFile).map{|s,re| # load non-RDF
         re.map{|p,o| # each resource
           o.justArray.map{|o| # each triple
-            o = o.R if o.class==Hash # cast resource represented as Hash to R
-            g[s] ||= {'uri' => s} # resource node
-            g[s][p] ||= [] # predicate node
-            g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add triple
-    g
+            o = o.R if o.class==Hash # normalize resource classes to R
+            g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add triple
+    g # tree-graph
   end
 
   # pure-RDF loader
@@ -75,7 +72,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     g = RDF::Graph.new
     set.map{|n|
       g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
-    g
+    g # graph
   end
 
   def HEAD; self.GET.do{|s,h,b|[ s, h, []]} end
