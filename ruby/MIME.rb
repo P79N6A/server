@@ -1,14 +1,19 @@
 # coding: utf-8
-=begin formats
+=begin
+ An adjunct to format support from the standard RDF library.
 
- We define a JSON format and its RDF::Reader instance, for data caching w/ stdlib JSON functionality.
+ We define a RDF::Reader instance for a JSON RDF-subset format emphasizing speed and ease of use.
+ note there's no Writer for this format as it can't roundtrip RDF. It's used in caching data
+ extracted from non-RDF, and its in-memory representation as input to our HTML renderer.
 
  functions from non-RDF files to a stream of RDF triples yield (rather than return) three values:
-  1 URI-string entity 2 URI-string attribute 3 RDF::URI, RDF::Literal, String, or numeric value.
+  1 URI-identified entity 2 URI-identified attribute 3 URI or Literal (string or numeric) value.
 
 =end
 class R
 
+  # prefix -> MIME
+  # suffix is optional so these can also be an entire filename to avoid sniffing on commonly-occuring names
   MIMEprefix = {
     'capfile' => 'text/plain',
     'config' => 'application/config',
@@ -23,6 +28,7 @@ class R
     'readme' => 'text/markdown',
   }
 
+  # suffix aka extension -> MIME
   MIMEsuffix = {
     'asc' => 'text/plain',
     'chk' => 'text/plain',
@@ -54,6 +60,7 @@ class R
     'yaml' => 'text/plain',
   }
 
+  # MIME -> TriplrFunction
   Triplr = {
     'application/config'   => [:triplrDataFile],
     'application/font'      => [:triplrFile],
@@ -107,6 +114,7 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
+  # RDF type -> icon name
   Icons = {
     'uri' => :id,
     Type => :type,
@@ -146,6 +154,7 @@ class R
     SIOC+'MailMessage' => :envelope,
   }
 
+  # file -> MIME
   def mime
     @mime ||=
       (name = path || ''
@@ -178,6 +187,7 @@ class R
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
   def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
+
   def triplrImage &f
     yield uri, Type, R[Image]
     w,h = Dimensions.dimensions pathPOSIX
@@ -185,6 +195,7 @@ class R
     yield uri, Stat+'height', h
     triplrFile false,&f
   end
+
   def triplrContainer
     s = path # subject
     return unless s
@@ -192,19 +203,18 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    # contained nodes
+    # preview content on this level
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d| # containers inside this container
-      yield s, Stat+'contains', d.justPath }
-    # leaf node, load RDF and summarize
+    dirs.map{|d| yield s, Stat+'contains', d.justPath } # child container pointer
+    # terminal node (leaf/file), load + summarize
     (R.load files.select &:e).map{|f,r|
       types = r.types
       if types.member? Image
         yield s, Image, f.R + '?thumb'
-      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet') # drop chat messages. more generally anything that omits a Title attribute could be dropped here
+      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet') # drop chat messages. more generally anything that omits a Title or filename could be dropped here
         r.map{|p,o| o.justArray.map{|o| # visit triples
             yield f, p, o # triple for overview graph
-          } unless [Content,'uri',DC+'hasFormat'].member? p} # arc types to drop
+          } unless ['uri',Content,DC+'hasFormat'].member? p} # drop RDF types in summary
       end}
   end
 
