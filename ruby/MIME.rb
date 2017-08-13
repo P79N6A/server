@@ -1,11 +1,11 @@
 # coding: utf-8
 =begin MIME-type handling
- JSON-cache is a RDF-subset graph in a tree. it is trivially pickleable using the standard-library JSON functions
- RDF::Reader parsers for Atom/RSS and JSON-cache allow RDF.rb to use its standard loader code with these formats
- call #toRDF to swap a non-RDF file-reference with a JSON-cache substitute then continue as if a normal RDF doc
+ JSON-cache is a RDF-subset graph in a tree. it is trivially pickleable using the standard-library JSON functions.
+ RDF::Reader parsers for Atom/RSS and JSON-cache allow RDF.rb to use its standard loader code with these formats.
 
+ call #toRDF to swap non-RDF file-references with JSON-cache substitutes to be used alongside normal RDF docs.
  underneath the hood toRDF calls triplr functions from a file-reference to a stream of triples for translation,
- of which many are defined below. if none are defined you'll just get fs metadata and a WARNING of unhandled MIME
+ of which many are defined below. if none are defined you'll get fs metadata and a WARNING of an unhandled MIME
 =end
 class R
 
