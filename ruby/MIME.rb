@@ -123,6 +123,7 @@ class R
     Mtime => :time,
     To => :userB,
     DC+'hasFormat' => :file,
+    DC+'cache' => :chain,
     Schema+'location' => :location,
     Stat+'File' => :file,
     Stat+'Archive' => :archive,
@@ -505,7 +506,6 @@ class R
   alias_method :getFeed, :fetchFeed
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
-  # if you're indexing a live URL call fetchFeed as it's got a cache in front of it
   def indexFeed options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -516,9 +516,11 @@ class R
         docP = doc.justPath
         unless doc.e || docP.e
           [doc,docP].map{|d|d.dir.mkdir}
+          cacheBase = doc.stripDoc
+          graph << RDF::Statement.new(graph.name, R[DC+'cache'], cacheBase)
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
           ln doc, docP
-          puts 'http:'+doc.stripDoc
+          puts 'http:'+cacheBase
         end
         true}}
     self
