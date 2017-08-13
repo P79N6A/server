@@ -3,29 +3,26 @@
  JSON-cache is a RDF-subset graph in a tree, trivially pickleable with the stdlib JSON code
  an RDF::Reader instance allows a JSON-cache entry to behave like a normal RDF file. 
 
- call #toRDF to make a JSON-cache entry from a non-RDF file-reference
- toRDF calls triplr functions from a file-reference to a stream of triples..
- if none are defined you'll get fs metadata and a WARNING of an unhandled MIME
+ call #toRDF to make a JSON-cache entry from a non-RDF file
+ if no MIME tripler exists you'll get fs-metadata and a WARNING in the log
 =end
 class R
 
-  # prefix -> MIME
-  # suffix is optional so these can also be an entire filename to avoid sniffing on commonly-occuring names
+  # basename prefix -> MIME
+  # suffix is optional therefore full names ie LICENSE (it's case-insensitive) match
   MIMEprefix = {
-    'capfile' => 'text/plain',
     'config' => 'application/config',
     'dockerfile' => 'text/plain',
     'gemfile' => 'application/ruby',
     'install' => 'text/plain',
     'license' => 'text/plain',
     'makefile' => 'application/makefile',
-    'msg' => 'message/rfc822',
-    'r' => 'text/plain',
+    'msg' => 'message/rfc822', # only actual prefix. Procmail uses this when delivering to a dir that doesnt have maildir subdirs
     'rakefile' => 'application/ruby',
     'readme' => 'text/markdown',
   }
 
-  # suffix aka extension -> MIME
+  # suffix -> MIME
   MIMEsuffix = {
     'asc' => 'text/plain',
     'chk' => 'text/plain',
@@ -153,6 +150,7 @@ class R
 
   # file -> MIME
   def mime
+    # take extension at face-value: don't sniff unless there's no prefix or suffix matches
     @mime ||=
       (name = path || ''
        prefix = (File.basename name).split('.')[0].downcase
@@ -165,7 +163,7 @@ class R
          MIMEsuffix[suffix]
        elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
          Rack::Mime::MIME_TYPES['.'+suffix]
-       else # FILE(1)
+       else # run a process to read inside the file. shame user into adding triplr mapping
          puts "WARNING unknown MIME of #{pathPOSIX}, sniffing (SLOW)"
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
@@ -174,7 +172,7 @@ class R
   # files directly readable by RDF::Reader
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
-  # JSON-tree loader
+  # JSON graph-tree loader. input to HTML Renderer and cache
   def R.load set
     graph = RDF::Graph.new # input graph
     g = {}                 # output tree
@@ -222,7 +220,6 @@ class R
     doc
   end
 
-  # triple-emitters for non-RDF documents
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
@@ -247,7 +244,7 @@ class R
   end
 
   def triplrContainer
-    s = path # subject
+    s = path # subject URI
     return unless s
     mt = mtime
     yield s, Type, R[Container]
