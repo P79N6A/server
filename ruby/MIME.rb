@@ -1,8 +1,8 @@
 # coding: utf-8
-=begin RDF format-conversion
- RDF::Reader are defined for Atom and JSON-cache so RDF.rb can carry on as if the data has always been RDF.
- non-RDF can be transcoded to data usable in this manner. call #toRDF to get a substitute file-reference.
-
+=begin MIME handling for non-RDF
+ JSON-cache is a RDF-subset graph in a tree. it is trivially pickleable using the standard-library JSON functions.
+ RDF::Reader parsers for Atom/RSS and JSON-cache allow RDF.rb to use its standard loader code with these formats:
+ call #toRDF to swap file-references with a JSON-cache substitute (if needed and cache is stale) and go on as usual
 =end
 class R
 
@@ -219,7 +219,7 @@ class R
     doc
   end
 
-  # triple-emitters for non-RDF resources
+  # triple-emitters for non-RDF documents
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
@@ -227,11 +227,13 @@ class R
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
-  def triplrUriList; uris.map{|u|yield u,Type,R[W3+'2000/01/rdf-schema#Resource']} end
   def triplrRTF          &f; triplrWord :catdoc,        &f end
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
   def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
+
+  def triplrUriList; uris.map{|u|yield u, Type, R[W3+'2000/01/rdf-schema#Resource']} end
+  def uris; open(pathPOSIX).readlines.map &:chomp end
 
   def triplrImage &f
     yield uri, Type, R[Image]
@@ -301,41 +303,6 @@ class R
           id = uri + '#row:' + line.to_s
           yield id, fields[i], field
           yield id, Type, R[ns+'Row']}}}
-  end
-
-  def uris; (open pathPOSIX).readlines.map &:chomp end
-
-  # Reader for JSON-format used by caching layer
-  module Format
-    class Format < RDF::Format
-      content_type     'application/json+rdf', :extension => :e
-      content_encoding 'utf-8'
-      reader { R::Format::Reader }
-    end
-    class Reader < RDF::Reader
-      format Format
-      def initialize(input = $stdin, options = {}, &block)
-        @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
-        @base = options[:base_uri]
-        if block_given?
-          case block.arity
-          when 0 then instance_eval(&block)
-          else block.call(self)
-          end
-        end
-        nil
-      end
-      def each_statement &fn
-        @graph.map{|s,r|
-          r.map{|p,o|
-            o.justArray.map{|o|
-              fn.call RDF::Statement.new(@base.join(s), RDF::URI(p),
-                        o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
-                                                              l.datatype=RDF.XMLLiteral if p == Content
-                                                              l))}}}
-      end
-      def each_triple &block; each_statement{|s| block.call *s.to_triple} end
-    end
   end
 
   def triplrChatLog &f
@@ -537,6 +504,7 @@ class R
     puts uri, e.class, e.message
   end
   alias_method :getFeed, :fetchFeed
+  def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
   def triplrTwitter
     base = 'https://twitter.com'
@@ -591,16 +559,46 @@ class R
     puts uri, e.class, e.message
   end
 
-  def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
+  # Reader for JSON-cache format
+  module Format
+    class Format < RDF::Format
+      content_type     'application/json+rdf', :extension => :e
+      content_encoding 'utf-8'
+      reader { R::Format::Reader }
+    end
+    class Reader < RDF::Reader
+      format Format
+      def initialize(input = $stdin, options = {}, &block)
+        @graph = JSON.parse (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read
+        @base = options[:base_uri]
+        if block_given?
+          case block.arity
+          when 0 then instance_eval(&block)
+          else block.call(self)
+          end
+        end
+        nil
+      end
+      def each_statement &fn
+        @graph.map{|s,r|
+          r.map{|p,o|
+            o.justArray.map{|o|
+              fn.call RDF::Statement.new(@base.join(s), RDF::URI(p),
+                        o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
+                                                              l.datatype=RDF.XMLLiteral if p == Content
+                                                              l))}}}
+      end
+      def each_triple &block; each_statement{|s| block.call *s.to_triple} end
+    end
+  end
 
-  module Feed # as RDF
-
+  # Reader for Atom and RSS feeds
+  module Feed
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom
       content_encoding 'utf-8'
       reader { R::Feed::Reader }
     end
-
     class Reader < RDF::Reader
       format Format
       def initialize(input = $stdin, options = {}, &block)
