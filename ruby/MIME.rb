@@ -17,7 +17,7 @@ class R
     'install' => 'text/plain',
     'license' => 'text/plain',
     'makefile' => 'application/makefile',
-    'msg' => 'message/rfc822', # only actual prefix. Procmail uses this when delivering to a dir that doesnt have maildir subdirs
+    'msg' => 'message/rfc822', # only actual prefix. Procmail uses this when delivering to a dir that doesnt have "maildir" subdirs
     'rakefile' => 'application/ruby',
     'readme' => 'text/markdown',
   }
@@ -161,7 +161,7 @@ class R
          MIMEprefix[prefix]
        elsif MIMEsuffix[suffix] # suffix mapping
          MIMEsuffix[suffix]
-       elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
+       elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
          Rack::Mime::MIME_TYPES['.'+suffix]
        else # run a process to read inside the file. shame user into adding triplr mapping
          puts "WARNING unknown MIME of #{pathPOSIX}, sniffing (SLOW)"
@@ -505,7 +505,7 @@ class R
   alias_method :getFeed, :fetchFeed
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
-  # if you're indexing a live URL call fetchFeed instead as it's got a cache in front of it
+  # if you're indexing a live URL call fetchFeed as it's got a cache in front of it
   def indexFeed options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -536,7 +536,7 @@ class R
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Creator, author
       content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # absolutize URIs relative to remote base
+      content.css('a').map{|a| # resolve URIs relative to remote
         a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
         yield s, DC+'link', R[a.attr 'href']
       }
@@ -590,7 +590,7 @@ class R
     end
   end
 
-  # Reader for Atom and RSS feeds
+  # Reader for Atom and RSS
   module Feed
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom
@@ -611,7 +611,7 @@ class R
         nil
       end
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
-      def each_statement &fn # triples flow left ← right across stream-transformer stack
+      def each_statement &fn # triples flow left ← right across stream-transforming stack
         resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
@@ -714,7 +714,7 @@ class R
           # identifier search. try RDF identifier then <link> as they're more likely to be a href than <id>
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u
-            unless u.match /^http/ # resolve relative references
+            unless u.match /^http/ # resolve relative URIs
               u = (URI.join @base, u).to_s
             end
             resource = u.R
