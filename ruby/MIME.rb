@@ -256,10 +256,10 @@ class R
       types = r.types # RDF type
       if types.member? Image
         yield s, Image, f.R + '?thumb'
-      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet') # drop chat messages. more generally anything that omits a Title or filename could be dropped here
-        r.map{|p,o| o.justArray.map{|o| # visit triples
-            yield f, p, o # triple for overview graph
-          } unless ['uri',Content,DC+'hasFormat'].member? p} # drop RDF types in summary
+      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet') # drop chat messages. more generally anything that omits a Title or filename could be dropped
+        r.map{|p,o| o.justArray.map{|o| # each triple
+            yield f, p, o # send triple to overview graph
+          } unless ['uri',Content,DC+'hasFormat'].member? p} # drop triple
       end}
   end
 
@@ -325,8 +325,8 @@ class R
           yield s, p, o
         }
         yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day}}
-    # summary
-    if linenum > 0#, if non-empty
+    # summarize non-empty log
+    if linenum > 0
       yield log, Type, R[SIOC+'ChatLog']
       yield log, Date, mtime.iso8601
       yield log, Creator, channel
