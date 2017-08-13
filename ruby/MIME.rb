@@ -490,7 +490,7 @@ class R
         resp = response.read
         unless body.e && body.readFile == resp
           updated = true
-          body.writeFile resp
+          body.writeFile resp # cache body and hand to indexer
           ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri
         end
       end
@@ -505,39 +505,7 @@ class R
   alias_method :getFeed, :fetchFeed
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
-  def triplrTwitter
-    base = 'https://twitter.com'
-    nokogiri.css('div.tweet > div.content').map{|t|
-      s = base + t.css('.js-permalink').attr('href') # subject URI
-      author = R[base+'/'+t.css('.username b')[0].inner_text]
-      yield s, Type, R[SIOC+'Tweet']
-      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
-      yield s, Creator, author
-      content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # absolutize URIs relative to remote base
-        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
-        yield s, DC+'link', R[a.attr 'href']
-      }
-      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
-  end
-
-  def indexTweets; graph = {}
-    triplrTwitter{|s,p,o|
-      graph[s] ||= {'uri' => s}; graph[s][p]||=[]; graph[s][p].push o}
-    graph.map{|u,r|
-      r[Date].do{|t|# timestamp required to place on timeline
-          slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
-          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-          doc = "//localhost/#{time}#{slug}.e".R # doc URI
-          docP = doc.justPath
-          unless doc.e || docP.e
-            docP.dir.mkdir
-            doc.writeFile({u => r}.to_json) # doc at host
-            ln doc, docP # doc local path
-            puts 'http:'+doc.stripDoc
-          end}}
-  end
-
+  # if you're indexing a live URL call fetchFeed instead as it's got a cache in front of it
   def indexFeed options = {}
     g = RDF::Repository.load self, options
     g.each_graph.map{|graph|
@@ -556,6 +524,37 @@ class R
     self
   rescue Exception => e
     puts uri, e.class, e.message
+  end
+
+  # an example of a CSS-selector based triplr. most of them (Scraper) are in another repo
+  def triplrTwitter
+    base = 'https://twitter.com'
+    nokogiri.css('div.tweet > div.content').map{|t|
+      s = base + t.css('.js-permalink').attr('href') # subject URI
+      author = R[base+'/'+t.css('.username b')[0].inner_text]
+      yield s, Type, R[SIOC+'Tweet']
+      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
+      yield s, Creator, author
+      content = t.css('.tweet-text')[0]
+      content.css('a').map{|a| # absolutize URIs relative to remote base
+        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
+        yield s, DC+'link', R[a.attr 'href']
+      }
+      yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
+  end
+
+  def indexTweets; graph = {}
+    triplrTwitter{|s,p,o|graph[s]||={'uri'=>s}; graph[s][p]||=[]; graph[s][p].push o}
+    graph.map{|u,r| # each resource
+      r[Date].do{|t|# timestamp for timeline location
+          slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
+          time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
+          doc = "//localhost/#{time}#{slug}.e".R # storage URI
+          docP = doc.justPath; docP.dir.mkdir # local container
+          unless doc.e || docP.e # store
+            doc.writeFile({u => r}.to_json)
+            ln doc, docP # make available on host and path
+          end}}
   end
 
   # Reader for JSON-cache format
