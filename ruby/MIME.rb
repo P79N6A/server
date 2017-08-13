@@ -2,7 +2,7 @@
 =begin MIME handling for non-RDF
  JSON-cache is a RDF-subset graph in a tree. it is trivially pickleable using the standard-library JSON functions.
  RDF::Reader parsers for Atom/RSS and JSON-cache allow RDF.rb to use its standard loader code with these formats:
- call #toRDF to swap file-references with a JSON-cache substitute (if needed and cache is stale) and go on as usual
+ call #toRDF to swap non-RDF file-references with a JSON-cache substitute (if needed) before going on as usual
 =end
 class R
 
@@ -586,7 +586,7 @@ class R
               fn.call RDF::Statement.new(@base.join(s), RDF::URI(p),
                         o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
                                                               l.datatype=RDF.XMLLiteral if p == Content
-                                                              l))}}}
+                                                              l))} unless p=='uri'}}
       end
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
     end
@@ -729,7 +729,6 @@ class R
               blogs.push @base.R.join('/') if @base.R.host != resource.host # reblog
               blogs.map{|blog| yield u, R::To, blog}
             end
-
             inner.scan(reAttach){|e| # media links
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
@@ -745,7 +744,6 @@ class R
                       end
                   yield u, p, o
                 end}}
-
             inner.scan(reElement){|e| # elements
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1]                  # expand property-name
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p # custom element-type handlers
