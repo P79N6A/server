@@ -341,8 +341,7 @@ class R
   # email triplr
   ReExpr = /\b[rR][eE]: /
   # Message-ID -> URI mapping
-  MessageId = -> id {
-    h = id.sha2
+  MessageId = -> id {h = id.sha2
     ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
     m = Mail.read node; return unless m
@@ -352,7 +351,7 @@ class R
     # storage paths
     srcDir = resource.justPath; srcDir.mkdir # container
     srcFile = srcDir + 'this.msg'            # location
-    # link to canonical location if sourced elsewhere
+    # link to canonical location
     ln self, srcFile unless srcFile.e rescue nil
     yield e, DC+'identifier', id         # pre-web identifier
     yield e, DC+'source', srcFile        # source provenance
@@ -415,19 +414,19 @@ class R
           ln srcFile, rev if !rev.e rescue nil}}}
 
     # HTML parts
-    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'} # decant HTML parts
+    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'}
     htmlCount = 0
-    htmlFiles.map{|p| # HTML
+    htmlFiles.map{|p| # HTML file
       html = srcDir + "#{htmlCount}.html"  # file location
       yield e, DC+'hasFormat', html        # file pointer
       html.writeFile p.decoded  if !html.e # store
-      htmlCount += 1 } # increment counter
+      htmlCount += 1 } # increment count
 
     # text parts
     parts.select{|p|
       (!p.mime_type || p.mime_type == 'text/plain') && # find text parts
         Mail::Encodings.defined?(p.body.encoding)      # ensure decoder is defined
-    }.map{|p| # part
+    }.map{|p| # text part
       # represent part as RDF
       yield e, Content, H[p.decoded.to_utf8.lines.to_a.map{|l| # split lines
         l = l.chomp # strip any remaining [\n\r]
@@ -466,7 +465,7 @@ class R
   end
 
   def fetchFeeds; uris.map(&:R).map(&:fetchFeed); nil end
-  def fetchFeed # keep metadata for conditional-fetch
+  def fetchFeed # cache metadata for future conditional-fetches
     updated = false
     head = {} # request header
     cache = R['/cache/'+uri.sha2+'/']  # cache storage
@@ -486,8 +485,8 @@ class R
       open(uri, head) do |response|
         curEtag = response.meta['etag']
         curMtime = response.last_modified || Time.now rescue Time.now
-        etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag header
-        mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified header
+        etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag value
+        mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified value
         resp = response.read
         unless body.e && body.readFile == resp
           updated = true
@@ -497,7 +496,7 @@ class R
       end
     rescue OpenURI::HTTPError => error
       msg = error.message
-      puts [uri,msg].join("\t") unless msg.match(/304/) # print return-type unless OK or cache-hit (304)
+      puts [uri,msg].join("\t") unless msg.match(/304/) # warn on error unless it's just a cache-hit (304)
     end
     updated ? self : nil
   rescue Exception => e
