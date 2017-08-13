@@ -1,13 +1,7 @@
 # coding: utf-8
-=begin
- formats beyond the standard RDF library
- We define RDF::Reader instances for Atom/RSS feeds and a RDF-subset emphasizing speed and JSON serializability.
- There's no Writer for this format as it can't roundtrip RDF non-destructively. On modern hardware Turtle may be suitably
- fast. subset performs 3x as fast as Turtle and its in-memory Hash representation matches the input to our HTML renderer.
-
- RDFizing
- if a RDF::Reader is defined on a non-RDF format (eg. Atom and JSON-cache) RDF library can be called as if it's actually RDF.
- else the file is rewritten to a JSON cache-file by calling triplrMIME and dumping collected triples to JSON then proceed as above
+=begin RDF format-conversion
+ RDF::Reader are defined for Atom and JSON-cache so RDF.rb can carry on as if the data has always been RDF.
+ non-RDF can be transcoded to data usable in this manner. call #toRDF to get a substitute file-reference.
 
 =end
 class R
@@ -174,8 +168,56 @@ class R
        end)
   end
 
-  # files directly readable by RDF::REader
+  # files directly readable by RDF::Reader
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
+
+  # JSON-tree loader
+  def R.load set
+    graph = RDF::Graph.new # input graph
+    g = {}                 # output tree
+    rdf,nonRDF = set.partition &:isRDF # partition node types
+    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n} # load RDF
+    graph.each_triple{|s,p,o| # each triple
+      s = s.to_s; p = p.to_s # normalize URI keys to strings
+      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # normalize resource classes to R
+      g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} # add triple
+    nonRDF.map{|n| (JSON.parse n.toJSON.readFile).map{|s,re| # load non-RDF
+        re.map{|p,o| # each resource
+          o.justArray.map{|o| # each triple
+            o = o.R if o.class==Hash # normalize resource classes to R
+            g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add triple
+    g # graph-as-tree
+  end
+
+  # pure-RDF loader
+  def load set
+    g = RDF::Graph.new
+    set.map{|n|
+      g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
+    g # graph
+  end
+
+  def toRDF; isRDF ? self : toJSON end
+
+  def toJSON # cache-file readable as RDF
+    return self if ext == 'e'
+    hash = node.stat.ino.to_s.sha2
+    doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
+    unless doc.e && doc.m > m # update cache
+      tree = {}
+      triplr = Triplr[mime]
+      unless triplr
+        puts "WARNING missing #{mime} triplr for #{uri}"
+        triplr = :triplrFile
+      end
+      send(*triplr){|s,p,o|
+        tree[s] ||= {'uri' => s}
+        tree[s][p] ||= []
+        tree[s][p].push o}
+      doc.writeFile tree.to_json
+    end
+    doc
+  end
 
   # triple-emitters for non-RDF resources
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
@@ -262,28 +304,6 @@ class R
   end
 
   def uris; (open pathPOSIX).readlines.map &:chomp end
-
-  # substitute non-RDF file reference with a RDF transcode
-  def toRDF; isRDF ? self : toJSON end
-  def toJSON # non-RDF file to JSON+RDF-file
-    return self if ext == 'e'
-    hash = node.stat.ino.to_s.sha2
-    doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
-    unless doc.e && doc.m > m # update cache
-      tree = {}
-      triplr = Triplr[mime]
-      unless triplr
-        puts "WARNING missing #{mime} triplr for #{uri}"
-        triplr = :triplrFile
-      end
-      send(*triplr){|s,p,o|
-        tree[s] ||= {'uri' => s}
-        tree[s][p] ||= []
-        tree[s][p].push o}
-      doc.writeFile tree.to_json
-    end
-    doc
-  end
 
   # Reader for JSON-format used by caching layer
   module Format
