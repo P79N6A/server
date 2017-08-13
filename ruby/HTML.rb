@@ -293,7 +293,7 @@ class R
                  when Stat+'contains'
                    l[k].justArray.sort_by(&:uri).map{|c|[c.R, ' ']}
                  when DC+'cache'
-                   l[k].justArray.map{|c|[{_: :a, href: c.uri, c: '&#128279;'}, ' ']}
+                   l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#128279;'}, ' ']}
                  else
                    l[k].justArray.map{|v|
                      case v
