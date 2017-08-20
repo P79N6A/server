@@ -26,29 +26,8 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
       '</pre></body></html>']]
   end
 
-  def notfound
-    [404,{'Content-Type' => 'text/html'},[HTML[{},self]]]
-  end
+  def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
-  def fileGET
-    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
-    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
-      thumb = thumbFile
-      if !thumb.e
-        if mime.match(/^video/)
-          `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
-        else
-          `convert #{sh} -thumbnail "256x256" #{thumb.sh}`
-        end
-      end
-      thumb.e && thumb.setEnv(env).condResponse || notfound
-    else
-      condResponse
-    end
-  end
-
-  def HEAD; self.GET.do{|s,h,b|[ s, h, []]} end
   def GET
     return notfound if path.match /^\/(cache|domain)/ # hide internal storage paths
     return justPath.fileGET if justPath.file?         # static result
@@ -69,6 +48,24 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
       end}
   end
 
+  def fileGET
+    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
+    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
+    if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
+      thumb = thumbFile
+      if !thumb.e
+        if mime.match(/^video/)
+          `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
+        else
+          `convert #{sh} -thumbnail "256x256" #{thumb.sh}`
+        end
+      end
+      thumb.e && thumb.setEnv(env).condResponse || notfound
+    else
+      condResponse
+    end
+  end
+
   def condResponse body=nil
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])
@@ -81,6 +78,10 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
         [(@r[:Status]||200), @r[:Response], [body]]
       end
     end
+  end
+
+  def notfound
+    [404,{'Content-Type' => 'text/html'},[HTML[{},self]]]
   end
 
   def nodeset
