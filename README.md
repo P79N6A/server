@@ -1,14 +1,9 @@
 # INSTALL
-## dependencies
+## dependencies (non-ruby)
 ``` sh
-# debian http://www.debian.org/
-apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments
-
-# void   http://www.voidlinux.eu/
-xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments
-
-# termux https://termux.com/
-packages install autoconf automake binutils clang file findutils git iconv pkg-config ruby ruby-dev libxslt-dev
+apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments # http://www.debian.org/
+xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments # http://www.voidlinux.eu/
+packages install autoconf automake binutils clang file findutils git iconv pkg-config ruby ruby-dev libxslt-dev # https://termux.com/
 ```
 ## dependencies (ruby)
 ``` sh
@@ -17,14 +12,13 @@ gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
 ruby install
-cd ../..
 ```
 # CONFIG (adjust to taste)
 ``` sh
-mkdir web && cd web # server container
+cd ../.. && mkdir web && cd web # storage
 ln ../pw/ruby/config.ru . # server config
-ln -s ../pw/{js,css} # CSS and JS containers
-mkdir -p domain/localhost # vhost container
+ln -s ../pw/{js,css} # CSS and JS
+mkdir -p domain/localhost # vhost
 ```
 # RUN
 ``` sh
