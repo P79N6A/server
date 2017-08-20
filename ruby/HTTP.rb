@@ -29,17 +29,17 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
   def GET
-    return notfound if path.match /^\/(cache|domain)/ # hide internal storage paths
-    return justPath.fileGET if justPath.file?         # static result
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/' # goto current container
-    set = nodeset # find nodes
-    return notfound if !set || set.empty? # 404
+    return notfound if path.match /^\/(cache|domain)/
+    return justPath.fileGET if justPath.file?
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/'
+    set = nodeset
+    return notfound if !set || set.empty?
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
-    condResponse ->{ # body continuation (unless HEAD or 304 response)
-      if set.size==1 && set[0].mime == format
-        set[0] # static response
-      else # dynamic response
+    condResponse ->{ # body called on-demand
+      if set.size==1 && set[0].mime==format
+        set[0] # static body
+      else # dynamic body
         if format == 'text/html' # HTML
           HTML[R.load(set),self] # render <- load
         else # RDF
