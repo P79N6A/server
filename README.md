@@ -21,15 +21,14 @@ cd ../..
 ```
 # CONFIG (adjust to taste)
 ``` sh
-mkdir web && cd web # main container
+mkdir web && cd web # server container
+ln ../pw/ruby/config.ru . # server config
 ln -s ../pw/{js,css} # CSS and JS containers
-mkdir domain # vhost container
-ln -s ~/Sync domain/localhost # host container
-ln ../pw/ruby/config.ru . # daemon configuration
+mkdir -p domain/localhost # vhost container
 ```
 # RUN
 ``` sh
-unicorn -rww -o 127.0.0.1 -p 8000
+unicorn -o 127.0.0.1 -p 8000
 ```
 # MIRRORS
 [src.whats-your.name/pw/](http://src.whats-your.name/pw/)
