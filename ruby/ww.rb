@@ -74,6 +74,7 @@ class R < RDF::URI
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def ext; (File.extname uri)[1..-1] || '' end
   def basename; File.basename (path||'') end
+  def thumbFile; dir + '/.' + basename + '.jpg' end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
   def sh; pathPOSIX.utf8.sh end
   def exist?; node.exist? end

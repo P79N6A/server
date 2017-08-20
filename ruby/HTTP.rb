@@ -30,7 +30,6 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     [404,{'Content-Type' => 'text/html'},[HTML[{},self]]]
   end
 
-  def thumbFile; dir + '/.' + basename + '.jpg' end
   def fileGET
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
