@@ -175,11 +175,6 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
       d)
   end
 
-  def selector
-    @idCount ||= 0
-    'O' + (@idCount += 1).to_s
-  end
-
   def q # memoize query args
     @q ||=
       (if q = env['QUERY_STRING']

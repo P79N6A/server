@@ -194,7 +194,7 @@ class R
     rowID = if e.path == this.path && this.fragment
               this.fragment
             else
-              e.selector
+              'row_' + href.sha2
             end
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
@@ -207,7 +207,7 @@ class R
             label = v.fragment || (v.basename && v.basename != '/' && (URI.unescape v.basename)) || v.host
             lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
             e.env[:label][lbl] = true
-            {_: :a, id: e.selector, href: v.uri, name: lbl, c: label}
+            {_: :a, id: 'addr_'+rand.to_s.sha2, href: v.uri, name: lbl, c: label}
           else
             {_: :span, c: v.to_s}
           end
@@ -250,7 +250,7 @@ class R
                                c: ({_: :a, name: label, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML(host && link.path || link.basename)}.
-                                   update(links.size < 9 ? {id: e.selector} : {}),' ']}},"\n"]}}}),
+                                   update(links.size < 9 ? {id: 'link_'+rand.to_s.sha2} : {}),' ']}},"\n"]}}}),
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
                      # resource is an image. show thumbnail if local file
                      ({_: :a, href: href,
