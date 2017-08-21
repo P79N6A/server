@@ -3,15 +3,16 @@
 ``` sh
 apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments # https://www.debian.org
 xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments # https://www.voidlinux.eu
-packages install autoconf automake binutils clang file findutils git iconv pkg-config ruby ruby-dev libxslt-dev # https://termux.com
+packages install autoconf automake binutils clang file findutils git iconv pkg-config python ruby ruby-dev libxslt-dev # https://termux.com
 ```
 ## dependencies (ruby)
 ``` sh
 cd pw/ruby
-./install # link source to library-directory
-gem install bundler # install third-party dependencies
+./install # live install for hacking. add to gemfile and install via bundler if desired
+gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
+pip install pygments
 ```
 # CONFIG (adjust to taste)
 ``` sh
