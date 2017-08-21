@@ -8,8 +8,8 @@ packages install autoconf automake binutils clang file findutils git iconv pkg-c
 ## dependencies (ruby)
 ``` sh
 cd pw/ruby
-./install # symlink this dir to library path
-gem install bundler # install third party deps
+./install # link source to library-directory
+gem install bundler # install third-party dependencies
 bundle config build.nokogiri --use-system-libraries
 bundle install
 ```
