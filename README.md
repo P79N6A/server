@@ -1,9 +1,12 @@
 # INSTALL
 ## dependencies (non-ruby)
 ``` sh
-apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config source-highlight python-pygments # https://www.debian.org
-xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel source-highlight python-Pygments # https://www.voidlinux.eu
+# sorry nixos users, you're on your own
+apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments                                    # https://www.debian.org
+xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel python-Pygments                                    # https://www.voidlinux.eu
 packages install autoconf automake binutils clang file findutils git iconv pkg-config python ruby ruby-dev libxslt-dev # https://termux.com
+
+pip install pygments
 ```
 ## dependencies (ruby)
 ``` sh
@@ -12,7 +15,6 @@ cd pw/ruby
 gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
-pip install pygments
 ```
 # CONFIG (adjust to taste)
 ``` sh

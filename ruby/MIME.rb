@@ -11,15 +11,22 @@ class R
   # basename prefix -> MIME
   # suffix is optional therefore full names ie LICENSE (it's case-insensitive) match
   MIMEprefix = {
+    'authors' => 'text/plain',
+    'changelog' => 'text/plain',
     'config' => 'application/config',
+    'contributors' => 'text/plain',
+    'copying' => 'text/plain',
     'dockerfile' => 'text/plain',
     'gemfile' => 'application/ruby',
     'install' => 'text/plain',
     'license' => 'text/plain',
+    'links' => 'text/plain',
     'makefile' => 'application/makefile',
-    'msg' => 'message/rfc822', # only actual prefix. Procmail uses this when delivering to a dir that doesnt have "maildir" subdirs
+    'msg' => 'message/rfc822', # Procmail uses msg.* when delivering to non-maildir containers
     'rakefile' => 'application/ruby',
     'readme' => 'text/markdown',
+    'todo' => 'text/plain',
+    'unlicense' => 'text/plain',
   }
 
   # suffix -> MIME
@@ -34,6 +41,7 @@ class R
     'db' => 'application/octet-stream',
     'e' => 'application/json',
     'eot' => 'application/font',
+    'go' => 'application/go',
     'haml' => 'text/plain',
     'hs' => 'application/haskell',
     'ini' => 'text/plain',
@@ -58,6 +66,7 @@ class R
   Triplr = {
     'application/config'   => [:triplrDataFile],
     'application/font'      => [:triplrFile],
+    'application/go'   => [:triplrSourceCode],
     'application/haskell'   => [:triplrSourceCode],
     'application/javascript' => [:triplrSourceCode],
     'application/ino'      => [:triplrSourceCode],
@@ -96,7 +105,11 @@ class R
     'text/man'             => [:triplrMan],
     'text/x-c'             => [:triplrSourceCode],
     'text/x-ruby'          => [:triplrSourceCode],
+    'text/x-php'           => [:triplrSourceCode],
+    'text/x-python'        => [:triplrSourceCode],
     'text/x-script.ruby'   => [:triplrSourceCode],
+    'text/x-script.python' => [:triplrSourceCode],
+    'text/x-shellscript'   => [:triplrSourceCode],
     'text/markdown'        => [:triplrMarkdown],
     'text/nfo'             => [:triplrText,'cp437'],
     'text/plain'           => [:triplrText],

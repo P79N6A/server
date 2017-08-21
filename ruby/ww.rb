@@ -27,6 +27,9 @@ end
 class RDF::URI
   def R; R.new to_s end
 end
+class RDF::Node
+  def R; R.new to_s end
+end
 class Pathname
   def R; R.unPOSIX to_s.utf8 end
 end
