@@ -57,7 +57,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
         if mime.match(/^video/)
           `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
         else
-          `convert #{sh} -thumbnail "256x256" #{thumb.sh}`
+          `gm convert #{sh} -thumbnail "256x256" #{thumb.sh}`
         end
       end
       thumb.e && thumb.setEnv(env).condResponse || notfound
