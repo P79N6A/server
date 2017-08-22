@@ -1,5 +1,5 @@
-#!/data/data/com.termux/files/usr/bin/ruby
 #!/usr/bin/env ruby
+#!/data/data/com.termux/files/usr/bin/ruby
 exit 0 if ARGV.empty?
 require 'ww'
 puts R[ARGV[0]].send *ARGV[1..-1]
