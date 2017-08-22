@@ -1,11 +1,6 @@
 #!/usr/bin/env ruby
 require 'fileutils'
 require 'pathname'
-
- lib = RbConfig::CONFIG["sitelibdir"] + '/'
- src = File.expand_path File.dirname __FILE__
-name = 'ww'
-
-FileUtils.mkdir_p lib unless Pathname(lib).exist?
-FileUtils.ln_s src, lib+name, :verbose => true
-FileUtils.ln_s src+'/'+name+'.rb', lib, :verbose => true
+loc = RbConfig::CONFIG["sitelibdir"] + '/'
+FileUtils.mkdir_p loc unless Pathname(loc).exist?
+FileUtils.ln_s (File.expand_path File.dirname __FILE__)+'/ww.rb', loc

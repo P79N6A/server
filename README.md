@@ -11,7 +11,7 @@ pip install pygments
 ## dependencies (ruby)
 ``` sh
 cd pw/ruby
-ruby install
+ruby install # live install of this dir. other options include adding . to ruby search-path or building a gem
 gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
