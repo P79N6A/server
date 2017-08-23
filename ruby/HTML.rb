@@ -151,7 +151,7 @@ class R
                s[Title] || s[Label] || s.uri
               else
                 s[p]
-               end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}}, # sort and render rows
+               end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}.intersperse("\n")}, # sort and render rows
           {_: :tr, c: keys.map{|k| # arc types
              # sort attr
              q = e.q.merge({'sort' => k})
@@ -212,10 +212,9 @@ class R
           end
         }.intersperse(' ')}}
 
-    [{_: :tr, href: href, id: rowID, class: focus ? 'focus' : '',
-      c: ["\n",
-          keys.map{|k|
-            [{_: :td, property: k,
+    {_: :tr, href: href, class: focus ? 'focus' : '',
+      c: keys.map{|k|
+            {_: :td, property: k,
               c: case k
                  when 'uri'
                    [# label
@@ -303,7 +302,6 @@ class R
                        v
                      end
                    }.intersperse(' ')
-                 end}, "\n"]}]},
-    ]}
+                 end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
 
 end
