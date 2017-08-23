@@ -244,12 +244,13 @@ class R
                          else
                            label = ''
                          end
+                         small = links.size < 5
                          {_: :tr,
                           c: [{_: :td, class: :group,
                                c: ({_: :a, name: label, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
-                                 [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML(host && link.path || link.basename)}.
-                                   update(links.size < 9 ? {id: 'link_'+rand.to_s.sha2} : {}),links.size <= 3 ? '<br>' : ' ']}},"\n"]}}}),
+                                 [{_: :a, class: :link, name: label, href: link.uri,
+                                   c: CGI.escapeHTML(host && link.path || link.basename)}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}},"\n"]}}}),
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
                      # resource is an image. show thumbnail if local file
                      ({_: :a, href: href,
