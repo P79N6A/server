@@ -114,16 +114,15 @@ class R
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
-             c: [{_: :meta, charset: 'utf-8'},
-                 {_: :link, rel: :icon, href: '/.icon.png'},
+             c: [{_: :meta, charset: 'utf-8'}, {_: :link, rel: :icon, href: '/.icon.png'},
                  e[:Links].do{|links|links.map{|type,uri|{_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: R['/js/ui.js'].readFile},{_: :style, c: R['/css/base.css'].readFile}]},
             {_: :body,
-             c: [upPage, prevPage, nextPage, # pagination links
-                 template[graph,re], # render items
+             c: [upPage, prevPage, nextPage, # page links
+                 template[graph,re],
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},
-                   {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?), # 404
-                 ([prevPage,nextPage] if graph.keys.size > 12), downPage]}]}]} # show pager controls at bottom on large docs
+                   {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?),
+                 ([prevPage,nextPage] if graph.keys.size > 8), downPage]}]}]}
 
   # arc-types: main column
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment']
@@ -250,7 +249,7 @@ class R
                                c: ({_: :a, name: label, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, name: label, href: link.uri, c: CGI.escapeHTML(host && link.path || link.basename)}.
-                                   update(links.size < 9 ? {id: 'link_'+rand.to_s.sha2} : {}),' ']}},"\n"]}}}),
+                                   update(links.size < 9 ? {id: 'link_'+rand.to_s.sha2} : {}),links.size <= 3 ? '<br>' : ' ']}},"\n"]}}}),
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
                      # resource is an image. show thumbnail if local file
                      ({_: :a, href: href,
