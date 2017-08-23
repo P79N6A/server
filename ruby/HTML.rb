@@ -250,7 +250,7 @@ class R
                                c: ({_: :a, name: label, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, name: label, href: link.uri,
-                                   c: CGI.escapeHTML(host && link.path || link.basename)}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}},"\n"]}}}),
+                                   c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}},"\n"]}}}),
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
                      # resource is an image. show thumbnail if local file
                      ({_: :a, href: href,

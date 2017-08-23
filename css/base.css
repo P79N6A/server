@@ -11,7 +11,7 @@ a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;color:#e
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
-img {max-width: 100%}
+table, img {max-width: 100%}
 a.thumb img {height:256px;margin:.1em}
 span.date {font-size:.9em;white-space: nowrap}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
