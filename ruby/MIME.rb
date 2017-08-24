@@ -352,15 +352,14 @@ class R
     puts uri, e.class, e.message
   end
 
-  # email triplr
+  # email
   ReExpr = /\b[rR][eE]: /
-  # Message-ID -> URI mapping
-  MessageId = -> id {h = id.sha2
-    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
+  # Message-ID -> URI
+  MessageURI = -> id {h = id.sha2; ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
     m = Mail.read node; return unless m
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
-    resource = MessageId[id]                 # message URI
+    resource = MessageURI[id]                # message URI
     e = resource.uri                         # URI as string
     # storage paths
     srcDir = resource.justPath; srcDir.mkdir # container
@@ -412,7 +411,7 @@ class R
     %w{in_reply_to references}.map{|ref|
       m.send(ref).do{|rs|
         rs.justArray.map{|r|
-          dest = MessageId[r]
+          dest = MessageURI[r]
           yield e, SIOC+'reply_of', dest
           destDir = dest.justPath; destDir.mkdir; destFile = destDir+'this.msg'
           # bidirectional reference link
