@@ -234,11 +234,11 @@ class R
     doc
   end
 
-  def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile false,&f end
-  def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile false,&f end
-  def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile false,&f end
-  def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile false,&f end
-  def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile false,&f end
+  def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
+  def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end
+  def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile &f end
+  def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile &f end
+  def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile &f end
   def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
   def triplrRTF          &f; triplrWord :catdoc,        &f end
@@ -254,7 +254,7 @@ class R
     w,h = Dimensions.dimensions pathPOSIX
     yield uri, Stat+'width', w
     yield uri, Stat+'height', h
-    triplrFile false,&f
+    triplrFile &f
   end
 
   def triplrContainer
@@ -277,20 +277,18 @@ class R
       end}
   end
 
-  def triplrFile basicFile=true
+  def triplrFile
     s = path || ''
     s = '/'+s unless s[0] == '/'
-    yield s, Stat+'container', s.R.dir
-    yield s, Type, R[Stat+'File'] if basicFile
+    size.do{|sz|yield s, Size, sz}
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
-    size.do{|sz|
-      yield s, Size, sz}
+    yield s, Stat+'container', s.R.dir
   end
 
   def triplrWord conv, out='', &f
-    triplrFile false, &f
+    triplrFile &f
     yield uri, Type, R[Stat+'WordDocument']
     yield uri, Content, '<pre>' +
                         `#{conv} #{sh} #{out}` +
@@ -298,12 +296,13 @@ class R
   end
 
   def triplrText enc=nil, &f
-    yield uri, Type, R[Stat+'TextFile']
-    yield uri, Content,
+    doc = stripDoc.uri
+    yield doc, Type, R[Stat+'TextFile']
+    yield doc, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: readFile.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
-    triplrFile false,&f
+    mtime.do{|mt|yield doc, Date, mt.iso8601}
   end
 
   def triplrCSV d
