@@ -130,7 +130,7 @@ class R
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TabularView = -> g, e {
-    e.env[:label] = {}; e.env[:ilabel] = {}; e.env[:links] = []
+    e.env[:label] = {}; e.env[:links] = []
     (1..10).map{|i|
       e.env[:label]["quote"+i.to_s] = true}
     # sort field
@@ -168,7 +168,6 @@ class R
      # label CSS
      {_: :style, c: ".focus, .focus a {background-color:##{'%06x' % (rand 16777216)};color:#fff;font-size:1.2em}\n"},
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
-     {_: :style, c: e.env[:ilabel].map{|name,_| "[name=\"#{name}\"] {color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]}
 
   Gallery = -> graph,e,_=true {
@@ -239,13 +238,13 @@ class R
                       links.map{|l|e.env[:links].push l} # mark as shown
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
-                         e.env[:ilabel][host] = true
+                         e.env[:label][host] = true
                          small = links.size < 5
                          {_: :tr,
                           c: [{_: :td, class: :group,
                                c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
-                                 [{_: :a, class: :link, name: host, href: link.uri,
+                                 [{_: :a, name: host, href: link.uri,
                                    c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
                      # image resource (subject of triple)
