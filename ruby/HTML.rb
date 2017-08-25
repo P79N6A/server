@@ -242,7 +242,9 @@ class R
            when Date
              l[Date].justArray.sort[-1].do{|v| {_: :span, class: :date, c: v}}
            when Stat+'contains'
-             l[k].justArray.sort_by(&:uri).map{|c|[c.R, ' ']}
+             l[k].justArray.sort_by(&:uri).do{|dirs|
+               dirs.map{|d|
+                 [{_: :a, href: d.uri, class: :dir, c: d.label}, dirs.size > 5 ? ' ' : '<br>']}}
            when DC+'cache'
              l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#128279;'}, ' ']}
            else
