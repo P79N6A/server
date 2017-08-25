@@ -69,10 +69,12 @@ class R < RDF::URI
   def to_json *a; {'uri' => uri}.to_json *a end
   def ==  u; to_s == u.to_s end
   def <=> c; to_s <=> c.to_s end
+  def match p; to_s.match p end
   def + u; R[uri + u.to_s].setEnv @r end
   def node; Pathname.new pathPOSIX end
   def justPath; (path || '/').R.setEnv(@r) end
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
+  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def dirname; File.dirname path end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def ext; (File.extname uri)[1..-1] || '' end

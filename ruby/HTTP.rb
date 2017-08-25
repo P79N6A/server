@@ -126,8 +126,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
-
-    # find nodes
+    # nodes
     set = []
     if container && find
       env[:Links][:up] = dirname + '/' + qs
@@ -139,32 +138,21 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
       set.concat paths.select(&:exist?).map{|loc|
         `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
     else
-      # container
       set.concat paths.map{|p|
         if p.node.directory?
           if trailingSlash
             env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (sans slash)
-            if format=='text/html' && (p+'index.html').exist?
-              p+'index.html'
-            else
-              p.children
-            end
+            (p+'index.*').glob || [p, p.children]
           else
-            env[:Links][:down] = path + '/' + qs # pointer to full-content URI (trailing-slash)
+            env[:Links][:down] = p.path + '/' + qs # pointer to full-content URI (trailing-slash)
             p
           end
+        else # arbitrary glob or basic pattern to find documents off base URI
+          (p.match(/\*/) ? p : (p+'.*')).glob
         end
       }.flatten.compact
-      env[:Links][:up] ||= dirname + '/' + qs # parent container
-      # document(s)
-      set.concat paths.map{|path|
-        dir = path.uri[-1] == '/'
-        glob = uri.match /\*/
-        base = dir ? (path+'index') : path
-        pattern = glob ? path : (base + '.*')
-        Pathname.glob(pattern.pathPOSIX).map{|p|p.R.setEnv @r}
-      }.flatten
     end
+    env[:Links][:up] ||= dirname + '/' + qs # parent
     set.select &:exist?
   end
 
