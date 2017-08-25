@@ -203,22 +203,22 @@ class R
        {_: :td, property: k,
         c: case k
            when 'uri'
-             [l[Label].justArray.map{|v| # label
-                label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                e.env[:label][lbl] = true
-                [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
-              (if titles = l[Title] # title
+             [(if titles = l[Title] # title
                titles.justArray.map{|title|
                  {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
               else # path name
                 {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename this.path))[0..64])} if this.path
-               end),
-              (links = [DC+'link',
+               end), ' ',
+              l[Label].justArray.map{|v| # label
+                label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
+                lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                e.env[:label][lbl] = true
+                [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
+              (links = [DC+'link', # links
                         SIOC+'attachment',
                         DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # find unseen links
                links.map{|l|e.env[:links].push l} # mark as visited
-               {_: :table, class: :links, # links
+               {_: :table, class: :links, # show new
                 c: links.group_by(&:host).map{|host,links|
                   e.env[:label][host] = true
                   small = links.size < 5

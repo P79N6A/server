@@ -331,6 +331,7 @@ class R
       l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
         s = base + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
+        yield s, Label, m[2]
         yield s, Creator, R['#'+m[2]]
         yield s, To, channel
         yield s, Content, m[3].hrefs{|p, o|
