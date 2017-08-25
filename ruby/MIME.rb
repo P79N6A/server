@@ -441,7 +441,7 @@ class R
         Mail::Encodings.defined?(p.body.encoding)      # ensure decoder is defined
     }.map{|p| # text part
       # represent part as RDF
-      yield e, Content, H[p.decoded.to_utf8.lines.to_a.map{|l| # split lines
+      yield e, Content, (H p.decoded.to_utf8.lines.to_a.map{|l| # split lines
         l = l.chomp # strip any remaining [\n\r]
         if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
           depth = (qp[1].scan /[>|]/).size # count > occurrences
@@ -454,7 +454,7 @@ class R
         else # fresh line
           [l.hrefs{|p,o| # hypertextify
              yield e, p, o}] # found links as RDF
-        end}.compact.intersperse("\n")]} # join lines
+        end}.compact.intersperse("\n"))} # join lines
 
     # message parts
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|

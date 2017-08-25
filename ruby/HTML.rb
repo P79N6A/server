@@ -1,6 +1,8 @@
 # coding: utf-8
-def H x # HTML output
+def H x # data to HTML
   case x
+  when String
+    x
   when Hash # element
     void = [:img, :input, :link, :meta].member? x[:_]
     '<' + (x[:_] || 'div').to_s +                        # element name
@@ -10,27 +12,15 @@ def H x # HTML output
          '<'=>'%3C'}[c]||c}.join + "'"}.join +
       (void ? '/' : '') + '>' + (H x[:c]) +              # children
       (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # element closer
-  when Array
+  when Array # sequential structure
     x.map{|n|H n}.join
-  when R
+  when R # <a>
     H({_: :a, href: x.uri, c: x.label})
-  when String
-    x
-  when Symbol
-    x.to_s
-  when Float
-    x.to_s
-  when Integer
-    x.to_s
   when NilClass
     ''
-  else # call native #to_s and escape output
-    x.to_s.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;')
+  else
+    CGI.escapeHTML x.to_s
   end
-end
-
-class H
-  def H.[] h; H h end
 end
 
 class String
