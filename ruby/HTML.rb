@@ -217,8 +217,7 @@ class R
                    c: [{_: :td, class: :group,
                         c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                        {_: :td, c: links.map{|link|
-                          [{_: :a, name: host, href: link.uri,
-                            c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
+                          [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
               # HTML content
               (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
               # image as subject of triple
