@@ -134,17 +134,12 @@ class R
     e.env[:label] = {}; e.env[:links] = []
     (1..10).map{|i|
       e.env[:label]["quote"+i.to_s] = true}
-    # sort field
     p = e.q['sort'] || Date
-    # sort direction
     direction = e.q.has_key?('ascending') ? :id : :reverse
-    # sort datatype
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    # column heading
     keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    # output
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|
@@ -154,19 +149,15 @@ class R
                 s[p]
                end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}.intersperse("\n")}, # sort and render rows
           {_: :tr, c: keys.map{|k| # arc types
-             # sort attr
              q = e.q.merge({'sort' => k})
-             # direction: select again to flip
+             # direction toggle
              if direction == :id
                q.delete 'ascending'
              else
                q['ascending'] = ''
              end
-             # arguments to querystring
              href = CGI.escapeHTML R.qs q
-             # column heading
              {_: :th,href: href,property: k,class: k==p ? 'selected' : '',c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
-     # label CSS
      {_: :style, c: ".focus, .focus a {background-color:##{'%06x' % (rand 16777216)};color:#fff;font-size:1.2em}\n"},
      {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#999;border-style: solid; border-width: 0 0 .1em 0}"}]}
