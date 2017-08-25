@@ -114,9 +114,11 @@ class R
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
-             c: [{_: :meta, charset: 'utf-8'}, {_: :link, rel: :icon, href: '/.icon.png'},
-                 e[:Links].do{|links|links.map{|type,uri|{_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                 {_: :script, c: R['/js/ui.js'].readFile},{_: :style, c: R['/css/base.css'].readFile}]},
+             c: [{_: :meta, charset: 'utf-8'},
+                 {_: :link, rel: :icon, href: '/.icon.png'},
+                 {_: :title, c: graph[re.path+'#this'].do{|r|r[Title].justArray[0]}||re.path},
+                 e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
+                 {_: :script, c: R['/js/ui.js'].readFile}, {_: :style, c: R['/css/base.css'].readFile}]},
             {_: :body,
              c: [upPage, prevPage, nextPage, # page links
                  template[graph,re],
@@ -273,14 +275,7 @@ class R
            when DC+'cache'
              l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#128279;'}, ' ']}
            else
-             l[k].justArray.map{|v|
-               case v
-               when Hash
-                 v.R
-               else
-                 CGI.escapeHTML v
-               end
-             }.intersperse(' ')
+             l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v)}.intersperse(' ')
            end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
 
 end

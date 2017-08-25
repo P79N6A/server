@@ -94,10 +94,10 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     find = q.has_key? 'find'
     grep = q.has_key? 'q'
 
-    # month/day/year/hour pagination
+    # month/day/year/hour traversal pointers
     dp = [] # date parts
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
-    n = nil; p = nil # pointers
+    n = nil; p = nil # init pointers
     case dp.length
     when 1 # Y
       year = dp[0]
@@ -122,7 +122,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
         n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
       end
     end
-    # add pointers, but don't point to 404s
+    # add pointers to request-meta
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
@@ -143,7 +143,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
       set.concat paths.map{|p|
         if p.node.directory?
           if trailingSlash
-            env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (no trailing-slash)
+            env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (sans slash)
             p.children
           else
             env[:Links][:down] = path + '/' + qs # pointer to full-content URI (trailing-slash)
