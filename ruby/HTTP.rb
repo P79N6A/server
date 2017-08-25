@@ -115,24 +115,23 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
         n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
       end
     end
-    # add pointers to request-meta
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
     env[:Links][:up] = dirname + '/' + qs
-    [self, justPath].uniq.map{|p|
+    [self, justPath].uniq.map{|p| # try with host bound and free (server-global path)
       if p.node.directory?
-        if q.has_key? 'find'
+        if q.has_key? 'find' # use FIND(1) to find nodes
           p.find q['find']
-        elsif q.has_key? 'q'
+        elsif q.has_key? 'q' # use GREP(1) to find nodes
           p.grep q['q']
         else
-          if uri[-1] == '/'
-            env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (sans slash)
-            (p+'index.*').glob || [p, p.children]
-          else
-            env[:Links][:down] = p.path + '/' + qs # pointer to full-content URI (trailing-slash)
-            p
+          if uri[-1] == '/' # trailing-slash
+            env[:Links][:up] = path[0..-2] + qs
+            (p+'index.*').glob || [p, p.children] # static index, fallback to inline of directly-contained
+          else # no trailing-slash
+            env[:Links][:down] = p.path + '/' + qs
+            p # directory without inlining of contained
           end
         end
       else # arbitrary glob or basic pattern to find documents off base URI
