@@ -10,10 +10,10 @@ def H x # HTML output
          '<'=>'%3C'}[c]||c}.join + "'"}.join +
       (void ? '/' : '') + '>' + (H x[:c]) +              # children
       (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # element closer
-  when Array # structure
+  when Array
     x.map{|n|H n}.join
-  when R # hyperlink
-    H x.href
+  when R
+    H({_: :a, href: x.uri, c: x.fragment || (x.basename && x.basename != '/' && (URI.unescape x.basename)) || x.host})
   when String
     x
   when Symbol
@@ -67,7 +67,6 @@ end
 
 class R
 
-  def href name=nil; {_: :a, href: uri, c: (name || fragment || basename)[0..48]} end
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
@@ -199,20 +198,6 @@ class R
     monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
     isImg = types.member? Image
 
-    actors = -> p {
-      l[p].do{|o|
-        o.justArray.uniq.map{|v|
-          if v.respond_to?(:uri)
-            v = v.R
-            label = v.fragment || (v.basename && v.basename != '/' && (URI.unescape v.basename)) || v.host
-            lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-            e.env[:label][lbl] = true
-            {_: :a, id: 'addr_'+rand.to_s.sha2, href: v.uri, name: lbl, c: label}
-          else
-            {_: :span, c: (CGI.escapeHTML v.to_s)}
-          end
-        }.intersperse(' ')}}
-
     {_: :tr, href: href, class: focus ? 'focus' : '',
      c: keys.map{|k|
        {_: :td, property: k,
@@ -258,10 +243,6 @@ class R
            when Type
              l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
                {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
-           when From
-             actors[From]
-           when To
-             actors[To]
            when Size
              l[Size].do{|sz|
                sum = 0
