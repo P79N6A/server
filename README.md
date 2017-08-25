@@ -1,8 +1,4 @@
 # INSTALL
-``` sh
-git clone git://repo.or.cz/www.git
-          https://gitlab.com/ix/pw.git/
-```
 ## non-ruby
 ``` sh
 # distro package manager - sorry nixos users, you're on your own
@@ -14,6 +10,7 @@ pip install pygments
 ```
 ## ruby
 ``` sh
+git clone https://gitlab.com/ix/pw
 cd pw/ruby
 ruby install
 gem install bundler
