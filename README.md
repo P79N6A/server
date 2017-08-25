@@ -1,5 +1,9 @@
 # INSTALL
-## dependencies (non-ruby)
+``` sh
+git clone git://repo.or.cz/www.git
+          https://gitlab.com/ix/pw.git/
+```
+## non-ruby
 ``` sh
 # distro package manager - sorry nixos users, you're on your own
 apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments                                    # https://www.debian.org
@@ -8,10 +12,10 @@ packages install autoconf automake binutils clang file findutils git iconv pkg-c
 # python package manager
 pip install pygments
 ```
-## dependencies (ruby)
+## ruby
 ``` sh
 cd pw/ruby
-ruby install # live install of this dir. other options include adding . to ruby search-path or building a gem
+ruby install
 gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
@@ -25,7 +29,7 @@ mkdir -p domain/localhost # vhost
 ```
 # RUN
 ``` sh
-unicorn -o 127.0.0.1 -p 8000
+unicorn
 ```
 # MIRRORS
 [src.whats-your.name/pw/](http://src.whats-your.name/pw/)
