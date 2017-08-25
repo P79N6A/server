@@ -23,15 +23,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	    this.attr('prev',last.attr('id'));
 	    last.attr('next',this.attr('id'));
 	};
-	// tap-to-select
-	this.addEventListener("click",function(e){
-	    var id = this.attr('id');
-	    if(window.location.hash.slice(1)==id){
-		window.location = this.attr('href');
-	    } else {
-		window.location.hash = id;
-	    };
-	},false);
 	last = this;
     });
     if(first && last){ // complete the ring
