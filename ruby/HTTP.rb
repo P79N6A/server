@@ -144,7 +144,11 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
         if p.node.directory?
           if trailingSlash
             env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (sans slash)
-            p.children
+            if format=='text/html' && (p+'index.html').exist?
+              p+'index.html'
+            else
+              p.children
+            end
           else
             env[:Links][:down] = path + '/' + qs # pointer to full-content URI (trailing-slash)
             p
