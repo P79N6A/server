@@ -212,80 +212,78 @@ class R
         }.intersperse(' ')}}
 
     {_: :tr, href: href, class: focus ? 'focus' : '',
-      c: keys.map{|k|
-            {_: :td, property: k,
-              c: case k
-                 when 'uri'
-                   [# label
-                     l[Label].justArray.map{|v|
-                       label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                       lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                       e.env[:label][lbl] = true
-                       [{_: :a, href: href, name: lbl, c: CGI.escapeHTML label},' ']},
-                     (if titles = l[Title]
-                      # title
-                      titles.justArray.map{|title|
-                        {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
-                     elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
-                       # basename
-                       name = this.path || ''
-                       {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)[0..64]))}
-                      end),
-                     # links
-                     (links = [DC+'link',
-                               SIOC+'attachment',
-                               DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # find unseen links
-                      links.map{|l|e.env[:links].push l} # mark as shown
-                      {_: :table, class: :links,
-                       c: links.group_by(&:host).map{|host,links|
-                         e.env[:label][host] = true
-                         small = links.size < 5
-                         {_: :tr,
-                          c: [{_: :td, class: :group,
-                               c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
-                              {_: :td, c: links.map{|link|
-                                 [{_: :a, name: host, href: link.uri,
-                                   c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
-                     (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
-                     # image resource (subject of triple)
-                     ({_: :a, href: href,
-                       c: {_: :img,
-                           src: if !this.host || e.host==this.host # thumbnail preview if local image
-                            this.path + '?thumb'
-                          else
-                            this.uri
-                           end}} if isImg),
-                     # image pointers (object of triple)
-                     l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}
-                   ]
-                 when Type
-                   l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
-                     {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
-                 when From
-                   actors[From]
-                 when To
-                   actors[To]
-                 when Size
-                   l[Size].do{|sz|
-                     sum = 0
-                     sz.justArray.map{|v|
-                       sum += v.to_i}
-                     sum}
-                 when Date
-                   l[Date].justArray.sort[-1].do{|v| {_: :span, class: :date, c: v}}
-                 when Stat+'contains'
-                   l[k].justArray.sort_by(&:uri).map{|c|[c.R, ' ']}
-                 when DC+'cache'
-                   l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#128279;'}, ' ']}
-                 else
-                   l[k].justArray.map{|v|
-                     case v
-                     when Hash
-                       v.R
-                     else
-                       CGI.escapeHTML v
-                     end
-                   }.intersperse(' ')
-                 end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
+     c: keys.map{|k|
+       {_: :td, property: k,
+        c: case k
+           when 'uri'
+             [l[Label].justArray.map{|v| # label
+                label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
+                lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                e.env[:label][lbl] = true
+                [{_: :a, href: href, name: lbl, c: CGI.escapeHTML label},' ']},
+              (if titles = l[Title]
+               # title
+               titles.justArray.map{|title|
+                 {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
+              elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
+                # basename
+                name = this.path || ''
+                {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)[0..64]))}
+               end),
+              # links
+              (links = [DC+'link',
+                        SIOC+'attachment',
+                        DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # find unseen links
+               links.map{|l|e.env[:links].push l} # mark as shown
+               {_: :table, class: :links,
+                c: links.group_by(&:host).map{|host,links|
+                  e.env[:label][host] = true
+                  small = links.size < 5
+                  {_: :tr,
+                   c: [{_: :td, class: :group,
+                        c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
+                       {_: :td, c: links.map{|link|
+                          [{_: :a, name: host, href: link.uri,
+                            c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
+              (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
+              # image resource (subject of triple)
+              ({_: :a, href: href,
+                c: {_: :img,
+                    src: if !this.host || e.host==this.host # thumbnail preview if local image
+                     this.path + '?thumb'
+                   else
+                     this.uri
+                    end}} if isImg),
+              # image pointers (object of triple)
+              l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}]
+           when Type
+             l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
+               {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
+           when From
+             actors[From]
+           when To
+             actors[To]
+           when Size
+             l[Size].do{|sz|
+               sum = 0
+               sz.justArray.map{|v|
+                 sum += v.to_i}
+               sum}
+           when Date
+             l[Date].justArray.sort[-1].do{|v| {_: :span, class: :date, c: v}}
+           when Stat+'contains'
+             l[k].justArray.sort_by(&:uri).map{|c|[c.R, ' ']}
+           when DC+'cache'
+             l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#128279;'}, ' ']}
+           else
+             l[k].justArray.map{|v|
+               case v
+               when Hash
+                 v.R
+               else
+                 CGI.escapeHTML v
+               end
+             }.intersperse(' ')
+           end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
 
 end
