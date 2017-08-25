@@ -52,7 +52,6 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
-      thumb = thumbFile
       if !thumb.e
         if mime.match(/^video/)
           `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
