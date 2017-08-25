@@ -87,12 +87,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
   def nodeset
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
-    paths = [self, justPath].uniq
     parts = path[1..-1].split '/'
-    trailingSlash = uri[-1]=='/'
-    container = paths.find{|p|p.node.directory?}
-    find = q.has_key? 'find'
-    grep = q.has_key? 'q'
 
     # month/day/year/hour traversal pointers
     dp = [] # date parts
@@ -126,34 +121,28 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
+    env[:Links][:up] = dirname + '/' + qs # parent
     # nodes
-    set = []
-    if container && find
-      env[:Links][:up] = dirname + '/' + qs
-      expression = '-ipath ' + ('*' + q['find'] + '*').sh
-      set.concat paths.select(&:exist?).map{|loc|
-        `find #{loc.sh} #{expression} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp}}.flatten
-    elsif container && grep
-      env[:Links][:up] = dirname + '/' + qs
-      set.concat paths.select(&:exist?).map{|loc|
-        `grep -ril #{q['q'].gsub(' ','.*').sh} #{loc.sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp}}.flatten
-    else
-      set.concat paths.map{|p|
-        if p.node.directory?
-          if trailingSlash
+    [self, justPath].uniq.map{|p|
+      if p.node.directory?
+        if q.has_key? 'find'
+          expression = '-ipath ' + ('*' + q['find'] + '*').sh
+          `find #{p.sh} #{expression} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp}
+        elsif q.has_key? 'q'
+          `grep -ril #{q['q'].gsub(' ','.*').sh} #{p.sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp}
+        else
+          if uri[-1] == '/'
             env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (sans slash)
             (p+'index.*').glob || [p, p.children]
           else
             env[:Links][:down] = p.path + '/' + qs # pointer to full-content URI (trailing-slash)
             p
           end
-        else # arbitrary glob or basic pattern to find documents off base URI
-          (p.match(/\*/) ? p : (p+'.*')).glob
         end
-      }.flatten.compact
-    end
-    env[:Links][:up] ||= dirname + '/' + qs # parent
-    set.select &:exist?
+      else # arbitrary glob or basic pattern to find documents off base URI
+        (p.match(/\*/) ? p : (p+'.*')).glob
+      end
+    }.flatten.compact.select &:exist?
   end
 
   def accept
