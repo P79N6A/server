@@ -207,7 +207,7 @@ class R
             e.env[:label][lbl] = true
             {_: :a, id: 'addr_'+rand.to_s.sha2, href: v.uri, name: lbl, c: label}
           else
-            {_: :span, c: CGI.escapeHTML v.to_s}
+            {_: :span, c: (CGI.escapeHTML v.to_s)}
           end
         }.intersperse(' ')}}
 
@@ -220,7 +220,7 @@ class R
                 label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                 lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                 e.env[:label][lbl] = true
-                [{_: :a, href: href, name: lbl, c: CGI.escapeHTML label},' ']},
+                [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
               (if titles = l[Title] # title
                titles.justArray.map{|title|
                  {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
