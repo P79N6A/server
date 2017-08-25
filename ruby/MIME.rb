@@ -763,11 +763,8 @@ class R
                 uri = e[3].match /<uri>([^<]+)</
                 name = e[3].match /<name>([^<]+)</
                 yield u, Creator, e[3].do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri
+                yield u, Creator, name[1] if name
                 yield u, Creator, uri[1].R if uri
-                if name
-                  name = name[1]
-                  yield u, Creator, (CGI.escapeHTML name) unless uri && uri[1].index(name.sub('/u/','/user/'))
-                end
               else # generic element
                 yield u,p,e[3].do{|o|
                   case o

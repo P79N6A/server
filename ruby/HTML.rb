@@ -250,28 +250,17 @@ class R
                      # image resource (subject of triple)
                      ({_: :a, href: href,
                        c: {_: :img,
-                           src: if !this.host || e.host==this.host # thumbnailify local resource
+                           src: if !this.host || e.host==this.host # thumbnail preview if local image
                             this.path + '?thumb'
                           else
                             this.uri
                            end}} if isImg),
-                     # image pointer (object of triple)
+                     # image pointers (object of triple)
                      l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}
                    ]
                  when Type
-                   l[Type].justArray.uniq.map{|t|
-                     if t.respond_to? :uri
-                       icon = Icons[t.uri]
-                       {_: :a, href: href, c: icon ? '' : (t.R.fragment||t.R.basename), class: icon}
-                     end
-                   }
-                 when Schema+'logo'
-                   l[k].justArray.map{|logo|
-                     if logo.respond_to? :uri
-                       {_: :a, href: l[DC+'link'].justArray[0].do{|l|l.uri}||'#',
-                        c: {_: :img, class: :logo, src: logo.uri}}
-                     end
-                   }
+                   l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
+                     {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
                  when From
                    actors[From]
                  when To
@@ -283,8 +272,7 @@ class R
                        sum += v.to_i}
                      sum}
                  when Date
-                   l[Date].justArray.sort[-1].do{|v|
-                     {_: :span, class: :date, c: v}}
+                   l[Date].justArray.sort[-1].do{|v| {_: :span, class: :date, c: v}}
                  when Stat+'contains'
                    l[k].justArray.sort_by(&:uri).map{|c|[c.R, ' ']}
                  when DC+'cache'
@@ -295,7 +283,7 @@ class R
                      when Hash
                        v.R
                      else
-                       v
+                       CGI.escapeHTML v
                      end
                    }.intersperse(' ')
                  end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
