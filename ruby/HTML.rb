@@ -221,21 +221,17 @@ class R
                 lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                 e.env[:label][lbl] = true
                 [{_: :a, href: href, name: lbl, c: CGI.escapeHTML label},' ']},
-              (if titles = l[Title]
-               # title
+              (if titles = l[Title] # title
                titles.justArray.map{|title|
                  {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
-              elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet')
-                # basename
-                name = this.path || ''
-                {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)[0..64]))}
+              else # path name
+                {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename this.path))[0..64])} if this.path
                end),
-              # links
               (links = [DC+'link',
                         SIOC+'attachment',
                         DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # find unseen links
-               links.map{|l|e.env[:links].push l} # mark as shown
-               {_: :table, class: :links,
+               links.map{|l|e.env[:links].push l} # mark as visited
+               {_: :table, class: :links, # links
                 c: links.group_by(&:host).map{|host,links|
                   e.env[:label][host] = true
                   small = links.size < 5
@@ -245,8 +241,9 @@ class R
                        {_: :td, c: links.map{|link|
                           [{_: :a, name: host, href: link.uri,
                             c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
+              # HTML content
               (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
-              # image resource (subject of triple)
+              # image as subject of triple
               ({_: :a, href: href,
                 c: {_: :img,
                     src: if !this.host || e.host==this.host # thumbnail preview if local image
@@ -254,7 +251,7 @@ class R
                    else
                      this.uri
                     end}} if isImg),
-              # image pointers (object of triple)
+              # image as object of triple
               l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}]
            when Type
              l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
