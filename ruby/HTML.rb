@@ -232,9 +232,11 @@ class R
                        name = this.path || ''
                        {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename name)[0..64]))}
                       end),
-                     # links, deduplicate across resources
-                     (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l}
-                      links.map{|l|e.env[:links].push l} # add to link-list
+                     # links
+                     (links = [DC+'link',
+                               SIOC+'attachment',
+                               DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # find unseen links
+                      links.map{|l|e.env[:links].push l} # mark as shown
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
                          if host
@@ -249,17 +251,17 @@ class R
                                c: ({_: :a, name: label, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
                                  [{_: :a, class: :link, name: label, href: link.uri,
-                                   c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}},"\n"]}}}),
+                                   c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
-                     # resource is an image. show thumbnail if local file
+                     # image resource (subject of triple)
                      ({_: :a, href: href,
                        c: {_: :img,
-                           src: if !this.host || e.host==this.host # local image thumbnail
+                           src: if !this.host || e.host==this.host # thumbnailify local resource
                             this.path + '?thumb'
                           else
                             this.uri
                            end}} if isImg),
-                     # pointer to image
+                     # image pointer (object of triple)
                      l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}
                    ]
                  when Type
