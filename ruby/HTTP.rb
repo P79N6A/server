@@ -88,7 +88,6 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     query = env['QUERY_STRING']
     qs = query && !query.empty? && ('?' + query) || ''
     parts = path[1..-1].split '/'
-
     # month/day/year/hour traversal pointers
     dp = [] # date parts
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
@@ -121,15 +120,13 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
-    env[:Links][:up] = dirname + '/' + qs # parent
-    # nodes
+    env[:Links][:up] = dirname + '/' + qs
     [self, justPath].uniq.map{|p|
       if p.node.directory?
         if q.has_key? 'find'
-          expression = '-ipath ' + ('*' + q['find'] + '*').sh
-          `find #{p.sh} #{expression} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp}
+          p.find q['find']
         elsif q.has_key? 'q'
-          `grep -ril #{q['q'].gsub(' ','.*').sh} #{p.sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp}
+          p.grep q['q']
         else
           if uri[-1] == '/'
             env[:Links][:up] = path[0..-2] + qs # pointer to summary URI (sans slash)
@@ -141,8 +138,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
         end
       else # arbitrary glob or basic pattern to find documents off base URI
         (p.match(/\*/) ? p : (p+'.*')).glob
-      end
-    }.flatten.compact.select &:exist?
+      end}.flatten.compact.select &:exist?
   end
 
   def accept

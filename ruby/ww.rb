@@ -75,6 +75,8 @@ class R < RDF::URI
   def justPath; (path || '/').R.setEnv(@r) end
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
+  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp} end
+  def grep g; `grep -ril #{g.gsub(' ','.*').sh} #{p.sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp}end
   def dirname; File.dirname path end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def ext; (File.extname uri)[1..-1] || '' end
