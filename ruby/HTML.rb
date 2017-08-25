@@ -239,18 +239,13 @@ class R
                       links.map{|l|e.env[:links].push l} # mark as shown
                       {_: :table, class: :links,
                        c: links.group_by(&:host).map{|host,links|
-                         if host
-                           label = host.split('.')[-1]
-                           e.env[:ilabel][label] = true
-                         else
-                           label = ''
-                         end
+                         e.env[:ilabel][host] = true
                          small = links.size < 5
                          {_: :tr,
                           c: [{_: :td, class: :group,
-                               c: ({_: :a, name: label, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
+                               c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                               {_: :td, c: links.map{|link|
-                                 [{_: :a, class: :link, name: label, href: link.uri,
+                                 [{_: :a, class: :link, name: host, href: link.uri,
                                    c: CGI.escapeHTML((host&&link.path||link.basename)[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
                      (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
                      # image resource (subject of triple)
