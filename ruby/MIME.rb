@@ -366,7 +366,7 @@ class R
     # link to canonical location
     ln self, srcFile unless srcFile.e rescue nil
     yield e, DC+'identifier', id         # pre-web identifier
-    yield e, DC+'source', srcFile        # source provenance
+    yield e, DC+'cache', self + '*' # webized source file
     yield e, Type, R[SIOC+'MailMessage'] # RDF typetag
 
     # From
