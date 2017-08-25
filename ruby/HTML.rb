@@ -275,7 +275,7 @@ class R
            when DC+'cache'
              l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#128279;'}, ' ']}
            else
-             l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v)}.intersperse(' ')
+             l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
            end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
 
 end
