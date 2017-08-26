@@ -81,14 +81,13 @@ class R
           r[Content].unshift line[0..400].gsub(highlight){|g|
             H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
       graph.delete u if r[Content].empty?}
-    graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
-                                          ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
+    graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
 
-  # 1 translate graph-in-JSON to HTML-in-Ruby
-  # 2 translate HTML-in-Ruby to HTML
+
   HTML = -> graph, re {
+    # translate graph-as-JSON to HTML-as-Ruby in desired layout then call H() for automated translation of HTML-as-Ruby to HTML
     e = re.env
-    Grep[graph,re] if re.q.has_key?('q') && !re.q.has_key?('full')
+    Grep[graph,re] if re.q.has_key?('q') # reduce model to match
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', id: :Up, rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']}
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}

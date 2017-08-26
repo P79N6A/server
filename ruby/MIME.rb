@@ -4,12 +4,12 @@
  an RDF::Reader instance allows a JSON-cache entry to behave like a normal RDF file. 
 
  call #toRDF to make a JSON-cache entry from a non-RDF file
- if no MIME tripler exists you'll get fs-metadata and a WARNING in the log
+ if no MIME-mapping exists you'll get fs-metadata and a WARNING
 =end
 class R
 
-  # basename prefix -> MIME
-  # suffix is optional therefore full names ie LICENSE (it's case-insensitive) match
+  # prefix -> MIME
+  # as suffix is optional, full names ("LICENSE", case-insensitive etc) match
   MIMEprefix = {
     'authors' => 'text/plain',
     'changelog' => 'text/plain',
@@ -22,7 +22,7 @@ class R
     'license' => 'text/plain',
     'links' => 'text/plain',
     'makefile' => 'application/makefile',
-    'msg' => 'message/rfc822', # Procmail uses msg.* when delivering to non-maildir containers
+    'msg' => 'message/rfc822', # Procmail msg.* from delivering to non-maildir containers
     'rakefile' => 'application/ruby',
     'readme' => 'text/markdown',
     'todo' => 'text/plain',
@@ -164,8 +164,7 @@ class R
 
   # file -> MIME
   def mime
-    # take extension at face-value: don't sniff unless there's no prefix or suffix matches
-    @mime ||=
+    @mime ||= # memoize
       (name = path || ''
        prefix = (File.basename name).split('.')[0].downcase
        suffix = ((File.extname name)[1..-1]||'').downcase
@@ -177,16 +176,15 @@ class R
          MIMEsuffix[suffix]
        elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
          Rack::Mime::MIME_TYPES['.'+suffix]
-       else # run a process to read inside the file. shame user into adding triplr mapping
-         puts "WARNING unknown MIME of #{pathPOSIX}, sniffing (SLOW)"
+       else # sniff inside the file. suggest adding explicit mapping
+         puts "#{pathPOSIX} unmapped MIME, sniffing content (SLOW)"
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
   end
 
-  # files directly readable by RDF::Reader
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
-  # JSON graph-tree loader. input to HTML Renderer and cache
+  # JSON graph-tree loader
   def R.load set
     graph = RDF::Graph.new # input graph
     g = {}                 # output tree
@@ -201,7 +199,7 @@ class R
           o.justArray.map{|o| # each triple
             o = o.R if o.class==Hash # normalize resource classes to R
             g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add triple
-    g # graph-as-tree
+    g # graph-as-tree suitable for input to HTML renderer or cache file
   end
 
   # pure-RDF loader
@@ -239,7 +237,6 @@ class R
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile &f end
   def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile &f end
   def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile &f end
-  def triplrMarkdown;   yield stripDoc.uri, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile) end
   def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
   def triplrRTF          &f; triplrWord :catdoc,        &f end
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
@@ -302,6 +299,13 @@ class R
     H({_: :pre, style: 'white-space: pre-wrap',
         c: readFile.do{|r|
           enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
+    mtime.do{|mt|yield doc, Date, mt.iso8601}
+  end
+
+  def triplrMarkdown
+    doc = stripDoc.uri
+    yield doc, Type, R[Stat+'TextFile']
+    yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
     mtime.do{|mt|yield doc, Date, mt.iso8601}
   end
 
