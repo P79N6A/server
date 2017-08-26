@@ -12,13 +12,12 @@ pip install pygments
 ``` sh
 git clone https://gitlab.com/ix/pw
 cd pw/ruby
-ruby install
-
 gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
+ruby install
 ```
-# CONFIG (adjust to taste)
+# CONFIGURE
 ``` sh
 cd ../.. && mkdir web && cd web # storage
 ln ../pw/ruby/config.ru . # server config

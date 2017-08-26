@@ -2,7 +2,7 @@ body, .focus > td[property="uri"], .focus > td[property="http://www.w3.org/1999/
 table {border-spacing:0}
 th a:before {font-size:1.6em;font-weight: normal;float:left}
 a.title {color:#000;background-color:#fff;font-size:1.1em}
-td {vertical-align:top}
+td, img {vertical-align:top}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
 td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span {font-size: .88em}
 td[property="uri"] {max-width: 166ex;overflow:hidden}
