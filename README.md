@@ -1,5 +1,5 @@
 # INSTALL
-## non-ruby
+## System
 ``` sh
 # distro package manager - sorry nixos users, you're on your own
 apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments                                    # https://www.debian.org
@@ -8,13 +8,13 @@ packages install autoconf automake binutils clang file findutils git iconv pkg-c
 # python package manager
 pip install pygments
 ```
-## ruby
+## Ruby
 ``` sh
 git clone https://gitlab.com/ix/pw
 cd pw/ruby
 gem install bundler
 bundle config build.nokogiri --use-system-libraries
-bundle install
+bundle install # install all Ruby dependencies
 ruby install
 ```
 # CONFIGURE
@@ -22,7 +22,6 @@ ruby install
 cd ../.. && mkdir web && cd web # storage
 ln ../pw/ruby/config.ru . # server config
 ln -s ../pw/{js,css} # CSS and JS
-mkdir -p domain/localhost # vhost
 ```
 # RUN
 ``` sh

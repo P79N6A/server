@@ -184,7 +184,7 @@ class R
 
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
-  # JSON graph-tree loader
+  # JSON-tree loader
   def R.load set
     graph = RDF::Graph.new # input graph
     g = {}                 # output tree
@@ -199,7 +199,7 @@ class R
           o.justArray.map{|o| # each triple
             o = o.R if o.class==Hash # normalize resource classes to R
             g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add triple
-    g # graph-as-tree suitable for input to HTML renderer or cache file
+    g # graph-as-tree suitable for input to HTML renderer or cache-file
   end
 
   # pure-RDF loader

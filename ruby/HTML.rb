@@ -84,14 +84,13 @@ class R
 
   HTML = -> graph, re { e=re.env
     re.q['q'].do{|q|Grep[graph,q]}
-    # rewrite tree-graph in HTML-Ruby in desired layout then feed to H(HTML-Ruby -> HTML-String) function
+    # tree-graph -> HTML-Ruby -> HTML-String
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', id: :Up, rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']}
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     graph = {'#links' => {'uri' => '#links',
-                          DC+'link' => [DC + 'link',
-                                        SIOC + 'attachment',
+                          DC+'link' => [DC + 'link', SIOC + 'attachment',
                                         DC + 'hasFormat'].map{|p|
                             graph.map{|u,r|r[p]}}.flatten.compact.uniq}} if re.q.has_key? 'links'
     images = graph.keys.grep /(jpg|png)$/i
@@ -193,9 +192,9 @@ class R
                 [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
               (links = [DC+'link', # links
                         SIOC+'attachment',
-                        DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # find unseen links
+                        DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                links.map{|l|e.env[:links].push l} # mark as visited
-               {_: :table, class: :links, # show new
+               {_: :table, class: :links, # show
                 c: links.group_by(&:host).map{|host,links|
                   e.env[:label][host] = true
                   small = links.size < 5
