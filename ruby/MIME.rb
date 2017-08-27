@@ -528,14 +528,12 @@ class R
       graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
         time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
-        doc =  R["//localhost/#{time}#{slug}.ttl"]
-        docP = doc.justPath
-        unless doc.e || docP.e
-          [doc,docP].map{|d|d.dir.mkdir}
+        doc =  R["/#{time}#{slug}.ttl"]
+        unless doc.e
+          doc.dir.mkdir
           cacheBase = doc.stripDoc
           graph << RDF::Statement.new(graph.name, R[DC+'cache'], cacheBase)
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
-          ln doc, docP
           puts 'http:'+cacheBase
         end
         true}}
@@ -563,16 +561,12 @@ class R
 
   def indexTweets; graph = {}
     triplrTwitter{|s,p,o|graph[s]||={'uri'=>s}; graph[s][p]||=[]; graph[s][p].push o}
-    graph.map{|u,r| # each resource
-      r[Date].do{|t|# timestamp for timeline location
+    graph.map{|u,r|
+      r[Date].do{|t|
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-          doc = "//localhost/#{time}#{slug}.e".R # storage URI
-          docP = doc.justPath; docP.dir.mkdir # local container
-          unless doc.e || docP.e # store
-            doc.writeFile({u => r}.to_json)
-            ln doc, docP # make available on host and path
-          end}}
+          doc = "/#{time}#{slug}.e".R
+          doc.writeFile({u => r}.to_json) unless doc.e}}
   end
 
   # Reader for JSON-cache format

@@ -29,7 +29,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
   def GET
-    return notfound if path.match /^\/(cache|domain)/
+    return notfound if path.match /^\/cache/
     return justPath.fileGET if justPath.file?
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/'
     set = nodeset
