@@ -28,6 +28,6 @@ ln -s ../pw/{js,css} # CSS and JS
 unicorn
 ```
 # MIRRORS
-[src.whats-your.name/pw/](http://src.whats-your.name/pw/)
-[gitlab.com/ix/pw](https://gitlab.com/ix/pw)
-[repo.or.cz/www](http://repo.or.cz/www)
+[src](http://mw.logbook.am/src/pw/)
+[gitlab](https://gitlab.com/ix/pw)
+[repo](http://repo.or.cz/www)
