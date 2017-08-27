@@ -534,7 +534,7 @@ class R
           cacheBase = doc.stripDoc
           graph << RDF::Statement.new(graph.name, R[DC+'cache'], cacheBase)
           RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
-          puts 'http:'+cacheBase
+          puts cacheBase
         end
         true}}
     self
@@ -566,6 +566,7 @@ class R
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           doc = "/#{time}#{slug}.e".R
+          puts u unless doc.e
           doc.writeFile({u => r}.to_json) unless doc.e}}
   end
 
