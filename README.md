@@ -1,8 +1,8 @@
 # INSTALL
 ## System
 ``` sh
-apt-get install ruby libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments # https://www.debian.org
-xbps-install base-devel ruby ruby-devel libxml2-devel libxslt-devel python-Pygments # https://www.voidlinux.eu
+apt-get install git ruby libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments # https://www.debian.org
+xbps-install base-devel git ruby ruby-devel libxml2-devel libxslt-devel python-Pygments # https://www.voidlinux.eu
 packages install autoconf automake binutils clang file findutils git iconv pkg-config python ruby ruby-dev libxslt-dev # https://termux.com
 
 ```
@@ -20,13 +20,13 @@ ruby install
 ``` sh
 cd ../.. && mkdir web && cd web # storage
 ln ../pw/ruby/config.ru . # server config
-ln -s ../pw/{js,css} # CSS and JS
+ln -s ../pw/{js,css} # CSS + JS
 ```
 # RUN
 ``` sh
 unicorn
 ```
 # MIRRORS
-[src](http://mw.logbook.am/src/pw/)
-[gitlab](https://gitlab.com/ix/pw)
-[repo](http://repo.or.cz/www)
+[mw.logbook.am](http://mw.logbook.am/src/pw/)
+[gitlab.com](https://gitlab.com/ix/pw)
+[repo.or.cz](http://repo.or.cz/www)
