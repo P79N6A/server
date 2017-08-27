@@ -32,65 +32,13 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     return notfound if path.match /^\/cache/
     return fileGET if file?
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/n'
-    set = nodeset
-    return notfound if !set || set.empty?
-    @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
-    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
-    condResponse ->{ # body called on-demand
-      if set.size==1 && set[0].mime==format
-        set[0] # static body
-      else # dynamic body
-        if format == 'text/html' # HTML
-          HTML[R.load(set),self] # render <- load
-        else # RDF
-          load(set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
-        end
-      end}
-  end
 
-  def fileGET
-    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
-    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
-      if !thumb.e
-        if mime.match(/^video/)
-          `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
-        else
-          `gm convert #{sh} -thumbnail "256x256" #{thumb.sh}`
-        end
-      end
-      thumb.e && thumb.setEnv(env).condResponse || notfound
-    else
-      condResponse
-    end
-  end
-
-  def condResponse body=nil
-    etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
-    if etags && (etags.include? @r[:Response]['ETag'])
-      [304, {}, []]
-    else
-      body = body ? body.call : self
-      if body.class == R # file-ref. use Rack::File handler                                       add our headers
-        (Rack::File.new nil).serving((Rack::Request.new @r), body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
-      else
-        [(@r[:Status]||200), @r[:Response], [body]]
-      end
-    end
-  end
-
-  def notfound
-    [404,{'Content-Type' => 'text/html'},[HTML[{},self]]]
-  end
-
-  def nodeset
-    query = env['QUERY_STRING']
-    qs = query && !query.empty? && ('?' + query) || ''
+    # time pointers
+    qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
     parts = path[1..-1].split '/'
-    # month/day/year/hour traversal pointers
     dp = [] # date parts
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
-    n = nil; p = nil # init pointers
+    n = nil; p = nil
     case dp.length
     when 1 # Y
       year = dp[0]
@@ -116,32 +64,83 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
       end
     end
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
-    env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
-    env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
-    env[:Links][:up] = dirname + '/' + qs
-    (if node.directory?
-     if q.has_key? 'find' # use FIND(1) to find nodes
-       find q['find']
-     elsif q.has_key? 'q' # use GREP(1) to find nodes
-       grep q['q']
-     else
-       if uri[-1] == '/' # trailing-slash
-         env[:Links][:up] = path[0..-2] + qs
-         (self+'index.*').glob || [self, children]
-       else
-         env[:Links][:down] = path + '/' + qs
-         self
-       end
-     end
-    else # arbitrary glob or base+doc pattern
-      (match(/\*/) ? self : (self+'.*')).glob
-     end).justArray.flatten.compact.select &:exist?
+    @r[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
+    @r[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
+    @r[:Links][:up] = dirname + '/' + qs
+
+    set = (if node.directory?
+           if q.has_key? 'find' # use FIND(1) to find nodes
+             find q['find']
+           elsif q.has_key? 'q' # use GREP(1) to find nodes
+             grep q['q']
+           else
+             if uri[-1] == '/' # trailing-slash
+               @r[:Links][:up] = path[0..-2] + qs
+               (self+'index.*').glob || [self, children]
+             else
+               @r[:Links][:down] = path + '/' + qs
+               self
+             end
+           end
+          else # arbitrary glob or base+doc pattern
+            (match(/\*/) ? self : (self+'.*')).glob
+           end).justArray.flatten.compact.select &:exist?
+
+    return notfound if !set || set.empty?
+
+    @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
+    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
+    condResponse ->{ # body called on-demand
+      if set.size==1 && set[0].mime==format
+        set[0] # static body
+      else # dynamic body
+        if format == 'text/html' # HTML
+          HTML[R.load(set),self] # render <- load
+        else # RDF
+          load(set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
+        end
+      end}
+  end
+
+  def fileGET
+    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
+    @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
+    if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
+      if !thumb.e
+        if mime.match(/^video/)
+          `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
+        else
+          `gm convert #{sh} -thumbnail "256x256" #{thumb.sh}`
+        end
+      end
+      thumb.e && thumb.setEnv(@r).condResponse || notfound
+    else
+      condResponse
+    end
+  end
+
+  def condResponse body=nil
+    etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
+    if etags && (etags.include? @r[:Response]['ETag'])
+      [304, {}, []]
+    else
+      body = body ? body.call : self
+      if body.class == R # file-ref. use Rack::File handler                                       add our headers
+        (Rack::File.new nil).serving((Rack::Request.new @r), body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
+      else
+        [(@r[:Status]||200), @r[:Response], [body]]
+      end
+    end
+  end
+
+  def notfound
+    [404,{'Content-Type' => 'text/html'},[HTML[{},self]]]
   end
 
   def accept
     @accept ||= (
       d={}
-      env['HTTP_ACCEPT'].do{|k|
+      @r['HTTP_ACCEPT'].do{|k|
         (k.split /,/).map{|e| # each pair
           f,q = e.split /;/   # split MIME from q value
           i = q && q.split(/=/)[1].to_f || 1.0 # q || default
@@ -151,7 +150,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
 
   def q # memoize query args
     @q ||=
-      (if q = env['QUERY_STRING']
+      (if q = @r['QUERY_STRING']
        h = {}
        q.split(/&/).map{|e|
          k, v = e.split(/=/,2).map{|x|CGI.unescape x}
