@@ -166,7 +166,7 @@ class R
   def mime
     @mime ||= # memoize
       (name = path || ''
-       prefix = (File.basename name).split('.')[0].downcase
+       prefix = ((File.basename name).split('.')[0]||'').downcase
        suffix = ((File.extname name)[1..-1]||'').downcase
        if node.directory? # container
          'inode/directory'

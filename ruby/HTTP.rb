@@ -135,7 +135,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
      end
     else # arbitrary glob or base+doc pattern
       (match(/\*/) ? self : (self+'.*')).glob
-     end).flatten.compact.select &:exist?
+     end).justArray.flatten.compact.select &:exist?
   end
 
   def accept
