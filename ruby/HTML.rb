@@ -67,11 +67,10 @@ class R
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml(:indent => 0)}
 
-  Grep = -> graph, re {
+  Grep = -> graph, q {
     wordIndex = {}
-    query = re.q['q']
-    words = query.scan(/[\w]+/).map(&:downcase).uniq
-    words.each_with_index{|word,i|wordIndex[word] = i}
+    words = q.scan(/[\w]+/).map(&:downcase).uniq
+    words.each_with_index{|word,i|wordIndex[word]=i}
     pattern = /#{words.join '.*'}/i
     highlight = /(#{words.join '|'})/i
     graph.map{|u,r|
@@ -80,14 +79,12 @@ class R
         lines[0..5].map{|line|
           r[Content].unshift line[0..400].gsub(highlight){|g|
             H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
-      graph.delete u if r[Content].empty?}
+      graph.delete u if r[Content].empty?} 
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
 
-
-  HTML = -> graph, re {
-    # translate graph-as-JSON to HTML-as-Ruby in desired layout then call H() for automated translation of HTML-as-Ruby to HTML
-    e = re.env
-    Grep[graph,re] if re.q.has_key?('q') # reduce model to match
+  HTML = -> graph, re { e=re.env
+    re.q['q'].do{|q|Grep[graph,q]}
+    # rewrite tree-graph in HTML-Ruby in desired layout then feed to H(HTML-Ruby -> HTML-String) function
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', id: :Up, rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']}
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
