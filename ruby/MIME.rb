@@ -262,7 +262,7 @@ class R
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d| yield s, Stat+'contains', d.justPath } # child container
+    dirs.map{|d| yield s, Stat+'contains', d } # child container
     (R.load files.select &:e).map{|f,r| # summarize leaf-node for listing
       types = r.types # RDF type
       if types.member? Image
@@ -324,7 +324,7 @@ class R
 
   def triplrChatLog &f
     linenum = -1
-    base = justPath.stripDoc
+    base = stripDoc
     dir = base.dir
     log = base.uri
     basename = base.basename
@@ -363,11 +363,11 @@ class R
   def triplrMail &b
     m = Mail.read node; return unless m
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
-    resource = MessageURI[id]                # message URI
-    e = resource.uri                         # URI as string
+    resource = MessageURI[id]              # message URI
+    e = resource.uri                       # URI as string
     # storage paths
-    srcDir = resource.justPath; srcDir.mkdir # container
-    srcFile = srcDir + 'this.msg'            # location
+    srcDir = resource.path.R; srcDir.mkdir # container
+    srcFile = srcDir + 'this.msg'          # location
     # link to canonical location
     ln self, srcFile unless srcFile.e rescue nil
     yield e, DC+'identifier', id         # pre-web identifier
@@ -417,7 +417,7 @@ class R
         rs.justArray.map{|r|
           dest = MessageURI[r]
           yield e, SIOC+'reply_of', dest
-          destDir = dest.justPath; destDir.mkdir; destFile = destDir+'this.msg'
+          destDir = dest.path.R; destDir.mkdir; destFile = destDir+'this.msg'
           # bidirectional reference link
           rev = destDir + id.sha2 + '.msg'
           rel = srcDir + r.sha2 + '.msg'

@@ -72,7 +72,6 @@ class R < RDF::URI
   def match p; to_s.match p end
   def + u; R[uri + u.to_s].setEnv @r end
   def node; Pathname.new pathPOSIX end
-  def justPath; (path || '/').R.setEnv(@r) end
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp} end

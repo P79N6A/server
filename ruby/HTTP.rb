@@ -30,8 +30,8 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
 
   def GET
     return notfound if path.match /^\/cache/
-    return justPath.fileGET if justPath.file?
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/'
+    return fileGET if file?
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/n'
     set = nodeset
     return notfound if !set || set.empty?
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
@@ -119,24 +119,23 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     env[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
     env[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
     env[:Links][:up] = dirname + '/' + qs
-    [self, justPath].uniq.map{|p| # try with host bound and free (server-global path)
-      if p.node.directory?
-        if q.has_key? 'find' # use FIND(1) to find nodes
-          p.find q['find']
-        elsif q.has_key? 'q' # use GREP(1) to find nodes
-          p.grep q['q']
-        else
-          if uri[-1] == '/' # trailing-slash
-            env[:Links][:up] = path[0..-2] + qs
-            (p+'index.*').glob || [p, p.children] # static index, fallback to inline of directly-contained
-          else # no trailing-slash
-            env[:Links][:down] = p.path + '/' + qs
-            p # directory without inlining of contained
-          end
-        end
-      else # arbitrary glob or basic pattern to find documents off base URI
-        (p.match(/\*/) ? p : (p+'.*')).glob
-      end}.flatten.compact.select &:exist?
+    (if node.directory?
+     if q.has_key? 'find' # use FIND(1) to find nodes
+       find q['find']
+     elsif q.has_key? 'q' # use GREP(1) to find nodes
+       grep q['q']
+     else
+       if uri[-1] == '/' # trailing-slash
+         env[:Links][:up] = path[0..-2] + qs
+         (self+'index.*').glob || [self, children]
+       else
+         env[:Links][:down] = path + '/' + qs
+         self
+       end
+     end
+    else # arbitrary glob or base+doc pattern
+      (match(/\*/) ? self : (self+'.*')).glob
+     end).flatten.compact.select &:exist?
   end
 
   def accept
