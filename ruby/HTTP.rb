@@ -32,12 +32,11 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
     return notfound if path.match /^\/cache/
     return fileGET if file?
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/'
+    qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
 
     # time pointers
-    qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
     parts = path[1..-1].split '/'
-    dp = [] # date parts
-    dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
+    dp = []; dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil
     case dp.length
     when 1 # Y
