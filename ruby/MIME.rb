@@ -332,17 +332,17 @@ class R
     network = dir + '/' + basename.split('%23')[0] + '*'
     day = dir.uri.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')}
     readFile.lines.map{|l|
-      l.scan(/(\d\d):(\d\d) <[\s+@]*([^\(>]+)[^>]*> (.*)/){|m|
+      l.scan(/(\d\d)(\d\d)(\d\d)[\s+@]*([^\(\s]+)[\S]* (.*)/){|m|
         s = base + '#l' + (linenum += 1).to_s
         yield s, Type, R[SIOC+'InstantMessage']
-        yield s, Label, m[2]
-        yield s, Creator, R['#'+m[2]]
+        yield s, Label, m[3]
+        yield s, Creator, R['#'+m[3]]
         yield s, To, channel
-        yield s, Content, m[3].hrefs{|p, o|
+        yield s, Content, m[4].hrefs{|p, o|
           yield log, p, o
           yield s, p, o
         }
-        yield s, Date, day+'T'+m[0]+':'+m[1]+':00' if day}}
+        yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
     # summarize non-empty log
     if linenum > 0
       yield log, Type, R[SIOC+'ChatLog']
