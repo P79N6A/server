@@ -1,8 +1,8 @@
 # INSTALL
 ## System
 ``` sh
-apt-get install git ruby libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments # https://www.debian.org
-xbps-install base-devel git ruby ruby-devel libxml2-devel libxslt-devel python-Pygments # https://www.voidlinux.eu
+apt-get install git ruby ruby-dev libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments                    # https://www.debian.org
+xbps-install base-devel git ruby ruby-devel libxml2-devel libxslt-devel python-Pygments                            # https://www.voidlinux.eu
 packages install autoconf automake binutils clang file findutils git iconv pkg-config python ruby ruby-dev libxslt-dev # https://termux.com
 
 ```
