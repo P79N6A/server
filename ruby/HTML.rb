@@ -118,7 +118,7 @@ class R
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    keys = [Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
+    keys = ['uri', Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
     [{_: :table,
@@ -195,10 +195,10 @@ class R
                   e.env[:label][host] = true
                   small = links.size < 5
                   {_: :tr,
-                   c: [{_: :td, class: :host,
-                        c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
-                       {_: :td, class: :path, c: links.map{|link|
-                          [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
+                   c: [{_: :td, class: :path, c: links.map{|link|
+                          [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}},
+                       {_: :td, class: :host, c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
+                      ]}}}),
               # HTML content
               (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
               # image as subject of triple
