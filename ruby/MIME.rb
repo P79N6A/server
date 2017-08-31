@@ -156,6 +156,7 @@ class R
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
     SIOC+'has_creator' => :user,
+    SIOC+'user_agent' => :mailer,
     SIOC+'has_discussion' => :comments,
     SIOC+'Thread' => :openenvelope,
     SIOC+'Post' => :newspaper,
@@ -378,6 +379,7 @@ class R
     from = []
     m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase }} # queue for indexing
     m[:from].do{|fr|fr.addrs.map{|a|yield e, Creator, a.display_name||a.name}} # creator name
+    m['X-Mailer'].do{|m|yield e, SIOC+'user_agent', m.to_s}
 
     # To
     to = []

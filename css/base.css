@@ -9,7 +9,7 @@ a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
 td, img, pre {vertical-align:top}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
-td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span {font-size: .88em}
+td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span, td[property="http://rdfs.org/sioc/ns#user_agent"] {font-size: .9em}
 td[property="uri"] {max-width: 166ex;overflow:hidden;display:box;box-align:center}
 td[property="uri"] > div {margin:auto;max-width:111ex;}
 td[property="uri"] img {float:right}
@@ -17,7 +17,7 @@ table, img {max-width: 100%}
 a.thumb img {height:256px;margin:.1em}
 span.date {font-size:.9em;white-space: nowrap}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
-pre {white-space: pre-wrap;margin:auto;max-width:111ex}
+pre {white-space: pre-wrap;margin:auto;max-width:100ex}
 table.links {float: right}
 table.links td.path {text-align: right}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
@@ -34,6 +34,7 @@ a.file:before { content:"\f15b"; font-family: icons; }
 a.textfile:before { content:"\f0f6"; font-family: icons; }
 a.html:before { content:"\f13b"; font-family: icons; }
 a.archive:before { content:"\f019"; font-family: icons; }
+a.mailer:before { content:"\f2ba"; font-family: icons; }
 a.graph:before { content:"\f1e0"; font-family: icons; }
 a.img:before { content:"\f03e"; font-family: icons; }
 a.code:before { content:"\f126"; font-family: icons; }
