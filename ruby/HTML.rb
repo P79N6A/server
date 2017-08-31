@@ -196,7 +196,7 @@ class R
                   small = links.size < 5
                   {_: :tr,
                    c: [{_: :td, class: :path, c: links.map{|link|
-                          [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}},
+                          [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), ' ']}},
                        {_: :td, class: :host, c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                       ]}}}),
               # HTML content
