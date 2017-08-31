@@ -195,9 +195,9 @@ class R
                   e.env[:label][host] = true
                   small = links.size < 5
                   {_: :tr,
-                   c: [{_: :td, class: :group,
+                   c: [{_: :td, class: :host,
                         c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
-                       {_: :td, c: links.map{|link|
+                       {_: :td, class: :path, c: links.map{|link|
                           [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), small ? '<br>' : ' ']}}]}}}),
               # HTML content
               (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
