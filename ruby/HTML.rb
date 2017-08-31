@@ -26,12 +26,8 @@ end
 class String
   def R; R.new self end
   # scan for HTTP URIs in string. example:
-  # as you can see in the demo (https://suchlike) and find full source at https://stuffshere.com.
-
-  # these decisions were made:
-  #  opening ( required for ) match, as referencing URLs inside () seems more common than URLs containing unmatched ()s [citation needed]
-  #  , and . only match mid-URI to allow usage of URIs as words in sentences ending in a period.
-  # <> wrapping is stripped
+  # demo on the site (https://demohere) and source-code at https://sourcehere.
+  # [,.] only match mid-URI, opening ( required for ) capture, <> wrapping is stripped
   def hrefs &b
     pre,link,post = self.partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
@@ -231,7 +227,7 @@ class R
                dirs.map{|d|
                  [{_: :a, href: d.uri, id: 'dir_'+d.uri.sha2, class: :dir, c: d.label}, dirs.size > 5 ? ' ' : '<br>']}}
            when DC+'cache'
-             l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#128279;'}, ' ']}
+             l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#9939;'}, ' ']}
            else
              l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
            end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
