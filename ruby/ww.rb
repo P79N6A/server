@@ -61,41 +61,46 @@ class R < RDF::URI
   Size     = Stat + 'size'
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
+
   def R; self end
   def R.[] uri; R.new uri end
-  def setEnv r; @r = r; self end
-  def env; @r end
-  alias_method :uri, :to_s
-  def to_json *a; {'uri' => uri}.to_json *a end
-  def ==  u; to_s == u.to_s end
-  def <=> c; to_s <=> c.to_s end
-  def match p; to_s.match p end
+  def R.unPOSIX path; ('/'+path).gsub(' ','%20').gsub('#','%23').R end
+
   def + u; R[uri + u.to_s].setEnv @r end
-  def node; Pathname.new pathPOSIX end
-  def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
-  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
-  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp} end
-  def grep g; `grep -ril #{g.gsub(' ','.*').sh} #{sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp} end
-  def dirname; File.dirname path end
-  def dir; ((host ? ('//'+host) : '') + dirname).R end
-  def ext; (File.extname uri)[1..-1] || '' end
+  def <=> c; to_s <=> c.to_s end
+  def ==  u; to_s == u.to_s end
   def basename; File.basename (path||'') end
-  def label; fragment || (basename && basename != '/' && (URI.unescape basename)) || host || '' end
-  def stripDoc; R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
-  def thumb; dir + '/.' + basename + '.jpg' end
-  def sh; pathPOSIX.utf8.sh end
+  def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
+  def dir; ((host ? ('//'+host) : '') + dirname).R end
+  def dirname; File.dirname path end
+  def env; @r end
   def exist?; node.exist? end
+  def ext; (File.extname uri)[1..-1] || '' end
   def file?; node.file? end
-  def mtime; node.stat.mtime end
-  def size; node.size rescue 0 end
-  alias_method :e, :exist?
-  alias_method :m, :mtime
-  def readFile; File.open(pathPOSIX).read end
-  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
-  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
+  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp} end
+  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
+  def grep g; `grep -ril #{g.gsub(' ','.*').sh} #{sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp} end
+  def label; fragment || (basename && basename != '/' && (URI.unescape basename)) || host || '' end
   def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
   def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
-  def R.unPOSIX path; ('/'+path).gsub(' ','%20').gsub('#','%23').R end
+  def match p; to_s.match p end
+  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
+  def mtime; node.stat.mtime end
+  def node; Pathname.new pathPOSIX end
   def pathPOSIX; URI.unescape((path||'').sub /^\//,'') end
+  def readFile; File.open(pathPOSIX).read end
+  def setEnv r; @r = r; self end
+  def shellPath; pathPOSIX.utf8.sh end
+  def size; node.size rescue 0 end
+  def stripDoc; R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
+  def thumb; dir + '/.' + basename + '.jpg' end
+  def to_json *a; {'uri' => uri}.to_json *a end
+  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
+
+  alias_method :e, :exist?
+  alias_method :m, :mtime
+  alias_method :sh, :shellPath
+  alias_method :uri, :to_s
+
   %w{MIME HTML HTTP}.map{|r|require_relative r}
 end

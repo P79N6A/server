@@ -177,7 +177,7 @@ class R
            when 'uri'
              [(if titles = l[Title] # title
                titles.justArray.map{|title|
-                 {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s.sub(ReExpr,''))}}.intersperse(' ')
+                 {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s)}}.intersperse(' ')
               else # path name
                 {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename this.path))[0..64])} if this.path
                end), ' ',

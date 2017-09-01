@@ -358,14 +358,11 @@ class R
   end
 
   # email
-  ReExpr = /\b[rR][eE]: /
-  # Message-ID -> URI
   MessageURI = -> id {h = id.sha2; ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
     m = Mail.read node; return unless m
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
-    resource = MessageURI[id]              # message URI
-    e = resource.uri                       # URI as string
+    resource = MessageURI[id]; e = resource.uri                # Message-URI
     # storage paths
     srcDir = resource.path.R; srcDir.mkdir # container
     srcFile = srcDir + 'this.msg'          # location
