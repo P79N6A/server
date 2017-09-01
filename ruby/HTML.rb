@@ -184,8 +184,8 @@ class R
                 [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
               # containers
               l[Stat+'contains'].justArray.sort_by(&:uri).do{|dirs|
-                dirs.map{|d|
-                  [{_: :a, href: d.uri, id: 'dir_'+d.uri.sha2, class: :dir, c: d.label}, dirs.size > 5 ? ' ' : '<br>']}},
+                dirs.map{|dir|
+                  [{_: :a, href: dir.uri, id: 'dir_'+dir.uri.sha2, class: :dir, c: dir.label}, ' ']}},
               # links
               (links = [DC+'link',
                         SIOC+'attachment',

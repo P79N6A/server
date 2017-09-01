@@ -19,7 +19,7 @@ span.date {font-size:.9em;white-space: nowrap}
 :target, :target a, div.sourcecode {background-color:#fff;color:#000}
 pre {white-space: pre-wrap;margin:auto}
 table.links {float: right}
-table.links td.host a {color:#eee;font-size:.94em}
+table.links td.host a {color:#000;background-color:#ddd;white-space:nowrap}
 table.links td.path {text-align: right}
 @font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
 a.id:before { content:"\f0c2"; font-family: icons; }
