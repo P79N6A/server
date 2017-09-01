@@ -167,7 +167,6 @@ class R
     names = []
     l[Title].do{|t|
       names.concat t.justArray}
-    puts this.uri,this.uri.size,'sdf'
     names.push (URI.unescape (File.basename this.path))[0..64] unless !names.empty? || !this.path || types.member?(SIOC+'Tweet') || monospace
     isImg = types.member? Image
     show = !head || !names.empty?

@@ -10,15 +10,16 @@ a[rel="up"], a[rel="down"] {margin-left:1em}
 td, img, pre {vertical-align:top}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
 td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span, td[property="http://rdfs.org/sioc/ns#user_agent"] {font-size: .9em}
-td[property="uri"] {max-width: 166ex;overflow:hidden;display:box;box-align:center}
+td[property="uri"] {display:box;box-align:center}
 td[property="uri"] > div {margin:auto}
+td[property="uri"] > p {float:right}
 td[property="uri"] img {float:right}
 td[property="uri"] .containers {float:right;margin-right:.2em}
+pre {white-space: pre-wrap;margin:auto}
 table, img {max-width: 100%}
 a.thumb img {height:256px;margin:.1em}
 span.date {font-size:.9em;white-space: nowrap}
 :target, .focus :target, :target a, div.sourcecode {background-color:#fff;color:#000}
-pre {white-space: pre-wrap;margin:auto}
 table.links {float: right}
 table.links td.host a {white-space:nowrap}
 table.links td.host {text-align: right}
