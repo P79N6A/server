@@ -64,7 +64,7 @@ class R < RDF::URI
 
   def R; self end
   def R.[] uri; R.new uri end
-  def R.unPOSIX path; ('/'+path).gsub(' ','%20').gsub('#','%23').R end
+  def R.unPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
 
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
@@ -87,7 +87,7 @@ class R < RDF::URI
   def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
   def mtime; node.stat.mtime end
   def node; Pathname.new pathPOSIX end
-  def pathPOSIX; URI.unescape((path||'').sub /^\//,'') end
+  def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
   def readFile; File.open(pathPOSIX).read end
   def setEnv r; @r = r; self end
   def shellPath; pathPOSIX.utf8.sh end
