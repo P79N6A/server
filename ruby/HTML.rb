@@ -107,7 +107,7 @@ class R
                    {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?),
                  ([prevPage,nextPage] if graph.keys.size > 8), downPage]}]}]}
 
-  InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', Stat+'contains']
+  InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
   TabularView = -> g, e {
     e.env[:label] = {}; (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # colorize up to 10-levels of quoting
