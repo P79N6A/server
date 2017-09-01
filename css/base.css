@@ -12,11 +12,12 @@ td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right
 td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span, td[property="http://rdfs.org/sioc/ns#user_agent"] {font-size: .9em}
 td[property="uri"] {max-width: 166ex;overflow:hidden;display:box;box-align:center}
 td[property="uri"] > div {margin:auto}
-td[property="uri"] img, td[property="uri"] a.dir {float:right}
+td[property="uri"] img {float:right}
+td[property="uri"] .containers {float:right;margin-right:.2em}
 table, img {max-width: 100%}
 a.thumb img {height:256px;margin:.1em}
 span.date {font-size:.9em;white-space: nowrap}
-:target, :target a, div.sourcecode {background-color:#fff;color:#000}
+:target, .focus :target, :target a, div.sourcecode {background-color:#fff;color:#000}
 pre {white-space: pre-wrap;margin:auto}
 table.links {float: right}
 table.links td.host a {color:#000;background-color:#eee;white-space:nowrap;font-weight:normal}
@@ -28,7 +29,6 @@ a.chain:before { content:"\f0c1"; font-family: icons; }
 a.link:before { content:"\f08e"; font-family: icons; }
 a.comment:before { content:"\f0e5"; font-family: icons; }
 a.comments:before { content:"\f086"; font-family: icons; }
-a.container:before { content:"\f187"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }
 a.dir:before { content:"\f07c"; font-family: icons; }
 a.file:before { content:"\f15b"; font-family: icons; }

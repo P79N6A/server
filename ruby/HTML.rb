@@ -183,8 +183,8 @@ class R
                 e.env[:label][lbl] = true
                 [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
               # containers
-              l[Stat+'contains'].justArray.sort_by(&:uri).do{|dirs|
-                dirs.map{|dir|{_: :a, href: dir.uri, id: 'dir_'+dir.uri.sha2, class: :dir, c: dir.label+' '}}},
+              l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
+                {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}}},
               # links
               (links = [DC+'link',
                         SIOC+'attachment',
