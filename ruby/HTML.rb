@@ -188,7 +188,7 @@ class R
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
-                  [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
+                  [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
                 # containers
                 l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
                   {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}} unless cs.empty?},
