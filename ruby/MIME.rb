@@ -256,8 +256,8 @@ class R
   end
 
   def triplrContainer
-    s = path # subject URI
-    return unless s
+    s = path
+    s = s + '/' unless s[-1] == '/'
     mt = mtime
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
@@ -276,8 +276,7 @@ class R
   end
 
   def triplrFile
-    s = path || ''
-    s = '/'+s unless s[0] == '/'
+    s = path
     size.do{|sz|yield s, Size, sz}
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
