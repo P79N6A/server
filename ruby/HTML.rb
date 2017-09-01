@@ -154,79 +154,81 @@ class R
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
     href = this.uri
+    head = e.q.has_key? 'head'
     types = l.types
     focus = !this.fragment && this.path==e.path
+    monospace = types.member?(SIOC+'InstantMessage') || types.member?(SIOC+'MailMessage')
     rowID = if e.path == this.path && this.fragment
               this.fragment
             else
               'row_' + href.sha2
             end
-    monospace = types.member?(SIOC+'InstantMessage')||types.member?(SIOC+'MailMessage')
+    names = []
+    l[Title].do{|t|
+      names.concat t.justArray}
+    names.push (URI.unescape (File.basename this.path))[0..64] unless !names.empty? || types.member?(SIOC+'Tweet') || monospace
     isImg = types.member? Image
-
-    {_: :tr, href: href, class: focus ? 'focus' : '',
-     c: keys.map{|k|
-       {_: :td, property: k,
-        c: case k
-           when 'uri'
-             # title
-             [(if titles = l[Title] # explicit title
-               titles.justArray.map{|title|
-                 {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s)}}.intersperse(' ')
-              else # from filesystem name
-                {_: :a, class: :title, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename this.path))[0..64])} if this.path
-               end), ' ',
-              # labels
-              l[Label].justArray.map{|v|
-                label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                e.env[:label][lbl] = true
-                [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
-              # containers
-              l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
-                {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}}},
-              # links
-              (links = [DC+'link',
-                        SIOC+'attachment',
-                        DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
-               links.map{|l|e.env[:links].push l} # mark as visited
-               {_: :table, class: :links, # show
-                c: links.group_by(&:host).map{|host,links|
-                  e.env[:label][host] = true
-                  small = links.size < 5
-                  {_: :tr,
-                   c: [{_: :td, class: :path, c: links.map{|link|
-                          [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), ' ']}},
-                       {_: :td, class: :host, c: ({_: :a, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
-                      ]}}}),
-              (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
-              # images
-              (images = [] # image list
-               images.push this if isImg       # subject of triple
-               l[Image].do{|i|images.concat i} #  object of triple
-               images.map(&:R).select{|i|!e.env[:images].member? i}.map{|img| # unseen images
-                 e.env[:images].push img
-                 {_: :a, class: :thumb, href: href,
-                  c: {_: :img, src: if !img.host || e.host==img.host
-                       img.path + '?thumb'
-                     else
-                       img.uri
-                      end}}})]
-           when Type
-             l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
-               {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
-           when Size
-             l[Size].do{|sz|
-               sum = 0
-               sz.justArray.map{|v|
-                 sum += v.to_i}
-               sum}
-           when Date
-             l[Date].justArray.sort[-1].do{|v| {_: :span, class: :date, c: v}}
-           when DC+'cache'
-             l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#9939;'}, ' ']}
-           else
-             l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
-           end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})}
+    show = !head || !names.empty?
+    if show
+      {_: :tr, href: href, class: focus ? 'focus' : '',
+       c: keys.map{|k|
+         {_: :td, property: k,
+          c: case k
+             when 'uri'
+               # names
+               [names.map{|name|{_: :a, class: :title, href: href, c: (CGI.escapeHTML name.to_s)}}.intersperse(' '), ' ',
+                # labels
+                l[Label].justArray.map{|v|
+                  label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
+                  lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                  e.env[:label][lbl] = true
+                  [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
+                # containers
+                l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
+                  {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}}},
+                # links
+                (links = [DC+'link',
+                          SIOC+'attachment',
+                          DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
+                 links.map{|l|e.env[:links].push l} # mark as visited
+                 {_: :table, class: :links, # show
+                  c: links.group_by(&:host).map{|host,links|
+                    e.env[:label][host] = true
+                    small = links.size < 5
+                    {_: :tr,
+                     c: [{_: :td, class: :host, c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
+                         {_: :td, class: :path, c: links.map{|link|
+                            [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), ' ']}}]}}}),
+                (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless head),
+                # images
+                (images = [] # image list
+                 images.push this if isImg       # subject of triple
+                 l[Image].do{|i|images.concat i} #  object of triple
+                 images.map(&:R).select{|i|!e.env[:images].member? i}.map{|img| # unseen images
+                   e.env[:images].push img
+                   {_: :a, class: :thumb, href: href,
+                    c: {_: :img, src: if !img.host || e.host==img.host
+                         img.path + '?thumb'
+                       else
+                         img.uri
+                        end}}})]
+             when Type
+               l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
+                 {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
+             when Size
+               l[Size].do{|sz|
+                 sum = 0
+                 sz.justArray.map{|v|
+                   sum += v.to_i}
+                 sum}
+             when Date
+               l[Date].justArray.sort[-1].do{|v| {_: :span, class: :date, c: v}}
+             when DC+'cache'
+               l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#9939;'}, ' ']}
+             else
+               l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
+             end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})
+    end
+  }
 
 end
