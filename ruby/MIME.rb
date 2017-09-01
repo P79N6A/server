@@ -263,16 +263,7 @@ class R
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d| yield s, Stat+'contains', d } # child container
-    (R.load files.select &:e).map{|f,r| # summarize leaf-node for listing
-      types = r.types # RDF type
-      if types.member? Image
-        yield s, Image, f.R + '?thumb'
-      elsif !types.member?(SIOC+'InstantMessage') && !types.member?(SIOC+'Tweet') # drop chat messages. more generally anything that omits a Title or filename could be dropped
-        r.map{|p,o| o.justArray.map{|o| # each triple
-            yield f, p, o # send triple to overview graph
-          } unless ['uri',Content,DC+'hasFormat'].member? p} # drop triple
-      end}
+    dirs.map{|d| yield s, Stat+'contains', d } # subcontainers
   end
 
   def triplrFile
@@ -281,7 +272,6 @@ class R
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
-    yield s, Stat+'container', s.R.dir
   end
 
   def triplrWord conv, out='', &f

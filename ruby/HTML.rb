@@ -170,11 +170,11 @@ class R
         c: case k
            when 'uri'
              # title
-             [(if titles = l[Title]
+             [(if titles = l[Title] # explicit title
                titles.justArray.map{|title|
                  {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s)}}.intersperse(' ')
-              else # path name
-                {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename this.path))[0..64])} if this.path
+              else # from filesystem name
+                {_: :a, class: :title, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename this.path))[0..64])} if this.path
                end), ' ',
               # labels
               l[Label].justArray.map{|v|
