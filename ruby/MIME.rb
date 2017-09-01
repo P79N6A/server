@@ -554,7 +554,7 @@ class R
       yield s, Type, R[SIOC+'Tweet']
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Creator, author
-      yiels d, Label, authorName
+      yield s, Label, authorName
       content = t.css('.tweet-text')[0]
       content.css('a').map{|a| # resolve URIs relative to origin
         a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
