@@ -198,15 +198,17 @@ class R
                       ]}}}),
               (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
               # images
-              #  as subject of triple
-              ({_: :a, href: href,
-                c: {_: :img, src: if !this.host || e.host==this.host
-                     this.path + '?thumb'
-                   else
-                     this.uri
-                    end}} if isImg),
-              #  as object of triple
-              l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}]
+              (images = [] # image list
+               images.push this if isImg       # subject of triple
+               l[Image].do{|i|images.concat i} #  object of triple
+               images.map(&:R).select{|i|!e.env[:images].member? i}.map{|img| # unseen images
+                 e.env[:images].push img
+                 {_: :a, class: :thumb, href: href,
+                  c: {_: :img, src: if !img.host || e.host==img.host
+                       img.path + '?thumb'
+                     else
+                       img.uri
+                      end}}})]
            when Type
              l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
                {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
