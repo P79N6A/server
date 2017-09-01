@@ -73,10 +73,10 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
            elsif q.has_key? 'q' # use GREP(1) to find nodes
              grep q['q']
            else
-             if uri[-1] == '/' # trailing-slash
+             if uri[-1] == '/' # inside container
                @r[:Links][:up] = path[0..-2] + qs
                (self+'index.*').glob || [self, children]
-             else
+             else # outside container
                @r[:Links][:down] = path + '/' + qs
                self
              end
@@ -86,7 +86,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
            end).justArray.flatten.compact.select &:exist?
 
     return notfound if !set || set.empty?
-
+    puts "set "+set.join(' ')
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
     condResponse ->{ # body called on-demand
