@@ -106,21 +106,16 @@ class R
                    {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?),
                  ([prevPage,nextPage] if graph.keys.size > 8), downPage]}]}]}
 
-  # arc-types: main column
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment']
-  # arc-types: verbose-view only
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
-
   TabularView = -> g, e {
-    e.env[:label] = {}; e.env[:links] = []
-    (1..10).map{|i|
-      e.env[:label]["quote"+i.to_s] = true}
+    e.env[:label] = {}; (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # colorize up to 10-levels of quoting
+    [:links,:images].map{|p| e.env[p] = []} # link and image lists for deduplication
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
     keys = ['uri', Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
-    keys -= InlineMeta
-    keys -= VerboseMeta unless e.q.has_key? 'full'
+    keys -= InlineMeta; keys -= VerboseMeta unless e.q.has_key? 'full'
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|
@@ -131,8 +126,7 @@ class R
                end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}.intersperse("\n")}, # sort and render rows
           {_: :tr, c: keys.map{|k| # arc types
              q = e.q.merge({'sort' => k})
-             # direction toggle
-             if direction == :id
+             if direction == :id # direction toggler for querystring
                q.delete 'ascending'
              else
                q['ascending'] = ''
@@ -175,18 +169,21 @@ class R
        {_: :td, property: k,
         c: case k
            when 'uri'
-             [(if titles = l[Title] # title
+             # title
+             [(if titles = l[Title]
                titles.justArray.map{|title|
                  {_: :a, class: :title, href: href, c: (CGI.escapeHTML title.to_s)}}.intersperse(' ')
               else # path name
                 {_: :a, href: href, c: (CGI.escapeHTML (URI.unescape (File.basename this.path))[0..64])} if this.path
                end), ' ',
-              l[Label].justArray.map{|v| # label
+              # labels
+              l[Label].justArray.map{|v|
                 label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                 lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                 e.env[:label][lbl] = true
                 [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
-              (links = [DC+'link', # links
+              # links
+              (links = [DC+'link',
                         SIOC+'attachment',
                         DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                links.map{|l|e.env[:links].push l} # mark as visited
@@ -199,17 +196,16 @@ class R
                           [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), ' ']}},
                        {_: :td, class: :host, c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                       ]}}}),
-              # HTML content
               (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless e.q.has_key? 'head'),
-              # image as subject of triple
+              # images
+              #  as subject of triple
               ({_: :a, href: href,
-                c: {_: :img,
-                    src: if !this.host || e.host==this.host # thumbnail preview if local image
+                c: {_: :img, src: if !this.host || e.host==this.host
                      this.path + '?thumb'
                    else
                      this.uri
                     end}} if isImg),
-              # image as object of triple
+              #  as object of triple
               l[Image].do{|is|is.justArray.map{|i|{_: :a, class: :thumb, href: href,c: {_: :img,src: i.uri}}}}]
            when Type
              l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
