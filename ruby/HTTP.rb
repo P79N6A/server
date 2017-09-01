@@ -27,7 +27,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
 
   def GET
     return fileGET if file?
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/t'
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?head')+@r['QUERY_STRING']}),[]] if path=='/t'
     qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
 
     # time pointers
@@ -81,7 +81,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
            end).justArray.flatten.compact.select &:exist?
 
     return notfound if !set || set.empty?
-#    puts "set "+set.join(' ')
+
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
     condResponse ->{ # body called on-demand
