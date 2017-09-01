@@ -227,6 +227,22 @@ class R
                  sz.justArray.map{|v|
                    sum += v.to_i}
                  sum}
+             when Creator
+               l[k].justArray.map{|v|
+                 if v.respond_to? :uri
+                   v = v.R
+                   v.host ? v : {_: :a, href: v.path + '/?head#row_' + href.sha2, c: v.fragment}
+                 else
+                   CGI.escapeHTML v.to_s
+                 end}.intersperse(' ')
+             when SIOC+'addressed_to'
+               l[k].justArray.map{|v|
+                 if v.respond_to? :uri
+                   v = v.R
+                   v.host ? v : {_: :a, href: v.path + '/?head#row_' + href.sha2, c: v.fragment}
+                 else
+                   CGI.escapeHTML v.to_s
+                 end}.intersperse(' ')
              when Date
                l[Date].justArray.sort[-1].do{|v|
                  {_: :a, class: :date, href: '/'+v[0..13].gsub(/[-T:]/,'/')+'#row_'+href.sha2, c: v}}
