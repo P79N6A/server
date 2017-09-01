@@ -544,17 +544,19 @@ class R
     puts uri, e.class, e.message
   end
 
-  # an example of a CSS-selector based triplr. most of them (Scraper) are in another repo
+  # example CSS-selector triplr. see Scraper repo
   def triplrTwitter
     base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
       s = base + t.css('.js-permalink').attr('href') # subject URI
-      author = R[base+'/'+t.css('.username b')[0].inner_text]
+      authorName = t.css('.username b')[0].inner_text
+      author = R[base+'/'+authorName]
       yield s, Type, R[SIOC+'Tweet']
       yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Creator, author
+      yiels d, Label, authorName
       content = t.css('.tweet-text')[0]
-      content.css('a').map{|a| # resolve URIs relative to remote
+      content.css('a').map{|a| # resolve URIs relative to origin
         a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
         yield s, DC+'link', R[a.attr 'href']
       }
