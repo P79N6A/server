@@ -81,7 +81,8 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
                self
              end
            end
-          else # arbitrary glob or base+doc pattern
+          else # arbitrary or base+ext glob
+            puts 'file(s) '+self
             (match(/\*/) ? self : (self+'.*')).glob
            end).justArray.flatten.compact.select &:exist?
 
