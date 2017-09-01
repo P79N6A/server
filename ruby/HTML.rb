@@ -123,10 +123,11 @@ class R
                s[Title] || s[Label] || s.uri
               else
                 s[p]
-               end).justArray[0]||0).send datatype}.send(direction).map{|r|TableRow[r,e,p,direction,keys]}.intersperse("\n")}, # sort and render rows
-          {_: :tr, c: keys.map{|k| # arc types
+               end).justArray[0]||0).send datatype}.send(direction).map{|r| # sort rows
+             TableRow[r,e,p,direction,keys]}.intersperse("\n")},          # render row
+          {_: :tr, c: keys.map{|k| # header row
              q = e.q.merge({'sort' => k})
-             if direction == :id # direction toggler for querystring
+             if direction == :id # direction toggle
                q.delete 'ascending'
              else
                q['ascending'] = ''
@@ -166,7 +167,8 @@ class R
     names = []
     l[Title].do{|t|
       names.concat t.justArray}
-    names.push (URI.unescape (File.basename this.path))[0..64] unless !names.empty? || types.member?(SIOC+'Tweet') || monospace
+    puts this.uri,this.uri.size,'sdf'
+    names.push (URI.unescape (File.basename this.path))[0..64] unless !names.empty? || !this.path || types.member?(SIOC+'Tweet') || monospace
     isImg = types.member? Image
     show = !head || !names.empty?
     if show

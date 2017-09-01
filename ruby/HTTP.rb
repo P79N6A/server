@@ -27,8 +27,8 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
 
   def GET
     return fileGET if file?
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?head')+@r['QUERY_STRING']}),[]] if path=='/t'
     qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')+(qs.empty? ? '?head' : qs)}),[]] if path=='/t'
 
     # time pointers
     parts = path[1..-1].split '/'
