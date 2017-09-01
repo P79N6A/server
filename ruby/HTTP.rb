@@ -60,8 +60,8 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
       end
     end
     s = (!parts.empty? || uri[-1]=='/') ? '/' : ''
-    @r[:Links][:prev] = p + s + parts.join('/') + qs if p && (R['//' + host + p].e || R[p].e)
-    @r[:Links][:next] = n + s + parts.join('/') + qs if n && (R['//' + host + n].e || R[n].e)
+    @r[:Links][:prev] = p + s + parts.join('/') + qs if p && R[p].e
+    @r[:Links][:next] = n + s + parts.join('/') + qs if n && R[n].e
     @r[:Links][:up] = dirname + '/' + qs
 
     set = (if node.directory?
