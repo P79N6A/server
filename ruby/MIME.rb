@@ -216,7 +216,7 @@ class R
   def toJSON # cache-file readable as RDF
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
-    doc = R['/cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
+    doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
     unless doc.e && doc.m > m # update cache
       tree = {}
       triplr = Triplr[mime]
@@ -473,7 +473,7 @@ class R
   def fetchFeed # cache metadata for future conditional-fetches
     updated = false
     head = {} # request header
-    cache = R['/cache/'+uri.sha2+'/']  # cache storage
+    cache = R['/.cache/'+uri.sha2+'/'] # storage
     etag = cache + 'etag'      # cached etag URI
     priorEtag = nil            # cached etag value
     mtime = cache + 'mtime'    # cached mtime URI
