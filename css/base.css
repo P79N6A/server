@@ -9,7 +9,8 @@ a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
 td, img, pre {vertical-align:top}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
-td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span, td[property="http://rdfs.org/sioc/ns#user_agent"] {font-size: .9em}
+td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span {font-size: .9em}
+td[property="http://rdfs.org/sioc/ns#has_creator"] span.notes, td[property="http://rdfs.org/sioc/ns#addressed_to"] span.notes {color:#aaa;font-size:.8em}
 td[property="uri"] {max-width:160ex;overflow:hidden}
 td[property="uri"] img, td[property="uri"] .containers {float:right;margin-right:.2em}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto;max-width:127ex}

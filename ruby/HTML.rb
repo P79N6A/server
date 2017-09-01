@@ -228,13 +228,15 @@ class R
                    sum += v.to_i}
                  sum}
              when Creator
-               l[k].justArray.map{|v|
+               [l[k].justArray.map{|v|
                  if v.respond_to? :uri
                    v = v.R
                    v.host ? v : {_: :a, href: v.path + '/?head#row_' + href.sha2, c: v.fragment} if v.path
                  else
                    CGI.escapeHTML v.to_s
-                 end}.intersperse(' ')
+                 end}.intersperse(' '),
+                l[SIOC+'user_agent'].do{|ua|
+                  ['<br>',{_: :span, class: :notes, c: ua.join}]}]
              when SIOC+'addressed_to'
                l[k].justArray.map{|v|
                  if v.respond_to? :uri
