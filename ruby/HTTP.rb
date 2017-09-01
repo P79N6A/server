@@ -4,15 +4,12 @@ class R
   def R.call e
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-    e['HTTP_X_FORWARDED_HOST'].do{|h|e['SERVER_NAME']=h}    # hostname
-    e['SERVER_NAME'] = e['SERVER_NAME'].gsub /[\.\/]+/, '.' # strip path chars
-    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'      # collapse sequence of /
-    path = Pathname.new(rawpath).expand_path.to_s           # evaluate path
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/'    # preserve trailing-slash
-    resource = R["//"+e['SERVER_NAME']+path] # resource instance
-    e['uri'] = resource.uri                  # resource URI
-    e[:Response] = {}; e[:Links] = {} # init response headers
-    (resource.setEnv e).send e['REQUEST_METHOD']
+    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'   # collapse sequential /s
+    path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
+    resource = path.R; e['uri'] = resource.uri           # resource URI
+    e[:Response]={}; e[:Links]={}                        # response header
+    resource.setEnv(e).send e['REQUEST_METHOD']          # call method
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
     puts msg
@@ -31,7 +28,7 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
   def GET
     return notfound if path.match /^\/cache/
     return fileGET if file?
-#    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/'
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H?')+@r['QUERY_STRING']}),[]] if path=='/t'
     qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
 
     # time pointers
@@ -82,7 +79,6 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
              end
            end
           else # arbitrary or base+ext glob
-            puts 'file(s) '+self
             (match(/\*/) ? self : (self+'.*')).glob
            end).justArray.flatten.compact.select &:exist?
 
