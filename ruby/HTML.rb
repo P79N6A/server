@@ -228,7 +228,8 @@ class R
                    sum += v.to_i}
                  sum}
              when Date
-               l[Date].justArray.sort[-1].do{|v| {_: :span, class: :date, c: v}}
+               l[Date].justArray.sort[-1].do{|v|
+                 {_: :a, class: :date, href: '/'+v.gsub(/[-T:]/,'/')[0..13], c: v}}
              when DC+'cache'
                l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#9939;'}, ' ']}
              else
