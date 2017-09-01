@@ -70,7 +70,6 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
              grep q['q']
            else
              if uri[-1] == '/' # inside container
-               @r[:Links][:up] = path[0..-2] + qs
                (self+'index.*').glob || [self, children]
              else # outside container
                @r[:Links][:down] = path + '/' + qs
