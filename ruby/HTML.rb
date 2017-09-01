@@ -79,6 +79,7 @@ class R
     graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
 
   HTML = -> graph, re { e=re.env
+    e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.q['q'].do{|q|Grep[graph,q]}
     # tree-graph -> HTML-Ruby -> HTML-String
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', id: :Up, rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']} unless re.path=='/'
@@ -96,7 +97,7 @@ class R
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'},
                  {_: :link, rel: :icon, href: '/.icon.png'},
-                 {_: :title, c: graph[re.path+'#this'].do{|r|r[Title].justArray[0]}||re.path},
+                 {_: :title, c: e[:title]||re.path},
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: R['/js/ui.js'].readFile}, {_: :style, c: R['/css/base.css'].readFile}]},
             {_: :body,
@@ -167,7 +168,11 @@ class R
     names = []
     l[Title].do{|t|
       names.concat t.justArray}
-    names.push (URI.unescape (File.basename this.path))[0..64] unless !names.empty? || !this.path || types.member?(SIOC+'Tweet') || monospace
+    # add a title to container/file resources
+    unless !names.empty? || !this.path || types.member?(SIOC+'Tweet') || monospace
+      fsName = (URI.unescape (File.basename this.path))[0..64]
+      names.push(focus && e.env[:title] || fsName)
+    end
     isImg = types.member? Image
     show = !head || !names.empty?
     if show
