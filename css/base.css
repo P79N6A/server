@@ -11,7 +11,8 @@ td, img, pre {vertical-align:top}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
 td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span, td[property="http://rdfs.org/sioc/ns#user_agent"] {font-size: .9em}
 td[property="uri"] {max-width:160ex;overflow:hidden}
-td[property="uri"] > p, td[property="uri"] img, td[property="uri"] .containers {float:right;margin-right:.2em}
+td[property="uri"] img, td[property="uri"] .containers {float:right;margin-right:.2em}
+td[property="uri"] > div, td[property="uri"] > p {margin:auto;max-width:127ex}
 pre {white-space: pre-wrap; width:100ex; margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0}
 table, img {max-width: 100%}
 a.label {float: left}
