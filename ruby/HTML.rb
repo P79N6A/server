@@ -186,7 +186,7 @@ class R
                   [{_: :a, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
                 # containers
                 l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
-                  {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}}},
+                  {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}} unless cs.empty?},
                 # links
                 (links = [DC+'link',
                           SIOC+'attachment',
@@ -199,7 +199,7 @@ class R
                     {_: :tr,
                      c: [{_: :td, class: :host, c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
                          {_: :td, class: :path, c: links.map{|link|
-                            [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), ' ']}}]}}}),
+                            [{_: :a, name: host, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {}), ' ']}}]}}} unless links.empty?),
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless head),
                 # images
                 (images = [] # image list
