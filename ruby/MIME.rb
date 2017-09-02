@@ -260,7 +260,9 @@ class R
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs.map{|d| yield s, Stat+'contains', d } # subcontainers
+    dirs = dirs.map{|dir|dir+'/'}
+    files = files.map &:stripDoc
+    [*dirs,*files].map{|node| yield s, Stat+'contains', node }
   end
 
   def triplrFile
