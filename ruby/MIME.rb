@@ -1,10 +1,7 @@
 # coding: utf-8
 =begin MIME-type handling
- JSON-cache is a RDF-subset graph in a tree, trivially pickleable with the stdlib JSON code
- an RDF::Reader instance allows a JSON-cache entry to behave like a normal RDF file. 
-
- call #toRDF to make a JSON-cache entry from a non-RDF file
- if no MIME-mapping exists you'll get fs-metadata and a WARNING
+ JSON-cache is a RDF subset in a tree, trivially pickleable with stdlib JSON functions
+ call #toRDF to make a JSON-cache entry for nonRDF. RDF::Reader enables use as RDF
 =end
 class R
 
