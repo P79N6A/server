@@ -231,7 +231,7 @@ class R
                [l[k].justArray.map{|v|
                  if v.respond_to? :uri
                    v = v.R
-                   v.host ? v : {_: :a, href: v.path + '/?head#row_' + href.sha2, c: v.fragment} if v.path
+                   v.host ? v : {_: :a, href: v.path + '?head#row_' + href.sha2, c: v.label} if v.path
                  else
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' '),
@@ -241,7 +241,7 @@ class R
                l[k].justArray.map{|v|
                  if v.respond_to? :uri
                    v = v.R
-                   v.host ? v : {_: :a, href: v.path + '/?head#row_' + href.sha2, c: v.fragment}
+                   v.host ? v : {_: :a, href: v.path + '?head#row_' + href.sha2, c: v.label}
                  else
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' ')
