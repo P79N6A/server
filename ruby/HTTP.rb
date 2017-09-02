@@ -55,7 +55,7 @@ class R
     end
     @r[:Links][:prev] = p + '/' + parts.join('/') + (parts.empty? ? '' : '/') + qs if p && R[p].e
     @r[:Links][:next] = n + '/' + parts.join('/') + (parts.empty? ? '' : '/') + qs if n && R[n].e
-    @r[:Links][:up] = dirname + qs
+    @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
 
     set = (if node.directory?
            if q.has_key? 'find' # FIND(1) nodes

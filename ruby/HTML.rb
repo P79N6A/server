@@ -190,9 +190,9 @@ class R
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
-                # containees
-                l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
-                  {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}} unless cs.empty?},
+                # containment
+                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
+                  {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}} unless cs.empty?} unless focus),
                 # links
                 (links = [DC+'link',
                           SIOC+'attachment',
