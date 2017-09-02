@@ -92,7 +92,7 @@ class R < RDF::URI
   def setEnv r; @r = r; self end
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
-  def stripDoc; R[uri.sub /\.(e|html|json|log|md|ttl|txt)$/,''].setEnv(@r) end
+  def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
   def thumb; dir + '/.' + basename + '.jpg' end
   def to_json *a; {'uri' => uri}.to_json *a end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
