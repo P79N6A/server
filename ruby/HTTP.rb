@@ -53,9 +53,9 @@ class R
         n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
       end
     end
-    slsh = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
-    @r[:Links][:prev] = p + '/' + parts.join('/') + slsh + qs if p && R[p].e
-    @r[:Links][:next] = n + '/' + parts.join('/') + slsh + qs if n && R[n].e
+    sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
+    @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs if p && R[p].e
+    @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs if n && R[n].e
     @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
 
     set = (if node.directory?
