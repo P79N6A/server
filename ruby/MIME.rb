@@ -611,7 +611,7 @@ class R
         nil
       end
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
-      def each_statement &fn # triples flow left ← right across stream-transforming stack
+      def each_statement &fn # triples flow (left ← right) across stream-transformers
         resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
@@ -711,7 +711,7 @@ class R
         @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-          # identifier search. try RDF identifier then <link> as they're more likely to be a href than <id>
+          # find post identifier
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u
             unless u.match /^http/ # resolve relative URIs
