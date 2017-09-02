@@ -58,8 +58,8 @@ pre {text-align:left; display:inline-block; background-color:#000; color:#fff; f
         n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
       end
     end
-    @r[:Links][:prev] = p + '/' + parts.join('/') + qs if p && R[p].e
-    @r[:Links][:next] = n + '/' + parts.join('/') + qs if n && R[n].e
+    @r[:Links][:prev] = p + '/' + parts.join('/') + (parts.empty? ? '' : '/') + qs if p && R[p].e
+    @r[:Links][:next] = n + '/' + parts.join('/') + (parts.empty? ? '' : '/') + qs if n && R[n].e
     @r[:Links][:up] = dirname + qs
 
     set = (if node.directory?
