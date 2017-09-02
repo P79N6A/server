@@ -86,10 +86,6 @@ class R
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|['<br clear=all>',{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
-    graph = {'#links' => {'uri' => '#links',
-                          DC+'link' => [DC + 'link', SIOC + 'attachment',
-                                        DC + 'hasFormat'].map{|p|
-                            graph.map{|u,r|r[p]}}.flatten.compact.uniq}} if re.q.has_key? 'links'
     images = graph.keys.grep /(jpg|png)$/i
     template = images.size==graph.keys.size ? Gallery : TabularView
     H ["<!DOCTYPE html>\n",
