@@ -390,10 +390,10 @@ class R
     dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month container
     [*from,*to].map{|addr| # address
       user, domain = addr.split '@' # split address parts
-      apath = dpath + domain + '/' + user # address container
-      yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # address triple
+      apath = dpath + domain + '/' + user + '/' # address container
+      yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # To/From triple
       if subject
-        mpath = apath + '/' + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # append time & subject
+        mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # append time & subject
         mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # append filetype extension
         mloc = mpath.R # index entry
         mloc.dir.mkdir # index container
