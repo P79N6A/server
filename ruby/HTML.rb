@@ -192,8 +192,8 @@ class R
                 # links
                 (links = [DC+'link',
                           SIOC+'attachment',
-                          DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l.path} # unseen links
-                 links.map{|l|e.env[:links].push l.path} # mark as visited
+                          DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? (l.host||'')+(l.path||'')} # unseen links (strip query)
+                 links.map{|l|e.env[:links].push (l.host||'')+(l.path||'')} # mark as visited
                  {_: :table, class: :links, # show
                   c: links.group_by(&:host).map{|host,links|
                     e.env[:label][host] = true
@@ -232,8 +232,7 @@ class R
                  else
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' '),
-                l[SIOC+'user_agent'].do{|ua|
-                  ['<br>',{_: :span, class: :notes, c: ua.join}]}]
+                (l[SIOC+'user_agent'].do{|ua|['<br>',{_: :span, class: :notes, c: ua.join}]} unless head)]
              when SIOC+'addressed_to'
                l[k].justArray.map{|v|
                  if v.respond_to? :uri
