@@ -69,7 +69,7 @@ class R < RDF::URI
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
-  def basename; File.basename path if path end
+  def basename; File.basename path end
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def dirname; File.dirname path end
@@ -80,7 +80,7 @@ class R < RDF::URI
   def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp} end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def grep g; `grep -ril #{g.gsub(' ','.*').sh} #{sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp} end
-  def label; fragment || (basename && basename != '/' && (URI.unescape basename)) || host || '' end
+  def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
   def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
   def match p; to_s.match p end
