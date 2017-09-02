@@ -64,6 +64,11 @@ class R
              grep q['q']
            else
              if uri[-1] == '/' # inside container
+               if q.has_key? 'head'
+                 q_ = q.dup
+                 q_.delete 'head'
+                 @r[:Links][:down] = path + R.qs(q_)
+               end
                (self+'index.*').glob || [self, children]
              else # outside container
                @r[:Links][:down] = path + '/' + qs
