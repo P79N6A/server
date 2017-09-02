@@ -262,7 +262,9 @@ class R
     dirs,files = children.partition{|e|e.node.directory?}
     dirs = dirs.map{|dir|dir+'/'}
     files = files.map &:stripDoc
-    [*dirs,*files].map{|node| yield s, Stat+'contains', node }
+    nodes = [*dirs, *files]
+    nodes.map{|node| yield s, Stat+'contains', node }
+    yield s, Size, nodes.size
   end
 
   def triplrFile
