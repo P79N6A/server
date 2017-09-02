@@ -58,9 +58,9 @@ class R
     @r[:Links][:up] = dirname + qs
 
     set = (if node.directory?
-           if q.has_key? 'find' # use FIND(1) to find nodes
+           if q.has_key? 'find' # FIND(1) nodes
              find q['find']
-           elsif q.has_key? 'q' # use GREP(1) to find nodes
+           elsif q.has_key? 'q' # GREP(1) nodes
              grep q['q']
            else
              if uri[-1] == '/' # inside container
@@ -75,7 +75,7 @@ class R
                self
              end
            end
-          else # arbitrary or base+ext glob
+          else # arbitrary or extension-wildcard glob
             (match(/\*/) ? self : (self+'.*')).glob
            end).justArray.flatten.compact.select &:exist?
 
@@ -83,12 +83,12 @@ class R
 
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
-    condResponse ->{ # body called on-demand
-      if set.size==1 && set[0].mime==format
+    condResponse ->{ # body
+      if set.size == 1 && set[0].mime == format
         set[0] # static body
       else # dynamic body
         if format == 'text/html' # HTML
-          HTML[R.load(set),self] # render <- load
+          HTML[R.load(set),self]
         else # RDF
           load(set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
         end
