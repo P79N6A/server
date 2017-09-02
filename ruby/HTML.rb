@@ -166,9 +166,10 @@ class R
               'row_' + href.sha2
             end
     names = []
+    # explicit title
     l[Title].do{|t|
       names.concat t.justArray}
-    # add a title to container/file resources
+    # name from fs metadata
     unless !names.empty? || !this.path || types.member?(SIOC+'Tweet') || monospace
       fsName = (URI.unescape (File.basename this.path))[0..64]
       names.push(focus && e.env[:title] || fsName)
@@ -189,7 +190,7 @@ class R
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
-                # containers
+                # containees
                 l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
                   {class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}.update(focus ? {id: 'c_'+c.uri.sha2} : {})}} unless cs.empty?},
                 # links
