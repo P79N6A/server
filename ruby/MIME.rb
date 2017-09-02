@@ -440,11 +440,12 @@ class R
             nil
           else # wrap quotes in <span>
             indent = "<span name='quote#{depth}'>&gt;</span>" # indentation marker with depth label
-            {_: :span, class: :quote, c: [indent * depth,' ', {_: :span, class: :quoted, c: qp[3].hrefs}]}
+            {_: :span, class: :quote,
+             c: [indent * depth,' ',
+                 {_: :span, class: :quoted, c: qp[3].hrefs{|p,o|yield e, p, o}}]}
           end
         else # fresh line
-          [l.hrefs{|p,o| # hypertextify
-             yield e, p, o}] # found links as RDF
+          [l.hrefs{|p,o|yield e, p, o}]
         end}.compact.intersperse("\n"))} # join lines
 
     # message parts
