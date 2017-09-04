@@ -31,7 +31,7 @@ class RDF::Node
   def R; R.new to_s end
 end
 class Pathname
-  def R; R.unPOSIX to_s.utf8 end
+  def R; R.fromPOSIX to_s.utf8 end
 end
 class R < RDF::URI
   # URI constants
@@ -64,7 +64,7 @@ class R < RDF::URI
 
   def R; self end
   def R.[] uri; R.new uri end
-  def R.unPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
+  def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
 
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
@@ -77,9 +77,9 @@ class R < RDF::URI
   def exist?; node.exist? end
   def ext; (File.extname uri)[1..-1] || '' end
   def file?; node.file? end
-  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.unPOSIX l.chomp} end
+  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.fromPOSIX l.chomp} end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
-  def grep g; `grep -ril #{g.gsub(' ','.*').sh} #{sh} | head -n 1024`.lines.map{|r|R.unPOSIX r.chomp} end
+  def grep g; `grep -ril #{g.gsub(' ','.*').sh} #{sh} | head -n 1024`.lines.map{|r|R.fromPOSIX r.chomp} end
   def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
   def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
