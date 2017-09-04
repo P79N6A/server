@@ -497,8 +497,8 @@ class R
         resp = response.read
         unless body.e && body.readFile == resp
           updated = true
-          body.writeFile resp # update cached body and invoke indexer
-          ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri
+          body.writeFile resp # update cache
+          ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri # run indexer
         end
       end
     rescue OpenURI::HTTPError => error
