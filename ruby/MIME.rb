@@ -635,13 +635,12 @@ class R
               (i.attr 'src').do{|src|
                 yield s, Image, src.R }}
             content.css('a').map{|a|
-              if a.has_attribute? 'href'
-                href = URI.join s, (a.attr 'href')
-                a.set_attribute 'href', href
-                link = href.to_s.R
+              (a.attr 'href').do{|href|
+                link = s.R.join href
+                a.set_attribute 'href', link
                 yield s, DC+'link', link
-                yield s, Image, link if %w{gif jpg png webp}.member? link.ext.downcase
-              end}
+                yield s, Image, link if %w{gif jpg png webp}.member? link.R.ext.downcase
+              }}
             yield s, p, content.to_xhtml
           else
             yield s, p, o
