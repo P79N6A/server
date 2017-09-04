@@ -472,15 +472,15 @@ class R
   end
 
   def fetchFeeds; uris.map(&:R).map(&:fetchFeed); nil end
-  def fetchFeed # cache metadata for future conditional-fetches
+  def fetchFeed
     updated = false
     head = {} # request header
     cache = R['/.cache/'+uri.sha2+'/'] # storage
-    etag = cache + 'etag'      # cached etag URI
-    priorEtag = nil            # cached etag value
-    mtime = cache + 'mtime'    # cached mtime URI
-    priorMtime = nil           # cached mtime value
-    body = cache + 'body.atom' # cached body URI
+    etag = cache + 'etag'      # cache etag URI
+    priorEtag = nil            # cache etag value
+    mtime = cache + 'mtime'    # cache mtime URI
+    priorMtime = nil           # cache mtime value
+    body = cache + 'body.atom' # cache body URI
     if etag.e
       priorEtag = etag.readFile
       head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -497,7 +497,7 @@ class R
         resp = response.read
         unless body.e && body.readFile == resp
           updated = true
-          body.writeFile resp # cache body and hand to indexer
+          body.writeFile resp # update cached body and invoke indexer
           ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri
         end
       end
