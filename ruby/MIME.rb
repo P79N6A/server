@@ -629,19 +629,18 @@ class R
       end
       def resolveURIs *f
         send(*f){|s,p,o|
-          if Content==p && o.class==String
+          if p==Content && o.class==String
             content = Nokogiri::HTML.fragment o
             content.css('img').map{|i|
               (i.attr 'src').do{|src|
                 yield s, Image, src.R }}
             content.css('a').map{|a|
-              a.set_attribute 'href', (URI.join s, (a.attr 'href')) if a.has_attribute? 'href' rescue nil}
-            content.css('span > a').map{|a|
-              if a.inner_text=='[link]'
-                link = (a.attr 'href').R
+              if a.has_attribute? 'href'
+                href = URI.join s, (a.attr 'href')
+                a.set_attribute 'href', href
+                link = href.to_s.R
                 yield s, DC+'link', link
-                yield s, Image, link if %w{jpg png}.member? link.ext
-                a.remove
+                yield s, Image, link if %w{gif jpg png webp}.member? link.ext.downcase
               end}
             yield s, p, content.to_xhtml
           else
