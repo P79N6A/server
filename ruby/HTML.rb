@@ -182,15 +182,15 @@ class R
       names.push(focus && e.env[:title] || fsName)
     end
 
-    # link resource entry in index context
+    # link resource-entry in index context
     indexContext = -> p,v {
       v = v.R
-      if isMail
+      if isMail # address*month
         {_: :a, href: v.path + '?head#row_' + href.sha2, c: v.label}
       elsif isTweet
-        if p == Creator # strip hour-dir, show everything from creator within day
+        if p == Creator # creator*day
           {_: :a, href: datePath[0..-4] + '*/*twitter*' + v.path[1..-1] + '*#row_' + href.sha2, c: v.label}
-        elsif p == To # show everything from host in hour
+        elsif p == To # host*hour
           {_: :a, href: datePath + '*twitter*#row_' + href.sha2, c: v.label}
         end
       else
