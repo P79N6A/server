@@ -59,21 +59,20 @@ class R
     @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
 
     set = (if node.directory?
-           if q.has_key? 'find' # FIND(1) nodes
+           if q.has_key? 'find' && path!='/' # FIND(1) nodes
              find q['find']
-           elsif q.has_key? 'q' # GREP(1) nodes
+           elsif q.has_key? 'q' path!='/' # GREP(1) nodes
              grep q['q']
-           else
+           else # basic container
              if uri[-1] == '/' # inside container
-               if q.has_key? 'head'
-                 q_ = q.dup
-                 q_.delete 'head'
-                 @r[:Links][:down] = path + R.qs(q_)
+               if q.has_key? 'head' # summary view
+                 q_ = q.dup; q_.delete 'head' # link to full full view
+                 @r[:Links][:down] = path + R.qs(q_) # down to children
                end
-               (self+'index.*').glob || [self, children]
+               (self+'index.*').glob || [self, children] # inlined children
              else # outside container
-               @r[:Links][:down] = path + '/' + qs
-               self
+               @r[:Links][:down] = path + '/' + qs # down to children
+               self # just the container
              end
            end
           else # arbitrary or extension-wildcard glob

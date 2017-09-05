@@ -539,8 +539,9 @@ class R
       s = base + t.css('.js-permalink').attr('href') # subject URI
       authorName = t.css('.username b')[0].inner_text
       author = R[base+'/'+authorName]
+      ts = Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Type, R[SIOC+'Tweet']
-      yield s, Date, Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
+      yield s, Date, ts
       yield s, Creator, author
       yield s, Label, authorName
       content = t.css('.tweet-text')[0]
