@@ -192,8 +192,8 @@ class R
                 # links
                 (links = [DC+'link',
                           SIOC+'attachment',
-                          DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? (l.host||'')+(l.path||'')} # unseen links (strip query)
-                 links.map{|l|e.env[:links].push (l.host||'')+(l.path||'')} # mark as visited
+                          DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
+                 links.map{|l|e.env[:links].push l} # mark as visited
                  {_: :table, class: :links, # show
                   c: links.group_by(&:host).map{|host,links|
                     e.env[:label][host] = true
