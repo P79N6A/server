@@ -543,6 +543,7 @@ class R
       yield s, Type, R[SIOC+'Tweet']
       yield s, Date, ts
       yield s, Creator, author
+      yield s, To, base.R
       yield s, Label, authorName
       content = t.css('.tweet-text')[0]
       content.css('a').map{|a| # resolve URIs relative to origin
