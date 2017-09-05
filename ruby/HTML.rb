@@ -258,7 +258,7 @@ class R
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' ')
              when Date
-               {_: :a, class: :date, href: datePath + '#row_' + href.sha2, c: date}
+               {_: :a, class: :date, href: (datePath||'') + '#row_' + href.sha2, c: date}
              when DC+'cache'
                l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#9939;'}, ' ']}
              else
