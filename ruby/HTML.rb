@@ -80,7 +80,7 @@ class R
 
   HTML = -> graph, re { e=re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
-    re.q['q'].do{|q|Grep[graph,q]}
+    re.path!='/' && re.q['q'].do{|q|Grep[graph,q]}
     # tree-graph -> HTML-Ruby -> HTML-String
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', id: :Up, rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']} unless re.path=='/'
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}

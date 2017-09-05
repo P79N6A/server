@@ -59,9 +59,9 @@ class R
     @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
 
     set = (if node.directory?
-           if q.has_key? 'find' && path!='/' # FIND(1) nodes
+           if (q.has_key? 'find') && path!='/' # FIND(1) nodes
              find q['find']
-           elsif q.has_key? 'q' path!='/' # GREP(1) nodes
+           elsif (q.has_key? 'q') && path!='/' # GREP(1) nodes
              grep q['q']
            else # basic container
              if uri[-1] == '/' # inside container
