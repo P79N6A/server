@@ -150,34 +150,55 @@ class R
 "}]}
 
   TableRow = -> l,e,sort,direction,keys {
+    #id 
     this = l.R
     href = this.uri
     head = e.q.has_key? 'head'
-    types = l.types
-    focus = !this.fragment && this.path==e.path
-    date = l[Date].justArray.sort[-1]
-    datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-    isChat = types.member? SIOC+'InstantMessage'
-    isMail = types.member? SIOC+'MailMessage'
-    isTweet = types.member? SIOC+'Tweet'
-    monospace = isChat || isMail
     rowID = if e.path == this.path && this.fragment
               this.fragment
             else
               'row_' + href.sha2
             end
+    focus = !this.fragment && this.path==e.path
+
+    # type
+    types = l.types
+    isChat = types.member? SIOC+'InstantMessage'
+    isImg = types.member? Image
+    isMail = types.member? SIOC+'MailMessage'
+    isTweet = types.member? SIOC+'Tweet'
+    monospace = isChat || isMail
+
+    # date
+    date = l[Date].justArray.sort[-1]
+    datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
+
+    # name. required for overview escalation
+    # prefer explicit title with fs-metadata fallback
     names = []
-    # explicit title
-    l[Title].do{|t|
-      names.concat t.justArray}
-    # name from fs metadata
-    unless !names.empty? || !this.path || types.member?(SIOC+'Tweet') || monospace
+    l[Title].do{|t|names.concat t.justArray}
+    unless !names.empty? || !this.path || isTweet || monospace
       fsName = (URI.unescape (File.basename this.path))[0..64]
       names.push(focus && e.env[:title] || fsName)
     end
-    isImg = types.member? Image
-    show = !head || !names.empty?
-    if show
+
+    # link resource entry in index context
+    indexContext = -> p,v {
+      v = v.R
+      if isMail
+        {_: :a, href: v.path + '?head#row_' + href.sha2, c: v.label}
+      elsif isTweet
+        if p == Creator # strip hour-dir, show everything from creator within day
+          {_: :a, href: datePath[0..-4] + '*/*twitter*' + v.path[1..-1] + '*#row_' + href.sha2, c: v.label}
+        elsif p == To # show everything from host in hour
+          {_: :a, href: datePath + '*twitter*#row_' + href.sha2, c: v.label}
+        end
+      else
+        v
+      end}
+
+    # show unless nameless and heading-only mode
+    if !head || !names.empty?
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,
@@ -232,14 +253,7 @@ class R
              when Creator
                [l[k].justArray.map{|v|
                  if v.respond_to? :uri
-                   v = v.R
-                   if isMail
-                     {_: :a, href: v.path + '?head#row_' + href.sha2, c: v.label}
-                   elsif isTweet
-                     {_: :a, href: datePath[0..-4] + '*/*twitter*' + v.path[1..-1] + '*#row_' + href.sha2, c: v.label}
-                   else
-                     v
-                   end
+                   indexContext[k,v]
                  else
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' '),
@@ -248,12 +262,7 @@ class R
              when SIOC+'addressed_to'
                l[k].justArray.map{|v|
                  if v.respond_to? :uri
-                   v = v.R
-                   if isMail
-                     {_: :a, href: v.path + '?head#row_' + href.sha2, c: v.label}
-                   else
-                     v
-                   end
+                   indexContext[k,v]
                  else
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' ')
