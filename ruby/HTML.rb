@@ -157,7 +157,7 @@ class R
     rowID = if e.path == this.path && this.fragment
               this.fragment
             else
-              'row_' + href.sha2
+              'r' + href.sha2
             end
     focus = !this.fragment && this.path==e.path
 
@@ -186,18 +186,18 @@ class R
     indexContext = -> p,v {
       v = v.R
       if isMail # address*month
-        {_: :a, href: v.path + '?head#row_' + href.sha2, c: v.label}
+        {_: :a, href: v.path + '?head#r' + href.sha2, c: v.label}
       elsif isTweet
         if p == Creator # creator*day
-          {_: :a, href: datePath[0..-4] + '*/*twitter*' + v.path[1..-1] + '*#row_' + href.sha2, c: v.label}
+          {_: :a, href: datePath[0..-4] + '*/*twitter*' + v.path[1..-1] + '*#r' + href.sha2, c: v.label}
         elsif p == To # host*hour
-          {_: :a, href: datePath + '*twitter*#row_' + href.sha2, c: v.label}
+          {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
         end
       else
         v
       end}
 
-    # show unless nameless and heading-only mode
+    # show uless nameless resource in heading-only mode
     if !head || !names.empty?
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
@@ -267,7 +267,7 @@ class R
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' ')
              when Date
-               {_: :a, class: :date, href: (datePath||'') + '#row_' + href.sha2, c: date}
+               {_: :a, class: :date, href: (datePath||'') + '#r' + href.sha2, c: date}
              when DC+'cache'
                l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#9939;'}, ' ']}
              else
