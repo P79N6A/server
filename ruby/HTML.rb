@@ -197,7 +197,7 @@ class R
         v
       end}
 
-    # show uless nameless resource in heading-only mode
+    # show unless nameless resource in heading-only mode
     if !head || !names.empty?
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|

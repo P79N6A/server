@@ -1,8 +1,8 @@
 body, .focus > td[property="uri"], .focus > td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {font-family: sans-serif;background-color:#000;color:#fff}
-table {margin:auto;border-spacing:0}
+a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
+table {margin:auto;cell-spacing:0}
 th a:before {font-size:1.6em;font-weight: normal;float:left}
 a.title {color:#000;background-color:#fff;font-size:1.1em;float:right}
-a {text-decoration:none; font-weight: bold; background-color:#000;color:#fff}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
@@ -19,7 +19,7 @@ table, img {max-width: 100%}
 a.label {float: left}
 a.thumb img {height:256px}
 .date {font-size:.9em;white-space: nowrap}
-:target, .focus :target, :target a, div.sourcecode {background-color:#fff;color:#000}
+:target, :target a {background-color:#fff;color:#000}
 table.links {float: right}
 table.links td.host a {white-space:nowrap}
 table.links td.host {text-align: right}
