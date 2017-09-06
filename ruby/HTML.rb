@@ -263,24 +263,22 @@ class R
 
   # tree-graph grep w/ highlighted HTML output
   Grep = -> graph, q {
-
     # tokenize query
     wordIndex = {}
     words = q.scan(/[\w]+/).map(&:downcase).uniq
     words.each_with_index{|word,i|
       wordIndex[word] = i}
-
     pattern = /(#{words.join '|'})/i
-
+    # find matches
+    graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
+    # highlight matches
     graph.map{|u,r|
-      r.values.flatten.map(&:to_s).map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines|
+      r[Content].justArray.map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines|
         r[Content] = []
         lines[0..5].map{|line|
           r[Content].unshift line[0..400].gsub(pattern){|g|
-            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
-      graph.delete u if r[Content].empty?
-    }
-    
+            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}}
+    # add highlight CSS to graph
     graph['#grep.CSS'] = {Content => H({_: :style,
                                         c: wordIndex.values.map{|i|
                                           ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
