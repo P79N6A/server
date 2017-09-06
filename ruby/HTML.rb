@@ -65,7 +65,7 @@ class R
 
   HTML = -> graph, re { e=re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
-    re.path!='/' && re.q['q'].do{|q|Grep[graph,q]}
+    re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
     # tree-graph -> HTML-Ruby -> HTML-String
     upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', id: :Up, rel: :up, href: (CGI.escapeHTML u.to_s)},'<br clear=all>']} unless re.path=='/'
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
@@ -273,15 +273,17 @@ class R
     pattern = /(#{words.join '|'})/i
 
     graph.map{|u,r|
-      r.values.flatten.select{|v|v.class==String}.map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines|
+      r.values.flatten.map(&:to_s).map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines|
         r[Content] = []
         lines[0..5].map{|line|
           r[Content].unshift line[0..400].gsub(pattern){|g|
             H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
-      graph.delete u if r[Content].empty?}
+      graph.delete u if r[Content].empty?
+    }
     
     graph['#grep.CSS'] = {Content => H({_: :style,
-                                        c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
-  }
+                                        c: wordIndex.values.map{|i|
+                                          ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
+    nil} # model has been filtered to results
 
 end

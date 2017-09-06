@@ -107,7 +107,6 @@ class R
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
     `#{cmd} | head -n 1024`.lines.map{|matchingFile|
-#      puts matchingFile
       R.fromPOSIX matchingFile.chomp}
   end
 
