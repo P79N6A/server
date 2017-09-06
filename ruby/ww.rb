@@ -104,7 +104,7 @@ class R < RDF::URI
     when 3
       a,b,c = words
       #(1,2,3), (1,3,2), (2,1,3), (2,3,1), (3,1,2), and (3,2,1)
-      
+      pattern = a+'.*'+b+'.*'+c+'\|'+a+'.*'+c+'.*'+b+'\|'+b+'.*'+a+'.*'+c+'\|'+b+'.*'+c+'.*'+a+'\|'+c+'.*'+a+'.*'+b+'\|'+c+'.*'+b+'.*'+a
     else # ordered match
       pattern = words.join '.*'
     end
