@@ -63,21 +63,6 @@ class R
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml(:indent => 0)}
 
-  Grep = -> graph, q {
-    wordIndex = {}
-    words = q.scan(/[\w]+/).map(&:downcase).uniq
-    words.each_with_index{|word,i|wordIndex[word]=i}
-    pattern = /#{words.join '.*'}/i
-    highlight = /(#{words.join '|'})/i
-    graph.map{|u,r|
-      r.values.flatten.select{|v|v.class==String}.map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines|
-        r[Content] = []
-        lines[0..5].map{|line|
-          r[Content].unshift line[0..400].gsub(highlight){|g|
-            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
-      graph.delete u if r[Content].empty?} 
-    graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}}
-
   HTML = -> graph, re { e=re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && re.q['q'].do{|q|Grep[graph,q]}
@@ -274,6 +259,29 @@ class R
                l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
              end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})
     end
+  }
+
+  # tree-graph grep w/ highlighted HTML output
+  Grep = -> graph, q {
+
+    # tokenize query into indexed words
+    wordIndex = {}
+    words = q.scan(/[\w]+/).map(&:downcase).uniq
+    words.each_with_index{|word,i|
+      wordIndex[word] = i}
+
+    pattern = /(#{words.join '|'})/i
+
+    graph.map{|u,r|
+      r.values.flatten.select{|v|v.class==String}.map(&:lines).flatten.map{|l|l.gsub(/<[^>]+>/,'')}.grep(pattern).do{|lines|
+        r[Content] = []
+        lines[0..5].map{|line|
+          r[Content].unshift line[0..400].gsub(pattern){|g|
+            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g})}}}
+      graph.delete u if r[Content].empty?}
+    
+    graph['#grep.CSS'] = {Content => H({_: :style,
+                                        c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
   }
 
 end

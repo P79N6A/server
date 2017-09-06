@@ -103,4 +103,5 @@ class R < RDF::URI
   alias_method :uri, :to_s
 
   %w{MIME HTML HTTP}.map{|r|require_relative r}
+
 end
