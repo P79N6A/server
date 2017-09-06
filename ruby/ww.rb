@@ -95,20 +95,7 @@ class R < RDF::URI
   def thumb; dir + '/.' + basename + '.jpg' end
   def to_json *a; {'uri' => uri}.to_json *a end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
-  def grep q
-    words = q.scan(/[\w]+/).map(&:downcase).uniq
-    case words.size
-    when 2
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
-    when 3
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
-    else # ordered match
-      pattern = words.join '.*'
-      cmd = "grep -ril #{pattern.sh} #{sh}"
-    end
-    `#{cmd} | head -n 1024`.lines.map{|matchingFile|
-      R.fromPOSIX matchingFile.chomp}
-  end
+
   alias_method :e, :exist?
   alias_method :m, :mtime
   alias_method :sh, :shellPath

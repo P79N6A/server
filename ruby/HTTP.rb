@@ -95,6 +95,22 @@ class R
       end}
   end
 
+  def grep q
+    words = q.scan(/[\w]+/).map(&:downcase).uniq
+    case words.size
+    when 2
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
+    when 3
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
+    else # ordered match
+      pattern = words.join '.*'
+      cmd = "grep -ril #{pattern.sh} #{sh}"
+    end
+    `#{cmd} | head -n 1024`.lines.map{|matchingFile|
+      puts matchingFile
+      R.fromPOSIX matchingFile.chomp}
+  end
+
   def fileGET
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
