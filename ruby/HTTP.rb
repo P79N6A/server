@@ -98,16 +98,16 @@ class R
   def grep q
     words = q.scan(/[\w]+/).map(&:downcase).uniq
     case words.size
-    when 2
+    when 2 # unordered && of terms
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
-    when 3
+    when 3 # unordered && of terms
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
-    else # ordered match
+    else # terms in submitted order
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
     `#{cmd} | head -n 1024`.lines.map{|matchingFile|
-      puts matchingFile
+#      puts matchingFile
       R.fromPOSIX matchingFile.chomp}
   end
 
