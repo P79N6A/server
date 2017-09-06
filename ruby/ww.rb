@@ -97,19 +97,17 @@ class R < RDF::URI
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
   def grep q
     words = q.scan(/[\w]+/).map(&:downcase).uniq
-    case words.size # unordered permutations for small term-sets
+    case words.size
     when 2
-      a,b = words
-      pattern = a+'.*'+b+'\|'+b+'.*'+a
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
     when 3
-      a,b,c = words
-      #(1,2,3), (1,3,2), (2,1,3), (2,3,1), (3,1,2), and (3,2,1)
-      pattern = a+'.*'+b+'.*'+c+'\|'+a+'.*'+c+'.*'+b+'\|'+b+'.*'+a+'.*'+c+'\|'+b+'.*'+c+'.*'+a+'\|'+c+'.*'+a+'.*'+b+'\|'+c+'.*'+b+'.*'+a
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
     else # ordered match
       pattern = words.join '.*'
+      cmd = "grep -ril #{pattern.sh} #{sh}"
     end
-    puts pattern
-    `grep -ril #{pattern.sh} #{sh} | head -n 1024`.lines.map{|r|R.fromPOSIX r.chomp}
+    `#{cmd} | head -n 1024`.lines.map{|matchingFile|
+      R.fromPOSIX matchingFile.chomp}
   end
   alias_method :e, :exist?
   alias_method :m, :mtime
