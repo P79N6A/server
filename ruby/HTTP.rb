@@ -122,7 +122,7 @@ class R
       s = s.to_s; p = p.to_s # subject/predicate URI keys
       o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # normalize resource classes
       g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} # add
-    # load JSON
+    # load JSON format
     nonRDF.map{|n| (JSON.parse n.toJSON.readFile).map{|s,re| # each subject
         re.map{|p,o| # each predicate/object
           o.justArray.map{|o| # each triple
