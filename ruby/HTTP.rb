@@ -96,7 +96,7 @@ class R
   end
 
   def grep q
-    words = q.scan(/[\w]+/).map(&:downcase).uniq
+    words = R.tokens q
     case words.size # unordered && (AND) terms
     when 2
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
@@ -108,8 +108,7 @@ class R
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
-    `#{cmd} | head -n 1024`.lines.map{|matchingFile|
-      R.fromPOSIX matchingFile.chomp}
+    `#{cmd} | head -n 1024`.lines.map{|matchingFile| R.fromPOSIX matchingFile.chomp}
   end
 
   # JSON loader

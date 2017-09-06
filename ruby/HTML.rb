@@ -265,7 +265,7 @@ class R
   Grep = -> graph, q {
     # tokenize query
     wordIndex = {}
-    words = q.scan(/[\w]+/).map(&:downcase).uniq
+    words = R.tokens q
     words.each_with_index{|word,i|
       wordIndex[word] = i}
     # pattern expression
@@ -277,7 +277,7 @@ class R
       r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
         r[Content] = lines[0..5].map{|line|
           line.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture matches
-            H({_: :span, class: "w w#{wordIndex[g.downcase]}", c: g}) # render HTML
+            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # render HTML
           }} if lines.size > 0
       }}
     # add highlight CSS to graph
