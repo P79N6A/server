@@ -79,7 +79,6 @@ class R < RDF::URI
   def file?; node.file? end
   def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.fromPOSIX l.chomp} end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
-  def grep g; `grep -ril #{g.gsub(' ','.*').sh} #{sh} | head -n 1024`.lines.map{|r|R.fromPOSIX r.chomp} end
   def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
   def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
@@ -96,7 +95,22 @@ class R < RDF::URI
   def thumb; dir + '/.' + basename + '.jpg' end
   def to_json *a; {'uri' => uri}.to_json *a end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
-
+  def grep q
+    words = q.scan(/[\w]+/).map(&:downcase).uniq
+    case words.size # unordered permutations for small term-sets
+    when 2
+      a,b = words
+      pattern = a+'.*'+b+'\|'+b+'.*'+a
+    when 3
+      a,b,c = words
+      #(1,2,3), (1,3,2), (2,1,3), (2,3,1), (3,1,2), and (3,2,1)
+      
+    else # ordered match
+      pattern = words.join '.*'
+    end
+    puts pattern
+    `grep -ril #{pattern.sh} #{sh} | head -n 1024`.lines.map{|r|R.fromPOSIX r.chomp}
+  end
   alias_method :e, :exist?
   alias_method :m, :mtime
   alias_method :sh, :shellPath

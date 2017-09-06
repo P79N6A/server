@@ -264,7 +264,7 @@ class R
   # tree-graph grep w/ highlighted HTML output
   Grep = -> graph, q {
 
-    # tokenize query into indexed words
+    # tokenize query
     wordIndex = {}
     words = q.scan(/[\w]+/).map(&:downcase).uniq
     words.each_with_index{|word,i|
