@@ -268,6 +268,7 @@ class R
     words = q.scan(/[\w]+/).map(&:downcase).uniq
     words.each_with_index{|word,i|
       wordIndex[word] = i}
+    # pattern expression
     pattern = /(#{words.join '|'})/i
     # find matches
     graph.map{|u,r|graph.delete u unless r.to_s.match pattern}

@@ -182,32 +182,6 @@ class R
 
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
-  # JSON-tree loader
-  def R.load set
-    graph = RDF::Graph.new # input graph
-    g = {}                 # output tree
-    rdf,nonRDF = set.partition &:isRDF # partition node types
-    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n} # load RDF
-    graph.each_triple{|s,p,o| # each triple
-      s = s.to_s; p = p.to_s # normalize URI keys to strings
-      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # normalize resource classes to R
-      g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} # add triple
-    nonRDF.map{|n| (JSON.parse n.toJSON.readFile).map{|s,re| # load non-RDF
-        re.map{|p,o| # each resource
-          o.justArray.map{|o| # each triple
-            o = o.R if o.class==Hash # normalize resource classes to R
-            g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add triple
-    g # graph-as-tree suitable for input to HTML renderer or cache-file
-  end
-
-  # pure-RDF loader
-  def load set
-    g = RDF::Graph.new
-    set.map{|n|
-      g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
-    g # graph
-  end
-
   def toRDF; isRDF ? self : toJSON end
 
   def toJSON # cache-file readable as RDF
