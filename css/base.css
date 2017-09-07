@@ -14,6 +14,7 @@ td[property="http://rdfs.org/sioc/ns#has_creator"] span.notes, td[property="http
 td[property="uri"] {max-width:160ex;overflow:hidden}
 td[property="uri"] img, td[property="uri"] .containers {float:right;margin-right:.2em}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto;max-width:127ex}
+td.path {padding-left:.2em}
 pre {white-space: pre-wrap; max-width:127ex; margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0}
 table, img {max-width: 100%}
 a.label {float: left}
