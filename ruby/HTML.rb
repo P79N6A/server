@@ -151,6 +151,7 @@ class R
     isChat = types.member? SIOC+'InstantMessage'
     isImg = types.member? Image
     isMail = types.member? SIOC+'MailMessage'
+    isBlog = types.member? SIOC+'BlogPost'
     isTweet = types.member? SIOC+'Tweet'
     monospace = isChat || isMail
 
@@ -178,6 +179,8 @@ class R
         elsif p == To # host*hour
           {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
         end
+      elsif isBlog # host*day
+        {_: :a, href: datePath[0..-4] + '*/*' + v.host + '*?head#r' + href.sha2, c: v.label}
       else
         v
       end}
