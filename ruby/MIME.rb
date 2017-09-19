@@ -118,6 +118,9 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
+  # MIMEs w/ native output support
+  Writable = %w{application/atom+xml text/html}
+
   # RDF type -> icon name
   Icons = {
     'uri' => :id,

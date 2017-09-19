@@ -217,8 +217,8 @@ class R
 
     # Accept header
     accept.sort.reverse.map{|q,formats| # highest qval first
-      formats.map{|mime| # terminate when writer found
-        return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}}
+      formats.map{|mime| # serializability check
+        return mime if RDF::Writer.for(:content_type => mime) || Writable.member?(mime)}}
 
     # default
     'text/html'
