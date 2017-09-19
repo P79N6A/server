@@ -25,6 +25,7 @@ class R
     return fileGET if file?
     qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
     return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')+(qs.empty? ? '?head' : qs)}),[]] if path=='/t'
+    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] if path=='/feed'
 
     # time pointers
     parts = path[1..-1].split '/'
@@ -88,9 +89,11 @@ class R
       if set.size == 1 && set[0].mime == format
         set[0] # static body
       else # dynamic body
-        if format == 'text/html' # HTML
+        if format == 'text/html'
           HTML[R.load(set),self]
-        else # RDF
+        elsif format == 'application/atom+xml'
+          FEED[R.load(set),self]
+        else
           load(set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
         end
       end}
@@ -209,9 +212,15 @@ class R
   def format; @format ||= selectFormat end
 
   def selectFormat
-    accept.sort.reverse.map{|q,formats|
-      formats.map{|mime|
-        return mime if RDF::Writer.for(:content_type => mime)}}
+    # query-string arg
+    return 'application/atom+xml' if q.has_key?('feed')
+
+    # Accept header
+    accept.sort.reverse.map{|q,formats| # highest qval first
+      formats.map{|mime| # terminate when writer found
+        return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}}
+
+    # default
     'text/html'
   end
   
