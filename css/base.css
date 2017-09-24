@@ -29,6 +29,7 @@ a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }
 a.chain:before { content:"\f0c1"; font-family: icons; }
 a.link:before { content:"\f08e"; font-family: icons; }
+a.node:before { content:"\f1e0"; font-family: icons; }
 a.comment:before { content:"\f0e5"; font-family: icons; }
 a.comments:before { content:"\f086"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }

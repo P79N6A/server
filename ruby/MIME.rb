@@ -161,6 +161,7 @@ class R
     SIOC+'Thread' => :openenvelope,
     SIOC+'Post' => :newspaper,
     SIOC+'MailMessage' => :envelope,
+    W3+'2000/01/rdf-schema#Resource' => :node,
   }
 
   # file -> MIME
