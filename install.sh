@@ -1,14 +1,22 @@
 #!/bin/sh
 # install
 cd ruby
-echo "installing our library.."
+echo "installing.."
 ruby install
-echo "installing dependencies.."
-gem install bundler
-bundle config build.nokogiri --use-system-libraries
-bundle install
+echo "\ninstalling dependencies.."
+gem install nokogiri -- --use-system-libraries
+gem install dimensions
+gem install foreman
+gem install linkeddata
+gem install mail
+gem install nokogiri
+gem install nokogiri-diff
+gem install rack
+gem install redcarpet
+gem install thin
+gem install unicorn
 # configure
-echo "init server-root"
+echo "\nconfiguring server"
 cd ../config
 mkdir ~/web
 ln -sr config.ru ~/web
