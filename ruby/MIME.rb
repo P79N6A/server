@@ -100,7 +100,7 @@ class R
     'text/x-python'        => [:triplrSourceCode],
     'text/x-script.ruby'   => [:triplrSourceCode],
     'text/x-script.python' => [:triplrSourceCode],
-    'text/x-shellscript'   => [:triplrSourceCode],
+    'text/x-shellscript'   => [:triplrFile],
     'text/markdown'        => [:triplrMarkdown],
     'text/nfo'             => [:triplrText,'cp437'],
     'text/plain'           => [:triplrText],
