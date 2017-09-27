@@ -145,13 +145,12 @@ class R
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
-    # name. required for overview escalation
-    # prefer explicit title with fs-metadata fallback
+    # filename or explicit Title required for overview presence
     names = []
     l[Title].do{|t|names.concat t.justArray}
     unless !names.empty? || !this.path || isTweet || monospace
-      fsName = (URI.unescape (File.basename this.path))[0..64]
-      names.push(focus && e.env[:title] || fsName)
+      fsName = (URI.unescape (File.basename this.path))[0..64] # filesystem name
+      names.push(focus && e.env[:title] || fsName) # request-level title via environment
     end
 
     # link resource-entry in index context
@@ -171,8 +170,7 @@ class R
         v
       end}
 
-    # show unless nameless resource in heading-only mode
-    if !head || !names.empty?
+    if !head || !names.empty? # hide unnamed resources in heading-only mode
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,
