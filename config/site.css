@@ -24,7 +24,7 @@ a.thumb img {height:256px}
 table.links {float: right}
 table.links td.host a {white-space:nowrap}
 table.links td.host {text-align: right}
-@font-face {font-family: "icons";src: url('/css/misc/icons.eot');src: url('/css/misc/icons.woff') format('woff'); src: url('/css/misc/icons.ttf')  format('truetype');}
+@font-face {font-family: "icons";src: url('/.font.woff') format('woff');}
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }
 a.chain:before { content:"\f0c1"; font-family: icons; }

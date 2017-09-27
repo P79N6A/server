@@ -1,8 +1,17 @@
 #!/bin/sh
-# install
 cd ruby
+
 echo "installing.."
 ruby install
+
+cd ../config
+echo "\nconfiguring.."
+mkdir ~/web
+ln -sr config.ru ~/web
+ln -sr site.css ~/web/.css
+ln -sr site.js ~/web/.js
+ln -sr font.woff ~/web/.font.woff
+
 echo "\ninstalling dependencies.."
 gem install nokogiri -- --use-system-libraries
 gem install dimensions
@@ -15,11 +24,5 @@ gem install rack
 gem install redcarpet
 gem install thin
 gem install unicorn
-# configure
-echo "\nconfiguring server"
-cd ../config
-mkdir ~/web
-ln -sr config.ru ~/web
-ln -sr site.css ~/web/.css
-ln -sr site.js ~/web/.js
+
 pip install --upgrade pygments
