@@ -1,10 +1,8 @@
 #!/bin/sh
-cd ruby
-
 echo "installing.."
-ruby install
+./ruby/install
 
-cd ../config
+cd config
 echo "\nconfiguring.."
 mkdir ~/web
 ln -sr config.ru ~/web
@@ -12,7 +10,7 @@ ln -sr site.css ~/web/.css
 ln -sr site.js ~/web/.js
 ln -sr font.woff ~/web/.font.woff
 
-echo "\ninstalling dependencies.."
+echo "\ninstalling Ruby dependencies.."
 gem install nokogiri -- --use-system-libraries
 gem install dimensions
 gem install foreman
