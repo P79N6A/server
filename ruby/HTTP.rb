@@ -23,7 +23,6 @@ class R
 
   def timeRegion
     time = Time.now
-    puts path,path.class
     loc = time.strftime(case path[1]
                         when 'y'
                           '/%Y/'
