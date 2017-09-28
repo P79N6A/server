@@ -239,14 +239,12 @@ class R
   def format; @format ||= selectFormat end
 
   def selectFormat
-    # query-string arg
+    # query argument override of header
     return 'application/atom+xml' if q.has_key?('feed')
-
-    # Accept header
+    # header
     accept.sort.reverse.map{|q,formats| # highest qval first
       formats.map{|mime| # serializability check
         return mime if RDF::Writer.for(:content_type => mime) || Writable.member?(mime)}}
-
     # default
     'text/html'
   end
