@@ -21,11 +21,33 @@ class R
 
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
+  def timeRegion
+    time = Time.now
+    puts path,path.class
+    loc = time.strftime(case path[1]
+                        when 'y'
+                          '/%Y/'
+                        when 'm'
+                          '/%Y/%m/'
+                        when 'd'
+                          '/%Y/%m/%d/'
+                        when 'h'
+                          '/%Y/%m/%d/%H/'
+                        else
+                        end)
+    [303,
+     @r[:Response].update({'Location'=> loc + (qs.empty? ? '?head' : qs)}),[]]
+  end
+
+  def feed
+    [303,
+     @r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]]
+  end
+
   def GET
-    return fileGET if file?
-    qs = @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || ''
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/')+(qs.empty? ? '?head' : qs)}),[]] if path=='/t'
-    return [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] if path=='/feed'
+    return file if file?
+    return feed if path == '/feed'
+    return timeRegion if path.match(/^\/(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/)
 
     # time pointers
     parts = path[1..-1].split '/'
@@ -56,10 +78,12 @@ class R
       end
     end
     sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
+
     @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs if p && R[p].e
     @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs if n && R[n].e
     @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
 
+    # find loadable-resource nodes
     set = (if node.directory?
            if (q.has_key? 'find') && path!='/' # FIND(1) nodes
              find q['find']
@@ -145,7 +169,7 @@ class R
   end
 
 
-  def fileGET
+  def file
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
@@ -191,7 +215,7 @@ class R
       d)
   end
 
-  def q # memoize query args
+  def q # query-args hashmap
     @q ||=
       (if q = @r['QUERY_STRING']
        h = {}
@@ -204,7 +228,11 @@ class R
        end)
   end
 
-  def R.qs h # {k: v} -> query-string
+  def qs # query-string
+    @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '')
+  end
+
+  def R.qs h # query-args hashmap -> query-string
     '?'+h.map{|k,v|
       k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
   end

@@ -249,9 +249,9 @@ class R
     end
   }
 
-  # tree-graph grep w/ highlighted HTML output
+  # tree-graph grep-results in HTML
   Grep = -> graph, q {
-    # tokenize query
+    # tokenize
     wordIndex = {}
     words = R.tokens q
     words.each_with_index{|word,i|
