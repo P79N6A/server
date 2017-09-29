@@ -34,13 +34,11 @@ class R
                           '/%Y/%m/%d/%H/'
                         else
                         end)
-    [303,
-     @r[:Response].update({'Location'=> loc + (qs.empty? ? '?head' : qs)}),[]]
+    [303,@r[:Response].update({'Location'=> loc + (qs.empty? ? '?head' : qs)}),[]]
   end
 
   def feed
-    [303,
-     @r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]]
+    [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]]
   end
 
   def GET

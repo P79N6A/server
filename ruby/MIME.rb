@@ -691,16 +691,14 @@ class R
           # find post identifier
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u
-            unless u.match /^http/ # resolve relative URIs
-              u = (URI.join @base, u).to_s
-            end
+            u = (URI.join @base, u).to_s unless u.match /^http/
             resource = u.R
             yield u, Type, R[SIOC+'BlogPost']
             blogs = [resource.join('/')]
-            blogs.push @base.R.join('/') if @base.R.host != resource.host # reblog
+            blogs.push @base.R.join('/') if @base.R.host != resource.host
             blogs.map{|blog| yield u, R::To, blog}
-
-            inner.scan(reAttach){|e| # media links
+            # links
+            inner.scan(reAttach){|e|
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
                 if rel
@@ -715,11 +713,12 @@ class R
                       end
                   yield u, p, o
                 end}}
-            inner.scan(reElement){|e| # elements
-              p = (x[e[0] && e[0].chop]||R::RSS) + e[1]                  # expand property-name
-              if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p # custom element-type handlers
+            # XML elements
+            inner.scan(reElement){|e|
+              p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
+              if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p
                 # used in subject URI search
-              elsif [Atom+'author', RSS+'author', RSS+'creator', DCe+'creator'].member? p # author
+              elsif [Atom+'author', RSS+'author', RSS+'creator', DCe+'creator'].member? p
                 uri = e[3].match /<uri>([^<]+)</
                 name = e[3].match /<name>([^<]+)</
                 yield u, Creator, e[3].do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri
@@ -743,7 +742,6 @@ class R
     end
   end
 
-  # writer for Atom and RSS
   FEED = -> d,e {
     H(['<?xml version="1.0" encoding="utf-8"?>',
        {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
