@@ -677,8 +677,8 @@ class R
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
-        commentRe = /\/comments\//
-        x = {} # XML-namespace table
+        # XML-namespace map
+        x = {}
         head = @doc.match(reHead)
         head && head[2] && head[2].scan(reXMLns){|m|
           prefix = m[0]
@@ -695,15 +695,11 @@ class R
               u = (URI.join @base, u).to_s
             end
             resource = u.R
-            if u.match commentRe
-              yield u, R::Type, R[R::Post]
-              yield u, R::To, R[resource.uri.match(commentRe).pre_match]
-            else
-              yield u, Type, R[SIOC+'BlogPost']
-              blogs = [resource.join('/')]
-              blogs.push @base.R.join('/') if @base.R.host != resource.host # reblog
-              blogs.map{|blog| yield u, R::To, blog}
-            end
+            yield u, Type, R[SIOC+'BlogPost']
+            blogs = [resource.join('/')]
+            blogs.push @base.R.join('/') if @base.R.host != resource.host # reblog
+            blogs.map{|blog| yield u, R::To, blog}
+
             inner.scan(reAttach){|e| # media links
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
