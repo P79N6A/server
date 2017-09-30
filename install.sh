@@ -5,10 +5,10 @@ echo "installing.."
 cd config
 echo "\nconfiguring.."
 mkdir ~/web
-ln -sr config.ru ~/web
-ln -sr site.css ~/web/.css
-ln -sr site.js ~/web/.js
-ln -sr font.woff ~/web/.font.woff
+cp config.ru ~/web
+cp site.css ~/web/.css
+cp site.js ~/web/.js
+cp font.woff ~/web/.font.woff
 
 echo "\ninstalling Ruby dependencies.."
 gem install nokogiri -- --use-system-libraries
