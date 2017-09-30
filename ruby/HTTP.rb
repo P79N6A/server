@@ -73,6 +73,10 @@ class R
     @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs if p && R[p].e
     @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs if n && R[n].e
     @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
+    if q.has_key? 'head'
+      qq = q.dup; qq.delete 'head'
+      @r[:Links][:down] = path + (R.qs qq)
+    end
 
     # find loadable-resource nodes
     set = (if node.directory?
@@ -80,15 +84,12 @@ class R
              find q['find']
            elsif (q.has_key? 'q') && path!='/' # GREP(1) nodes
              grep q['q']
-           else # basic container
-             if uri[-1] == '/' # inside container
-               if q.has_key? 'head' # summary view
-                 q_ = q.dup; q_.delete 'head' # link to full full view
-                 @r[:Links][:down] = path + R.qs(q_) # down to children
-               end
-               (self+'index.*').glob || [self, children] # inlined children
-             else # outside container
-               @r[:Links][:down] = path + '/' + qs # down to children
+           else # container
+             if uri[-1] == '/' # inside
+               # static wins over dynamic content
+               (self+'index.*').glob || [self, children] # inline children
+             else # outside
+               @r[:Links][:down] = path + '/' + qs
                self # just the container
              end
            end
