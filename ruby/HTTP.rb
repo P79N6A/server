@@ -9,14 +9,10 @@ class R
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
     resource = path.R; e['uri'] = resource.uri           # resource URI
     e[:Response]={}; e[:Links]={}                        # response header
-#    puts e['HTTP_USER_AGENT']
     resource.setEnv(e).send e['REQUEST_METHOD']          # call method
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
-    [500,{'Content-Type' => 'text/html'},
-     ["<html><head><style>body {background-color:#222; font-size:1.2em; text-align:center}\npre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}\n.number {color:#0f0; font-weight:normal; font-size:1.1em}</style></head><body><pre>",
-      msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),
-      '</pre></body></html>']]
+    [500,{'Content-Type' => 'text/html'},["<html><head><style>body {background-color:#222; font-size:1.2em; text-align:center}\npre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}\n.number {color:#0f0; font-weight:normal; font-size:1.1em}</style></head><body><pre>",msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),'</pre></body></html>']]
   end
 
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end

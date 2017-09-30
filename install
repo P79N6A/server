@@ -10,7 +10,7 @@ cp site.css ~/web/.css
 cp site.js ~/web/.js
 cp font.woff ~/web/.font.woff
 
-echo "\ninstalling Ruby dependencies.."
+echo "\ninstalling scriptlang dependencies.."
 gem install nokogiri -- --use-system-libraries
 gem install dimensions
 gem install foreman
@@ -22,5 +22,4 @@ gem install rack
 gem install redcarpet
 gem install thin
 gem install unicorn
-
 pip install --upgrade pygments
