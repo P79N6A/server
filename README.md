@@ -11,7 +11,7 @@ xbps-install base-devel git ruby ruby-devel libxml2-devel libxslt-devel python-P
 pkg install autoconf automake binutils clang file findutils git iconv pkg-config python ruby ruby-dev libxslt-dev
 ##
 
-cd pw && ./install.sh
+cd pw && sh install
 ```
 # RUN
 ``` sh

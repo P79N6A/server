@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "installing.."
-./ruby/install
+ruby ruby/install
 
 cd config
 echo "\nconfiguring.."
