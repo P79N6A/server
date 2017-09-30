@@ -17,34 +17,32 @@ class R
 
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
-  def timeRegion
+  def feed; [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] end
+  def chrono ps
     time = Time.now
-    loc = time.strftime(case path[1]
+    loc = time.strftime(case ps[0][0].downcase
                         when 'y'
-                          '/%Y/'
+                          '%Y'
                         when 'm'
-                          '/%Y/%m/'
+                          '%Y/%m'
                         when 'd'
-                          '/%Y/%m/%d/'
+                          '%Y/%m/%d'
                         when 'h'
-                          '/%Y/%m/%d/%H/'
+                          '%Y/%m/%d/%H'
                         else
                         end)
-    [303,@r[:Response].update({'Location'=> loc + (qs.empty? ? '?head' : qs)}),[]]
-  end
-
-  def feed
-    [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]]
+    [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + (qs.empty? ? '?head' : qs)}),[]]
   end
 
   def GET
     return file if file?
-    return feed if path == '/feed'
-    return timeRegion if path.match(/^\/(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/)
-
-    # time pointers
     parts = path[1..-1].split '/'
-    dp = []; dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
+    return feed if parts[0] == 'feed'
+    return (chrono parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
+
+    # datetime pointer arithmetic
+    dp = []
+    dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil
     case dp.length
     when 1 # Y
