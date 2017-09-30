@@ -249,7 +249,7 @@ class R
     end
   }
 
-  # tree-graph grep-results in HTML
+  # tree-graph grep result in HTML
   Grep = -> graph, q {
     # tokenize
     wordIndex = {}
@@ -261,17 +261,16 @@ class R
     # match resources
     graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
     # highlight matches
-    graph.values.map{|r|
+    graph.values.map{|r| # visit resource
       r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
         r[Content] = lines[0..5].map{|line|
           line.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture matches
             H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # render HTML
           }} if lines.size > 0
       }}
-    # add highlight CSS to graph
-    graph['#grep.CSS'] = {Content => H({_: :style,
-                                        c: wordIndex.values.map{|i|
-                                          ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
+    # highlighting CSS
+    graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
+      ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
     graph}
 
 end
