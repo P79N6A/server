@@ -24,3 +24,7 @@ gem install redcarpet
 gem install thin
 gem install unicorn
 
+# cd ruby
+# gem install bundler
+# bundle config build.nokogiri --use-system-libraries
+# bundle install
