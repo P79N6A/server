@@ -1,5 +1,5 @@
 # coding: utf-8
-%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
+%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 class Array
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
   def justArray; self end

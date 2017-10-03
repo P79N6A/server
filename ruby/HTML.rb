@@ -53,7 +53,7 @@ end
 
 class R
 
-  def nokogiri; Nokogiri::HTML.parse (open uri).read end
+  def nokogiri; require 'nokogiri'; Nokogiri::HTML.parse (open uri).read end
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
