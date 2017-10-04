@@ -23,6 +23,10 @@ def H x # HTML generator
   end
 end
 
+class Hash
+  def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
+end
+
 class Array
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
 end

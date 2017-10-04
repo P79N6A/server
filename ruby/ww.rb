@@ -8,8 +8,9 @@ class R < RDF::URI
 end
 %w{MIME HTML HTTP}.map{|r|require_relative r}
 # extraclass methods to facilitate type-normalization:
-# call #justArray to get an array of objects regardless of original type
-# call #R to convert anything with a URI attribute to our Resource class
+# justArray: return single-entry array with object or empty array for nil
+# R: convert anything with a URI attribute to our Resource class
+# do: execute a block with object bound as first argument
 class Array
   def justArray; self end
 end
@@ -19,7 +20,6 @@ end
 class Hash
   def R; R.new self["uri"] end
   def uri; self["uri"] end
-  def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
 end
 class NilClass
   def do; nil end
