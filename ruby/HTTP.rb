@@ -17,23 +17,6 @@ class R
 
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
-  def feed; [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] end
-  def chrono ps
-    time = Time.now
-    loc = time.strftime(case ps[0][0].downcase
-                        when 'y'
-                          '%Y'
-                        when 'm'
-                          '%Y/%m'
-                        when 'd'
-                          '%Y/%m/%d'
-                        when 'h'
-                          '%Y/%m/%d/%H'
-                        else
-                        end)
-    [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + (qs.empty? ? '?head' : qs)}),[]]
-  end
-
   def GET
     return file if file?
     parts = path[1..-1].split '/'
@@ -160,7 +143,30 @@ class R
     g # RDF graph
   end
 
+  # thumbnail URI
+  def thumb; dir + '/.' + basename + '.jpg' end
 
+  # feed handler
+  def feed; [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] end
+
+  # time-range handler
+  def chrono ps
+    time = Time.now
+    loc = time.strftime(case ps[0][0].downcase
+                        when 'y'
+                          '%Y'
+                        when 'm'
+                          '%Y/%m'
+                        when 'd'
+                          '%Y/%m/%d'
+                        when 'h'
+                          '%Y/%m/%d/%H'
+                        else
+                        end)
+    [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + (qs.empty? ? '?head' : qs)}),[]]
+  end
+
+  # file handler
   def file
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/

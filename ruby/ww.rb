@@ -95,7 +95,6 @@ class R < RDF::URI
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
-  def thumb; dir + '/.' + basename + '.jpg' end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
 
   alias_method :e, :exist?
