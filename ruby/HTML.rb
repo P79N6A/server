@@ -154,7 +154,7 @@ class R
       names.push(focus && e.env[:title] || fsName) # request-level title via environment
     end
 
-    # link resource-entry in index context
+    # link to "query result" (URI match) with resource highlighted in index
     indexContext = -> p,v {
       v = v.R
       if isMail # address*month
@@ -171,7 +171,7 @@ class R
         v
       end}
 
-    if !head || !names.empty? # hide unnamed resources in heading-only mode
+    if !head || !names.empty? # hide unnamed resources in header-only mode
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,

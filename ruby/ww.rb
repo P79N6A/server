@@ -34,6 +34,7 @@ class Pathname
   def R; R.fromPOSIX to_s.utf8 end
 end
 class R < RDF::URI
+
   # URI constants
   W3 = 'http://www.w3.org/'
   OA = 'https://www.w3.org/ns/oa#'
@@ -64,8 +65,10 @@ class R < RDF::URI
 
   def R; self end
   def R.[] uri; R.new uri end
+
   def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
   def R.tokens str; str.scan(/[\w]+/).map(&:downcase).uniq end
+
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
