@@ -216,37 +216,8 @@ class R
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
   def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-
   def triplrUriList; uris.map{|u|yield u, Type, R[W3+'2000/01/rdf-schema#Resource']} end
   def uris; open(pathPOSIX).readlines.map &:chomp end
-
-  def triplrImage &f
-    yield uri, Type, R[Image]
-    w,h = Dimensions.dimensions pathPOSIX
-    yield uri, Stat+'width', w
-    yield uri, Stat+'height', h
-    triplrFile &f
-  end
-
-  # fs-name utility functions
-  def basename; File.basename path end
-  def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
-  def dir; ((host ? ('//'+host) : '') + dirname).R end
-  def dirname; File.dirname path end
-  def exist?; node.exist? end
-  def ext; (File.extname uri)[1..-1] || '' end
-  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.fromPOSIX l.chomp} end
-  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
-  def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
-  def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
-  def match p; to_s.match p end
-  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
-  def mtime; node.stat.mtime end
-  def node; Pathname.new pathPOSIX end
-  def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
-  def shellPath; pathPOSIX.utf8.sh end
-  def size; node.size rescue 0 end
-  def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
 
   def triplrContainer
     s = path
@@ -262,6 +233,15 @@ class R
     nodes.map{|node| yield s, Stat+'contains', node }
     yield s, Size, nodes.size
   end
+  # directory utility-functions
+  def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
+  def dir; ((host ? ('//'+host) : '') + dirname).R end
+  def dirname; File.dirname path end
+  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.fromPOSIX l.chomp} end
+  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
+  def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
+  def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
+  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
 
   def triplrFile
     s = path
@@ -270,8 +250,32 @@ class R
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
   end
+  # file utility-functions
+  def basename; File.basename path end
+  def exist?; node.exist? end
+  def ext; (File.extname uri)[1..-1] || '' end
+  def match p; to_s.match p end
+  def mtime; node.stat.mtime end
+  def node; Pathname.new pathPOSIX end
+  def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
+  def shellPath; pathPOSIX.utf8.sh end
+  def size; node.size rescue 0 end
   def readFile; File.open(pathPOSIX).read end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
+  alias_method :e, :exist?
+  alias_method :m, :mtime
+  alias_method :sh, :shellPath
+  alias_method :uri, :to_s
+  def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
+  def R.tokens str; str.scan(/[\w]+/).map(&:downcase).uniq end
+
+  def triplrImage &f
+    yield uri, Type, R[Image]
+    w,h = Dimensions.dimensions pathPOSIX
+    yield uri, Stat+'width', w
+    yield uri, Stat+'height', h
+    triplrFile &f
+  end
 
   def triplrWord conv, out='', &f
     triplrFile &f
@@ -561,6 +565,34 @@ class R
           puts u unless doc.e
           doc.writeFile({u => r}.to_json) unless doc.e}}
   end
+
+  # URI constants
+  W3 = 'http://www.w3.org/'
+  OA = 'https://www.w3.org/ns/oa#'
+  Purl = 'http://purl.org/'
+  DC   = Purl + 'dc/terms/'
+  DCe  = Purl + 'dc/elements/1.1/'
+  SIOC = 'http://rdfs.org/sioc/ns#'
+  Schema = 'http://schema.org/'
+  Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
+  Harvard  = 'http://harvard.edu/'
+  Sound    = Purl + 'ontology/mo/Sound'
+  Image    = DC + 'Image'
+  RSS      = Purl + 'rss/1.0/'
+  Date     = DC   + 'date'
+  Title    = DC   + 'title'
+  Post     = SIOC + 'Post'
+  To       = SIOC + 'addressed_to'
+  From     = SIOC + 'has_creator'
+  Creator  = SIOC + 'has_creator'
+  Content  = SIOC + 'content'
+  Stat     = W3   + 'ns/posix/stat#'
+  Atom     = W3   + '2005/Atom#'
+  Type     = W3 + '1999/02/22-rdf-syntax-ns#type'
+  Label    = W3 + '2000/01/rdf-schema#label'
+  Size     = Stat + 'size'
+  Mtime    = Stat + 'mtime'
+  Container = W3  + 'ns/ldp#Container'
 
   # Reader for JSON-cache format
   module Format

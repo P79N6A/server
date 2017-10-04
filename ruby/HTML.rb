@@ -54,6 +54,8 @@ end
 class R
 
   def nokogiri; require 'nokogiri'; Nokogiri::HTML.parse (open uri).read end
+  def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
+  def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
