@@ -7,10 +7,10 @@ class R < RDF::URI
   def R.[] uri; R.new uri end
 end
 %w{MIME HTML HTTP}.map{|r|require_relative r}
-# extraclass methods to facilitate type-normalization:
-# justArray: return single-entry array with object or empty array for nil
-# R: convert anything with a URI attribute to our Resource class
-# do: execute a block with object bound as first argument
+# extraclass methods for type-normalizing and conditional code
+# justArray: [a,r,r,a,y] for [a,r,r,a,y], [object] for object, [] for nil
+# R: Resource from anything with URI attribute
+# do: if arg exists yield it to a one-arg code-block
 class Array
   def justArray; self end
 end
