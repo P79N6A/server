@@ -2,6 +2,10 @@
 # external dependencies
 %w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 # this library
+class R < RDF::URI
+  def R; self end
+  def R.[] uri; R.new uri end
+end
 %w{MIME HTML HTTP}.map{|r|require_relative r}
 # minimal and shrinking additions to stdlib classes
 class Array
@@ -37,14 +41,4 @@ class RDF::Node
 end
 class Pathname
   def R; R.fromPOSIX to_s.utf8 end
-end
-class R < RDF::URI
-
-  def R; self end
-  def R.[] uri; R.new uri end
-
-  def + u; R[uri + u.to_s].setEnv @r end
-  def <=> c; to_s <=> c.to_s end
-  def ==  u; to_s == u.to_s end
-
 end
