@@ -228,6 +228,26 @@ class R
     triplrFile &f
   end
 
+  # fs-name utility functions
+  def basename; File.basename path end
+  def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
+  def dir; ((host ? ('//'+host) : '') + dirname).R end
+  def dirname; File.dirname path end
+  def exist?; node.exist? end
+  def ext; (File.extname uri)[1..-1] || '' end
+  def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.fromPOSIX l.chomp} end
+  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
+  def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
+  def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
+  def match p; to_s.match p end
+  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
+  def mtime; node.stat.mtime end
+  def node; Pathname.new pathPOSIX end
+  def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
+  def shellPath; pathPOSIX.utf8.sh end
+  def size; node.size rescue 0 end
+  def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
+
   def triplrContainer
     s = path
     s = s + '/' unless s[-1] == '/'
@@ -250,6 +270,8 @@ class R
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
   end
+  def readFile; File.open(pathPOSIX).read end
+  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
 
   def triplrWord conv, out='', &f
     triplrFile &f

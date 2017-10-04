@@ -15,10 +15,14 @@ class R
     [500,{'Content-Type' => 'text/html'},["<html><head><style>body {background-color:#222; font-size:1.2em; text-align:center}\npre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}\n.number {color:#0f0; font-weight:normal; font-size:1.1em}</style></head><body><pre>",msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),'</pre></body></html>']]
   end
 
+  # HTTP environment (header key/val pairs)
+  def env; @r end
+  def setEnv r; @r = r; self end
+
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
   def GET
-    return file if file?
+    return file if node.file?
     parts = path[1..-1].split '/'
     return feed if parts[0] == 'feed'
     return (chrono parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
