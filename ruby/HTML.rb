@@ -134,12 +134,13 @@ class R
 
     # type
     types = l.types
-    isChat = types.member? SIOC+'InstantMessage'
     isImg = types.member? Image
+    isCode = types.member? SIOC+'SourceCode'
+    isChat = types.member? SIOC+'InstantMessage'
     isMail = types.member? SIOC+'MailMessage'
     isBlog = types.member? SIOC+'BlogPost'
     isTweet = types.member? SIOC+'Tweet'
-    monospace = isChat || isMail
+    monospace = isChat || isCode || isMail
 
     # date
     date = l[Date].justArray.sort[-1]

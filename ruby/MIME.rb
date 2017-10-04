@@ -6,17 +6,18 @@
 class R
 
   # prefix -> MIME
-  # as suffix is optional, full names ("LICENSE", case-insensitive etc) match
+  # suffix is optional, full names ("LICENSE",etc) also match
   MIMEprefix = {
     'authors' => 'text/plain',
     'changelog' => 'text/plain',
     'contributors' => 'text/plain',
     'copying' => 'text/plain',
+    'install' => 'text/x-shellscript',
     'license' => 'text/plain',
-    'msg' => 'message/rfc822', # Procmail msg.* from delivering to non-maildir containers
     'readme' => 'text/markdown',
     'todo' => 'text/plain',
     'unlicense' => 'text/plain',
+    'msg' => 'message/rfc822',
   }
 
   # suffix -> MIME
