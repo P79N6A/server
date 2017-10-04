@@ -149,7 +149,7 @@ class R
     # filename or explicit Title required for overview presence
     names = []
     l[Title].do{|t|names.concat t.justArray}
-    unless !names.empty? || !this.path || isTweet || monospace
+    unless !names.empty? || !this.path || isTweet || isChat
       fsName = (URI.unescape (File.basename this.path))[0..64] # filesystem name
       names.push(focus && e.env[:title] || fsName) # request-level title via environment
     end
