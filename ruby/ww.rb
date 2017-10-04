@@ -1,5 +1,9 @@
 # coding: utf-8
+# external dependencies
 %w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
+# this library
+%w{MIME HTML HTTP}.map{|r|require_relative r}
+# minimal and shrinking additions to stdlib classes
 class Array
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
   def justArray; self end
@@ -24,6 +28,7 @@ class Object
     [Time, DateTime].member?(self.class) ? self : Time.parse(self)
   end
 end
+# everything is a Resource, or an R to save typing
 class RDF::URI
   def R; R.new to_s end
 end
@@ -41,7 +46,5 @@ class R < RDF::URI
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
-
-  %w{MIME HTML HTTP}.map{|r|require_relative r}
 
 end
