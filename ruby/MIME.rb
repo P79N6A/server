@@ -1,9 +1,33 @@
 # coding: utf-8
-=begin MIME-type handling
- JSON-cache is a RDF subset in a tree, trivially pickleable with stdlib JSON functions
- call #toRDF to make a JSON-cache entry for nonRDF. RDF::Reader enables use as RDF
-=end
 class R
+
+  # URI constants
+  W3 = 'http://www.w3.org/'
+  OA = 'https://www.w3.org/ns/oa#'
+  Purl = 'http://purl.org/'
+  DC   = Purl + 'dc/terms/'
+  DCe  = Purl + 'dc/elements/1.1/'
+  SIOC = 'http://rdfs.org/sioc/ns#'
+  Schema = 'http://schema.org/'
+  Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
+  Harvard  = 'http://harvard.edu/'
+  Sound    = Purl + 'ontology/mo/Sound'
+  Image    = DC + 'Image'
+  RSS      = Purl + 'rss/1.0/'
+  Date     = DC   + 'date'
+  Title    = DC   + 'title'
+  Post     = SIOC + 'Post'
+  To       = SIOC + 'addressed_to'
+  From     = SIOC + 'has_creator'
+  Creator  = SIOC + 'has_creator'
+  Content  = SIOC + 'content'
+  Stat     = W3   + 'ns/posix/stat#'
+  Atom     = W3   + '2005/Atom#'
+  Type     = W3 + '1999/02/22-rdf-syntax-ns#type'
+  Label    = W3 + '2000/01/rdf-schema#label'
+  Size     = Stat + 'size'
+  Mtime    = Stat + 'mtime'
+  Container = W3  + 'ns/ldp#Container'
 
   # prefix -> MIME
   # suffix is optional, full names ("LICENSE",etc) also match
@@ -182,7 +206,7 @@ class R
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : toJSON end
 
-  # Resource (content) to JSON
+  # Resource (content) to JSON (RDF subset in a tree)
   def toJSON
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
@@ -565,34 +589,6 @@ class R
           puts u unless doc.e
           doc.writeFile({u => r}.to_json) unless doc.e}}
   end
-
-  # URI constants
-  W3 = 'http://www.w3.org/'
-  OA = 'https://www.w3.org/ns/oa#'
-  Purl = 'http://purl.org/'
-  DC   = Purl + 'dc/terms/'
-  DCe  = Purl + 'dc/elements/1.1/'
-  SIOC = 'http://rdfs.org/sioc/ns#'
-  Schema = 'http://schema.org/'
-  Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
-  Harvard  = 'http://harvard.edu/'
-  Sound    = Purl + 'ontology/mo/Sound'
-  Image    = DC + 'Image'
-  RSS      = Purl + 'rss/1.0/'
-  Date     = DC   + 'date'
-  Title    = DC   + 'title'
-  Post     = SIOC + 'Post'
-  To       = SIOC + 'addressed_to'
-  From     = SIOC + 'has_creator'
-  Creator  = SIOC + 'has_creator'
-  Content  = SIOC + 'content'
-  Stat     = W3   + 'ns/posix/stat#'
-  Atom     = W3   + '2005/Atom#'
-  Type     = W3 + '1999/02/22-rdf-syntax-ns#type'
-  Label    = W3 + '2000/01/rdf-schema#label'
-  Size     = Stat + 'size'
-  Mtime    = Stat + 'mtime'
-  Container = W3  + 'ns/ldp#Container'
 
   # Reader for JSON-cache format
   module Format
