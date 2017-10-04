@@ -96,7 +96,6 @@ class R < RDF::URI
   def size; node.size rescue 0 end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
   def thumb; dir + '/.' + basename + '.jpg' end
-  def to_json *a; {'uri' => uri}.to_json *a end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
 
   alias_method :e, :exist?
