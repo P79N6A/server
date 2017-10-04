@@ -7,9 +7,10 @@ class R < RDF::URI
   def R.[] uri; R.new uri end
 end
 %w{MIME HTML HTTP}.map{|r|require_relative r}
-# minimal and shrinking additions to stdlib classes
+# extraclass methods to facilitate type-normalization:
+# call #justArray to get an array of objects regardless of original type
+# call #R to convert anything with a URI attribute to our Resource class
 class Array
-  def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
   def justArray; self end
 end
 class FalseClass
@@ -32,7 +33,6 @@ class Object
     [Time, DateTime].member?(self.class) ? self : Time.parse(self)
   end
 end
-# everything is a Resource, or an R to save typing
 class RDF::URI
   def R; R.new to_s end
 end

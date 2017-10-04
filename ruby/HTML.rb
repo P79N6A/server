@@ -1,5 +1,5 @@
 # coding: utf-8
-def H x # data to HTML
+def H x # HTML generator
   case x
   when String
     x
@@ -21,6 +21,10 @@ def H x # data to HTML
   else
     CGI.escapeHTML x.to_s
   end
+end
+
+class Array
+  def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
 end
 
 class String
