@@ -159,15 +159,19 @@ class R
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
-    # filename or explicit Title required for overview presence
-    names = []
-    l[Title].do{|t|names.concat t.justArray}
-    unless !names.empty? || !this.path || isTweet || isChat
-      fsName = (URI.unescape (File.basename this.path))[0..64] # filesystem name
-      names.push(focus && e.env[:title] || fsName) # request-level title via environment
+    # explicit titles
+    names = []; l[Title].do{|t| names.concat t.justArray}
+    # no title found
+    if names.empty? && this.path
+      if isTweet || isChat
+      #hide filename, side-effect of also hidden in overview
+      else # use filename
+        fsName = (URI.unescape (File.basename this.path))[0..64] # filename
+        names.push(focus && e.env[:title] || fsName) # request-URI title from environment
+      end
     end
 
-    # link to "query result" (URI match) with resource highlighted in index
+    # link to query result (URI match) with resource highlighted
     indexContext = -> p,v {
       v = v.R
       if isMail # address*month
@@ -184,7 +188,7 @@ class R
         v
       end}
 
-    if !head || !names.empty? # hide unnamed resources in header-only mode
+    if !head || !names.empty? # hide anonymous nodes in header-view
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,
