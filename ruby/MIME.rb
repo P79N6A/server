@@ -206,7 +206,7 @@ class R
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : toJSON end
 
-  # Resource (content) to JSON (RDF subset in a tree)
+  # Resource data to JSON (RDF subset)
   def toJSON
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
@@ -227,7 +227,7 @@ class R
     doc
   end
 
-  # Resource (URI) to JSON
+  # Resource identifier to JSON
   def to_json *a; {'uri' => uri}.to_json *a end
 
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
@@ -291,7 +291,6 @@ class R
   alias_method :sh, :shellPath
   alias_method :uri, :to_s
   def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
-  def R.tokens str; str.scan(/[\w]+/).map(&:downcase).uniq end
 
   def triplrImage &f
     yield uri, Type, R[Image]
