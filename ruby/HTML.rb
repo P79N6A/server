@@ -256,7 +256,7 @@ class R
              when Date
                {_: :a, class: :date, href: (datePath||'') + '#r' + href.sha2, c: date}
              when DC+'cache'
-               l[k].justArray.map{|c|[{_: :a, href: c.path, c: '&#9939;'}, ' ']}
+               l[k].justArray.map{|c|[{_: :a, href: c.path, class: :chain}, ' ']}
              else
                l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
              end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})
