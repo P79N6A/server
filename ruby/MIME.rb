@@ -206,7 +206,7 @@ class R
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : toJSON end
 
-  # Resource data to JSON (RDF subset)
+  # data to JSON (RDF-subset)
   def toJSON
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
@@ -227,7 +227,7 @@ class R
     doc
   end
 
-  # Resource identifier to JSON
+  # identifier to JSON
   def to_json *a; {'uri' => uri}.to_json *a end
 
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end

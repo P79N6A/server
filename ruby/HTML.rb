@@ -104,22 +104,24 @@ class R
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
   TabularView = -> g, e {
-    e.env[:label] = {}; (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # colorize up to 10-levels of quoting
-    [:links,:images].map{|p| e.env[p] = []} # link and image lists for deduplication
+    e.env[:label] = {} # named labels
+    e.env[:summary] = {'uri'=>'#summary', Content => []} # summary node
+    (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # colorize levels of quoting
+    [:links,:images].map{|p| e.env[p] = []} # link/image lists to track duplicates
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
     keys = ['uri', Type, g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta; keys -= VerboseMeta unless e.q.has_key? 'full'
+    resources = g.values.sort_by{|s|
+      ((if p == 'uri'
+        s[Title] || s[Label] || s.uri
+       else
+         s[p]
+        end).justArray[0]||0).send datatype}.send direction
+    resources.push e.env[:summary]
     [{_: :table,
-      c: [{_: :tbody,
-           c: g.values.sort_by{|s|
-             ((if p == 'uri'
-               s[Title] || s[Label] || s.uri
-              else
-                s[p]
-               end).justArray[0]||0).send datatype}.send(direction).map{|r| # sort rows
-             TableRow[r,e,p,direction,keys]}.intersperse("\n")},          # render row
+      c: [{_: :tbody, c: resources.map{|r| TableRow[r,e,p,direction,keys]}.intersperse("\n")},
           {_: :tr, c: keys.map{|k| # header row
              q = e.q.merge({'sort' => k})
              if direction == :id # direction toggle
@@ -163,8 +165,13 @@ class R
     names = []; l[Title].do{|t| names.concat t.justArray}
     # no title found
     if names.empty? && this.path
-      if isTweet || isChat
-      #hide filename, side-effect of also hidden in overview
+      if isTweet
+        if head # peel out content to summary-node
+          e.env[:summary][Title] ||= 'Twitter'
+          [Date,Type,To].map{|p|e.env[:summary][p]||=l[p]}
+          e.env[:summary][Content].concat l[Content]
+        end
+      elsif isChat # hide chat-message in overview
       else # use filename
         fsName = (URI.unescape (File.basename this.path))[0..64] # filename
         names.push(focus && e.env[:title] || fsName) # request-URI title from environment
@@ -188,7 +195,7 @@ class R
         v
       end}
 
-    if !head || !names.empty? # hide anonymous nodes in header-view
+    unless head && names.empty?
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,
@@ -219,7 +226,7 @@ class R
                          {_: :td, class: :path, c: links.map{|link|
                             {_: :a, name: host, href: link.uri,
                                    c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
-                (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c} unless head),
+                (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head && href!='#summary'),
                 # images
                 (images = [] # image list
                  images.push this if isImg       # subject of triple
