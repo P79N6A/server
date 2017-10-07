@@ -11,6 +11,10 @@ end
 class RDF::Node
   def R; R.new to_s end
 end
+class Hash
+  def R; R.new self["uri"] end
+  def uri; self["uri"] end
+end
 class Pathname
   def R; R.fromPOSIX to_s.utf8 end
 end
@@ -24,10 +28,6 @@ class Array
 end
 class FalseClass
   def do; false end
-end
-class Hash
-  def R; R.new self["uri"] end
-  def uri; self["uri"] end
 end
 class NilClass
   def do; nil end
