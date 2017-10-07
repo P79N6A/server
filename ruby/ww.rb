@@ -1,6 +1,5 @@
 # coding: utf-8
-# external dependencies
-%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
+%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r} # external dependencies
 class R < RDF::URI
   def R; self end
   def R.[] uri; R.new uri end
@@ -35,8 +34,7 @@ class NilClass
 end
 class Object
   def id; self end
-  # yield non-nil arg to block
-  def do; yield self end
+  def do; yield self end # yield non-nil arg to block
   def justArray; [self] end
   def to_time
     [Time, DateTime].member?(self.class) ? self : Time.parse(self)
