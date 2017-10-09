@@ -594,7 +594,8 @@ class R
     uris.map{|u|yield Twitter + '/' + u, Type, R[Schema+'Person']}
   end
   def fetchTweets
-    uris.shuffle.each_slice(22){|s|R['https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].indexTweets}
+    uris.shuffle.each_slice(22){|s|
+      R[Twitter+'/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].indexTweets}
   end
 
   # Reader for JSON-cache format
