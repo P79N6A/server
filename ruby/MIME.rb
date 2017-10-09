@@ -11,6 +11,7 @@ class R
   Schema = 'http://schema.org/'
   Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
   Harvard  = 'http://harvard.edu/'
+  Twitter  = 'https://twitter.com'
   Sound    = Purl + 'ontology/mo/Sound'
   Image    = DC + 'Image'
   RSS      = Purl + 'rss/1.0/'
@@ -73,6 +74,7 @@ class R
     'terminfo' => 'application/config',
     'tmp' => 'application/octet-stream',
     'ttl' => 'text/turtle',
+    'tw' => 'text/twitters',
     'u' => 'text/uri-list',
     'woff' => 'application/font',
     'yaml' => 'text/plain',
@@ -130,6 +132,7 @@ class R
     'text/nfo'             => [:triplrText,'cp437'],
     'text/plain'           => [:triplrText],
     'text/restructured'    => [:triplrMarkdown],
+    'text/twitters'    => [:triplrTwitters],
     'text/rtf'             => [:triplrRTF],
     'text/semicolon-separated-values' => [:triplrCSV,/;/],
     'text/tab-separated-values' => [:triplrCSV,/\t/],
@@ -557,27 +560,26 @@ class R
     puts uri, e.class, e.message
   end
 
-  # example CSS-selector triplr. see Scraper repo
+  # demo of host-specific ingestion facilities
+  # triplr (HTML doc CSS selections), indexer and user-list
   def triplrTwitter
-    base = 'https://twitter.com'
     nokogiri.css('div.tweet > div.content').map{|t|
-      s = base + t.css('.js-permalink').attr('href') # subject URI
+      s = Twitter + t.css('.js-permalink').attr('href') # subject URI
       authorName = t.css('.username b')[0].inner_text
-      author = R[base+'/'+authorName]
+      author = R[Twitter + '/' + authorName]
       ts = Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
       yield s, Type, R[SIOC+'Tweet']
       yield s, Date, ts
       yield s, Creator, author
-      yield s, To, (base+'/#twitter').R
+      yield s, To, (Twitter + '/#twitter').R
       yield s, Label, authorName
       content = t.css('.tweet-text')[0]
       content.css('a').map{|a| # resolve URIs relative to origin
-        a.set_attribute('href',base + (a.attr 'href')) if (a.attr 'href').match /^\//
+        a.set_attribute('href', Twitter + (a.attr 'href')) if (a.attr 'href').match /^\//
         yield s, DC+'link', R[a.attr 'href']
       }
       yield s, Content, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
   end
-
   def indexTweets; graph = {}
     triplrTwitter{|s,p,o|graph[s]||={'uri'=>s}; graph[s][p]||=[]; graph[s][p].push o}
     graph.map{|u,r|
@@ -587,6 +589,12 @@ class R
           doc = "/#{time}#{slug}.e".R
           puts u unless doc.e
           doc.writeFile({u => r}.to_json) unless doc.e}}
+  end
+  def triplrTwitters
+    uris.map{|u|yield Twitter + '/' + u, Type, R[Schema+'Person']}
+  end
+  def fetchTweets
+    uris.shuffle.each_slice(22){|s|R['https://twitter.com/search?f=realtime&q='+s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join].indexTweets}
   end
 
   # Reader for JSON-cache format
