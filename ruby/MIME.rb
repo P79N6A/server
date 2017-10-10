@@ -167,6 +167,8 @@ class R
     Stat+'WordDocument' => :word,
     Stat+'DataFile' => :tree,
     Stat+'TextFile' => :textfile,
+    Stat+'width' => :width,
+    Stat+'height' => :height,
     Stat+'container' => :dir,
     Stat+'contains' => :dir,
     SIOC+'BlogPost' => :pencil,
