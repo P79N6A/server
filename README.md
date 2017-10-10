@@ -12,7 +12,7 @@ pkg install autoconf automake binutils clang file findutils git iconv pkg-config
 
 sh install
 ```
-# RUN
+# USAGE
 ``` sh
 unicorn .conf/rack.ru -p 80
 ```

@@ -473,10 +473,10 @@ class R
             indent = "<span name='quote#{depth}'>&gt;</span>" # indentation marker with depth label
             {_: :span, class: :quote,
              c: [indent * depth,' ',
-                 {_: :span, class: :quoted, c: qp[3].hrefs{|p,o|yield e, p, o}}]}
+                 {_: :span, class: :quoted, c: qp[3].gsub('@','').hrefs{|p,o|yield e, p, o}}]}
           end
         else # fresh line
-          [l.hrefs{|p,o|yield e, p, o}]
+          [l.gsub(/(\w+)@(\w+)/,'\2\1').hrefs{|p,o|yield e, p, o}]
         end}.compact.intersperse("\n"))} # join lines
 
     # message parts
