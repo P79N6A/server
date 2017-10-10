@@ -65,7 +65,7 @@ class R
       @r[:Links][:down] = path + (R.qs qq)
     end
 
-    # find loadable-resource nodes
+    # file-resource nodes
     set = (if node.directory?
            if (q.has_key? 'find') && path!='/' # FIND(1) nodes
              find q['find']
@@ -111,7 +111,7 @@ class R
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
     when 4
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else # terms in submitted order
+    else # in-order terms
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
