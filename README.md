@@ -2,7 +2,7 @@
 ``` sh
 git clone https://gitlab.com/ix/pw && cd pw
 
-## platform dependencies:
+## platform-specific dependency install:
 #Debian https://www.debian.org
 apt-get install git ruby ruby-dev libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
 #Void https://www.voidlinux.eu

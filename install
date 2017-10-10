@@ -5,7 +5,7 @@ ruby install
 
 echo "\ninstalling dependencies.."
 # ruby
-gem install bundler
+#gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
 cd ..
