@@ -140,7 +140,7 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  # MIMEs w/ in-library output support
+  # MIMEs w/ in-library writability
   Writable = %w{application/atom+xml text/html}
 
   # RDF type -> icon name
@@ -452,8 +452,8 @@ class R
     htmlCount = 0
     htmlFiles.map{|p| # HTML file
       html = srcDir + "#{htmlCount}.html"  # file location
-      yield e, DC+'hasFormat', html        # file pointer
-      html.writeFile p.decoded  if !html.e # store
+#      yield e, DC+'hasFormat', html        # file pointer
+#      html.writeFile p.decoded  if !html.e # store HTML email
       htmlCount += 1 } # increment count
 
     # text parts
