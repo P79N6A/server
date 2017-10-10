@@ -132,7 +132,7 @@ class R
     'text/nfo'             => [:triplrText,'cp437'],
     'text/plain'           => [:triplrText],
     'text/restructured'    => [:triplrMarkdown],
-    'text/twitters'    => [:triplrTwitters],
+    'text/twitters'    => [:triplrTwppl],
     'text/rtf'             => [:triplrRTF],
     'text/semicolon-separated-values' => [:triplrCSV,/;/],
     'text/tab-separated-values' => [:triplrCSV,/\t/],
@@ -259,14 +259,11 @@ class R
     nodes.map{|node| yield s, Stat+'contains', node }
     yield s, Size, nodes.size
   end
-  # directory utility-functions
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def dirname; File.dirname path end
   def find p; `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.fromPOSIX l.chomp} end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
-  def ln a,b; FileUtils.ln a.pathPOSIX, b.pathPOSIX end
-  def ln_s a,b; FileUtils.ln_s a.pathPOSIX, b.pathPOSIX end
   def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
 
   def triplrFile
@@ -276,23 +273,27 @@ class R
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
   end
-  # file utility-functions
+  def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
+  def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
   def basename; File.basename path end
   def exist?; node.exist? end
   def ext; (File.extname uri)[1..-1] || '' end
   def match p; to_s.match p end
   def mtime; node.stat.mtime end
   def node; Pathname.new pathPOSIX end
-  def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
   def readFile; File.open(pathPOSIX).read end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
+  def ln x,y; FileUtils.ln x.pathPOSIX, y.pathPOSIX end
+  def ln_s x,y
+    FileUtils.ln_s x.node.expand_path,
+                   y.node.expand_path
+  end
   alias_method :e, :exist?
   alias_method :m, :mtime
   alias_method :sh, :shellPath
   alias_method :uri, :to_s
-  def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
 
   def triplrImage &f
     yield uri, Type, R[Image]
@@ -589,7 +590,7 @@ class R
           puts u unless doc.e
           doc.writeFile({u => r}.to_json) unless doc.e}}
   end
-  def triplrTwitters
+  def triplrTwppl
     uris.map{|u|yield Twitter + '/' + u, Type, R[Schema+'Person']}
   end
   def fetchTweets
