@@ -14,7 +14,7 @@ sh install
 ```
 # RUN
 ``` sh
-unicorn
+unicorn .conf/rack.ru -p 80
 ```
 # MIRRORS
 [mw.logbook.am](http://mw.logbook.am/src/pw/)

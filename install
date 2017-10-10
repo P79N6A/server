@@ -1,30 +1,18 @@
 #!/bin/sh
 echo "installing.."
-ruby ruby/install
-
-cd config
-echo "\nconfiguring.."
-mkdir ~/web
-cp config.ru ~/web
-cp site.css ~/web/.css
-cp site.js ~/web/.js
-cp font.woff ~/web/.font.woff
+cd ruby
+ruby install
 
 echo "\ninstalling dependencies.."
+# ruby
+gem install bundler
+bundle config build.nokogiri --use-system-libraries
+bundle install
+cd ..
+# python
 pip install --upgrade pygments
-gem install nokogiri -- --use-system-libraries
-gem install dimensions
-gem install foreman
-gem install linkeddata
-gem install mail
-gem install nokogiri
-gem install nokogiri-diff
-gem install rack
-gem install redcarpet
-gem install thin
-gem install unicorn
 
-# cd ruby
-# gem install bundler
-# bundle config build.nokogiri --use-system-libraries
-# bundle install
+echo "\nconfiguring.."
+conf=~/web/.conf
+mkdir -p $conf
+rsync -av config/ $conf
