@@ -1,5 +1,5 @@
 body, .focus > td[property="uri"], .focus > td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {font-family: sans-serif;background-color:#000;color:#fff}
-.focus a.date {font-size: .6em}
+.focus a.date {font-size: .8em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
 table {margin:auto;border-spacing:0}
 th a:before {font-size:1.6em;font-weight: normal;float:left}
@@ -8,6 +8,7 @@ a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
 a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
+td {padding:.2em}
 td, img, pre {vertical-align:top}
 td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
 td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span {font-size: .9em}
