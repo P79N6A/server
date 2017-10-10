@@ -180,7 +180,7 @@ class R
       end
     end
     labels = l[Label].justArray
-    this.host.do{|h|labels.push h}
+    this.host.do{|h|labels.unshift h}
 
     indexContext = -> p,v {
       v = v.R
