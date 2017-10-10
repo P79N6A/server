@@ -2,12 +2,13 @@
 ``` sh
 git clone https://gitlab.com/ix/pw && cd pw
 
-## platform-specific dependency install:
-#Debian https://www.debian.org
+# Debian
 apt-get install git ruby ruby-dev libssl-dev libxml2-dev libxslt1-dev pkg-config python-pygments
-#Void https://www.voidlinux.eu
+
+# Void
 xbps-install GraphicsMagick base-devel git ruby ruby-devel libxml2-devel libxslt-devel python-Pygments
-#Termux https://termux.com
+
+# Termux
 pkg install autoconf automake binutils clang file findutils git iconv pkg-config python ruby ruby-dev libxslt-dev
 
 sh install
