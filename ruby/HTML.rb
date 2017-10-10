@@ -165,24 +165,23 @@ class R
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
-    # explicit titles
-    names = []; l[Title].do{|t| names.concat t.justArray}
-    # no title found
-    if names.empty? && this.path
+    names = l[Title].justArray
+    if names.empty? && this.path # no explicit title, continue search
       if isTweet
         if head # peel out content to summary-node
           e.env[:summary][Title] ||= 'Twitter'
           [Date,Type,To].map{|p|e.env[:summary][p]||=l[p]}
           e.env[:summary][Content].concat l[Content]
         end
-      elsif isChat # hide chat-message in overview
-      else # use filename
+      elsif isChat # no title (hidden in heading)
+      else # file metadata
         fsName = (URI.unescape (File.basename this.path))[0..64] # filename
         names.push(focus && e.env[:title] || fsName) # request-URI title from environment
       end
     end
+    labels = l[Label].justArray
+    this.host.do{|h|labels.push h}
 
-    # link to query result (URI match) with resource highlighted
     indexContext = -> p,v {
       v = v.R
       if isMail # address*month
@@ -208,7 +207,7 @@ class R
                # names
                [names.map{|name|{_: :a, class: :title, href: href, c: (CGI.escapeHTML name.to_s)}}.intersperse(' '), ' ',
                 # labels
-                l[Label].justArray.map{|v|
+                labels.map{|v|
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
