@@ -38,17 +38,21 @@ class String
   # [,.] only match mid-URI, opening ( required for ) capture, <> wrapping is stripped
   def hrefs &b
     pre,link,post = self.partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
-    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escape URI
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escape pre-match
+    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
       (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
        (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
-        yield(R::Image,u.R) if b # emit image
-        "<img src='#{u}'/>"           # inline image
+        yield(R::Image,u.R) if b # image RDF
+        "<img src='#{u}'/>"      # inline image
        else
-         yield(R::DC+'link',u.R) if b # emit link
-         u.sub(/^https?.../,'')       # innertext
+         if b && !u.match?(/groups.google/)
+           yield(R::DC+'link',u.R) # link RDF
+           u.sub(/^https?.../,'')  # text
+         else
+           '' # skip URL
+         end
         end) + '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # process post-match tail
+      (post.empty? && '' || post.hrefs(&b)) # recursion on post-match tail
   rescue Exception => x
     puts [x.class,x.message,self[0..127]].join(" ")
     ""
