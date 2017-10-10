@@ -131,10 +131,10 @@ class R
       o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # normalize resource classes
       g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} # add
     # load JSON format
-    nonRDF.map{|n| (JSON.parse n.toJSON.readFile).map{|s,re| # each subject
-        re.map{|p,o| # each predicate/object
-          o.justArray.map{|o| # each triple
-            o = o.R if o.class==Hash # normalize resource classes
+    nonRDF.map{|n| (JSON.parse n.cachedRDF.readFile).map{|s,re| # subject, resource
+        re.map{|p,o| # predicate, object(s)
+          o.justArray.map{|o| # object
+            o = o.R if o.class==Hash
             g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add
     g # tree-graph
   end

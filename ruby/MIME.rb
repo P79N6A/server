@@ -208,10 +208,9 @@ class R
   end
 
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
-  def toRDF; isRDF ? self : toJSON end
+  def toRDF; isRDF ? self : cachedRDF end
 
-  # data to JSON (RDF-subset)
-  def toJSON
+  def cachedRDF
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
     doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
@@ -231,7 +230,6 @@ class R
     doc
   end
 
-  # identifier to JSON
   def to_json *a; {'uri' => uri}.to_json *a end
 
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
