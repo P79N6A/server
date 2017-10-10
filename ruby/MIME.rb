@@ -140,7 +140,7 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  # MIMEs w/ native output support
+  # MIMEs w/ in-library output support
   Writable = %w{application/atom+xml text/html}
 
   # RDF type -> icon name
@@ -159,6 +159,7 @@ class R
     To => :userB,
     DC+'hasFormat' => :file,
     DC+'cache' => :chain,
+    Schema+'Person' => :user,
     Schema+'location' => :location,
     Stat+'File' => :file,
     Stat+'Archive' => :archive,
