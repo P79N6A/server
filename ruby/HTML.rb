@@ -45,7 +45,7 @@ class String
         yield(R::Image,u.R) if b # image RDF
         "<img src='#{u}'/>"      # inline image
        else
-         if b && !u.match?(/groups.google/)
+         if b #&& !u.match(/groups.google/)
            yield(R::DC+'link',u.R) # link RDF
            u.sub(/^https?.../,'')  # text
          else
