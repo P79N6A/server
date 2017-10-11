@@ -9,6 +9,7 @@ class R
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
     resource = path.R; e['uri'] = resource.uri           # resource URI
     e[:Response]={}; e[:Links]={}                        # response header
+    puts e['HTTP_USER_AGENT']
     resource.setEnv(e).send e['REQUEST_METHOD']          # call method
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"

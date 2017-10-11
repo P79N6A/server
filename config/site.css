@@ -2,7 +2,7 @@ body, .focus > td[property="uri"], .focus > td[property="http://www.w3.org/1999/
 .focus a.date {font-size: .8em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
 a:visited {background-color:#fff;color:#000}
-table {margin:auto;border-spacing:0}
+table {display: inline-block;border-spacing:0}
 th a:before {font-size:1.6em;font-weight: normal;float:left}
 a.title {color:#000;background-color:#fff;font-size:1.1em;float:right}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em}
@@ -11,10 +11,8 @@ a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
 td {padding:.2em}
 td, img, pre {vertical-align:top}
-td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {text-align:right}
 td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span {font-size: .9em}
 td[property="http://rdfs.org/sioc/ns#has_creator"] span.notes, td[property="http://rdfs.org/sioc/ns#addressed_to"] span.notes {color:#aaa;font-size:.8em}
-td[property="uri"] {overflow:hidden}
 td[property="uri"] img, td[property="uri"] .containers {float:right;margin-right:.2em}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td.path {padding-left:.2em}
@@ -25,9 +23,6 @@ a.label {float: left}
 a.thumb img {height:256px}
 .date {font-size:.9em;white-space: nowrap}
 :target, :target a, :target[name] {background-color:#fff;color:#000}
-table.links {float: right}
-table.links td.host a {white-space:nowrap}
-table.links td.host {text-align: right}
 @font-face {font-family: "icons";src: url('/.conf/font.woff') format('woff');}
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }
