@@ -4,10 +4,9 @@ a {text-decoration:none; font-family: hack; font-weight: bold; background-color:
 a:visited {background-color:#fff;color:#000}
 table {display: inline-block;border-spacing:0}
 th a:before {font-size:1.6em;font-weight: normal;float:left}
-a.title {color:#000;background-color:#fff;font-size:1.1em;float:right}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em}
 a[rel="prev"], a[rel="up"], a[rel="down"] {float: left}
-a[rel="next"] {float: right}
+a.title, a[rel="next"] {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
 td {padding:.2em}
 td, img, pre {vertical-align:top}
