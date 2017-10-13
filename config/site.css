@@ -1,13 +1,13 @@
-body, .focus > td[property="uri"], .focus > td[property="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"] {font-family: sans-serif;background-color:#000;color:#fff}
+body {font-family: sans-serif;background-color:#000;color:#fff}
 table {display: inline-block;border-spacing:0}
 table, img {max-width: 100%}
 th a:before {font-size:1.6em;font-weight: normal;float:left}
+tr.focus > td {background-color:#222}
 td {padding:.2em}
 td, img, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 pre {white-space: pre-wrap; font-family: monospace; max-width: 144ex; margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0}
 span.notes {color:#aaa;font-size:.8em}
-.focus a.date {font-size: .78em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
 a:visited {background-color:#fff;color:#000}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em}
