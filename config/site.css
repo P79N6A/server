@@ -7,7 +7,7 @@ td, img, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 pre {white-space: pre-wrap; font-family: monospace; max-width: 144ex; margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0}
 span.notes {color:#aaa;font-size:.8em}
-.focus a.date {font-size: .8em}
+.focus a.date {font-size: .78em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
 a:visited {background-color:#fff;color:#000}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em}
@@ -15,7 +15,7 @@ a[rel="prev"], a[rel="up"], a[rel="down"], a.label {float: left}
 a.title, a[rel="next"], table.links {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em}
 a.thumb img {height:256px}
-.date {font-size:.9em;white-space: nowrap}
+.containers, .date {float: left; font-size:.93em}
 :target, :target a, :target[name] {background-color:#fff;color:#000}
 @font-face {font-family: "icons";src: url('/.conf/font.woff') format('woff');}
 a.id:before { content:"\f0c2"; font-family: icons; }
