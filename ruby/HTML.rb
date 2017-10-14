@@ -101,7 +101,7 @@ class R
                 ]},
             {_: :body,
              c: [upPage, prevPage, nextPage, # page pointers
-                 OverView[e[:overview]],
+                 e[:overview].do{|o|[OverView[o],br]},
                  TabularView[graph,re], # resources
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},
                    {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?),
