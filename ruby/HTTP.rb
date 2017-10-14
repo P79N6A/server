@@ -28,7 +28,7 @@ class R
     return feed if parts[0] == 'feed'
     return (chrono parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
 
-    # datetime pointer arithmetic
+    # datetime pointer-arithmetic
     dp = []
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil

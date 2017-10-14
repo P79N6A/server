@@ -10,10 +10,10 @@ pre {white-space: pre-wrap; font-family: monospace; max-width: 144ex; margin-lef
 span.notes {color:#aaa;font-size:.8em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
 a:visited {background-color:#fff;color:#000}
-a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em}
+a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;padding-left:.14em;padding-right:.14em}
 a[rel="prev"], a[rel="up"], a[rel="down"], a.label {float: left}
 a.title, a[rel="next"], table.links {float: right}
-a[rel="up"], a[rel="down"] {margin-left:1em}
+a[rel="up"], a[rel="down"] {margin-left:1em;}
 a.thumb img {height:256px}
 .containers, .date {float: left; font-size:.93em}
 :target, :target a, :target[name] {background-color:#fff;color:#000}
