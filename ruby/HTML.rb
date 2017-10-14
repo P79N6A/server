@@ -101,13 +101,28 @@ class R
                 ]},
             {_: :body,
              c: [upPage, prevPage, nextPage, # page pointers
+                 OverView[e[:overview]],
                  TabularView[graph,re], # resources
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},
                    {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?),
                  ([br,prevPage,nextPage] if graph.keys.size > 8), downPage]}]}]}
 
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
+
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
+                 RSS+'comments', RSS+'em', RSS+'category',
+                 Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
+                 "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
+
+  OverView = -> type {
+    case type
+    when :year
+      "years"
+    else
+    end
+  }
+
   TabularView = -> g, e {
     e.env[:label] = {} # named labels
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # colorize levels of quoting

@@ -34,21 +34,25 @@ class R
     n = nil; p = nil
     case dp.length
     when 1 # Y
+      @r[:overview] = :year
       year = dp[0]
       n = '/' + (year + 1).to_s
       p = '/' + (year - 1).to_s
     when 2 # Y-m
+      @r[:overview] = :month
       year = dp[0]
       m = dp[1]
       n = m >= 12 ? "/#{year + 1}/#{01}" : "/#{year}/#{'%02d' % (m + 1)}"
       p = m <=  1 ? "/#{year - 1}/#{12}" : "/#{year}/#{'%02d' % (m - 1)}"
     when 3 # Y-m-d
+      @r[:overview] = :day
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue nil
       if day
         p = (day-1).strftime('/%Y/%m/%d')
         n = (day+1).strftime('/%Y/%m/%d')
       end
     when 4 # Y-m-d-H
+      @r[:overview] = :hour
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue nil
       if day
         hour = dp[3]
