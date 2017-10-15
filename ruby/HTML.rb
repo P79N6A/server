@@ -18,6 +18,8 @@ def H x # HTML generator
     H({_: :a, href: x.uri, c: x.label})
   when NilClass
     ''
+  when FalseClass
+    ''
   else
     CGI.escapeHTML x.to_s
   end
@@ -101,7 +103,8 @@ class R
                 ]},
             {_: :body,
              c: [upPage, prevPage, nextPage, # page pointers
-                 e[:overview].do{|o|[OverView[o],br]},
+                 re.path[-1]=='/' && e[:overview].do{|o|
+                   [OverView[graph,re,o],br]},
                  TabularView[graph,re], # resources
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},
                    {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?),
@@ -115,8 +118,8 @@ class R
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
-  OverView = -> type {
-    case type
+  OverView = -> graph,env,style {
+    case style
     when :year
       "years"
     else
