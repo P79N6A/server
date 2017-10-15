@@ -174,18 +174,19 @@ class R
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
-    # name(s), required to show in heading mode
-    names = l[Title].justArray
-    if names.empty? && this.path # no explicit title provided
+    # name(s), required to show in header
+    names = l[Title].justArray # explicit title
+    if names.empty? && this.path # no explicit title found
       if isTweet || isChat # individual msgs hidden in overview
-      else # file metadata
-        fsName = (URI.unescape (File.basename this.path))[0..64] # filename, or
-        names.push(focus && e.env[:title] || fsName) # requestURI#this from environment
+      else # file and request-URI metadata
+        fsName = (URI.unescape (File.basename this.path))[0..64] # fs name
+        names.push(focus && e.env[:title] || fsName) # <req#this> title
       end
     end
     labels = l[Label].justArray
     this.host.do{|h|labels.unshift h}
 
+    # pointer to resource as selection in result-set
     indexContext = -> p,v {
       v = v.R
       if isMail # address*month

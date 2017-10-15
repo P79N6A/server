@@ -109,7 +109,7 @@ class R
 
   def grep q
     words = R.tokens q
-    case words.size # unordered && (AND) terms
+    case words.size # unordered AND (&&) terms
     when 2
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
     when 3
