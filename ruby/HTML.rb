@@ -170,7 +170,6 @@ class R
     isChat = types.member? SIOC+'InstantMessage'
     isMail = types.member? SIOC+'MailMessage'
     isBlog = types.member? SIOC+'BlogPost'
-    isTweet = types.member? SIOC+'Tweet'
     monospace = isChat || isCode || isMail
 
     # date
@@ -180,7 +179,7 @@ class R
     # name(s), required to show in header
     names = l[Title].justArray # explicit title
     if names.empty? && this.path # no explicit title found
-      if isTweet || isChat # individual msgs hidden in overview
+      if isChat # individual msgs hidden in overview
       else # file and request-URI metadata
         fsName = (URI.unescape (File.basename this.path))[0..64] # fs name
         names.push(focus && e.env[:title] || fsName) # <req#this> title
@@ -194,12 +193,6 @@ class R
       v = v.R
       if isMail # address*month
         {_: :a, href: v.path + '?head#r' + href.sha2, c: v.label}
-      elsif isTweet
-        if p == Creator # creator*day
-          {_: :a, href: datePath[0..-4] + '*/*twitter*' + v.path[1..-1] + '*#r' + href.sha2, c: v.label}
-        elsif p == To # host*hour
-          {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
-        end
       elsif isBlog # host*day
         {_: :a, href: datePath[0..-4] + '*/*' + v.host + '*?head#r' + href.sha2, c: v.label}
       else
