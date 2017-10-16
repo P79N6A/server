@@ -6,16 +6,17 @@ tr.focus > td {background-color:#222}
 td {padding:.2em}
 td, img, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
+td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 pre {white-space: pre-wrap; font-family: monospace; max-width: 144ex; margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0}
 span.notes {color:#aaa;font-size:.8em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
 a:visited {background-color:#fff;color:#000}
+a.date {white-space: nowrap}
+a.thumb img {height:256px}
 a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;padding-left:.14em;padding-right:.14em}
 a[rel="prev"], a[rel="up"], a[rel="down"], a.label {float: left}
 a.title, a[rel="next"], table.links {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em;}
-a.thumb img {height:256px}
-.containers, .date {float: left; font-size:.93em}
 :target, :target a, :target[name] {background-color:#fff;color:#000}
 @font-face {font-family: "icons";src: url('/.conf/font.woff') format('woff');}
 a.id:before { content:"\f0c2"; font-family: icons; }
@@ -49,7 +50,6 @@ a.envelope:before { content:"\f0e0"; font-family: icons; }
 a.newspaper:before { content:"\f1ea"; font-family: icons; }
 a.openenvelope:before { content:"\f2b6"; font-family: icons; }
 a.time:before { content:"\f017"; font-family: icons; }
-a.tweet:before { content:"\f099"; font-family: icons; }
 a.user:before { content:"\f007"; font-family: icons;}
 a.userB:before { content:"\f2c0"; font-family: icons;}
 .highlight .c { color: #586e75 } /* Comment */
