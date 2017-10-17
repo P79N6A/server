@@ -74,7 +74,7 @@ class R
     set = (if node.directory?
            if q.has_key?('f') && path!='/' # FIND(1) nodes
              find q['f']
-           elsif q.has_key?('q') && path!='/' # GREP(1) nodes
+           elsif q.has_key?('q') && q['q'] && !q['q'].empty? && path!='/' # GREP(1) nodes
              grep q['q']
            else # container
              if uri[-1] == '/' # inside

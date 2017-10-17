@@ -277,7 +277,7 @@ class R
   }
 
   # tree-graph grep result in HTML
-  def R.tokens str; str.scan(/[\w]+/).map(&:downcase).uniq end
+  def R.tokens str; str ? str.scan(/[\w]+/).map(&:downcase).uniq : [] end
   Grep = -> graph, q {
     # tokenize
     wordIndex = {}
