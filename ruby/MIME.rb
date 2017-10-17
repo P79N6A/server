@@ -451,7 +451,7 @@ class R
     htmlFiles.map{|p| # HTML file
       html = srcDir + "#{htmlCount}.html"  # file location
 #      yield e, DC+'hasFormat', html        # file pointer
-#      html.writeFile p.decoded  if !html.e # store HTML email
+      html.writeFile p.decoded  if !html.e # store HTML email
       htmlCount += 1 } # increment count
 
     # text parts
