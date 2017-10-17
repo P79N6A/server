@@ -72,9 +72,9 @@ class R
 
     # file-resource nodes
     set = (if node.directory?
-           if (q.has_key? 'find') && path!='/' # FIND(1) nodes
-             find q['find']
-           elsif (q.has_key? 'q') && path!='/' # GREP(1) nodes
+           if q.has_key?('f') && path!='/' # FIND(1) nodes
+             find q['f']
+           elsif q.has_key?('q') && path!='/' # GREP(1) nodes
              grep q['q']
            else # container
              if uri[-1] == '/' # inside
