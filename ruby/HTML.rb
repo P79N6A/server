@@ -39,7 +39,7 @@ class String
   # demo on the site (https://demohere) and source-code at https://sourcehere.
   # [,.] only match mid-URI, opening ( required for ) capture, <> wrapping is stripped
   def hrefs &b
-    pre,link,post = self.partition /(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/
+    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
       (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
@@ -47,17 +47,10 @@ class String
         yield(R::Image,u.R) if b # image RDF
         "<img src='#{u}'/>"      # inline image
        else
-         if b #&& !u.match(/groups.google/)
-           yield(R::DC+'link',u.R) # link RDF
-           u.sub(/^https?.../,'')  # text
-         else
-           '' # skip URL
-         end
+         yield(R::DC+'link',u.R) if b # link RDF
+         u.sub(/^https?.../,'')  # text
         end) + '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # recursion on post-match tail
-  rescue Exception => x
-    puts [x.class,x.message,self[0..127]].join(" ")
-    ""
   end
   def sha2; Digest::SHA2.hexdigest self end
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
@@ -107,7 +100,8 @@ class R
                    [OverView[graph,re,o],br]},
                  TabularView[graph,re], # resources
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},
-                   {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}] if graph.empty?),
+                   {_: :span,style: 'font-size:12em;font-weight:bold',c: 404},
+                   (CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  ([br,prevPage,nextPage] if graph.keys.size > 8), downPage]}]}]}
 
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
