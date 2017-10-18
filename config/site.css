@@ -9,6 +9,7 @@ td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 pre {white-space: pre-wrap; font-family: monospace; max-width: 144ex; margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0}
 span.notes {color:#aaa;font-size:.8em}
+div.containers {min-width:20em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
 a:visited {background-color:#fff;color:#000}
 a.date {white-space: nowrap}

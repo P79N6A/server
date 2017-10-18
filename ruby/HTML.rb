@@ -211,7 +211,10 @@ class R
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
                 # links
-                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|{class: :containers, c: cs.map{|c|{_: :a, href: c.uri, c: c.label+' '}}} unless cs.empty?} unless focus),
+                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
+                   {class: :containers, c: cs.map{|c|
+                      [{_: :a, href: c.uri, c: c.label},
+                       ' ']}} unless cs.empty?} unless focus),
                 (links = [DC+'link',
                           SIOC+'attachment',
                           DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
