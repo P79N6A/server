@@ -48,9 +48,9 @@ class String
         "<img src='#{u}'/>"      # inline image
        else
          yield(R::DC+'link',u.R) if b # link RDF
-         u.sub(/^https?.../,'')  # text
+         u.sub(/^https?.../,'')  # inline text
         end) + '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # recursion on post-match tail
+      (post.empty? && '' || post.hrefs(&b)) # recursion on post-capture tail
   end
   def sha2; Digest::SHA2.hexdigest self end
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
@@ -90,19 +90,22 @@ class R
              c: [{_: :meta, charset: 'utf-8'},
                  {_: :title, c: e[:title]||re.path},
                  {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                 {_: :script, c: '.conf/site.js'.R.readFile},
-                 {_: :style, c: '.conf/site.css'.R.readFile},
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                 ]},
             {_: :body,
              c: [upPage, prevPage, nextPage, # page pointers
-                 re.path[-1]=='/' && e[:overview].do{|o|
-                   [OverView[graph,re,o],br]},
+                 re.path[-1]=='/' && e[:view].do{|o|
+                   [View[graph,re,o],br]},
                  TabularView[graph,re], # resources
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},
                    {_: :span,style: 'font-size:12em;font-weight:bold',c: 404},
                    (CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
-                 ([br,prevPage,nextPage] if graph.keys.size > 8), downPage]}]}]}
+                 ([br,prevPage,nextPage] if graph.keys.size > 8), downPage,
+                 {_: :style, c: '.conf/site.css'.R.readFile},
+                 {_: :script, c: '.conf/site.js'.R.readFile},
+                ]}
+           ]}
+      ]}
 
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
@@ -112,7 +115,7 @@ class R
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
-  OverView = -> graph,env,style {
+  View = -> graph,env,style {
     case style
     when :year
       "years"
