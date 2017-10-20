@@ -215,7 +215,7 @@ class R
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
                 # links
                 (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
-                   {class: :containers, c: cs.map{|c|
+                   {_: :span, class: :children, c: cs.map{|c|
                       [{_: :a, href: c.uri, c: c.label},
                        ' ']}} unless cs.empty?} unless focus),
                 (links = [DC+'link',
