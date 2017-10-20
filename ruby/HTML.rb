@@ -76,7 +76,9 @@ class R
     html.to_xhtml(:indent => 0)}
 
   # tree-graph -> XML-in-Ruby -> HTML
-  HTML = -> graph, re { e=re.env
+  HTML = -> graph, re {
+    e=re.env
+    debug = re.q.has_key? 'dbg'
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
     br = '<br clear=all>'
@@ -85,11 +87,12 @@ class R
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|[br,{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     H ["<!DOCTYPE html>\n",
-       {_: :html,
+       {_: :html, debug: debug ? :true : :false,
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'},
                  {_: :title, c: e[:title]||re.path},
                  {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                 ({_: :script, type: 'text/javascript',src: 'https://getfirebug.com/firebug-lite.js'} if debug),
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                 ]},
             {_: :body,
