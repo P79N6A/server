@@ -95,7 +95,8 @@ class R
                 ]},
             {_: :body,
              c: [upPage, prevPage, nextPage, # page pointers
-                 re.path[-1]=='/' && e[:view].do{|o|[View[graph,re,o],br]} || TabularView[graph,re],
+                 re.path[-1]=='/' && e[:view].do{|o|[View[graph,re,o],br]},
+                 TabularView[graph,re],
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  ([br,prevPage,nextPage] if graph.keys.size > 8), downPage,
                  {_: :style, c: '.conf/site.css'.R.readFile},
