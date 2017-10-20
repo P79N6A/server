@@ -118,7 +118,7 @@ class R
        c: [
          {_: :tr, c: months.map{|r|
             size = r[Size].justArray[0]
-            {_: :td, style: 'vertical-align:bottom', c: {id: 'month'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: "background-color:blue; width: 2em; height:#{size / 2.0}em"}}}},
+            {_: :td, style: 'vertical-align:bottom', c: {id: 'month'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:blue; width: 2em; height:#{size / 2.0}em" : ''}}}},
          {_: :tr, c: months.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
          {_: :tr, c: {_: :td, colspan: 12, style: 'font-size:1.6em', c: re.basename}}
           ]}
@@ -128,7 +128,7 @@ class R
        c: [
          {_: :tr, c: days.map{|r|
             size = r[Size].justArray[0]
-            {_: :td, style: 'vertical-align:bottom', c: {id: 'day'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: "background-color:green; width: 2em; height:#{size / 2.0}em"}}}},
+            {_: :td, style: 'vertical-align:bottom', c: {id: 'day'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:green; width: 2em; height:#{size / 2.0}em" : ''}}}},
          {_: :tr, c: days.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
          {_: :tr, c: {_: :td, colspan: 31, style: 'font-size:1.6em', c: re.uri[1..-2]}}
        ]}
@@ -138,7 +138,7 @@ class R
        c: [
          {_: :tr, c: hours.map{|r|
             size = r[Size].justArray[0]
-            {_: :td, style: 'vertical-align:bottom', c: {id: 'hour'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: "background-color:white; width: 2em; height:#{size / 4.2}em"}}}},
+            {_: :td, style: 'vertical-align:bottom', c: {id: 'hour'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:white; width: 2em; height:#{size / 4.2}em" : ''}}}},
          {_: :tr, c: hours.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
          {_: :tr, c: {_: :td, colspan: 24, style: 'font-size:1.6em', c: re.uri[1..-2]}}
           ]}
