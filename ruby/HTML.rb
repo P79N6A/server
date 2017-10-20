@@ -75,7 +75,7 @@ class R
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml(:indent => 0)}
 
-  # tree-graph -> XML-in-Ruby -> HTML
+  # graph-tree -> HTML
   HTML = -> graph, re {
     e=re.env
     debug = re.q.has_key? 'dbg'
@@ -133,7 +133,7 @@ class R
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    keys = [Type,Creator,To,g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
+    keys = [Creator,To,Type,g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta; keys -= VerboseMeta unless e.q.has_key? 'full'
     [{_: :table,
       c: [{_: :tbody,
