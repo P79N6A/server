@@ -78,7 +78,7 @@ class R
            else # container
              if uri[-1] == '/' # inside
                # static wins over dynamic content
-               (self+'index.*').glob || [self, children] # inline children
+               (self+'index.{html,ttl}').glob || [self, children] # inline children
              else # outside
                @r[:Links][:down] = path + '/' + qs
                self # just the container
