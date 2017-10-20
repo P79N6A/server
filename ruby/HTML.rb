@@ -123,7 +123,7 @@ class R
          {_: :tr, c: {_: :td, colspan: 12, style: 'font-size:1.6em', c: re.basename}}
           ]}
     when :month
-      days = graph.values.select{|r|r.R.path.match /\d{4}\/\d{2}\/\d{2}/}.sort_by(&:uri)
+      days = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
       {_: :table,
        c: [
          {_: :tr, c: days.map{|r|
@@ -133,7 +133,7 @@ class R
          {_: :tr, c: {_: :td, colspan: 31, style: 'font-size:1.6em', c: re.uri[1..-2]}}
        ]}
     when :day
-      hours = graph.values.select{|r|r.R.path.match /\d{4}\/\d{2}\/\d{2}\/\d{2}/}.sort_by(&:uri)
+      hours = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
       {_: :table,
        c: [
          {_: :tr, c: hours.map{|r|
