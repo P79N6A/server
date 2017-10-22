@@ -114,51 +114,56 @@ class R
 
   TimeSegs = -> config,graph,re {
     segs = graph.values.select{|r|
-      r.R.path.do{|p|
-        p.match config[:path]}}.sort_by(&:uri)
+      r.R.path.do{|p|p.match config[:path]}}.sort_by(&:uri)
+    color = '#%06x' % (rand 16777216)
     [{_: :table,
-     c: [{_: :tr, c: segs.map{|r|
-          size = r[Size].justArray[0]
-          {_: :td, style: 'vertical-align:bottom', c: {id: config[:segType].to_s + r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:#{config[:color]}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
-       {_: :tr, c: segs.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-       {_: :tr, c: {_: :td, colspan: config[:count], style: 'font-size:1.6em', c: re.basename}}]},
-     config[:showContent] ? TabularView[grpah,re] : ''
-   ]}
+      c: [{_: :tr, c: {_: :td, colspan: config[:count], style: 'font-size:1.6em', c: re.path[1..-1].split('/').join('.')}},
+          {_: :tr, c: segs.map{|r|
+             size = r[Size].justArray[0] || 0
+             full = size >= config[:segSize]
+             {_: :td, id: config[:segType].to_s + r.R.basename,
+              onclick: "window.location.href = this.getAttribute(\"href\");",
+              href: r.uri + (config[:showContent] ? '?head' : ''),
+              style: 'vertical-align:bottom',
+              c: {style: size ? "background-color:#{full ? 'white' : color}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
+          {_: :tr, c: segs.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
+         ]},
+     config[:showContent] ? TabularView[graph,re] : '' ]}
 
   View[:epoch] = -> graph,re {
     config = {
       path: /^\/\d{4}\/$/,
-      segType: :year,
       count: 3000,
-      scale: 2.0,
-      color: :red}
+      segType: :year,
+      segSize: 12, # months
+      scale: 1.0}
     TimeSegs[config,graph,re]}
 
   View[:year] = -> graph,re {
     config = {
       path: /^\/\d{4}\/\d{2}\/$/,
-      segType: :month,
       count: 12,
-      scale: 2.0,
-      color: :red}
+      segType: :month,
+      segSize: 30, # days
+      scale: 2.0}
     TimeSegs[config,graph,re]}
 
   View[:month] = -> graph,re {
     config = {
       path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
-      segType: :month,
       count: 31,
-      scale: 2.0,
-      color: :green}
+      segType: :day,
+      segSize: 24, # hours
+      scale: 2.0}
     TimeSegs[config,graph,re]}
 
   View[:day] = -> graph,re {
     config = {
       path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
-      segType: :day,
       count: 24,
+      segType: :hour,
+      segSize: 3600, # seconds
       scale: 4.2,
-      color: :white,
       showContent: :true}
     TimeSegs[config,graph,re]}
 
