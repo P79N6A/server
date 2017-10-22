@@ -30,6 +30,7 @@ class R
     dp = []
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil
+    @r[:view] = :epoch if path=='/'
     case dp.length
     when 1 # Y
       @r[:view] = :year

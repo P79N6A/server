@@ -125,6 +125,15 @@ class R
      config[:showContent] ? TabularView[grpah,re] : ''
    ]}
 
+  View[:epoch] = -> graph,re {
+    config = {
+      path: /^\/\d{4}\/$/,
+      segType: :year,
+      count: 3000,
+      scale: 2.0,
+      color: :red}
+    TimeSegs[config,graph,re]}
+
   View[:year] = -> graph,re {
     config = {
       path: /^\/\d{4}\/\d{2}\/$/,
