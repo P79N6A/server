@@ -60,6 +60,8 @@ end
 
 class R
 
+  View = {}
+
   def nokogiri; require 'nokogiri'; Nokogiri::HTML.parse (open uri).read end
   def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
@@ -78,7 +80,8 @@ class R
   # graph-tree -> HTML
   HTML = -> graph, re {
     e=re.env
-#    debug = re.q.has_key? 'dbg'
+    debug = re.q.has_key? 'dbg'
+    view = e[:view]
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
     br = '<br clear=all>'
@@ -87,15 +90,15 @@ class R
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
     downPage = e[:Links][:down].do{|d|[br,{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     H ["<!DOCTYPE html>\n",
-       {_: :html,# debug: debug ? :true : :false,
+       {_: :html, debug: debug ? :true : :false,
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: e[:title]||re.path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-#                 ({_: :script, type: 'text/javascript',src: 'https://getfirebug.com/firebug-lite.js'} if debug),
+                 ({_: :script, type: 'text/javascript',src: 'https://getfirebug.com/firebug-lite.js'} if debug),
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                 ]},
             {_: :body,
              c: [upPage, prevPage, nextPage, # page pointers
-                 re.path[-1]=='/' && e[:view].do{|o|[View[graph,re,o],br]},
+                 View[view] && View[view][graph,re],
                  TabularView[graph,re],
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  ([br,prevPage,nextPage] if graph.keys.size > 8), downPage,
@@ -110,40 +113,38 @@ class R
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
-  View = -> graph,re,style {
-    case style
-    when :year
-      months = graph.values.select{|r|r.R.basename.match /^[0-1][0-9]$/}.sort_by(&:uri)
-      {_: :table,
-       c: [
-         {_: :tr, c: months.map{|r|
-            size = r[Size].justArray[0]
-            {_: :td, style: 'vertical-align:bottom', c: {id: 'month'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:blue; width: 2em; height:#{size / 2.0}em" : ''}}}},
-         {_: :tr, c: months.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-         {_: :tr, c: {_: :td, colspan: 12, style: 'font-size:1.6em', c: re.basename}}
-          ]}
-    when :month
-      days = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
-      {_: :table,
-       c: [
-         {_: :tr, c: days.map{|r|
-            size = r[Size].justArray[0]
-            {_: :td, style: 'vertical-align:bottom', c: {id: 'day'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:green; width: 2em; height:#{size / 2.0}em" : ''}}}},
-         {_: :tr, c: days.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-         {_: :tr, c: {_: :td, colspan: 31, style: 'font-size:1.6em', c: re.uri[1..-2]}}
-       ]}
-    when :day
-      hours = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
-      {_: :table,
-       c: [
-         {_: :tr, c: hours.map{|r|
-            size = r[Size].justArray[0]
-            {_: :td, style: 'vertical-align:bottom', c: {id: 'hour'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:white; width: 2em; height:#{size / 4.2}em" : ''}}}},
-         {_: :tr, c: hours.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-         {_: :tr, c: {_: :td, colspan: 24, style: 'font-size:1.6em', c: re.uri[1..-2]}}
-          ]}
-    else
-    end
+  View[:year] = -> graph,re {
+    months = graph.values.select{|r|r.R.basename.match /^[0-1][0-9]$/}.sort_by(&:uri)
+    {_: :table,
+     c: [
+       {_: :tr, c: months.map{|r|
+          size = r[Size].justArray[0]
+          {_: :td, style: 'vertical-align:bottom', c: {id: 'month'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:blue; width: 2em; height:#{size / 2.0}em" : ''}}}},
+       {_: :tr, c: months.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
+       {_: :tr, c: {_: :td, colspan: 12, style: 'font-size:1.6em', c: re.basename}}
+     ]}
+  }
+  View[:month] = -> graph,re {
+    days = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
+    {_: :table,
+     c: [
+       {_: :tr, c: days.map{|r|
+          size = r[Size].justArray[0]
+          {_: :td, style: 'vertical-align:bottom', c: {id: 'day'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:green; width: 2em; height:#{size / 2.0}em" : ''}}}},
+       {_: :tr, c: days.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
+       {_: :tr, c: {_: :td, colspan: 31, style: 'font-size:1.6em', c: re.uri[1..-2]}}
+     ]} 
+  }
+  View[:day] = -> graph,re {
+    hours = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
+    {_: :table,
+     c: [
+       {_: :tr, c: hours.map{|r|
+          size = r[Size].justArray[0]
+          {_: :td, style: 'vertical-align:bottom', c: {id: 'hour'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:white; width: 2em; height:#{size / 4.2}em" : ''}}}},
+       {_: :tr, c: hours.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
+       {_: :tr, c: {_: :td, colspan: 24, style: 'font-size:1.6em', c: re.uri[1..-2]}}
+     ]}
   }
 
   TabularView = -> g, e {
