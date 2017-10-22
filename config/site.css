@@ -18,7 +18,7 @@ a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;padding-
 a[rel="prev"], a[rel="up"], a[rel="down"], a.label {float: left}
 a[rel="next"], table.links {float: right}
 a[rel="up"], a[rel="down"] {margin-left:1em;}
-:target, :target a, :target[name] {background-color:#eee;color:#000}
+:target, :target a, :target[name] {background-color:#f5f5f5;color:#000}
 @font-face {font-family: "icons";src: url('/.conf/font.woff') format('woff');}
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }
