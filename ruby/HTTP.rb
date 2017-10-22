@@ -2,20 +2,19 @@
 class R
 
   def R.call e
-    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
+    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'   # collapse sequential /s
-    path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
+    path = Pathname.new(rawpath).expand_path.to_s        # evaluate path expression,
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserving trailing-slash
     resource = path.R; e['uri'] = resource.uri           # resource URI
-    e[:Response]={}; e[:Links]={}                        # response header
-    resource.setEnv(e).send e['REQUEST_METHOD']          # call method
+    e[:Response]={}; e[:Links]={}                        # header fields
+    resource.setEnv(e).send e['REQUEST_METHOD']          # call resource
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
     [500,{'Content-Type' => 'text/html'},["<html><head><style>body {background-color:#222; font-size:1.2em; text-align:center}\npre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}\n.number {color:#0f0; font-weight:normal; font-size:1.1em}</style></head><body><pre>",msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),'</pre></body></html>']]
   end
 
-  # HTTP environment (header key/val pairs)
   def env; @r end
   def setEnv r; @r = r; self end
 
@@ -244,7 +243,7 @@ class R
   def format; @format ||= selectFormat end
 
   def selectFormat
-    # query argument override of header
+    # query arg
     return 'application/atom+xml' if q.has_key?('feed')
     # header
     accept.sort.reverse.map{|q,formats| # highest qval first
