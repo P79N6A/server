@@ -113,15 +113,19 @@ class R
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TimeSegs = -> config,graph,re {
+
     here = re.path.match config[:path]
     segs = graph.values.select{|r|
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
     color = '#%06x' % (rand 16777216)
+
     [{_: :table,
       c: [{_: :tr, c: {_: :td, colspan: config[:count], style: 'font-size:1.6em', c: re.path[1..-1].split('/').join('.')}},
           {_: :tr, c: segs.map{|r|
+
              size = r[Size].justArray[0] || 0
              full = size >= config[:segSize]
+
              {_: :td, id: config[:segType].to_s + r.R.basename,
               onclick: "window.location.href = this.getAttribute(\"href\");",
               href: r.uri + (config[:showContent] ? '?head' : ''),
@@ -173,14 +177,20 @@ class R
     TimeSegs[config,graph,re]}
 
   TabularView = -> g, e {
-    e.env[:label] = {} # named labels
-    (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # colorize levels of quoting
-    [:links,:images].map{|p| e.env[p] = []} # link/image lists to track duplicates
+    # labels
+    e.env[:label] = {}
+    (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true}
+
+    [:links,:images].map{|p| e.env[p] = []} # link & image lists
+
+    # sort configuration
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
+
     keys = [Creator,To,Type,g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta; keys -= VerboseMeta unless e.q.has_key? 'full'
+
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
