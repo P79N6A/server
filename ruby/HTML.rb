@@ -97,9 +97,8 @@ class R
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                 ]},
             {_: :body,
-             c: [upPage, prevPage, nextPage, # page pointers
-                 View[view] && View[view][graph,re],
-                 TabularView[graph,re],
+             c: [upPage, prevPage, nextPage,
+                 View[view] && View[view][graph,re] || TabularView[graph,re],
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  ([br,prevPage,nextPage] if graph.keys.size > 8), downPage,
                  {_: :style, c: '.conf/site.css'.R.readFile},
@@ -113,39 +112,46 @@ class R
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
+  TimeSegs = -> config,graph,re {
+    segs = graph.values.select{|r|
+      r.R.path.do{|p|
+        p.match config[:path]}}.sort_by(&:uri)
+    [{_: :table,
+     c: [{_: :tr, c: segs.map{|r|
+          size = r[Size].justArray[0]
+          {_: :td, style: 'vertical-align:bottom', c: {id: config[:segType].to_s + r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:#{config[:color]}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
+       {_: :tr, c: segs.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
+       {_: :tr, c: {_: :td, colspan: config[:count], style: 'font-size:1.6em', c: re.basename}}]},
+     config[:showContent] ? TabularView[grpah,re] : ''
+   ]}
+
   View[:year] = -> graph,re {
-    months = graph.values.select{|r|r.R.basename.match /^[0-1][0-9]$/}.sort_by(&:uri)
-    {_: :table,
-     c: [
-       {_: :tr, c: months.map{|r|
-          size = r[Size].justArray[0]
-          {_: :td, style: 'vertical-align:bottom', c: {id: 'month'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:blue; width: 2em; height:#{size / 2.0}em" : ''}}}},
-       {_: :tr, c: months.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-       {_: :tr, c: {_: :td, colspan: 12, style: 'font-size:1.6em', c: re.basename}}
-     ]}
-  }
+    config = {
+      path: /^\/\d{4}\/\d{2}\/$/,
+      segType: :month,
+      count: 12,
+      scale: 2.0,
+      color: :red}
+    TimeSegs[config,graph,re]}
+
   View[:month] = -> graph,re {
-    days = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
-    {_: :table,
-     c: [
-       {_: :tr, c: days.map{|r|
-          size = r[Size].justArray[0]
-          {_: :td, style: 'vertical-align:bottom', c: {id: 'day'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:green; width: 2em; height:#{size / 2.0}em" : ''}}}},
-       {_: :tr, c: days.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-       {_: :tr, c: {_: :td, colspan: 31, style: 'font-size:1.6em', c: re.uri[1..-2]}}
-     ]} 
-  }
+    config = {
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
+      segType: :month,
+      count: 31,
+      scale: 2.0,
+      color: :green}
+    TimeSegs[config,graph,re]}
+
   View[:day] = -> graph,re {
-    hours = graph.values.select{|r|r.R.path.do{|p|p.match /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/}}.sort_by(&:uri)
-    {_: :table,
-     c: [
-       {_: :tr, c: hours.map{|r|
-          size = r[Size].justArray[0]
-          {_: :td, style: 'vertical-align:bottom', c: {id: 'hour'+r.R.basename,onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri, style: size ? "background-color:white; width: 2em; height:#{size / 4.2}em" : ''}}}},
-       {_: :tr, c: hours.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-       {_: :tr, c: {_: :td, colspan: 24, style: 'font-size:1.6em', c: re.uri[1..-2]}}
-     ]}
-  }
+    config = {
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
+      segType: :day,
+      count: 24,
+      scale: 4.2,
+      color: :white,
+      showContent: :true}
+    TimeSegs[config,graph,re]}
 
   TabularView = -> g, e {
     e.env[:label] = {} # named labels

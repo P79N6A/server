@@ -58,7 +58,6 @@ class R
       end
     end
     sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
-
     @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs if p && R[p].e
     @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs if n && R[n].e
     @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
