@@ -113,8 +113,9 @@ class R
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TimeSegs = -> config,graph,re {
+    here = re.path.match config[:path]
     segs = graph.values.select{|r|
-      r.R.path.do{|p|p.match config[:path]}}.sort_by(&:uri)
+      r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
     color = '#%06x' % (rand 16777216)
     [{_: :table,
       c: [{_: :tr, c: {_: :td, colspan: config[:count], style: 'font-size:1.6em', c: re.path[1..-1].split('/').join('.')}},
@@ -128,41 +129,44 @@ class R
               c: {style: size ? "background-color:#{full ? 'white' : color}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
           {_: :tr, c: segs.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
          ]},
-     config[:showContent] ? TabularView[graph,re] : '' ]}
+     (!here || config[:showContent]) ? TabularView[graph,re] : '' ]}
 
   View[:epoch] = -> graph,re {
     config = {
-      path: /^\/\d{4}\/$/,
       count: 3000,
       segType: :year,
       segSize: 12, # months
+      segPath: /^\/\d{4}\/$/,
       scale: 1.0}
     TimeSegs[config,graph,re]}
 
   View[:year] = -> graph,re {
     config = {
-      path: /^\/\d{4}\/\d{2}\/$/,
+      path: /^\/\d{4}\/$/,
       count: 12,
       segType: :month,
       segSize: 30, # days
+      segPath: /^\/\d{4}\/\d{2}\/$/,
       scale: 2.0}
     TimeSegs[config,graph,re]}
 
   View[:month] = -> graph,re {
     config = {
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
+      path: /^\/\d{4}\/\d{2}\/$/,
       count: 31,
       segType: :day,
       segSize: 24, # hours
+      segPath: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
       scale: 2.0}
     TimeSegs[config,graph,re]}
 
   View[:day] = -> graph,re {
     config = {
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
       count: 24,
       segType: :hour,
       segSize: 3600, # seconds
+      segPath: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
       scale: 4.2,
       showContent: :true}
     TimeSegs[config,graph,re]}
