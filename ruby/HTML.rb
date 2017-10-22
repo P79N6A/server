@@ -133,6 +133,7 @@ class R
 
   View[:epoch] = -> graph,re {
     config = {
+      segPath: /^\/$/,
       count: 3000,
       segType: :year,
       segSize: 12, # months
