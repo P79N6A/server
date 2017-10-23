@@ -131,8 +131,12 @@ class R
               href: r.uri + (config[:showContent] ? '?head' : ''),
               style: 'vertical-align:bottom',
               c: {style: size ? "background-color:#{full ? 'white' : color}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
-          {_: :tr, c: segs.map{|r|{_: :td, style: 'text-align: center', c: {_: :a, href: r.uri, c: r.R.basename}}}},
-         ]},
+          {_: :tr,
+           c: [segs.map{|r|
+               {_: :td, style: 'text-align: center',
+                c: {_: :a, href: r.uri, c: r.R.basename}}},
+               {_: :td, c: {_: :a, class: :clock, href: '/h', id: :uptothetime}}
+              ]}]},
      (!here || config[:showContent]) ? TabularView[graph,re] : '' ]}
 
   View[:epoch] = -> graph,re {
