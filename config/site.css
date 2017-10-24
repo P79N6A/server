@@ -2,14 +2,15 @@ body {font-family: sans-serif;background-color:#000;color:#fff}
 table {display: inline-block}
 table, img {max-width: 100%}
 th a:before {font-size:1.6em;font-weight: normal}
+th.selected, th.selected a {background-color:#fff;color:#000}
 tr.focus > td {background-color:#222}
 tr.focus > td > a {background-color:#222; color: #fff; border-width: 0}
-td {padding:.2em;border-radius:.12em}
+th,td {padding:.2em;border-radius:.12em}
 table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
-table.timeseg {background-color:#222;padding:.5em;border-radius:.5em}
-table.timeseg td.time > a {float: right;background-color:#222;color:#444;font-weight: normal}
+table.timeseg {background-color:#222;padding:.5em .3em .2em .4em;border-radius:.5em}
+table.timeseg td.time > a {float: right;padding-left:.18em;background-color:#222;color:#333;font-weight: normal}
 table.timeseg td.time > span {font-size:1.6em}
 table.timeseg td.seg {background-color:#000;text-align:center}
 table.timeseg td.seg .bar {width: 1.8em;border-radius:.1em}
