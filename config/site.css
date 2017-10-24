@@ -12,6 +12,7 @@ td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org
 table.timeseg {background-color:#222;padding:.5em .3em .2em .4em;border-radius:.5em}
 table.timeseg td.time > a {float: right;padding-left:.18em;background-color:#222;color:#333;font-weight: normal}
 table.timeseg td.time > span {font-size:1.6em}
+table.timeseg td.time span.sep {font-size:.6em}
 table.timeseg td.seg {background-color:#000;text-align:center}
 table.timeseg td.seg .bar {width: 1.8em;border-radius:.1em}
 pre {white-space: pre-wrap; font-family: monospace; max-width: 144ex; margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0}

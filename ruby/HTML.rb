@@ -121,7 +121,7 @@ class R
     [{_: :table, class: :timeseg,
       c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
                        c: [
-                         {_: :span, c: re.path[1..-1].split('/').join('.')},
+                         {_: :span, c: re.path[1..-1].split('/').join('<span class=sep>&#9676;</span>')},
                          {_: :a, class: :clock, href: '/h', id: :uptothetime},
                           ]}},
           {_: :tr, c: segs.map{|r|
