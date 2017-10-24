@@ -113,22 +113,19 @@ class R
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TimeSegs = -> config,graph,re {
-
+    name = re.path[1..-1].split('/').join '<span class=sep>&#9676;</span>'
     segs = graph.values.select{|r|
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
     color = '#%06x' % (rand 16777216)
-
     [{_: :table, class: :timeseg,
       c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
                        c: [
-                         {_: :span, c: re.path[1..-1].split('/').join('<span class=sep>&#9676;</span>')},
+                         {_: :span, c: name},
                          {_: :a, class: :clock, href: '/h', id: :uptothetime},
                           ]}},
           {_: :tr, c: segs.map{|r|
-
              size = r[Size].justArray[0] || 0
              full = size >= config[:segSize]
-
              {_: :td, class: :seg, id: config[:segType].to_s + r.R.basename,
               onclick: "window.location.href = this.getAttribute(\"href\");",
               href: r.uri + '?head',
