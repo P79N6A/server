@@ -114,7 +114,6 @@ class R
 
   TimeSegs = -> config,graph,re {
 
-    here = re.path.match config[:path]
     segs = graph.values.select{|r|
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
     color = '#%06x' % (rand 16777216)
@@ -128,7 +127,7 @@ class R
 
              {_: :td, id: config[:segType].to_s + r.R.basename,
               onclick: "window.location.href = this.getAttribute(\"href\");",
-              href: r.uri + (config[:showContent] ? '?head' : ''),
+              href: r.uri + '?head',
               style: 'vertical-align:bottom',
               c: {style: size ? "background-color:#{full ? 'white' : color}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
           {_: :tr,
@@ -137,7 +136,7 @@ class R
                 c: {_: :a, href: r.uri, c: r.R.basename}}},
                {_: :td, c: {_: :a, class: :clock, href: '/h', id: :uptothetime}}
               ]}]},
-     (!here || config[:showContent]) ? TabularView[graph,re] : '' ]}
+     TabularView[graph,re]]}
 
   View[:epoch] = -> graph,re {
     config = {
@@ -176,8 +175,7 @@ class R
       segType: :hour,
       segSize: 3600, # seconds
       segPath: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
-      scale: 4.2,
-      showContent: :true}
+      scale: 4.2}
     TimeSegs[config,graph,re]}
 
   TabularView = -> g, e {
