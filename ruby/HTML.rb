@@ -118,22 +118,25 @@ class R
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
     color = '#%06x' % (rand 16777216)
 
-    [{_: :a, class: :clock, href: '/h', id: :uptothetime},
-     {_: :table,
-      c: [{_: :tr, c: {_: :td, colspan: config[:count], style: 'font-size:1.6em', c: re.path[1..-1].split('/').join('.')}},
+    [{_: :table, class: :timeseg,
+      c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
+                       c: [
+                         {_: :span, c: re.path[1..-1].split('/').join('.')},
+                         {_: :a, class: :clock, href: '/h', id: :uptothetime},
+                          ]}},
           {_: :tr, c: segs.map{|r|
 
              size = r[Size].justArray[0] || 0
              full = size >= config[:segSize]
 
-             {_: :td, id: config[:segType].to_s + r.R.basename,
+             {_: :td, class: :seg, id: config[:segType].to_s + r.R.basename,
               onclick: "window.location.href = this.getAttribute(\"href\");",
               href: r.uri + '?head',
               style: 'vertical-align:bottom',
               c: {style: size ? "background-color:#{full ? 'white' : color}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
           {_: :tr,
            c: segs.map{|r|
-               {_: :td, style: 'text-align: center',
+               {_: :td, class: :seg,
                 c: {_: :a, href: r.uri, c: r.R.basename}}}}]},
      TabularView[graph,re]]}
 
