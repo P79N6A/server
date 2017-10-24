@@ -118,7 +118,8 @@ class R
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
     color = '#%06x' % (rand 16777216)
 
-    [{_: :table,
+    [{_: :a, class: :clock, href: '/h', id: :uptothetime},
+     {_: :table,
       c: [{_: :tr, c: {_: :td, colspan: config[:count], style: 'font-size:1.6em', c: re.path[1..-1].split('/').join('.')}},
           {_: :tr, c: segs.map{|r|
 
@@ -131,11 +132,9 @@ class R
               style: 'vertical-align:bottom',
               c: {style: size ? "background-color:#{full ? 'white' : color}; width: 2em; height:#{size / config[:scale]}em" : ''}}}},
           {_: :tr,
-           c: [segs.map{|r|
+           c: segs.map{|r|
                {_: :td, style: 'text-align: center',
-                c: {_: :a, href: r.uri, c: r.R.basename}}},
-               {_: :td, c: {_: :a, class: :clock, href: '/h', id: :uptothetime}}
-              ]}]},
+                c: {_: :a, href: r.uri, c: r.R.basename}}}}]},
      TabularView[graph,re]]}
 
   View[:epoch] = -> graph,re {
