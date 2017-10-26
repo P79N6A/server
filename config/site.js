@@ -37,67 +37,57 @@ document.addEventListener("DOMContentLoaded", function(){
 		window.location = doc.getAttribute('href');
 	};
 	var key = e.keyCode;
+//	console.log(key);
 	if(e.getModifierState("Shift")) {
-	    if(key==80) // [shift-p]rev page
+	    if(key==80) // [p]rev page
 		jumpDoc('prev');
-	    if(key==78) // [shift-n]ext page
+	    if(key==78) // [n]ext page
 		jumpDoc('next');
-	    if(key==85) // [shift-u]p to parent
+	    if(key==85) // [u]p to parent
 		jumpDoc('up');
-	    if(key==68) // [shift-d]own to children
+	    if(key==68) // [d]own to children
 		jumpDoc('down');
-	    return null;
-	};	
-	if(key==80){ // [p]revious selection
-	    loc = window.location.hash
-	    if(loc) {
-		cur = document.querySelector(loc);
-		if(!cur)
-		    cur = first;
-	    } else {
-		cur = first
+	    if(key==38){ // [up] previous element
+		loc = window.location.hash
+		if(loc) {
+		    cur = document.querySelector(loc);
+		    if(!cur)
+			cur = first;
+		} else {
+		    cur = first
+		};
+		var p = cur.attr('prev');
+		window.location.hash = p;
+		e.preventDefault();
 	    };
-	    var p = cur.attr('prev');
-	    window.location.hash = p;
-	    e.preventDefault();
-	};
-	if(key==78){ // [n]ext selection
-	    var loc = window.location.hash;
-	    var cur = null;
-	    if(loc)
-		cur = document.querySelector(loc);
-	    if(!cur) {
-		window.location.hash = first.attr('id');
-	    } else {
-		window.location.hash = cur.attr('next');
+	    if(key==40){ // [down] next element
+		var loc = window.location.hash;
+		var cur = null;
+		if(loc)
+		    cur = document.querySelector(loc);
+		if(!cur) {
+		    window.location.hash = first.attr('id');
+		} else {
+		    window.location.hash = cur.attr('next');
+		};
+		e.preventDefault();
 	    };
-	    e.preventDefault();
-	};
-	if(key==13||key==39){ // [enter] go
-	    // find identifier
-	    loc = window.location.hash;
-	    if(loc){
-		// find element
-		cur = document.querySelector(loc);
-		if(cur){
-		    // find href
-		    href = cur.attr('href');
-		    // go
-		    if(href)
-			window.location = href;
+	    if(key==13){ // [enter] select
+		// find identifier
+		loc = window.location.hash;
+		if(loc){
+		    // find element
+		    cur = document.querySelector(loc);
+		    if(cur){
+			// find href
+			href = cur.attr('href');
+			// go
+			if(href)
+			    window.location = href;
+		    };
 		};
 	    };
-	};
-	if(key==83){ // [s]ort type
-	    var sel = document.querySelector('.selected');
-	    if(sel){
-		var next = sel.nextSibling || document.querySelector('tr > th[href]');
-		if(next)
-		    window.location = next.getAttribute('href');
-	    };
-	};
-	if(key==82){ // [r]everse sort
-	    window.location = document.querySelector('.selected').getAttribute('href');
+	    return null;
 	};
     },false);
 }, false);

@@ -125,8 +125,11 @@ class R
                               path.push part
                               [{_: :a, id: 'p_'+path.join.sha2, class: :range,
                                 href: path.join('/') + '/', c: part},' ']}},
-                         {_: :a, class: :clock, href: '/h', id: :uptothetime},
-                          ]}},
+                           {_: :a, class: :clock, href: '/h', id: :uptothetime},
+                           ({_: :form,
+                             c: [{_: :a, class: :find},
+                                 {_: :input, name: config[:segType] == :day ? 'f' : 'q', placeholder: :search}]
+                            } if [:day,:hour].member?(config[:segType]))]}},
           {_: :tr, c: segs.map{|r|
              size = r[Size].justArray[0] || 0
              full = size >= config[:segSize]
