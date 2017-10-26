@@ -11,6 +11,7 @@ td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 table.timeseg {background-color:#222;border-radius:.5em}
 table.timeseg td.time > a.clock {float: right;padding-left:.18em;background-color:#222;color:#333;font-weight: normal}
+table.timeseg td.time > a.range {font-size: 1.2em}
 table.timeseg td.time > span {font-size:1.6em}
 table.timeseg td.time span.sep {font-size:.6em}
 table.timeseg td.seg {background-color:#000;text-align:center}
