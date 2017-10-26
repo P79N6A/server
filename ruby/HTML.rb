@@ -123,8 +123,8 @@ class R
                        c: [{class: :slices,
                             c: pathParts.map{|part|
                               path.push part
-                              {_: :a, id: 'p_'+path.join.sha2, class: :range,
-                               href: path.join('/') + '/', c: part}}},
+                              [{_: :a, id: 'p_'+path.join.sha2, class: :range,
+                                href: path.join('/') + '/', c: part},' ']}},
                          {_: :a, class: :clock, href: '/h', id: :uptothetime},
                           ]}},
           {_: :tr, c: segs.map{|r|
