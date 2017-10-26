@@ -113,14 +113,17 @@ class R
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
   TimeSegs = -> config,graph,re {
-    name = re.path[1..-1].split('/').join '<span class=sep>&#9676;</span>'
+    pathParts = re.path.split '/'
+    path = []
     segs = graph.values.select{|r|
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
     color = '#%06x' % (rand 16777216)
     [{_: :table, class: :timeseg,
       c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
-                       c: [
-                         {_: :span, c: name},
+                       c: [pathParts.map{|part|
+                             path.push part
+                             [{_: :a, id: 'p_'+path.join.sha2,
+                               href: path.join('/'), c: part}, ' ']},
                          {_: :a, class: :clock, href: '/h', id: :uptothetime},
                           ]}},
           {_: :tr, c: segs.map{|r|
