@@ -21,12 +21,15 @@ class R
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
   def GET
-    return file if node.file?
     parts = path[1..-1].split '/'
-    return feed if parts[0] == 'feed'
-    return (chrono parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
+    firstPart = parts[0] || ''
 
-    # datetime pointer-arithmetic
+    return file if node.file?
+    return feed if parts[0] == 'feed'
+    return (chrono parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
+    return [204,{},[]] if firstPart.match(/^gen.*204$/)
+
+    # timeseg pointer-arithmetic
     dp = []
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil
