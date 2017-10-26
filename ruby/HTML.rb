@@ -120,10 +120,11 @@ class R
     color = '#%06x' % (rand 16777216)
     [{_: :table, class: :timeseg,
       c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
-                       c: [pathParts.map{|part|
-                             path.push part
-                             [{_: :a, id: 'p_'+path.join.sha2, class: :range,
-                               href: path.join('/') + '/', c: part}, ' ']},
+                       c: [{class: :slices,
+                            c: pathParts.map{|part|
+                              path.push part
+                              {_: :a, id: 'p_'+path.join.sha2, class: :range,
+                               href: path.join('/') + '/', c: part}}},
                          {_: :a, class: :clock, href: '/h', id: :uptothetime},
                           ]}},
           {_: :tr, c: segs.map{|r|
