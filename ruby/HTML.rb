@@ -128,7 +128,10 @@ class R
                            {_: :a, class: :clock, href: '/h', id: :uptothetime},
                            ({_: :form,
                              c: [{_: :a, class: :find},
-                                 {_: :input, name: config[:segType] == :day ? 'f' : 'q', placeholder: :search}]
+                                 {_: :input, id: :searchbox,
+                                  name: config[:segType] == :day ? 'f' : 'q',
+                                  placeholder: config[:segType] == :day ? :find : :search
+                                 }]
                             } if [:day,:hour].member?(config[:segType]))]}},
           {_: :tr, c: segs.map{|r|
              size = r[Size].justArray[0] || 0
