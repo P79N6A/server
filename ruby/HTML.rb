@@ -159,7 +159,7 @@ class R
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: 'prev', c: '&#9664;', class: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextRange = env[:Links][:next].do{|n|{_: :a, id: 'next', c: '&#9654;', class: :next, href: (CGI.escapeHTML n.to_s)}}
-    {_: :table, class: :timeseg, style: showSegs ? '' : 'position: fixed',
+    {_: :table, class: :dir, style: showSegs ? '' : 'position: fixed',
      c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
                       c: [prevRange,
                           pathParts.map{|part|
