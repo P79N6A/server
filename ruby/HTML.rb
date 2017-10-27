@@ -95,13 +95,14 @@ class R
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                 ]},
             {_: :body,
-             c: [prevPage, nextPage,
+             c: [{_: :style, c: '.conf/site.css'.R.readFile},
+                 prevPage, nextPage,
                  DirView[graph,re],
                  TabularView[graph,re],
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  ([br,prevPage,nextPage] if graph.keys.size > 8), fullPage,
-                 {_: :style, c: '.conf/site.css'.R.readFile},
-                 {_: :script, c: '.conf/site.js'.R.readFile}]}]}]}
+                 {_: :script, c: '.conf/site.js'.R.readFile}
+                ]}]}]}
 
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
@@ -156,8 +157,7 @@ class R
     path = ""
     query = re.q['q'] || re.q['f']
     showSegs = config.has_key? :segType
-    segs = graph.values.select{|r|
-      r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri) if showSegs
+    segs = graph.values.select{|r| r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri) if showSegs
     color = '#%06x' % (rand 16777216)
     {_: :table, class: :timeseg,
      c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
