@@ -132,8 +132,8 @@ class R
                                          else
                                            :range
                                          end
-                                  [{_: :a, id: 'p_'+path.join.sha2, class: type,
-                                    href: href + '?head', c: part},' ']},
+                                  {_: :a, id: 'p_'+path.join.sha2, class: type,
+                                   href: href + '?head', c: part.empty? ? '&nbsp;' : part}},
                                 {_: :a, class: :clock, href: '/h', id: :uptothetime},
                                ]},
                            ({_: :form,
