@@ -262,7 +262,7 @@ class R
       if isMail # address*month
         {_: :a, href: v.path + '?head#r' + href.sha2, c: v.label}
       elsif isBlog # host*day
-        {_: :a, href: datePath[0..-4] + '*/*' + v.host + '*?head#r' + href.sha2, c: v.label}
+        {_: :a, href: datePath[0..-4] + '*/*' + (v.host||'') + '*?head#r' + href.sha2, c: v.label}
       else
         v
       end}
