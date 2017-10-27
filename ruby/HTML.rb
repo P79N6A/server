@@ -124,9 +124,16 @@ class R
                             c: [pathParts.map{|part|
                                   path.push part
                                   href = path.join('/') + '/'
-                                  year = path.size == 2
-                                  [{_: :a, id: 'p_'+path.join.sha2, class: year ? :year : :range,
-                                    href: (year ? '/' : href) + (year ? '#r'+href.sha2 : '?head'), c: part},' ']},
+                                  type = case path.size
+                                         when 2
+                                           :year
+                                         when 5
+                                           :hour
+                                         else
+                                           :range
+                                         end
+                                  [{_: :a, id: 'p_'+path.join.sha2, class: type,
+                                    href: href + '?head', c: part},' ']},
                                 {_: :a, class: :clock, href: '/h', id: :uptothetime},
                                ]},
                            ({_: :form,
