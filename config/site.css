@@ -1,5 +1,5 @@
 @font-face {font-family: "icons";src: url('/.conf/font.woff') format('woff');}
-body {font-family: sans-serif;background-color:#000;color:#fff}
+body {font-family: sans-serif;background-color:#000;color:#fff;margin:0}
 table {display: inline-block}
 table, img {max-width: 100%}
 th a:before {font-size:1.6em;font-weight: normal}
@@ -11,12 +11,12 @@ th,td,a {border-radius:.16em}
 table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
+table.links {float: right}
 table.timeseg {background-color:#222;border-radius:.5em}
 table.timeseg span.slash {color:#333}
-table.timeseg td.time {text-align:right}
+table.timeseg td.time {white-space: nowrap}
 table.timeseg td.time form {display:inline-block}
 table.timeseg td.time input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
-table.timeseg td.time .slices {float:left;}
 table.timeseg td.time a.find {font-weight: normal;color:#ccc}
 table.timeseg td.time a.clock {background-color:#222;color:#222;font-weight: normal}
 table.timeseg td.time a.year {font-size: 1.2em;background-color:#ccc;color:#000}
@@ -29,12 +29,12 @@ pre {white-space: pre-wrap; font-family: monospace; max-width: 144ex; margin-lef
 span.notes {color:#aaa;font-size:.8em}
 span.children a {font-weight: normal;font-size:.9em}
 a {text-decoration:none; font-family: hack; font-weight: bold; background-color:#000;color:#fff}
+#prev {float: left}
+#next {float: right}
+#prev,#next {color:#aaa}
 a.date {white-space: nowrap}
 a.thumb img {height:256px}
-a[rel="prev"], a[rel="next"], a[rel="up"], a[rel="down"] {font-size:3em;padding-left:.14em;padding-right:.14em}
-a[rel="prev"], a[rel="up"], a[rel="down"], a.label {float: left}
-a[rel="next"], table.links {float: right}
-a[rel="up"], a[rel="down"] {margin-left:1em;}
+a[rel="down"] {font-size:3em;padding-left:.14em;padding-right:.14em}
 :target, :target a, :target[name], table.timeseg td.seg:target {background-color:#f5f5f5;color:#000}
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }
