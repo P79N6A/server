@@ -21,12 +21,15 @@ class R
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
   def GET
-    return file if node.file?
     parts = path[1..-1].split '/'
     firstPart = parts[0] || ''
+    directory = node.directory?
+
+    return file if node.file?
     return feed if parts[0] == 'feed'
     return (chrono parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
     return [204,{},[]] if firstPart.match(/^gen.*204$/)
+    return [302,{'Location' => path+'/'},[]] if directory && path[-1] != '/' 
 
     # timeseg pointer-arithmetic
     dp = []; dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
@@ -70,7 +73,7 @@ class R
     end
 
     # file-resource nodes
-    set = (if node.directory?
+    set = (if directory
            if q.has_key?('f') && path!='/' # FIND(1) nodes
              find q['f']
            elsif q.has_key?('q') && path!='/' # GREP(1) nodes
