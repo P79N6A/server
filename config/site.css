@@ -18,7 +18,7 @@ table.timeseg td.time input {background-color:#111;color:#fff;border-width:0;fon
 table.timeseg td.time .slices {float:left;}
 table.timeseg td.time a.find {font-weight: normal;color:#ccc}
 table.timeseg td.time a.clock {background-color:#222;color:#383838;font-weight: normal}
-table.timeseg td.time a.year {font-size: 1.2em;background-color:#ccc;color:#000;border-radius:.1em}
+table.timeseg td.time a.year {font-size: 1.2em;background-color:#ccc;color:#000}
 table.timeseg td.time a.range {font-size: 1.2em}
 table.timeseg td.time span.sep {font-size:.6em}
 table.timeseg td.seg {background-color:#000;text-align:center}

@@ -52,6 +52,7 @@ class R
         n = (day+1).strftime('/%Y/%m/%d')
       end
     when 4 # Y-m-d-H
+      @r[:view] = :hour
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue nil
       if day
         hour = dp[3]

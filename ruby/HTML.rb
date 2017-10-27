@@ -114,16 +114,19 @@ class R
   TimeSegs = -> config,graph,re {
     pathParts = re.path.split '/'
     path = []
+    showSegs = config.has_key? :segType
     segs = graph.values.select{|r|
-      r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri)
+      r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri) if showSegs
     color = '#%06x' % (rand 16777216)
     [{_: :table, class: :timeseg,
       c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
                        c: [{class: :slices,
                             c: [pathParts.map{|part|
                                   path.push part
-                                  [{_: :a, id: 'p_'+path.join.sha2, class: path.size==2 ? :year : :range,
-                                    href: path.join('/') + '/', c: part},' ']},
+                                  href = path.join('/') + '/'
+                                  year = path.size == 2
+                                  [{_: :a, id: 'p_'+path.join.sha2, class: year ? :year : :range,
+                                    href: (year ? '/' : href) + (year ? '#r'+href.sha2 : '?head'), c: part},' ']},
                                 {_: :a, class: :clock, href: '/h', id: :uptothetime},
                                ]},
                            ({_: :form,
@@ -133,18 +136,19 @@ class R
                                   placeholder: config[:segType] == :day ? :find : :search
                                  }]
                             } if [:day,:hour].member?(config[:segType]))]}},
-          {_: :tr, c: segs.map{|r|
+          ({_: :tr, c: segs.map{|r|
              size = r[Size].justArray[0] || 0
              full = size >= config[:segSize]
              {_: :td, class: :seg, id: config[:segType].to_s + r.R.basename,
               onclick: "window.location.href = this.getAttribute(\"href\");",
               href: r.uri + '?head',
               style: 'vertical-align:bottom',
-              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}},
-          {_: :tr,
+              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}} if showSegs),
+          ({_: :tr,
            c: segs.map{|r|
                {_: :td, class: :seg,
-                c: {_: :a, href: r.uri, c: r.R.basename}}}}]},
+                c: {_: :a, href: r.uri, c: r.R.basename}}}} if showSegs)
+         ]},
      TabularView[graph,re]]}
 
   View[:epoch] = -> graph,re {
@@ -185,6 +189,13 @@ class R
       segSize: 3600, # seconds
       segPath: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
       scale: 4.2}
+    TimeSegs[config,graph,re]}
+
+  View[:hour] = -> graph,re {
+    config = {
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
+      count: 1,
+    }
     TimeSegs[config,graph,re]}
 
   TabularView = -> g, e {

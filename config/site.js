@@ -75,10 +75,10 @@ document.addEventListener("DOMContentLoaded", function(){
 	} else {
 	    if(key==38||key==80) // [up] [p]revious element
 		selectPrev();
+	    if(key==39||key==13) // [enter] goto href
+		gotoHref();
 	    if(key==40||key==78) // [down] [n]ext element
 		selectNext();
-	    if(key==13) // [enter] goto href
-		gotoHref();
 	};
     },false);
     document.querySelector('form > input').addEventListener("keydown",function(e){
