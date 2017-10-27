@@ -114,6 +114,7 @@ class R
   TimeSegs = -> config,graph,re {
     pathParts = re.path.split '/'
     path = []
+    query = re.q['q'] || re.q['f']
     showSegs = config.has_key? :segType
     segs = graph.values.select{|r|
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri) if showSegs
@@ -137,12 +138,11 @@ class R
                                 {_: :a, class: :clock, href: '/h', id: :uptothetime},
                                ]},
                            ({_: :form,
-                             c: [{_: :a, class: :find},
+                             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
                                  {_: :input, id: :searchbox,
-                                  name: config[:segType] == :day ? 'f' : 'q',
+                                  name: (!config[:segType] || config[:segType]==:hour) ? 'q' : 'f',
                                   placeholder: config[:segType] == :day ? :find : :search
-                                 }]
-                            } if [:day,:hour].member?(config[:segType]))]}},
+                                 }.update(query ? {value: query} : {})]} unless re.path=='/')]}},
           ({_: :tr, c: segs.map{|r|
              size = r[Size].justArray[0] || 0
              full = size >= config[:segSize]
