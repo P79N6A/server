@@ -111,7 +111,7 @@ class R
                  Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
-  DirViewConfig = {
+  ViewConfig = {
     epoch: {
       type: :epoch,
       path: /^\/$/,
@@ -152,7 +152,7 @@ class R
   }
 
   DirView = -> graph,re {
-    config = DirViewConfig[re.env[:view]] || {}
+    config = ViewConfig[re.env[:view]] || {}
     pathParts = re.path.split '/'
     path = ""
     query = re.q['q'] || re.q['f']
@@ -171,8 +171,8 @@ class R
                           ({_: :form,
                             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
                                 {_: :input, id: :searchbox,
-                                 name: (!config[:segType] || config[:segType]==:hour) ? 'q' : 'f', # FIND big dirs GREP small dirs
-                                 placeholder: config[:segType] == :day ? :find : :search
+                                 name: (config[:type]==:day || config[:type]==:hour) ? 'q' : 'f', # FIND big dirs GREP small dirs
+                                 placeholder: :search
                                 }.update(query ? {value: query} : {})]} unless re.path=='/')]}},
          ({_: :tr, c: segs.map{|r|
              size = r[Size].justArray[0] || 0
