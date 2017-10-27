@@ -12,24 +12,55 @@ Element.prototype.attr = function(a,v){
     };
 };
 document.addEventListener("DOMContentLoaded", function(){
-    // construct selection-ring
+
     var first = null;
     var last = null;
+
+    // construct selection-ring
     document.querySelectorAll('[id]').map(function(e){
 	if(!first)
-	    first = this;
-	// link the list
-	if(last){
+	    first = this;	
+	if(last){ // link
 	    this.attr('prev',last.attr('id'));
 	    last.attr('next',this.attr('id'));
 	};
 	last = this;
     });
-    if(first && last){ // complete the ring
+    if(first && last){ // round the ring
 	last.attr('next',first.attr('id'));
 	first.attr('prev',last.attr('id'));
     };
+
     // keyboard navigation
+    var selectNext = function(){
+	var cur = null;
+	if(window.location.hash)
+	    cur = document.querySelector(window.location.hash);
+	if(!cur)
+	    cur = last;
+	window.location.hash = cur.attr('next');
+    };
+    var selectPrev = function(){
+	var cur = null;
+	if(window.location.hash)
+	    cur = document.querySelector(window.location.hash);
+	if(!cur)
+	    cur = first;
+	window.location.hash = cur.attr('prev');;
+    };
+    var gotoSelection = function(){
+	if(window.location.hash){
+	    // element
+	    cur = document.querySelector(window.location.hash);
+	    if(cur){
+		// location
+		href = cur.attr('href');
+		// go
+		if(href)
+		    window.location = href;
+	    };
+	};
+    };
     document.addEventListener("keydown",function(e){
 	var jumpDoc = function(direction) {
 	    var doc = document.querySelector("head > link[rel='"+direction+"']");
@@ -37,56 +68,18 @@ document.addEventListener("DOMContentLoaded", function(){
 		window.location = doc.getAttribute('href');
 	};
 	var key = e.keyCode;
+//	console.log(key);
 	if(e.getModifierState("Shift")) {
 	    if(key==80) // [p]rev page
 		jumpDoc('prev');
 	    if(key==78) // [n]ext page
 		jumpDoc('next');
-	    if(key==85) // [u]p to parent
-		jumpDoc('up');
-	    if(key==68) // [d]own to children
-		jumpDoc('down');
-	    if(key==38){ // [up] previous element
-		loc = window.location.hash
-		if(loc) {
-		    cur = document.querySelector(loc);
-		    if(!cur)
-			cur = first;
-		} else {
-		    cur = first
-		};
-		var p = cur.attr('prev');
-		window.location.hash = p;
-		e.preventDefault();
-	    };
-	    if(key==40){ // [down] next element
-		var loc = window.location.hash;
-		var cur = null;
-		if(loc)
-		    cur = document.querySelector(loc);
-		if(!cur) {
-		    window.location.hash = first.attr('id');
-		} else {
-		    window.location.hash = cur.attr('next');
-		};
-		e.preventDefault();
-	    };
-	    if(key==13){ // [enter] select
-		// find identifier
-		loc = window.location.hash;
-		if(loc){
-		    // find element
-		    cur = document.querySelector(loc);
-		    if(cur){
-			// find href
-			href = cur.attr('href');
-			// go
-			if(href)
-			    window.location = href;
-		    };
-		};
-	    };
-	    return null;
 	};
+	if(key==78) // [up] previous element
+	    selectPrev();
+	if(key==80) // [down] next element
+	    selectNext();
+	if(key==13) // [enter] select
+	    gotoSelection();
     },false);
 }, false);
