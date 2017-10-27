@@ -94,7 +94,7 @@ class R
                 ]},
             {_: :body,
              c: [{_: :style, c: '.conf/site.css'.R.readFile},
-                 DirView[graph,re],
+                 DirView[graph,re],br,br,
                  TabularView[graph,re],
                  expand,
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),

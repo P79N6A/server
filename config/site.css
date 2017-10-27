@@ -7,12 +7,12 @@ th.selected, th.selected a {background-color:#fff;color:#000}
 tr.focus td {background-color:#222}
 tr.focus a {background-color:#222; color: #fff; border-width: 0}
 tr.focus a.title {font-size:1.27em}
-th,td,a {border-radius:.16em}
+table,th,td,a {border-radius:.16em}
 table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 table.links {float: right}
-table.timeseg {background-color:#222;border-radius:.5em}
+table.timeseg {background-color:#222}
 table.timeseg span.slash {color:#333}
 table.timeseg td.time {white-space: nowrap}
 table.timeseg td.time form {display:inline-block}
