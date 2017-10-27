@@ -81,7 +81,6 @@ class R
   HTML = -> graph, re {
     e=re.env
     debug = re.q.has_key? 'dbg'
-    view = e[:view]
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
     br = '<br clear=all>'
@@ -97,7 +96,8 @@ class R
                 ]},
             {_: :body,
              c: [prevPage, nextPage,
-                 View[view] && View[view][graph,re] || TabularView[graph,re],
+                 DirView[graph,re],
+                 TabularView[graph,re],
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  ([br,prevPage,nextPage] if graph.keys.size > 8), fullPage,
                  {_: :style, c: '.conf/site.css'.R.readFile},
@@ -110,40 +110,71 @@ class R
                  Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
                  "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
+  DirViewConfig = {
+    epoch: {
+      type: :epoch,
+      path: /^\/$/,
+      count: 3000,
+      segType: :year,
+      segSize: 12, # months
+      segPath: /^\/\d{4}\/$/,
+      scale: 1.0},
+    year: {
+      type: :year,
+      path: /^\/\d{4}\/$/,
+      count: 12,
+      segType: :month,
+      segSize: 30, # days
+      segPath: /^\/\d{4}\/\d{2}\/$/,
+      scale: 2.0},
+    month: {
+      type: :month,
+      path: /^\/\d{4}\/\d{2}\/$/,
+      count: 31,
+      segType: :day,
+      segSize: 24, # hours
+      segPath: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
+      scale: 2.0},
+    day: {
+      type: :day,
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
+      count: 24,
+      segType: :hour,
+      segSize: 3600, # seconds
+      segPath: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
+      scale: 4.2},
+    hour: {
+      type: :hour,
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
+      count: 1,
+    },
+  }
 
-  TimeSegs = -> config,graph,re {
+  DirView = -> graph,re {
+    config = DirViewConfig[re.env[:view]] || {}
     pathParts = re.path.split '/'
-    path = []
+    path = ""
     query = re.q['q'] || re.q['f']
     showSegs = config.has_key? :segType
     segs = graph.values.select{|r|
       r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri) if showSegs
     color = '#%06x' % (rand 16777216)
-    [{_: :table, class: :timeseg,
-      c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
-                       c: [{class: :slices,
-                            c: [pathParts.map{|part|
-                                  path.push part
-                                  href = path.join('/') + '/'
-                                  type = case path.size
-                                         when 2
-                                           :year
-                                         when 5
-                                           :hour
-                                         else
-                                           :range
-                                         end
-                                  {_: :a, id: 'p_'+path.join.sha2, class: type,
-                                   href: href + '?head', c: part.empty? ? '&nbsp;' : part}},
-                                {_: :a, class: :clock, href: '/h', id: :uptothetime},
-                               ]},
-                           ({_: :form,
-                             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
-                                 {_: :input, id: :searchbox,
-                                  name: (!config[:segType] || config[:segType]==:hour) ? 'q' : 'f',
-                                  placeholder: config[:segType] == :day ? :find : :search
-                                 }.update(query ? {value: query} : {})]} unless re.path=='/')]}},
-          ({_: :tr, c: segs.map{|r|
+    {_: :table, class: :timeseg,
+     c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
+                      c: [{class: :slices,
+                           c: [pathParts.map{|part|
+                                 path = path + part + '/'
+                                 {_: :a, id: 'p'+path.sha2, class: :range,
+                                  href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
+                               {_: :a, class: :clock, href: '/h', id: :uptothetime},
+                              ]},
+                          ({_: :form,
+                            c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
+                                {_: :input, id: :searchbox,
+                                 name: (!config[:segType] || config[:segType]==:hour) ? 'q' : 'f', # FIND big dirs GREP small dirs
+                                 placeholder: config[:segType] == :day ? :find : :search
+                                }.update(query ? {value: query} : {})]} unless re.path=='/')]}},
+         ({_: :tr, c: segs.map{|r|
              size = r[Size].justArray[0] || 0
              full = size >= config[:segSize]
              {_: :td, class: :seg, id: config[:segType].to_s + r.R.basename,
@@ -151,59 +182,10 @@ class R
               href: r.uri + '?head',
               style: 'vertical-align:bottom',
               c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}} if showSegs),
-          ({_: :tr,
+         ({_: :tr,
            c: segs.map{|r|
-               {_: :td, class: :seg,
-                c: {_: :a, href: r.uri, c: r.R.basename}}}} if showSegs)
-         ]},
-     TabularView[graph,re]]}
-
-  View[:epoch] = -> graph,re {
-    config = {
-      path: /^\/$/,
-      count: 3000,
-      segType: :year,
-      segSize: 12, # months
-      segPath: /^\/\d{4}\/$/,
-      scale: 1.0}
-    TimeSegs[config,graph,re]}
-
-  View[:year] = -> graph,re {
-    config = {
-      path: /^\/\d{4}\/$/,
-      count: 12,
-      segType: :month,
-      segSize: 30, # days
-      segPath: /^\/\d{4}\/\d{2}\/$/,
-      scale: 2.0}
-    TimeSegs[config,graph,re]}
-
-  View[:month] = -> graph,re {
-    config = {
-      path: /^\/\d{4}\/\d{2}\/$/,
-      count: 31,
-      segType: :day,
-      segSize: 24, # hours
-      segPath: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
-      scale: 2.0}
-    TimeSegs[config,graph,re]}
-
-  View[:day] = -> graph,re {
-    config = {
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
-      count: 24,
-      segType: :hour,
-      segSize: 3600, # seconds
-      segPath: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
-      scale: 4.2}
-    TimeSegs[config,graph,re]}
-
-  View[:hour] = -> graph,re {
-    config = {
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
-      count: 1,
-    }
-    TimeSegs[config,graph,re]}
+             {_: :td, class: :seg,
+              c: {_: :a, href: r.uri, c: r.R.basename}}}} if showSegs)]}}
 
   TabularView = -> g, e {
     # labels

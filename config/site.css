@@ -12,6 +12,7 @@ table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 table.timeseg {background-color:#222;border-radius:.5em}
+table.timeseg span.slash {color:#333}
 table.timeseg td.time {text-align:right}
 table.timeseg td.time form {display:inline-block}
 table.timeseg td.time input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
