@@ -73,7 +73,7 @@ class R
     set = (if node.directory?
            if q.has_key?('f') && path!='/' # FIND(1) nodes
              find q['f']
-           elsif q.has_key?('q') && q['q'] && !q['q'].empty? && path!='/' # GREP(1) nodes
+           elsif q.has_key?('q') && path!='/' # GREP(1) nodes
              grep q['q']
            else # container
              if uri[-1] == '/' # inside
@@ -107,14 +107,16 @@ class R
 
   def grep q
     words = R.tokens q
-    case words.size # unordered AND (&&) terms
+    case words.size # unordered &&
+    when 0
+      return []
     when 2
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
     when 3
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
     when 4
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else # in-order terms
+    else # scan-order &&
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
