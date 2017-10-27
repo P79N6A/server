@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		window.location = doc.getAttribute('href');
 	};
 	var key = e.keyCode;
-//	console.log(key);
 	if(e.getModifierState("Shift")) {
 	    if(key==80) // [p]rev page
 		jumpDoc('prev');
