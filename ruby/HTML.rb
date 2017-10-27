@@ -85,10 +85,9 @@ class R
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
     br = '<br clear=all>'
-    upPage = e[:Links][:up].do{|u|[{_: :a, c: '&#9650;', id: :Up, rel: :up, href: (CGI.escapeHTML u.to_s)},br]} unless re.path=='/'
     prevPage = e[:Links][:prev].do{|p|{_: :a, c: '&#9664;', rel: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextPage = e[:Links][:next].do{|n|{_: :a, c: '&#9654;', rel: :next, href: (CGI.escapeHTML n.to_s)}}
-    downPage = e[:Links][:down].do{|d|[br,{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
+    fullPage = e[:Links][:down].do{|d|[br,{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     H ["<!DOCTYPE html>\n",
        {_: :html, debug: debug ? :true : :false,
         c: [{_: :head,
@@ -97,10 +96,10 @@ class R
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                 ]},
             {_: :body,
-             c: [upPage, prevPage, nextPage,
+             c: [prevPage, nextPage,
                  View[view] && View[view][graph,re] || TabularView[graph,re],
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
-                 ([br,prevPage,nextPage] if graph.keys.size > 8), downPage,
+                 ([br,prevPage,nextPage] if graph.keys.size > 8), fullPage,
                  {_: :style, c: '.conf/site.css'.R.readFile},
                  {_: :script, c: '.conf/site.js'.R.readFile}]}]}]}
 

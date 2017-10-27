@@ -73,15 +73,16 @@ document.addEventListener("DOMContentLoaded", function(){
 	    if(key==78) // [n]ext page
 		gotoLink('next');
 	} else {
-	    if(key==38||key==78) // [up] [p]revious element
+	    if(key==38||key==80) // [up] [p]revious element
 		selectPrev();
-	    if(key==40||key==80) // [down] [n]ext element
+	    if(key==40||key==78) // [down] [n]ext element
 		selectNext();
 	    if(key==13) // [enter] goto href
 		gotoHref();
 	};
     },false);
     document.querySelector('form > input').addEventListener("keydown",function(e){
-	e.stopPropagation();
+	if(e.keyCode != 38 && e.keyCode != 40)
+	    e.stopPropagation();
     },false);
 }, false);
