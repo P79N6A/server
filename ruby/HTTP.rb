@@ -78,16 +78,16 @@ class R
              find q['f']
            elsif q.has_key?('q') && path!='/' # GREP(1) nodes
              grep q['q']
-           else # container
+           else
              if uri[-1] == '/' # inside
-               (self+'index.{html,ttl}').glob || [self, children] # contained nodes or index
+               (self+'index.{html,ttl}').glob || [self, children] # contained nodes
              else # outside
                @r[:Links][:down] = path + '/' + qs
-               self # just the container
+               self # just container
              end
            end
-          else # arbitrary or extension-wildcard glob
-            (match(/\*/) ? self : (self+'.*')).glob
+          else
+            (match(/\*/) ? self : (self+'.*')).glob # documents
            end).justArray.flatten.compact.select &:exist?
 
     return notfound if !set || set.empty?
