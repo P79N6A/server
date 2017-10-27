@@ -159,7 +159,7 @@ class R
     showSegs = config.has_key? :segType
     segs = graph.values.select{|r| r.R.path.do{|p|p.match config[:segPath]}}.sort_by(&:uri) if showSegs
     color = '#%06x' % (rand 16777216)
-    {_: :table, class: :timeseg,
+    {_: :table, class: :timeseg, style: showSegs ? '' : 'position: fixed',
      c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:count],
                       c: [{class: :slices,
                            c: [pathParts.map{|part|
