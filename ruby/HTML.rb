@@ -164,8 +164,7 @@ class R
                       c: [prevRange,
                           pathParts.map{|part|
                             path = path + part + '/'
-                            {_: :a, id: 'p'+path.sha2, class: :range,
-                             href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
+                            {_: :a, id: 'p'+path.sha2, href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
                           {_: :a, class: :clock, href: '/h', id: :uptothetime},
                           ({_: :form,
                             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },

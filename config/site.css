@@ -19,9 +19,6 @@ table.dir td.time form {display:inline-block}
 table.dir td.time input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
 table.dir td.time a.find {font-weight: normal;color:#ccc}
 table.dir td.time a.clock {background-color:#222;color:#222;font-weight: normal}
-table.dir td.time a.year {font-size: 1.2em;background-color:#ccc;color:#000}
-table.dir td.time a.hour {font-size:.8em;font-weight: normal}
-table.dir td.time a.range {font-size: 1.2em}
 table.dir td.time span.sep {font-size:.6em}
 table.dir td.seg {background-color:#000;text-align:center}
 table.dir td.seg .bar {width: 100%; margin:auto}
