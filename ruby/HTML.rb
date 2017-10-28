@@ -152,6 +152,7 @@ class R
       children = graph.values.select{|r|
         r.R.path.do{|p|
           p.match childPath}}.sort_by(&:uri)
+      showChildren = children.size > 1
     end
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: 'prev', c: '&#9664;', class: :prev, href: (CGI.escapeHTML p.to_s)}}
@@ -174,15 +175,15 @@ class R
          ({_: :tr, c: children.map{|r|
              size = r[Size].justArray[0] || 0
              full = size >= childSize
-             {_: :td, class: :seg, id: config[:childType].to_s + r.R.basename,
+             {_: :td, class: :seg, id: childType.to_s + r.R.basename,
               onclick: "window.location.href = this.getAttribute(\"href\");",
               href: r.uri + '?head',
               style: 'vertical-align:bottom',
-              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}} if children),
+              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}} if showChildren),
          ({_: :tr,
            c: children.map{|r|
              {_: :td, class: :seg,
-              c: {_: :a, href: r.uri, c: r.R.basename}}}} if children)]}}
+              c: {_: :a, href: r.uri, c: r.R.basename}}}} if showChildren)]}}
 
   TabularView = -> g, e {
     # labels
