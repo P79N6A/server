@@ -7,7 +7,7 @@ th.selected, th.selected a {background-color:#fff;color:#000}
 tr.focus td {background-color:#222}
 tr.focus a {background-color:#222; color: #fff; border-width: 0}
 tr.focus a.title {font-size:1.27em}
-table,th,td,a,div {border-radius:.16em}
+table,th,td,a,div {border-radius:.13em}
 table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
