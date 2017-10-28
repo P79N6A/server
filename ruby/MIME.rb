@@ -243,6 +243,14 @@ class R
   def triplrUriList; uris.map{|u|yield u, Type, R[W3+'2000/01/rdf-schema#Resource']} end
   def uris; open(pathPOSIX).readlines.map &:chomp end
 
+  # POSIX mapping
+  def triplrFile
+    s = path
+    size.do{|sz|yield s, Size, sz}
+    mtime.do{|mt|
+      yield s, Mtime, mt.to_i
+      yield s, Date, mt.iso8601}
+  end
   def triplrContainer
     s = path
     s = s + '/' unless s[-1] == '/'
@@ -260,17 +268,9 @@ class R
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def dirname; File.dirname path end
-  def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|l|R.fromPOSIX l.chomp} : [] end
+  def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 255`.lines.map{|l|R.fromPOSIX l.chomp} : [] end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
-
-  def triplrFile
-    s = path
-    size.do{|sz|yield s, Size, sz}
-    mtime.do{|mt|
-      yield s, Mtime, mt.to_i
-      yield s, Date, mt.iso8601}
-  end
   def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
   def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
   def basename; File.basename path end
@@ -288,6 +288,24 @@ class R
     FileUtils.ln_s x.node.expand_path,
                    y.node.expand_path
   end
+  def grep q
+    words = R.tokens q
+    case words.size # unordered &&
+    when 0
+      return []
+    when 2
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
+    when 3
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
+    when 4
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
+    else # scan-order &&
+      pattern = words.join '.*'
+      cmd = "grep -ril #{pattern.sh} #{sh}"
+    end
+    `#{cmd} | head -n 255`.lines.map{|matchingFile| R.fromPOSIX matchingFile.chomp}
+  end
+
   alias_method :e, :exist?
   alias_method :m, :mtime
   alias_method :sh, :shellPath

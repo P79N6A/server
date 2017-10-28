@@ -108,24 +108,6 @@ class R
       end}
   end
 
-  def grep q
-    words = R.tokens q
-    case words.size # unordered &&
-    when 0
-      return []
-    when 2
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
-    when 3
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
-    when 4
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else # scan-order &&
-      pattern = words.join '.*'
-      cmd = "grep -ril #{pattern.sh} #{sh}"
-    end
-    `#{cmd} | head -n 1024`.lines.map{|matchingFile| R.fromPOSIX matchingFile.chomp}
-  end
-
   # JSON loader
   def R.load set
     graph = RDF::Graph.new # input graph
