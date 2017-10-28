@@ -144,9 +144,9 @@ class R
     pathParts = re.path.split '/'
     path = ""
     query = re.q['q'] || re.q['f']
-    showChildren = (config.has_key? :type) && config[:type] != :hour
-    if showChildren
-      c = ViewConfig[config[:childType]]
+    childType = config[:childType]
+    if childType
+      c = ViewConfig[childType]
       childSize = c[:size]
       childPath = c[:path]
       children = graph.values.select{|r|
@@ -156,7 +156,7 @@ class R
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: 'prev', c: '&#9664;', class: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextRange = env[:Links][:next].do{|n|{_: :a, id: 'next', c: '&#9654;', class: :next, href: (CGI.escapeHTML n.to_s)}}
-    {_: :table, class: :dir, style: showChildren ? '' : 'position: fixed;left:30%',
+    {_: :table, class: :dir, style: children ? '' : 'position: fixed;left:30%',
      c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:size],
                       c: [prevRange,
                           pathParts.map{|part|
@@ -178,11 +178,11 @@ class R
               onclick: "window.location.href = this.getAttribute(\"href\");",
               href: r.uri + '?head',
               style: 'vertical-align:bottom',
-              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}} if showChildren),
+              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}} if children),
          ({_: :tr,
            c: children.map{|r|
              {_: :td, class: :seg,
-              c: {_: :a, href: r.uri, c: r.R.basename}}}} if showChildren)]}}
+              c: {_: :a, href: r.uri, c: r.R.basename}}}} if children)]}}
 
   TabularView = -> g, e {
     # labels
