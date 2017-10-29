@@ -14,6 +14,7 @@ td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org
 table.links {float: right}
 table.dir {background-color:#222}
 table.dir span.slash {color:#333}
+table.dir a.pathPart {display: inline-block;max-width:12em;overflow:hidden}
 table.dir td.time {white-space: nowrap}
 table.dir td.time form {display:inline-block}
 table.dir td.time input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}

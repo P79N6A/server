@@ -113,26 +113,22 @@ class R
       type: :epoch,
       childType: :year,
       path: /^\/$/,
-      size: 3000,
-      scale: 1.0},
+      size: 3000},
     year: {
       type: :year,
       childType: :month,
       path: /^\/\d{4}\/$/,
-      size: 12,
-      scale: 2.0},
+      size: 12},
     month: {
       type: :month,
       childType: :day,
       path: /^\/\d{4}\/\d{2}\/$/,
-      size: 30,
-      scale: 2.0},
+      size: 30},
     day: {
       type: :day,
       childType: :hour,
       path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
-      size: 24,
-      scale: 5.0},
+      size: 24},
     hour: {
       type: :hour,
       path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
@@ -149,10 +145,9 @@ class R
       c = ViewConfig[childType]
       childSize = c[:size]
       childPath = c[:path]
-      children = graph.values.select{|r|
-        r.R.path.do{|p|
-          p.match childPath}}.sort_by(&:uri)
+      children = graph.values.select{|r|r.R.path.match childPath}.sort_by &:uri
       showChildren = children.size > 1
+      max = children.map{|c|c[Size].justArray[0]||0}.max.to_f
     end
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: 'prev', c: '&#9664;', class: :prev, href: (CGI.escapeHTML p.to_s)}}
@@ -162,7 +157,7 @@ class R
                       c: [prevRange,
                           pathParts.map{|part|
                             path = path + part + '/'
-                            {_: :a, id: 'p'+path.sha2, href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
+                            {_: :a, id: 'p'+path.sha2, class: :pathPart, href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
                           {_: :a, class: :clock, href: '/h', id: :uptothetime},
                           ({_: :form,
                             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
@@ -174,12 +169,16 @@ class R
                          ]}},
          ({_: :tr, c: children.map{|r|
              size = r[Size].justArray[0] || 0
-             full = size >= childSize
+             full = if env[:du]
+                      false
+                    else
+                      size >= childSize
+                    end
              {_: :td, class: :seg, id: childType.to_s + r.R.basename,
               onclick: "window.location.href = this.getAttribute(\"href\");",
               href: r.uri + '?head',
               style: 'vertical-align:bottom',
-              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{size / config[:scale]}em" : ''}}}} if showChildren),
+              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{12.0 * size / max}em" : ''}}}} if showChildren),
          ({_: :tr,
            c: children.map{|r|
              {_: :td, class: :seg,
