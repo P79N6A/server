@@ -70,6 +70,8 @@ document.addEventListener("DOMContentLoaded", function(){
 	if(e.getModifierState("Shift")) {
 	    if(key==80) // [p]rev page
 		gotoLink('prev');
+	    if(key==85) // [u]p to container
+		gotoLink('up');
 	    if(key==78) // [n]ext page
 		gotoLink('next');
 	} else {

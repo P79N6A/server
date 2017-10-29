@@ -16,8 +16,8 @@ table.dir {background-color:#222}
 table.dir span.slash {color:#333}
 table.dir a.pathPart {display: inline-block;max-width:12em;overflow:hidden}
 table.dir td.time {white-space: nowrap}
-table.dir td.time form {display:inline-block}
-table.dir td.time input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
+table.dir td.time form {margin:0;display:inline-block}
+table.dir td.time input {margin:0;background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
 table.dir td.time a.find {font-weight: normal;color:#ccc}
 table.dir td.time a.clock {background-color:#222;color:#222;font-weight: normal}
 table.dir td.time span.sep {font-size:.6em}
