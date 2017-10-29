@@ -94,7 +94,7 @@ class R
                 ]},
             {_: :body,
              c: [{_: :style, c: '.conf/site.css'.R.readFile},
-                 DirView[graph,re],br,br,
+                 DirView[graph,re],
                  TabularView[graph,re],
                  expand,
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
@@ -113,7 +113,7 @@ class R
       type: :epoch,
       childType: :year,
       path: /^\/$/,
-      size: 3000},
+      size: 1},
     year: {
       type: :year,
       childType: :month,
@@ -145,14 +145,14 @@ class R
       c = ViewConfig[childType]
       childSize = c[:size]
       childPath = c[:path]
-      children = graph.values.select{|r|r.R.path.match childPath}.sort_by &:uri
+      children = graph.values.select{|r|r.R.path.do{|p|p.match childPath}}.sort_by &:uri
       showChildren = children.size > 1
       max = children.map{|c|c[Size].justArray[0]||0}.max.to_f
     end
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: 'prev', c: '&#9664;', class: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextRange = env[:Links][:next].do{|n|{_: :a, id: 'next', c: '&#9654;', class: :next, href: (CGI.escapeHTML n.to_s)}}
-    {_: :table, class: :dir, style: children ? '' : 'position: fixed;left:30%',
+    {_: :table, class: :dir,
      c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:size],
                       c: [prevRange,
                           pathParts.map{|part|
@@ -175,9 +175,7 @@ class R
                       size >= childSize
                     end
              {_: :td, class: :seg, id: childType.to_s + r.R.basename,
-              onclick: "window.location.href = this.getAttribute(\"href\");",
-              href: r.uri + '?head',
-              style: 'vertical-align:bottom',
+              onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri + '?head',
               c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{12.0 * size / max}em" : ''}}}} if showChildren),
          ({_: :tr,
            c: children.map{|r|
