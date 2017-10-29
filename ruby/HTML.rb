@@ -137,6 +137,7 @@ class R
   DirView = -> graph,re {
     env = re.env
     config = ViewConfig[env[:view]] || {}
+    grep = [:day,:hour].member? config[:type]
     pathParts = re.path.split '/'
     path = ""
     query = re.q['q'] || re.q['f']
@@ -162,8 +163,8 @@ class R
                           ({_: :form,
                             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
                                 {_: :input, id: :searchbox,
-                                 name: (config[:type]==:day || config[:type]==:hour) ? 'q' : 'f', # FIND big dirs GREP small dirs
-                                 placeholder: :search
+                                 name: grep ? 'q' : 'f', # FIND big dirs GREP small dirs
+                                 placeholder: grep ? :grep : :find
                                 }.update(query ? {value: query} : {})]} unless re.path=='/'),
                           nextRange
                          ]}},
