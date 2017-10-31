@@ -113,20 +113,20 @@ class R
     graph = RDF::Graph.new # input graph
     g = {}                 # output tree
     rdf,nonRDF = set.partition &:isRDF # partition node types
-    # load RDF formats
+    # load RDF
     rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
-    # RDF triples to tree
+    # RDF to graph-tree
     graph.each_triple{|s,p,o| # each triple
-      s = s.to_s; p = p.to_s # subject/predicate URI keys
+      s = s.to_s; p = p.to_s # subject, predicate
       o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # normalize resource classes
-      g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} # add
-    # load JSON format
-    nonRDF.map{|n| (JSON.parse n.cachedRDF.readFile).map{|s,re| # subject, resource
+      g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o}
+    # load JSON
+    nonRDF.map{|n| (JSON.parse n.cachedRDF.readFile).map{|s,re| # subject resource
         re.map{|p,o| # predicate, object(s)
           o.justArray.map{|o| # object
             o = o.R if o.class==Hash
-            g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}} # add
-    g # tree-graph
+            g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
+    g
   end
 
   # RDF loader
