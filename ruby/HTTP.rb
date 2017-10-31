@@ -102,7 +102,7 @@ class R
           HTML[(load set),self]
         elsif format == 'application/atom+xml'
           FEED[(load set),self]
-        else
+        else # RDF
           (loadRDF set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
         end
       end}
@@ -127,7 +127,7 @@ class R
           o.justArray.map{|o| # object
             o = o.R if o.class==Hash
             g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
-    # DU nodes
+    # DU
     if q.has_key?('du') && [:year,:month,:day].member?(@r[:view])
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/'][Size] = node.du}
