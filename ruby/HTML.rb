@@ -80,22 +80,19 @@ class R
   # graph-tree -> HTML
   HTML = -> graph, re {
     e=re.env
-    debug = re.q.has_key? 'dbg'
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
     br = '<br clear=all>'
-    nav = Nav[graph,re]
     expand = e[:Links][:down].do{|d|[br,{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     H ["<!DOCTYPE html>\n",
-       {_: :html, debug: debug ? :true : :false,
+       {_: :html,
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: e[:title]||re.path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                 ({_: :script, type: 'text/javascript',src: 'https://getfirebug.com/firebug-lite.js'} if debug),
                  e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                 ]},
             {_: :body,
              c: [{_: :style, c: '.conf/site.css'.R.readFile},
-                 nav, TabularView[graph,re], (nav if graph.keys.size > 22), expand,
+                 Nav[graph,re], Table[graph,re], expand,
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  {_: :style, c: '.conf/code.css'.R.readFile}, {_: :script, c: '.conf/site.js'.R.readFile}]}]}]}
 
@@ -170,7 +167,7 @@ class R
             {_: :td, id: childType.to_s + r.R.basename, onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri + '?head',
              c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{100.0 * size / max}%" : '', c: {_: :a, href: r.uri, c: r.R.basename}}}}}} if showChildren)]}
 
-  TabularView = -> g, e {
+  Table = -> g, e {
     # labels
     e.env[:label] = {}
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true}
