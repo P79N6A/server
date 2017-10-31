@@ -84,6 +84,7 @@ class R
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
     br = '<br clear=all>'
+    nav = Nav[graph,re]
     expand = e[:Links][:down].do{|d|[br,{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
     H ["<!DOCTYPE html>\n",
        {_: :html, debug: debug ? :true : :false,
@@ -94,7 +95,7 @@ class R
                 ]},
             {_: :body,
              c: [{_: :style, c: '.conf/site.css'.R.readFile},
-                 OverView[graph,re], TabularView[graph,re], expand,
+                 nav, TabularView[graph,re], (nav if graph.keys.size > 22), expand,
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
                  {_: :style, c: '.conf/code.css'.R.readFile}, {_: :script, c: '.conf/site.js'.R.readFile}]}]}]}
 
@@ -131,7 +132,7 @@ class R
       path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
       size: 3600}}
 
-  OverView = -> graph,re {
+  Nav = -> graph,re {
     env = re.env; path = "" ; depth = 0
     config = ViewConfig[env[:view]] || {}
     grep = [:day,:hour].member? config[:type]
@@ -153,7 +154,7 @@ class R
           (re.path.split '/').map{|part|
             path = path + part + '/'
             depth += 1
-            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
+            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [part,{_: :span, class: :sep, c: '.'}]}},
           {_: :a, class: :clock, href: '/h', id: :uptothetime},
           ({_: :form,
             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },

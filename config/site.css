@@ -4,8 +4,8 @@ pre, form, input {display: inline-block;margin:0}
 .nav {text-align:center}
 .nav input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
 .nav a.find {font-weight: normal;color:#ccc}
-.nav a.clock {background-color:#222;color:#222;font-weight: normal}
-.nav span.slash {color:#555}
+.nav a.clock {color:#111;font-weight: normal}
+.nav span.sep {color:#444}
 table, img {max-width: 100%}
 tbody {width: 100%}
 th a:before {font-size:1.6em;font-weight: normal}
@@ -28,7 +28,7 @@ span.children a {font-weight: normal;font-size:.9em}
 a {text-decoration:none; font-weight: bold; color:#fff}
 #prev {float:left}
 #next {float:right}
-#prev,#next {font-size:1.5em}
+#prev,#next {font-size:1.8em}
 a.date {white-space: nowrap}
 a.thumb img {height:256px}
 a[rel="down"] {font-size:2.8em;margin:.3em}
