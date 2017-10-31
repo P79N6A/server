@@ -268,6 +268,7 @@ class R
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def dirname; File.dirname path end
+  def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
   def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 255`.lines.map{|l|R.fromPOSIX l.chomp} : [] end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
