@@ -226,19 +226,18 @@ class R
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
-    # name(s), required to show in header
-    names = l[Title].justArray # explicit title
-    if names.empty? && this.path # no explicit title found
+    # title
+    titles = l[Title].justArray # explicit title
+    if titles.empty? && this.path # no explicit title found
       if isChat # individual msgs hidden in overview
       else # file and request-URI metadata
         fsName = (URI.unescape (File.basename this.path))[0..64] # fs name
-        names.push(focus && e.env[:title] || fsName) # <req#this> title
+        titles.push(focus && e.env[:title] || fsName) # <req#this> title
       end
     end
     labels = l[Label].justArray
     this.host.do{|h|labels.unshift h}
-
-    # pointer to resource as selection in result-set
+    # generate pointer to resource as selection in index
     indexContext = -> p,v {
       v = v.R
       if isMail # address*month
@@ -249,45 +248,34 @@ class R
         v
       end}
 
-    unless head && names.empty?
+    unless head && titles.empty?
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,
           c: case k
              when 'uri'
-               # names
-               [names.map{|name|{_: :a, class: :title, href: href, c: (CGI.escapeHTML name.to_s)}}.intersperse(' '), ' ',
-                # labels
-                labels.map{|v|
+               [labels.map{|v|
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label)},' ']},
-                # links
-                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|
-                   {_: :span, class: :children, c: cs.map{|c|
-                      [{_: :a, href: c.uri, c: c.label},
-                       ' ']}} unless cs.empty?} unless focus),
-                (links = [DC+'link',
-                          SIOC+'attachment',
-                          DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
-                 links.map{|l|e.env[:links].push l} # mark as visited
-                 {_: :table, class: :links, # show
+                titles.map{|name|{_: :a, class: :title, href: href, c: (CGI.escapeHTML name.to_s)}}.intersperse(' '), ' ',
+                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|{_: :span, class: :children, c: cs.map{|c|[{_: :a, href: c.uri, c: c.label}, ' ']}} unless cs.empty?} unless focus),
+                (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
+                 links.map{|l|e.env[:links].push l} # mark as displayed
+                 {_: :table, class: :links,
                   c: links.group_by(&:host).map{|host,links|
-                    e.env[:label][host] = true
                     small = links.size < 5
                     {_: :tr,
-                     c: [{_: :td, class: :host, c: ({_: :a, name: host, href: '//'+host, c: host.sub(/^www\./,'')} if host)},
+                     c: [{_: :td, class: :host, c: ({_: :a, href: '//'+host, c: host} if host)},
                          {_: :td, class: :path, c: links.map{|link|
-                            {_: :a, name: host, href: link.uri,
-                                   c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
+                            {_: :a, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
-                # images
-                (images = [] # image list
-                 images.push this if isImg       # subject of triple
-                 l[Image].do{|i|images.concat i} #  object of triple
+                (images = []
+                 images.push this if isImg       # image as subject of triple
+                 l[Image].do{|i|images.concat i} # image as object of triple
                  images.map(&:R).select{|i|!e.env[:images].member? i}.map{|img| # unseen images
-                   e.env[:images].push img
+                   e.env[:images].push img # seen
                    {_: :a, class: :thumb, href: href,
                     c: {_: :img, src: if !img.host || e.host==img.host
                          img.path + '?thumb'
