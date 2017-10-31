@@ -94,12 +94,9 @@ class R
                 ]},
             {_: :body,
              c: [{_: :style, c: '.conf/site.css'.R.readFile},
-                 DirView[graph,re],
-                 TabularView[graph,re],
-                 expand,
+                 OverView[graph,re], TabularView[graph,re], expand,
                  ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
-                 {_: :script, c: '.conf/site.js'.R.readFile}
-                ]}]}]}
+                 {_: :style, c: '.conf/code.css'.R.readFile}, {_: :script, c: '.conf/site.js'.R.readFile}]}]}]}
 
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
@@ -134,12 +131,10 @@ class R
       path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
       size: 3600}}
 
-  DirView = -> graph,re {
-    env = re.env
+  OverView = -> graph,re {
+    env = re.env; path = "" ; depth = 0
     config = ViewConfig[env[:view]] || {}
     grep = [:day,:hour].member? config[:type]
-    pathParts = re.path.split '/'
-    path = ""
     query = re.q['q'] || re.q['f']
     childType = config[:childType]
     if childType
@@ -153,33 +148,26 @@ class R
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: 'prev', c: '&#9664;', class: :prev, href: (CGI.escapeHTML p.to_s)}}
     nextRange = env[:Links][:next].do{|n|{_: :a, id: 'next', c: '&#9654;', class: :next, href: (CGI.escapeHTML n.to_s)}}
-    {_: :table, class: :dir,
-     c: [{_: :tr, c: {_: :td, class: :time, colspan: config[:size],
-                      c: [prevRange,
-                          pathParts.map{|part|
-                            path = path + part + '/'
-                            {_: :a, id: 'p'+path.sha2, class: :pathPart, href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
-                          {_: :a, class: :clock, href: '/h', id: :uptothetime},
-                          ({_: :form,
-                            c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
-                                {_: :input, id: :searchbox,
-                                 name: grep ? 'q' : 'f', # FIND big dirs GREP small dirs
-                                 placeholder: grep ? :grep : :find
-                                }.update(query ? {value: query} : {})]} unless re.path=='/'),
-                          nextRange
-                         ]}},
-         ({_: :tr, c: children.map{|r|
-             size = r[Size].justArray[0] || 0
-             full = if env[:du]
-                      false
-                    else
-                      size >= childSize
-                    end
-             {_: :td, class: :seg, id: childType.to_s + r.R.basename,
-              onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri + '?head',
-              c: [{class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{100.0 * size / max}%" : ''},
-                  {_: :a, href: r.uri, c: r.R.basename}
-                 ]}}} if showChildren)]}}
+    [{class: :nav,
+      c: [prevRange,
+          (re.path.split '/').map{|part|
+            path = path + part + '/'
+            depth += 1
+            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [part,{_: :span, class: :slash, c: '/'}]}},
+          {_: :a, class: :clock, href: '/h', id: :uptothetime},
+          ({_: :form,
+            c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
+                {_: :input, id: :searchbox,
+                 name: grep ? 'q' : 'f', # FIND big dirs GREP small dirs
+                 placeholder: grep ? :grep : :find
+                }.update(query ? {value: query} : {})]} unless re.path=='/'),
+          nextRange]},
+     ({_: :table, class: :dir,
+      c: {_: :tr, c: children.map{|r|
+            size = r[Size].justArray[0]||0
+            full = env[:du] ? false : (size >= childSize)
+            {_: :td, id: childType.to_s + r.R.basename, onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri + '?head',
+             c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{100.0 * size / max}%" : '', c: {_: :a, href: r.uri, c: r.R.basename}}}}}} if showChildren)]}
 
   TabularView = -> g, e {
     # labels
