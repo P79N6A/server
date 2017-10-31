@@ -68,11 +68,13 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	};
 	if(e.getModifierState("Shift")) {
-	    if(key==80) // [p]rev page
+	    if(key==80) // [p]rev
 		gotoLink('prev');
-	    if(key==85) // [u]p to container
+	    if(key==85) // [u]p to parent
 		gotoLink('up');
-	    if(key==78) // [n]ext page
+	    if(key==68) // [d]own to leaf
+		gotoLink('down');
+	    if(key==78) // [n]ext
 		gotoLink('next');
 	} else {
 	    if(key==38||key==80) // [up] [p]revious element
