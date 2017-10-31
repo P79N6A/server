@@ -265,11 +265,11 @@ class R
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
                   c: links.group_by(&:host).map{|host,links|
-                    small = links.size < 5
+                    linknav = links.size < 5
                     {_: :tr,
                      c: [{_: :td, class: :host, c: ({_: :a, href: '//'+host, c: host} if host)},
                          {_: :td, class: :path, c: links.map{|link|
-                            {_: :a, href: link.uri, c: CGI.escapeHTML(link.label[0..64])}.update(small ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
+                            {_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'/')[0..41])}.update(linknav ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []
                  images.push this if isImg       # image as subject of triple
