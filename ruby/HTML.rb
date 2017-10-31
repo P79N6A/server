@@ -151,7 +151,7 @@ class R
           (re.path.split '/').map{|part|
             path = path + part + '/'
             depth += 1
-            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [part,{_: :span, class: :sep, c: '.'}]}},
+            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [part,{_: :span, class: :sep, c: '/'}]}},
           {_: :a, class: :clock, href: '/h', id: :uptothetime},
           ({_: :form,
             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },

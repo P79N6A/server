@@ -4,8 +4,7 @@ table, pre, form, input {display: inline-block;margin:0}
 .nav {text-align:center}
 .nav input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
 .nav a.find {font-weight: normal;color:#ccc}
-.nav a.clock {color:#111;font-weight: normal}
-.nav span.sep {color:#444}
+.nav a.clock, .nav span.sep {color:#181818;font-weight: normal}
 table, img {max-width: 100%}
 tbody {width: 100%}
 th a:before {font-size:1.6em;font-weight: normal}
