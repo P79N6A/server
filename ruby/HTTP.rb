@@ -99,38 +99,44 @@ class R
         set[0] # static body
       else # dynamic body
         if format == 'text/html'
-          HTML[R.load(set),self]
+          HTML[(load set),self]
         elsif format == 'application/atom+xml'
-          FEED[R.load(set),self]
+          FEED[(load set),self]
         else
-          load(set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
+          (loadRDF set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
         end
       end}
   end
 
-  # JSON loader
-  def R.load set
-    graph = RDF::Graph.new # input graph
-    g = {}                 # output tree
-    rdf,nonRDF = set.partition &:isRDF # partition node types
-    # load RDF
+  # JSON & RDF loader. return a graph-tree in JSON
+  def load set
+    graph = RDF::Graph.new # graph
+    g = {}                 # tree
+    rdf,nonRDF = set.partition &:isRDF
+    # RDF to tree
     rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
-    # RDF to graph-tree
     graph.each_triple{|s,p,o| # each triple
       s = s.to_s; p = p.to_s # subject, predicate
-      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # normalize resource classes
-      g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o}
+      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # object
+      g[s] ||= {'uri'=>s}
+      g[s][p] ||= []
+      g[s][p].push o unless g[s][p].member? o}
     # load JSON
-    nonRDF.map{|n| (JSON.parse n.cachedRDF.readFile).map{|s,re| # subject resource
-        re.map{|p,o| # predicate, object(s)
+    nonRDF.map{|n| (JSON.parse n.cachedRDF.readFile).map{|s,re| # subject
+        re.map{|p,o| # predicate, objects
           o.justArray.map{|o| # object
             o = o.R if o.class==Hash
             g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
+    # DU nodes
+    if q.has_key?('du') && [:year,:month,:day].member?(@r[:view])
+      set.select{|d|d.node.directory?}.-([self]).map{|node|
+        g[node.path+'/'][Size] = node.du}
+    end
     g
   end
 
-  # RDF loader
-  def load set
+  # pure-RDF loader. return a RDF::Graph
+  def loadRDF set
     g = RDF::Graph.new
     set.map{|n|
       g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
