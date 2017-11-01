@@ -79,8 +79,10 @@ document.addEventListener("DOMContentLoaded", function(){
 	} else {
 	    if(key==38||key==80) // [p]revious entry
 		selectPrev();
-	    if(key==39||key==13) // [enter] follow link
+	    if(key==39||key==13) // [right] [enter] forwards
 		gotoHref();
+	    if(key==37) // [left] go backwards
+		window.history.go(-1);
 	    if(key==40||key==78) // [n]ext entry
 		selectNext();
 	};
