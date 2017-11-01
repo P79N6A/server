@@ -243,7 +243,7 @@ class R
   def triplrUriList; uris.map{|u|yield u, Type, R[W3+'2000/01/rdf-schema#Resource']} end
   def uris; open(pathPOSIX).readlines.map &:chomp end
 
-  # POSIX mapping
+  # POSIX mapping functions
   def triplrFile
     s = path
     size.do{|sz|yield s, Size, sz}
@@ -289,24 +289,11 @@ class R
     FileUtils.ln_s x.node.expand_path,
                    y.node.expand_path
   end
-  def grep q
-    words = R.tokens q
-    case words.size # unordered &&
-    when 0
-      return []
-    when 2
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
-    when 3
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
-    when 4
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else # scan-order &&
-      pattern = words.join '.*'
-      cmd = "grep -ril #{pattern.sh} #{sh}"
-    end
-    `#{cmd} | head -n 255`.lines.map{|matchingFile| R.fromPOSIX matchingFile.chomp}
-  end
-
+  def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
+  def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
+  def + u; R[uri + u.to_s].setEnv @r end
+  def <=> c; to_s <=> c.to_s end
+  def ==  u; to_s == u.to_s end
   alias_method :e, :exist?
   alias_method :m, :mtime
   alias_method :sh, :shellPath

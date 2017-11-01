@@ -127,7 +127,7 @@ class R
           o.justArray.map{|o| # object
             o = o.R if o.class==Hash
             g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
-    # DU
+    # update container Size to recursive child-size, on request
     if q.has_key?('du') && [:year,:month,:day].member?(@r[:view])
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/'][Size] = node.du}
@@ -184,14 +184,33 @@ class R
     end
   end
 
+  def grep q # params -> node-set
+    words = R.tokens q
+    case words.size # unordered &&
+    when 0
+      return []
+    when 2
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
+    when 3
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
+    when 4
+      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
+    else # scan-order &&
+      pattern = words.join '.*'
+      cmd = "grep -ril #{pattern.sh} #{sh}"
+    end
+    `#{cmd} | head -n 255`.lines.map{|matchingFile| R.fromPOSIX matchingFile.chomp}
+  end
+
   def condResponse body=nil
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])
       [304, {}, []]
     else
       body = body ? body.call : self
-      if body.class == R # file-ref. use Rack::File handler                                       add our headers
-        (Rack::File.new nil).serving((Rack::Request.new @r), body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
+      if body.class == R # file-ref. use optimized file-handler
+        (Rack::File.new nil).serving((Rack::Request.new @r), body.pathPOSIX).do{|s,h,b|
+          [s,h.update(@r[:Response]),b]} # attach response headers
       else
         [(@r[:Status]||200), @r[:Response], [body]]
       end
