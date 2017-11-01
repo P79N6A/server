@@ -127,13 +127,14 @@ class R
           o.justArray.map{|o| # object
             o = o.R if o.class==Hash
             g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
-    # update container Size to recursive child-size, on request
+    # update container Size to recursive child-size on request
     if q.has_key?('du') && [:year,:month,:day].member?(@r[:view])
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/'][Size] = node.du}
     end
     g
   end
+  def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
 
   # pure-RDF loader. return a RDF::Graph
   def loadRDF set
@@ -184,9 +185,18 @@ class R
     end
   end
 
-  def grep q # params -> node-set
+  # node-set query handlers
+  def find p
+    if p && !p.empty?
+      `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 255`.lines.map{|pathName|
+        R.fromPOSIX pathName.chomp}
+    else
+      []
+    end
+  end
+  def grep q
     words = R.tokens q
-    case words.size # unordered &&
+    case words.size # any term-order on small term-sets
     when 0
       return []
     when 2
@@ -195,12 +205,14 @@ class R
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
     when 4
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else # scan-order &&
+    else # scan-order terms
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
-    `#{cmd} | head -n 255`.lines.map{|matchingFile| R.fromPOSIX matchingFile.chomp}
+    `#{cmd} | head -n 255`.lines.map{|pathName|
+      R.fromPOSIX pathName.chomp}
   end
+
 
   def condResponse body=nil
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
