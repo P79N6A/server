@@ -171,17 +171,13 @@ class R
     # labels
     e.env[:label] = {}
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true}
-
     [:links,:images].map{|p| e.env[p] = []} # link & image lists
-
     # sort configuration
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-
     keys = [Creator,To,Type,g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta; keys -= VerboseMeta unless e.q.has_key? 'full'
-
     [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
@@ -209,7 +205,6 @@ class R
               'r' + href.sha2
             end
     focus = !this.fragment && this.path==e.path
-
     # type
     types = l.types
     isImg = types.member? Image
@@ -218,16 +213,14 @@ class R
     isMail = types.member? SIOC+'MailMessage'
     isBlog = types.member? SIOC+'BlogPost'
     monospace = isChat || isCode || isMail
-
     # date
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-
     # title
     titles = l[Title].justArray # explicit title
-    if titles.empty? && this.path # no explicit title found
-      if isChat # individual msgs hidden in overview
-      else # file and request-URI metadata
+    if titles.empty? && this.path # implicit title
+      if isChat # individual msgs untitled (ignore filename)
+      else # filename
         fsName = (URI.unescape (File.basename this.path))[0..64] # fs name
         titles.push(focus && e.env[:title] || fsName) # <req#this> title
       end
@@ -244,7 +237,6 @@ class R
       else
         v
       end}
-
     unless head && titles.empty?
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
@@ -266,7 +258,7 @@ class R
                     {_: :tr,
                      c: [{_: :td, class: :host, c: ({_: :a, href: '//'+host, c: host} if host)},
                          {_: :td, class: :path, c: links.map{|link|
-                            {_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'/')[0..41])}.update(linknav ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
+                            {_: :a, href: link.uri, c: CGI.escapeHTML((link.path||'/')[0..63])}.update(linknav ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []
                  images.push this if isImg       # image as subject of triple

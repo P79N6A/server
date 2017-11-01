@@ -333,6 +333,7 @@ class R
     yield doc, Type, R[Stat+'TextFile']
     mtime.do{|mt|
       yield doc, Date, mt.iso8601}
+    yield doc, DC+'hasFormat', self
     yield doc, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
         c: readFile.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
@@ -471,7 +472,7 @@ class R
     htmlCount = 0
     htmlFiles.map{|p| # HTML file
       html = srcDir + "#{htmlCount}.html"  # file location
-#      yield e, DC+'hasFormat', html        # file pointer
+      yield e, DC+'hasFormat', html        # file pointer
       html.writeFile p.decoded  if !html.e # store HTML email
       htmlCount += 1 } # increment count
 
