@@ -398,7 +398,8 @@ class R
     # From
     from = []
     m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase }} # queue for indexing
-    m[:from].do{|fr|fr.addrs.map{|a|yield e, Creator, a.display_name||a.name}} # creator name
+    m[:from].do{|fr|
+      fr.addrs.map{|a|yield e, Creator, a.display_name||a.name} if fr.respond_to? :addrs} # creator name
     m['X-Mailer'].do{|m|yield e, SIOC+'user_agent', m.to_s}
 
     # To
@@ -423,15 +424,18 @@ class R
     dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month container
     [*from,*to].map{|addr| # address
       user, domain = addr.split '@' # split address parts
-      apath = dpath + domain + '/' + user + '/' # address container
-      yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # To/From triple
-      if subject
-        mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # append time & subject
-        mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # append filetype extension
-        mloc = mpath.R # index entry
-        mloc.dir.mkdir # index container
-        ln self, mloc unless mloc.e rescue nil # link to index
-      end}
+      if user && domain
+        apath = dpath + domain + '/' + user + '/' # address container
+        yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # To/From triple
+        if subject
+          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # append time & subject
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # append filetype extension
+          mloc = mpath.R # index entry
+          mloc.dir.mkdir # index container
+          ln self, mloc unless mloc.e rescue nil # link to index
+        end
+      end
+    }
 
     # references
     %w{in_reply_to references}.map{|ref|
