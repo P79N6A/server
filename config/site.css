@@ -17,7 +17,7 @@ table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 table.links td.host {text-align:right}
-table.links td.host a {background-color:#000;color:#999;font-weight: normal; font-size:.88em}
+table.links td.host a {color:#999;font-weight: normal; font-size:.9em}
 table.dir {width:100%;display:table}
 table.dir td {position: relative;height:12em;vertical-align:bottom;background-color:#000;text-align:center}
 table.dir td .bar {width: 100%; margin:auto;}
@@ -28,13 +28,13 @@ span.children a {font-weight: normal;font-size:.9em}
 a {text-decoration:none; font-weight: bold; color:#fff}
 #prev {left:0}
 #next {right:0}
-#prev,#next {font-size:2.1em;position:fixed;top:-.18em}
+#prev,#next {font-size:2.1em;position:fixed;top:-.1em}
 a.date {white-space: nowrap}
 a.thumb img {height:256px}
 a[rel="down"] {font-size:2.8em;margin:.3em}
 :target {background-color:#fff !important;
 	 color:#000 !important;}
-:target a {color:#000}
+:target a {background-color:#fff;color:#000}
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }
 a.chain:before { content:"\f0c1"; font-family: icons; }
