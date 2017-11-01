@@ -331,11 +331,13 @@ class R
   def triplrText enc=nil, &f
     doc = stripDoc.uri
     yield doc, Type, R[Stat+'TextFile']
+    mtime.do{|mt|
+      yield doc, Date, mt.iso8601}
     yield doc, Content,
     H({_: :pre, style: 'white-space: pre-wrap',
-        c: readFile.do{|r|
-          enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
-    mtime.do{|mt|yield doc, Date, mt.iso8601}
+        c: readFile.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
+  rescue Exception => e
+    puts uri, e.class, e.message
   end
 
   def triplrMarkdown
