@@ -160,7 +160,7 @@ class R
             size = r[Size].justArray[0]||0
             full = env[:du] ? false : (size >= childSize)
             {_: :td, id: childType.to_s + r.R.basename, onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri + '?head',
-             c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{100.0 * size / max}%" : '', c: {_: :a, href: r.uri, c: r.R.basename}}}}}} if showChildren)]}
+             c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{100.0 * size / max}%" : '', c: r.R.basename}}}}} if showChildren)]}
 
   Table = -> g, e {
     # labels
