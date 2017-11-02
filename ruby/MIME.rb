@@ -243,7 +243,13 @@ class R
   def triplrUriList; uris.map{|u|yield u, Type, R[W3+'2000/01/rdf-schema#Resource']} end
   def uris; open(pathPOSIX).readlines.map &:chomp end
 
-  # POSIX mapping functions
+  # POSIX map
+  def pathPOSIX
+    URI.unescape(path[0]=='/' ? '.'+path : path)
+  end
+  def R.fromPOSIX path
+    path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R
+  end
   def triplrFile
     s = path
     size.do{|sz|yield s, Size, sz}
@@ -265,30 +271,25 @@ class R
     nodes.map{|node| yield s, Stat+'contains', node }
     yield s, Size, nodes.size
   end
+  def basename; File.basename path end
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dir; ((host ? ('//'+host) : '') + dirname).R end
   def dirname; File.dirname path end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
-  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
-  def pathPOSIX; URI.unescape(path[0]=='/' ? '.'+path : path) end
-  def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
-  def basename; File.basename path end
   def exist?; node.exist? end
   def ext; (File.extname uri)[1..-1] || '' end
+  def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
+  def ln x,y; FileUtils.ln x.pathPOSIX, y.pathPOSIX end
+  def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
   def match p; to_s.match p end
+  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
   def mtime; node.stat.mtime end
   def node; Pathname.new pathPOSIX end
+  def readFile; File.open(pathPOSIX).read end
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
-  def readFile; File.open(pathPOSIX).read end
-  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
-  def ln x,y; FileUtils.ln x.pathPOSIX, y.pathPOSIX end
-  def ln_s x,y
-    FileUtils.ln_s x.node.expand_path,
-                   y.node.expand_path
-  end
-  def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
+  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
