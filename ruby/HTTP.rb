@@ -144,9 +144,6 @@ class R
     g # RDF graph
   end
 
-  # thumbnail URI
-  def thumb; dir + '/.' + basename + '.jpg' end
-
   # feed handler
   def feed; [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] end
 
@@ -171,18 +168,26 @@ class R
   def file
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-    if q.has_key?('thumb') && ext.match(/(mp4|mkv|png|jpg)/i)
-      if !thumb.e
-        if mime.match(/^video/)
-          `ffmpegthumbnailer -s 256 -i #{sh} -o #{thumb.sh}`
-        else
-          `gm convert #{sh} -thumbnail "256x256" #{thumb.sh}`
-        end
-      end
-      thumb.e && thumb.setEnv(@r).condResponse || notfound
+    if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
+      filePreview
     else
       condResponse
     end
+  end
+
+  def filePreview
+    p = previewURI.R
+    if !p.e
+      if mime.match(/^video/)
+        `ffmpegthumbnailer -s 256 -i #{sh} -o #{p.sh}`
+      else
+        `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
+      end
+    end
+    p.e && p.setEnv(@r).condResponse || notfound
+  end
+  def previewURI
+    join('.' + basename + '.jpg')
   end
 
   # node-set query handlers

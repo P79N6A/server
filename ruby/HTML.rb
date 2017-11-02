@@ -262,7 +262,7 @@ class R
                    e.env[:images].push img # seen
                    {_: :a, class: :thumb, href: href,
                     c: {_: :img, src: if !img.host || e.host==img.host
-                         img.path + '?thumb'
+                         img.path + '?preview'
                        else
                          img.uri
                         end}}})]
