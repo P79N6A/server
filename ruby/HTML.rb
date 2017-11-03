@@ -74,22 +74,22 @@ class R
 
   # graph-tree -> HTML
   HTML = -> graph, re {
-    e=re.env
+    e = re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
     re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
-    br = '<br clear=all>'
-    expand = e[:Links][:down].do{|d|[br,{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}]}
+    expand = e[:Links][:down].do{|d|{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}}
+    foot = [{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"}, {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}, (CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?
     H ["<!DOCTYPE html>\n",
        {_: :html,
         c: [{_: :head,
              c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: e[:title]||re.path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                 e[:Links].do{|links|links.map{|type,uri| {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                ]},
+                 %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
+                 e[:Links].do{|links|
+                   links.map{|type,uri|
+                     {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
+                 {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [{_: :style, c: '.conf/site.css'.R.readFile},
-                 Nav[graph,re], Table[graph,re], expand,
-                 ([{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"},{_: :span,style: 'font-size:12em;font-weight:bold',c: 404},(CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?),
-                 {_: :style, c: '.conf/code.css'.R.readFile}, {_: :script, c: '.conf/site.js'.R.readFile}]}]}]}
+             c: [Nav[graph,re], Table[graph,re], expand, foot]}]}]}
 
   InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
@@ -190,7 +190,6 @@ class R
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
   TableRow = -> l,e,sort,direction,keys {
-    #id 
     this = l.R
     href = this.uri
     head = e.q.has_key? 'head'
@@ -200,24 +199,18 @@ class R
               'r' + href.sha2
             end
     focus = !this.fragment && this.path==e.path
-    # type
     types = l.types
-    isImg = types.member? Image
-    isCode = types.member? SIOC+'SourceCode'
-    isChat = types.member? SIOC+'InstantMessage'
-    isMail = types.member? SIOC+'MailMessage'
-    isBlog = types.member? SIOC+'BlogPost'
-    monospace = isChat || isCode || isMail
-    # date
+    chatMsg = types.member? SIOC+'InstantMessage'
+    mailMsg = types.member? SIOC+'MailMessage'
+    monospace = chatMsg || mailMsg || types.member?(SIOC+'SourceCode')
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-    # title
     titles = l[Title].justArray # explicit title
-    if titles.empty? && this.path # implicit title
-      if isChat # individual msgs untitled (ignore filename)
-      else # filename
-        fsName = (URI.unescape (File.basename this.path))[0..64] # fs name
-        titles.push(focus && e.env[:title] || fsName) # <req#this> title
+    if titles.empty? && this.path
+      if chatMsg # don't elevate filename as implicit title, for these types
+      else
+        fsName = (URI.unescape (File.basename this.path))[0..64] # filename, default title if none other found
+        titles.push(focus && e.env[:title] || fsName) # requestURI title from environment
       end
     end
     labels = l[Label].justArray
@@ -225,9 +218,9 @@ class R
     # generate pointer to resource as selection in index
     indexContext = -> p,v {
       v = v.R
-      if isMail # address*month
+      if mailMsg # address*month
         {_: :a, href: v.path + '?head#r' + href.sha2, c: v.label}
-      elsif isBlog # host*day
+      elsif types.member? SIOC+'BlogPost' # host*day
         {_: :a, href: datePath[0..-4] + '*/*' + (v.host||'') + '*?head#r' + href.sha2, c: v.label}
       else
         v
@@ -256,8 +249,8 @@ class R
                             {_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.path||'/')[1..64].gsub('/',' '))}.update(linknav ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []
-                 images.push this if isImg       # image as subject of triple
-                 l[Image].do{|i|images.concat i} # image as object of triple
+                 images.push this if types.member?(Image) # subject of triple
+                 l[Image].do{|i|images.concat i}          # object of triple
                  images.map(&:R).select{|i|!e.env[:images].member? i}.map{|img| # unseen images
                    e.env[:images].push img # seen
                    {_: :a, class: :thumb, href: href,
