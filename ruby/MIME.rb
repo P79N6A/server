@@ -207,6 +207,8 @@ class R
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : cachedRDF end
 
+  def to_json *a; {'uri' => uri}.to_json *a end
+
   def cachedRDF
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
@@ -226,8 +228,6 @@ class R
     end
     doc
   end
-
-  def to_json *a; {'uri' => uri}.to_json *a end
 
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end

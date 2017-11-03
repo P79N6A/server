@@ -59,10 +59,33 @@ class String
 end
 
 class R
-
   View = {}
 
-  def nokogiri; require 'nokogiri'; Nokogiri::HTML.parse (open uri).read end
+  def R.tokens str
+    str ? str.scan(/[\w]+/).map(&:downcase).uniq : []
+  end
+
+  def nokogiri
+    require 'nokogiri'; Nokogiri::HTML.parse (open uri).read
+  end
+
+  Grep = -> graph, q {
+    wordIndex = {}
+    words = R.tokens q
+    words.each_with_index{|word,i|
+      wordIndex[word] = i}
+    pattern = /(#{words.join '|'})/i
+    # drop non-matching resources
+    graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
+    # highlight matches
+    graph.values.map{|r|
+      r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
+        r[Abstract] = [lines[0..5].map{|l|
+          l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
+            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrapper span
+          }},{_: :hr}] if lines.size > 0 }}
+    graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
+    graph}
 
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
@@ -76,7 +99,9 @@ class R
   HTML = -> graph, re {
     e = re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
-    re.path!='/' && !graph.empty? && re.q['q'].do{|q|Grep[graph,q]}
+    if q = re.q['q']
+      Grep[graph,q]
+    end
     expand = e[:Links][:down].do{|d|{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}}
     foot = [{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"}, {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}, (CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?
     H ["<!DOCTYPE html>\n",
@@ -91,7 +116,7 @@ class R
             {_: :body,
              c: [Nav[graph,re], Table[graph,re], expand, foot]}]}]}
 
-  InlineMeta = [Title, Image, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
                  RSS+'comments', RSS+'em', RSS+'category',
@@ -221,7 +246,7 @@ class R
       else
         v
       end}
-    unless head && titles.empty?
+    unless head && titles.empty? && !l[Abstract]
       {_: :tr, href: href, class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,
@@ -290,30 +315,5 @@ class R
              end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})
     end
   }
-
-  # tree-graph grep result in HTML
-  def R.tokens str; str ? str.scan(/[\w]+/).map(&:downcase).uniq : [] end
-  Grep = -> graph, q {
-    # tokenize
-    wordIndex = {}
-    words = R.tokens q
-    words.each_with_index{|word,i|
-      wordIndex[word] = i}
-    # pattern expression
-    pattern = /(#{words.join '|'})/i
-    # match resources
-    graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
-    # highlight matches
-    graph.values.map{|r| # visit resource
-      r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
-        r[Content] = lines[0..5].map{|line|
-          line.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture matches
-            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # render HTML
-          }} if lines.size > 0
-      }}
-    # highlighting CSS
-    graph['#grep.CSS'] = {Content => H({_: :style, c: wordIndex.values.map{|i|
-      ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
-    graph}
 
 end
