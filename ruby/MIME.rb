@@ -1,7 +1,7 @@
 # coding: utf-8
 class R
 
-  # URI constants
+  # URIs
   W3 = 'http://www.w3.org/'
   OA = 'https://www.w3.org/ns/oa#'
   Purl = 'http://purl.org/'
@@ -30,7 +30,6 @@ class R
   Container = W3  + 'ns/ldp#Container'
 
   # prefix -> MIME
-  # suffix is optional, full names ("LICENSE",etc) also match
   MIMEprefix = {
     'authors' => 'text/plain',
     'changelog' => 'text/plain',
@@ -78,7 +77,7 @@ class R
     'yaml' => 'text/plain',
   }
 
-  # MIME -> TriplrFunction
+  # MIME -> Triplr
   Triplr = {
     'application/config'   => [:triplrDataFile],
     'application/font'      => [:triplrFile],
@@ -199,7 +198,7 @@ class R
          MIMEsuffix[suffix]
        elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
          Rack::Mime::MIME_TYPES['.'+suffix]
-       else # sniff inside the file. suggest adding explicit mapping
+       else
          puts "#{pathPOSIX} unmapped MIME, sniffing content (SLOW)"
          `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
        end)
@@ -211,8 +210,8 @@ class R
   def cachedRDF
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
-    doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r # cache location
-    unless doc.e && doc.m > m # update cache
+    doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
+    unless doc.e && doc.m > m
       tree = {}
       triplr = Triplr[mime]
       unless triplr
@@ -244,9 +243,7 @@ class R
   def uris; open(pathPOSIX).readlines.map &:chomp end
 
   # POSIX map
-  def pathPOSIX
-    @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path))
-  end
+  def pathPOSIX; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
   def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
   def node; @node ||= (Pathname.new pathPOSIX) end
   def basename; File.basename path end
@@ -476,10 +473,10 @@ class R
         l = l.chomp # strip any remaining [\n\r]
         if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
           depth = (qp[1].scan /[>|]/).size # count > occurrences
-          if qp[3].empty? # drop empty-string lines while inside quoted portion
+          if qp[3].empty? # drop blank quotes
             nil
           else # wrap quotes in <span>
-            indent = "<span name='quote#{depth}'>&gt;</span>" # indentation marker with depth label
+            indent = "<span name='quote#{depth}'>&gt;</span>"
             {_: :span, class: :quote,
              c: [indent * depth,' ',
                  {_: :span, class: :quoted, c: qp[3].gsub('@','').hrefs{|p,o|yield e, p, o}}]}
@@ -541,7 +538,7 @@ class R
       end
     rescue OpenURI::HTTPError => error
       msg = error.message
-      puts [uri,msg].join("\t") unless msg.match(/304/) # warn on error unless it's just a cache-hit (304)
+      puts [uri,msg].join("\t") unless msg.match(/304/)
     end
     updated ? self : nil
   rescue Exception => e
@@ -624,7 +621,7 @@ class R
         nil
       end
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
-      def each_statement &fn # triples flow (left ← right) across stream-transformers
+      def each_statement &fn # triples flow (left ← right)
         resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
@@ -711,7 +708,7 @@ class R
         reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
-        # XML-namespace map
+        # XML namespaces
         x = {}
         head = @doc.match(reHead)
         head && head[2] && head[2].scan(reXMLns){|m|
