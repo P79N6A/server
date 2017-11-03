@@ -12,7 +12,10 @@ class R
     resource.setEnv(e).send e['REQUEST_METHOD']          # call resource
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
-    [500,{'Content-Type' => 'text/html'},["<html><head><style>body {background-color:#222; font-size:1.2em; text-align:center}\npre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}\n.number {color:#0f0; font-weight:normal; font-size:1.1em}</style></head><body><pre>",msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),'</pre></body></html>']]
+    [500,{'Content-Type' => 'text/html'},
+     ["<html><head><style>body {background-color:#222; font-size:1.2em; text-align:center}\npre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}\n.number {color:#0f0; font-weight:normal; font-size:1.1em}</style></head><body><pre>",
+      msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),
+      '</pre></body></html>']]
   end
 
   def env; @r end
@@ -31,10 +34,11 @@ class R
     return [204,{},[]] if firstPart.match(/^gen.*204$/)
     return [302,{'Location' => path+'/'},[]] if directory && path[-1] != '/' 
 
-    # timeseg pointer-arithmetic
-    dp = []; dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
+    dp = []
+    dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil
     @r[:view] = :epoch if path=='/'
+
     case dp.length
     when 1 # Y
       @r[:view] = :year
@@ -63,6 +67,7 @@ class R
         n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
       end
     end
+
     sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
     @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs if p && R[p].e
     @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs if n && R[n].e
@@ -72,7 +77,6 @@ class R
       @r[:Links][:down] = path + (R.qs qq)
     end
 
-    # file-resource nodes
     set = (if directory
            if q.has_key?('f') && path!='/' # FIND(1) nodes
              find q['f']
@@ -126,7 +130,8 @@ class R
         re.map{|p,o| # predicate, objects
           o.justArray.map{|o| # object
             o = o.R if o.class==Hash
-            g[s]||={'uri'=>s}; g[s][p]||=[]; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
+            g[s] ||= {'uri'=>s}
+            g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
     # update container Size to recursive child-size on request
     if q.has_key?('du') && [:year,:month,:day].member?(@r[:view])
       set.select{|d|d.node.directory?}.-([self]).map{|node|
