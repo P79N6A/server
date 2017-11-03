@@ -16,6 +16,7 @@ class R
   RSS      = Purl + 'rss/1.0/'
   Date     = DC   + 'date'
   Title    = DC   + 'title'
+  Abstract = DC   + 'abstract'
   Post     = SIOC + 'Post'
   To       = SIOC + 'addressed_to'
   From     = SIOC + 'has_creator'
@@ -136,7 +137,6 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  # MIMEs w/ in-library writability
   Writable = %w{application/atom+xml text/html}
 
   # RDF type -> icon name
@@ -267,6 +267,7 @@ class R
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
+
   alias_method :e, :exist?
   alias_method :m, :mtime
   alias_method :sh, :shellPath
@@ -379,7 +380,8 @@ class R
   end
 
   # email
-  MessageURI = -> id {h = id.sha2; ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
+  MessageURI = -> id { h = id.sha2
+    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
     m = Mail.read node; return unless m
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID

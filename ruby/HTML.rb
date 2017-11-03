@@ -193,11 +193,7 @@ class R
     this = l.R
     href = this.uri
     head = e.q.has_key? 'head'
-    rowID = if e.path == this.path && this.fragment
-              this.fragment
-            else
-              'r' + href.sha2
-            end
+    rowID = (e.path == this.path && this.fragment) ? this.fragment : 'r'+href.sha2
     focus = !this.fragment && this.path==e.path
     types = l.types
     chatMsg = types.member? SIOC+'InstantMessage'
@@ -247,6 +243,7 @@ class R
                      c: [{_: :td, class: :host, c: ({_: :a, href: '//'+host, c: host} if host)},
                          {_: :td, class: :path, c: links.map{|link|
                             {_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.path||'/')[1..64].gsub('/',' '))}.update(linknav ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
+                l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []
                  images.push this if types.member?(Image) # subject of triple
