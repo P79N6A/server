@@ -1,32 +1,20 @@
 # coding: utf-8
-%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r} # external dependencies
+%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 class R < RDF::URI
   def R; self end
   def R.[] uri; R.new uri end
 end
-
-class RDF::URI
-  def R; R.new to_s end
-end
-class RDF::Node
-  def R; R.new to_s end
-end
-class Hash
-  def R; R.new self["uri"] end
-  def uri; self["uri"] end
-end
-class Pathname
-  def R; R.fromPOSIX to_s.utf8 end
-end
-
 %w{MIME HTML HTTP}.map{|r|require_relative r}
-
 class Array
   #       [a] -> [a]
   def justArray; self end
 end
 class FalseClass
   def do; self end
+end
+class Hash
+  def R; R.new self["uri"] end
+  def uri;     self["uri"] end
 end
 class NilClass
   #       nil -> []
@@ -39,6 +27,15 @@ class Object
   def id; self end
   def do; yield self end
   def to_time; [Time, DateTime].member?(self.class) ? self : Time.parse(self) end
+end
+class Pathname
+  def R; R.fromPOSIX to_s.utf8 end
+end
+class RDF::Node
+  def R; R.new to_s end
+end
+class RDF::URI
+  def R; R.new to_s end
 end
 =begin
   the "monkeypatching" has been pared down.."Everything is a resource", call #R to return an abstract resource of class R
