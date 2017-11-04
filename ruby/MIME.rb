@@ -366,8 +366,7 @@ class R
           yield s, p, o
         }
         yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
-    # summarize non-empty log
-    if linenum > 0
+    if linenum > 0 # summarize at log-URI
       yield log, Type, R[SIOC+'ChatLog']
       yield log, Date, mtime.iso8601
       yield log, Creator, channel
@@ -379,9 +378,7 @@ class R
     puts uri, e.class, e.message
   end
 
-  # email
-  MessageURI = -> id { h = id.sha2
-    ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
+  MessageURI = -> id { h=id.sha2; ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
     m = Mail.read node; return unless m
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
@@ -420,19 +417,20 @@ class R
     # Date
     date = (m.date || Time.now).to_time.utc
     dstr = date.iso8601
-    yield e, Date, dstr; #yield e, Mtime, date.to_i
-    dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month container
-    [*from,*to].map{|addr| # address
-      user, domain = addr.split '@' # split address parts
+    yield e, Date, dstr
+    dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month
+    [*from,*to].map{|addr| # addresses
+      user, domain = addr.split '@'
       if user && domain
-        apath = dpath + domain + '/' + user + '/' # address container
-        yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # To/From triple
+        apath = dpath + domain + '/' + user # address
+        yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user]
         if subject
-          mpath = apath + (dstr[8..-1] + subject).gsub(/[^a-zA-Z0-9_]+/,'.')[0..96] # append time & subject
-          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # append filetype extension
+          slug = R.tokens(subject).join('.')[0..63]
+          mpath = apath + '.' + dstr[8..-1].gsub(/[^0-9]+/,'.') + slug # time & subject
+          mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # file-type extension
           mloc = mpath.R # index entry
           mloc.dir.mkdir # index container
-          ln self, mloc unless mloc.e rescue nil # link to index
+          ln self, mloc unless mloc.e rescue nil # link index
         end
       end
     }
