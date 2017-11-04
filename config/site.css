@@ -8,10 +8,11 @@ img {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff}
 #prev {left:0}
 #next {right:0}
-#prev,#next {font-size:2.1em;position:fixed;top:0}
+#down {display:block}
+#prev,#next {position:fixed;top:0}
+#prev,#next,#down {font-size:2.2em;margin-left:.16em}
 a.date {white-space: nowrap}
 a.thumb img {max-height: 24em}
-a[rel="down"] {font-size:2.8em;margin:.3em}
 .nav {text-align:center}
 .nav input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
 .nav a.find {font-weight: normal;color:#ccc}

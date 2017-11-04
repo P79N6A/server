@@ -61,13 +61,39 @@ end
 class R
   View = {}
 
-  def R.tokens str
-    str ? str.scan(/[\w]+/).map(&:downcase).uniq : []
-  end
+  ViewConfig = {
+    epoch: {
+      type: :epoch,
+      childType: :year,
+      path: /^\/$/,
+      size: 1},
+    year: {
+      type: :year,
+      childType: :month,
+      path: /^\/\d{4}\/$/,
+      size: 12},
+    month: {
+      type: :month,
+      childType: :day,
+      path: /^\/\d{4}\/\d{2}\/$/,
+      size: 30},
+    day: {
+      type: :day,
+      childType: :hour,
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
+      size: 24},
+    hour: {
+      type: :hour,
+      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
+      size: 3600}}
 
-  def nokogiri
-    require 'nokogiri'; Nokogiri::HTML.parse (open uri).read
-  end
+  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
+
+  def R.tokens str; str ? str.scan(/[\w]+/).map(&:downcase).uniq : [] end
+
+  def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   Grep = -> graph, q {
     wordIndex = {}
@@ -102,7 +128,7 @@ class R
     if q = re.q['q']
       Grep[graph,q]
     end
-    expand = e[:Links][:down].do{|d|{_: :a, c: '&#9660;', id: :Down, rel: :down, href: (CGI.escapeHTML d.to_s)}}
+    expand = e[:Links][:down].do{|d|{_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}}
     foot = [{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"}, {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}, (CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?
     H ["<!DOCTYPE html>\n",
        {_: :html,
@@ -115,39 +141,6 @@ class R
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
              c: [Nav[graph,re], Table[graph,re], expand, foot]}]}]}
-
-  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
-                 RSS+'comments', RSS+'em', RSS+'category',
-                 Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
-                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary',
-                 "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
-  ViewConfig = {
-    epoch: {
-      type: :epoch,
-      childType: :year,
-      path: /^\/$/,
-      size: 1},
-    year: {
-      type: :year,
-      childType: :month,
-      path: /^\/\d{4}\/$/,
-      size: 12},
-    month: {
-      type: :month,
-      childType: :day,
-      path: /^\/\d{4}\/\d{2}\/$/,
-      size: 30},
-    day: {
-      type: :day,
-      childType: :hour,
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
-      size: 24},
-    hour: {
-      type: :hour,
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
-      size: 3600}}
 
   Nav = -> graph,re {
     env = re.env; path = "" ; depth = 0
@@ -164,8 +157,8 @@ class R
       max = children.map{|c|c[Size].justArray[0]||0}.max.to_f
     end
     color = '#%06x' % (rand 16777216)
-    prevRange = env[:Links][:prev].do{|p|{_: :a, id: 'prev', c: '&#9664;', class: :prev, href: (CGI.escapeHTML p.to_s)}}
-    nextRange = env[:Links][:next].do{|n|{_: :a, id: 'next', c: '&#9654;', class: :next, href: (CGI.escapeHTML n.to_s)}}
+    prevRange = env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}}
+    nextRange = env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}
     [{class: :nav,
       c: [prevRange,
           (re.path.split '/').map{|part|

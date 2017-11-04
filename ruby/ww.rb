@@ -1,5 +1,5 @@
 # coding: utf-8
-%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
+%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 class R < RDF::URI
   def R; self end
   def R.[] uri; R.new uri end
