@@ -289,11 +289,9 @@ class R
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     dirs,files = children.partition{|e|e.node.directory?}
-    dirs = dirs.map{|dir|dir+'/'}
-    files = files.map &:stripDoc
-    nodes = [*dirs, *files]
-    nodes.map{|node| yield s, Stat+'contains', node }
-    yield s, Size, nodes.size
+    files.map{|f|f.basename.split('.')[0]}.uniq.map{|p|yield s, Stat+'contains', R[s+p]}
+    dirs.map{|dir| yield s, Stat+'contains', dir+'/' }
+    yield s, Size, [*dirs, *files].size
   end
 
   def triplrImage &f

@@ -240,7 +240,7 @@ class R
         v
       end}
     unless head && titles.empty? && !l[Abstract]
-      {_: :tr, href: href, class: focus ? 'focus' : '',
+      {_: :tr, id: rowID, href: href + (!this.host && href[-1]=='/' && '?head' || ''), class: focus ? 'focus' : '',
        c: keys.map{|k|
          {_: :td, property: k,
           c: case k
@@ -251,7 +251,7 @@ class R
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
                 titles.map{|name|{_: :a, class: :title, href: href, c: (CGI.escapeHTML name.to_s)}}.intersperse(' '), ' ',
-                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|{_: :span, class: :children, c: cs.map{|c|[{_: :a, href: c.uri, c: c.label}, ' ']}} unless cs.empty?} unless focus),
+                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|{_: :span, class: :children, c: cs.map{|c|[{_: :a, id: 'child'+c.uri.sha2, href: c.uri + (c.host ? '' : '?head'), c: c.label}, ' ']}} unless cs.empty?} unless focus),
                 (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
@@ -305,7 +305,7 @@ class R
                l[k].justArray.map{|c|[{_: :a, href: c.path, class: :chain}, ' ']}
              else
                l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
-             end}}.intersperse("\n")}.update(focus ? {} : {id: rowID})
+             end}}.intersperse("\n")}
     end
   }
 
