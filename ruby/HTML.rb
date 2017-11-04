@@ -250,17 +250,16 @@ class R
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
-                titles.map{|name|{_: :a, class: :title, href: href, c: (CGI.escapeHTML name.to_s)}}.intersperse(' '), ' ',
+                titles.map{|t|[{_: :a, class: :title, href: href, c: (CGI.escapeHTML t.to_s)},'<br>']},
                 (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|{_: :span, class: :children, c: cs.map{|c|[{_: :a, id: 'child'+c.uri.sha2, href: c.uri + (c.host ? '' : '?head'), c: c.label}, ' ']}} unless cs.empty?} unless focus),
-                (links = [DC+'link', SIOC+'attachment', DC+'hasFormat'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
+                (links = [DC+'link', SIOC+'attachment'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
                   c: links.group_by(&:host).map{|host,links|
-                    linknav = links.size < 5
                     {_: :tr,
                      c: [{_: :td, class: :host, c: ({_: :a, href: '//'+host, c: host} if host)},
                          {_: :td, class: :path, c: links.map{|link|
-                            {_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.path||'/')[1..64].gsub('/',' '))}.update(linknav ? {id: 'link_'+rand.to_s.sha2} : {})}.intersperse(' ')}]}}} unless links.empty?),
+                            [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.path||'/')[0..64])},' ']}}]}}} unless links.empty?),
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []
