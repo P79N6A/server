@@ -15,3 +15,9 @@ set smtp_pass = $my_pass
 set mbox_type=Maildir
 set folder="~/.mail"
 set spoolfile="~/.mail/mailhost.com"
+
+mailboxes =whats-your.name =panix.com =lists.cpunks.org =googlegroups.com =w3.org =hard-core-dx.com =metzdowd.com =outages.org =nettime.org =haskell.org =netbehavior.org =eff.org
+
+set sidebar_visible
+set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
+set mail_check_stats
