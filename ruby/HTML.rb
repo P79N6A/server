@@ -121,7 +121,6 @@ class R
         a.unlink unless keepAttr.member? a.name}} if keepAttr
     html.to_xhtml(:indent => 0)}
 
-  # graph-tree -> HTML
   HTML = -> graph, re {
     e = re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
@@ -164,7 +163,7 @@ class R
           (re.path.split '/').map{|part|
             path = path + part + '/'
             depth += 1
-            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [part,{_: :span, class: :sep, c: '/'}]}},
+            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
           {_: :a, class: :clock, href: '/h', id: :uptothetime},
           ({_: :form,
             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
