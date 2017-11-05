@@ -254,7 +254,7 @@ class R
   def exist?; node.exist? end
   def ext; (File.extname uri)[1..-1] || '' end
   def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
-  def ln x,y; FileUtils.ln x.pathPOSIX, y.pathPOSIX end
+  def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
   def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
   def match p; to_s.match p end
   def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
@@ -378,17 +378,15 @@ class R
 
   MessageURI = -> id { h=id.sha2; ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
-    m = Mail.read node; return unless m
+    m = Mail.read node; return unless m # open message-file
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
-    resource = MessageURI[id]; e = resource.uri                # Message-URI
-    # storage paths
+    resource = MessageURI[id]; e = resource.uri                # Message URI
     srcDir = resource.path.R; srcDir.mkdir # container
-    srcFile = srcDir + 'this.msg'          # location
-    # link to canonical location
-    ln self, srcFile unless srcFile.e rescue nil
+    srcFile = srcDir + 'this.msg'          # found location
+    ln self, srcFile unless srcFile.e rescue nil # canonical location
     yield e, DC+'identifier', id         # pre-web identifier
-    yield e, DC+'cache', self + '*' # webized source file
-    yield e, Type, R[SIOC+'MailMessage'] # RDF typetag
+    yield e, DC+'cache', self + '*' # source file
+    yield e, Type, R[SIOC+'MailMessage'] # RDF type
 
     # From
     from = []
@@ -426,14 +424,16 @@ class R
           slug = R.tokens(subject).join('.')[0..63]
           mpath = apath + '.' + dstr[8..-1].gsub(/[^0-9]+/,'.') + slug # time & subject
           mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # file-type extension
-          mloc = mpath.R # index entry
-          mloc.dir.mkdir # index container
-          ln self, mloc unless mloc.e rescue nil # link index
+          mdir = '../.mail/' + domain + '/' # maildir
+          %w{cur new tmp}.map{|c| R[mdir + c].mkdir} # maildir container
+          mloc = R[mdir + 'cur/' + id.sha2 + '.msg'] # maildir entry
+          iloc = mpath.R # index entry
+          [iloc,mloc].map{|loc| loc.dir.mkdir # container
+            ln self, loc unless loc.e rescue nil} # link
         end
       end
     }
 
-    # references
     %w{in_reply_to references}.map{|ref|
       m.send(ref).do{|rs|
         rs.justArray.map{|r|
@@ -451,8 +451,7 @@ class R
             end
           end
           ln srcFile, rev if !rev.e rescue nil}}}
-
-    # HTML parts
+    # part handling
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'}
     htmlCount = 0
     htmlFiles.map{|p| # HTML file
@@ -460,17 +459,14 @@ class R
       yield e, DC+'hasFormat', html        # file pointer
       html.writeFile p.decoded  if !html.e # store HTML email
       htmlCount += 1 } # increment count
-
-    # text parts
     parts.select{|p|
-      (!p.mime_type || p.mime_type == 'text/plain') && # find text parts
-        Mail::Encodings.defined?(p.body.encoding)      # ensure decoder is defined
-    }.map{|p| # text part
-      # represent part as RDF
+      (!p.mime_type || p.mime_type == 'text/plain') && # text parts
+        Mail::Encodings.defined?(p.body.encoding)      # decodable?
+    }.map{|p|
       yield e, Content, (H p.decoded.to_utf8.lines.to_a.map{|l| # split lines
         l = l.chomp # strip any remaining [\n\r]
         if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
-          depth = (qp[1].scan /[>|]/).size # count > occurrences
+          depth = (qp[1].scan /[>|]/).size # > count
           if qp[3].empty? # drop blank quotes
             nil
           else # wrap quotes in <span>
@@ -482,15 +478,11 @@ class R
         else # fresh line
           [l.gsub(/(\w+)@(\w+)/,'\2\1').hrefs{|p,o|yield e, p, o}]
         end}.compact.intersperse("\n"))} # join lines
-
-    # message parts
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|
       content = m.body.decoded                   # decode message-part
       f = srcDir + content.sha2 + '.inlined.msg' # message location
       f.writeFile content if !f.e                # store message
       f.triplrMail &b}                           # recursion on message-part
-
-    # attachments
     m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} ||                           # explicit name
              (rand.to_s.sha2 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generated name
