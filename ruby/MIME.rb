@@ -243,30 +243,30 @@ class R
   def uris; open(pathPOSIX).readlines.map &:chomp end
 
   # POSIX map
-  def pathPOSIX; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
-  def R.fromPOSIX path; path.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
-  def node; @node ||= (Pathname.new pathPOSIX) end
+  def R.fromPOSIX p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
+  def + u; R[uri + u.to_s].setEnv @r end
+  def <=> c; to_s <=> c.to_s end
+  def ==  u; to_s == u.to_s end
   def basename; File.basename path end
   def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
   def dir; dirname.R end
   def dirname; File.dirname path end
-  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def exist?; node.exist? end
   def ext; (File.extname uri)[1..-1] || '' end
+  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
   def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
   def match p; to_s.match p end
   def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
   def mtime; node.stat.mtime end
+  def node; @node ||= (Pathname.new pathPOSIX) end
+  def pathPOSIX; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
   def readFile; File.open(pathPOSIX).read end
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
   def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
-  def + u; R[uri + u.to_s].setEnv @r end
-  def <=> c; to_s <=> c.to_s end
-  def ==  u; to_s == u.to_s end
 
   alias_method :e, :exist?
   alias_method :m, :mtime
@@ -645,28 +645,27 @@ class R
       def normalizePredicates *f
         send(*f){|s,p,o|
           yield s,
-                {DCe+'subject' => Title,
+                {Atom+'content' => Content,
+                 Atom+'displaycategories' => Label,
+                 Atom+'enclosure' => SIOC+'attachment',
+                 Atom+'summary' => Content,
+                 Atom+'title' => Title,
+                 DCe+'subject' => Title,
                  DCe+'type' => Type,
-                 RSS+'title' => Title,
-                 RSS+'description' => Content,
-                 RSS+'encoded' => Content,
-                 RSS+'modules/slash/comments' => SIOC+'num_replies',
-                 RSS+'modules/content/encoded' => Content,
-                 RSS+'category' => Label,
-                 RSS+'source' => DC+'source',
-                 Harvard+'author' => Creator,
-                 Harvard+'subtitle' => Title,
                  Harvard+'WPID' => Label,
                  Harvard+'affiliation' => Creator,
+                 Harvard+'author' => Creator,
+                 Harvard+'subtitle' => Title,
+                 Podcast+'author' => Creator,
                  Podcast+'keywords' => Label,
                  Podcast+'subtitle' => Title,
-                 Podcast+'author' => Creator,
-                 Atom+'displaycategories' => Label,
-                 'http://newsoffice.mit.edu/ns/tags' => Label,
-                 Atom+'content' => Content,
-                 Atom+'summary' => Content,
-                 Atom+'enclosure' => SIOC+'attachment',
-                 Atom+'title' => Title,
+                 RSS+'category' => Label,
+                 RSS+'description' => Content,
+                 RSS+'encoded' => Content,
+                 RSS+'modules/content/encoded' => Content,
+                 RSS+'modules/slash/comments' => SIOC+'num_replies',
+                 RSS+'source' => DC+'source',
+                 RSS+'title' => Title,
                 }[p]||p, o }
       end
       def normalizeDates *f
