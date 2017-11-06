@@ -176,13 +176,17 @@ class R
       c: [{_: :tr, c: children.map{|r|
             size = r[Size].justArray[0]||0
             full = env[:du] ? false : (size >= childSize)
-            {_: :td, id: childType.to_s + r.R.basename, onclick: "window.location.href = this.getAttribute(\"href\");", href: r.uri + '?head',
-             c: {class: :bar, style: size ? "background-color:#{full ? 'white' : color}; height:#{100.0 * size / max}%" : '', c: r.R.basename}}}},
+            {_: :td, class: :dir,
+             c: {_: :a, href: r.uri + '?head',
+                 id: childType.to_s + r.R.basename,
+                 style: size ? "background-color:#{full ? '#eee' : color}; height:#{100.0 * size / max}%" : '',
+                 c: r.R.basename}}}},
           {_: :tr, c: children.map{|r|
              graph.delete r.uri
-             {_: :td, class: :subdir, c: r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
+             {_: :td, class: :subdir,
+              c: r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
                 nom = c.R.basename
-                {_: :a, href: c.uri, style: "background-color:##{('%02x' % (rand(64)+192))*3}",
+                {_: :a, href: c.uri, style: "background-color:##{('%02x' % (rand(56)+200))*3}",
                  c: nom}.update(nom.to_i%6 == 0 ? {id: 'h'+rand.to_s.sha2} : {})}}}}]} if showChildren)]}
 
   Table = -> g, e {
