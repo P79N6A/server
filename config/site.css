@@ -30,3 +30,4 @@ table.links td.path a {background-color:#000;color:#fff;border: .08em solid #222
 table.dir {width:100%;display:table}
 table.dir td {position: relative;height:12em;vertical-align:bottom;background-color:#000;text-align:center}
 table.dir td .bar {width: 100%; margin:auto; color:#000;font-weight: bold}
+table.dir td.subdir a {display: block; font-size: .8em; font-weight: normal; color: #000; border-radius: 0}
