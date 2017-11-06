@@ -185,9 +185,9 @@ class R
              graph.delete r.uri
              {_: :td, class: :subdir,
               c: r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
-                nom = c.R.basename
-                {_: :a, href: c.uri, style: "background-color:##{('%02x' % (rand(56)+200))*3}",
-                 c: nom}.update(nom.to_i%6 == 0 ? {id: 'h'+rand.to_s.sha2} : {})}}}}]} if showChildren)]}
+                nom = c.R.basename[0..63]
+                {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*4))*3}",
+                 c: CGI.escapeHTML(URI.unescape nom)}.update(nom.to_i%6 == 0 ? {id: 'h'+rand.to_s.sha2} : {})}}}}]} if showChildren)]}
 
   Table = -> g, e {
     # labels
