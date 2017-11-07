@@ -63,8 +63,6 @@ class R
 
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
 
-  View = {}
-
   ViewConfig = {
     epoch: {
       type: :epoch,
@@ -135,7 +133,10 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [Nav[graph,re], Table[graph,re], expand, foot]}]}]}
+             c: [Nav[graph,re],
+                (Table[graph,re] unless graph.empty?),
+                 expand,
+                 foot]}]}]}
 
   Nav = -> graph,re {
     env = re.env; path = "" ; depth = 0
@@ -154,6 +155,7 @@ class R
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}}
     nextRange = env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}
+
     [{class: :nav,
       c: [prevRange,
           (re.path.split '/').map{|part|
