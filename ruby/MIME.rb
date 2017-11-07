@@ -204,10 +204,10 @@ class R
        end)
   end
 
+  def R.tokens str; str ? str.scan(/[\w]+/).map(&:downcase).uniq : [] end
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
-  def toRDF; isRDF ? self : cachedRDF end
-
-  def to_json *a; {'uri' => uri}.to_json *a end
+  def toRDF; isRDF ? self : cachedRDF end       # R -> R (with transcode if nonRDF)
+  def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash for Ruby JSON-writer
 
   def cachedRDF
     return self if ext == 'e'
@@ -229,6 +229,7 @@ class R
     doc
   end
 
+  def nokogiri; Nokogiri::HTML.parse (open uri).read end
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile &f end
