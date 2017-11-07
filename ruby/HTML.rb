@@ -182,7 +182,7 @@ class R
           {_: :tr, c: children.map{|r|
              graph.delete r.uri
              {_: :td, class: :subdir,
-              c: r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
+              c: r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
                 nom = c.R.basename[0..63]
                 {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*4))*3}",
                  c: CGI.escapeHTML(URI.unescape nom)}.update(nom.to_i%6 == 0 ? {id: 'h'+rand.to_s.sha2} : {})}}}}]} if showChildren)]}
