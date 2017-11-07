@@ -151,6 +151,7 @@ class R
       children = graph.values.select{|r|r.R.path.do{|p|p.match childPath}}.sort_by &:uri
       showChildren = children.size > 1
       max = children.map{|c|c[Size].justArray[0]||0}.max.to_f
+      graph.delete re.path # container rendered as nav-view
     end
     color = '#%06x' % (rand 16777216)
     prevRange = env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}}

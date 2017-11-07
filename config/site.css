@@ -26,7 +26,7 @@ th.selected, th.selected a {background-color:#fff;color:#000}
 table.links {background-color:#555;border-spacing: 0;border-radius:.24em;margin:.2em;float:right}
 table.links td.host a {float: right; color:#000; font-weight: normal; font-size:.9em}
 table.links td.path a {background-color:#000;color:#fff;border: .08em solid #222;border-radius:.3em;font-weight: normal;display:inline-block;margin-bottom:.1em}
-table.dir {width:100%;display:table;margin-top:2.4em}
+table.dir {width:100%;display:table;margin-top:2.6em}
 table.dir a {display: block;}
 table.dir td.dir {text-align: center;height:12em;vertical-align:bottom;}
 table.dir td.dir a {width: 100%; color:#000;font-weight: bold}
