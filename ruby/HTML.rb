@@ -219,7 +219,6 @@ class R
     href = this.uri
     head = e.q.has_key? 'head'
     rowID = (e.path == this.path && this.fragment) ? this.fragment : 'r'+href.sha2
-    focus = !this.fragment && this.path==e.path
     types = l.types
     chatMsg = types.member? SIOC+'InstantMessage'
     mailMsg = types.member? SIOC+'MailMessage'
@@ -231,7 +230,7 @@ class R
       if chatMsg # don't elevate filename as implicit title, for these types
       else
         fsName = (URI.unescape (File.basename this.path))[0..64] # filename, default title if none other found
-        titles.push(focus && e.env[:title] || fsName) # requestURI title from environment
+        titles.push(e.path==this.path && e.env[:title] || fsName) # requestURI title from environment
       end
     end
     labels = l[Label].justArray
@@ -247,7 +246,7 @@ class R
         v
       end}
     unless head && titles.empty? && !l[Abstract]
-      {_: :tr, id: rowID, href: href + (!this.host && href[-1]=='/' && '?head' || ''), class: focus ? 'focus' : '',
+      {_: :tr, id: rowID, href: href + (!this.host && href[-1]=='/' && '?head' || ''),
        c: keys.map{|k|
          {_: :td, property: k,
           c: case k
@@ -258,7 +257,6 @@ class R
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
                 titles.map{|t|[{_: :a, class: :title, href: href, c: (CGI.escapeHTML t.to_s)},'<br>']},
-                (l[Stat+'contains'].justArray.sort_by(&:uri).do{|cs|{_: :span, class: :children, c: cs.map{|c|[{_: :a, id: 'child'+c.uri.sha2, href: c.uri + (c.host ? '' : '?head'), c: c.label}, ' ']}} unless cs.empty?} unless focus),
                 (links = [DC+'link', SIOC+'attachment'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
