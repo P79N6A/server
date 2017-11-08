@@ -391,7 +391,7 @@ class R
 
     # From
     from = []
-    m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase }} # queue for indexing
+    m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase if f}} # queue for indexing
     m[:from].do{|fr|
       fr.addrs.map{|a|yield e, Creator, a.display_name||a.name} if fr.respond_to? :addrs} # creator name
     m['X-Mailer'].do{|m|yield e, SIOC+'user_agent', m.to_s}
