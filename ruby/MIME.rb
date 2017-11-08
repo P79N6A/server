@@ -244,7 +244,7 @@ class R
   def uris; open(pathPOSIX).readlines.map &:chomp end
 
   # POSIX map
-  def R.fromPOSIX p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
+  def R.fromPOSIX p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R end
   def + u; R[uri + u.to_s].setEnv @r end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
