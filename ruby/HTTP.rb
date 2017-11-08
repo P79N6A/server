@@ -126,12 +126,14 @@ class R
       g[s][p] ||= []
       g[s][p].push o unless g[s][p].member? o}
     # load JSON
-    nonRDF.map{|n| (JSON.parse n.cachedRDF.readFile).map{|s,re| # subject
-        re.map{|p,o| # predicate, objects
-          o.justArray.map{|o| # object
-            o = o.R if o.class==Hash
-            g[s] ||= {'uri'=>s}
-            g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}
+    nonRDF.map{|n|
+      n.cachedRDF.do{|transcode|
+        JSON.parse(transcode.readFile).map{|s,re| # subject
+          re.map{|p,o| # predicate, objects
+            o.justArray.map{|o| # object
+              o = o.R if o.class==Hash
+              g[s] ||= {'uri'=>s}
+              g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}}
     # update container Size to recursive child-size on request
     if q.has_key?('du') && [:year,:month,:day].member?(@r[:view])
       set.select{|d|d.node.directory?}.-([self]).map{|node|

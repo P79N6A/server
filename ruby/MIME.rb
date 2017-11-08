@@ -227,6 +227,8 @@ class R
       doc.writeFile tree.to_json
     end
     doc
+  rescue Exception => e
+    puts uri, e.class, e.message
   end
 
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
