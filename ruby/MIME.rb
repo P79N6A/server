@@ -412,7 +412,8 @@ class R
       yield e, Title, subject}
 
     # Date
-    date = (m.date || Time.now).to_time.utc
+    date = m.date || Time.now rescue Time.now
+    date = date.to_time.utc
     dstr = date.iso8601
     yield e, Date, dstr
     dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month
