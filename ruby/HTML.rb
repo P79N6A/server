@@ -264,12 +264,13 @@ class R
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
                   c: links.group_by(&:host).map{|host,links|
-                    tld = (host||'').split('.')[-1] || ''
+                    tld = host.split('.')[-1] || '' if host
                     e.env[:label][tld] = true
                     {_: :tr,
-                     c: [{_: :td, class: :host, name: tld,
-                          c: ({_: :a, href: '//'+host, c: host} if host)},
-                         {_: :td, class: :path, c: links.map{|link|
+                     c: [({_: :td, class: :host, name: tld,
+                          c: {_: :a, href: '//'+host, c: host}} if host),
+                         {_: :td, class: :path, colspan: host ? 1 : 2,
+                          c: links.map{|link|
                             [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.path||'/')[0..64])},' ']}}]}}} unless links.empty?),
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
