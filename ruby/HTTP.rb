@@ -32,7 +32,7 @@ class R
     return feed if parts[0] == 'feed'
     return (chrono parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
     return [204,{},[]] if firstPart.match(/^gen.*204$/)
-    return [302,{'Location' => path+'/'},[]] if directory && path[-1] != '/' 
+    return [302,{'Location' => path+'/'+qs},[]] if directory && path[-1]!='/' 
 
     dp = []
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
