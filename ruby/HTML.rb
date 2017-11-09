@@ -211,8 +211,10 @@ class R
                q['ascending'] = ''
              end
              href = CGI.escapeHTML R.qs q
-             {_: :th, id: 'sort_'+k.sha2, href: href,property: k,class: k==p ? 'selected' : '',c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
-     {_: :style, c: e.env[:label].map{|name,_| "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
+             {_: :th, id: 'sort_'+k.sha2, href: href, property: k, class: k==p ? 'selected' : '',
+              c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
+     {_: :style, c: e.env[:label].map{|name,_|
+        "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
   TableRow = -> l,e,sort,direction,keys {
@@ -262,8 +264,11 @@ class R
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
                   c: links.group_by(&:host).map{|host,links|
+                    tld = (host||'').split('.')[-1] || ''
+                    e.env[:label][tld] = true
                     {_: :tr,
-                     c: [{_: :td, class: :host, c: ({_: :a, href: '//'+host, c: host} if host)},
+                     c: [{_: :td, class: :host, name: tld,
+                          c: ({_: :a, href: '//'+host, c: host} if host)},
                          {_: :td, class: :path, c: links.map{|link|
                             [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.path||'/')[0..64])},' ']}}]}}} unless links.empty?),
                 l[Abstract],
