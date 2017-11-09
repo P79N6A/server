@@ -89,32 +89,6 @@ class R
       path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
       size: 3600}}
 
-  Grep = -> graph, q {
-    wordIndex = {}
-    words = R.tokens q
-    words.each_with_index{|word,i|
-      wordIndex[word] = i}
-    pattern = /(#{words.join '|'})/i
-    # drop non-matching resources
-    graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
-    # highlight matches
-    graph.values.map{|r|
-      r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
-        r[Abstract] = [lines[0..5].map{|l|
-          l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
-            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrapper span
-          }},{_: :hr}] if lines.size > 0 }}
-    graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
-    graph}
-
-  StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
-    html = Nokogiri::HTML.fragment body
-    loseTags.map{|tag| html.css(tag).remove} if loseTags
-    html.traverse{|e|
-      e.attribute_nodes.map{|a|
-        a.unlink unless keepAttr.member? a.name}} if keepAttr
-    html.to_xhtml(:indent => 0)}
-
   HTML = -> graph, re {
     e = re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
@@ -319,5 +293,31 @@ class R
              end}}.intersperse("\n")}
     end
   }
+
+  Grep = -> graph, q {
+    wordIndex = {}
+    words = R.tokens q
+    words.each_with_index{|word,i|
+      wordIndex[word] = i}
+    pattern = /(#{words.join '|'})/i
+    # drop non-matching resources
+    graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
+    # highlight matches
+    graph.values.map{|r|
+      r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
+        r[Abstract] = [lines[0..5].map{|l|
+          l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
+            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrapper span
+          }},{_: :hr}] if lines.size > 0 }}
+    graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
+    graph}
+
+  StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
+    html = Nokogiri::HTML.fragment body
+    loseTags.map{|tag| html.css(tag).remove} if loseTags
+    html.traverse{|e|
+      e.attribute_nodes.map{|a|
+        a.unlink unless keepAttr.member? a.name}} if keepAttr
+    html.to_xhtml(:indent => 0)}
 
 end
