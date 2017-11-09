@@ -292,8 +292,8 @@ class R
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     dirs,files = children.partition{|e|e.node.directory?}
-    files.map{|f|f.basename.split('.')[0]}.uniq.map{|p|yield s, Stat+'contains', R[s+p]}
-    dirs.map{|dir| yield s, Stat+'contains', dir+'/' }
+    files.map{|f|yield s, Stat+'contains', f}
+    dirs.map{|d| yield s, Stat+'contains', d + '/'}
     yield s, Size, [*dirs, *files].size
   end
 

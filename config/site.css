@@ -31,5 +31,5 @@ table.dir a {display: block;}
 table.dir td.dir {text-align: center;height:12em;vertical-align:bottom;}
 table.dir td.dir a {width: 100%; color:#000;font-weight: bold}
 table.dir td.subdir {text-align: right;}
-table.dir td.subdir a {font-size: .7em; padding-right: .2em;font-weight: normal; color: #000; border-radius: 0}
+table.dir td.subdir a {max-width:24em;overflow:hidden;font-size: .7em; padding-right: .2em;font-weight: normal; color: #000; border-radius: 0}
 table.dir td.subdir a:last-child {border-radius: 0 0 .2em .2em}
