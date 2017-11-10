@@ -137,8 +137,6 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  Writable = %w{application/atom+xml text/html}
-
   # RDF type -> icon name
   Icons = {
     'uri' => :id,
@@ -205,11 +203,12 @@ class R
   end
 
   def R.tokens str; str ? str.scan(/[\w]+/).map(&:downcase).uniq : [] end
+  Writable = %w{application/atom+xml text/html}
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
-  def toRDF; isRDF ? self : cachedRDF end       # R -> R (with transcode if nonRDF)
-  def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash for Ruby JSON-writer
+  def toRDF; isRDF ? self : transcode end       # R -> R
+  def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
 
-  def cachedRDF
+  def transcode
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
     doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r

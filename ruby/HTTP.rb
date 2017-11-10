@@ -127,7 +127,7 @@ class R
       g[s][p].push o unless g[s][p].member? o}
     # load JSON
     nonRDF.map{|n|
-      n.cachedRDF.do{|transcode|
+      n.transcode.do{|transcode|
         JSON.parse(transcode.readFile).map{|s,re| # subject
           re.map{|p,o| # predicate, objects
             o.justArray.map{|o| # object
