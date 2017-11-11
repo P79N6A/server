@@ -37,29 +37,23 @@ class R
     dp = []
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil
-    @r[:view] = :epoch if path=='/'
-
     case dp.length
     when 1 # Y
-      @r[:view] = :year
       year = dp[0]
       n = '/' + (year + 1).to_s
       p = '/' + (year - 1).to_s
     when 2 # Y-m
-      @r[:view] = :month
       year = dp[0]
       m = dp[1]
       n = m >= 12 ? "/#{year + 1}/#{01}" : "/#{year}/#{'%02d' % (m + 1)}"
       p = m <=  1 ? "/#{year - 1}/#{12}" : "/#{year}/#{'%02d' % (m - 1)}"
     when 3 # Y-m-d
-      @r[:view] = :day
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue nil
       if day
         p = (day-1).strftime('/%Y/%m/%d')
         n = (day+1).strftime('/%Y/%m/%d')
       end
     when 4 # Y-m-d-H
-      @r[:view] = :hour
       day = ::Date.parse "#{dp[0]}-#{dp[1]}-#{dp[2]}" rescue nil
       if day
         hour = dp[3]
@@ -135,7 +129,7 @@ class R
               g[s] ||= {'uri'=>s}
               g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}}
     # update container Size to recursive child-size on request
-    if q.has_key?('du') && [:year,:month,:day].member?(@r[:view])
+    if q.has_key?('du') && path != '/'
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/'][Size] = node.du}
     end

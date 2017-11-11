@@ -33,31 +33,6 @@ class Array
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
 end
 
-class String
-  def R; R.new self end
-  # scan for HTTP URIs in string. example:
-  # demo on the site (https://demohere) and source-code at https://sourcehere.
-  # [,.] only match mid-URI, opening ( required for ) capture, <> wrapping is stripped
-  def hrefs &b
-    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
-    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
-      (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
-       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
-        yield(R::Image,u.R) if b # image RDF
-        "<img src='#{u}'/>"      # inline image
-       else
-         yield(R::DC+'link',u.R) if b # link RDF
-         u.sub(/^https?.../,'')  # inline text
-        end) + '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # recursion on post-capture tail
-  end
-  def sha2; Digest::SHA2.hexdigest self end
-  def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
-  def utf8; force_encoding 'UTF-8' end
-  def sh; Shellwords.escape self end
-end
-
 class R
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
