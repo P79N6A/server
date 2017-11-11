@@ -47,31 +47,29 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [Nav[graph,re],
+             c: [Search[graph,re],
                 (Table[graph,re] unless graph.empty?),
                  expand,
                  foot]}]}]}
 
-  Nav = -> graph,re {
-    env = re.env; path = "" ; depth = 0
-#   max = children.map{|c|c[Size].justArray[0]||0}.max.to_f 
-    color = '#%06x' % (rand 16777216)
+  Search = -> graph,re {
+    parts = re.path.split '/'
+    path = ""
+    grep = parts.size > 3 # use FIND closer to root, GREP for smaller sections
     [{class: :nav,
-      c: [env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-          (re.path.split '/').map{|part|
+      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
+          parts.map{|part|
             path = path + part + '/'
-            depth += 1
-            {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
+            {_: :a, id: 'p'+path.sha2, class: :pathPart, href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
           {_: :a, class: :clock, href: '/h', id: :uptothetime},
-          (grep = [:day,:hour].member? config[:type]
-           query = re.q['q'] || re.q['f']
+          (query = re.q['q'] || re.q['f']
            {_: :form,
             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
                 {_: :input, id: :searchbox,
                  name: grep ? 'q' : 'f',
                  placeholder: grep ? :grep : :find
                 }.update(query ? {value: query} : {})]} unless re.path=='/'),
-          env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]},
+          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]},
      ({_: :table, class: :dir,
       c: [{_: :tr, c: children.map{|r|
             size = r[Size].justArray[0]||0
@@ -88,6 +86,7 @@ class R
                 nom = c.R.basename[0..63]
                 {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3}",
                  c: CGI.escapeHTML(URI.unescape nom)}}}}}]} if showChildren)]}
+#    color = '#%06x' % (rand 16777216)
 
   Table = -> g, e {
     # labels

@@ -7,7 +7,7 @@ class R < RDF::URI
 end
 # now the rest of the library can reopen R
 %w{MIME HTML HTTP}.map{|r|require_relative r}
-# #justArray converts to one-element array for expressions applicable to multiple objects. eliminates mandatory [] wrapping of single RDF-JSON object
+# #justArray returns one-element array for singleton object. obviates [] wrapping of RDF-object when construction Hash or JSON
 # #R normalizes any type identifiable with a URI to our abstract resource
 # #do passes object to block-arg. Kernel#yield_self in Ruby 2.5 may be faster than "yield self", TODO investigate once widely deployed
 class Array
