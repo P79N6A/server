@@ -25,44 +25,9 @@ def H x # HTML generator
   end
 end
 
-class Hash
-  def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
-end
-
-class Array
-  def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
-end
-
 class R
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content",Harvard+'featured']
-
-  ViewConfig = {
-    epoch: {
-      type: :epoch,
-      childType: :year,
-      path: /^\/$/,
-      size: 1},
-    year: {
-      type: :year,
-      childType: :month,
-      path: /^\/\d{4}\/$/,
-      size: 12},
-    month: {
-      type: :month,
-      childType: :day,
-      path: /^\/\d{4}\/\d{2}\/$/,
-      size: 30},
-    day: {
-      type: :day,
-      childType: :hour,
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/$/,
-      size: 24},
-    hour: {
-      type: :hour,
-      path: /^\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/$/,
-      size: 3600}}
 
   HTML = -> graph, re {
     e = re.env
@@ -89,37 +54,24 @@ class R
 
   Nav = -> graph,re {
     env = re.env; path = "" ; depth = 0
-    config = ViewConfig[env[:view]] || {}
-    grep = [:day,:hour].member? config[:type]
-    query = re.q['q'] || re.q['f']
-    childType = config[:childType]
-    if childType
-      c = ViewConfig[childType]
-      childSize = c[:size]
-      childPath = c[:path]
-      children = graph.values.select{|r|r.R.path.do{|p|p.match childPath}}.sort_by &:uri
-      showChildren = children.size > 1
-      max = children.map{|c|c[Size].justArray[0]||0}.max.to_f
-      graph.delete re.path # container rendered as nav-view
-    end
+#   max = children.map{|c|c[Size].justArray[0]||0}.max.to_f 
     color = '#%06x' % (rand 16777216)
-    prevRange = env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}}
-    nextRange = env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}
-
     [{class: :nav,
-      c: [prevRange,
+      c: [env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
           (re.path.split '/').map{|part|
             path = path + part + '/'
             depth += 1
             {_: :a, id: 'p'+path.sha2, class: :pathPart, style: depth > 4 ? 'font-weight: normal' : '', href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
           {_: :a, class: :clock, href: '/h', id: :uptothetime},
-          ({_: :form,
+          (grep = [:day,:hour].member? config[:type]
+           query = re.q['q'] || re.q['f']
+           {_: :form,
             c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
                 {_: :input, id: :searchbox,
-                 name: grep ? 'q' : 'f', # FIND big dirs GREP small dirs
+                 name: grep ? 'q' : 'f',
                  placeholder: grep ? :grep : :find
                 }.update(query ? {value: query} : {})]} unless re.path=='/'),
-          nextRange]},
+          env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]},
      ({_: :table, class: :dir,
       c: [{_: :tr, c: children.map{|r|
             size = r[Size].justArray[0]||0

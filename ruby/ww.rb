@@ -8,6 +8,7 @@ end
 class Array
   #       [a] -> [a]
   def justArray; self end
+  def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
 end
 class FalseClass
   def do; self end
@@ -15,6 +16,7 @@ end
 class Hash
   def R; R.new self["uri"] end
   def uri;     self["uri"] end
+  def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
 end
 class NilClass
   #       nil -> []
