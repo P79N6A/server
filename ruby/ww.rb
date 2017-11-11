@@ -38,10 +38,8 @@ class RDF::URI
   def R; R.new to_s end
 end
 =begin
-  the "monkeypatching" has been pared down.."Everything is a resource", call #R to return an abstract resource of class R
-  #do passes object as first arg to a block of code
-  add R to PATH to call resource methods in a shell context
-  example:
+  "Everything is a resource". call #R to return an abstract resource of class R
+  to call resource-methods from a shell environment add R to PATH:
 
  ~ R https://readwrite.com feeds
 https://readwrite.com/feed/
