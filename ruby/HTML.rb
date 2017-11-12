@@ -32,7 +32,9 @@ class R
   HTML = -> graph, re {
     e = re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
-    Grep[graph,q] if q = re.q['q']
+    if q = re.q['q']
+      Grep[graph,q]
+    end
     foot = [{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"}, {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}, (CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?
     H ["<!DOCTYPE html>\n",
        {_: :html,
@@ -70,18 +72,22 @@ class R
 
   Tree = -> graph,re {
     tree = {}
-    graph.keys.map{|uri|
+
+    graph.keys.select{|k|!k.R.host}.map{|uri|
       c = tree
-      uri.R.path.split('/').map{|name|c = c[name] ||= {}}}
+      uri.R.path.split('/').map{|name|
+        c = c[name] ||= {}}}
+
     maxSize = graph.values.map{|c|c[Size].justArray[0]||0}.max.to_f
 
     render = -> t,path='' {
+      path = path + '/' + name
       {_: :table, class: :tree, c: [
          {_: :tr, c: t.keys.map{|name|
-            {_: :td, c: {_: :a,
-                 c: CGI.escapeHTML(URI.unescape name)}}}}, # node
+            {_: :td, c: {_: :a, href: path,
+                  c: CGI.escapeHTML(URI.unescape name)}}}}, # node
          {_: :tr, c: t.keys.map{|name|
-            {_: :td, c: (render[t[name], path+'/'+name] if t.size > 0)}}}, # children
+            {_: :td, c: (render[t[name], path] if t[name].size > 0)}}}, # children
        ]}}
 
     render[tree]}
