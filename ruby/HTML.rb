@@ -79,7 +79,7 @@ class R
     # construct tree of local paths
     graph.keys.select{|k|!k.R.host}.map{|uri|
       c = tree
-      uri.R.path.split('/').map{|name|
+      uri.R.parts.map{|name|
         c = c[name] ||= {}}}
 
     render = -> t,path='',depth=0 {

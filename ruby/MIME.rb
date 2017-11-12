@@ -264,6 +264,7 @@ class R
   def mtime; node.stat.mtime end
   def node; @node ||= (Pathname.new pathPOSIX) end
   def pathPOSIX; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
+  def parts; path ? path.split('/') : [] end
   def readFile; File.open(pathPOSIX).read end
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
