@@ -136,10 +136,8 @@ class R
     elsif q.has_key?('q') && path != '/'
       set.map{|r|
         bin = r.dirname + '/'
-        g[bin] ||= {}
-        g[bin][Size] ||= 0
-        g[bin][Size] += 1
-      }
+        g[bin] ||= {'uri' => bin, Type => Container, Size => 0}
+        g[bin][Size] += 1}
     end
     g
   end

@@ -76,17 +76,19 @@ class R
   Tree = -> graph,re {
     tree = {}
     size = {}
-    # construct tree of local paths
+    # construct tree
     graph.keys.select{|k|!k.R.host}.map{|uri|
       c = tree
       uri.R.parts.map{|name|
         c = c[name] ||= {}}}
-
+    # renderer
     render = -> t,path='',depth=0 {
       label = 'p'+path.sha2
       re.env[:label][label] = true
       nodes = t.keys.select{|k|k.empty? || k.match?(/^\d+$/)}.sort
-      size[depth] = nodes.map{|n|graph[path+n+'/'].do{|r|r[Size].justArray[0]}||1}.max.to_f
+      size[depth] = nodes.map{|n|
+        this = path + n + '/'
+        graph[this].do{|r|r[Size].justArray[0]}||1}.max.to_f
       {_: :table, class: :tree, c: [
          {_: :tr, class: :name, c: nodes.map{|name|
             this = path + name + '/'
@@ -99,7 +101,6 @@ class R
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
             {_: :td, c: (render[t[k], path+k+'/', depth+1] if t[k].size > 0)}}}]}}
-
     render[tree]}
 
   Table = -> g, e {
@@ -238,7 +239,9 @@ class R
     words.each_with_index{|word,i| wordIndex[word] = i }
     pattern = /(#{words.join '|'})/i
     # select resources
-    graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
+    graph.map{|u,r|
+      keep = r.to_s.match(pattern) || r[Type] == Container
+      graph.delete u unless keep}
     # highlight matches
     graph.values.map{|r|
       r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
