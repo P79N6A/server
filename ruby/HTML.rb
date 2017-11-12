@@ -85,7 +85,7 @@ class R
     render = -> t,path='',depth=0 {
       label = 'p'+path.sha2
       re.env[:label][label] = true
-      nodes = t.keys.select{|k|k.empty? || k.match?(/^\d+$/)}
+      nodes = t.keys.select{|k|k.empty? || k.match?(/^\d+$/)}.sort
       size[depth] = nodes.map{|n|graph[path+n+'/'].do{|r|r[Size].justArray[0]}||1}.max.to_f
       {_: :table, class: :tree, c: [
          {_: :tr, class: :name, c: nodes.map{|name|

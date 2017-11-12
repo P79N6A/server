@@ -131,6 +131,7 @@ class R
     # update container Size to recursive child-size on request
     if q.has_key?('du') && path != '/'
       set.select{|d|d.node.directory?}.-([self]).map{|node|
+        g[node.path+'/']||={}
         g[node.path+'/'][Size] = node.du}
     end
     g
