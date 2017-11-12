@@ -49,6 +49,8 @@ class R
             {_: :body,
              c: [Search[graph,re], Tree[graph,re],
                  (Table[graph,re] unless graph.empty?),
+                 {_: :style, c: e[:label].map{|name,_|
+                    "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  e[:Links][:down].do{|d|{_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
                  foot]}]}]}
 
@@ -124,8 +126,6 @@ class R
              href = CGI.escapeHTML R.qs q
              {_: :th, id: 'sort_'+k.sha2, href: href, property: k, class: k==p ? 'selected' : '',
               c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
-     {_: :style, c: e.env[:label].map{|name,_|
-        "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
   TableRow = -> l,e,sort,direction,keys {
