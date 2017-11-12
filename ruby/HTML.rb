@@ -88,9 +88,10 @@ class R
          {_: :tr, class: :name, c: t.keys.map{|name|
             this = path + name + '/'
             size = graph[this].do{|r|r[Size].justArray[0]}
+            height = (size && maxSize) ? (8.0 * size / maxSize) : 1.0
             {_: :td,
              c: {_: :a, href: this, name: label,
-                 style: size ? "font-weight: normal; font-size:.8em; color:#000; height:#{8.0 * size / maxSize}em" : '',
+                 style: size ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: t.keys.map{|k|{_: :td, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}}]}}
 
