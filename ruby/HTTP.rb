@@ -128,11 +128,18 @@ class R
               o = o.R if o.class==Hash
               g[s] ||= {'uri'=>s}
               g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}}
-    # update container Size to recursive child-size on request
+    # update Size attr for request variants
     if q.has_key?('du') && path != '/'
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/']||={}
         g[node.path+'/'][Size] = node.du}
+    elsif q.has_key?('q') && path != '/'
+      set.map{|r|
+        bin = r.dirname + '/'
+        g[bin] ||= {}
+        g[bin][Size] ||= 0
+        g[bin][Size] += 1
+      }
     end
     g
   end
