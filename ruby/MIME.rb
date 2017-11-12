@@ -294,7 +294,6 @@ class R
     dirs,files = children.partition{|e|e.node.directory?}
     files.map{|f|yield s, Stat+'contains', f}
     dirs.map{|d| yield s, Stat+'contains', d + '/'}
-    yield s, Size, [*dirs, *files].size
   end
 
   def triplrImage &f
