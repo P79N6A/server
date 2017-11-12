@@ -94,7 +94,7 @@ class R
             height = (sz && size[depth]) ? (8.8 * sz / size[depth]) : 1.0
             graph.delete this
             {_: :td,
-             c: {_: :a, href: this, name: label, id: label,
+             c: {_: :a, href: this, name: label, id: 't'+this.sha2,
                  style: sz ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{depth.to_s*3};color:#fff",
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
