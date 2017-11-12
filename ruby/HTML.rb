@@ -99,7 +99,8 @@ class R
                  style: sz ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{depth.to_s*3};color:#fff",
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
-            {_: :td, c: (if t[k].size > 0
+            branch = t[k].size > 0
+            {_: :td, class: branch ? :branch : :leaf, c: (if branch
                          render[t[k], path+k+'/', depth+1]
                         else
                           graph[path + k + '/'].do{|r|

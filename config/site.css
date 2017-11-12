@@ -18,7 +18,8 @@ a.thumb img {max-height: 24em}
 .search a.find {font-weight: normal;color:#ccc}
 .search a.clock, .nav span.sep {color:#181818;font-weight: normal}
 .tree {width: 100%;display:table}
-.tree td {text-align:center; vertical-align:bottom}
+.tree td {text-align:center;}
+.tree tr.name td {vertical-align:bottom}
 .tree a {display: block;font-weight: normal;color:#eee}
 table,th,td,a,div {border-radius:.13em}
 table, td, img, a, pre {vertical-align:top}
