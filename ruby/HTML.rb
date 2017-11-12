@@ -105,7 +105,7 @@ class R
                         else
                           graph[path + k + '/'].do{|r|
                             r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
-                              nom = c.R.basename[0..63]
+                              nom = c.R.basename[0..22]
                               {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3};color:#000", c: CGI.escapeHTML(URI.unescape nom)}}}
                          end)}}}]}}
     render[tree]}
