@@ -94,13 +94,19 @@ class R
             this = path + name + '/'
             sz = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             height = (sz && size[depth]) ? (8.8 * sz / size[depth]) : 1.0
-            graph.delete this
             {_: :td,
              c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
                  style: sz ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{depth.to_s*3};color:#fff",
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
-            {_: :td, c: (render[t[k], path+k+'/', depth+1] if t[k].size > 0)}}}]}}
+            {_: :td, c: (if t[k].size > 0
+                         render[t[k], path+k+'/', depth+1]
+                        else
+                          graph[path + k + '/'].do{|r|
+                            r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
+                              nom = c.R.basename[0..63]
+                              {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3};color:#000", c: CGI.escapeHTML(URI.unescape nom)}}}
+                         end)}}}]}}
     render[tree]}
 
   Table = -> g, e {
