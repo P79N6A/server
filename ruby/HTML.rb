@@ -232,12 +232,12 @@ class R
   }
 
   Grep = -> graph, q {
+    # tokenise
     wordIndex = {}
     words = R.tokens q
-    words.each_with_index{|word,i|
-      wordIndex[word] = i}
+    words.each_with_index{|word,i| wordIndex[word] = i }
     pattern = /(#{words.join '|'})/i
-    # drop non-matching resources
+    # select resources
     graph.map{|u,r|graph.delete u unless r.to_s.match pattern}
     # highlight matches
     graph.values.map{|r|
@@ -246,6 +246,7 @@ class R
           l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
             H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrapper span
           }},{_: :hr}] if lines.size > 0 }}
+    # highlight CSS
     graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
     graph}
 
