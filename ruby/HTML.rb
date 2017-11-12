@@ -52,7 +52,7 @@ class R
   Search = -> graph,re {
     parts = re.path.split '/'
     path = ""
-    grep = parts.size > 3 # use FIND closer to root, GREP for smaller sections
+    grep = parts.size > 3 # use FIND closer to root, GREP for smaller subtrees. arbitrary default overridable via QS @f = find, @q = grep
     {class: :search,
      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
          parts.map{|part|
@@ -68,17 +68,21 @@ class R
                }.update(query ? {value: query} : {})]} unless re.path=='/'),
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
 
-  Tree = -> graph,re {tree = {}
+  Tree = -> graph,re {
+    tree = {}
     graph.keys.map{|uri|
       c = tree
-      uri.R.path.split('/').map{|name|
-        c = c[name] ||= {}}}
+      uri.R.path.split('/').map{|name|c = c[name] ||= {}}}
+    maxSize = graph.values.map{|c|c[Size].justArray[0]||0}.max.to_f
 
-    render = -> t {
-      {_: :table, c: [
-         {_: :tr, c: t.keys.map{|name|{_: :td, c: name}}}, # name
-         {_: :tr, c: t.keys.map{|k|{_: :td, c: render[t[k]]}}}, # children
-       ]} if t.size > 0}
+    render = -> t,path='' {
+      {_: :table, class: :tree, c: [
+         {_: :tr, c: t.keys.map{|name|
+            {_: :td, c: {_: :a,
+                 c: CGI.escapeHTML(URI.unescape name)}}}}, # node
+         {_: :tr, c: t.keys.map{|name|
+            {_: :td, c: (render[t[name], path+'/'+name] if t.size > 0)}}}, # children
+       ]}}
 
     render[tree]}
 =begin
@@ -97,7 +101,7 @@ class R
              c: r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
                nom = c.R.basename[0..63]
                {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3}",
-                c: CGI.escapeHTML(URI.unescape nom)}}}}}]}
+                c: }}}}}]}
    color = '#%06x' % (rand 16777216)
 =end
 
