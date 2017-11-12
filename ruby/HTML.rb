@@ -32,10 +32,7 @@ class R
   HTML = -> graph, re {
     e = re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
-    if q = re.q['q']
-      Grep[graph,q]
-    end
-    expand = e[:Links][:down].do{|d|{_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}}
+    Grep[graph,q] if q = re.q['q']
     foot = [{_: :style, c: "body {text-align:center;background-color:##{'%06x' % (rand 16777216)}}"}, {_: :span,style: 'font-size:12em;font-weight:bold',c: 404}, (CGI.escapeHTML e['HTTP_USER_AGENT'])] if graph.empty?
     H ["<!DOCTYPE html>\n",
        {_: :html,
@@ -47,31 +44,46 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [Search[graph,re],
-                (Table[graph,re] unless graph.empty?),
-                 expand,
+             c: [Search[graph,re], Tree[graph,re],
+                 (Table[graph,re] unless graph.empty?),
+                 e[:Links][:down].do{|d|{_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
                  foot]}]}]}
 
   Search = -> graph,re {
     parts = re.path.split '/'
     path = ""
     grep = parts.size > 3 # use FIND closer to root, GREP for smaller sections
-    [{class: :nav,
-      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-          parts.map{|part|
-            path = path + part + '/'
-            {_: :a, id: 'p'+path.sha2, class: :pathPart, href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
-          {_: :a, class: :clock, href: '/h', id: :uptothetime},
-          (query = re.q['q'] || re.q['f']
-           {_: :form,
-            c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
-                {_: :input, id: :searchbox,
-                 name: grep ? 'q' : 'f',
-                 placeholder: grep ? :grep : :find
-                }.update(query ? {value: query} : {})]} unless re.path=='/'),
-          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]},
-     ({_: :table, class: :dir,
-      c: [{_: :tr, c: children.map{|r|
+    {class: :search,
+     c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
+         parts.map{|part|
+           path = path + part + '/'
+           {_: :a, id: 'p'+path.sha2, class: :pathPart, href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
+         {_: :a, class: :clock, href: '/h', id: :uptothetime},
+         (query = re.q['q'] || re.q['f']
+          {_: :form,
+           c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
+               {_: :input, id: :searchbox,
+                name: grep ? 'q' : 'f',
+                placeholder: grep ? :grep : :find
+               }.update(query ? {value: query} : {})]} unless re.path=='/'),
+         re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
+
+  Tree = -> graph,re {tree = {}
+    graph.keys.map{|uri|
+      c = tree
+      uri.R.path.split('/').map{|name|
+        c = c[name] ||= {}}}
+
+    render = -> t {
+      {_: :table, c: [
+         {_: :tr, c: t.keys.map{|name|{_: :td, c: name}}}, # name
+         {_: :tr, c: t.keys.map{|k|{_: :td, c: render[t[k]]}}}, # children
+       ]} if t.size > 0}
+
+    render[tree]}
+=begin
+    {_: :table, class: :dir,
+     c: [{_: :tr, c: children.map{|r|
             size = r[Size].justArray[0]||0
             full = env[:du] ? false : (size >= childSize)
             {_: :td, class: :dir,
@@ -79,14 +91,15 @@ class R
                  id: childType.to_s + r.R.basename,
                  style: size ? "background-color:#{full ? '#eee' : color}; height:#{100.0 * size / max}%" : '',
                  c: r.R.basename}}}},
-          {_: :tr, c: children.map{|r|
-             graph.delete r.uri
-             {_: :td, class: :subdir,
-              c: r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
-                nom = c.R.basename[0..63]
-                {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3}",
-                 c: CGI.escapeHTML(URI.unescape nom)}}}}}]} if showChildren)]}
-#    color = '#%06x' % (rand 16777216)
+         {_: :tr, c: children.map{|r|
+            graph.delete r.uri
+            {_: :td, class: :subdir,
+             c: r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
+               nom = c.R.basename[0..63]
+               {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3}",
+                c: CGI.escapeHTML(URI.unescape nom)}}}}}]}
+   color = '#%06x' % (rand 16777216)
+=end
 
   Table = -> g, e {
     # labels
