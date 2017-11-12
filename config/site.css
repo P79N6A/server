@@ -17,6 +17,7 @@ a.thumb img {max-height: 24em}
 .search input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
 .search a.find {font-weight: normal;color:#ccc}
 .search a.clock, .nav span.sep {color:#181818;font-weight: normal}
+.tree {width: 100%;display:table}
 .tree td {text-align:center; vertical-align:bottom}
 .tree a {display: block}
 table,th,td,a,div {border-radius:.13em}

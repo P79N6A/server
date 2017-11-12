@@ -89,9 +89,10 @@ class R
          {_: :tr, class: :name, c: nodes.map{|name|
             this = path + name + '/'
             sz = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
-            height = (sz && size[depth]) ? (8.0 * sz / size[depth]) : 1.0
+            height = (sz && size[depth]) ? (8.8 * sz / size[depth]) : 1.0
+            graph.delete this
             {_: :td,
-             c: {_: :a, href: this, name: label,
+             c: {_: :a, href: this, name: label, id: label,
                  style: sz ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{depth.to_s*3};color:#fff",
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
