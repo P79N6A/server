@@ -84,16 +84,17 @@ class R
     render = -> t,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
+      nodes = t.keys
       {_: :table, class: :tree, c: [
-         {_: :tr, class: :name, c: t.keys.map{|name|
+         {_: :tr, class: :name, c: nodes.map{|name|
             this = path + name + '/'
-            size = graph[this].do{|r|r[Size].justArray[0]}
+            size = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             height = (size && maxSize) ? (8.0 * size / maxSize) : 1.0
             {_: :td,
              c: {_: :a, href: this, name: label,
-                 style: size ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
+                 style: size ? "height:#{height < 1.0 ? 1.0 : height}em" : 'background-color:#fff;color:#000',
                  c: CGI.escapeHTML(URI.unescape name)}}}},
-         {_: :tr, c: t.keys.map{|k|{_: :td, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}}]}}
+         {_: :tr, c: nodes.map{|k|{_: :td, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}}]}}
 
     render[tree]}
 
