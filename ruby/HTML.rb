@@ -32,6 +32,7 @@ class R
   HTML = -> graph, re {
     e = re.env
     e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
+    e[:label] = {}
     if q = re.q['q']
       Grep[graph,q]
     end
@@ -72,7 +73,7 @@ class R
 
   Tree = -> graph,re {
     tree = {}
-
+    # construct tree of local paths
     graph.keys.select{|k|!k.R.host}.map{|uri|
       c = tree
       uri.R.path.split('/').map{|name|
@@ -81,39 +82,22 @@ class R
     maxSize = graph.values.map{|c|c[Size].justArray[0]||0}.max.to_f
 
     render = -> t,path='' {
-      path = path + '/' + name
+      label = 'p'+path.sha2
+      re.env[:label][label] = true
       {_: :table, class: :tree, c: [
-         {_: :tr, c: t.keys.map{|name|
-            {_: :td, c: {_: :a, href: path,
-                  c: CGI.escapeHTML(URI.unescape name)}}}}, # node
-         {_: :tr, c: t.keys.map{|name|
-            {_: :td, c: (render[t[name], path] if t[name].size > 0)}}}, # children
-       ]}}
+         {_: :tr, class: :name, c: t.keys.map{|name|
+            this = path + name + '/'
+            size = graph[this].do{|r|r[Size].justArray[0]}
+            {_: :td,
+             c: {_: :a, href: this, name: label,
+                 style: size ? "font-weight: normal; font-size:.8em; color:#000; height:#{8.0 * size / maxSize}em" : '',
+                 c: CGI.escapeHTML(URI.unescape name)}}}},
+         {_: :tr, c: t.keys.map{|k|{_: :td, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}}]}}
 
     render[tree]}
-=begin
-    {_: :table, class: :dir,
-     c: [{_: :tr, c: children.map{|r|
-            size = r[Size].justArray[0]||0
-            full = env[:du] ? false : (size >= childSize)
-            {_: :td, class: :dir,
-             c: {_: :a, href: r.uri + '?head',
-                 id: childType.to_s + r.R.basename,
-                 style: size ? "background-color:#{full ? '#eee' : color}; height:#{100.0 * size / max}%" : '',
-                 c: r.R.basename}}}},
-         {_: :tr, c: children.map{|r|
-            graph.delete r.uri
-            {_: :td, class: :subdir,
-             c: r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
-               nom = c.R.basename[0..63]
-               {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3}",
-                c: }}}}}]}
-   color = '#%06x' % (rand 16777216)
-=end
 
   Table = -> g, e {
     # labels
-    e.env[:label] = {}
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true}
     [:links,:images].map{|p| e.env[p] = []} # link & image lists
     # sort configuration
