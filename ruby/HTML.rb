@@ -97,13 +97,14 @@ class R
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
             branch = t[k].size > 0
-            {_: :td, class: branch ? :branch : :leaf, c: (if branch
-                                                          render[t[k], path+k+'/']
-                        else
-                          graph[path + k + '/'].do{|r|
-                            r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
-                              [{_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename)},' ']}}
-                         end)}}}]}}
+            {_: :td, class: branch ? :branch : :leaf,
+             c: (if branch
+                 render[t[k], path+k+'/']
+                else
+                  graph[path + k + '/'].do{|r|
+                    r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
+                      [{_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename)},' ']}}
+                 end)}}}]}}
     render[tree]}
 
   Table = -> g, e {
