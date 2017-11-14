@@ -75,8 +75,8 @@ class R
 
   Tree = -> graph,re {
     tree = {}
-    size = {}
-    # construct tree
+    size = graph.values.map{|r|r[Size].justArray[0]||1}.max.to_f
+    # populate tree
     graph.keys.select{|k|!k.R.host}.map{|uri|
       c = tree
       uri.R.parts.map{|name|
@@ -85,18 +85,15 @@ class R
     render = -> t,path='',depth=0 {
       label = 'p'+path.sha2
       re.env[:label][label] = true
-      nodes = t.keys.select{|k|k.empty? || k.match(/^\d+$/)}.sort
-      size[depth] = nodes.map{|n|
-        this = path + n + '/'
-        graph[this].do{|r|r[Size].justArray[0]}||1}.max.to_f
+      nodes = t.keys.sort
       {_: :table, class: :tree, c: [
          {_: :tr, class: :name, c: nodes.map{|name|
             this = path + name + '/'
-            sz = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
-            height = (sz && size[depth]) ? (8.8 * sz / size[depth]) : 1.0
+            s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
+            height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td,
              c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
-                 style: sz ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{depth.to_s*3};color:#fff",
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{depth.to_s*3};color:#fff",
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
             branch = t[k].size > 0
