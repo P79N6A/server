@@ -91,10 +91,9 @@ class R
             this = path + name + '/'
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             height = (s && size) ? (8.8 * s / size) : 1.0
-            {_: :td,
-             c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
+            {_: :td, c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(8))*3};color:#fff",
-                 c: CGI.escapeHTML(URI.unescape name)}}}},
+                 c: CGI.escapeHTML(URI.unescape name)}}}},"\n",
          {_: :tr, c: nodes.map{|k|
             branch = t[k].size > 0
             {_: :td, class: branch ? :branch : :leaf,
@@ -103,7 +102,7 @@ class R
                 else
                   graph[path + k + '/'].do{|r|
                     r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
-                      [{_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename[0..25])},' ']}}
+                      [{_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename[0..25])}," \n"]}}
                  end)}}}]}}
     render[tree]}
 
