@@ -77,7 +77,7 @@ class R
     tree = {}
     size = graph.values.map{|r|r[Size].justArray[0]||1}.max.to_f
     # populate tree
-    graph.keys.select{|k|!k.R.host}.map{|uri|
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
       uri.R.parts.map{|name|
         c = c[name] ||= {}}}
@@ -102,8 +102,8 @@ class R
                         else
                           graph[path + k + '/'].do{|r|
                             r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
-                              nom = c.R.basename[0..22]
-                              {_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3};color:#000", c: CGI.escapeHTML(URI.unescape nom)}}}
+                              nom = c.R.basename
+                              [{_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3};color:#000", c: CGI.escapeHTML(URI.unescape nom)},' ']}}
                          end)}}}]}}
     render[tree]}
 
