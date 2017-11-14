@@ -103,7 +103,7 @@ class R
                 else
                   graph[path + k + '/'].do{|r|
                     r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
-                      [{_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename)},' ']}}
+                      [{_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename[0..25])},' ']}}
                  end)}}}]}}
     render[tree]}
 
