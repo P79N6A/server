@@ -77,11 +77,8 @@ class R
     tree = {}
     size = graph.values.map{|r|r[Size].justArray[0]||1}.max.to_f
     # populate tree
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
-      c = tree
-      uri.R.parts.map{|name|
-        c = c[name] ||= {}}}
-    # render
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree
+      uri.R.parts.map{|name| c = c[name] ||= {}}}
     render = -> t,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
