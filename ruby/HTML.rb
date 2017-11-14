@@ -73,13 +73,10 @@ class R
                }.update(query ? {value: query} : {})]} unless re.path=='/'),
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
 
-  Tree = -> graph,re {
-    tree = {}
-    size = graph.values.map{|r|r[Size].justArray[0]||1}.max.to_f
-    # populate tree
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree
-      uri.R.parts.map{|name| c = c[name] ||= {}}}
-    render = -> t,path='' {
+  Tree = -> graph,re {tree = {}
+    size = graph.values.map{|r|r[Size].justArray[0]||1}.max.to_f # max node-size for scaling
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree; uri.R.parts.map{|name| c = c[name] ||= {}}} # populate tree
+    render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
       nodes = t.keys.sort
@@ -90,12 +87,12 @@ class R
             height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td, c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(8))*3};color:#fff",
-                 c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+                 c: ['&nbsp; '*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k|
             branch = t[k].size > 0
             {_: :td, class: branch ? :branch : :leaf,
              c: (if branch
-                 render[t[k], path+k+'/']
+                 render[t[k], depth+1, path+k+'/']
                 else
                   graph[path + k + '/'].do{|r|
                     r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
