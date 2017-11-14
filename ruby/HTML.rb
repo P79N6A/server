@@ -82,7 +82,7 @@ class R
       uri.R.parts.map{|name|
         c = c[name] ||= {}}}
     # render
-    render = -> t,path='',depth=0 {
+    render = -> t,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
       nodes = t.keys.sort
@@ -93,12 +93,12 @@ class R
             height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td,
              c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{depth.to_s*3};color:#fff",
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(8))*3};color:#fff",
                  c: CGI.escapeHTML(URI.unescape name)}}}},
          {_: :tr, c: nodes.map{|k|
             branch = t[k].size > 0
             {_: :td, class: branch ? :branch : :leaf, c: (if branch
-                         render[t[k], path+k+'/', depth+1]
+                         render[t[k], path+k+'/']
                         else
                           graph[path + k + '/'].do{|r|
                             r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
