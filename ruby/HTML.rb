@@ -101,9 +101,8 @@ class R
                          render[t[k], path+k+'/']
                         else
                           graph[path + k + '/'].do{|r|
-                            r[Stat+'contains'].justArray.sort_by(&:uri).reverse.map{|c|
-                              nom = c.R.basename
-                              [{_: :a, href: c.uri, style: "background-color:##{('%02x' % (255-nom.size*3))*3};color:#000", c: CGI.escapeHTML(URI.unescape nom)},' ']}}
+                            r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
+                              [{_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename)},'']}}
                          end)}}}]}}
     render[tree]}
 
