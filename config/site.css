@@ -21,7 +21,6 @@ a.thumb img {max-height: 24em}
 .tree td {text-align:center;padding:0}
 .tree tr.name > td {vertical-align:bottom}
 .tree tr.name > td > a {display: block}
-.tree td.leaf > a {float: left;max-width: 10em;overflow:hidden}
 table,th,td,a,div {border-radius:.13em}
 table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
