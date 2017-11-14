@@ -63,8 +63,8 @@ class R
     end
 
     sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
-    @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs if p && R[p].e
-    @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs if n && R[n].e
+    @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
+    @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
     @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs
     if q.has_key? 'head'
       qq = q.dup; qq.delete 'head'
