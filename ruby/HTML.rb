@@ -175,7 +175,7 @@ class R
                           c: {_: :a, href: '//'+host, c: host}} if host),
                          {_: :td, class: :path, colspan: host ? 1 : 2,
                           c: links.map{|link|
-                            [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.host ? link.path : link.basename)[0..64])},' ']}}]}}} unless links.empty?),
+                            [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||'')[0..64])},' ']}}]}}} unless links.empty?),
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []

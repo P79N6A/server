@@ -291,10 +291,11 @@ class R
     yield s, Type, R[Container]
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
-    dirs,files = children.partition{|e|e.node.directory?}
-    files.map{|f|yield s, Stat+'contains', f}
-    dirs.map{|d| yield s, Stat+'contains', d + '/'}
-    yield s, Size, [*dirs, *files].size
+    containers,files = children.partition{|e|e.node.directory?}
+    resources = files.map{|f|R[s+f.basename.gsub(/\.[0-9re\.]+\./,'.*.')]}.uniq
+    containers.map{|d|yield s, Stat+'contains', d + '/'}
+    resources.map{|f|yield s, Stat+'contains', f}
+    yield s, Size, [*containers, *files].size
   end
 
   def triplrImage &f
