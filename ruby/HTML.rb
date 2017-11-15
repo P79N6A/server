@@ -79,7 +79,7 @@ class R
     render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
-      nodes = t.keys.sort
+      nodes = t.keys.-(%w{msg}).sort
       {_: :table, class: :tree, c: [
          {_: :tr, class: :name, c: nodes.map{|name|
             this = path + name + '/'
