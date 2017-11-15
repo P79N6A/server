@@ -159,12 +159,12 @@ class R
          {_: :td, property: k,
           c: case k
              when 'uri'
-               [labels.map{|v|
+               [titles.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},' ']},
+                labels.map{|v|
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
-                titles.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},'<br>']},
                 (links = [DC+'link', SIOC+'attachment', Stat+'contains'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
