@@ -153,7 +153,8 @@ class R
         v
       end}
     unless head && titles.empty? && !l[Abstract]
-      {_: :tr, id: rowID, href: href + (!this.host && href[-1]=='/' && '?head' || ''),
+      link = href + (!this.host && href[-1]=='/' && '?head' || '')
+      {_: :tr, id: rowID, href: link,
        c: keys.map{|k|
          {_: :td, property: k,
           c: case k
@@ -162,8 +163,8 @@ class R
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
-                  [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
-                titles.map{|t|[{_: :a, class: :title, href: href, c: (CGI.escapeHTML t.to_s)},'<br>']},
+                  [{_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
+                titles.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},'<br>']},
                 (links = [DC+'link', SIOC+'attachment', Stat+'contains'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,

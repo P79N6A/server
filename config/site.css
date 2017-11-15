@@ -1,6 +1,6 @@
 :target, :target * {background-color:#fff !important; color:#000 !important;border-color: #fff !important;}
 body {background-color:#000;color:#fff;margin:0;font-family: sans-serif;padding-top:2.6em}
-table, pre, form, input {display: inline-block;margin:0}
+table, form, input, pre {display: inline-block;margin:0}
 pre {white-space: pre-wrap; font-family: monospace}
 span.notes {color:#aaa;font-size:.8em}
 span.children a {font-weight: normal;font-size:.9em}
@@ -27,6 +27,7 @@ td[property="uri"] > div, td[property="uri"] > p {margin:auto}
 td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 th a:before {font-size:1.6em;font-weight: normal}
 th.selected, th.selected a {background-color:#fff;color:#000}
+table.links {display:block}
 table.links td.host a {float: right; color:#000; font-size:.9em}
 table.links td.path a {background-color:#000;color:#fff;border: .08em solid #222;border-radius:.3em;font-weight: normal;display:inline-block;margin-bottom:.1em}
 table.links td.path a:visited {background-color:#eee;color:#000} 
