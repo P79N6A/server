@@ -74,8 +74,8 @@ class R
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
 
   Tree = -> graph,re {tree = {}
-    size = graph.values.map{|r|r[Size].justArray[0]||1}.max.to_f # max node-size for scaling
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree; uri.R.parts.map{|name| c = c[name] ||= {}}} # populate tree
+    size = graph.values.map{|r|r[Size].justArray[0]||1}.max.to_f # max node-size
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree; uri.R.parts.map{|name|c = c[name] ||= {}}} # tree-structure
     render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
@@ -86,18 +86,14 @@ class R
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td, c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(8))*3};color:#fff",
-                 c: ['&nbsp; '*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(7))*3};color:#fff",
+                 c: ['&nbsp;'*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k|
-            branch = t[k].size > 0
-            {_: :td, class: branch ? :branch : :leaf,
-             c: (if branch
-                 render[t[k], depth+1, path+k+'/']
-                else
-                  graph[path + k + '/'].do{|r|
-                    r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|
-                      {_: :a, href: c.uri, c: CGI.escapeHTML(URI.unescape c.R.basename[0..25])}}.intersperse(" \n")}
-                 end)}}.intersperse("\n")}]}}
+            {_: :td,
+             c: [graph[path+k+'/'].do{|r| graph.delete r.uri
+                   r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|{_: :a,href: c.uri,c: CGI.escapeHTML(URI.unescape c.R.basename[0..25])}}.intersperse(" \n")},
+                 (render[t[k], depth+1, path+k+'/'] if t[k].size > 0)
+                ]}}.intersperse("\n")}]}}
     render[tree]}
 
   Table = -> g, e {
