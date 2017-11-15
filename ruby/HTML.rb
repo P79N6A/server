@@ -86,7 +86,7 @@ class R
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td, c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(7))*3};color:#fff",
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(6))*3};color:#fff",
                  c: ['&nbsp;'*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k|
             {_: :td,
