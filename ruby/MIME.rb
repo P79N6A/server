@@ -292,7 +292,7 @@ class R
     yield s, Mtime, mt.to_i
     yield s, Date, mt.iso8601
     containers,files = children.partition{|e|e.node.directory?}
-    resources = files.map{|f|R[s+f.basename.gsub(/\.[0-9re\.]+\./,'.*.')]}.uniq
+    resources = files.map{|f|R[s+f.basename.gsub(/\.[0-9re\.]+\./,'.*.')].stripDoc}.sort.uniq
     containers.map{|d|yield s, Stat+'contains', d + '/'}
     resources.map{|f|yield s, Stat+'contains', f}
     yield s, Size, [*containers, *files].size
