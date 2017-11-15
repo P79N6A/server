@@ -47,7 +47,7 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [Search[graph,re], Tree[graph,re],
+             c: [Search[graph,re], (Tree[graph,re] unless re.basename=='msg'),
                  (Table[graph,re] unless graph.empty?),
                  {_: :style, c: e[:label].map{|name,_|
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
@@ -90,8 +90,7 @@ class R
                  c: ['&nbsp;'*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k|
             {_: :td,
-             c: [graph[path+k+'/'].do{|r| graph.delete r.uri
-                   r[Stat+'contains'].justArray.sort_by(&:uri).map{|c|{_: :a,href: c.uri,c: CGI.escapeHTML(URI.unescape c.R.basename[0..25])}}.intersperse(" \n")},
+             c: [graph[path+k+'/'].do{|r|graph.delete r.uri},
                  (render[t[k], depth+1, path+k+'/'] if t[k].size > 0)
                 ]}}.intersperse("\n")}]}}
     render[tree]}
@@ -165,7 +164,7 @@ class R
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: href, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
                 titles.map{|t|[{_: :a, class: :title, href: href, c: (CGI.escapeHTML t.to_s)},'<br>']},
-                (links = [DC+'link', SIOC+'attachment'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
+                (links = [DC+'link', SIOC+'attachment', Stat+'contains'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
                  links.map{|l|e.env[:links].push l} # mark as displayed
                  {_: :table, class: :links,
                   c: links.group_by(&:host).map{|host,links|
@@ -176,7 +175,7 @@ class R
                           c: {_: :a, href: '//'+host, c: host}} if host),
                          {_: :td, class: :path, colspan: host ? 1 : 2,
                           c: links.map{|link|
-                            [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.path||'/')[0..64])},' ']}}]}}} unless links.empty?),
+                            [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape(link.host ? link.path : link.basename)[0..64])},' ']}}]}}} unless links.empty?),
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []
