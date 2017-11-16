@@ -1,6 +1,7 @@
 # coding: utf-8
 class R
-
+  def env; @r end
+  def setEnv r; @r = r; self end
   def R.call e
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
@@ -17,23 +18,16 @@ class R
       msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),
       '</pre></body></html>']]
   end
-
-  def env; @r end
-  def setEnv r; @r = r; self end
-
   def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
-
   def GET
     parts = path[1..-1].split '/'
     firstPart = parts[0] || ''
     directory = node.directory?
-
     return file if node.file?
     return feed if parts[0] == 'feed'
     return (chrono parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
     return [204,{},[]] if firstPart.match(/^gen.*204$/)
     return [302,{'Location' => path+'/'+qs},[]] if directory && path[-1]!='/' 
-
     dp = []
     dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
     n = nil; p = nil
@@ -61,7 +55,6 @@ class R
         n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
       end
     end
-
     sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
     @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
     @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
@@ -70,7 +63,6 @@ class R
       qq = q.dup; qq.delete 'head'
       @r[:Links][:down] = path + (R.qs qq)
     end
-
     set = (if directory
            if q.has_key?('f') && path!='/' # FIND(1) nodes
              find q['f']
@@ -87,9 +79,7 @@ class R
           else
             (match(/\*/) ? self : (self+'.*')).glob # documents
            end).justArray.flatten.compact.select &:exist?
-
     return notfound if !set || set.empty?
-
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
     condResponse ->{ # body
@@ -105,35 +95,30 @@ class R
         end
       end}
   end
-
-  # JSON & RDF loader. return a graph-tree in JSON
-  def load set
+  def load set # JSON/RDF to graph-in-tree JSON
     graph = RDF::Graph.new # graph
     g = {}                 # tree
-    rdf,nonRDF = set.partition &:isRDF
-    # RDF to tree
-    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
+    rdf,nonRDF = set.partition &:isRDF #partition on file type
+    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n} # load RDF
     graph.each_triple{|s,p,o| # each triple
       s = s.to_s; p = p.to_s # subject, predicate
       o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # object
-      g[s] ||= {'uri'=>s}
+      g[s] ||= {'uri'=>s} # new resource
       g[s][p] ||= []
-      g[s][p].push o unless g[s][p].member? o}
-    # load JSON
+      g[s][p].push o unless g[s][p].member? o} # RDF to tree
     nonRDF.map{|n|
-      n.transcode.do{|transcode|
+      n.transcode.do{|transcode| # load nonRDF, transcoded to RDF
         JSON.parse(transcode.readFile).map{|s,re| # subject
           re.map{|p,o| # predicate, objects
             o.justArray.map{|o| # object
               o = o.R if o.class==Hash
-              g[s] ||= {'uri'=>s}
-              g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}}
-    # update Size attr for request variants
-    if q.has_key?('du') && path != '/'
+              g[s] ||= {'uri'=>s} # new resource
+              g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
+    if q.has_key?('du') && path != '/' # storage-space to size-attribute
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/']||={}
         g[node.path+'/'][Size] = node.du}
-    elsif (q.has_key?('f')||q.has_key?('q')) && path != '/'
+    elsif (q.has_key?('f')||q.has_key?('q')) && path!='/' # match-count to size-attribute
       set.map{|r|
         bin = r.dirname + '/'
         g[bin] ||= {'uri' => bin, Type => Container}
@@ -142,20 +127,11 @@ class R
     end
     g
   end
-  def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
-
-  # pure-RDF loader. return a RDF::Graph
-  def loadRDF set
-    g = RDF::Graph.new
-    set.map{|n|
-      g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
-    g # RDF graph
+  def loadRDF set # pure-RDF loader
+    g = RDF::Graph.new; set.map{|n|g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
+    g
   end
-
-  # feed handler
   def feed; [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] end
-
-  # time-range handler
   def chrono ps
     time = Time.now
     loc = time.strftime(case ps[0][0].downcase
@@ -171,8 +147,6 @@ class R
                         end)
     [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + (qs.empty? ? '?head' : qs)}),[]]
   end
-
-  # file handler
   def file
     @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
@@ -182,9 +156,8 @@ class R
       condResponse
     end
   end
-
   def filePreview
-    p = previewURI.R
+    p = join('.' + basename + '.jpg').R
     if !p.e
       if mime.match(/^video/)
         `ffmpegthumbnailer -s 256 -i #{sh} -o #{p.sh}`
@@ -193,19 +166,6 @@ class R
       end
     end
     p.e && p.setEnv(@r).condResponse || notfound
-  end
-  def previewURI
-    join('.' + basename + '.jpg')
-  end
-
-  # node-set query handlers
-  def find p
-    if p && !p.empty?
-      `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 255`.lines.map{|pathName|
-        R.fromPOSIX pathName.chomp}
-    else
-      []
-    end
   end
   def grep q
     words = R.tokens q
@@ -225,8 +185,6 @@ class R
     `#{cmd} | head -n 255`.lines.map{|pathName|
       R.fromPOSIX pathName.chomp}
   end
-
-
   def condResponse body=nil
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])
@@ -241,23 +199,10 @@ class R
       end
     end
   end
-
-  def notfound
-    [404,{'Content-Type' => 'text/html'},[HTML[{},self]]]
-  end
-
-  def accept
-    @accept ||= (
-      d={}
-      @r['HTTP_ACCEPT'].do{|k|
-        (k.split /,/).map{|e| # each pair
-          f,q = e.split /;/   # split MIME from q value
-          i = q && q.split(/=/)[1].to_f || 1.0 # q || default
-          d[i] ||= []; d[i].push f.strip}} # append
-      d)
-  end
-
-  def q # query-args hashmap
+  def notfound; [404,{'Content-Type' => 'text/html'},[HTML[{},self]]] end
+  def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
+  def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # serialize qs
+  def q # parse qs
     @q ||=
       (if q = @r['QUERY_STRING']
        h = {}
@@ -269,27 +214,20 @@ class R
         {}
        end)
   end
-
-  def qs # query-string
-    @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '')
-  end
-
-  def R.qs h # query-args hashmap -> query-string
-    '?'+h.map{|k,v|
-      k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('')
-  end
-
   def format; @format ||= selectFormat end
-
   def selectFormat
-    # query arg
+    # query
     return 'application/atom+xml' if q.has_key?('feed')
     # header
-    accept.sort.reverse.map{|q,formats| # highest qval first
+    (d={}
+     @r['HTTP_ACCEPT'].do{|k|
+       (k.split /,/).map{|e| # each pair
+         f,q = e.split /;/   # split MIME from q value
+         i = q && q.split(/=/)[1].to_f || 1.0 # q || default
+         d[i] ||= []; d[i].push f.strip}} # append
+     d).sort.reverse.map{|q,formats| # highest qval first
       formats.map{|mime| # serializability check
         return mime if RDF::Writer.for(:content_type => mime) || Writable.member?(mime)}}
-    # default
-    'text/html'
+    'text/html' # default
   end
-  
-  end
+end

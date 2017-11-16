@@ -255,6 +255,8 @@ class R
   def dirname; File.dirname path end
   def exist?; node.exist? end
   def ext; (File.extname uri)[1..-1] || '' end
+  def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
+  def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 255`.lines.map{|p|R.fromPOSIX p.chomp} : [] end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
