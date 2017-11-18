@@ -208,7 +208,7 @@ class R
   def toRDF; isRDF ? self : transcode end       # R -> R
   def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
 
-  def load set # load mixed Non-RDF + RDF to graph-tree Hash
+  def load set # load Non-RDF + RDF to URI-indexed tree
     graph = RDF::Graph.new # graph
     g = {}                 # tree
     rdf,nonRDF = set.partition &:isRDF #partition on file type
@@ -229,11 +229,11 @@ class R
               o = o.R if o.class==Hash
               g[s] ||= {'uri'=>s} # new resource
               g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
-    if q.has_key?('du') && path != '/' # DU: storage space size-attrs
+    if q.has_key?('du') && path != '/' # DU: container storage-size attribute
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/']||={}
         g[node.path+'/'][Size] = node.du}
-    elsif (q.has_key?('f')||q.has_key?('q')) && path!='/' # FIND/GREP: match-count size-attrs
+    elsif (q.has_key?('f')||q.has_key?('q')) && path!='/' # FIND/GREP: container match-count attribute
       set.map{|r|
         bin = r.dirname + '/'
         g[bin] ||= {'uri' => bin, Type => Container}
