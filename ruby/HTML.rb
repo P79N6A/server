@@ -73,28 +73,35 @@ class R
                }.update(query ? {value: query} : {})]} unless re.path=='/'),
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
 
-  Tree = -> graph,re {tree = {}; f = {}
+  Tree = -> graph,re {
+    tree = {}
+    flat = {}
     hide = ['msg','/']
     # grow tree
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| # resources
       c = tree
       uri.R.parts.map{|name| # walk path
         c = c[name] ||= {}}} # update cursor to new position, creating node if necessary
-    # select leaf-nodes
+
+    # (optional) only leaf-nodes
     flatten = -> t,path='' {
       t.keys.map{|k|
         if t[k].size > 0 # branching
           flatten[t[k], path+k+'/']
         else # leaf
           f[k] ||= {}
-          graph[path+k+'/'].do{|r| graph.delete r.uri}
         end}}
-    flat = re.q.has_key? 'flat'
-    flatten[tree] if flat
+    if re.q.has_key? 'flat'
+      flatten[tree]
+      tree = flat
+    end
+
     # find max-size for scaling
     size = graph.values.map{|r|!hide.member?(r.R.basename) && r[Size].justArray[0] || 1}.max.to_f
     # tiptoe into containers with ?head
     qs = R.qs re.q.merge({'head'=>''})
+
+    # tree to HTML
     render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
@@ -109,10 +116,10 @@ class R
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(6))*3};color:#fff",
                  c: ['&nbsp;'*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k| # child nodes
-            graph[path+k+'/'].do{|r| graph.delete r.uri} # "consume" container so it doesnt also appear in tabular-list view
+            graph[path+k+'/'].do{|r| graph.delete r.uri} # "consume" container so it doesnt appear again in tabular-list
             {_: :td,
              c: (render[t[k], depth+1, path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
-    render[flat ? f : tree]}
+    render[tree]}
 
   Table = -> g, e {
     # labels
