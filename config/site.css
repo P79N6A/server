@@ -28,5 +28,5 @@ th a:before {font-size:1.6em;font-weight: normal}
 th.selected, th.selected a {background-color:#fff;color:#000}
 table.links {display:block}
 table.links td.host a {float: right; color:#000; font-size:.9em}
-table.links td.path a {background-color:#000;color:#fff;border: .08em solid #222;border-radius:.3em;font-weight: normal;display:inline-block;margin-bottom:.1em}
+table.links td.path a {background-color:#000;color:#fff;border: .08em solid #222;border-radius:.2em;font-weight: normal;display:inline-block;margin-bottom:.1em}
 table.links td.path a:visited {background-color:#eee;color:#000} 

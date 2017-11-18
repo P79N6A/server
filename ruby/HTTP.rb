@@ -97,42 +97,6 @@ class R
         end
       end}
   end
-  def load set # JSON/RDF to graph-in-tree JSON
-    graph = RDF::Graph.new # graph
-    g = {}                 # tree
-    rdf,nonRDF = set.partition &:isRDF #partition on file type
-    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n} # load RDF
-    graph.each_triple{|s,p,o| # each triple
-      s = s.to_s; p = p.to_s # subject, predicate
-      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # object
-      g[s] ||= {'uri'=>s} # new resource
-      g[s][p] ||= []
-      g[s][p].push o unless g[s][p].member? o} # RDF to tree
-    nonRDF.map{|n|
-      n.transcode.do{|transcode| # load nonRDF, transcoded to RDF
-        JSON.parse(transcode.readFile).map{|s,re| # subject
-          re.map{|p,o| # predicate, objects
-            o.justArray.map{|o| # object
-              o = o.R if o.class==Hash
-              g[s] ||= {'uri'=>s} # new resource
-              g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
-    if q.has_key?('du') && path != '/' # storage-space to size-attribute
-      set.select{|d|d.node.directory?}.-([self]).map{|node|
-        g[node.path+'/']||={}
-        g[node.path+'/'][Size] = node.du}
-    elsif (q.has_key?('f')||q.has_key?('q')) && path!='/' # match-count to size-attribute
-      set.map{|r|
-        bin = r.dirname + '/'
-        g[bin] ||= {'uri' => bin, Type => Container}
-        g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
-        g[bin][Size] += 1}
-    end
-    g
-  end
-  def loadRDF set # pure-RDF loader
-    g = RDF::Graph.new; set.map{|n|g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
-    g
-  end
   def feed; [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] end
   def chrono ps
     time = Time.now

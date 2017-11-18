@@ -208,6 +208,46 @@ class R
   def toRDF; isRDF ? self : transcode end       # R -> R
   def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
 
+  def load set # load mixed Non-RDF + RDF to graph-tree Hash
+    graph = RDF::Graph.new # graph
+    g = {}                 # tree
+    rdf,nonRDF = set.partition &:isRDF #partition on file type
+    # load RDF
+    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
+    graph.each_triple{|s,p,o| # each triple
+      s = s.to_s; p = p.to_s # subject, predicate
+      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # object
+      g[s] ||= {'uri'=>s} # new resource
+      g[s][p] ||= []
+      g[s][p].push o unless g[s][p].member? o} # RDF to tree
+    # load nonRDF
+    nonRDF.map{|n|
+      n.transcode.do{|transcode| # transcode to RDF
+        JSON.parse(transcode.readFile).map{|s,re| # subject
+          re.map{|p,o| # predicate, objects
+            o.justArray.map{|o| # object
+              o = o.R if o.class==Hash
+              g[s] ||= {'uri'=>s} # new resource
+              g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
+    if q.has_key?('du') && path != '/' # DU: storage space size-attrs
+      set.select{|d|d.node.directory?}.-([self]).map{|node|
+        g[node.path+'/']||={}
+        g[node.path+'/'][Size] = node.du}
+    elsif (q.has_key?('f')||q.has_key?('q')) && path!='/' # FIND/GREP: match-count size-attrs
+      set.map{|r|
+        bin = r.dirname + '/'
+        g[bin] ||= {'uri' => bin, Type => Container}
+        g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
+        g[bin][Size] += 1}
+    end
+    g
+  end
+
+  def loadRDF set # load RDF to RDF::Graph
+    g = RDF::Graph.new; set.map{|n|g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
+    g
+  end
+
   def transcode
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
@@ -256,7 +296,7 @@ class R
   def exist?; node.exist? end
   def ext; (File.extname uri)[1..-1] || '' end
   def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
-  def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 255`.lines.map{|p|R.fromPOSIX p.chomp} : [] end
+  def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|p|R.fromPOSIX p.chomp} : [] end
   def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r}.do{|g|g.empty? ? nil : g} end
   def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
   def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
