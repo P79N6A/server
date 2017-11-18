@@ -86,10 +86,14 @@ class R
     # (optional) only leaf-nodes
     flatten = -> t,path='' {
       t.keys.map{|k|
+        cur = path+k+'/'
         if t[k].size > 0 # branching
-          flatten[t[k], path+k+'/']
+          flatten[t[k], cur]
         else # leaf
-          f[k] ||= {}
+          graph[cur].do{|c|
+            graph[k+'/'] ||= {Size => 0}
+            graph[k+'/'][Size] += c[Size].justArray[0]||0} # magnitude to bin
+          flat[k] ||= {}
         end}}
     if re.q.has_key? 'flat'
       flatten[tree]
