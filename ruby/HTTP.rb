@@ -200,10 +200,10 @@ class R
     end
   end
   def notfound; [404,{'Content-Type' => 'text/html'},[HTML[{},self]]] end
-  def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
-  def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # serialize qs
-  def q # parse qs
-    @q ||=
+  def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end # qs from request-env
+  def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # serialized qs
+  def q # parsed qs
+    @q ||= # memoize
       (if q = @r['QUERY_STRING']
        h = {}
        q.split(/&/).map{|e|
@@ -216,9 +216,7 @@ class R
   end
   def format; @format ||= selectFormat end
   def selectFormat
-    # query
     return 'application/atom+xml' if q.has_key?('feed')
-    # header
     (d={}
      @r['HTTP_ACCEPT'].do{|k|
        (k.split /,/).map{|e| # each pair

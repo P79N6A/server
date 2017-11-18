@@ -57,7 +57,7 @@ class R
   Search = -> graph,re {
     parts = re.path.split '/'
     path = ""
-    grep = parts.size > 3 # use FIND closer to root, GREP for smaller subtrees. arbitrary default overridable via QS @f = find, @q = grep
+    grep = parts.size > 3 # suggest FIND closer to root, GREP for smaller subtree. @f = find, @q = grep for explicit search-provider
     {class: :search,
      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
          parts.map{|part|
@@ -77,6 +77,7 @@ class R
     hide = ['msg','/']
     size = graph.values.map{|r|!hide.member?(r.R.basename) && r[Size].justArray[0] || 1}.max.to_f # max node-size
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree; uri.R.parts.map{|name|c = c[name] ||= {}}} # tree
+    qs = R.qs re.q.merge({'head'=>''})
     render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
@@ -86,7 +87,7 @@ class R
             this = path + name + '/'
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             height = (s && size) ? (8.8 * s / size) : 1.0
-            {_: :td, c: {_: :a, href: this+re.qs, name: label, id: 't'+this.sha2,
+            {_: :td, c: {_: :a, href: this + qs, name: label, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(6))*3};color:#fff",
                  c: ['&nbsp;'*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k| graph[path+k+'/'].do{|r|graph.delete r.uri}
