@@ -75,8 +75,11 @@ class R
 
   Tree = -> graph,re {tree = {}
     hide = ['msg','/']
-    size = graph.values.map{|r|!hide.member?(r.R.basename) && r[Size].justArray[0] || 1}.max.to_f # max node-size
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree; uri.R.parts.map{|name|c = c[name] ||= {}}} # tree
+    # find maximum size for scaling
+    size = graph.values.map{|r|!hide.member?(r.R.basename) && r[Size].justArray[0] || 1}.max.to_f
+    # grow tree
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| c=tree; uri.R.parts.map{|name|c = c[name] ||= {}}}
+    # tiptoe into containers with ?head
     qs = R.qs re.q.merge({'head'=>''})
     render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
