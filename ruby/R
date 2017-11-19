@@ -9,7 +9,6 @@ https://readwrite.com/comments/feed/
  ~/web R https://readwrite.com/feed/ getFeed
 /2017/11/02/16/56:05.readwrite.com.2017.11.02.iphone.x.coming.ar.apps.booming
 /2017/11/02/12/34:44.readwrite.com.2017.11.02.farm.fridge.iiot.love.story
-/2017/10/25/17/54:01.readwrite.com.2017.10.25.consider.expansion.shenzhen
 =end
 exit 0 if ARGV.empty?
 require 'ww'

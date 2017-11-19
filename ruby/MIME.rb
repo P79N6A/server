@@ -137,7 +137,7 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  # RDF type -> icon name
+  # RDF type -> icon name (icon name to font mapping in icons.css)
   Icons = {
     'uri' => :id,
     Type => :type,
@@ -194,7 +194,7 @@ class R
          MIMEprefix[prefix]
        elsif MIMEsuffix[suffix] # suffix mapping
          MIMEsuffix[suffix]
-       elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
+       elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
          Rack::Mime::MIME_TYPES['.'+suffix]
        else
          puts "#{pathPOSIX} unmapped MIME, sniffing content (SLOW)"
@@ -248,7 +248,7 @@ class R
     g
   end
 
-  def transcode
+  def transcode # non-RDF to RDF using triplrs
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
     doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
