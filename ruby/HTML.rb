@@ -64,7 +64,6 @@ class R
          parts.map{|part|
            path = path + part + '/'
            {_: :a, id: 'p'+path.sha2, class: :pathPart, href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
-         {_: :a, class: :clock, href: '/h', id: :uptothetime},
          (query = re.q['q'] || re.q['f']
           {_: :form,
            c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
