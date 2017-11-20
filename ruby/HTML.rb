@@ -1,5 +1,5 @@
 # coding: utf-8
-def H x # HTML generator
+def H x # HTML
   case x
   when String
     x
@@ -57,7 +57,7 @@ class R
   Search = -> graph,re {
     parts = re.path.split '/'
     path = ""
-    grep = parts.size > 3 # suggest in UI of FIND closer to root, GREP for smaller subtrees
+    grep = parts.size > 3 # suggest FIND closer to root, GREP for smaller subtrees
     # server offers @f -> find, @q -> grep explicit search-provider selection
     {class: :search,
      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
@@ -174,7 +174,7 @@ class R
     indexContext = -> v {
       v = v.R
       if mailMsg
-        {_: :a, href: v.path + '?head#r' + href.sha2, c: v.label}
+        {_: :a, id: 'address_'+rand.to_s.sha2, href: v.path + '?head#r' + href.sha2, c: v.label}
       elsif types.member? SIOC+'BlogPost'
         {_: :a, href: datePath[0..-4] + '*/*' + (v.host||'') + '*?head#r' + href.sha2, c: v.label}
       else
@@ -254,7 +254,6 @@ class R
   }
 
   Grep = -> graph, q {
-    # tokenise
     wordIndex = {}
     words = R.tokens q
     words.each_with_index{|word,i| wordIndex[word] = i }
@@ -268,9 +267,9 @@ class R
       r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
         r[Abstract] = [lines[0..5].map{|l|
           l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
-            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrapper span
+            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
           }},{_: :hr}] if lines.size > 0 }}
-    # highlight CSS
+    # CSS
     graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
     graph}
 
