@@ -57,7 +57,8 @@ class R
   Search = -> graph,re {
     parts = re.path.split '/'
     path = ""
-    grep = parts.size > 3 # suggest FIND closer to root, GREP for smaller subtree. @f = find, @q = grep for explicit search-provider
+    grep = parts.size > 3 # suggest in UI of FIND closer to root, GREP for smaller subtrees
+    # server offers @f -> find, @q -> grep explicit search-provider selection
     {class: :search,
      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
          parts.map{|part|

@@ -66,7 +66,7 @@ class R
     set = (if directory
            if q.has_key?('f') && path!='/' # FIND(1) nodes
              found = find q['f']
-             q['head'] = true if found.size > 16
+             q['head'] = true if found.size > 127
              found
            elsif q.has_key?('q') && path!='/' # GREP(1) nodes
              grep q['q']
