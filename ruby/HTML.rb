@@ -166,13 +166,13 @@ class R
     titles = l[Title].justArray # explicit title
     if titles.empty? && this.path
       if chatMsg # don't elevate filename as implicit title, for these types
-      else
-        titles.push(e.path==this.path && e.env[:title] || URI.unescape(this.path)) # request-title if rendering request URI || filename, default title if none other found
+      else # request-title if rendering request-URI || fs metadata (default if none other found)
+        titles.push(e.path==this.path && e.env[:title] || URI.unescape(this.uri))
       end
     end
     labels = l[Label].justArray
     this.host.do{|h|labels.unshift h}
-    # pointer to resource as selection in index container
+    # pointer to resource as selection in index-container
     indexContext = -> v {
       v = v.R
       if mailMsg
