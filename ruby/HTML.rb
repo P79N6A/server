@@ -123,13 +123,12 @@ class R
             graph[path+k+'/'].do{|r| graph.delete r.uri} # "consume" container so it doesnt appear again in tabular-list
             {_: :td,
              c: (render[t[k], depth+1, path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+
     render[tree]}
 
   Table = -> g, e {
-    # labels
-    (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true}
+    (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # labels
     [:links,:images].map{|p| e.env[p] = []} # link & image lists
-    # sort configuration
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
@@ -147,7 +146,7 @@ class R
                q['ascending'] = ''
              end
              href = CGI.escapeHTML R.qs q
-             {_: :th, id: 'sort_'+k.sha2, href: href, property: k, class: k==p ? 'selected' : '',
+             {_: :th, property: k, class: k==p ? 'selected' : '',
               c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
