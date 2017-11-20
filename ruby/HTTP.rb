@@ -5,9 +5,9 @@ class R
   def R.call e
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
     return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
-    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'   # collapse sequential /s
-    path = Pathname.new(rawpath).expand_path.to_s        # evaluate path expression,
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserving trailing-slash
+    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'   # /-collapse
+    path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
+    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
     resource = path.R; e['uri'] = resource.uri           # resource URI
     e[:Response]={}; e[:Links]={}                        # header fields
     resource.setEnv(e).send e['REQUEST_METHOD']          # call resource
@@ -135,16 +135,16 @@ class R
   end
   def grep q
     words = R.tokens q
-    case words.size # any term-order on small term-sets
+    case words.size
     when 0
       return []
-    when 2
+    when 2 # unordered
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
     when 3
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
     when 4
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else # scan-order terms
+    else
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
@@ -157,18 +157,17 @@ class R
       [304, {}, []]
     else
       body = body ? body.call : self
-      if body.class == R # file-ref. use optimized file-handler
-        (Rack::File.new nil).serving((Rack::Request.new @r), body.pathPOSIX).do{|s,h,b|
-          [s,h.update(@r[:Response]),b]} # attach response headers
+      if body.class == R # file-ref
+        (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
       else
         [(@r[:Status]||200), @r[:Response], [body]]
       end
     end
   end
   def notfound; [404,{'Content-Type' => 'text/html'},[HTML[{},self]]] end
-  def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end # qs from request-env
-  def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # serialized qs
-  def q # parsed qs
+  def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end # qs
+  def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # Hash -> qs
+  def q # qs -> Hash
     @q ||= # memoize
       (if q = @r['QUERY_STRING']
        h = {}
@@ -185,12 +184,12 @@ class R
     return 'application/atom+xml' if q.has_key?('feed')
     (d={}
      @r['HTTP_ACCEPT'].do{|k|
-       (k.split /,/).map{|e| # each pair
-         f,q = e.split /;/   # split MIME from q value
-         i = q && q.split(/=/)[1].to_f || 1.0 # q || default
-         d[i] ||= []; d[i].push f.strip}} # append
-     d).sort.reverse.map{|q,formats| # highest qval first
-      formats.map{|mime| # serializability check
+       (k.split /,/).map{|e| # MIME/q-val pairs
+         f,q = e.split /;/   # split pair
+         i = q && q.split(/=/)[1].to_f || 1.0
+         d[i] ||= []; d[i].push f.strip}} # index q-val
+     d).sort.reverse.map{|q,formats| # ordered index
+      formats.map{|mime| #serializable?
         return mime if RDF::Writer.for(:content_type => mime) || Writable.member?(mime)}}
     'text/html' # default
   end
