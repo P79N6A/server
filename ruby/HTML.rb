@@ -167,18 +167,17 @@ class R
     if titles.empty? && this.path
       if chatMsg # don't elevate filename as implicit title, for these types
       else
-        fsName = (URI.unescape (File.basename this.path))[0..64] # filename, default title if none other found
-        titles.push(e.path==this.path && e.env[:title] || fsName) # requestURI title from environment
+        titles.push(e.path==this.path && e.env[:title] || URI.unescape(this.path)) # request-title if rendering request URI || filename, default title if none other found
       end
     end
     labels = l[Label].justArray
     this.host.do{|h|labels.unshift h}
-    # generate pointer to resource as selection in index
-    indexContext = -> p,v {
+    # pointer to resource as selection in index container
+    indexContext = -> v {
       v = v.R
-      if mailMsg # address*month
+      if mailMsg
         {_: :a, href: v.path + '?head#r' + href.sha2, c: v.label}
-      elsif types.member? SIOC+'BlogPost' # host*day
+      elsif types.member? SIOC+'BlogPost'
         {_: :a, href: datePath[0..-4] + '*/*' + (v.host||'') + '*?head#r' + href.sha2, c: v.label}
       else
         v
@@ -233,7 +232,7 @@ class R
              when Creator
                [l[k].justArray.map{|v|
                  if v.respond_to? :uri
-                   indexContext[k,v]
+                   indexContext[v]
                  else
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' '),
@@ -242,7 +241,7 @@ class R
              when SIOC+'addressed_to'
                l[k].justArray.map{|v|
                  if v.respond_to? :uri
-                   indexContext[k,v]
+                   indexContext[v]
                  else
                    CGI.escapeHTML v.to_s
                  end}.intersperse(' ')
