@@ -101,7 +101,7 @@ class R
     end
 
     # find max-size for scaling
-    size = graph.values.map{|r|!hide.member?(r.R.basename) && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
+    size = graph.values.map{|r|!hide.member?(r.R.basename) && r.has_key?('uri') && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
 
     # link to container preview/summary
     qs = R.qs re.q.merge({'head'=>''})
