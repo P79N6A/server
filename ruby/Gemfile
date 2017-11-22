@@ -1,6 +1,7 @@
 source "https://rubygems.org/"
 gem 'dimensions'
 gem 'foreman'
+gem 'icalendar'
 gem 'linkeddata'
 gem 'mail'
 gem 'nokogiri'
