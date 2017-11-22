@@ -47,7 +47,10 @@ class R
         slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
         time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
         doc = "/#{time}#{slug}.e".R
-        doc.writeFile({u => r}.to_json) unless doc.e}}
+        unless doc.e
+          puts u
+          doc.writeFile({u => r}.to_json)
+        end}}
   end
   def twitter
     open(pathPOSIX).readlines.map(&:chomp).shuffle.each_slice(22){|s|
