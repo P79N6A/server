@@ -101,11 +101,11 @@ class R
     end
 
     # find max-size for scaling
-    size = graph.values.map{|r|!hide.member?(r.R.basename) && r[Size].justArray[0] || 1}.max.to_f
-    # tiptoe into containers with ?head
+    size = graph.values.map{|r|!hide.member?(r.R.basename) && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
+
+    # link to container preview/summary
     qs = R.qs re.q.merge({'head'=>''})
 
-    # tree to HTML
     render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
