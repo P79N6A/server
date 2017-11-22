@@ -6,7 +6,7 @@ class R < RDF::URI
   def R.[] uri; R.new uri end
 end
 # now the rest of the library can reopen R
-%w{MIME HTML HTTP}.map{|r|require_relative r}
+%w{MIME HTML HTTP proprietary}.map{|r|require_relative r}
 # #justArray returns one-element array for singleton object. obviates [] wrapping of RDF-object when construction Hash or JSON
 # #R normalizes any type identifiable with a URI to our abstract resource
 # #do passes object to block-arg. Kernel#yield_self in Ruby 2.5 may be faster than "yield self", TODO investigate once widely deployed
