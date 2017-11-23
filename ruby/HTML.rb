@@ -150,32 +150,33 @@ class R
               c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
-  TableRow = -> l,e,sort,direction,keys {
-    this = l.R
+  TableRow = -> l,e,sort,direction,keys { this = l.R
+    types = l.types
+    chat = types.member? SIOC+'InstantMessage'
+    mail = types.member? SIOC+'MailMessage'
+    post = types.member? SIOC+'BlogPost'
+    tweet = types.member? SIOC+'Tweet'
     href = this.uri
     head = e.q.has_key? 'head'
     rowID = (e.path == this.path && this.fragment) ? this.fragment : 'r'+href.sha2
-    types = l.types
-    chatMsg = types.member? SIOC+'InstantMessage'
-    mailMsg = types.member? SIOC+'MailMessage'
-    monospace = chatMsg || mailMsg || types.member?(SIOC+'SourceCode')
+    monospace = chat || mail || types.member?(SIOC+'SourceCode')
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
     titles = l[Title].justArray # explicit title
     if titles.empty? && this.path
-      if chatMsg || types.member?(SIOC+'Tweet') # untitled
-      else # request-URI title or fs metadata
+      if chat || tweet # untitled
+      else # doc title || URI
         titles.push(e.path==this.path && e.env[:title] || URI.unescape(this.uri))
       end
     end
     labels = l[Label].justArray
     this.host.do{|h|labels.unshift h}
-    # pointer to resource as selection in index-container
-    indexContext = -> v {
-      v = v.R
-      if mailMsg
+    indexContext = -> v { v = v.R
+      if mail
         {_: :a, id: 'address_'+rand.to_s.sha2, href: v.path + '?head#r' + href.sha2, c: v.label}
-      elsif types.member? SIOC+'BlogPost'
+      elsif tweet
+        {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
+      elsif post
         {_: :a, href: datePath[0..-4] + '*/*' + (v.host||'') + '*?head#r' + href.sha2, c: v.label}
       else
         v
@@ -194,7 +195,7 @@ class R
                   e.env[:label][lbl] = true
                   [{_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
                 (links = [DC+'link', SIOC+'attachment', Stat+'contains'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
-                 links.map{|l|e.env[:links].push l} # mark as displayed
+                 links.map{|l|e.env[:links].push l} # mark seen
                  {_: :table, class: :links,
                   c: links.group_by(&:host).map{|host,links|
                     tld = host.split('.')[-1] || '' if host
