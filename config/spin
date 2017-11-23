@@ -1,3 +1,7 @@
 #!/bin/sh
-R .conf/feedB.u fetchFeeds
-R .conf/twits twitter
+while true
+do
+    R .conf/feedB.u fetchFeeds
+    R .conf/twits twitter
+    sleep 30m
+done
