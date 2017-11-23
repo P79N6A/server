@@ -544,9 +544,7 @@ class R
       end }
   end
 
-  def fetchFeeds; uris.map(&:R).map(&:fetchFeed); nil end
   def fetchFeed
-    updated = false
     head = {} # request header
     cache = R['/.cache/'+uri.sha2+'/'] # storage
     etag = cache + 'etag'      # cache etag URI
@@ -569,8 +567,7 @@ class R
         mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified value
         resp = response.read
         unless body.e && body.readFile == resp
-          updated = true
-          body.writeFile resp # update cache
+          body.writeFile resp # new cached body
           ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri # run indexer
         end
       end
@@ -578,11 +575,12 @@ class R
       msg = error.message
       puts [uri,msg].join("\t") unless msg.match(/304/)
     end
-    updated ? self : nil
+    nil
   rescue Exception => e
     puts uri, e.class, e.message
   end
   alias_method :getFeed, :fetchFeed
+  def fetchFeeds; uris.map(&:R).map(&:fetchFeed); nil end
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
   def indexFeed options = {}
