@@ -12,4 +12,4 @@ https://readwrite.com/comments/feed/
 =end
 exit 0 if ARGV.empty?
 require 'ww'
-puts R[ARGV[0]].send *ARGV[1..-1]
+R[ARGV[0]].send *ARGV[1..-1]

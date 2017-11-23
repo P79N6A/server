@@ -575,13 +575,12 @@ class R
       msg = error.message
       puts [uri,msg].join("\t") unless msg.match(/304/)
     end
-    nil
   rescue Exception => e
     puts uri, e.class, e.message
   end
-  alias_method :getFeed, :fetchFeed
-  def fetchFeeds; uris.map(&:R).map(&:fetchFeed); nil end
+  def fetchFeeds; uris.map(&:R).map &:fetchFeed end
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
+  alias_method :getFeed, :fetchFeed
 
   def indexFeed options = {}
     g = RDF::Repository.load self, options
