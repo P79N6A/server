@@ -173,6 +173,7 @@ class R
     SIOC+'WikiArticle' => :pencil,
     SIOC+'Usergroup' => :group,
     SIOC+'SourceCode' => :code,
+    SIOC+'Tweet' => :bird,
     SIOC+'has_creator' => :user,
     SIOC+'user_agent' => :mailer,
     SIOC+'has_discussion' => :comments,

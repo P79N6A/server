@@ -23,7 +23,6 @@ a.thumb img {max-height: 24em}
 table,th,td,a,div {border-radius:.13em}
 table, td, img, a, pre {vertical-align:top}
 td[property="uri"] > div, td[property="uri"] > p {margin:auto}
-td[property="http://rdfs.org/sioc/ns#has_creator"], td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:16em}
 th a:before {font-size:1.6em;font-weight: normal}
 th.selected, th.selected a {background-color:#fff;color:#000}
 table.links {display:block}
