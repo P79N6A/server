@@ -1,4 +1,6 @@
 #!/bin/sh
 R https://www.reddit.com/user/where2cop617/comments/.rss getFeed
 R https://www.reddit.com/r/boston+dorchester/new/.rss getFeed
+R https://www.wallflux.com/atom/811594278885814 getFeed
+R https://www.wallflux.com/atom/632566790191491 getFeed
 R .conf/twits twitter
