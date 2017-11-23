@@ -163,8 +163,8 @@ class R
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
     titles = l[Title].justArray # explicit title
     if titles.empty? && this.path
-      if chatMsg # don't elevate filename as implicit title, for these types
-      else # request-title if rendering request-URI || fs metadata (default if none other found)
+      if chatMsg || types.member?(SIOC+'Tweet') # untitled
+      else # request-URI title or fs metadata
         titles.push(e.path==this.path && e.env[:title] || URI.unescape(this.uri))
       end
     end
