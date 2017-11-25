@@ -37,8 +37,9 @@ class R
         end}}
   end
   def twitter
-    open(pathPOSIX).readlines.map(&:chomp).shuffle.each_slice(22){|s|
+    open(pathPOSIX).readlines.map(&:chomp).shuffle.each_slice(16){|s|
       readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
+      puts readURI
       readURI.R.indexTweets}
   end
 
