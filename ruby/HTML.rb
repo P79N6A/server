@@ -53,7 +53,7 @@ class R
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  !empty && e[:Links][:down].do{|d|
                    {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                 empty && [{_: :span,style: 'font-size:12em;font-weight:bold',c: 404}, (CGI.escapeHTML e['HTTP_USER_AGENT'])]]}]}]}
+                 empty && [{_: :span,style: 'font-size:3em', c: '&nbsp;404 '}, (CGI.escapeHTML e['HTTP_USER_AGENT'])]]}]}]}
 
   Search = -> graph,re {
     parts = re.path.split '/'
