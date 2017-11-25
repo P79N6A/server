@@ -165,7 +165,7 @@ class R
     end
   end
   def notfound; [404,{'Content-Type' => 'text/html'},[HTML[{},self]]] end
-  def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end # qs
+  def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end # env -> qs
   def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # Hash -> qs
   def q # qs -> Hash
     @q ||= # memoize
