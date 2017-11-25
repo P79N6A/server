@@ -138,13 +138,13 @@ class R
     case words.size
     when 0
       return []
-    when 2 # unordered
+    when 2 # unordered terms
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
     when 3
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
     when 4
       cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else
+    else # ordered terms
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
