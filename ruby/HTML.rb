@@ -51,7 +51,7 @@ class R
                  (Table[graph,re] unless graph.empty?),
                  {_: :style, c: e[:label].map{|name,_|
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
-                 e[:Links][:down].do{|d|{_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
+                 !graph.empty? && e[:Links][:down].do{|d|{_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
                  foot]}]}]}
 
   Search = -> graph,re {
