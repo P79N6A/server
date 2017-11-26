@@ -76,14 +76,13 @@ class R
 
   Tree = -> graph,re {
     tree = {}
-    hide = ['msg','/']
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
       uri.R.parts.map{|name| # walk path
         c = c[name] ||= {}}} # move cursor to child node. create if missing
 
     # find max-size for scaling
-    size = graph.values.map{|r|!hide.member?(r.R.basename) && r.has_key?('uri') && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
+    size = graph.values.map{|r|r.has_key?('uri') && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
 
     # link to container preview/summary
     qs = R.qs re.q.merge({'head'=>''})
@@ -91,12 +90,12 @@ class R
     render = -> t,depth=0,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
-      nodes = t.keys.-(hide).sort
+      nodes = t.keys.sort
       {_: :table, class: :tree, c: [
          {_: :tr, class: :name, c: nodes.map{|name| # node
             this = path + name + '/'
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
-            height = (s && size) ? (8.8 * s / size) : 1.0
+            height = (s && size) ? (10 * s / size) : 1.0
             {_: :td,
              c: {_: :a, href: this + qs, name: label, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(6))*3};color:#fff",
