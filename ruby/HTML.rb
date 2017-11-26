@@ -76,30 +76,11 @@ class R
 
   Tree = -> graph,re {
     tree = {}
-    flat = {}
     hide = ['msg','/']
-    # grow tree
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| # resources
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
       uri.R.parts.map{|name| # walk path
-        c = c[name] ||= {}}} # update cursor to new position, creating node if necessary
-
-    # (optional) only leaf-nodes
-    flatten = -> t,path='' {
-      t.keys.map{|k|
-        cur = path+k+'/'
-        if t[k].size > 0 # branching
-          flatten[t[k], cur]
-        else # leaf
-          graph[cur].do{|c|
-            graph[k+'/'] ||= {Size => 0}
-            graph[k+'/'][Size] += c[Size].justArray[0]||0} # magnitude to bin
-          flat[k] ||= {}
-        end}}
-    if re.q.has_key? 'flat'
-      flatten[tree]
-      tree = flat
-    end
+        c = c[name] ||= {}}} # move cursor to child node. create if missing
 
     # find max-size for scaling
     size = graph.values.map{|r|!hide.member?(r.R.basename) && r.has_key?('uri') && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
