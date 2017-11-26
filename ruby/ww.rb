@@ -1,5 +1,5 @@
 # coding: utf-8
-%w{cgi csv date digest/sha2 dimensions fileutils json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r} # ruby deps
+%w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r} # ruby deps
 # define resource class and URI constants
 class R < RDF::URI
   def R; self end
