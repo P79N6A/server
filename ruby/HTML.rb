@@ -26,7 +26,7 @@ def H x # HTML
 end
 
 class R
-  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', DC+'link', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   HTML = -> graph, re {
@@ -133,7 +133,7 @@ class R
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    keys = [Creator,To,Type,g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
+    keys = [Creator,To,Type,'uri',DC+'link',g.values.select{|v|v.respond_to? :keys}.map(&:keys)].flatten.uniq
     keys -= InlineMeta; keys -= VerboseMeta unless e.q.has_key? 'full'
     [{_: :table,
       c: [{_: :tbody,
@@ -172,7 +172,25 @@ class R
     end
     labels = l[Label].justArray
     this.host.do{|h|labels.unshift h}
-    indexContext = -> v { v = v.R
+
+    linkTable = -> links {
+      links = links.map(&:R).select{|l|!e.env[:links].member? l} # unseen
+      {_: :table, class: :links,
+       c: links.group_by(&:host).map{|host,links|
+         tld = host.split('.')[-1] || '' if host
+         e.env[:label][tld] = true
+         {_: :tr,
+          c: [({_: :td, class: :host, name: tld,
+                c: {_: :a, href: '//'+host, c: host}} if host),
+              {_: :td, class: :path, colspan: host ? 1 : 2,
+               c: links.map{|link|
+                 e.env[:links].push link # seen
+                 [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri,
+                   c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))},
+                  ' ']}}]}}} unless links.empty? }
+
+    indexContext = -> v {
+      v = v.R
       if mail
         {_: :a, id: 'address_'+rand.to_s.sha2, href: v.path + '?head#r' + href.sha2, c: v.label}
       elsif tweet
@@ -182,6 +200,7 @@ class R
       else
         v
       end}
+
     unless head && titles.empty? && !l[Abstract]
       link = href + (!this.host && href[-1]=='/' && '?head' || '')
       {_: :tr, id: rowID, href: link,
@@ -189,24 +208,13 @@ class R
          {_: :td, property: k,
           c: case k
              when 'uri'
-               [titles.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},' ']},
-                labels.map{|v|
+               [labels.map{|v|
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
-                  [{_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])},' ']},
-                (links = [DC+'link', SIOC+'attachment', Stat+'contains'].map{|p|l[p]}.flatten.compact.map(&:R).select{|l|!e.env[:links].member? l} # unseen links
-                 links.map{|l|e.env[:links].push l} # mark seen
-                 {_: :table, class: :links,
-                  c: links.group_by(&:host).map{|host,links|
-                    tld = host.split('.')[-1] || '' if host
-                    e.env[:label][tld] = true
-                    {_: :tr,
-                     c: [({_: :td, class: :host, name: tld,
-                          c: {_: :a, href: '//'+host, c: host}} if host),
-                         {_: :td, class: :path, colspan: host ? 1 : 2,
-                          c: links.map{|link|
-                            [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||'')[0..64])},' ']}}]}}} unless links.empty?),
+                  {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
+                titles.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},' ']},
+                linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                 (images = []
@@ -234,7 +242,7 @@ class R
                  if v.respond_to? :uri
                    indexContext[v]
                  else
-                   CGI.escapeHTML v.to_s
+                   {_: :span, c: (CGI.escapeHTML v.to_s)}
                  end}.intersperse(' '),
                 (l[SIOC+'user_agent'].do{|ua|
                    ['<br>', {_: :span, class: :notes, c: ua.join}]} unless head)]
@@ -243,12 +251,14 @@ class R
                  if v.respond_to? :uri
                    indexContext[v]
                  else
-                   CGI.escapeHTML v.to_s
+                   {_: :span, c: (CGI.escapeHTML v.to_s)}
                  end}.intersperse(' ')
              when Date
                {_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath
              when DC+'cache'
                l[k].justArray.map{|c|[{_: :a, href: c.path, class: :chain}, ' ']}
+             when DC+'link'
+               linkTable[l[k].justArray]
              else
                l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
              end}}.intersperse("\n")}
