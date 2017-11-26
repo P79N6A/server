@@ -85,6 +85,7 @@ class R
     'inode/directory'      => [:triplrContainer],
     'message/rfc822'       => [:triplrMail],
     'text/cache-manifest'  => [:triplrText],
+    'text/calendar'        => [:triplrCalendar],
     'text/chatlog'         => [:triplrChatLog],
     'text/css'             => [:triplrSourceCode],
     'text/csv'             => [:triplrCSV,/,/],
@@ -351,6 +352,10 @@ class R
     yield doc, Type, R[Stat+'TextFile']
     yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
     mtime.do{|mt|yield doc, Date, mt.iso8601}
+  end
+
+  def triplrCalendar
+    puts "cal"
   end
 
   def triplrCSV d
