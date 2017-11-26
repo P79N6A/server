@@ -123,6 +123,7 @@ class R
     Mtime => :time,
     To => :userB,
     DC+'hasFormat' => :file,
+    DC+'link' => :chain,
     DC+'cache' => :chain,
     Schema+'Person' => :user,
     Schema+'location' => :location,
@@ -293,6 +294,7 @@ class R
   def triplrFile
     s = path
     size.do{|sz|yield s, Size, sz}
+    yield s, Title, basename
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
@@ -301,14 +303,12 @@ class R
   def triplrContainer
     s = path
     s = s + '/' unless s[-1] == '/'
-    mt = mtime
     yield s, Type, R[Container]
-    yield s, Mtime, mt.to_i
-    yield s, Date, mt.iso8601
-    containers,files = children.partition{|e|e.node.directory?}
-    containers.map{|d|yield s, Stat+'contains', d + '/'}
-#    files.map{|f|yield s, Stat+'contains', f}
-    yield s, Size, [*containers, *files].size
+    yield s, Size, children.size
+    yield s, Title, basename+'/'
+    mtime.do{|mt|
+      yield s, Mtime, mt.to_i
+      yield s, Date, mt.iso8601}
   end
 
   def triplrImage &f

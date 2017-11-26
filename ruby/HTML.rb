@@ -163,15 +163,10 @@ class R
     monospace = chat || mail || types.member?(SIOC+'SourceCode')
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-    titles = l[Title].justArray # explicit title
-    if titles.empty? && this.path
-      if chat || tweet # untitled
-      else # doc title || URI
-        titles.push(e.path==this.path && e.env[:title] || URI.unescape(this.uri))
-      end
-    end
+    titles = l[Title].justArray
+    titles.push e.env[:title] if this.path==e.path
     labels = l[Label].justArray
-    this.host.do{|h|labels.unshift h}
+    labels.unshift this.host if this.host
 
     linkTable = -> links {
       links = links.map(&:R).select{|l|!e.env[:links].member? l} # unseen
@@ -208,12 +203,12 @@ class R
          {_: :td, property: k,
           c: case k
              when 'uri'
-               [labels.map{|v|
+               [labels.compact.map{|v|
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
                   {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
-                titles.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},' ']},
+                titles.compact.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},' ']},
                 linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
