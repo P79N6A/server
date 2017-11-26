@@ -22,7 +22,7 @@ a.date {white-space: nowrap}
 .tree td {text-align:center;padding:0;vertical-align:bottom}
 .tree a {display: block}
 th a:before {font-size:1.6em;font-weight: normal}
-td[property="http://rdfs.org/sioc/ns#has_creator"] span, td[property="http://rdfs.org/sioc/ns#addressed_to"] span {white-space: nowrap;display: inline-block;max-width: 21ex;overflow:hidden}
+td[property="http://rdfs.org/sioc/ns#has_creator"] *, td[property="http://rdfs.org/sioc/ns#addressed_to"] * {white-space: nowrap;display: inline-block;max-width: 21ex;overflow:hidden}
 table.links {display:block}
 table.links td.host a {float: right; color:#000}
 table.links td.path a {background-color:#000;color:#fff;border: .08em solid #222;border-radius:.2em;font-weight: normal;display:inline-block;margin-bottom:.1em}
