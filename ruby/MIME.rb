@@ -221,7 +221,7 @@ class R
     g
   end
 
-  def transcode # non-RDF to RDF using triplrs
+  def transcode # non-RDF -> RDF
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
     doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
@@ -254,8 +254,6 @@ class R
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
   def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-  def triplrUriList; uris.map{|u|yield u, Type, R[W3+'2000/01/rdf-schema#Resource']} end
-  def uris; open(pathPOSIX).readlines.map &:chomp end
 
   # POSIX map
   def R.fromPOSIX p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R end
@@ -309,6 +307,14 @@ class R
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}
+  end
+
+  def triplrUriList
+    open(pathPOSIX).readlines.map{|line|
+      t = line.chomp.split ' '
+      uri = t[0]
+      yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
+      yield uri, Title, t[1..-1].join(' ') if t.size > 1 }
   end
 
   def triplrImage &f
@@ -548,7 +554,7 @@ class R
   rescue Exception => e
     puts uri, e.class, e.message
   end
-  def fetchFeeds; uris.map(&:R).map &:fetchFeed end
+  def fetchFeeds; open(pathPOSIX).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
   def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
   alias_method :getFeed, :fetchFeed
 

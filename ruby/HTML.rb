@@ -165,8 +165,6 @@ class R
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
     titles = l[Title].justArray
     titles.push e.env[:title] if this.path==e.path
-    labels = l[Label].justArray
-    labels.unshift this.host if this.host
 
     linkTable = -> links {
       links = links.map(&:R).select{|l|!e.env[:links].member? l} # unseen
@@ -203,7 +201,7 @@ class R
          {_: :td, property: k,
           c: case k
              when 'uri'
-               [labels.compact.map{|v|
+               [l[Label].justArray.compact.map{|v|
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
