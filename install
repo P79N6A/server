@@ -1,22 +1,14 @@
 #!/bin/sh
-echo "installing.."
-
+# ruby
 cd ruby
 ruby install
-
-echo "\ninstalling dependencies.."
-
-# ruby
 gem install bundler
 bundle config build.nokogiri --use-system-libraries
 bundle install
 cd ..
-
 # python
 pip install --upgrade pygments
-
-echo "\nconfiguring.."
-
+# conf
 conf=~/web/.conf
 mkdir -p $conf
 rsync -av config/ $conf
