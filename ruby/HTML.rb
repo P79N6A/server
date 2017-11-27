@@ -53,7 +53,7 @@ class R
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  !empty && e[:Links][:down].do{|d|
                    {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                 empty && {_: :a,style: 'font-size:8em;color:#888', c: 404, href: re.dirname}]}]}]}
+                 empty && {_: :a,style: 'font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000', c: '404<br><br><br><br><br><br><br><br>', href: re.dirname}]}]}]}
 
   Search = -> graph,re {
     parts = re.path.split '/'
@@ -113,8 +113,8 @@ class R
     p = e.q['sort'] || Date
     direction = e.q.has_key?('ascending') ? :id : :reverse
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    keys = g.values.map(&:keys).flatten.uniq
-    keys -= InlineMeta; keys -= VerboseMeta unless e.q.has_key? 'full'
+    keys = g.values.map(&:keys).flatten.uniq - InlineMeta
+    keys -= VerboseMeta unless e.q.has_key? 'full'
     [{_: :table, id: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
