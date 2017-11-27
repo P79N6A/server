@@ -18,8 +18,9 @@ a.date {white-space: nowrap}
 .search input {background-color:#111;color:#fff;border-width:0;font-size:1.1em;max-width:16ex}
 .search a.find {font-weight: normal;color:#ccc}
 .search a.clock, .search span.sep {color:#555;font-weight: normal}
-.tree {width: 100%;display:table}
+.tree {width: 100%;display:table;border-spacing:0}
 .tree td {text-align:center;padding:0;vertical-align:bottom}
+.tree td.scaled {padding:.1em}
 .tree a {display: block}
 #table {display:table;margin:auto}
 th a:before {font-size:1.6em;font-weight: normal}

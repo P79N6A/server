@@ -87,7 +87,7 @@ class R
     # link to container preview/summary
     qs = R.qs re.q.merge({'head'=>''})
 
-    render = -> t,depth=0,path='' {
+    render = -> t,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
       nodes = t.keys.sort
@@ -96,14 +96,14 @@ class R
             this = path + name + '/'
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             height = (s && size) ? (10 * s / size) : 1.0
+            {_: :td, class: s ? :scaled : '',
+             c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : 'border: .08em solid #333',
+                 c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+         {_: :tr, c: nodes.map{|k| # children
+            graph[path+k+'/'].do{|r| graph.delete r.uri}
             {_: :td,
-             c: {_: :a, href: this + qs, name: label, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : "background-color:##{('%x' % rand(6))*3};color:#fff",
-                 c: ['&nbsp;'*depth, CGI.escapeHTML(URI.unescape name)]}}}.intersperse("\n")},"\n",
-         {_: :tr, c: nodes.map{|k| # child nodes
-            graph[path+k+'/'].do{|r| graph.delete r.uri} # "consume" container so it doesnt appear again in tabular-list
-            {_: :td,
-             c: (render[t[k], depth+1, path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+             c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
 
     render[tree]}
 
