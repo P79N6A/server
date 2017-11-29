@@ -530,6 +530,10 @@ class R
       end }
   end
 
+  def indexMail
+
+  end
+
   def fetchFeed
     head = {} # request header
     cache = R['/.cache/'+uri.sha2+'/'] # storage
