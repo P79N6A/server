@@ -47,7 +47,7 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [Search[graph,re], (Tree[graph,re] unless re.basename=='msg'),
+             c: [Search[graph,re], ({id: :tree, c: Tree[graph,re]} unless re.basename=='msg'),
                  (Table[graph,re] unless graph.empty?),
                  {_: :style, c: e[:label].map{|name,_|
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
@@ -56,15 +56,9 @@ class R
                  empty && {_: :a,style: 'font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000', c: '404'+'<br>'*7, href: re.dirname}]}]}]}
 
   Search = -> graph,re {
-    parts = re.path.split '/'
-    path = ""
-    grep = parts.size > 3 # suggest FIND closer to root, GREP for smaller subtrees
-    # server offers @f -> find, @q -> grep explicit search-provider selection
+    grep = re.path.split('/').size > 3 # FIND or GREP suggestion, @f find, @q grep explicit search-provider
     {class: :search,
      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-         parts.map{|part|
-           path = path + part + '/'
-           {_: :a, id: 'p'+path.sha2, class: :pathPart, href: path + '?head', c: [CGI.escapeHTML(URI.unescape part),{_: :span, class: :sep, c: '/'}]}},
          (query = re.q['q'] || re.q['f']
           {_: :form,
            c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
@@ -75,6 +69,7 @@ class R
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
 
   Tree = -> graph,re {
+    tile = 0
     tree = {}
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
@@ -95,10 +90,11 @@ class R
          {_: :tr, class: :name, c: nodes.map{|name| # node
             this = path + name + '/'
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
+            tile += 1 unless s
             height = (s && size) ? (10 * s / size) : 1.0
-            {_: :td, class: s ? :scaled : '',
+            {_: :td, class: s ? :scaled : :node,
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : 'border: .08em solid #333',
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile%2==0 ? '' : 'background-color:#222'),
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k| # children
             graph[path+k+'/'].do{|r| graph.delete r.uri}
