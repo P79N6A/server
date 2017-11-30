@@ -148,7 +148,7 @@ class R
       pattern = words.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
-    `#{cmd} | head -n 255`.lines.map{|pathName|
+    `#{cmd} | head -n 1024`.lines.map{|pathName|
       R.fromPOSIX pathName.chomp}
   end
   def condResponse body=nil
