@@ -416,7 +416,10 @@ class R
     resource = MessageURI[id]; e = resource.uri                # Message URI
     srcDir = resource.path.R; srcDir.mkdir # container
     srcFile = srcDir + 'this.msg'          # found location
-    ln self, srcFile unless srcFile.e rescue nil # canonical location
+    unless srcFile.e
+      ln self, srcFile # canonical-location link
+      puts "LINK  #{srcFile}" if @verbose
+    end
     yield e, DC+'identifier', id         # pre-web identifier
     yield e, DC+'cache', self + '*' # source file
     yield e, Type, R[SIOC+'MailMessage'] # RDF type
@@ -449,7 +452,10 @@ class R
     dstr = date.iso8601
     yield e, Date, dstr
     dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month
-    [*from,*to].map{|addr| # addresses
+    puts "DATE  #{date}\nSUBJ  #{subject}" if @verbose && subject
+
+    # index addresses
+    [*from,*to].map{|addr|
       user, domain = addr.split '@'
       if user && domain
         apath = dpath + domain + '/' + user # address
@@ -463,11 +469,16 @@ class R
           mloc = R[mdir + 'cur/' + id.sha2 + '.msg'] # maildir entry
           iloc = mpath.R # index entry
           [iloc,mloc].map{|loc| loc.dir.mkdir # container
-            ln self, loc unless loc.e rescue nil} # link
+            unless loc.e
+              ln self, loc # index link
+              puts "LINK  #{loc}" if @verbose
+            end
+          }
         end
       end
     }
 
+    # index bidirectional refs
     %w{in_reply_to references}.map{|ref|
       m.send(ref).do{|rs|
         rs.justArray.map{|r|
@@ -478,21 +489,28 @@ class R
           rev = destDir + id.sha2 + '.msg'
           rel = srcDir + r.sha2 + '.msg'
           if !rel.e # link missing
-            if destFile.e # exists, create link
+            if destFile.e # link
               ln destFile, rel rescue nil
-            else # point to message anyway in case it appears
+            else # missing but symlink in case it appears
               ln_s destFile, rel rescue nil
             end
           end
           ln srcFile, rev if !rev.e rescue nil}}}
-    # part handling
+
+    # HTML email. could sanitize and inline <body> content as sioc:content
+    # if plaintext email is missing, but that seems rare in ML world anyway
     htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'}
     htmlCount = 0
     htmlFiles.map{|p| # HTML file
       html = srcDir + "#{htmlCount}.html"  # file location
       yield e, DC+'hasFormat', html        # file pointer
-      html.writeFile p.decoded  if !html.e # store HTML email
+      unless html.e
+        html.writeFile p.decoded  # store HTML email
+        puts "HTML  #{html}" if @verbose
+      end
       htmlCount += 1 } # increment count
+
+    # text email
     parts.select{|p|
       (!p.mime_type || p.mime_type == 'text/plain') && # text parts
         Mail::Encodings.defined?(p.body.encoding)      # decodable?
@@ -512,16 +530,23 @@ class R
         else # fresh line
           [l.gsub(/(\w+)@(\w+)/,'\2\1').hrefs{|p,o|yield e, p, o}]
         end}.compact.intersperse("\n"))} # join lines
+
+    # recursive mail: digests forwards & archives
     parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|
       content = m.body.decoded                   # decode message-part
       f = srcDir + content.sha2 + '.inlined.msg' # message location
       f.writeFile content if !f.e                # store message
-      f.triplrMail &b}                           # recursion on message-part
-    m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p|
+      f.triplrMail &b}                           # recurse, thread triple-collector reference
+
+    # attachments
+    m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p| # decodability check
       name = p.filename.do{|f|f.to_utf8.do{|f|!f.empty? && f}} ||                           # explicit name
              (rand.to_s.sha2 + (Rack::Mime::MIME_TYPES.invert[p.mime_type] || '.bin').to_s) # generated name
       file = srcDir + name                     # file location
-      file.writeFile p.body.decoded if !file.e # store
+      unless file.e
+        file.writeFile p.body.decoded # store
+        puts "FILE  #{file}" if @verbose
+      end
       yield e, SIOC+'attachment', file         # file pointer
       if p.main_type=='image'                  # image attachments
         yield e, Image, file                   # image link represented in RDF
@@ -531,8 +556,15 @@ class R
   end
 
   def indexMail
-
+    @verbose = true
+    triples = 0
+    triplrMail{|s,p,o|triples += 1}
+    puts "    #{triples} triples"
+  rescue Exception => e
+    puts uri, e.class, e.message
   end
+
+  def indexMails; glob.map &:indexMail end
 
   def fetchFeed
     head = {} # request header
