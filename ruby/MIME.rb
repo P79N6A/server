@@ -592,7 +592,7 @@ class R
     puts uri, e.class, e.message
   end
 
-  # Reader for JSON-cache format
+  # JSON -> RDF
   module Format
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
@@ -625,7 +625,7 @@ class R
     end
   end
 
-  # Reader for Atom and RSS
+  # RSS & Atom -> RDF
   module Feed
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom
