@@ -1,5 +1,5 @@
 :target, :target *,th.selected, th.selected a {background-color:#fff !important; color:#000 !important;border-color: #fff !important;}
-body {background-color:#000;color:#fff;margin:0;font-family: sans-serif;padding-top:2em}
+body {background-color:#000;color:#fff;margin:0;font-family: sans-serif;padding-top:2.2em}
 table,form,input,pre {display: inline-block;margin:0}
 div,img,pre,table,th,td,a {border-radius:.13em;vertical-align:top}
 pre {white-space: pre-wrap; font-family: monospace;max-width:255ex;overflow:hidden}
