@@ -73,7 +73,7 @@ class R
            else
              if uri[-1] == '/' # inside
                index = (self+'index.{html,ttl}').glob # static index as HTML or Turtle
-               index.empty ? [self, children] : index
+               index.empty? ? [self, children] : index
              else # outside
                @r[:Links][:down] = path + '/' + qs
                self # just container, not its children
