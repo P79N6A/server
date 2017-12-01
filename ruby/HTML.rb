@@ -47,7 +47,7 @@ class R
                      {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [Search[graph,re], ({id: :tree, c: Tree[graph,re]} unless re.basename=='msg'),
+             c: [Search[graph,re], {class: :tree, c: Tree[graph,re]},
                  (Table[graph,re] unless graph.empty?),
                  {_: :style, c: e[:label].map{|name,_|
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
@@ -91,7 +91,7 @@ class R
             this = path + name + '/'
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
             tile += 1 unless s
-            height = (s && size) ? (10 * s / size) : 1.0
+            height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td, class: s ? :scaled : :node,
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile%2==0 ? '' : 'background-color:#222'),
@@ -111,7 +111,7 @@ class R
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
     keys = g.values.map(&:keys).flatten.uniq - InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    [{_: :table, id: :table,
+    [{_: :table,
       c: [{_: :tbody,
            c: g.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
              TableRow[r,e,p,direction,keys]}.intersperse("\n")},
