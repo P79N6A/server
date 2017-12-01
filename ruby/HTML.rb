@@ -75,10 +75,11 @@ class R
     # construct tree
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
-      uri.R.parts.map{|name| # walk path
-        c = c[name] ||= {}}} # move cursor to node. create if missing
+      uri.R.parts.map{|name| # path instructions
+        c = c[name] ||= {}}} # create node and jump cursor to it
     # max-size
-    size = graph.values.map{|r|r.has_key?('uri') && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
+    size = graph.values.map{|r|
+      r.has_key?('uri') && r.uri!='/' && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
     # recursive renderer
     render = -> t,path='' {
       label = 'p'+path.sha2
@@ -108,7 +109,7 @@ class R
     datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
     keys = g.values.map(&:keys).flatten.uniq - InlineMeta
     keys -= VerboseMeta unless e.q.has_key? 'full'
-    [{_: :table,
+    [{_: :table, style: 'margin:auto',
       c: [{_: :tbody,
            c: g.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
              TableRow[r,e,p,direction,keys]}.intersperse("\n")},
