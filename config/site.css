@@ -22,6 +22,7 @@ table.tree {width: 100%; border-spacing:0; margin:0}
 table.tree td {vertical-align:bottom}
 table.tree a {display: block; padding-left:.125em}
 th a:before {font-size:1.6em; font-weight: normal}
+td[property="uri"] {min-width: 16em}
 td[property="http://rdfs.org/sioc/ns#has_creator"] *, td[property="http://rdfs.org/sioc/ns#addressed_to"] * {white-space: nowrap; display: inline-block; max-width: 21ex; overflow:hidden}
 table.links td.host a {float: right; color:#000}
 table.links td.path {max-width: 32em; overflow:hidden}
