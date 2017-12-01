@@ -128,6 +128,8 @@ class R
     DC+'cache' => :chain,
     Schema+'Person' => :user,
     Schema+'location' => :location,
+    RSS+'comments' => :comments,
+    Comments => :comments,
     Stat+'File' => :file,
     Stat+'Archive' => :archive,
     Stat+'HTMLFile' => :html,

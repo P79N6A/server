@@ -27,7 +27,7 @@ end
 
 class R
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', "http://wellformedweb.org/CommentAPI/commentRss","http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   HTML = -> graph, re {
     e = re.env
@@ -56,7 +56,7 @@ class R
                  empty && {_: :a,style: 'font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000', c: '404'+'<br>'*7, href: re.dirname}]}]}]}
 
   Search = -> graph,re {
-    grep = re.path.split('/').size > 3 # FIND or GREP suggestion, @f find, @q grep explicit search-provider
+    grep = re.path.split('/').size > 3 # @f->find, @q->grep for explicit search-provider
     {class: :search,
      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
          (query = re.q['q'] || re.q['f']
@@ -69,19 +69,17 @@ class R
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
 
   Tree = -> graph,re {
+    qs = R.qs re.q.merge({'head'=>''})
     tile = 0
     tree = {}
+    # construct tree
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
       uri.R.parts.map{|name| # walk path
-        c = c[name] ||= {}}} # move cursor to child node. create if missing
-
-    # find max-size for scaling
+        c = c[name] ||= {}}} # move cursor to node. create if missing
+    # max-size
     size = graph.values.map{|r|r.has_key?('uri') && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
-
-    # link to container preview/summary
-    qs = R.qs re.q.merge({'head'=>''})
-
+    # recursive renderer
     render = -> t,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
@@ -100,7 +98,6 @@ class R
             graph[path+k+'/'].do{|r| graph.delete r.uri}
             {_: :td,
              c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
-
     render[tree]}
 
   Table = -> g, e {
