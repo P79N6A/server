@@ -135,18 +135,18 @@ class R
     p.e && p.setEnv(@r).condResponse || notfound
   end
   def grep q
-    words = R.tokens q
-    case words.size
+    args = q.shellsplit
+    case args.size
     when 0
       return []
-    when 2 # unordered terms
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -il #{words[1].sh}"
+    when 2
+      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -il #{args[1].sh}"
     when 3
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -il #{words[2].sh}"
+      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -il #{args[2].sh}"
     when 4
-      cmd = "grep -rilZ #{words[0].sh} #{sh} | xargs -0 grep -ilZ #{words[1].sh} | xargs -0 grep -ilZ #{words[2].sh} | xargs -0 grep -il #{words[3].sh}"
-    else # ordered terms
-      pattern = words.join '.*'
+      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -ilZ #{args[2].sh} | xargs -0 grep -il #{args[3].sh}"
+    else
+      pattern = args.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
     `#{cmd} | head -n 1024`.lines.map{|pathName|
