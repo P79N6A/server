@@ -93,7 +93,7 @@ class R
             height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td, class: s ? :scaled : :node,
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile%2==0 ? '' : 'background-color:#222'),
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k| # children
             graph[path+k+'/'].do{|r| graph.delete r.uri}
