@@ -23,7 +23,7 @@ table.tree td {vertical-align:bottom}
 table.tree a {display: block; padding-left:.125em}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
-td[property="uri"] a.scanned, td[property="http://rdfs.org/sioc/ns#has_creator"] *, td[property="http://rdfs.org/sioc/ns#addressed_to"] * {white-space: nowrap; display: inline-block; max-width: 21ex; overflow:hidden}
+td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
 table.links td.host a {float: right; color:#000}
 table.links td.path {max-width: 32em; overflow:hidden}
 table.links td.path a {background-color:#000; color:#fff; border: .08em solid #222; border-radius:.2em; font-weight: normal; display:inline-block; margin-bottom:.1em}

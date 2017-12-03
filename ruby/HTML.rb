@@ -133,12 +133,12 @@ class R
     tweet = types.member? SIOC+'Tweet'
     href = this.uri
     head = e.q.has_key? 'head'
-    rowID = (e.path == this.path && this.fragment) ? this.fragment : 'r'+href.sha2
     monospace = chat || mail || types.member?(SIOC+'SourceCode')
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
     titles = l[Title].justArray
     titles.push e.env[:title] if this.path==e.path
+    identified = false
 
     linkTable = -> links {
       links = links.map(&:R).select{|l|!e.env[:links].member? l} # unseen
@@ -170,7 +170,7 @@ class R
 
     unless head && titles.empty? && !l[Abstract]
       link = href + (!this.host && href[-1]=='/' && '?head' || '')
-      {_: :tr, id: rowID, href: link,
+      {_: :tr,
        c: keys.map{|k|
          {_: :td, property: k,
           c: case k
@@ -180,7 +180,15 @@ class R
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
                   {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
-                titles.compact.map{|t|[{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)},' ']},
+                titles.compact.map{|t|
+                  identifier = if identified
+                                 {}
+                               else
+                                 identified = true
+                                 {id: 'r'+href.sha2}
+                               end
+                  [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(identifier),
+                   ' ']},
                 linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
