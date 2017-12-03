@@ -224,10 +224,10 @@ class R
       nodes = t.keys - TabularFields
       nodes.map{|name|
         this = path + name + '/'
-        nodes.size > 1 && graph[this].do{|r|sizes.concat r[Size].justArray} # size
-        scale[t[name], this] if t[name].size > 0}} # child sizes
-    scale[tree]
-    size = sizes.max.to_f
+        nodes.size > 1 && graph[this].do{|r|sizes.concat r[Size].justArray} # record size of comparable elements
+        scale[t[name], this] if t[name].size > 0}} # visit children
+    scale[tree] # visit tree
+    size = sizes.max.to_f # max
 
     # renderer
     render = -> t,path='' {
@@ -247,7 +247,6 @@ class R
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k| # child nodes
             {_: :td, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
-
     render[tree]}
 
   Grep = -> graph, q {
