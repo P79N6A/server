@@ -93,7 +93,10 @@ class R
               c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
-  TableRow = -> l,e,sort,direction,keys { this = l.R; href = this.uri
+  TableRow = -> l,e,sort,direction,keys {
+    this = l.R
+    inDoc = e.path == this.path
+    href = this.uri
     head = e.q.has_key? 'head'
     types = l.types
     chat = types.member? SIOC+'InstantMessage'
@@ -146,13 +149,13 @@ class R
                   e.env[:label][lbl] = true
                   {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
                 titles.compact.map{|t|
-                  identifier = if identified # show once
-                                 {}
-                               else
-                                 identified = true
-                                 {id: (e.path == this.path && this.fragment) ? this.fragment : 'r'+href.sha2} # use fragment-identifier if current doc, disambiguate when merging other docs
-                               end
-                  [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(identifier),
+                  locSelection = if identified || inDoc
+                                   {}
+                                 else
+                                   identified = true
+                                   {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2} # use fragment-identifier if current doc, disambiguate when merging other docs
+                                 end
+                  [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(locSelection),
                    ' ']},
                 linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
                 l[Abstract],
