@@ -854,7 +854,7 @@ class String
     pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
-      (link.empty? && '' || '<a href="' + u + '">' + # hyperlink
+      (link.empty? && '' || '<a class=scanned href="' + u + '">' + # hyperlink
        (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
         yield(R::Image,u.R) if b # image RDF
         "<img src='#{u}'/>"      # inline image
