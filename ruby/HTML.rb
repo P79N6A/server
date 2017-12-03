@@ -224,10 +224,10 @@ class R
       nodes = t.keys - TabularFields
       nodes.map{|name|
         this = path + name + '/'
-        nodes.size > 1 && graph[this].do{|r|sizes.concat r[Size].justArray} # record size of comparable elements
+        nodes.size > 1 && graph[this].do{|r|sizes.concat r[Size].justArray} # size
         scale[t[name], this] if t[name].size > 0}} # visit children
-    scale[tree] # visit tree
-    size = sizes.max.to_f # max
+    scale[tree]
+    size = sizes.max.to_f # max-size
 
     # renderer
     render = -> t,path='' {

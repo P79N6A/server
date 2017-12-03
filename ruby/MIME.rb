@@ -209,7 +209,7 @@ class R
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/']||={}
         g[node.path+'/'][Size] = node.du}
-    elsif (q.has_key?('f')||q.has_key?('q')) && path!='/' # FIND/GREP: container match-count attribute
+    elsif (q.has_key?('f')||q.has_key?('q')||env[:glob]) && path!='/' # FIND/GREP: container match-count attribute
       set.map{|r|
         bin = r.dirname + '/'
         g[bin] ||= {'uri' => bin, Type => Container}

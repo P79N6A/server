@@ -80,11 +80,15 @@ class R
              end
            end
           else
-            (match(/\*/) ? self : (self+'.*')).glob # documents
+            @r[:glob] = match /\*/
+            (@r[:glob] ? self : (self+'.*')).glob # GLOB
            end).justArray.flatten.compact.select &:exist?
+
     return notfound if !set || set.empty?
+
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
     @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
+
     condResponse ->{ # body
       if set.size == 1 && set[0].mime == format
         set[0] # static body
