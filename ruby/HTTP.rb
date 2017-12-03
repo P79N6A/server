@@ -64,19 +64,19 @@ class R
       @r[:Links][:down] = path + (R.qs qq)
     end
     set = (if directory
-           if q.has_key?('f') && path!='/' # FIND(1) nodes
+           if q.has_key?('f') && path!='/' # FIND
              found = find q['f']
              q['head'] = true if found.size > 127
              found
-           elsif q.has_key?('q') && path!='/' # GREP(1) nodes
+           elsif q.has_key?('q') && path!='/' # GREP
              grep q['q']
            else
-             if uri[-1] == '/' # inside
-               index = (self+'index.{html,ttl}').glob # static index as HTML or Turtle
-               index.empty? ? [self, children] : index
+             if uri[-1] == '/' # inside (trailing slash)
+               index = (self+'index.{html,ttl}').glob # static index (HTML or Turtle)
+               index.empty? ? [self, children] : index # container and its contents
              else # outside
                @r[:Links][:down] = path + '/' + qs
-               self # just container, not its children
+               self # just container
              end
            end
           else

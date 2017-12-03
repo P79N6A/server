@@ -26,9 +26,10 @@ def H x # HTML
 end
 
 class R
-  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains'] # no dedicated column
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"] # hide in abbreviated view
-  TabularFields = %w{msg} # prefer tabular over tree
+
+  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains'] # types without a dedicated column in tabular-view
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"] # hidden in abbreviated view
+  TabularFields = %w{msg} # prefer tabular over tree-view
 
   HTML = -> graph, re {
     e = re.env
@@ -57,7 +58,7 @@ class R
                  empty && {_: :a,style: 'font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000', c: '404'+'<br>'*7, href: re.dirname}]}]}]}
 
   Search = -> graph,re {
-    grep = re.path.split('/').size > 3 # @f->find, @q->grep for explicit search-provider
+    grep = re.path.split('/').size > 3 # suggested search-provider
     {class: :search,
      c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
          (query = re.q['q'] || re.q['f']
@@ -218,7 +219,7 @@ class R
         c = c[name] ||= {}}} # create node and jump cursor
     # largest container-size
     size = graph.values.map{|r|
-      r.has_key?('uri') && r.uri!='/' && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
+      r.has_key?('uri') && r.uri!='/' && r.uri[-1]=='/' && !TabularFields.member?(r.R.basename) && r[Size].justArray[0] || 1}.max.to_f
 
     # recursive renderer
     render = -> t,path='' {
@@ -227,13 +228,12 @@ class R
       nodes = t.keys.sort - TabularFields
       {_: :table, class: :tree, c: [
          {_: :tr, class: :name, c: nodes.map{|name| # nodes
-            this = path + name + '/'
-            s = nodes.size > 1 && graph[this].do{|r| # scaled node in tree
-              r[Size].justArray[0]}
+            this = path + name + '/' # path
+            s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]} # size
             graph.delete this # consume node
-            tile += 1 unless s
-            height = (s && size) ? (8.8 * s / size) : 1.0
-            {_: :td, class: s ? :scaled : :node,
+            tile += 1 unless s # odd/even toggle
+            height = (s && size) ? (8.8 * s / size) : 1.0 # scaled-size
+            {_: :td, class: s ? :scaled : :node, # render
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
