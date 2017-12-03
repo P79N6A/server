@@ -150,11 +150,11 @@ class R
                   e.env[:label][lbl] = true
                   {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
                 titles.compact.map{|t|
-                  locSelection = if identified || inDoc
+                  locSelection = if identified || (inDoc && !this.fragment) # don't link to doc already loaded
                                    {}
                                  else
                                    identified = true
-                                   {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2} # use fragment-identifier in current doc, disambiguate when merging other docs
+                                   {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
                                  end
                   [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(locSelection),
                    ' ']},
