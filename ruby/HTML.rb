@@ -70,16 +70,16 @@ class R
 
   Tree = -> graph,re {
     qs = R.qs re.q.merge({'head'=>''})
-    tile = 0
-    tree = {}
+    tree = {}; tile = 0
     # construct tree
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
       uri.R.parts.map{|name| # path instructions
-        c = c[name] ||= {}}} # create node and jump cursor to it
-    # max-size
+        c = c[name] ||= {}}} # create node and jump cursor
+    # largest container-size
     size = graph.values.map{|r|
       r.has_key?('uri') && r.uri!='/' && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
+
     # recursive renderer
     render = -> t,path='' {
       label = 'p'+path.sha2
@@ -96,9 +96,11 @@ class R
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
          {_: :tr, c: nodes.map{|k| # children
-            graph[path+k+'/'].do{|r| graph.delete r.uri}
+            inline = k != 'msg'
+            graph[path+k+'/'].do{|r| graph.delete r.uri} if inline
             {_: :td,
-             c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+             c: (render[t[k], path+k+'/'] if inline && t[k].size > 0)}}.intersperse("\n")}]}}
+
     render[tree]}
 
   Table = -> g, e {

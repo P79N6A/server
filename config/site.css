@@ -16,7 +16,7 @@ a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
-.search a.find {font-weight: normal; color:#ccc}
+.search a.find {font-weight: normal}
 div.tree {overflow: auto;width:100%; max-width:100%}
 table.tree {width: 100%; border-spacing:0; margin:0}
 table.tree td {vertical-align:bottom}
