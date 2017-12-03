@@ -131,7 +131,7 @@ class R
       elsif tweet
         {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
       elsif post
-        {_: :a, href: datePath[0..-4] + '*/*' + (v.host||'') + '*?head#r' + href.sha2, c: v.label}
+        {_: :a, id: 'post_'+rand.to_s.sha2, href: datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + href.sha2, c: v.label}
       else
         v
       end}
@@ -153,7 +153,7 @@ class R
                                    {}
                                  else
                                    identified = true
-                                   {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2} # use fragment-identifier if current doc, disambiguate when merging other docs
+                                   {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2} # use fragment-identifier in current doc, disambiguate when merging other docs
                                  end
                   [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(locSelection),
                    ' ']},
@@ -229,8 +229,8 @@ class R
          {_: :tr, class: :name, c: nodes.map{|name| # nodes
             this = path + name + '/'
             s = nodes.size > 1 && graph[this].do{|r| # scaled node in tree
-              graph.delete r.uri
               r[Size].justArray[0]}
+            graph.delete this # consume node
             tile += 1 unless s
             height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td, class: s ? :scaled : :node,
