@@ -26,8 +26,9 @@ def H x # HTML
 end
 
 class R
-  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains'] # no dedicated column
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"] # hide in abbreviated view
+  TabularFields = %w{msg} # prefer tabular over tree
 
   HTML = -> graph, re {
     e = re.env
@@ -67,41 +68,6 @@ class R
                 placeholder: grep ? :grep : :find
                }.update(query ? {value: query} : {})]} unless re.path=='/'),
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
-
-  Tree = -> graph,re {
-    qs = R.qs re.q.merge({'head'=>''})
-    tree = {}; tile = 0
-    # construct tree
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
-      c = tree
-      uri.R.parts.map{|name| # path instructions
-        c = c[name] ||= {}}} # create node and jump cursor
-    # largest container-size
-    size = graph.values.map{|r|
-      r.has_key?('uri') && r.uri!='/' && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
-
-    # recursive renderer
-    render = -> t,path='' {
-      label = 'p'+path.sha2
-      re.env[:label][label] = true
-      nodes = t.keys.sort
-      {_: :table, class: :tree, c: [
-         {_: :tr, class: :name, c: nodes.map{|name| # node
-            this = path + name + '/'
-            s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
-            tile += 1 unless s
-            height = (s && size) ? (8.8 * s / size) : 1.0
-            {_: :td, class: s ? :scaled : :node,
-             c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
-                 c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
-         {_: :tr, c: nodes.map{|k| # children
-            inline = k != 'msg'
-            graph[path+k+'/'].do{|r| graph.delete r.uri} if inline
-            {_: :td,
-             c: (render[t[k], path+k+'/'] if inline && t[k].size > 0)}}.intersperse("\n")}]}}
-
-    render[tree]}
 
   Table = -> g, e {
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # labels
@@ -241,6 +207,40 @@ class R
              end}}.intersperse("\n")}
     end
   }
+
+  Tree = -> graph,re {
+    qs = R.qs re.q.merge({'head'=>''})
+    tree = {}; tile = 0
+    # construct tree
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
+      c = tree
+      uri.R.parts.map{|name| # path instructions
+        c = c[name] ||= {}}} # create node and jump cursor
+    # largest container-size
+    size = graph.values.map{|r|
+      r.has_key?('uri') && r.uri!='/' && r.uri[-1]=='/' && r[Size].justArray[0] || 1}.max.to_f
+
+    # recursive renderer
+    render = -> t,path='' {
+      label = 'p'+path.sha2
+      re.env[:label][label] = true
+      nodes = t.keys.sort - TabularFields
+      {_: :table, class: :tree, c: [
+         {_: :tr, class: :name, c: nodes.map{|name| # node
+            this = path + name + '/'
+            s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
+            tile += 1 unless s
+            height = (s && size) ? (8.8 * s / size) : 1.0
+            {_: :td, class: s ? :scaled : :node,
+             c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
+                 c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+         {_: :tr, c: nodes.map{|k| # children
+            graph[path+k+'/'].do{|r| graph.delete r.uri}
+            {_: :td,
+             c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+
+    render[tree]}
 
   Grep = -> graph, q {
     wordIndex = {}
