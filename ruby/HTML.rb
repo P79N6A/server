@@ -93,19 +93,17 @@ class R
               c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
-  TableRow = -> l,e,sort,direction,keys { this = l.R
+  TableRow = -> l,e,sort,direction,keys { this = l.R; href = this.uri
+    head = e.q.has_key? 'head'
     types = l.types
     chat = types.member? SIOC+'InstantMessage'
     mail = types.member? SIOC+'MailMessage'
     post = types.member? SIOC+'BlogPost'
     tweet = types.member? SIOC+'Tweet'
-    href = this.uri
-    head = e.q.has_key? 'head'
     monospace = chat || mail || types.member?(SIOC+'SourceCode')
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
     titles = l[Title].justArray
-    titles.push e.env[:title] if this.path==e.path
     identified = false
 
     linkTable = -> links {
@@ -113,15 +111,14 @@ class R
       {_: :table, class: :links,
        c: links.group_by(&:host).map{|host,links|
          tld = host.split('.')[-1] || '' if host
+         traverse = links.size <= 3
          e.env[:label][tld] = true
          {_: :tr,
           c: [({_: :td, class: :host, name: tld,
                 c: {_: :a, href: '//'+host, c: host}} if host),
               {_: :td, class: :path, colspan: host ? 1 : 2,
-               c: links.map{|link|
-                 e.env[:links].push link # seen
-                 [{_: :a, id: 'link_'+rand.to_s.sha2, href: link.uri,
-                   c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))},
+               c: links.map{|link| e.env[:links].push link
+                 [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                   ' ']}}]}}} unless links.empty? }
 
     indexContext = -> v {
@@ -149,11 +146,11 @@ class R
                   e.env[:label][lbl] = true
                   {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
                 titles.compact.map{|t|
-                  identifier = if identified
+                  identifier = if identified # show once
                                  {}
                                else
                                  identified = true
-                                 {id: 'r'+href.sha2}
+                                 {id: (e.path == this.path && this.fragment) ? this.fragment : 'r'+href.sha2} # use fragment-identifier if current doc, disambiguate when merging other docs
                                end
                   [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(identifier),
                    ' ']},
@@ -226,19 +223,19 @@ class R
       re.env[:label][label] = true
       nodes = t.keys.sort - TabularFields
       {_: :table, class: :tree, c: [
-         {_: :tr, class: :name, c: nodes.map{|name| # node
+         {_: :tr, class: :name, c: nodes.map{|name| # nodes
             this = path + name + '/'
-            s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]}
+            s = nodes.size > 1 && graph[this].do{|r| # scaled node in tree
+              graph.delete r.uri
+              r[Size].justArray[0]}
             tile += 1 unless s
             height = (s && size) ? (8.8 * s / size) : 1.0
             {_: :td, class: s ? :scaled : :node,
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
-         {_: :tr, c: nodes.map{|k| # children
-            graph[path+k+'/'].do{|r| graph.delete r.uri}
-            {_: :td,
-             c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+         {_: :tr, c: nodes.map{|k| # child nodes
+            {_: :td, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
 
     render[tree]}
 
