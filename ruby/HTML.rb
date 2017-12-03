@@ -212,16 +212,24 @@ class R
   Tree = -> graph,re {
     qs = R.qs re.q.merge({'head'=>''})
     tree = {}; tile = 0
+
     # construct tree
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
       c = tree
       uri.R.parts.map{|name| # path instructions
         c = c[name] ||= {}}} # create node and jump cursor
-    # largest container-size
-    size = graph.values.map{|r|
-      r.has_key?('uri') && r.uri!='/' && r.uri[-1]=='/' && !TabularFields.member?(r.R.basename) && r[Size].justArray[0] || 1}.max.to_f
 
-    # recursive renderer
+    sizes = []
+    scale = -> t,path='' {
+      nodes = t.keys - TabularFields
+      nodes.map{|name|
+        this = path + name + '/'
+        nodes.size > 1 && graph[this].do{|r|sizes.concat r[Size].justArray} # size
+        scale[t[name], this] if t[name].size > 0}} # child sizes
+    scale[tree]
+    size = sizes.max.to_f
+
+    # renderer
     render = -> t,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
@@ -232,7 +240,7 @@ class R
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]} # size
             graph.delete this # consume node
             tile += 1 unless s # odd/even toggle
-            height = (s && size) ? (8.8 * s / size) : 1.0 # scaled-size
+            height = (s && size) ? (8.8 * s / size) : 1.0 # scale
             {_: :td, class: s ? :scaled : :node, # render
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
