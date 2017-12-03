@@ -444,8 +444,7 @@ class R
     # Subject
     subject = nil
     m.subject.do{|s|
-      subject = s.to_utf8.gsub(/\[[^\]]+\]/){|l|
-        yield e, Label, l[1..-2]; nil} # emit []-wrapped tokens as RDF labels
+      subject = s.to_utf8.gsub(/\[[^\]]+\]/){|l|yield e, Label, l[1..-2];nil}
       yield e, Title, subject}
 
     # Date

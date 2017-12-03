@@ -253,7 +253,7 @@ class R
       graph.delete u unless keep}
     # highlight matches
     graph.values.map{|r|
-      r[Content].justArray.map(&:lines).flatten.grep(pattern).do{|lines|
+      (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
         r[Abstract] = [lines[0..5].map{|l|
           l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
             H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
