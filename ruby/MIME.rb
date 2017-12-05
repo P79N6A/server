@@ -567,6 +567,7 @@ class R
 
   def indexMails; glob.map &:indexMail end
 
+  def feeds; puts (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
   def fetchFeed
     head = {} # request header
     cache = R['/.cache/'+uri.sha2+'/'] # storage
@@ -602,7 +603,6 @@ class R
     puts uri, e.class, e.message
   end
   def fetchFeeds; open(pathPOSIX).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
-  def feeds; (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
   alias_method :getFeed, :fetchFeed
 
   def indexFeed options = {}
