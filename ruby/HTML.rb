@@ -97,6 +97,8 @@ class R
   TableRow = -> l,e,sort,direction,keys {
     this = l.R
     inDoc = e.path == this.path
+    reqURI = inDoc && !this.fragment
+    identified = false
     href = this.uri
     head = e.q.has_key? 'head'
     types = l.types
@@ -108,7 +110,6 @@ class R
     date = l[Date].justArray.sort[-1]
     datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
     titles = l[Title].justArray
-    identified = false
 
     linkTable = -> links {
       links = links.map(&:R).select{|l|!e.env[:links].member? l} # unseen
@@ -150,13 +151,13 @@ class R
                   e.env[:label][lbl] = true
                   {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
                 titles.compact.map{|t|
-                  locSelection = if identified || (inDoc && !this.fragment) # don't link to doc already loaded
-                                   {}
-                                 else
-                                   identified = true
-                                   {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
-                                 end
-                  [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(locSelection),
+                  identifier = if identified || reqURI
+                                 {}
+                               else
+                                 identified = true
+                                 {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
+                               end
+                  [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(identifier).update(reqURI ? {class: :reqURI} : {}),
                    ' ']},
                 linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
                 l[Abstract],
