@@ -109,7 +109,7 @@ class R
     'text/x-tex'           => [:triplrTeX],
   }
 
-  # RDF type -> icon name (icon name to font mapping in icons.css)
+  # RDF type -> icon-name -> font (in icons.css)
   Icons = {
     'uri' => :id,
     Type => :type,
@@ -205,11 +205,11 @@ class R
               o = o.R if o.class==Hash
               g[s] ||= {'uri'=>s} # new resource
               g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
-    if q.has_key?('du') && path != '/' # DU: container storage-size attribute
+    if q.has_key?('du') && path != '/' # DU usage-count
       set.select{|d|d.node.directory?}.-([self]).map{|node|
         g[node.path+'/']||={}
         g[node.path+'/'][Size] = node.du}
-    elsif (q.has_key?('f')||q.has_key?('q')||env[:glob]) && path!='/' # FIND/GREP: container match-count attribute
+    elsif (q.has_key?('f')||q.has_key?('q')||env[:glob]) && path!='/' # FIND/GREP counts
       set.map{|r|
         bin = r.dirname + '/'
         g[bin] ||= {'uri' => bin, Type => Container}
