@@ -108,7 +108,7 @@ class R
         {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
       end}
 
-    indexContext = -> v {
+    indexLink = -> v {
       v = v.R
       if mail
         {_: :a, id: 'address_'+rand.to_s.sha2, href: v.path + '?head#r' + href.sha2, c: v.label}
@@ -160,7 +160,7 @@ class R
              when Creator
                [l[k].justArray.map{|v|
                  if v.respond_to? :uri
-                   indexContext[v]
+                   indexLink[v]
                  else
                    {_: :span, c: (CGI.escapeHTML v.to_s)}
                  end}.intersperse(' '),
@@ -169,7 +169,7 @@ class R
              when SIOC+'addressed_to'
                l[k].justArray.map{|v|
                  if v.respond_to? :uri
-                   indexContext[v]
+                   indexLink[v]
                  else
                    {_: :span, c: (CGI.escapeHTML v.to_s)}
                  end}.intersperse(' ')
