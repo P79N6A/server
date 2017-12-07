@@ -430,14 +430,57 @@ class R
     yield e, DC+'cache', self + '*' # source-file pointer
     yield e, Type, R[SIOC+'MailMessage'] # RDF type
 
+    # HTML body
+    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'}
+    htmlCount = 0
+    htmlFiles.map{|p| # HTML file
+      html = srcDir + "#{htmlCount}.html"  # file location
+      yield e, DC+'hasFormat', html        # file pointer
+      unless html.e
+        html.writeFile p.decoded  # store HTML email
+        puts "HTML #{html}" if @verbose
+      end
+      htmlCount += 1 } # increment count
+
+    # text/plain body
+    parts.select{|p|
+      (!p.mime_type || p.mime_type == 'text/plain') && # text parts
+        Mail::Encodings.defined?(p.body.encoding)      # decodable?
+    }.map{|p|
+      yield e, Content, (H p.decoded.to_utf8.lines.to_a.map{|l| # split lines
+        l = l.chomp # strip any remaining [\n\r]
+        if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
+          depth = (qp[1].scan /[>|]/).size # > count
+          if qp[3].empty? # drop blank quotes
+            nil
+          else # wrap quotes in <span>
+            indent = "<span name='quote#{depth}'>&gt;</span>"
+            {_: :span, class: :quote,
+             c: [indent * depth,' ',
+                 {_: :span, class: :quoted, c: qp[3].gsub('@','').hrefs{|p,o|yield e, p, o}}]}
+          end
+        else # fresh line
+          [l.gsub(/(\w+)@(\w+)/,'\2\1').hrefs{|p,o|yield e, p, o}]
+        end}.compact.intersperse("\n"))} # join lines
+
+    # recursive messages, digests, forwards, archives..
+    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|
+      content = m.body.decoded                   # decode message-part
+      f = srcDir + content.sha2 + '.inlined.msg' # message location
+      f.writeFile content if !f.e                # store message
+      f.triplrMail &b}                           # recurse, thread triple-collector reference
+
     # From
     from = []
-    m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase if f}} # queue address for indexing + triple-emitting
+    m.from.do{|f|
+      f.justArray.compact.map{|f|
+        puts "FROM #{f}" if @verbose 
+        from.push f.to_utf8.downcase}} # queue address for indexing + triple-emitting
     m[:from].do{|fr|
       fr.addrs.map{|a|
         name = a.display_name || a.name # human-readable name
         yield e, Creator, name
-        puts "FROM #{name}" if @verbose
+        puts "NAME #{name}" if @verbose
       } if fr.respond_to? :addrs}
     m['X-Mailer'].do{|m|
       yield e, SIOC+'user_agent', m.to_s
@@ -448,6 +491,7 @@ class R
     to = []
     %w{to cc bcc resent_to}.map{|p|      # recipient fields
       m.send(p).justArray.map{|r|        # recipient
+        puts "  TO #{r}" if @verbose
         to.push r.to_utf8.downcase }}    # queue for indexing
     m['X-BeenThere'].justArray.map{|r|to.push r.to_s} # anti-loop recipient
     m['List-Id'].do{|name|yield e, To, name.decoded.sub(/<[^>]+>/,'').gsub(/[<>&]/,'')} # mailinglist name
@@ -508,47 +552,6 @@ class R
             end
           end
           ln srcFile, rev if !rev.e rescue nil}}}
-
-    # HTML email. could sanitize and inline <body> content as sioc:content
-    # if plaintext email is missing, but that seems rare in ML world anyway
-    htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'}
-    htmlCount = 0
-    htmlFiles.map{|p| # HTML file
-      html = srcDir + "#{htmlCount}.html"  # file location
-      yield e, DC+'hasFormat', html        # file pointer
-      unless html.e
-        html.writeFile p.decoded  # store HTML email
-        puts "HTML #{html}" if @verbose
-      end
-      htmlCount += 1 } # increment count
-
-    # text email
-    parts.select{|p|
-      (!p.mime_type || p.mime_type == 'text/plain') && # text parts
-        Mail::Encodings.defined?(p.body.encoding)      # decodable?
-    }.map{|p|
-      yield e, Content, (H p.decoded.to_utf8.lines.to_a.map{|l| # split lines
-        l = l.chomp # strip any remaining [\n\r]
-        if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
-          depth = (qp[1].scan /[>|]/).size # > count
-          if qp[3].empty? # drop blank quotes
-            nil
-          else # wrap quotes in <span>
-            indent = "<span name='quote#{depth}'>&gt;</span>"
-            {_: :span, class: :quote,
-             c: [indent * depth,' ',
-                 {_: :span, class: :quoted, c: qp[3].gsub('@','').hrefs{|p,o|yield e, p, o}}]}
-          end
-        else # fresh line
-          [l.gsub(/(\w+)@(\w+)/,'\2\1').hrefs{|p,o|yield e, p, o}]
-        end}.compact.intersperse("\n"))} # join lines
-
-    # recursive mail: digests forwards & archives
-    parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|
-      content = m.body.decoded                   # decode message-part
-      f = srcDir + content.sha2 + '.inlined.msg' # message location
-      f.writeFile content if !f.e                # store message
-      f.triplrMail &b}                           # recurse, thread triple-collector reference
 
     # attachments
     m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p| # decodability check
