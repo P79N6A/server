@@ -413,7 +413,6 @@ class R
 
   MessageURI = -> id { h=id.sha2; ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
-    puts "youve got mail! #{uri}"
     @verbose = true
     m = Mail.read node; return unless m # open message-file
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
@@ -424,7 +423,7 @@ class R
     srcFile = srcDir + 'this.msg'          # found location
     unless srcFile.e
       ln self, srcFile # canonical-location link
-      puts "LINK  #{srcFile}" if @verbose
+      puts "LINK #{srcFile}" if @verbose
     end
     yield e, DC+'identifier', id         # pre-web identifier
     yield e, DC+'cache', self + '*' # source file
@@ -434,8 +433,15 @@ class R
     from = []
     m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase if f}} # queue for indexing
     m[:from].do{|fr|
-      fr.addrs.map{|a|yield e, Creator, a.display_name||a.name} if fr.respond_to? :addrs} # creator name
-    m['X-Mailer'].do{|m|yield e, SIOC+'user_agent', m.to_s}
+      fr.addrs.map{|a|
+        name = a.display_name || a.name
+        yield e, Creator, name
+        puts "FROM #{name}" if @verbose
+      } if fr.respond_to? :addrs} # creator name
+    m['X-Mailer'].do{|m|
+      yield e, SIOC+'user_agent', m.to_s
+      puts " MLR #{m}" if @verbose
+    }
 
     # To
     to = []
@@ -457,7 +463,7 @@ class R
     dstr = date.iso8601
     yield e, Date, dstr
     dpath = '/' + dstr[0..6].gsub('-','/') + '/msg/' # month
-    puts "DATE  #{date}\nSUBJ  #{subject}" if @verbose && subject
+    puts "DATE #{date}\nSUBJ #{subject}" if @verbose && subject
 
     # index addresses
     [*from,*to].map{|addr|
@@ -476,7 +482,7 @@ class R
           [iloc,mloc].map{|loc| loc.dir.mkdir # container
             unless loc.e
               ln self, loc # index link
-              puts "LINK  #{loc}" if @verbose
+              puts "LINK #{loc}" if @verbose
             end
           }
         end
@@ -511,7 +517,7 @@ class R
       yield e, DC+'hasFormat', html        # file pointer
       unless html.e
         html.writeFile p.decoded  # store HTML email
-        puts "HTML  #{html}" if @verbose
+        puts "HTML #{html}" if @verbose
       end
       htmlCount += 1 } # increment count
 
@@ -550,7 +556,7 @@ class R
       file = srcDir + name                     # file location
       unless file.e
         file.writeFile p.body.decoded # store
-        puts "FILE  #{file}" if @verbose
+        puts "FILE #{file}" if @verbose
       end
       yield e, SIOC+'attachment', file         # file pointer
       if p.main_type=='image'                  # image attachments
