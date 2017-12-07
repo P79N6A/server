@@ -52,8 +52,8 @@ document.addEventListener("DOMContentLoaded", function(){
 	    window.location.hash = cur.attr('prev');;
 	    e.preventDefault();
 	};
-	var gotoLink = function(direction) {
-	    var doc = document.querySelector("head > link[rel='"+direction+"']");
+	var gotoLink = function(arc) {
+	    var doc = document.querySelector("link[rel='" + arc + "']");
 	    if(doc)
 		window.location = doc.getAttribute('href');
 	};
@@ -78,19 +78,18 @@ document.addEventListener("DOMContentLoaded", function(){
 	    if(key==78) // [n]ext page
 		gotoLink('next');
 	} else {
-	    if(key==38||key==80) // [p]revious option
+	    if(key==38||key==80) // [p]revious
 		selectPrev();
-	    if(key==40||key==78) // [n]ext option
+	    if(key==40||key==78) // [n]ext
 		selectNext();
-	    if(key==39) // [rightarrow] forward
+	    if(key==39) // [right-arrow]
 		gotoHref();
-	    if(key==37) // [leftarrow] back
+	    if(key==37) // [left-arrow]
 		window.history.go(-1);
-	    if(key==82) // [r]everse sort
+	    if(key==83) // [s]ort
 		gotoLink('sort');
 	};
     },false);
-    // don't trap arrowkey use when reaching the form
     document.querySelector('form > input').addEventListener("keydown",function(e){
 	if(e.keyCode != 38 && e.keyCode != 40)
 	    e.stopPropagation();

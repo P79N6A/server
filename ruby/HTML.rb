@@ -20,7 +20,8 @@ class R
                  %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
                  e[:Links].do{|links|
                    links.map{|type,uri|
-                     {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
+                     {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}
+                   }},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
              c: [Search[graph,re], {class: :tree, c: Tree[graph,re]},
@@ -57,6 +58,7 @@ class R
            c: g.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
              TableRow[r,e,p,direction,keys]}.intersperse("\n")},
           {_: :tr, c: keys.map{|k| # header row
+             selection = p == k
              q = e.q.merge({'sort' => k})
              if direction == :id # direction toggle
                q.delete 'ascending'
@@ -64,8 +66,9 @@ class R
                q['ascending'] = ''
              end
              href = CGI.escapeHTML R.qs q
-             {_: :th, property: k, class: k==p ? 'selected' : '',
-              c: {_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)}}}}]},
+             {_: :th, property: k, class: selection ? 'selected' : '',
+              c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
+                  (selection ? {_: :link, rel: :sort, href: href} : '')]}}}]},
      {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
 
   TableRow = -> l,e,sort,direction,keys {
