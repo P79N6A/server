@@ -306,7 +306,7 @@ class R
     s = s + '/' unless s[-1] == '/'
     yield s, Type, R[Container]
     yield s, Size, children.size
-    yield s, Title, basename+'/'
+    yield s, Title, basename
     mtime.do{|mt|
       yield s, Mtime, mt.to_i
       yield s, Date, mt.iso8601}

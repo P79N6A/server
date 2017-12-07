@@ -3,8 +3,7 @@ body {background-color:#000; color:#fff; margin:0; font-family: sans-serif; padd
 form,input,pre {display: inline-block; margin:0}
 div,img,pre,table,th,td,a {border-radius:.13em; vertical-align:top}
 pre {white-space: pre-wrap; font-family: monospace; max-width:255ex; overflow:hidden}
-span.notes {color:#aaa}
-span.notes, a.reqURI {font-weight: normal; font-size:.8em}
+span.notes {color:#aaa;font-size:.8em}
 span.children a {font-weight: normal; font-size:.9em}
 img {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff}
