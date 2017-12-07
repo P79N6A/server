@@ -55,7 +55,7 @@ class R
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  !empty && e[:Links][:down].do{|d|
                    {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                 empty && {_: :a,style: 'font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000', c: '404'+'<br>'*7, href: re.dirname}]}]}]}
+                 empty && {_: :a, class: :notfound, c: '404'+'<br>'*7, href: re.dirname}]}]}]}
 
   Search = -> graph,re {
     grep = re.path.split('/').size > 3 # suggested search-provider

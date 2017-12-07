@@ -16,6 +16,7 @@ a {text-decoration:none; font-weight: bold; color:#fff}
 a.reqURI {float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
+a.notfound {font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
