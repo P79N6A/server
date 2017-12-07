@@ -194,7 +194,7 @@ class R
          d[i] ||= []; d[i].push f.strip}} # index q-val
      d).sort.reverse.map{|q,formats| # ordered index
       formats.map{|mime| #serializable?
-        return mime if RDF::Writer.for(:content_type => mime) || Writable.member?(mime)}}
+        return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}}
     'text/html' # default
   end
 end

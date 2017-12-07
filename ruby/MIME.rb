@@ -178,8 +178,6 @@ class R
        end)
   end
 
-  def R.tokens str; str ? str.scan(/[\w]+/).map(&:downcase).uniq : [] end
-  Writable = %w{application/atom+xml text/html}
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
   def toRDF; isRDF ? self : transcode end       # R -> R
   def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
@@ -517,7 +515,7 @@ class R
         apath = dpath + domain + '/' + user # address
         yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # To/From triple
         if subject
-          slug = R.tokens(subject).join('.')[0..63]
+          slug = subject.scan(/[\w]+/).map(&:downcase).uniq.join('.')[0..63]
           mpath = apath + '.' + dstr[8..-1].gsub(/[^0-9]+/,'.') + slug # time & subject
           mpath = mpath + (mpath[-1] == '.' ? '' : '.')  + 'msg' # file-type extension
           mdir = '../.mail/' + domain + '/' # maildir
