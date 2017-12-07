@@ -468,7 +468,7 @@ class R
       content = m.body.decoded                   # decode message-part
       f = srcDir + content.sha2 + '.inlined.msg' # message location
       f.writeFile content if !f.e                # store message
-      f.triplrMail &b}                           # recurse, thread triple-collector reference
+      f.triplrMail &b} # triplr on contained message
 
     # From
     from = []
