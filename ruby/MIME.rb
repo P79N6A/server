@@ -414,19 +414,20 @@ class R
   MessageURI = -> id { h=id.sha2; ['', 'msg', h[0], h[1], h[2], id.gsub(/[^a-zA-Z0-9]+/,'.')[0..96], '#this'].join('/').R}
   def triplrMail &b
     @verbose = true
-    m = Mail.read node; return unless m # open message-file
+
+    m = Mail.read node; return unless m
     id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
-    resource = MessageURI[id]; e = resource.uri                # Message URI
     puts " MID #{id}" if @verbose
+    resource = MessageURI[id]; e = resource.uri                # Message URI
     puts " URI #{resource}" if @verbose
     srcDir = resource.path.R; srcDir.mkdir # container
-    srcFile = srcDir + 'this.msg'          # found location
+    srcFile = srcDir + 'this.msg'          # pathname
     unless srcFile.e
-      ln self, srcFile # canonical-location link
+      ln self, srcFile # link canonical-location
       puts "LINK #{srcFile}" if @verbose
     end
-    yield e, DC+'identifier', id         # pre-web identifier
-    yield e, DC+'cache', self + '*' # source file
+    yield e, DC+'identifier', id    # Message-ID as RDF
+    yield e, DC+'cache', self + '*' # source-file pointer
     yield e, Type, R[SIOC+'MailMessage'] # RDF type
 
     # From

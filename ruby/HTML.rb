@@ -2,8 +2,7 @@
 class R
 
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains'] # types without a dedicated column in tabular-view
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"] # hidden in abbreviated view
-  TabularFields = %w{msg} # prefer tabular over tree-view
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   HTML = -> graph, re {
     e = re.env
@@ -45,6 +44,7 @@ class R
                }.update(query ? {value: query} : {})]} unless re.path=='/'),
          re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
 
+  TabularFields = %w{msg} # container-names w/ tabular layout
   Table = -> g, e {
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # labels
     [:links,:images].map{|p| e.env[p] = []} # link & image lists
