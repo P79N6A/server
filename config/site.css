@@ -7,11 +7,9 @@ span.notes {color:#aaa;font-size:.8em}
 span.children a {font-weight: normal; font-size:.9em}
 img {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff}
-#prev {left:0}
+a#prev,a#next {color:#000;position:fixed;top:-0.2em;font-size:2.4em}
+#prev {left:-.1em}
 #next {right:0}
-#down {display:block}
-#prev,#next {position:fixed;top:0}
-#prev,#next,#down {font-size:2.2em}
 a.reqURI {font-size:.86em;float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}

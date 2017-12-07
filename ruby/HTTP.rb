@@ -153,8 +153,7 @@ class R
       pattern = args.join '.*'
       cmd = "grep -ril #{pattern.sh} #{sh}"
     end
-    `#{cmd} | head -n 1024`.lines.map{|pathName|
-      R.fromPOSIX pathName.chomp}
+    `#{cmd} | head -n 1024`.lines.map{|pathName| R.fromPOSIX pathName.chomp}
   end
   def condResponse body=nil
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
