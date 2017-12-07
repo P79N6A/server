@@ -182,7 +182,7 @@ class R
   def toRDF; isRDF ? self : transcode end       # R -> R
   def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
 
-  def load set # load Non-RDF + RDF to URI-indexed tree
+  def load set # files -> graph-tree
     graph = RDF::Graph.new # graph
     g = {}                 # tree
     rdf,nonRDF = set.partition &:isRDF #partition on file type
@@ -217,12 +217,12 @@ class R
     g
   end
 
-  def loadRDF set # load RDF to RDF::Graph
+  def loadRDF set # files -> RDF::Graph
     g = RDF::Graph.new; set.map{|n|g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
     g
   end
 
-  def transcode # non-RDF -> RDF
+  def transcode # non-RDF file -> RDF file
     return self if ext == 'e'
     hash = node.stat.ino.to_s.sha2
     doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r

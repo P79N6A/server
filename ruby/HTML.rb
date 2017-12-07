@@ -230,9 +230,9 @@ class R
 
   Grep = -> graph, q {
     wordIndex = {}
-    words = R.tokens q
-    words.each_with_index{|word,i| wordIndex[word] = i }
-    pattern = /(#{words.join '|'})/i
+    args = q.shellsplit
+    args.each_with_index{|arg,i| wordIndex[arg] = i }
+    pattern = /(#{args.join '|'})/i
     # select resources
     graph.map{|u,r|
       keep = r.to_s.match(pattern) || r[Type] == Container
