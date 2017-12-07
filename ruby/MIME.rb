@@ -432,13 +432,13 @@ class R
 
     # From
     from = []
-    m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase if f}} # queue for indexing
+    m.from.do{|f|f.justArray.map{|f|from.push f.to_utf8.downcase if f}} # queue address for indexing + triple-emitting
     m[:from].do{|fr|
       fr.addrs.map{|a|
-        name = a.display_name || a.name
+        name = a.display_name || a.name # human-readable name
         yield e, Creator, name
         puts "FROM #{name}" if @verbose
-      } if fr.respond_to? :addrs} # creator name
+      } if fr.respond_to? :addrs}
     m['X-Mailer'].do{|m|
       yield e, SIOC+'user_agent', m.to_s
       puts " MLR #{m}" if @verbose
@@ -471,7 +471,7 @@ class R
       user, domain = addr.split '@'
       if user && domain
         apath = dpath + domain + '/' + user # address
-        yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user]
+        yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # To/From triple
         if subject
           slug = R.tokens(subject).join('.')[0..63]
           mpath = apath + '.' + dstr[8..-1].gsub(/[^0-9]+/,'.') + slug # time & subject
