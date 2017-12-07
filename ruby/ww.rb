@@ -36,7 +36,6 @@ end
 # #R normalizes any type with a URI attribute to our abstract resource
 # #do may be obsoleted by Kernel#yield_self in Ruby 2.5
 class Array
-  # [a] -> [a]
   def justArray; self end
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
 end
@@ -49,12 +48,10 @@ class Hash
   def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
 end
 class NilClass
-  # nil -> []
   def justArray; [] end
   def do; self end
 end
 class Object
-  # a -> [a]
   def justArray; [self] end
   def id; self end
   def do; yield self end
