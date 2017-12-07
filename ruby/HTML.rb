@@ -104,6 +104,7 @@ class R
         {}
       else
         identified = true
+        # fragments from other docs could collide, so make a new one
         {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
       end}
 
