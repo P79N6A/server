@@ -10,6 +10,7 @@ a {text-decoration:none; font-weight: bold; color:#fff}
 a#prev,a#next {color:#000;position:fixed;top:-0.2em;font-size:2.4em}
 #prev {left:-.1em}
 #next {right:0}
+#down {font-size:1.88em}
 a.reqURI {font-size:.86em;float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}

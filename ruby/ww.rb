@@ -33,8 +33,8 @@ class R < RDF::URI
   Container = W3  + 'ns/ldp#Container'
 end
 %w{MIME HTML HTTP proprietary}.map{|r|require_relative r}
-# #R normalizes any type identifiable with a URI to our abstract resource
-# #do passes object to block-arg. Kernel#yield_self in Ruby 2.5 may be faster than "yield self", TODO investigate once widely deployed
+# #R normalizes any type with a URI attribute to our abstract resource
+# #do may be obsoleted by Kernel#yield_self in Ruby 2.5
 class Array
   # [a] -> [a]
   def justArray; self end
