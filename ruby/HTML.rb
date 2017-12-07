@@ -99,6 +99,13 @@ class R
                c: links.map{|link| e.env[:links].push link
                  [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                   ' ']}}]}}} unless links.empty? }
+    rowID = -> {
+      if identified || reqURI
+        {}
+      else
+        identified = true
+        {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
+      end}
 
     indexContext = -> v {
       v = v.R
@@ -123,16 +130,9 @@ class R
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
-                  {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse('&nbsp;'),
+                  {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}.update(rowID[])}.intersperse(' '),' ',
                 titles.compact.map{|t|
-                  identifier = if identified || reqURI
-                                 {}
-                               else
-                                 identified = true
-                                 {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
-                               end
-                  [{_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(identifier).update(reqURI ? {class: :reqURI} : {}),
-                   ' ']},
+                  {_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
                 linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),

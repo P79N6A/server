@@ -82,10 +82,12 @@ document.addEventListener("DOMContentLoaded", function(){
 		selectPrev();
 	    if(key==40||key==78) // [n]ext option
 		selectNext();
-	    if(key==39) // [right] forward
+	    if(key==39) // [rightarrow] forward
 		gotoHref();
-	    if(key==37) // [left] backward
+	    if(key==37) // [leftarrow] back
 		window.history.go(-1);
+	    if(key==82) // [r]everse sort
+		gotoLink('sort');
 	};
     },false);
     // don't trap arrowkey use when reaching the form

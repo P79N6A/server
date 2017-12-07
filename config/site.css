@@ -12,7 +12,7 @@ a {text-decoration:none; font-weight: bold; color:#fff}
 #down {display:block}
 #prev,#next {position:fixed;top:0}
 #prev,#next,#down {font-size:2.2em}
-a.reqURI {float: right}
+a.reqURI {font-size:.86em;float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.notfound {font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000}
