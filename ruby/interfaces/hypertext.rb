@@ -2,10 +2,13 @@ class R
 
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
-  # used in main and other columns, no dedicated column
+  # used by the default view, don't show in dedicated column
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-  # properties hidden when not verbose
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher', RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+
+  # properties hidden without verbose flag
+  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
+                 RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
   HTML = -> graph, re {
     e = re.env
@@ -26,13 +29,18 @@ class R
                    }},
                  {_: :script, c: '.conf/site.js'.R.readFile}]},
             {_: :body,
-             c: [Search[graph,re], {class: :tree, c: Tree[graph,re]},
+             c: [e[:Links][:up].do{|p|[{_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)},'<br>']},
+                 e[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
+                 Search[graph,re],
+                 {class: :tree, c: Tree[graph,re]},
                  (Table[graph,re] unless graph.empty?),
                  {_: :style, c: e[:label].map{|name,_|
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                  !empty && e[:Links][:down].do{|d|
                    {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                 empty && {_: :a, id: :nope, class: :notfound, c: '404'+'<br>'*7, href: re.dirname}]}]}]}
+                 empty && {_: :a, id: :nope, class: :notfound, c: '404'+'<br>'*7, href: re.dirname},
+                 e[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}
+                ]}]}]}
 
   # tabular layout for these container-names
   TabularFields = %w{msg}
@@ -187,17 +195,15 @@ class R
   }
 
   Search = -> graph,re {
-    grep = re.path.split('/').size > 3 # suggested search-provider based on tree depth
+    query = re.q['q'] || re.q['f']
+    useGrep = re.path.split('/').size > 3 # select a default search-provider
     {class: :search,
-     c: [re.env[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-         (query = re.q['q'] || re.q['f']
-          {_: :form,
-           c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
-               {_: :input, id: :searchbox,
-                name: grep ? 'q' : 'f',
-                placeholder: grep ? :grep : :find
-               }.update(query ? {value: query} : {})]} unless re.path=='/'),
-         re.env[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}}
+     c: {_: :form,
+         c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
+             {_: :input, id: :searchbox,
+              name: useGrep ? 'q' : 'f',
+              placeholder: useGrep ? :grep : :find
+             }.update(query ? {value: query} : {})]}} unless re.path=='/'}
 
   Tree = -> graph,re {
     qs = R.qs re.q.merge({'head'=>''})
