@@ -12,17 +12,17 @@ a.reqURI {font-size:.86em;float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.notfound {font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000}
+a:visited {border:.08em solid #eee} 
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
 div.tree {overflow: auto; max-width:100%}
-table.tree {background-color:#fff; border-spacing:.1em;margin:0}
+table.tree {background-color:#333; border-spacing:.1em}
 table.tree td {background-color:#000;vertical-align:bottom}
-table.tree a {display: block; padding-left:.125em}
+table.tree a {display: block}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
 td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
+table.links td.host, a.label {border-radius:.125em}
 table.links td.host a {float: right; color:#000}
 table.links td.path {max-width: 32ex; overflow:hidden}
-table.links td.path a {background-color:#000; color:#fff; border: .08em solid #222; border-radius:.2em; font-weight: normal; display:inline-block; margin-bottom:.1em}
-table.links td.path a:visited {background-color:#000; color:#000;border:.08em solid #eee} 
