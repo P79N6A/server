@@ -227,19 +227,20 @@ class R
       label = 'p'+path.sha2
       re.env[:label][label] = true
       nodes = t.keys.sort
-      {_: :table, class: :tree, c: [
-         {_: :tr, class: :name, c: nodes.map{|name| # nodes
+      table = nodes.size < 32
+      {class: table ? :table : '', c: [
+         {class: table ? :tr : '', c: nodes.map{|name| # nodes
             this = path + name + '/' # path
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]} # size
             graph.delete this # consume node
             tile += 1 unless s # odd/even toggle
             height = (s && size) ? (8.8 * s / size) : 1.0 # scale
-            {_: :td, class: s ? :scaled : :node, # render
+            {class: table ? :td : '', # render
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
-         {_: :tr, c: nodes.map{|k| # child nodes
-            {_: :td, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+         {class: table ? :tr : '', c: nodes.map{|k| # child nodes
+            {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
     render[tree]}
 
   Grep = -> graph, q {
