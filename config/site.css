@@ -16,11 +16,10 @@ a:visited {border:.08em solid #eee}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
-div.tree {overflow: auto; max-width:100%}
-.table {display: table; margin:.5em;background-color:#333; border-spacing:.1em}
+.table {display: table}
 .tr {display: table-row}
-.td {display: table-cell;background-color:#000;vertical-align:bottom}
-.table a {display: block}
+.td {display: table-cell;vertical-align: bottom;padding: .1em}
+.table a {display: block;max-width:24ex;overflow:hidden}
 td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}

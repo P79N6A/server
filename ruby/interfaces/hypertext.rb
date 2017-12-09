@@ -32,7 +32,7 @@ class R
              c: [e[:Links][:up].do{|p|[{_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)},'<br>']},
                  e[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
                  Search[graph,re],
-                 {class: :tree, c: Tree[graph,re]},
+                 Tree[graph,re],
                  (Table[graph,re] unless graph.empty?),
                  {_: :style, c: e[:label].map{|name,_|
                     "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
@@ -204,7 +204,7 @@ class R
 
   Tree = -> graph,re {
     qs = R.qs re.q.merge({'head'=>''})
-    tree = {}; tile = 0
+    tree = {}
 
     # construct tree
     graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
@@ -233,11 +233,10 @@ class R
             this = path + name + '/' # path
             s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]} # size
             graph.delete this # consume node
-            tile += 1 unless s # odd/even toggle
             height = (s && size) ? (8.8 * s / size) : 1.0 # scale
             {class: table ? :td : '', # render
              c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : (tile % 2 == 0 ? 'background-color:#222' : ''),
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : 'background-color:#222',
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
          {class: table ? :tr : '', c: nodes.map{|k| # child nodes
             {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
