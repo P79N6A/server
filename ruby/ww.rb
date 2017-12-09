@@ -1,6 +1,5 @@
 # coding: utf-8
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
-# URI constants
 class R < RDF::URI
   def R; self end
   def R.[] uri; R.new uri end
@@ -32,9 +31,6 @@ class R < RDF::URI
   Mtime    = Stat + 'mtime'
   Container = W3  + 'ns/ldp#Container'
 end
-%w{MIME HTML HTTP proprietary}.map{|r|require_relative r}
-# #R normalizes any type with a URI attribute to our abstract resource
-# #do may be obsoleted by Kernel#yield_self in Ruby 2.5
 class Array
   def justArray; self end
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
@@ -66,3 +62,5 @@ end
 class RDF::URI
   def R; R.new to_s end
 end
+%w{MIME HTML HTTP}.map{|f|require_relative f}
+%w{hypertext online}.map{|i|require_relative 'interfaces/'+i}
