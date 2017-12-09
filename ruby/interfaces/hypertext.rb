@@ -1,4 +1,7 @@
 class R
+
+  def nokogiri; Nokogiri::HTML.parse (open uri).read end
+
   # used in main and other columns, no dedicated column
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
   # properties hidden when not verbose
@@ -31,7 +34,7 @@ class R
                    {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
                  empty && {_: :a, id: :nope, class: :notfound, c: '404'+'<br>'*7, href: re.dirname}]}]}]}
 
-  # tabular layout for these tree-node names
+  # tabular layout for these container-names
   TabularFields = %w{msg}
 
   Table = -> g, e {

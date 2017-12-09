@@ -179,72 +179,7 @@ class R
   end
 
   def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
-  def toRDF; isRDF ? self : transcode end       # R -> R
-  def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
 
-  def load set # files -> graph-tree
-    graph = RDF::Graph.new # graph
-    g = {}                 # tree
-    rdf,nonRDF = set.partition &:isRDF #partition on file type
-    # load RDF
-    rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
-    graph.each_triple{|s,p,o| # each triple
-      s = s.to_s; p = p.to_s # subject, predicate
-      o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # object
-      g[s] ||= {'uri'=>s} # new resource
-      g[s][p] ||= []
-      g[s][p].push o unless g[s][p].member? o} # RDF to tree
-    # load nonRDF
-    nonRDF.map{|n|
-      n.transcode.do{|transcode| # transcode to RDF
-        JSON.parse(transcode.readFile).map{|s,re| # subject
-          re.map{|p,o| # predicate, objects
-            o.justArray.map{|o| # object
-              o = o.R if o.class==Hash
-              g[s] ||= {'uri'=>s} # new resource
-              g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
-    if q.has_key?('du') && path != '/' # DU usage-count
-      set.select{|d|d.node.directory?}.-([self]).map{|node|
-        g[node.path+'/']||={}
-        g[node.path+'/'][Size] = node.du}
-    elsif (q.has_key?('f')||q.has_key?('q')||env[:glob]) && path!='/' # FIND/GREP counts
-      set.map{|r|
-        bin = r.dirname + '/'
-        g[bin] ||= {'uri' => bin, Type => Container}
-        g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
-        g[bin][Size] += 1}
-    end
-    g
-  end
-
-  def loadRDF set # files -> RDF::Graph
-    g = RDF::Graph.new; set.map{|n|g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
-    g
-  end
-
-  def transcode # non-RDF file -> RDF file
-    return self if ext == 'e'
-    hash = node.stat.ino.to_s.sha2
-    doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
-    unless doc.e && doc.m > m
-      tree = {}
-      triplr = Triplr[mime]
-      unless triplr
-        puts "WARNING missing #{mime} triplr for #{uri}"
-        triplr = :triplrFile
-      end
-      send(*triplr){|s,p,o|
-        tree[s] ||= {'uri' => s}
-        tree[s][p] ||= []
-        tree[s][p].push o}
-      doc.writeFile tree.to_json
-    end
-    doc
-  rescue Exception => e
-    puts uri, e.class, e.message
-  end
-
-  def nokogiri; Nokogiri::HTML.parse (open uri).read end
   def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
   def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end
   def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile &f end
@@ -255,40 +190,6 @@ class R
   def triplrWordDoc      &f; triplrWord :antiword,      &f end
   def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
   def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-
-  # POSIX map
-  def R.fromPOSIX p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R end
-  def + u; R[uri + u.to_s].setEnv @r end
-  def <=> c; to_s <=> c.to_s end
-  def ==  u; to_s == u.to_s end
-  def basename; File.basename (path||'') end
-  def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
-  def dir; dirname.R end
-  def dirname; File.dirname path end
-  def exist?; node.exist? end
-  def ext; (File.extname uri)[1..-1] || '' end
-  def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
-  def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|p|R.fromPOSIX p.chomp} : [] end
-  def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r} end
-  def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
-  def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
-  def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
-  def match p; to_s.match p end
-  def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
-  def mtime; node.stat.mtime end
-  def node; @node ||= (Pathname.new pathPOSIX) end
-  def pathPOSIX; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
-  def parts; path ? path.split('/') : [] end
-  def readFile; File.open(pathPOSIX).read end
-  def shellPath; pathPOSIX.utf8.sh end
-  def size; node.size rescue 0 end
-  def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
-  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
-
-  alias_method :e, :exist?
-  alias_method :m, :mtime
-  alias_method :sh, :shellPath
-  alias_method :uri, :to_s
 
   def triplrFile
     s = path
@@ -568,74 +469,8 @@ class R
       end }
   end
 
-  def indexMail
-    @verbose = true
-    triples = 0
-    triplrMail{|s,p,o|triples += 1}
-    puts "    #{triples} triples"
-  rescue Exception => e
-    puts uri, e.class, e.message
-  end
-
-  def indexMails; glob.map &:indexMail end
-
-  def feeds; puts (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
-  def fetchFeed
-    head = {} # request header
-    cache = R['/.cache/'+uri.sha2+'/'] # storage
-    etag = cache + 'etag'      # cache etag URI
-    priorEtag = nil            # cache etag value
-    mtime = cache + 'mtime'    # cache mtime URI
-    priorMtime = nil           # cache mtime value
-    body = cache + 'body.atom' # cache body URI
-    if etag.e
-      priorEtag = etag.readFile
-      head["If-None-Match"] = priorEtag unless priorEtag.empty?
-    elsif mtime.e
-      priorMtime = mtime.readFile.to_time
-      head["If-Modified-Since"] = priorMtime.httpdate
-    end
-    begin # conditional GET
-      open(uri, head) do |response|
-        curEtag = response.meta['etag']
-        curMtime = response.last_modified || Time.now rescue Time.now
-        etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag value
-        mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified value
-        resp = response.read
-        unless body.e && body.readFile == resp
-          body.writeFile resp # new cached body
-          ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri # run indexer
-        end
-      end
-    rescue OpenURI::HTTPError => error
-      msg = error.message
-      puts [uri,msg].join("\t") unless msg.match(/304/)
-    end
-  rescue Exception => e
-    puts uri, e.class, e.message
-  end
-  def fetchFeeds; open(pathPOSIX).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
-  alias_method :getFeed, :fetchFeed
-
-  def indexFeed options = {}
-    g = RDF::Repository.load self, options
-    g.each_graph.map{|graph|
-      graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
-        time = t.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
-        slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
-        doc =  R["/#{time}#{slug}.ttl"]
-        unless doc.e
-          doc.dir.mkdir
-          cacheBase = doc.stripDoc
-          graph << RDF::Statement.new(graph.name, R[DC+'cache'], cacheBase)
-          RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
-          puts cacheBase
-        end
-        true}}
-    self
-  rescue Exception => e
-    puts uri, e.class, e.message
-  end
+  # URI -> JSON
+  def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
 
   # JSON -> RDF
   module Format
@@ -854,6 +689,41 @@ class R
                      {_: :content, type: :xhtml,
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                            c: d[Content]}}]}}]}])}
+
+  StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
+    html = Nokogiri::HTML.fragment body
+    loseTags.map{|tag| html.css(tag).remove} if loseTags
+    html.traverse{|e|
+      e.attribute_nodes.map{|a|
+        a.unlink unless keepAttr.member? a.name}} if keepAttr
+    html.to_xhtml(:indent => 0)}
+
+end
+
+def H x # HTML from ruby values
+  case x
+  when String
+    x
+  when Hash # element
+    void = [:img, :input, :link, :meta].member? x[:_]
+    '<' + (x[:_] || 'div').to_s +                        # element name
+      (x.keys - [:_,:c]).map{|a|                         # attribute name
+      ' ' + a.to_s + '=' + "'" + x[a].to_s.chars.map{|c| # attribute value
+        {"'"=>'%27', '>'=>'%3E',
+         '<'=>'%3C'}[c]||c}.join + "'"}.join +
+      (void ? '/' : '') + '>' + (H x[:c]) +              # children
+      (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # element closer
+  when Array # structure
+    x.map{|n|H n}.join
+  when R
+    H({_: :a, href: x.uri, c: x.label})
+  when NilClass
+    ''
+  when FalseClass
+    ''
+  else
+    CGI.escapeHTML x.to_s
+  end
 end
 
 class String

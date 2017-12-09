@@ -3,6 +3,10 @@
 class R < RDF::URI
   def R; self end
   def R.[] uri; R.new uri end
+  def + u; R[uri + u.to_s].setEnv @r end
+  def <=> c; to_s <=> c.to_s end
+  def ==  u; to_s == u.to_s end
+  # TODO benchmark RDF::Vocab usage vs string-constants
   W3 = 'http://www.w3.org/'
   OA = 'https://www.w3.org/ns/oa#'
   Purl = 'http://purl.org/'
@@ -62,5 +66,5 @@ end
 class RDF::URI
   def R; R.new to_s end
 end
-%w{MIME HTML HTTP}.map{|f|require_relative f}
-%w{hypertext online}.map{|i|require_relative 'interfaces/'+i}
+%w{MIME HTTP POSIX}.map{|f|require_relative f}
+%w{local online hypertext}.map{|i|require_relative 'interfaces/'+i}
