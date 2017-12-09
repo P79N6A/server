@@ -19,11 +19,9 @@ class R
   def mtime; node.stat.mtime end
   def node; @node ||= (Pathname.new pathPOSIX) end
   def parts; path ? path.split('/') : [] end
-  def readFile; File.open(pathPOSIX).read end
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
-  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
 
   alias_method :e, :exist?
   alias_method :m, :mtime

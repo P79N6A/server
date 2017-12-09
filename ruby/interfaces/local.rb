@@ -1,6 +1,9 @@
 class R
 
-  # files -> graph-tree
+  def readFile; File.open(pathPOSIX).read end
+  def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
+
+  # file(s) -> graph-tree
   def load set
     graph = RDF::Graph.new # graph
     g = {}                 # tree
@@ -36,7 +39,7 @@ class R
     g
   end
 
-  # files -> RDF::Graph
+  # file(s) -> RDF::Graph
   def loadRDF set
     g = RDF::Graph.new; set.map{|n|g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
     g
@@ -66,6 +69,25 @@ class R
     doc
   rescue Exception => e
     puts uri, e.class, e.message
+  end
+
+  # pattern -> file(s)
+  def grep q
+    args = q.shellsplit
+    case args.size
+    when 0
+      return []
+    when 2
+      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -il #{args[1].sh}"
+    when 3
+      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -il #{args[2].sh}"
+    when 4
+      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -ilZ #{args[2].sh} | xargs -0 grep -il #{args[3].sh}"
+    else
+      pattern = args.join '.*'
+      cmd = "grep -ril #{pattern.sh} #{sh}"
+    end
+    `#{cmd} | head -n 1024`.lines.map{|pathName| R.fromPOSIX pathName.chomp}
   end
 
   def indexMail

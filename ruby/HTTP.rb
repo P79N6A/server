@@ -138,23 +138,6 @@ class R
     end
     p.e && p.setEnv(@r).condResponse || notfound
   end
-  def grep q
-    args = q.shellsplit
-    case args.size
-    when 0
-      return []
-    when 2
-      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -il #{args[1].sh}"
-    when 3
-      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -il #{args[2].sh}"
-    when 4
-      cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -ilZ #{args[2].sh} | xargs -0 grep -il #{args[3].sh}"
-    else
-      pattern = args.join '.*'
-      cmd = "grep -ril #{pattern.sh} #{sh}"
-    end
-    `#{cmd} | head -n 1024`.lines.map{|pathName| R.fromPOSIX pathName.chomp}
-  end
   def condResponse body=nil
     etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
     if etags && (etags.include? @r[:Response]['ETag'])
