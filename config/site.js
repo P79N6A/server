@@ -77,15 +77,11 @@ document.addEventListener("DOMContentLoaded", function(){
 		gotoLink('up');
 	    if(key==68) // [d]own
 		gotoLink('down');
-	} else { // fragment level
+	} else { // node level
 	    if(key==38||key==80) // [p]rev
 		selectPrev();
 	    if(key==40||key==78) // [n]ext
 		selectNext();
-	    if(key==39) // [right] go
-		gotoHref();
-	    if(key==37) // [left] go back
-		window.history.go(-1);
 	    if(key==83) // [s]ort
 		gotoLink('sort');
 	};
