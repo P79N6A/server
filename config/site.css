@@ -3,7 +3,7 @@ body {background-color:#000; color:#fff; margin:0; font-family: sans-serif}
 pre {display: inline-block; margin:0; white-space: pre-wrap; font-family: monospace; max-width:255ex; overflow:hidden}
 span.notes {color:#aaa;font-size:.8em}
 img {max-width: 100%}
-a {text-decoration:none; font-weight: bold; color:#fff}
+a {text-decoration:none; font-weight: bold; color:#fff; border-radius:.125em}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev {float: left}
@@ -17,12 +17,12 @@ a:visited {border:.08em solid #eee}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
 div.tree {overflow: auto; max-width:100%}
-table.tree {background-color:#333; border-spacing:.1em}
+table.tree {margin:.5em;background-color:#aaa; border-spacing:.1em}
 table.tree td {background-color:#000;vertical-align:bottom}
 table.tree a {display: block}
+td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
 td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
-table.links td.host, a.label {border-radius:.125em}
 table.links td.host a {float: right; color:#000}
 table.links td.path {max-width: 32ex; overflow:hidden}

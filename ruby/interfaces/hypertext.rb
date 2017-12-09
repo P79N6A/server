@@ -42,9 +42,6 @@ class R
                  e[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}
                 ]}]}]}
 
-  # tabular layout for these container-names
-  TabularFields = %w{msg}
-
   Table = -> g, e {
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # labels
     [:links,:images].map{|p| e.env[p] = []} # link & image lists
@@ -217,7 +214,7 @@ class R
 
     sizes = []
     scale = -> t,path='' {
-      nodes = t.keys - TabularFields
+      nodes = t.keys
       nodes.map{|name|
         this = path + name + '/'
         nodes.size > 1 && graph[this].do{|r|sizes.concat r[Size].justArray} # size
@@ -229,7 +226,7 @@ class R
     render = -> t,path='' {
       label = 'p'+path.sha2
       re.env[:label][label] = true
-      nodes = t.keys.sort - TabularFields
+      nodes = t.keys.sort
       {_: :table, class: :tree, c: [
          {_: :tr, class: :name, c: nodes.map{|name| # nodes
             this = path + name + '/' # path
