@@ -7,7 +7,7 @@ span.notes {color:#aaa;font-size:.8em}
 span.children a {font-weight: normal; font-size:.9em}
 img {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff}
-a#prev,a#next {color:#000;position:fixed;top:-0.2em;font-size:2.4em}
+a#prev,a#next {color:#000;position:fixed;top:0;font-size:2.4em}
 #prev {left:-.1em}
 #next {right:0}
 #down {font-size:1.88em}
@@ -26,6 +26,6 @@ th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
 td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
 table.links td.host a {float: right; color:#000}
-table.links td.path {max-width: 32em; overflow:hidden}
+table.links td.path {max-width: 32ex; overflow:hidden}
 table.links td.path a {background-color:#000; color:#fff; border: .08em solid #222; border-radius:.2em; font-weight: normal; display:inline-block; margin-bottom:.1em}
-table.links td.path a:visited {background-color:#eee; color:#000} 
+table.links td.path a:visited {background-color:#000; color:#000;border:.08em solid #eee} 

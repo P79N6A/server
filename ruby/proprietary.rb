@@ -1,7 +1,8 @@
 class R
 
+  # interface with some online services
+  
   Twitter = 'https://twitter.com'
-
   def fetchTweets
     nokogiri.css('div.tweet > div.content').map{|t|
       s = Twitter + t.css('.js-permalink').attr('href')
@@ -19,7 +20,6 @@ class R
         yield s, DC+'link', R[a.attr 'href']}
       yield s, Abstract, StripHTML[content.inner_html].gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
   end
-
   def indexTweets
     graph = {}
     # build graph
@@ -38,7 +38,6 @@ class R
           doc.writeFile({u => r}.to_json)
         end}}
   end
-
   def twitter
     open(pathPOSIX).readlines.map(&:chomp).shuffle.each_slice(16){|s|
       readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
@@ -46,7 +45,6 @@ class R
   end
 
   Instagram = 'https://www.instagram.com/'
-
   def ig
     open(pathPOSIX).readlines.map(&:chomp).map{|ig|
       R[Instagram+ig].indexInstagram}
