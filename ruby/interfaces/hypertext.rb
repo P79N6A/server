@@ -235,8 +235,8 @@ class R
             graph.delete this # consume node
             height = (s && size) ? (8.8 * s / size) : 1.0 # scale
             {class: table ? :td : '', # render
-             c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : 'background-color:#222',
+             c: {_: :a, class: :scale, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
          {class: table ? :tr : '', c: nodes.map{|k| # child nodes
             {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
