@@ -73,7 +73,7 @@ class R
             graph.delete this # consume node
             height = (s && size) ? (8.8 * s / size) : 1.0 # scale
             {class: table ? :td : '', # render
-             c: {_: :a, class: :scale, href: this + re.qs, name: s ? label : :node, id: 't'+this.sha2,
+             c: {_: :a, class: s ? :scale : '', href: this + re.qs, name: s ? label : :node, id: 't'+this.sha2,
                  style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
                  c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
          {class: table ? :tr : '', c: nodes.map{|k| # child nodes
@@ -171,13 +171,14 @@ class R
          {_: :td, property: k,
           c: case k
              when 'uri'
-               [l[Label].justArray.compact.map{|v|
+               [titles.compact.map{|t|
+                  {_: :a, class: :title, href: link,
+                   c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
+                l[Label].justArray.compact.map{|v|
                   label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                   lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                   e.env[:label][lbl] = true
-                  {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}.update(rowID[])}.intersperse(' '),' ',
-                titles.compact.map{|t|
-                  {_: :a, class: :title, href: link, c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
+                  {_: :a, class: :label, href: link, name: lbl, c: ' '+(CGI.escapeHTML label[0..41])}.update(rowID[])},
                 linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
                 l[Abstract],
                 (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
