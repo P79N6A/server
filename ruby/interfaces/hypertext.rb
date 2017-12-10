@@ -2,7 +2,7 @@ class R
 
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
-  # used by the default view, don't show in dedicated column
+  # don't show property in a column, fields used by default-view as needed
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
   # properties hidden without verbose flag
