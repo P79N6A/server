@@ -561,7 +561,7 @@ class R
                 {Atom+'content' => Content,
                  Atom+'displaycategories' => Label,
                  Atom+'enclosure' => SIOC+'attachment',
-                 Atom+'summary' => Content,
+                 Atom+'summary' => Abstract,
                  Atom+'title' => Title,
                  DCe+'subject' => Title,
                  DCe+'type' => Type,
@@ -671,6 +671,7 @@ class R
     end
   end
 
+  # graph-tree -> Feed
   FEED = -> d,e {
     H(['<?xml version="1.0" encoding="utf-8"?>',
        {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
@@ -688,6 +689,7 @@ class R
                        c: {xmlns:"http://www.w3.org/1999/xhtml",
                            c: d[Content]}}]}}]}])}
 
+  # HTML -> cleaned XHTML
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
     html = Nokogiri::HTML.fragment body
     loseTags.map{|tag| html.css(tag).remove} if loseTags
