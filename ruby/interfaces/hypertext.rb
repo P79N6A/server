@@ -42,6 +42,44 @@ class R
                  e[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}
                 ]}]}]}
 
+  Tree = -> graph,re {
+    # construct tree
+    tree = {}
+    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
+      c = tree
+      uri.R.parts.map{|name| # path instructions
+        c = c[name] ||= {}}} # create node and jump cursor
+    # search for sizes of scaled nodes
+    sizes = []
+    scale = -> t,path='' {
+      t.keys.map{|name|
+        this = path + name + '/'
+        graph[this].do{|r|
+          sizes.concat r[Size].justArray} # size
+        scale[t[name], this] if t[name].size > 0}}
+    scale[tree]
+    size = sizes.max.to_f # max-size
+
+    # renderer
+    render = -> t,path='' {
+      label = 'p'+path.sha2
+      re.env[:label][label] = true
+      nodes = t.keys.sort
+      table = nodes.size < 32
+      {class: table ? :table : '', c: [
+         {class: table ? :tr : '', c: nodes.map{|name| # nodes
+            this = path + name + '/' # path
+            s = graph[this].do{|r|r[Size].justArray[0]} # size
+            graph.delete this # consume node
+            height = (s && size) ? (8.8 * s / size) : 1.0 # scale
+            {class: table ? :td : '', # render
+             c: {_: :a, class: :scale, href: this + re.qs, name: s ? label : :node, id: 't'+this.sha2,
+                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
+                 c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+         {class: table ? :tr : '', c: nodes.map{|k| # child nodes
+            {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+    render[tree]}
+
   Table = -> g, e {
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # labels
     [:links,:images].map{|p| e.env[p] = []} # link & image lists
@@ -201,46 +239,6 @@ class R
               name: useGrep ? 'q' : 'f',
               placeholder: useGrep ? :grep : :find
              }.update(query ? {value: query} : {})]}} unless re.path=='/'}
-
-  Tree = -> graph,re {
-    qs = R.qs re.q.merge({'head'=>''})
-    tree = {}
-
-    # construct tree
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
-      c = tree
-      uri.R.parts.map{|name| # path instructions
-        c = c[name] ||= {}}} # create node and jump cursor
-
-    sizes = []
-    scale = -> t,path='' {
-      nodes = t.keys
-      nodes.map{|name|
-        this = path + name + '/'
-        nodes.size > 1 && graph[this].do{|r|sizes.concat r[Size].justArray} # size
-        scale[t[name], this] if t[name].size > 0}} # visit children
-    scale[tree]
-    size = sizes.max.to_f # max-size
-
-    # renderer
-    render = -> t,path='' {
-      label = 'p'+path.sha2
-      re.env[:label][label] = true
-      nodes = t.keys.sort
-      table = nodes.size < 32
-      {class: table ? :table : '', c: [
-         {class: table ? :tr : '', c: nodes.map{|name| # nodes
-            this = path + name + '/' # path
-            s = nodes.size > 1 && graph[this].do{|r|r[Size].justArray[0]} # size
-            graph.delete this # consume node
-            height = (s && size) ? (8.8 * s / size) : 1.0 # scale
-            {class: table ? :td : '', # render
-             c: {_: :a, class: :scale, href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
-                 c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
-         {class: table ? :tr : '', c: nodes.map{|k| # child nodes
-            {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
-    render[tree]}
 
   Grep = -> graph, q {
     wordIndex = {}
