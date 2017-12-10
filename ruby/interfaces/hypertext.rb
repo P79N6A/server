@@ -49,14 +49,14 @@ class R
       c = tree
       uri.R.parts.map{|name| # path instructions
         c = c[name] ||= {}}} # create node and jump cursor
-    # search for sizes of scaled nodes
+    # find sizes of scaled nodes
     sizes = []
     scale = -> t,path='' {
       t.keys.map{|name|
-        this = path + name + '/'
+        this = path+name+'/'
         graph[this].do{|r|
           sizes.concat r[Size].justArray} # size
-        scale[t[name], this] if t[name].size > 0}}
+        scale[t[name], this] if t[name].size > 0}} # child nodes
     scale[tree]
     size = sizes.max.to_f # max-size
 
