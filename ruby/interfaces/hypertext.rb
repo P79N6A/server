@@ -124,10 +124,10 @@ class R
     titles = l[Title].justArray
 
     linkTable = -> links {
-      links = links.map(&:R).select{|l|!e.env[:links].member? l} # unseen
+      links = links.map(&:R).select{|l|!e.env[:links].member? l}.sort_by &:tld
       {_: :table, class: :links,
        c: links.group_by(&:host).map{|host,links|
-         tld = host.split('.')[-1] || '' if host
+         tld = links[0] && links[0].tld || 'none'
          traverse = links.size <= 3
          e.env[:label][tld] = true
          {_: :tr,
@@ -137,6 +137,7 @@ class R
                c: links.map{|link| e.env[:links].push link
                  [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                   ' ']}}]}}} unless links.empty? }
+
     rowID = -> {
       if identified || reqURI
         {}

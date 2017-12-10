@@ -22,6 +22,7 @@ class R
   def shellPath; pathPOSIX.utf8.sh end
   def size; node.size rescue 0 end
   def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
+  def tld; host && host.split('.')[-1] end
 
   alias_method :e, :exist?
   alias_method :m, :mtime
