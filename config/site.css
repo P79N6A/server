@@ -3,7 +3,8 @@ body {background-color:#000; color:#fff; margin:0; font-family: sans-serif}
 pre {display: inline-block; margin:0; white-space: pre-wrap; font-family: monospace; max-width:255ex; overflow:hidden}
 span.notes {color:#aaa;font-size:.8em}
 img {max-width: 100%}
-a {text-decoration:none; font-weight: bold; color:#fff; border-radius:.125em}
+a {text-decoration:none; font-weight: bold; color:#fff}
+a,td.host {border-radius:.125em}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev {float: left}
@@ -12,14 +13,13 @@ a.reqURI {font-size:.86em;float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.notfound {font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000}
-a:visited {border:.08em solid #eee} 
+a:visited {border:.08em solid #eee}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
-.table {display: table}
+.table {display: table;width:100%}
 .tr {display: table-row}
 .td {display: table-cell;vertical-align: bottom;padding: .1em}
-.table a {display: block;max-width:24ex;overflow:hidden}
 td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
