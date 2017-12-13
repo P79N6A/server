@@ -66,5 +66,5 @@ end
 class RDF::URI
   def R; R.new to_s end
 end
-%w{MIME HTTP POSIX}.map{|f|require_relative f}
-%w{local online hypertext}.map{|i|require_relative 'interfaces/'+i}
+%w{MIME util}.map{|f|require_relative f}
+%w{HTTP HTML nonRDF POSIX online}.map{|i|require_relative 'interfaces/'+i}

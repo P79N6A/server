@@ -3,12 +3,59 @@ class R
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   module HTML
-    # don't give property a dedicated column in non-verbose tabular view. data used by view as needed
+    # omit column in non-verbose tabular view. data used by view as needed
     InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
     # hidden without verbose flag
     VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
                    RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                    SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+    Icons = {
+      'uri' => :id,
+      Type => :type,
+      Container => :dir,
+      Content => :pencil,
+      Date => :date,
+      Label => :tag,
+      Title => :title,
+      Sound => :speaker,
+      Image => :img,
+      Size => :size,
+      Mtime => :time,
+      To => :userB,
+      DC+'hasFormat' => :file,
+      DC+'link' => :chain,
+      DC+'cache' => :chain,
+      Schema+'Person' => :user,
+      Schema+'location' => :location,
+      RSS+'comments' => :comments,
+      Comments => :comments,
+      Stat+'File' => :file,
+      Stat+'Archive' => :archive,
+      Stat+'HTMLFile' => :html,
+      Stat+'WordDocument' => :word,
+      Stat+'DataFile' => :tree,
+      Stat+'TextFile' => :textfile,
+      Stat+'width' => :width,
+      Stat+'height' => :height,
+      Stat+'container' => :dir,
+      Stat+'contains' => :dir,
+      SIOC+'BlogPost' => :pencil,
+      SIOC+'ChatLog' => :comments,
+      SIOC+'Discussion' => :comments,
+      SIOC+'InstantMessage' => :comment,
+      SIOC+'MicroblogPost' => :newspaper,
+      SIOC+'WikiArticle' => :pencil,
+      SIOC+'Usergroup' => :group,
+      SIOC+'SourceCode' => :code,
+      SIOC+'Tweet' => :bird,
+      SIOC+'has_creator' => :user,
+      SIOC+'user_agent' => :mailer,
+      SIOC+'has_discussion' => :comments,
+      SIOC+'Thread' => :openenvelope,
+      SIOC+'Post' => :newspaper,
+      SIOC+'MailMessage' => :envelope,
+      W3+'2000/01/rdf-schema#Resource' => :node,
+    }
 
     def renderHTML graph
       empty = graph.empty?
@@ -43,24 +90,6 @@ class R
                    empty && {_: :a, id: :nope, class: :notfound, c: '404'+'<br>'*7, href: dirname},
                    @r[:Links][:next].do{|n|
                      {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}]}]
-    end
-
-    def renderFeed graph
-      H(['<?xml version="1.0" encoding="utf-8"?>',
-         {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
-          c: [{_: :id, c: uri},
-              {_: :title, c: uri},
-              {_: :link, rel: :self, href: uri},
-              {_: :updated, c: Time.now.iso8601},
-              graph.map{|u,d|
-                {_: :entry,
-                 c: [{_: :id, c: u}, {_: :link, href: u},
-                     d[Date].do{|d|   {_: :updated, c: d[0]}},
-                     d[Title].do{|t|  {_: :title,   c: t}},
-                     d[Creator].do{|c|{_: :author,  c: c[0]}},
-                     {_: :content, type: :xhtml,
-                      c: {xmlns:"http://www.w3.org/1999/xhtml",
-                          c: d[Content]}}]}}]}])
     end
 
     def htmlTree graph
@@ -283,6 +312,24 @@ class R
                 name: useGrep ? 'q' : 'f',
                 placeholder: useGrep ? :grep : :find
                }.update(query ? {value: query} : {})]}} unless path=='/'
+    end
+
+    def renderFeed graph
+      H(['<?xml version="1.0" encoding="utf-8"?>',
+         {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
+          c: [{_: :id, c: uri},
+              {_: :title, c: uri},
+              {_: :link, rel: :self, href: uri},
+              {_: :updated, c: Time.now.iso8601},
+              graph.map{|u,d|
+                {_: :entry,
+                 c: [{_: :id, c: u}, {_: :link, href: u},
+                     d[Date].do{|d|   {_: :updated, c: d[0]}},
+                     d[Title].do{|t|  {_: :title,   c: t}},
+                     d[Creator].do{|c|{_: :author,  c: c[0]}},
+                     {_: :content, type: :xhtml,
+                      c: {xmlns:"http://www.w3.org/1999/xhtml",
+                          c: d[Content]}}]}}]}])
     end
   end
 
