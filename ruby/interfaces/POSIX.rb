@@ -1,6 +1,7 @@
 class R
   def R.fromPOSIX p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R end
   module POSIX
+    include URIs
     def basename; File.basename (path||'') end
     def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
     def dir; dirname.R end
