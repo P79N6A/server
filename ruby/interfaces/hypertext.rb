@@ -3,6 +3,12 @@ class R
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   module HTML
+    # don't give property a dedicated column in non-verbose tabular view. data used by view as needed
+    InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+    # hidden without verbose flag
+    VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
+                   RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+                   SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
     def renderHTML graph
       empty = graph.empty?
@@ -25,7 +31,7 @@ class R
                      {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
                    @r[:Links][:prev].do{|p|
                      {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-                   searchbox,
+                   searchBox,
                    (htmlTree graph),
                    !empty && (htmlTable graph),
                    {_: :style, c: @r[:label].map{|name,_|
@@ -94,6 +100,157 @@ class R
       render[tree]
     end
 
+    def htmlTable graph
+      (1..10).map{|i|@r[:label]["quote"+i.to_s] = true} # labels
+      [:links,:images].map{|p|@r[p] = []} # link & image lists
+      p = q['sort'] || Date
+      direction = q.has_key?('ascending') ? :id : :reverse
+      datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
+      keys = graph.values.map(&:keys).flatten.uniq - InlineMeta
+      keys -= VerboseMeta unless q.has_key? 'full'
+      [{_: :table, style: 'margin:auto',
+        c: [{_: :tbody,
+             c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
+               (htmlTableRow r,p,direction,keys)}.intersperse("\n")},
+            {_: :tr, c: keys.map{|k| # header row
+               selection = p == k
+               q_ = q.merge({'sort' => k})
+               if direction == :id # direction toggle
+                 q_.delete 'ascending'
+               else
+                 q_['ascending'] = ''
+               end
+               href = CGI.escapeHTML R.qs q_
+               {_: :th, property: k, class: selection ? 'selected' : '',
+                c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
+                    (selection ? {_: :link, rel: :sort, href: href} : '')]}}}]},
+       {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]
+    end
+
+    def htmlTableRow l,sort,direction,keys
+      this = l.R
+      inDoc = path == this.path
+      reqURI = inDoc && !this.fragment
+      identified = false
+      href = this.uri
+      head = q.has_key? 'head'
+      types = l.types
+      chat = types.member? SIOC+'InstantMessage'
+      mail = types.member? SIOC+'MailMessage'
+      post = types.member? SIOC+'BlogPost'
+      tweet = types.member? SIOC+'Tweet'
+      monospace = chat || mail || types.member?(SIOC+'SourceCode')
+      date = l[Date].justArray.sort[-1]
+      datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
+      titles = l[Title].justArray
+
+      linkTable = -> links {
+        links = links.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
+        {_: :table, class: :links,
+         c: links.group_by(&:host).map{|host,links|
+           tld = links[0] && links[0].tld || 'none'
+           traverse = links.size <= 3
+           @r[:label][tld] = true
+           {_: :tr,
+            c: [({_: :td, class: :host, name: tld,
+                  c: {_: :a, href: '//'+host, c: host}} if host),
+                {_: :td, class: :path, colspan: host ? 1 : 2,
+                 c: links.map{|link| @r[:links].push link
+                   [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
+                    ' ']}}]}}} unless links.empty? }
+
+      rowID = -> {
+        if identified || reqURI
+          {}
+        else
+          identified = true
+          {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
+        end}
+
+      # pointer to selection of node in an index context
+      indexLink = -> v {
+        v = v.R
+        if mail # messages*month
+          {_: :a, id: 'address_'+rand.to_s.sha2, href: v.path + '?head#r' + href.sha2, c: v.label}
+        elsif tweet # tweets*hour
+          {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
+        elsif post
+          url = if datePath # host*month
+                  datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + href.sha2
+                else
+                  v.host
+                end
+          {_: :a, id: 'post_'+rand.to_s.sha2, href: url, c: v.label}
+        else
+          v
+        end}
+
+      unless head && titles.empty? && !l[Abstract]
+        link = href + (!this.host && href[-1]=='/' && '?head' || '')
+        {_: :tr,
+         c: keys.map{|k|
+           {_: :td, property: k,
+            c: case k
+               when 'uri'
+                 [titles.compact.map{|t|
+                    {_: :a, class: :title, href: link,
+                     c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
+                  l[Label].justArray.compact.map{|v|
+                    label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
+                    lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
+                    @r[:label][lbl] = true
+                    {_: :a, class: :label, href: link, name: lbl, c: ' '+(CGI.escapeHTML label[0..41])}.update(rowID[])},
+                  linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
+                  l[Abstract],
+                  (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
+                  (images = []
+                   images.push this if types.member?(Image) # subject of triple
+                   l[Image].do{|i|images.concat i}          # object of triple
+                   images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unseen images
+                     @r[:images].push img # seen
+                     {_: :a, class: :thumb, href: href,
+                      c: {_: :img, src: if !img.host || host==img.host
+                           img.path + '?preview'
+                         else
+                           img.uri
+                          end}}})]
+               when Type
+                 l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
+                   {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
+               when Size
+                 l[Size].do{|sz|
+                   sum = 0
+                   sz.justArray.map{|v|
+                     sum += v.to_i}
+                   sum}
+               when Creator
+                 [l[k].justArray.map{|v|
+                    if v.respond_to? :uri
+                      indexLink[v]
+                    else
+                      {_: :span, c: (CGI.escapeHTML v.to_s)}
+                    end}.intersperse(' '),
+                  (l[SIOC+'user_agent'].do{|ua|
+                     ['<br>', {_: :span, class: :notes, c: ua.join}]} unless head)]
+               when SIOC+'addressed_to'
+                 l[k].justArray.map{|v|
+                   if v.respond_to? :uri
+                     indexLink[v]
+                   else
+                     {_: :span, c: (CGI.escapeHTML v.to_s)}
+                   end}.intersperse(' ')
+               when Date
+                 {_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath
+               when DC+'cache'
+                 l[k].justArray.map{|c|[{_: :a, href: c.path, class: :chain}, ' ']}
+               when DC+'link'
+                 linkTable[l[k].justArray]
+               else
+                 l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
+               end}}.intersperse("\n")}
+      end
+    end
+
     def htmlGrep graph, q
       wordIndex = {}
       args = q.shellsplit
@@ -128,163 +285,5 @@ class R
   end
 
   include HTML
-
-  # don't show property in a column, fields used by default-view as needed
-  InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-
-  # properties hidden without verbose flag
-  VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
-                 RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
-                 SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
-
-  Table = -> g, e {
-    (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # labels
-    [:links,:images].map{|p| e.env[p] = []} # link & image lists
-    p = e.q['sort'] || Date
-    direction = e.q.has_key?('ascending') ? :id : :reverse
-    datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
-    keys = g.values.map(&:keys).flatten.uniq - InlineMeta
-    keys -= VerboseMeta unless e.q.has_key? 'full'
-    [{_: :table, style: 'margin:auto',
-      c: [{_: :tbody,
-           c: g.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
-             TableRow[r,e,p,direction,keys]}.intersperse("\n")},
-          {_: :tr, c: keys.map{|k| # header row
-             selection = p == k
-             q = e.q.merge({'sort' => k})
-             if direction == :id # direction toggle
-               q.delete 'ascending'
-             else
-               q['ascending'] = ''
-             end
-             href = CGI.escapeHTML R.qs q
-             {_: :th, property: k, class: selection ? 'selected' : '',
-              c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
-                  (selection ? {_: :link, rel: :sort, href: href} : '')]}}}]},
-     {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]}
-
-  TableRow = -> l,e,sort,direction,keys {
-    this = l.R
-    inDoc = e.path == this.path
-    reqURI = inDoc && !this.fragment
-    identified = false
-    href = this.uri
-    head = e.q.has_key? 'head'
-    types = l.types
-    chat = types.member? SIOC+'InstantMessage'
-    mail = types.member? SIOC+'MailMessage'
-    post = types.member? SIOC+'BlogPost'
-    tweet = types.member? SIOC+'Tweet'
-    monospace = chat || mail || types.member?(SIOC+'SourceCode')
-    date = l[Date].justArray.sort[-1]
-    datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-    titles = l[Title].justArray
-
-    linkTable = -> links {
-      links = links.map(&:R).select{|l|!e.env[:links].member? l}.sort_by &:tld
-      {_: :table, class: :links,
-       c: links.group_by(&:host).map{|host,links|
-         tld = links[0] && links[0].tld || 'none'
-         traverse = links.size <= 3
-         e.env[:label][tld] = true
-         {_: :tr,
-          c: [({_: :td, class: :host, name: tld,
-                c: {_: :a, href: '//'+host, c: host}} if host),
-              {_: :td, class: :path, colspan: host ? 1 : 2,
-               c: links.map{|link| e.env[:links].push link
-                 [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
-                  ' ']}}]}}} unless links.empty? }
-
-    rowID = -> {
-      if identified || reqURI
-        {}
-      else
-        identified = true
-        {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
-      end}
-
-    # pointer to selection of node in an index context
-    indexLink = -> v {
-      v = v.R
-      if mail # messages*month
-        {_: :a, id: 'address_'+rand.to_s.sha2, href: v.path + '?head#r' + href.sha2, c: v.label}
-      elsif tweet # tweets*hour
-        {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
-      elsif post
-        url = if datePath # host*month
-                datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + href.sha2
-              else
-                v.host
-              end
-        {_: :a, id: 'post_'+rand.to_s.sha2, href: url, c: v.label}
-      else
-        v
-      end}
-
-    unless head && titles.empty? && !l[Abstract]
-      link = href + (!this.host && href[-1]=='/' && '?head' || '')
-      {_: :tr,
-       c: keys.map{|k|
-         {_: :td, property: k,
-          c: case k
-             when 'uri'
-               [titles.compact.map{|t|
-                  {_: :a, class: :title, href: link,
-                   c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
-                l[Label].justArray.compact.map{|v|
-                  label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                  lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                  e.env[:label][lbl] = true
-                  {_: :a, class: :label, href: link, name: lbl, c: ' '+(CGI.escapeHTML label[0..41])}.update(rowID[])},
-                linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
-                l[Abstract],
-                (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
-                (images = []
-                 images.push this if types.member?(Image) # subject of triple
-                 l[Image].do{|i|images.concat i}          # object of triple
-                 images.map(&:R).select{|i|!e.env[:images].member? i}.map{|img| # unseen images
-                   e.env[:images].push img # seen
-                   {_: :a, class: :thumb, href: href,
-                    c: {_: :img, src: if !img.host || e.host==img.host
-                         img.path + '?preview'
-                       else
-                         img.uri
-                        end}}})]
-             when Type
-               l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
-                 {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
-             when Size
-               l[Size].do{|sz|
-                 sum = 0
-                 sz.justArray.map{|v|
-                   sum += v.to_i}
-                 sum}
-             when Creator
-               [l[k].justArray.map{|v|
-                 if v.respond_to? :uri
-                   indexLink[v]
-                 else
-                   {_: :span, c: (CGI.escapeHTML v.to_s)}
-                 end}.intersperse(' '),
-                (l[SIOC+'user_agent'].do{|ua|
-                   ['<br>', {_: :span, class: :notes, c: ua.join}]} unless head)]
-             when SIOC+'addressed_to'
-               l[k].justArray.map{|v|
-                 if v.respond_to? :uri
-                   indexLink[v]
-                 else
-                   {_: :span, c: (CGI.escapeHTML v.to_s)}
-                 end}.intersperse(' ')
-             when Date
-               {_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath
-             when DC+'cache'
-               l[k].justArray.map{|c|[{_: :a, href: c.path, class: :chain}, ' ']}
-             when DC+'link'
-               linkTable[l[k].justArray]
-             else
-               l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
-             end}}.intersperse("\n")}
-    end
-  }
 
 end
