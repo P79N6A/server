@@ -25,9 +25,9 @@ class R
                      {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
                    @r[:Links][:prev].do{|p|
                      {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-                   Search[graph,self],
-                   Tree[graph,self],
-                   !empty && Table[graph,self],
+                   searchbox,
+                   (htmlTree graph),
+                   !empty && (htmlTable graph),
                    {_: :style, c: @r[:label].map{|name,_|
                       "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                    !empty && @r[:Links][:down].do{|d|
@@ -55,6 +55,45 @@ class R
                           c: d[Content]}}]}}]}])
     end
 
+    def htmlTree graph
+      # construct tree
+      tree = {}
+      graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
+        c = tree
+        uri.R.parts.map{|name| # path instructions
+          c = c[name] ||= {}}} # create node and jump cursor
+      # find sizes of scaled nodes
+      sizes = []
+      scale = -> t,path='' {
+        t.keys.map{|name|
+          this = path+name+'/'
+          graph[this].do{|r|
+            sizes.concat r[Size].justArray} # size
+          scale[t[name], this] if t[name].size > 0}} # child nodes
+      scale[tree]
+      size = sizes.max.to_f # max-size
+
+      # renderer
+      render = -> t,path='' {
+        label = 'p'+path.sha2
+        @r[:label][label] = true
+        nodes = t.keys.sort
+        table = nodes.size < 32
+        {class: table ? :table : '', c: [
+           {class: table ? :tr : '', c: nodes.map{|name| # nodes
+              this = path + name + '/' # path
+              s = graph[this].do{|r|r[Size].justArray[0]} # size
+              graph.delete this # consume node
+              height = (s && size) ? (8.8 * s / size) : 1.0 # scale
+              {class: table ? :td : '', # render
+               c: {_: :a, class: s ? :scale : '', href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
+                   style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
+                   c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+           {class: table ? :tr : '', c: nodes.map{|k| # child nodes
+              {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+      render[tree]
+    end
+
     def htmlGrep graph, q
       wordIndex = {}
       args = q.shellsplit
@@ -74,6 +113,18 @@ class R
       # word-highlight CSS
       graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
     end
+
+    def searchBox
+      query = q['q'] || q['f']
+      useGrep = path.split('/').size > 3 # search-provider suggestion
+      {class: :search,
+       c: {_: :form,
+           c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
+               {_: :input, id: :searchbox,
+                name: useGrep ? 'q' : 'f',
+                placeholder: useGrep ? :grep : :find
+               }.update(query ? {value: query} : {})]}} unless path=='/'
+    end
   end
 
   include HTML
@@ -85,44 +136,6 @@ class R
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
                  RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
-
-  Tree = -> graph,re {
-    # construct tree
-    tree = {}
-    graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
-      c = tree
-      uri.R.parts.map{|name| # path instructions
-        c = c[name] ||= {}}} # create node and jump cursor
-    # find sizes of scaled nodes
-    sizes = []
-    scale = -> t,path='' {
-      t.keys.map{|name|
-        this = path+name+'/'
-        graph[this].do{|r|
-          sizes.concat r[Size].justArray} # size
-        scale[t[name], this] if t[name].size > 0}} # child nodes
-    scale[tree]
-    size = sizes.max.to_f # max-size
-
-    # renderer
-    render = -> t,path='' {
-      label = 'p'+path.sha2
-      re.env[:label][label] = true
-      nodes = t.keys.sort
-      table = nodes.size < 32
-      {class: table ? :table : '', c: [
-         {class: table ? :tr : '', c: nodes.map{|name| # nodes
-            this = path + name + '/' # path
-            s = graph[this].do{|r|r[Size].justArray[0]} # size
-            graph.delete this # consume node
-            height = (s && size) ? (8.8 * s / size) : 1.0 # scale
-            {class: table ? :td : '', # render
-             c: {_: :a, class: s ? :scale : '', href: this + re.qs, name: s ? label : :node, id: 't'+this.sha2,
-                 style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
-                 c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
-         {class: table ? :tr : '', c: nodes.map{|k| # child nodes
-            {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
-    render[tree]}
 
   Table = -> g, e {
     (1..10).map{|i|e.env[:label]["quote"+i.to_s] = true} # labels
@@ -273,22 +286,5 @@ class R
              end}}.intersperse("\n")}
     end
   }
-
-  Search = -> graph,re {
-    query = re.q['q'] || re.q['f']
-    useGrep = re.path.split('/').size > 3 # select a default search-provider
-    {class: :search,
-     c: {_: :form,
-         c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
-             {_: :input, id: :searchbox,
-              name: useGrep ? 'q' : 'f',
-              placeholder: useGrep ? :grep : :find
-             }.update(query ? {value: query} : {})]}} unless re.path=='/'}
-
-  Grep = -> graph, q {
-
-    graph
-  }
-
 
 end
