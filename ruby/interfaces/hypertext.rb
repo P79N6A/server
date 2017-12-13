@@ -2,6 +2,82 @@ class R
 
   def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
+  module HTML
+
+    def renderHTML graph
+      empty = graph.empty?
+      @r[:title] = graph[path+'#this'].do{|r|r[Title].justArray[0]}
+      @r[:label] = {}
+      query = q['q']
+      htmlGrep graph, query if query
+      H ["<!DOCTYPE html>\n",
+         {_: :html,
+          c: [{_: :head,
+               c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]||path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                   %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
+                   @r[:Links].do{|links|
+                     links.map{|type,uri|
+                       {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}
+                     }},
+                   {_: :script, c: '.conf/site.js'.R.readFile}]},
+              {_: :body,
+               c: [@r[:Links][:up].do{|p|
+                     {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
+                   @r[:Links][:prev].do{|p|
+                     {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
+                   Search[graph,self],
+                   Tree[graph,self],
+                   !empty && Table[graph,self],
+                   {_: :style, c: @r[:label].map{|name,_|
+                      "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
+                   !empty && @r[:Links][:down].do{|d|
+                     {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
+                   empty && {_: :a, id: :nope, class: :notfound, c: '404'+'<br>'*7, href: dirname},
+                   @r[:Links][:next].do{|n|
+                     {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}]}]
+    end
+
+    def renderFeed graph
+      H(['<?xml version="1.0" encoding="utf-8"?>',
+         {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
+          c: [{_: :id, c: uri},
+              {_: :title, c: uri},
+              {_: :link, rel: :self, href: uri},
+              {_: :updated, c: Time.now.iso8601},
+              graph.map{|u,d|
+                {_: :entry,
+                 c: [{_: :id, c: u}, {_: :link, href: u},
+                     d[Date].do{|d|   {_: :updated, c: d[0]}},
+                     d[Title].do{|t|  {_: :title,   c: t}},
+                     d[Creator].do{|c|{_: :author,  c: c[0]}},
+                     {_: :content, type: :xhtml,
+                      c: {xmlns:"http://www.w3.org/1999/xhtml",
+                          c: d[Content]}}]}}]}])
+    end
+
+    def htmlGrep graph, q
+      wordIndex = {}
+      args = q.shellsplit
+      args.each_with_index{|arg,i| wordIndex[arg] = i }
+      pattern = /(#{args.join '|'})/i
+      # find matches
+      graph.map{|u,r|
+        keep = r.to_s.match(pattern) || r[Type] == Container
+        graph.delete u unless keep}
+      # highlight matches
+      graph.values.map{|r|
+        (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
+          r[Abstract] = [lines[0..5].map{|l|
+                           l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
+                             H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
+                           }},{_: :hr}] if lines.size > 0 }}
+      # word-highlight CSS
+      graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
+    end
+  end
+
+  include HTML
+
   # don't show property in a column, fields used by default-view as needed
   InlineMeta = [Title, Image, Abstract, Content, Label, DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
 
@@ -9,38 +85,6 @@ class R
   VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
                  RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                  SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
-
-  HTML = -> graph, re {
-    e = re.env
-    e[:title] = graph[re.path+'#this'].do{|r|r[Title].justArray[0]}
-    e[:label] = {}
-    empty = graph.empty?
-    if q = re.q['q']
-      Grep[graph,q]
-    end
-    H ["<!DOCTYPE html>\n",
-       {_: :html,
-        c: [{_: :head,
-             c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: e[:title]||re.path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                 %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
-                 e[:Links].do{|links|
-                   links.map{|type,uri|
-                     {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}
-                   }},
-                 {_: :script, c: '.conf/site.js'.R.readFile}]},
-            {_: :body,
-             c: [e[:Links][:up].do{|p|[{_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)},'<br>']},
-                 e[:Links][:prev].do{|p|{_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-                 Search[graph,re],
-                 Tree[graph,re],
-                 (Table[graph,re] unless graph.empty?),
-                 {_: :style, c: e[:label].map{|name,_|
-                    "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
-                 !empty && e[:Links][:down].do{|d|
-                   {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                 empty && {_: :a, id: :nope, class: :notfound, c: '404'+'<br>'*7, href: re.dirname},
-                 e[:Links][:next].do{|n|{_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}
-                ]}]}]}
 
   Tree = -> graph,re {
     # construct tree
@@ -242,24 +286,9 @@ class R
              }.update(query ? {value: query} : {})]}} unless re.path=='/'}
 
   Grep = -> graph, q {
-    wordIndex = {}
-    args = q.shellsplit
-    args.each_with_index{|arg,i| wordIndex[arg] = i }
-    pattern = /(#{args.join '|'})/i
-    # select resources
-    graph.map{|u,r|
-      keep = r.to_s.match(pattern) || r[Type] == Container
-      graph.delete u unless keep}
-    # highlight matches
-    graph.values.map{|r|
-      (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
-        r[Abstract] = [lines[0..5].map{|l|
-          l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
-            H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
-          }},{_: :hr}] if lines.size > 0 }}
-    # CSS
-    graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
-    graph}
+
+    graph
+  }
 
 
 end

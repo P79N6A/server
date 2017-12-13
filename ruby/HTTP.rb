@@ -90,16 +90,17 @@ class R
     return notfound if !set || set.empty?
 
     @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
-    @r[:Response].update({'Content-Type' => format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
+    @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
+                          'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
 
     condResponse ->{ # body
       if set.size == 1 && set[0].mime == format
         set[0] # static body
       else # dynamic body
         if format == 'text/html'
-          HTML[(load set),self]
+          renderHTML load set
         elsif format == 'application/atom+xml'
-          FEED[(load set),self]
+          renderFeed load set
         else # RDF
           (loadRDF set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
         end
@@ -122,7 +123,8 @@ class R
     [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + (qs.empty? ? '?head' : qs)}),[]]
   end
   def file
-    @r[:Response].update({'Content-Type' => mime, 'ETag' => [m,size].join.sha2})
+    @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
+                          'ETag' => [m,size].join.sha2})
     @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
     if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
       filePreview
@@ -154,7 +156,7 @@ class R
       end
     end
   end
-  def notfound; [404,{'Content-Type' => 'text/html'},[HTML[{},self]]] end
+  def notfound; [404,{'Content-Type' => 'text/html'},[renderHTML({})]] end
   def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end # env -> qs
   def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # Hash -> qs
   def q # qs -> Hash

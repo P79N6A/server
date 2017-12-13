@@ -5,6 +5,7 @@ span.notes {color:#aaa;font-size:.8em}
 img {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff; vertical-align: top}
 a,td.host {border-radius:.125em}
+a#up {display:block}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}

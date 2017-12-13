@@ -505,13 +505,16 @@ class R
 
   # RSS & Atom -> RDF
   module Feed
+
     class Format < RDF::Format
       content_type     'application/atom+xml', :extension => :atom
       content_encoding 'utf-8'
       reader { R::Feed::Reader }
     end
+
     class Reader < RDF::Reader
       format Format
+
       def initialize(input = $stdin, options = {}, &block)
         @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.to_utf8
         @base = options[:base_uri]
@@ -523,7 +526,9 @@ class R
         end
         nil
       end
+
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
+
       def each_statement &fn # triples flow (left ← right)
         resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
@@ -535,6 +540,7 @@ class R
                                                          l.datatype=RDF.XMLLiteral if p == Content
                                                          l), :graph_name => s.R)}
       end
+
       def resolveURIs *f
         send(*f){|s,p,o|
           if p==Content && o.class==String
@@ -555,6 +561,7 @@ class R
           end
         }
       end
+
       def normalizePredicates *f
         send(*f){|s,p,o|
           yield s,
@@ -577,6 +584,7 @@ class R
                  RSS+'title' => Title,
                 }[p]||p, o }
       end
+
       def normalizeDates *f
         send(*f){|s,p,o|
           yield *({'CreationDate' => true,
@@ -589,6 +597,7 @@ class R
                   }[p] ?
                   [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
       end
+
       def rawTriples
         # elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
@@ -670,24 +679,6 @@ class R
       end
     end
   end
-
-  # graph-tree -> Feed
-  FEED = -> d,e {
-    H(['<?xml version="1.0" encoding="utf-8"?>',
-       {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
-         c: [{_: :id, c: e.uri},
-             {_: :title, c: "Atom feed for " + e.uri},
-             {_: :link, rel: :self, href: e.uri},
-             {_: :updated, c: Time.now.iso8601},
-             d.map{|u,d|
-               {_: :entry,
-                 c: [{_: :id, c: u}, {_: :link, href: u},
-                     d[Date].do{|d|   {_: :updated, c: d[0]}},
-                     d[Title].do{|t|  {_: :title,   c: t}},
-                     d[Creator].do{|c|{_: :author,  c: c[0]}},
-                     {_: :content, type: :xhtml,
-                       c: {xmlns:"http://www.w3.org/1999/xhtml",
-                           c: d[Content]}}]}}]}])}
 
   # HTML -> cleaned XHTML
   StripHTML = -> body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type} {
