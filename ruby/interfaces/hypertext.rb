@@ -12,8 +12,10 @@ class R
 
     def renderHTML graph
       empty = graph.empty?
-      @r[:title] = graph[path+'#this'].do{|r|r[Title].justArray[0]}
-      @r[:label] = {}
+      @r ||= {}
+      @r[:title] ||= graph[path+'#this'].do{|r|r[Title].justArray[0]}
+      @r[:label] ||= {}
+      @r[:Links] ||= {}
       query = q['q']
       htmlGrep graph, query if query
       H ["<!DOCTYPE html>\n",
