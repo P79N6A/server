@@ -28,7 +28,6 @@ class R
     alias_method :e, :exist?
     alias_method :m, :mtime
     alias_method :sh, :shellPath
-    alias_method :uri, :to_s
 
     # file(s) -> graph-tree
     def load set

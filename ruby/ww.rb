@@ -2,10 +2,11 @@
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 class R < RDF::URI
   def R; self end
-  def R.[] uri; R.new uri end
-  def + u; R[uri + u.to_s] end
+  def R.[] u; R.new u end
+  def + u; R[to_s + u.to_s] end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
+  alias_method :uri, :to_s
   # TODO benchmark RDF::Vocab usage vs string-constants
   module URIs
     W3 = 'http://www.w3.org/'

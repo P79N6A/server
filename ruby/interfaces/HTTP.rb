@@ -6,9 +6,7 @@ class R
     rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # /-collapse
     path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-    resource = path.R; env['uri'] = resource.uri         # URI
-    env[:Response]={}; env[:Links]={}                    # response environment
-    resource.send env['REQUEST_METHOD'], env
+    path.R.send env['REQUEST_METHOD'], env
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
     [500,{'Content-Type' => 'text/html'},
@@ -23,7 +21,8 @@ class R
     def HEAD env; self.GET(env).do{|s,h,b|[s,h,[]]} end
     def GET env
       @r = env
-      puts "GET #{uri}"
+      @r[:Response] = {}
+      @r[:Links] = {}
       parts = path[1..-1].split '/'
       firstPart = parts[0] || ''
       directory = node.directory?
