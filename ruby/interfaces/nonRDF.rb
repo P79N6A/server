@@ -348,5 +348,4 @@ class R
         end }
     end
   end
-  include Webize
 end

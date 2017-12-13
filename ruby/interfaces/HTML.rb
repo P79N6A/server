@@ -332,7 +332,4 @@ class R
                           c: d[Content]}}]}}]}])
     end
   end
-
-  include HTML
-
 end

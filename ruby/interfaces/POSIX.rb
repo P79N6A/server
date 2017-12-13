@@ -117,5 +117,4 @@ class R
       `#{cmd} | head -n 1024`.lines.map{|pathName| R.fromPOSIX pathName.chomp}
     end
   end
-  include POSIX
 end

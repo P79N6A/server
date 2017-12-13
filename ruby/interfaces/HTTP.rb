@@ -1,16 +1,14 @@
 # coding: utf-8
 class R
   def R.call e
-    mthd = e['REQUEST_METHOD']
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-    return [405,{},[]] unless %w{HEAD GET}.member? mthd
+    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
     rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'   # /-collapse
     path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-    resource = path.R; e['uri'] = resource.uri           # resource URI
-    e[:Response]={}; e[:Links]={}                        # header fields
-    puts mthd
-    resource.setEnv(e).send mthd          # call resource
+    resource = path.R; e['uri'] = resource.uri           # URI
+    resource.setEnv e; e[:Response]={}; e[:Links]={}     # environment
+    resource.send e['REQUEST_METHOD']
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
     [500,{'Content-Type' => 'text/html'},
@@ -201,7 +199,4 @@ class R
       'text/html' # default
     end
   end
-
-  include HTTP
-
 end
