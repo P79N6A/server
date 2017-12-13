@@ -100,7 +100,7 @@ class R
             o.justArray.map{|o|
               fn.call RDF::Statement.new(@base.join(s), RDF::URI(p),
                                          o.class==Hash ? @base.join(o['uri']) : (l = RDF::Literal o
-                                                                                 l.datatype=RDF.XMLLiteral if p == Content
+                                                                                 l.datatype=RDF.XMLLiteral if p == 'http://rdfs.org/sioc/ns#content'
                                                                                  l))} unless p=='uri'}}
       end
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end

@@ -7,7 +7,6 @@ class R < RDF::URI
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
   alias_method :uri, :to_s
-  # TODO benchmark RDF::Vocab usage vs string-constants
   module URIs
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'

@@ -8,14 +8,7 @@ class R
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
     path.R.send env['REQUEST_METHOD'], env
   rescue Exception => x
-    msg = [x.class,x.message,x.backtrace].join "\n"
-    [500,{'Content-Type' => 'text/html'},
-     ["<html><head><style>\n",
-      "body {background-color:#222; font-size:1.2em; text-align:center}\n",
-      "pre {text-align:left; display:inline-block; background-color:#000; color:#fff; font-weight:bold; border-radius:.6em; padding:1em}\n",
-      ".number {color:#0f0; font-weight:normal; font-size:1.1em}</style></head><body><pre>",
-      msg.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;').gsub(/([0-9\.]+)/,'<span class=number>\1</span>'),
-      '</pre></body></html>']]
+    [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
   end
   module HTTP
     def HEAD env; self.GET(env).do{|s,h,b|[s,h,[]]} end
@@ -76,10 +69,8 @@ class R
              else
                if uri[-1] == '/' # inside (trailing slash)
                  index = (self+'index.{html,ttl}').glob # static index (HTML or Turtle)
-                 puts "index #{index}"
                  index.empty? ? [self, children] : index # container and its contents
                else # outside
-                 puts "out #{uri}"
                  @r[:Links][:down] = path + '/' + qs
                  self # just container
                end
@@ -90,7 +81,6 @@ class R
              end).justArray.flatten.compact.select &:exist?
 
       return notfound if !set || set.empty?
-      puts "set #{set.join ' '}"
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
