@@ -117,6 +117,7 @@ class R
     end
 
     class Reader < RDF::Reader
+      include URIs
       format Format
 
       def initialize(input = $stdin, options = {}, &block)
