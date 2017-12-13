@@ -7,7 +7,7 @@ class R
     path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
     resource = path.R; e['uri'] = resource.uri           # URI
-    resource.setEnv e; e[:Response]={}; e[:Links]={}     # environment
+    e[:Response]={}; e[:Links]={}                        # response environment
     resource.send e['REQUEST_METHOD']
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
@@ -20,7 +20,6 @@ class R
       '</pre></body></html>']]
   end
   module HTTP
-    def setEnv r; @r = r; self end
     def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
     def GET
       puts "GET #{uri}"
@@ -96,7 +95,7 @@ class R
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
 
-      condResponse ->{ # body
+      condResponse @r, ->{ # body
         if set.size == 1 && set[0].mime == format
           set[0] # static body
         else # dynamic body
@@ -134,7 +133,7 @@ class R
       if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
         filePreview
       else
-        condResponse
+        condResponse @r
       end
     end
 
@@ -147,19 +146,19 @@ class R
           `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
         end
       end
-      p.e && p.setEnv(@r).condResponse || notfound
+      p.e && p.condResponse(@r) || notfound
     end
 
-    def condResponse body=nil
-      etags = @r['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
-      if etags && (etags.include? @r[:Response]['ETag'])
+    def condResponse env, body=nil
+      etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
+      if etags && (etags.include? env[:Response]['ETag'])
         [304, {}, []]
       else
         body = body ? body.call : self
         if body.class == R # file-ref
-          (Rack::File.new nil).serving((Rack::Request.new @r),body.pathPOSIX).do{|s,h,b|[s,h.update(@r[:Response]),b]}
+          (Rack::File.new nil).serving((Rack::Request.new env),body.pathPOSIX).do{|s,h,b|[s,h.update(env[:Response]),b]}
         else
-          [(@r[:Status]||200), @r[:Response], [body]]
+          [(env[:Status]||200), env[:Response], [body]]
         end
       end
     end

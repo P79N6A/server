@@ -2,14 +2,14 @@ class R
   def R.fromPOSIX p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R end
   module POSIX
     def basename; File.basename (path||'') end
-    def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map{|c|c.R.setEnv @r} end
+    def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
     def dir; dirname.R end
     def dirname; File.dirname path end
     def exist?; node.exist? end
     def ext; (File.extname uri)[1..-1] || '' end
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
     def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|p|R.fromPOSIX p.chomp} : [] end
-    def glob; (Pathname.glob pathPOSIX).map{|p|p.R.setEnv @r} end
+    def glob; (Pathname.glob pathPOSIX).map &:R end
     def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
     def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
     def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
@@ -22,7 +22,7 @@ class R
     def readFile; File.open(pathPOSIX).read end
     def shellPath; pathPOSIX.utf8.sh end
     def size; node.size rescue 0 end
-    def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''].setEnv(@r) end
+    def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''] end
     def tld; host && host.split('.')[-1] || '' end
     def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
     alias_method :e, :exist?
@@ -79,7 +79,7 @@ class R
     def transcode
       return self if ext == 'e'
       hash = node.stat.ino.to_s.sha2
-      doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e'].setEnv @r
+      doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e']
       unless doc.e && doc.m > m
         tree = {}
         triplr = ::R::Webize::Triplr[mime]

@@ -3,7 +3,7 @@
 class R < RDF::URI
   def R; self end
   def R.[] uri; R.new uri end
-  def + u; R[uri + u.to_s].setEnv @r end
+  def + u; R[uri + u.to_s] end
   def <=> c; to_s <=> c.to_s end
   def ==  u; to_s == u.to_s end
   # TODO benchmark RDF::Vocab usage vs string-constants
