@@ -1,5 +1,7 @@
 class R
   module Webize
+    include URIs
+
     # MIME mapping
     Triplr = {
       'application/config'   => [:triplrDataFile],

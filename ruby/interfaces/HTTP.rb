@@ -1,14 +1,14 @@
 # coding: utf-8
 class R
-  def R.call e
-    return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
-    return [405,{},[]] unless %w{HEAD GET}.member? e['REQUEST_METHOD']
-    rawpath = e['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'   # /-collapse
+  def R.call env
+    return [404,{},[]] if env['REQUEST_PATH'].match(/\.php$/i)
+    return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
+    rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # /-collapse
     path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
     path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-    resource = path.R; e['uri'] = resource.uri           # URI
-    e[:Response]={}; e[:Links]={}                        # response environment
-    resource.send e['REQUEST_METHOD']
+    resource = path.R; env['uri'] = resource.uri         # URI
+    env[:Response]={}; env[:Links]={}                    # response environment
+    resource.send env['REQUEST_METHOD'], env
   rescue Exception => x
     msg = [x.class,x.message,x.backtrace].join "\n"
     [500,{'Content-Type' => 'text/html'},
@@ -20,8 +20,9 @@ class R
       '</pre></body></html>']]
   end
   module HTTP
-    def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
-    def GET
+    def HEAD env; self.GET(env).do{|s,h,b|[s,h,[]]} end
+    def GET env
+      @r = env
       puts "GET #{uri}"
       parts = path[1..-1].split '/'
       firstPart = parts[0] || ''
