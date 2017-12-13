@@ -1,6 +1,5 @@
 # coding: utf-8
 class R
-  def env; @r end
   def setEnv r; @r = r; self end
   def R.call e
     return [404,{},[]] if e['REQUEST_PATH'].match(/\.php$/i)
