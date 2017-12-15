@@ -46,7 +46,7 @@ class R
       # load nonRDF
       nonRDF.map{|n|
         n.transcode.do{|transcode| # transcode to RDF
-          JSON.parse(transcode.readFile).map{|s,re| # subject
+          ::JSON.parse(transcode.readFile).map{|s,re| # subject
             re.map{|p,o| # predicate, objects
               o.justArray.map{|o| # object
                 o = o.R if o.class==Hash

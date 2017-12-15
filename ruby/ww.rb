@@ -4,10 +4,9 @@ class R < RDF::URI
   def R; self end
   def R.[] u; R.new u end
   def + u; R[to_s + u.to_s] end
-  def <=> c; to_s <=> c.to_s end
-  def ==  u; to_s == u.to_s end
   alias_method :uri, :to_s
   module URIs
+    # URI constants
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
     Purl = 'http://purl.org/'
@@ -35,8 +34,12 @@ class R < RDF::URI
     Size     = Stat + 'size'
     Mtime    = Stat + 'mtime'
     Container = W3  + 'ns/ldp#Container'
+    Twitter = 'https://twitter.com'
+    Instagram = 'https://www.instagram.com/'
   end
 end
+# TODO replace #do with #yield_self, added in ruby 2.5
+# TODO investigate non-corelib ("monkeypatched") approaches to handling one vs many: remove #justArray ?
 class Array
   def justArray; self end
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
@@ -68,12 +71,14 @@ end
 class RDF::URI
   def R; R.new to_s end
 end
-%w{MIME util}.map{|f|require_relative f}
-%w{HTTP HTML nonRDF POSIX online}.map{|i|require_relative 'interfaces/'+i}
+%w{MIME HTTP HTML JSON Feed nonRDF POSIX Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
 class R
-  include URIs
-  include HTTP
-  include POSIX
-  include Webize
-  include HTML
+  [URIs,
+   MIME,
+   HTTP,
+   POSIX,
+   Webize,
+   HTML
+  ].map{|m|
+    include m}
 end

@@ -1,6 +1,6 @@
+# coding: utf-8
 class R
 
-  def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   module HTML
     include URIs
@@ -56,6 +56,15 @@ class R
       W3+'2000/01/rdf-schema#Resource' => :node,
     }
 
+    def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type}
+      html = Nokogiri::HTML.fragment body
+      loseTags.map{|tag| html.css(tag).remove} if loseTags
+      html.traverse{|e|
+        e.attribute_nodes.map{|a|
+          a.unlink unless keepAttr.member? a.name}} if keepAttr
+      html.to_xhtml(:indent => 0)
+    end
+
     def renderHTML graph
       empty = graph.empty?
       @r ||= {}
@@ -109,7 +118,7 @@ class R
       scale[tree]
       size = sizes.max.to_f # max-size
 
-      # renderer
+      # renderer lambda
       render = -> t,path='' {
         label = 'p'+path.sha2
         @r[:label][label] = true
@@ -313,22 +322,52 @@ class R
                }.update(query ? {value: query} : {})]}} unless path=='/'
     end
 
-    def renderFeed graph
-      H(['<?xml version="1.0" encoding="utf-8"?>',
-         {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
-          c: [{_: :id, c: uri},
-              {_: :title, c: uri},
-              {_: :link, rel: :self, href: uri},
-              {_: :updated, c: Time.now.iso8601},
-              graph.map{|u,d|
-                {_: :entry,
-                 c: [{_: :id, c: u}, {_: :link, href: u},
-                     d[Date].do{|d|   {_: :updated, c: d[0]}},
-                     d[Title].do{|t|  {_: :title,   c: t}},
-                     d[Creator].do{|c|{_: :author,  c: c[0]}},
-                     {_: :content, type: :xhtml,
-                      c: {xmlns:"http://www.w3.org/1999/xhtml",
-                          c: d[Content]}}]}}]}])
+    def nokogiri
+      Nokogiri::HTML.parse (open uri).read
+    end
+
+  end
+end
+
+class String
+  def R; R.new self end
+  # scan for HTTP URIs in string
+  # opening '(' required for ')' capture, <> wrapping stripped, ',' and '.' only match mid-URI:
+  # demo on the site (https://demohere) and source-code at https://sourcehere.
+  def hrefs &b
+    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
+    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
+      (link.empty? && '' || '<a class=scanned href="' + u + '">' + # hyperlink
+       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
+        yield(R::Image,u.R) if b # image RDF
+        "<img src='#{u}'/>"      # inline image
+       else
+         yield(R::DC+'link',u.R) if b # link RDF
+         u.sub(/^https?.../,'')  # inline text
+        end) + '</a>') +
+      (post.empty? && '' || post.hrefs(&b)) # recurse on post-capture tail
+  end
+  def sha2; Digest::SHA2.hexdigest self end
+  def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
+  def utf8; force_encoding 'UTF-8' end
+  def sh; Shellwords.escape self end
+end
+
+module Redcarpet
+  module Render
+    class Pygment < HTML
+      def block_code(code, lang)
+        if lang
+          IO.popen("pygmentize -l #{lang.downcase.sh} -f html",'r+'){|p|
+            p.puts code
+            p.close_write
+            p.read
+          }
+        else
+          code
+        end
+      end
     end
   end
 end
