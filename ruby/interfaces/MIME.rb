@@ -1,6 +1,7 @@
 # coding: utf-8
 class WebResource
   module MIME
+    include URIs
 
     # name prefix -> MIME
     MIMEprefix = {
