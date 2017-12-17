@@ -281,7 +281,7 @@ class R
                when Date
                  {_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath
                when DC+'cache'
-                 l[k].justArray.map{|c|[{_: :a, href: c.path, class: :chain}, ' ']}
+                 l[k].justArray.map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
                when DC+'link'
                  linkTable[l[k].justArray]
                else
