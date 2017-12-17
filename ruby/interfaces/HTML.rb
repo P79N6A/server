@@ -179,7 +179,7 @@ class WebResource
       post = types.member? SIOC+'BlogPost'
       tweet = types.member? SIOC+'Tweet'
       monospace = chat || mail || types.member?(SIOC+'SourceCode')
-      date = l[Date].justArray.sort[-1]
+      date = l[Date].justArray.sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
       titles = l[Title].justArray
 

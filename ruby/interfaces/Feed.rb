@@ -162,12 +162,6 @@ class WebResource
       end
 
       def rawTriples
-        # elements
-        reHead = /<(rdf|rss|feed)([^>]+)/i
-        reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
-        reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
-        reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
-        reGroup = /<\/?media:group>/i
         # identifiers
         reRDF = /about=["']?([^'">\s]+)/              # RDF @about
         reLink = /<link>([^<]+)/                      # <link> element
@@ -175,8 +169,14 @@ class WebResource
         reLinkHref = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @href @rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
-        # media links
-        reAttach = %r{<(link|enclosure|media)([^>]+)>}mi
+        # elements
+        reHead = /<(rdf|rss|feed)([^>]+)/i
+        reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
+        reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
+        reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
+        reGroup = /<\/?media:group>/i
+        # media elements
+        reAttach = %r{<(link|enclosure|media|media:thumbnail)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
         # XML namespaces
@@ -203,18 +203,17 @@ class WebResource
             inner.scan(reAttach){|e|
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
-                if rel
-                  o = url[2].R
-                  p = case o.ext.downcase
-                      when 'jpg'
-                        R::Image
-                      when 'png'
-                        R::Image
-                      else
-                        R::Atom + rel[1]
-                      end
-                  yield u, p, o
-                end}}
+                rel = rel ? rel[1] : 'link'
+                o = url[2].R
+                p = case o.ext.downcase
+                    when 'jpg'
+                      R::Image
+                    when 'png'
+                      R::Image
+                    else
+                      R::Atom + rel
+                    end
+                yield u, p, o }}
             # XML elements
             inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
