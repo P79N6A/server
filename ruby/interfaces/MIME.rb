@@ -28,6 +28,7 @@ class WebResource
       'db' => 'application/octet-stream',
       'e' => 'application/json',
       'eot' => 'application/font',
+      'feed' => 'application/atom+xml',
       'go' => 'application/go',
       'haml' => 'text/plain',
       'hs' => 'application/haskell',
@@ -132,7 +133,7 @@ class WebResource
     end
 
     # file -> boolean
-    def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
+    def isRDF; %w{feed n3 ttl}.member? ext end
 
     # file -> RDF file
     def toRDF; isRDF ? self : transcode end

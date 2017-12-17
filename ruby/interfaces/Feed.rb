@@ -64,7 +64,7 @@ class WebResource
     end
 
     class Format < RDF::Format
-      content_type     'application/atom+xml', :extension => :atom
+      content_type     'application/atom+xml', :extension => :feed
       content_encoding 'utf-8'
       reader { WebResource::Feed::Reader }
     end

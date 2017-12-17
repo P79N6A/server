@@ -1,8 +1,5 @@
-opml 
-webresource <- R
 predicate-specific indexcontext link for to/from. merged column
 house insert
-fokr templeOS
 move H into HTML module namespace
 script / doc formail https://lists.netbehaviour.org/pipermail/netbehaviour/
 document config/ in index.ttl
