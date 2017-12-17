@@ -1,3 +1,3 @@
 require 'ww'
 use Rack::Deflater
-run R
+run R::HTTP

@@ -68,7 +68,7 @@ class Object
   def to_time; [Time, DateTime].member?(self.class) ? self : Time.parse(self) end
 end
 class Pathname
-  def R; R.fromPOSIX to_s.utf8 end
+  def R; R::POSIX.path to_s.utf8 end
 end
 class RDF::Node
   def R; R.new to_s end

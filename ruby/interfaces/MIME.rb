@@ -140,7 +140,6 @@ class R
       unless doc.e && doc.m > m
         tree = {}
         triplr = Triplr[mime]
-        puts "triplin #{triplr}"
         unless triplr
           puts "WARNING missing #{mime} triplr for #{uri}"
           triplr = :triplrFile

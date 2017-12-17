@@ -1,16 +1,16 @@
 # coding: utf-8
 class R
-  def R.call env
-    return [404,{},[]] if env['REQUEST_PATH'].match(/\.php$/i)
-    return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
-    rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # /-collapse
-    path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
-    path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-    path.R.send env['REQUEST_METHOD'], env
-  rescue Exception => x
-    [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
-  end
   module HTTP
+    def self.call env
+      return [404,{},[]] if env['REQUEST_PATH'].match(/\.php$/i)
+      return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
+      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # /-collapse
+      path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
+      path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
+      path.R.send env['REQUEST_METHOD'], env
+    rescue Exception => x
+      [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
+    end
     include URIs
     def HEAD env; self.GET(env).do{|s,h,b|[s,h,[]]} end
     def GET env
