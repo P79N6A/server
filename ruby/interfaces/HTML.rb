@@ -95,7 +95,7 @@ class R
                       "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
                    !empty && @r[:Links][:down].do{|d|
                      {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                   empty && {_: :a, id: :nope, class: :notfound, c: '404'+'<br>'*7, href: dirname},
+                   empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname},
                    @r[:Links][:next].do{|n|
                      {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}]}]
     end

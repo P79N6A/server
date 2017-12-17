@@ -16,7 +16,6 @@ show size on all leaf nodes
 ln ln_s fallback
 fixed height width-based treeview
 arrow tree-nav
-randcolor404
 cache images
 link to line image is from
 show small image links (src and target)

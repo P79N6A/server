@@ -13,7 +13,7 @@ a#next {float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.reqURI {font-size:.86em;float: right}
-a.notfound {font-size:8em;background-color:#404;width:100%;display:block;text-align:center;border-radius:0;color:#000}
+a.notfound {font-size:8em;width:100%;display:block;text-align:center;border-radius:0;color:#000}
 a.scale {display: inline-block;font-weight:normal;padding:.1em;margin: 0 .05em 0 .05em}
 a:visited {border:.08em solid #eee}
 .search {position:fixed; top:0;right:4%}
