@@ -13,6 +13,7 @@ a.comments:before { content:"\f086"; font-family: icons; }
 a.date:before { content:"\f073"; font-family: icons; }
 a.dir:before { content:"\f07c"; font-family: icons; }
 a.file:before { content:"\f15b"; font-family: icons; }
+a.feed:before { content:"\f09e"; font-family: icons; }
 a.textfile:before { content:"\f0f6"; font-family: icons; }
 a.html:before { content:"\f13b"; font-family: icons; }
 a.archive:before { content:"\f019"; font-family: icons; }

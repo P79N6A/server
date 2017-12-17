@@ -41,6 +41,7 @@ class R
       SIOC+'BlogPost' => :pencil,
       SIOC+'ChatLog' => :comments,
       SIOC+'Discussion' => :comments,
+      SIOC+'Feed' => :feed,
       SIOC+'InstantMessage' => :comment,
       SIOC+'MicroblogPost' => :newspaper,
       SIOC+'WikiArticle' => :pencil,
