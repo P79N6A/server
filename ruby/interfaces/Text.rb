@@ -21,14 +21,6 @@ class R
         yield uri, Title, t[1..-1].join(' ') if t.size > 1 }
     end
 
-    def triplrImage &f
-      yield uri, Type, R[Image]
-      w,h = Dimensions.dimensions pathPOSIX
-      yield uri, Stat+'width', w
-      yield uri, Stat+'height', h
-      triplrFile &f
-    end
-
     def triplrWord conv, out='', &f
       triplrFile &f
       yield uri, Type, R[Stat+'WordDocument']

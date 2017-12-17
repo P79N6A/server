@@ -171,18 +171,6 @@ class R
       end
     end
 
-    def filePreview
-      p = join('.' + basename + '.jpg').R
-      if !p.e
-        if mime.match(/^video/)
-          `ffmpegthumbnailer -s 256 -i #{sh} -o #{p.sh}`
-        else
-          `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
-        end
-      end
-      p.e && p.condResponse(@r) || notfound
-    end
-
     def condResponse env, body=nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])

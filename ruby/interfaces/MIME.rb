@@ -154,5 +154,27 @@ class R
     rescue Exception => e
       puts uri, e.class, e.message
     end
+
+    # file -> preview file
+    def filePreview
+      p = join('.' + basename + '.jpg').R
+      if !p.e
+        if mime.match(/^video/)
+          `ffmpegthumbnailer -s 256 -i #{sh} -o #{p.sh}`
+        else
+          `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
+        end
+      end
+      p.e && p.condResponse(@r) || notfound
+    end
+  end
+  module Webize
+    def triplrImage &f
+      yield uri, Type, R[Image]
+      w,h = Dimensions.dimensions pathPOSIX
+      yield uri, Stat+'width', w
+      yield uri, Stat+'height', h
+      triplrFile &f
+    end
   end
 end
