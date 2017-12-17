@@ -1,4 +1,4 @@
-class R
+class WebResource
   module JSON
     # URI -> JSON
     def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash

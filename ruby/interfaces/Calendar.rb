@@ -1,4 +1,4 @@
-class R
+class WebResource
   module Webize
     def triplrCalendar
       cal_file = File.open localPath

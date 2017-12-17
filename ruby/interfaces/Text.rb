@@ -1,4 +1,4 @@
-class R
+class WebResource
   module Webize
     include URIs
 

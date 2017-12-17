@@ -1,9 +1,11 @@
 # coding: utf-8
 # load dependencies
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
-class R < RDF::URI
-  def R.[] u; R.new u end
+class WebResource < RDF::URI
+  def self.[] u; WebResource.new u end
   def R; self end
+  def inspect; "<#{to_s}>" end
+  alias_method :uri, :to_s
   # URI constants
   module URIs
     W3 = 'http://www.w3.org/'
@@ -40,6 +42,7 @@ class R < RDF::URI
   %w{MIME HTTP HTML POSIX Feed JSON Text Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
   [MIME, HTTP, HTML, POSIX, Feed, JSON, Webize, Util].map{|m|include m}
 end
+R = WebResource # shorthand
 # TODO replace #do with #yield_self? added in ruby 2.5..
 # TODO approaches to handling one vs many: remove #justArray?
 class Array
@@ -50,7 +53,7 @@ class FalseClass
   def do; self end
 end
 class Hash
-  def R; R.new self["uri"] end
+  def R; WebResource.new self["uri"] end
   def uri;     self["uri"] end
   def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
 end
@@ -68,8 +71,8 @@ class Pathname
   def R; R::POSIX.path to_s.utf8 end
 end
 class RDF::Node
-  def R; R.new to_s end
+  def R; WebResource.new to_s end
 end
 class RDF::URI
-  def R; R.new to_s end
+  def R; WebResource.new to_s end
 end

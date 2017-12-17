@@ -1,5 +1,5 @@
 # coding: utf-8
-class R
+class WebResource
   module MIME
 
     # name prefix -> MIME
@@ -179,7 +179,7 @@ class R
       rdf.map{|n|graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
         s = s.to_s; p = p.to_s # subject, predicate
-        o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # object
+        o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
         g[s] ||= {'uri'=>s} # new resource
         g[s][p] ||= []
         g[s][p].push o unless g[s][p].member? o} # RDF to tree

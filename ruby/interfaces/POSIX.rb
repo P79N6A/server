@@ -1,4 +1,4 @@
-class R
+class WebResource
   module POSIX
 
     def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R  end
@@ -30,7 +30,6 @@ class R
     alias_method :e, :exist?
     alias_method :m, :mtime
     alias_method :sh, :shellPath
-    alias_method :uri, :to_s
 
     # pattern -> file(s)
     def grep q

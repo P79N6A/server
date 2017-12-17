@@ -1,6 +1,5 @@
 # coding: utf-8
-class R
-
+class WebResource
 
   module HTML
     include URIs
@@ -331,7 +330,7 @@ class R
 end
 
 class String
-  def R; R.new self end
+  def R; WebResource.new self end
   # scan for HTTP URIs in string
   # opening '(' required for ')' capture, <> wrapping stripped, ',' and '.' only match mid-URI:
   # demo on the site (https://demohere) and source-code at https://sourcehere.

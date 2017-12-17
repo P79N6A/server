@@ -1,5 +1,5 @@
 # coding: utf-8
-class R
+class WebResource
   module Feed
     include URIs
 
@@ -90,7 +90,7 @@ class R
       def each_statement &fn # triples flow (left ← right)
         resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
-                                     (o.class == R || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
+                                     (o.class == WebResource || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
                                                                                                     R::HTML.strip o
                                                                                                    else
                                                                                                      o.gsub(/<[^>]*>/,' ')

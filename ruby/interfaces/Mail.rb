@@ -1,4 +1,4 @@
-class R
+class WebResource
   module Webize
     def triplrMail &b
       m = Mail.read node; return unless m

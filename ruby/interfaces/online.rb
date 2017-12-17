@@ -1,4 +1,4 @@
-class R
+class WebResource
   module Util
     include URIs
     # interface with some online services

@@ -1,5 +1,5 @@
 # coding: utf-8
-class R
+class WebResource
   module HTTP
     def self.call env
       return [404,{},[]] if env['REQUEST_PATH'].match(/\.php$/i)
@@ -82,6 +82,8 @@ class R
              end).justArray.flatten.compact.select &:exist?
 
       return notfound if !set || set.empty?
+#      puts "set #{set.join ' '}"
+
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
@@ -135,7 +137,7 @@ class R
         [304, {}, []]
       else
         body = body ? body.call : self
-        if body.class == R # file-ref
+        if body.class == WebResource # serve static-resource with Rack handler,           adding our response metadata
           (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|[s,h.update(env[:Response]),b]}
         else
           [(env[:Status]||200), env[:Response], [body]]
