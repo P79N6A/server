@@ -57,15 +57,6 @@ class R
       mtime.do{|mt|yield doc, Date, mt.iso8601}
     end
 
-    def triplrCalendar
-      cal_file = File.open pathPOSIX
-      cals = Icalendar::Calendar.parse(cal_file)
-      cal = cals.first
-      puts cal
-      event = cal.events.first
-      puts event
-    end
-
     def triplrCSV d
       ns    = W3 + 'ns/csv#'
       lines = CSV.read pathPOSIX
