@@ -2,6 +2,7 @@ class R
   module POSIX
 
     def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R  end
+    def + u; R[to_s + u.to_s] end
     def basename; File.basename (path||'') end
     def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
     def dir; dirname.R end
@@ -10,22 +11,22 @@ class R
     def ext; (File.extname uri)[1..-1] || '' end
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
     def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|pth|POSIX.path pth.chomp} : [] end
-    def glob; (Pathname.glob pathPOSIX).map &:R end
+    def glob; (Pathname.glob localPath).map &:R end
     def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
     def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
     def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
     def match p; to_s.match p end
-    def mkdir; FileUtils.mkdir_p pathPOSIX unless exist?; self end
+    def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
     def mtime; node.stat.mtime end
-    def node; @node ||= (Pathname.new pathPOSIX) end
+    def node; @node ||= (Pathname.new localPath) end
     def parts; path ? path.split('/') : [] end
-    def pathPOSIX; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
-    def readFile; File.open(pathPOSIX).read end
-    def shellPath; pathPOSIX.utf8.sh end
+    def localPath; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
+    def readFile; File.open(localPath).read end
+    def shellPath; localPath.utf8.sh end
     def size; node.size rescue 0 end
     def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''] end
     def tld; host && host.split('.')[-1] || '' end
-    def writeFile o; dir.mkdir; File.open(pathPOSIX,'w'){|f|f << o}; self end
+    def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
     alias_method :e, :exist?
     alias_method :m, :mtime
     alias_method :sh, :shellPath

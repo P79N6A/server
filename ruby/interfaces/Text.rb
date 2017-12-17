@@ -14,7 +14,7 @@ class R
     def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
 
     def triplrUriList
-      open(pathPOSIX).readlines.map{|line|
+      open(localPath).readlines.map{|line|
         t = line.chomp.split ' '
         uri = t[0]
         yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
@@ -51,7 +51,7 @@ class R
 
     def triplrCSV d
       ns    = W3 + 'ns/csv#'
-      lines = CSV.read pathPOSIX
+      lines = CSV.read localPath
       lines[0].do{|fields| # header-row
         yield uri, Type, R[ns+'Table']
         yield uri, ns+'rowCount', lines.size

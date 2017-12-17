@@ -125,8 +125,8 @@ class R
          elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
            Rack::Mime::MIME_TYPES['.'+suffix]
          else
-           puts "#{pathPOSIX} unmapped MIME, sniffing content (SLOW)"
-           `file --mime-type -b #{Shellwords.escape pathPOSIX.to_s}`.chomp
+           puts "#{localPath} unmapped MIME, sniffing content (SLOW)"
+           `file --mime-type -b #{Shellwords.escape localPath.to_s}`.chomp
          end)
     end
 
@@ -176,7 +176,7 @@ class R
       g = {}                 # tree
       rdf,nonRDF = set.partition &:isRDF #partition on file type
       # load RDF
-      rdf.map{|n|graph.load n.pathPOSIX, :base_uri => n}
+      rdf.map{|n|graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
         s = s.to_s; p = p.to_s # subject, predicate
         o = [RDF::Node, RDF::URI, R].member?(o.class) ? o.R : o.value # object
@@ -208,14 +208,14 @@ class R
 
     # file(s) -> graph
     def loadRDF set
-      g = RDF::Graph.new; set.map{|n|g.load n.toRDF.pathPOSIX, :base_uri => n.stripDoc}
+      g = RDF::Graph.new; set.map{|n|g.load n.toRDF.localPath, :base_uri => n.stripDoc}
       g
     end
   end
   module Webize
     def triplrImage &f
       yield uri, Type, R[Image]
-      w,h = Dimensions.dimensions pathPOSIX
+      w,h = Dimensions.dimensions localPath
       yield uri, Stat+'width', w
       yield uri, Stat+'height', h
       triplrFile &f

@@ -29,7 +29,7 @@ class R
           resp = response.read
           unless body.e && body.readFile == resp
             body.writeFile resp # new cached body
-            ('file:'+body.pathPOSIX).R.indexFeed :format => :feed, :base_uri => uri # run indexer
+            ('file:'+body.localPath).R.indexFeed :format => :feed, :base_uri => uri # run indexer
           end
         end
       rescue OpenURI::HTTPError => error
@@ -39,7 +39,7 @@ class R
     rescue Exception => e
       puts uri, e.class, e.message
     end
-    def fetchFeeds; open(pathPOSIX).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
+    def fetchFeeds; open(localPath).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
 
     alias_method :getFeed, :fetchFeed
 
@@ -54,7 +54,7 @@ class R
             doc.dir.mkdir
             cacheBase = doc.stripDoc
             graph << RDF::Statement.new(graph.name, R[DC+'cache'], cacheBase)
-            RDF::Writer.open(doc.pathPOSIX){|f|f << graph}
+            RDF::Writer.open(doc.localPath){|f|f << graph}
             puts cacheBase
           end
           true}}

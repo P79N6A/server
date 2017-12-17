@@ -4,7 +4,6 @@
 class R < RDF::URI
   def R; self end
   def R.[] u; R.new u end
-  def + u; R[to_s + u.to_s] end
   alias_method :uri, :to_s
   # URI constants
   module URIs

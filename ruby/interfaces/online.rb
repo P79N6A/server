@@ -41,13 +41,13 @@ class R
     end
 
     def twitter
-      open(pathPOSIX).readlines.map(&:chomp).shuffle.each_slice(16){|s|
+      open(localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
         readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
         readURI.R.indexTweets}
     end
 
     def ig
-      open(pathPOSIX).readlines.map(&:chomp).map{|ig|
+      open(localPath).readlines.map(&:chomp).map{|ig|
         R[Instagram+ig].indexInstagram}
     end
   end

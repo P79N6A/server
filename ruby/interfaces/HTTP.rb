@@ -136,7 +136,7 @@ class R
       else
         body = body ? body.call : self
         if body.class == R # file-ref
-          (Rack::File.new nil).serving((Rack::Request.new env),body.pathPOSIX).do{|s,h,b|[s,h.update(env[:Response]),b]}
+          (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|[s,h.update(env[:Response]),b]}
         else
           [(env[:Status]||200), env[:Response], [body]]
         end

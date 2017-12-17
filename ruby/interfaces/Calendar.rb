@@ -1,7 +1,7 @@
 class R
   module Webize
     def triplrCalendar
-      cal_file = File.open pathPOSIX
+      cal_file = File.open localPath
       cals = Icalendar::Calendar.parse(cal_file)
       cal = cals.first
       puts cal
