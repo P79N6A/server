@@ -30,6 +30,7 @@ class R
     alias_method :e, :exist?
     alias_method :m, :mtime
     alias_method :sh, :shellPath
+    alias_method :uri, :to_s
 
     # pattern -> file(s)
     def grep q

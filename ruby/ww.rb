@@ -2,9 +2,8 @@
 # load dependencies
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 class R < RDF::URI
-  def R; self end
   def R.[] u; R.new u end
-  alias_method :uri, :to_s
+  def R; self end
   # URI constants
   module URIs
     W3 = 'http://www.w3.org/'
