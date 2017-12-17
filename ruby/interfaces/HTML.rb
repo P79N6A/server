@@ -346,7 +346,7 @@ class String
          yield(R::DC+'link',u.R) if b # link RDF
          u.sub(/^https?.../,'')  # inline text
         end) + '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # recurse on post-capture tail
+      (post.empty? && '' || post.hrefs(&b)) # tail
   end
   def sha2; Digest::SHA2.hexdigest self end
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
