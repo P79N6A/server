@@ -40,7 +40,7 @@ class R < RDF::URI
   end
   # load library
   %w{MIME HTTP HTML POSIX Feed JSON Text Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
-  [MIME, HTTP, HTML, POSIX, Feed, Webize, Util].map{|m|include m}
+  [MIME, HTTP, HTML, POSIX, Feed, JSON, Webize, Util].map{|m|include m}
 end
 # TODO replace #do with #yield_self? added in ruby 2.5..
 # TODO approaches to handling one vs many: remove #justArray?
