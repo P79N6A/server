@@ -75,7 +75,7 @@ class R
     # file -> RDF-file
     def toRDF; isRDF ? self : transcode end
 
-    # nonRDF-file -> RDF-file
+    # nonRDF file -> RDF file
     def transcode
       return self if ext == 'e'
       hash = node.stat.ino.to_s.sha2
@@ -83,6 +83,7 @@ class R
       unless doc.e && doc.m > m
         tree = {}
         triplr = ::R::Webize::Triplr[mime]
+        puts "triplin #{triplr}"
         unless triplr
           puts "WARNING missing #{mime} triplr for #{uri}"
           triplr = :triplrFile

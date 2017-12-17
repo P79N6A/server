@@ -1,12 +1,13 @@
 # coding: utf-8
+# load dependencies
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 class R < RDF::URI
   def R; self end
   def R.[] u; R.new u end
   def + u; R[to_s + u.to_s] end
   alias_method :uri, :to_s
+  # URI constants
   module URIs
-    # URI constants
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
     Purl = 'http://purl.org/'
@@ -37,9 +38,13 @@ class R < RDF::URI
     Twitter = 'https://twitter.com'
     Instagram = 'https://www.instagram.com/'
   end
+  # load library
+  %w{MIME HTTP HTML JSON Feed nonRDF POSIX Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
+  # module namespace
+  [MIME,HTTP,HTML,POSIX,Webize,Util].map{|m|include m}
 end
-# TODO replace #do with #yield_self, added in ruby 2.5
-# TODO investigate non-corelib ("monkeypatched") approaches to handling one vs many: remove #justArray ?
+# TODO replace #do with #yield_self? added in ruby 2.5..
+# TODO investigate approaches to handling one vs many: remove #justArray?
 class Array
   def justArray; self end
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
@@ -70,15 +75,4 @@ class RDF::Node
 end
 class RDF::URI
   def R; R.new to_s end
-end
-%w{MIME HTTP HTML JSON Feed nonRDF POSIX Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
-class R
-  [URIs,
-   MIME,
-   HTTP,
-   POSIX,
-   Webize,
-   HTML
-  ].map{|m|
-    include m}
 end
