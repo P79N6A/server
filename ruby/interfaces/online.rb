@@ -1,5 +1,6 @@
 class R
   module Util
+    include URIs
     # interface with some online services
     # READ-ONLY access on remote
 

@@ -38,13 +38,13 @@ class R < RDF::URI
     Twitter = 'https://twitter.com'
     Instagram = 'https://www.instagram.com/'
   end
-  # load library
+  # load libraries
   %w{MIME HTTP HTML JSON Feed Text POSIX Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
-  # module namespace
+  # include modules
   [MIME,HTTP,HTML,POSIX,Webize,Util].map{|m|include m}
 end
 # TODO replace #do with #yield_self? added in ruby 2.5..
-# TODO investigate approaches to handling one vs many: remove #justArray?
+# TODO approaches to handling one vs many: remove #justArray?
 class Array
   def justArray; self end
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
