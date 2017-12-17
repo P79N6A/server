@@ -6,7 +6,7 @@ class WebResource
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
       content_encoding 'utf-8'
-      reader { R::JSON::Reader }
+      reader { WebResource::JSON::Reader }
     end
 
     # JSON -> RDF
