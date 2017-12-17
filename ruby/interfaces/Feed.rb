@@ -1,6 +1,8 @@
 # coding: utf-8
 class R
   module Feed
+    include URIs
+
     def feeds; puts (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
     def fetchFeed
