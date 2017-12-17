@@ -2,7 +2,7 @@
 class R
   module MIME
 
-    # basename-prefix -> MIME
+    # name prefix -> MIME
     MIMEprefix = {
       'authors' => 'text/plain',
       'changelog' => 'text/plain',
@@ -15,7 +15,7 @@ class R
       'unlicense' => 'text/plain',
       'msg' => 'message/rfc822'}
 
-    # basename-suffix -> MIME
+    # name suffix -> MIME
     MIMEsuffix = {
       'asc' => 'text/plain',
       'chk' => 'text/plain',
@@ -48,7 +48,7 @@ class R
       'woff' => 'application/font',
       'yaml' => 'text/plain'}
 
-    # MIME -> RDF-ize function
+    # MIME -> RDF-yielding function
     Triplr = {
       'application/config'   => [:triplrDataFile],
       'application/font'      => [:triplrFile],
@@ -128,16 +128,18 @@ class R
          end)
     end
 
+    # file -> boolean
     def isRDF; %w{atom n3 rdf owl ttl}.member? ext end
 
-    # nonRDF file -> RDF file
+    # file -> RDF file
+    def toRDF; isRDF ? self : transcode end
     def transcode
       return self if ext == 'e'
       hash = node.stat.ino.to_s.sha2
       doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e']
       unless doc.e && doc.m > m
         tree = {}
-        triplr = ::R::Webize::Triplr[mime]
+        triplr = Triplr[mime]
         puts "triplin #{triplr}"
         unless triplr
           puts "WARNING missing #{mime} triplr for #{uri}"
