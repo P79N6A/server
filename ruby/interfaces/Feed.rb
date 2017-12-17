@@ -255,4 +255,13 @@ class R
                           c: d[Content]}}]}}]}])
     end
   end
+  module Webize
+    def triplrOPML
+      Nokogiri::HTML.fragment(readFile).css('outline[type="rss"]').map{|t|
+        s = t.attr 'xmlurl'
+        yield s, Type, R[SIOC+'Feed']
+        yield s, Title, t.attr('title')
+      }
+    end
+  end
 end

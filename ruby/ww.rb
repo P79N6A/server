@@ -39,7 +39,7 @@ class R < RDF::URI
     Instagram = 'https://www.instagram.com/'
   end
   # load library
-  %w{MIME HTTP HTML  POSIX  Feed  JSON Text Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
+  %w{MIME HTTP HTML POSIX Feed JSON Text Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
   [MIME, HTTP, HTML, POSIX, Feed, Webize, Util].map{|m|include m}
 end
 # TODO replace #do with #yield_self? added in ruby 2.5..
