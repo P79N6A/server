@@ -240,7 +240,7 @@ class WebResource
                     @r[:label][lbl] = true
                     {_: :a, class: :label, href: link, name: lbl, c: ' '+(CGI.escapeHTML label[0..41])}.update(rowID[])},
                   linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
-                  l[Abstract],
+                  l[Abstract].do{|abs|{_: :pre, c: abs}},
                   (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                   (images = []
                    images.push this if types.member?(Image) # subject of triple

@@ -15,6 +15,7 @@ class WebResource < RDF::URI
     DCe  = Purl + 'dc/elements/1.1/'
     SIOC = 'http://rdfs.org/sioc/ns#'
     Schema = 'http://schema.org/'
+    Media = 'http://search.yahoo.com/mrss/'
     Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'
     Comments = 'http://wellformedweb.org/CommentAPI/commentRss'
     Sound    = Purl + 'ontology/mo/Sound'
@@ -37,6 +38,7 @@ class WebResource < RDF::URI
     Container = W3  + 'ns/ldp#Container'
     Twitter = 'https://twitter.com'
     Instagram = 'https://www.instagram.com/'
+    YouTube = 'http://www.youtube.com/xml/schemas/2015#'
   end
   # load library
   %w{MIME HTTP HTML POSIX Feed JSON Text Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}

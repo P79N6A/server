@@ -130,9 +130,14 @@ class WebResource
                  Atom+'title' => Title,
                  DCe+'subject' => Title,
                  DCe+'type' => Type,
+                 Media+'title' => Title,
+                 Media+'description' => Abstract,
+                 Media+'community' => Content,
                  Podcast+'author' => Creator,
                  Podcast+'keywords' => Label,
                  Podcast+'subtitle' => Title,
+                 YouTube+'videoId' => Label,
+                 YouTube+'channelId' => SIOC+'user_agent',
                  RSS+'category' => Label,
                  RSS+'description' => Content,
                  RSS+'encoded' => Content,
@@ -162,6 +167,7 @@ class WebResource
         reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
+        reGroup = /<\/?media:group>/i
         # identifiers
         reRDF = /about=["']?([^'">\s]+)/              # RDF @about
         reLink = /<link>([^<]+)/                      # <link> element
@@ -210,7 +216,7 @@ class WebResource
                   yield u, p, o
                 end}}
             # XML elements
-            inner.scan(reElement){|e|
+            inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p
               # used in subject URI search
