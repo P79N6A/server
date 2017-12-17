@@ -39,7 +39,7 @@ class R < RDF::URI
     Instagram = 'https://www.instagram.com/'
   end
   # load library
-  %w{MIME HTTP HTML JSON Feed nonRDF POSIX Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
+  %w{MIME HTTP HTML JSON Feed Text POSIX Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
   # module namespace
   [MIME,HTTP,HTML,POSIX,Webize,Util].map{|m|include m}
 end

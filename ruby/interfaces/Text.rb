@@ -13,26 +13,6 @@ class R
     def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
     def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
 
-    def triplrFile
-      s = path
-      size.do{|sz|yield s, Size, sz}
-      yield s, Title, basename
-      mtime.do{|mt|
-        yield s, Mtime, mt.to_i
-        yield s, Date, mt.iso8601}
-    end
-
-    def triplrContainer
-      s = path
-      s = s + '/' unless s[-1] == '/'
-      yield s, Type, R[Container]
-      yield s, Size, children.size
-      yield s, Title, basename
-      mtime.do{|mt|
-        yield s, Mtime, mt.to_i
-        yield s, Date, mt.iso8601}
-    end
-
     def triplrUriList
       open(pathPOSIX).readlines.map{|line|
         t = line.chomp.split ' '
