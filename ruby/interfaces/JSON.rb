@@ -1,6 +1,7 @@
 class R
-
   module JSON
+    # URI -> JSON
+    def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
 
     class Format < RDF::Format
       content_type     'application/json+rdf', :extension => :e
@@ -34,8 +35,4 @@ class R
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
     end
   end
-
-  # URI -> JSON
-  def to_json *a; {'uri' => uri}.to_json *a end # R -> Hash
-
 end

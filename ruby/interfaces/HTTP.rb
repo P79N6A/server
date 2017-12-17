@@ -58,7 +58,7 @@ class R
       @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs unless path=='/'
       if q.has_key? 'head'
         qq = q.dup; qq.delete 'head'
-        @r[:Links][:down] = path + (R.qs qq)
+        @r[:Links][:down] = path + (HTTP.qs qq)
       end
       set = (if directory
              if q.has_key?('f') && path!='/' # FIND
@@ -199,11 +199,14 @@ class R
 
     def notfound; [404,{'Content-Type' => 'text/html'},[renderHTML({})]] end
 
-    def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end # env -> qs
+    # Hash -> qs
+    def self.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
 
-    def R.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end # Hash -> qs
+    # request-env -> qs
+    def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
 
-    def q # qs -> Hash
+    # qs -> Hash
+    def q
       @q ||= # memoize
         (if q = @r['QUERY_STRING']
          h = {}

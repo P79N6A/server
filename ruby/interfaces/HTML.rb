@@ -159,7 +159,7 @@ class R
                else
                  q_['ascending'] = ''
                end
-               href = CGI.escapeHTML R.qs q_
+               href = CGI.escapeHTML HTTP.qs q_
                {_: :th, property: k, class: selection ? 'selected' : '',
                 c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
                     (selection ? {_: :link, rel: :sort, href: href} : '')]}}}]},
