@@ -50,4 +50,24 @@ class WebResource
       `#{cmd} | head -n 1024`.lines.map{|path| POSIX.path path.chomp}
     end
   end
+  module Webize
+    def triplrFile
+      s = path
+      size.do{|sz|yield s, Size, sz}
+      yield s, Label, basename
+      mtime.do{|mt|
+        yield s, Mtime, mt.to_i
+        yield s, Date, mt.iso8601}
+    end
+    def triplrContainer
+      s = path
+      s = s + '/' unless s[-1] == '/'
+      yield s, Type, R[Container]
+      yield s, Size, children.size
+      yield s, Title, basename
+      mtime.do{|mt|
+        yield s, Mtime, mt.to_i
+        yield s, Date, mt.iso8601}
+    end
+  end
 end

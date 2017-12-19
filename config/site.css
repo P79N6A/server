@@ -9,7 +9,7 @@ a#up {display:block}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
-a#next {float: right}
+a#next, a.title {float: right}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.reqURI {font-size:.86em;float: right}
