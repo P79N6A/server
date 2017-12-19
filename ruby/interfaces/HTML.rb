@@ -239,7 +239,7 @@ class WebResource
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
                     {_: :a, class: :label, href: link, name: lbl, c: ' '+(CGI.escapeHTML label[0..41])}.update(rowID[])},
-                  linkTable[[SIOC+'attachment',Stat+'contains'].map{|p|l[p]}.flatten.compact],
+                  linkTable[[SIOC+'attachment',Stat+'contains',DC+'link'].map{|p|l[p]}.flatten.compact],
                   l[Abstract].do{|abs|{_: :pre, c: abs}},
                   (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                   (images = []
@@ -282,8 +282,6 @@ class WebResource
                  {_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath
                when DC+'cache'
                  l[k].justArray.map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
-               when DC+'link'
-                 linkTable[l[k].justArray]
                else
                  l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
                end}}.intersperse("\n")}

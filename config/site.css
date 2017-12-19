@@ -26,5 +26,7 @@ td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
 td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
+table.links {float:right}
 table.links td.host a {float: right; color:#000}
-table.links td.path {max-width: 28em;overflow:hidden}
+table.links td.path {max-width: 42em;overflow:hidden;}
+table.links td.path a {font-weight: normal}
