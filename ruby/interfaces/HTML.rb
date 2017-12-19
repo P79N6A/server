@@ -3,7 +3,7 @@ class WebResource
 
   module HTML
     include URIs
-    InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+    InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', Atom+'link', DC+'hasFormat', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
     VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
                    RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                    SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
@@ -239,7 +239,7 @@ class WebResource
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
                     {_: :a, class: :label, href: link, name: lbl, c: ' '+(CGI.escapeHTML label[0..41])}.update(rowID[])},
-                  linkTable[[SIOC+'attachment',Stat+'contains',DC+'link'].map{|p|l[p]}.flatten.compact],
+                  linkTable[[SIOC+'attachment',Stat+'contains',Atom+'link',DC+'link'].map{|p|l[p]}.flatten.compact],
                   l[Abstract].do{|abs|{_: :pre, c: abs}},
                   (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
                   (images = []

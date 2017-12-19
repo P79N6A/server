@@ -126,6 +126,7 @@ class WebResource
                 {Atom+'content' => Content,
                  Atom+'displaycategories' => Label,
                  Atom+'enclosure' => SIOC+'attachment',
+                 Atom+'link' => DC+'link',
                  Atom+'summary' => Abstract,
                  Atom+'title' => Title,
                  DCe+'subject' => Title,
