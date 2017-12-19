@@ -88,7 +88,7 @@ class WebResource
                      {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
                    @r[:Links][:prev].do{|p|
                      {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-                   searchBox,
+                   htmlSearch,
                    (htmlTree graph),
                    !empty && (htmlTable graph),
                    {_: :style, c: @r[:label].map{|name,_|
@@ -310,7 +310,7 @@ class WebResource
       graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
     end
 
-    def searchBox
+    def htmlSearch
       query = q['q'] || q['f']
       useGrep = path.split('/').size > 3 # search-provider suggestion
       {class: :search,
@@ -326,6 +326,25 @@ class WebResource
       Nokogiri::HTML.parse (open uri).read
     end
 
+  end
+  module Webize
+    def triplrHTML &f
+      triplrFile &f
+      yield uri, Type, R[Stat+'HTMLFile']
+      n = Nokogiri::HTML.parse readFile
+      n.css('title').map{|title|
+        yield uri, Title, title.inner_text}
+      n.css('meta[property="og:image"]').map{|m|
+        yield m, Image, m.attr("content").R
+      }
+    end
+    
+    def triplrMarkdown
+      doc = stripDoc.uri
+      yield doc, Type, R[Stat+'TextFile']
+      yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
+      mtime.do{|mt|yield doc, Date, mt.iso8601}
+    end
   end
 end
 

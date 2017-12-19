@@ -4,7 +4,6 @@ class WebResource
 
     def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
     def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end
-    def triplrHTML &f;    yield uri, Type, R[Stat+'HTMLFile']; triplrFile &f end
     def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile &f end
     def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile &f end
     def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
@@ -40,13 +39,6 @@ class WebResource
                c: readFile.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
     rescue Exception => e
       puts uri, e.class, e.message
-    end
-
-    def triplrMarkdown
-      doc = stripDoc.uri
-      yield doc, Type, R[Stat+'TextFile']
-      yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
-      mtime.do{|mt|yield doc, Date, mt.iso8601}
     end
 
     def triplrCSV d
