@@ -20,8 +20,7 @@ class WebResource
       parts = path[1..-1].split '/'
       firstPart = parts[0] || ''
       directory = node.directory?
-      return file if node.file?
-      return feed if parts[0] == 'feed'
+      return fileResponse if node.file?
       return (chrono parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
       return [204,{},[]] if firstPart.match(/^gen.*204$/)
       return [302,{'Location' => path+'/'+qs},[]] if directory && path[-1]!='/' 
@@ -102,8 +101,6 @@ class WebResource
         end}
     end
 
-    def feed; [303,@r[:Response].update({'Location'=> Time.now.strftime('/%Y/%m/%d/%H/?feed')}),[]] end
-
     def chrono ps
       time = Time.now
       loc = time.strftime(case ps[0][0].downcase
@@ -120,7 +117,7 @@ class WebResource
       [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + (qs.empty? ? '?head' : qs)}),[]]
     end
 
-    def file
+    def fileResponse
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
                             'ETag' => [m,size].join.sha2})
       @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
