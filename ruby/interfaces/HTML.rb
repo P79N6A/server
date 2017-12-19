@@ -107,35 +107,33 @@ class WebResource
         c = tree
         uri.R.parts.map{|name| # path instructions
           c = c[name] ||= {}}} # create node and jump cursor
-      # find sizes of scaled nodes
-      sizes = []
-      scale = -> t,path='' {
-        t.keys.map{|name|
-          this = path+name+'/'
-          graph[this].do{|r|
-            sizes.concat r[Size].justArray} # size
-          scale[t[name], this] if t[name].size > 0}} # child nodes
-      scale[tree]
-      size = sizes.max.to_f # max-size
 
-      # renderer lambda
+      # renderer function
       render = -> t,path='' {
         label = 'p'+path.sha2
         @r[:label][label] = true
         nodes = t.keys.sort
         table = nodes.size < 32
-        {class: table ? :table : '', c: [
-           {class: table ? :tr : '', c: nodes.map{|name| # nodes
+        size = 0.0
+        nodes.map{|name|
+          uri = path + name + '/'
+          graph[uri].do{|r|
+            r[Size].justArray.map{|sz|
+              puts "total size #{size} + #{uri} #{sz}"
+              size += sz}}}
+
+        {_: table ? :table : :div, class: :tree, c: [
+           {_: table ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
               this = path + name + '/' # path
               s = graph[this].do{|r|r[Size].justArray[0]} # size
               graph.delete this # consume node
-              height = (s && size) ? (8.8 * s / size) : 1.0 # scale
-              {class: table ? :td : '', # render
-               c: {_: :a, class: s ? :scale : '', href: this + qs, name: s ? label : :node, id: 't'+this.sha2,
-                   style: s ? "height:#{height < 1.0 ? 1.0 : height}em" : '',
-                   c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
-           {class: table ? :tr : '', c: nodes.map{|k| # child nodes
-              {class: table ? :td : '', c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+              width = (s && size > 0) ? (s / size) : 1.0 # scale
+              {_: table ? :td : :div, class: :node, style: s ? "width:#{width * 100.0}%;height:2em" : '',
+               c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2, c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+           {_: table ? :tr : :div, c: nodes.map{|k| # child nodes
+              {_: table ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+
+      # render
       render[tree]
     end
 

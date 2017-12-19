@@ -14,14 +14,13 @@ a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.reqURI {font-size:.86em;float: right}
 a.notfound {font-size:8em;width:100%;display:block;text-align:center;border-radius:0;color:#000}
-a.scale {display: inline-block;font-weight:normal;padding:.1em;margin: 0 .05em 0 .05em}
 a:visited {border:.08em solid #eee}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
-.table {display: table}
-.tr {display: table-row}
-.td {display: table-cell;vertical-align: bottom}
+table.tree {width:100%;margin:0;cell-spacing:0}
+table.tree td {padding:0}
+table.tree tr.nodes > td.node > a {display:block;height:100%;width:100%}
 td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
