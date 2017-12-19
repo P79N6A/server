@@ -21,7 +21,7 @@ class WebResource
       firstPart = parts[0] || ''
       directory = node.directory?
       return fileResponse if node.file?
-      return (chrono parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
+      return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
       return [204,{},[]] if firstPart.match(/^gen.*204$/)
       return [302,{'Location' => path+'/'+qs},[]] if directory && path[-1]!='/' 
       dp = []
@@ -87,21 +87,21 @@ class WebResource
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
 
-      condResponse @r, ->{ # body
+      entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # static body
-        else # dynamic body
+          set[0] # static entity
+        else # dynamic
           if format == 'text/html'
             renderHTML load set
           elsif format == 'application/atom+xml'
             renderFeed load set
-          else # RDF
+          else
             (loadRDF set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}
     end
 
-    def chrono ps
+    def chronoDir ps
       time = Time.now
       loc = time.strftime(case ps[0][0].downcase
                           when 'y'
@@ -124,11 +124,11 @@ class WebResource
       if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
         filePreview
       else
-        condResponse @r
+        entity @r
       end
     end
 
-    def condResponse env, body=nil
+    def entity env, body=nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
         [304, {}, []]
