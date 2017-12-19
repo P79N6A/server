@@ -68,11 +68,11 @@ class WebResource
                grep q['q']
              else
                if uri[-1] == '/' # inside (trailing slash)
-                 index = (self+'index.{html,ttl}').glob # static index (HTML or Turtle)
-                 index.empty? ? [self, children] : index # container and its contents
+                 index = (self+'index.{html,ttl}').glob # static index
+                 !index.empty? && qs.empty? && index || [self, children]
                else # outside
                  @r[:Links][:down] = path + '/' + qs
-                 self # just container
+                 self
                end
              end
             else
