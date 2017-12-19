@@ -1,7 +1,6 @@
 predicate-specific indexcontext link for to/from. merged column
 house insert
 move H into HTML module namespace
-extrat HTML meta
 script / doc formail https://lists.netbehaviour.org/pipermail/netbehaviour/
 document config/ in index.ttl
 ical

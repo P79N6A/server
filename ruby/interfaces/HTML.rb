@@ -332,11 +332,8 @@ class WebResource
       triplrFile &f
       yield uri, Type, R[Stat+'HTMLFile']
       n = Nokogiri::HTML.parse readFile
-      n.css('title').map{|title|
-        yield uri, Title, title.inner_text}
-      n.css('meta[property="og:image"]').map{|m|
-        yield m, Image, m.attr("content").R
-      }
+      n.css('title').map{|title| yield uri, Title, title.inner_text }
+      n.css('meta[property="og:image"]').map{|m| yield uri, Image, m.attr("content").R }
     end
     
     def triplrMarkdown
