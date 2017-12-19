@@ -115,25 +115,26 @@ class WebResource
         nodes = t.keys.sort
         table = nodes.size < 32
         size = 0.0
+        # scale
         nodes.map{|name|
           uri = path + name + '/'
           graph[uri].do{|r|
             r[Size].justArray.map{|sz|
-              puts "total size #{size} + #{uri} #{sz}"
-              size += sz}}}
-
+              size += sz}}} if nodes.size > 1
+        # render
         {_: table ? :table : :div, class: :tree, c: [
            {_: table ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
               this = path + name + '/' # path
               s = graph[this].do{|r|r[Size].justArray[0]} # size
               graph.delete this # consume node
-              width = (s && size > 0) ? (s / size) : 1.0 # scale
-              {_: table ? :td : :div, class: :node, style: s ? "width:#{width * 100.0}%;height:2em" : '',
-               c: {_: :a, href: this + qs, name: s ? label : :node, id: 't'+this.sha2, c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
-           {_: table ? :tr : :div, c: nodes.map{|k| # child nodes
+              scaled = s && size > 0
+              width = scaled && (s / size) # scale
+              {_: table ? :td : :div, class: :node, style: width ? "width:#{width * 100.0}%;height:2em" : '',
+               c: {_: :a, href: this + qs, name: label, id: 't'+this.sha2, c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+           {_: table ? :tr : :div, c: nodes.map{|k| # children
               {_: table ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
 
-      # render
+      # render tree
       render[tree]
     end
 
