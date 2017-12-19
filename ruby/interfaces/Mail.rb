@@ -1,6 +1,6 @@
 class WebResource
   module Webize
-    def triplrMail &b
+    def triplrMail &b; @verbose = true
       m = Mail.read node; return unless m
       id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
       puts " MID #{id}" if @verbose
@@ -61,6 +61,10 @@ class WebResource
       from = []
       m.from.do{|f|
         f.justArray.compact.map{|f|
+          noms = f.split ' '
+          if noms.size > 2 && noms[1] == 'at'
+            f = "#{noms[0]}@#{noms[2]}"
+          end
           puts "FROM #{f}" if @verbose 
           from.push f.to_utf8.downcase}} # queue address for indexing + triple-emitting
       m[:from].do{|fr|
@@ -160,7 +164,6 @@ class WebResource
   module Util
 
     def indexMail
-      @verbose = true
       triples = 0
       triplrMail{|s,p,o|triples += 1}
       puts "    #{triples} triples"
