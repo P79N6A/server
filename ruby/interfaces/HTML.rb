@@ -89,7 +89,7 @@ class WebResource
                    @r[:Links][:prev].do{|p|
                      {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
                    htmlSearch,
-                   (htmlTree graph),
+                   {class: :scroll, c: (htmlTree graph)},
                    !empty && (htmlTable graph),
                    {_: :style, c: @r[:label].map{|name,_|
                       "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
