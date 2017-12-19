@@ -122,7 +122,7 @@ class WebResource
             r[Size].justArray.map{|sz|
               size += sz}}} if label
         # render
-        {_: table ? :table : :div, class: :tree, c: [
+        {_: table ? :table : :div, class: :tree, border: 1, c: [
            {_: table ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
               this = path + name + '/' # path
               s = graph[this].do{|r|r[Size].justArray[0]} # size
