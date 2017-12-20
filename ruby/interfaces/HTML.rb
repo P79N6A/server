@@ -138,8 +138,8 @@ class WebResource
                style: scaled ? "width:#{width * 100.0}%" : '',
                c: named ? {_: :a, href: this + qs, name: label, id: 't'+this.sha2,
                            c: (scaled ? '' : ('&nbsp;'*path.size)) + CGI.escapeHTML(URI.unescape name) + (scaled ? '' : '/')} : ''}}.intersperse("\n")},"\n",
-           {_: tabled ? :tr : :div, c: nodes.map{|k| # children
-              {_: tabled ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+           ({_: tabled ? :tr : :div, c: nodes.map{|k| # children
+              {_: tabled ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")} unless !nodes.find{|n|t[n].size > 0})]}}
 
       # render tree
       render[tree]
