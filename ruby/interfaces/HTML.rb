@@ -153,7 +153,7 @@ class WebResource
       datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
       keys = graph.values.map(&:keys).flatten.uniq - InlineMeta
       keys -= VerboseMeta unless q.has_key? 'full'
-      [{_: :table, style: 'margin:auto',
+      [{_: :table, border: 1, style: 'margin:auto;border: .0em solid black',
         c: [{_: :tbody,
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
                (htmlTableRow r,p,direction,keys)}.intersperse("\n")},
@@ -194,7 +194,7 @@ class WebResource
         {_: :table, class: :links,
          c: links.group_by(&:host).map{|host,links|
            tld = links[0] && links[0].tld || 'none'
-           traverse = links.size <= 3
+           traverse = links.size <= 16
            @r[:label][tld] = true
            {_: :tr,
             c: [({_: :td, class: :host, name: tld,
@@ -238,15 +238,15 @@ class WebResource
            {_: :td, property: k,
             c: case k
                when 'uri'
-                 [titles.compact.map{|t|
-                    @r[:label][this.tld] = true
-                    {_: :a, class: :title, href: link, name: this.tld,
-                     c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
-                  l[Label].justArray.compact.map{|v|
+                 [l[Label].justArray.compact.map{|v|
                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
-                    {_: :a, class: :label, href: link, name: lbl, c: ' '+(CGI.escapeHTML label[0..41])}.update(rowID[])},
+                    {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])+' '}.update(rowID[])},
+                  titles.compact.map{|t|
+                    @r[:label][this.tld] = true
+                    {_: :a, class: :title, href: link, name: this.tld,
+                     c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
                   linkTable[LinkPred.map{|p|l[p]}.flatten.compact],
                   l[Abstract].do{|abs|{_: :pre, c: abs}},
                   (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
