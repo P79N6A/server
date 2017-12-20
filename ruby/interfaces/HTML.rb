@@ -242,7 +242,7 @@ class WebResource
                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
-                    {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}.update(rowID[])}.intersperse(' '),
+                    {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse(' '),
                   titles.compact.map{|t|
                     @r[:label][this.tld] = true
                     {_: :a, class: :title, href: link, name: this.tld,
