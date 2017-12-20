@@ -169,7 +169,7 @@ class WebResource
           `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
         end
       end
-      p.e && p.condResponse(@r) || notfound
+      p.e && p.entity(@r) || notfound
     end
 
     # file(s) -> graph-in-tree

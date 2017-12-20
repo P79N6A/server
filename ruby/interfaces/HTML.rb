@@ -215,17 +215,18 @@ class WebResource
       # pointer to selection of node in an index context
       indexLink = -> v {
         v = v.R
+        id = rand.to_s.sha2
         if mail # messages*month
-          {_: :a, id: 'address_'+rand.to_s.sha2, href: v.path + '?head#r' + href.sha2, c: v.label}
+          {_: :a, id: 'address_'+id, href: v.path + '?head#r' + href.sha2, c: v.label}
         elsif tweet # tweets*hour
-          {_: :a, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
+          {_: :a, id: 'tweets_'+id, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
         elsif post
           url = if datePath # host*month
                   datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + href.sha2
                 else
                   v.host
                 end
-          {_: :a, id: 'post_'+rand.to_s.sha2, href: url, c: v.label}
+          {_: :a, id: 'post_'+id, href: url, c: v.label}
         else
           v
         end}
