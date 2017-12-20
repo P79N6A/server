@@ -116,7 +116,7 @@ class WebResource
         nodes = t.keys.sort
         label = 'p'+path.sha2 if nodes.size > 1
         @r[:label][label] = true if label
-        table = nodes.size < 36
+        tabled = nodes.size < 36
         size = 0.0
         # scale
         nodes.map{|name|
@@ -125,21 +125,21 @@ class WebResource
             r[Size].justArray.map{|sz|
               size += sz}}} if label
         # render
-        {_: table ? :table : :div, class: :tree, border: 1, c: [
-           {_: table ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
+        {_: tabled ? :table : :div, class: :tree, border: 1, c: [
+           {_: tabled ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
               this = path + name + '/' # path
               s = graph[this].do{|r|r[Size].justArray[0]} # size
               graph.delete this # consume node
               named = !name.empty?
-              scaled = s && size > 0
+              scaled = size > 0 && s && tabled
               width = scaled && (s / size) # scale
-              {_: table ? :td : :div,
+              {_: tabled ? :td : :div,
                class: named ? (scaled ? :scaled : :unscaled) : '',
                style: scaled ? "width:#{width * 100.0}%" : '',
                c: named ? {_: :a, href: this + qs, name: label, id: 't'+this.sha2,
                            c: (scaled ? '' : ('&nbsp;'*path.size)) + CGI.escapeHTML(URI.unescape name) + (scaled ? '' : '/')} : ''}}.intersperse("\n")},"\n",
-           {_: table ? :tr : :div, c: nodes.map{|k| # children
-              {_: table ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
+           {_: tabled ? :tr : :div, c: nodes.map{|k| # children
+              {_: tabled ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
 
       # render tree
       render[tree]
