@@ -132,9 +132,8 @@ class WebResource
               graph.delete this # consume node
               scaled = s && size > 0
               width = scaled && (s / size) # scale
-              {_: table ? :td : :div, class: name.empty? ? '' : :node,
-               style: width ? "width:#{width * 100.0}%;height:2em" : '',
-               c: {_: :a, href: this + qs, name: label || :node, id: 't'+this.sha2, c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
+              {_: table ? :td : :div, class: name.empty? ? '' : (width ? :scaled : :unscaled), style: width ? "width:#{width * 100.0}%" : '',
+               c: {_: :a, href: this + qs, name: label, id: 't'+this.sha2, c: CGI.escapeHTML(URI.unescape name)}}}.intersperse("\n")},"\n",
            {_: table ? :tr : :div, c: nodes.map{|k| # children
               {_: table ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")}]}}
 
