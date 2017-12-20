@@ -106,11 +106,14 @@ class WebResource
                       "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
                    !empty && @r[:Links][:down].do{|d|
                      {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                   empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname},
-                  ]}]}]
+                   empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname}
+                  ]}
+             ]}
+        ]
     end
 
     def htmlTree graph
+      q = qs.empty? ? '?head' : qs
       # construct tree
       tree = {}
       graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
@@ -143,7 +146,7 @@ class WebResource
               {_: tabled ? :td : :div,
                class: named ? (scaled ? :scaled : :unscaled) : '',
                style: scaled ? "width:#{width * 100.0}%" : '',
-               c: named ? {_: :a, href: this + qs, name: label, id: 't'+this.sha2,
+               c: named ? {_: :a, href: this + q, name: label, id: 't'+this.sha2,
                            c: (scaled ? '' : ('&nbsp;'*path.size)) + CGI.escapeHTML(URI.unescape name) + (scaled ? '' : '/')} : ''}}.intersperse("\n")},"\n",
            ({_: tabled ? :tr : :div, c: nodes.map{|k| # children
               {_: tabled ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")} unless !nodes.find{|n|t[n].size > 0})]}}
