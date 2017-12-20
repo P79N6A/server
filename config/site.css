@@ -4,13 +4,13 @@ pre {display: inline-block; margin:0; white-space: pre-wrap; font-family: monosp
 span.notes {color:#aaa;font-size:.8em}
 img {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff; vertical-align: top}
-a,td.host {border-radius:.125em}
+a,table,td.host {border-radius:.125em}
 a#up {display:block}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
 a#next, a.title {float: right}
-a.title {border-width: 0 0 0 .1em; border-style: dashed; border-color: #aa0; border-radius:0; padding-left:.2em}
+a.title {border-width: 0 .1em 0 .1em; border-style: dashed; padding:0 .2em 0 .2em}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.reqURI {font-size:.86em;float: right}
@@ -29,7 +29,7 @@ th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
 td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
 td[property="http://rdfs.org/sioc/ns#has_creator"] {max-width:22ex;overflow:hidden}
-table.links {float:left;background-color:#222}
+table.links {float:left;background-color:#191919}
 table.links td.host a {float: right; color:#000}
-table.links td.path {max-width: 42em;overflow:hidden;background-color:#111}
+table.links td.path {max-width: 42em;overflow:hidden;background-color:#000}
 table.links td.path a {font-weight: normal}

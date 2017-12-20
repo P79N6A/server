@@ -94,7 +94,8 @@ class WebResource
                    {class: :scroll, c: (htmlTree graph)},
                    !empty && (htmlTable graph),
                    {_: :style, c: @r[:label].map{|name,_|
-                      "[name=\"#{name}\"] {color:#000;background-color: #{'#%06x' % (rand 16777216)}}\n"}},
+                      color = '#%06x' % (rand 16777216)
+                      "[name=\"#{name}\"] {color:#000; border-color: #{color}; background-color: #{color}}\n"}},
                    !empty && @r[:Links][:down].do{|d|
                      {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
                    empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname},
@@ -234,7 +235,8 @@ class WebResource
             c: case k
                when 'uri'
                  [titles.compact.map{|t|
-                    {_: :a, class: :title, href: link,
+                    @r[:label][this.tld] = true
+                    {_: :a, class: :title, href: link, name: this.tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
                   l[Label].justArray.compact.map{|v|
                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
