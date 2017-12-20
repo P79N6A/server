@@ -31,7 +31,7 @@ td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
 td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
-td[property="http://rdfs.org/sioc/ns#has_creator"] {max-width:22ex;overflow:hidden}
+td[property="http://rdfs.org/sioc/ns#has_creator"],td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:24ex;overflow:hidden}
 table.links {float:left;background-color:#191919}
 table.links td.host a {float: right; color:#000}
 table.links td.path {max-width: 42em;overflow:hidden;background-color:#000}
