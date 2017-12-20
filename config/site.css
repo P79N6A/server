@@ -22,10 +22,10 @@ a:visited {border:.08em solid #eee}
 div.scroll {max-width:100%;overflow:scroll}
 table.tree {width:100%;border: .0em solid black; border-spacing:0}
 table.tree td {padding:0}
+table.tree a {display:block;height:100%;width:100%;padding-left:.125em}
 table.tree tr.nodes > td.unscaled {border: .1em solid #222;background-color:#181818}
-table.tree tr.nodes > td.unscaled > a {background-color:#000;color:#fff}
+table.tree tr.nodes > td.unscaled > a {background-color:#000;color:#fff;font-family: monospace}
 table.tree tr.nodes > td.scaled {height:1.6em}
-table.tree tr.nodes > td.scaled > a {display:block;height:100%;width:100%;padding-left:.125em}
 td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
