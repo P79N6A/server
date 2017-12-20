@@ -242,14 +242,14 @@ class WebResource
                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
-                    {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])+' '}.update(rowID[])},
+                    {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}.update(rowID[])}.intersperse(' '),
                   titles.compact.map{|t|
                     @r[:label][this.tld] = true
                     {_: :a, class: :title, href: link, name: this.tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
                   linkTable[LinkPred.map{|p|l[p]}.flatten.compact],
                   l[Abstract].do{|abs|{_: :pre, c: abs}},
-                  (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : [c,' ']} unless head),
+                  (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c}.intersperse(' ') unless head),
                   (images = []
                    images.push this if types.member?(Image) # subject of triple
                    l[Image].do{|i|images.concat i}          # object of triple
@@ -260,7 +260,7 @@ class WebResource
                            img.path + '?preview'
                          else
                            img.uri
-                          end}}})]
+                          end}}})].intersperse(' ')
                when Type
                  l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
                    {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
