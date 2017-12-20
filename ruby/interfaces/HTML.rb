@@ -95,7 +95,7 @@ class WebResource
                    !empty && (htmlTable graph),
                    {_: :style, c: @r[:label].map{|name,_|
                       color = '#%06x' % (rand 16777216)
-                      "[name=\"#{name}\"] {color:#000; border-color: #{color}; background-color: #{color}}\n"}},
+                      "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
                    !empty && @r[:Links][:down].do{|d|
                      {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
                    empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname},

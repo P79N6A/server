@@ -10,7 +10,6 @@ a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
 a#next, a.title {float: right}
-a.title {border-width: 0 .1em 0 .1em; border-style: dashed; padding:0 .2em 0 .2em}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
 a.reqURI {font-size:.86em;float: right}
