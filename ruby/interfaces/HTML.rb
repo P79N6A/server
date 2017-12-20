@@ -91,6 +91,8 @@ class WebResource
                      {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
                    @r[:Links][:prev].do{|p|
                      {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
+                   @r[:Links][:next].do{|n|
+                     {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}},
                    path!='/' && {class: :search,
                                  c: {_: :form,
                                      c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
@@ -105,8 +107,7 @@ class WebResource
                    !empty && @r[:Links][:down].do{|d|
                      {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
                    empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname},
-                   @r[:Links][:next].do{|n|
-                     {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}}]}]}]
+                  ]}]}]
     end
 
     def htmlTree graph
