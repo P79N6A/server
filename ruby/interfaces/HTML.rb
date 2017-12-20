@@ -73,8 +73,9 @@ class WebResource
       @r[:title] ||= graph[path+'#this'].do{|r|r[Title].justArray[0]}
       @r[:label] ||= {}
       @r[:Links] ||= {}
-      query = q['q']
-      htmlGrep graph, query if query
+      htmlGrep graph, q['q'] if q['q']
+      query = q['q'] || q['f']
+      useGrep = path.split('/').size > 3 # search-provider suggestion
       H ["<!DOCTYPE html>\n",
          {_: :html,
           c: [{_: :head,
@@ -90,7 +91,12 @@ class WebResource
                      {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
                    @r[:Links][:prev].do{|p|
                      {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-                   htmlSearch,
+                   path!='/' && {class: :search,
+                                 c: {_: :form,
+                                     c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
+                                         {_: :input, id: :searchbox, name: useGrep ? 'q' : 'f',
+                                          placeholder: useGrep ? :grep : :find
+                                         }.update(query ? {value: query} : {})]}},
                    {class: :scroll, c: (htmlTree graph)},
                    !empty && (htmlTable graph),
                    {_: :style, c: @r[:label].map{|name,_|
@@ -314,18 +320,6 @@ class WebResource
                            }},{_: :hr}] if lines.size > 0 }}
       # word-highlight CSS
       graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
-    end
-
-    def htmlSearch
-      query = q['q'] || q['f']
-      useGrep = path.split('/').size > 3 # search-provider suggestion
-      {class: :search,
-       c: {_: :form,
-           c: [{_: :a, class: :find, href: (query ? '?' : '') + '#searchbox' },
-               {_: :input, id: :searchbox,
-                name: useGrep ? 'q' : 'f',
-                placeholder: useGrep ? :grep : :find
-               }.update(query ? {value: query} : {})]}} unless path=='/'
     end
 
     def nokogiri
