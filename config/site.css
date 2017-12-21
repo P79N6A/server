@@ -11,6 +11,7 @@ a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
 a.label {margin-right: .1em;padding: 0 .1em 0 .1em;background-color:#fff;color:#000}
+a.twitter {border: .1em dotted #888;border-radius:.5em;padding:0 .3em 0 .3em}
 a#next, a.title {float: right}
 a.title {padding:0 .16em 0 .16em}
 a.thumb img {max-height: 24em}

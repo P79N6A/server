@@ -260,8 +260,7 @@ class WebResource
             c: case k
                when 'uri'
                  [self[Label].compact.map{|v|
-                    label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                    {_: :a, class: :label, href: uri, c: (CGI.escapeHTML label[0..42])}}.intersperse(' '),
+                    {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri, c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
                     {_: :a, class: :title, href: uri, name: tld,
