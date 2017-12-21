@@ -68,7 +68,7 @@ class WebResource
                grep q['q']
              else
                if uri[-1] == '/' # inside (trailing slash)
-                 index = (self+'index.{html,ttl}').glob # static index
+                 index = (self+'index.{html}').glob # static index
                  !index.empty? && qs.empty? && index || [self, children]
                else # outside
                  @r[:Links][:down] = path + '/' + qs
@@ -81,7 +81,6 @@ class WebResource
              end).justArray.flatten.compact.select &:exist?
 
       return notfound if !set || set.empty?
-#      puts "set #{set.join ' '}"
 
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
