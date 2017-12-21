@@ -31,11 +31,12 @@ class WebResource
       Comments => :comments,
       Stat+'File' => :file,
       Stat+'Archive' => :archive,
-      Stat+'HTMLFile' => :html,
-      Stat+'WordDocument' => :word,
       Stat+'DataFile' => :tree,
-      Stat+'TextFile' => :textfile,
+      Stat+'HTMLFile' => :html,
       Stat+'MarkdownFile' => :markup,
+      Stat+'TextFile' => :textfile,
+      Stat+'UriList' => :list,
+      Stat+'WordDocument' => :word,
       Stat+'width' => :width,
       Stat+'height' => :height,
       Stat+'container' => :dir,
@@ -253,8 +254,8 @@ class WebResource
                     {_: :a, class: :title, href: uri, name: tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
                   linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
-                  self[Abstract].do{|abs|{_: :pre, c: abs}},
-                  (self[Content].map{|c|monospace ? {_: :pre,c: c} : c}.intersperse(' ') unless head),
+                  self[Abstract].map{|abs|{_: :pre, c: abs}},
+                  (self[Content].map{|c|monospace ? {_: :pre, c: c} : c}.intersperse(' ') unless head),
                   (images = []
                    images.push self if types.member?(Image) # is subject of triple
                    self[Image].do{|i|images.concat i}      # is object of triple
@@ -270,11 +271,9 @@ class WebResource
                  self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
                    {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
                when Size
-                 self[Size].do{|sz|
-                   sum = 0
-                   sz.map{|v|
-                     sum += v.to_i}
-                   sum}
+                 sum = 0
+                 self[Size].map{|v|sum += v.to_i}
+                 sum == 0 ? '' : sum
                when Creator
                  [self[Creator].map{|v|
                     if v.respond_to? :uri
@@ -282,8 +281,8 @@ class WebResource
                     else
                       {_: :span, c: (CGI.escapeHTML v.to_s)}
                     end}.intersperse(' '),
-                  (self[SIOC+'user_agent'].do{|ua|
-                     ['<br>', {_: :span, class: :notes, c: ua.join}]} unless head)]
+                  (self[SIOC+'user_agent'].map{|ua|
+                     ['<br>', {_: :span, class: :notes, c: ua}]} unless head)]
                when SIOC+'addressed_to'
                  self[SIOC+'addressed_to'].map{|v|
                    if v.respond_to? :uri
@@ -293,7 +292,7 @@ class WebResource
                    end}.intersperse(' ')
                when Date
                  [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
-                  self[DC+'note'].do{|ua|{_: :span, class: :notes, c: ua.join}}].compact.intersperse('<br>')
+                  self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}].compact.intersperse('<br>')
                when DC+'cache'
                  self[DC+'cache'].map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
                else

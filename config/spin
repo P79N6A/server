@@ -2,7 +2,7 @@
 while true
 do
     R .conf/feedB.u fetchFeeds
-    R .conf/twits twitter
+    R .conf/twitter.u twitter
     date
     sleep 30m
 done

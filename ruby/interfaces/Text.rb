@@ -19,7 +19,13 @@ class WebResource
     def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
 
     def triplrUriList
-      open(localPath).readlines.map{|line|
+      lines = open(localPath).readlines
+      doc = stripDoc.uri
+      yield doc, Type, R[Stat+'UriList']
+      yield doc, Title, stripDoc.basename
+      yield doc, Size, lines.size
+      yield doc, Date, mtime.iso8601
+      lines.map{|line|
         t = line.chomp.split ' '
         uri = t[0]
         resource = uri.R
@@ -29,7 +35,7 @@ class WebResource
                   "#{resource.host}#{resource.path}"
                 end
         yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
-        yield uri, Title, title }
+        yield uri, Title, title}
     end
 
     def triplrWord conv, out='', &f
