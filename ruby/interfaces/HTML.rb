@@ -237,8 +237,7 @@ class WebResource
           v
         end}
 
-      titles = self[Title]
-      unless head && titles.empty? && !self[Abstract] # title or abstract required in heading-mode
+      unless head && self[Title].empty? && self[Abstract].empty? # title or abstract required in heading-mode
         {_: :tr,
          c: keys.map{|k|
            {_: :td, property: k,
@@ -249,7 +248,7 @@ class WebResource
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
                     {_: :a, class: :label, href: uri, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse(' '),
-                  titles.compact.map{|t|
+                  self[Title].compact.map{|t|
                     @r[:label][tld] = true
                     {_: :a, class: :title, href: uri, name: tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
