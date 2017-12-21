@@ -192,9 +192,8 @@ class WebResource
       post = types.member? SIOC+'BlogPost'
       tweet = types.member? SIOC+'Tweet'
       monospace = chat || mail || types.member?(SIOC+'SourceCode')
-      date = @data[Date].justArray.sort[0]
+      date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-      titles = @data[Title].justArray
 
       linkTable = -> links {
         links = links.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
@@ -238,13 +237,14 @@ class WebResource
           v
         end}
 
-      unless head && titles.empty? && !@data[Abstract] # title or abstract required on ?head flag
+      titles = self[Title]
+      unless head && titles.empty? && !self[Abstract] # title or abstract required in heading-mode
         {_: :tr,
          c: keys.map{|k|
            {_: :td, property: k,
             c: case k
                when 'uri'
-                 [@data[Label].justArray.compact.map{|v|
+                 [self[Label].compact.map{|v|
                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
@@ -253,12 +253,12 @@ class WebResource
                     @r[:label][tld] = true
                     {_: :a, class: :title, href: uri, name: tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
-                  linkTable[LinkPred.map{|p|@data[p]}.flatten.compact],
-                  @data[Abstract].do{|abs|{_: :pre, c: abs}},
-                  (@data[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c}.intersperse(' ') unless head),
+                  linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
+                  self[Abstract].do{|abs|{_: :pre, c: abs}},
+                  (self[Content].map{|c|monospace ? {_: :pre,c: c} : c}.intersperse(' ') unless head),
                   (images = []
                    images.push self if types.member?(Image) # is subject of triple
-                   @data[Image].do{|i|images.concat i}      # is object of triple
+                   self[Image].do{|i|images.concat i}      # is object of triple
                    images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unseen images
                      @r[:images].push img # seen
                      {_: :a, class: :thumb, href: uri,
@@ -268,25 +268,25 @@ class WebResource
                            img.uri
                           end}}})].intersperse(' ')
                when Type
-                 @data[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
+                 self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
                    {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
                when Size
-                 @data[Size].do{|sz|
+                 self[Size].do{|sz|
                    sum = 0
-                   sz.justArray.map{|v|
+                   sz.map{|v|
                      sum += v.to_i}
                    sum}
                when Creator
-                 [@data[k].justArray.map{|v|
+                 [self[Creator].map{|v|
                     if v.respond_to? :uri
                       indexLink[v]
                     else
                       {_: :span, c: (CGI.escapeHTML v.to_s)}
                     end}.intersperse(' '),
-                  (@data[SIOC+'user_agent'].do{|ua|
+                  (self[SIOC+'user_agent'].do{|ua|
                      ['<br>', {_: :span, class: :notes, c: ua.join}]} unless head)]
                when SIOC+'addressed_to'
-                 @data[k].justArray.map{|v|
+                 self[SIOC+'addressed_to'].map{|v|
                    if v.respond_to? :uri
                      indexLink[v]
                    else
@@ -294,11 +294,11 @@ class WebResource
                    end}.intersperse(' ')
                when Date
                  [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
-                  @data[DC+'note'].do{|ua|{_: :span, class: :notes, c: ua.join}}].compact.intersperse('<br>')
+                  self[DC+'note'].do{|ua|{_: :span, class: :notes, c: ua.join}}].compact.intersperse('<br>')
                when DC+'cache'
-                 @data[k].justArray.map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
+                 self[DC+'cache'].map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
                else
-                 @data[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
+                 self[k].map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
                end}}.intersperse("\n")}
       end
     end
