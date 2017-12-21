@@ -22,8 +22,14 @@ class WebResource
       open(localPath).readlines.map{|line|
         t = line.chomp.split ' '
         uri = t[0]
+        resource = uri.R
+        title = if t.size > 1
+                  t[1..-1].join ' '
+                else
+                  "#{resource.host}#{resource.path}"
+                end
         yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
-        yield uri, Title, t[1..-1].join(' ') if t.size > 1 }
+        yield uri, Title, title }
     end
 
     def triplrWord conv, out='', &f
