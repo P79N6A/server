@@ -107,10 +107,7 @@ class WebResource
                       "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
                    !empty && @r[:Links][:down].do{|d|
                      {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                   empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname}
-                  ]}
-             ]}
-        ]
+                   empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname}]}]}]
     end
 
     def htmlTree graph
