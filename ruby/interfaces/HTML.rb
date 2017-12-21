@@ -2,6 +2,31 @@
 class WebResource
 
   module HTML
+    def self.render x
+      case x
+      when String
+        x
+      when Hash
+        void = [:img, :input, :link, :meta].member? x[:_]
+        '<' + (x[:_] || 'div').to_s +                        # element name
+          (x.keys - [:_,:c]).map{|a|                         # attribute name
+          ' ' + a.to_s + '=' + "'" + x[a].to_s.chars.map{|c| # attribute value
+            {"'"=>'%27', '>'=>'%3E',
+             '<'=>'%3C'}[c]||c}.join + "'"}.join +
+          (void ? '/' : '') + '>' + (render x[:c]) +              # children
+          (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # element closer
+      when Array
+        x.map{|n|render n}.join
+      when R
+        render({_: :a, href: x.uri, c: x.label})
+      when NilClass
+        ''
+      when FalseClass
+        ''
+      else
+        CGI.escapeHTML x.to_s
+      end
+    end
     include URIs
     InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', DC+'note', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
     VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
@@ -68,7 +93,7 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    def renderHTML graph
+    def htmlDocument graph
       empty = graph.empty?
       @r ||= {}
       @r[:title] ||= graph[path+'#this'].do{|r|r[Title].justArray[0]}
@@ -77,37 +102,37 @@ class WebResource
       htmlGrep graph, q['q'] if q['q']
       query = q['q'] || q['f']
       useGrep = path.split('/').size > 3 # search-provider suggestion
-      H ["<!DOCTYPE html>\n",
-         {_: :html,
-          c: [{_: :head,
-               c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]||path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                   %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
-                   @r[:Links].do{|links|
-                     links.map{|type,uri|
-                       {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}
-                     }},
-                   {_: :script, c: '.conf/site.js'.R.readFile}]},
-              {_: :body,
-               c: [@r[:Links][:up].do{|p|
-                     {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
-                   @r[:Links][:prev].do{|p|
-                     {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-                   @r[:Links][:next].do{|n|
-                     {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}},
-                   path!='/' && {class: :search,
-                                 c: {_: :form,
-                                     c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
-                                         {_: :input, id: :searchbox, name: useGrep ? 'q' : 'f',
-                                          placeholder: useGrep ? :grep : :find
-                                         }.update(query ? {value: query} : {})]}},
-                   {class: :scroll, c: (htmlTree graph)},
-                   !empty && (htmlTable graph),
-                   {_: :style, c: @r[:label].map{|name,_|
-                      color = '#%06x' % (rand 16777216)
-                      "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
-                   !empty && @r[:Links][:down].do{|d|
-                     {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
-                   empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname}]}]}]
+      HTML.render ["<!DOCTYPE html>\n",
+                   {_: :html,
+                    c: [{_: :head,
+                         c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]||path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                             %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
+                             @r[:Links].do{|links|
+                               links.map{|type,uri|
+                                 {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}
+                               }},
+                             {_: :script, c: '.conf/site.js'.R.readFile}]},
+                        {_: :body,
+                         c: [@r[:Links][:up].do{|p|
+                               {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
+                             @r[:Links][:prev].do{|p|
+                               {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
+                             @r[:Links][:next].do{|n|
+                               {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}},
+                             path!='/' && {class: :search,
+                                           c: {_: :form,
+                                               c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
+                                                   {_: :input, id: :searchbox, name: useGrep ? 'q' : 'f',
+                                                    placeholder: useGrep ? :grep : :find
+                                                   }.update(query ? {value: query} : {})]}},
+                             {class: :scroll, c: (htmlTree graph)},
+                             !empty && (htmlTable graph),
+                             {_: :style, c: @r[:label].map{|name,_|
+                                color = '#%06x' % (rand 16777216)
+                                "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
+                             !empty && @r[:Links][:down].do{|d|
+                               {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
+                             empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname}]}]}]
     end
 
     def htmlTree graph
@@ -317,7 +342,7 @@ class WebResource
         (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
           r[Abstract] = [lines[0..5].map{|l|
                            l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
-                             H({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
+                             HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
                            }},{_: :hr}] if lines.size > 0 }}
       # word-highlight CSS
       graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
@@ -382,28 +407,3 @@ module Redcarpet
   end
 end
 
-def H x # HTML from ruby values
-  case x
-  when String
-    x
-  when Hash # element
-    void = [:img, :input, :link, :meta].member? x[:_]
-    '<' + (x[:_] || 'div').to_s +                        # element name
-      (x.keys - [:_,:c]).map{|a|                         # attribute name
-      ' ' + a.to_s + '=' + "'" + x[a].to_s.chars.map{|c| # attribute value
-        {"'"=>'%27', '>'=>'%3E',
-         '<'=>'%3C'}[c]||c}.join + "'"}.join +
-      (void ? '/' : '') + '>' + (H x[:c]) +              # children
-      (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # element closer
-  when Array # structure
-    x.map{|n|H n}.join
-  when R
-    H({_: :a, href: x.uri, c: x.label})
-  when NilClass
-    ''
-  when FalseClass
-    ''
-  else
-    CGI.escapeHTML x.to_s
-  end
-end

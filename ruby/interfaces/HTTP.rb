@@ -91,7 +91,7 @@ class WebResource
           set[0] # static entity
         else # dynamic
           if format == 'text/html'
-            renderHTML load set
+            htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set
           else
@@ -141,7 +141,7 @@ class WebResource
       end
     end
 
-    def notfound; [404,{'Content-Type' => 'text/html'},[renderHTML({})]] end
+    def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument({})]] end
 
     # Hash -> qs
     def self.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end

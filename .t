@@ -1,10 +1,7 @@
 house insert
-move H into HTML module namespace
 ical
 ig
-stats - doc view 
-find largest mail, attachment 
-secondary resource keynav
+stats - doc view  - find largest mail, attachment 
 fix grep (view) arg-splitting
 ln ln_s fallback
 cache images

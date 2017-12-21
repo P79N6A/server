@@ -244,21 +244,21 @@ class WebResource
     end
 
     def renderFeed graph
-      H(['<?xml version="1.0" encoding="utf-8"?>',
-         {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
-          c: [{_: :id, c: uri},
-              {_: :title, c: uri},
-              {_: :link, rel: :self, href: uri},
-              {_: :updated, c: Time.now.iso8601},
-              graph.map{|u,d|
-                {_: :entry,
-                 c: [{_: :id, c: u}, {_: :link, href: u},
-                     d[Date].do{|d|   {_: :updated, c: d[0]}},
-                     d[Title].do{|t|  {_: :title,   c: t}},
-                     d[Creator].do{|c|{_: :author,  c: c[0]}},
-                     {_: :content, type: :xhtml,
-                      c: {xmlns:"http://www.w3.org/1999/xhtml",
-                          c: d[Content]}}]}}]}])
+      HTML.render ['<?xml version="1.0" encoding="utf-8"?>',
+                   {_: :feed,xmlns: 'http://www.w3.org/2005/Atom',
+                    c: [{_: :id, c: uri},
+                        {_: :title, c: uri},
+                        {_: :link, rel: :self, href: uri},
+                        {_: :updated, c: Time.now.iso8601},
+                        graph.map{|u,d|
+                          {_: :entry,
+                           c: [{_: :id, c: u}, {_: :link, href: u},
+                               d[Date].do{|d|   {_: :updated, c: d[0]}},
+                               d[Title].do{|t|  {_: :title,   c: t}},
+                               d[Creator].do{|c|{_: :author,  c: c[0]}},
+                               {_: :content, type: :xhtml,
+                                c: {xmlns:"http://www.w3.org/1999/xhtml",
+                                    c: d[Content]}}]}}]}]
     end
   end
   module Webize

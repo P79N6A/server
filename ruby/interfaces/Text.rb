@@ -54,7 +54,7 @@ class WebResource
         yield doc, Date, mt.iso8601}
       yield doc, DC+'hasFormat', self
       yield doc, Content,
-            H({_: :pre, style: 'white-space: pre-wrap',
+            HTML.render({_: :pre, style: 'white-space: pre-wrap',
                c: readFile.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
     rescue Exception => e
       puts uri, e.class, e.message
