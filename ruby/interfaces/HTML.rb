@@ -4,8 +4,7 @@ class WebResource
   module HTML
     include URIs
     InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', DC+'note', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-    VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
-                   RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+    VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                    SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
     LinkPred = [SIOC+'attachment',Stat+'contains',Atom+'link',RSS+'link',DC+'link']
 
@@ -186,8 +185,6 @@ class WebResource
 
     def htmlTableRow sort,direction,keys
       inDoc = path == @r['REQUEST_PATH']
-      identified = false
-      head = q.has_key? 'head'
       chat = types.member? SIOC+'InstantMessage'
       mail = types.member? SIOC+'MailMessage'
       post = types.member? SIOC+'BlogPost'
@@ -211,6 +208,7 @@ class WebResource
                    [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                     ' ']}}]}}} unless links.empty? }
 
+      identified = false
       rowID = -> {
         if identified || (inDoc && !fragment)
           {}
@@ -238,7 +236,7 @@ class WebResource
           v
         end}
 
-      unless head && self[Title].empty? && self[Abstract].empty? # title or abstract required in heading-mode
+      unless q.has_key?('head') && self[Title].empty? && self[Abstract].empty? # title or abstract required in heading-mode
         {_: :tr,
          c: keys.map{|k|
            {_: :td, property: k,
@@ -255,7 +253,7 @@ class WebResource
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
                   linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
                   self[Abstract].map{|abs|{_: :pre, c: abs}},
-                  (self[Content].map{|c|monospace ? {_: :pre, c: c} : c}.intersperse(' ') unless head),
+                  (self[Content].map{|c|monospace ? {_: :pre, c: c} : c}.intersperse(' ') unless q.has_key?('head')),
                   (images = []
                    images.push self if types.member?(Image) # is subject of triple
                    self[Image].do{|i|images.concat i}      # is object of triple
@@ -281,8 +279,8 @@ class WebResource
                     else
                       {_: :span, c: (CGI.escapeHTML v.to_s)}
                     end}.intersperse(' '),
-                  (self[SIOC+'user_agent'].map{|ua|
-                     ['<br>', {_: :span, class: :notes, c: ua}]} unless head)]
+                  self[SIOC+'user_agent'].map{|ua|
+                    ['<br>', {_: :span, class: :notes, c: ua}]}]
                when SIOC+'addressed_to'
                  self[SIOC+'addressed_to'].map{|v|
                    if v.respond_to? :uri
