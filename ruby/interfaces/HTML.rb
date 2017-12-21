@@ -3,7 +3,7 @@ class WebResource
 
   module HTML
     include URIs
-    InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+    InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', DC+'note', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
     VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
                    RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                    SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
@@ -298,7 +298,8 @@ class WebResource
                      {_: :span, c: (CGI.escapeHTML v.to_s)}
                    end}.intersperse(' ')
                when Date
-                 {_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath
+                 [({_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath),
+                  l[DC+'note'].do{|ua|{_: :span, class: :notes, c: ua.join}}].compact.intersperse('<br>')
                when DC+'cache'
                  l[k].justArray.map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
                else

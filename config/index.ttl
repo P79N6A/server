@@ -1,0 +1,23 @@
+<icons.css> <http://purl.org/dc/terms/note> "CSS mapping icon names to font location" .
+<site.css> <http://purl.org/dc/terms/note> "CSS for main HTML view" .
+<code.css> <http://purl.org/dc/terms/note> "CSS for code-highlighting" .
+<rack.ru> <http://purl.org/dc/terms/note> "Ruby daemon invocation" .
+<instagram> <http://purl.org/dc/terms/note> "Instagram URLs" .
+<site.js> <http://purl.org/dc/terms/note> "Javascript to enable keyboard-navigation" .
+<twits> <http://purl.org/dc/terms/note> "twitter users" .
+<ooze> <http://purl.org/dc/terms/note> "slow-rolling content scanner" .
+<spin> <http://purl.org/dc/terms/note> "frequently-changing content scanner" .
+<font.woff> <http://purl.org/dc/terms/note> "icons in SIL OFL / MIT License font-file" .
+<icon.png> <http://purl.org/dc/terms/note> "'favicon' visual site-identity" .
+
+<http://www.universalhub.com/node/feed> <http://purl.org/dc/terms/note> "Adam G's feed" .
+<http://baystatebanner.com/rss/headlines/> <http://purl.org/dc/terms/note> "news, mainly in Roxbury" .
+<http://www.dotnews.com/rss.xml> <http://purl.org/dc/terms/note> "Dorchester Reporter" .
+<http://959watd.com/feed/> <http://purl.org/dc/terms/note> "At The dump." .
+<http://cambridgehappenings.org/~api/papers/b2aba772-7680-4d6b-8282-76aa8c9b8762/rss> <http://purl.org/dc/terms/note> "human-filter Cambridge reblog" .
+<http://amateurplanner.blogspot.com/feeds/posts/default> <http://purl.org/dc/terms/note> "THE AMATEUR PLANNER" .
+<http://www.gardenclubbackbay.org/feed/> <http://purl.org/dc/terms/note> "shadows" .
+<http://friendsofthepublicgarden.org/feed/> <http://purl.org/dc/terms/note> "shadows" .
+<https://dorchester.comunicas.org/feed/> <http://purl.org/dc/terms/note> "Dorchester Post" .
+<http://tmtv.world/feed/> <http://purl.org/dc/terms/note> "The Museum" .
+<http://bpdnews.com/news?format=rss> <http://purl.org/dc/terms/note> "Boston Police" .
