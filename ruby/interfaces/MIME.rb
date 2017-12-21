@@ -13,6 +13,7 @@ class WebResource
       'gemfile' => 'text/x-ruby',
       'install' => 'text/x-shellscript',
       'license' => 'text/plain',
+      'makefile' => 'text/x-makefile',
       'todo' => 'text/plain',
       'unlicense' => 'text/plain',
       'msg' => 'message/rfc822',
@@ -22,6 +23,7 @@ class WebResource
     # name suffix -> MIME
     MIMEsuffix = {
       'asc' => 'text/plain',
+      'bat' => 'text/x-batch',
       'chk' => 'text/plain',
       'conf' => 'application/config',
       'desktop' => 'application/config',
@@ -97,8 +99,10 @@ class WebResource
       'text/html'            => [:triplrHTML],
       'text/man'             => [:triplrMan],
       'text/xml+opml'        => [:triplrOPML],
+      'text/x-batch'         => [:triplrBat],
       'text/x-c'             => [:triplrSourceCode],
       'text/x-docker'        => [:triplrDocker],
+      'text/x-makefile'      => [:triplrMakefile],
       'text/x-ruby'          => [:triplrRuby],
       'text/x-php'           => [:triplrSourceCode],
       'text/x-python'        => [:triplrSourceCode],

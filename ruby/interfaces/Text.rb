@@ -5,7 +5,9 @@ class WebResource
     def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
     def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end
     def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile &f end
+    def triplrBat &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l batch -f html #{sh}`; triplrFile &f end
     def triplrDocker &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l docker -f html #{sh}`; triplrFile &f end
+    def triplrMakefile &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l make -f html #{sh}`; triplrFile &f end
     def triplrRuby &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l ruby -f html #{sh}`; triplrFile &f end
     def triplrShellScript &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l sh -f html #{sh}`; triplrFile &f end
     def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile &f end
