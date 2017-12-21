@@ -238,7 +238,7 @@ class WebResource
           v
         end}
 
-      unless head && titles.empty? && !@data[Abstract]
+      unless head && titles.empty? && !@data[Abstract] # title or abstract required on ?head flag
         {_: :tr,
          c: keys.map{|k|
            {_: :td, property: k,

@@ -5,7 +5,7 @@ end
 class WebResource
   module JSON
     include URIs
-    def types; @data[Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
+    def types; @types ||= @data[Type].justArray.select{|t|t.respond_to? :uri}.map(&:uri) end
     def to_json *a; {'uri' => uri}.to_json *a end
 
     class Format < RDF::Format
