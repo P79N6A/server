@@ -187,7 +187,6 @@ class WebResource
       inDoc = path == @r['REQUEST_PATH']
       identified = false
       head = q.has_key? 'head'
-      types = @data.types
       chat = types.member? SIOC+'InstantMessage'
       mail = types.member? SIOC+'MailMessage'
       post = types.member? SIOC+'BlogPost'

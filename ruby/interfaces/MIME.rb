@@ -11,7 +11,6 @@ class WebResource
       'copying' => 'text/plain',
       'dockerfile' => 'text/x-docker',
       'gemfile' => 'text/x-ruby',
-      'install' => 'text/x-shellscript',
       'license' => 'text/plain',
       'makefile' => 'text/x-makefile',
       'todo' => 'text/plain',
