@@ -1,12 +1,14 @@
 class Hash
-  def R; WebResource.new(self["uri"]).data self end # preserve data with reference
+  def R; WebResource.new(self["uri"]).data self end # preserve Hash/JSON data via reference
   def uri;     self["uri"] end
 end
 class WebResource
   module JSON
     include URIs
-    def types; @types ||= self[Type].select{|t|t.respond_to? :uri}.map(&:uri) end
     def [] p; @data[p].justArray end
+    def data d; @data = d; self end
+    def types; @types ||= self[Type].select{|t|t.respond_to? :uri}.map(&:uri) end
+    def a type; types.member? type end
     def to_json *a; {'uri' => uri}.to_json *a end
 
     class Format < RDF::Format

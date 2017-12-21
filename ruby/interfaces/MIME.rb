@@ -217,9 +217,6 @@ class WebResource
       g
     end
 
-    # resource data in graph-in-tree format
-    def data arg=nil; arg ? (@data = arg; self) : @data end
-
     # file(s) -> graph
     def loadRDF set
       g = RDF::Graph.new; set.map{|n|g.load n.toRDF.localPath, :base_uri => n.stripDoc}

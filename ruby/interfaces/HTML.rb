@@ -207,11 +207,6 @@ class WebResource
 
     def htmlTableRow sort,direction,keys
       inDoc = path == @r['REQUEST_PATH']
-      chat = types.member? SIOC+'InstantMessage'
-      mail = types.member? SIOC+'MailMessage'
-      post = types.member? SIOC+'BlogPost'
-      tweet = types.member? SIOC+'Tweet'
-      code = types.member?(SIOC+'SourceCode')
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
@@ -243,11 +238,11 @@ class WebResource
       indexLink = -> v {
         v = v.R
         id = rand.to_s.sha2
-        if mail # messages*month
+        if a SIOC+'MailMessage' # messages*month
           {_: :a, id: 'address_'+id, href: v.path + '?head#r' + sha2, c: v.label}
-        elsif tweet # tweets*hour
+        elsif a SIOC+'Tweet' # tweets*hour
           {_: :a, id: 'tweets_'+id, href: datePath + '*twitter*#r' + sha2, c: v.label}
-        elsif post
+        elsif a SIOC+'BlogPost'
           url = if datePath # host*month
                   datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2
                 else
@@ -266,18 +261,16 @@ class WebResource
                when 'uri'
                  [self[Label].compact.map{|v|
                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
-                    lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
-                    @r[:label][lbl] = true
-                    {_: :a, class: :label, href: uri, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse(' '),
+                    {_: :a, class: :label, href: uri, c: (CGI.escapeHTML label[0..42])}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
                     {_: :a, class: :title, href: uri, name: tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
                   self[Abstract], linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
                   (self[Content].map{|c|
-                     if code || mail
+                     if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
                        {_: :pre, c: c}
-                     elsif chat
+                     elsif a SIOC+'InstantMessage'
                        {_: :span, class: :monospace, c: c}
                      else
                        c

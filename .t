@@ -1,3 +1,4 @@
+predicate/baseURI for uri-list -> triple mapping (just use turtle?)
 house insert
 ical
 ig
