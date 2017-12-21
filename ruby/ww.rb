@@ -1,12 +1,10 @@
 # coding: utf-8
-# load dependencies
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 class WebResource < RDF::URI
   def self.[] u; WebResource.new u end
   def R; self end
   def inspect; "<#{to_s}>" end
   alias_method :uri, :to_s
-  # URI constants
   module URIs
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
@@ -40,13 +38,10 @@ class WebResource < RDF::URI
     Instagram = 'https://www.instagram.com/'
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
   end
-  # load library
   %w{MIME HTTP HTML POSIX Feed JSON Text Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
   [MIME, HTTP, HTML, POSIX, Feed, JSON, Webize, Util].map{|m|include m}
 end
 R = WebResource # shorthand
-# TODO replace #do with #yield_self? added in ruby 2.5..
-# TODO approaches to handling one vs many: remove #justArray?
 class Array
   def justArray; self end
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
