@@ -248,8 +248,8 @@ class WebResource
                     @r[:label][tld] = true
                     {_: :a, class: :title, href: uri, name: tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
+                  self[Abstract].map{|abs|{_: :span, class: :monospace, c: abs}},
                   linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
-                  self[Abstract].map{|abs|{_: :pre, c: abs}},
                   (self[Content].map{|c|monospace ? {_: :pre, c: c} : c}.intersperse(' ') unless q.has_key?('head')),
                   (images = []
                    images.push self if types.member?(Image) # is subject of triple
