@@ -217,7 +217,7 @@ class WebResource
           {}
         else
           identified = true
-          {id: (inDoc && fragment) ? fragment : 'r'+uri.sha2}
+          {id: (inDoc && fragment) ? fragment : 'r'+sha2}
         end}
 
       # pointer to selection of node in an index context
@@ -225,12 +225,12 @@ class WebResource
         v = v.R
         id = rand.to_s.sha2
         if mail # messages*month
-          {_: :a, id: 'address_'+id, href: v.path + '?head#r' + uri.sha2, c: v.label}
+          {_: :a, id: 'address_'+id, href: v.path + '?head#r' + sha2, c: v.label}
         elsif tweet # tweets*hour
-          {_: :a, id: 'tweets_'+id, href: datePath + '*twitter*#r' + uri.sha2, c: v.label}
+          {_: :a, id: 'tweets_'+id, href: datePath + '*twitter*#r' + sha2, c: v.label}
         elsif post
           url = if datePath # host*month
-                  datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + uri.sha2
+                  datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2
                 else
                   v.host
                 end
@@ -294,7 +294,7 @@ class WebResource
                      {_: :span, c: (CGI.escapeHTML v.to_s)}
                    end}.intersperse(' ')
                when Date
-                 [({_: :a, class: :date, href: datePath + '#r' + uri.sha2, c: date} if datePath),
+                 [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
                   @data[DC+'note'].do{|ua|{_: :span, class: :notes, c: ua.join}}].compact.intersperse('<br>')
                when DC+'cache'
                  @data[k].justArray.map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}

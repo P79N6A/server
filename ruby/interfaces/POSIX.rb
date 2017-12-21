@@ -22,6 +22,7 @@ class WebResource
     def parts; path ? path.split('/') : [] end
     def localPath; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
     def readFile; File.open(localPath).read end
+    def sha2; to_s.sha2 end
     def shellPath; localPath.utf8.sh end
     def size; node.size rescue 0 end
     def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt)$/,''] end
