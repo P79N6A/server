@@ -15,6 +15,8 @@ a.dir:before { content:"\f07c"; font-family: icons; }
 a.file:before { content:"\f15b"; font-family: icons; }
 a.feed:before { content:"\f09e"; font-family: icons; }
 a.textfile:before { content:"\f0f6"; font-family: icons; }
+a.textfileInverse:before { content:"\f15c"; font-family: icons; }
+a.markup:before { content:"\f1c9"; font-family: icons; }
 a.html:before { content:"\f13b"; font-family: icons; }
 a.archive:before { content:"\f019"; font-family: icons; }
 a.mailer:before { content:"\f2ba"; font-family: icons; }

@@ -35,6 +35,7 @@ class WebResource
       Stat+'WordDocument' => :word,
       Stat+'DataFile' => :tree,
       Stat+'TextFile' => :textfile,
+      Stat+'MarkdownFile' => :markup,
       Stat+'width' => :width,
       Stat+'height' => :height,
       Stat+'container' => :dir,
@@ -338,13 +339,6 @@ class WebResource
       n = Nokogiri::HTML.parse readFile
       n.css('title').map{|title| yield uri, Title, title.inner_text }
       n.css('meta[property="og:image"]').map{|m| yield uri, Image, m.attr("content").R }
-    end
-    
-    def triplrMarkdown
-      doc = stripDoc.uri
-      yield doc, Type, R[Stat+'TextFile']
-      yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
-      mtime.do{|mt|yield doc, Date, mt.iso8601}
     end
   end
 end

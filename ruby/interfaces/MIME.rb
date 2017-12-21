@@ -9,12 +9,15 @@ class WebResource
       'changelog' => 'text/plain',
       'contributors' => 'text/plain',
       'copying' => 'text/plain',
+      'gemfile' => 'text/x-ruby',
       'install' => 'text/x-shellscript',
       'license' => 'text/plain',
       'readme' => 'text/markdown',
       'todo' => 'text/plain',
       'unlicense' => 'text/plain',
-      'msg' => 'message/rfc822'}
+      'msg' => 'message/rfc822',
+      'r' => 'text/x-ruby',
+    }
 
     # name suffix -> MIME
     MIMEsuffix = {
@@ -95,12 +98,12 @@ class WebResource
       'text/man'             => [:triplrMan],
       'text/xml+opml'        => [:triplrOPML],
       'text/x-c'             => [:triplrSourceCode],
-      'text/x-ruby'          => [:triplrSourceCode],
+      'text/x-ruby'          => [:triplrRuby],
       'text/x-php'           => [:triplrSourceCode],
       'text/x-python'        => [:triplrSourceCode],
       'text/x-script.ruby'   => [:triplrSourceCode],
       'text/x-script.python' => [:triplrSourceCode],
-      'text/x-shellscript'   => [:triplrFile],
+      'text/x-shellscript'   => [:triplrShellScript],
       'text/markdown'        => [:triplrMarkdown],
       'text/nfo'             => [:triplrText,'cp437'],
       'text/plain'           => [:triplrText],

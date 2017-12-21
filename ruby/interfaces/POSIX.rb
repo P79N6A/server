@@ -54,7 +54,7 @@ class WebResource
     def triplrFile
       s = path
       size.do{|sz|yield s, Size, sz}
-      yield s, Label, basename
+      yield s, Title, basename
       mtime.do{|mt|
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
