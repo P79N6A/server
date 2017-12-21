@@ -186,7 +186,7 @@ class WebResource
       mail = types.member? SIOC+'MailMessage'
       post = types.member? SIOC+'BlogPost'
       tweet = types.member? SIOC+'Tweet'
-      monospace = chat || mail || types.member?(SIOC+'SourceCode')
+      code = types.member?(SIOC+'SourceCode')
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
@@ -249,7 +249,15 @@ class WebResource
                     {_: :a, class: :title, href: uri, name: tld,
                      c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
                   self[Abstract], linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
-                  (self[Content].map{|c|monospace ? {_: :pre, c: c} : c}.intersperse(' ') unless q.has_key?('head')),
+                  (self[Content].map{|c|
+                     if code || mail
+                       {_: :pre, c: c}
+                     elsif chat
+                       {_: :span, class: :monospace, c: c}
+                     else
+                       c
+                     end
+                   }.intersperse(' ') unless q.has_key?('head')),
                   (images = []
                    images.push self if types.member?(Image) # is subject of triple
                    self[Image].do{|i|images.concat i}      # is object of triple
