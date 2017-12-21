@@ -49,11 +49,6 @@ end
 class FalseClass
   def do; self end
 end
-class Hash
-  def R; WebResource.new self["uri"] end
-  def uri;     self["uri"] end
-  def types; self[R::Type].justArray.select{|t|t.respond_to? :uri}.map &:uri end
-end
 class NilClass
   def justArray; [] end
   def do; self end

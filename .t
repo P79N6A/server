@@ -1,6 +1,5 @@
 house insert
 move H into HTML module namespace
-document config/ in index.ttl
 ical
 ig
 stats - doc view 

@@ -7,14 +7,14 @@ class WebResource
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # /-collapse
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-      path.R.send env['REQUEST_METHOD'], env
+      path.R.environment(env).send env['REQUEST_METHOD']
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
     end
     include URIs
-    def HEAD env; self.GET(env).do{|s,h,b|[s,h,[]]} end
-    def GET env
-      @r = env
+    def environment env=nil; env ? (@r = env; self) : @r end
+    def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
+    def GET
       @r[:Response] = {}
       @r[:Links] = {}
       parts = path[1..-1].split '/'

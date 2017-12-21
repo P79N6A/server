@@ -167,7 +167,7 @@ class WebResource
       [{_: :table, border: 1, style: 'margin:auto;border: .0em solid black',
         c: [{_: :tbody,
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
-               (htmlTableRow r,p,direction,keys)}.intersperse("\n")},
+               (r.R.environment(@r).htmlTableRow p,direction,keys)}.intersperse("\n")},
             {_: :tr, c: keys.map{|k| # header row
                selection = p == k
                q_ = q.merge({'sort' => k})
@@ -183,22 +183,19 @@ class WebResource
        {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]
     end
 
-    def htmlTableRow l,sort,direction,keys
-      this = l.R
-      inDoc = path == this.path
-      reqURI = inDoc && !this.fragment
+    def htmlTableRow sort,direction,keys
+      inDoc = path == @r['REQUEST_PATH']
       identified = false
-      href = this.uri
       head = q.has_key? 'head'
-      types = l.types
+      types = @data.types
       chat = types.member? SIOC+'InstantMessage'
       mail = types.member? SIOC+'MailMessage'
       post = types.member? SIOC+'BlogPost'
       tweet = types.member? SIOC+'Tweet'
       monospace = chat || mail || types.member?(SIOC+'SourceCode')
-      date = l[Date].justArray.sort[0]
+      date = @data[Date].justArray.sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-      titles = l[Title].justArray
+      titles = @data[Title].justArray
 
       linkTable = -> links {
         links = links.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
@@ -216,11 +213,11 @@ class WebResource
                     ' ']}}]}}} unless links.empty? }
 
       rowID = -> {
-        if identified || reqURI
+        if identified || (inDoc && !fragment)
           {}
         else
           identified = true
-          {id: (inDoc && this.fragment) ? this.fragment : 'r'+href.sha2}
+          {id: (inDoc && fragment) ? fragment : 'r'+uri.sha2}
         end}
 
       # pointer to selection of node in an index context
@@ -228,12 +225,12 @@ class WebResource
         v = v.R
         id = rand.to_s.sha2
         if mail # messages*month
-          {_: :a, id: 'address_'+id, href: v.path + '?head#r' + href.sha2, c: v.label}
+          {_: :a, id: 'address_'+id, href: v.path + '?head#r' + uri.sha2, c: v.label}
         elsif tweet # tweets*hour
-          {_: :a, id: 'tweets_'+id, href: datePath + '*twitter*#r' + href.sha2, c: v.label}
+          {_: :a, id: 'tweets_'+id, href: datePath + '*twitter*#r' + uri.sha2, c: v.label}
         elsif post
           url = if datePath # host*month
-                  datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + href.sha2
+                  datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + uri.sha2
                 else
                   v.host
                 end
@@ -242,68 +239,67 @@ class WebResource
           v
         end}
 
-      unless head && titles.empty? && !l[Abstract]
-        link = href + (!this.host && href[-1]=='/' && '?head' || '')
+      unless head && titles.empty? && !@data[Abstract]
         {_: :tr,
          c: keys.map{|k|
            {_: :td, property: k,
             c: case k
                when 'uri'
-                 [l[Label].justArray.compact.map{|v|
+                 [@data[Label].justArray.compact.map{|v|
                     label = (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v).to_s
                     lbl = label.downcase.gsub(/[^a-zA-Z0-9_]/,'')
                     @r[:label][lbl] = true
-                    {_: :a, class: :label, href: link, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse(' '),
+                    {_: :a, class: :label, href: uri, name: lbl, c: (CGI.escapeHTML label[0..41])}}.intersperse(' '),
                   titles.compact.map{|t|
-                    @r[:label][this.tld] = true
-                    {_: :a, class: :title, href: link, name: this.tld,
-                     c: (CGI.escapeHTML t.to_s)}.update(rowID[]).update(reqURI ? {class: :reqURI} : {})}.intersperse(' '),
-                  linkTable[LinkPred.map{|p|l[p]}.flatten.compact],
-                  l[Abstract].do{|abs|{_: :pre, c: abs}},
-                  (l[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c}.intersperse(' ') unless head),
+                    @r[:label][tld] = true
+                    {_: :a, class: :title, href: uri, name: tld,
+                     c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
+                  linkTable[LinkPred.map{|p|@data[p]}.flatten.compact],
+                  @data[Abstract].do{|abs|{_: :pre, c: abs}},
+                  (@data[Content].justArray.map{|c|monospace ? {_: :pre,c: c} : c}.intersperse(' ') unless head),
                   (images = []
-                   images.push this if types.member?(Image) # subject of triple
-                   l[Image].do{|i|images.concat i}          # object of triple
+                   images.push self if types.member?(Image) # is subject of triple
+                   @data[Image].do{|i|images.concat i}      # is object of triple
                    images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unseen images
                      @r[:images].push img # seen
-                     {_: :a, class: :thumb, href: href,
+                     {_: :a, class: :thumb, href: uri,
                       c: {_: :img, src: if !img.host || host==img.host
                            img.path + '?preview'
                          else
                            img.uri
                           end}}})].intersperse(' ')
                when Type
-                 l[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
-                   {_: :a, href: href, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
+                 @data[Type].justArray.uniq.select{|t|t.respond_to? :uri}.map{|t|
+                   {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
                when Size
-                 l[Size].do{|sz|
+                 @data[Size].do{|sz|
                    sum = 0
                    sz.justArray.map{|v|
                      sum += v.to_i}
                    sum}
                when Creator
-                 [l[k].justArray.map{|v|
+                 [@data[k].justArray.map{|v|
                     if v.respond_to? :uri
                       indexLink[v]
                     else
                       {_: :span, c: (CGI.escapeHTML v.to_s)}
                     end}.intersperse(' '),
-                  (l[SIOC+'user_agent'].do{|ua|
+                  (@data[SIOC+'user_agent'].do{|ua|
                      ['<br>', {_: :span, class: :notes, c: ua.join}]} unless head)]
                when SIOC+'addressed_to'
-                 l[k].justArray.map{|v|
+                 @data[k].justArray.map{|v|
                    if v.respond_to? :uri
                      indexLink[v]
                    else
                      {_: :span, c: (CGI.escapeHTML v.to_s)}
                    end}.intersperse(' ')
                when Date
-                 [({_: :a, class: :date, href: datePath + '#r' + href.sha2, c: date} if datePath),
-                  l[DC+'note'].do{|ua|{_: :span, class: :notes, c: ua.join}}].compact.intersperse('<br>')
+                 [({_: :a, class: :date, href: datePath + '#r' + uri.sha2, c: date} if datePath),
+                  @data[DC+'note'].do{|ua|{_: :span, class: :notes, c: ua.join}}].compact.intersperse('<br>')
                when DC+'cache'
-                 l[k].justArray.map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
+                 @data[k].justArray.map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
                else
-                 l[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
+                 @data[k].justArray.map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
                end}}.intersperse("\n")}
       end
     end

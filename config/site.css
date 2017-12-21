@@ -14,7 +14,6 @@ a#next, a.title {float: right}
 a.title {padding:0 .16em 0 .16em}
 a.thumb img {max-height: 24em}
 a.date {white-space: nowrap}
-a.reqURI {font-size:.86em;float: right}
 a.notfound {font-size:8em;width:100%;display:block;text-align:center;border-radius:0;color:#000}
 a:visited {border:.08em solid #eee}
 .search {position:fixed; top:0;right:4%}
