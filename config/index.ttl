@@ -6,11 +6,11 @@
 <site.js> <http://purl.org/dc/terms/note> "Javascript to enable keyboard-navigation" .
 <twits> <http://purl.org/dc/terms/note> "twitter users" .
 <ooze> <http://purl.org/dc/terms/note> "slow-rolling content scanner" .
-<spin> <http://purl.org/dc/terms/note> "frequently-changing content scanner" .
+<spin> <http://purl.org/dc/terms/note> "frequently-updating content scanner" .
 <font.woff> <http://purl.org/dc/terms/note> "icons in SIL OFL / MIT License font-file" .
 <icon.png> <http://purl.org/dc/terms/note> "'favicon' visual site-identity" .
 
-<http://www.universalhub.com/node/feed> <http://purl.org/dc/terms/note> "Adam G's feed" .
+<http://www.universalhub.com/node/feed> <http://purl.org/dc/terms/note> "Adam G's news" .
 <http://baystatebanner.com/rss/headlines/> <http://purl.org/dc/terms/note> "news, mainly in Roxbury" .
 <http://www.dotnews.com/rss.xml> <http://purl.org/dc/terms/note> "Dorchester Reporter" .
 <http://959watd.com/feed/> <http://purl.org/dc/terms/note> "At The dump." .
