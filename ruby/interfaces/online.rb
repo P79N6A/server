@@ -1,3 +1,4 @@
+# coding: utf-8
 class WebResource
   module Util
     include URIs
@@ -15,6 +16,7 @@ class WebResource
         yield s, Creator, author
         yield s, To, (Twitter + '/#twitter').R
         yield s, Label, authorName
+        yield s, Title, '▶'
         content = t.css('.tweet-text')[0]
         content.css('a').map{|a|
           a.set_attribute('href', Twitter + (a.attr 'href')) if (a.attr 'href').match /^\//
