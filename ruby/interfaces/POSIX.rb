@@ -28,7 +28,7 @@ class WebResource
     def sha2; to_s.sha2 end
     def shellPath; localPath.utf8.sh end
     def size; node.size rescue 0 end
-    def stripDoc; R[uri.sub /\.(e|html|json|log|md|msg|ttl|txt|u|urls)$/,''] end
+    def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|ttl|txt|u)$/,''] end
     def tld; host && host.split('.')[-1] || '' end
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
     alias_method :e, :exist?
