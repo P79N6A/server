@@ -1,5 +1,4 @@
-predicate/baseURI for uri-list -> triple mapping (just use turtle?)
-house insert
+house data
 ical
 ig
 stats - doc view  - find largest mail, attachment 

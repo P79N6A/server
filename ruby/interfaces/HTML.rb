@@ -172,16 +172,17 @@ class WebResource
                    [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                     ' ']}}]}}} unless links.empty? }
 
-      # show From/To fields once in a single column
+      # From/To fields in one column
       ft = false
       fromTo = -> {
         unless ft
           ft = true
           [[Creator,SIOC+'addressed_to'].map{|edge|
-             self[edge].map{|v| #generate index-location pointers
+             self[edge].map{|v|
                if v.respond_to? :uri
                  v = v.R
                  id = rand.to_s.sha2
+                 # domain-specific index-location pointers
                  if a SIOC+'MailMessage' # messages*address*month
                    {_: :a, id: 'address_'+id, href: v.path + '?head#r' + sha2, c: v.label}
                  elsif a SIOC+'Tweet'
@@ -216,7 +217,7 @@ class WebResource
                     {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri, c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
-                    {_: :a, class: :title, href: uri, name: tld, # link in entry-list exactly once. reuse doc-local identifier or hash full URI to unique fragment
+                    {_: :a, class: :title, href: uri, name: tld, # local identifier or hashed nonlocal-URI.
                      c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
                                                         {}
                                                        else
