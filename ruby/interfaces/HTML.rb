@@ -49,6 +49,10 @@ class WebResource
       htmlGrep graph, q['q'] if q['q']
       query = q['q'] || q['f']
       useGrep = path.split('/').size > 3 # search-provider suggestion
+      link = -> name,icon {
+        @r[:Links][name].do{|href|
+          {_: :a, id: name, c: icon, href: (CGI.escapeHTML href.to_s)}}}
+
       HTML.render ["<!DOCTYPE html>\n",
                    {_: :html,
                     c: [{_: :head,
@@ -60,12 +64,7 @@ class WebResource
                                }},
                              {_: :script, c: '.conf/site.js'.R.readFile}]},
                         {_: :body,
-                         c: [@r[:Links][:up].do{|p|
-                               {_: :a, id: :up, c: '&#9650;', href: (CGI.escapeHTML p.to_s)}},
-                             @r[:Links][:prev].do{|p|
-                               {_: :a, id: :prev, c: '&#9664;', href: (CGI.escapeHTML p.to_s)}},
-                             @r[:Links][:next].do{|n|
-                               {_: :a, id: :next, c: '&#9654;', href: (CGI.escapeHTML n.to_s)}},
+                         c: [link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
                              path!='/' && {class: :search,
                                            c: {_: :form,
                                                c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
@@ -96,7 +95,7 @@ class WebResource
         nodes = t.keys.sort
         label = 'p'+path.sha2 if nodes.size > 1
         @r[:label][label] = true if label
-        tabled = nodes.size < 36 && path != '/'
+        tabled = nodes.size < 36
         size = 0.0
         # scale
         nodes.map{|name|
