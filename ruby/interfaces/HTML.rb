@@ -253,6 +253,21 @@ class WebResource
           v
         end}
 
+      # show From/To in single column
+      ft = false
+      fromTo = -> p {
+        unless ft
+          ft = true
+          [[Creator,SIOC+'addressed_to'].map{|edge|
+             self[edge].map{|o|
+               if o.respond_to? :uri
+                 indexLink[o]
+               else
+                 {_: :span, c: (CGI.escapeHTML o.to_s)}
+               end}.intersperse(' ')}.intersperse('&rarr;'),
+           self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]
+        end}
+
       unless q.has_key?('head') && self[Title].empty? && self[Abstract].empty? # title or abstract required in heading-mode
         {_: :tr,
          c: keys.map{|k|
@@ -294,21 +309,9 @@ class WebResource
                  self[Size].map{|v|sum += v.to_i}
                  sum == 0 ? '' : sum
                when Creator
-                 [self[Creator].map{|v|
-                    if v.respond_to? :uri
-                      indexLink[v]
-                    else
-                      {_: :span, c: (CGI.escapeHTML v.to_s)}
-                    end}.intersperse(' '),
-                  self[SIOC+'user_agent'].map{|ua|
-                    ['<br>', {_: :span, class: :notes, c: ua}]}]
+                 fromTo[k]
                when SIOC+'addressed_to'
-                 self[SIOC+'addressed_to'].map{|v|
-                   if v.respond_to? :uri
-                     indexLink[v]
-                   else
-                     {_: :span, c: (CGI.escapeHTML v.to_s)}
-                   end}.intersperse(' ')
+                 fromTo[k]
                when Date
                  [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
                   self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}].compact.intersperse('<br>')
