@@ -228,22 +228,8 @@ class WebResource
 
       # pointer to selection of node in an index context
       indexLink = -> v {
-        v = v.R
-        id = rand.to_s.sha2
-        if a SIOC+'MailMessage' # messages*month
-          {_: :a, id: 'address_'+id, href: v.path + '?head#r' + sha2, c: v.label}
-        elsif a SIOC+'Tweet' # tweets*hour
-          {_: :a, id: 'tweets_'+id, href: datePath + '*twitter*#r' + sha2, c: v.label}
-        elsif a SIOC+'BlogPost'
-          url = if datePath # host*month
-                  datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2
-                else
-                  v.host
-                end
-          {_: :a, id: 'post_'+id, href: url, c: v.label}
-        else
-          v
-        end}
+
+      }
 
       # show From/To in single column
       ft = false
@@ -251,11 +237,30 @@ class WebResource
         unless ft
           ft = true
           [[Creator,SIOC+'addressed_to'].map{|edge|
-             self[edge].map{|o|
-               if o.respond_to? :uri
-                 indexLink[o]
+             self[edge].map{|v|
+               if v.respond_to? :uri
+                 v = v.R
+                 id = rand.to_s.sha2
+                 if a SIOC+'MailMessage' # messages*address*month
+                   {_: :a, id: 'address_'+id, href: v.path + '?head#r' + sha2, c: v.label}
+                 elsif a SIOC+'Tweet'
+                   if edge == Creator  # tweets*author*day
+                     {_: :a, id: 'tw'+id, href: datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2, c: v.label}
+                   else # tweets*hour
+                     {_: :a, id: 'tw'+id, href: datePath + '*twitter*#r' + sha2, c: v.label}
+                   end
+                 elsif a SIOC+'BlogPost'
+                   url = if datePath # posts*host*day
+                           datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2
+                         else
+                           v.host
+                         end
+                   {_: :a, id: 'post_'+id, href: url, c: v.label}
+                 else
+                   v
+                 end
                else
-                 {_: :span, c: (CGI.escapeHTML o.to_s)}
+                 {_: :span, c: (CGI.escapeHTML v.to_s)}
                end}.intersperse(' ')}.intersperse('&rarr;'),
            self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]
         end}
