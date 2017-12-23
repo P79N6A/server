@@ -109,7 +109,6 @@ class WebResource
            {_: tabled ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
               this = path + name + '/' # path
               s = graph[this].do{|r|r[Size].justArray[0]} # size
-              graph.delete this # consume node
               named = !name.empty?
               scaled = size > 0 && s && tabled
               width = scaled && (s / size) # scale

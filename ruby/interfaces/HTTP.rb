@@ -66,20 +66,22 @@ class WebResource
                found
              elsif q.has_key?('q') && path!='/' # GREP
                grep q['q']
-             else
-               if uri[-1] == '/' # inside (trailing slash)
-                 index = (self+'index.{html}').glob # static index
+             else # container
+               if uri[-1] == '/' # inside container
+                 index = (self+'index.html').glob # static index
                  !index.empty? && qs.empty? && index || [self, children]
-               else # outside
+               else # outside container
                  @r[:Links][:down] = path + '/' + qs
                  self
                end
              end
-            else
-              @r[:glob] = match /\*/
-              (@r[:glob] ? self : (self+'.*')).glob # GLOB
+            else # file(s)
+               @r[:glob] = match /\*/
+              [(@r[:glob] ? self : (self+'.*')).glob,
+              (dir+'/index.ttl')]
              end).justArray.flatten.compact.select &:exist?
 
+#      puts set
       return notfound if !set || set.empty?
 
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?

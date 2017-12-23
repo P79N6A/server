@@ -10,3 +10,6 @@
 <site.js> <http://purl.org/dc/terms/note> "Javascript to enable keyboard-navigation" .
 <spin.sh> <http://purl.org/dc/terms/note> "frequently-updating content scanner" .
 <twitter.com> <http://purl.org/dc/terms/note> "twitter users" .
+<.> a <http://www.w3.org/ns/ldp#Container> ;
+ <http://purl.org/dc/terms/note> "configuration data";
+ <http://purl.org/dc/terms/title> "config" .
