@@ -262,6 +262,7 @@ class WebResource
     end
   end
   module Webize
+    FeedNames = %w{atom atom.xml blog default feed feed.xml index.xml photos_public.gne news.rss news.xml .rss rss rss.xml RSS}
     def triplrOPML
       Nokogiri::HTML.fragment(readFile).css('outline[type="rss"]').map{|t|
         s = t.attr 'xmlurl'

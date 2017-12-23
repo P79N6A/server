@@ -258,7 +258,7 @@ class WebResource
                  fromTo[]
                when Date
                  [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
-                  self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}].compact.intersperse('<br>')
+                  self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}.intersperse(' ')].compact.intersperse('<br>')
                when DC+'cache'
                  self[DC+'cache'].map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
                else
@@ -301,31 +301,6 @@ class WebResource
       n.css('meta[property="og:image"]').map{|m| yield uri, Image, m.attr("content").R }
     end
   end
-end
-
-class String
-  def R; WebResource.new self end
-  # scan for HTTP URIs in string
-  # opening '(' required for ')' capture, <> wrapping stripped, ',' and '.' only match mid-URI:
-  # demo on the site (https://demohere) and source-code at https://sourcehere.
-  def hrefs &b
-    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
-    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
-      (link.empty? && '' || '<a class=scanned href="' + u + '">' + # hyperlink
-       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
-        yield(R::Image,u.R) if b # image RDF
-        "<img src='#{u}'/>"      # inline image
-       else
-         yield(R::DC+'link',u.R) if b # link RDF
-         u.sub(/^https?.../,'')  # inline text
-        end) + '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # tail
-  end
-  def sha2; Digest::SHA2.hexdigest self end
-  def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
-  def utf8; force_encoding 'UTF-8' end
-  def sh; Shellwords.escape self end
 end
 
 module Redcarpet

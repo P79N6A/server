@@ -2,7 +2,7 @@
 while true
 do
     R .conf/hyper.u fetchFeeds
-    R .conf/twitter.u twitter
+    R .conf/twitter.com.urls twitter
     date
     sleep 30m
 done

@@ -54,6 +54,7 @@ class WebResource
       'tmp' => 'application/octet-stream',
       'ttl' => 'text/turtle',
       'u' => 'text/uri-list',
+      'urls' => 'text/based-uri-list',
       'woff' => 'application/font',
       'yaml' => 'text/plain'}
 
@@ -118,6 +119,7 @@ class WebResource
       'text/semicolon-separated-values' => [:triplrCSV,/;/],
       'text/tab-separated-values' => [:triplrCSV,/\t/],
       'text/uri-list'        => [:triplrUriList],
+      'text/based-uri-list'        => [:triplrUriList,true],
       'text/x-tex'           => [:triplrTeX],
     }
 

@@ -1,3 +1,4 @@
+# coding: utf-8
 class WebResource
   module Webize
     include URIs
@@ -17,26 +18,6 @@ class WebResource
     def triplrWordDoc      &f; triplrWord :antiword,      &f end
     def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
     def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-
-    def triplrUriList
-      lines = open(localPath).readlines
-      doc = stripDoc.uri
-      yield doc, Type, R[Stat+'UriList']
-      yield doc, Title, stripDoc.basename
-      yield doc, Size, lines.size
-      yield doc, Date, mtime.iso8601
-      lines.map{|line|
-        t = line.chomp.split ' '
-        uri = t[0]
-        resource = uri.R
-        title = if t.size > 1
-                  t[1..-1].join ' '
-                else
-                  "#{resource.host}#{resource.path}"
-                end
-        yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
-        yield uri, Title, title}
-    end
 
     def triplrWord conv, out='', &f
       triplrFile &f
@@ -59,7 +40,7 @@ class WebResource
     rescue Exception => e
       puts uri, e.class, e.message
     end
-
+    
     def triplrMarkdown
       doc = stripDoc.uri
       yield doc, Type, R[Stat+'MarkdownFile']
@@ -79,6 +60,31 @@ class WebResource
             id = uri + '#row:' + line.to_s
             yield id, fields[i], field
             yield id, Type, R[ns+'Row']}}}
+    end
+
+    def triplrUriList based=nil
+      lines = open(localPath).readlines
+      doc = stripDoc.uri
+      base = stripDoc.basename
+      yield doc, Type, R[Stat+'UriList']
+      yield doc, Title, base
+      yield doc, Size, lines.size
+      yield doc, Date, mtime.iso8601
+      prefix = based ? "https://#{base}/" : ''
+      lines.map{|line|
+        t = line.chomp.split ' '
+        uri = prefix + t[0]
+        resource = uri.R
+        title = if t.size > 1
+                  t[1..-1].join ' '
+                else
+                  "#{resource.host}#{resource.path}"
+                end
+        yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
+        yield uri, Title, title
+        yield uri, DC+'note', "#{resource.host.split('.')[0..-2].-(%w{wordpress www}).join('.')} feed" if resource.host && FeedNames.member?(resource.basename)
+        yield uri, Label, t[0] if based
+      }
     end
 
     def triplrChatLog &f
@@ -115,4 +121,29 @@ class WebResource
     end
 
   end
+end
+
+class String
+  def R; WebResource.new self end
+  # scan for HTTP URIs in string
+  # opening '(' required for ')' capture, <> wrapping stripped, ',' and '.' only match mid-URI:
+  # demo on the site (https://demohere) and source-code at https://sourcehere.
+  def hrefs &b
+    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
+    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
+      (link.empty? && '' || '<a class=scanned href="' + u + '">' + # hyperlink
+       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
+        yield(R::Image,u.R) if b # image RDF
+        "<img src='#{u}'/>"      # inline image
+       else
+         yield(R::DC+'link',u.R) if b # link RDF
+         u.sub(/^https?.../,'')  # inline text
+        end) + '</a>') +
+      (post.empty? && '' || post.hrefs(&b)) # tail
+  end
+  def sha2; Digest::SHA2.hexdigest self end
+  def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
+  def utf8; force_encoding 'UTF-8' end
+  def sh; Shellwords.escape self end
 end
