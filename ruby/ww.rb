@@ -38,7 +38,7 @@ class WebResource < RDF::URI
     Instagram = 'https://www.instagram.com/'
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
   end
-  %w{MIME HTTP HTML POSIX Feed JSON Text Mail Calendar online}.map{|i|require_relative 'interfaces/'+i}
+  %w{MIME HTTP HTML POSIX Feed JSON Text Mail Calendar icon online}.map{|i|require_relative 'interfaces/'+i}
   [MIME, HTTP, HTML, POSIX, Feed, JSON, Webize, Util].map{|m|include m}
 end
 R = WebResource # shorthand
