@@ -1,3 +1,6 @@
+class Pathname
+  def R; R::POSIX.path to_s.utf8 end
+end
 class WebResource
   module POSIX
 
