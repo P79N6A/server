@@ -29,58 +29,57 @@ class WebResource
     end
     include URIs
     InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', DC+'note', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-    VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
-                   SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
+    VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
     LinkPred = [SIOC+'attachment',Stat+'contains',Atom+'link',RSS+'link',DC+'link']
 
       Icons = {
       'uri' => :id,
-      Type => :type,
+      Comments => :comments,
       Container => :dir,
       Content => :pencil,
-      Date => :date,
-      Label => :tag,
-      Title => :title,
-      Sound => :speaker,
-      Image => :img,
-      Size => :size,
-      Mtime => :time,
-      To => :userB,
+      DC+'cache' => :chain,
       DC+'hasFormat' => :file,
       DC+'link' => :chain,
-      DC+'cache' => :chain,
-      Schema+'Person' => :user,
-      Schema+'location' => :location,
+      Date => :date,
+      Image => :img,
+      Label => :tag,
+      Mtime => :time,
       RSS+'comments' => :comments,
-      Comments => :comments,
-      Stat+'File' => :file,
-      Stat+'Archive' => :archive,
-      Stat+'DataFile' => :tree,
-      Stat+'HTMLFile' => :html,
-      Stat+'MarkdownFile' => :markup,
-      Stat+'TextFile' => :textfile,
-      Stat+'UriList' => :list,
-      Stat+'WordDocument' => :word,
-      Stat+'width' => :width,
-      Stat+'height' => :height,
-      Stat+'container' => :dir,
-      Stat+'contains' => :dir,
       SIOC+'BlogPost' => :pencil,
       SIOC+'ChatLog' => :comments,
       SIOC+'Discussion' => :comments,
       SIOC+'Feed' => :feed,
       SIOC+'InstantMessage' => :comment,
-      SIOC+'MicroblogPost' => :newspaper,
-      SIOC+'WikiArticle' => :pencil,
-      SIOC+'Usergroup' => :group,
-      SIOC+'SourceCode' => :code,
-      SIOC+'Tweet' => :bird,
-      SIOC+'has_creator' => :user,
-      SIOC+'user_agent' => :mailer,
-      SIOC+'has_discussion' => :comments,
-      SIOC+'Thread' => :openenvelope,
-      SIOC+'Post' => :newspaper,
       SIOC+'MailMessage' => :envelope,
+      SIOC+'MicroblogPost' => :newspaper,
+      SIOC+'Post' => :newspaper,
+      SIOC+'SourceCode' => :code,
+      SIOC+'Thread' => :openenvelope,
+      SIOC+'Tweet' => :bird,
+      SIOC+'Usergroup' => :group,
+      SIOC+'WikiArticle' => :pencil,
+      SIOC+'has_creator' => :user,
+      SIOC+'has_discussion' => :comments,
+      SIOC+'user_agent' => :mailer,
+      Schema+'Person' => :user,
+      Schema+'location' => :location,
+      Size => :size,
+      Sound => :speaker,
+      Stat+'Archive' => :archive,
+      Stat+'DataFile' => :tree,
+      Stat+'File' => :file,
+      Stat+'HTMLFile' => :html,
+      Stat+'MarkdownFile' => :markup,
+      Stat+'TextFile' => :textfile,
+      Stat+'UriList' => :list,
+      Stat+'WordDocument' => :word,
+      Stat+'container' => :dir,
+      Stat+'contains' => :dir,
+      Stat+'height' => :height,
+      Stat+'width' => :width,
+      Title => :title,
+      To => :userB,
+      Type => :type,
       W3+'2000/01/rdf-schema#Resource' => :node,
     }
 
@@ -149,7 +148,7 @@ class WebResource
         nodes = t.keys.sort
         label = 'p'+path.sha2 if nodes.size > 1
         @r[:label][label] = true if label
-        tabled = nodes.size < 36
+        tabled = nodes.size < 36 && path != '/'
         size = 0.0
         # scale
         nodes.map{|name|
@@ -226,7 +225,7 @@ class WebResource
                    [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                     ' ']}}]}}} unless links.empty? }
 
-      # show From/To in single column.
+      # show From/To fields once in a single column
       ft = false
       fromTo = -> {
         unless ft
