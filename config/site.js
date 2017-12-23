@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var first = null;
     var last = null;
 
-    // construct selection-ring
+    // link selection-ring
     document.querySelectorAll('[id]').map(function(e){
 	if(!first)
 	    first = this;	
@@ -31,10 +31,27 @@ document.addEventListener("DOMContentLoaded", function(){
 	first.attr('prev',last.attr('id'));
     };
 
+    var firstI = null;
+    var lastI = null;
+    // primary-items-only selection-ring
+    document.querySelectorAll('[id][primary]').map(function(e){
+	if(!firstI)
+	    firstI = this;
+	if(lastI){ // link
+	    this.attr('prevI',lastI.attr('id'));
+	    lastI.attr('nextI',this.attr('id'));
+	};
+	lastI = this;
+    });
+    if(firstI && lastI){ // round the ring
+	lastI.attr('nextI',firstI.attr('id'));
+	firstI.attr('prevI',lastI.attr('id'));
+    };
+
     // keyboard navigation
     document.addEventListener("keydown",function(e){
 	var key = e.keyCode;
-	var selectNext = function(){
+	var selectNextLink = function(){
 	    var cur = null;
 	    if(window.location.hash)
 		cur = document.querySelector(window.location.hash);
@@ -43,13 +60,31 @@ document.addEventListener("DOMContentLoaded", function(){
 	    window.location.hash = cur.attr('next');
 	    e.preventDefault();
 	};
-	var selectPrev = function(){
+	var selectPrevLink = function(){
 	    var cur = null;
 	    if(window.location.hash)
 		cur = document.querySelector(window.location.hash);
 	    if(!cur)
 		cur = first;
 	    window.location.hash = cur.attr('prev');;
+	    e.preventDefault();
+	};
+	var selectNextItem = function(){
+	    var cur = null;
+	    if(window.location.hash)
+		cur = document.querySelector(window.location.hash);
+	    if(!cur)
+		cur = lastI;
+	    window.location.hash = cur.attr('nextI');
+	    e.preventDefault();
+	};
+	var selectPrevItem = function(){
+	    var cur = null;
+	    if(window.location.hash)
+		cur = document.querySelector(window.location.hash);
+	    if(!cur)
+		cur = firstI;
+	    window.location.hash = cur.attr('prevI');;
 	    e.preventDefault();
 	};
 	var gotoLink = function(arc) {
@@ -68,21 +103,25 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	};
 
-	if(e.getModifierState("Shift")) { // document level
-	    if(key==80) // [p]rev
+	if(e.getModifierState("Shift")) {
+	    if(key==80) // [p]rev page
 		gotoLink('prev');
-	    if(key==78) // [n]ext
+	    if(key==78) // [n]ext page
 		gotoLink('next');
-	    if(key==85) // [u]p
+	    if(key==38) // [p]rev item
+		selectPrevItem();
+	    if(key==40) // [n]ext item
+		selectNextItem();
+	    if(key==85) // [u]p to parent
 		gotoLink('up');
-	    if(key==68) // [d]own
+	    if(key==68) // [d]own to children
 		gotoLink('down');
-	} else { // node level
-	    if(key==38||key==80) // [p]rev
-		selectPrev();
-	    if(key==40||key==78) // [n]ext
-		selectNext();
-	    if(key==83) // [s]ort
+	} else {
+	    if(key==38||key==80) // [p]rev link
+		selectPrevLink();
+	    if(key==40||key==78) // [n]ext link
+		selectNextLink();
+	    if(key==83) // [s]ort entries
 		gotoLink('sort');
 	};
     },false);

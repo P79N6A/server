@@ -207,6 +207,7 @@ class WebResource
 
     def htmlTableRow sort,direction,keys
       inDoc = path == @r['REQUEST_PATH']
+      identified = false
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
@@ -224,15 +225,6 @@ class WebResource
                  c: links.map{|link| @r[:links].push link
                    [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                     ' ']}}]}}} unless links.empty? }
-
-      identified = false
-      rowID = -> {
-        if identified || (inDoc && !fragment)
-          {}
-        else
-          identified = true
-          {id: (inDoc && fragment) ? fragment : 'r'+sha2}
-        end}
 
       # pointer to selection of node in an index context
       indexLink = -> v {
@@ -278,8 +270,13 @@ class WebResource
                     {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri, c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
-                    {_: :a, class: :title, href: uri, name: tld,
-                     c: (CGI.escapeHTML t.to_s)}.update(rowID[])}.intersperse(' '),
+                    {_: :a, class: :title, href: uri, name: tld, # link in entry-list exactly once. reuse doc-local identifier or hash full URI to unique fragment
+                     c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
+                                                        {}
+                                                       else
+                                                         identified = true
+                                                         {id: (inDoc && fragment) ? fragment : 'r'+sha2, primary: :true}
+                                                        end)}.intersperse(' '),
                   self[Abstract], linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
                   (self[Content].map{|c|
                      if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
