@@ -261,7 +261,7 @@ class WebResource
                  end
                else
                  {_: :span, c: (CGI.escapeHTML v.to_s)}
-               end}.intersperse(' ')}.intersperse('&rarr;'),
+               end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
            self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]
         end}
 
