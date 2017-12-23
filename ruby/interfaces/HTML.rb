@@ -228,7 +228,7 @@ class WebResource
 
       # show From/To in single column.
       ft = false
-      fromTo = -> p {
+      fromTo = -> {
         unless ft
           ft = true
           [[Creator,SIOC+'addressed_to'].map{|edge|
@@ -306,9 +306,9 @@ class WebResource
                  self[Size].map{|v|sum += v.to_i}
                  sum == 0 ? '' : sum
                when Creator
-                 fromTo[k]
+                 fromTo[]
                when SIOC+'addressed_to'
-                 fromTo[k]
+                 fromTo[]
                when Date
                  [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
                   self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}].compact.intersperse('<br>')
