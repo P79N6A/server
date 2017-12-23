@@ -4,9 +4,9 @@
 <icons.css> <http://purl.org/dc/terms/note> "CSS mapping icon names to font location" .
 <instagram.com> <http://purl.org/dc/terms/note> "Instagram users" .
 <feeds> <http://purl.org/dc/terms/note> "feed URLs" .
-<ooze> <http://purl.org/dc/terms/note> "slow-rolling content scanner" .
+<ooze.sh> <http://purl.org/dc/terms/note> "slow-rolling content scanner" .
 <rack.ru> <http://purl.org/dc/terms/note> "Ruby daemon invocation" .
 <site.css> <http://purl.org/dc/terms/note> "CSS for main HTML view" .
 <site.js> <http://purl.org/dc/terms/note> "Javascript to enable keyboard-navigation" .
-<spin> <http://purl.org/dc/terms/note> "frequently-updating content scanner" .
+<spin.sh> <http://purl.org/dc/terms/note> "frequently-updating content scanner" .
 <twitter.com> <http://purl.org/dc/terms/note> "twitter users" .
