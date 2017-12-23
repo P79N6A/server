@@ -5,7 +5,7 @@ class WebResource < RDF::URI
   def R; self end
   def inspect; "<#{to_s}>" end
   alias_method :uri, :to_s
-  %w{MIME URI HTTP HTML POSIX Feed JSON Text Mail Calendar icon online}.map{|i|require_relative 'interfaces/'+i}
+  %w{URI MIME HTTP HTML POSIX Feed JSON Text Mail Calendar icon online}.map{|i|require_relative 'interfaces/'+i}
   [MIME, HTTP, HTML, POSIX, Feed, JSON, Webize, Util].map{|m|include m}
 end
 R = WebResource # shorthand
