@@ -226,18 +226,13 @@ class WebResource
                    [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
                     ' ']}}]}}} unless links.empty? }
 
-      # pointer to selection of node in an index context
-      indexLink = -> v {
-
-      }
-
-      # show From/To in single column
+      # show From/To in single column.
       ft = false
       fromTo = -> p {
         unless ft
           ft = true
           [[Creator,SIOC+'addressed_to'].map{|edge|
-             self[edge].map{|v|
+             self[edge].map{|v| #generate index-location pointers
                if v.respond_to? :uri
                  v = v.R
                  id = rand.to_s.sha2
