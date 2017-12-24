@@ -90,7 +90,7 @@ class WebResource
         uri.R.parts.map{|name| # path instructions
           c = c[name] ||= {}}} # create node and jump cursor
 
-      # renderer function, recursive
+      # renderer function
       render = -> t,path='' {
         nodes = t.keys.sort
         label = 'p'+path.sha2 if nodes.size > 1

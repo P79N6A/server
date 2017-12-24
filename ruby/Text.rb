@@ -75,13 +75,9 @@ class WebResource
         t = line.chomp.split ' '
         uri = prefix + t[0]
         resource = uri.R
-        title = if t.size > 1
-                  t[1..-1].join ' '
-                else
-                  "#{resource.host}#{resource.path}"
-                end
+        title = t[1..-1].join ' ' if t.size > 1
         yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
-        yield uri, Title, title
+        yield uri, Title, title if title
         yield uri, DC+'note', "#{resource.host.split('.')[0..-2].-(%w{wordpress www}).join('.')} feed" if resource.host && FeedNames.member?(resource.basename)
         yield uri, Label, t[0] if based
       }
