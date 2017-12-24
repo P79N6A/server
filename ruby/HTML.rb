@@ -216,7 +216,7 @@ class WebResource
                     {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri, c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
-                    {_: :a, class: :title, href: uri, name: inDoc ? :localhost : tld,
+                    {_: :a, class: :title, href: (a Container) ? uri+'?head' : uri, name: inDoc ? :localhost : tld,
                      c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
                                                         {}
                                                        else

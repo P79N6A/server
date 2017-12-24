@@ -16,7 +16,6 @@ class WebResource
       'todo' => 'text/plain',
       'unlicense' => 'text/plain',
       'msg' => 'message/rfc822',
-      'r' => 'text/x-ruby',
     }
 
     # name suffix -> MIME
