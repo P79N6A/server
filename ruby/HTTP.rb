@@ -105,35 +105,39 @@ class WebResource
     def load set
       graph = RDF::Graph.new # graph
       g = {}                 # tree
-      rdf,nonRDF = set.partition &:isRDF #partition on file type
+      rdf,json = set.partition &:isRDF
       # load RDF
-      rdf.map{|n|graph.load n.localPath, :base_uri => n}
+      rdf.map{|n|
+        graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
         s = s.to_s; p = p.to_s # subject, predicate
         o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
-        g[s] ||= {'uri'=>s} # new resource
+        g[s] ||= {'uri'=>s}
         g[s][p] ||= []
-        g[s][p].push o unless g[s][p].member? o} # RDF to tree
-      # load nonRDF
-      nonRDF.map{|n|
-        n.transcode.do{|transcode| # transcode to RDF
+        g[s][p].push o unless g[s][p].member? o} # attach to URI-indexed tree
+      # optimization. bypass RDF library for JSON graph-tree format
+      json.map{|n|
+        n.transcode.do{|transcode|
           ::JSON.parse(transcode.readFile).map{|s,re| # subject
-            re.map{|p,o| # predicate, objects
-              o.justArray.map{|o| # object
+            re.map{|p,o| # predicate object(s)
+              o.justArray.map{|o| # each triple
                 o = o.R if o.class==Hash
-                g[s] ||= {'uri'=>s} # new resource
-                g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
-      if q.has_key?('du') && path != '/' # DU usage-count
+                g[s] ||= {'uri'=>s}
+                g[s][p] ||= []
+                g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # tree
+
+      if q.has_key?('du') && path != '/' # DU container-size
         set.select{|d|d.node.directory?}.-([self]).map{|node|
           g[node.path+'/']||={}
           g[node.path+'/'][Size] = node.du}
-      elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # FIND/GREP counts
+      elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # FIND/GREP bin-sizes
         set.map{|r|
           bin = r.dirname + '/'
           g[bin] ||= {'uri' => bin, Type => Container}
           g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
           g[bin][Size] += 1}
       end
+
       g
     end
 
