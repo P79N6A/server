@@ -105,8 +105,10 @@ class WebResource
     def load set
       graph = RDF::Graph.new # graph
       g = {}                 # tree
+
+      # static resources
       rdf,json = set.partition &:isRDF
-      # load RDF
+      # RDF files
       rdf.map{|n|
         graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
