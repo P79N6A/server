@@ -47,6 +47,18 @@ class WebResource
       @r[:label] ||= {}
       @r[:Links] ||= {}
       htmlGrep graph, q['q'] if q['q']
+      if q.has_key?('1')
+        resources  = graph.values
+        resources.map{|re|
+          re.map{|p,o|
+            one = graph[''] ||= {'uri' => ''}
+            unless p=='uri'
+              one[p] ||= []
+              o.justArray.map{|o|
+                one[p].push o unless one[p].member?(o)}
+            end}
+          graph.delete re.uri unless re.uri == '' }
+      end
       query = q['q'] || q['f']
       useGrep = path.split('/').size > 3 # search-provider suggestion
       link = -> name,icon {
@@ -90,7 +102,7 @@ class WebResource
         uri.R.parts.map{|name| # path instructions
           c = c[name] ||= {}}} # create node and jump cursor
 
-      # renderer function
+      # renderer
       render = -> t,path='' {
         nodes = t.keys.sort
         label = 'p'+path.sha2 if nodes.size > 1
@@ -178,7 +190,7 @@ class WebResource
           ft = true
           [[Creator,SIOC+'addressed_to'].map{|edge|
              self[edge].map{|v|
-               if v.respond_to? :uri
+               if v.respond_to?(:uri) && v.R.path
                  v = v.R
                  id = rand.to_s.sha2
                  # domain-specific index-location pointer

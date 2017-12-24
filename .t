@@ -1,3 +1,4 @@
+rreplace justarray w/ splat operator
 house data
 ical
 ig
