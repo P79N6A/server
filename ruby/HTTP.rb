@@ -1,8 +1,8 @@
 # coding: utf-8
 class WebResource
   module HTTP
+    include URIs
     def self.call env
-      return [404,{},[]] if env['REQUEST_PATH'].match(/\.php$/i)
       return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # /-collapse
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
@@ -11,7 +11,6 @@ class WebResource
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
     end
-    include URIs
     def environment env=nil; env ? (@r = env; self) : @r end
     def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
     def GET
@@ -100,6 +99,48 @@ class WebResource
             (loadRDF set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}
+    end
+
+    # file(s) -> graph-in-tree
+    def load set
+      graph = RDF::Graph.new # graph
+      g = {}                 # tree
+      rdf,nonRDF = set.partition &:isRDF #partition on file type
+      # load RDF
+      rdf.map{|n|graph.load n.localPath, :base_uri => n}
+      graph.each_triple{|s,p,o| # each triple
+        s = s.to_s; p = p.to_s # subject, predicate
+        o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
+        g[s] ||= {'uri'=>s} # new resource
+        g[s][p] ||= []
+        g[s][p].push o unless g[s][p].member? o} # RDF to tree
+      # load nonRDF
+      nonRDF.map{|n|
+        n.transcode.do{|transcode| # transcode to RDF
+          ::JSON.parse(transcode.readFile).map{|s,re| # subject
+            re.map{|p,o| # predicate, objects
+              o.justArray.map{|o| # object
+                o = o.R if o.class==Hash
+                g[s] ||= {'uri'=>s} # new resource
+                g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
+      if q.has_key?('du') && path != '/' # DU usage-count
+        set.select{|d|d.node.directory?}.-([self]).map{|node|
+          g[node.path+'/']||={}
+          g[node.path+'/'][Size] = node.du}
+      elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # FIND/GREP counts
+        set.map{|r|
+          bin = r.dirname + '/'
+          g[bin] ||= {'uri' => bin, Type => Container}
+          g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
+          g[bin][Size] += 1}
+      end
+      g
+    end
+
+    # file(s) -> graph
+    def loadRDF set
+      g = RDF::Graph.new; set.map{|n|g.load n.toRDF.localPath, :base_uri => n.stripDoc}
+      g
     end
 
     def chronoDir ps

@@ -183,48 +183,6 @@ class WebResource
       end
       p.e && p.entity(@r) || notfound
     end
-
-    # file(s) -> graph-in-tree
-    def load set
-      graph = RDF::Graph.new # graph
-      g = {}                 # tree
-      rdf,nonRDF = set.partition &:isRDF #partition on file type
-      # load RDF
-      rdf.map{|n|graph.load n.localPath, :base_uri => n}
-      graph.each_triple{|s,p,o| # each triple
-        s = s.to_s; p = p.to_s # subject, predicate
-        o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
-        g[s] ||= {'uri'=>s} # new resource
-        g[s][p] ||= []
-        g[s][p].push o unless g[s][p].member? o} # RDF to tree
-      # load nonRDF
-      nonRDF.map{|n|
-        n.transcode.do{|transcode| # transcode to RDF
-          ::JSON.parse(transcode.readFile).map{|s,re| # subject
-            re.map{|p,o| # predicate, objects
-              o.justArray.map{|o| # object
-                o = o.R if o.class==Hash
-                g[s] ||= {'uri'=>s} # new resource
-                g[s][p] ||= []; g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # RDF to tree
-      if q.has_key?('du') && path != '/' # DU usage-count
-        set.select{|d|d.node.directory?}.-([self]).map{|node|
-          g[node.path+'/']||={}
-          g[node.path+'/'][Size] = node.du}
-      elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # FIND/GREP counts
-        set.map{|r|
-          bin = r.dirname + '/'
-          g[bin] ||= {'uri' => bin, Type => Container}
-          g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
-          g[bin][Size] += 1}
-      end
-      g
-    end
-
-    # file(s) -> graph
-    def loadRDF set
-      g = RDF::Graph.new; set.map{|n|g.load n.toRDF.localPath, :base_uri => n.stripDoc}
-      g
-    end
   end
   module Webize
     def triplrImage &f
