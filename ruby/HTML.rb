@@ -224,7 +224,8 @@ class WebResource
            {_: :td, property: k,
             c: case k
                when 'uri'
-                 [self[Label].compact.map{|v|
+                 [#{_: :h3, c: CGI.escapeHTML(uri)},
+                   self[Label].compact.map{|v|
                     {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri, c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
@@ -271,7 +272,7 @@ class WebResource
                  [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
                   self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}.intersperse(' ')].compact.intersperse('<br>')
                when DC+'cache'
-                 self[DC+'cache'].map{|c|[{_: :a, href: c.R.path, class: :chain}, ' ']}
+                 self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.R.path, class: :chain}, ' ']}
                else
                  self[k].map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
                end}}.intersperse("\n")}
