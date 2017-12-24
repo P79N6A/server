@@ -75,9 +75,9 @@ class WebResource
                end
              end
             else # file(s)
-               @r[:glob] = match /\*/
+              @r[:glob] = match /\*/
               [(@r[:glob] ? self : (self+'.*')).glob,
-              (dir+'/index.ttl')]
+               join('index.ttl').R]
              end).justArray.flatten.compact.select &:exist?
 
 #      puts set
@@ -132,12 +132,12 @@ class WebResource
                 g[s] ||= {'uri'=>s}
                 g[s][p] ||= []
                 g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # tree insert
-
-      if q.has_key?('du') && path != '/' # DU container-size
+      # storage size
+      if q.has_key?('du') && path != '/'
         set.select{|d|d.node.directory?}.-([self]).map{|node|
           g[node.path+'/']||={}
           g[node.path+'/'][Size] = node.du}
-      elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # FIND/GREP bin-sizes
+      elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # search-result counts
         set.map{|r|
           bin = r.dirname + '/'
           g[bin] ||= {'uri' => bin, Type => Container}
@@ -190,7 +190,7 @@ class WebResource
       end
     end
 
-    def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument({})]] end
+    def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
 
     # env -> qs
     def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end

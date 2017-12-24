@@ -40,7 +40,7 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    def htmlDocument graph
+    def htmlDocument graph = {}
       empty = graph.empty?
       @r ||= {}
       @r[:title] ||= graph[path+'#this'].do{|r|r[Title].justArray[0]}

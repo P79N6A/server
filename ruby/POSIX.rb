@@ -13,7 +13,9 @@ class WebResource
     def exist?; node.exist? end
     def ext; (File.extname uri)[1..-1] || '' end
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
-    def find p; (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|pth|POSIX.path pth.chomp} : [] end
+    def find p
+      (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|pth|POSIX.path pth.chomp} : []
+    end
     def glob; (Pathname.glob localPath).map &:R end
     def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
     def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
@@ -23,7 +25,10 @@ class WebResource
     def mtime; node.stat.mtime end
     def node; @node ||= (Pathname.new localPath) end
     def parts; path ? path.split('/') : [] end
-    def localPath; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
+    def localPath
+#      puts "localPath #{path} #{uri} #{caller[0..2]}"
+      @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path))
+    end
     def readFile; File.open(localPath).read end
     def sha2; to_s.sha2 end
     def shellPath; localPath.utf8.sh end
