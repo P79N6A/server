@@ -105,6 +105,7 @@ class WebResource
       'text/x-docker'        => [:triplrDocker],
       'text/ini'             => [:triplrIni],
       'text/x-makefile'      => [:triplrMakefile],
+      'text/x-java-source'   => [:triplrSourceCode],
       'text/x-ruby'          => [:triplrRuby],
       'text/x-php'           => [:triplrSourceCode],
       'text/x-python'        => [:triplrSourceCode],
