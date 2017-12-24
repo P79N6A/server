@@ -183,6 +183,22 @@ class WebResource
       end
       p.e && p.entity(@r) || notfound
     end
+
+    def selectMIME
+      return 'application/atom+xml' if q.has_key?('feed')
+      index = {}
+      @r['HTTP_ACCEPT'].do{|k|
+        (k.split /,/).map{|e| # (MIME, q) pairs
+          format, q = e.split /;/       # pair
+          i = q && q.split(/=/)[1].to_f || 1.0 # q-value with default
+          index[i] ||= []
+          index[i].push format.strip}} # indexed q-vals
+       index.sort.reverse.map{|q,formats| # order index
+        formats.map{|mime| # formats tied at q-val. return first serializable
+          return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}} # serializable
+      'text/html' # default
+    end
+
   end
   module Webize
     def triplrImage &f

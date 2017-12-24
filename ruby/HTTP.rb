@@ -83,6 +83,7 @@ class WebResource
 #      puts set
       return notfound if !set || set.empty?
 
+      format = selectMIME
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
@@ -96,7 +97,11 @@ class WebResource
           elsif format == 'application/atom+xml'
             renderFeed load set
           else
-            (loadRDF set).dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
+            g = RDF::Graph.new
+            set.map{|n|
+              g.load n.toRDF.localPath,
+                     :base_uri => n.stripDoc }
+            g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}
     end
@@ -140,12 +145,6 @@ class WebResource
           g[bin][Size] += 1}
       end
 
-      g
-    end
-
-    # file(s) -> graph
-    def loadRDF set
-      g = RDF::Graph.new; set.map{|n|g.load n.toRDF.localPath, :base_uri => n.stripDoc}
       g
     end
 
@@ -209,22 +208,6 @@ class WebResource
         else
           {}
          end)
-    end
-
-    def format; @format ||= selectFormat end
-
-    def selectFormat
-      return 'application/atom+xml' if q.has_key?('feed')
-      (d={}
-       @r['HTTP_ACCEPT'].do{|k|
-         (k.split /,/).map{|e| # MIME/q-val pairs
-           f,q = e.split /;/   # split pair
-           i = q && q.split(/=/)[1].to_f || 1.0
-           d[i] ||= []; d[i].push f.strip}} # index q-val
-       d).sort.reverse.map{|q,formats| # ordered index
-        formats.map{|mime| #serializable?
-          return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}}
-      'text/html' # default
     end
   end
 end

@@ -181,7 +181,7 @@ class WebResource
                if v.respond_to? :uri
                  v = v.R
                  id = rand.to_s.sha2
-                 # domain-specific index-location pointers
+                 # domain-specific index-location pointer
                  if a SIOC+'MailMessage' # messages*address*month
                    {_: :a, id: 'address_'+id, href: v.path + '?head#r' + sha2, c: v.label}
                  elsif a SIOC+'Tweet'
@@ -216,11 +216,11 @@ class WebResource
                     {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri, c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
-                    {_: :a, class: :title, href: uri, name: inDoc ? :localhost : tld, # local identifier or hashed nonlocal-URI.
+                    {_: :a, class: :title, href: uri, name: inDoc ? :localhost : tld,
                      c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
                                                         {}
                                                        else
-                                                         identified = true
+                                                         identified = true # doc-local identifier
                                                          {id: (inDoc && fragment) ? fragment : 'r'+sha2, primary: :true}
                                                         end)}.intersperse(' '),
                   self[Abstract], linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
