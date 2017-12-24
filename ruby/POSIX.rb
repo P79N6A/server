@@ -40,6 +40,31 @@ class WebResource
     alias_method :m, :mtime
     alias_method :sh, :shellPath
 
+    # env -> file(s)
+    def selectNodes
+      (if node.directory?
+       if q.has_key?('f') && path!='/' # FIND
+         found = find q['f']
+         q['head'] = true if found.size > 127
+         found
+       elsif q.has_key?('q') && path!='/' # GREP
+         grep q['q']
+       else # LS
+         if uri[-1] == '/' # inside container
+           index = (self+'index.html').glob # static index
+           !index.empty? && qs.empty? && index || [self, children]
+         else # outside container
+           @r[:Links][:down] = path + '/' + qs
+           self
+         end
+       end
+      else # GLOB
+        @r[:glob] = match /\*/
+        [(@r[:glob] ? self : (self+'.*')).glob,
+         join('index.ttl').R]
+       end).justArray.flatten.compact.select &:exist?
+    end
+
     # pattern -> file(s)
     def grep q
       args = q.shellsplit

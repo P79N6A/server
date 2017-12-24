@@ -18,11 +18,10 @@ class WebResource
       @r[:Links] = {}
       parts = path[1..-1].split '/'
       firstPart = parts[0] || ''
-      directory = node.directory?
       return fileResponse if node.file?
       return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
       return [204,{},[]] if firstPart.match(/^gen.*204$/)
-      return [302,{'Location' => path+'/'+qs},[]] if directory && path[-1]!='/' 
+      return [302,{'Location' => path+'/'+qs},[]] if node.directory? && path[-1] != '/'
       dp = []
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
       n = nil; p = nil
@@ -58,36 +57,13 @@ class WebResource
         qq = q.dup; qq.delete 'head'
         @r[:Links][:down] = path + (HTTP.qs qq)
       end
-      set = (if directory
-             if q.has_key?('f') && path!='/' # FIND
-               found = find q['f']
-               q['head'] = true if found.size > 127
-               found
-             elsif q.has_key?('q') && path!='/' # GREP
-               grep q['q']
-             else # container
-               if uri[-1] == '/' # inside container
-                 index = (self+'index.html').glob # static index
-                 !index.empty? && qs.empty? && index || [self, children]
-               else # outside container
-                 @r[:Links][:down] = path + '/' + qs
-                 self
-               end
-             end
-            else # file(s)
-              @r[:glob] = match /\*/
-              [(@r[:glob] ? self : (self+'.*')).glob,
-               join('index.ttl').R]
-             end).justArray.flatten.compact.select &:exist?
-
+      set = selectNodes
 #      puts set
       return notfound if !set || set.empty?
-
       format = selectMIME
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
-
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
           set[0] # static entity
