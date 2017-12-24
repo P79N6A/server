@@ -4,7 +4,7 @@ class WebResource
     include URIs
     def self.call env
       return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
-      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # /-collapse
+      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
       path.R.environment(env).send env['REQUEST_METHOD']
@@ -114,8 +114,8 @@ class WebResource
         o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
         g[s] ||= {'uri'=>s}
         g[s][p] ||= []
-        g[s][p].push o unless g[s][p].member? o} # attach to URI-indexed tree
-      # optimization. bypass RDF library for JSON graph-tree format
+        g[s][p].push o unless g[s][p].member? o} # tree insert
+      # optimization. skip RDF::Reader for native JSON format
       json.map{|n|
         n.transcode.do{|transcode|
           ::JSON.parse(transcode.readFile).map{|s,re| # subject
@@ -124,7 +124,7 @@ class WebResource
                 o = o.R if o.class==Hash
                 g[s] ||= {'uri'=>s}
                 g[s][p] ||= []
-                g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # tree
+                g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # tree insert
 
       if q.has_key?('du') && path != '/' # DU container-size
         set.select{|d|d.node.directory?}.-([self]).map{|node|
