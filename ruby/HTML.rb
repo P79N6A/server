@@ -90,7 +90,7 @@ class WebResource
         uri.R.parts.map{|name| # path instructions
           c = c[name] ||= {}}} # create node and jump cursor
 
-      # renderer function
+      # renderer function, recursive
       render = -> t,path='' {
         nodes = t.keys.sort
         label = 'p'+path.sha2 if nodes.size > 1
@@ -103,7 +103,7 @@ class WebResource
           graph[uri].do{|r|
             r[Size].justArray.map{|sz|
               size += sz}}} if label
-        # render
+        # output
         {_: tabled ? :table : :div, class: :tree, border: 1, c: [
            {_: tabled ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
               this = path + name + '/' # path
