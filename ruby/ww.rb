@@ -1,6 +1,6 @@
 # coding: utf-8
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
-%w{URI MIME HTTP HTML POSIX Feed JSON Text Mail Calendar icon online}.map{|i|require_relative 'interfaces/'+i}
+%w{URI MIME HTTP HTML POSIX Feed JSON Text Mail Calendar icon online}.map{|i|require_relative i}
 R = WebResource
 class Array
   def justArray; self end
@@ -20,5 +20,12 @@ class Object
   def to_time; [Time, DateTime].member?(self.class) ? self : Time.parse(self) end
 end
 class WebResource
-  [MIME, HTTP, HTML, POSIX, Feed, JSON, Webize, Util].map{|m|include m}
+  [MIME,
+   HTTP,
+   HTML,
+   POSIX,
+   Feed,
+   JSON,
+   Webize,
+   Util].map{|m|include m}
 end
