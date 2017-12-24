@@ -184,12 +184,13 @@ class WebResource
       p.e && p.entity(@r) || notfound
     end
 
+    # env -> MIME
     def selectMIME
       return 'application/atom+xml' if q.has_key?('feed')
       index = {}
       @r['HTTP_ACCEPT'].do{|k|
-        (k.split /,/).map{|e| # (MIME, q) pairs
-          format, q = e.split /;/       # pair
+        (k.split /,/).map{|e| # (MIME,q) pairs
+          format, q = e.split /;/      # pair
           i = q && q.split(/=/)[1].to_f || 1.0 # q-value with default
           index[i] ||= []
           index[i].push format.strip}} # indexed q-vals
