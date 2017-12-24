@@ -4,7 +4,10 @@ end
 class RDF::URI
   def R; WebResource.new to_s end
 end
-class WebResource
+class WebResource < RDF::URI
+  def R; self end
+  def self.[] u; WebResource.new u end
+  alias_method :uri, :to_s
   module URIs
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
