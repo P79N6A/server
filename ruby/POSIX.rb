@@ -4,8 +4,8 @@ end
 class WebResource
   module POSIX
     LinkMethod = nil
-    # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote),
-    # owing to less indirection (noticeably faster on certain high-seek-time media and filesystems) and fragility (target file erased)
+    # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote with naive copy utils),
+    # owing to less indirection (notably faster on certain slow-seek media and filesystems) and resilience (not dependent on target-file nonerasure)
     def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
     def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
     def link; send LinkMethod end # prefer hard but fallback to soft
@@ -15,7 +15,7 @@ class WebResource
     # write file at location of POSIX path-map
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
 
-    # contaoned children excepting invisible nodes
+    # contained children excepting invisible nodes
     def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
     # dirname of path component, mapped to WebResource
     def dir; dirname.R end
@@ -34,11 +34,14 @@ class WebResource
 
     # existence check on mapped fs-node
     def exist?; node.exist? end
-
+    alias_method :e, :exist?
 
     def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
+    # size of mapped node
     def size; node.size rescue 0 end
+    # mtime of mapped node
     def mtime; node.stat.mtime end
+    alias_method :m, :mtime
 
     # POSIX path -> URI
     def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R  end
@@ -51,6 +54,7 @@ class WebResource
 
     # shell-escaped path
     def shellPath; localPath.utf8.sh end
+    alias_method :sh, :shellPath
 
     # '/'-separated parts of path component
     def parts; path ? path.split('/') : [] end
@@ -72,10 +76,6 @@ class WebResource
 
     # SHA2 hash of URI as string
     def sha2; to_s.sha2 end
-
-    alias_method :e, :exist?
-    alias_method :m, :mtime
-    alias_method :sh, :shellPath
 
     # env -> file(s)
     def selectNodes
