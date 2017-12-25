@@ -9,6 +9,13 @@ class WebResource < RDF::URI
   def self.[] u; WebResource.new u end
   alias_method :uri, :to_s
   module URIs
+    # concatenate URIs
+    def + u; R[to_s + u.to_s] end
+
+    # match URI against regex
+    def match p; to_s.match p end
+
+    # shorthand for common URIs
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
     Purl = 'http://purl.org/'

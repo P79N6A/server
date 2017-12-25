@@ -3,39 +3,76 @@ class Pathname
 end
 class WebResource
   module POSIX
+    LinkMethod = nil
+    # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote),
+    # owing to less indirection (noticeably faster on certain high-seek-time media and filesystems) and fragility (target file erased)
+    def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
+    def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
+    def link; send LinkMethod end # prefer hard but fallback to soft
 
-    def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R  end
-    def + u; R[to_s + u.to_s] end
-    def basename; File.basename (path||'') end
+    # read file at location of POSIX path-map
+    def readFile; File.open(localPath).read end
+    # write file at location of POSIX path-map
+    def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
+
+    # contaoned children excepting invisible nodes
     def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
+    # dirname of path component, mapped to WebResource
     def dir; dirname.R end
+    # dirname of path component as String
     def dirname; File.dirname path end
-    def exist?; node.exist? end
-    def ext; (File.extname uri)[1..-1] || '' end
+
+    # storage-space usage
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
+
+    # FIND on path component
     def find p
       (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|pth|POSIX.path pth.chomp} : []
     end
+    # GLOB on path component
     def glob; (Pathname.glob localPath).map &:R end
-    def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
-    def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
-    def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
-    def match p; to_s.match p end
+
+    # existence check on mapped fs-node
+    def exist?; node.exist? end
+
+
     def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
-    def mtime; node.stat.mtime end
-    def node; @node ||= (Pathname.new localPath) end
-    def parts; path ? path.split('/') : [] end
-    def localPath
-#      puts "localPath #{path} #{uri} #{caller[0..2]}"
-      @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path))
-    end
-    def readFile; File.open(localPath).read end
-    def sha2; to_s.sha2 end
-    def shellPath; localPath.utf8.sh end
     def size; node.size rescue 0 end
+    def mtime; node.stat.mtime end
+
+    # POSIX path -> URI
+    def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R  end
+
+    # URI -> POSIX path
+    def localPath; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
+
+    # Pathname object
+    def node; @node ||= (Pathname.new localPath) end
+
+    # shell-escaped path
+    def shellPath; localPath.utf8.sh end
+
+    # '/'-separated parts of path component
+    def parts; path ? path.split('/') : [] end
+
+    # basename of path component
+    def basename; File.basename (path||'') end
+
+    # fragment || basename || host
+    def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
+
+    # strip extension of native document formats
     def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|ttl|txt|u)$/,''] end
+
+    # name-extension of path component
+    def ext; (File.extname uri)[1..-1] || '' end
+
+    # TLD of host component
     def tld; host && host.split('.')[-1] || '' end
-    def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
+
+    # SHA2 hash of URI as string
+    def sha2; to_s.sha2 end
+
     alias_method :e, :exist?
     alias_method :m, :mtime
     alias_method :sh, :shellPath
