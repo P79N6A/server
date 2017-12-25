@@ -3,12 +3,27 @@ class Pathname
 end
 class WebResource
   module POSIX
-    LinkMethod = nil
+
     # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote with naive copy utils),
     # owing to less indirection (notably faster on certain slow-seek media and filesystems) and resilience (not dependent on target-file nonerasure)
+    # however Windows and Android (seemingly due to Windows-compat sdcard fs) often fail to support them
+    LinkMethod = begin
+                   file = '.cache/link'.R
+                   link = '.cache/link_'.R
+                   file.node.touch unless file.exist?
+                   link.node.delete if link.exist?
+                   file.ln link
+                   :ln
+                 rescue
+                   :ln_s
+                 end
+
+    # link mapped nodes
     def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
+    # symlink mapped nodes
     def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
-    def link; send LinkMethod end # prefer hard but fallback to soft
+    # prefer hard but fallback to soft
+    def link; send LinkMethod end
 
     # read file at location of POSIX path-map
     def readFile; File.open(localPath).read end
