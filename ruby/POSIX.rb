@@ -124,10 +124,11 @@ class WebResource
          end
        end
       else # GLOB
-        @r[:glob] = match /\*/
-        [(@r[:glob] ? self : (self+'.*')).glob,
+        @r[:glob] = match /[\*\{\[]/
+        [self,
+         (@r[:glob] ? self : (self+'.*')).glob,
          join('index.ttl').R]
-       end).justArray.flatten.compact.select &:exist?
+       end).justArray.flatten.compact.uniq.select &:exist?
     end
 
     # pattern -> file(s)
@@ -150,6 +151,7 @@ class WebResource
     end
   end
   module Webize
+
     # emit RDF of file metadata
     def triplrFile
       s = path
@@ -159,6 +161,7 @@ class WebResource
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
     end
+
     # emit RDF of container metadata
     def triplrContainer
       s = path
@@ -170,6 +173,7 @@ class WebResource
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
     end
+
   end
   include POSIX
   include Webize

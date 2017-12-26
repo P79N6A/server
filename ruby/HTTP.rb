@@ -18,7 +18,7 @@ class WebResource
       @r[:Links] = {}
       parts = path[1..-1].split '/'
       firstPart = parts[0] || ''
-      return fileResponse if node.file?
+      return fileResponse if node.file? && !@r['REQUEST_URI'].match?(/\?/)
       return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
       return [204,{},[]] if firstPart.match(/^gen.*204$/)
       return [302,{'Location' => path+'/'+qs},[]] if node.directory? && path[-1] != '/'
@@ -50,17 +50,19 @@ class WebResource
         end
       end
       sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
+
       @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
       @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
-      @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs unless path=='/'
+      @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + HTTP.qs(q.merge({'head' => ''})) unless path=='/'
       if q.has_key? 'head'
         qq = q.dup; qq.delete 'head'
         @r[:Links][:down] = path + (HTTP.qs qq)
       end
+
       set = selectNodes
-#      puts set
       return notfound if !set || set.empty?
       format = selectMIME
+
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
