@@ -5,9 +5,17 @@ class WebResource
   module POSIX
 
     # link mapped nodes
-    def ln n;   FileUtils.ln   node.expand_path, n.node.expand_path end
+    def ln n
+      #puts "ln #{path} #{n.path}"
+      FileUtils.ln   node.expand_path, n.node.expand_path
+    end
+
     # symlink mapped nodes
-    def ln_s n; FileUtils.ln_s node.expand_path, n.node.expand_path end
+    def ln_s n
+      #puts "ln -s #{path} #{n.path}"
+      FileUtils.ln_s node.expand_path, n.node.expand_path
+    end
+
     # prefer hard but fallback to soft
     def link n; send LinkMethod, n end
 
@@ -19,6 +27,7 @@ class WebResource
 
     # touch mapped node
     def touch
+      dir.mkdir
       FileUtils.touch localPath
     end
 
@@ -43,12 +52,16 @@ class WebResource
     def find p
       (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 1024`.lines.map{|pth|POSIX.path pth.chomp} : []
     end
+
     # GLOB on path component
     def glob; (Pathname.glob localPath).map &:R end
 
     # existence check on mapped fs-node
     def exist?; node.exist? end
     alias_method :e, :exist?
+
+    # symlink existence check
+    def symlink?; node.symlink? end
 
     # create container
     def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
@@ -60,10 +73,10 @@ class WebResource
     def mtime; node.stat.mtime end
     alias_method :m, :mtime
 
-    # POSIX path -> URI
-    def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R rescue '/'.R  end
+    # storage path -> URI
+    def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
 
-    # URI -> POSIX path
+    # URI -> storage path
     def localPath; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
 
     # Pathname object

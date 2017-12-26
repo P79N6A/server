@@ -167,8 +167,6 @@ class WebResource
         doc.writeFile tree.to_json
       end
       doc
-    rescue Exception => e
-      puts uri, e.class, e.message
     end
 
     # file -> preview file

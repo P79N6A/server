@@ -138,8 +138,8 @@ class WebResource
             if !rel.e # link missing
               if destFile.e # link
                 destFile.link rel
-              else # missing but symlink in case it appears
-                destFile.ln_s rel
+              else # symlink. it may appear
+                destFile.ln_s rel unless rel.symlink?
               end
             end
             srcFile.link rev if !rev.e}}}
