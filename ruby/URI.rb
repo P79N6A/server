@@ -4,11 +4,15 @@ end
 class RDF::URI
   def R; WebResource.new to_s end
 end
+class String
+  def R; WebResource.new self end
+end
 class WebResource < RDF::URI
   def R; self end
   def self.[] u; WebResource.new u end
   alias_method :uri, :to_s
   module URIs
+
     # concatenate URIs
     def + u; R[to_s + u.to_s] end
 

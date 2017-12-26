@@ -28,4 +28,20 @@ class WebResource
    JSON,
    Webize,
    Util].map{|m|include m}
+  module POSIX
+    # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote with naive copy utils),
+    # owing to less indirection (notably faster on certain slow-seek media and filesystems) and resilience (not dependent on target-file nonerasure)
+    # however Windows and Android (seemingly due to Windows-compat sdcard fs) often fail to support them
+    LinkMethod = begin
+                   file = '.cache/link'.R
+                   link = '.cache/link_'.R
+                   file.touch unless file.exist?
+                   link.delete if link.exist?
+                   file.ln link
+                   :ln
+                 rescue Exception => e
+                   puts e #, e.backtrace
+                   :ln_s
+                 end
+  end
 end

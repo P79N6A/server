@@ -1,6 +1,6 @@
 class WebResource
   module Webize
-    def triplrMail &b; @verbose = true
+    def triplrMail &b
       m = Mail.read node; return unless m
       id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
       puts " MID #{id}" if @verbose
@@ -10,7 +10,7 @@ class WebResource
       srcDir = resource.path.R; srcDir.mkdir # container
       srcFile = srcDir + 'this.msg'          # pathname
       unless srcFile.e
-        ln self, srcFile # link canonical-location
+        link srcFile # link canonical-location
         puts "LINK #{srcFile}" if @verbose
       end
       yield e, DC+'identifier', id    # Message-ID as RDF
@@ -117,7 +117,7 @@ class WebResource
             iloc = mpath.R # index entry
             [iloc,mloc].map{|loc| loc.dir.mkdir # container
               unless loc.e
-                ln self, loc # index link
+                link loc
                 puts "LINK #{loc}" if @verbose
               end
             }
@@ -137,12 +137,12 @@ class WebResource
             rel = srcDir + r.sha2 + '.msg'
             if !rel.e # link missing
               if destFile.e # link
-                ln destFile, rel rescue nil
+                destFile.link rel
               else # missing but symlink in case it appears
-                ln_s destFile, rel rescue nil
+                destFile.ln_s rel
               end
             end
-            ln srcFile, rev if !rev.e rescue nil}}}
+            srcFile.link rev if !rev.e}}}
 
       # attachments
       m.attachments.select{|p|Mail::Encodings.defined?(p.body.encoding)}.map{|p| # decodability check

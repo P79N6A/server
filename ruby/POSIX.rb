@@ -4,38 +4,36 @@ end
 class WebResource
   module POSIX
 
-    # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote with naive copy utils),
-    # owing to less indirection (notably faster on certain slow-seek media and filesystems) and resilience (not dependent on target-file nonerasure)
-    # however Windows and Android (seemingly due to Windows-compat sdcard fs) often fail to support them
-    LinkMethod = begin
-                   file = '.cache/link'.R
-                   link = '.cache/link_'.R
-                   file.node.touch unless file.exist?
-                   link.node.delete if link.exist?
-                   file.ln link
-                   :ln
-                 rescue Exception => e
-                   puts e
-                   :ln_s
-                 end
-
     # link mapped nodes
-    def ln x,y;   FileUtils.ln   x.node.expand_path, y.node.expand_path end
+    def ln n;   FileUtils.ln   node.expand_path, n.node.expand_path end
     # symlink mapped nodes
-    def ln_s x,y; FileUtils.ln_s x.node.expand_path, y.node.expand_path end
+    def ln_s n; FileUtils.ln_s node.expand_path, n.node.expand_path end
     # prefer hard but fallback to soft
-    def link; send LinkMethod end
+    def link n; send LinkMethod, n end
 
     # read file at location of POSIX path-map
     def readFile; File.open(localPath).read end
+
     # write file at location of POSIX path-map
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
 
-    # contained children excepting invisible nodes
+    # touch mapped node
+    def touch
+      FileUtils.touch localPath
+    end
+
+    # erase mapped node
+    def delete
+      node.delete
+    end
+
+    # contained children excepting hidden nodes
     def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
+
     # dirname of path component, mapped to WebResource
     def dir; dirname.R end
-    # dirname of path component as String
+
+    # dirname of path component
     def dirname; File.dirname path end
 
     # storage-space usage
@@ -52,9 +50,12 @@ class WebResource
     def exist?; node.exist? end
     alias_method :e, :exist?
 
+    # create container
     def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
+
     # size of mapped node
     def size; node.size rescue 0 end
+
     # mtime of mapped node
     def mtime; node.stat.mtime end
     alias_method :m, :mtime
@@ -136,6 +137,7 @@ class WebResource
       end
       `#{cmd} | head -n 1024`.lines.map{|path| POSIX.path path.chomp}
     end
+
   end
   module Webize
     # emit RDF of file metadata

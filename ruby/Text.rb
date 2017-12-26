@@ -120,7 +120,6 @@ class WebResource
 end
 
 class String
-  def R; WebResource.new self end
   # scan for HTTP URIs in string
   # opening '(' required for ')' capture, <> wrapping stripped, ',' and '.' only match mid-URI:
   # demo on the site (https://demohere) and source-code at https://sourcehere.
