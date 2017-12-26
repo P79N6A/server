@@ -10,6 +10,7 @@ class WebResource
     def triplrDocker &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l docker -f html #{sh}`; triplrFile &f end
     def triplrIni &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l ini -f html #{sh}`; triplrFile &f end
     def triplrMakefile &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l make -f html #{sh}`; triplrFile &f end
+    def triplrLisp &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l lisp -f html #{sh}`; triplrFile &f end
     def triplrRuby &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l ruby -f html #{sh}`; triplrFile &f end
     def triplrShellScript &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l sh -f html #{sh}`; triplrFile &f end
     def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile &f end
