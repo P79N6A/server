@@ -272,7 +272,7 @@ class WebResource
                  [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
                   self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}.intersperse(' ')].compact.intersperse('<br>')
                when DC+'cache'
-                 self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.R.path, class: :chain}, ' ']}
+                 self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.uri, class: :chain}, ' ']}
                else
                  self[k].map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
                end}}.intersperse("\n")}
@@ -304,6 +304,7 @@ class WebResource
     end
 
   end
+  include HTML
   module Webize
     def triplrHTML &f
       triplrFile &f

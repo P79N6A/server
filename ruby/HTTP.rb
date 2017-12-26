@@ -186,4 +186,5 @@ class WebResource
          end)
     end
   end
+  include HTTP
 end

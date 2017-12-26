@@ -53,4 +53,5 @@ class WebResource
         R[Instagram+ig].indexInstagram}
     end
   end
+  include Util
 end

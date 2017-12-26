@@ -14,7 +14,7 @@ class WebResource
         puts "LINK #{srcFile}" if @verbose
       end
       yield e, DC+'identifier', id    # Message-ID as RDF
-      yield e, DC+'cache', self + '*' # source-file pointer
+      yield e, DC+'cache', resource
       yield e, Type, R[SIOC+'MailMessage'] # RDF type
 
       # HTML body

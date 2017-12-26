@@ -199,13 +199,5 @@ class WebResource
     end
 
   end
-  module Webize
-    def triplrImage &f
-      yield uri, Type, R[Image]
-      w,h = Dimensions.dimensions localPath
-      yield uri, Stat+'width', w
-      yield uri, Stat+'height', h
-      triplrFile &f
-    end
-  end
+  include MIME
 end

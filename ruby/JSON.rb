@@ -43,4 +43,5 @@ class WebResource
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
     end
   end
+  include JSON
 end

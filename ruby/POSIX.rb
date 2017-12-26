@@ -148,7 +148,6 @@ class WebResource
       end
       `#{cmd} | head -n 1024`.lines.map{|path| POSIX.path path.chomp}
     end
-
   end
   module Webize
     # emit RDF of file metadata
@@ -171,5 +170,23 @@ class WebResource
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
     end
+  end
+  include POSIX
+  include Webize
+  module POSIX
+    # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote with naive copy utils),
+    # owing to less indirection (notably faster on certain slow-seek media and filesystems) and resilience (not dependent on target-file nonerasure)
+    # however Windows and Android (seemingly due to Windows-compat sdcard fs) often fail to support them
+    LinkMethod = begin
+                   file = '.cache/link'.R
+                   link = '.cache/link_'.R
+                   file.touch unless file.exist?
+                   link.delete if link.exist?
+                   file.ln link
+                   :ln
+                 rescue Exception => e
+                   puts e #, e.backtrace
+                   :ln_s
+                 end
   end
 end
