@@ -14,7 +14,8 @@ class WebResource
                    link.node.delete if link.exist?
                    file.ln link
                    :ln
-                 rescue
+                 rescue Exception => e
+                   puts e
                    :ln_s
                  end
 
@@ -137,6 +138,7 @@ class WebResource
     end
   end
   module Webize
+    # emit RDF of file metadata
     def triplrFile
       s = path
       size.do{|sz|yield s, Size, sz}
@@ -145,6 +147,7 @@ class WebResource
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
     end
+    # emit RDF of container metadata
     def triplrContainer
       s = path
       s = s + '/' unless s[-1] == '/'
