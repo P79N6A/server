@@ -77,14 +77,14 @@ class WebResource
                              {_: :script, c: '.conf/site.js'.R.readFile}]},
                         {_: :body,
                          c: [link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
+                             {class: :scroll, c: (htmlTree graph)},
+                             !empty && (htmlTable graph),
                              path!='/' && {class: :search,
                                            c: {_: :form,
                                                c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
                                                    {_: :input, id: :searchbox, name: useGrep ? 'q' : 'f',
                                                     placeholder: useGrep ? :grep : :find
                                                    }.update(query ? {value: query} : {})]}},
-                             {class: :scroll, c: (htmlTree graph)},
-                             !empty && (htmlTable graph),
                              {_: :style, c: @r[:label].map{|name,_|
                                 color = '#%06x' % (rand 16777216)
                                 "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
@@ -126,7 +126,7 @@ class WebResource
               {_: tabled ? :td : :div,
                class: named ? (scaled ? :scaled : :unscaled) : '',
                style: scaled ? "width:#{width * 100.0}%" : '',
-               c: named ? {_: :a, href: this + q, name: label, id: 't'+this.sha2,
+               c: named ? {_: :a, href: this + q, name: label, #id: 't'+this.sha2,
                            c: (scaled ? '' : ('&nbsp;'*path.size)) + CGI.escapeHTML(URI.unescape name) + (scaled ? '' : '/')} : ''}}.intersperse("\n")},"\n",
            ({_: tabled ? :tr : :div, c: nodes.map{|k| # children
               {_: tabled ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")} unless !nodes.find{|n|t[n].size > 0})]}}

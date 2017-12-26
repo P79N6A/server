@@ -53,7 +53,7 @@ class WebResource
 
       @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
       @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
-      @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + HTTP.qs(q.merge({'head' => ''})) unless path=='/'
+      @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + HTTP.qs(q.merge({'head' => ''})) + '#r' + path.sha2 unless path=='/'
       if q.has_key? 'head'
         qq = q.dup; qq.delete 'head'
         @r[:Links][:down] = path + (HTTP.qs qq)
@@ -170,10 +170,10 @@ class WebResource
 
     def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
 
+    # {} -> qs
+    def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
     # env -> qs
     def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
-    # {} -> qs
-    def self.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
     # qs -> {}
     def q
       @q ||= # memoize
