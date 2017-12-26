@@ -58,10 +58,8 @@ class WebResource
 
     # existence check on mapped fs-node
     def exist?; node.exist? end
-    alias_method :e, :exist?
-
-    # symlink existence check
     def symlink?; node.symlink? end
+    alias_method :e, :exist?
 
     # create container
     def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
