@@ -83,40 +83,6 @@ class WebResource
         yield uri, Label, t[0] if based
       }
     end
-
-    def triplrChatLog &f
-      linenum = -1
-      base = stripDoc
-      dir = base.dir
-      log = base.uri
-      basename = base.basename
-      channel = dir + '/' + basename
-      network = dir + '/' + basename.split('%23')[0] + '*'
-      day = dir.uri.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')}
-      readFile.lines.map{|l|
-        l.scan(/(\d\d)(\d\d)(\d\d)[\s+@]*([^\(\s]+)[\S]* (.*)/){|m|
-          s = base + '#l' + (linenum += 1).to_s
-          yield s, Type, R[SIOC+'InstantMessage']
-          yield s, Label, m[3]
-          yield s, Creator, R['#'+m[3]]
-          yield s, To, channel
-          yield s, Content, m[4].hrefs{|p, o|
-            yield log, p, o
-            yield s, p, o
-          }
-          yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
-      if linenum > 0 # summarize at log-URI
-        yield log, Type, R[SIOC+'ChatLog']
-        yield log, Date, mtime.iso8601
-        yield log, Creator, channel
-        yield log, To, network
-        yield log, Title, basename.split('%23')[-1] # channel
-        yield log, Size, linenum
-      end
-    rescue Exception => e
-      puts uri, e.class, e.message
-    end
-
   end
 end
 
@@ -128,14 +94,10 @@ class String
     pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
     u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
-      (link.empty? && '' || '<a class=scanned href="' + u + '">' + # hyperlink
-       (if u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) # image?
-        yield(R::Image,u.R) if b # image RDF
-        "<img src='#{u}'/>"      # inline image
-       else
-         yield(R::DC+'link',u.R) if b # link RDF
-         u.sub(/^https?.../,'')  # inline text
-        end) + '</a>') +
+      (link.empty? && '' ||
+       '<a class="scanned link" href="' + u + '">' + # hyperlink
+       (yield(u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : R::Link, u.R) if b; '') +
+       '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # tail
   end
   def sha2; Digest::SHA2.hexdigest self end

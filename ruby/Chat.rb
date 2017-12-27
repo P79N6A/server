@@ -1,10 +1,11 @@
 # coding: utf-8
 class WebResource
-  module Util
-    include URIs
-    # interface with some online services
-    # READ-ONLY access on remote
-
+  module Webize
+    def twitter
+      open(localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
+        readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
+        readURI.R.indexTweets}
+    end
     def fetchTweets
       nokogiri.css('div.tweet > div.content').map{|t|
         s = Twitter + t.css('.js-permalink').attr('href')
@@ -42,16 +43,35 @@ class WebResource
           end}}
     end
 
-    def twitter
-      open(localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
-        readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
-        readURI.R.indexTweets}
-    end
-
-    def ig
-      open(localPath).readlines.map(&:chomp).map{|ig|
-        R[Instagram+ig].indexInstagram}
+    def triplrChatLog &f
+      linenum = -1
+      base = stripDoc
+      dir = base.dir
+      log = base.uri
+      basename = base.basename
+      channel = dir + '/' + basename
+      network = dir + '/' + basename.split('%23')[0] + '*'
+      day = dir.uri.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')}
+      readFile.lines.map{|l|
+        l.scan(/(\d\d)(\d\d)(\d\d)[\s+@]*([^\(\s]+)[\S]* (.*)/){|m|
+          s = base + '#l' + (linenum += 1).to_s
+          yield s, Type, R[SIOC+'InstantMessage']
+          yield s, Label, m[3]
+          yield s, Creator, R['#'+m[3]]
+          yield s, To, channel
+          yield s, Content, m[4].hrefs{|p,o|
+            yield s, Title, '▶' if p==Image
+            yield s, p, o
+          }
+          yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
+      if linenum > 0 # summarize at log-URI
+        yield log, Type, R[SIOC+'ChatLog']
+        yield log, Date, mtime.iso8601
+        yield log, Creator, channel
+        yield log, To, network
+        yield log, Title, basename.split('%23')[-1] # channel
+        yield log, Size, linenum
+      end
     end
   end
-  include Util
 end

@@ -17,7 +17,8 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R
-        render({_: :a, href: x.uri, c: x.label})
+        render({_: :a, href: x.uri, style: x[:style][0], class: x[:class][0], c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.basename != '/' && x.basename) || x.host || '')}.
+                 update(!x[:id].empty? ? {id: x[:id][0]} : {} ))
       when NilClass
         ''
       when FalseClass
@@ -61,9 +62,7 @@ class WebResource
       end
       query = q['q'] || q['f']
       useGrep = path.split('/').size > 3 # search-provider suggestion
-      link = -> name,icon {
-        @r[:Links][name].do{|href|
-          {_: :a, id: name, c: icon, href: (CGI.escapeHTML href.to_s)}}}
+      link = -> name,icon {@r[:Links][name].do{|l| l.R.data({id: name, label: icon})}}
 
       HTML.render ["<!DOCTYPE html>\n",
                    {_: :html,
@@ -88,8 +87,7 @@ class WebResource
                              {_: :style, c: @r[:label].map{|name,_|
                                 color = '#%06x' % (rand 16777216)
                                 "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
-                             !empty && @r[:Links][:down].do{|d|
-                               {_: :a, id: :down, c: '&#9660;', href: (CGI.escapeHTML d.to_s)}},
+                             !empty && link[:down, '&#9660;'],
                              empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname}]}]}]
     end
 
@@ -176,12 +174,10 @@ class WebResource
            traverse = links.size <= 16
            @r[:label][tld] = true
            {_: :tr,
-            c: [({_: :td, class: :host, name: tld,
-                  c: {_: :a, href: '//'+host, c: host}} if host),
+            c: [({_: :td, class: :host, name: tld, c: R['//'+host]} if host),
                 {_: :td, class: :path, colspan: host ? 1 : 2,
                  c: links.map{|link| @r[:links].push link
-                   [{_: :a, href: link.uri, c: CGI.escapeHTML(URI.unescape((link.host ? link.path : link.basename)||''))}.update(traverse ? {id: 'link'+rand.to_s.sha2} : {}),
-                    ' ']}}]}}} unless links.empty? }
+                   [link.data((traverse ? {id: 'link'+rand.to_s.sha2} : {})),' ']}}]}}} unless links.empty?}
 
       # From/To fields in one column
       ft = false
@@ -195,20 +191,15 @@ class WebResource
                  id = rand.to_s.sha2
                  # domain-specific index-location pointer
                  if a SIOC+'MailMessage' # messages*address*month
-                   {_: :a, id: 'address_'+id, href: v.path + '?head#r' + sha2, c: v.label}
+                   R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename})
                  elsif a SIOC+'Tweet'
                    if edge == Creator  # tweets*author*day
-                     {_: :a, id: 'tw'+id, href: datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2, c: v.label}
+                     R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({id: 'twit'+id, label: v.basename})
                    else # tweets*hour
-                     {_: :a, id: 'tw'+id, href: datePath + '*twitter*#r' + sha2, c: v.label}
+                     R[datePath + '*twitter*#r' + sha2].data({id: 'tweet'+id, label: :twitter})
                    end
                  elsif a SIOC+'BlogPost'
-                   url = if datePath # posts*host*day
-                           datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2
-                         else
-                           v.host
-                         end
-                   {_: :a, id: 'post_'+id, href: url, c: v.label}
+                   R[datePath ? (datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2) : ('//'+host)].data({id: 'post'+id, label: v.host})
                  else
                    v
                  end
@@ -224,12 +215,12 @@ class WebResource
            {_: :td, property: k,
             c: case k
                when 'uri'
-                 [#{_: :h3, c: CGI.escapeHTML(uri)},
-                   self[Label].compact.map{|v|
-                    {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri, c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
+                 [self[Label].compact.map{|v|
+                    {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri,
+                     c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
-                    {_: :a, class: :title, href: (a Container) ? uri+'?head' : (uri + (host ? '' : '?')), name: inDoc ? :localhost : tld,
+                    {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: inDoc ? :localhost : tld,
                      c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
                                                         {}
                                                        else

@@ -160,9 +160,6 @@ class WebResource
                 HTML.render({_: :a, href: file.uri, c: [{_: :img, src: file.uri}, p.filename]}) # render HTML
         end }
     end
-  end
-  module Util
-
     def indexMail
       triples = 0
       triplrMail{|s,p,o|triples += 1}

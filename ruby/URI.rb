@@ -26,6 +26,7 @@ class WebResource < RDF::URI
     DC   = Purl + 'dc/terms/'
     DCe  = Purl + 'dc/elements/1.1/'
     SIOC = 'http://rdfs.org/sioc/ns#'
+    Link = DC + 'link'
     Schema = 'http://schema.org/'
     Media = 'http://search.yahoo.com/mrss/'
     Podcast = 'http://www.itunes.com/dtds/podcast-1.0.dtd#'

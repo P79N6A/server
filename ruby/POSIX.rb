@@ -90,9 +90,6 @@ class WebResource
     # basename of path component
     def basename; File.basename (path||'') end
 
-    # fragment || basename || host
-    def label; fragment || (path && basename != '/' && (URI.unescape basename)) || host || '' end
-
     # strip extension of native document formats
     def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|ttl|txt|u)$/,''] end
 
