@@ -108,20 +108,22 @@ document.addEventListener("DOMContentLoaded", function(){
 		gotoLink('prev');
 	    if(key==78) // [n]ext page
 		gotoLink('next');
-	    if(key==38) // [p]rev superitem (subject URI)
+	    if(key==38) // [p]rev superitem (titled subject URI)
 		selectPrevItem();
 	    if(key==40) // [n]ext superitem
 		selectNextItem();
-	    if(key==85) // [u]p to parent
+	    if(key==85) // [u]p to container
 		gotoLink('up');
-	    if(key==68) // [d]own to children
+	    if(key==68) // [d]own to contained
 		gotoLink('down');
 	} else {
-	    if(key==39 )
-		console.log(e,e.target)
-	    if(key==38 || key==80) // u[p]rev item (object URI)
+	    if(key==37)
+		window.history.go(-1);
+	    if(key==39)
+		e.target.click();
+	    if(key==38 || key==80) // [up] [p]revious item
 		selectPrevLink();
-	    if(key==40 || key==78) // dow[n]ext item
+	    if(key==40 || key==78) // [down] [n]ext item
 		selectNextLink();
 	    if(key==83) // [s]ort entries
 		gotoLink('sort');

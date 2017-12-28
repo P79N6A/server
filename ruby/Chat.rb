@@ -1,11 +1,13 @@
 # coding: utf-8
 class WebResource
   module Webize
+
     def twitter
       open(localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
         readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
         readURI.R.indexTweets}
     end
+
     def fetchTweets
       nokogiri.css('div.tweet > div.content').map{|t|
         s = Twitter + t.css('.js-permalink').attr('href')
@@ -24,6 +26,7 @@ class WebResource
           yield s, DC+'link', R[a.attr 'href']}
         yield s, Abstract, HTML.strip(content.inner_html).gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
     end
+
     def indexTweets
       graph = {}
       # build graph
