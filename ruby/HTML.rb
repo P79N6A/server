@@ -67,7 +67,7 @@ class WebResource
       HTML.render ["<!DOCTYPE html>\n",
                    {_: :html,
                     c: [{_: :head,
-                         c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]||path}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                         c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]||path.gsub('/','  ')}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
                              %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
                              @r[:Links].do{|links|
                                links.map{|type,uri|
