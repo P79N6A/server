@@ -1,7 +1,6 @@
 # coding: utf-8
 class WebResource
   module Webize
-    include URIs
 
     def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
     def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end

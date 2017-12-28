@@ -108,18 +108,20 @@ document.addEventListener("DOMContentLoaded", function(){
 		gotoLink('prev');
 	    if(key==78) // [n]ext page
 		gotoLink('next');
-	    if(key==38) // [p]rev item
+	    if(key==38) // [p]rev superitem (subject URI)
 		selectPrevItem();
-	    if(key==40) // [n]ext item
+	    if(key==40) // [n]ext superitem
 		selectNextItem();
 	    if(key==85) // [u]p to parent
 		gotoLink('up');
 	    if(key==68) // [d]own to children
 		gotoLink('down');
 	} else {
-	    if(key==38||key==80) // [p]rev link
+	    if(key==39 )
+		console.log(e,e.target)
+	    if(key==38 || key==80) // u[p]rev item (object URI)
 		selectPrevLink();
-	    if(key==40||key==78) // [n]ext link
+	    if(key==40 || key==78) // dow[n]ext item
 		selectNextLink();
 	    if(key==83) // [s]ort entries
 		gotoLink('sort');
@@ -130,3 +132,5 @@ document.addEventListener("DOMContentLoaded", function(){
 	    e.stopPropagation();
     },false);
 }, false);
+
+//		window.location = e.target(getAttribute('href'));

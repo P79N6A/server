@@ -16,7 +16,7 @@ class WebResource
       FileUtils.ln_s node.expand_path, n.node.expand_path
     end
 
-    # prefer hard but fallback to soft
+    # link with fallback to symlink
     def link n; send LinkMethod, n end
 
     # read file at location of POSIX path-map
@@ -173,11 +173,7 @@ class WebResource
 
   end
   include POSIX
-  include Webize
-  module POSIX
-    # generally, we prefer hard-links for files which won't be synched to another machine (causing space-waste on remote with naive copy utils),
-    # owing to less indirection (notably faster on certain slow-seek media and filesystems) and resilience (not dependent on target-file nonerasure)
-    # however Windows and Android (seemingly due to Windows-compat sdcard fs) often fail to support them
+  module POSIX # this check uses the posix module, so close, include, and reopen it. TODO rewrite entire project in compilable language
     LinkMethod = begin
                    file = '.cache/link'.R
                    link = '.cache/link_'.R
@@ -189,5 +185,26 @@ class WebResource
                    puts e #, e.backtrace
                    :ln_s
                  end
+  end
+  module HTML
+    def htmlGrep graph, q
+      wordIndex = {}
+      args = q.shellsplit
+      args.each_with_index{|arg,i| wordIndex[arg] = i }
+      pattern = /(#{args.join '|'})/i
+      # find matches
+      graph.map{|u,r|
+        keep = r.to_s.match(pattern) || r[Type] == Container
+        graph.delete u unless keep}
+      # highlight matches
+      graph.values.map{|r|
+        (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
+          r[Abstract] = [lines[0..5].map{|l|
+                           l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
+                             HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
+                           }},{_: :hr}] if lines.size > 0 }}
+      # word-highlight CSS
+      graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
+    end
   end
 end

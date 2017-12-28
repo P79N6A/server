@@ -202,5 +202,9 @@ class WebResource
     end
 
   end
+  module Webize
+    include URIs
+  end
   include MIME
+  include Webize
 end
