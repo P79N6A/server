@@ -110,7 +110,7 @@ class WebResource
                    images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unseen images
                      @r[:images].push img # seen
                      {_: :a, class: :thumb, href: uri,
-                      c: {_: :img, src: if !img.host || host==img.host
+                      c: {_: :img, src: if !img.host || img.host == @r['HTTP_HOST']
                            img.path + '?preview'
                          else
                            img.uri

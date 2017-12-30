@@ -88,7 +88,10 @@ class WebResource
                                 color = '#%06x' % (rand 16777216)
                                 "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
                              !empty && link[:down, '&#9660;'],
-                             empty && {_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: '404'+'<br>'*7, href: dirname}]}]}]
+                             empty && [{_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
+                                       {_: :table, class: :env, c: @r.map{|k,vs|
+                                          {_: :tr, c: [{_: :td, c: k},{_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}
+                                        }}]]}]}]
     end
 
     def nokogiri

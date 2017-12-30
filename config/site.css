@@ -21,7 +21,8 @@ a:visited {border:.08em solid #eee}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
-div.scroll {max-width:100%;overflow:scroll}
+div.scroll {max-width:100%;overflow:hidden}
+table.env {margin: auto}
 table.tree {width:100%;border-spacing:0}
 table.tree td {padding:0}
 table.tree a {display:block;height:100%;width:100%;padding-left:.125em}
