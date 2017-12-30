@@ -112,7 +112,7 @@ class WebResource
                 link = s.R.join href
                 a.set_attribute 'href', link
                 yield s, DC+'link', link
-                yield s, Image, link if %w{gif jpg png webp}.member? link.R.ext.downcase
+                yield s, Image, link if %w{gif jpeg jpg png webp}.member? link.R.ext.downcase
               }}
             yield s, p, content.to_xhtml
           else
@@ -209,6 +209,8 @@ class WebResource
                 o = url[2].R
                 p = case o.ext.downcase
                     when 'jpg'
+                      R::Image
+                    when 'jpeg'
                       R::Image
                     when 'png'
                       R::Image
