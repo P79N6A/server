@@ -76,6 +76,7 @@ class WebResource
       def initialize(input = $stdin, options = {}, &block)
         @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.to_utf8
         @base = options[:base_uri]
+        @host = @base.R.host
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -198,7 +199,7 @@ class WebResource
             resource = u.R
             yield u, Type, R[SIOC+'BlogPost']
             blogs = [resource.join('/')]
-            blogs.push @base.R.join('/') if @base.R.host != resource.host
+            blogs.push @base.R.join('/') if @host && @host != resource.host
             blogs.map{|blog| yield u, R::To, blog}
             # links
             inner.scan(reAttach){|e|
