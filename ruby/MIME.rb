@@ -21,6 +21,7 @@ class WebResource
     # name suffix -> MIME
     MIMEsuffix = {
       'asc' => 'text/plain',
+      'atom' => 'application/atom+xml',
       'bat' => 'text/x-batch',
       'bu' => 'text/based-uri-list',
       'cfg' => 'text/ini',
@@ -33,7 +34,6 @@ class WebResource
       'docx' => 'application/msword+xml',
       'e' => 'application/json',
       'eot' => 'application/font',
-      'feed' => 'application/atom+xml',
       'go' => 'application/go',
       'haml' => 'text/plain',
       'hs' => 'application/haskell',
@@ -148,7 +148,7 @@ class WebResource
     end
 
     # file -> boolean
-    def isRDF; %w{feed n3 ttl}.member? ext end
+    def isRDF; %w{atom n3 owl rdf ttl}.member? ext end
 
     # file -> RDF file
     def toRDF; isRDF ? self : transcode end

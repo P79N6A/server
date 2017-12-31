@@ -64,7 +64,7 @@ class WebResource
     end
 
     class Format < RDF::Format
-      content_type     'application/atom+xml', :extension => :feed
+      content_type     'application/atom+xml', :extension => :atom
       content_encoding 'utf-8'
       reader { WebResource::Feed::Reader }
     end
@@ -224,7 +224,7 @@ class WebResource
             inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p
-              # used in subject URI search
+              # bound as subject-URI
               elsif [Atom+'author', RSS+'author', RSS+'creator', DCe+'creator'].member? p
                 uri = e[3].match /<uri>([^<]+)</
                 name = e[3].match /<name>([^<]+)</
