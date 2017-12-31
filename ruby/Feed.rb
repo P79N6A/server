@@ -172,13 +172,13 @@ class WebResource
         reLinkHref = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @href @rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
-        # generic elements
+
+        # elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
         reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
         reGroup = /<\/?media:group>/i
-        # media elements
         reMedia = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
@@ -201,10 +201,12 @@ class WebResource
           if u # id found
             u = (URI.join @base, u).to_s unless u.match /^http/
             resource = u.R
+
             yield u, Type, R[SIOC+'BlogPost']
             blogs = [resource.join('/')]
             blogs.push @base.R.join('/') if @host && @host != resource.host
             blogs.map{|blog| yield u, R::To, blog}
+
             inner.scan(reMedia){|e|
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
@@ -220,7 +222,8 @@ class WebResource
                     else
                       R::Atom + rel
                     end
-                yield u, p, o }}
+                yield u,p,o}}
+
             inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p
