@@ -110,11 +110,13 @@ class WebResource
                    images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unseen images
                      @r[:images].push img # seen
                      {_: :a, class: :thumb, href: uri,
-                      c: {_: :img, src: if !img.host || img.host == @r['HTTP_HOST']
-                           img.path + '?preview'
-                         else
-                           img.uri
-                          end}}})].intersperse(' ')
+                      c: [{_: :img, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail locally-hosted images
+                            img.path + '?preview'
+                          else
+                            img.uri
+                           end},'<br>',
+                          {_: :span, class: :notes, c: (CGI.escapeHTML img.uri)},
+                         ]}})].intersperse(' ')
                when Type
                  self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
                    {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
