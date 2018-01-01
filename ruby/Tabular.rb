@@ -1,5 +1,6 @@
 class WebResource
   module HTML
+
     def htmlTable graph
       (1..10).map{|i|@r[:label]["quote"+i.to_s] = true} # labels
       [:links,:images].map{|p|@r[p] = []} # link & image lists
@@ -46,7 +47,7 @@ class WebResource
                  c: links.map{|link| @r[:links].push link
                    [link.data((traverse ? {id: 'link'+rand.to_s.sha2} : {})),' ']}}]}}} unless links.empty?}
 
-      # From/To fields in one column
+      # From/To fields once in the same column
       ft = false
       fromTo = -> {
         unless ft
@@ -76,7 +77,7 @@ class WebResource
            self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]
         end}
 
-      unless q.has_key?('head') && self[Title].empty? && self[Abstract].empty? # title or abstract required in heading-mode
+      unless q.has_key?('head') && self[Title].empty? && self[Abstract].empty? # title or abstract required to show in heading
         {_: :tr,
          c: keys.map{|k|
            {_: :td, property: k,
@@ -88,10 +89,10 @@ class WebResource
                   self[Title].compact.map{|t|
                     @r[:label][tld] = true
                     {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: inDoc ? :localhost : tld,
-                     c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
+                     c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment) # identify once
                                                         {}
                                                        else
-                                                         identified = true # doc-local identifier
+                                                         identified = true
                                                          {id: (inDoc && fragment) ? fragment : 'r'+sha2, primary: :true}
                                                         end)}.intersperse(' '),
                   self[Abstract], linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
@@ -115,7 +116,7 @@ class WebResource
                           else
                             img.uri
                            end},'<br>',
-                          {_: :span, class: :notes, c: (CGI.escapeHTML img.uri)},
+                          {_: :span, class: :notes, c: CGI.escapeHTML((img.host||'')+img.path)},
                          ]}})].intersperse(' ')
                when Type
                  self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
