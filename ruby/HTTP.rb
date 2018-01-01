@@ -18,7 +18,7 @@ class WebResource
       @r[:Links] = {}
       parts = path[1..-1].split '/'
       firstPart = parts[0] || ''
-      return fileResponse if node.file? && !@r['REQUEST_URI'].match?(/\?/)
+      return fileResponse if node.file?
       return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
       return [204,{},[]] if firstPart.match(/^gen.*204$/)
       return [302,{'Location' => path+'/'+qs},[]] if node.directory? && path[-1] != '/'

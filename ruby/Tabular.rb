@@ -116,7 +116,8 @@ class WebResource
                           else
                             img.uri
                            end},'<br>',
-                          {_: :span, class: :notes, c: CGI.escapeHTML((img.host||'')+img.path)},
+                          {_: :span, class: :host, c: host},
+                          {_: :span, class: :notes, c: (CGI.escapeHTML img.path)},
                          ]}})].intersperse(' ')
                when Type
                  self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
