@@ -5,8 +5,9 @@ nntp
 house data
 ical
 ig
-merge media and generic element for single pass (Feed)
+merge media and generic-element parse to single pass (Feed)
 benchmark nokogiri/lax-SGML-parser feed parse vs regex
 stats - doc view  - find largest mail, attachment 
-change grep-view arg combining || to &&
+change grep-view arg-stacking to match others (|| vs &&)
 cache images
+highlight and identify (for traversal) current timeseg-containers
