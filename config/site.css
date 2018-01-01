@@ -2,7 +2,7 @@
 body {background-color:#000; color:#fff; margin:0; font-family: sans-serif}
 pre {display: inline-block; margin:0; white-space: pre-wrap; max-width:255ex; overflow:hidden}
 pre, .monospace {font-family: monospace}
-span.notes {color:#aaa;font-size:.8em}
+span.notes {color:#bbb;font-size:.8em}
 img {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff; vertical-align: top}
 a,table,td.host {border-radius:.125em}
@@ -14,8 +14,8 @@ a.label {margin-right: .1em;padding: 0 .1em 0 .1em;background-color:#fff;color:#
 a.twitter {border: .1em dotted #888;border-radius:.5em;padding:0 .3em 0 .3em}
 a#next, a.title {float: right}
 a.title {padding:0 .16em 0 .16em}
-a.thumb {display: inline-block;max-width:32em;border-radius:.3em;border: .1em solid #333}
-a.thumb img {max-height: 24em}
+a.thumb {display: inline-block;max-width:24em;max-height: 24em}
+a.thumb img {}
 a.thumb span.host {font-size:.88em}
 a.thumb span.notes {font-weight: normal}
 a.date {white-space: nowrap}
