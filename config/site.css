@@ -14,8 +14,8 @@ a.label {margin-right: .1em;padding: 0 .1em 0 .1em;background-color:#fff;color:#
 a.twitter {border: .1em dotted #888;border-radius:.5em;padding:0 .3em 0 .3em}
 a#next, a.title {float: right}
 a.title {padding:0 .16em 0 .16em}
-a.thumb {display: inline-block;max-width:24em;max-height: 24em}
-a.thumb img {}
+a.thumb {display: inline-block}
+a.thumb img {max-width:24em;max-height: 24em}
 a.thumb span.host {font-size:.88em}
 a.thumb span.notes {font-weight: normal}
 a.date {white-space: nowrap}
