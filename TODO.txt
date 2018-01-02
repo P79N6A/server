@@ -2,12 +2,12 @@ justArray -> splat
 cascading-unglob the tree
 gopher
 nntp
-house data
 ical
-ig
+instagram
 merge media and generic-element parse to single pass (Feed)
+runtime-alternate storage locations for ingested docs
 benchmark nokogiri/lax-SGML-parser feed parse vs regex
 stats - doc view  - find largest mail, attachment 
-change grep-view arg-stacking to match others (|| vs &&)
+change grep (view) arg-stacking to match fileset+model behavior (|| vs &&)x
 cache images
 highlight and identify (for traversal) current timeseg-containers
