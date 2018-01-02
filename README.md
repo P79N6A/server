@@ -8,7 +8,7 @@ apt-get install git ruby ruby-dev rsync libssl-dev libxml2-dev libxslt1-dev pkg-
 xbps-install GraphicsMagick base-devel git ruby ruby-devel rsync libxml2-devel libxslt-devel python-Pygments
 pkg install autoconf automake binutils clang file findutils git iconv pkg-config python ruby rsync ruby-dev libxslt-dev
 
-unicorn .conf/rack.ru -p 80
+unicorn .conf/rack.ru
 ```
 # MIRRORS
 [mw.logbook.am](http://mw.logbook.am/src/pw/)
