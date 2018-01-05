@@ -4,16 +4,15 @@ pre {display: inline-block; margin:0; white-space: pre-wrap; max-width:255ex; ov
 pre, .monospace {font-family: monospace}
 span.notes {color:#bbb;font-size:.8em}
 img {max-width: 100%}
-a {text-decoration:none; font-weight: bold; color:#fff; vertical-align: top}
+a {text-decoration:none; font-weight: bold; color:#fff; vertical-align: top;padding: 0 .1em 0 .1em}
 a,table,td.host {border-radius:.125em}
 a#up {display:block}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
-a.label {margin-right: .1em;padding: 0 .1em 0 .1em;background-color:#fff;color:#000}
-a.twitter {border: .1em dotted #888;border-radius:.5em;padding:0 .3em 0 .3em}
+a.label {margin-right: .1em;background-color:#fff;color:#000}
+a.twitter {border: .1em dotted #888}
 a#next, a.title {float: right}
-a.title {padding:0 .16em 0 .16em}
 a.thumb {display: inline-block}
 a.thumb img {max-width:24em;max-height: 24em}
 a.thumb span.host {font-size:.88em}
@@ -26,11 +25,10 @@ a:visited {border:.08em solid #eee}
 .search a.find {font-weight: normal}
 div.scroll {max-width:100%;overflow:hidden}
 table.env {margin: auto}
-table.tree {width:100%;border-spacing:0}
-table.tree a {display:block;height:100%;width:100%;padding-left:.125em}
+table.tree {width:100%}
+table.tree a {display:block;height:100%;width:100%}
 table.tree tr.nodes > td.unscaled {border: .1em solid #222;background-color:#181818;border-radius:.2em}
 table.tree tr.nodes > td.unscaled > a {background-color:#000;color:#fff;font-family: monospace}
-table.tree tr.nodes > td.scaled {height:1.6em;padding-right:.1em}
 td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="uri"] {min-width: 18em}
