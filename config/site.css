@@ -10,7 +10,7 @@ a#up {display:block}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
-a.label {margin-right: .1em;background-color:#fff;color:#000}
+a.label {background-color:#fff;color:#000}
 a.twitter {border: .1em dotted #888}
 a#next, a.title {float: right}
 a.thumb {display: inline-block}
@@ -18,24 +18,19 @@ a.thumb img {max-width:24em;max-height: 24em}
 a.thumb span.host {font-size:.88em}
 a.thumb span.notes {font-weight: normal}
 a.date {white-space: nowrap}
-a.notfound {font-size:8em;width:100%;display:block;text-align:center;border-radius:0;color:#000}
-a:visited {border:.08em solid #eee}
+a.notfound {font-size:8em;width:100%;display:block;text-align:center;border-radius:0;3color:#000}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
 div.scroll {max-width:100%;overflow:hidden}
-table.env {margin: auto}
 table.tree {width:100%}
 table.tree a {display:block;height:100%;width:100%}
-table.tree tr.nodes > td.unscaled {border: .1em solid #222;background-color:#181818;border-radius:.2em}
+table.tree tr.nodes > td.unscaled {background-color:#222;border-radius:.2em}
 table.tree tr.nodes > td.unscaled > a {background-color:#000;color:#fff;font-family: monospace}
 td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
-td[property="uri"] {min-width: 18em}
-td[property="uri"] a.scanned {white-space: nowrap; display: inline-block; max-width: 80ex; overflow:hidden}
 td[property="http://www.w3.org/ns/posix/stat#size"] {text-align: right}
 td[property="http://rdfs.org/sioc/ns#has_creator"],td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:24ex}
-table.links {float:left;background-color:#191919}
-table.links td.host a {float: right; color:#000}
+table.links {float:leftx}
+table.links td.host a {float: right}
 table.links td.path {max-width: 42em;overflow:hidden;background-color:#000}
-table.links td.path a {font-weight: normal}
