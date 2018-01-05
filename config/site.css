@@ -1,11 +1,12 @@
 :target, :target *,th.selected, th.selected a {background-color:#fff !important; color:#000 !important;border-color: #fff !important;}
 body {background-color:#000; color:#fff; margin:0; font-family: sans-serif}
-pre {display: inline-block; margin:0; white-space: pre-wrap; max-width:255ex; overflow:hidden}
+pre {margin:0; white-space: pre-wrap; max-width:255ex; overflow:hidden}
 pre, .monospace {font-family: monospace}
 span.notes {color:#bbb;font-size:.8em}
 img {max-width: 100%}
-a {text-decoration:none; font-weight: bold; color:#fff; vertical-align: top;padding: 0 .1em 0 .1em}
+a {text-decoration:none; font-weight: bold; color:#fff; padding: 0 .1em 0 .1em}
 a,table,td.host {border-radius:.125em}
+a,td {vertical-align:top}
 a#up {display:block}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
@@ -13,7 +14,7 @@ a#prev, a.label {float: left}
 a.label {background-color:#fff;color:#000}
 a.twitter {border: .1em dotted #888}
 a#next, a.title {float: right}
-a.thumb {display: inline-block}
+a.thumb, pre, table.links {display: inline-block}
 a.thumb img {max-width:24em;max-height: 24em}
 a.thumb span.host {font-size:.88em}
 a.thumb span.notes {font-weight: normal}
@@ -27,10 +28,7 @@ table.tree {width:100%}
 table.tree a {display:block;height:100%;width:100%}
 table.tree tr.nodes > td.unscaled {background-color:#222;border-radius:.2em}
 table.tree tr.nodes > td.unscaled > a {background-color:#000;color:#fff;font-family: monospace}
-td {vertical-align:top}
 th a:before {font-size:1.6em; font-weight: normal}
-td[property="http://www.w3.org/ns/posix/stat#size"] {text-align: right}
-td[property="http://rdfs.org/sioc/ns#has_creator"],td[property="http://rdfs.org/sioc/ns#addressed_to"] {max-width:24ex}
-table.links {float:leftx}
+td[property="http://rdfs.org/sioc/ns#has_creator"],td[property="http://rdfs.org/sioc/ns#addressed_to"], td[property="http://www.w3.org/ns/posix/stat#size"] {text-align: right}
 table.links td.host a {float: right}
 table.links td.path {max-width: 42em;overflow:hidden;background-color:#000}
