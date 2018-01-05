@@ -13,6 +13,6 @@ sh install.sh
 unicorn .conf/rack.ru
 ```
 # MIRRORS
-[mw.logbook.am](http://mw.logbook.am/src/pw/)
-[gitlab.com](https://gitlab.com/ix/pw)
-[repo.or.cz](http://repo.or.cz/www)
+[logbook](http://mw.logbook.am/pw/)
+[gitlab](https://gitlab.com/ix/pw)
+[repo](http://repo.or.cz/www)
