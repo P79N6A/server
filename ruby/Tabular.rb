@@ -108,10 +108,11 @@ class WebResource
                        c
                      end
                    }.intersperse(' ') unless q.has_key?('head')),
+                  # scan RDF for unshown images
                   (images = []
                    images.push self if types.member?(Image) # is subject of triple
                    self[Image].do{|i|images.concat i}      # is object of triple
-                   images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unseen images
+                   images.map(&:R).select{|i|!@r[:images].member? i}.map{|img|
                      @r[:images].push img # seen
                      {_: :a, class: :thumb, href: uri,
                       c: [{_: :img, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail locally-hosted images
