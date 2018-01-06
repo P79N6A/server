@@ -28,4 +28,4 @@ table.tree tr.nodes > td.unscaled {background-color:#222}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="http://rdfs.org/sioc/ns#has_creator"],td[property="http://rdfs.org/sioc/ns#addressed_to"], td[property="http://www.w3.org/ns/posix/stat#size"] {text-align: right}
 table.links td.host a {float: right}
-table.links td.path {max-width: 42em;overflow:hidden;background-color:#000}
+table.links td.path {max-width: 42em;overflow:hidden}

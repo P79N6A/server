@@ -42,10 +42,11 @@ class WebResource
            traverse = links.size <= 16
            @r[:label][tld] = true
            {_: :tr,
-            c: [({_: :td, class: :host, name: tld, c: R['//'+host]} if host),
+            c: [({_: :td, class: :host, c: R['//'+host]} if host),
                 {_: :td, class: :path, colspan: host ? 1 : 2,
-                 c: links.map{|link| @r[:links].push link
-                   [link.data((traverse ? {id: 'link'+rand.to_s.sha2} : {})),' ']}}]}}} unless links.empty?}
+                 c: links.map{|link|
+                   @r[:links].push link
+                   [link.data((traverse ? {id: 'link'+rand.to_s.sha2, name: tld} : {})),' ']}}]}}} unless links.empty?}
 
       # From/To fields once in the same column
       ft = false

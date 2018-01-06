@@ -17,7 +17,7 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R
-        render({_: :a, href: x.uri, style: x[:style][0], class: x[:class][0], c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.basename != '/' && x.basename) || x.host || '')}.
+        render({_: :a, href: x.uri, style: x[:style][0], class: x[:class][0], name: x[:name][0], c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.basename != '/' && x.basename) || x.host || '')}.
                  update(!x[:id].empty? ? {id: x[:id][0]} : {} ))
       when NilClass
         ''
