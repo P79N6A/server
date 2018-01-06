@@ -86,19 +86,6 @@ class WebResource
 end
 
 class String
-  # scan for HTTP URIs in string
-  # opening '(' required for ')' capture, <> wrapping stripped, ',' and '.' only match mid-URI:
-  # demo on the site (https://demohere) and source-code at https://sourcehere.
-  def hrefs &b
-    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
-    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
-      (link.empty? && '' ||
-       '<a class="scanned link" href="' + u + '">' + # hyperlink
-       (yield(u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : R::Link, u.R) if b; '') +
-       '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # tail
-  end
   def sha2; Digest::SHA2.hexdigest self end
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
   def utf8; force_encoding 'UTF-8' end

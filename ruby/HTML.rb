@@ -29,7 +29,7 @@ class WebResource
       end
     end
     include URIs
-    InlineMeta = [Title, Image, Abstract, Content, Label, DC+'link', DC+'note', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+    InlineMeta = [Title, Image, Video, Abstract, Content, Label, DC+'link', DC+'note', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
     VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
     LinkPred = [SIOC+'attachment',Stat+'contains',Atom+'link',RSS+'link',DC+'link']
 
@@ -110,6 +110,21 @@ class WebResource
       n.css('title').map{|title| yield uri, Title, title.inner_text }
       n.css('meta[property="og:image"]').map{|m| yield uri, Image, m.attr("content").R }
     end
+  end
+end
+
+class String
+  # text -> HTML. also a triplr yielding RDF to supplied block
+  # '(' required to capture ')', <> and ()-wrapping stripped, comma or period after URI not captured
+  def hrefs &b
+    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
+    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
+      (link.empty? && '' ||
+       '<a class="scanned link" href="' + u + '">' + # hyperlink
+       (yield(u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : (u.match(/(mkv|mp4|webm)$/i) ? R::Video : R::Link), u.R) if b; '') +
+       '</a>') +
+      (post.empty? && '' || post.hrefs(&b)) # tail
   end
 end
 

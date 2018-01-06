@@ -33,6 +33,7 @@ class WebResource < RDF::URI
     Comments = 'http://wellformedweb.org/CommentAPI/commentRss'
     Sound    = Purl + 'ontology/mo/Sound'
     Image    = DC + 'Image'
+    Video    = DC + 'Video'
     RSS      = Purl + 'rss/1.0/'
     Date     = DC   + 'date'
     Title    = DC   + 'title'
