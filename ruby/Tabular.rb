@@ -123,8 +123,9 @@ class WebResource
                           {_: :span, class: :notes, c: (CGI.escapeHTML img.path)},
                          ]}}),
                   self[Video].map(&:R).map{|video|
-                    [{_: :video, src: video.uri, controls: :true},
-                     {_: :span, class: :notes, c: video.basename}]}
+                    {class: :video,
+                     c: [{_: :video, src: video.uri, controls: :true}, '<br>',
+                         {_: :span, class: :notes, c: video.basename}]}}
                  ].intersperse(' ')
                when Type
                  self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|

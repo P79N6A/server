@@ -1,6 +1,6 @@
 justArray -> splat
 cascading-unglob the tree
-since all links are rendered in one place now, automagically add label-color CSS there, this may requiire passing in the request context which should be magic too
+add request-wide label-entries at R -> <a> conversion, this may requiire passing in the request context which should be magic too
 gopher
 nntp
 ical
