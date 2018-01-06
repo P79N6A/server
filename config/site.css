@@ -14,7 +14,7 @@ a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
 a.label {background-color:#fff;color:#000}
-a.twitter {border: .1em dotted #888}
+a.twitter {border: .06em dotted #888}
 a#next, a.title, table.links {float: right}
 a.thumb, pre {display: inline-block}
 a.thumb img {max-width:24em;max-height: 24em}

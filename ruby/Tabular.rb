@@ -63,7 +63,8 @@ class WebResource
                    R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename})
                  elsif a SIOC+'Tweet'
                    if edge == Creator  # tweets*author*day
-                     R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({id: 'twit'+id, label: v.basename})
+                    @r[:label][v.basename] = true
+                     R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({id: 'twit'+id, name: v.basename, label: v.basename})
                    else # tweets*hour
                      R[datePath + '*twitter*#r' + sha2].data({id: 'tweet'+id, label: :twitter})
                    end
@@ -88,9 +89,10 @@ class WebResource
                     {_: :a, class: a(SIOC+'Tweet') ? :twitter : :label, href: uri,
                      c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
                   self[Title].compact.map{|t|
-                    @r[:label][tld] = true
-                    {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: inDoc ? :localhost : tld,
-                     c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment) # identify once
+                    name = a(SIOC+'Tweet') ? basename : tld
+                    @r[:label][name] = true
+                    {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: name,
+                     c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
                                                         {}
                                                        else
                                                          identified = true
