@@ -14,8 +14,8 @@ a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
 a.label {background-color:#fff;color:#000}
 a.twitter {border: .1em dotted #888}
-a#next, a.title {float: right}
-a.thumb, pre, table.links {display: inline-block}
+a#next, a.title, table.links {float: right}
+a.thumb, pre {display: inline-block}
 a.thumb img {max-width:24em;max-height: 24em}
 a.thumb span.host {font-size:.88em}
 a.thumb span.notes {font-weight: normal}
