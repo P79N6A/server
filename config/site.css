@@ -5,10 +5,10 @@ pre, .monospace {font-family: monospace}
 span.notes {color:#bbb;font-size:.8em}
 img,div.scroll {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff; padding: 0 .1em 0 .1em}
-a,table,td.host {border-radius:.125em}
+a,table,td {border-radius:.125em}
 table.tree, table.tree a, a.notfound {width:100%}
 a,td {vertical-align:top}
-a#up {display:block}
+a#up, a.notfound, table.tree a {display:block}
 a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
@@ -19,13 +19,11 @@ a.thumb, pre {display: inline-block}
 a.thumb img {max-width:24em;max-height: 24em}
 a.thumb span.host {font-size:.88em}
 a.thumb span.notes {font-weight: normal}
-a.date {white-space: nowrap}
-a.notfound {font-size:8em;display:block;text-align:center;border-radius:0;3color:#000}
+a.notfound {font-size:8em;text-align:center;color:#000}
 .search {position:fixed; top:0;right:4%}
 .search input {background-color:#000; color:#fff; border-width:0; font-size:1.1em; max-width:16ex}
 .search a.find {font-weight: normal}
-table.tree a {display:block;height:100%}
-table.tree tr.nodes > td.unscaled {background-color:#222;border-radius:.2em}
+table.tree tr.nodes > td.unscaled {background-color:#222}
 table.tree tr.nodes > td.unscaled > a {background-color:#000;color:#fff;font-family: monospace}
 th a:before {font-size:1.6em; font-weight: normal}
 td[property="http://rdfs.org/sioc/ns#has_creator"],td[property="http://rdfs.org/sioc/ns#addressed_to"], td[property="http://www.w3.org/ns/posix/stat#size"] {text-align: right}
