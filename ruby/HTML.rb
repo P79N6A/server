@@ -61,13 +61,14 @@ class WebResource
           graph.delete re.uri unless re.uri == '' }
       end
       query = q['q'] || q['f']
+      title = @r[:title] || [*path.split('/'), query].join(' ')
       useGrep = path.split('/').size > 3 # search-provider suggestion
       link = -> name,icon {@r[:Links][name].do{|l| l.R.data({id: name, label: icon})}}
 
       HTML.render ["<!DOCTYPE html>\n",
                    {_: :html,
                     c: [{_: :head,
-                         c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]||path.gsub('/','  ')}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                         c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: title}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
                              %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
                              @r[:Links].do{|links|
                                links.map{|type,uri|
@@ -88,7 +89,7 @@ class WebResource
                                 color = '#%06x' % (rand 16777216)
                                 "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
                              !empty && link[:down, '&#9660;'],
-                             empty && [{_: :a, id: :nope, class: :notfound, style: "background-color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
+                             empty && [{_: :a, id: :nope, class: :notfound, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
                                        {_: :table, class: :env, c: @r.map{|k,vs|
                                           {_: :tr, c: [{_: :td, c: k},{_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}
                                         }}]]}]}]
