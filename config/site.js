@@ -31,23 +31,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	first.attr('prev',last.attr('id'));
     };
 
-    var firstI = null;
-    var lastI = null;
-    // primary-items-only selection-ring
-    document.querySelectorAll('[id][primary]').map(function(e){
-	if(!firstI)
-	    firstI = this;
-	if(lastI){ // link
-	    this.attr('prevI',lastI.attr('id'));
-	    lastI.attr('nextI',this.attr('id'));
-	};
-	lastI = this;
-    });
-    if(firstI && lastI){ // round the ring
-	lastI.attr('nextI',firstI.attr('id'));
-	firstI.attr('prevI',lastI.attr('id'));
-    };
-
     // keyboard navigation
     document.addEventListener("keydown",function(e){
 	var key = e.keyCode;
@@ -67,24 +50,6 @@ document.addEventListener("DOMContentLoaded", function(){
 	    if(!cur)
 		cur = first;
 	    window.location.hash = cur.attr('prev');;
-	    e.preventDefault();
-	};
-	var selectNextItem = function(){
-	    var cur = null;
-	    if(window.location.hash)
-		cur = document.querySelector(window.location.hash);
-	    if(!cur)
-		cur = lastI;
-	    window.location.hash = cur.attr('nextI');
-	    e.preventDefault();
-	};
-	var selectPrevItem = function(){
-	    var cur = null;
-	    if(window.location.hash)
-		cur = document.querySelector(window.location.hash);
-	    if(!cur)
-		cur = firstI;
-	    window.location.hash = cur.attr('prevI');;
 	    e.preventDefault();
 	};
 	var gotoLink = function(arc) {
@@ -108,10 +73,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		gotoLink('prev');
 	    if(key==78) // [n]ext page
 		gotoLink('next');
-	    if(key==38) // [p]rev superitem (titled subject URI)
-		selectPrevItem();
-	    if(key==40) // [n]ext superitem
-		selectNextItem();
 	    if(key==85) // [u]p to container
 		gotoLink('up');
 	    if(key==68) // [d]own to contained
@@ -134,5 +95,3 @@ document.addEventListener("DOMContentLoaded", function(){
 	    e.stopPropagation();
     },false);
 }, false);
-
-//		window.location = e.target(getAttribute('href'));

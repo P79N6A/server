@@ -4,8 +4,8 @@ class WebResource
       q = qs.empty? ? '?head' : qs
       # construct tree
       tree = {}
-      graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
-        c = tree
+      graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri| # local containers
+        c = tree # start at root
         uri.R.parts.map{|name| # path instructions
           c = c[name] ||= {}}} # create node and jump cursor
 

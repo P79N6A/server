@@ -21,8 +21,8 @@ class WebResource
                 style: x[:style][0],
                 class: x[:class][0],
                 c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.basename != '/' && x.basename) || x.host || '&#x279f;')}.
-                 update(!x[:id].empty? ? {id: x[:id][0]} : {}).
-                 update(!x[:name].empty? ? {name: x[:name][0]} : {}))
+                 update(x[:id][0] ? {id: x[:id][0]} : {}).
+                 update(x[:name][0] ? {name: x[:name][0]} : {}))
       when NilClass
         ''
       when FalseClass

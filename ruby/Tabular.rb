@@ -12,8 +12,9 @@ class WebResource
       keys -= VerboseMeta unless q.has_key? 'full'
       [{_: :table, style: 'margin:auto',
         c: [{_: :tbody,
-             c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
-               (r.R.environment(@r).htmlTableRow p,direction,keys)}.intersperse("\n")},
+             c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.
+               send(direction).map{|r|
+               (r.R.environment(@r).htmlTableRow p,direction,keys)}},
             {_: :tr, c: [From,Type,'uri',*keys,DC+'cache',Date,Size].map{|k| # header row
                selection = p == k
                q_ = q.merge({'sort' => k})
@@ -52,8 +53,7 @@ class WebResource
                     'vanilla'
                   end
           @r[:label][color] = true unless color == 'vanilla'
-          {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: color,
-           c: (CGI.escapeHTML t.to_s)}.update({id: inDoc ? (fragment||'') : 'r'+sha2, primary: :true})}.intersperse(' ')}
+          R[uri + (a(Container) ? '?head' : '')].data({id: inDoc ? fragment : 'r'+sha2, class: :title, name: color, label: CGI.escapeHTML(t.to_s)})}.intersperse(' ')}
 
       labels = -> {
         self[Label].compact.map{|v|
@@ -169,7 +169,7 @@ class WebResource
 
       main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
 
-      hidden ? "<!-- #{CGI.escapeHTML uri} -->" : {_: :tr,
+      hidden ? '' : [{_: :tr,
          c: [[fromTo, typeTag, main].map{|_|
                {_: :td, c: _[]}},
              keys.map{|k|
@@ -177,7 +177,7 @@ class WebResource
                 c: self[k].map{|v|
                   v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
              [cacheLink, timeStamp, size].map{|_|
-               {_: :td, c: _[]}}]}
+               {_: :td, c: _[]}}]},"\n"]
     end
   end
   module Webize
