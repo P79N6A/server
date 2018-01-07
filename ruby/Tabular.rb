@@ -44,15 +44,10 @@ class WebResource
 
       title = -> {
         self[Title].compact.map{|t|
-          name = a(SIOC+'Tweet') ? basename : tld
+          name = a(SIOC+'Tweet') ? parts[1] : tld
           @r[:label][name] = true
           {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: name,
-           c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
-                                              {}
-                                             else
-                                               identified = true
-                                               {id: (inDoc && fragment) ? fragment : 'r'+sha2, primary: :true}
-                                              end)}.intersperse(' ')}
+           c: (CGI.escapeHTML t.to_s)}.update({id: inDoc ? (fragment||'') : 'r'+sha2, primary: :true})}.intersperse(' ')}
 
       labels = -> {
         self[Label].compact.map{|v|
@@ -148,24 +143,14 @@ class WebResource
 
       cacheLink = -> {self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.uri, class: :chain}, ' ']}}
 
-      main = -> {
-        [labels[],
-         title[],
-         abstract[],
-         linkTable[],
-         content[],
-         photos[],
-         videos[],
-        ].intersperse(' ')}
+      main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
 
       unless q.has_key?('head') && self[Title].empty? && self[Abstract].empty? # in header-mode, title and/or abstract is required
         {_: :tr,
-         c: [[fromTo, typeTag, main].map{|producer|
-               {_: :td, c: producer[]}},
+         c: [[fromTo, typeTag, main].map{|producer|{_: :td, c: producer[]}},
              keys.map{|k|
                {_: :td, property: k, c: self[k].map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
-             [cacheLink, timeStamp, size].map{|producer|
-               {_: :td, c: producer[]}}]}
+             [cacheLink, timeStamp, size].map{|producer|{_: :td, c: producer[]}}]}
       end
     end
   end
