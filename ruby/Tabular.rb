@@ -156,8 +156,7 @@ class WebResource
 
       main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
 
-      unless hidden
-        {_: :tr,
+      hidden ? "<!-- #{CGI.escapeHTML uri} -->" : {_: :tr,
          c: [[fromTo, typeTag, main].map{|_|
                {_: :td, c: _[]}},
              keys.map{|k|
@@ -166,7 +165,6 @@ class WebResource
                   v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
              [cacheLink, timeStamp, size].map{|_|
                {_: :td, c: _[]}}]}
-      end
     end
   end
 end
