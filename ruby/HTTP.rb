@@ -170,10 +170,10 @@ class WebResource
 
     def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
 
-    # querystring -> {}
+    # querystring -> Hash
     def q fromEnv = true
       @q ||=
-        (if q = (fromEnv ? @r['QUERY_STRING'] : query)
+        (if q = (fromEnv && @r && @r['QUERY_STRING'] || query)
          h = {}
          q.split(/&/).map{|e|
            k, v = e.split(/=/,2).map{|x|CGI.unescape x}
@@ -187,7 +187,7 @@ class WebResource
     # env -> ?querystring
     def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
 
-    # {} -> ?querystring
+    # Hash -> ?querystring
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
 
   end

@@ -120,15 +120,14 @@ end
 class String
   # text -> HTML. also a triplr yielding RDF to supplied block
   # '(' required to capture ')', <> and ()-wrapping stripped, comma or period after URI not captured
-  def hrefs &b
-    pre,link,post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
-    u = link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') # escaped URI
+  def hrefs &blk
+    pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
       (link.empty? && '' ||
-       '<a class="scanned link" href="' + u + '">' + # hyperlink
-       (yield(u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : (u.match(/(youtube.com|(mkv|mp4|webm)$)/i) ? R::Video : R::Link), u.R) if b; '') +
+       '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' + # HTML link
+       (yield(link.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : (link.match(/(youtube.com|(mkv|mp4|webm)$)/i) ? R::Video : R::Link), link.R) if blk; '') + # RDF link
        '</a>') +
-      (post.empty? && '' || post.hrefs(&b)) # tail
+      (post.empty? && '' || post.hrefs(&blk)) # again on tail
   end
 end
 
