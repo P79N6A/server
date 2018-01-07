@@ -27,4 +27,4 @@ a.notfound {font-size:4.04em}
 table.tree tr.nodes > td.unscaled {background-color:#222}
 th a:before {font-size:1.6em; font-weight: normal}
 .fromTo {float: right}
-table.links td.path {max-width: 42em;overflow:hidden}
+table.links td.path {text-align: right; max-width: 42em;overflow:hidden}

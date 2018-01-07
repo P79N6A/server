@@ -1,3 +1,4 @@
+# coding: utf-8
 class WebResource
   module HTML
 
@@ -86,6 +87,7 @@ class WebResource
                 ({_: :td, class: :host, c: R['//'+host]} if host)
                ]}}} unless links.empty?}
 #<iframe width="560" height="315" src="https://www.youtube.com/embed/_KwNqrEm8s0" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+
       photos = -> { # scan RDF for not-yet-shown resourcs
         images = []
         images.push self if types.member?(Image) # as subject of triple
@@ -120,9 +122,9 @@ class WebResource
                    elsif a SIOC+'Tweet'
                      if edge == Creator  # tweets*author*day
                        @r[:label][v.basename] = true
-                       R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({id: 'twit'+id, name: v.basename, label: v.basename})
+                       R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({name: v.basename, label: v.basename})
                      else # tweets*hour
-                       R[datePath + '*twitter*#r' + sha2].data({id: 'tweet'+id, label: :twitter})
+                       R[datePath + '*twitter*#r' + sha2].data({label: '&#x1F425;'})
                      end
                    elsif a SIOC+'BlogPost'
                      R[datePath ? (datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2) : ('//'+host)].data({id: 'post'+id, label: v.host})
