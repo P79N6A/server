@@ -14,7 +14,7 @@ a#up,a#down,a#prev,a#next {font-size:2.4em}
 a#up,a#down {padding-left:1em}
 a#prev, a.label {float: left}
 a.label {background-color:#fff;color:#000}
-a.twitter {border: .06em dotted #888}
+a.date {white-space: nowrap;font-size:.96em}
 a#next, a.title, table.links, .video .notes {float: right}
 a.thumb, pre, .video {display: inline-block}
 a.thumb img {max-width:24em;max-height: 24em}
@@ -26,6 +26,6 @@ a.notfound {font-size:4.04em}
 .search a.find {font-weight: normal}
 table.tree tr.nodes > td.unscaled {background-color:#222}
 th a:before {font-size:1.6em; font-weight: normal}
-td[property="http://rdfs.org/sioc/ns#has_creator"],td[property="http://rdfs.org/sioc/ns#addressed_to"], td[property="http://www.w3.org/ns/posix/stat#size"] {text-align: right}
-table.links td.host a {float: right}
+td[property="http://www.w3.org/ns/posix/stat#size"] {text-align: right}
+table.links td.host a, .fromTo {float: right}
 table.links td.path {max-width: 42em;overflow:hidden}

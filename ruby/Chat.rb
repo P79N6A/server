@@ -59,7 +59,6 @@ class WebResource
         l.scan(/(\d\d)(\d\d)(\d\d)[\s+@]*([^\(\s]+)[\S]* (.*)/){|m|
           s = base + '#l' + (linenum += 1).to_s
           yield s, Type, R[SIOC+'InstantMessage']
-          yield s, Label, m[3]
           yield s, Creator, R['#'+m[3]]
           yield s, To, channel
           yield s, Content, m[4].hrefs{|p,o|
