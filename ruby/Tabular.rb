@@ -138,8 +138,7 @@ class WebResource
       size = -> {
         sum = 0
         self[Size].map{|v|sum += v.to_i}
-        sum == 0 ? '' : sum
-      }
+        sum == 0 ? '' : sum}
 
       cacheLink = -> {self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.uri, class: :chain}, ' ']}}
 
@@ -147,10 +146,14 @@ class WebResource
 
       unless hidden
         {_: :tr,
-         c: [[fromTo, typeTag, main].map{|producer|{_: :td, c: producer[]}},
+         c: [[fromTo, typeTag, main].map{|_|
+               {_: :td, c: _[]}},
              keys.map{|k|
-               {_: :td, property: k, c: self[k].map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
-             [cacheLink, timeStamp, size].map{|producer|{_: :td, c: producer[]}}]}
+               {_: :td, property: k,
+                c: self[k].map{|v|
+                  v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
+             [cacheLink, timeStamp, size].map{|_|
+               {_: :td, c: _[]}}]}
       end
     end
   end
