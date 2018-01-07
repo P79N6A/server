@@ -81,12 +81,11 @@ class WebResource
                    [link.data((traverse ? {id: 'link'+rand.to_s.sha2, name: tld} : {})),' ']}},
                 ({_: :td, class: :host, c: R['//'+host]} if host)
                ]}}} unless links.empty?}
-#<iframe width="560" height="315" src="https://www.youtube.com/embed/_KwNqrEm8s0" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
       photos = -> { # scan RDF for not-yet-shown resourcs
         images = []
-        images.push self if types.member?(Image) # as subject of triple
-        self[Image].do{|i|images.concat i}      # as object of triple
+        images.push self if types.member?(Image) # subject of triple
+        self[Image].do{|i|images.concat i}       #  object of triple
         images.map(&:R).select{|i|!@r[:images].member? i}.map{|img|
           @r[:images].push img # seen
           {_: :a, class: :thumb, href: uri,
@@ -103,6 +102,7 @@ class WebResource
           {class: :video,
            c: [{_: :video, src: video.uri, controls: :true}, '<br>',
                {_: :span, class: :notes, c: video.basename}]}}}
+      #<iframe width="560" height="315" src="https://www.youtube.com/embed/_KwNqrEm8s0" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
       fromTo = -> {
         {class: :fromTo,
@@ -111,7 +111,7 @@ class WebResource
                  if v.respond_to?(:uri) && v.R.path
                    v = v.R
                    id = rand.to_s.sha2
-                   # domain-specific index-location pointer
+                   # domain-specific index-pointer
                    if a SIOC+'MailMessage' # messages*address*month
                      R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename})
                    elsif a SIOC+'Tweet'
