@@ -18,7 +18,6 @@ class WebResource
         yield s, Date, ts
         yield s, Creator, author
         yield s, To, (Twitter + '/#twitter').R
-        yield s, Label, authorName
         yield s, Title, '▶'
         content = t.css('.tweet-text')[0]
         content.css('a').map{|a|

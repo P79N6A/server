@@ -26,5 +26,5 @@ a.notfound {font-size:4.04em}
 .search a.find {font-weight: normal}
 table.tree tr.nodes > td.unscaled {background-color:#222}
 th a:before {font-size:1.6em; font-weight: normal}
-table.links td.host a, .fromTo {float: right}
+.fromTo {float: right}
 table.links td.path {max-width: 42em;overflow:hidden}

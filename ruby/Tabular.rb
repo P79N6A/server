@@ -79,12 +79,13 @@ class WebResource
            traverse = links.size <= 16
            @r[:label][tld] = true
            {_: :tr,
-            c: [({_: :td, class: :host, c: R['//'+host]} if host),
-                {_: :td, class: :path, colspan: host ? 1 : 2,
+            c: [{_: :td, class: :path, colspan: host ? 1 : 2,
                  c: links.map{|link|
                    @r[:links].push link
-                   [link.data((traverse ? {id: 'link'+rand.to_s.sha2, name: tld} : {})),' ']}}]}}} unless links.empty?}
-
+                   [link.data((traverse ? {id: 'link'+rand.to_s.sha2, name: tld} : {})),' ']}},
+                ({_: :td, class: :host, c: R['//'+host]} if host)
+               ]}}} unless links.empty?}
+#<iframe width="560" height="315" src="https://www.youtube.com/embed/_KwNqrEm8s0" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
       photos = -> { # scan RDF for not-yet-shown resourcs
         images = []
         images.push self if types.member?(Image) # as subject of triple
