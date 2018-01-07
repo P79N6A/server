@@ -44,9 +44,15 @@ class WebResource
 
       title = -> {
         self[Title].compact.map{|t|
-          name = a(SIOC+'Tweet') ? parts[1] : tld
-          @r[:label][name] = true
-          {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: name,
+          color = if a SIOC+'Tweet'
+                    parts[1]
+                  elsif a SIOC+'ChatLog'
+                    CGI.unescape(basename).split('#')[0]
+                  else
+                    'vanilla'
+                  end
+          @r[:label][color] = true unless color == 'vanilla'
+          {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: color,
            c: (CGI.escapeHTML t.to_s)}.update({id: inDoc ? (fragment||'') : 'r'+sha2, primary: :true})}.intersperse(' ')}
 
       labels = -> {
@@ -122,7 +128,13 @@ class WebResource
                        R[datePath + '*twitter*#r' + sha2].data({label: '&#x1F425;'})
                      end
                    elsif a SIOC+'BlogPost'
-                     R[datePath ? (datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2) : ('//'+host)].data({id: 'post'+id, label: v.host})
+                     name = 'blog_'+v.host.gsub('.','')
+                     @r[:label][name] = true
+                     R[datePath ? (datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2) : ('//'+host)].data({id: 'post'+id, label: v.host, name: name})
+                   elsif (a SIOC+'ChatLog') && edge==To
+                     name = v.basename[0..-2]
+                     @r[:label][name] = true
+                     v.data({name: name})
                    else
                      v
                    end
