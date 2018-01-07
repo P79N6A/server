@@ -5,6 +5,7 @@ class WebResource
     def triplrArchive &f; yield uri, Type, R[Stat+'Archive']; triplrFile &f end
     def triplrAudio &f;   yield uri, Type, R[Sound]; triplrFile &f end
     def triplrDataFile &f; yield uri, Type, R[Stat+'DataFile']; triplrFile &f end
+
     def triplrBat &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l batch -f html #{sh}`; triplrFile &f end
     def triplrDocker &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l docker -f html #{sh}`; triplrFile &f end
     def triplrIni &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l ini -f html #{sh}`; triplrFile &f end
@@ -14,11 +15,11 @@ class WebResource
     def triplrShellScript &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l sh -f html #{sh}`; triplrFile &f end
     def triplrSourceCode &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}`; triplrFile &f end
     def triplrTeX;        yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
+
     def triplrRTF          &f; triplrWord :catdoc,        &f end
     def triplrWordDoc      &f; triplrWord :antiword,      &f end
     def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
     def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-
     def triplrWord conv, out='', &f
       triplrFile &f
       yield uri, Type, R[Stat+'WordDocument']
@@ -47,19 +48,6 @@ class WebResource
       yield doc, Title, stripDoc.basename
       yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
       mtime.do{|mt|yield doc, Date, mt.iso8601}
-    end
-
-    def triplrCSV d
-      ns    = W3 + 'ns/csv#'
-      lines = CSV.read localPath
-      lines[0].do{|fields| # header-row
-        yield uri, Type, R[ns+'Table']
-        yield uri, ns+'rowCount', lines.size
-        lines[1..-1].each_with_index{|row,line|
-          row.each_with_index{|field,i|
-            id = uri + '#row:' + line.to_s
-            yield id, fields[i], field
-            yield id, Type, R[ns+'Row']}}}
     end
 
     def triplrUriList based=nil
