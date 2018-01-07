@@ -1,15 +1,3 @@
 #!/usr/bin/env ruby
-=begin
-  to call resource-methods in a shell add this file to PATH
-
- ~ R https://readwrite.com feeds
-https://readwrite.com/feed/
-https://readwrite.com/comments/feed/
-
- ~/web R https://readwrite.com/feed/ getFeed
-/2017/11/02/16/56:05.readwrite.com.2017.11.02.iphone.x.coming.ar.apps.booming
-/2017/11/02/12/34:44.readwrite.com.2017.11.02.farm.fridge.iiot.love.story
-=end
-exit 0 if ARGV.empty?
 require 'ww'
-R[ARGV[0]].send *ARGV[1..-1]
+ARGV[0].R.send *ARGV[1..-1]
