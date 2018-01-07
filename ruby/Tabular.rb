@@ -128,7 +128,7 @@ class WebResource
                      end
                    elsif (a SIOC+'InstantMessage') && edge==To
                      v.data({label: CGI.unescape(basename).split('#')[-1]})
-                   elsif a SIOC+'BlogPost'
+                   elsif (a SIOC+'BlogPost') && edge==To
                      name = 'blog_'+v.host.gsub('.','')
                      @r[:label][name] = true
                      R[datePath ? (datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2) : ('//'+host)].data({id: 'post'+id, label: v.host, name: name})

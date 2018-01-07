@@ -172,6 +172,7 @@ class WebResource
         reLinkHref = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @href @rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
+        reURL = /\A(\/|http)[\S]+\Z/                  # HTTP URI
 
         # elements
         reHead = /<(rdf|rss|feed)([^>]+)/i
@@ -205,7 +206,9 @@ class WebResource
             yield u, Type, R[SIOC+'BlogPost']
             blogs = [resource.join('/')]
             blogs.push @base.R.join('/') if @host && @host != resource.host
-            blogs.map{|blog| yield u, R::To, blog}
+            blogs.map{|blog|
+#              puts "blog #{blog}"
+              yield u, R::To, blog}
 
             inner.scan(reMedia){|e|
               e[1].match(reSrc).do{|url|
@@ -227,14 +230,22 @@ class WebResource
             inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
               if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p
-              # bound as subject-URI
+               # element used in subject-URI search
               elsif [Atom+'author', RSS+'author', RSS+'creator', DCe+'creator'].member? p
+                crs = [] # creators
                 uri = e[3].match /<uri>([^<]+)</
+                crs.push uri[1].R if uri
                 name = e[3].match /<name>([^<]+)</
-                yield u, Creator, e[3].do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o } unless name||uri
-                yield u, Creator, name[1] if name
-                yield u, Creator, uri[1].R if uri
-              else # generic element
+                crs.push name[1] if name
+                unless name || uri
+                  crs.push e[3].do{|o|
+                    o.match(reURL) ? o.R : o }
+                end
+                crs.map{|cr|
+#                  puts "cr #{cr.class} #{cr}"
+                  yield u, Creator, cr
+                }
+              else # basic element
                 yield u,p,e[3].do{|o|
                   case o
                   when /^\s*<\!\[CDATA/m
