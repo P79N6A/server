@@ -3,7 +3,7 @@ body {margin:0; font-family: sans-serif}
 body, .search input {background-color:#000; color:#fff; }
 pre {margin:0; white-space: pre-wrap; max-width:255ex; overflow:hidden}
 pre, .monospace {font-family: monospace}
-span.notes {color:#bbb;font-size:.8em}
+.notes {font-weight: normal;color:#ccc;font-size:.8em}
 img,div.scroll {max-width: 100%}
 a {text-decoration:none; font-weight: bold; color:#fff; padding: 0 .1em 0 .1em}
 a,table,td {border-radius:.125em}
@@ -19,7 +19,6 @@ a#next, table.links, .video .notes {float: right}
 a.thumb, pre, .video {display: inline-block}
 a.thumb img {max-width:24em;max-height: 24em}
 a.thumb span.host {font-size:.88em}
-a.thumb span.notes {font-weight: normal}
 a.notfound {font-size:4.04em}
 .search {position:fixed; top:0;right:4%}
 .search input {border-width:0; font-size:1.1em; max-width:16ex}
