@@ -13,7 +13,7 @@ class WebResource
         c: [{_: :tbody,
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.send(direction).map{|r|
                (r.R.environment(@r).htmlTableRow p,direction,keys)}.intersperse("\n")},
-            {_: :tr, c: [From,Type,'uri',*keys].map{|k| # header row
+            {_: :tr, c: [From,Type,'uri',*keys,DC+'cache',Date,Size].map{|k| # header row
                selection = p == k
                q_ = q.merge({'sort' => k})
                if direction == :id # direction toggle
@@ -34,8 +34,45 @@ class WebResource
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
-      linkTable = -> links {
-        links = links.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
+      # cells
+
+      typeTag = -> {
+        self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
+          {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}}
+
+
+      title = -> {
+        self[Title].compact.map{|t|
+          name = a(SIOC+'Tweet') ? basename : tld
+          @r[:label][name] = true
+          {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: name,
+           c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
+                                              {}
+                                             else
+                                               identified = true
+                                               {id: (inDoc && fragment) ? fragment : 'r'+sha2, primary: :true}
+                                              end)}.intersperse(' ')}
+
+      labels = -> {
+        self[Label].compact.map{|v|
+          {_: :a, class: :label, href: uri,
+           c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' ')}
+
+      abstract = -> {self[Abstract]}
+
+      content = -> {
+        self[Content].map{|c|
+          if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
+            {_: :pre, c: c}
+          elsif a SIOC+'InstantMessage'
+            {_: :span, class: :monospace, c: c}
+          else
+            c
+          end
+        }.intersperse(' ') unless q.has_key?('head')}
+
+      linkTable = -> {
+        links = LinkPred.map{|p|self[p]}.flatten.compact.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
         {_: :table, class: :links,
          c: links.group_by(&:host).map{|host,links|
            tld = links[0] && links[0].tld || 'none'
@@ -48,12 +85,7 @@ class WebResource
                    @r[:links].push link
                    [link.data((traverse ? {id: 'link'+rand.to_s.sha2, name: tld} : {})),' ']}}]}}} unless links.empty?}
 
-      typeTag = -> {
-        self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
-          {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}}
-
-      photos = -> {
-        # scan RDF for not-yet-shown resourcs
+      photos = -> { # scan RDF for not-yet-shown resourcs
         images = []
         images.push self if types.member?(Image) # as subject of triple
         self[Image].do{|i|images.concat i}      # as object of triple
@@ -66,41 +98,13 @@ class WebResource
                  img.uri
                 end},'<br>',
                {_: :span, class: :host, c: host},
-               {_: :span, class: :notes, c: (CGI.escapeHTML img.path)},
-              ]}}}
+               {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}}}
 
       videos = -> {
         self[Video].map(&:R).map{|video|
           {class: :video,
            c: [{_: :video, src: video.uri, controls: :true}, '<br>',
                {_: :span, class: :notes, c: video.basename}]}}}
-
-      main = -> {
-        [self[Label].compact.map{|v|
-           {_: :a, class: :label, href: uri,
-            c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' '),
-         self[Title].compact.map{|t|
-           name = a(SIOC+'Tweet') ? basename : tld
-           @r[:label][name] = true
-           {_: :a, class: :title, href: uri + ((a Container) ? '?head' : ''), name: name,
-            c: (CGI.escapeHTML t.to_s)}.update(if identified || (inDoc && !fragment)
-                                               {}
-                                              else
-                                                identified = true
-                                                {id: (inDoc && fragment) ? fragment : 'r'+sha2, primary: :true}
-                                               end)}.intersperse(' '),
-         self[Abstract], linkTable[LinkPred.map{|p|self[p]}.flatten.compact],
-         (self[Content].map{|c|
-            if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
-              {_: :pre, c: c}
-            elsif a SIOC+'InstantMessage'
-              {_: :span, class: :monospace, c: c}
-            else
-              c
-            end
-          }.intersperse(' ') unless q.has_key?('head')),
-         photos[], videos[],
-        ].intersperse(' ')}
 
       fromTo = -> {
         {class: :fromTo,
@@ -129,25 +133,36 @@ class WebResource
                  end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
              self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]}}
 
+      timeStamp = -> {
+        [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
+         self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}.intersperse(' ')].compact.intersperse('<br>')}
+
+      size = -> {
+        sum = 0
+        self[Size].map{|v|sum += v.to_i}
+        sum == 0 ? '' : sum
+      }
+
+      cacheLink = -> {self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.uri, class: :chain}, ' ']}}
+
+      main = -> {
+        [labels[],
+         title[],
+         abstract[],
+         linkTable[],
+         content[],
+         photos[],
+         videos[],
+        ].intersperse(' ')}
+
       unless q.has_key?('head') && self[Title].empty? && self[Abstract].empty? # in header-mode, title and/or abstract is required
         {_: :tr,
          c: [[fromTo, typeTag, main].map{|producer|
                {_: :td, c: producer[]}},
              keys.map{|k|
-               {_: :td, property: k,
-                c: case k
-                   when Size
-                     sum = 0
-                     self[Size].map{|v|sum += v.to_i}
-                     sum == 0 ? '' : sum
-                   when Date
-                     [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
-                      self[DC+'note'].map{|n|{_: :span, class: :notes, c: n}}.intersperse(' ')].compact.intersperse('<br>')
-                   when DC+'cache'
-                     self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.uri, class: :chain}, ' ']}
-                   else
-                     self[k].map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')
-                   end}}.intersperse("\n")]}
+               {_: :td, property: k, c: self[k].map{|v|v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
+             [cacheLink, timeStamp, size].map{|producer|
+               {_: :td, c: producer[]}}]}
       end
     end
   end
