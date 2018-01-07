@@ -158,7 +158,9 @@ class WebResource
         self[Size].map{|v|sum += v.to_i}
         sum == 0 ? '' : sum}
 
-      cacheLink = -> {self[DC+'cache'].map{|c|[{_: :a, id: '#c'+sha2, href: c.uri, class: :chain}, ' ']}}
+      cacheLink = -> {
+        self[DC+'cache'].map{|c|
+          {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}}
 
       main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
 
