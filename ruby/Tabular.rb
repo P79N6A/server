@@ -117,7 +117,6 @@ class WebResource
                  if v.respond_to?(:uri) && v.R.path
                    v = v.R
                    id = rand.to_s.sha2
-                   # domain-specific index-pointer
                    if a SIOC+'MailMessage' # messages*address*month
                      R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename})
                    elsif a SIOC+'Tweet'
@@ -127,6 +126,8 @@ class WebResource
                      else # tweets*hour
                        R[datePath + '*twitter*#r' + sha2].data({label: '&#x1F425;'})
                      end
+                   elsif (a SIOC+'InstantMessage') && edge==To
+                     v.data({label: CGI.unescape(basename).split('#')[-1]})
                    elsif a SIOC+'BlogPost'
                      name = 'blog_'+v.host.gsub('.','')
                      @r[:label][name] = true
@@ -138,6 +139,11 @@ class WebResource
                    else
                      v
                    end
+                 elsif (a SIOC+'InstantMessage') && edge==From
+                   nick = v.fragment
+                   name = nick.gsub(/[_\-#@]+/,'')
+                   @r[:label][name] = true
+                   (dir+'?q='+nick).data({name: name, label: nick})
                  else
                    {_: :span, c: (CGI.escapeHTML v.to_s)}
                  end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
