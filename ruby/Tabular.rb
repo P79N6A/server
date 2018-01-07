@@ -31,7 +31,7 @@ class WebResource
 
     def htmlTableRow sort,direction,keys
       inDoc = path == @r['REQUEST_PATH']
-      identified = false
+      hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty?
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
@@ -85,7 +85,7 @@ class WebResource
       photos = -> { # scan RDF for not-yet-shown resourcs
         images = []
         images.push self if types.member?(Image) # subject of triple
-        self[Image].do{|i|images.concat i}       #  object of triple
+        self[Image].do{|i|images.concat i}        # object of triple
         images.map(&:R).select{|i|!@r[:images].member? i}.map{|img|
           @r[:images].push img # seen
           {_: :a, class: :thumb, href: uri,
@@ -145,7 +145,7 @@ class WebResource
 
       main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
 
-      unless q.has_key?('head') && self[Title].empty? && self[Abstract].empty? # in header-mode, title and/or abstract is required
+      unless hidden
         {_: :tr,
          c: [[fromTo, typeTag, main].map{|producer|{_: :td, c: producer[]}},
              keys.map{|k|
