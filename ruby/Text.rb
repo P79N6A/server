@@ -20,12 +20,12 @@ class WebResource
     def triplrWordDoc      &f; triplrWord :antiword,      &f end
     def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
     def triplrOpenDocument &f; triplrWord :odt2txt,       &f end
-    def triplrWord conv, out='', &f
-      triplrFile &f
+    def triplrWord conv, argB='', &f
       yield uri, Type, R[Stat+'WordDocument']
       yield uri, Content, '<pre>' +
-                          `#{conv} #{sh} #{out}` +
+                          `#{conv} #{sh} #{argB}` +
                           '</pre>'
+      triplrFile &f
     end
 
     def triplrText enc=nil, &f
