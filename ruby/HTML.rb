@@ -17,7 +17,10 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R
-        render({_: :a, href: x.uri, style: x[:style][0], class: x[:class][0], c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.basename != '/' && x.basename) || x.host || '')}.
+        render({_: :a, href: x.uri,
+                style: x[:style][0],
+                class: x[:class][0],
+                c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.basename != '/' && x.basename) || x.host || '&#x279f;')}.
                  update(!x[:id].empty? ? {id: x[:id][0]} : {}).
                  update(!x[:name].empty? ? {name: x[:name][0]} : {}))
       when NilClass
@@ -92,8 +95,9 @@ class WebResource
                              !empty && link[:down, '&#9660;'],
                              empty && [{_: :a, id: :nope, class: :notfound, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
                                        {_: :table, class: :env, c: @r.map{|k,vs|
-                                          {_: :tr, c: [{_: :td, c: k},{_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}
-                                        }}]]}]}]
+                                          {_: :tr,
+                                           c: [{_: :td, c: k},
+                                               {_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}}}]]}]}]
     end
 
     def nokogiri
@@ -122,7 +126,7 @@ class String
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
       (link.empty? && '' ||
        '<a class="scanned link" href="' + u + '">' + # hyperlink
-       (yield(u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : (u.match(/(mkv|mp4|webm)$/i) ? R::Video : R::Link), u.R) if b; '') +
+       (yield(u.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : (u.match(/(youtube.com|(mkv|mp4|webm)$)/i) ? R::Video : R::Link), u.R) if b; '') +
        '</a>') +
       (post.empty? && '' || post.hrefs(&b)) # tail
   end

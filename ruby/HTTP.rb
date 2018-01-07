@@ -153,7 +153,7 @@ class WebResource
       end
     end
 
-    def entity env, body=nil
+    def entity env, body = nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
         [304, {}, []]
@@ -170,14 +170,10 @@ class WebResource
 
     def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
 
-    # {} -> qs
-    def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
-    # env -> qs
-    def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
-    # qs -> {}
-    def q
-      @q ||= # memoize
-        (if q = @r['QUERY_STRING']
+    # querystring -> {}
+    def q fromEnv = true
+      @q ||=
+        (if q = (fromEnv ? @r['QUERY_STRING'] : query)
          h = {}
          q.split(/&/).map{|e|
            k, v = e.split(/=/,2).map{|x|CGI.unescape x}
@@ -187,6 +183,13 @@ class WebResource
           {}
          end)
     end
+
+    # env -> ?querystring
+    def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
+
+    # {} -> ?querystring
+    def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
+
   end
   include HTTP
 end

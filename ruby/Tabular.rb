@@ -105,10 +105,15 @@ class WebResource
 
       videos = -> {
         self[Video].map(&:R).map{|video|
-          {class: :video,
-           c: [{_: :video, src: video.uri, controls: :true}, '<br>',
-               {_: :span, class: :notes, c: video.basename}]}}}
-      #<iframe width="560" height="315" src="https://www.youtube.com/embed/_KwNqrEm8s0" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+          if video.match /youtube.com/
+            id = (video.q false)['v']
+            {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
+          else
+            {class: :video,
+             c: [{_: :video, src: video.uri, controls: :true}, '<br>',
+                 {_: :span, class: :notes, c: video.basename}]}
+          end}}
+      #<iframe width="560" height="315" src=  ></iframe>
 
       fromTo = -> {
         {class: :fromTo,
