@@ -1,9 +1,7 @@
 cascading-unglob the tree
 add label-entries automatically in R -> <a> conversion. preserve request context during R creation for req-wide scope
-gopher
-nntp
 ical
-instagram
+ig
 runtime-alternate storage locations for ingested docs (all comments on post in subdir)
 change grep (view) arg-stacking to match fileset+model behavior (|| vs &&)
 locally cache images. fire and forget archival attempt with req-time refswap if exists

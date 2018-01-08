@@ -81,6 +81,7 @@ class WebResource
       'application/xml'     => [:triplrDataFile],
       'application/x-executable' => [:triplrFile],
       'application/x-gzip'   => [:triplrArchive],
+      'application/zip'   => [:triplrArchive],
       'application/vnd.oasis.opendocument.text' => [:triplrOpenDocument],
       'audio/mpeg'           => [:triplrAudio],
       'audio/x-wav'          => [:triplrAudio],
