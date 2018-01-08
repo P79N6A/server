@@ -69,24 +69,20 @@ document.addEventListener("DOMContentLoaded", function(){
 	};
 
 	if(e.getModifierState("Shift")) {
-	    if(key==80) // [p]rev page
+	    if(key==37) // page [left]
 		gotoLink('prev');
-	    if(key==78) // [n]ext page
+	    if(key==39) // page [right]
 		gotoLink('next');
-	    if(key==85) // [u]p to container
+	    if(key==38) // [up] to container
 		gotoLink('up');
-	    if(key==68) // [d]own to contained
+	    if(key==40) // [down] to children
 		gotoLink('down');
 	} else {
-	    if(key==37)
-		window.history.go(-1);
-	    if(key==39)
-		e.target.click();
-	    if(key==38 || key==80) // [up] [p]revious item
+	    if(key==38 || key==80) // [up] [p]revious
 		selectPrevLink();
-	    if(key==40 || key==78) // [down] [n]ext item
+	    if(key==40 || key==78) // [down] [n]ext
 		selectNextLink();
-	    if(key==83) // [s]ort entries
+	    if(key==83) // [s]ort
 		gotoLink('sort');
 	};
     },false);
