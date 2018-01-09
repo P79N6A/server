@@ -1,29 +1,27 @@
-:target, :target *,th.selected, th.selected a {background-color:#fff !important; color:#000 !important;border-color: #fff !important;}
-body {margin:0; font-family: sans-serif}
-body, .search input {background-color:#000; color:#fff; }
-pre {margin:0; white-space: pre-wrap; max-width:255ex; overflow:hidden}
-pre, .monospace {font-family: monospace}
-.notes {font-weight: normal;color:#ccc;font-size:.8em}
-img,div.scroll {max-width: 100%}
-a {text-decoration:none; font-weight: bold; color:#fff; padding: 0 .1em 0 .1em}
-a,table,td {border-radius:.125em}
-table.tree, table.tree a {width:100%}
-a,td {vertical-align:top}
-a#up, table.tree a {display:block}
-a#up,a#down,a#prev,a#next {font-size:2.4em}
-a#up,a#down {padding-left:1em}
-a#prev, a.label {float: left}
-a.label {background-color:#fff;color:#000}
-a.date {white-space: nowrap;font-size:.96em}
-a#next, table.links, .video .notes {float: right}
-a.thumb, pre, .video {display: inline-block}
-a.thumb img {max-width:24em;max-height: 24em}
-a.thumb span.host {font-size:.88em}
-a.notfound {font-size:4.04em}
-.search {position:fixed; top:0;right:4%}
-.search input {border-width:0; font-size:1.1em; max-width:16ex}
-.search a.find {font-weight: normal}
-table.tree tr.nodes > td.unscaled {background-color:#222}
-th a:before {font-size:1.6em; font-weight: normal}
-.fromTo {float: right}
-table.links td.path {text-align: right; max-width: 42em;overflow:hidden}
+:target, :target *,th.selected, th.selected a {background-color: #fff !important; color: #000 !important; border-color: #fff !important;}
+body                   {margin: 0; font-family: sans-serif}
+body, .search input    {background-color: #000; color: #fff}
+#up, table.tree a      {display: block}
+#prev                  {top: 0; left: 0}
+#next                  {top: 0; right: 0}
+#up,#down,#prev,#next  {font-size: 2.4em}
+#up,#down              {padding-left: 1em}
+a                      {text-decoration: none; font-weight: bold; color: #fff; padding: 0 .1em 0 .1em}
+a,table,td             {border-radius: .125em}
+a,td                   {vertical-align: top}
+a.label                {background-color: #fff; color: #000}
+a.date                 {white-space: nowrap; font-size: .96em}
+a.thumb, pre, .video   {display: inline-block}
+a.thumb img            {max-width: 24em; max-height: 24em}
+a.thumb span.host      {font-size: .88em}
+a.notfound             {font-size: 4.04em}
+pre                    {margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
+pre, .monospace        {font-family: monospace}
+.notes                 {font-weight: normal; color: #ccc; font-size: .8em}
+.fromTo                {float: right}
+table.tree {width: 100%}
+table.links            {float: right}
+.search, #prev, #next  {position: fixed}
+.search                {top: 0; right: 4%}
+.search input          {border-width: 0; font-size: 1.1em; max-width: 16ex}
+.search a.find         {font-weight: normal}
