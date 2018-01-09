@@ -31,9 +31,8 @@ class WebResource
               scaled = size > 0 && s && tabled
               width = scaled && (s / size) # scale
               {_: tabled ? :td : :div,
-               class: named ? (scaled ? :scaled : :unscaled) : '',
                style: scaled ? "width:#{width * 100.0}%" : '',
-               c: named ? {_: :a, href: this + q, name: label, #id: 't'+this.sha2,
+               c: named ? {_: :a, href: this + q, name: label, class: scaled ? :scaled : '',
                            c: (scaled ? '' : ('&nbsp;'*path.size)) + CGI.escapeHTML(URI.unescape name) + (scaled ? '' : '/')} : ''}}.intersperse("\n")},"\n",
            ({_: tabled ? :tr : :div, c: nodes.map{|k| # children
               {_: tabled ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")} unless !nodes.find{|n|t[n].size > 0})]}}
