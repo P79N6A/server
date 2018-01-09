@@ -91,7 +91,7 @@ class WebResource
                                                    }.update(query ? {value: query} : {})]}},
                              {_: :style, c: @r[:label].map{|name,_|
                                 color = '#%06x' % (rand 16777216)
-                                "[name=\"#{name}\"] {color:#000; background-color: #{color}}\n"}},
+                                "[name=\"#{name}\"] {background-color: #{color}}\n"}},
                              !empty && link[:down, '&#9660;'],
                              empty && [{_: :a, id: :nope, class: :notfound, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
                                        {_: :table, class: :env, c: @r.map{|k,vs|

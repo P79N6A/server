@@ -20,7 +20,6 @@ class WebResource
       firstPart = parts[0] || ''
       return fileResponse if node.file?
       return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
-      return [204,{},[]] if firstPart.match(/^gen.*204$/)
       return [302,{'Location' => path+'/'+qs},[]] if node.directory? && path[-1] != '/'
       dp = []
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)

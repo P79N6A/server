@@ -197,12 +197,13 @@ class WebResource
         keep = r.to_s.match(pattern) || r[Type] == Container
         graph.delete u unless keep}
       # highlight matches
+      # TODO on small sets HTML/DOM-traversal highlight of innerText. benchmark nokogiri/etc vs to_s.gsub
       graph.values.map{|r|
         (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
-          r[Abstract] = [lines[0..5].map{|l|
-                           l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
-                             HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
-                           }},{_: :hr}] if lines.size > 0 }}
+          r[Abstract] = lines[0..5].map{|l|
+            l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
+              HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
+            }} if lines.size > 0 }}
       # word-highlight CSS
       graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
     end

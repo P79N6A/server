@@ -1,18 +1,17 @@
-:target, :target *,th.selected, th.selected a {background-color: #fff !important; color: #000 !important; border-color: #fff !important}
+:target, :target *, th.selected, th.selected a {background-color: #ccc !important; color: #000 !important}
 a.thumb, pre, .video, table.links {display: inline-block}
-body                 {margin: 0; font-family: sans-serif;padding:1em}
-body, .search input  {background-color: #000; color: #fff}
+body                 {padding: 1em .5em .5em .5em}
 #up,#down,#prev,#next{font-size: 2.4em}
-#up                  {margin: -.32em 0 0 .32em;display:block}
-#prev                {position: fixed;top: 1.28em; left: -.16em}
-#next                {position: fixed;top: 1em; right: 0}
-a                    {text-decoration: none; font-weight: bold; color: #fff; padding: 0 .1em 0 .1em}
+#up                  {position: absolute; top: -.2em; left: .8em}
+#prev                {position: fixed; top: 1.28em; left: -.16em}
+#next                {position: fixed; top: 1em; right: 0}
+a                    {text-decoration: none; font-weight: bold; color: #000; padding: 0 .1em 0 .1em}
 a,table,td           {border-radius: .125em}
 a.label              {background-color: #fff; color: #000}
-a.date               {white-space: nowrap; font-size: .96em}
+a.date               {white-space: nowrap}
 a.thumb img          {max-width: 24em; max-height: 24em}
 a.scaled             {display:block}
-a.notfound           {font-size: 4.04em}
+a.notfound           {font-size: 3em}
 pre                  {margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
 pre, .monospace      {font-family: monospace}
 .notes               {font-weight: normal; color: #ccc; font-size: .8em}
