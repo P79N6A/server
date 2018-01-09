@@ -40,10 +40,10 @@ class WebResource
     def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
 
     # dirname of path component, mapped to WebResource
-    def dir; dirname.R end
+    def dir; dirname.R if path end
 
     # dirname of path component
-    def dirname; File.dirname path end
+    def dirname; File.dirname path if path end
 
     # storage-space usage
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end

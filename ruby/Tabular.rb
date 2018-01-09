@@ -115,8 +115,7 @@ class WebResource
           end}}
 
       fromTo = -> {
-        {class: :fromTo,
-         c: [[Creator,SIOC+'addressed_to'].map{|edge|
+        [[Creator,SIOC+'addressed_to'].map{|edge|
                self[edge].map{|v|
                  if v.respond_to?(:uri) && v.R.path
                    v = v.R
@@ -147,11 +146,11 @@ class WebResource
                    nick = v.fragment
                    name = nick.gsub(/[_\-#@]+/,'')
                    @r[:label][name] = true
-                   (dir+'?q='+nick).data({name: name, label: nick})
+                   ((dir||self)+'?q='+nick).data({name: name, label: nick})
                  else
                    {_: :span, c: (CGI.escapeHTML v.to_s)}
                  end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
-             self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]}}
+             self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]}
 
       timeStamp = -> {
         [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
