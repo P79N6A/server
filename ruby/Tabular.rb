@@ -36,8 +36,6 @@ class WebResource
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
 
-      # cells
-
       typeTag = -> {
         self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
           {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}}
@@ -49,10 +47,12 @@ class WebResource
                     parts[1]
                   elsif a SIOC+'ChatLog'
                     CGI.unescape(basename).split('#')[0]
+                  elsif inDoc && !fragment
+                    'this'
                   else
                     'vanilla'
                   end
-          @r[:label][color] = true unless color == 'vanilla'
+          @r[:label][color] = true unless %w{vanilla this}.member?(color)
           R[uri + (a(Container) ? '?head' : '')].data({id: inDoc ? fragment : 'r'+sha2, class: :title, name: color, label: CGI.escapeHTML(t.to_s)})}.intersperse(' ')}
 
       labels = -> {
