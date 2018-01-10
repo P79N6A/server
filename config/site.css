@@ -7,11 +7,12 @@ body                 {padding: 1em .5em .5em .5em}
 #next                {position: fixed; top: 1em; right: 0}
 a                    {text-decoration: none; font-weight: bold; background-color: #000 ; color: #fff; padding: 0 .1em 0 .1em}
 a,table, td          {border-radius: .125em}
-a.label, [name]      {background-color: #fff; color: #000}
 a.date               {white-space: nowrap}
+a.label              {background-color: #000; color: #fff; border: .1em dotted #ccc;border-radius:.2em;margin:.1em}
 a.thumb img          {max-width: 24em; max-height: 24em}
 a.scaled             {display:block}
 pre                  {margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
 pre, .monospace      {font-family: monospace}
+[name]               {background-color: #fff; color: #000}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
 table.tree           {width: 100%}
