@@ -89,9 +89,11 @@ class WebResource
                                                    {_: :input, id: :searchbox, name: useGrep ? 'q' : 'f',
                                                     placeholder: useGrep ? :grep : :find
                                                    }.update(query ? {value: query} : {})]}},
-                             {_: :style, c: @r[:label].map{|name,_|
-                                color = '#%06x' % (rand 16777216)
-                                "[name=\"#{name}\"] {background-color: #{color}}\n"}},
+                             {_: :style,
+                              c: [q.has_key?('dark') ? "body {background-color: #000; color: #fff}\n" : '',
+                                  @r[:label].map{|name,_|
+                                    color = '#%06x' % (rand 16777216)
+                                    "[name=\"#{name}\"] {background-color: #{color}}\n"}]},
                              !empty && link[:down, '&#9660;'],
                              empty && [{_: :a, id: :nope, class: :notfound, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
                                        {_: :table, class: :env, c: @r.map{|k,vs|
