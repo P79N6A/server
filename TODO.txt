@@ -8,4 +8,4 @@ locally cache images. fire and forget archival attempt with req-time refswap if 
 highlight and identify current timeseg
 ignore ?qs when guessing if URI might be an image in #hrefs
 more video inlining
-[09/Jan/2018:04:18:24 +0000] "GET /pw/config/twitter.comsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchboxsearchbox?sort=urisearchboxsearchboxsearchboxsearchbox HTTP/1.1" 200 - 0.0416
+
