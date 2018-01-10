@@ -90,12 +90,12 @@ class WebResource
                                                     placeholder: useGrep ? :grep : :find
                                                    }.update(query ? {value: query} : {})]}},
                              {_: :style,
-                              c: [q.has_key?('dark') ? "body {background-color: #000; color: #fff}\n" : '',
+                              c: [q.has_key?('bright') ? "body {background-color: #fff; color: #000}\n" : "body {background-color: #000; color: #fff}\n",
                                   @r[:label].map{|name,_|
                                     color = '#%06x' % (rand 16777216)
                                     "[name=\"#{name}\"] {background-color: #{color}}\n"}]},
                              !empty && link[:down, '&#9660;'],
-                             empty && [{_: :a, id: :nope, class: :notfound, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
+                             empty && [{_: :a, id: :nope, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
                                        {_: :table, class: :env, c: @r.map{|k,vs|
                                           {_: :tr,
                                            c: [{_: :td, c: k},
