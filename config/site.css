@@ -1,7 +1,8 @@
 :target, :target *, th.selected, th.selected a {background-color: #000 !important; color: #fff !important}
 a.thumb, pre, .video, table.links {display: inline-block}
 a, table, td         {border-radius: .125em}
-body                 {padding: 1em .5em .5em .5em}
+tr:nth-child(odd) {background-color:#191919}
+body                 {padding: 1.2em .5em .5em 1em}
 #up,#down,#prev,#next{font-size: 2.4em}
 #up                  {position: absolute; top: -.2em; left: .8em}
 #prev                {position: fixed; top: 1.28em; left: -.16em}
@@ -10,10 +11,11 @@ a                    {text-decoration: none; font-weight: bold; background-color
 a.date               {white-space: nowrap}
 a.thumb img          {max-width: 24em; max-height: 24em}
 a.scaled             {display: block}
+.fromTo              {vertical-align: top; text-align:right}
 pre                  {margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
 pre, .monospace      {font-family: monospace}
 [name]               {background-color: #fff; color: #000}
-.label               {border: .1em dotted #ccc; border-radius: .2em; margin: .1em}
+.label               {border: .08em solid #444}
 .label,a[name="this"]{background-color: #000; color: #fff}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
 table.tree           {width: 100%}

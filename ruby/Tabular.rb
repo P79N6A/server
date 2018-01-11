@@ -169,14 +169,14 @@ class WebResource
       main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
 
       hidden ? '' : [{_: :tr,
-         c: [[fromTo, typeTag, main].map{|_|
-               {_: :td, c: _[]}},
-             keys.map{|k|
-               {_: :td, property: k,
-                c: self[k].map{|v|
-                  v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
-             [cacheLink, timeStamp, size].map{|_|
-               {_: :td, c: _[]}}]},"\n"]
+                      c: [{_: :td, class: :fromTo, c: fromTo[]},
+                          [typeTag, main].map{|_| {_: :td, c: _[]}},
+                          keys.map{|k|
+                            {_: :td, property: k,
+                             c: self[k].map{|v|
+                               v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
+                          [cacheLink, timeStamp, size].map{|_|
+                            {_: :td, c: _[]}}]},"\n"]
     end
   end
   module Webize
