@@ -170,7 +170,8 @@ class WebResource
 
       hidden ? '' : [{_: :tr,
                       c: [{_: :td, class: :fromTo, c: fromTo[]},
-                          [typeTag, main].map{|_| {_: :td, c: _[]}},
+                          {_: :td, class: :typeTag, c: typeTag[]},
+                          {_: :td, c: main[]},
                           keys.map{|k|
                             {_: :td, property: k,
                              c: self[k].map{|v|

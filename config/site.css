@@ -1,21 +1,19 @@
-:target, :target *, th.selected, th.selected a {background-color: #000 !important; color: #fff !important}
+:target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 a.thumb, pre, .video, table.links {display: inline-block}
+.fromTo, .typeTag, .title {vertical-align: top; text-align:right}
 a, table, td         {border-radius: .125em}
-tr:nth-child(odd) {background-color:#191919}
+tr:nth-child(odd)    {background-color:#1a1a1a}
 body                 {padding: 1.2em .5em .5em 1em}
+pre,.monospace       {font-family: monospace;margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
 #up,#down,#prev,#next{font-size: 2.4em}
 #up                  {position: absolute; top: -.2em; left: .8em}
 #prev                {position: fixed; top: 1.28em; left: -.16em}
 #next                {position: fixed; top: 1em; right: 0}
 a                    {text-decoration: none; font-weight: bold; background-color: #000; color: #fff; padding: 0 .1em 0 .1em}
-a.date               {white-space: nowrap}
 a.thumb img          {max-width: 24em; max-height: 24em}
 a.scaled             {display: block}
-.fromTo              {vertical-align: top; text-align:right}
-pre                  {margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
-pre, .monospace      {font-family: monospace}
 [name]               {background-color: #fff; color: #000}
-.label               {border: .08em solid #444}
+.tree                {width: 100%}
+.label               {border: .08em solid #777}
 .label,a[name="this"]{background-color: #000; color: #fff}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
-table.tree           {width: 100%}
