@@ -43,17 +43,25 @@ class WebResource
 
       title = -> {
         self[Title].compact.map{|t|
-          color = if a SIOC+'Tweet'
-                    parts[1]
-                  elsif a SIOC+'ChatLog'
-                    CGI.unescape(basename).split('#')[0]
-                  elsif inDoc && !fragment
-                    'this'
-                  else
-                    'vanilla'
-                  end
-          @r[:label][color] = true unless %w{vanilla this}.member?(color)
-          R[uri + (a(Container) ? '?head' : '')].data({id: inDoc ? fragment : 'r'+sha2, class: :title, name: color, label: CGI.escapeHTML(t.to_s)})}.intersperse(' ')}
+          meta = {id: inDoc ? fragment : 'r'+sha2,
+                  class: :title,
+                  label: CGI.escapeHTML(t.to_s)}
+          name = if a SIOC+'Tweet'
+                   parts[1]
+                 elsif a SIOC+'ChatLog'
+                   CGI.unescape(basename).split('#')[0]
+                 elsif inDoc && !fragment
+                   'this'
+                 elsif uri[-1] == '/'
+                   'dirname'
+                 end
+          if name
+            meta.update({name: name})
+            @r[:label][name] = true
+          end
+          link = uri.R
+          link += '?head' if a Container
+          link.data meta}.intersperse(' ')}
 
       labels = -> {
         self[Label].compact.map{|v|

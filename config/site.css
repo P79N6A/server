@@ -2,7 +2,6 @@
 a.thumb, pre, .video, table.links {display: inline-block}
 .fromTo, .typeTag, .title {vertical-align: top; text-align:right}
 a, table, td         {border-radius: .125em}
-tr:nth-child(odd)    {background-color:#1a1a1a}
 body                 {padding: 1.2em .5em .5em 1em}
 pre,.monospace       {font-family: monospace;margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
 #up,#down,#prev,#next{font-size: 2.4em}
@@ -10,10 +9,10 @@ pre,.monospace       {font-family: monospace;margin: 0; white-space: pre-wrap; m
 #prev                {position: fixed; top: 1.28em; left: -.16em}
 #next                {position: fixed; top: 1em; right: 0}
 a                    {text-decoration: none; font-weight: bold; background-color: #000; color: #fff; padding: 0 .1em 0 .1em}
-a.thumb img          {max-width: 24em; max-height: 24em}
 a.scaled             {display: block}
-[name]               {background-color: #fff; color: #000}
+.thumb img           {max-width: 24em; max-height: 24em}
 .tree                {width: 100%}
+.notes               {font-weight: normal; color: #bbb; font-size: .8em}
 .label               {border: .08em solid #777}
 .label,a[name="this"]{background-color: #000; color: #fff}
-.notes               {font-weight: normal; color: #bbb; font-size: .8em}
+[name]               {background-color: #fff; color: #000}
