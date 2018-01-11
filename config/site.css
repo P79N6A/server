@@ -1,6 +1,6 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 a.thumb, pre, .video, table.links {display: inline-block}
-.fromTo, .typeTag, .title {vertical-align: top; text-align:right}
+.fromTo, .typeTag, .title, .label {vertical-align: top; text-align:right}
 a, table, td         {border-radius: .125em}
 body                 {padding: 1.5em .5em .5em 1.4em}
 pre,.monospace       {font-family: monospace;margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
@@ -14,6 +14,6 @@ a                    {text-decoration: none; font-weight: bold; background-color
 .tree                {width: 100%}
 .tree a              {display:block}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
-.label               {border: .08em solid #777;border-radius: 0 .5em .5em .5em}
+.label               {border: .08em solid #bbb; border-radius: 0 .5em .5em .5em}
 .label,a[name="this"]{background-color: #000; color: #fff}
 [name]               {background-color: #fff; color: #000}

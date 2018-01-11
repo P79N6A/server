@@ -129,7 +129,8 @@ class WebResource
                    v = v.R
                    id = rand.to_s.sha2
                    if a SIOC+'MailMessage' # messages*address*month
-                     R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename})
+                     @r[:label][v.basename] = true
+                     R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename})
                    elsif a SIOC+'Tweet'
                      if edge == Creator  # tweets*author*day
                        @r[:label][v.basename] = true
