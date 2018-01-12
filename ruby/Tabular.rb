@@ -108,7 +108,7 @@ class WebResource
                else
                  img.uri
                 end},'<br>',
-               {_: :span, class: :host, c: host},
+               {_: :span, class: :host, c: img.host},
                {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}}}
 
       videos = -> {
