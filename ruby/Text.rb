@@ -49,27 +49,6 @@ class WebResource
       yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
       mtime.do{|mt|yield doc, Date, mt.iso8601}
     end
-
-    def triplrUriList based=nil
-      lines = open(localPath).readlines
-      doc = stripDoc.uri
-      base = stripDoc.basename
-      yield doc, Type, R[Stat+'UriList']
-      yield doc, Title, base
-      yield doc, Size, lines.size
-      yield doc, Date, mtime.iso8601
-      prefix = based ? "https://#{base}/" : ''
-      lines.map{|line|
-        t = line.chomp.split ' '
-        uri = prefix + t[0]
-        resource = uri.R
-        title = t[1..-1].join ' ' if t.size > 1
-        yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
-        yield uri, Title, title if title
-        yield uri, DC+'note', "#{resource.host.split('.')[0..-2].-(%w{wordpress www}).join('.')} feed" if resource.host && FeedNames.member?(resource.basename)
-        yield uri, Label, t[0] if based
-      }
-    end
   end
 end
 

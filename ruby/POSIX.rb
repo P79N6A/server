@@ -149,7 +149,7 @@ class WebResource
   end
   module Webize
 
-    # emit RDF of file metadata
+    # emit RDF of file-metadata
     def triplrFile
       s = path
       size.do{|sz|yield s, Size, sz}
@@ -159,7 +159,7 @@ class WebResource
         yield s, Date, mt.iso8601}
     end
 
-    # emit RDF of container metadata
+    # emit RDF of container-metadata
     def triplrContainer
       s = path
       s = s + '/' unless s[-1] == '/'
@@ -172,8 +172,10 @@ class WebResource
     end
 
   end
+
   include POSIX
-  module POSIX # this check uses the posix module, so close, include, and reopen it. TODO rewrite entire project in compilable language
+
+  module POSIX
     LinkMethod = begin
                    file = '.cache/link'.R
                    link = '.cache/link_'.R
@@ -182,7 +184,6 @@ class WebResource
                    file.ln link
                    :ln
                  rescue Exception => e
-                   puts e #, e.backtrace
                    :ln_s
                  end
   end
@@ -197,14 +198,13 @@ class WebResource
         keep = r.to_s.match(pattern) || r[Type] == Container
         graph.delete u unless keep}
       # highlight matches
-      # TODO on small sets HTML/DOM-traversal highlight of innerText. benchmark nokogiri/etc vs to_s.gsub
       graph.values.map{|r|
         (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
           r[Abstract] = lines[0..5].map{|l|
             l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
               HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
             }} if lines.size > 0 }}
-      # word-highlight CSS
+      # highlighting CSS
       graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
     end
   end

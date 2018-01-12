@@ -12,14 +12,10 @@ class WebResource < RDF::URI
   def self.[] u; WebResource.new u end
   alias_method :uri, :to_s
   module URIs
-
-    # concatenate URIs
     def + u; R[to_s + u.to_s] end
-
-    # match URI against regex
     def match p; to_s.match p end
 
-    # shorthand for common URIs
+    # short names for URIs
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
     Purl = 'http://purl.org/'
@@ -53,5 +49,24 @@ class WebResource < RDF::URI
     Twitter = 'https://twitter.com'
     Instagram = 'https://www.instagram.com/'
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
+  end
+  module Webize
+    def triplrUriList based=nil
+      lines = open(localPath).readlines
+      doc = stripDoc.uri
+      base = stripDoc.basename
+      yield doc, Type, R[Stat+'UriList']
+      yield doc, Title, base
+      yield doc, Size, lines.size
+      yield doc, Date, mtime.iso8601
+      prefix = based ? "https://#{base}/" : ''
+      lines.map{|line|
+        t = line.chomp.split ' '
+        uri = prefix + t[0]
+        title = t[1..-1].join ' ' if t.size > 1
+        yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
+        yield uri, Title, title ? title : uri
+      }
+    end
   end
 end
