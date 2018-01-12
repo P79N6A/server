@@ -12,7 +12,8 @@ a                    {text-decoration: none; font-weight: bold; padding: 0 .1em 
 a.date               {white-space: nowrap}
 a, a[name="this"]    {background-color: #000; color: #fff}
 a.label, [name]      {background-color: #fff; color: #000}
-.thumb img           {max-width: 24em; max-height: 24em}
+a.thumb              {display: inline-block}
+img.thumb            {max-width: 24em; max-height: 24em}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
 table.links          {background-color:#777;margin:.3em}
 table.tree           {width: 100%}
