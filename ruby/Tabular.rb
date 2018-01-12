@@ -100,9 +100,9 @@ class WebResource
         images = []
         images.push self if types.member?(Image) # subject of triple
         self[Image].do{|i|images.concat i}        # object of triple
-        images.map(&:R).select{|i|!@r[:images].member? i}.map{|img|
-          @r[:images].push img # seen
-          {_: :a, class: :thumb, href: uri,
+        images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unvisited
+          @r[:images].push img                     # visit
+          {_: :a, class: :thumb, href: uri,       # render
            c: [{_: :img, class: :thumb, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
                  img.path + '?preview'
                else
