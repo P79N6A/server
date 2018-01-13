@@ -75,7 +75,7 @@ class WebResource
 
       def initialize(input = $stdin, options = {}, &block)
         @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.to_utf8
-        @base = options[:base_uri]
+        @base = options[:base_uri] || '/'
         @host = @base.R.host
         if block_given?
           case block.arity
@@ -209,8 +209,8 @@ class WebResource
           inner = m[3]
           # identifier search. prioritize resolvable URIs
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
-          if u # id found
-            u = (URI.join @base, u).to_s unless u.match /^http/
+          if u # identifier match
+            u = @base.R.join(u).to_s unless u.match /^http/
             resource = u.R
 
             yield u, Type, R[SIOC+'BlogPost']
