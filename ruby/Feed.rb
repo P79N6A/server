@@ -108,9 +108,16 @@ class WebResource
             content.css('a').map{|a|
               (a.attr 'href').do{|href|
                 link = s.R.join href
+                re = link.R
                 a.set_attribute 'href', link
-                yield s, DC+'link', link
-                yield s, Image, link if %w{gif jpeg jpg png webp}.member? link.R.ext.downcase}}
+                if %w{gif jpeg jpg png webp}.member? re.ext.downcase
+                  yield s, Image, re
+                elsif re.host && re.host.match(/youtu/)
+                  yield s, Video, re
+                else
+                  yield s, DC+'link', re
+                end
+              }}
 
             content.css('img').map{|i|
               (i.attr 'src').do{|src|
