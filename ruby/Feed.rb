@@ -114,7 +114,7 @@ class WebResource
                   yield s, Image, re
                 elsif re.host && re.host.match(/youtu/)
                   yield s, Video, re
-                else
+                elsif s.R != re
                   yield s, DC+'link', re
                 end
               }}
@@ -224,7 +224,6 @@ class WebResource
             blogs = [resource.join('/')]
             blogs.push @base.R.join('/') if @host && @host != resource.host
             blogs.map{|blog|
-#              puts "blog #{blog}"
               yield u, R::To, blog}
 
             inner.scan(reMedia){|e|
@@ -242,7 +241,7 @@ class WebResource
                     else
                       R::Atom + rel
                     end
-                yield u,p,o}}
+                yield u,p,o unless resource == o}}
 
             inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
@@ -259,7 +258,6 @@ class WebResource
                     o.match(reURL) ? o.R : o }
                 end
                 crs.map{|cr|
-#                  puts "cr #{cr.class} #{cr}"
                   yield u, Creator, cr
                 }
               else # basic element
