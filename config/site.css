@@ -3,7 +3,7 @@ a.thumb, pre, .video, table.links {display: inline-block}
 .fromTo, .typeTag, .title, .label {vertical-align: top; text-align:right}
 a, table, td         {border-radius: .125em}
 body                 {font-family: sans-serif; padding: 1.5em .5em .5em 1.4em}
-pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap; max-width: 255ex; overflow: hidden}
+pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap; max-width: 168ex; overflow: hidden}
 #up,#down,#prev,#next{font-size: 2.4em}
 #up                  {position: absolute; top: -.2em; left: .8em}
 #prev                {position: fixed; top: 1.28em; left: -.16em}
@@ -17,5 +17,5 @@ img.thumb            {max-width: 24em; max-height: 24em}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
 table.links          {background-color:#777;margin:.3em}
 table.tree           {width: 100%}
-table.tree td        {text-align:center}
+table.tree td        {text-align:center;vertical-align: bottom}
 table.tree a         {display:block}
