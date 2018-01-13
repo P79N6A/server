@@ -104,16 +104,26 @@ class WebResource
         send(*f){|s,p,o|
           if p==Content && o.class==String
             content = Nokogiri::HTML.fragment o
-            content.css('img').map{|i|
-              (i.attr 'src').do{|src|
-                yield s, Image, src.R }}
+
             content.css('a').map{|a|
               (a.attr 'href').do{|href|
                 link = s.R.join href
                 a.set_attribute 'href', link
                 yield s, DC+'link', link
-                yield s, Image, link if %w{gif jpeg jpg png webp}.member? link.R.ext.downcase
-              }}
+                yield s, Image, link if %w{gif jpeg jpg png webp}.member? link.R.ext.downcase}}
+
+            content.css('img').map{|i|
+              (i.attr 'src').do{|src|
+                yield s, Image, src.R}}
+
+            content.css('iframe').map{|i|
+              (i.attr 'src').do{|src|
+                src = src.R
+                if src.host && src.host.match(/youtu/)
+                  id = src.parts[-1]
+                  yield s, Video, R['https://www.youtube.com/watch?v='+id]
+                end}}
+
             yield s, p, content.to_xhtml
           else
             yield s, p, o
