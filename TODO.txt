@@ -1,5 +1,4 @@
 cascading-unglob the tree
-add label-entries automatically in R -> <a> conversion. preserve request context during R creation for req-wide scope
 ical
 ig
 runtime-alternate storage locations for ingested docs (all comments on post in subdir, lkml in hourdirs)
