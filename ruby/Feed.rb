@@ -75,8 +75,8 @@ class WebResource
 
       def initialize(input = $stdin, options = {}, &block)
         @doc = (input.respond_to?(:read) ? input : StringIO.new(input.to_s)).read.to_utf8
-        @base = options[:base_uri] || '/'
-        @host = @base.R.host
+        @base = (options[:base_uri] || '/').R
+        @host = @base.host
         if block_given?
           case block.arity
           when 0 then instance_eval(&block)
@@ -89,7 +89,7 @@ class WebResource
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
 
       def each_statement &fn # triples flow (left ← right)
-        resolveURIs(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
+        scanContent(:normalizeDates, :normalizePredicates,:rawTriples){|s,p,o|
           fn.call RDF::Statement.new(s.R, p.R,
                                      (o.class == WebResource || o.class == RDF::URI) ? o : (l = RDF::Literal (if p == Content
                                                                                                     R::HTML.strip o
@@ -100,7 +100,7 @@ class WebResource
                                                                                   l), :graph_name => s.R)}
       end
 
-      def resolveURIs *f
+      def scanContent *f
         send(*f){|s,p,o|
           if p==Content && o.class==String
             content = Nokogiri::HTML.fragment o
@@ -134,8 +134,7 @@ class WebResource
             yield s, p, content.to_xhtml
           else
             yield s, p, o
-          end
-        }
+          end}
       end
 
       def normalizePredicates *f
@@ -217,12 +216,12 @@ class WebResource
           # identifier search. prioritize resolvable URIs
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u # identifier match
-            u = @base.R.join(u).to_s unless u.match /^http/
+            u = @base.join(u).to_s unless u.match /^http/
             resource = u.R
 
             yield u, Type, R[SIOC+'BlogPost']
             blogs = [resource.join('/')]
-            blogs.push @base.R.join('/') if @host && @host != resource.host
+            blogs.push @base.join('/') if @host && @host != resource.host
             blogs.map{|blog|
               yield u, R::To, blog}
 
@@ -230,7 +229,7 @@ class WebResource
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
                 rel = rel ? rel[1] : 'link'
-                o = url[2].R
+                o = (@base.join url[2]).R
                 p = case o.ext.downcase
                     when 'jpg'
                       R::Image
