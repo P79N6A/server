@@ -75,11 +75,11 @@ class WebResource
                    {_: :html,
                     c: [{_: :head,
                          c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: title}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                             css.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
+                             css.map{|s|
+                               {_: :style, c: ".conf/#{s}.css".R.readFile}},
                              @r[:Links].do{|links|
                                links.map{|type,uri|
-                                 {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}
-                               }},
+                                 {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              {_: :script, c: '.conf/site.js'.R.readFile}]},
                         {_: :body,
                          c: [link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
