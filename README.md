@@ -2,9 +2,9 @@
 ``` sh
 apt-get install git ruby ruby-dev rsync libssl-dev libxml2-dev libxslt1-dev pkg-config
 
-pacman -S git ruby base-devel graphicsmagick rsync libxml2 libxslt
+pacman -S graphicsmagick git ruby base-devel rsync libxml2 libxslt
 
-pkg install autoconf automake binutils clang file findutils git iconv pkg-config python ruby rsync ruby-dev libxslt-dev
+pkg install graphicsmagick git ruby autoconf automake binutils clang file findutils iconv pkg-config python rsync ruby-dev libxslt-dev
 
 xbps-install GraphicsMagick base-devel git ruby ruby-devel rsync libxml2-devel libxslt-devel
 ```
