@@ -92,7 +92,7 @@ class WebResource
             c: [{_: :td, class: :path, colspan: host ? 1 : 2,
                  c: links.map{|link|
                    @r[:links].push link
-                   [link.data((traverse ? {id: 'link'+rand.to_s.sha2, name: tld} : {})),' ']}},
+                   [link.data((traverse ? {id: 'link'+SecureRandom.hex(8), name: tld} : {})),' ']}},
                 ({_: :td, class: :host, c: R['//'+host]} if host)
                ]}}} unless links.empty?}
 
@@ -127,7 +127,7 @@ class WebResource
                self[edge].map{|v|
                  if v.respond_to?(:uri) && v.R.path
                    v = v.R
-                   id = rand.to_s.sha2
+                   id = SecureRandom.hex 8
                    if a SIOC+'MailMessage' # messages*address*month
                      @r[:label][v.basename] = true
                      R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename})

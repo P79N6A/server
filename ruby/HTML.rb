@@ -68,12 +68,14 @@ class WebResource
       title = @r[:title] || [*path.split('/'), query].join(' ')
       useGrep = path.split('/').size > 3 # search-provider suggestion
       link = -> name,icon {@r[:Links][name].do{|l| l.R.data({id: name, label: icon})}}
+      css = %w{icons site}
+      css.push 'code' if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
 
       HTML.render ["<!DOCTYPE html>\n",
                    {_: :html,
                     c: [{_: :head,
                          c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: title}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                             %w{code icons site}.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
+                             css.map{|s|{_: :style, c: ".conf/#{s}.css".R.readFile}},
                              @r[:Links].do{|links|
                                links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}
