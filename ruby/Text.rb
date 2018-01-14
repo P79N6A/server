@@ -44,9 +44,10 @@ class WebResource
     
     def triplrMarkdown
       doc = stripDoc.uri
+      attr = stripDoc.basename == 'README' ? Abstract : Content
       yield doc, Type, R[Stat+'MarkdownFile']
       yield doc, Title, stripDoc.basename
-      yield doc, Content, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
+      yield doc, attr, ::Redcarpet::Markdown.new(::Redcarpet::Render::Pygment, fenced_code_blocks: true).render(readFile)
       mtime.do{|mt|yield doc, Date, mt.iso8601}
     end
   end
