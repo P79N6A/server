@@ -44,6 +44,7 @@ class WebResource
     alias_method :getFeed, :fetchFeed
 
     def indexFeed options = {}
+      # TODO runtime-alternate storage locations for (all comments on post in subdir, lkml in hourdir instead of defaultmonth-dir)
       g = RDF::Repository.load self, options
       g.each_graph.map{|graph|
         graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp

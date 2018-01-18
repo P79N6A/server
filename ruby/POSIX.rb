@@ -191,6 +191,7 @@ class WebResource
                  end
   end
   module HTML
+    # TODO change multi-arg handling (|| to &&)
     def htmlGrep graph, q
       wordIndex = {}
       args = q.shellsplit

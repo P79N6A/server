@@ -1,5 +1,6 @@
 class WebResource
   module Webize
+    #TODO popular image host translation to RDF
     def triplrImage &f
       yield uri, Type, R[Image]
       w,h = Dimensions.dimensions localPath
