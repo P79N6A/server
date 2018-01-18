@@ -4,20 +4,23 @@ end
 class WebResource
   module POSIX
 
-    # link mapped nodes
+    # link fs-nodes
     def ln n
       #puts "ln #{path} #{n.path}"
       FileUtils.ln   node.expand_path, n.node.expand_path
     end
-
-    # symlink mapped nodes
+    #TODO relative_path_from so db (fs tree) can support multiple concurrent mountpoints
+    # symlink fs-nodes
     def ln_s n
       #puts "ln -s #{path} #{n.path}"
       FileUtils.ln_s node.expand_path, n.node.expand_path
     end
 
-    # link with fallback to symlink
-    def link n; send LinkMethod, n end
+    def link n
+      send LinkMethod, n unless n.exist?
+    rescue Exception => e
+      puts e,e.class,e.message
+    end
 
     # read file at location of POSIX path-map
     def readFile; File.open(localPath).read end
