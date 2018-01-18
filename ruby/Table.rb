@@ -68,7 +68,10 @@ class WebResource
           {_: :a, class: :label, href: uri,
            c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' ')}
 
-      abstract = -> {self[Abstract]}
+      abstract = -> {
+        [self[Abstract],
+         self[DC+'note'].map{|n|
+           {_: :a, href: uri, class: :notes, c: CGI.escapeHTML(n.to_s)}}.intersperse(' ')]}
 
       content = -> {
         self[Content].map{|c|
@@ -161,10 +164,7 @@ class WebResource
                  end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
              self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]}
 
-      timeStamp = -> {
-        [({_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath),
-         self[DC+'note'].map{|n|
-           {_: :a, href: uri, class: :notes, c: CGI.escapeHTML(n.to_s)}}.intersperse(' ')].compact.intersperse('<br>')}
+      timeStamp = -> {{_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath}
 
       size = -> {
         sum = 0

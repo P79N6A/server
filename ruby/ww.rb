@@ -1,6 +1,6 @@
 # coding: utf-8
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
-%w{URI MIME HTTP HTML POSIX Feed JSON Text Mail Tabular Tree Calendar Chat Icons Image}.map{|i|require_relative i}
+%w{URI MIME HTTP HTML POSIX Feed JSON Text Mail Table Tree Calendar Chat Icons Image}.map{|i|require_relative i}
 R = WebResource
 class Array
   def justArray; self end
