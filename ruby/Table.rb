@@ -128,12 +128,12 @@ class WebResource
       fromTo = -> {
         [[Creator,SIOC+'addressed_to'].map{|edge|
                self[edge].map{|v|
-                 if v.respond_to?(:uri) && v.R.path
+                 if v.respond_to?(:uri)
                    v = v.R
                    id = SecureRandom.hex 8
                    if a SIOC+'MailMessage' # messages*address*month
                      @r[:label][v.basename] = true
-                     R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename})
+                     R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename}) if v.path
                    elsif a SIOC+'Tweet'
                      if edge == Creator  # tweets*author*day
                        @r[:label][v.basename] = true
@@ -141,8 +141,15 @@ class WebResource
                      else # tweets*hour
                        R[datePath + '*twitter*#r' + sha2].data({label: '&#x1F425;'})
                      end
-                   elsif (a SIOC+'InstantMessage') && edge==To
-                     v.data({label: CGI.unescape(basename).split('#')[-1]})
+                   elsif a SIOC+'InstantMessage'
+                     if edge==From
+                       nick = v.fragment
+                       name = nick.gsub(/[_\-#@]+/,'')
+                       @r[:label][name] = true
+                       ((dir||self)+'?q='+nick).data({name: name, label: nick})
+                     elsif edge==To
+                       v.data({label: CGI.unescape(basename).split('#')[-1]})
+                     end
                    elsif (a SIOC+'BlogPost') && edge==To
                      name = 'blog_'+(v.host||'').gsub('.','')
                      @r[:label][name] = true
@@ -154,11 +161,6 @@ class WebResource
                    else
                      v
                    end
-                 elsif (a SIOC+'InstantMessage') && edge==From
-                   nick = v.fragment
-                   name = nick.gsub(/[_\-#@]+/,'')
-                   @r[:label][name] = true
-                   ((dir||self)+'?q='+nick).data({name: name, label: nick})
                  else
                    {_: :span, c: (CGI.escapeHTML v.to_s)}
                  end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
@@ -173,7 +175,7 @@ class WebResource
 
       cacheLink = -> {
         self[DC+'cache'].map{|c|
-          {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}}
+          {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}.intersperse(' ')}
 
       main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
 
