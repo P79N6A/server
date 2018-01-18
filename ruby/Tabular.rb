@@ -10,7 +10,7 @@ class WebResource
       datatype = [R::Size,R::Stat+'mtime'].member?(p) ? :to_i : :to_s
       keys = graph.values.map(&:keys).flatten.uniq - InlineMeta
       keys -= VerboseMeta unless q.has_key? 'full'
-      [{_: :table, style: 'margin:auto',
+      [{_: :table,
         c: [{_: :tbody,
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.
                send(direction).map{|r|
