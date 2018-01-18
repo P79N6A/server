@@ -14,7 +14,7 @@ class WebResource
         c: [{_: :tbody,
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.
                send(direction).map{|r|
-               (r.R.environment(@r).htmlTableRow p,direction,keys)}},
+               (r.R.environment(@r).tableRow p,direction,keys)}},
             {_: :tr, c: [From,Type,'uri',*keys,DC+'cache',Date,Size].map{|k| # header row
                selection = p == k
                q_ = q.merge({'sort' => k})
@@ -30,101 +30,117 @@ class WebResource
        {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]
     end
 
-    def htmlTableRow sort,direction,keys
-      inDoc = path == @r['REQUEST_PATH']
+    def tableCellTitle
+      self[Title].compact.map{|t|
+        meta = {id: inDoc ? fragment : 'r'+sha2,
+                class: :title,
+                label: CGI.escapeHTML(t.to_s)}
+        name = if a SIOC+'Tweet'
+                 parts[1]
+               elsif a SIOC+'ChatLog'
+                 CGI.unescape(basename).split('#')[0]
+               elsif inDoc && !fragment
+                 'this'
+               elsif uri[-1] == '/'
+                 'dirname'
+               end
+        if name
+          meta.update({name: name})
+          @r[:label][name] = true
+        end
+        link = uri.R
+        link += '?head' if a Container
+        link.data meta}.intersperse(' ')
+    end
+
+    def tableCellLabels
+      self[Label].compact.map{|v|
+        {_: :a, class: :label, href: uri,
+         c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' ')
+    end
+
+    def tableCellAbstract
+      [self[Abstract],
+       self[DC+'note'].map{|n|
+         {_: :a, href: uri, class: :notes, c: CGI.escapeHTML(n.to_s)}}.intersperse(' ')]
+    end
+
+    def tableCellContent
+      self[Content].map{|c|
+        if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
+          {_: :pre, c: c}
+        elsif a SIOC+'InstantMessage'
+          {_: :span, class: :monospace, c: c}
+        else
+          c
+        end
+      }.intersperse(' ') unless q.has_key?('head')
+    end
+
+    def tableCellBody
+      [tableCellLabels,
+       tableCellTitle,
+       tableCellAbstract,
+       tableCellLinks,
+       tableCellContent,
+       tableCellPhoto,
+       tableCellVideo]
+    end
+
+    def tableCellTypes
+      self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
+        {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
+    end
+
+    def tableCellLinks
+      links = LinkPred.map{|p|self[p]}.flatten.compact.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
+      {_: :table, class: :links,
+       c: links.group_by(&:host).map{|host,links|
+         tld = links[0] && links[0].tld || 'none'
+         traverse = links.size <= 16
+         @r[:label][tld] = true
+         {_: :tr,
+          c: [{_: :td, class: :path, colspan: host ? 1 : 2,
+               c: links.map{|link|
+                 @r[:links].push link
+                 [link.data((traverse ? {id: 'link'+SecureRandom.hex(8), name: tld} : {})),' ']}},
+              ({_: :td, class: :host, c: R['//'+host]} if host)
+             ]}}} unless links.empty?
+    end
+
+    def tableCellPhoto
+      # scan RDF for not-yet-shown resourcs
+      images = []
+      images.push self if types.member?(Image) # subject of triple
+      self[Image].do{|i|images.concat i}        # object of triple
+      images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unvisited
+        @r[:images].push img                     # visit
+        {_: :a, class: :thumb, href: uri,       # render
+         c: [{_: :img, class: :thumb, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
+               img.path + '?preview'
+             else
+               img.uri
+              end},'<br>',
+             {_: :span, class: :host, c: img.host},
+             {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}}
+    end
+
+    def tableCellVideo
+      self[Video].map(&:R).map{|video|
+        if video.match /youtu/
+          id = video.q(false)['v'] || video.parts[-1]
+          {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
+        else
+          {class: :video,
+           c: [{_: :video, src: video.uri, controls: :true}, '<br>',
+               {_: :span, class: :notes, c: video.basename}]}
+        end}
+    end
+
+    def tableRow sort,direction,keys
       hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty?
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-
-      typeTag = -> {
-        self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
-          {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}}
-
-
-      title = -> {
-        self[Title].compact.map{|t|
-          meta = {id: inDoc ? fragment : 'r'+sha2,
-                  class: :title,
-                  label: CGI.escapeHTML(t.to_s)}
-          name = if a SIOC+'Tweet'
-                   parts[1]
-                 elsif a SIOC+'ChatLog'
-                   CGI.unescape(basename).split('#')[0]
-                 elsif inDoc && !fragment
-                   'this'
-                 elsif uri[-1] == '/'
-                   'dirname'
-                 end
-          if name
-            meta.update({name: name})
-            @r[:label][name] = true
-          end
-          link = uri.R
-          link += '?head' if a Container
-          link.data meta}.intersperse(' ')}
-
-      labels = -> {
-        self[Label].compact.map{|v|
-          {_: :a, class: :label, href: uri,
-           c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' ')}
-
-      abstract = -> {
-        [self[Abstract],
-         self[DC+'note'].map{|n|
-           {_: :a, href: uri, class: :notes, c: CGI.escapeHTML(n.to_s)}}.intersperse(' ')]}
-
-      content = -> {
-        self[Content].map{|c|
-          if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
-            {_: :pre, c: c}
-          elsif a SIOC+'InstantMessage'
-            {_: :span, class: :monospace, c: c}
-          else
-            c
-          end
-        }.intersperse(' ') unless q.has_key?('head')}
-
-      linkTable = -> {
-        links = LinkPred.map{|p|self[p]}.flatten.compact.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
-        {_: :table, class: :links,
-         c: links.group_by(&:host).map{|host,links|
-           tld = links[0] && links[0].tld || 'none'
-           traverse = links.size <= 16
-           @r[:label][tld] = true
-           {_: :tr,
-            c: [{_: :td, class: :path, colspan: host ? 1 : 2,
-                 c: links.map{|link|
-                   @r[:links].push link
-                   [link.data((traverse ? {id: 'link'+SecureRandom.hex(8), name: tld} : {})),' ']}},
-                ({_: :td, class: :host, c: R['//'+host]} if host)
-               ]}}} unless links.empty?}
-
-      photos = -> { # scan RDF for not-yet-shown resourcs
-        images = []
-        images.push self if types.member?(Image) # subject of triple
-        self[Image].do{|i|images.concat i}        # object of triple
-        images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unvisited
-          @r[:images].push img                     # visit
-          {_: :a, class: :thumb, href: uri,       # render
-           c: [{_: :img, class: :thumb, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
-                 img.path + '?preview'
-               else
-                 img.uri
-                end},'<br>',
-               {_: :span, class: :host, c: img.host},
-               {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}}}
-
-      videos = -> {
-        self[Video].map(&:R).map{|video|
-          if video.match /youtu/
-            id = video.q(false)['v'] || video.parts[-1]
-            {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
-          else
-            {class: :video,
-             c: [{_: :video, src: video.uri, controls: :true}, '<br>',
-                 {_: :span, class: :notes, c: video.basename}]}
-          end}}
-
       fromTo = -> {
         [[Creator,SIOC+'addressed_to'].map{|edge|
                self[edge].map{|v|
@@ -166,6 +182,10 @@ class WebResource
                  end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
              self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]}
 
+      cacheLink = -> {
+        self[DC+'cache'].map{|c|
+          {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}.intersperse(' ')}
+
       timeStamp = -> {{_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath}
 
       size = -> {
@@ -173,22 +193,15 @@ class WebResource
         self[Size].map{|v|sum += v.to_i}
         sum == 0 ? '' : sum}
 
-      cacheLink = -> {
-        self[DC+'cache'].map{|c|
-          {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}.intersperse(' ')}
-
-      main = -> {[labels[], title[], abstract[], linkTable[], content[], photos[], videos[]]}
-
       hidden ? '' : [{_: :tr,
                       c: [{_: :td, class: :fromTo, c: fromTo[]},
-                          {_: :td, class: :typeTag, c: typeTag[]},
-                          {_: :td, c: main[]},
+                          {_: :td, class: :typeTag, c: tableCellTypes},
+                          {_: :td, c: tableCellBody},
                           keys.map{|k|
                             {_: :td, property: k,
                              c: self[k].map{|v|
                                v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
-                          [cacheLink, timeStamp, size].map{|_|
-                            {_: :td, c: _[]}}]},"\n"]
+                          [cacheLink, timeStamp, size].map{|cell| {_: :td, c: cell[]}}]},"\n"]
     end
   end
   module Webize

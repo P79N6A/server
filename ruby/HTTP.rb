@@ -183,6 +183,8 @@ class WebResource
          end)
     end
 
+    def inDoc; path == @r['REQUEST_PATH'] end
+
     # env -> ?querystring
     def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
 
