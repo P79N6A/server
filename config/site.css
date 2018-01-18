@@ -1,11 +1,12 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-.fromTo, .typeTag, .title, .label {text-align:right}
+.fromTo, .typeTag, .title, .label, table.links td.path {text-align:right}
 a, table, td         {vertical-align: top; border-radius: .125em}
 body                 {font-family: sans-serif; padding: 1.5em .5em .5em 1.4em}
-pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap; max-width: 168ex; overflow: hidden}
+pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap}
+pre                  {min-width:80ex; max-width: 168ex; overflow: hidden}
 #up,#down,#prev,#next{font-size: 2.4em}
 #up                  {position: absolute; top: -.2em; left: .8em}
-#prev                {position: fixed; top: 1.28em; left: -.16em}
+#prev                {position: fixed; bottom: 1.28em; left: -.16em}
 #next                {position: fixed; top: 1em; right: 0}
 a                    {text-decoration: none; font-weight: bold; padding: 0 .1em 0 .1em}
 a.date               {white-space: nowrap}
@@ -16,6 +17,7 @@ img.thumb            {max-width: 24em; max-height: 24em}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
 table                {margin:auto}
 td.fromTo            {max-width:20em}
-table.links td       {border-color:#338;border-width: 0 0 .1em 0;border-style:dotted}
+table.links          {float: right}
+table.links td.host  {border-color:#446;border-width: 0 0 .1em 0;border-style:dotted}
 table.tree td        {vertical-align: bottom}
 table.tree a         {display:block}
