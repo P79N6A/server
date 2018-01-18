@@ -36,7 +36,7 @@ class WebResource
               scaled = sizes.size > 0 && s && tabled
               height = scaled && (s / maxSize) # scale
               {_: tabled ? :td : :div, style: scaled ? 'height: 8em' : '',
-               c: named ? {_: :a, href: this + q, name: label, style: scaled ? "height:#{height * 100.0}%" : '',
+               c: named ? {_: :a, id: 't'+this.gsub(/[^a-zA-Z0-9]/,'_'), href: this + q, name: label, style: scaled ? "height:#{height * 100.0}%" : '',
                            c: CGI.escapeHTML(URI.unescape(name)[0..24])} : ''}}.intersperse("\n")},"\n",
            ({_: tabled ? :tr : :div, c: nodes.map{|k| # children
               {_: tabled ? :td : :div, c: (render[t[k], path+k+'/'] if t[k].size > 0)}}.intersperse("\n")} unless !nodes.find{|n|t[n].size > 0})]}}
