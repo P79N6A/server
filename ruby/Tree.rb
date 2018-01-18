@@ -13,7 +13,7 @@ class WebResource
 
       # renderer
       render = -> t,path='' {
-        nodes = t.keys.sort
+        nodes = t.keys.sort - %w{msg}
         label = 'p'+path.sha2 if nodes.size > 1
         @r[:label][label] = true if label
         tabled = nodes.size < 36
