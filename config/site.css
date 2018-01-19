@@ -1,13 +1,14 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 .fromTo, .typeTag, .title, .label, table.links td.path {text-align:right}
 a, table, td         {vertical-align: top}
-body                 {font-family: sans-serif; padding: 1.5em .5em .5em 1.4em}
+body                 {font-family: sans-serif; margin: 0 1em 0 1em}
 pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap}
 pre                  {min-width:80ex; max-width: 168ex; overflow: hidden}
 #up,#down,#prev,#next{font-size: 2.4em}
-#up                  {position: absolute; top: -.2em; left: .8em}
-#prev                {position: fixed; bottom: 1.28em; left: -.16em}
-#next                {position: fixed; top: 1em; right: 0}
+#up                  {display:block}
+#prev,#next          {position: fixed; bottom: 1em}
+#prev                {left: 0}
+#next                {right: 0}
 a                    {text-decoration: none; font-weight: bold}
 a.date               {white-space: nowrap}
 a, a[name="this"]    {background-color: #000; color: #fff}
