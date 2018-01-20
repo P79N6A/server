@@ -14,6 +14,7 @@ a.date               {white-space: nowrap}
 a, a[name="this"]    {background-color: #000; color: #fff}
 a.label, [name]      {background-color: #fff; color: #000}
 a.thumb              {display: inline-block}
+img                  {max-width: 100%}
 img.thumb            {max-width: 24em; max-height: 24em}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
 table                {margin:auto}
