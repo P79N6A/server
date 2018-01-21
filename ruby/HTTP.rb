@@ -117,7 +117,7 @@ class WebResource
       elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # search-result counts
         set.map{|r|
           bin = r.dirname + '/'
-          g[bin] ||= {'uri' => bin, Type => Container}
+          g[bin] ||= {'uri' => bin}
           g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
           g[bin][Size] += 1}
       end

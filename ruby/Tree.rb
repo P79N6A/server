@@ -31,7 +31,8 @@ class WebResource
         {_: tabled ? :table : :div, class: :tree, c: [
            {_: tabled ? :tr : :div, class: :nodes, c: nodes.map{|name| # nodes
               this = path + name + '/' # path
-              s = graph[this].do{|r|r[Size].justArray[0]} # size
+              s = graph[this].do{|r|   # size
+                r.delete(Size).justArray[0]}
               named = !name.empty?
               scaled = sizes.size > 0 && s && tabled
               height = scaled && (s / maxSize) # scale

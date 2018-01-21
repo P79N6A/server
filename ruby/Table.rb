@@ -14,7 +14,7 @@ class WebResource
         c: [{_: :tbody,
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.
                send(direction).map{|r|
-               (r.R.environment(@r).tableRow p,direction,keys)}},
+               r.R.environment(@r).tableRow p,direction,keys unless r.keys==%w{uri}}},
             {_: :tr, c: [From,Type,'uri',*keys,DC+'cache',Date,Size].map{|k| # header row
                selection = p == k
                q_ = q.merge({'sort' => k})
@@ -137,6 +137,10 @@ class WebResource
         end}
     end
 
+    def tableCellCache
+      
+    end
+
     def tableRow sort,direction,keys
       hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty?
       date = self[Date].sort[0]
@@ -193,15 +197,15 @@ class WebResource
         self[Size].map{|v|sum += v.to_i}
         sum == 0 ? '' : sum}
 
-      hidden ? '' : [{_: :tr,
-                      c: [{_: :td, class: :fromTo, c: fromTo[]},
-                          {_: :td, class: :typeTag, c: tableCellTypes},
-                          {_: :td, c: tableCellBody},
-                          keys.map{|k|
-                            {_: :td, property: k,
-                             c: self[k].map{|v|
-                               v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
-                          [cacheLink, timeStamp, size].map{|cell| {_: :td, c: cell[]}}]},"\n"]
+      hidden ? '' : {_: :tr,
+                     c: [{_: :td, class: :fromTo, c: fromTo[]},
+                         {_: :td, class: :typeTag, c: tableCellTypes},
+                         {_: :td, c: tableCellBody},
+                         keys.map{|k|
+                           {_: :td, property: k,
+                            c: self[k].map{|v|
+                              v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
+                         [cacheLink, timeStamp, size].map{|cell| {_: :td, c: cell[]}}]}
     end
   end
   module Webize
