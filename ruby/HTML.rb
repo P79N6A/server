@@ -18,7 +18,7 @@ class WebResource
         x.map{|n|render n}.join
       when R
         render({_: :a, href: x.uri,
-                c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.basename != '/' && x.basename) || x.host || '&#x279f;')}.
+                c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.path[1..-1]) || x.host || '&#x279f;')}.
                  update(x[:id][0] ? {id: x[:id][0]} : {}).
                  update(x[:style][0] ? {style: x[:style][0]} : {}).
                  update(x[:class][0] ? {class: x[:class][0]} : {}).

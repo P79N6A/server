@@ -30,6 +30,21 @@ class WebResource
        {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]
     end
 
+    def tableRow sort,direction,keys
+      hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty?
+      hidden ? '' : {_: :tr,
+                     c: [{_: :td, class: :fromTo, c: tableCellFromTo},
+                         {_: :td, c: tableCellTypes},
+                         {_: :td, c: tableCellBody},
+                         keys.map{|k|
+                           {_: :td, property: k,
+                            c: self[k].map{|v|
+                              v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
+                         {_: :td, c: tableCellCache},
+                         {_: :td, c: tableCellDate},
+                         {_: :td, c: tableCellSize}]}
+    end
+
     def tableCellTitle
       self[Title].compact.map{|t|
         meta = {id: inDoc ? fragment : 'r'+sha2,
@@ -108,6 +123,50 @@ class WebResource
              ]}}} unless links.empty?
     end
 
+    def tableCellFromTo
+      date = self[Date].sort[0]
+      datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
+      [[Creator,SIOC+'addressed_to'].map{|edge|
+         self[edge].map{|v|
+           if v.respond_to?(:uri)
+             v = v.R
+             id = SecureRandom.hex 8
+             if a SIOC+'MailMessage' # messages*address*month
+               @r[:label][v.basename] = true
+               R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename}) if v.path
+             elsif a SIOC+'Tweet'
+               if edge == Creator  # tweets*author*day
+                 @r[:label][v.basename] = true
+                 R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({name: v.basename, label: v.basename})
+               else # tweets*hour
+                 R[datePath + '*twitter*#r' + sha2].data({label: '&#x1F425;'})
+               end
+             elsif a SIOC+'InstantMessage'
+               if edge==From
+                 nick = v.fragment
+                 name = nick.gsub(/[_\-#@]+/,'')
+                 @r[:label][name] = true
+                 ((dir||self)+'?q='+nick).data({name: name, label: nick})
+               elsif edge==To
+                 v.data({label: CGI.unescape(basename).split('#')[-1]})
+               end
+             elsif (a SIOC+'BlogPost') && edge==To
+               name = 'blog_'+(v.host||'').gsub('.','')
+               @r[:label][name] = true
+               R[datePath ? (datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2) : ('//'+host)].data({id: 'post'+id, label: v.host, name: name})
+             elsif (a SIOC+'ChatLog') && edge==To
+               name = v.basename[0..-2]
+               @r[:label][name] = true
+               v.data({name: name})
+             else
+               v
+             end
+           else
+             {_: :span, c: (CGI.escapeHTML v.to_s)}
+           end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse(' &rarr; '),
+       self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]
+    end
+
     def tableCellPhoto
       # scan RDF for not-yet-shown resourcs
       images = []
@@ -138,74 +197,20 @@ class WebResource
     end
 
     def tableCellCache
-      
+      self[DC+'cache'].map{|c|
+        {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}.intersperse ' '
     end
 
-    def tableRow sort,direction,keys
-      hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty?
+    def tableCellSize
+      sum = 0
+      self[Size].map{|v|sum += v.to_i}
+      sum == 0 ? '' : sum
+    end
+
+    def tableCellDate
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-      fromTo = -> {
-        [[Creator,SIOC+'addressed_to'].map{|edge|
-               self[edge].map{|v|
-                 if v.respond_to?(:uri)
-                   v = v.R
-                   id = SecureRandom.hex 8
-                   if a SIOC+'MailMessage' # messages*address*month
-                     @r[:label][v.basename] = true
-                     R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename}) if v.path
-                   elsif a SIOC+'Tweet'
-                     if edge == Creator  # tweets*author*day
-                       @r[:label][v.basename] = true
-                       R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({name: v.basename, label: v.basename})
-                     else # tweets*hour
-                       R[datePath + '*twitter*#r' + sha2].data({label: '&#x1F425;'})
-                     end
-                   elsif a SIOC+'InstantMessage'
-                     if edge==From
-                       nick = v.fragment
-                       name = nick.gsub(/[_\-#@]+/,'')
-                       @r[:label][name] = true
-                       ((dir||self)+'?q='+nick).data({name: name, label: nick})
-                     elsif edge==To
-                       v.data({label: CGI.unescape(basename).split('#')[-1]})
-                     end
-                   elsif (a SIOC+'BlogPost') && edge==To
-                     name = 'blog_'+(v.host||'').gsub('.','')
-                     @r[:label][name] = true
-                     R[datePath ? (datePath[0..-4] + '*/*' + (v.host||'') + '*#r' + sha2) : ('//'+host)].data({id: 'post'+id, label: v.host, name: name})
-                   elsif (a SIOC+'ChatLog') && edge==To
-                     name = v.basename[0..-2]
-                     @r[:label][name] = true
-                     v.data({name: name})
-                   else
-                     v
-                   end
-                 else
-                   {_: :span, c: (CGI.escapeHTML v.to_s)}
-                 end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse('&rarr;'),
-             self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]}
-
-      cacheLink = -> {
-        self[DC+'cache'].map{|c|
-          {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}.intersperse(' ')}
-
-      timeStamp = -> {{_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath}
-
-      size = -> {
-        sum = 0
-        self[Size].map{|v|sum += v.to_i}
-        sum == 0 ? '' : sum}
-
-      hidden ? '' : {_: :tr,
-                     c: [{_: :td, class: :fromTo, c: fromTo[]},
-                         {_: :td, class: :typeTag, c: tableCellTypes},
-                         {_: :td, c: tableCellBody},
-                         keys.map{|k|
-                           {_: :td, property: k,
-                            c: self[k].map{|v|
-                              v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
-                         [cacheLink, timeStamp, size].map{|cell| {_: :td, c: cell[]}}]}
+      {_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath
     end
   end
   module Webize

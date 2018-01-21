@@ -1,5 +1,5 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-.fromTo, .typeTag, .title, .label, table.links td.path {text-align:right}
+.fromTo, .title, .label, table.links td.path {text-align:right}
 a, table, td         {vertical-align: top}
 body                 {font-family: sans-serif; margin: 0 1em 0 1em}
 pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap}
