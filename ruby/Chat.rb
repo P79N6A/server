@@ -68,7 +68,6 @@ class WebResource
       if linenum > 0 # summarize at log-URI
         yield log, Type, R[SIOC+'ChatLog']
         yield log, Date, mtime.iso8601
-        yield log, Creator, channel
         yield log, To, network
         yield log, Title, basename.split('%23')[-1] # channel
         yield log, Size, linenum
