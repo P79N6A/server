@@ -31,7 +31,7 @@ class WebResource
     end
 
     def tableRow sort,direction,keys
-      hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty?
+      hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty? && self[Link].empty?
       hidden ? '' : {_: :tr,
                      c: [{_: :td, class: :fromTo, c: tableCellFromTo},
                          {_: :td, c: tableCellTypes},
