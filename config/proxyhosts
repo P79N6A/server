@@ -1,5 +1,6 @@
-# for sites not providing RDF MIMEs and standard read/write interface,
-# use proxy presenting standard abstract interface to the client, implementing adaptors for nonconforming sites. ideally we wouldnt have to write any of these
+# mitmproxy -p 443 --mode reverse:http://localhost --set keep_host_header
+# standard SOLID/RDF-interface via request-time proxy. ideally we wouldnt have to write any, as standard-adoption would take over
+# but network-effects winner-take-all means fewer adaptors to implement
 
 # facebook
 0.0.0.0 facebook.com
@@ -15,6 +16,6 @@
 0.0.0.0 mobile.twitter.com
 0.0.0.0 www.twitter.com
 
-# URL machine-in-the-middle
+# URL shortener/obfuscators
 0.0.0.0 l.instagram.com
 0.0.0.0 t.co
