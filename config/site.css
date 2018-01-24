@@ -20,6 +20,8 @@ img.thumb            {max-width: 24em; max-height: 24em}
 table                {margin:auto}
 td                   {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid}
 td.fromTo            {max-width:20em}
+th a                 {font-weight: normal; font-size: 1.4em}
 table.links          {float: right}
-table.tree td        {vertical-align: bottom}
+table.tree           {border-spacing: 0;width: 100%}
+table.tree td        {padding:0}
 table.tree a         {display:block}
