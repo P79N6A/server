@@ -1,5 +1,5 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-.fromTo, .title, .label, table.links td.path {text-align:right}
+.fromTo, table.links td.path {text-align:right}
 a, table, td         {vertical-align: top}
 body                 {font-family: sans-serif; margin: 0 1em 0 1em}
 pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap}
@@ -13,7 +13,8 @@ a                    {text-decoration: none; font-weight: bold}
 a.date               {white-space: nowrap}
 a, a[name="this"]    {background-color: #000; color: #fff}
 a.label, [name]      {background-color: #fff; color: #000}
-a.thumb              {display: inline-block}
+a.thumb,a.title      {display: inline-block}
+a.title              {max-width: 42em}
 img                  {max-width: 100%}
 img.thumb            {max-width: 24em; max-height: 24em}
 .notes               {font-weight: normal; color: #bbb; font-size: .8em}
