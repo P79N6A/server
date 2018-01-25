@@ -55,6 +55,7 @@ class WebResource
       'tmp' => 'application/octet-stream',
       'ttl' => 'text/turtle',
       'u' => 'text/uri-list',
+      'webp' => 'image/webp',
       'woff' => 'application/font',
       'yaml' => 'text/plain',
     }
