@@ -60,6 +60,9 @@ class WebResource
 
       set = selectNodes
       return notfound if !set || set.empty?
+
+#      puts set.join ' '
+
       format = selectMIME
 
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
