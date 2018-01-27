@@ -50,11 +50,11 @@ class WebResource < RDF::URI
     Instagram = 'https://www.instagram.com/'
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
 
-    MITMhosts = %w{t.co tinyurl.com}
+    MITMhosts = %w{l.instagram.com t.co tinyurl.com}
 
   end
   module Webize
-    def triplrUriList based=nil
+    def triplrUriList rebase = false
       lines = open(localPath).readlines
       doc = stripDoc.uri
       base = stripDoc.basename
@@ -62,14 +62,15 @@ class WebResource < RDF::URI
       yield doc, Title, base
       yield doc, Size, lines.size
       yield doc, Date, mtime.iso8601
-      prefix = based ? "https://#{base}/" : ''
+      prefix = rebase ? "https://#{base}/" : ''
       lines.map{|line|
         t = line.chomp.split ' '
-        uri = prefix + t[0]
-        title = t[1..-1].join ' ' if t.size > 1
-        yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
-        yield uri, Title, title ? title : uri
-      }
+        unless t.empty?
+          uri = prefix + t[0]
+          title = t[1..-1].join ' ' if t.size > 1
+          yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
+          yield uri, Title, title ? title : uri
+        end}
     end
   end
 end
