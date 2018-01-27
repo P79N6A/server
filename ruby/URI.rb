@@ -49,6 +49,9 @@ class WebResource < RDF::URI
     Twitter = 'https://twitter.com'
     Instagram = 'https://www.instagram.com/'
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
+
+    MITMhosts = %w{t.co tinyurl.com}
+
   end
   module Webize
     def triplrUriList based=nil
