@@ -16,17 +16,17 @@ document.addEventListener("DOMContentLoaded", function(){
     var first = null;
     var last = null;
 
-    // link selection-ring
+    // construct selection-ring
     document.querySelectorAll('[id]').map(function(e){
 	if(!first)
 	    first = this;	
-	if(last){ // link
+	if(last){ // link to prior
 	    this.attr('prev',last.attr('id'));
 	    last.attr('next',this.attr('id'));
 	};
 	last = this;
     });
-    if(first && last){ // round the ring
+    if(first && last){ // connect the ends
 	last.attr('next',first.attr('id'));
 	first.attr('prev',last.attr('id'));
     };
@@ -69,20 +69,20 @@ document.addEventListener("DOMContentLoaded", function(){
 	};
 
 	if(e.getModifierState("Shift")) {
-	    if(key==37) // page [left]
+	    if(key==37) // [shift-left] previous page
 		gotoLink('prev');
-	    if(key==39) // page [right]
+	    if(key==39) // [shift-right] next page
 		gotoLink('next');
-	    if(key==38) // [up] to container
+	    if(key==38) // [shift-up] up to parent
 		gotoLink('up');
-	    if(key==40) // [down] to children
+	    if(key==40) // [shift-down] show children
 		gotoLink('down');
 	} else {
-	    if(key==38 || key==80) // [up] [p]revious
+	    if(key==80) // [p]revious link
 		selectPrevLink();
-	    if(key==40 || key==78) // [down] [n]ext
+	    if(key==78) // [n]ext link
 		selectNextLink();
-	    if(key==83) // [s]ort
+	    if(key==83) // [s]ort items
 		gotoLink('sort');
 	};
     },false);
