@@ -50,6 +50,7 @@ class WebResource < RDF::URI
     Instagram = 'https://www.instagram.com/'
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
 
+    #TODO dynamic list from .conf/proxyhosts
     MITMhosts = %w{l.instagram.com t.co tinyurl.com}
 
   end

@@ -122,16 +122,28 @@ class WebResource
 end
 
 class String
-  # text -> HTML. also a triplr yielding RDF to supplied block
-  # '(' required to capture ')', <> and ()-wrapping stripped, comma or period after URI not captured
+  # text -> HTML + (rel,href) tuple
+  # "(" required to capture ")", <> or () wrap stripped, trailing [,.] not captured
   def hrefs &blk
     pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') +    # escaped pre-match
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # pre-match
       (link.empty? && '' ||
-       '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' + # HTML link
-       (yield(link.match(/(gif|jpg|jpeg|jpg:large|png|webp)$/i) ? R::Image : (link.match(/(youtube.com|(mkv|mp4|webm)$)/i) ? R::Video : R::Link), link.R) if blk; '') + # RDF link
+       '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' +
+       (resource = link.R
+        if blk && !(R::MITMhosts.member? resource.host) # TODO resolve original link of shortlink rehosts in background thread
+          type = case link
+                 when /(gif|jpg|jpeg|jpg:large|png|webp)$/i
+                   R::Image
+                 when /(youtube.com|(mkv|mp4|webm)$)/i
+                   R::Video
+                 else
+                   R::Link
+                 end
+          yield type, resource
+        end
+        '') +
        '</a>') +
-      (post.empty? && '' || post.hrefs(&blk)) # again on tail
+      (post.empty? && '' || post.hrefs(&blk)) # post-match recursion
   end
 end
 
