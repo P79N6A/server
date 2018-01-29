@@ -51,7 +51,7 @@ class WebResource < RDF::URI
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
 
     #TODO dynamic list from .conf/proxyhosts
-    MITMhosts = %w{l.instagram.com t.co tinyurl.com}
+    MITMhosts = %w{i-ne.ws l.instagram.com t.co tinyurl.com}
 
   end
   module Webize
