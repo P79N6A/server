@@ -26,6 +26,7 @@ class WebResource
           curMtime = response.last_modified || Time.now rescue Time.now
           etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag value
           mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified value
+          # TODO cache status for 301 moved-permanently link-maintenance. entire header to RDF?
           resp = response.read
           unless body.e && body.readFile == resp
             body.writeFile resp # new cached body
