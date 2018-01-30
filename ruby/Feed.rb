@@ -231,6 +231,7 @@ class WebResource
                 rel = e[1].match reRel
                 rel = rel ? rel[1] : 'link'
                 o = (@base.join url[2]).R
+                # TODO Cache media
                 p = case o.ext.downcase
                     when 'jpg'
                       R::Image
