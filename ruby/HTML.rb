@@ -52,7 +52,7 @@ class WebResource
       @r[:label] ||= {}
       @r[:Links] ||= {}
       htmlGrep graph, q['q'] if q['q']
-      if q.has_key?('1')
+      if q.has_key?('1') # merge properties to one resource
         resources  = graph.values
         resources.map{|re|
           re.map{|p,o|
@@ -66,17 +66,20 @@ class WebResource
       end
       query = q['q'] || q['f']
       title = @r[:title] || [*path.split('/'), query].join(' ')
-      useGrep = path.split('/').size > 3 # search-provider suggestion
-      link = -> name,icon {@r[:Links][name].do{|l| l.R.data({id: name, label: icon})}}
-      css = %w{icons site}
-      css.push 'code' if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
+      grep = path.split('/').size > 3 # search-provider default
+      css = -> s {{_: :style, c: ["\n",
+                  ".conf/#{s}.css".R.readFile]}}
+      cssFiles = [:icons]
+      cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
+      link = -> name,icon {
+        @r[:Links][name].do{|uri|
+          uri.R.data({id: name, label: icon})}}
 
       HTML.render ["<!DOCTYPE html>\n",
                    {_: :html,
                     c: [{_: :head,
                          c: [{_: :meta, charset: 'utf-8'}, {_: :title, c: title}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                             css.map{|s|
-                               {_: :style, c: ".conf/#{s}.css".R.readFile}},
+                             css['site'],
                              @r[:Links].do{|links|
                                links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}}]},
@@ -87,11 +90,12 @@ class WebResource
                              path!='/' && {class: :search,
                                            c: {_: :form,
                                                c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
-                                                   {_: :input, id: :searchbox, name: useGrep ? 'q' : 'f',
-                                                    placeholder: useGrep ? :grep : :find
+                                                   {_: :input, id: :searchbox, name: grep ? 'q' : 'f',
+                                                    placeholder: grep ? :grep : :find
                                                    }.update(query ? {value: query} : {})]}},
                              {_: :style,
-                              c: [q.has_key?('bright') ? "body {background-color: #fff; color: #000}\n" : "body {background-color: #000; color: #fff}\n",
+                              c: ["\n",
+                                  q.has_key?('bright') ? "body {background-color: #fff; color: #000}\n" : "body {background-color: #000; color: #fff}\n",
                                   @r[:label].map{|name,_|
                                     color = '#%06x' % (rand 16777216)
                                     "[name=\"#{name}\"] {background-color: #{color}}\n"}]},
@@ -101,8 +105,8 @@ class WebResource
                                           {_: :tr,
                                            c: [{_: :td, c: k},
                                                {_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}}}],
-                             {_: :script, c: '.conf/site.js'.R.readFile}
-                            ]}]}]
+                             cssFiles.map{|f|css[f]}, "\n",
+                             {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}]}]}]
     end
 
     def nokogiri

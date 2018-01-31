@@ -14,7 +14,7 @@ class WebResource
         c: [{_: :tbody,
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.
                send(direction).map{|r|
-               r.R.environment(@r).tableRow p,direction,keys unless r.keys==%w{uri}}},
+               r.R.environment(@r).tableRow p,direction,keys unless r.keys==%w{uri}}}, "\n",
             {_: :tr, c: [From,Type,'uri',*keys,DC+'cache',Date,Size].map{|k| # header row
                selection = p == k
                q_ = q.merge({'sort' => k})
@@ -24,25 +24,26 @@ class WebResource
                  q_['ascending'] = ''
                end
                href = CGI.escapeHTML HTTP.qs q_
-               {_: :th, property: k, class: selection ? 'selected' : '',
-                c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
-                    (selection ? {_: :link, rel: :sort, href: href} : '')]}}}]},
-       {_: :style, c: "[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]
+               [{_: :th, property: k, class: selection ? 'selected' : '',
+                 c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
+                     (selection ? {_: :link, rel: :sort, href: href} : '')]}, "\n"]}}]},
+       {_: :style, c: "\n[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]
     end
 
     def tableRow sort,direction,keys
       hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty? && self[Link].empty?
-      hidden ? '' : {_: :tr,
-                     c: [{_: :td, class: :fromTo, c: tableCellFromTo},
-                         {_: :td, c: tableCellTypes},
-                         {_: :td, c: tableCellMain},
-                         keys.map{|k|
-                           {_: :td, property: k,
-                            c: self[k].map{|v|
-                              v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}},
-                         {_: :td, c: tableCellCache},
-                         {_: :td, c: tableCellDate},
-                         {_: :td, c: tableCellSize}]}
+      hidden ? '' : [{_: :tr,
+                      c: ["\n",
+                          {_: :td, class: :fromTo, c: tableCellFromTo}, "\n",
+                          {_: :td, c: tableCellTypes}, "\n",
+                          {_: :td, c: tableCellMain}, "\n",
+                          keys.map{|k|
+                            [{_: :td, property: k,
+                              c: self[k].map{|v|
+                                v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}, "\n"]},
+                          {_: :td, c: tableCellCache}, "\n",
+                          {_: :td, c: tableCellDate}, "\n",
+                          {_: :td, c: tableCellSize}]},"\n"]
     end
 
     def tableCellMain
