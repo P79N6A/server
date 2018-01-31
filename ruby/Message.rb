@@ -1,5 +1,7 @@
 class WebResource
+
   module HTML
+
     def tableCellFromTo
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
@@ -43,5 +45,7 @@ class WebResource
            end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse(' &rarr; '),
        self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]
     end
+
   end
+
 end

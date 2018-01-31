@@ -1,6 +1,7 @@
 class WebResource
-  # basic metadata - DC etc
+  # basic metadata
   module HTML
+
     def tableCellTitle
       self[Title].compact.map{|t|
         meta = {id: inDoc ? fragment : 'r'+sha2,
@@ -73,5 +74,7 @@ class WebResource
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
       {_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath
     end
+
   end
+
 end

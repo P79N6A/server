@@ -79,8 +79,7 @@ class WebResource
                                {_: :style, c: ".conf/#{s}.css".R.readFile}},
                              @r[:Links].do{|links|
                                links.map{|type,uri|
-                                 {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                             {_: :script, c: '.conf/site.js'.R.readFile}]},
+                                 {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}}]},
                         {_: :body,
                          c: [link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
                              {class: :scroll, c: (htmlTree graph)},
@@ -101,7 +100,9 @@ class WebResource
                                        {_: :table, class: :env, c: @r.map{|k,vs|
                                           {_: :tr,
                                            c: [{_: :td, c: k},
-                                               {_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}}}]]}]}]
+                                               {_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}}}],
+                             {_: :script, c: '.conf/site.js'.R.readFile}
+                            ]}]}]
     end
 
     def nokogiri
