@@ -56,15 +56,8 @@ class WebResource < RDF::URI
   end
   module Webize
     def triplrUriList rebase = false
-      lines = open(localPath).readlines
-      doc = stripDoc.uri
-      base = stripDoc.basename
-      yield doc, Type, R[Stat+'UriList']
-      yield doc, Title, base
-      yield doc, Size, lines.size
-      yield doc, Date, mtime.iso8601
-      prefix = rebase ? "https://#{base}/" : ''
-      lines.map{|line|
+      prefix = rebase ? "https://#{stripDoc.basename}/" : ''
+      (open localPath).readlines.map{|line|
         t = line.chomp.split ' '
         unless t.empty?
           uri = prefix + t[0]
