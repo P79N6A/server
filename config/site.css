@@ -1,28 +1,28 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-.fromTo, table.links td.path {text-align:right}
-a, table, td         {vertical-align: top}
-body                 {font-family: sans-serif; margin: 0 1em 0 1em}
-pre,.monospace       {font-family: monospace; margin: 0; white-space: pre-wrap}
-pre                  {min-width:80ex; max-width: 168ex; overflow: hidden}
 #up,#down,#prev,#next{font-size: 2.4em}
-#up                  {display:block}
-#prev,#next          {position: fixed; bottom: 1em}
-#prev                {left: 0}
-#next                {right: 0}
-a                    {text-decoration: none; font-weight: bold}
-a.date               {white-space: nowrap}
-a, a[name="this"]    {background-color: #000; color: #fff}
-a.label, [name]      {background-color: #fff; color: #000}
-a.thumb,a.title      {display: inline-block}
-a.title              {max-width: 42em}
-img                  {max-width: 100%}
-img.thumb            {max-width: 24em; max-height: 24em}
-.notes               {font-weight: normal; color: #bbb; font-size: .8em}
-table                {margin:auto}
-td                   {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid}
-td.fromTo            {max-width:20em}
-th a                 {font-weight: normal; font-size: 1.4em}
-table.links          {float: right}
-table.tree           {border-spacing: 0;width: 100%}
-table.tree td        {padding:0}
-table.tree a         {display:block}
+#up             {display:block}
+#prev,#next     {position: fixed; bottom: 1em}
+#prev           {left: 0}
+#next           {right: 0}
+a, table, td    {vertical-align: top}
+body            {font-family: sans-serif; margin: 0 1em 0 1em}
+pre,.monospace  {font-family: monospace; margin: 0; white-space: pre-wrap}
+pre             {min-width:80ex; max-width: 168ex; overflow: hidden}
+a               {text-decoration: none; font-weight: bold}
+a.date          {white-space: nowrap}
+a,a[name="this"]{background-color: #000; color: #fff}
+a.label, [name] {background-color: #fff; color: #000}
+a.thumb,a.title {display: inline-block}
+a.title         {max-width: 42em}
+img             {max-width: 100%}
+img.thumb       {max-width: 24em; max-height: 24em}
+.fromTo,td.path {text-align:right}
+.notes          {font-weight: normal; color: #bbb; font-size: .8em}
+table           {margin:auto}
+td              {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid}
+td.fromTo       {max-width:20em}
+th a            {font-weight: normal; font-size: 1.4em}
+table.links     {float: right}
+table.tree      {border-spacing: 0;width: 100%}
+table.tree td   {padding:0}
+table.tree a    {display:block}
