@@ -1,6 +1,20 @@
 # coding: utf-8
 class WebResource
   module HTML
+    # non-base non-hidden types are assigned their own column
+
+    # types used/shown in default tabular layout
+    InlineMeta = ['uri', Title, Image, Video, Abstract, From, To, Size, Date, Type, Content, Label,
+                  DC+'cache', DC+'link', DC+'note', DC+'hasFormat',
+                  Atom+'link', RSS+'link', RSS+'guid',
+                  SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
+
+    # types hidden unless verbose
+    VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
+                   RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
+                   SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies',
+                   Mtime, Podcast+'explicit', Podcast+'summary', Comments,
+                   "http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
 
     def htmlTable graph
       (1..10).map{|i|@r[:label]["quote"+i.to_s] = true} # labels

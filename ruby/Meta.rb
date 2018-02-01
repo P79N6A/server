@@ -42,6 +42,8 @@ class WebResource
         {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
     end
 
+    LinkPred = [DC+'link', SIOC+'attachment', Stat+'contains', Atom+'link', RSS+'link']
+
     def tableCellLinks
       links = LinkPred.map{|p|self[p]}.flatten.compact.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
       {_: :table, class: :links,

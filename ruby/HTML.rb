@@ -1,6 +1,7 @@
 # coding: utf-8
 class WebResource
   module HTML
+    # recursive renderer
     def self.render x
       case x
       when String
@@ -31,10 +32,8 @@ class WebResource
         CGI.escapeHTML x.to_s
       end
     end
+
     include URIs
-    InlineMeta = ['uri', Title, Image, Video, Abstract, From, To, Size, Date, Type, Content, Label, DC+'cache', DC+'link', DC+'note', Atom+'link', RSS+'link', RSS+'guid', DC+'hasFormat', SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-    VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate', SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies', Mtime, Podcast+'explicit', Podcast+'summary', Comments,"http://rssnamespace.org/feedburner/ext/1.0#origLink","http://purl.org/syndication/thread/1.0#total","http://search.yahoo.com/mrss/content"]
-    LinkPred = [SIOC+'attachment',Stat+'contains',Atom+'link',RSS+'link',DC+'link']
 
     def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type}
       html = Nokogiri::HTML.fragment body
