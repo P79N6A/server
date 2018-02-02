@@ -127,7 +127,7 @@ end
 
 class String
   # text -> HTML + (rel,href) tuple
-  # "(" required to capture ")", <> or () wrap stripped, trailing [,.] not captured
+  # <> or () URL wrapping stripped, trailing [,.] not captured
   def hrefs &blk
     pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # pre-match

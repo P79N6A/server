@@ -9,7 +9,7 @@ class WebResource
       #puts "ln #{path} #{n.path}"
       FileUtils.ln   node.expand_path, n.node.expand_path
     end
-    #TODO relative_path_from so db (fs tree) can support multiple concurrent mountpoints
+    #TODO relative_path_from for multiple concurrent OS mountpoints
     # symlink fs-nodes
     def ln_s n
       #puts "ln -s #{path} #{n.path}"
