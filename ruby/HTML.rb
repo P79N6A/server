@@ -94,7 +94,6 @@ class WebResource
                                                    }.update(query ? {value: query} : {})]}},
                              {_: :style,
                               c: ["\n",
-                                  q.has_key?('bright') ? "body {background-color: #fff; color: #000}\n" : "body {background-color: #000; color: #fff}\n",
                                   @r[:label].map{|name,_|
                                     color = '#%06x' % (rand 16777216)
                                     "[name=\"#{name}\"] {background-color: #{color}}\n"}]},

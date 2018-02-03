@@ -5,7 +5,7 @@
 #prev           {left: 0}
 #next           {right: 0}
 a, table, td    {vertical-align: top}
-body            {font-family: sans-serif; margin: 0 1em 0 1em}
+body            {font-family: sans-serif; margin: 0 1em 0 1em;background-color: #000; color: #fff}
 pre,.monospace  {font-family: monospace; margin: 0; white-space: pre-wrap}
 pre             {min-width: 24em; max-width: 168ex; overflow: hidden}
 a               {text-decoration: none; font-weight: bold}
