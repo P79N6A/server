@@ -44,6 +44,20 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
+    def self.kv hash
+      {_: :table, class: :env, c: hash.map{|k,vs|
+         {_: :tr,
+          c: [{_: :td, c: ["\n",k]},
+              {_: :td, c: ["\n ", vs.justArray.map{|v|
+                             if v.class==Hash
+                               kv v
+                             else
+                               CGI.escapeHTML v.to_s
+                             end
+                           }.intersperse(' ')]}]}
+       }}
+    end
+
     def htmlDocument graph = {}
       empty = graph.empty?
       @r ||= {}
@@ -107,11 +121,7 @@ class WebResource
                                     "[name=\"#{name}\"] {background-color: #{color}}\n"}]}, "\n",
                              !empty && link[:down, '&#9660;'], "\n",
                              empty && [{_: :a, id: :nope, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname}, "\n",
-                                       {_: :table, class: :env, c: @r.map{|k,vs|
-                                          {_: :tr,
-                                           c: [{_: :td, c: ["\n",k]},
-                                               {_: :td, c: ["\n ", vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')]}]}
-                                        }},"\n"],
+                                       HTML.kv(@r),"\n"],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}]}]}]
     end
