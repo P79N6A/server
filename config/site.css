@@ -20,10 +20,11 @@ p               {max-width: 80ex}
 .fromTo,td.path {text-align:right}
 .notes          {font-weight: normal; color: #bbb; font-size: .8em}
 table           {margin:auto}
-td              {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid}
+td              {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid;padding:0}
 td.fromTo       {max-width:20em}
 th a            {font-weight: normal; font-size: 1.4em}
 table.links     {float: right}
 table.tree      {border-spacing: 0;width: 100%}
-table.tree td   {padding:0}
 table.tree a    {display:block}
+table.kv        {border-width: .08em 0 .08em 0;border-style: solid;border-color: white;margin:0}
+table.kv td:first-child {font-weight: bold; text-align:right;white-space: nowrap}

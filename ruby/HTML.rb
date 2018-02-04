@@ -45,7 +45,7 @@ class WebResource
     end
 
     def self.kv hash
-      {_: :table, class: :env, c: hash.map{|k,vs|
+      {_: :table, class: :kv, c: hash.map{|k,vs|
          {_: :tr,
           c: [{_: :td, c: ["\n",k]},
               {_: :td, c: ["\n ", vs.justArray.map{|v|
