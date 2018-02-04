@@ -7,7 +7,7 @@
 a, table, td    {vertical-align: top}
 body            {font-family: sans-serif; margin: 0 1em 0 1em;background-color: #000; color: #fff}
 pre,.monospace  {font-family: monospace; margin: 0; white-space: pre-wrap}
-pre             {min-width: 24em; max-width: 168ex; overflow: hidden}
+pre             {min-width: 80ex; max-width: 168ex; overflow: hidden}
 a               {text-decoration: none; font-weight: bold}
 a.date          {white-space: nowrap}
 a,a[name="this"]{background-color: #000; color: #fff}
@@ -26,5 +26,5 @@ th a            {font-weight: normal; font-size: 1.4em}
 table.links     {float: right}
 table.tree      {border-spacing: 0;width: 100%}
 table.tree a    {display:block}
-table.kv        {border-width: .08em 0 .08em 0;border-style: solid;border-color: white;margin:0}
+table.kv        {border-width: .1em 0 .1em 0;border-style: solid;border-color: #aaa;margin:0}
 table.kv td:first-child {font-weight: bold; text-align:right;white-space: nowrap}

@@ -44,20 +44,6 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    def self.kv hash
-      {_: :table, class: :kv, c: hash.map{|k,vs|
-         {_: :tr,
-          c: [{_: :td, c: ["\n",k]},
-              {_: :td, c: ["\n ", vs.justArray.map{|v|
-                             if v.class==Hash
-                               kv v
-                             else
-                               CGI.escapeHTML v.to_s
-                             end
-                           }.intersperse(' ')]}]}
-       }}
-    end
-
     def htmlDocument graph = {}
       empty = graph.empty?
       @r ||= {}
@@ -78,7 +64,7 @@ class WebResource
           graph.delete re.uri unless re.uri == '' }
       end
       query = q['q'] || q['f']
-      title = @r[:title] || [*path.split('/'), query].join(' ')
+      title = @r[:title] || [*path.split('/'), query].map{|e|e && URI.unescape(e)}.join(' ')
       grep = path.split('/').size > 3 # search-provider default
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}

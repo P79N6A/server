@@ -1,6 +1,23 @@
 class WebResource
   # basic metadata
+
   module HTML
+    def self.kv hash
+      {_: :table, class: :kv,
+       c: hash.map{|k,vs|
+         {_: :tr,
+          c: [{_: :td, c: ["\n", k]},
+              {_: :td, c: ["\n ",
+                           vs.justArray.map{|v|
+                             if v.class==Hash
+                               kv v
+                             elsif k=='QUERY_STRING'
+                               kv R['?'+v].q
+                             else
+                               CGI.escapeHTML v.to_s
+                             end
+                           }.intersperse(' ')]}]}}}
+    end
 
     def tableCellTitle
       self[Title].compact.map{|t|
