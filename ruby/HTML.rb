@@ -108,11 +108,10 @@ class WebResource
                              !empty && link[:down, '&#9660;'], "\n",
                              empty && [{_: :a, id: :nope, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname}, "\n",
                                        {_: :table, class: :env, c: @r.map{|k,vs|
-                                          ["\n",
-                                           {_: :tr,
-                                            c: [{_: :td, c: k},"\n     ",
-                                                {_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}]
-                                        }}],
+                                          {_: :tr,
+                                           c: [{_: :td, c: ["\n",k]},
+                                               {_: :td, c: ["\n ", vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')]}]}
+                                        }},"\n"],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}]}]}]
     end
