@@ -4,6 +4,13 @@ end
 class WebResource
   module POSIX
 
+    def self.splitArgs args
+      args.shellsplit
+    rescue
+      puts "shell tokenization failed: #{args}"
+      args.split(/\W/)
+    end
+
     # link fs-nodes
     def ln n
       #puts "ln #{path} #{n.path}"
@@ -80,7 +87,7 @@ class WebResource
     # URI -> storage path
     def localPath; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
 
-    # Pathname object
+    # Pathname
     def node; @node ||= (Pathname.new localPath) end
 
     # shell-escaped path
@@ -133,7 +140,7 @@ class WebResource
 
     # pattern -> file(s)
     def grep q
-      args = q.shellsplit
+      args = POSIX.splitArgs q
       case args.size
       when 0
         return []
@@ -194,7 +201,7 @@ class WebResource
     # TODO change multi-arg handling (|| to &&)
     def htmlGrep graph, q
       wordIndex = {}
-      args = q.shellsplit
+      args = POSIX.splitArgs q
       args.each_with_index{|arg,i| wordIndex[arg] = i }
       pattern = /(#{args.join '|'})/i
       # find matches
