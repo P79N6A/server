@@ -104,13 +104,15 @@ class WebResource
                               c: ["\n",
                                   @r[:label].map{|name,_|
                                     color = '#%06x' % (rand 16777216)
-                                    "[name=\"#{name}\"] {background-color: #{color}}\n"}]},
-                             !empty && link[:down, '&#9660;'],
-                             empty && [{_: :a, id: :nope, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname},
+                                    "[name=\"#{name}\"] {background-color: #{color}}\n"}]}, "\n",
+                             !empty && link[:down, '&#9660;'], "\n",
+                             empty && [{_: :a, id: :nope, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname}, "\n",
                                        {_: :table, class: :env, c: @r.map{|k,vs|
-                                          {_: :tr,
-                                           c: [{_: :td, c: k},
-                                               {_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}}}],
+                                          ["\n",
+                                           {_: :tr,
+                                            c: [{_: :td, c: k},"\n     ",
+                                                {_: :td, c: vs.justArray.map{|v|CGI.escapeHTML v.to_s}.intersperse(' ')}]}]
+                                        }}],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}]}]}]
     end
