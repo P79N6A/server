@@ -107,7 +107,7 @@ class WebResource
                                     "[name=\"#{name}\"] {background-color: #{color}}\n"}]}, "\n",
                              !empty && link[:down, '&#9660;'], "\n",
                              empty && [{_: :a, id: :nope, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname}, "\n",
-                                       HTML.kv(@r),"\n"],
+                                       HTML.kv(@r.update({'HTTP_ACCEPT' => acceptedMIMEs, 'QUERY_STRING' => q})),"\n"],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}]}]}]
     end

@@ -9,11 +9,9 @@ class WebResource
           c: [{_: :td, c: ["\n", k]},
               {_: :td, c: ["\n ",
                            vs.justArray.map{|v|
-                             if v.class==Hash
-                               kv v
-                             elsif k=='QUERY_STRING'
-                               kv R['?'+v].q
-                             else
+                             if v.class == Hash
+                               kv v # another kv hash
+                             else # terminal node
                                CGI.escapeHTML v.to_s
                              end
                            }.intersperse(' ')]}]}}}

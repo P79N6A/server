@@ -187,19 +187,23 @@ class WebResource
       p.e && p.entity(@r) || notfound
     end
 
+    # env -> MIMEs indexed on q-val
+    def acceptedMIMEs k = 'HTTP_ACCEPT'
+      index = {}
+      @r[k].do{|v|
+        (v.split /,/).map{|e| # (MIME,q) tuples
+          format, q = e.split /;/ # this pair
+          i = q && q.split(/=/)[1].to_f || 1.0 # q or default
+          index[i]||=[]; index[i].push format.strip}} # index q-val
+      index
+    end
+
     # env -> MIME
     def selectMIME
       return 'application/atom+xml' if q.has_key?('feed')
-      index = {}
-      @r['HTTP_ACCEPT'].do{|k|
-        (k.split /,/).map{|e| # (MIME,q) pairs
-          format, q = e.split /;/      # pair
-          i = q && q.split(/=/)[1].to_f || 1.0 # q-value with default
-          index[i] ||= []
-          index[i].push format.strip}} # indexed q-vals
-       index.sort.reverse.map{|q,formats| # order index
-        formats.map{|mime| # formats tied at q-val. return first serializable
-          return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}} # serializable
+      acceptedMIMEs.sort.reverse.map{|q,formats| # sorted index, highest qval first
+        formats.map{|mime| # formats at q-value
+          return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}} # terminate if serializable
       'text/html' # default
     end
 
