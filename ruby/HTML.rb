@@ -65,7 +65,6 @@ class WebResource
       end
       query = q['q'] || q['f']
       title = @r[:title] || [*path.split('/'), query].map{|e|e && URI.unescape(e)}.join(' ')
-      grep = path.split('/').size > 3 # search-provider default
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
@@ -94,12 +93,6 @@ class WebResource
                              link[:next, '&#9654;'], "\n",
                              {class: :scroll, c: (htmlTree graph)},
                              !empty && (htmlTable graph),
-                             path!='/' && {class: :search,
-                                           c: {_: :form,
-                                               c: [{_: :a, id: :query, class: :find, href: (query ? '?head' : '') + '#searchbox' },
-                                                   {_: :input, id: :searchbox, name: grep ? 'q' : 'f',
-                                                    placeholder: grep ? :grep : :find
-                                                   }.update(query ? {value: query} : {})]}},
                              {_: :style,
                               c: ["\n",
                                   @r[:label].map{|name,_|

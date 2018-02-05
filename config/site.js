@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	first.attr('prev',last.attr('id'));
     };
 
-    // keyboard navigation
+    // keyboard control
     document.addEventListener("keydown",function(e){
 	var key = e.keyCode;
 	var selectNextLink = function(){
@@ -85,9 +85,5 @@ document.addEventListener("DOMContentLoaded", function(){
 	    if(key==83) // [s]ort items
 		gotoLink('sort');
 	};
-    },false);
-    document.querySelector('form > input').addEventListener("keydown",function(e){
-	if(e.keyCode != 38 && e.keyCode != 40)
-	    e.stopPropagation();
     },false);
 }, false);
