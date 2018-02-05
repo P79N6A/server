@@ -33,8 +33,8 @@ class WebResource
                  parts[1]
                elsif a SIOC+'ChatLog'
                  CGI.unescape(basename).split('#')[0]
-               elsif inDoc && !fragment
-                 'this'
+               elsif inDoc && !fragment # doc itself
+                 nil
                elsif uri[-1] == '/'
                  'dirname'
                end

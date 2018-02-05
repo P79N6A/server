@@ -19,7 +19,7 @@ p             {max-width: 80ex}
 .fromTo,.path {text-align:right}
 .notes        {font-weight: normal; color: #bbb; font-size: .8em}
 body > table  {margin:auto}
-td            {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid;padding:0}
+td            {border: .08em solid #222}
 td.fromTo     {max-width:20em}
 th a          {font-weight: normal; font-size: 1.4em}
 table.links   {float: right}
