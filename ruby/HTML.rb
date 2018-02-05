@@ -106,11 +106,10 @@ class WebResource
                                     color = '#%06x' % (rand 16777216)
                                     "[name=\"#{name}\"] {background-color: #{color}}\n"}]}, "\n",
                              !empty && link[:down, '&#9660;'], "\n",
-                             empty && [{_: :a, id: :nope, style: "color:#{'#%06x' % (rand 16777216)}", c: 404, href: dirname}, "\n",
-                                       HTML.kv(@r.update({'HTTP_ACCEPT' => accept,
-                                                          'HTTP_ACCEPT_ENCODING' => (accept 'HTTP_ACCEPT_ENCODING'),
-                                                          'HTTP_ACCEPT_LANGUAGE' => (accept 'HTTP_ACCEPT_LANGUAGE'),
-                                                          'QUERY_STRING' => q})),"\n"],
+                             empty && HTML.kv(@r.dup.update({'HTTP_ACCEPT' => accept,
+                                                             'HTTP_ACCEPT_ENCODING' => (accept 'HTTP_ACCEPT_ENCODING'),
+                                                             'HTTP_ACCEPT_LANGUAGE' => (accept 'HTTP_ACCEPT_LANGUAGE'),
+                                                             'QUERY_STRING' => q})),
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}]}]}]
     end
