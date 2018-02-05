@@ -29,18 +29,22 @@ class WebResource
              c: graph.values.sort_by{|s|((p=='uri' ? (s[Title]||s[Label]||s.uri) : s[p]).justArray[0]||0).send datatype}.
                send(direction).map{|r|
                r.R.environment(@r).tableRow p,direction,keys unless r.keys==%w{uri}}}, "\n",
-            {_: :tr, c: [From,Type,'uri',*keys,DC+'cache',Date,Size].map{|k| # header row
-               selection = p == k
-               q_ = q.merge({'sort' => k})
-               if direction == :id # direction toggle
-                 q_.delete 'ascending'
-               else
-                 q_['ascending'] = ''
-               end
-               href = CGI.escapeHTML HTTP.qs q_
-               [{_: :th, property: k, class: selection ? 'selected' : '',
-                 c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
-                     (selection ? {_: :link, rel: :sort, href: href} : '')]}, "\n"]}}]}, "\n",
+            {_: :tr,
+             c: [[From,Type,'uri',*keys,DC+'cache',Date,Size].map{|k| # header row
+                   selection = p == k
+                   q_ = q.merge({'sort' => k})
+                   if direction == :id # direction toggle
+                     q_.delete 'ascending'
+                   else
+                     q_['ascending'] = ''
+                   end
+                   href = CGI.escapeHTML HTTP.qs q_
+                   ["\n  ",
+                    {_: :th, property: k, class: selection ? 'selected' : '',
+                     c: ["\n    ", {_: :a,class: Icons[k]||'', href: href, c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
+                         (selection ? {_: :link, rel: :sort, href: href} : '')]}]}, "\n"]
+            }, "\n",
+           ]}, "\n",
        {_: :style, c: "\n[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}\n"}]
     end
 
@@ -57,7 +61,7 @@ class WebResource
                                 v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}, "\n  "]},
                           {_: :td, c: tableCellCache}, "\n  ",
                           {_: :td, c: tableCellDate}, "\n  ",
-                          {_: :td, c: tableCellSize}]}]
+                          {_: :td, c: tableCellSize}, "\n"]}]
     end
 
     def tableCellMain
