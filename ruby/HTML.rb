@@ -1,7 +1,6 @@
 # coding: utf-8
 class WebResource
   module HTML
-    # recursive renderer
     def self.render x
       case x
       when String
@@ -51,19 +50,8 @@ class WebResource
       @r[:label] ||= {}
       @r[:Links] ||= {}
       htmlGrep graph, q['q'] if q['q']
-      if q.has_key?('1') # merge properties to one resource
-        resources  = graph.values
-        resources.map{|re|
-          re.map{|p,o|
-            one = graph[''] ||= {'uri' => ''}
-            unless p=='uri'
-              one[p] ||= []
-              o.justArray.map{|o|
-                one[p].push o unless one[p].member?(o)}
-            end}
-          graph.delete re.uri unless re.uri == '' }
-      end
-      title = @r[:title] || [*path.split('/'), q['q'] , q['f']].map{|e|e && URI.unescape(e)}.join(' ')
+      title = @r[:title] ||
+              [*path.split('/'), q['q'] , q['f']].map{|e|e && URI.unescape(e)}.join(' ')
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]

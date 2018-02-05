@@ -1,6 +1,6 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 #up,#down,#prev,#next{font-size: 2.4em}
-#prev,#next   {position: fixed; bottom: 1em}
+#prev,#next   {position: fixed; bottom: .4em}
 body          {font-family: sans-serif; background-color: #000; color: #fff}
 pre,.monospace{font-family: monospace; margin: 0; white-space: pre-wrap}
 pre           {min-width: 80ex; max-width: 168ex; overflow: hidden}
