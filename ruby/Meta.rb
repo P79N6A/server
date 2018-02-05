@@ -73,6 +73,7 @@ class WebResource
          tld = links[0] && links[0].tld || 'none'
          traverse = links.size <= 16
          @r[:label][tld] = true
+         # TODO icon cache
          {_: :tr,
           c: [{_: :td, class: :path, colspan: host ? 1 : 2,
                c: links.map{|link|

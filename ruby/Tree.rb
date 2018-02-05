@@ -11,7 +11,7 @@ class WebResource
         uri.R.parts.map{|name| # path instructions
           c = c[name] ||= {}}} # create node and jump cursor
 
-      # renderer
+      # render function
       render = -> t,path='' {
         nodes = t.keys.sort - %w{msg}
         label = 'p'+path.sha2 if nodes.size > 1
