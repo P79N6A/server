@@ -6,8 +6,8 @@ class WebResource
       {_: :table, class: :kv,
        c: hash.map{|k,vs|
          {_: :tr,
-          c: [{_: :td, c: ["\n", k]},
-              {_: :td, c: ["\n ",
+          c: [{_: :td, class: :key, c: ["\n", k]},
+              {_: :td, class: :val, c: ["\n ",
                            vs.justArray.map{|v|
                              c = v.class
                              if c == Hash

@@ -1,30 +1,29 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 #up,#down,#prev,#next{font-size: 2.4em}
-#up             {display:block}
-#prev,#next     {position: fixed; bottom: 1em}
-#prev           {left: 0}
-#next           {right: 0}
-a, table, td    {vertical-align: top}
-body            {font-family: sans-serif; margin: 0 1em 0 1em;background-color: #000; color: #fff}
-pre,.monospace  {font-family: monospace; margin: 0; white-space: pre-wrap}
-pre             {min-width: 80ex; max-width: 168ex; overflow: hidden}
-a               {text-decoration: none; font-weight: bold}
-a.date          {white-space: nowrap}
-a,a[name="this"]{background-color: #000; color: #fff}
-a.label, [name] {background-color: #fff; color: #000}
-a.thumb,a.title {display: inline-block}
-a.title         {max-width: 42em}
-img             {max-width: 100%}
-img.thumb       {max-width: 24em; max-height: 24em}
-p               {max-width: 80ex}
-.fromTo,td.path {text-align:right}
-.notes          {font-weight: normal; color: #bbb; font-size: .8em}
-table           {margin:auto}
-td              {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid;padding:0}
-td.fromTo       {max-width:20em}
-th a            {font-weight: normal; font-size: 1.4em}
-table.links     {float: right}
-table.tree      {border-spacing: 0;width: 100%}
-table.tree a    {display:block}
-table.kv        {width: 100%; border-width: .1em 0 .1em 0;border-style: solid;border-color: #aaa;margin:0}
-table.kv td:first-child {font-weight: bold; text-align:right;white-space: nowrap}
+#up           {display:block}
+#prev,#next   {position: fixed; bottom: 1em}
+#prev         {left: 0}
+#next         {right: 0}
+a, table, td  {vertical-align: top}
+body          {font-family: sans-serif; margin: 0 1em 0 1em;background-color: #000; color: #fff}
+pre,.monospace{font-family: monospace; margin: 0; white-space: pre-wrap}
+pre           {min-width: 80ex; max-width: 168ex; overflow: hidden}
+a             {text-decoration: none; font-weight: bold}
+a.date        {white-space: nowrap}
+a             {background-color: #000; color: #fff}
+a.label,[name]{background-color: #fff; color: #000}
+a.title       {display: inline-block;max-width: 48em}
+img           {max-width: 100%}
+img.thumb     {max-width: 24em; max-height: 24em}
+p             {max-width: 80ex}
+.fromTo,.path {text-align:right}
+.notes        {font-weight: normal; color: #bbb; font-size: .8em}
+body > table  {margin:auto}
+td            {border-color:#223;border-width: 0 .08em .08em 0;border-style:solid;padding:0}
+td.fromTo     {max-width:20em}
+th a          {font-weight: normal; font-size: 1.4em}
+table.links   {float: right}
+table.tree    {border-spacing: 0;width: 100%}
+table.tree a  {display:block}
+table.kv .val {text-align: left}
+table.kv .key {font-weight: bold; text-align:right;white-space: nowrap}
