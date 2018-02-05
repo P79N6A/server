@@ -1,15 +1,10 @@
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 #up,#down,#prev,#next{font-size: 2.4em}
-#up           {display:block}
 #prev,#next   {position: fixed; bottom: 1em}
-#prev         {left: 0}
-#next         {right: 0}
 body          {font-family: sans-serif; background-color: #000; color: #fff}
 pre,.monospace{font-family: monospace; margin: 0; white-space: pre-wrap}
 pre           {min-width: 80ex; max-width: 168ex; overflow: hidden}
-a             {text-decoration: none; font-weight: bold}
-a.date        {white-space: nowrap}
-a             {background-color: #000; color: #fff}
+a             {text-decoration: none; font-weight: bold; background-color: #000; color: #fff}
 a.label,[name]{background-color: #fff; color: #000}
 a.title       {display: inline-block;max-width: 48em;padding: 0 .15em 0 .15em}
 img           {max-width: 100%}

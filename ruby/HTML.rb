@@ -68,9 +68,9 @@ class WebResource
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-      link = -> name,icon {
+      link = -> name,icon,style=nil {
         @r[:Links][name].do{|uri|
-          uri.R.data({id: name, label: icon})}}
+          uri.R.data({id: name, label: icon, style: style})}}
 
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
@@ -87,9 +87,9 @@ class WebResource
                             ].map{|e| ['  ',e,"\n"] }}, "\n\n",
                         {_: :body,
                          c: ["\n",
-                             link[:up, '&#9650;'], "\n",
-                             link[:prev, '&#9664;'], "\n",
-                             link[:next, '&#9654;'], "\n",
+                             link[:up, '&#9650;', 'display: block'], "\n",
+                             link[:prev, '&#9664;', 'left: 0'], "\n",
+                             link[:next, '&#9654;', 'right: 0'], "\n",
                              {class: :scroll, c: (htmlTree graph)},
                              !empty && (htmlTable graph),
                              {_: :style,
