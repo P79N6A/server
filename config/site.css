@@ -11,7 +11,7 @@ a             {text-decoration: none; font-weight: bold}
 a.date        {white-space: nowrap}
 a             {background-color: #000; color: #fff}
 a.label,[name]{background-color: #fff; color: #000}
-a.title       {display: inline-block;max-width: 48em}
+a.title       {display: inline-block;max-width: 48em;padding: 0 .15em 0 .15em}
 img           {max-width: 100%}
 img.thumb     {max-width: 24em; max-height: 24em}
 p             {max-width: 80ex}
