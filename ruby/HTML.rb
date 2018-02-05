@@ -63,8 +63,7 @@ class WebResource
             end}
           graph.delete re.uri unless re.uri == '' }
       end
-      query = q['q'] || q['f']
-      title = @r[:title] || [*path.split('/'), query].map{|e|e && URI.unescape(e)}.join(' ')
+      title = @r[:title] || [*path.split('/'), q['q'] , q['f']].map{|e|e && URI.unescape(e)}.join(' ')
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
