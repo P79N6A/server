@@ -188,7 +188,7 @@ class WebResource
     end
 
     # env -> MIMEs indexed on q-val
-    def acceptedMIMEs k = 'HTTP_ACCEPT'
+    def accept k = 'HTTP_ACCEPT'
       index = {}
       @r[k].do{|v|
         (v.split /,/).map{|e| # (MIME,q) tuples
@@ -201,7 +201,7 @@ class WebResource
     # env -> MIME
     def selectMIME
       return 'application/atom+xml' if q.has_key?('feed')
-      acceptedMIMEs.sort.reverse.map{|q,formats| # sorted index, highest qval first
+      accept.sort.reverse.map{|q,formats| # sorted index, highest qval first
         formats.map{|mime| # formats at q-value
           return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}} # terminate if serializable
       'text/html' # default

@@ -9,9 +9,16 @@ class WebResource
           c: [{_: :td, c: ["\n", k]},
               {_: :td, c: ["\n ",
                            vs.justArray.map{|v|
-                             if v.class == Hash
+                             c = v.class
+                             if c == Hash
                                kv v # another kv hash
-                             else # terminal node
+                             elsif c == TrueClass
+                               {_: :a, class: :check}
+                             elsif c == FalseClass
+                               {_: :a, class: :ban}
+                             elsif !([Fixnum,String].member? c)
+                               {_: :a, class: :cog, c: c}
+                             else
                                CGI.escapeHTML v.to_s
                              end
                            }.intersperse(' ')]}]}}}

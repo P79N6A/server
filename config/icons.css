@@ -19,6 +19,9 @@ a.textfile:before { content:"\f0f6"; font-family: icons; }
 a.textfileInverse:before { content:"\f15c"; font-family: icons; }
 a.markup:before { content:"\f1c9"; font-family: icons; }
 a.html:before { content:"\f13b"; font-family: icons; }
+a.cog:before { content:"\f013"; font-family: icons; }
+a.check:before { content:"\f00c"; font-family: icons; }
+a.ban:before { content:"\f05e"; font-family: icons; }
 a.archive:before { content:"\f019"; font-family: icons; }
 a.mailer:before { content:"\f2ba"; font-family: icons; }
 a.graph:before { content:"\f1e0"; font-family: icons; }

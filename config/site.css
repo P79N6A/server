@@ -26,5 +26,5 @@ th a            {font-weight: normal; font-size: 1.4em}
 table.links     {float: right}
 table.tree      {border-spacing: 0;width: 100%}
 table.tree a    {display:block}
-table.kv        {border-width: .1em 0 .1em 0;border-style: solid;border-color: #aaa;margin:0}
+table.kv        {width: 100%; border-width: .1em 0 .1em 0;border-style: solid;border-color: #aaa;margin:0}
 table.kv td:first-child {font-weight: bold; text-align:right;white-space: nowrap}
