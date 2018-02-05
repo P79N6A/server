@@ -40,24 +40,24 @@ class WebResource
                href = CGI.escapeHTML HTTP.qs q_
                [{_: :th, property: k, class: selection ? 'selected' : '',
                  c: [{_: :a,href: href,class: Icons[k]||'',c: Icons[k] ? '' : (k.R.fragment||k.R.basename)},
-                     (selection ? {_: :link, rel: :sort, href: href} : '')]}, "\n"]}}]},
-       {_: :style, c: "\n[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}"}]
+                     (selection ? {_: :link, rel: :sort, href: href} : '')]}, "\n"]}}]}, "\n",
+       {_: :style, c: "\n[property=\"#{p}\"] {border-color:#444;border-style: solid; border-width: 0 0 .08em 0}\n"}]
     end
 
     def tableRow sort,direction,keys
       hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty? && self[Link].empty?
-      hidden ? '' : [{_: :tr,
-                      c: ["\n",
-                          {_: :td, class: :fromTo, c: tableCellFromTo}, "\n",
-                          {_: :td, c: tableCellTypes}, "\n",
-                          {_: :td, c: tableCellMain}, "\n",
+      hidden ? '' : ["\n", {_: :tr,
+                      c: ["\n  ",
+                          {_: :td, class: :fromTo, c: tableCellFromTo}, "\n  ",
+                          {_: :td, c: tableCellTypes}, "\n  ",
+                          {_: :td, c: tableCellMain}, "\n  ",
                           keys.map{|k|
                             [{_: :td, property: k,
                               c: self[k].map{|v|
-                                v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}, "\n"]},
-                          {_: :td, c: tableCellCache}, "\n",
-                          {_: :td, c: tableCellDate}, "\n",
-                          {_: :td, c: tableCellSize}]},"\n"]
+                                v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}, "\n  "]},
+                          {_: :td, c: tableCellCache}, "\n  ",
+                          {_: :td, c: tableCellDate}, "\n  ",
+                          {_: :td, c: tableCellSize}]}]
     end
 
     def tableCellMain

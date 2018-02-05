@@ -7,13 +7,12 @@ class WebResource
         x
       when Hash
         void = [:img, :input, :link, :meta].member? x[:_]
-        '<' + (x[:_] || 'div').to_s +                        # element name
+        '<' + (x[:_] || 'div').to_s +                        # open tag
           (x.keys - [:_,:c]).map{|a|                         # attribute name
           ' ' + a.to_s + '=' + "'" + x[a].to_s.chars.map{|c| # attribute value
-            {"'"=>'%27', '>'=>'%3E',
-             '<'=>'%3C'}[c]||c}.join + "'"}.join +
-          (void ? '/' : '') + '>' + (render x[:c]) +              # children
-          (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # element closer
+            {"'"=>'%27', '>'=>'%3E', '<'=>'%3C'}[c]||c}.join + "'"}.join +
+          (void ? '/' : '') + '>' + (render x[:c]) +         # child nodes
+          (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # close tag
       when Array
         x.map{|n|render n}.join
       when R
@@ -44,59 +43,44 @@ class WebResource
     end
 
     def htmlDocument graph = {}
-      empty = graph.empty?
       @r ||= {}
       @r[:title] ||= graph[path+'#this'].do{|r|r[Title].justArray[0]}
       @r[:label] ||= {}
       @r[:Links] ||= {}
       htmlGrep graph, q['q'] if q['q']
-      title = @r[:title] ||
-              [*path.split('/'), q['q'] , q['f']].map{|e|e && URI.unescape(e)}.join(' ')
+      title = @r[:title] || [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ')
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-      link = -> name,icon,style=nil {
-        @r[:Links][name].do{|uri|
-          uri.R.data({id: name, label: icon, style: style})}}
-
+      notfound = -> {
+        dbg = @r.dup.update({'HTTP_ACCEPT' => accept, 'HTTP_ACCEPT_ENCODING' => (accept 'HTTP_ACCEPT_ENCODING'), 'HTTP_ACCEPT_LANGUAGE' => (accept 'HTTP_ACCEPT_LANGUAGE'), 'QUERY_STRING' => q}); dbg[:Response].delete 'Link'
+        HTML.kv dbg}
+      link = -> name, icon, style=nil {@r[:Links][name].do{|uri| [uri.R.data({id: name, label: icon, style: style}),"\n"]}}
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n",
                         {_: :head,
-                         c: ['',
-                             {_: :meta, charset: 'utf-8'},
-                             {_: :title, c: title},
-                             {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                             *@r[:Links].do{|links|
-                               links.map{|type,uri|
+                         c: ['', {_: :meta, charset: 'utf-8'}, {_: :title, c: title}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                             *@r[:Links].do{|links| links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                             css['site'],
-                            ].map{|e| ['  ',e,"\n"] }}, "\n\n",
+                             css['site']].map{|e|['  ',e,"\n"]}}, "\n",
                         {_: :body,
                          c: ["\n",
-                             link[:up, '&#9650;', 'display: block'], "\n",
-                             link[:prev, '&#9664;', 'left: 0'], "\n",
-                             link[:next, '&#9654;', 'right: 0'], "\n",
-                             {class: :scroll, c: (htmlTree graph)},
-                             !empty && (htmlTable graph),
-                             {_: :style,
-                              c: ["\n",
-                                  @r[:label].map{|name,_|
-                                    color = '#%06x' % (rand 16777216)
-                                    "[name=\"#{name}\"] {background-color: #{color}}\n"}]}, "\n",
-                             !empty && link[:down, '&#9660;'], "\n",
-                             empty && HTML.kv(@r.dup.update({'HTTP_ACCEPT' => accept,
-                                                             'HTTP_ACCEPT_ENCODING' => (accept 'HTTP_ACCEPT_ENCODING'),
-                                                             'HTTP_ACCEPT_LANGUAGE' => (accept 'HTTP_ACCEPT_LANGUAGE'),
-                                                             'QUERY_STRING' => q})),
+                             link[:up, '&#9650;', 'display: block'],
+                             link[:prev, '&#9664;', 'left: 0'],
+                             link[:next, '&#9654;', 'right: 0'],
+                             {class: :scroll, c: ["\n", (htmlTree graph), "\n"]}, "\n",
+                             graph.empty? ? notfound[] : [(htmlTable graph), link[:down,'&#9660;']], "\n",
+                             {_: :style, c: ["\n", @r[:label].map{|name,_|
+                               "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}]}, "\n",
                              cssFiles.map{|f|css[f]}, "\n",
-                             {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}]}]}]
+                             {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n",
+                            ]}, "\n",
+                       ]}]
     end
 
-    def nokogiri
-      Nokogiri::HTML.parse (open uri).read
-    end
+    def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   end
   include HTML
