@@ -78,7 +78,6 @@ class WebResource
 
       # conditional response
       entity @r, ->{
-        puts set.join ' '
         if set.size == 1 && set[0].mime == format
           set[0] # static file good to go
         else # transcode and/or merge sources
@@ -131,7 +130,6 @@ class WebResource
           g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
           g[bin][Size] += 1}
       end
-
       g
     end
 

@@ -82,6 +82,27 @@ class WebResource
 
     def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
+    # TODO multi-arg handling options (|| to &&)
+    def htmlGrep graph, q
+      wordIndex = {}
+      args = POSIX.splitArgs q
+      args.each_with_index{|arg,i| wordIndex[arg] = i }
+      pattern = /(#{args.join '|'})/i
+      # find matches
+      graph.map{|u,r|
+        keep = !(r.has_key?(Abstract)||r.has_key?(Content)) || r.to_s.match(pattern)
+        graph.delete u unless keep}
+      # highlight matches
+      graph.values.map{|r|
+        (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
+          r[Abstract] = lines[0..5].map{|l|
+            l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
+              HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
+            }} if lines.size > 0 }}
+      # highlighting CSS
+      graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
+    end
+
   end
   include HTML
   module Webize
