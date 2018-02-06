@@ -22,14 +22,15 @@ class WebResource
       self[Image].do{|i|images.concat i}        # object of triple
       images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unvisited
         @r[:images].push img # mark visit
-        [{_: :a, class: :thumb, href: (@r['REQUEST_PATH'] != path) ? uri : img.uri, # link to original context first
-          c: {_: :img, class: :thumb, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
-               img.path + '?preview'
-             else
-               img.uri
-              end}},'<br>',
-         {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host},
-                                    {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}
+        puts "img #{img}"
+        {class: :thumb,
+         c: [{_: :a, href: (@r['REQUEST_PATH'] != path) ? uri : img.uri, # link to original context first
+              c: {_: :img, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
+                   img.path + '?preview'
+                 else
+                   img.uri
+                  end}},'<br>',
+             {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
     end
 
     def tableCellVideo
