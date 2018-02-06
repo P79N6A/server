@@ -2,6 +2,8 @@
 class WebResource
   module HTTP
     include URIs
+
+    # Rack entry-point
     def self.call env
       return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
@@ -11,8 +13,11 @@ class WebResource
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
     end
+
     def environment env=nil; env ? (@r = env; self) : @r end
+
     def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
+
     def GET
       @r[:Response] = {}
       @r[:Links] = {}
@@ -21,6 +26,8 @@ class WebResource
       return fileResponse if node.file?
       return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
       return [302,{'Location' => path+'/'+qs},[]] if node.directory? && path[-1] != '/'
+
+      # datedir pointers
       dp = []
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
       n = nil; p = nil
@@ -48,39 +55,40 @@ class WebResource
           n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
         end
       end
-      sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
-
+      sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '') # trailing slash
       @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
       @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
       @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + HTTP.qs(q.merge({'head' => ''})) + '#r' + path.sha2 unless path=='/'
+
+      # expansion pointer
       if q.has_key? 'head'
         qq = q.dup; qq.delete 'head'
         @r[:Links][:down] = path + (HTTP.qs qq)
       end
 
+      # resource set
       set = selectNodes
       return notfound if !set || set.empty?
-
-#      puts set.join ' '
-
       format = selectMIME
 
+      # response header
       @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
+
+      # conditional response
       entity @r, ->{
+        puts set.join ' '
         if set.size == 1 && set[0].mime == format
-          set[0] # static entity
-        else # dynamic
+          set[0] # static file good to go
+        else # transcode and/or merge sources
           if format == 'text/html'
             htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set
-          else
+          else # RDF
             g = RDF::Graph.new
-            set.map{|n|
-              g.load n.toRDF.localPath,
-                     :base_uri => n.stripDoc }
+            set.map{|n| g.load n.toRDF.localPath, :base_uri => n.stripDoc }
             g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}
@@ -90,10 +98,8 @@ class WebResource
     def load set
       graph = RDF::Graph.new # graph
       g = {}                 # tree
-
-      # static resources
       rdf,json = set.partition &:isRDF
-      # RDF files
+      # RDF
       rdf.map{|n|
         graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
@@ -101,8 +107,8 @@ class WebResource
         o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
         g[s] ||= {'uri'=>s}
         g[s][p] ||= []
-        g[s][p].push o unless g[s][p].member? o} # tree insert
-      # optimization. skip RDF::Reader for native JSON format
+        g[s][p].push o unless g[s][p].member? o} # insert
+      # JSON
       json.map{|n|
         n.transcode.do{|transcode|
           ::JSON.parse(transcode.readFile).map{|s,re| # subject
@@ -111,13 +117,14 @@ class WebResource
                 o = o.R if o.class==Hash
                 g[s] ||= {'uri'=>s}
                 g[s][p] ||= []
-                g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # tree insert
-      # storage size
+                g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # insert
+
+      # set metadata
       if q.has_key?('du') && path != '/'
         set.select{|d|d.node.directory?}.-([self]).map{|node|
           g[node.path+'/']||={}
           g[node.path+'/'][Size] = node.du}
-      elsif (q.has_key?('f')||q.has_key?('q')||@r[:glob]) && path!='/' # search-result counts
+      elsif q.has_key?('f') || q.has_key?('q') || @r[:glob]
         set.map{|r|
           bin = r.dirname + '/'
           g[bin] ||= {'uri' => bin}
