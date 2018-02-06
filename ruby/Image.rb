@@ -22,7 +22,7 @@ class WebResource
       self[Image].do{|i|images.concat i}        # object of triple
       images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unvisited
         @r[:images].push img # mark visit
-        puts "img #{img}"
+#        puts "img #{img}"
         {class: :thumb,
          c: [{_: :a, href: (@r['REQUEST_PATH'] != path) ? uri : img.uri, # link to original context first
               c: {_: :img, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
