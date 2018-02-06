@@ -132,9 +132,7 @@ class WebResource
        end
       else # GLOB
         @r[:glob] = match /[\*\{\[]/
-        [self,
-         (@r[:glob] ? self : (self+'.*')).glob,
-         join('index.ttl').R]
+        [self,(@r[:glob] ? self : (self+'.*')).glob]
        end).justArray.flatten.compact.uniq.select &:exist?
     end
 
