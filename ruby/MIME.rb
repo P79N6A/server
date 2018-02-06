@@ -199,12 +199,13 @@ class WebResource
     end
 
     # env -> MIME
-    def selectMIME
+    def selectMIME default='text/html'
       return 'application/atom+xml' if q.has_key?('feed')
       accept.sort.reverse.map{|q,formats| # sorted index, highest qval first
         formats.map{|mime| # formats at q-value
+          return default if mime == '*/*'
           return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}} # terminate if serializable
-      'text/html' # default
+      default
     end
 
   end
