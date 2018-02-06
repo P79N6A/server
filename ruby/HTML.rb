@@ -82,7 +82,6 @@ class WebResource
 
     def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
-    # TODO multi-arg handling options (|| to &&)
     def htmlGrep graph, q
       wordIndex = {}
       args = POSIX.splitArgs q
