@@ -1,5 +1,6 @@
 body, main {background-color:#224 !important; color: #fff !important; font-family: sans-serif}
 a {text-decoration: none; color: #ccf; font-weight: bold}
-header, nav, input, button, div[role="banner"],.side, .SubscriptionBar, .BlueBar, .inline-newsletter, section.infobar, div.footer-parent, ul.buttons, span.score, time, a.numchildren, .Post__sharingBox, .topbar, .modal-container, .hidden, .u-hiddenVisually, .visuallyhidden, .ProfileSidebar, .ProfileNav, .ProfileHeading, .ProfileWarningTimeline, .stream-item-footer, .dismiss-module, .dropdown, span.flair, .stream-footer, .stream-fail-container, .GalleryNav, .score, .expand, .userattrs, span.score-hidden, .child, .midcol, .reportform, .clearleft, #geo-disabled-dropdown {display: none}
+header, nav, input, button, div[role="banner"],.side, .SubscriptionBar, .BlueBar, .inline-newsletter, section.infobar, div.footer-parent, ul.buttons, span.score, time, a.numchildren, .Post__sharingBox, .topbar, .modal-container, .hidden, .u-hiddenVisually, .visuallyhidden, .ProfileSidebar, .ProfileNav, .ProfileHeading, .ProfileWarningTimeline, .stream-item-footer, .dismiss-module, .dropdown, span.flair, .stream-footer, .stream-fail-container, .GalleryNav, .score, .expand, .userattrs, span.score-hidden, .child, .midcol, .reportform, .clearleft, .debuginfo, #geo-disabled-dropdown {display: none}
 div, form, p {display: inline-block; margin: 0}
 div.comment, div.tweet {background-color: #000; padding: .2em; margin: .15em;max-width: 80ex}
+.AdaptiveMedia-singlePhoto {padding-top: 0 !important}
