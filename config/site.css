@@ -1,22 +1,22 @@
-:target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-#up,#down,#prev,#next{font-size: 2.4em}
-#prev,#next   {position: fixed; bottom: .4em}
-body          {font-family: sans-serif; background-color: #000; color: #fff}
-pre,.monospace{font-family: monospace; margin: 0; white-space: pre-wrap}
-pre           {min-width: 80ex; max-width: 168ex; overflow: hidden}
-a             {text-decoration: none; font-weight: bold; background-color: #000; color: #fff}
 a.label,[name]{background-color: #fff; color: #000}
+a             {text-decoration: none; font-weight: bold; background-color: #000; color: #fff}
 a.title       {display: inline-block;max-width: 48em;padding: 0 .15em 0 .15em}
-img           {max-width: 100%}
-div.thumb     {max-width: 24em;padding: .1em; display: inline-block; margin: .2em; background-color: #222; border-radius: .2em; overflow: hidden}
-div.thumb img {width: 100%}
-p             {max-width: 80ex}
-.fromTo,.path {text-align:right}
-.notes        {font-weight: normal; color: #bbb; font-size: .8em}
+body          {font-family: sans-serif; background-color: #000; color: #fff}
 body > table  {margin:auto}
+div.thumb img {width: 100%}
+div.thumb     {max-width: 24em;padding: .1em; display: inline-block; margin: .2em; background-color: #222; border-radius: .2em; overflow: hidden}
+.fromTo,.path {text-align:right}
+img           {max-width: 100%}
+.notes        {font-weight: normal; color: #bbb; font-size: .8em}
+p             {max-width: 80ex}
+pre           {min-width: 80ex; max-width: 168ex; overflow: hidden}
+pre,.monospace{font-family: monospace; margin: 0; white-space: pre-wrap}
+#prev,#next   {position: fixed; bottom: .4em}
+table.kv .key {font-weight: bold; text-align:right;white-space: nowrap}
+table.links   {float: right}
+table.tree a  {display:block}
+table.tree    {width: 100%}
+:target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 td            {vertical-align: top; background-color:#000;border-radius: .2em}
 th a          {font-weight: normal; font-size: 1.4em}
-table.links   {float: right}
-table.tree    {width: 100%}
-table.tree a  {display:block}
-table.kv .key {font-weight: bold; text-align:right;white-space: nowrap}
+#up,#down,#prev,#next{font-size: 2.4em}
