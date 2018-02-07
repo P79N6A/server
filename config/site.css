@@ -14,9 +14,9 @@ p             {max-width: 80ex}
 .fromTo,.path {text-align:right}
 .notes        {font-weight: normal; color: #bbb; font-size: .8em}
 body > table  {margin:auto}
-td            {vertical-align: top; border-color:#333;border-width: 0 0 .08em 0; border-style: solid}
+td            {vertical-align: top; background-color:#000;border-radius: .2em}
 th a          {font-weight: normal; font-size: 1.4em}
 table.links   {float: right}
-table.tree    {border-spacing: 0;width: 100%}
+table.tree    {width: 100%}
 table.tree a  {display:block}
 table.kv .key {font-weight: bold; text-align:right;white-space: nowrap}
