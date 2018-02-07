@@ -79,7 +79,7 @@ class WebResource
         if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
           {_: :pre, c: c}
         elsif a SIOC+'InstantMessage'
-          {_: :span, class: :monospace, c: c}
+          {_: :span, class: :mono, c: c}
         else
           c
         end
