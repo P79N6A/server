@@ -1,6 +1,6 @@
 * {font-family: sans-serif !important}
 .main, #main, .entry, .story, .row, div.comment, div.entry-content, .tweet, .main-tweet, div.result, div.comment-content, .PostList__post {background-color: #000 !important; padding: .2em; margin: .15em; min-width: 20em; max-width: 50em;border-radius: .2em}
-body, .page-block-container {background-color:#224 !important; color: #fff !important}
+body, #page, .page-block-container {background-color:#224 !important; color: #fff !important}
 div, form, p, table {display: inline-block; margin: 0}
 a {text-decoration: none; color: #ccf; font-weight: bold}
 p {background-color: #000 !important; color: #fff !important;}
