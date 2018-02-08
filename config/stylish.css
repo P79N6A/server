@@ -1,5 +1,5 @@
 * {font-family: sans-serif !important}
-.main, #main, .entry, .story, .Post, .Post div, .row, .comment, .entry-content, .tweet, .main-tweet, .result, .comment-content {background-color: #000 !important; padding: .2em; margin: .15em; min-width: 20em; max-width: 50em;border-radius: .2em; border-width: 0 !important}
+.main, #main, .entry, .story, .Post, .Post div, .row, .comment, .entry-content, .tweet, .main-tweet, .result, .comment-content {background-color: #000 !important; min-width: 20em; max-width: 50em;border-radius: .2em; border-width: 0 !important}
 body, #page, .page-block-container, .ProfileTemplate {background-color:#224 !important; color: #fff !important}
 div, form, p, table {display: inline-block; margin: 0}
 a {text-decoration: none; color: #ccf; font-weight: bold}
