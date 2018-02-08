@@ -5,7 +5,9 @@ class WebResource
     def tableCellFromTo
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
-      [[Creator,SIOC+'addressed_to'].map{|edge|
+      tweet = a SIOC+'Tweet'
+      {class: tweet ? :tw : '',
+       c: [[Creator,SIOC+'addressed_to'].map{|edge|
          self[edge].map{|v|
            if v.respond_to?(:uri)
              v = v.R
@@ -13,7 +15,7 @@ class WebResource
              if a SIOC+'MailMessage' # messages*address*month
                @r[:label][v.basename] = true
                R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename}) if v.path
-             elsif a SIOC+'Tweet'
+             elsif tweet
                if edge == Creator  # tweets*author*day
                  @r[:label][v.basename] = true
                  R[datePath[0..-4] + '*/*twitter.com.'+v.basename+'*#r' + sha2].data({name: v.basename, label: v.basename})
@@ -43,7 +45,7 @@ class WebResource
            else
              {_: :span, c: (CGI.escapeHTML v.to_s)}
            end}.intersperse(' ')}.map{|a|a.empty? ? nil : a}.compact.intersperse(' &rarr; '),
-       self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]
+       self[SIOC+'user_agent'].map{|a|['<br>',{_: :span, class: :notes, c: a}]}]}
     end
 
   end
