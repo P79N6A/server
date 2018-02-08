@@ -67,9 +67,7 @@ class WebResource
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
                          c: ["\n",
-                             link[:up, '&#9650;', 'display: block'],
-                             link[:prev, '&#9664;', 'left: 0'],
-                             link[:next, '&#9654;', 'right: 0'],
+                             link[:up, '&#9650;'], link[:prev, '&#9664;','left: 0'], link[:next, '&#9654;','right: 0'],
                              graph.empty? ? notfound[] : [(htmlTable graph), link[:down,'&#9660;']], "\n",
                              (htmlTree graph), "\n",
                              {_: :style, c: ["\n", @r[:label].map{|name,_|
