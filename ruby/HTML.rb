@@ -70,8 +70,8 @@ class WebResource
                              link[:up, '&#9650;', 'display: block'],
                              link[:prev, '&#9664;', 'left: 0'],
                              link[:next, '&#9654;', 'right: 0'],
-                             {class: :scroll, c: ["\n", (htmlTree graph), "\n"]}, "\n",
                              graph.empty? ? notfound[] : [(htmlTable graph), link[:down,'&#9660;']], "\n",
+                             (htmlTree graph), "\n",
                              {_: :style, c: ["\n", @r[:label].map{|name,_|
                                "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}]}, "\n",
                              cssFiles.map{|f|css[f]}, "\n",
