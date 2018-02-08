@@ -33,10 +33,8 @@ class WebResource
                  parts[1]
                elsif a SIOC+'ChatLog'
                  CGI.unescape(basename).split('#')[0]
-               elsif inDoc && !fragment # doc itself
+               else
                  nil
-               elsif uri[-1] == '/'
-                 'dirname'
                end
         if name
           meta.update({name: name})

@@ -1,6 +1,5 @@
 a.label,[name]{background-color: #fff; color: #000}
-a            {text-decoration: none; font-weight: bold; background-color: #000; color: #fff}
-a.title      {display: inline-block;max-width: 48em;padding: 0 .15em 0 .15em}
+a,a.title    {text-decoration: none; font-weight: bold; background-color: #000; color: #fff}
 body         {font-family: sans-serif; background-color: #000; color: #fff}
 body > table {margin:auto}
 div.thumb img{width: 100%}
@@ -14,9 +13,8 @@ pre, .mono   {font-family: monospace; margin: 0; white-space: pre-wrap}
 #prev,#next  {position: fixed; bottom: .4em}
 table.kv .key{font-weight: bold; text-align:right;white-space: nowrap}
 table.links  {float: right}
-table.tree td{vertical-align: bottom}
 table.tree a {display:block}
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-td           {background-color:#000;border-radius: .2em}
+td           {background-color:#000;border-radius: .2em; vertical-align: bottom}
 th a         {font-weight: normal; font-size: 1.4em}
 #up,#down,#prev,#next{font-size: 2.4em}
