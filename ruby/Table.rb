@@ -1,15 +1,11 @@
 # coding: utf-8
 class WebResource
   module HTML
-    # non-base non-hidden types are assigned their own column
-
-    # types used/shown in default tabular layout
+    # types not hidden or inlined appear in columns
     InlineMeta = ['uri', Title, Image, Video, Abstract, From, To, Size, Date, Type, Content, Label,
                   DC+'cache', DC+'link', DC+'note', DC+'hasFormat',
                   Atom+'link', RSS+'link', RSS+'guid',
                   SIOC+'channel', SIOC+'attachment', SIOC+'user_agent', Stat+'contains']
-
-    # types hidden unless verbose
     VerboseMeta = [DC+'identifier', DC+'source', DCe+'rights', DCe+'publisher',
                    RSS+'comments', RSS+'em', RSS+'category', Atom+'edit', Atom+'self', Atom+'replies', Atom+'alternate',
                    SIOC+'has_discussion', SIOC+'reply_of', SIOC+'num_replies',

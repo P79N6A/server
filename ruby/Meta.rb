@@ -54,7 +54,9 @@ class WebResource
     def tableCellAbstract
       [self[Abstract],
        self[DC+'note'].map{|n|
-         {_: :a, href: uri, class: :notes, c: CGI.escapeHTML(n.to_s)}}.intersperse(' ')]
+         {_: :a, href: uri, class: :notes,
+          c: (CGI.escapeHTML n.to_s)}}.intersperse(' ')
+      ].intersperse(' ')
     end
 
     def tableCellTypes
@@ -71,7 +73,6 @@ class WebResource
          tld = links[0] && links[0].tld || 'none'
          traverse = links.size <= 16
          @r[:label][tld] = true
-         # TODO icon cache
          {_: :tr,
           c: [{_: :td, class: :path, colspan: host ? 1 : 2,
                c: links.map{|link|
