@@ -1,7 +1,9 @@
 <code.css> <http://purl.org/dc/terms/note> "CSS for code-highlighting" .
+<stylish.css> <http://purl.org/dc/terms/note> "CSS for read-mode" .
 <font.woff> <http://purl.org/dc/terms/note> "icons in SIL OFL / MIT License font-file" .
 <icon.png> <http://purl.org/dc/terms/note> "'favicon' visual site-identity" .
 <icons.css> <http://purl.org/dc/terms/note> "CSS mapping icon names to font location" .
+<proxyhosts> <http://purl.org/dc/terms/note> "hosts accessed through Solid/LDP proxy" .
 <instagram.com> <http://purl.org/dc/terms/note> "Instagram users" .
 <feeds> <http://purl.org/dc/terms/note> "feed URLs" .
 <ooze.sh> <http://purl.org/dc/terms/note> "slow-rolling content scanner" .
