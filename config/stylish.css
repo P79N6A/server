@@ -1,5 +1,5 @@
 * {font-family: sans-serif !important}
-.entry, .story, .Post, .Post div, .row, .comment, .entry-content, .tweet, .main-tweet, .result, .comment-content, div.rc {background-color: #000 !important; color: #fff; min-width: 20em; max-width: 50em;border-radius: .2em; border-width: 0 !important}
+.entry, .story, .Post, .Post div, .row, .comment, .entry-content, .tweet, .main-tweet, .stream-item, .result, .comment-content, div.rc {background-color: #000 !important; color: #fff; min-width: 20em; max-width: 50em;border-radius: .2em; margin: .2em; border-width: 0 !important}
 html, body, #page, #main, .page-block-container, .ProfileTemplate {background-color:#224 !important; color: #fff !important}
 div, form, p, table {display: inline-block; margin: 0}
 a {text-decoration: none; color: #ccf; font-weight: bold}
