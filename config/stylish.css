@@ -1,10 +1,150 @@
-* {font-family: sans-serif !important}
-.entry, .story, .Post, .Post div, .row, .comment, .entry-content, .tweet, .main-tweet, .stream-item, .result, .comment-content, div.rc {background-color: #000 !important; color: #fff; min-width: 20em; max-width: 50em;border-radius: .2em; margin: .2em; border-width: 0 !important}
-html, body, #page, #main, .page-block-container, .ProfileTemplate {background-color:#224 !important; color: #fff !important}
-div, form, p, table {display: inline-block; margin: 0}
-a {text-decoration: none; color: #ccf; font-weight: bold}
-p, span {background-color: #000; color: #fff}
-.AdaptiveMedia-singlePhoto {padding-top: 0 !important}
-ol {list-style-type: none}
-#container {width: 100%}
-header, .masthead, footer, .footer, nav, div[role="banner"], [data-author="AutoModerator"], .side, button, .sidebar, .newsletter-signup, .SubscriptionBar, .BlueBar, .inline-newsletter, section.infobar, div.footer-parent, ul.buttons, span.score, time, a.numchildren, .Post__sharingBox, .topbar, .modal-container, .hidden, .u-hiddenVisually, .visuallyhidden, .article-header, .ProfileSidebar, .ProfileNav, .ProfileHeading, div.arrow, .ProfileWarningTimeline, .stream-item-footer, aside, .tertiary, .column-header-metadata, #enable-comments-button, .article-buckets-list, .dismiss-module, .dropdown, .slideUp, span.flair, .stream-footer, .stream-fail-container, .GalleryNav, .rank, .stats, .score, a.username, .comment-header-date, .expand, .ad-container, .ad-box, .userattrs, span.score-hidden, #title, #create, #searchform, #top_nav, #info, .description, .sfbgx, #appbar, #footcnt, .article-share, .reportform, .clearleft, .debuginfo, .recirc-inset, .article-section--story-group, #newsletter-signup-1, .Footer, .Post__scoreWrap, #breaking, .Post__origin, .global-audio-components, #masthead-container, .article-meta-main, .metabar, .js-stickyFooter, #geo-disabled-dropdown, #geo-enabled-dropdown, .lightdrop, .panestack-title, #guide, #brand_bar, #footer, .meta-and-actions, .last-section {display: none !important}
+.Post div,
+.Post,
+.comment,
+.comment-content,
+.entry,
+.entry-content,
+.main-tweet,
+.result,
+.row,
+.story,
+.stream-item,
+.tweet,
+div.rc {
+    background-color: #000 !important;
+    color: #fff;
+    min-width: 20em;
+    max-width: 50em;
+    border-radius: .2em;
+    display: inline-block !important;
+    margin: .2em;
+    border-width: 0 !important
+}
+html,
+body,
+#page,
+#main,
+.page-block-container,
+.ProfileTemplate {
+    background-color: #224 !important;
+    color: #fff !important;
+    font-family: sans-serif
+}
+div,
+form,
+p,
+table {
+    display: inline-block;
+    margin: 0
+}
+a {
+    text-decoration: none;
+    color: #ccf;
+    font-weight: bold
+}
+p,
+span {
+    background-color: #000;
+    color: #fff
+}
+.AdaptiveMedia-singlePhoto {
+    padding-top: 0 !important
+}
+ol {
+    list-style-type: none
+}
+#container {
+    width: 100%
+}
+#appbar,
+#brand_bar,
+#breaking,
+#create,
+#enable-comments-button,
+#footcnt,
+#footer,
+#geo-disabled-dropdown,
+#geo-enabled-dropdown,
+#guide,
+#info,
+#masthead-container,
+#newsletter-signup-1,
+#searchform,
+#title,
+#top_nav,
+.BlueBar,
+.Footer,
+.GalleryNav,
+.Post__origin,
+.Post__scoreWrap,
+.Post__sharingBox,
+.ProfileCanopy-navBar,
+.ProfileHeading,
+.ProfileNav,
+.ProfileSidebar,
+.ProfileWarningTimeline,
+.SubscriptionBar,
+.ad-box,
+.ad-container,
+.article-buckets-list,
+.article-header,
+.article-meta-main,
+.article-section--story-group,
+.article-share,
+.clearleft,
+.column-header-metadata,
+.comment-header-date,
+.debuginfo,
+.description,
+.dismiss-module,
+.dropdown,
+.expand,
+.footer,
+.global-audio-components,
+.hidden,
+.inline-newsletter,
+.js-stickyFooter,
+.lightdrop,
+.masthead,
+.meta-and-actions,
+.metabar,
+.modal-container,
+.newsletter-signup,
+.panestack-title,
+.rank,
+.recirc-inset,
+.reportform,
+.score,
+.sfbgx,
+.side,
+.sidebar,
+.slideUp,
+.stats,
+.stream-fail-container,
+.stream-footer,
+.stream-item-footer,
+.tertiary,
+.topbar,
+.u-hiddenVisually,
+.userattrs,
+.visuallyhidden,
+[data-author="AutoModerator"],
+a.numchildren,
+a.username,
+aside,
+button,
+div.arrow,
+div.footer-parent,
+div[role="banner"],
+footer,
+header,
+nav,
+section.infobar,
+span.flair,
+span.score,
+span.score-hidden,
+time,
+ul.buttons,
+.last-section {
+    display: none !important
+}
