@@ -48,6 +48,10 @@ span {
     background-color: #000;
     color: #fff
 }
+.AdaptiveMedia {
+    min-width: 80em;
+    min-height: 20em;
+}
 .AdaptiveMedia-singlePhoto {
     padding-top: 0 !important
 }
