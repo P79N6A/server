@@ -25,6 +25,7 @@ body,
 #page,
 #main,
 .page-block-container,
+.ThreadedConversation,
 .ProfileTemplate {
     background-color: #224 !important;
     color: #fff !important;
@@ -53,6 +54,8 @@ span {
 ol {
     list-style-type: none
 }
+.ProfileCanopy-headerBg, .ProfileCanopy-headerBg img {position: relative; top:0; bottom: 0}
+img.Emoji {width: 72px !important; height: 72px !important}
 #container {
     width: 100%
 }
