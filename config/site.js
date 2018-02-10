@@ -67,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		};
 	    };
 	};
-
 	if(e.getModifierState("Shift")) {
 	    if(key==37) // [shift-left] previous page
 		gotoLink('prev');
