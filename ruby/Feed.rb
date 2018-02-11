@@ -217,7 +217,7 @@ class WebResource
         @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-          # identifier search. prioritize resolvable URIs
+          # identifier search. prefer already RDF with lots of fallbacks
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
           if u # identifier match
             u = @base.join(u).to_s unless u.match /^http/
@@ -249,8 +249,8 @@ class WebResource
 
             inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
-              if [Atom+'id',RSS+'link',RSS+'guid',Atom+'link'].member? p
-               # element used in subject-URI search
+              if [Atom+'id', RSS+'link', RSS+'guid', Atom+'link'].member? p
+               # subject URI candidates above
               elsif [Atom+'author', RSS+'author', RSS+'creator', DCe+'creator'].member? p
                 crs = [] # creators
                 uri = e[3].match /<uri>([^<]+)</
