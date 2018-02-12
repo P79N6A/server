@@ -10,6 +10,7 @@
 .story,
 .stream-item,
 .tweet,
+.alt1,
 div.rc {
     background-color: #000 !important;
     color: #fff;
@@ -23,6 +24,7 @@ div.rc {
 html,
 body,
 #page,
+.page,
 #main,
 .page-block-container,
 .ThreadedConversation,
@@ -76,6 +78,7 @@ img.Emoji {width: 72px !important; height: 72px !important}
 #guide,
 #header,
 #info,
+#fixed_sidebar,
 #masthead-container,
 #newsletter-signup-1,
 #qrform,
