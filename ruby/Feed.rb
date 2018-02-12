@@ -119,7 +119,7 @@ class WebResource
                   yield s, Image, re
                 elsif re.host && re.host.match(/youtu/)
                   yield s, Video, re
-                elsif s.R != re
+                elsif re != subject
                   yield s, DC+'link', re
                 end }}
 
