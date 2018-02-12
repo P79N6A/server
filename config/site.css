@@ -7,6 +7,7 @@ div.thumb img{width: 100%}
 div,table    {display: inline-block}
 .fromTo,.path{text-align:right}
 img          {max-width: 100%}
+.thumb       {max-width: 28em}
 .notes       {font-weight: normal; color: #bbb; font-size: .8em}
 p            {max-width: 80ex}
 pre          {min-width: 80ex; max-width: 168ex; overflow: hidden}
