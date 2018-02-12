@@ -105,11 +105,14 @@ class WebResource
       def scanContent *f
         send(*f){|s,p,o|
           if p==Content && o.class==String
+            subject = s.R
+            # emit HTML links as RDF
             content = Nokogiri::HTML.fragment o
 
+            # <a>
             content.css('a').map{|a|
               (a.attr 'href').do{|href|
-                link = s.R.join href
+                link = subject.join href
                 re = link.R
                 a.set_attribute 'href', link
                 if %w{gif jpeg jpg png webp}.member? re.ext.downcase
@@ -118,25 +121,27 @@ class WebResource
                   yield s, Video, re
                 elsif s.R != re
                   yield s, DC+'link', re
-                end
-              }}
+                end }}
 
+            # <img>
             content.css('img').map{|i|
               (i.attr 'src').do{|src|
-                yield s, Image, src.R}}
+                yield s, Image, (subject.join src) }}
 
+            # <iframe>
             content.css('iframe').map{|i|
               (i.attr 'src').do{|src|
                 src = src.R
                 if src.host && src.host.match(/youtu/)
                   id = src.parts[-1]
                   yield s, Video, R['https://www.youtube.com/watch?v='+id]
-                end}}
+                end }}
 
+            # full HTML content
             yield s, p, content.to_xhtml
           else
             yield s, p, o
-          end}
+          end }
       end
 
       def normalizePredicates *f
@@ -225,7 +230,7 @@ class WebResource
 
             yield u, Type, R[SIOC+'BlogPost']
             blogs = [resource.join('/')]
-            blogs.push @base.join('/') if @host && @host != resource.host
+            blogs.push @base.join('/') if @host && @host != resource.host # re-blog at another host
             blogs.map{|blog|
               yield u, R::To, blog}
 
