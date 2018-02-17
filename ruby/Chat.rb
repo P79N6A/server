@@ -1,8 +1,11 @@
 # coding: utf-8
 class WebResource
-  module Webize
 
+  module URIs
     Twitter = 'https://twitter.com'
+  end
+
+  module Webize
 
     def twitter
       open(localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|

@@ -1,4 +1,10 @@
 class WebResource
+
+  module URIs
+    Instagram = 'https://www.instagram.com/'
+    YouTube = 'http://www.youtube.com/xml/schemas/2015#'
+  end
+
   # TODO Dedupe video embeds within request
   module Webize
 
@@ -10,8 +16,6 @@ class WebResource
       yield uri, Stat+'height', h
       triplrFile &f
     end
-
-    Instagram = 'https://www.instagram.com/'
 
     def ig
       open(localPath).readlines.map(&:chomp).map{|ig|
@@ -38,7 +42,6 @@ class WebResource
              {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
     end
 
-    YouTube = 'http://www.youtube.com/xml/schemas/2015#'
     def tableCellVideo
       self[Video].map(&:R).map{|video|
         if video.match /youtu/
