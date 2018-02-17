@@ -11,12 +11,11 @@ class WebResource
       args.split(/\W/)
     end
 
-    # link fs-nodes
+    # link mapped fs-nodes
     def ln n
       FileUtils.ln   node.expand_path, n.node.expand_path
     end
     #TODO relative symlink targets for multiple servers on differing mountpoints
-    # symlink fs-nodes
     def ln_s n
       #puts "ln -s #{path} #{n.path}"
       FileUtils.ln_s node.expand_path, n.node.expand_path
@@ -28,10 +27,10 @@ class WebResource
       puts e,e.class,e.message
     end
 
-    # read file at location of POSIX path-map
+    # read file at location
     def readFile; File.open(localPath).read end
 
-    # write file at location of POSIX path-map
+    # write file at location
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
 
     # touch mapped node
@@ -45,13 +44,11 @@ class WebResource
       node.delete
     end
 
-    # contained children excepting hidden nodes
+    # contained children minus hidden nodes
     def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
 
-    # dirname of path component, mapped to WebResource
+    # dirname of mapped path
     def dir; dirname.R if path end
-
-    # dirname of path component
     def dirname; File.dirname path if path end
 
     # storage-space usage
@@ -99,7 +96,7 @@ class WebResource
     # basename of path component
     def basename; File.basename (path||'') end
 
-    # strip native document-format suffixes for content-type agnostic base-URI
+    # strip document-format suffixes for content-type agnostic base-URI
     def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|ttl|txt|u)$/,''] end
 
     # name suffix
@@ -111,7 +108,7 @@ class WebResource
     # SHA2 hash of URI string
     def sha2; to_s.sha2 end
 
-    # env -> file(s)
+    # WebResource -> file(s)
     def selectNodes
       (if node.directory?
        if q.has_key?('f') && path!='/' # FIND
@@ -172,7 +169,7 @@ class WebResource
       s = s + '/' unless s[-1] == '/'
       yield s, Type, R[Container]
       yield s, Size, children.size
-      yield s, Title, basename
+      yield s, Title, basename + '/'
       mtime.do{|mt|
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
