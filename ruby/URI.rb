@@ -34,6 +34,7 @@ class WebResource < RDF::URI
     Date     = DC   + 'date'
     Title    = DC   + 'title'
     Abstract = DC   + 'abstract'
+    Note     = DC   + 'note'
     Post     = SIOC + 'Post'
     To       = SIOC + 'addressed_to'
     From     = SIOC + 'has_creator'
@@ -68,7 +69,13 @@ class WebResource < RDF::URI
           uri = prefix + t[0]
           title = t[1..-1].join ' ' if t.size > 1
           yield uri, Type, R[Resource]
-          yield uri, Title, title if title
+          if title
+            yield uri, Title, title
+          else
+            res = uri.R
+            yield uri, Note, res.host
+            yield uri, Label, res.path[1..-1]
+          end
         end}
     end
   end
