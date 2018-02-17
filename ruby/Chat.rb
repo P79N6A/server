@@ -2,6 +2,8 @@
 class WebResource
   module Webize
 
+    Twitter = 'https://twitter.com'
+
     def twitter
       open(localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
         readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join

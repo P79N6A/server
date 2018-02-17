@@ -1,6 +1,7 @@
 class WebResource
-  # TODO Dedupe video displays per request
+  # TODO Dedupe video embeds within request
   module Webize
+
     #TODO imagehost reqtime translation to RDF
     def triplrImage &f
       yield uri, Type, R[Image]
@@ -9,12 +10,17 @@ class WebResource
       yield uri, Stat+'height', h
       triplrFile &f
     end
+
+    Instagram = 'https://www.instagram.com/'
+
     def ig
       open(localPath).readlines.map(&:chomp).map{|ig|
         R[Instagram+ig].indexInstagram}
     end
+
   end
   module HTML
+
     def tableCellPhoto
       # scan RDF for not-yet-shown resourcs
       images = []
@@ -22,7 +28,6 @@ class WebResource
       self[Image].do{|i|images.concat i}        # object of triple
       images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unvisited
         @r[:images].push img # mark visit
-#        puts "img #{img}"
         {class: :thumb,
          c: [{_: :a, href: (@r['REQUEST_PATH'] != path) ? uri : img.uri, # link to original context first
               c: {_: :img, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
@@ -33,6 +38,7 @@ class WebResource
              {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
     end
 
+    YouTube = 'http://www.youtube.com/xml/schemas/2015#'
     def tableCellVideo
       self[Video].map(&:R).map{|video|
         if video.match /youtu/
@@ -44,5 +50,6 @@ class WebResource
                {_: :span, class: :notes, c: video.basename}]}
         end}
     end
+
   end
 end

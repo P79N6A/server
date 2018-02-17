@@ -39,6 +39,7 @@ class WebResource < RDF::URI
     From     = SIOC + 'has_creator'
     Creator  = SIOC + 'has_creator'
     Content  = SIOC + 'content'
+    Resource = W3   + '2000/01/rdf-schema#Resource'
     Stat     = W3   + 'ns/posix/stat#'
     Atom     = W3   + '2005/Atom#'
     Type     = W3 + '1999/02/22-rdf-syntax-ns#type'
@@ -46,25 +47,30 @@ class WebResource < RDF::URI
     Size     = Stat + 'size'
     Mtime    = Stat + 'mtime'
     Container = W3  + 'ns/ldp#Container'
-    Twitter = 'https://twitter.com'
-    Instagram = 'https://www.instagram.com/'
-    YouTube = 'http://www.youtube.com/xml/schemas/2015#'
 
     #TODO dynamic list from .conf/proxyhosts
     MITMhosts = %w{i-ne.ws l.instagram.com t.co tinyurl.com}
 
   end
   module Webize
-    def triplrUriList rebase = false
-      prefix = rebase ? "https://#{stripDoc.basename}/" : ''
+
+    def triplrUriList addHost = false
+      base = stripDoc
+      name = base.basename
+      # list resource
+      yield base.uri, Type, R[Resource]
+      yield base.uri, Title, name
+      prefix = addHost ? "https://#{name}/" : ''
+      # emit lines
       (open localPath).readlines.map{|line|
         t = line.chomp.split ' '
         unless t.empty?
           uri = prefix + t[0]
           title = t[1..-1].join ' ' if t.size > 1
-          yield uri, Type, R[W3+'2000/01/rdf-schema#Resource']
-          yield uri, Title, title ? title : uri
+          yield uri, Type, R[Resource]
+          yield uri, Title, title if title
         end}
     end
   end
+
 end

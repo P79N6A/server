@@ -13,10 +13,9 @@ class WebResource
 
     # link fs-nodes
     def ln n
-      #puts "ln #{path} #{n.path}"
       FileUtils.ln   node.expand_path, n.node.expand_path
     end
-    #TODO relative_path_from for multiple concurrent OS mountpoints
+    #TODO relative symlink targets for multiple servers on differing mountpoints
     # symlink fs-nodes
     def ln_s n
       #puts "ln -s #{path} #{n.path}"
@@ -100,16 +99,16 @@ class WebResource
     # basename of path component
     def basename; File.basename (path||'') end
 
-    # strip extension of native document formats
+    # strip native document-format suffixes for content-type agnostic base-URI
     def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|ttl|txt|u)$/,''] end
 
-    # name-extension of path component
+    # name suffix
     def ext; (File.extname uri)[1..-1] || '' end
 
-    # TLD of host component
+    # TLD of host
     def tld; host && host.split('.')[-1] || '' end
 
-    # SHA2 hash of URI as string
+    # SHA2 hash of URI string
     def sha2; to_s.sha2 end
 
     # env -> file(s)
@@ -167,7 +166,7 @@ class WebResource
         yield s, Date, mt.iso8601}
     end
 
-    # emit RDF of container-metadata
+    # RDFize container-metadata
     def triplrContainer
       s = path
       s = s + '/' unless s[-1] == '/'

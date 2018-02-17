@@ -1,3 +1,6 @@
+<.> a <http://www.w3.org/ns/ldp#Container> ;
+ <http://purl.org/dc/terms/note> "configuration data" .
+
 <code.css> <http://purl.org/dc/terms/note> "CSS for code-highlight" .
 <stylish.css> <http://purl.org/dc/terms/note> "CSS for read-mode" .
 <font.woff> <http://purl.org/dc/terms/note> "icons in SIL OFL / MIT License font-file" .
@@ -5,7 +8,7 @@
 <icons.css> <http://purl.org/dc/terms/note> "CSS mapping icon names to font location" .
 <proxyhosts> <http://purl.org/dc/terms/note> "hosts accessed through Solid/LDP proxy" .
 <instagram.com> <http://purl.org/dc/terms/note> "Instagram users" .
-<muttrc> <http://purl.org/dc/terms/note> "example mutt configuration. for reading or mainly replying to mails" .
+<muttrc> <http://purl.org/dc/terms/note> "configuration for reading/replying to mails" .
 <procmailrc> <http://purl.org/dc/terms/note> "procmailrc for hour-dir delivery" .
 <feeds> <http://purl.org/dc/terms/note> "feed URLs" .
 <ooze.sh> <http://purl.org/dc/terms/note> "slow-rolling content scanner" .
@@ -14,6 +17,3 @@
 <site.js> <http://purl.org/dc/terms/note> "Javascript to enable keyboard-navigation" .
 <spin.sh> <http://purl.org/dc/terms/note> "frequently-updating content scanner" .
 <twitter.com> <http://purl.org/dc/terms/note> "twitter users" .
-<.> a <http://www.w3.org/ns/ldp#Container> ;
- <http://purl.org/dc/terms/note> "configuration data";
- <http://purl.org/dc/terms/title> "config" .
