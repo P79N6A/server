@@ -58,16 +58,19 @@ class WebResource < RDF::URI
     def triplrUriList addHost = false
       base = stripDoc
       name = base.basename
+
       # list resource
       yield base.uri, Type, R[Resource]
       yield base.uri, Title, name
       prefix = addHost ? "https://#{name}/" : ''
+
       # emit lines
       (open localPath).readlines.map{|line|
         t = line.chomp.split ' '
         unless t.empty?
           uri = prefix + t[0]
           title = t[1..-1].join ' ' if t.size > 1
+          # triples
           yield uri, Type, R[Resource]
           if title
             yield uri, Title, title
