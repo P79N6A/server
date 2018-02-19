@@ -8,3 +8,8 @@ stuff on / minimize
 icons in http://l/.s/pw/config/?head#r5eae6392364092b1d7bbfe4b1f39cf5943da4da10d0f143781f6226a4cce2057
 ignore .git
 hrefize 404 links
+remove procmail dep
+call indexmail(s) from stdin or uri (local or over HTTP)
+link mail to timeline if not delivered there
+use https://github.com/ruby-rdf/rdf-rdfa for HTML output w/ RDFA - port templates if ugly
+horz tree for better label orientaatoin vs shape
