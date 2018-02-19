@@ -1,3 +1,0 @@
-<calendars> <http://purl.org/dc/terms/note> "calendar URLs" .
-<http://caughtindot.com/events/?ical=1> <http://purl.org/dc/terms/note> "caughtindot calendar" .
-<https://districthallboston.org/upcomingevents/?ical=1> <http://purl.org/dc/terms/note> "District Hall calendar" .
