@@ -54,7 +54,10 @@ class WebResource
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       notfound = -> {
-        dbg = @r.dup.update({'HTTP_ACCEPT' => accept, 'HTTP_ACCEPT_ENCODING' => (accept 'HTTP_ACCEPT_ENCODING'), 'HTTP_ACCEPT_LANGUAGE' => (accept 'HTTP_ACCEPT_LANGUAGE'), 'QUERY_STRING' => q}); dbg[:Response].delete 'Link'
+        dbg = @r.dup.update({'HTTP_ACCEPT' => accept,
+                             'HTTP_ACCEPT_ENCODING' => (accept 'HTTP_ACCEPT_ENCODING'),
+                             'HTTP_ACCEPT_LANGUAGE' => (accept 'HTTP_ACCEPT_LANGUAGE'),
+                             'QUERY_STRING' => q}); dbg[:Response].delete 'Link'
         HTML.kv dbg}
       link = -> name, icon, style=nil {@r[:Links][name].do{|uri| [uri.R.data({id: name, label: icon, style: style}),"\n"]}}
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
@@ -67,12 +70,12 @@ class WebResource
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
                          c: ["\n",
-                             link[:up, '&#9650;'],
+                             link[:up, '&#9650;', 'vertical-align: top'],
                              graph.empty? ? notfound[] : (htmlTable graph), "\n",
                              (htmlTree graph), "\n",
                              link[:prev, '&#9664;','float: left'],
-                             link[:next, '&#9654;','float: right'],
-                             link[:down,'&#9660;'],
+                             link[:next, '&#9654;','float: right'], '<br>',
+                             link[:down,'&#9660;', 'margin-left: 1em'],
                              {_: :style, c: ["\n",
                                              @r[:label].map{|name,_|
                                                "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}]}, "\n",

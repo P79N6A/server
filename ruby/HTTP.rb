@@ -9,12 +9,32 @@ class WebResource
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
+      env['q'] = parseQs env['QUERY_STRING']
       path.R.environment(env).send env['REQUEST_METHOD']
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
     end
 
-    def environment env=nil; env ? (@r = env; self) : @r end
+    def self.parseQs qs
+      if qs
+        h = {}
+        qs.split(/&/).map{|e|
+          k, v = e.split(/=/,2).map{|x|CGI.unescape x}
+          h[(k||'').downcase] = v}
+        h
+      else
+        {}
+      end
+    end
+
+    def environment env = nil
+      if env
+        @r = env
+        self
+      else
+        @r
+      end
+    end
 
     def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
@@ -179,16 +199,7 @@ class WebResource
 
     # querystring -> Hash
     def q fromEnv = true
-      @q ||=
-        (if q = (fromEnv && @r && @r['QUERY_STRING'] || query)
-         h = {}
-         q.split(/&/).map{|e|
-           k, v = e.split(/=/,2).map{|x|CGI.unescape x}
-           h[(k||'').downcase] = v}
-         h
-        else
-          {}
-         end)
+      fromEnv ? @r['q'] : parseQs(query)
     end
 
     def inDoc; path == @r['REQUEST_PATH'] end

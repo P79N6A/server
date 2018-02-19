@@ -120,7 +120,13 @@ class WebResource
        else # LS
          if uri[-1] == '/' # inside container
            index = (self+'index.html').glob # static index
-           !index.empty? && qs.empty? && index || [self, children]
+           if !index.empty? && qs.empty?
+             index
+           else
+             q['head'] = true # abbreviate to listing only
+             @r[:Links][:down] = path + '*' # link to expanded set
+             [self, children]
+           end
          else # outside container
            @r[:Links][:down] = path + '/' + qs
            self
