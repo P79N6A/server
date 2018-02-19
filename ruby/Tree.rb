@@ -11,7 +11,7 @@ class WebResource
         uri.R.parts.map{|name| # path instructions
           c = c[name] ||= {}}} # create node and jump cursor
 
-      # render function
+      # renderer
       render = -> t,path='' {
         nodes = t.keys.sort - %w{msg}
         label = 'p'+path.sha2 if nodes.size > 1
@@ -42,8 +42,8 @@ class WebResource
                            c: CGI.escapeHTML(URI.unescape(name)[0..24])} : ''}}.intersperse("\n")},"\n",
          ]}}
 
-      # render
       render[tree]
+#      HTML.kv tree
     end
   end
 end
