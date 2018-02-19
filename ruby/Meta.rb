@@ -40,9 +40,7 @@ class WebResource
           meta.update({name: name})
           @r[:label][name] = true
         end
-        link = uri.R
-        link += '?head' if a Container
-        link.data meta}.intersperse(' ')
+        uri.R.data meta}.intersperse(' ')
     end
 
     def tableCellLabels

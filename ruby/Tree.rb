@@ -2,7 +2,7 @@ class WebResource
   module HTML
     # container tree-structure in HTML
     def htmlTree graph
-      q = qs.empty? ? '?head' : qs
+      query = qs
 
       # construct tree
       tree = {}
@@ -38,7 +38,7 @@ class WebResource
               scaled = s && sizes.size > 0
               height = scaled && (s / maxSize) # scale
               {_: :td, style: scaled ? 'height: 8em' : '',
-               c: named ? {_: :a, id: 't'+this.gsub(/[^a-zA-Z0-9]/,'_'), href: this + q, name: label, style: scaled ? "height:#{height * 100.0}%" : '',
+               c: named ? {_: :a, id: 't'+this.gsub(/[^a-zA-Z0-9]/,'_'), href: this + query, name: label, style: scaled ? "height:#{height * 100.0}%" : '',
                            c: CGI.escapeHTML(URI.unescape(name)[0..24])} : ''}}.intersperse("\n")},"\n",
          ]}}
 

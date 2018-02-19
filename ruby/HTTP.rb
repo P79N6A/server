@@ -78,9 +78,9 @@ class WebResource
       sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '') # trailing slash
       @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
       @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
-      @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + HTTP.qs(q.merge({'head' => ''})) + '#r' + path.sha2 unless path=='/'
+      @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
 
-      # expansion pointer
+      # inline-expansion pointer
       if q.has_key? 'head'
         qq = q.dup; qq.delete 'head'
         @r[:Links][:down] = path + (HTTP.qs qq)
@@ -166,7 +166,7 @@ class WebResource
                             '%Y/%m/%d/%H'
                           else
                           end)
-      [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + (qs.empty? ? '?head' : qs)}),[]]
+      [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
     end
 
     def fileResponse
@@ -205,7 +205,7 @@ class WebResource
     def inDoc; path == @r['REQUEST_PATH'] end
 
     # env -> ?querystring
-    def qs; @qs ||= (@r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?' + @r['QUERY_STRING']) || '') end
+    def qs; @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || '' end
 
     # Hash -> ?querystring
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end

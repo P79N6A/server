@@ -14,7 +14,7 @@ class WebResource
              id = SecureRandom.hex 8
              if a SIOC+'MailMessage' # messages*address*month
                @r[:label][v.basename] = true
-               R[v.path + '?head#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename}) if v.path
+               R[v.path + '#r' + sha2].data({id: 'address_'+id, label: v.basename, name: v.basename}) if v.path
              elsif tweet
                if edge == Creator  # tweets*author*day
                  @r[:label][v.basename] = true
