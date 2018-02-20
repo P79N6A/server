@@ -199,7 +199,7 @@ class WebResource
 
     # querystring -> Hash
     def q fromEnv = true
-      fromEnv ? @r['q'] : parseQs(query)
+      fromEnv ? @r['q'] : HTTP.parseQs(query)
     end
 
     def inDoc; path == @r['REQUEST_PATH'] end
