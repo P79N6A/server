@@ -11,7 +11,7 @@ class WebResource
     def triplrMakefile &f;    yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l make -f html #{sh}` end
     def triplrLisp &f;        yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l lisp -f html #{sh}` end
     def triplrShellScript &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l sh -f html #{sh}` end
-    def triplrSourceCode &f;  yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}` end
+    def triplrCode &f;        yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}` end # let pygments determine file-type
     def triplrTeX;            yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
     def triplrRuby &f
       u = path[0..-4]
