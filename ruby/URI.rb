@@ -60,7 +60,7 @@ class WebResource < RDF::URI
       name = base.basename
 
       # list resource
-      yield base.uri, Type, R[Resource]
+      yield base.uri, Type, R[DC+'List']
       yield base.uri, Title, name
       prefix = addHost ? "https://#{name}/" : ''
 
