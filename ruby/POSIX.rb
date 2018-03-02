@@ -97,7 +97,7 @@ class WebResource
     def basename; File.basename (path||'') end
 
     # strip document-format suffixes for content-type agnostic base-URI
-    def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|ttl|txt|u)$/,''] end
+    def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|opml|ttl|txt|u)$/,''] end
 
     # name suffix
     def ext; (File.extname uri)[1..-1] || '' end
