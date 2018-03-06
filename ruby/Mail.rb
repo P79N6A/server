@@ -1,5 +1,10 @@
 class WebResource
   module Webize
+
+    def triplrMbox &b
+      # TODO use formail or a ruby library? former forces the stdin support and entails process switch overhead but prob mmore robust anywas
+    end
+
     def triplrMail &b
       m = Mail.read node; return unless m
       id = m.message_id || m.resent_message_id || rand.to_s.sha2 # Message-ID
