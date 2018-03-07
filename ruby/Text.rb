@@ -61,4 +61,28 @@ class String
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
   def utf8; force_encoding 'UTF-8' end
   def sh; Shellwords.escape self end
+
+  # text -> HTML & yielded (rel,href) tuples
+  def hrefs &blk
+                                     # <> and () wrapping stripped, trailing [,.] dropped
+    pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # pre-match
+      (link.empty? && '' ||
+       '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' +
+       (resource = link.R
+        if blk && !(R::MITMhosts.member? resource.host) # TODO resolve shortened link in background task
+          type = case link
+                 when /(gif|jpg|jpeg|jpg:large|png|webp)$/i
+                   R::Image
+                 when /(youtube.com|(mkv|mp4|webm)$)/i
+                   R::Video
+                 else
+                   R::Link
+                 end
+          yield type, resource
+        end
+        '') +
+       '</a>') +
+      (post.empty? && '' || post.hrefs(&blk)) # recursion on post-match
+  end
 end

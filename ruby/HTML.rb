@@ -120,32 +120,6 @@ class WebResource
   end
 end
 
-class String
-  # text -> HTML + (rel,href) tuple
-  # <> or () URL wrapping stripped, trailing [,.] not captured
-  def hrefs &blk
-    pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # pre-match
-      (link.empty? && '' ||
-       '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' +
-       (resource = link.R
-        if blk && !(R::MITMhosts.member? resource.host) # TODO resolve original link of shortlink rehosts in background thread
-          type = case link
-                 when /(gif|jpg|jpeg|jpg:large|png|webp)$/i
-                   R::Image
-                 when /(youtube.com|(mkv|mp4|webm)$)/i
-                   R::Video
-                 else
-                   R::Link
-                 end
-          yield type, resource
-        end
-        '') +
-       '</a>') +
-      (post.empty? && '' || post.hrefs(&blk)) # post-match recursion
-  end
-end
-
 module Redcarpet
   module Render
     class Pygment < HTML

@@ -9,7 +9,7 @@ img          {max-width: 100%}
 .thumb       {max-width: 28em}
 .notes       {font-weight: normal; color: #eee; font-size: .85em; float: right}
 p            {max-width: 80ex}
-pre          {max-width: 168ex; overflow: hidden}
+pre          {min-width: 40ex; max-width: 255ex; overflow: hidden}
 pre, .mono   {font-family: monospace; margin: 0; white-space: pre-wrap}
 table.kv .key{font-weight: bold; text-align:right;white-space: nowrap}
 table.links  {float: right}
