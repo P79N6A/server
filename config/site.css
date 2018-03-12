@@ -11,10 +11,10 @@ img          {max-width: 100%}
 p            {max-width: 80ex}
 pre          {min-width: 40ex; max-width: 255ex; overflow: hidden}
 pre, .mono   {font-family: monospace; margin: 0; white-space: pre-wrap}
-td.key       {font-weight: bold; text-align:right; border-color:#fff; border-width: 0 0 1px 0; border-style: dotted; border-radius: 0}
+td.key       {font-weight: bold; text-align:right; color:#000; background-color:#fff}
 table.links  {float: right}
 table.tree a {display:block}
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-td           {background-color:#000;border-radius: .2em}
+td           {background-color:#000;border-radius: .18em}
 th a         {font-weight: normal; font-size: 1.4em}
 #up,#down,#prev,#next{font-size: 2.4em}
