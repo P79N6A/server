@@ -2,6 +2,7 @@ class WebResource
   # basic metadata
 
   module HTML
+
     def self.kv hash
       {_: :table, class: :kv,
        c: hash.map{|k,vs|
@@ -24,7 +25,7 @@ class WebResource
                            }.intersperse(' ')]}]}}}
     end
 
-    def tableCellTitle
+    def cell_Title
       self[Title].compact.map{|t|
         meta = {id: inDoc ? fragment : 'r'+sha2,
                 class: :title,
@@ -43,13 +44,13 @@ class WebResource
         uri.R.data meta}.intersperse(' ')
     end
 
-    def tableCellLabels
+    def cell_Labels
       self[Label].compact.map{|v|
         {_: :a, class: :label, href: uri,
          c: (CGI.escapeHTML (v.respond_to?(:uri) ? (v.R.fragment || v.R.basename) : v))}}.intersperse(' ')
     end
 
-    def tableCellAbstract
+    def cell_Abstract
       [self[Abstract],
        self[DC+'note'].map{|n|
          {_: :a, href: uri, class: :notes,
@@ -57,14 +58,14 @@ class WebResource
       ].intersperse(' ')
     end
 
-    def tableCellTypes
+    def cell_Types
       self[Type].uniq.select{|t|t.respond_to? :uri}.map{|t|
         {_: :a, href: uri, c: Icons[t.uri] ? '' : (t.R.fragment||t.R.basename), class: Icons[t.uri]}}
     end
 
     LinkPred = [DC+'link', SIOC+'attachment', Stat+'contains', Atom+'link', RSS+'link']
 
-    def tableCellLinks
+    def cell_Links
       links = LinkPred.map{|p|self[p]}.flatten.compact.map(&:R).select{|l|!@r[:links].member? l}.sort_by &:tld
       {_: :table, class: :links,
        c: links.group_by(&:host).map{|host,links|
@@ -80,18 +81,18 @@ class WebResource
              ]}}} unless links.empty?
     end
 
-    def tableCellCache
+    def cell_Cache
       self[DC+'cache'].map{|c|
         {_: :a, id: 'c'+sha2, href: c.uri, class: :chain}}.intersperse ' '
     end
 
-    def tableCellSize
+    def cell_Size
       sum = 0
       self[Size].map{|v|sum += v.to_i}
       sum == 0 ? '' : sum
     end
 
-    def tableCellDate
+    def cell_Date
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
       {_: :a, class: :date, href: datePath + '#r' + sha2, c: date} if datePath

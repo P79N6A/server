@@ -2,7 +2,7 @@ class WebResource
 
   module HTML
 
-    def tableCellFromTo
+    def cell_FromTo
       date = self[Date].sort[0]
       datePath = '/' + date[0..13].gsub(/[-T:]/,'/') if date
       tweet = a SIOC+'Tweet'

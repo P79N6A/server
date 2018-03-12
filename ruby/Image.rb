@@ -25,7 +25,7 @@ class WebResource
   end
   module HTML
 
-    def tableCellPhoto
+    def cell_Photo
       # scan RDF for not-yet-shown resourcs
       images = []
       images.push self if types.member?(Image) # subject of triple
@@ -42,7 +42,7 @@ class WebResource
              {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
     end
 
-    def tableCellVideo
+    def cell_Video
       self[Video].map(&:R).map{|video|
         if video.match /youtu/
           id = video.q(false)['v'] || video.parts[-1]

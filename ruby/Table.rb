@@ -48,29 +48,29 @@ class WebResource
       hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty? && self[Link].empty?
       hidden ? '' : ["\n", {_: :tr,
                       c: ["\n  ",
-                          {_: :td, class: :fromTo, c: tableCellFromTo}, "\n  ",
-                          {_: :td, c: tableCellTypes}, "\n  ",
-                          {_: :td, c: tableCellMain}, "\n  ",
+                          {_: :td, class: :fromTo, c: cell_FromTo}, "\n  ",
+                          {_: :td, c: cell_Types}, "\n  ",
+                          {_: :td, c: cell_Main}, "\n  ",
                           keys.map{|k|
                             [{_: :td, property: k,
                               c: self[k].map{|v|
                                 v.respond_to?(:uri) ? v.R : CGI.escapeHTML(v.to_s)}.intersperse(' ')}, "\n  "]},
-                          {_: :td, c: tableCellCache}, "\n  ",
-                          {_: :td, c: tableCellDate}, "\n  ",
-                          {_: :td, c: tableCellSize}, "\n"]}]
+                          {_: :td, c: cell_Cache}, "\n  ",
+                          {_: :td, c: cell_Date}, "\n  ",
+                          {_: :td, c: cell_Size}, "\n"]}]
     end
 
-    def tableCellMain
-      [tableCellLabels,
-       tableCellTitle,
-       tableCellAbstract,
-       tableCellLinks,
-       tableCellContent,
-       tableCellPhoto,
-       tableCellVideo]
+    def cell_Main
+      [cell_Labels,
+       cell_Title,
+       cell_Abstract,
+       cell_Links,
+       cell_Content,
+       cell_Photo,
+       cell_Video]
     end
 
-    def tableCellContent
+    def cell_Content
       self[Content].map{|c|
         if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
           {_: :pre, c: c}
