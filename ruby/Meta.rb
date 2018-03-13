@@ -4,25 +4,25 @@ class WebResource
   module HTML
 
     def self.kv hash
-      {_: :table, class: :kv,
-       c: hash.map{|k,vs|
-         {_: :tr,
-          c: [{_: :td, class: :key, c: ["\n", k]},
-              {_: :td, class: :val, c: ["\n ",
-                           vs.justArray.map{|v|
-                             c = v.class
-                             if c == Hash
-                               kv v # another kv hash
-                             elsif c == TrueClass
-                               {_: :a, class: :check}
-                             elsif c == FalseClass
-                               {_: :a, class: :ban}
-                             elsif !([Fixnum,String].member? c)
-                               {_: :a, class: :cog, c: c}
-                             else
-                               CGI.escapeHTML v.to_s
-                             end
-                           }.intersperse(' ')]}]}}}
+     hash.map{|k,vs|
+       {class: :k,
+        c: [{_: :span, class: :name, c: k},
+            {class: :v,
+             c: ["\n ",
+                 vs.justArray.map{|v|
+                   c = v.class
+                   if c == Hash
+                     kv v # another kv hash
+                   elsif c == TrueClass
+                     {_: :a, class: :check}
+                   elsif c == FalseClass
+                     {_: :a, class: :ban}
+                   elsif !([Fixnum,String].member? c)
+                     {_: :a, class: :cog, c: c}
+                   else
+                     CGI.escapeHTML v.to_s
+                   end
+                 }.intersperse(' ')]}]}}
     end
 
     def cell_Title
