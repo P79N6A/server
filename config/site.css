@@ -13,8 +13,12 @@ pre          {min-width: 40ex; max-width: 255ex; overflow: hidden}
 pre, .mono   {font-family: monospace; margin: 0; white-space: pre-wrap}
 table.links  {float: right}
 table.tree a {display:block}
-div.k {border: .1em solid #fff; padding: .2em}
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 td           {background-color:#000;border-radius: .18em}
 th a         {font-weight: normal; font-size: 1.4em}
 #up,#down,#prev,#next{font-size: 2.4em}
+
+div.kv {margin: .5em}
+div.k {border-radius: .3em .3em 0 0; background-color: white; color: black; padding: .2em}
+div.k > .label {font-weight: bold}
+div.v {border-radius: 0 0 .3em .3em; background-color: white; color: black; padding: .2em; display: block}
