@@ -28,10 +28,10 @@ class WebResource
       query = qs
       graph.keys.select{|k|!k.R.host}.map{|path|
         cur = tree
-        path.R.parts.map{|dir|
-          dir.split '-'
+        path.R.parts.map{|name|
+          name.split '-'
         }.flatten.map{|name|
-          cur = cur[name] ||= {}}} # jump cursor to node, initializing if first visit
+          cur = cur[name] ||= (graph.delete(path) || {})}} # jump cursor to node, initializing if first visit
 
       HTML.kv tree
     end
