@@ -26,12 +26,12 @@ class WebResource
     def htmlTree graph
       tree = {}
       query = qs
-      graph.keys.select{|k|!k.R.host && k[-1]=='/'}.map{|uri|
-        c = tree # start at root
-        uri.R.parts.map{|dir|
+      graph.keys.select{|k|!k.R.host}.map{|path|
+        cur = tree
+        path.R.parts.map{|dir|
           dir.split '-'
-        }.flatten.map{|name| # path instructions
-          c = c[name] ||= {}}} # create node and jump cursor
+        }.flatten.map{|name|
+          cur = cur[name] ||= {}}} # jump cursor to node, initializing if first visit
 
       HTML.kv tree
     end
