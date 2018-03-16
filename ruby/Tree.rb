@@ -1,9 +1,9 @@
-class WebResource
+ class WebResource
   module HTML
 
-    def self.kv hash, color = :black
-      color = color == :black ? :white : :black
-      style = "background-color: #{color}"
+    def self.kv hash, flip=0
+      flop = flip != 0 ? 0 : 1
+      style = flip == 1 ? "background-color: black; color: white" : "background-color: white; color: black"
       hash.map{|k,vs|
        {class: :kv,
         c: [{class: :k, style: style, c: {_: :span, class: :label, c: k}},
@@ -12,7 +12,7 @@ class WebResource
                  vs.justArray.map{|v|
                    c = v.class
                    if c == Hash
-                     kv v, color
+                     kv v, flop
                    elsif c == TrueClass
                      {_: :a, class: :check}
                    elsif c == FalseClass
