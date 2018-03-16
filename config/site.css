@@ -17,8 +17,3 @@ table.tree a {display:block}
 td           {background-color:#000;border-radius: .18em}
 th a         {font-weight: normal; font-size: 1.4em}
 #up,#down,#prev,#next{font-size: 2.4em}
-
-div.kv {margin: .5em}
-div.k {border-radius: .3em .3em 0 0; background-color: white; color: black; padding: .2em}
-div.k > .label {font-weight: bold}
-div.v {border-radius: 0 0 .3em .3em; background-color: white; color: black; padding: .2em; display: block}
