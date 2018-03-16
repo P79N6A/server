@@ -1,6 +1,6 @@
  class WebResource
   module HTML
-
+#      hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty? && self[Link].empty?
     def self.kv hash, flip=0
       flop = flip != 0 ? 0 : 1
       style = flop == 1 ? "background-color: black; color: white" : "background-color: white; color: black"

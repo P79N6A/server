@@ -43,16 +43,26 @@ class WebResource
     end
 
     def htmlDocument graph = {}
+
       @r ||= {}
       @r[:title] ||= graph[path+'#this'].do{|r|r[Title].justArray[0]}
       @r[:label] ||= {}
       @r[:Links] ||= {}
+      (1..10).map{|i|
+        @r[:label]["quote"+i.to_s] = true}
+      [:links,
+       :images].map{|p|
+        @r[p] = []}
+
       htmlGrep graph, q['q'] if q['q']
+
       title = @r[:title] || [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ')
+
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
+
       link = -> name, icon, style=nil {@r[:Links][name].do{|uri| [uri.R.data({id: name, label: icon, style: style}),"\n"]}}
 
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
@@ -67,7 +77,6 @@ class WebResource
                          c: ["\n",
                              link[:up, '&#9650;', 'vertical-align: top'],
                              (htmlTree graph), "\n",
-                             (htmlTable graph), "\n",
                              link[:prev, '&#9664;','float: left'],
                              link[:next, '&#9654;','float: right'], '<br>',
                              link[:down,'&#9660;', 'margin-left: 1em'],

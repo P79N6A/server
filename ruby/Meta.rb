@@ -2,6 +2,18 @@ class WebResource
   # basic metadata rendering
   module HTML
 
+    def cell_Content
+      self[Content].map{|c|
+        if (a SIOC+'SourceCode') || (a SIOC+'MailMessage')
+          {_: :pre, c: c}
+        elsif a SIOC+'InstantMessage'
+          {_: :span, class: :mono, c: c}
+        else
+          c
+        end
+      }.intersperse(' ') unless q.has_key?('head')
+    end
+
     def cell_Title
       self[Title].compact.map{|t|
         meta = {id: inDoc ? fragment : 'r'+sha2,
