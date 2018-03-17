@@ -1,6 +1,14 @@
 class Hash
-  def R; WebResource.new(self["uri"]).data self end # preserve Hash/JSON data via reference
-  def uri;     self["uri"] end
+
+  # cast to WebResource (reversible)
+  def R
+    WebResource.new(uri).data self
+  end
+  # URI accessor method
+  def uri
+    self["uri"]
+  end
+
 end
 class WebResource
   module JSON
@@ -16,8 +24,7 @@ class WebResource
       content_encoding 'utf-8'
       reader { WebResource::JSON::Reader }
     end
-
-    # JSON -> RDF
+    # native JSON format support in RDF-parser class
     class Reader < RDF::Reader
       format Format
       def initialize(input = $stdin, options = {}, &block)

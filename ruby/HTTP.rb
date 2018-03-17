@@ -3,15 +3,15 @@ class WebResource
   module HTTP
     include URIs
 
-    # Rack entry-point
+    # Rack HTTP-call entry-point
     def self.call env
       return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-      env['q'] = parseQs env['QUERY_STRING']
-      path.R.environment(env).send env['REQUEST_METHOD']
-    rescue Exception => x
+      env['q'] = parseQs env['QUERY_STRING']               # parse query
+      path.R.environment(env).send env['REQUEST_METHOD']   # instantiate resource
+    rescue Exception => x                                  # error handler
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
     end
 
@@ -27,7 +27,7 @@ class WebResource
       end
     end
 
-    def environment env = nil
+    def environment env = nil # set (arg) or get (no args)
       if env
         @r = env
         self
@@ -113,12 +113,13 @@ class WebResource
         end}
     end
 
-    # file(s) -> graph-in-tree
+    # optimization. RDF loader reads JSON but this bypasses RDF library when loading to JSON tree representation. less function-call/abstraction overhead
     def load set
+      g = {}                 # JSON tree (nested Hash in-memory)
       graph = RDF::Graph.new # graph
-      g = {}                 # tree
       rdf,json = set.partition &:isRDF
-      # RDF
+
+      # load RDF
       rdf.map{|n|
         graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
@@ -127,7 +128,8 @@ class WebResource
         g[s] ||= {'uri'=>s}
         g[s][p] ||= []
         g[s][p].push o unless g[s][p].member? o} # insert
-      # JSON
+
+      # load JSON
       json.map{|n|
         n.transcode.do{|transcode|
           ::JSON.parse(transcode.readFile).map{|s,re| # subject
@@ -138,7 +140,7 @@ class WebResource
                 g[s][p] ||= []
                 g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # insert
 
-      # set metadata
+      # add request metadata
       if q.has_key?('du') && path != '/'
         set.select{|d|d.node.directory?}.-([self]).map{|node|
           g[node.path+'/']||={}
