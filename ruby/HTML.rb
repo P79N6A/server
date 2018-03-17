@@ -43,33 +43,38 @@ class WebResource
     end
 
     def htmlDocument graph = {}
-
+      # environment w/ per-request metadata
       @r ||= {}
-      @r[:title] ||= graph[path+'#this'].do{|r|r[Title].justArray[0]}
+      # explicit title in RDF
+      @r[:title] ||= graph[path+'#this'].do{|r|
+        r[Title].justArray[0]}
+      # title from URI
+      @r[:title] ||= [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ')
+      # labels
       @r[:label] ||= {}
-      @r[:Links] ||= {}
       (1..10).map{|i|
         @r[:label]["quote"+i.to_s] = true}
-      [:links,
-       :images].map{|p|
-        @r[p] = []}
+      # links in Response header
+      @r[:Links] ||= {}
+      # links + images in RDF
+      [:links, :images].map{|p| @r[p] = []}
 
       htmlGrep graph, q['q'] if q['q']
 
-      title = @r[:title] || [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ')
-
+      # CSS
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
 
+      # link renderer
       link = -> name, icon, style=nil {@r[:Links][name].do{|uri| [uri.R.data({id: name, label: icon, style: style}),"\n"]}}
 
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
                         {_: :head,
-                         c: ['', {_: :meta, charset: 'utf-8'}, {_: :title, c: title}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                         c: ['', {_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
                              *@r[:Links].do{|links| links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",

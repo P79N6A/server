@@ -113,7 +113,7 @@ class WebResource
         end}
     end
 
-    # optimization. RDF loader reads JSON but this bypasses RDF library when loading to JSON tree representation. less function-call/abstraction overhead
+    # optimization. RDF loader can JSON but this bypasses RDF library when loading to JSON tree representation. less function-call/abstraction overhead
     def load set
       g = {}                 # JSON tree (nested Hash in-memory)
       graph = RDF::Graph.new # graph
