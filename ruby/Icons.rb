@@ -25,6 +25,7 @@ class WebResource
       SIOC+'MicroblogPost' => :newspaper,
       SIOC+'Post' => :newspaper,
       SIOC+'SourceCode' => :code,
+      SIOC+'reply_of' => :reply,
       SIOC+'Thread' => :openenvelope,
       SIOC+'Tweet' => :bird,
       SIOC+'Usergroup' => :group,
