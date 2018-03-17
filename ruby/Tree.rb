@@ -6,8 +6,9 @@
       style = flop == 1 ? "background-color: black; color: white" : "background-color: white; color: black"
       {_: :table, c: hash.map{|k,vs|
          {_: :tr, class: :kv,
-          c: [{_: :td, style: style, c: {_: :span, class: :label, c: k}},
-              {_: :td, style: style,
+          c: [{_: :td, class: :k, style: style,
+               c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
+              {_: :td, class: :v, style: style,
                c: ["\n ",
                    vs.justArray.map{|v|
                      c = v.class
