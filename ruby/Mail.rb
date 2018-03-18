@@ -39,7 +39,9 @@ class WebResource
         (!p.mime_type || p.mime_type == 'text/plain') && # text parts
           Mail::Encodings.defined?(p.body.encoding)      # decodable?
       }.map{|p|
-        yield e, Content, (HTML.render p.decoded.to_utf8.lines.to_a.map{|l| # split lines
+        yield e, Content,
+              HTML.render({_: :pre,
+                           c: p.decoded.to_utf8.lines.to_a.map{|l| # split lines
                              l = l.chomp # strip any remaining [\n\r]
                              if qp = l.match(/^((\s*[>|]\s*)+)(.*)/) # quoted line
                                depth = (qp[1].scan /[>|]/).size # > count
@@ -53,7 +55,7 @@ class WebResource
                                end
                              else # fresh line
                                [l.gsub(/(\w+)@(\w+)/,'\2\1').hrefs{|p,o|yield e, p, o}]
-                             end}.compact.intersperse("\n"))} # join lines
+                             end}.compact.intersperse("\n")})} # join lines
 
       # recursive messages, digests, forwards, archives..
       parts.select{|p|p.mime_type=='message/rfc822'}.map{|m|

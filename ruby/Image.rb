@@ -42,17 +42,16 @@ class WebResource
              {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
     end
 
-    def cell_Video
-      self[Video].map(&:R).map{|video|
-        if video.match /youtu/
-          id = video.q(false)['v'] || video.parts[-1]
-          {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
-        else
-          {class: :video,
-           c: [{_: :video, src: video.uri, controls: :true}, '<br>',
-               {_: :span, class: :notes, c: video.basename}]}
-        end}
-    end
+    Markup[Video] = -> video {
+      video = video.R
+      if video.match /youtu/
+        id = video.q(false)['v'] || video.parts[-1]
+        {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
+      else
+        {class: :video,
+         c: [{_: :video, src: video.uri, controls: :true}, '<br>',
+             {_: :span, class: :notes, c: video.basename}]}
+      end}
 
   end
 end

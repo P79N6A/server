@@ -10,7 +10,7 @@ class WebResource
       DC+'hasFormat' => :file,
       DC+'link' => :chain,
       DC+'List' => :list,
-      DC+'Video' => :video,
+      Video => :video,
       Date => :date,
       Image => :img,
       Label => :tag,

@@ -11,15 +11,16 @@
               {_: :td, class: :v, style: style,
                c: ["\n ",
                    vs.justArray.map{|v|
-                     c = v.class
-                     if c == Hash
+                     if Markup[k]
+                       Markup[k].call v
+                     elsif v.class == Hash
                        kv v, flop
-                     elsif c == TrueClass
-                       {_: :a, class: :check}
-                     elsif c == FalseClass
-                       {_: :a, class: :ban}
-                     elsif !([Fixnum,String].member? c)
-                       {_: :a, class: :cog, c: c}
+                     elsif v.class == WebResource
+                       v
+                     elsif k == Content
+                       v
+                     elsif k == 'uri'
+                       v.R
                      else
                        CGI.escapeHTML v.to_s
                      end

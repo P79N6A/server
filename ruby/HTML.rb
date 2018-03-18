@@ -1,6 +1,20 @@
 # coding: utf-8
 class WebResource
   module HTML
+    include URIs
+
+    Markup = {}
+
+    Markup[Type] = -> t {
+      t = t.R
+      {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}}
+
+    Markup[DC+'cache'] = -> c {
+      {_: :a, href: c.uri, class: :chain}}
+
+    Markup[Date] = -> date {
+      {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
+
     def self.render x
       case x
       when String
@@ -31,8 +45,6 @@ class WebResource
       end
     end
 
-    include URIs
-
     def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type}
       html = Nokogiri::HTML.fragment body
       loseTags.map{|tag| html.css(tag).remove} if loseTags
@@ -54,9 +66,9 @@ class WebResource
       @r[:label] ||= {}
       (1..10).map{|i|
         @r[:label]["quote"+i.to_s] = true}
-      # links in Response header
+      # links in header
       @r[:Links] ||= {}
-      # links + images in RDF
+      # links+images in RDF
       [:links, :images].map{|p| @r[p] = []}
 
       htmlGrep graph, q['q'] if q['q']
@@ -101,10 +113,12 @@ class WebResource
       args = POSIX.splitArgs q
       args.each_with_index{|arg,i| wordIndex[arg] = i }
       pattern = /(#{args.join '|'})/i
+
       # find matches
       graph.map{|u,r|
         keep = !(r.has_key?(Abstract)||r.has_key?(Content)) || r.to_s.match(pattern)
         graph.delete u unless keep}
+
       # highlight matches
       graph.values.map{|r|
         (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
@@ -112,8 +126,11 @@ class WebResource
             l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
               HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
             }} if lines.size > 0 }}
+
       # highlighting CSS
-      graph['#abstracts'] = {Abstract => {_: :style, c: wordIndex.values.map{|i|".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
+      graph['#abstracts'] = {Abstract => {_: :style,
+                                          c: wordIndex.values.map{|i|
+                                            ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}}}
     end
 
   end
@@ -146,4 +163,3 @@ module Redcarpet
     end
   end
 end
-
