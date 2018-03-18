@@ -25,22 +25,16 @@ class WebResource
   end
   module HTML
 
-    def cell_Photo
-      # scan RDF for not-yet-shown resourcs
-      images = []
-      images.push self if types.member?(Image) # subject of triple
-      self[Image].do{|i|images.concat i}        # object of triple
-      images.map(&:R).select{|i|!@r[:images].member? i}.map{|img| # unvisited
-        @r[:images].push img # mark visit
-        {class: :thumb,
-         c: [{_: :a, href: (@r['REQUEST_PATH'] != path) ? uri : img.uri, # link to original context first
-              c: {_: :img, src: if !img.host || img.host == @r['HTTP_HOST'] # thumbnail if locally-hosted
-                   img.path + '?preview'
-                 else
-                   img.uri
-                  end}},'<br>',
-             {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
-    end
+    Markup[Image] = -> image {
+      img = image.R
+      {class: :thumb,
+       c: [{_: :a, href: img.uri,
+            c: {_: :img, src: if !img.host # thumbnailify local file
+                 img.path + '?preview'
+               else
+                 img.uri
+                end}},'<br>',
+           {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
 
     Markup[Video] = -> video {
       video = video.R

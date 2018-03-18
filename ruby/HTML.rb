@@ -54,7 +54,6 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    #      hidden = q.has_key?('head') && self[Title].empty? && self[Abstract].empty? && self[Link].empty?
     def self.kv hash, flip=0
       flop = flip != 0 ? 0 : 1
       style = flop == 1 ? "background-color: black; color: white" : "background-color: white; color: black"
@@ -106,9 +105,9 @@ class WebResource
       @r[:label] ||= {}
       (1..10).map{|i|
         @r[:label]["quote"+i.to_s] = true}
-      # links in header
+      # links in HTTP header
       @r[:Links] ||= {}
-      # links+images in RDF
+      # links+images in HTML
       [:links, :images].map{|p| @r[p] = []}
 
       htmlGrep graph, q['q'] if q['q']

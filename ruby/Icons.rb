@@ -5,6 +5,7 @@ class WebResource
       Comments => :comments,
       Container => :dir,
       Content => :pencil,
+      Abstract => :quote,
       DC+'identifier' => :barcode,
       DC+'cache' => :chain,
       DC+'hasFormat' => :file,
