@@ -2,7 +2,7 @@ a            {text-decoration: none; font-weight: bold}
 a.title      {color: #fff}
 a.date,div.tw{white-space: nowrap}
 a[name]      {color: #000}
-body         {font-family: sans-serif; background-color: #000; color: #fff}
+body         {font-family: sans-serif; margin: 0}
 div, table   {display: inline-block}
 .fromTo,.path{text-align:right}
 img          {max-width: 100%}
@@ -12,10 +12,11 @@ p            {max-width: 80ex}
 pre          {min-width: 40ex; max-width: 255ex; overflow: hidden}
 pre, .mono   {font-family: monospace; margin: 0; white-space: pre-wrap}
 table.links  {float: right}
+table        {margin: 1em; border-spacing: 0}
 table.tree a {display:block}
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-td           {background-color:#000;border-radius: .18em}
 th a         {font-weight: normal; font-size: 1.4em}
 #up,#down,#prev,#next{font-size: 2.4em}
 .k {text-align: right}
 .k > a {font-weight: normal}
+.v     {padding:0}
