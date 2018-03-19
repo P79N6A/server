@@ -162,7 +162,7 @@ class WebResource
     # emit RDF of file-metadata
     def triplrFile
       s = path
-      yield s, Title, basename
+#      yield s, Title, basename
 
       size.do{|sz|
         yield s, Size, sz}
@@ -177,7 +177,7 @@ class WebResource
       s = path
       s = s + '/' unless s[-1] == '/'
       yield s, Type, R[Container]
-      yield s, Title, basename + '/'
+#      yield s, Title, basename + '/'
       yield s, Size, children.size
 
       mtime.do{|mt|

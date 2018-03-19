@@ -13,7 +13,7 @@ class WebResource
       {_: :a, href: c.uri, class: :chain}}
 
     Markup[Date] = -> date {
-      {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
+      {_: :a, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
     def self.render x
       case x

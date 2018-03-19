@@ -12,7 +12,7 @@ p            {max-width: 80ex}
 pre          {min-width: 40ex; max-width: 255ex; overflow: hidden}
 pre, .mono   {font-family: monospace; margin: 0; white-space: pre-wrap}
 table.links  {float: right}
-table        {margin: 1em; border-spacing: 0}
+table        {margin: .2em; border-spacing: 0}
 table.tree a {display:block}
 :target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
 th a         {font-weight: normal; font-size: 1.4em}
@@ -20,3 +20,4 @@ th a         {font-weight: normal; font-size: 1.4em}
 .k {text-align: right}
 .k > a {font-weight: normal}
 .v     {padding:0}
+.flip > tr > .k {background-color: pink}
