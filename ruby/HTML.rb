@@ -76,19 +76,6 @@ class WebResource
                    }.intersperse(' ')]}]}}}
     end
 
-    def htmlTree graph
-      tree = {}
-      query = qs
-      graph.keys.select{|k|!k.R.host}.map{|path|
-        cur = tree
-        path.R.parts.map{|name|
-          name.split '-'
-        }.flatten.map{|name|
-          cur = cur[name] ||= (graph.delete(path) || {})}} # jump cursor to node, initializing if first visit
-
-      HTML.kv tree
-    end
-
     def htmlDocument graph = {}
       # environment
       @r ||= {}
@@ -122,7 +109,7 @@ class WebResource
                         {_: :body,
                          c: ["\n",
                              link[:up, '&#9650;', 'vertical-align: top'],
-                             (htmlTree graph), "\n",
+                             (HTML.kv graph), "\n",
                              link[:prev, '&#9664;','float: left'],
                              link[:next, '&#9654;','float: right'], '<br>',
                              link[:down,'&#9660;', 'margin-left: 1em'],

@@ -315,7 +315,6 @@ class WebResource
       Nokogiri::HTML.fragment(readFile).css('outline[type="rss"]').map{|t|
         s = t.attr 'xmlurl'
         yield s, Type, R[SIOC+'Feed']
-        yield s, Note, t.attr('title')
       }
     end
   end
