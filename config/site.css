@@ -4,8 +4,9 @@ table  {display: inline-block; border-spacing: 0}
 img    {max-width: 100%}
 .thumb {max-width: 28em}
 pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; font-family: monospace; margin: 0; white-space: pre-wrap}
-:target, :target * {background-color: #0f0 !important; color: #fff !important}
-.k {vertical-align: top}
+.k     {vertical-align: top}
+.v     {padding: 0}
 .k > a {display:block; font-weight: normal}
 .flip, .flip > a {background-color: #000;color:#fff}
 .flop, .flop > a {background-color: #fff;color:#000}
+:target, :target * {background-color: #0f0 !important; color: #fff !important}
