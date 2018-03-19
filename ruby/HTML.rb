@@ -93,8 +93,10 @@ class WebResource
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
 
-      # link renderer
-      link = -> name, icon, style=nil {@r[:Links][name].do{|uri| [uri.R.data({id: name, label: icon, style: style}),"\n"]}}
+      # head-links in body
+      link = -> name,label {
+        @r[:Links][name].do{|uri|
+          [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})},"\n"]}}
 
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
@@ -107,12 +109,9 @@ class WebResource
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
-                         c: ["\n",
-                             link[:up, '&#9650;', 'vertical-align: top'],
-                             (HTML.kv graph), "\n",
-                             link[:prev, '&#9664;','float: left'],
-                             link[:next, '&#9654;','float: right'], '<br>',
-                             link[:down,'&#9660;', 'margin-left: 1em'],
+                         c: ["\n", link[:up, '&#9650;'], '<br>',
+                             link[:prev, '&#9664;'], (HTML.kv graph), link[:next, '&#9654;'], '<br>',
+                             link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n",
                             ]}, "\n" ]}]
