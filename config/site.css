@@ -1,23 +1,16 @@
 a            {text-decoration: none; font-weight: bold}
-a.title      {color: #fff}
-a.date,div.tw{white-space: nowrap}
-a[name]      {color: #000}
 body         {font-family: sans-serif; margin: 0}
 div, table   {display: inline-block}
-.fromTo,.path{text-align:right}
 img          {max-width: 100%}
 .thumb       {max-width: 28em}
-.notes       {font-weight: normal; color: #eee; font-size: .85em; float: right}
-p            {max-width: 80ex}
 pre          {min-width: 40ex; max-width: 255ex; overflow: hidden}
 pre, .mono   {font-family: monospace; margin: 0; white-space: pre-wrap}
-table.links  {float: right}
-table        {margin: .2em; border-spacing: 0}
-table.tree a {display:block}
-:target, :target *, th.selected, th.selected a {background-color: #fff !important; color: #000 !important}
-th a         {font-weight: normal; font-size: 1.4em}
+:target, :target * {background-color: #0f0 !important; color: #fff !important}
 #up,#down,#prev,#next{font-size: 2.4em}
 .k {text-align: right}
-.k > a {font-weight: normal}
+.k > a {display:block; font-weight: normal}
 .v     {padding:0}
-.flip > tr > .k {background-color: pink}
+.flip {background-color: #000;color:#fff}
+.flop {background-color: #fff;color:#000}
+.flip > a {color:#fff}
+.flop > a {color:#000}

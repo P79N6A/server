@@ -30,12 +30,8 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R
-        render({_: :a, href: x.uri,
-                c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.path[1..-1]) || x.host || '&#x279f;')}.
-                 update(x[:id][0] ? {id: x[:id][0]} : {}).
-                 update(x[:style][0] ? {style: x[:style][0]} : {}).
-                 update(x[:class][0] ? {class: x[:class][0]} : {}).
-                 update(x[:name][0] ? {name: x[:name][0]} : {}))
+        render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2,
+                c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.path[1..-1]) || x.host || '&#x279f;')})
       when NilClass
         ''
       when FalseClass
@@ -56,12 +52,12 @@ class WebResource
 
     def self.kv hash, flip=0
       flop = flip != 0 ? 0 : 1
-      style = flop == 1 ? "background-color: black; color: white" : "background-color: white; color: black"
+      styl = flip != 0 ? 'flop' : 'flip'
       {_: :table, c: hash.map{|k,vs|
-         {_: :tr, class: :kv,
-          c: [{_: :td, class: :k, style: style,
+         {_: :tr,
+          c: [{_: :td, class: 'k '+styl,
                c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
-              {_: :td, class: :v, style: style,
+              {_: :td, class: 'v '+styl,
                c: ["\n ",
                    vs.justArray.map{|v|
                      if Markup[k]
