@@ -64,11 +64,9 @@ class WebResource
           s = base + '#l' + (linenum += 1).to_s
           yield s, Type, R[SIOC+'InstantMessage']
           yield s, Creator, R['#'+m[3]]
-          yield s, To, channel
+#          yield s, To, channel
           yield s, Content, m[4].hrefs{|p,o|
-            yield s, Title, '▶' if p==Image
-            yield s, p, o
-          }
+            yield s, p, o }
           yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
       if linenum > 0 # summarize at log-URI
         yield log, Type, R[SIOC+'ChatLog']

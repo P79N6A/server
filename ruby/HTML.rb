@@ -66,7 +66,7 @@ class WebResource
                        kv v, flop
                      elsif v.class == WebResource
                        v
-                     elsif k == Content
+                     elsif k == Content || k == Abstract
                        v
                      elsif k == 'uri'
                        v.R
@@ -102,15 +102,10 @@ class WebResource
       tree = {}
       graph.keys.map{|id|
         cur = tree
-        res = id.R
-        [res.host || '', *res.parts].map{|name|
+        id.R.parts.map{|name|
           cur = cur[name] ||= {}}
-        if id[-1] != '/'
           cur[Contains] ||= []
-          cur[Contains].push graph[id]
-        end
-      }
-      puts tree
+          cur[Contains].push graph[id]}
 
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
