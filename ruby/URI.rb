@@ -47,6 +47,7 @@ class WebResource < RDF::URI
     Size     = Stat + 'size'
     Mtime    = Stat + 'mtime'
     Container = W3  + 'ns/ldp#Container'
+    Contains  = W3  + 'ns/ldp#contains'
 
     #TODO dynamic list from .conf/proxyhosts
     MITMhosts = %w{i-ne.ws l.instagram.com t.co tinyurl.com}

@@ -98,6 +98,20 @@ class WebResource
         @r[:Links][name].do{|uri|
           [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})},"\n"]}}
 
+      # graph to tree
+      tree = {}
+      graph.keys.map{|id|
+        cur = tree
+        res = id.R
+        [res.host || '', *res.parts].map{|name|
+          cur = cur[name] ||= {}}
+        if id[-1] != '/'
+          cur[Contains] ||= []
+          cur[Contains].push graph[id]
+        end
+      }
+      puts tree
+
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
@@ -110,7 +124,7 @@ class WebResource
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
                          c: ["\n", link[:up, '&#9650;'], '<br>',
-                             link[:prev, '&#9664;'], (HTML.kv graph), link[:next, '&#9654;'], '<br>',
+                             link[:prev, '&#9664;'], (HTML.kv tree), link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n",

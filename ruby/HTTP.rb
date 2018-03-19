@@ -155,19 +155,6 @@ class WebResource
       g
     end
 
-
-    def htmlTree graph
-      tree = {}
-      query = qs
-      graph.keys.select{|k|!k.R.host}.map{|path|
-        cur = tree
-        path.R.parts.map{|name|
-          name.split '-'
-        }.flatten.map{|name|
-          cur = cur[name] ||= (graph.delete(path) || {})}} # jump cursor to node, initializing if first visit
-      tree
-    end
-
     def chronoDir ps
       time = Time.now
       loc = time.strftime(case ps[0][0].downcase

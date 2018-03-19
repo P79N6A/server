@@ -3,6 +3,7 @@ class WebResource
     Icons = {
       'uri' => :id,
       Comments => :comments,
+      Contains => :bin,
       Container => :dir,
       Content => :pencil,
       Abstract => :quote,

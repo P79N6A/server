@@ -2,6 +2,7 @@
 a.id:before { content:"\f0c2"; font-family: icons; }
 a.barcode:before { content:"\f02a"; font-family: icons; }
 a.type:before { content:"\f02b"; font-family: icons; }
+a.bin:before { content:"\f187"; font-family: icons; }
 a.chain:before { content:"\f0c1"; font-family: icons; }
 a.width:before { content:"\f07e"; font-family: icons; }
 a.height:before { content:"\f07d"; font-family: icons; }
