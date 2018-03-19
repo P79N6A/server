@@ -94,21 +94,13 @@ class WebResource
     end
 
     def htmlDocument graph = {}
-      # environment w/ per-request metadata
+      # environment
       @r ||= {}
-      # explicit title in RDF
-      @r[:title] ||= graph[path+'#this'].do{|r|
-        r[Title].justArray[0]}
-      # title from URI
-      @r[:title] ||= [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ')
-      # labels
-      @r[:label] ||= {}
-      (1..10).map{|i|
-        @r[:label]["quote"+i.to_s] = true}
-      # links in HTTP header
+      # document title
+      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # explicit title in RDF
+              [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # full-pathname
+      # links for HTTP header
       @r[:Links] ||= {}
-      # links+images in HTML
-      [:links, :images].map{|p| @r[p] = []}
 
       htmlGrep graph, q['q'] if q['q']
 
@@ -125,7 +117,9 @@ class WebResource
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
                         {_: :head,
-                         c: ['', {_: :meta, charset: 'utf-8'}, {_: :title, c: @r[:title]}, {_: :link, rel: :icon, href: '/.conf/icon.png'},
+                         c: [{_: :meta, charset: 'utf-8'},
+                             {_: :title, c: title},
+                             {_: :link, rel: :icon, href: '/.conf/icon.png'},
                              *@r[:Links].do{|links| links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
@@ -136,13 +130,9 @@ class WebResource
                              link[:prev, '&#9664;','float: left'],
                              link[:next, '&#9654;','float: right'], '<br>',
                              link[:down,'&#9660;', 'margin-left: 1em'],
-                             {_: :style, c: ["\n",
-                                             @r[:label].map{|name,_|
-                                               "[name=\"#{name}\"] {background-color: #{'#%06x' % (rand 16777216)}}\n"}]}, "\n",
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n",
-                            ]}, "\n",
-                       ]}]
+                            ]}, "\n" ]}]
     end
 
     def nokogiri; Nokogiri::HTML.parse (open uri).read end
