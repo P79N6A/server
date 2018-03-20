@@ -75,20 +75,20 @@ class WebResource
 
     # tabular-overview
     def self.heading resources
-      keys = [[From, :from],
-              [To,   :to],
-              ['uri'],
-              [Type],
-              [Title,:title],
-              [Abstract],
-              [Image],
-              [Video],
-              [Date]]
+      ks = [[From, :from],
+            [To,   :to],
+            ['uri'],
+            [Type],
+            [Title,:title],
+            [Abstract],
+            [Date]]
       {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
-         {_: :tr, c: keys.map{|k|
+         {_: :tr, c: ks.map{|k|
+            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
             {_: :td, class: k[1],
-             c: r[k[0]].justArray.map{|v|
-               HTML.value k[0],v }.intersperse(' ')}}}}}
+             c: keys.map{|key|
+               r[key].justArray.map{|v|
+                 HTML.value key,v }.intersperse(' ')}}}}}}
     end
 
     # recursive key-value tables
