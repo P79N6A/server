@@ -75,7 +75,7 @@ class WebResource
 
     # tabular-overview
     def self.heading resources
-      keys = ['uri',Type,From,To,Title,Abstract,Date]
+      keys = [From,To,'uri',Type,Title,Abstract,Date]
       {_: :table, c: resources.sort_by{|r|r[Date].justArray[0]}.reverse.map{|r|
          {_: :tr, c: keys.map{|k|
             {_: :td, c: r[k].justArray.map{|v|
@@ -85,12 +85,13 @@ class WebResource
     # recursive key-value render
     def self.kv hash, env={'q'=>{}}
       {_: :table, class: :kv, c: hash.map{|k,vs|
+         hide = k == Content && env['q'] && env['q'].has_key?('h')
          {_: :tr,
           c: [{_: :td, class: :k,
                c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
               {_: :td, class: :v,
                c: ["\n ",
-                   vs.justArray.map{|v| HTML.value k,v }.intersperse(' ')]}]} unless k==Content && env['q'].has_key?('h')}}
+                   vs.justArray.map{|v| HTML.value k,v }.intersperse(' ')]}]} unless hide}}
     end
 
     def htmlDocument graph = {}

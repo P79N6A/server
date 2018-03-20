@@ -113,18 +113,15 @@ class WebResource
       (if node.directory?
        if q.has_key?('f') && path!='/' # FIND
          found = find q['f']
-         q['head'] = true if found.size > 127
          found
        elsif q.has_key?('q') && path!='/' # GREP
          grep q['q']
        else # LS
          if uri[-1] == '/' # inside container
-           index = (self+'index.html').glob # static index
-           if !index.empty? && qs.empty?
+           index = (self+'index.html').glob
+           if !index.empty? && qs.empty? # static index
              index
            else
-             q['head'] = true # abbreviate to listing only
-             @r[:Links][:down] = path + '*' # link to expanded set
              [self, children]
            end
          else # outside container

@@ -80,12 +80,6 @@ class WebResource
       @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
       @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
 
-      # inline-expansion pointer
-      if q.has_key? 'head'
-        qq = q.dup; qq.delete 'head'
-        @r[:Links][:down] = path + (HTTP.qs qq)
-      end
-
       # resource set
       set = selectNodes
       return notfound if !set || set.empty?
