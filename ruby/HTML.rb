@@ -50,7 +50,7 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    def self.kv hash, flip=0
+    def self.kv hash, env={'q'=>{}}, flip=0
       flop = flip != 0 ? 0 : 1
       styl = flip != 0 ? 'flop' : 'flip'
       {_: :table, class: :kv, c: hash.map{|k,vs|
@@ -67,18 +67,20 @@ class WebResource
                        if resource.types.member? SIOC+'InstantMessage'
                          MarkupIM[resource, flop]
                        else
-                         kv v, flop
+                         kv v, env, flop
                        end
                      elsif v.class == WebResource
                        v
-                     elsif k == Content || k == Abstract
+                     elsif k == Content
+                       v
+                     elsif k == Abstract
                        v
                      elsif k == 'uri'
                        v.R
                      else
                        CGI.escapeHTML v.to_s
                      end
-                   }.intersperse(' ')]}]}}}
+                   }.intersperse(' ')]}]} unless k==Content && env['q'].has_key?('h')}}
     end
 
     def htmlDocument graph = {}
@@ -124,7 +126,7 @@ class WebResource
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
-                             link[:prev, '&#9664;'], (HTML.kv tree), link[:next, '&#9654;'], '<br>',
+                             link[:prev, '&#9664;'], (HTML.kv tree, @r), link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n",
