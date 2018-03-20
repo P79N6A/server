@@ -1,12 +1,16 @@
 a      {text-decoration: none; font-weight: bold; background-color: #fff; color:#000}
 body   {font-family: sans-serif; margin: 0}
-table  {display: inline-block}
 img    {max-width: 100%}
 .thumb {max-width: 28em}
-pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; font-family: monospace; margin: 0; white-space: pre-wrap}
-.k     {vertical-align: top}
-.v     {padding: 0}
+pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; margin: 0; white-space: pre-wrap}
+.kv    {display: inline-block; border-spacing: 0}
+.k     {vertical-align: top; padding: .3em}
+.v     {padding: .2em}
 .k > a {display:block; font-weight: normal}
+tr:first-child > .k {border-radius: .5em 0 0 0}
+tr:first-child > .v {border-radius: 0 .5em 0 0}
+tr:last-child > .v  {border-radius: 0 0 .5em 0}
+tr:last-child > .k  {border-radius: 0 0 0 .5em}
 .flip, .flip > a {background-color: #000;color:#fff}
 .flop, .flop > a {background-color: #fff;color:#000}
 :target, :target * {background-color: #0f0 !important; color: #fff !important}

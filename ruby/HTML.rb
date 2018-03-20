@@ -53,7 +53,7 @@ class WebResource
     def self.kv hash, flip=0
       flop = flip != 0 ? 0 : 1
       styl = flip != 0 ? 'flop' : 'flip'
-      {_: :table, c: hash.map{|k,vs|
+      {_: :table, class: :kv, c: hash.map{|k,vs|
          {_: :tr,
           c: [{_: :td, class: 'k '+styl,
                c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
