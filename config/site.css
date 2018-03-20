@@ -1,6 +1,6 @@
 a      {text-decoration: none; font-weight: bold; background-color: #fff; color:#000}
 body   {font-family: sans-serif; margin: 0}
-table  {display: inline-block; border-spacing: 0}
+table  {display: inline-block}
 img    {max-width: 100%}
 .thumb {max-width: 28em}
 pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; font-family: monospace; margin: 0; white-space: pre-wrap}

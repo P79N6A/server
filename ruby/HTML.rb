@@ -102,10 +102,10 @@ class WebResource
       tree = {}
       graph.keys.map{|id|
         re = id.R
-        locator = (re.fragment ? re.path : re.dirname).R
         cursor = tree
-        locator.parts.map{|name|
-          cursor = cursor[name] ||= {}}
+        location = re.fragment && re.path || re.dirname # fragments in files, files in dirs
+        location.R.parts.map{|name|
+          cursor = cursor[name] ||= {}} if location
         cursor[Contains] ||= []
         cursor[Contains].push graph[id]}
 
