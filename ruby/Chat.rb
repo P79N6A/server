@@ -5,8 +5,8 @@ class WebResource
     Twitter = 'https://twitter.com'
   end
   module HTML
-    MarkupIM = -> msg, flip {
-      [{class: 'im ' + (flip == 1 ? 'flop' : 'flip'),
+    MarkupIM = -> msg,env {
+      [{class: :im,
         c: [msg[Creator].map{|c|
          if c.respond_to? :uri
            {_: :a, class: :comment, href: c.uri, c: c.R.fragment || c.R.basename || ''}
@@ -14,8 +14,8 @@ class WebResource
            CGI.escapeHTML c
          end}, ' ',
             msg[Abstract], msg[Content],
-            msg[Image].map{|i| Markup[Image][i]},
-            msg[Video].map{|v| Markup[Video][v]}
+            msg[Image].map{|i| Markup[Image][i,env]},
+            msg[Video].map{|v| Markup[Video][v,env]}
            ]}," \n"]}
   end
   module Webize

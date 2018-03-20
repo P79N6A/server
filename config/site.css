@@ -9,5 +9,5 @@ td.from, td.to {max-width:24ex;overflow:hidden}
 td.title {min-width:24ex}
 .kv    {display: inline-block; border: 1px solid #333}
 .k > a {display:block; font-weight: normal}
-.im {display: inline-block; border-radius: .42em; margin: .05em; padding-left:.2em}
+.im {display: inline-block}
 :target, :target * {background-color: #0f0 !important; color: #fff !important}

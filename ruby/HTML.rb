@@ -50,13 +50,13 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    def self.value k, v, env={}
+    def self.value k, v, env
       if Markup[k]
         Markup[k][v,env]
       elsif v.class == Hash
         resource = v.R
         if resource.types.member? SIOC+'InstantMessage'
-          MarkupIM[resource]
+          MarkupIM[resource,env]
         else
           kv v, env
         end
@@ -74,7 +74,7 @@ class WebResource
     end
 
     # tabular-overview
-    def self.heading resources, env={'q'=>{}, 'images'=>{}}
+    def self.heading resources, env
       ks = [[From, :from],
             [To,   :to],
             ['uri'],
@@ -92,7 +92,7 @@ class WebResource
     end
 
     # recursive key-value tables
-    def self.kv hash, env={'q'=>{}, 'images'=>{}}
+    def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          {_: :tr,
@@ -111,6 +111,8 @@ class WebResource
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # full-pathname
       # links for HTTP header
       @r[:Links] ||= {}
+      # image references
+      @r['images'] = {}
 
       htmlGrep graph, q['q'] if q['q']
 
@@ -139,7 +141,7 @@ class WebResource
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
                              (if q.has_key? 'head'
-                              HTML.heading graph.values
+                              HTML.heading graph.values, @r
                              else
                                tree = {} # tree-layout
                                graph.keys.map{|id| # resource identifier
