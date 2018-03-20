@@ -41,7 +41,7 @@ class WebResource
       end
     end
 
-    def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href rel src title type}
+    def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
       html = Nokogiri::HTML.fragment body
       loseTags.map{|tag| html.css(tag).remove} if loseTags
       html.traverse{|e|
