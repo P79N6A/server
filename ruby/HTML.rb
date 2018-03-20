@@ -64,7 +64,7 @@ class WebResource
                        Markup[k].call v
                      elsif v.class == Hash
                        if v.R.types.member? SIOC+'InstantMessage'
-                         MarkupIM[v]
+                         MarkupIM[v, flop]
                        else
                          kv v, flop
                        end
@@ -122,7 +122,7 @@ class WebResource
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
-                         c: ["\n", link[:up, '&#9650;'], '<br>',
+                         c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'], (HTML.kv tree), link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n",

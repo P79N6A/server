@@ -33,6 +33,7 @@ class WebResource
       SIOC+'Usergroup' => :group,
       SIOC+'WikiArticle' => :pencil,
       SIOC+'has_creator' => :user,
+      SIOC+'num_replies' => :comments,
       SIOC+'has_discussion' => :comments,
       SIOC+'user_agent' => :mailer,
       Schema+'Person' => :user,
