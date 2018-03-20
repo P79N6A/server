@@ -63,7 +63,11 @@ class WebResource
                      if Markup[k]
                        Markup[k].call v
                      elsif v.class == Hash
-                       kv v, flop
+                       if v.R.types.member? SIOC+'InstantMessage'
+                         MarkupIM[v]
+                       else
+                         kv v, flop
+                       end
                      elsif v.class == WebResource
                        v
                      elsif k == Content || k == Abstract

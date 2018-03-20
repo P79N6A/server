@@ -4,7 +4,17 @@ class WebResource
   module URIs
     Twitter = 'https://twitter.com'
   end
-
+  module HTML
+    MarkupIM = -> msg {
+      [msg[Creator].justArray.map{|c|
+         if c.respond_to? :uri
+           {_: :a, class: :comment, href: c.uri, c: c.R.fragment || c.R.basename || ''}
+         else
+           CGI.escapeHTML c           
+         end},
+       msg[Content],"<br>\n"]
+    }
+  end
   module Webize
 
     def twitter
