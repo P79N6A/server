@@ -50,37 +50,47 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    def self.kv hash, env={'q'=>{}}, flip=0
-      flop = flip != 0 ? 0 : 1
-      styl = flip != 0 ? 'flop' : 'flip'
+    def self.value k, v, env={}
+      if Markup[k]
+        Markup[k][v]
+      elsif v.class == Hash
+        resource = v.R
+        if resource.types.member? SIOC+'InstantMessage'
+          MarkupIM[resource]
+        else
+          kv v, env
+        end
+      elsif v.class == WebResource
+        v
+      elsif k == Content
+        v
+      elsif k == Abstract
+        v
+      elsif k == 'uri'
+        v.R
+      else
+        CGI.escapeHTML v.to_s
+      end
+    end
+
+    # tabular-overview
+    def self.heading resources
+      keys = ['uri',Type,From,To,Title,Abstract,Date]
+      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0]}.reverse.map{|r|
+         {_: :tr, c: keys.map{|k|
+            {_: :td, c: r[k].justArray.map{|v|
+               HTML.value k,v }}}}}}
+    end
+
+    # recursive key-value render
+    def self.kv hash, env={'q'=>{}}
       {_: :table, class: :kv, c: hash.map{|k,vs|
          {_: :tr,
-          c: [{_: :td, class: 'k '+styl,
+          c: [{_: :td, class: :k,
                c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
-              {_: :td, class: 'v '+styl,
+              {_: :td, class: :v,
                c: ["\n ",
-                   vs.justArray.map{|v|
-                     if Markup[k]
-                       Markup[k].call v
-                     elsif v.class == Hash
-                       resource = v.R
-                       if resource.types.member? SIOC+'InstantMessage'
-                         MarkupIM[resource, flop]
-                       else
-                         kv v, env, flop
-                       end
-                     elsif v.class == WebResource
-                       v
-                     elsif k == Content
-                       v
-                     elsif k == Abstract
-                       v
-                     elsif k == 'uri'
-                       v.R
-                     else
-                       CGI.escapeHTML v.to_s
-                     end
-                   }.intersperse(' ')]}]} unless k==Content && env['q'].has_key?('h')}}
+                   vs.justArray.map{|v| HTML.value k,v }.intersperse(' ')]}]} unless k==Content && env['q'].has_key?('h')}}
     end
 
     def htmlDocument graph = {}
@@ -105,15 +115,6 @@ class WebResource
         @r[:Links][name].do{|uri|
           [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})},"\n"]}}
 
-      # tree of doc-graphs for input to layout function
-      tree = {}
-      graph.keys.map{|id| # resource identifier
-        re = id.R # resource instance
-        cursor = tree # starting point
-        location = re.fragment ? re.path : re.dirname # fragments contained by docs, docs contained in dirs
-        location.R.parts.map{|name| cursor = cursor[name] ||= {}} if location # locate container
-        cursor[Contains] ||= []; cursor[Contains].push graph[id]} # append to container
-
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
@@ -126,7 +127,20 @@ class WebResource
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
-                             link[:prev, '&#9664;'], (HTML.kv tree, @r), link[:next, '&#9654;'], '<br>',
+                             link[:prev, '&#9664;'],
+                             (if q.has_key? 'head'
+                              HTML.heading graph.values
+                             else
+                               tree = {} # tree-layout
+                               graph.keys.map{|id| # resource identifier
+                                 re = id.R # resource instance
+                                 cursor = tree # starting point
+                                 location = re.fragment ? re.path : re.dirname # fragments contained by docs, docs contained in dirs
+                                 location.R.parts.map{|name| cursor = cursor[name] ||= {}} if location # locate container
+                                 cursor[Contains] ||= []; cursor[Contains].push graph[id]} # append to container
+                               HTML.kv tree, @r
+                              end),
+                             link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n",
