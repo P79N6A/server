@@ -7,7 +7,7 @@ pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; margin: 0; white-sp
 .k     {vertical-align: top; padding: .3em}
 .v     {padding: .2em}
 .k > a {display:block; font-weight: normal}
-.im {display: inline-block}
+.im {display: inline-block; border-radius: .42em; margin: .05em; padding-left:.3em}
 tr:first-child > .k {border-radius: .5em 0 0 0}
 tr:first-child > .v {border-radius: 0 .5em 0 0}
 tr:last-child > .v  {border-radius: 0 0 .5em 0}
