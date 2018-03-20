@@ -98,14 +98,16 @@ class WebResource
         @r[:Links][name].do{|uri|
           [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})},"\n"]}}
 
-      # graph to tree
+      # tree of doc-graphs as input to layout function
       tree = {}
       graph.keys.map{|id|
-        cur = tree
-        id.R.parts.map{|name|
-          cur = cur[name] ||= {}}
-          cur[Contains] ||= []
-          cur[Contains].push graph[id]}
+        re = id.R
+        locator = (re.fragment ? re.path : re.dirname).R
+        cursor = tree
+        locator.parts.map{|name|
+          cursor = cursor[name] ||= {}}
+        cursor[Contains] ||= []
+        cursor[Contains].push graph[id]}
 
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
