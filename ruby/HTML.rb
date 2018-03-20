@@ -75,8 +75,8 @@ class WebResource
 
     # tabular-overview
     def self.heading resources
-      keys = [From,To,'uri',Type,Title,Abstract,Date]
-      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0]}.reverse.map{|r|
+      keys = [From,To,'uri',Type,Title,Abstract,Image,Video,Date]
+      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
          {_: :tr, c: keys.map{|k|
             {_: :td, c: r[k].justArray.map{|v|
                HTML.value k,v }}}}}}
