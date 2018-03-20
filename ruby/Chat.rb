@@ -32,11 +32,9 @@ class WebResource
         authorName = t.css('.username b')[0].inner_text
         author = R[Twitter + '/' + authorName]
         ts = Time.at(t.css('[data-time]')[0].attr('data-time').to_i).iso8601
-        yield s, Type, R[SIOC+'Tweet']
+        yield s, Type, R[SIOC+'InstantMessage']
         yield s, Date, ts
         yield s, Creator, author
-        yield s, To, (Twitter + '/#twitter').R
-        yield s, Title, '▶'
         content = t.css('.tweet-text')[0]
         content.css('a').map{|a|
           a.set_attribute('href', Twitter + (a.attr 'href')) if (a.attr 'href').match /^\//
