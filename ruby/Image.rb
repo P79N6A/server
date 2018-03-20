@@ -25,26 +25,36 @@ class WebResource
   end
   module HTML
 
-    Markup[Image] = -> image {
+    Markup[Image] = -> image,env {
       img = image.R
-      {class: :thumb,
-       c: {_: :a, href: img.uri,
-           c: {_: :img, src: if !img.host # thumbnail
-                img.path + '?preview'
-              else
-                img.uri
-               end}}}}
-
-    Markup[Video] = -> video {
-      video = video.R
-      if video.match /youtu/
-        id = video.q(false)['v'] || video.parts[-1]
-        {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
+      if env['images'][img.uri]
       else
-        {class: :video,
-         c: [{_: :video, src: video.uri, controls: :true}, '<br>',
-             {_: :span, class: :notes, c: video.basename}]}
-      end}
+        env['images'][img.uri] = true
+        {class: :thumb,
+         c: {_: :a, href: img.uri,
+             c: {_: :img, src: if !img.host # thumbnail
+                  img.path + '?preview'
+                else
+                  img.uri
+                 end}}}
+      end
+    }
+
+    Markup[Video] = -> video,env {
+      video = video.R
+      if env['images'][video.uri]
+      else
+        env['images'][video.uri] = true
+        if video.match /youtu/
+          id = video.q(false)['v'] || video.parts[-1]
+          {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
+        else
+          {class: :video,
+           c: [{_: :video, src: video.uri, controls: :true}, '<br>',
+               {_: :span, class: :notes, c: video.basename}]}
+        end
+      end
+    }
 
   end
 end

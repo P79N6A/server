@@ -5,14 +5,14 @@ class WebResource
 
     Markup = {}
 
-    Markup[Type] = -> t {
+    Markup[Type] = -> t,env=nil {
       t = t.R
       {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}}
 
-    Markup[DC+'cache'] = -> c {
+    Markup[DC+'cache'] = -> c,env=nil {
       {_: :a, href: c.uri, class: :chain}}
 
-    Markup[Date] = -> date {
+    Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
     def self.render x
@@ -52,7 +52,7 @@ class WebResource
 
     def self.value k, v, env={}
       if Markup[k]
-        Markup[k][v]
+        Markup[k][v,env]
       elsif v.class == Hash
         resource = v.R
         if resource.types.member? SIOC+'InstantMessage'
@@ -74,7 +74,7 @@ class WebResource
     end
 
     # tabular-overview
-    def self.heading resources
+    def self.heading resources, env={'q'=>{}, 'images'=>{}}
       ks = [[From, :from],
             [To,   :to],
             ['uri'],
@@ -88,11 +88,11 @@ class WebResource
             {_: :td, class: k[1],
              c: keys.map{|key|
                r[key].justArray.map{|v|
-                 HTML.value key,v }.intersperse(' ')}}}}}}
+                 HTML.value key,v,env }.intersperse(' ')}}}}}}
     end
 
     # recursive key-value tables
-    def self.kv hash, env={'q'=>{}}
+    def self.kv hash, env={'q'=>{}, 'images'=>{}}
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          {_: :tr,
