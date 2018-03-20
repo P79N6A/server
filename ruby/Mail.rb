@@ -113,7 +113,7 @@ class WebResource
         user, domain = addr.split '@'
         if user && domain
           apath = dpath + domain + '/' + user # address
-          yield e, (from.member? addr) ? Creator : To, R[apath+'#'+user] # To/From triple
+          yield e, (from.member? addr) ? Creator : To, R[apath+'?head'] # To/From triple
           if subject
             slug = subject.scan(/[\w]+/).map(&:downcase).uniq.join('.')[0..63]
             mpath = apath + '.' + dstr[8..-1].gsub(/[^0-9]+/,'.') + slug # time & subject

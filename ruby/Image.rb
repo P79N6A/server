@@ -28,13 +28,12 @@ class WebResource
     Markup[Image] = -> image {
       img = image.R
       {class: :thumb,
-       c: [{_: :a, href: img.uri,
-            c: {_: :img, src: if !img.host # thumbnailify local file
-                 img.path + '?preview'
-               else
-                 img.uri
-                end}},'<br>',
-           {_: :a, href: img.uri, c: [{_: :span, class: :host, c: img.host}, {_: :span, class: :notes, c: (CGI.escapeHTML img.path)}]}]}}
+       c: {_: :a, href: img.uri,
+           c: {_: :img, src: if !img.host # thumbnail
+                img.path + '?preview'
+              else
+                img.uri
+               end}}}}
 
     Markup[Video] = -> video {
       video = video.R

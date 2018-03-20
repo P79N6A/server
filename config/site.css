@@ -5,6 +5,8 @@ img    {max-width: 100%}
 .date  {white-space: nowrap}
 pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; margin: 0; white-space: pre-wrap}
 td     {vertical-align: top}
+td.from, td.to {max-width:24ex;overflow:hidden}
+td.title {min-width:24ex}
 .kv    {display: inline-block; border: 1px solid #333}
 .k > a {display:block; font-weight: normal}
 .im {display: inline-block; border-radius: .42em; margin: .05em; padding-left:.2em}

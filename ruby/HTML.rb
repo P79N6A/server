@@ -31,7 +31,7 @@ class WebResource
         x.map{|n|render n}.join
       when R
         render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2,
-                c: x[:label][0] || URI.unescape(x.fragment || (x.path && x.path[1..-1]) || x.host || '&#x279f;')})
+                c: x[:label][0] || URI.unescape(x.fragment || x.basename || x.host || '&#x279f;')})
       when NilClass
         ''
       when FalseClass
@@ -75,14 +75,23 @@ class WebResource
 
     # tabular-overview
     def self.heading resources
-      keys = [From,To,'uri',Type,Title,Abstract,Image,Video,Date]
+      keys = [[From, :from],
+              [To,   :to],
+              ['uri'],
+              [Type],
+              [Title,:title],
+              [Abstract],
+              [Image],
+              [Video],
+              [Date]]
       {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
          {_: :tr, c: keys.map{|k|
-            {_: :td, c: r[k].justArray.map{|v|
-               HTML.value k,v }}}}}}
+            {_: :td, class: k[1],
+             c: r[k[0]].justArray.map{|v|
+               HTML.value k[0],v }.intersperse(' ')}}}}}
     end
 
-    # recursive key-value render
+    # recursive key-value tables
     def self.kv hash, env={'q'=>{}}
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
