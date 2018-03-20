@@ -2,6 +2,7 @@ a      {text-decoration: none; font-weight: bold; background-color: #000; color:
 body   {font-family: sans-serif; margin: 0; background-color:#000; color: #fff}
 img    {max-width: 100%}
 .thumb {max-width: 28em}
+.date  {white-space: nowrap}
 pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; margin: 0; white-space: pre-wrap}
 .kv    {display: inline-block; border: 1px solid #333}
 .k     {vertical-align: top}

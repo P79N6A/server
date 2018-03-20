@@ -13,7 +13,7 @@ class WebResource
       {_: :a, href: c.uri, class: :chain}}
 
     Markup[Date] = -> date {
-      {_: :a, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
+      {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
     def self.render x
       case x
@@ -91,7 +91,7 @@ class WebResource
                c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
               {_: :td, class: :v,
                c: ["\n ",
-                   vs.justArray.map{|v| HTML.value k,v }.intersperse(' ')]}]} unless hide}}
+                   vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]} unless hide}}
     end
 
     def htmlDocument graph = {}
