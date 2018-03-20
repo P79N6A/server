@@ -10,9 +10,8 @@ class WebResource
          if c.respond_to? :uri
            {_: :a, class: :comment, href: c.uri, c: c.R.fragment || c.R.basename || ''}
          else
-           CGI.escapeHTML c           
-         end},
-       msg[Content],"<br>\n"]
+           CGI.escapeHTML c
+         end}, ' ', msg[Content], "<br>\n"]
     }
   end
   module Webize
