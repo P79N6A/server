@@ -117,7 +117,7 @@ class WebResource
                 a.set_attribute 'href', link
                 if %w{gif jpeg jpg png webp}.member? re.ext.downcase
                   yield s, Image, re
-                elsif re.host && re.host.match(/youtu/)
+                elsif (%w{mp4 webm}.member? re.ext.downcase) || (re.host && re.host.match(/(vimeo|youtu)/))
                   yield s, Video, re
                 elsif re != subject
                   yield s, DC+'link', re
