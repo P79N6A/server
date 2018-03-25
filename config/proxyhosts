@@ -1,21 +1,17 @@
-# mitmproxy -p 443 --mode reverse:http://localhost --set keep_host_header
-# standard SOLID/RDF-interface via request-time proxy. ideally we wouldnt have to write any, as standard-adoption would take over
-# but network-effects winner-take-all means fewer adaptors to implement
-
+# launch proxy-server
+#$ mitmproxy -p 443 --showhost -m reverse:http://localhost --set keep_host_header=true
+# forward requests to RDFizing proxy via DNS
 # facebook
 0.0.0.0 facebook.com
 0.0.0.0 m.facebook.com
 0.0.0.0 www.facebook.com
-
 # reddit
 0.0.0.0 reddit.com
 0.0.0.0 www.reddit.com
-
 # twitter
 0.0.0.0 twitter.com
 0.0.0.0 mobile.twitter.com
 0.0.0.0 www.twitter.com
-
 # URL shortener/obfuscators
 0.0.0.0 l.instagram.com
 0.0.0.0 t.co
