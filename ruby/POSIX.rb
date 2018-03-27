@@ -179,11 +179,16 @@ class WebResource
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
     end
-
   end
-
+  module HTML
+    Markup[Container] = -> c , env {
+      {_: :table, class: :container, c: [
+         {_: :tr, class: :name, c: {_: :td, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}}},
+         {_: :tr, class: :contents, c: {_: :td, c: 'fff'}},
+       ]}
+    }
+  end
   include POSIX
-
   module POSIX
     LinkMethod = begin
                    file = '.cache/link'.R

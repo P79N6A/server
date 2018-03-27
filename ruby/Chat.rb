@@ -5,7 +5,7 @@ class WebResource
     Twitter = 'https://twitter.com'
   end
   module HTML
-    MarkupIM = -> msg,env {
+    Markup[InstantMessage] = -> msg,env {
       [{class: :im,
         c: [msg[Creator].map{|c|
          if c.respond_to? :uri
