@@ -141,16 +141,16 @@ class WebResource
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
                              (if q.has_key? 'head'
-                              HTML.heading graph.values, @r
+                              HTML.heading graph.values, @r # basic listing
                              else
-                               tree = {} # tree-layout
+                               tree = {} # tree
                                graph.keys.map{|id| # resource identifier
-                                 re = id.R # resource instance
-                                 cursor = tree # starting point
-                                 location = re.fragment ? re.path : re.dirname # fragments contained by docs, docs contained in dirs
-                                 location.R.parts.map{|name| cursor = cursor[name] ||= {}} if location # locate container
+                                 re = id.R # resource
+                                 cursor = tree
+                                 location = re.fragment ? re.path : re.dirname # fragments in files, files in dirs
+                                 location.R.parts.map{|name| cursor = cursor[name] ||= {}} if location # find container
                                  cursor[Contains] ||= []; cursor[Contains].push graph[id]} # append to container
-                               HTML.kv tree, @r
+                               HTML.kv tree, @r # render graph-as-tree
                               end),
                              link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
