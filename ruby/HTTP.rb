@@ -134,19 +134,6 @@ class WebResource
                 g[s] ||= {'uri'=>s}
                 g[s][p] ||= []
                 g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # insert
-
-      # add request metadata
-      if q.has_key?('du') && path != '/'
-        set.select{|d|d.node.directory?}.-([self]).map{|node|
-          g[node.path+'/']||={}
-          g[node.path+'/'][Size] = node.du}
-      elsif q.has_key?('f') || q.has_key?('q') || @r[:glob]
-        set.map{|r|
-          bin = r.dirname + '/'
-          g[bin] ||= {'uri' => bin}
-          g[bin][Size] = 0 if !g[bin][Size] || g[bin][Size].class==Array
-          g[bin][Size] += 1}
-      end
       g
     end
 

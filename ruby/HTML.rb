@@ -15,6 +15,10 @@ class WebResource
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
+    Markup[Container] = -> dir, env {
+      'dir'
+    }
+
     def self.render x
       case x
       when String
@@ -55,10 +59,12 @@ class WebResource
         Markup[k][v,env]
       elsif v.class == Hash
         resource = v.R
-        if resource.types.member? SIOC+'InstantMessage'
+        types = resource.types
+        if types.member? SIOC+'InstantMessage'
           MarkupIM[resource,env]
         else
-          kv v, env
+          [(Markup[Container][resource,env] if types.member? Container),
+           kv(v,env)]
         end
       elsif v.class == WebResource
         v
