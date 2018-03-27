@@ -110,29 +110,22 @@ class WebResource
     end
 
     def htmlDocument graph = {}
-      # environment
-      @r ||= {}
-      # document title
+      @r ||= {} # environment
       title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # explicit title in RDF
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # full-pathname
-      # links for HTTP header
-      @r[:Links] ||= {}
-      # image references
-      @r['images'] = {}
-
+      @r[:Links] ||= {} # document-level links
+      @r['images'] = {}  # image references
       htmlGrep graph, q['q'] if q['q']
-
-      # CSS
+      # CSS includes
       css = -> s {{_: :style, c: ["\n",
                   ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-
-      # head-links in body
+      # link renderer
       link = -> name,label {
         @r[:Links][name].do{|uri|
           [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})},"\n"]}}
-
+      # output
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
