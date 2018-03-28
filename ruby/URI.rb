@@ -39,6 +39,7 @@ class WebResource < RDF::URI
     From     = SIOC + 'has_creator'
     Creator  = SIOC + 'has_creator'
     Content  = SIOC + 'content'
+    BlogPost = SIOC + 'BlogPost'
     InstantMessage = SIOC + 'InstantMessage'
     Resource = W3   + '2000/01/rdf-schema#Resource'
     Stat     = W3   + 'ns/posix/stat#'

@@ -1,5 +1,14 @@
 # coding: utf-8
 class WebResource
+
+  module HTML
+    Markup[BlogPost] = -> post , env {
+      {_: :table, class: :post,
+       c: {_: :tr,
+           c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
+               {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
+  end
+
   module Feed
     include URIs
 
@@ -228,7 +237,7 @@ class WebResource
             u = @base.join(u).to_s unless u.match /^http/
             resource = u.R
 
-            yield u, Type, R[SIOC+'BlogPost']
+            yield u, Type, R[BlogPost]
             blogs = [resource.join('/')]
             blogs.push @base.join('/') if @host && @host != resource.host # re-blog at another host
             blogs.map{|blog|

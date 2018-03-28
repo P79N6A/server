@@ -5,12 +5,8 @@ class WebResource
 
     Markup = {}
 
-    Markup[Type] = -> t,env=nil {
-      t = t.R
+    Markup[Type] = -> t,env=nil { t = t.R
       {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}}
-
-    Markup[DC+'cache'] = -> c,env=nil {
-      {_: :a, href: c.uri, class: :chain}}
 
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
@@ -46,7 +42,7 @@ class WebResource
       if k.empty?
         ''
       elsif [Date, Type, To, From, DC+'cache', Size].member? k # base metadata
-        "background-color: #ccc; color: #000"
+        "background-color: #ddd; color: #000"
       elsif [Contains, Content, Title, Link, Image, Video, 'status', 'uri'].member? k # content & title
         "background-color: #000; color: #fff"
       else # oddbal metadata, colorize it
@@ -64,7 +60,9 @@ class WebResource
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
-          Markup[Container][resource,env]
+          Markup[Container][v,env]
+        elsif types.member? BlogPost
+          Markup[BlogPost][v,env]
         else
           kv v,env
         end
@@ -75,7 +73,8 @@ class WebResource
       elsif k == Abstract
         v
       elsif k == 'uri'
-        v.R
+        u = v.R
+        {_: :a, class: :wb, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
       else
         {_: :span, class: :bw, c: CGI.escapeHTML(v.to_s)}
       end
