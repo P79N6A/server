@@ -61,7 +61,7 @@ class WebResource
         elsif types.member? Container
           Markup[Container][resource,env]
         else
-          k v,env
+          kv v,env
         end
       elsif v.class == WebResource
         v
