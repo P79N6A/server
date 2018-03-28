@@ -154,8 +154,9 @@ class WebResource
       `#{cmd} | head -n 1024`.lines.map{|path| POSIX.path path.chomp}
     end
   end
-  module Webize
+  include POSIX
 
+  module Webize
     # emit RDF of file-metadata
     def triplrFile
       s = path
@@ -180,6 +181,7 @@ class WebResource
         yield s, Date, mt.iso8601}
     end
   end
+
   module HTML
     Markup[Container] = -> c , env {
       {_: :table, class: :container, c: [
@@ -188,9 +190,10 @@ class WebResource
        ]}
     }
   end
-  include POSIX
+
   module POSIX
-    LinkMethod = begin
+    # volume-local link method. avoid symlinks for more resiliency against deletions + less runtime indirection. Android builds sometimes can't though
+    LinkMethod = begin # link-method capability test
                    file = '.cache/link'.R
                    link = '.cache/link_'.R
                    file.touch unless file.exist?

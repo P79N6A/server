@@ -31,7 +31,7 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R
-        render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2,
+        render({_: :a, class: :wb, href: x.uri, id: 'link'+rand.to_s.sha2,
                 c: x[:label][0] || URI.unescape(x.fragment || x.basename || x.host || '&#x279f;')})
       when NilClass
         ''
@@ -45,7 +45,7 @@ class WebResource
     def self.colorize k
       if k.empty?
         ''
-      elsif [Contains, 'status'].member? k
+      elsif [Contains, Content, 'status'].member? k
         "background-color: #000; color: #fff"
       else
         "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
@@ -75,7 +75,7 @@ class WebResource
       elsif k == 'uri'
         v.R
       else
-        CGI.escapeHTML v.to_s
+        {_: :span, class: :bw, c: CGI.escapeHTML(v.to_s)}
       end
     end
 
