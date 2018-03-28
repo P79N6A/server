@@ -183,12 +183,13 @@ class WebResource
   end
 
   module HTML
-    Markup[Container] = -> c , env {
+    Markup[Container] = -> container , env {
+      c = container.R
+      container.delete Type
+      container.delete 'uri'
       {_: :table, class: :container, c: [
          {_: :tr, class: :name, c: {_: :td, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}}},
-         {_: :tr, class: :contents, c: {_: :td, c: 'fff'}},
-       ]}
-    }
+         {_: :tr, class: :contents, c: {_: :td, c: HTML.kv(container,env)}}]}}
   end
 
   module POSIX

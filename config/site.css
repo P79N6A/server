@@ -7,6 +7,9 @@ img    {max-width: 100%}
 .post {background-color:#fff; margin: .2em}
 .post .type {vertical-align:top}
 .post .type a {color: #000; font-size: 2em}
+.container .name > td {padding: 0}
+.container .name > td > a {font-size: 1.4em; padding: .2em; background-color: #fff; color: #000; border-radius: .3em .3em 0 0 }
+.container .contents > td {padding: .2em; background-color: #fff; color: #000; border-radius: 0 .3em .3em .3em}
 .thumb {max-width: 28em}
 .date  {white-space: nowrap; color: #000}
 td.k {text-align: center}
