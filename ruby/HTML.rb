@@ -46,8 +46,8 @@ class WebResource
       if k.empty?
         ''
       elsif [Date, Type, To, From, DC+'cache', Size].member? k # base metadata
-        "background-color: #bbb"
-      elsif [Contains, Content, Title, 'status', 'uri'].member? k # content/titles
+        "background-color: #ccc; color: #000"
+      elsif [Contains, Content, Title, Link, Image, Video, 'status', 'uri'].member? k # content & title
         "background-color: #000; color: #fff"
       else # oddbal metadata, colorize it
         "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
