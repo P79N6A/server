@@ -45,11 +45,11 @@ class WebResource
     def self.colorize k
       if k.empty?
         ''
-      elsif [Date, Type, To, From, DC+'cache'].member? k
+      elsif [Date, Type, To, From, DC+'cache', Size].member? k # base metadata
         "background-color: #bbb"
-      elsif [Contains, Content, Title, 'status', 'uri'].member? k
+      elsif [Contains, Content, Title, 'status', 'uri'].member? k # content/titles
         "background-color: #000; color: #fff"
-      else
+      else # oddbal metadata, colorize it
         "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
       end
     end
