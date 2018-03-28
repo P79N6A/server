@@ -98,18 +98,19 @@ class WebResource
     def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
+         style = "background-color: #{'#%06x' % (rand 16777216)}; color: black"
          {_: :tr,
-          c: [{_: :td, class: :k,
+          c: [{_: :td, class: :k, style: style,
                c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
-              {_: :td, class: :v,
+              {_: :td, class: :v, style: style,
                c: ["\n ",
                    vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]} unless hide}}
     end
 
     def htmlDocument graph = {}
-      @r ||= {} # environment
-      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # explicit title in RDF
-              [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # full-pathname
+      @r ||= {} # env
+      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # explicit title
+              [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # pathname
       @r[:Links] ||= {} # document-level links
       @r['images'] = {}  # image references
       htmlGrep graph, q['q'] if q['q']
@@ -137,16 +138,16 @@ class WebResource
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
                              (if q.has_key? 'head'
-                              HTML.heading graph.values, @r # basic listing
-                             else
-                               tree = {} # tree
-                               graph.keys.map{|id| # resource identifier
-                                 re = id.R # resource
+                              HTML.heading graph.values, @r # tabular overview
+                             else # graph as tree
+                               tree = {}
+                               graph.keys.map{|id|
+                                 re = id.R # identified resource
                                  cursor = tree
                                  location = re.fragment ? re.path : re.dirname # fragments in files, files in dirs
                                  location.R.parts.map{|name| cursor = cursor[name] ||= {}} if location # find container
-                                 cursor[Contains] ||= []; cursor[Contains].push graph[id]} # append to container
-                               HTML.kv tree, @r # render graph-as-tree
+                                 cursor[Contains] ||= []; cursor[Contains].push graph[id]} # append
+                               HTML.kv tree, @r # tree -> HTML
                               end),
                              link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
