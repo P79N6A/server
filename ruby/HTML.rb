@@ -42,15 +42,6 @@ class WebResource
       end
     end
 
-    def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
-      html = Nokogiri::HTML.fragment body
-      loseTags.map{|tag| html.css(tag).remove} if loseTags
-      html.traverse{|e|
-        e.attribute_nodes.map{|a|
-          a.unlink unless keepAttr.member? a.name}} if keepAttr
-      html.to_xhtml(:indent => 0)
-    end
-
     def self.colorize k
       if k.empty?
         ''
@@ -193,6 +184,15 @@ class WebResource
       # highlighting CSS
       graph['#abstracts'] = {Abstract => HTML.render({_: :style, c: wordIndex.values.map{|i|
                                                         ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
+    end
+
+    def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
+      html = Nokogiri::HTML.fragment body
+      loseTags.map{|tag| html.css(tag).remove} if loseTags
+      html.traverse{|e|
+        e.attribute_nodes.map{|a|
+          a.unlink unless keepAttr.member? a.name}} if keepAttr
+      html.to_xhtml(:indent => 0)
     end
 
   end

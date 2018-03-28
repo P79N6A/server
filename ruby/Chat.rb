@@ -11,7 +11,7 @@ class WebResource
               if c.respond_to? :uri
                 name = c.R.fragment || c.R.basename || ''
                 color = env[:colors][name] ||= (HTML.colorize name)
-                {_: :a, class: :comment, style: color, href: c.uri, c: name}
+                {_: :a, class: :comment, style: color, href: msg.uri, c: name}
               else
                 CGI.escapeHTML c
               end}, ' ',
