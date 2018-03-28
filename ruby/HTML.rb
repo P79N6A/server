@@ -45,7 +45,9 @@ class WebResource
     def self.colorize k
       if k.empty?
         ''
-      elsif [Contains, Content, 'status'].member? k
+      elsif [Date, Type, To, From, DC+'cache'].member? k
+        "background-color: #bbb"
+      elsif [Contains, Content, Title, 'status', 'uri'].member? k
         "background-color: #000; color: #fff"
       else
         "background-color: #{'#%06x' % (rand 16777216)}; color: #000"

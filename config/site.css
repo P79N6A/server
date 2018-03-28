@@ -5,7 +5,7 @@ a, td, div, span {border-radius: .2em}
 img    {max-width: 100%}
 .wb {background-color:#fff; color: #000}
 .thumb {max-width: 28em}
-.date  {white-space: nowrap}
+.date  {white-space: nowrap; color: #000}
 td.k {text-align: center}
 pre    {min-width: 40ex; max-width: 255ex; overflow: hidden; margin: 0; white-space: pre-wrap}
 table, div {display: inline-block}
