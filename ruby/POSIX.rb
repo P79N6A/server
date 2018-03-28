@@ -125,7 +125,7 @@ class WebResource
              [self, children]
            end
          else # outside container
-           @r[:Links][:down] = path + '/' + qs
+           @r[:links][:down] = path + '/' + qs
            self
          end
        end

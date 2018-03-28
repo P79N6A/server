@@ -15,6 +15,7 @@ class WebResource
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
+    # in-memory data-structure to HTML string
     def self.render x
       case x
       when String
@@ -50,6 +51,17 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
+    def self.colorize k
+      if k.empty?
+        ''
+      elsif [Contains, 'status'].member? k
+        "background-color: #000; color: #fff"
+      else
+        "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
+      end
+    end
+
+    # typed value to markup
     def self.value k, v, env
       if Markup[k]
         Markup[k][v,env]
@@ -98,10 +110,10 @@ class WebResource
     def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
-         style = "background-color: #{'#%06x' % (rand 16777216)}; color: black"
+         style = env[:colors][k] ||= HTML.colorize(k)
          {_: :tr,
           c: [{_: :td, class: :k, style: style,
-               c: {_: :a, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
+               c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
               {_: :td, class: :v, style: style,
                c: ["\n ",
                    vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]} unless hide}}
@@ -111,8 +123,9 @@ class WebResource
       @r ||= {} # env
       title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # explicit title
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # pathname
-      @r[:Links] ||= {} # document-level links
-      @r['images'] = {}  # image references
+      @r[:links] ||= {} # document-level links
+      @r[:images] ||= {}  # image references
+      @r[:colors] ||= {}  # image references
       htmlGrep graph, q['q'] if q['q']
       # CSS includes
       css = -> s {{_: :style, c: ["\n",
@@ -121,7 +134,7 @@ class WebResource
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       # link renderer
       link = -> name,label {
-        @r[:Links][name].do{|uri|
+        @r[:links][name].do{|uri|
           [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})},"\n"]}}
       # output
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
@@ -131,7 +144,7 @@ class WebResource
                          c: [{_: :meta, charset: 'utf-8'},
                              {_: :title, c: title},
                              {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                             *@r[:Links].do{|links| links.map{|type,uri|
+                             *@r[:links].do{|links| links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,

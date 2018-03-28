@@ -41,7 +41,7 @@ class WebResource
 
     def GET
       @r[:Response] = {}
-      @r[:Links] = {}
+      @r[:links] = {}
       parts = path[1..-1].split '/'
       firstPart = parts[0] || ''
       return fileResponse if node.file?
@@ -77,9 +77,9 @@ class WebResource
         end
       end
       sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '') # trailing slash
-      @r[:Links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
-      @r[:Links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
-      @r[:Links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
+      @r[:links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
+      @r[:links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
+      @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
 
       # resource set
       set = selectNodes
@@ -87,7 +87,7 @@ class WebResource
       format = selectMIME
 
       # response header
-      @r[:Response].update({'Link' => @r[:Links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:Links].empty?
+      @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
 

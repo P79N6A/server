@@ -5,14 +5,16 @@ class WebResource
     Twitter = 'https://twitter.com'
   end
   module HTML
-    Markup[InstantMessage] = -> msg,env {
-      [{class: :im,
+    Markup[InstantMessage] = -> msg, env {
+      [{class: :bw,
         c: [msg[Creator].map{|c|
-         if c.respond_to? :uri
-           {_: :a, class: :comment, href: c.uri, c: c.R.fragment || c.R.basename || ''}
-         else
-           CGI.escapeHTML c
-         end}, ' ',
+              if c.respond_to? :uri
+                name = c.R.fragment || c.R.basename || ''
+                color = env[:colors][name] ||= (HTML.colorize name)
+                {_: :a, class: :comment, style: color, href: c.uri, c: name}
+              else
+                CGI.escapeHTML c
+              end}, ' ',
             msg[Abstract], msg[Content],
             msg[Image].map{|i| Markup[Image][i,env]},
             msg[Video].map{|v| Markup[Video][v,env]}

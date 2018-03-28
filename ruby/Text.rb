@@ -5,20 +5,31 @@ class WebResource
     def triplrArchive &f;     yield uri, Type, R[Stat+'Archive']; triplrFile &f end
     def triplrAudio &f;       yield uri, Type, R[Sound]; triplrFile &f end
     def triplrDataFile &f;    yield uri, Type, R[Stat+'DataFile']; triplrFile &f end
-    def triplrBat &f;         yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l batch -f html #{sh}` end
-    def triplrDocker &f;      yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l docker -f html #{sh}` end
-    def triplrIni &f;         yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l ini -f html #{sh}` end
-    def triplrMakefile &f;    yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l make -f html #{sh}` end
-    def triplrLisp &f;        yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l lisp -f html #{sh}` end
-    def triplrShellScript &f; yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -l sh -f html #{sh}` end
-    def triplrCode &f;        yield uri, Type, R[SIOC+'SourceCode']; yield uri, Content, `pygmentize -f html #{sh}` end # let pygments determine file-type
-    def triplrTeX;            yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
+
+    def triplrBat &f
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -l batch -f html #{sh}` end
+    def triplrDocker &f
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -l docker -f html #{sh}` end
+    def triplrIni &f
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -l ini -f html #{sh}` end
+    def triplrMakefile &f
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -l make -f html #{sh}` end
+    def triplrLisp &f
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -l lisp -f html #{sh}` end
+    def triplrShellScript &f
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -l sh -f html #{sh}` end
     def triplrRuby &f
-      u = path[0..-4]
-      yield u, Type, R[SIOC+'SourceCode']
-      yield u, Title, basename
-      yield u, Content, `pygmentize -l ruby -f html #{sh}`
-      yield u, DC+'cache', self
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -l ruby -f html #{sh}` end
+    def triplrCode &f # generic, pygments determine file-type
+      yield uri, Type, R[SIOC+'SourceCode']
+      yield uri, Content, `pygmentize -f html #{sh}`
     end
 
     def triplrWord conv, argB='', &f
@@ -26,6 +37,7 @@ class WebResource
       yield uri, Content, '<pre>' + `#{conv} #{sh} #{argB}` + '</pre>'
       triplrFile &f
     end
+
     def triplrRTF          &f; triplrWord :catdoc,        &f end
     def triplrWordDoc      &f; triplrWord :antiword,      &f end
     def triplrWordXML      &f; triplrWord :docx2txt, '-', &f end
@@ -45,6 +57,9 @@ class WebResource
       puts uri, e.class, e.message
     end
     
+    def triplrTeX
+      yield stripDoc.uri, Content, `cat #{sh} | tth -r` end
+
     def triplrMarkdown
       doc = stripDoc.uri
       attr = stripDoc.basename == 'README' ? Abstract : Content
