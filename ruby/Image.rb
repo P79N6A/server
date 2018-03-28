@@ -27,9 +27,9 @@ class WebResource
 
     Markup[Image] = -> image,env {
       img = image.R
-      if env['images'][img.uri]
+      if env[:images][img.uri]
       else
-        env['images'][img.uri] = true
+        env[:images][img.uri] = true
         {class: :thumb,
          c: {_: :a, href: img.uri,
              c: {_: :img, src: if !img.host # thumbnail
@@ -42,9 +42,9 @@ class WebResource
 
     Markup[Video] = -> video,env {
       video = video.R
-      if env['images'][video.uri]
+      if env[:images][video.uri]
       else
-        env['images'][video.uri] = true
+        env[:images][video.uri] = true
         if video.match /youtu/
           id = video.q(false)['v'] || video.parts[-1]
           {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
