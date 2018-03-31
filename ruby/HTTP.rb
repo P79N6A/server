@@ -48,10 +48,10 @@ class WebResource
       return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
       return [302,{'Location' => path+'/'+qs},[]] if node.directory? && path[-1] != '/'
 
-      # datedir pointers
-      dp = []
+      # find next/prev chronodir for HEAD page pointers
+      dp = [] # datetime parts
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
-      n = nil; p = nil
+      n = nil; p = nil # next / prev pointer
       case dp.length
       when 1 # Y
         year = dp[0]
@@ -106,51 +106,6 @@ class WebResource
             g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}
-    end
-
-    # optimization. RDF loader can JSON but this bypasses RDF library when loading to JSON tree representation. less function-call/abstraction overhead
-    def load set
-      g = {}                 # JSON tree (nested Hash in-memory)
-      graph = RDF::Graph.new # graph
-      rdf,json = set.partition &:isRDF
-
-      # load RDF
-      rdf.map{|n|
-        graph.load n.localPath, :base_uri => n}
-      graph.each_triple{|s,p,o| # each triple
-        s = s.to_s; p = p.to_s # subject, predicate
-        o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
-        g[s] ||= {'uri'=>s}
-        g[s][p] ||= []
-        g[s][p].push o unless g[s][p].member? o} # insert
-
-      # load JSON
-      json.map{|n|
-        n.transcode.do{|transcode|
-          ::JSON.parse(transcode.readFile).map{|s,re| # subject
-            re.map{|p,o| # predicate object(s)
-              o.justArray.map{|o| # each triple
-                o = o.R if o.class==Hash
-                g[s] ||= {'uri'=>s}
-                g[s][p] ||= []
-                g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # insert
-      g
-    end
-
-    def chronoDir ps
-      time = Time.now
-      loc = time.strftime(case ps[0][0].downcase
-                          when 'y'
-                            '%Y'
-                          when 'm'
-                            '%Y/%m'
-                          when 'd'
-                            '%Y/%m/%d'
-                          when 'h'
-                            '%Y/%m/%d/%H'
-                          else
-                          end)
-      [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
     end
 
     def fileResponse

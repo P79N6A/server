@@ -50,5 +50,37 @@ class WebResource
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
     end
   end
+
   include JSON
+
+  module HTTP
+    # optimization bypasses RDFlib abstraction-funcall overhead for straight JSON to in-memory Hash parse common-case
+    def load set
+      g = {}                 # JSON tree (nested Hash in-memory)
+      graph = RDF::Graph.new # graph
+      rdf,json = set.partition &:isRDF
+
+      # load RDF
+      rdf.map{|n|
+        graph.load n.localPath, :base_uri => n}
+      graph.each_triple{|s,p,o| # each triple
+        s = s.to_s; p = p.to_s # subject, predicate
+        o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
+        g[s] ||= {'uri'=>s}
+        g[s][p] ||= []
+        g[s][p].push o unless g[s][p].member? o} # insert
+
+      # load JSON
+      json.map{|n|
+        n.transcode.do{|transcode|
+          ::JSON.parse(transcode.readFile).map{|s,re| # subject
+            re.map{|p,o| # predicate object(s)
+              o.justArray.map{|o| # each triple
+                o = o.R if o.class==Hash
+                g[s] ||= {'uri'=>s}
+                g[s][p] ||= []
+                g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # insert
+      g
+    end
+  end
 end

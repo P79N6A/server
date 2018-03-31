@@ -154,6 +154,7 @@ class WebResource
       `#{cmd} | head -n 1024`.lines.map{|path| POSIX.path path.chomp}
     end
   end
+
   include POSIX
 
   module Webize
@@ -179,6 +180,25 @@ class WebResource
       mtime.do{|mt|
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
+    end
+  end
+
+  module HTTP
+    # redirect to date dir
+    def chronoDir ps
+      time = Time.now
+      loc = time.strftime(case ps[0][0].downcase
+                          when 'y'
+                            '%Y'
+                          when 'm'
+                            '%Y/%m'
+                          when 'd'
+                            '%Y/%m/%d'
+                          when 'h'
+                            '%Y/%m/%d/%H'
+                          else
+                          end)
+      [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
     end
   end
 
