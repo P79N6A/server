@@ -11,12 +11,12 @@ class WebResource
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
-    # in-memory data-structure to HTML string
+    # markup data-structure to HTML string
     def self.render x
       case x
-      when String
+      when String # fully reduced
         x
-      when Hash
+      when Hash # element / DOM node
         void = [:img, :input, :link, :meta].member? x[:_]
         '<' + (x[:_] || 'div').to_s +                        # open tag
           (x.keys - [:_,:c]).map{|a|                         # attribute name
@@ -26,7 +26,7 @@ class WebResource
           (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # close tag
       when Array
         x.map{|n|render n}.join
-      when R
+      when R # <a href>
         render({_: :a, class: :wb, href: x.uri, id: 'link'+rand.to_s.sha2,
                 c: x[:label][0] || URI.unescape(x.fragment || x.basename || x.host || '&#x279f;')})
       when NilClass
@@ -45,12 +45,12 @@ class WebResource
         "background-color: #ddd; color: #000"
       elsif [Contains, Content, Title, Link, Image, Video, 'status', 'uri'].member? k # content & title
         "background-color: #000; color: #fff"
-      else # oddbal metadata, colorize it
+      else # oddball metadata, colorize it
         "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
       end
     end
 
-    # typed value to markup
+    # typed value (p,o) tuple to markup data
     def self.value k, v, env
       if Markup[k]
         Markup[k][v,env]
@@ -145,13 +145,25 @@ class WebResource
                              (if q.has_key? 'head'
                               HTML.heading graph.values, @r # tabular overview
                              else # graph as tree
-                               tree = {}
-                               graph.keys.map{|id|
-                                 re = id.R # identified resource
-                                 cursor = tree
-                                 location = re.fragment ? re.path : re.dirname # fragments in files, files in dirs
-                                 location.R.parts.map{|name| cursor = cursor[name] ||= {}} if location # find container
-                                 cursor[Contains] ||= []; cursor[Contains].push graph[id]} # append
+                               tree = {'uri' => '/',
+                                       Type => [Container],
+                                       Contains => []
+                                      }
+                               graph.values.map{|s|
+                                 this = tree
+                                 path = []
+                                 s.R.path.do{|p|
+                                   p.R.parts.map{|name|
+                                     path.push name
+                                     this = this[Contains].find{|c|c.R.basename==name} ||
+                                            (child = {'uri' => path.join('/'), Contains => []}
+                                             this[Contains].push child
+                                             child)}}
+                                 s.map{|p,o|
+                                   unless p=='uri'
+                                     this[p] ||= []
+                                     this[p].concat o
+                                   end}}
                                HTML.kv tree, @r # tree -> HTML
                               end),
                              link[:next, '&#9654;'], '<br>',
