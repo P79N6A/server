@@ -5,8 +5,13 @@ class WebResource
 
     Markup = {}
 
-    Markup[Type] = -> t,env=nil { t = t.R
-      {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}}
+    Markup[Type] = -> t,env=nil {
+      if t.respond_to? :uri
+        t = t.R
+        {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}
+      else
+        CGI.escapeHTML t.to_s
+      end}
 
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
@@ -50,34 +55,36 @@ class WebResource
       end
     end
 
-    # typed value (p,o) tuple to markup data
-    def self.value k, v, env
-      if Markup[k]
-        Markup[k][v,env]
-      elsif v.class == Hash
-        resource = v.R
-        types = resource.types
-        if types.member? InstantMessage
-          Markup[InstantMessage][resource,env]
-        elsif types.member? Container
-          Markup[Container][v,env]
-        elsif types.member? BlogPost
-          Markup[BlogPost][v,env]
+    # typed value(s) ((p,o) tuple) to markup structure
+    def self.value k, vs, env
+      vs.justArray.map{|v|
+        if Markup[k]
+          Markup[k][v,env]
+        elsif v.class == Hash
+          resource = v.R
+          types = resource.types
+          if types.member? InstantMessage
+            Markup[InstantMessage][resource,env]
+          elsif types.member? Container
+            Markup[Container][v,env]
+          elsif types.member? BlogPost
+            Markup[BlogPost][v,env]
+          else
+            kv v,env
+          end
+        elsif v.class == WebResource
+          v
+        elsif k == Content
+          v
+        elsif k == Abstract
+          v
+        elsif k == 'uri'
+          u = v.R
+          {_: :a, class: :wb, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
         else
-          kv v,env
+          {_: :span, class: :bw, c: CGI.escapeHTML(v.to_s)}
         end
-      elsif v.class == WebResource
-        v
-      elsif k == Content
-        v
-      elsif k == Abstract
-        v
-      elsif k == 'uri'
-        u = v.R
-        {_: :a, class: :wb, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
-      else
-        {_: :span, class: :bw, c: CGI.escapeHTML(v.to_s)}
-      end
+      }
     end
 
     # tabular-overview
@@ -162,7 +169,11 @@ class WebResource
                                  s.map{|p,o|
                                    unless p=='uri'
                                      this[p] ||= []
-                                     this[p].concat o
+                                     if this[p].class == Array
+                                       this[p].push o
+                                     else
+                                       puts this[p].class, this[p]
+                                     end
                                    end}}
                                HTML.kv tree, @r # tree -> HTML
                               end),

@@ -26,17 +26,21 @@ class WebResource
   module HTML
 
     Markup[Image] = -> image,env {
-      img = image.R
-      if env[:images][img.uri]
+      if image.respond_to? :uri
+        img = image.R
+        if env[:images][img.uri]
+        else
+          env[:images][img.uri] = true
+          {class: :thumb,
+           c: {_: :a, href: img.uri,
+               c: {_: :img, src: if !img.host # thumbnail
+                    img.path + '?preview'
+                  else
+                    img.uri
+                   end}}}
+        end
       else
-        env[:images][img.uri] = true
-        {class: :thumb,
-         c: {_: :a, href: img.uri,
-             c: {_: :img, src: if !img.host # thumbnail
-                  img.path + '?preview'
-                else
-                  img.uri
-                 end}}}
+        CGI.escapeHTML image.to_s
       end
     }
 
