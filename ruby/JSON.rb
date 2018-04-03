@@ -1,13 +1,11 @@
 class Hash
 
-  # cast to WebResource (reversible)
+  # cast to WebResource. reversible with Hash data preserved
   def R
     WebResource.new(uri).data self
   end
-  # URI accessor method
-  def uri
-    self["uri"]
-  end
+
+  def uri; self["uri"] end
 
 end
 class WebResource
@@ -24,7 +22,7 @@ class WebResource
       content_encoding 'utf-8'
       reader { WebResource::JSON::Reader }
     end
-    # native JSON format support in RDF-parser class
+    # native JSON format is RDF
     class Reader < RDF::Reader
       format Format
       def initialize(input = $stdin, options = {}, &block)
@@ -54,13 +52,13 @@ class WebResource
   include JSON
 
   module HTTP
-    # optimization bypasses RDFlib abstraction-funcall overhead for straight JSON to in-memory Hash parse common-case
-    def load set
-      g = {}                 # JSON tree (nested Hash in-memory)
-      graph = RDF::Graph.new # graph
+    # load JSON and RDF to URI-indexed Hashtable. HTML and Feed renderer take this as input
+    def load set # file-set argument
+      g = {}                 # JSON tree
+      graph = RDF::Graph.new # RDF graph
       rdf,json = set.partition &:isRDF
 
-      # load RDF
+      # load RDF data
       rdf.map{|n|
         graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
@@ -70,7 +68,7 @@ class WebResource
         g[s][p] ||= []
         g[s][p].push o unless g[s][p].member? o} # insert
 
-      # load JSON
+      # load JSON data
       json.map{|n|
         n.transcode.do{|transcode|
           ::JSON.parse(transcode.readFile).map{|s,re| # subject
@@ -80,7 +78,8 @@ class WebResource
                 g[s] ||= {'uri'=>s}
                 g[s][p] ||= []
                 g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # insert
-      g
+
+      g # loaded graph reference returned to caller
     end
   end
 end
