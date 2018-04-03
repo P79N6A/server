@@ -16,12 +16,11 @@ class WebResource
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
-    # markup data-structure to HTML string
     def self.render x
       case x
-      when String # fully reduced
+      when String
         x
-      when Hash # element / DOM node
+      when Hash # HTML element
         void = [:img, :input, :link, :meta].member? x[:_]
         '<' + (x[:_] || 'div').to_s +                        # open tag
           (x.keys - [:_,:c]).map{|a|                         # attribute name
@@ -87,7 +86,7 @@ class WebResource
       }
     end
 
-    # tabular-overview
+    # tabular overview
     def self.heading resources, env
       ks = [[From, :from],
             [To,   :to],
@@ -126,15 +125,11 @@ class WebResource
       @r[:images] ||= {}  # image references
       @r[:colors] ||= {}  # image references
       htmlGrep graph, q['q'] if q['q']
-      # CSS includes
-      css = -> s {{_: :style, c: ["\n",
-                  ".conf/#{s}.css".R.readFile]}}
+      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-      # link renderer
       link = -> name,label {
-        @r[:links][name].do{|uri|
-          [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})},"\n"]}}
+        @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
       # output
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
