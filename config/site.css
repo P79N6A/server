@@ -1,8 +1,8 @@
-body, .bw {background-color:#000; color: #fff}
 body   {font-family: sans-serif}
 a      {text-decoration: none; font-weight: bold; color:#ccc}
 a, table, td, div, span {border-radius: .2em}
 img    {max-width: 100%}
+.bw {background-color:#000; color: #fff}
 .wb {background-color:#fff; color: #000}
 .post {background-color:#fff; margin: .2em}
 .post .type {vertical-align:top}
