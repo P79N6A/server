@@ -2,6 +2,7 @@
 class WebResource
   module HTTP
     include URIs
+    Host = {}
 
     # Rack HTTP-call entry-point
     def self.call env
@@ -43,13 +44,25 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
       parts = path[1..-1].split '/'
-      firstPart = parts[0] || ''
-      return fileResponse if node.file?
-      return (chronoDir parts) if firstPart.match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
-      return [302,{'Location' => path+'/'+qs},[]] if node.directory? && path[-1] != '/'
 
-      # find next/prev chronodir for HEAD page pointers
-      dp = [] # datetime parts
+      ## bespoke GET handlers
+
+      # host-specific mapping
+      return Host[@r['HTTP_HOST']][self] if Host[@r['HTTP_HOST']]
+
+      # dynamic date-dir redirect
+      return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
+
+      # (fs) directory requested and exists
+      return [302,{'Location' => path + '/' + qs},[]] if node.directory? && path[-1] != '/'
+
+      # (fs) file requested and exists
+      return fileResponse if node.file?
+
+      ## default GET handler
+
+      # HEAD page pointers
+      dp = [] # date parts
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
       n = nil; p = nil # next / prev pointer
       case dp.length
