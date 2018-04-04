@@ -21,8 +21,6 @@ end
 
 class WebResource
   module HTTP
-    Host['l.instagram.com'] = -> re {
-      location = re.q['u']
-      [302,{'Location' => location},[]]}
+    Host['l.instagram.com'] = -> re { [ 302, {'Location' => re.q['u']}, [] ] }
   end
 end
