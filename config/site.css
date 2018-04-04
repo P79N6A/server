@@ -1,15 +1,13 @@
-body   {font-family: sans-serif}
+body   {font-family: sans-serif; background-color:#000; color: #fff}
 a      {text-decoration: none; font-weight: bold; color:#ccc}
 a, table, td, div, span {border-radius: .2em}
 img    {max-width: 100%}
-.bw {background-color:#000; color: #fff}
-.wb {background-color:#fff; color: #000}
 .post {background-color:#fff; margin: .2em}
 .post .type {vertical-align:top}
 .post .type a {color: #000; font-size: 2em}
 .container .name > td {padding: 0}
 .container .name > td > a {font-size: 1.4em; padding: .2em; background-color: #fff; color: #000; border-radius: .3em .3em 0 0 }
-.container .contents > td {padding: .2em; background-color: #fff; color: #000; border-radius: 0 .3em .3em .3em}
+.container .contents > td {padding: .2em; border-style: solid; border-width: 2px; border-radius: 0 .3em .3em .3em}
 .thumb {max-width: 28em}
 .date  {white-space: nowrap; color: #000}
 td.k {text-align: center}

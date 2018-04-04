@@ -6,8 +6,7 @@ class WebResource
   end
   module HTML
     Markup[InstantMessage] = -> msg, env {
-      [{class: :bw,
-        c: [msg[Creator].map{|c|
+      [{c: [msg[Creator].map{|c|
               if c.respond_to? :uri
                 name = c.R.fragment || c.R.basename || ''
                 color = env[:colors][name] ||= (HTML.colorize name)

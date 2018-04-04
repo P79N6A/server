@@ -16,6 +16,7 @@ class WebResource
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
+    # Markup -> String
     def self.render x
       case x
       when String
@@ -31,7 +32,7 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R # <a href>
-        render({_: :a, class: :wb, href: x.uri, id: 'link'+rand.to_s.sha2,
+        render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2,
                 c: x[:label][0] || URI.unescape(x.fragment || x.basename || x.host || '&#x279f;')})
       when NilClass
         ''
@@ -54,7 +55,7 @@ class WebResource
       end
     end
 
-    # typed value(s) ((p,o) tuple) to markup structure
+    # (p,[o]) -> Markup
     def self.value k, vs, env
       vs.justArray.map{|v|
         if Markup[k]
@@ -79,9 +80,9 @@ class WebResource
           v
         elsif k == 'uri'
           u = v.R
-          {_: :a, class: :wb, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
+          {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
         else
-          {_: :span, class: :bw, c: CGI.escapeHTML(v.to_s)}
+          CGI.escapeHTML v.to_s
         end
       }
     end
@@ -104,7 +105,7 @@ class WebResource
                  HTML.value key,v,env }.intersperse(' ')}}}}}}
     end
 
-    # recursive key-value tables
+    # markup key-value table
     def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
@@ -148,7 +149,7 @@ class WebResource
                               HTML.heading graph.values, @r # tabular overview
                              else # graph as tree
                                tree = {'uri' => '/',
-                                       Type => [Container],
+                                       Type => [R[Container]],
                                        Contains => []
                                       }
                                graph.values.map{|s|
@@ -170,7 +171,7 @@ class WebResource
                                        puts this[p].class, this[p]
                                      end
                                    end}}
-                               HTML.kv tree, @r # tree -> HTML
+                               HTML.value Container, [tree], @r
                               end),
                              link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
