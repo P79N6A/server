@@ -15,7 +15,7 @@ class WebResource < RDF::URI
     def + u; R[to_s + u.to_s] end
     def match p; to_s.match p end
 
-    # short names for URIs
+    #URI constants
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
     Purl = 'http://purl.org/'
@@ -50,9 +50,6 @@ class WebResource < RDF::URI
     Mtime    = Stat + 'mtime'
     Container = W3  + 'ns/ldp#Container'
     Contains  = W3  + 'ns/ldp#contains'
-
-    #TODO dynamic list from .conf/proxyhosts
-    MITMhosts = %w{i-ne.ws l.instagram.com t.co tinyurl.com}
 
   end
   module Webize
