@@ -13,8 +13,7 @@ class WebResource
         CGI.escapeHTML t.to_s
       end}
 
-    Markup[Date] = -> date,env=nil {
-      {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
+    Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
 
     # Markup -> String
     def self.render x
@@ -31,7 +30,7 @@ class WebResource
           (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # close tag
       when Array
         x.map{|n|render n}.join
-      when R # <a href>
+      when R
         render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2,
                 c: x[:label][0] || URI.unescape(x.fragment || x.basename || x.host || '&#x279f;')})
       when NilClass
@@ -40,18 +39,6 @@ class WebResource
         ''
       else
         CGI.escapeHTML x.to_s
-      end
-    end
-
-    def self.colorize k
-      if k.empty?
-        ''
-      elsif [Date, Type, To, From, DC+'cache', Size].member? k # base metadata
-        "background-color: #ddd; color: #000"
-      elsif [Contains, Content, Title, Link, Image, Video, 'status', 'uri'].member? k # content & title
-        "background-color: #000; color: #fff"
-      else # oddball metadata, colorize it
-        "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
       end
     end
 
@@ -87,7 +74,7 @@ class WebResource
       }
     end
 
-    # tabular overview
+    # [resource] -> Markup
     def self.heading resources, env
       ks = [[From, :from],
             [To,   :to],
@@ -105,7 +92,7 @@ class WebResource
                  HTML.value key,v,env }.intersperse(' ')}}}}}}
     end
 
-    # markup key-value table
+    # { k => v } -> Markup
     def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
@@ -204,6 +191,18 @@ class WebResource
       # highlighting CSS
       graph['#abstracts'] = {Abstract => HTML.render({_: :style, c: wordIndex.values.map{|i|
                                                         ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
+    end
+
+    def self.colorize k
+      if k.empty?
+        ''
+      elsif [Date, Type, To, From, DC+'cache', Size].member? k # base metadata
+        "background-color: #ddd; color: #000"
+      elsif [Contains, Content, Title, Link, Image, Video, 'status', 'uri'].member? k # content & title
+        "background-color: #000; color: #fff"
+      else # oddball metadata, colorize it
+        "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
+      end
     end
 
     def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
