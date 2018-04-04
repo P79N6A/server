@@ -98,11 +98,15 @@ class WebResource
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          style = env[:colors][k] ||= HTML.colorize(k)
          {_: :tr,
-          c: [{_: :td, class: :k, style: style,
-               c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
-              {_: :td, class: :v, style: style,
-               c: ["\n ",
-                   vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]} unless hide}}
+          c: (if k == Contains
+              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
+             else
+               [{_: :td, class: :k, style: style,
+                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
+                {_: :td, class: :v, style: style,
+                 c: ["\n ",
+                     vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]
+              end)} unless hide}}
     end
 
     def htmlDocument graph = {}
@@ -146,7 +150,7 @@ class WebResource
                                    p.R.parts.map{|name|
                                      path.push name
                                      this = this[Contains].find{|c|c.R.basename==name} ||
-                                            (child = {'uri' => path.join('/'), Contains => []}
+                                            (child = {'uri' => path.join('/'), Type => [R[Container]], Contains => []}
                                              this[Contains].push child
                                              child)}}
                                  s.map{|p,o|

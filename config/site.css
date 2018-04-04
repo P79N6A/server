@@ -5,9 +5,10 @@ img    {max-width: 100%}
 .post {background-color:#fff; margin: .2em}
 .post .type {vertical-align:top}
 .post .type a {color: #000; font-size: 2em}
-.container .name > td {padding: 0}
-.container .name > td > a {font-size: 1.4em; padding: .2em; background-color: #fff; color: #000; border-radius: .3em .3em 0 0 }
-.container .contents > td {padding: .2em; border-style: solid; border-width: 2px; border-radius: 0 .3em .3em .3em}
+.container {border-spacing: 0}
+.container .name > td.label  {font-size: 1.4em; border-color: #333; border-style: solid; border-width: 1px 1px 0 1px; border-radius: .3em .3em 0 0 }
+.container .name > td.spacer {font-size: 1.4em; border-color: #333; border-style: solid; border-width: 0 0 1px 0; border-radius: 0; width: 100% }
+.container .contents > td {padding: 0; border-color: #333; border-style: solid; border-width: 0 1px 1px 1px; border-radius: 0 0 .3em .3em}
 .thumb {max-width: 28em}
 .date  {white-space: nowrap; color: #000}
 td.k {text-align: center}

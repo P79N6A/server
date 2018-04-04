@@ -208,8 +208,11 @@ class WebResource
       container.delete Type
       container.delete 'uri'
       {_: :table, class: :container, c: [
-         {_: :tr, class: :name, c: {_: :td, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}}},
-         {_: :tr, class: :contents, c: {_: :td, c: HTML.kv(container,env)}}]}}
+         {_: :tr, class: :name,
+          c: [{_: :td, class: :label, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}},
+              {_: :td, class: :spacer}
+             ]},
+         {_: :tr, class: :contents, c: {_: :td, colspan: 2, c: HTML.kv(container,env)}}]}}
   end
 
   module POSIX
