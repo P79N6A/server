@@ -98,7 +98,7 @@ class String
       (link.empty? && '' ||
        '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' +
        (resource = link.R
-        if blk && !(R::MITMhosts.member? resource.host) # TODO resolve shortened link in background task
+        if blk # TODO resolve shortened link in background task
           type = case link
                  when /(gif|jpg|jpeg|jpg:large|png|webp)$/i
                    R::Image
