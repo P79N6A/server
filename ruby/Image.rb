@@ -11,6 +11,7 @@ class WebResource
     #TODO imagehost reqtime translation to RDF
     def triplrImage &f
       yield uri, Type, R[Image]
+      yield uri, Image, self
       w,h = Dimensions.dimensions localPath
       yield uri, Stat+'width', w
       yield uri, Stat+'height', h
