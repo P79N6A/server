@@ -1,17 +1,30 @@
-# launch proxy-server
-#$ mitmproxy -p 443 --showhost -m reverse:http://localhost --set keep_host_header=true
-# forward requests to RDFizing proxy via DNS
+#proxy
+# mitmproxy -p 443 --showhost -m reverse:http://localhost --set keep_host_header=true
+# 
+#certificate config
+# cd ~/.mitmproxy/
+# openssl x509 -inform PEM -subject_hash_old -in mitmproxy-ca-cert.pem
+# su -c 'ln mitmproxy-ca-cert.pem /oreo/system/etc/security/cacerts/c8750f0d.0'
+#
+#notes
+# adjust link target to match android path and hashed value
+# don't run mitmproxy as root. listen on high port or whitelist <1024 binding:
+# setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/python3`
+
 # facebook
 0.0.0.0 facebook.com
 0.0.0.0 m.facebook.com
 0.0.0.0 www.facebook.com
+
 # reddit
 0.0.0.0 reddit.com
 0.0.0.0 www.reddit.com
+
 # twitter
 0.0.0.0 twitter.com
 0.0.0.0 mobile.twitter.com
 0.0.0.0 www.twitter.com
+
 # URL shortener/obfuscators
 0.0.0.0 l.instagram.com
 0.0.0.0 t.co
