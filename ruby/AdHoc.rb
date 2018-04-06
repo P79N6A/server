@@ -22,7 +22,7 @@ end
 class WebResource
   module HTTP
 
-    # MITMd locations. 
+    # MITMd locations.
     Host['t.co'] = -> re {
       [200, {'Content-Type' => 'text/html'}, ["<h1>T.CO"]]        
     }
@@ -32,13 +32,13 @@ class WebResource
 
     # nonlocal fonts. redirect to local
     Host['fonts.gstatic.com'] = Host['fonts.googleapis.com'] = -> re {
-      fontPath = '/.conf/font.woff'
-      if re.path == fontPath
+      location = '/.conf/font.woff'
+      if re.path == location
         re.fileResponse
       elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, ["body {background-color: #{'#%06x' % (rand 16777216)} !important}\n"]]
+        [200, {'Content-Type' => 'text/css'}, []]
       else
-        [301, {'Location' => fontPath}, []]
+        [301, {'Location' => location}, []]
       end}
 
   end
