@@ -21,6 +21,16 @@ end
 
 class WebResource
   module HTTP
+
     Host['l.instagram.com'] = -> re { [ 302, {'Location' => re.q['u']}, [] ] }
+
+    Host['fonts.gstatic.com'] = -> re {
+      fontPath = '/.conf/font.woff'
+      if re.path == fontPath
+        re.fileResponse
+      else
+        [301, {'Location' => fontPath}, []]
+      end}
+
   end
 end

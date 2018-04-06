@@ -11,7 +11,7 @@ class WebResource
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
       env['q'] = parseQs env['QUERY_STRING']               # parse query
-      print env['HTTP_HOST'] + " "
+      print env['HTTP_HOST'] + " " + (env['HTTP_REFERER']||'') + " " + (env['HTTP_USER_AGENT']||'') + " "
       path.R.environment(env).send env['REQUEST_METHOD']   # resource object
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]

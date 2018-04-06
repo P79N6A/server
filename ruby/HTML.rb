@@ -122,6 +122,7 @@ class WebResource
       cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label {
         @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
+      nodata = graph.empty?
       # output
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
@@ -138,6 +139,8 @@ class WebResource
                              link[:prev, '&#9664;'],
                              (if q.has_key? 'head'
                               HTML.heading graph.values, @r # tabular overview
+                             elsif nodata
+                               [{_: :h1, c: 404}, HTML.kv(@r,@r)]
                              else # graph as tree
                                tree = {'uri' => '/',
                                        Type => [R[Container]],
