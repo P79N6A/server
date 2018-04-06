@@ -22,15 +22,15 @@ end
 class WebResource
   module HTTP
 
-
+    # MITMd locations. 
     Host['t.co'] = -> re {
       [200, {'Content-Type' => 'text/html'}, ["<h1>T.CO"]]        
     }
 
-    # extract URI from URL
-    Host['l.instagram.com'] = -> re { [ 302, {'Location' => re.q['u']}, [] ] }
+    # URI encoded in URL
+    Host['l.instagram.com'] = -> re {[302, {'Location' => re.q['u']}, []]}
 
-    # fonts. redirect to local font
+    # nonlocal fonts. redirect to local
     Host['fonts.gstatic.com'] = Host['fonts.googleapis.com'] = -> re {
       fontPath = '/.conf/font.woff'
       if re.path == fontPath
