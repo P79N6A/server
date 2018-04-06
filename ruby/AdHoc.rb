@@ -24,7 +24,12 @@ class WebResource
 
     # MITMd locations.
     Host['t.co'] = -> re {
-      [200, {'Content-Type' => 'text/html'}, ["<h1>T.CO"]]        
+      pointer = R['/.cache/tco' + re.path[0..2] + '/' + re.path[3..-1] + '.u']
+      if pointer.exist?
+        [200, {'Content-Type' => 'text/html'}, ["<h1>T.CO"]]
+      else
+        open('https://t.co'+re.path)
+      end
     }
 
     # URI encoded in URL
