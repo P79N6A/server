@@ -22,14 +22,21 @@ end
 class WebResource
   module HTTP
 
+
+    Host['t.co'] = -> re {
+      [200, {'Content-Type' => 'text/html'}, ["<h1>T.CO"]]        
+    }
+
+    # extract URI from URL
     Host['l.instagram.com'] = -> re { [ 302, {'Location' => re.q['u']}, [] ] }
 
+    # fonts. redirect to local font
     Host['fonts.gstatic.com'] = Host['fonts.googleapis.com'] = -> re {
       fontPath = '/.conf/font.woff'
       if re.path == fontPath
         re.fileResponse
       elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, ["body {background-color: #{'#%06x' % (rand 16777216)} !important}\n"]]        
+        [200, {'Content-Type' => 'text/css'}, ["body {background-color: #{'#%06x' % (rand 16777216)} !important}\n"]]
       else
         [301, {'Location' => fontPath}, []]
       end}
