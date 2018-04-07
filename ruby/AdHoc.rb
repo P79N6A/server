@@ -20,12 +20,14 @@ class WebResource
     Host['t.co'] = -> re {
       pointer = R['/.cache/tco' + re.path[0..2] + '/' + re.path[3..-1] + '.u']
       if pointer.exist?
-        [200, {'Content-Type' => 'text/html'}, ["<h1>T.CO"]]
+        location = pointer.readFile.chomp
+        [200, {'Content-Type' => 'text/html'}, ["<h1>UNCACHED</h1><a href='#{location}'>#{location}</a>"]]
       else
-        meddle = 'https://t.co'+re.path
-        puts meddle
-#        open(middleman)
-        [200, {'Content-Type' => 'text/html'}, ["<h1>" + meddle]]
+        meddle = 'https://t.co' + re.path
+        re = Net::HTTP.get_response(URI.parse(meddle))
+        location = re['location']
+        pointer.writeFile location
+        [200, {'Content-Type' => 'text/html'}, ["<h1>UNCACHED</h1><a href='#{location}'>#{location}</a>"]]
       end
     }
 
