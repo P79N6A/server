@@ -8,9 +8,10 @@
  * see mitmproxy/Squid/Solid docs for ideas
 =end
 
-# /etc/hosts uneditable on Android, iOS, app-sandbox scenarios + by non-root. ignore hosts-file and setup a nameserver-only resolution chain, referring to local proxyhosts file as needed instead
+# /etc/hosts uneditable on Android, iOS, app-sandboxes + non-root. ignore it and setup a nameserver-only resolution chain:
 require 'resolv-replace'
-Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => '1.1.1.1')])
+Resolv::DefaultResolver.
+  replace_resolvers([Resolv::DNS.new(:nameserver => '1.1.1.1')])
 
 class WebResource
   module HTTP
@@ -21,7 +22,10 @@ class WebResource
       if pointer.exist?
         [200, {'Content-Type' => 'text/html'}, ["<h1>T.CO"]]
       else
-        open('https://t.co'+re.path)
+        meddle = 'https://t.co'+re.path
+        puts meddle
+#        open(middleman)
+        [200, {'Content-Type' => 'text/html'}, ["<h1>" + meddle]]
       end
     }
 
