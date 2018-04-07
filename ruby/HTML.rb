@@ -31,8 +31,7 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R
-        render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2,
-                c: x[:label][0] || URI.unescape(x.fragment || x.basename || x.host || '&#x279f;')})
+        render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2, c: x[:label][0] || (CGI.escapeHTML x.uri)})
       when NilClass
         ''
       when FalseClass

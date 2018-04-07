@@ -27,9 +27,10 @@ class WebResource
       else
         dest = (Net::HTTP.get_response (URI.parse source))['location']
         cache.writeFile dest
-        puts "#{re.path[1..-1]} -> #{location}"
+        puts "#{re.path[1..-1]} -> #{dest}"
       end
-      [200, {'Content-Type' => 'text/html'}, [re.htmlDocument({re.path => {'source' => source.R, 'dest' => dest.R}})]]
+      [200, {'Content-Type' => 'text/html'},
+       [re.htmlDocument({source => {'dest' => dest.R}})]]
     }
 
     # URI is encoded in URL, redirect to correct link
