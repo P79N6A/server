@@ -17,18 +17,18 @@ class WebResource
   module HTTP
 
     # cache short-link expansion locally
-    Host['t.co'] = -> re {
-      pointer = R['/.cache/tco' + re.path[0..2] + '/' + re.path[3..-1] + '.u']
-      if pointer.exist?
-        location = pointer.readFile.chomp
-        [200, {'Content-Type' => 'text/html'}, ["<h1>UNCACHED</h1><a href='#{location}'>#{location}</a>"]]
+    Host['bos.gl'] = Host['w.bos.gl'] = Host['t.co'] = -> re {
+      host = re.env['HTTP_HOST']
+      cache = R['/.cache/' + host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
+      location = nil
+      if cache.exist?
+        location = cache.readFile
       else
-        meddle = 'https://t.co' + re.path
-        re = Net::HTTP.get_response(URI.parse(meddle))
-        location = re['location']
-        pointer.writeFile location
-        [200, {'Content-Type' => 'text/html'}, ["<h1>UNCACHED</h1><a href='#{location}'>#{location}</a>"]]
+        location = (Net::HTTP.get_response (URI.parse re.env['rack.url_scheme'] + '://' + host + re.path))['location']
+        cache.writeFile location
+        puts "#{re.path[1..-1]} -> #{location}"
       end
+      [200, {'Content-Type' => 'text/html'}, ["<a href='#{location}'>#{location}</a>"]]
     }
 
     # URI is encoded in URL, redirect to correct link

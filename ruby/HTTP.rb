@@ -29,7 +29,7 @@ class WebResource
       end
     end
 
-    def environment env = nil # set (arg) or get (no args)
+    def environment env = nil # set (arg) or get
       if env
         @r = env
         self
@@ -37,6 +37,7 @@ class WebResource
         @r
       end
     end
+    alias_method :env, :environment
 
     def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
 
