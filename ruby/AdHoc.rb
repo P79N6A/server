@@ -16,19 +16,20 @@ Resolv::DefaultResolver.
 class WebResource
   module HTTP
 
-    # cache short-link expansion locally
+    # cache short-link expansion
     Host['bos.gl'] = Host['w.bos.gl'] = Host['t.co'] = -> re {
       host = re.env['HTTP_HOST']
+      source = re.env['rack.url_scheme'] + '://' + host + re.path
+      dest = nil
       cache = R['/.cache/' + host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
-      location = nil
       if cache.exist?
-        location = cache.readFile
+        dest = cache.readFile
       else
-        location = (Net::HTTP.get_response (URI.parse re.env['rack.url_scheme'] + '://' + host + re.path))['location']
-        cache.writeFile location
+        dest = (Net::HTTP.get_response (URI.parse source))['location']
+        cache.writeFile dest
         puts "#{re.path[1..-1]} -> #{location}"
       end
-      [200, {'Content-Type' => 'text/html'}, ["<a href='#{location}'>#{location}</a>"]]
+      [200, {'Content-Type' => 'text/html'}, [re.htmlDocument({re.path => {'source' => source.R, 'dest' => dest.R}})]]
     }
 
     # URI is encoded in URL, redirect to correct link
@@ -52,7 +53,7 @@ end
 # additions to stdlib classes
 # #do conditionally binds var + runs block on non-nil arguments
 # #justArray maps nil -> [] and obj -> [obj]
-# #intersperse is stolen from Haskell
+# #intersperse is borrowed from Haskell
 class Array
   def justArray; self end
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
