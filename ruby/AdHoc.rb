@@ -6,10 +6,11 @@
  * browser proxy-settings
  * OS proxy-settings
  * see mitmproxy/Squid/Solid docs for ideas
-
- modifying /etc/hosts requires root (nixed on stock Android/iOS) so we ignore it always to be consistent across systems
 =end
 
+# /etc/hosts uneditable on Android, iOS, app-sandbox scenarios + by non-root. ignore hosts-file and setup a nameserver-only resolution chain, referring to local proxyhosts file as needed instead
+require 'resolv-replace'
+Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => '1.1.1.1')])
 
 class WebResource
   module HTTP
@@ -25,7 +26,8 @@ class WebResource
     }
 
     # URI is encoded in URL, redirect to correct link
-    Host['l.instagram.com'] = -> re {[302, {'Location' => re.q['u']}, []]}
+    Host['l.instagram.com'] = -> re {
+      [302, {'Location' => re.q['u']}, []]}
 
     # nonlocal fonts/CSS redirected to local
     Host['fonts.gstatic.com'] = Host['fonts.googleapis.com'] = -> re {
@@ -33,7 +35,7 @@ class WebResource
       if re.path == location
         re.fileResponse
       elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, []]
+        [200, {'Content-Type' => 'text/css'}, ['body {background-color: pink !important}']]
       else
         [301, {'Location' => location}, []]
       end}
