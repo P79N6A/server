@@ -8,36 +8,16 @@
  * see mitmproxy/Squid/Solid docs for ideas
 =end
 
-# /etc/hosts uneditable on Android, iOS, app-sandboxes + non-root. ignore it and setup a nameserver-only resolution chain:
-require 'resolv-replace'
-Resolv::DefaultResolver.
-  replace_resolvers([Resolv::DNS.new(:nameserver => '1.1.1.1')])
-
 class WebResource
   module HTTP
 
-    # cache short-link expansion
-    Host['bos.gl'] = Host['w.bos.gl'] = Host['t.co'] = -> re {
-      host = re.env['HTTP_HOST']
-      source = re.env['rack.url_scheme'] + '://' + host + re.path
-      dest = nil
-      cache = R['/.cache/' + host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
-      if cache.exist?
-        dest = cache.readFile
-      else
-        dest = (Net::HTTP.get_response (URI.parse source))['location']
-        cache.writeFile dest
-        puts "#{re.path[1..-1]} -> #{dest}"
-      end
-      [200, {'Content-Type' => 'text/html'},
-       [re.htmlDocument({source => {'dest' => dest.R}})]]
-    }
+    %w{ift.tt bos.gl w.bos.gl t.co}.map{|host|
+      Host[host] = Short}
 
-    # URI is encoded in URL, redirect to correct link
-    Host['l.instagram.com'] = -> re {
-      [302, {'Location' => re.q['u']}, []]}
+    # URI encoded in URL. peel it out
+    Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
 
-    # nonlocal fonts/CSS redirected to local
+    # nonlocal fonts, redirect to local
     Host['fonts.gstatic.com'] = Host['fonts.googleapis.com'] = -> re {
       location = '/.conf/font.woff'
       if re.path == location
@@ -51,7 +31,7 @@ class WebResource
   end
 end
 
-# additions to stdlib classes
+# additions to stdlib classesL
 # #do conditionally binds var + runs block on non-nil arguments
 # #justArray maps nil -> [] and obj -> [obj]
 # #intersperse is borrowed from Haskell
