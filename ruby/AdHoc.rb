@@ -24,7 +24,7 @@ class WebResource
   module HTTP
 
     # URI shorteners
-    %w{bit.ly cfl.re ift.tt bos.gl w.bos.gl t.co}.map{|host|
+    %w{bit.ly cfl.re ift.tt nyti.ms bos.gl w.bos.gl t.co trib.al}.map{|host|
       Host[host] = Short}
 
     # URI encoded in URI
