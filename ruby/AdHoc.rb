@@ -1,20 +1,33 @@
 =begin
  many ways to direct traffic to proxy:
+
+ (port 443) $ setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/python3`
  * default-gateway setting
  * iptables/routing configuration 
  * concatenate proxyhosts to /etc/hosts
+ * see mitmproxy/Squid/Solid docs for ideas
+ (arbitrary high-port i.e. 8000)
  * browser proxy-settings
  * OS proxy-settings
- * see mitmproxy/Squid/Solid docs for ideas
+
+proxy
+ mitmproxy -p 443 --showhost -m reverse:http://localhost --set keep_host_header=true
+ 
+certificates
+ cd ~/.mitmproxy/
+ openssl x509 -inform PEM -subject_hash_old -in mitmproxy-ca-cert.pem
+ su -c 'ln mitmproxy-ca-cert.pem /oreo/system/etc/security/cacerts/c8750f0d.0' # adjust to match above command's hashed-value
+
 =end
 
 class WebResource
   module HTTP
 
+    # URI shorteners
     %w{ift.tt bos.gl w.bos.gl t.co}.map{|host|
       Host[host] = Short}
 
-    # URI encoded in URL. peel it out
+    # URI encoded in URI
     Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
 
     # nonlocal fonts, redirect to local
@@ -31,7 +44,7 @@ class WebResource
   end
 end
 
-# additions to stdlib classesL
+# additions to stdlib classes:
 # #do conditionally binds var + runs block on non-nil arguments
 # #justArray maps nil -> [] and obj -> [obj]
 # #intersperse is borrowed from Haskell
