@@ -64,9 +64,7 @@ class WebResource < RDF::URI
 
     ## short-URI resolution, cached with no expiry (do any major services allow editing?)
     Short = -> re {
-
       host = re.env['HTTP_HOST']
-
       source = re.env['rack.url_scheme'] + '://' + host + re.path
       dest = nil
 
