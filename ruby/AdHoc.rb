@@ -24,8 +24,7 @@ class WebResource
   module HTTP
 
     # URI shorteners
-    %w{bit.ly bos.gl cfl.re ift.tt nyti.ms ow.ly t.co trib.al w.bos.gl}.map{|host|
-      Host[host] = Short}
+    %w{bit.ly bos.gl cfl.re ift.tt n.pr nyti.ms ow.ly t.co trib.al w.bos.gl}.map{|host|Host[host] = Short}
 
     # URI encoded in URI
     Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}

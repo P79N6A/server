@@ -6,10 +6,13 @@ class WebResource
     Contain = {}
     Markup = {}
 
-    # containe year-directories at fs-root in additional decade-container
+    # contain year-containers at root in additional decade-container
     Contain['decades'] = -> graph {
+      decades = {}
+      other = []
 
-    }
+      {'uri' => '/', Type => [R[Container]],
+       Contains => (decades.values.concat other)}}
 
     # markup RDF type-tag
     Markup[Type] = -> t,env=nil {
