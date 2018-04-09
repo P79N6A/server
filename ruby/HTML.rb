@@ -6,6 +6,12 @@ class WebResource
     Contain = {}
     Markup = {}
 
+    # containe year-directories at fs-root in additional decade-container
+    Contain['decades'] = -> graph {
+
+    }
+
+    # markup RDF type-tag
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
         t = t.R
