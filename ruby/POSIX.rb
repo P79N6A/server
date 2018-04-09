@@ -207,10 +207,12 @@ class WebResource
     # graph to tree transform, used ahead of markup
     # POSIX filesystem-paths control the tree structure
     Contain['tree'] = -> graph {
+
       tree = {'uri' => '/',
               Type => [R[Container]],
               Contains => []
              }
+
       graph.values.map{|s|
         this = tree
         path = []
@@ -221,6 +223,7 @@ class WebResource
                    (child = {'uri' => path.join('/'), Type => [R[Container]], Contains => []}
                     this[Contains].push child
                     child)}}
+
         s.map{|p,o|
           unless p=='uri'
             this[p] ||= []
@@ -229,7 +232,9 @@ class WebResource
             else
               puts this[p].class, this[p]
             end
-          end}}}
+          end}}
+
+      tree}
 
     Markup[Container] = -> container , env {
       c = container.R
