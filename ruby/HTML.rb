@@ -3,6 +3,7 @@ class WebResource
   module HTML
     include URIs
 
+    Contain = {}
     Markup = {}
 
     Markup[Type] = -> t,env=nil {

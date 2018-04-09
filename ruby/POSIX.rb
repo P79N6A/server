@@ -204,8 +204,8 @@ class WebResource
 
   module HTML
 
-    # graph to tree transform, used ahead of rendering
-    # POSIX filesystem-paths dictate the tree's structure
+    # graph to tree transform, used ahead of markup
+    # POSIX filesystem-paths control the tree structure
     Contain['tree'] = -> graph {
       tree = {'uri' => '/',
               Type => [R[Container]],
