@@ -137,34 +137,11 @@ class WebResource
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
                              (if q.has_key? 'head'
-                              HTML.heading graph.values, @r # tabular overview
+                              HTML.heading graph.values, @r # tabular view
                              elsif nodata
-                               [{_: :h1, c: 404}, HTML.kv(@r,@r)]
-                             else # graph as tree
-                               tree = {'uri' => '/',
-                                       Type => [R[Container]],
-                                       Contains => []
-                                      }
-                               graph.values.map{|s|
-                                 this = tree
-                                 path = []
-                                 s.R.path.do{|p|
-                                   p.R.parts.map{|name|
-                                     path.push name
-                                     this = this[Contains].find{|c|c.R.basename==name} ||
-                                            (child = {'uri' => path.join('/'), Type => [R[Container]], Contains => []}
-                                             this[Contains].push child
-                                             child)}}
-                                 s.map{|p,o|
-                                   unless p=='uri'
-                                     this[p] ||= []
-                                     if this[p].class == Array
-                                       this[p].push o
-                                     else
-                                       puts this[p].class, this[p]
-                                     end
-                                   end}}
-                               HTML.value Container, [tree], @r
+                               [{_: :h1, c: 404}, HTML.kv(@r,@r)] # 404
+                             else # parametric graph-to-tree transform, then markup the tree (of recursively nested containing nodes)
+                               HTML.value Container, [(Contain[q['c']] || Contain[path == '/' ? 'decades' : 'tree'])[graph]], @r
                               end),
                              link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],

@@ -203,6 +203,34 @@ class WebResource
   end
 
   module HTML
+
+    # graph to tree transform, used ahead of rendering
+    # POSIX filesystem-paths dictate the tree's structure
+    Contain['tree'] = -> graph {
+      tree = {'uri' => '/',
+              Type => [R[Container]],
+              Contains => []
+             }
+      graph.values.map{|s|
+        this = tree
+        path = []
+        s.R.path.do{|p|
+          p.R.parts.map{|name|
+            path.push name
+            this = this[Contains].find{|c|c.R.basename==name} ||
+                   (child = {'uri' => path.join('/'), Type => [R[Container]], Contains => []}
+                    this[Contains].push child
+                    child)}}
+        s.map{|p,o|
+          unless p=='uri'
+            this[p] ||= []
+            if this[p].class == Array
+              this[p].push o
+            else
+              puts this[p].class, this[p]
+            end
+          end}}}
+
     Markup[Container] = -> container , env {
       c = container.R
       container.delete Type

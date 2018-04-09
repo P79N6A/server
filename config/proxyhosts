@@ -1,25 +1,11 @@
-
-# facebook
-0.0.0.0 facebook.com
-0.0.0.0 m.facebook.com
-0.0.0.0 www.facebook.com
-
-# reddit
-0.0.0.0 reddit.com
-0.0.0.0 www.reddit.com
-
-# twitter
-0.0.0.0 twitter.com
-0.0.0.0 mobile.twitter.com
-0.0.0.0 www.twitter.com
-
 # URL shortener/obfuscators
-0.0.0.0 l.instagram.com
-0.0.0.0 t.co
-0.0.0.0 bit.ly
-0.0.0.0 bos.gl
-0.0.0.0 w.bos.gl
-0.0.0.0 ift.tt
-0.0.0.0 cfl.re
-0.0.0.0 nyti.ms
-0.0.0.0 trib.al
+127.0.0.1 l.instagram.com
+127.0.0.1 t.co
+127.0.0.1 bit.ly
+127.0.0.1 bos.gl
+127.0.0.1 w.bos.gl
+127.0.0.1 ift.tt
+127.0.0.1 cfl.re
+127.0.0.1 nyti.ms
+127.0.0.1 trib.al
+127.0.0.1 ow.ly

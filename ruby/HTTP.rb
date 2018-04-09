@@ -3,6 +3,7 @@ class WebResource
   module HTTP
     include URIs
     Host = {}
+    Contain = {}
 
     # Rack HTTP-call entry-point
     def self.call env
