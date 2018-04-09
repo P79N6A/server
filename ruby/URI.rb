@@ -77,7 +77,7 @@ class WebResource < RDF::URI
         puts "#{re.path[1..-1]} -> #{dest}"
       end
 
-      [200, {'Content-Type' => 'text/html'}, [re.htmlDocument({source => {'dest' => dest.R}})]]}
+      [200, {'Content-Type' => 'text/html'}, [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
   end
   module Webize
