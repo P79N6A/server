@@ -37,7 +37,7 @@ class WebResource
       elsif re.path == '/css'
         [200, {'Content-Type' => 'text/css'}, ['body {background-color: pink !important}']]
       else
-        [301, {'Location' => location}, []]
+        [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
 
   end
