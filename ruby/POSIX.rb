@@ -90,7 +90,7 @@ class WebResource
     def shellPath; localPath.utf8.sh end
     alias_method :sh, :shellPath
 
-    # '/'-separated parts of path component
+    # path components split on /
     def parts; path ? path.split('/') : [] end
 
     # basename of path component
@@ -234,8 +234,8 @@ class WebResource
 
   module HTML
 
-    # graph to tree transform, used ahead of markup
-    # POSIX filesystem-paths control the tree structure
+    # graph to tree transform
+    # filesystem-paths control the tree structure
     Contain['tree'] = -> graph {
 
       tree = {'uri' => '/',
@@ -279,7 +279,6 @@ class WebResource
   end
 
   module POSIX
-    # volume-local link method. avoid symlinks for more resiliency against deletions + less runtime indirection. Android builds sometimes can't though
     LinkMethod = begin # link-method capability test
                    file = '.cache/link'.R
                    link = '.cache/link_'.R

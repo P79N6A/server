@@ -62,7 +62,7 @@ class WebResource
 
       ## default GET handler
 
-      # HEAD page pointers
+      # time-slice page pointers
       dp = [] # date parts
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
       n = nil; p = nil # next / prev pointer
