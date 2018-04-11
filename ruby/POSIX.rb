@@ -200,6 +200,34 @@ class WebResource
                           end)
       [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
     end
+
+    def entity env, body = nil
+      etags = env['HTTP_IF_NONE_MATCH'].do{|m|
+        m.strip.split /\s*,\s*/ }
+      if etags && (etags.include? env[:Response]['ETag'])
+        [304, {}, []]
+      else
+        body = body ? body.call : self
+        if body.class == WebResource # use Rack file-handler
+          (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
+            [s,h.update(env[:Response]),b]}
+        else
+          [(env[:Status]||200), env[:Response], [body]]
+        end
+      end
+    end
+
+    def fileResponse
+      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
+                            'ETag' => [m,size].join.sha2})
+      @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
+      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
+        filePreview
+      else
+        entity @r
+      end
+    end
+
   end
 
   module HTML
