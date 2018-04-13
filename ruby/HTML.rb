@@ -150,7 +150,7 @@ class WebResource
                               HTML.heading graph.values, @r # tabular view
                              elsif nodata
                                [{_: :h1, c: 404}, HTML.kv(@r,@r)] # 404
-                             else # parametric graph-to-tree transform, then markup the tree (of recursively nested containing nodes)
+                             else # graph -> tree -> markup
                                HTML.value Container, [(Contain[q['c']] || Contain[path == '/' ? 'decades' : 'tree'])[graph]], @r
                               end),
                              link[:next, '&#9654;'], '<br>',
