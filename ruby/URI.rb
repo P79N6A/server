@@ -8,8 +8,8 @@ class String
   def R; WebResource.new self end
 end
 
-# /etc/hosts uneditable to Android/iOS sandboxed apps and non-root users. ignore it everywhere for consistency
-# Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => '1.1.1.1')])
+# shutoff /etc/hosts lookup
+Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => '1.1.1.1')])
 
 class WebResource < RDF::URI
 
