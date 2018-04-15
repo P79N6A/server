@@ -80,7 +80,7 @@ class WebResource
         else
           CGI.escapeHTML v.to_s
         end
-      }
+      }.intersperse ' '
     end
 
     # [resource] -> Markup
