@@ -13,6 +13,6 @@ img    {max-width: 100%}
 .date, a  {white-space: nowrap}
 td.k {text-align: center}
 pre    {min-width: 40ex; margin: 0; white-space: pre-wrap}
-pre, td.v {max-width: 192ex; overflow: hidden}
+pre, td.v {max-width: 200ex; overflow: hidden}
 table, div, a {display: inline-block}
 :target, :target * {background-color: #0f0 !important; color: #fff !important}
