@@ -11,7 +11,7 @@
  * OS proxy-settings
 
 proxy
- mitmproxy -p 443 --showhost -m reverse:http://localhost --set keep_host_header=true
+ mitmproxy -p 443 --showhost -m reverse:http://localhost:8000 --set keep_host_header=true
  
 certificates
  cd ~/.mitmproxy/

@@ -84,7 +84,7 @@ class WebResource
     end
 
     # [resource] -> Markup
-    def self.heading resources, env
+    def self.tabular resources, env
       ks = [[From, :from],
             [To,   :to],
             ['uri'],
@@ -146,8 +146,8 @@ class WebResource
                         {_: :body,
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
-                             (if q.has_key? 'head'
-                              HTML.heading graph.values, @r # tabular view
+                             (if q.has_key? 't'
+                              HTML.tabular graph.values, @r # tabular view
                              elsif nodata
                                [{_: :h1, c: 404}, HTML.kv(@r,@r)] # 404
                              else # graph -> tree -> markup
