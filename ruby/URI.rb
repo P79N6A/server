@@ -8,8 +8,8 @@ class String
   def R; WebResource.new self end
 end
 
-# shutoff /etc/hosts lookup
-Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => '1.1.1.1')])
+# parametric DNS-resolver address
+Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
 
 class WebResource < RDF::URI
 

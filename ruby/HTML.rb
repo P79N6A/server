@@ -14,7 +14,7 @@ class WebResource
       {'uri' => '/', Type => [R[Container]],
        Contains => (decades.values.concat other)}}
 
-    # markup RDF type-tag
+    # RDF-typetag -> Markup
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
         t = t.R
@@ -83,7 +83,7 @@ class WebResource
       }.intersperse ' '
     end
 
-    # [rsrc,..] -> Markup
+    # [resA,resB,..] -> Markup
     def self.tabular resources, env
       ks = [[From, :from],
             [To,   :to],
@@ -101,7 +101,7 @@ class WebResource
                  HTML.value key,v,env }.intersperse(' ')}}}}}}
     end
 
-    # { k => v } -> Markup
+    # {k => v} -> Markup
     def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
