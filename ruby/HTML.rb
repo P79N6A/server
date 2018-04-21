@@ -83,7 +83,7 @@ class WebResource
       }.intersperse ' '
     end
 
-    # [resource] -> Markup
+    # [rsrc,..] -> Markup
     def self.tabular resources, env
       ks = [[From, :from],
             [To,   :to],
