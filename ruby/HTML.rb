@@ -105,7 +105,8 @@ class WebResource
     def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
-         style = env[:colors][k] ||= HTML.colorize(k)
+         label = k.to_s.split(/[\._\-\/]/)[0]
+         style = env[:colors][label] ||= HTML.colorize(label)
          {_: :tr,
           c: (if k == Contains
               {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}

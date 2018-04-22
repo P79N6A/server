@@ -11,7 +11,6 @@ img    {max-width: 100%}
 .container .contents > td {padding: 0; border-color: #333; border-style: solid; border-width: 0 1px 1px 1px; border-radius: 0 0 .3em .3em}
 .thumb {max-width: 28em}
 .date, a  {white-space: nowrap}
-td.k {text-align: center}
 pre    {min-width: 40ex; margin: 0; white-space: pre-wrap}
 pre, td.v {max-width: 200ex; overflow: hidden}
 table, div, a {display: inline-block}
