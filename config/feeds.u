@@ -14,6 +14,7 @@ http://thequincysun.com/feed/
 https://api.flickr.com/services/feeds/photos_public.gne?id=36054681@N04&lang=en-us&format=atom
 http://www.bostoncreates.org/news.rss
 https://artplaceuphams.wordpress.com/feed/
+http://www.providencejournal.com/business?template=rss&mime=xml
 http://yvng-mel.tumblr.com/rss
 https://uphamscorner.org/feed/
 https://dorchester.comunicas.org/feed/
@@ -119,6 +120,7 @@ https://commonwealthmagazine.org/feed/
 http://www.bethtreffeisen.com/feed.xml
 http://www.franklinparkcoalition.org/feed/
 http://www.improper.com/feed/
+http://www.providencejournal.com/entertainment?template=rss&mime=xml
 http://boston1775.blogspot.com/feeds/posts/default
 http://www.walkuproslindale.org/weblog/feed/
 http://feeds.feedburner.com/planning101
@@ -179,6 +181,7 @@ https://www.eastboston.com/eastboston.rss
 http://blog.brooklinepolice.com/feeds/posts/default
 http://www.buildingbos.com/1/feed
 https://www.flickr.com/services/feeds/photos_public.gne?id=76250222@N05&lang=en-us&format=atom
+http://www.providencejournal.com/section/?template=rss_photos&mime=xml
 http://www.bostonchinatownblog.org/feeds/posts/default
 https://zumixboston.wordpress.com/feed/
 http://brandeishoot.com/feed/
@@ -243,6 +246,7 @@ http://mydorchester.org/node/feed
 http://michelleforboston.com/feed/
 https://www.justice.gov/feeds/justice-news.xml?type=press_release&component%5B1871%5D=1871
 https://api.flickr.com/services/feeds/photos_public.gne?id=66169386@N04&lang=en-us&format=atom
+http://www.providencejournal.com/news?template=rss&mime=xml
 http://www.ds4si.org/blog?format=RSS
 https://everydayboston.org/feed/
 http://discoverwaltham.us/rss.xml
