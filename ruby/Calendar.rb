@@ -10,4 +10,12 @@ class WebResource
       puts event
     end
   end
+  module HTML
+    Group['decades'] = -> graph {
+      decades = {}
+      other = []
+      
+      {'uri' => '/', Type => [R[Container]],
+       Contains => (decades.values.concat other)}}
+  end
 end

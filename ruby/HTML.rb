@@ -3,14 +3,7 @@ class WebResource
   module HTML
     SourceCode ||= Pathname.new(__FILE__).relative_path_from PWD
 
-    Group['decades'] = -> graph {
-      decades = {}
-      other = []
-
-      {'uri' => '/', Type => [R[Container]],
-       Contains => (decades.values.concat other)}}
-
-    # Markup -> String
+    # Markup -> HTML
     def self.render x
       case x
       when String
@@ -68,7 +61,7 @@ class WebResource
       }.intersperse ' '
     end
 
-    # [resA,resB,..] -> Markup
+    # [resA,resB..] -> Markup
     def self.tabular resources, env
       ks = [[From, :from],
             [To,   :to],
@@ -104,6 +97,7 @@ class WebResource
               end)} unless hide}}
     end
 
+    # Graph -> HTML
     def htmlDocument graph = {}
       @r ||= {} # env
       title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # title in RDF ||
@@ -116,6 +110,7 @@ class WebResource
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label { # markup doc-graph (exposed in HEAD) links
         @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
+      # Graph -> Tree -> Markup -> HTML
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
@@ -135,7 +130,7 @@ class WebResource
                                HTML.tabular graph.values, @r
                              else
                                grouper = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
-                               HTML.value Container, [grouper[graph]], @r  # graph -> tree -> markup
+                               HTML.value Container, [grouper[graph]], @r
                               end),
                              link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
@@ -173,15 +168,12 @@ class WebResource
     def self.colorize k
       if k.empty?
         ''
-      elsif [Date, Type, To, From, DC+'cache', Size].member? k # base metadata
-        "background-color: #ddd; color: #000"
-      elsif [Contains, Content, Title, Link, Image, Video, 'status', 'uri'].member? k # content & title
-        "background-color: #000; color: #fff"
-      else # oddball metadata, colorize it
+      else
         "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
       end
     end
 
+    # HTML -> HTML
     def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
       html = Nokogiri::HTML.fragment body
       loseTags.map{|tag| html.css(tag).remove} if loseTags
@@ -190,6 +182,8 @@ class WebResource
           a.unlink unless keepAttr.member? a.name}} if keepAttr
       html.to_xhtml(:indent => 0)
     end
+
+    # RDF -> Markup
 
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
@@ -214,8 +208,16 @@ class WebResource
              ]},
          {_: :tr, class: :contents, c: {_: :td, colspan: 2, style: style, c: HTML.kv(container,env, flp == 0 ? 1 : 0)}}]}}
 
+    Markup[BlogPost] = -> post , env {
+      {_: :table, class: :post, style: 'background-color: pink',
+       c: {_: :tr,
+           c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
+               {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
+
   end
   module Webize
+
+    # HTML -> RDF
     def triplrHTML &f
       triplrFile &f
       yield uri, Type, R[Stat+'HTMLFile']
@@ -223,6 +225,7 @@ class WebResource
       n.css('title').map{|title| yield uri, Title, title.inner_text }
       n.css('meta[property="og:image"]').map{|m| yield uri, Image, m.attr("content").R }
     end
+
   end
 end
 

@@ -1,14 +1,6 @@
 # coding: utf-8
 class WebResource
 
-  module HTML
-    Markup[BlogPost] = -> post , env {
-      {_: :table, class: :post,
-       c: {_: :tr,
-           c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
-               {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
-  end
-
   module Feed
     include URIs
 
