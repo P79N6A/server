@@ -234,9 +234,8 @@ class WebResource
 
   module HTML
 
-    # graph to tree transform
     # filesystem-paths control the tree structure
-    Contain['tree'] = -> graph {
+    Group['tree'] = -> graph {
 
       tree = {'uri' => '/',
               Type => [R[Container]],

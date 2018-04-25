@@ -3,11 +3,10 @@ class WebResource
   module HTML
     include URIs
 
-    Contain = {}
+    Group = {}
     Markup = {}
 
-    # contain year-containers at root in additional decade-container
-    Contain['decades'] = -> graph {
+    Group['decades'] = -> graph {
       decades = {}
       other = []
 
@@ -126,14 +125,11 @@ class WebResource
       @r[:links] ||= {} # document-level links
       @r[:images] ||= {}  # image references
       @r[:colors] ||= {}  # image references
-      htmlGrep graph, q['q'] if q['q']
-      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}}
-      cssFiles = [:icons]
-      cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-      link = -> name,label {
+      htmlGrep graph, q['q'] if q['q'] # HTMLize grep-results
+      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
+      cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
+      link = -> name,label { # markup doc-graph (in HEAD also) links
         @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
-      nodata = graph.empty?
-      # output
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
@@ -147,12 +143,13 @@ class WebResource
                         {_: :body,
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
-                             (if q.has_key? 't'
-                              HTML.tabular graph.values, @r # tabular view
-                             elsif nodata
-                               [{_: :h1, c: 404}, HTML.kv(@r,@r)] # 404
-                             else # graph -> tree -> markup
-                               HTML.value Container, [(Contain[q['c']] || Contain[path == '/' ? 'decades' : 'tree'])[graph]], @r
+                             (if graph.empty?
+                              [{_: :h1, c: 404}, HTML.kv(@r,@r)]
+                             elsif (q.has_key? 'tabular') || (q.has_key? 't')
+                               HTML.tabular graph.values, @r
+                             else
+                               grouper = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                               HTML.value Container, [grouper[graph]], @r  # graph -> tree -> markup
                               end),
                              link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
