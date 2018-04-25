@@ -99,8 +99,8 @@ class WebResource
 
     # Graph -> HTML
     def htmlDocument graph = {}
-      @r ||= {} # env
-      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # title in RDF ||
+      @r ||= {} # environment
+      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} ||                   # title in RDF ||
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
@@ -110,6 +110,7 @@ class WebResource
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label { # markup doc-graph (exposed in HEAD) links
         @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
+
       # Graph -> Tree -> Markup -> HTML
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
