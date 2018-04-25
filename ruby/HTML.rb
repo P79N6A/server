@@ -29,74 +29,6 @@ class WebResource
       end
     end
 
-    # (p,[o]) -> Markup
-    def self.value k, vs, env, flp=0
-      vs.justArray.map{|v|
-        if Markup[k]
-          Markup[k][v,env]
-        elsif v.class == Hash
-          resource = v.R
-          types = resource.types
-          if types.member? InstantMessage
-            Markup[InstantMessage][resource,env]
-          elsif types.member? Container
-            Markup[Container][v,env,flp]
-          elsif types.member? BlogPost
-            Markup[BlogPost][v,env]
-          else
-            kv v,env
-          end
-        elsif v.class == WebResource
-          v
-        elsif k == Content
-          v
-        elsif k == Abstract
-          v
-        elsif k == 'uri'
-          u = v.R
-          {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
-        else
-          CGI.escapeHTML v.to_s
-        end
-      }.intersperse ' '
-    end
-
-    # [resA,resB..] -> Markup
-    def self.tabular resources, env
-      ks = [[From, :from],
-            [To,   :to],
-            ['uri'],
-            [Type],
-            [Title,:title],
-            [Abstract],
-            [Date]]
-      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
-         {_: :tr, c: ks.map{|k|
-            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
-            {_: :td, class: k[1],
-             c: keys.map{|key|
-               r[key].justArray.map{|v|
-                 HTML.value key,v,env }.intersperse(' ')}}}}}}
-    end
-
-    # {k => v} -> Markup
-    def self.kv hash, env, flp=0
-      {_: :table, class: :kv, c: hash.map{|k,vs|
-         hide = k == Content && env['q'] && env['q'].has_key?('h')
-         label = k.to_s.split(/[\._\-\/]/)[0]
-         style = env[:colors][label] ||= HTML.colorize(label)
-         {_: :tr,
-          c: (if k == Contains
-              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env,flp }}
-             else
-               [{_: :td, class: :k, style: style,
-                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
-                {_: :td, class: :v, style: style,
-                 c: ["\n ",
-                     vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]
-              end)} unless hide}}
-    end
-
     # Graph -> HTML
     def htmlDocument graph = {}
       @r ||= {} # environment
@@ -110,7 +42,6 @@ class WebResource
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label { # markup doc-graph (exposed in HEAD) links
         @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
-
       # Graph -> Tree -> Markup -> HTML
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
@@ -184,8 +115,78 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    # RDF -> Markup
+    ## RDF -> Markup
 
+    # [reA,reB..] -> Markup
+    def self.tabular resources, env
+      ks = [[From, :from],
+            [To,   :to],
+            ['uri'],
+            [Type],
+            [Title,:title],
+            [Abstract],
+            [Date]]
+      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
+         {_: :tr, c: ks.map{|k|
+            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
+            {_: :td, class: k[1],
+             c: keys.map{|key|
+               r[key].justArray.map{|v|
+                 HTML.value key,v,env }.intersperse(' ')}}}}}}
+    end
+
+    # {k => v} -> Markup
+    def self.kv hash, env, flp=0
+      {_: :table, class: :kv, c: hash.map{|k,vs|
+         hide = k == Content && env['q'] && env['q'].has_key?('h')
+         label = k.to_s.split(/[\._\-\/]/)[0]
+         style = env[:colors][label] ||= HTML.colorize(label)
+         {_: :tr,
+          c: (if k == Contains
+              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env,flp }}
+             else
+               [{_: :td, class: :k, style: style,
+                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
+                {_: :td, class: :v, style: style,
+                 c: ["\n ",
+                     vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]
+              end)} unless hide}}
+    end
+
+    # (k,[vA,vB..]) -> Markup
+    def self.value k, vs, env, flp=0
+      vs.justArray.map{|v|
+        # value can be typed literal or resource
+        if Markup[k]
+          Markup[k][v,env]
+        elsif v.class == Hash # resource, dispatch on type
+          resource = v.R
+          types = resource.types
+          if types.member? InstantMessage
+            Markup[InstantMessage][resource,env]
+          elsif types.member? Container
+            Markup[Container][v,env,flp]
+          elsif types.member? BlogPost
+            Markup[BlogPost][v,env]
+          else
+            kv v,env
+          end
+        elsif v.class == WebResource
+          v
+        elsif k == Content
+          v
+        elsif k == Abstract
+          v
+        elsif k == 'uri'
+          u = v.R
+          {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
+        else
+          CGI.escapeHTML v.to_s
+        end
+      }.intersperse ' '
+    end
+
+    # type-tag -> Markup
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
         t = t.R
@@ -194,8 +195,10 @@ class WebResource
         CGI.escapeHTML t.to_s
       end}
 
+    # timestamp -> Markup
     Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
 
+    # directory/container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
       c = container.R
       container.delete Type
@@ -207,8 +210,11 @@ class WebResource
           c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}},
               {_: :td, class: :spacer}
              ]},
-         {_: :tr, class: :contents, c: {_: :td, colspan: 2, style: style, c: HTML.kv(container,env, flp == 0 ? 1 : 0)}}]}}
+         {_: :tr, class: :contents,
+          c: {_: :td, colspan: 2, style: style,
+              c: HTML.kv(container,env, flp == 0 ? 1 : 0)}}]}}
 
+    # Blog Post -> Markup
     Markup[BlogPost] = -> post , env {
       {_: :table, class: :post, style: 'background-color: pink',
        c: {_: :tr,
