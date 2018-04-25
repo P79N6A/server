@@ -265,16 +265,18 @@ class WebResource
 
       tree}
 
-    Markup[Container] = -> container , env {
+    Markup[Container] = -> container , env, flp = 0 {
       c = container.R
       container.delete Type
       container.delete 'uri'
+      bgcolor = flp == 0 ? '#000' : '#222'
+      style = "background-color: #{bgcolor}"
       {_: :table, class: :container, c: [
          {_: :tr, class: :name,
-          c: [{_: :td, class: :label, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}},
+          c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}},
               {_: :td, class: :spacer}
              ]},
-         {_: :tr, class: :contents, c: {_: :td, colspan: 2, c: HTML.kv(container,env)}}]}}
+         {_: :tr, class: :contents, c: {_: :td, colspan: 2, style: style, c: HTML.kv(container,env, flp == 0 ? 1 : 0)}}]}}
   end
 
   module POSIX

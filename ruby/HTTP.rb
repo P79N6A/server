@@ -103,7 +103,7 @@ class WebResource
       # response header
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
-                            'ETag' => [set.concat([R[HTML::SourceCode], R['.conf/site.css']]).sort.map{|r|[r,r.m]}, format].join.sha2})
+                            'ETag' => [[R[HTML::SourceCode], R['.conf/site.css'], *set].sort.map{|r|[r,r.m]}, format].join.sha2})
 
       # conditional response
       entity @r, ->{

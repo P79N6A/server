@@ -48,7 +48,7 @@ class WebResource
     end
 
     # (p,[o]) -> Markup
-    def self.value k, vs, env
+    def self.value k, vs, env, flp=0
       vs.justArray.map{|v|
         if Markup[k]
           Markup[k][v,env]
@@ -58,7 +58,7 @@ class WebResource
           if types.member? InstantMessage
             Markup[InstantMessage][resource,env]
           elsif types.member? Container
-            Markup[Container][v,env]
+            Markup[Container][v,env,flp]
           elsif types.member? BlogPost
             Markup[BlogPost][v,env]
           else
@@ -98,14 +98,14 @@ class WebResource
     end
 
     # {k => v} -> Markup
-    def self.kv hash, env
+    def self.kv hash, env, flp=0
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          label = k.to_s.split(/[\._\-\/]/)[0]
          style = env[:colors][label] ||= HTML.colorize(label)
          {_: :tr,
           c: (if k == Contains
-              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
+              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env,flp }}
              else
                [{_: :td, class: :k, style: style,
                  c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
