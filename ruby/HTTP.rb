@@ -7,12 +7,12 @@ class WebResource
     # Rack hands us control, dispatch appropriate method
     def self.call env
       return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
-      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
+      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # requested path
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
       env['q'] = parseQs env['QUERY_STRING']               # parse query
       puts env['HTTP_HOST'] + " " + (env['HTTP_REFERER']||'') + " " + (env['HTTP_USER_AGENT']||'') + " "
-      path.R.environment(env).send env['REQUEST_METHOD']   # resource object
+      path.R.environment(env).send env['REQUEST_METHOD']   # call HTTP-method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
     end
@@ -103,8 +103,7 @@ class WebResource
       # response header
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
-                            'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2,
-                           })
+                            'ETag' => [set.push(R[HTML::SourceCode]).sort.map{|r|[r,r.m]}, format].join.sha2})
 
       # conditional response
       entity @r, ->{
