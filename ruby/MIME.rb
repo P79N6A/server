@@ -214,6 +214,12 @@ class WebResource
   module Webize
     include URIs
   end
+  module HTML
+    include URIs
+    Group = {}
+    Markup = {}
+  end
   include MIME
   include Webize
+  include HTML
 end

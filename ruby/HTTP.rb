@@ -111,6 +111,7 @@ class WebResource
           set[0] # static file good to go
         else # transcode and/or merge sources
           if format == 'text/html'
+            ::Kernel.load HTML::SourceCode if ENV['DEV']
             htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set

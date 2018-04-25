@@ -1,11 +1,7 @@
 # coding: utf-8
 class WebResource
   module HTML
-    include URIs
     SourceCode = Pathname.new(__FILE__).relative_path_from PWD
-
-    Group = {}
-    Markup = {}
 
     Group['decades'] = -> graph {
       decades = {}
@@ -207,7 +203,6 @@ class WebResource
     end
 
   end
-  include HTML
   module Webize
     def triplrHTML &f
       triplrFile &f
