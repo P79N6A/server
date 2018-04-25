@@ -1,5 +1,0 @@
-mbox import
-whitelisted hosts for maildir-creation
-link mail to timeline in hourdir (instead of monthdirs which glob can simulate)
-non-default containerizations
-parse proxyhosts into ShortHost var
