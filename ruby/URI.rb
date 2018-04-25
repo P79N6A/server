@@ -8,15 +8,16 @@ class String
   def R; WebResource.new self end
 end
 
-# parametric DNS-resolver address
+# parametric DNS-resolver
 Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
 
 class WebResource < RDF::URI
 
-  def R; self end # call #R to cast to WebResource (paths, URI strings, Hash with 'uri' field)
+  def R; self end # casting method - already a WebResource
   def self.[] u; WebResource.new u end # enable R[] constructor syntax
 
   alias_method :uri, :to_s
+  PWD = Pathname.new File.expand_path '.'
 
   module URIs
     def + u; R[to_s + u.to_s] end

@@ -4,7 +4,7 @@ class WebResource
     include URIs
     Host = {}
 
-    # Rack HTTP-call entry-point
+    # Rack hands us control, dispatch appropriate method
     def self.call env
       return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
@@ -62,10 +62,10 @@ class WebResource
 
       ## default GET handler
 
-      # time-slice page pointers
+      # time-pointers
       dp = [] # date parts
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
-      n = nil; p = nil # next / prev pointer
+      n = nil; p = nil # next / prev pointers
       case dp.length
       when 1 # Y
         year = dp[0]
@@ -90,7 +90,7 @@ class WebResource
           n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
         end
       end
-      sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '') # trailing slash
+      sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '') # preserve trailing slash
       @r[:links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
       @r[:links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
       @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
