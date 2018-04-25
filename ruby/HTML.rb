@@ -1,7 +1,7 @@
 # coding: utf-8
 class WebResource
   module HTML
-    SourceCode = Pathname.new(__FILE__).relative_path_from PWD
+    SourceCode ||= Pathname.new(__FILE__).relative_path_from PWD
 
     Group['decades'] = -> graph {
       decades = {}
