@@ -10,17 +10,6 @@ class WebResource
       {'uri' => '/', Type => [R[Container]],
        Contains => (decades.values.concat other)}}
 
-    # RDF-typetag -> Markup
-    Markup[Type] = -> t,env=nil {
-      if t.respond_to? :uri
-        t = t.R
-        {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}
-      else
-        CGI.escapeHTML t.to_s
-      end}
-
-    Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
-
     # Markup -> String
     def self.render x
       case x
@@ -201,6 +190,29 @@ class WebResource
           a.unlink unless keepAttr.member? a.name}} if keepAttr
       html.to_xhtml(:indent => 0)
     end
+
+    Markup[Type] = -> t,env=nil {
+      if t.respond_to? :uri
+        t = t.R
+        {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}
+      else
+        CGI.escapeHTML t.to_s
+      end}
+
+    Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
+
+    Markup[Container] = -> container , env, flp = 0 {
+      c = container.R
+      container.delete Type
+      container.delete 'uri'
+      bgcolor = flp == 0 ? '#000' : '#222'
+      style = "background-color: #{bgcolor}"
+      {_: :table, class: :container, c: [
+         {_: :tr, class: :name,
+          c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}},
+              {_: :td, class: :spacer}
+             ]},
+         {_: :tr, class: :contents, c: {_: :td, colspan: 2, style: style, c: HTML.kv(container,env, flp == 0 ? 1 : 0)}}]}}
 
   end
   module Webize
