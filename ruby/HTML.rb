@@ -233,15 +233,22 @@ class WebResource
       tree = {}
       # visit resources
       graph.values.map{|resource|
-        # walk. terminates at doc-graph node (fragments grouped there)
+        r = resource.R
+
+        # walk to doc-graph node
         cursor = tree
-        resource.R.parts.unshift(resource.R.host||'').map{|name|
+        r.parts.unshift(r.host||'').map{|name|
           cursor[Type] ||= R[Container] # containing node
-          cursor[Contains]       ||= {} # child nodes
- cursor = cursor[Contains][name] ||= {name: name}} # advance cursor
-        # attach resource at node
-        cursor[resource.uri] ||= resource}
-      tree }
+          cursor[Contains] ||= {}       # contained nodes
+ cursor = cursor[Contains][name] ||= {name: name}} # insert node, advance cursor
+
+        if !r.fragment # document properties
+          resource.map{|k,v|cursor[k] ||= v}
+        else # fragment contained by doc
+          cursor[Contains] ||= {}
+          cursor[Contains][r.fragment] = resource
+        end
+      }; tree }
 
   end
   module Webize
