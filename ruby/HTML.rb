@@ -207,7 +207,7 @@ class WebResource
     # Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
       c = container.R
-      bgcolor = flp == 0 ? '#000' : '#eee'
+      bgcolor = flp == 0 ? '#000' : '#444'
       style = "background-color: #{bgcolor}"
       {_: :table, class: :container, c: [
          {_: :tr, class: :name,
@@ -216,7 +216,7 @@ class WebResource
              ]},
          {_: :tr, class: :contents,
           c: {_: :td, colspan: 2, style: style,
-              c: container[Contains].values.map{|c|
+              c: (container[Contains]||{}).values.map{|c|
                 HTML.value(nil,c,env,flp)}}}]}}
 
     # BlogPost -> Markup
@@ -227,6 +227,7 @@ class WebResource
                {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
 
     # Graph -> Tree
+
     Group['tree'] = -> graph {
       tree = {}
       # visit resources
@@ -247,6 +248,11 @@ class WebResource
           cursor[Contains][r.fragment] = resource
         end
       }; tree }
+
+    Group['decades'] = -> graph {
+      decades = {}
+      other = []
+      {'uri' => '/', Type => R[Container], Contains => decades}}
 
   end
   module Webize
