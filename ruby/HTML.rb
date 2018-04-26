@@ -171,10 +171,10 @@ class WebResource
         elsif v.class == WebResource
           v # resource w/o data
         elsif k == Content
-          v # Content (already in normal form)
+          v # Content field. already markup or HTML
         elsif k == Abstract
-          v # Abstract
-        elsif k == 'uri'
+          v # Abstract displays even in abbreviated/title-only/heading views
+        elsif k == 'uri' # identifier
           u = v.R
           {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
         else
@@ -183,6 +183,7 @@ class WebResource
       }.intersperse ' '
     end
 
+    # triple markup-mappings
     # type-tag -> Markup
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
@@ -191,10 +192,10 @@ class WebResource
       else
         CGI.escapeHTML t.to_s
       end}
-
     # timestamp -> Markup
     Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
 
+    # resource markup-mappings
     # Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
       c = container.R
@@ -210,7 +211,6 @@ class WebResource
          {_: :tr, class: :contents,
           c: {_: :td, colspan: 2, style: style,
               c: HTML.kv(container,env, flp == 0 ? 1 : 0)}}]}}
-
     # Blog Post -> Markup
     Markup[BlogPost] = -> post , env {
       {_: :table, class: :post, style: 'background-color: pink',
