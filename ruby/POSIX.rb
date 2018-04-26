@@ -229,41 +229,6 @@ class WebResource
 
   end
 
-  module HTML
-
-    # file paths control the tree structure
-    Group['tree'] = -> graph {
-
-      tree = {'uri' => '/',
-              Type => [R[Container]],
-              Contains => []
-             }
-
-      graph.values.map{|s|
-        this = tree
-        path = []
-        s.R.path.do{|p|
-          p.R.parts.map{|name|
-            path.push name
-            this = this[Contains].find{|c|c.R.basename==name} ||
-                   (child = {'uri' => path.join('/'), Type => [R[Container]], Contains => []}
-                    this[Contains].push child
-                    child)}}
-
-        s.map{|p,o|
-          unless p=='uri'
-            this[p] ||= []
-            if this[p].class == Array
-              this[p].push o
-            else
-              puts this[p].class, this[p]
-            end
-          end}}
-
-      tree}
-
-  end
-
   module POSIX
     LinkMethod = begin # link-method capability test
                    file = '.cache/link'.R

@@ -95,7 +95,7 @@ class WebResource
     end
 
     def self.colorize k
-      if k.empty?
+      if !k || k.empty?
         ''
       else
         "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
@@ -129,8 +129,7 @@ class WebResource
                 {_: :td, class: :v, style: style,
                  c: ["\n ",
                      vs.justArray.map{|v|
-                       puts v.class,v
-                       HTML.value k,v,env }.intersperse(' ')]}]
+                       HTML.value k,v,env}.intersperse(' ')]}]
               end)} unless hide}}
     end
 
@@ -154,19 +153,19 @@ class WebResource
 
     # (k,v) tuple -> Markup
     def self.value k, v, env, flp=0
-      if k == 'uri' # identifier
+      if 'uri' == k # identifier
         u = v.R
         {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
-      elsif k == Content
+      elsif Content == k
         v # Content field. already Markup or HTML
-      elsif k == Abstract
-        v # Abstract. already Markup or HTML. displays in abbreviated/heading views
-      elsif Markup[k] # markup-lambda for predicate
+      elsif Abstract == k
+        v # Abstract. already Markup or HTML
+      elsif Markup[k] # markup by predicate type
         Markup[k][v,env]
       elsif v.class == Hash # resource w/ data
         resource = v.R
         types = resource.types
-        # markup-lambda for resource type
+        # markup by resource type
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
@@ -177,7 +176,7 @@ class WebResource
           kv v,env
         end
       elsif v.class == WebResource
-        v # resource reference w/o data
+        v # resource reference
       else
         puts "markup undefined for #{k} #{v}"
         CGI.escapeHTML v.to_s
@@ -185,6 +184,7 @@ class WebResource
     end
 
     # triple markup-mappings
+
     # typetag -> Markup
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
@@ -193,10 +193,12 @@ class WebResource
       else
         CGI.escapeHTML t.to_s
       end}
+
     # datetime -> Markup
     Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
-    # resource markup-mappings
+    # resource markup-mappings (RDF type)
+
     # Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
       c = container.R
@@ -212,12 +214,28 @@ class WebResource
          {_: :tr, class: :contents,
           c: {_: :td, colspan: 2, style: style,
               c: HTML.kv(container,env, flp == 0 ? 1 : 0)}}]}}
-    # Blog Post -> Markup
+
+    # BlogPost -> Markup
     Markup[BlogPost] = -> post , env {
       {_: :table, class: :post, style: 'background-color: pink',
        c: {_: :tr,
            c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
                {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
+
+    # Graph -> Tree
+    Group['tree'] = -> graph {
+      tree = {}
+      # visit resources
+      graph.values.map{|resource|
+        cursor = tree
+        # walk
+        resource.R.parts.unshift(resource.R.host||'').map{|name|
+          cursor[Type] ||= R[Container] # containing node
+          cursor[Contains]       ||= {} # child nodes
+ cursor = cursor[Contains][name] ||= {name: name}} # advance cursor to named node
+        # attach resource to tree
+        cursor[resource.uri] ||= resource}
+      tree } # return
 
   end
   module Webize
