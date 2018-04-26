@@ -78,12 +78,10 @@ class WebResource
       args = POSIX.splitArgs q
       args.each_with_index{|arg,i| wordIndex[arg] = i }
       pattern = /(#{args.join '|'})/i
-
       # find matches
       graph.map{|u,r|
         keep = !(r.has_key?(Abstract)||r.has_key?(Content)) || r.to_s.match(pattern)
         graph.delete u unless keep}
-
       # highlight matches
       graph.values.map{|r|
         (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
@@ -91,8 +89,7 @@ class WebResource
             l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
               HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
             }} if lines.size > 0 }}
-
-      # highlighting CSS
+      # CSS
       graph['#abstracts'] = {Abstract => HTML.render({_: :style, c: wordIndex.values.map{|i|
                                                         ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
     end
@@ -115,26 +112,9 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    ## RDF -> Markup
+    ## JSON|RDF -> Markup
 
-    # [reA,reB..] -> Markup
-    def self.tabular resources, env
-      ks = [[From, :from],
-            [To,   :to],
-            ['uri'],
-            [Type],
-            [Title,:title],
-            [Abstract],
-            [Date]]
-      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
-         {_: :tr, c: ks.map{|k|
-            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
-            {_: :td, class: k[1],
-             c: keys.map{|key|
-               r[key].justArray.map{|v|
-                 HTML.value key,v,env }.intersperse(' ')}}}}}}
-    end
-
+    # resource
     # {k => v} -> Markup
     def self.kv hash, env, flp=0
       {_: :table, class: :kv, c: hash.map{|k,vs|
@@ -153,13 +133,33 @@ class WebResource
               end)} unless hide}}
     end
 
-    # (k,[vA,vB..]) -> Markup
+    # resource list
+    # [reA,reB..] -> Markup
+    def self.tabular resources, env
+      ks = [[From, :from],
+            [To,   :to],
+            ['uri'],
+            [Type],
+            [Title,:title],
+            [Abstract],
+            [Date]]
+      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
+         {_: :tr, c: ks.map{|k|
+            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
+            {_: :td, class: k[1],
+             c: keys.map{|key|
+               r[key].justArray.map{|v|
+                 HTML.value key,v,env }.intersperse(' ')}}}}}}
+    end
+
+    # property/value pair(s)
+    # (k,v) -> Markup
     def self.value k, vs, env, flp=0
-      vs.justArray.map{|v|
+      vs.justArray.map{|v| # each (k,v) tuple
         # value can be typed literal or resource
         if Markup[k]
           Markup[k][v,env]
-        elsif v.class == Hash # resource, dispatch on type
+        elsif v.class == Hash # typed resource
           resource = v.R
           types = resource.types
           if types.member? InstantMessage
@@ -198,7 +198,7 @@ class WebResource
     # timestamp -> Markup
     Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
 
-    # directory/container -> Markup
+    # Directory|Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
       c = container.R
       container.delete Type
