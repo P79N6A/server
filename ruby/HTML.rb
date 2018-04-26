@@ -61,8 +61,8 @@ class WebResource
                              elsif (q.has_key? 'tabular') || (q.has_key? 't')
                                HTML.tabular graph.values, @r
                              else
-                               grouper = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
-                               HTML.value Container, [grouper[graph]], @r
+                               treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                               HTML.value Container, treeize[graph], @r
                               end),
                              link[:next, '&#9654;'], '<br>',
                              link[:down,'&#9660;'],
@@ -128,7 +128,9 @@ class WebResource
                  c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
                 {_: :td, class: :v, style: style,
                  c: ["\n ",
-                     vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')]}]
+                     vs.justArray.map{|v|
+                       puts v.class,v
+                       HTML.value k,v,env }.intersperse(' ')]}]
               end)} unless hide}}
     end
 
@@ -151,40 +153,39 @@ class WebResource
     end
 
     # (k,v) tuple -> Markup
-    def self.value k, vs, env, flp=0
-      vs.justArray.map{|v| # each (k,v) tuple
-        if Markup[k] # markup-lambda for predicate type
-          Markup[k][v,env]
-        elsif v.class == Hash # resource w/ data
-          resource = v.R
-          types = resource.types
-          # markup-lambda for object type
-          if types.member? InstantMessage
-            Markup[InstantMessage][resource,env]
-          elsif types.member? Container
-            Markup[Container][v,env,flp]
-          elsif types.member? BlogPost
-            Markup[BlogPost][v,env]
-          else
-            kv v,env
-          end
-        elsif v.class == WebResource
-          v # resource w/o data
-        elsif k == Content
-          v # Content field. already markup or HTML
-        elsif k == Abstract
-          v # Abstract displays even in abbreviated/title-only/heading views
-        elsif k == 'uri' # identifier
-          u = v.R
-          {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
+    def self.value k, v, env, flp=0
+      if k == 'uri' # identifier
+        u = v.R
+        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
+      elsif k == Content
+        v # Content field. already Markup or HTML
+      elsif k == Abstract
+        v # Abstract. already Markup or HTML. displays in abbreviated/heading views
+      elsif Markup[k] # markup-lambda for predicate
+        Markup[k][v,env]
+      elsif v.class == Hash # resource w/ data
+        resource = v.R
+        types = resource.types
+        # markup-lambda for resource type
+        if types.member? InstantMessage
+          Markup[InstantMessage][resource,env]
+        elsif types.member? Container
+          Markup[Container][v,env,flp]
+        elsif types.member? BlogPost
+          Markup[BlogPost][v,env]
         else
-          CGI.escapeHTML v.to_s
+          kv v,env
         end
-      }.intersperse ' '
+      elsif v.class == WebResource
+        v # resource reference w/o data
+      else
+        puts "markup undefined for #{k} #{v}"
+        CGI.escapeHTML v.to_s
+      end
     end
 
     # triple markup-mappings
-    # type-tag -> Markup
+    # typetag -> Markup
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
         t = t.R
@@ -192,8 +193,8 @@ class WebResource
       else
         CGI.escapeHTML t.to_s
       end}
-    # timestamp -> Markup
-    Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
+    # datetime -> Markup
+    Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
     # resource markup-mappings
     # Container -> Markup
