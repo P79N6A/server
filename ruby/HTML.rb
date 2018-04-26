@@ -183,7 +183,7 @@ class WebResource
       elsif v.class == WebResource
         v # resource reference
       else
-        puts "markup undefined for #{k} #{v}"
+#        puts "markup undefined for #{k} #{v}"
         CGI.escapeHTML v.to_s
       end
     end
@@ -207,14 +207,11 @@ class WebResource
     # Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
       c = container.R
-      container.delete Type
-      container.delete 'uri'
-      name = container.delete(:name) || ''
       bgcolor = flp == 0 ? '#000' : '#222'
       style = "background-color: #{bgcolor}"
       {_: :table, class: :container, c: [
          {_: :tr, class: :name,
-          c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: (CGI.escapeHTML name)}},
+          c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: CGI.escapeHTML(container[:name] || '')}},
               {_: :td, class: :spacer}
              ]},
          {_: :tr, class: :contents,
