@@ -114,8 +114,7 @@ class WebResource
 
     ## JSON|RDF -> Markup
 
-    # resource
-    # {k => v} -> Markup
+    # Resource {k => v} -> Markup
     def self.kv hash, env, flp=0
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
@@ -133,8 +132,7 @@ class WebResource
               end)} unless hide}}
     end
 
-    # resource list
-    # [reA,reB..] -> Markup
+    # ResourceList [reA,reB..] -> Markup
     def self.tabular resources, env
       ks = [[From, :from],
             [To,   :to],
@@ -152,16 +150,15 @@ class WebResource
                  HTML.value key,v,env }.intersperse(' ')}}}}}}
     end
 
-    # property/value pair(s)
-    # (k,v) -> Markup
+    # (k,v) tuple -> Markup
     def self.value k, vs, env, flp=0
       vs.justArray.map{|v| # each (k,v) tuple
-        # value can be typed literal or resource
-        if Markup[k]
+        if Markup[k] # markup-lambda for predicate type
           Markup[k][v,env]
-        elsif v.class == Hash # typed resource
+        elsif v.class == Hash # resource w/ data
           resource = v.R
           types = resource.types
+          # markup-lambda for object type
           if types.member? InstantMessage
             Markup[InstantMessage][resource,env]
           elsif types.member? Container
@@ -172,11 +169,11 @@ class WebResource
             kv v,env
           end
         elsif v.class == WebResource
-          v
+          v # resource w/o data
         elsif k == Content
-          v
+          v # Content (already in normal form)
         elsif k == Abstract
-          v
+          v # Abstract
         elsif k == 'uri'
           u = v.R
           {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
@@ -198,7 +195,7 @@ class WebResource
     # timestamp -> Markup
     Markup[Date] = -> date,env=nil { {_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date} }
 
-    # Directory|Container -> Markup
+    # Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
       c = container.R
       container.delete Type
