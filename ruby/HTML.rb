@@ -204,11 +204,12 @@ class WebResource
       c = container.R
       container.delete Type
       container.delete 'uri'
+      name = container.delete(:name) || ''
       bgcolor = flp == 0 ? '#000' : '#222'
       style = "background-color: #{bgcolor}"
       {_: :table, class: :container, c: [
          {_: :tr, class: :name,
-          c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: CGI.escapeHTML(c.basename)}},
+          c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: (CGI.escapeHTML name)}},
               {_: :td, class: :spacer}
              ]},
          {_: :tr, class: :contents,
@@ -227,15 +228,15 @@ class WebResource
       tree = {}
       # visit resources
       graph.values.map{|resource|
+        # walk. terminates at doc-graph node (fragments grouped there)
         cursor = tree
-        # walk
         resource.R.parts.unshift(resource.R.host||'').map{|name|
           cursor[Type] ||= R[Container] # containing node
           cursor[Contains]       ||= {} # child nodes
- cursor = cursor[Contains][name] ||= {name: name}} # advance cursor to named node
-        # attach resource to tree
+ cursor = cursor[Contains][name] ||= {name: name}} # advance cursor
+        # attach resource at node
         cursor[resource.uri] ||= resource}
-      tree } # return
+      tree }
 
   end
   module Webize
