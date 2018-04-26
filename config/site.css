@@ -1,17 +1,16 @@
-body   {font-family: sans-serif; background-color:#000; color: #fff}
-a      {text-decoration: none; color: #fff; border-radius: .22em; max-width: 24em; overflow: hidden; }
-img    {max-width: 100%}
+body {font-family: sans-serif; background-color:#000; color: #fff}
+a    {text-decoration: none; color: #fff; max-width: 42em; overflow: hidden; }
+img  {max-width: 100%}
 .post {background-color:#fff; margin: .2em}
 .post .type {vertical-align:top}
 .post .type a {color: #000; font-size: 2em}
-.container {border-spacing: 0}
 .container .name > td.label  {border-radius: .3em .3em 0 0; width: 3% }
 .container .name > td.spacer {border-radius: 0; width: 97% }
 .container .contents > td {border-radius: 0 0 .3em .3em}
 .thumb {max-width: 28em}
-.date, a  {white-space: nowrap}
-pre    {min-width: 40ex; margin: 0; white-space: pre-wrap}
-pre, td.v {max-width: 200ex; overflow: hidden}
-table, div, span {border-radius: .2em}
+.date {white-space: nowrap}
+pre   {min-width: 40ex; margin: 0; white-space: pre-wrap; max-width: 200ex}
+table {border-spacing: 0}
+table, div, a, span {border-radius: .2em}
 table, div, a {display: inline-block}
 :target, :target * {background-color: #0f0 !important; color: #fff !important}
