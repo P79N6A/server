@@ -158,19 +158,16 @@ class WebResource
   include POSIX
 
   module Webize
-    # emit RDF of file-metadata
+    # file -> RDF
     def triplrFile
       s = path
-
-      size.do{|sz|
-        yield s, Size, sz}
-
+      size.do{|sz| yield s, Size, sz}
       mtime.do{|mt|
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
     end
 
-    # RDFize container-metadata
+    # directory -> RDF
     def triplrContainer
       s = path
       s = s + '/' unless s[-1] == '/'
@@ -184,7 +181,7 @@ class WebResource
   end
 
   module HTTP
-    # redirect to date dir
+    # redirect to time-dir
     def chronoDir ps
       time = Time.now
       loc = time.strftime(case ps[0][0].downcase
@@ -234,7 +231,7 @@ class WebResource
 
   module HTML
 
-    # filesystem-paths control the tree structure
+    # file paths control the tree structure
     Group['tree'] = -> graph {
 
       tree = {'uri' => '/',
