@@ -42,7 +42,7 @@ class WebResource
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label { # markup doc-graph (exposed in HEAD) links
         @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
-      # Graph -> Tree -> Markup -> HTML
+      # Markup -> HTML
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
                     c: ["\n\n",
@@ -57,11 +57,15 @@ class WebResource
                          c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
                              (if graph.empty?
-                              [{_: :h1, c: 404}, HTML.kv(@r,@r)]
+                              # Env -> Markup
+                              [{_: :h1, c: 404},
+                               HTML.kv(@r,@r)]
                              elsif (q.has_key? 'tabular') || (q.has_key? 't')
+                               # Graph -> Markup
                                HTML.tabular graph.values, @r
                              else
                                treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                               # Graph -> Tree -> Markup
                                HTML.value Container, treeize[graph], @r
                               end),
                              link[:next, '&#9654;'], '<br>',
@@ -73,6 +77,7 @@ class WebResource
 
     def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
+    # Graph -> Graph
     def htmlGrep graph, q
       wordIndex = {}
       args = POSIX.splitArgs q
