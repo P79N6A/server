@@ -1,22 +1,24 @@
-body {font-family: sans-serif; background-color:#000; color: #fff}
+body {font-family: sans-serif}
 a    {text-decoration: none; color: #fff; background-color:#000; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
 .post {max-width: 40em}
 .post .type {vertical-align:top}
 .post .type a {font-size: 2em}
-.container {padding-top:0 ; margin: .2em}
-.container > span.name {font-size:.9em;vertical-align:top}
-.container.depth0 {background-color: #000;color:#fff}
-.container.depth1 {background-color: #111;color:#fff}
-.container.depth2 {background-color: #222;color:#fff}
-.container.depth3 {background-color: #333;color:#fff}
-.container.depth4 {background-color: #444;color:#fff}
+.msgbody {color:#000;background-color:#fff}
+.container {padding: .2em;margin:.1em;border-radius:.6em}
+.container > span.name {font-size:.9em; display: block; font-weight: bold;vertical-align:top}
+.container.depth0 {background-color: #fff;color:#000}
+.container.depth1 {background-color: #ddd;color:#000}
+.container.depth2 {background-color: #bbb;color:#000}
+.container.depth3 {background-color: #999;color:#000}
+.container.depth4 {background-color: #777;color:#fff}
 .container.depth5 {background-color: #555;color:#fff}
-.container.depth6 {background-color: #666;color:#fff}
-.container.depth7 {background-color: #777;color:#fff}
-.container.depth8 {background-color: #888;color:#fff}
+.container.depth6 {background-color: #333;color:#fff}
+.container.depth7 {background-color: #111;color:#fff}
+.container.depth8 {background-color: #000;color:#fff}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
+a.comment {font-weight: bold;border-radius:.5em; padding: 0 .1em 0 .1em}
 pre   {min-width: 40ex; margin: 0; white-space: pre-wrap; max-width: 200ex}
 table {border-spacing: 0}
 table, div, a, span {border-radius: .2em}

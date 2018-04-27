@@ -36,7 +36,7 @@ class WebResource
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
-      @r[:colors] ||= {}  # image references
+      @r[:colors] ||= {'status' => 'background-color:#eee'}  # image references
       htmlGrep graph, q['q'] if q['q'] # markup grep-results
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
@@ -218,7 +218,7 @@ class WebResource
               else
                 CGI.escapeHTML c
               end}, ' ',
-            msg[Abstract], msg[Content],
+            {_: :span, class: :msgbody, c: [msg[Abstract], msg[Content]]},
             msg[Image].map{|i| Markup[Image][i,env]},
             msg[Video].map{|v| Markup[Video][v,env]}
           ]}," \n"]}
@@ -258,21 +258,20 @@ class WebResource
       other = []
       {'uri' => '/', Type => R[Container], Contains => decades}}
 
-    def self.colorizeBG k
+    def self.colorize k, a
       if !k || k.empty?
         ''
       else
-        "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
+        "#{a==0 ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
       end
     end
 
+    def self.colorizeBG k
+      colorize k, 1
+    end
+
     def self.colorizeFG k
-      if !k || k.empty?
-        ''
-      else
-        color = '#%06x' % (rand 16777216)
-        "color: #{color}; border: .08em solid #{color}; background-color: #000"
-      end
+      colorize k, 0
     end
 
   end
