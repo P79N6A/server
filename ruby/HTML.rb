@@ -210,18 +210,10 @@ class WebResource
       bgcolor = flp == 0 ? '#000' : '#444'
       style = "background-color: #{bgcolor}"
       {class: :container,
-       c: [{_: :span, class: :label, c: CGI.escapeHTML(container[:name] || '')},
-          ]}
-      {_: :table, c: [
-         {_: :tr, class: :name,
-          c: [{_: :td, class: :label, style: style, c: {_: :a, href: c.uri, c: }},
-              {_: :td, class: :spacer}
-             ]},
-         {_: :tr, class: :contents,
-          c: {_: :td, colspan: 2, style: style,
-              c: (container[Contains]||{}).values.map{|c|
-                HTML.value(nil,c,env,flp)}}}]}
-    }
+       c: [{_: :span, class: :label, style: style, c: CGI.escapeHTML(container[:name] || '')},
+           (container[Contains]||{}).values.map{|c|
+             HTML.value(nil,c,env,flp)}
+          ]}}
 
     # BlogPost -> Markup
     Markup[BlogPost] = -> post , env {
