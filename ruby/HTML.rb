@@ -117,8 +117,6 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    ## JSON|RDF -> Markup
-
     # Resource {k => v} -> Markup
     def self.kv hash, env, flp=0
       {_: :table, class: :kv, c: hash.map{|k,vs|
@@ -183,7 +181,6 @@ class WebResource
       elsif v.class == WebResource
         v # resource reference
       else
-#        puts "markup undefined for #{k} #{v}"
         CGI.escapeHTML v.to_s
       end
     end
@@ -202,7 +199,7 @@ class WebResource
     # datetime -> Markup
     Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
-    # resource markup-mappings (RDF type)
+    # resource markup-mappings, by RDF type
 
     # Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
@@ -222,8 +219,9 @@ class WebResource
            c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
                {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
 
-    # Graph -> Tree
+    # Graph -> Tree transforms
 
+    # filesystem paths control tree-structure
     Group['tree'] = -> graph {
       tree = {}
       # visit resources
@@ -237,14 +235,16 @@ class WebResource
           cursor[Contains] ||= {}       # contained nodes
  cursor = cursor[Contains][name] ||= {name: name}} # insert node, advance cursor
 
-        if !r.fragment # document properties
+        # add resource data
+        if !r.fragment # file metadata
           resource.map{|k,v|cursor[k] ||= v}
-        else # fragment contained by doc
+        else # fragment of doc
           cursor[Contains] ||= {}
           cursor[Contains][r.fragment] = resource
         end
       }; tree }
 
+    # group toplevel year-dirs by decade
     Group['decades'] = -> graph {
       decades = {}
       other = []
