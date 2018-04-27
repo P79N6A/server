@@ -144,7 +144,7 @@ class WebResource
                  HTML.value key,v,env }.intersperse(' ')}}}}}}
     end
 
-    # (k,v) tuple -> Markup
+    # Triple (_ p o) -> Markup
     def self.value k, v, env
       if 'uri' == k # identifier
         u = v.R
@@ -175,9 +175,10 @@ class WebResource
       end
     end
 
-    # triple markup-mappings
+    # subject ignored, predicate mapped
+    # Triple (_ _ o) -> Markup
+    Markup[Title] = -> title,env=nil {{_: :h2, c: (CGI.escapeHTML title.to_s)}}
 
-    # typetag -> Markup
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
         t = t.R
@@ -186,10 +187,7 @@ class WebResource
         CGI.escapeHTML t.to_s
       end}
 
-    # datetime -> Markup
     Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
-
-    # resource markup-mappings, by RDF type
 
     # Container -> Markup
     Markup[Container] = -> container , env {
