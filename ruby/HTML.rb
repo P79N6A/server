@@ -113,15 +113,13 @@ class WebResource
     def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
-         label = k.to_s.split(/[\._\-\/]/)[0]
-         style = env[:colors][label] ||= HTML.colorizeBG(label)
          {_: :tr,
           c: (if k == Contains
               {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
              else
-               [{_: :td, class: :k, style: style,
+               [{_: :td, class: :k,
                  c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
-                {_: :td, class: :v, style: style,
+                {_: :td, class: :v,
                  c: ["\n ",
                      vs.justArray.map{|v|
                        HTML.value k,v,env}.intersperse(' ')]}]
@@ -152,9 +150,9 @@ class WebResource
         u = v.R
         {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
       elsif Content == k
-        v # Content field. already Markup or HTML
+        {class: :content, c: v}
       elsif Abstract == k
-        v # Abstract. already Markup or HTML
+        v
       elsif Markup[k] # markup by predicate type
         Markup[k][v,env]
       elsif v.class == Hash # resource w/ data
