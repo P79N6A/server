@@ -4,21 +4,6 @@ class WebResource
   module URIs
     Twitter = 'https://twitter.com'
   end
-  module HTML
-    Markup[InstantMessage] = -> msg, env {
-      [{c: [msg[Creator].map{|c|
-              if c.respond_to? :uri
-                name = c.R.fragment || c.R.basename || ''
-                color = env[:colors][name] ||= (HTML.colorize name)
-                {_: :a, class: :comment, style: color, href: msg.uri, c: name}
-              else
-                CGI.escapeHTML c
-              end}, ' ',
-            msg[Abstract], msg[Content],
-            msg[Image].map{|i| Markup[Image][i,env]},
-            msg[Video].map{|v| Markup[Video][v,env]}
-           ]}," \n"]}
-  end
   module Webize
 
     def twitter

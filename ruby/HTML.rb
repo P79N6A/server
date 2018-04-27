@@ -99,14 +99,6 @@ class WebResource
                                                         ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
     end
 
-    def self.colorize k
-      if !k || k.empty?
-        ''
-      else
-        "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
-      end
-    end
-
     # HTML -> HTML
     def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
       html = Nokogiri::HTML.fragment body
@@ -118,14 +110,14 @@ class WebResource
     end
 
     # Resource {k => v} -> Markup
-    def self.kv hash, env, flp=0
+    def self.kv hash, env
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          label = k.to_s.split(/[\._\-\/]/)[0]
-         style = env[:colors][label] ||= HTML.colorize(label)
+         style = env[:colors][label] ||= HTML.colorizeBG(label)
          {_: :tr,
           c: (if k == Contains
-              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env,flp }}
+              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
              else
                [{_: :td, class: :k, style: style,
                  c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
@@ -155,7 +147,7 @@ class WebResource
     end
 
     # (k,v) tuple -> Markup
-    def self.value k, v, env, flp=0
+    def self.value k, v, env
       if 'uri' == k # identifier
         u = v.R
         {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
@@ -172,7 +164,7 @@ class WebResource
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
-          Markup[Container][v,env,flp]
+          Markup[Container][v,env]
         elsif types.member? BlogPost
           Markup[BlogPost][v,env]
         else
@@ -202,12 +194,13 @@ class WebResource
     # resource markup-mappings, by RDF type
 
     # Container -> Markup
-    Markup[Container] = -> container , env, flp = 0 {
+    Markup[Container] = -> container , env {
       name = container[:name] || ''
-      {class: "container #{flp == 0 ? :flip : :flop}",
-       c: [{_: :span, class: :name, c: CGI.escapeHTML(name)},
+      color = env[:colors][name] ||= (HTML.colorizeFG name)
+      {class: "container depth#{container[:depth]}", style: color,
+       c: [{_: :span, class: :name,  c: CGI.escapeHTML(name)},
            (container[Contains]||{}).values.map{|c|
-             HTML.value(nil,c,env,flp==0 ? 1 : 0)}]}}
+             HTML.value(nil,c,env)}]}}
 
     # BlogPost -> Markup
     Markup[BlogPost] = -> post , env {
@@ -215,6 +208,20 @@ class WebResource
        c: {_: :tr,
            c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
                {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
+
+    Markup[InstantMessage] = -> msg, env {
+      [{c: [msg[Creator].map{|c|
+              if c.respond_to? :uri
+                name = c.R.fragment || c.R.basename || ''
+                color = env[:colors][name] ||= (HTML.colorizeBG name)
+                {_: :a, class: :comment, style: color, href: msg.uri, c: name}
+              else
+                CGI.escapeHTML c
+              end}, ' ',
+            msg[Abstract], msg[Content],
+            msg[Image].map{|i| Markup[Image][i,env]},
+            msg[Video].map{|v| Markup[Video][v,env]}
+          ]}," \n"]}
 
     # Graph -> Tree transforms
 
@@ -226,11 +233,15 @@ class WebResource
         r = resource.R
 
         # walk to doc-graph node
+        depth = 0
         cursor = tree
         r.parts.unshift(r.host||'').map{|name|
           cursor[Type] ||= R[Container] # containing node
           cursor[Contains] ||= {}       # contained nodes
- cursor = cursor[Contains][name] ||= {name: name}} # insert node, advance cursor
+           # create node and advance cursor to it
+          cursor = cursor[Contains][name] ||= {depth: depth, name: name}
+          depth += 1
+        }
 
         # add resource data
         if !r.fragment # file metadata
@@ -246,6 +257,23 @@ class WebResource
       decades = {}
       other = []
       {'uri' => '/', Type => R[Container], Contains => decades}}
+
+    def self.colorizeBG k
+      if !k || k.empty?
+        ''
+      else
+        "background-color: #{'#%06x' % (rand 16777216)}; color: #000"
+      end
+    end
+
+    def self.colorizeFG k
+      if !k || k.empty?
+        ''
+      else
+        color = '#%06x' % (rand 16777216)
+        "color: #{color}; border: .08em solid #{color}; background-color: #000"
+      end
+    end
 
   end
   module Webize
