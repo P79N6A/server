@@ -172,7 +172,7 @@ class WebResource
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
-          Markup[Container][v,env,flp==0 ? 1 : 0]
+          Markup[Container][v,env,flp]
         elsif types.member? BlogPost
           Markup[BlogPost][v,env]
         else
@@ -203,18 +203,15 @@ class WebResource
 
     # Container -> Markup
     Markup[Container] = -> container , env, flp = 0 {
-      c = container.R
-      bgcolor = flp == 0 ? '#000' : '#444'
-      style = "background-color: #{bgcolor}"
-      {class: :container,
-       c: [{_: :span, class: :label, style: style, c: CGI.escapeHTML(container[:name] || '')},
+      name = container[:name] || ''
+      {class: "container #{flp == 0 ? :flip : :flop}",
+       c: [{_: :span, class: :name, c: CGI.escapeHTML(name)},
            (container[Contains]||{}).values.map{|c|
-             HTML.value(nil,c,env,flp)}
-          ]}}
+             HTML.value(nil,c,env,flp==0 ? 1 : 0)}]}}
 
     # BlogPost -> Markup
     Markup[BlogPost] = -> post , env {
-      {_: :table, class: :post, style: 'background-color: pink',
+      {_: :table, class: :post,
        c: {_: :tr,
            c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
                {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}

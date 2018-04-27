@@ -10,7 +10,7 @@
 .node:before { content:"\f1e0"; font-family: icons; }
 .clock:before { content:"\f017"; font-family: icons; }
 .find:before { content:"\f002"; font-family: icons; }
-.comment:before { content:"\f0e5"; font-family: icons; }
+.comment:after { content:"\f0e5"; font-family: icons; }
 .comments:before { content:"\f086"; font-family: icons; }
 .date:before { content:"\f073"; font-family: icons; }
 .dir:before { content:"\f07c"; font-family: icons; }

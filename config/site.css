@@ -1,12 +1,13 @@
 body {font-family: sans-serif; background-color:#000; color: #fff}
-a    {text-decoration: none; color: #fff; max-width: 42em; overflow: hidden; }
+a    {text-decoration: none; color: #fff; background-color:#000; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
-.post {background-color:#fff; margin: .2em}
+.post {max-width: 40em;margin: .5em}
 .post .type {vertical-align:top}
-.post .type a {color: #000; font-size: 2em}
-.container .name > td.label  {border-radius: .3em .3em 0 0; width: 3% }
-.container .name > td.spacer {border-radius: 0; width: 97% }
-.container .contents > td {border-radius: 0 0 .3em .3em}
+.post .type a {font-size: 2em}
+.container  {padding-top:0; margin:.1em}
+.container.flip {background-color: #fff;color:#000}
+.container.flop {background-color: #111;color:#fff}
+.container > span.name {font-size:.9em;vertical-align:top}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 pre   {min-width: 40ex; margin: 0; white-space: pre-wrap; max-width: 200ex}
