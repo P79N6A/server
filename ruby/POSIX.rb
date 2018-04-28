@@ -106,7 +106,7 @@ class WebResource
     # basename of path component
     def basename; File.basename (path||'') end
 
-    # strip document-format suffixes for content-type agnostic base-URI
+    # strip native doc-format suffixes
     def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|opml|ttl|txt|u)$/,''] end
 
     # name suffix

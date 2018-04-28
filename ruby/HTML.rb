@@ -36,7 +36,7 @@ class WebResource
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
-      @r[:colors] ||= {'status' => 'background-color:#eee'}  # image references
+      @r[:colors] ||= {'status' => 'background-color:#f3f3f3'}  # image references
       htmlGrep graph, q['q'] if q['q'] # markup grep-results
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
@@ -144,21 +144,20 @@ class WebResource
                  HTML.value key,v,env }.intersperse(' ')}}}}}}
     end
 
-    # Triple (_ p o) -> Markup
+    # dispatch to type-specific markup
     def self.value k, v, env
-      if 'uri' == k # identifier
+      if 'uri' == k
         u = v.R
         {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
       elsif Content == k
         {class: :content, c: v}
       elsif Abstract == k
         v
-      elsif Markup[k] # markup by predicate type
+      elsif Markup[k] # markup lambda defined on predicate
         Markup[k][v,env]
-      elsif v.class == Hash # resource w/ data
+      elsif v.class == Hash # resource with data
         resource = v.R
         types = resource.types
-        # markup by resource type
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
@@ -169,14 +168,12 @@ class WebResource
           kv v,env
         end
       elsif v.class == WebResource
-        v # resource reference
+        v # resource without data - just a reference
       else
         CGI.escapeHTML v.to_s
       end
     end
 
-    # subject ignored, predicate mapped
-    # Triple (_ _ o) -> Markup
     Markup[Title] = -> title,env=nil {{_: :h2, c: (CGI.escapeHTML title.to_s)}}
 
     Markup[Type] = -> t,env=nil {
@@ -189,7 +186,6 @@ class WebResource
 
     Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
-    # Container -> Markup
     Markup[Container] = -> container , env {
       name = container[:name] || ''
       color = env[:colors][name] ||= (HTML.colorizeFG name)
@@ -198,7 +194,6 @@ class WebResource
            (container[Contains]||{}).values.map{|c|
              HTML.value(nil,c,env)}]}}
 
-    # BlogPost -> Markup
     Markup[BlogPost] = -> post , env {
       {_: :table, class: :post,
        c: {_: :tr,
@@ -216,7 +211,8 @@ class WebResource
               end}, ' ',
             {_: :span, class: :msgbody, c: [msg[Abstract], msg[Content]]},
             msg[Image].map{|i| Markup[Image][i,env]},
-            msg[Video].map{|v| Markup[Video][v,env]}
+            msg[Video].map{|v| Markup[Video][v,env]},
+            msg[Link].map(&:R)
           ]}," \n"]}
 
     # Graph -> Tree transforms
@@ -254,20 +250,20 @@ class WebResource
       other = []
       {'uri' => '/', Type => R[Container], Contains => decades}}
 
-    def self.colorize k, a
+    def self.colorize k, bg=true
       if !k || k.empty?
         ''
       else
-        "#{a==0 ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
+        "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
       end
     end
 
     def self.colorizeBG k
-      colorize k, 1
+      colorize k
     end
 
     def self.colorizeFG k
-      colorize k, 0
+      colorize k, false
     end
 
   end
