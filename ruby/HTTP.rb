@@ -158,9 +158,7 @@ certificates
  su -c 'ln mitmproxy-ca-cert.pem /android/system/etc/security/cacerts/c8750f0d.0' # adjust to match above command's hashed-value
 =end
     # find URI from middleman
-    '.conf/hosts/minized'.R.lines.map{|l|
-      host = l.split(' ')[1]
-      Host[host] = Short}
+    '.conf/hosts/minized'.R.hosts.map{|host| Host[host] = Short}
 
     # unwrap URI
     Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
