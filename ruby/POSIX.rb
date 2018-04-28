@@ -90,8 +90,18 @@ class WebResource
     def shellPath; localPath.utf8.sh end
     alias_method :sh, :shellPath
 
-    # path components split on /
-    def parts; path ? path.split('/') : [] end
+    # path entries
+    def parts
+      if path
+        if path[0]=='/'
+          path[1..-1]
+        else
+          path
+        end.split '/'
+      else
+        []
+      end
+    end
 
     # basename of path component
     def basename; File.basename (path||'') end
