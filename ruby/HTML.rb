@@ -54,7 +54,7 @@ class WebResource
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
-                         c: ["\n", link[:up, '&nbsp;&nbsp;&#9650;'], '<br>',
+                         c: ["\n", link[:up, '&#9650;'], '<br>',
                              link[:prev, '&#9664;'],
                              (if graph.empty?
                               # Env -> Markup
@@ -201,15 +201,18 @@ class WebResource
                {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
 
     Markup[InstantMessage] = -> msg, env {
-      [{c: [msg[Creator].map{|c|
-              if c.respond_to? :uri
-                name = c.R.fragment || c.R.basename || ''
-                color = env[:colors][name] ||= (HTML.colorizeBG name)
-                {_: :a, class: :comment, style: color, href: msg.uri, c: name}
-              else
-                CGI.escapeHTML c
-              end}, ' ',
-            {_: :span, class: :msgbody, c: [msg[Abstract], msg[Content]]},
+      [{c: [{class: :creator,
+             c: msg[Creator].map{|c|
+               if c.respond_to? :uri
+                 name = c.R.fragment || c.R.basename || ''
+                 color = env[:colors][name] ||= (HTML.colorizeBG name)
+                 {_: :a, class: :creator, style: color, href: msg.uri, c: name}
+               else
+                 CGI.escapeHTML c
+               end}}, ' ',
+            {_: :span, class: :msgbody,
+             c: [msg[Abstract],
+                 msg[Content]]},
             msg[Image].map{|i| Markup[Image][i,env]},
             msg[Video].map{|v| Markup[Video][v,env]},
             msg[Link].map(&:R)

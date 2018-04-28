@@ -1,5 +1,5 @@
 body {font-family: sans-serif}
-a    {text-decoration: none; font-weight: bold; color: #000; background-color:#eee; max-width: 28em; overflow: hidden; }
+a    {text-decoration: none; font-weight: bold; color: #000; background-color:#fff; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
 .post {max-width: 40em}
 .post .type {vertical-align:top}
@@ -18,7 +18,8 @@ img  {max-width: 100%}
 .container.depth8 {background-color: #000;color:#fff}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
-a.comment {border-radius:.5em; padding: 0 .1em 0 .1em}
+div.creator {min-width:9ex; text-align:right}
+a.creator {border-radius:.5em; padding: 0 .18em 0 .18em}
 pre   {min-width: 40ex; white-space: pre-wrap; max-width: 200ex}
 pre, p {margin: 0 0 .1em 0}
 p {border-width: 0 0 .08em 0; display: inline-block;border-style: dotted; border-color: #888}
