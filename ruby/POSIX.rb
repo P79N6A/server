@@ -29,6 +29,7 @@ class WebResource
 
     # read file at location
     def readFile; File.open(localPath).read end
+    def lines; (open localPath).readlines end
 
     # write file at location
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end

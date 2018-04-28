@@ -86,23 +86,19 @@ class WebResource < RDF::URI
       base = stripDoc
       name = base.basename
 
-      # list resource
+      # URI-list file
       yield base.uri, Type, R[DC+'List']
       yield base.uri, Title, name
       prefix = addHost ? "https://#{name}/" : ''
 
-      # lines
-      (open localPath).readlines.map{|line|
+      # URIs
+      lines.map{|line|
         t = line.chomp.split ' '
         unless t.empty?
           uri = prefix + t[0]
           title = t[1..-1].join ' ' if t.size > 1
-
-          # triples
           yield uri, Type, R[Resource]
-          if title
-            yield uri, Title, title
-          end
+          yield uri, Title, title if title
         end}
     end
   end

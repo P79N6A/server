@@ -253,7 +253,7 @@ class WebResource
       other = []
       {'uri' => '/', Type => R[Container], Contains => decades}}
 
-    def self.colorize k, bg=true
+    def self.colorize k, bg = true
       if !k || k.empty?
         ''
       else

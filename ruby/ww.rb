@@ -1,3 +1,29 @@
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet resolv-replace shellwords}.map{|r|require r}
-%w{URI MIME HTTP HTML POSIX Feed JSON Text Mail Calendar Chat Icons Image AdHoc}.map{|i|require_relative i}
-R = WebResource
+%w{URI POSIX MIME HTTP HTML Feed JSON Text Mail Calendar Chat Icons Image}.map{|i|require_relative i}
+R = WebResource # alias
+# extension to std-classes
+class Array
+  # already an array
+  def justArray; self end
+  # borrowed from Haskell
+  def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
+end
+class Object
+  # obj -> [obj]
+  def justArray; [self] end
+  # identity function
+  def id; self end
+  # arg exists, run block
+  def do; yield self end
+  def to_time; [Time, DateTime].member?(self.class) ? self : Time.parse(self) end
+end
+class FalseClass
+  # arg false, don't do block
+  def do; self end
+end
+class NilClass
+  # nil -> []
+  def justArray; [] end
+  # arg missing, don't do block
+  def do; self end
+end
