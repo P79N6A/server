@@ -118,7 +118,7 @@ class WebResource
               {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
              else
                [{_: :td, class: :k,
-                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k}},
+                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
                 {_: :td, class: :v,
                  c: ["\n ",
                      vs.justArray.map{|v|

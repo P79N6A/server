@@ -7,6 +7,10 @@ end
 class String
   def R; WebResource.new self end
 end
+class Symbol
+  def R; WebResource.new to_s end
+end
+
 
 # parametric DNS-resolver
 Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
