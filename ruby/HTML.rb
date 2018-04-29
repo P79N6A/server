@@ -36,7 +36,7 @@ class WebResource
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
-      @r[:colors] ||= {'status' => 'background-color:#f3f3f3'}  # image references
+      @r[:colors] ||= {'status' => 'background-color:#222'}
       htmlGrep graph, q['q'] if q['q'] # markup grep-results
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
@@ -188,7 +188,7 @@ class WebResource
 
     Markup[Container] = -> container , env {
       name = container[:name] || ''
-      color = env[:colors][name] ||= (HTML.colorizeFG name)
+      color = env[:colors][name] ||= (HTML.colorizeBG name)
       {class: "container depth#{container[:depth]}", style: color,
        c: [{_: :span, class: :name,  c: CGI.escapeHTML(name)},
            (container[Contains]||{}).values.map{|c|
