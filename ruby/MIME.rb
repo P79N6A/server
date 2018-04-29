@@ -11,8 +11,14 @@ class WebResource
       'copying' => 'text/plain',
       'dockerfile' => 'text/x-docker',
       'gemfile' => 'text/x-ruby',
+      'licence' => 'text/plain',
       'license' => 'text/plain',
       'makefile' => 'text/x-makefile',
+      'notice' => 'text/plain',
+      'procfile' => 'text/x-ruby',
+      'rakefile' => 'text/x-ruby',
+      'readme' => 'text/plain',
+      'thanks' => 'text/plain',
       'todo' => 'text/plain',
       'unlicense' => 'text/plain',
       'msg' => 'message/rfc822',
@@ -137,13 +143,13 @@ class WebResource
         (name = path || ''
          prefix = ((File.basename name).split('.')[0]||'').downcase
          suffix = ((File.extname name)[1..-1]||'').downcase
-         if node.directory? # container
+         if node.directory?
            'inode/directory'
+         elsif MIMEsuffix[suffix] # suffix mapping (native)
+           MIMEsuffix[suffix]
          elsif MIMEprefix[prefix] # prefix mapping
            MIMEprefix[prefix]
-         elsif MIMEsuffix[suffix] # suffix mapping
-           MIMEsuffix[suffix]
-         elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
+         elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
            Rack::Mime::MIME_TYPES['.'+suffix]
          else
            puts "#{localPath} unmapped MIME, sniffing content (SLOW)"
