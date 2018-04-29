@@ -19,7 +19,7 @@ class WebResource
       when Array
         x.map{|n|render n}.join
       when R
-        render({_: :a, href: x.uri, id: 'link'+rand.to_s.sha2, c: x[:label][0] || (CGI.escapeHTML x.uri)})
+        render({_: :a, href: x.uri, id: x[:id][0] || ('link'+rand.to_s.sha2), c: x[:label][0] || (CGI.escapeHTML x.uri)})
       when NilClass
         ''
       when FalseClass
@@ -41,7 +41,7 @@ class WebResource
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label { # markup doc-graph (exposed in HEAD) links
-        @r[:links][name].do{|uri| [{_: :span, style: "font-size: 2.4em", c: uri.R.data({id: name, label: label})}, "\n"]}}
+        @r[:links][name].do{|uri| [uri.R.data({id: name, label: label}), "\n"]}}
       # Markup -> HTML
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
                    {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
@@ -54,25 +54,26 @@ class WebResource
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
-                         c: ["\n", link[:up, '&#9650;'], '<br>',
-                             link[:prev, '&#9664;'],
-                             (if graph.empty?
-                              # Env -> Markup
-                              [{_: :h1, c: 404},
-                               HTML.kv(@r,@r)]
-                             elsif (q.has_key? 'tabular') || (q.has_key? 't')
-                               # Graph -> Markup
-                               HTML.tabular graph.values, @r
-                             else
-                               treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
-                               # Graph -> Tree -> Markup
-                               HTML.value Container, treeize[graph], @r
-                              end),
-                             link[:next, '&#9654;'], '<br>',
-                             link[:down,'&#9660;'],
-                             cssFiles.map{|f|css[f]}, "\n",
-                             {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n",
-                            ]}, "\n" ]}]
+                         c: ["\n",
+                             {_: :table, id: :main,
+                              c: [
+                                {_: :tr, c: [{_: :td},{_: :td, c: link[:up, '&#9650;']},{_: :td}]},
+                                {_: :tr,
+                                 c: [{_: :td, c: link[:prev, '&#9664;']},
+                                     {_: :td, class: :content,
+                                      c:(if graph.empty?
+                                         [{_: :h1, c: 404}, HTML.kv(@r,@r)]
+                                         elsif q['layout']=='tabular'
+                                           HTML.tabular graph.values, @r
+                                         else
+                                           treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                                           HTML.value Container, treeize[graph], @r
+                                         end)
+                                     },
+                                     {_: :td, c: link[:next, '&#9654;']}]},
+                                {_: :tr, c: [{_: :td},{_: :td, c: link[:down,'&#9660;']},{_: :td}]},
+                              ]},
+                             cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
     end
 
     def nokogiri; Nokogiri::HTML.parse (open uri).read end
