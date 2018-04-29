@@ -76,76 +76,7 @@ class WebResource
                              cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
     end
 
-    def nokogiri; Nokogiri::HTML.parse (open uri).read end
-
-    # Graph -> Graph
-    def htmlGrep graph, q
-      wordIndex = {}
-      args = POSIX.splitArgs q
-      args.each_with_index{|arg,i| wordIndex[arg] = i }
-      pattern = /(#{args.join '|'})/i
-      # find matches
-      graph.map{|u,r|
-        keep = !(r.has_key?(Abstract)||r.has_key?(Content)) || r.to_s.match(pattern)
-        graph.delete u unless keep}
-      # highlight matches
-      graph.values.map{|r|
-        (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
-          r[Abstract] = lines[0..5].map{|l|
-            l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture match
-              HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap match
-            }} if lines.size > 0 }}
-      # CSS
-      graph['#abstracts'] = {Abstract => HTML.render({_: :style, c: wordIndex.values.map{|i|
-                                                        ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
-    end
-
-    # HTML -> HTML
-    def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
-      html = Nokogiri::HTML.fragment body
-      loseTags.map{|tag| html.css(tag).remove} if loseTags
-      html.traverse{|e|
-        e.attribute_nodes.map{|a|
-          a.unlink unless keepAttr.member? a.name}} if keepAttr
-      html.to_xhtml(:indent => 0)
-    end
-
-    # Resource {k => v} -> Markup
-    def self.kv hash, env
-      {_: :table, class: :kv, c: hash.map{|k,vs|
-         hide = k == Content && env['q'] && env['q'].has_key?('h')
-         {_: :tr,
-          c: (if k == Contains
-              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
-             else
-               [{_: :td, class: :k,
-                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
-                {_: :td, class: :v,
-                 c: ["\n ",
-                     vs.justArray.map{|v|
-                       HTML.value k,v,env}.intersperse(' ')]}]
-              end)} unless hide}}
-    end
-
-    # ResourceList [reA,reB..] -> Markup
-    def self.tabular resources, env
-      ks = [[From, :from],
-            [To,   :to],
-            ['uri'],
-            [Type],
-            [Title,:title],
-            [Abstract],
-            [Date]]
-      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
-         {_: :tr, c: ks.map{|k|
-            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
-            {_: :td, class: k[1],
-             c: keys.map{|key|
-               r[key].justArray.map{|v|
-                 HTML.value key,v,env }.intersperse(' ')}}}}}}
-    end
-
-    # dispatch to type-specific markup
+    # RDF-typed value -> Markup
     def self.value k, v, env
       if 'uri' == k
         u = v.R
@@ -203,7 +134,7 @@ class WebResource
             c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
                 {_: :td, class: :title, c: titles.map{|title|
                    Markup[Title][title,env]}}]},
-           {_: :tr, c: [{_: :td}, {_: :td, class: :contents, c: (HTML.kv post, env)}]}
+           {_: :tr, c: {_: :td, class: :contents, colspan: 2, c: (HTML.kv post, env)}}
           ]}}
 
     Markup[InstantMessage] = -> msg, env {
@@ -224,9 +155,44 @@ class WebResource
             msg[Link].map(&:R)
           ]}," \n"]}
 
+    # Resource {k => v} -> Markup
+    def self.kv hash, env
+      {_: :table, class: :kv, c: hash.map{|k,vs|
+         hide = k == Content && env['q'] && env['q'].has_key?('h')
+         {_: :tr,
+          c: (if k == Contains
+              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
+             else
+               [{_: :td, class: :k,
+                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
+                {_: :td, class: :v,
+                 c: ["\n ",
+                     vs.justArray.map{|v|
+                       HTML.value k,v,env}.intersperse(' ')]}]
+              end)} unless hide}}
+    end
+
+    # ResourceList [rA,rB..] -> Markup
+    def self.tabular resources, env
+      ks = [[From, :from],
+            [To,   :to],
+            ['uri'],
+            [Type],
+            [Title,:title],
+            [Abstract],
+            [Date]]
+      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
+         {_: :tr, c: ks.map{|k|
+            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
+            {_: :td, class: k[1],
+             c: keys.map{|key|
+               r[key].justArray.map{|v|
+                 HTML.value key,v,env }.intersperse(' ')}}}}}}
+    end
+
     # Graph -> Tree transforms
 
-    # filesystem paths control tree-structure
+    # path names control tree-structure
     Group['tree'] = -> graph {
       tree = {}
       # visit resources
@@ -253,7 +219,7 @@ class WebResource
         end
       }; tree }
 
-    # group toplevel year-dirs by decade
+    # group year directories by decade
     Group['decades'] = -> graph {
       decades = {}
       other = []
@@ -267,6 +233,8 @@ class WebResource
       end
     end
 
+    ## Utility functions
+
     def self.colorizeBG k
       colorize k
     end
@@ -274,6 +242,41 @@ class WebResource
     def self.colorizeFG k
       colorize k, false
     end
+
+    # colorized grep matches, in Abstract field
+    def htmlGrep graph, q
+      wordIndex = {}
+      args = POSIX.splitArgs q
+      args.each_with_index{|arg,i| wordIndex[arg] = i }
+      pattern = /(#{args.join '|'})/i
+      # find matches
+      graph.map{|u,r|
+        keep = !(r.has_key?(Abstract)||r.has_key?(Content)) || r.to_s.match(pattern)
+        graph.delete u unless keep}
+      # highlight matches
+      graph.values.map{|r|
+        (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
+          r[Abstract] = lines[0..5].map{|l|
+            l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture
+              HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap
+            }} if lines.size > 0 }}
+      # CSS
+      graph['#abstracts'] = {Abstract => HTML.render({_: :style, c: wordIndex.values.map{|i|
+                                                        ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
+    end
+
+    # dirty HTML -> cleaned/reformatted HTML
+    def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
+      html = Nokogiri::HTML.fragment body
+      loseTags.map{|tag| html.css(tag).remove} if loseTags
+      html.traverse{|e|
+        e.attribute_nodes.map{|a|
+          a.unlink unless keepAttr.member? a.name}} if keepAttr
+      html.to_xhtml(:indent => 0)
+    end
+
+    # parse HTML at URI to in-memory structure
+    def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   end
   module Webize
