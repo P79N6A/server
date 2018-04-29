@@ -189,17 +189,22 @@ class WebResource
 
     Markup[Container] = -> container , env {
       name = container[:name] || ''
+      contents = (container.delete(Contains)||{}).values
       color = env[:colors][name] ||= (HTML.colorizeBG name)
       {class: "container depth#{container[:depth]}", style: color,
        c: [{_: :span, class: :name,  c: CGI.escapeHTML(name)},
-           (container[Contains]||{}).values.map{|c|
-             HTML.value(nil,c,env)}]}}
+           HTML.kv(container, env), # container metadata
+           contents.map{|c| HTML.value(nil,c,env)}]}}
 
     Markup[BlogPost] = -> post , env {
+      titles = post.delete(Title).justArray
       {_: :table, class: :post,
-       c: {_: :tr,
-           c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
-               {_: :td, class: :contents, c: (HTML.kv post, env)}]}}}
+       c: [{_: :tr,
+            c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
+                {_: :td, class: :title, c: titles.map{|title|
+                   Markup[Title][title,env]}}]},
+           {_: :tr, c: [{_: :td}, {_: :td, class: :contents, c: (HTML.kv post, env)}]}
+          ]}}
 
     Markup[InstantMessage] = -> msg, env {
       [{c: [{class: :creator,

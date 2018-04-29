@@ -12,7 +12,7 @@ class WebResource
   module JSON
     include URIs
     def [] p; (@data||{})[p].justArray end
-    def data d; @data = (@data||{}).merge(d); self end
+    def data d={}; @data = (@data||{}).merge(d); self end
     def types; @types ||= self[Type].select{|t|t.respond_to? :uri}.map(&:uri) end
     def a type; types.member? type end
     def to_json *a; {'uri' => uri}.to_json *a end
