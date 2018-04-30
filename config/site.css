@@ -5,7 +5,7 @@ img  {max-width: 100%}
 * {vertical-align:top}
 .post .type a {font-size: 2em}
 .container {padding: .2em;margin:.1em;border-radius:.6em 1.2em 1.2em 1.2em}
-.container > span.name {font-size:.9em; display: block; font-weight: bold;vertical-align:top}
+.container > span.name {font-size:.9em; font-weight: bold;vertical-align:top}
 .container.depth0,p{background-color: #fff;color:#000}
 .container.depth1 {background-color: #ccc;color:#000}
 .container.depth2 {background-color: #999;color:#000}

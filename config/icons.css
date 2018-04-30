@@ -1,7 +1,6 @@
 @font-face {font-family: "icons";src: url('/.conf/font.woff') format('woff');}
 .id:before { content:"\f0c2"; font-family: icons; }
 .barcode:before { content:"\f02a"; font-family: icons; }
-.type:before { content:"\f02b"; font-family: icons; }
 .bin:before { content:"\f187"; font-family: icons; }
 .chain:before { content:"\f0c1"; font-family: icons; }
 .width:before { content:"\f07e"; font-family: icons; }

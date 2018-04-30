@@ -85,7 +85,7 @@ class WebResource
         {class: :content, c: v}
       elsif Abstract == k
         v
-      elsif Markup[k] # markup lambda defined on predicate
+      elsif Markup[k]
         Markup[k][v,env]
       elsif v.class == Hash # resource with data
         resource = v.R
@@ -100,7 +100,7 @@ class WebResource
           kv v,env
         end
       elsif v.class == WebResource
-        v # resource without data - just a reference
+        v # resource without data, just a reference
       else
         CGI.escapeHTML v.to_s
       end
@@ -119,13 +119,16 @@ class WebResource
     Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
     Markup[Container] = -> container , env {
-      name = container[:name] || ''
+      name = (container.delete :name) || ''
       contents = (container.delete(Contains)||{}).values
+      depth = (container.delete :depth) || 0
       color = env[:colors][name] ||= (HTML.colorizeBG name)
-      {class: "container depth#{container[:depth]}", style: color,
-       c: [{_: :span, class: :name,  c: CGI.escapeHTML(name)},
-           HTML.kv(container, env), # container metadata
-           contents.map{|c| HTML.value(nil,c,env)}]}}
+
+      {class: "container depth#{depth}", style: color,
+       c: [HTML.kv(container, env), # container metadata
+           {_: :span, class: :name, c: CGI.escapeHTML(name)}, # label
+           contents.map{|c| # child nodes
+             HTML.value(nil,c,env)}]}}
 
     Markup[BlogPost] = -> post , env {
       titles = post.delete(Title).justArray
@@ -160,16 +163,10 @@ class WebResource
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          {_: :tr,
-          c: (if k == Contains
-              {_: :td, colspan: 2, c: vs.justArray.map{|v| HTML.value k,v,env }}
-             else
-               [{_: :td, class: :k,
-                 c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
-                {_: :td, class: :v,
-                 c: ["\n ",
-                     vs.justArray.map{|v|
-                       HTML.value k,v,env}.intersperse(' ')]}]
-              end)} unless hide}}
+          c: [{_: :td, class: :k, c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
+              {_: :td, class: :v,
+               c: ["\n ",
+                   vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')]}]} unless hide}}
     end
 
     # ResourceList [rA,rB..] -> Markup
