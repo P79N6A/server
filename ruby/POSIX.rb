@@ -87,22 +87,24 @@ class WebResource
 
     # Pathname
     def node; @node ||= (Pathname.new localPath) end
+    def directory?; node.directory? end
+    def file?; node.file? end
 
     # shell-escaped path
     def shellPath; localPath.utf8.sh end
     alias_method :sh, :shellPath
 
-    # path entries
+    # path nodes
     def parts
-      if path
-        if path[0]=='/'
-          path[1..-1]
-        else
-          path
-        end.split '/'
-      else
-        []
-      end
+      @parts ||= if path
+                   if path[0]=='/'
+                     path[1..-1]
+                   else
+                     path
+                   end.split '/'
+                 else
+                   []
+                 end
     end
 
     # basename of path component
@@ -122,7 +124,7 @@ class WebResource
 
     # WebResource -> file(s)
     def selectNodes
-      (if node.directory?
+      (if directory?
        if q.has_key?('f') && path!='/' # FIND
          found = find q['f']
          found
