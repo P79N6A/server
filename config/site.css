@@ -1,4 +1,5 @@
 body, .msgbody {font-family: sans-serif;color:#fff;background-color:#000}
+body {margin: 0 1.3em 0 1.3em}
 a    {text-decoration: none; font-weight: bold; color: #fff; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
 .post {max-width: 40em}
@@ -13,10 +14,10 @@ a.creator {border-radius:.5em; padding: 0 .18em 0 .18em}
 pre   {min-width: 40ex; white-space: pre-wrap; max-width: 200ex}
 pre, p {margin: 0 0 .1em 0}
 p {border-width: 0 0 .08em 0; display: inline-block;border-style: dotted; border-color: #888;background-color: #fff;color:#000}
-#main {display:block;width:100%}
 table {border-spacing: 0}
 table, div, a {display: inline-block}
-#main .content {width:99%;padding: .5em}
 :target, :target * {background-color: #eef !important; color: #000 !important}
-#up,#prev,#next,#down {display:block;font-size: 1.8em;height:100%;width:100%}
-#prev,#next {min-height:32em;}
+#up,#down,#prev,#next {font-size: 1.8em}
+#prev,#next {position:fixed; height: 100%}
+#prev {left: 0; top:0}
+#next {right: 0; top:0}

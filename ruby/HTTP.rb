@@ -157,7 +157,7 @@ certificates
       if re.path == location
         re.fileResponse
       elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, ['body {background-color: #000; color: #fff}']]
+        [200, {'Content-Type' => 'text/css'}, ['* {background-color: #000 !important; color: #fff !important}']]
       else
         [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}

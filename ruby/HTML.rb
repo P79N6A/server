@@ -54,25 +54,16 @@ class WebResource
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
-                         c: ["\n",
-                             {_: :table, id: :main,
-                              c: [
-                                {_: :tr, c: [{_: :td},{_: :td, c: link[:up, '&#9650;']},{_: :td}]},
-                                {_: :tr,
-                                 c: [{_: :td, c: link[:prev, '&#9664;']},
-                                     {_: :td, class: :content,
-                                      c:(if graph.empty?
-                                         [{_: :h1, c: 404}, HTML.kv(@r,@r)]
-                                         elsif q['layout']=='tabular'
-                                           HTML.tabular graph.values, @r
-                                         else
-                                           treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
-                                           HTML.value Container, treeize[graph], @r
-                                         end)
-                                     },
-                                     {_: :td, c: link[:next, '&#9654;']}]},
-                                {_: :tr, c: [{_: :td},{_: :td, c: link[:down,'&#9660;']},{_: :td}]},
-                              ]},
+                         c: ["\n", link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
+                             if graph.empty?
+                               [{_: :h1, c: 404}, HTML.kv(@r,@r)]
+                             elsif q['layout']=='tabular'
+                               HTML.tabular graph.values, @r
+                             else
+                               treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                               HTML.value Container, treeize[graph], @r
+                             end,
+                             link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
     end
 
