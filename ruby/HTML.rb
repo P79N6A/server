@@ -61,7 +61,7 @@ class WebResource
                                HTML.tabular graph.values, @r
                              else
                                treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
-                               HTML.value Container, treeize[graph], @r
+                               Markup[Container][treeize[graph], @r]
                              end,
                              link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
@@ -78,7 +78,7 @@ class WebResource
         v
       elsif Markup[k]
         Markup[k][v,env]
-      elsif v.class == Hash # resource with data
+      elsif v.class == Hash # resource and its data
         resource = v.R
         types = resource.types
         if types.member? InstantMessage
@@ -91,7 +91,7 @@ class WebResource
           kv v,env
         end
       elsif v.class == WebResource
-        v # resource without data, just a reference
+        v # resource reference
       else
         CGI.escapeHTML v.to_s
       end
@@ -116,7 +116,8 @@ class WebResource
 
       {class: :container, style: color,
        c: [HTML.kv(container, env), # container metadata
-           {_: :span, class: :name, c: CGI.escapeHTML(name)}, # label
+           {_: :span, class: :name, style: color,
+            c: CGI.escapeHTML(name)}, # label
            contents.map{|c| # child nodes
              HTML.value(nil,c,env)}]}}
 
@@ -185,20 +186,18 @@ class WebResource
       # visit resources
       graph.values.map{|resource|
         r = resource.R
-
-        # walk to doc-graph node
+        # walk to doc-graph
         cursor = tree
         r.parts.unshift(r.host||'').map{|name|
           cursor[Type] ||= R[Container] # containing node
           cursor[Contains] ||= {}       # contained nodes
-           # create node and advance cursor to it
-          cursor = cursor[Contains][name] ||= {name: name}
-        }
+           # create node and advance cursor
+          cursor = cursor[Contains][name] ||= {name: name}}
 
-        # add resource data
-        if !r.fragment # file metadata
+        # link resource data
+        if !r.fragment # graph-meta
           resource.map{|k,v|cursor[k] ||= v}
-        else # fragment of doc
+        else # resources
           cursor[Contains] ||= {}
           cursor[Contains][r.fragment] = resource
         end
@@ -206,17 +205,13 @@ class WebResource
 
     # group year directories by decade
     Group['decades'] = -> graph {
-      decades = {misc: {name: 'misc', Type => R[Container], Contains => {}}}
+      decades = {}
       graph.values.map{|resource|
         name = resource.R.parts[0] || ''
-        decade = if name.match /^\d{4}$/
-                   name[0..2] + '0s'
-                 else
-                   :misc
-                 end
+        decade = (name.match /^\d{4}$/) ? name[0..2]+'0s' : ' '
         decades[decade] ||= {name: decade, Type => R[Container], Contains => {}}
         decades[decade][Contains][resource.uri] = resource}
-      {'uri' => '/', Type => R[Container], Contains => decades}}
+      decades}
 
     def self.colorize k, bg = true
       if !k || k.empty?
