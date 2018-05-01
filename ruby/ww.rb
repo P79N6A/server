@@ -15,6 +15,7 @@ class Object
   def id; self end
   # arg exists, run block
   def do; yield self end
+  # cast to DateTime
   def to_time; [Time, DateTime].member?(self.class) ? self : Time.parse(self) end
 end
 class FalseClass
