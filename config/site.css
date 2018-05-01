@@ -1,27 +1,18 @@
-body, .msgbody {font-family: sans-serif;color:#fff;background-color:#000; margin: 0}
-a    {text-decoration: none; font-weight: bold; color: #fff; background-color:#222; max-width: 28em; overflow: hidden; }
+body, .msgbody {font-family: sans-serif;color:#fff;background-color:#000}
+a    {text-decoration: none; font-weight: bold; color: #fff; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
 .post {max-width: 40em}
 * {vertical-align:top}
 .post .type a {font-size: 2em}
 .container {padding: .2em;margin:.1em;border-radius:.6em 1.2em 1.2em 1.2em}
 .container > span.name {font-size:.9em; font-weight: bold;vertical-align:top}
-.container.depth0,p{background-color: #fff;color:#000}
-.container.depth1 {background-color: #ccc;color:#000}
-.container.depth2 {background-color: #999;color:#000}
-.container.depth3 {background-color: #777;color:#000}
-.container.depth4 {background-color: #555;color:#000}
-.container.depth5 {background-color: #333;color:#fff}
-.container.depth6 {background-color: #222;color:#fff}
-.container.depth7 {background-color: #111;color:#fff}
-.container.depth8 {background-color: #000;color:#fff}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 div.creator {min-width:9ex; text-align:right}
 a.creator {border-radius:.5em; padding: 0 .18em 0 .18em}
 pre   {min-width: 40ex; white-space: pre-wrap; max-width: 200ex}
 pre, p {margin: 0 0 .1em 0}
-p {border-width: 0 0 .08em 0; display: inline-block;border-style: dotted; border-color: #888}
+p {border-width: 0 0 .08em 0; display: inline-block;border-style: dotted; border-color: #888;background-color: #fff;color:#000}
 #main {display:block;width:100%}
 table {border-spacing: 0}
 table, div, a {display: inline-block}

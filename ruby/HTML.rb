@@ -121,10 +121,9 @@ class WebResource
     Markup[Container] = -> container , env {
       name = (container.delete :name) || ''
       contents = (container.delete(Contains)||{}).values
-      depth = (container.delete :depth) || 0
       color = env[:colors][name] ||= (HTML.colorizeBG name)
 
-      {class: "container depth#{depth}", style: color,
+      {class: :container, style: color,
        c: [HTML.kv(container, env), # container metadata
            {_: :span, class: :name, c: CGI.escapeHTML(name)}, # label
            contents.map{|c| # child nodes
@@ -197,14 +196,12 @@ class WebResource
         r = resource.R
 
         # walk to doc-graph node
-        depth = 0
         cursor = tree
         r.parts.unshift(r.host||'').map{|name|
           cursor[Type] ||= R[Container] # containing node
           cursor[Contains] ||= {}       # contained nodes
            # create node and advance cursor to it
-          cursor = cursor[Contains][name] ||= {depth: depth, name: name}
-          depth += 1
+          cursor = cursor[Contains][name] ||= {name: name}
         }
 
         # add resource data
