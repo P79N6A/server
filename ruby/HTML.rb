@@ -57,8 +57,6 @@ class WebResource
                          c: ["\n", link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
                              if graph.empty?
                                [{_: :h1, c: 404}, HTML.kv(@r,@r)]
-                             elsif q['layout']=='tabular'
-                               HTML.tabular graph.values, @r
                              else
                                treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
                                Markup[Container][treeize[graph], @r]
@@ -118,8 +116,11 @@ class WebResource
        c: [HTML.kv(container, env), # container metadata
            {_: :span, class: :name, style: color,
             c: CGI.escapeHTML(name)}, # label
-           contents.map{|c| # child nodes
-             HTML.value(nil,c,env)}]}}
+           if env['q'].has_key? 't' # tabular items
+             HTML.tabular contents, env
+           else # child nodes in a jumble
+             contents.map{|c|HTML.value(nil,c,env)}
+           end]}}
 
     Markup[BlogPost] = -> post , env {
       titles = post.delete(Title).justArray
@@ -162,17 +163,12 @@ class WebResource
 
     # ResourceList [rA,rB..] -> Markup
     def self.tabular resources, env
-      ks = [[From, :from],
-            [To,   :to],
-            ['uri'],
-            [Type],
-            [Title,:title],
-            [Abstract],
-            [Date]]
+      ks = resources.map(&:keys).flatten.uniq
+puts :tabular, resources
       {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
          {_: :tr, c: ks.map{|k|
-            keys = k[0]==Title ? [Title,Image,Video] : [k[0]]
-            {_: :td, class: k[1],
+            keys = k==Title ? [Title,Image,Video] : [k]
+            {_: :td, class: k.R.fragment||k.R.basename,
              c: keys.map{|key|
                r[key].justArray.map{|v|
                  HTML.value key,v,env }.intersperse(' ')}}}}}}
