@@ -206,8 +206,16 @@ class WebResource
 
     # group year directories by decade
     Group['decades'] = -> graph {
-      decades = {}
-      other = []
+      decades = {misc: {name: 'misc', Type => R[Container], Contains => {}}}
+      graph.values.map{|resource|
+        name = resource.R.parts[0] || ''
+        decade = if name.match /^\d{4}$/
+                   name[0..2] + '0s'
+                 else
+                   :misc
+                 end
+        decades[decade] ||= {name: decade, Type => R[Container], Contains => {}}
+        decades[decade][Contains][resource.uri] = resource}
       {'uri' => '/', Type => R[Container], Contains => decades}}
 
     def self.colorize k, bg = true

@@ -95,7 +95,7 @@ class WebResource
                             'ETag' => [[R[HTML::SourceCode], # cache-bust on renderer,
                                         R['.conf/site.css'], # CSS, or doc changes
                                         *set].sort.map{|r|[r,r.m]}, format].join.sha2})
-      # conditional response
+      # conditional body
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
           set[0] # static file good to go
@@ -105,7 +105,7 @@ class WebResource
             htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set
-          else # RDF
+          else # RDF formats
             g = RDF::Graph.new
             set.map{|n| g.load n.toRDF.localPath, :base_uri => n.stripDoc }
             g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
@@ -151,13 +151,13 @@ certificates
     # unwrap URI
     Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
 
-    # use local font
+    # local font & CSS
     Host['fonts.gstatic.com'] = Host['fonts.googleapis.com'] = -> re {
       location = '/.conf/font.woff'
       if re.path == location
         re.fileResponse
       elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, ["* {background-color: #000 !important; color: #fff !important; font-family: sans-serif}\n a {text-decoration:none; font-weight: bold}"]]
+        [200, {'Content-Type' => 'text/css'}, ["* {background-color: #000 !important; color: #fff !important; font-family: sans-serif}\n a {text-decoration:none; font-weight: bold; color: #0f0 !important}"]]
       else
         [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
