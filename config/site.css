@@ -5,8 +5,8 @@ img  {max-width: 100%}
 .post {max-width: 40em}
 * {vertical-align:top}
 .post .type a {font-size: 2em}
-.container {padding: .2em;margin:.1em;border-radius:0 1.2em 1.2em 1.2em; position: relative;margin:.7em}
-.container > span.name {font-weight: bold;position:absolute;top:-.8em;left:0;border-radius: .4em}
+.container {padding: .2em;margin:.1em;border-radius:0 .8em .8em .8em; position: relative;margin-top:.9em}
+.container > span.name {font-weight: bold;position:absolute;top:-.8em;left:0;border-radius: .3em .3em 0 0;padding: 0 .16em 0 .16em}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 div.creator {min-width:9ex; text-align:right}

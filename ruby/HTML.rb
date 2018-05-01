@@ -208,10 +208,10 @@ class WebResource
       decades = {}
       graph.values.map{|resource|
         name = resource.R.parts[0] || ''
-        decade = (name.match /^\d{4}$/) ? name[0..2]+'0s' : ' '
+        decade = (name.match /^\d{4}$/) ? name[0..2]+'0s' : '/'
         decades[decade] ||= {name: decade, Type => R[Container], Contains => {}}
         decades[decade][Contains][resource.uri] = resource}
-      decades}
+      {Contains => decades}}
 
     def self.colorize k, bg = true
       if !k || k.empty?
