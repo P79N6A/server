@@ -87,15 +87,14 @@ class WebResource
       # resource set
       set = selectNodes
       return notfound if !set || set.empty?
-      format = selectMIME
 
-      # response header
+      # response metadata
+      format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [[R[HTML::SourceCode], # cache-bust on renderer,
                                         R['.conf/site.css'], # CSS, or doc changes
                                         *set].sort.map{|r|[r,r.m]}, format].join.sha2})
-
       # conditional response
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
@@ -158,7 +157,7 @@ certificates
       if re.path == location
         re.fileResponse
       elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, ['body {background-color: #0f0}']]
+        [200, {'Content-Type' => 'text/css'}, ['body {background-color: #000; color: #fff}']]
       else
         [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
