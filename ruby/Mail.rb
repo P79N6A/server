@@ -20,7 +20,7 @@ class WebResource
       end
       yield e, DC+'identifier', id    # Message-ID as RDF
       yield e, Cache, resource
-      yield e, Type, R[SIOC+'MailMessage'] # RDF type
+      yield e, Type, R[Email]
 
       # HTML body
       htmlFiles, parts = m.all_parts.push(m).partition{|p|p.mime_type=='text/html'}

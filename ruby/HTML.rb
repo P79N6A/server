@@ -57,9 +57,13 @@ class WebResource
                          c: ["\n", link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
                              if graph.empty?
                                [{_: :h1, c: 404}, HTML.kv(@r,@r)]
-                             else
-                               treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
-                               Markup[Container][treeize[graph], @r]
+                             else # graph -> Markup
+                               if q.has_key? 't'
+                                 HTML.tabular graph.values, @r
+                               else
+                                 treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                                 Markup[Container][treeize[graph], @r]
+                               end
                              end,
                              link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
@@ -83,7 +87,7 @@ class WebResource
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
           Markup[Container][v,env]
-        elsif types.member? BlogPost
+        elsif types.member?(BlogPost) || types.member?(Email)
           Markup[BlogPost][v,env]
         else
           kv v,env
@@ -120,16 +124,15 @@ class WebResource
       color = env[:colors][name] ||= (HTML.colorizeBG name)
       {class: :container, style: color,
        c: [{_: :span, class: :name, style: color, c: CGI.escapeHTML(name)}, # label
-           if env['q'].has_key? 't' # tabular items
+           if env['q'].has_key? 't'
              HTML.tabular contents, env
-           else # child nodes in a jumble
+           else # child nodes
              contents.map{|c|HTML.value(nil,c,env)}
            end,
            HTML.kv(container, env)]}}
 
-    Markup[BlogPost] = -> post , env {
-      [:name,To,Type].map{|attr|
-        post.delete attr} # hide basename in common dir/blogpost nameclash scenario
+    Markup[BlogPost] = Markup[Email] = -> post , env {
+      [:name,Type].map{|attr|post.delete attr}
       canonical = post.delete 'uri'
       cache = post.delete(Cache).justArray[0]
       titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
@@ -172,7 +175,6 @@ class WebResource
     # ResourceList [rA,rB..] -> Markup
     def self.tabular resources, env
       ks = resources.map(&:keys).flatten.uniq
-puts :tabular, resources
       {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
          {_: :tr, c: ks.map{|k|
             keys = k==Title ? [Title,Image,Video] : [k]
