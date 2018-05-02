@@ -11,20 +11,16 @@ class WebResource
       args.split(/\W/)
     end
 
-    # link mapped fs-nodes
-    def ln n
-      FileUtils.ln   node.expand_path, n.node.expand_path
-    end
-    #TODO relative symlink targets for multiple servers on differing mountpoints
-    def ln_s n
-      #puts "ln -s #{path} #{n.path}"
-      FileUtils.ln_s node.expand_path, n.node.expand_path
-    end
-
     def link n
       send LinkMethod, n unless n.exist?
     rescue Exception => e
       puts e,e.class,e.message
+    end
+    def ln n
+      FileUtils.ln   node.expand_path, n.node.expand_path
+    end
+    def ln_s n
+      FileUtils.ln_s node.expand_path, n.node.expand_path
     end
 
     # read file at location
