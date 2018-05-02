@@ -132,10 +132,12 @@ class WebResource
       canonical = post.delete 'uri'
       cache = post.delete(Cache).justArray[0]
       titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
+      date = post.delete(Date).justArray[0]
       {class: :post,
        c: [{_: :a, class: :newspaper, href: cache||canonical},
            titles.map{|title|Markup[Title][title,env,canonical]},
-           (HTML.kv post, env)]}}
+           (HTML.kv post, env),
+           (['<br>',Markup[Date][date]] if date)]}}
 
     Markup[InstantMessage] = -> msg, env {
       [{c: [{class: :creator,
