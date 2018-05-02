@@ -111,16 +111,14 @@ class WebResource
       name = (container.delete :name) || ''
       contents = (container.delete(Contains)||{}).values
       color = env[:colors][name] ||= (HTML.colorizeBG name)
-
       {class: :container, style: color,
-       c: [HTML.kv(container, env), # container metadata
-           {_: :span, class: :name, style: color,
-            c: CGI.escapeHTML(name)}, # label
+       c: [{_: :span, class: :name, style: color, c: CGI.escapeHTML(name)}, # label
            if env['q'].has_key? 't' # tabular items
              HTML.tabular contents, env
            else # child nodes in a jumble
              contents.map{|c|HTML.value(nil,c,env)}
-           end]}}
+           end,
+           HTML.kv(container, env)]}} # extra container-metadata
 
     Markup[BlogPost] = -> post , env {
       titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq

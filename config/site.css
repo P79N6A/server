@@ -4,7 +4,7 @@ a    {text-decoration: none; font-weight: bold; color: #fff; max-width: 28em; ov
 img  {max-width: 100%}
 .post {max-width: 40em}
 * {vertical-align:top}
-.post .type a {font-size: 2em}
+.post .type a {font-size: 1.5em}
 .container {padding: .2em;margin:.1em;border-radius:0 .8em .8em .8em; position: relative;margin-top:.9em}
 .container > span.name {font-weight: bold;position:absolute;top:-.8em;left:0;border-radius: .3em .3em 0 0;padding: 0 .16em 0 .16em}
 .thumb {max-width: 28em}
