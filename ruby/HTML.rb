@@ -123,7 +123,7 @@ class WebResource
            end]}}
 
     Markup[BlogPost] = -> post , env {
-      titles = post.delete(Title).justArray
+      titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
       {_: :table, class: :post,
        c: [{_: :tr,
             c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
@@ -176,7 +176,7 @@ puts :tabular, resources
 
     # Graph -> Tree transforms
 
-    # path names control tree-structure
+    # filesystem tree
     Group['tree'] = -> graph {
       tree = {}
       # visit resources
@@ -190,7 +190,7 @@ puts :tabular, resources
            # create node and advance cursor
           cursor = cursor[Contains][name] ||= {name: name}}
 
-        # link resource data
+        # reference resource-data
         if !r.fragment # graph-meta
           resource.map{|k,v|cursor[k] ||= v}
         else # resources
