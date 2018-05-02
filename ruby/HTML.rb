@@ -95,7 +95,13 @@ class WebResource
       end
     end
 
-    Markup[Title] = -> title,env=nil {{_: :h2, c: (CGI.escapeHTML title.to_s)}}
+    Markup[Title] = -> title,env=nil,url=nil {
+      title = CGI.escapeHTML title.to_s
+      if url
+        {_: :a, class: :title, c: title, href: url, id: 'post'+rand.to_s.sha2}
+      else
+        {_: :h3, c: title}
+      end}
 
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
@@ -118,17 +124,18 @@ class WebResource
            else # child nodes in a jumble
              contents.map{|c|HTML.value(nil,c,env)}
            end,
-           HTML.kv(container, env)]}} # extra container-metadata
+           HTML.kv(container, env)]}}
 
     Markup[BlogPost] = -> post , env {
+      post.delete To
+      post.delete :name # hide basename in common dir/blogpost nameclash scenario
+      canonical = post.delete 'uri'
+      cache = post.delete(Cache).justArray[0]
       titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
-      {_: :table, class: :post,
-       c: [{_: :tr,
-            c: [{_: :td, class: :type, c: {_: :a, class: :newspaper, href: post.uri}},
-                {_: :td, class: :title, c: titles.map{|title|
-                   Markup[Title][title,env]}}]},
-           {_: :tr, c: {_: :td, class: :contents, colspan: 2, c: (HTML.kv post, env)}}
-          ]}}
+      {class: :post,
+       c: [{_: :a, class: :newspaper, href: cache||canonical},
+           titles.map{|title|Markup[Title][title,env,canonical]},
+           (HTML.kv post, env)]}}
 
     Markup[InstantMessage] = -> msg, env {
       [{c: [{class: :creator,

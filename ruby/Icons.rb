@@ -2,13 +2,13 @@ class WebResource
   module HTML
     Icons = {
       'uri' => :id,
+      Cache => :chain,
       Comments => :comments,
       Contains => :bin,
       Container => :dir,
       Content => :pencil,
       Abstract => :quote,
       DC+'identifier' => :barcode,
-      DC+'cache' => :chain,
       DC+'hasFormat' => :file,
       DC+'link' => :chain,
       DC+'List' => :list,

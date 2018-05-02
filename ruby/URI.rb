@@ -43,6 +43,7 @@ class WebResource < RDF::URI
     Image    = DC + 'Image'
     Video    = DC + 'Video'
     RSS      = Purl + 'rss/1.0/'
+    Cache    = DC   + 'cache'
     Date     = DC   + 'date'
     Title    = DC   + 'title'
     Abstract = DC   + 'abstract'

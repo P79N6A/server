@@ -56,7 +56,7 @@ class WebResource
           unless doc.e
             doc.dir.mkdir
             cacheBase = doc.stripDoc
-            graph << RDF::Statement.new(graph.name, R[DC+'cache'], cacheBase)
+            graph << RDF::Statement.new(graph.name, R[Cache], cacheBase)
             RDF::Writer.open(doc.localPath){|f|f << graph}
             puts cacheBase
           end
