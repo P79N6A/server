@@ -14,6 +14,7 @@ a.creator {border-radius:.5em; padding: 0 .18em 0 .18em}
 pre   {min-width: 40ex; white-space: pre-wrap; max-width: 200ex}
 pre, p {margin: 0 0 .1em 0}
 p {border-width: 0 0 .08em 0; display: inline-block;border-style: dotted; border-color: #888;background-color: #fff;color:#000}
+p a {color: #000}
 table {border-spacing: 0}
 table, div, a {display: inline-block}
 :target, :target * {background-color: #eef !important; color: #000 !important}
