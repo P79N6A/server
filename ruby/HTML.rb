@@ -114,6 +114,7 @@ class WebResource
     Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
     Markup[Container] = -> container , env {
+      container.delete Type
       name = (container.delete :name) || ''
       contents = (container.delete(Contains)||{}).values
       color = env[:colors][name] ||= (HTML.colorizeBG name)
@@ -127,8 +128,8 @@ class WebResource
            HTML.kv(container, env)]}}
 
     Markup[BlogPost] = -> post , env {
-      post.delete To
-      post.delete :name # hide basename in common dir/blogpost nameclash scenario
+      [:name,To,Type].map{|attr|
+        post.delete attr} # hide basename in common dir/blogpost nameclash scenario
       canonical = post.delete 'uri'
       cache = post.delete(Cache).justArray[0]
       titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
