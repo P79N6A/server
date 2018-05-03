@@ -1,9 +1,9 @@
+* {vertical-align:top}
 body, .msgbody {font-family: sans-serif;color:#fff;background-color:#000}
 body {margin: 0 1.6em 0 1.6em}
 a    {text-decoration: none; font-weight: bold; color: #fff; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
 .post {max-width: 40em}
-* {vertical-align:top}
 .post .newspaper {font-size: 1.8em}
 .post .title {font-size: 1.28em;background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .88em; font-weight: normal}

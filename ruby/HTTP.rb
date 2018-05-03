@@ -152,7 +152,7 @@ certificates
     Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
 
     # local font & CSS
-    Host['fonts.gstatic.com'] = Host['fonts.googleapis.com'] = -> re {
+    Font = -> re {
       location = '/.conf/font.woff'
       if re.path == location
         re.fileResponse
@@ -161,6 +161,8 @@ certificates
       else
         [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
+    '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
+
   end
   include HTTP
 end
