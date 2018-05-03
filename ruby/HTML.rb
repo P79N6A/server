@@ -75,7 +75,7 @@ class WebResource
         u = v.R
         {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
       elsif Content == k
-        {class: :content, c: v}
+        v
       elsif Abstract == k
         v
       elsif Markup[k]
