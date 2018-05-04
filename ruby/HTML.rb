@@ -37,10 +37,10 @@ class WebResource
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
       @r[:colors] ||= {'status' => 'background-color:#222'}
-      htmlGrep graph, q['q'] if q['q'] # markup grep-results
+      htmlGrep graph, q['q'] if q['q'] # filter graph
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-      link = -> name,label { # markup doc-graph (exposed in HEAD) links
+      link = -> name,label { # markup graph-doc (HEAD) links
         @r[:links][name].do{|uri| [uri.R.data({id: name, label: label}), "\n"]}}
       # Markup -> HTML
       HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
@@ -57,10 +57,12 @@ class WebResource
                          c: ["\n", link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
                              if graph.empty?
                                [{_: :h1, c: 404}, HTML.kv(@r,@r)]
-                             else # graph -> Markup
+                             else
                                if q.has_key? 't'
+                                 # Graph -> Markup
                                  HTML.tabular graph.values, @r
                                else
+                                 # Graph -> Tree -> Markup
                                  treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
                                  Markup[Container][treeize[graph], @r]
                                end
