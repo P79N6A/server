@@ -104,7 +104,7 @@ class WebResource
 
     Markup[Link] = -> ref, env=nil {
       u = ref.to_s
-      [{_: :a, class: :link, title: u, href: u, c: u}," \n"]}
+      [{_: :a, class: :link, title: u, href: u, c: u.sub(/^https?.../,'')}," \n"]}
 
     Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
@@ -150,7 +150,7 @@ class WebResource
 
     Markup[BlogPost] = Markup[Email] = -> post , env {
       # hidden fields in default view
-      [:name, Type, Comments, RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
+      [:name, Type, Comments, DC+'identifier', RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
       # bind data
       canonical = post.delete 'uri'
       cache = post.delete(Cache).justArray[0]
@@ -165,9 +165,9 @@ class WebResource
              Markup[Title][title,env,canonical]},
            {_: :table,
             c: {_: :tr,
-                c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}},
+                c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}, class: :from},
                     {_: :td, c: '&rarr;'},
-                    {_: :td, c: to.map{|f|Markup[Creator][f,env]}}]}},
+                    {_: :td, c: to.map{|f|Markup[Creator][f,env]}, class: :to}]}},
            (HTML.kv post, env), # remaining fields in default render
            (['<br>', Markup[Date][date]] if date)]}}
 
@@ -184,6 +184,7 @@ class WebResource
 
     # Resource {k => v} -> Markup
     def self.kv hash, env
+      hash.delete :name
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          {_: :tr,
@@ -191,7 +192,6 @@ class WebResource
               {_: :td, class: :v,
                c: ["\n ",
                    vs.justArray.map{|v|
-                     puts "#{k} #{v}"
                      HTML.value k,v,env}.intersperse(' ')]}]} unless hide}}
     end
 
@@ -213,7 +213,7 @@ class WebResource
     Group['tree'] = -> graph {
       tree = {}
       # visit resources
-      graph.values.map{|resource|
+      (graph.class==Array ? graph : graph.values).map{|resource|
         r = resource.R
         # walk to doc-graph
         cursor = tree
