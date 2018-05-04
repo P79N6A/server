@@ -225,7 +225,13 @@ class WebResource
           attrs = m[2]
           inner = m[3]
           # identifier search. prefer RDF with lots of fallbacks
-          u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
+          u = (attrs.do{|a|a.match(reRDF)} ||
+               inner.match(reLink) ||
+               inner.match(reLinkCData) ||
+               inner.match(reLinkHref) ||
+               inner.match(reLinkRel) ||
+               inner.match(reId)).do{|s|s[1]}
+
           if u # identifier found
             u = @base.join(u).to_s unless u.match /^http/
             resource = u.R
@@ -274,6 +280,7 @@ class WebResource
                       o
                     end}
                 end
+                # author(s) -> RDF
                 crs.map{|cr|yield u, Creator, cr}
               else # element -> RDF
                 yield u,p,e[3].do{|o|
