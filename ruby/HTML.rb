@@ -16,9 +16,9 @@ class WebResource
             {"'"=>'%27', '>'=>'%3E', '<'=>'%3C'}[c]||c}.join + "'"}.join +
           (void ? '/' : '') + '>' + (render x[:c]) +         # child nodes
           (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # close tag
-      when Array
+      when Array # structure
         x.map{|n|render n}.join
-      when R
+      when R # hyperlink
         render({_: :a, href: x.uri, id: x[:id][0] || ('link'+rand.to_s.sha2), c: x[:label][0] || (CGI.escapeHTML x.uri)})
       when NilClass
         ''
