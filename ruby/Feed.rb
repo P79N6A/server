@@ -105,15 +105,18 @@ class WebResource
         send(*f){|s,p,o|
           if p==Content && o.class==String
             subject = s.R
-            # emit HTML links as RDF
+            # parse
+            o = o.match(/</) ? o : ('<p>'+o+'</p>')
             content = Nokogiri::HTML.fragment o
 
             # <a>
             content.css('a').map{|a|
               (a.attr 'href').do{|href|
+                # resolve URI relative to subject base
                 link = subject.join href
                 re = link.R
                 a.set_attribute 'href', link
+                # emit hyperlinks as RDF
                 if %w{gif jpeg jpg png webp}.member? re.ext.downcase
                   yield s, Image, re
                 elsif (%w{mp4 webm}.member? re.ext.downcase) || (re.host && re.host.match(/(vimeo|youtu)/))
@@ -125,7 +128,7 @@ class WebResource
             # <img>
             content.css('img').map{|i|
               (i.attr 'src').do{|src|
-                yield s, Image, (subject.join src) }}
+                yield s, Image, (subject.join src)}}
 
             # <iframe>
             content.css('iframe').map{|i|
