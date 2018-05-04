@@ -102,6 +102,10 @@ class WebResource
       end
     end
 
+    Markup[Link] = -> ref, env=nil {
+      u = ref.to_s
+      [{_: :a, class: :link, title: u, href: u, c: u}," \n"]}
+
     Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
       if url
@@ -186,7 +190,9 @@ class WebResource
           c: [{_: :td, class: :k, c: {_: :span, class: Icons[k] || :label, title: k, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
               {_: :td, class: :v,
                c: ["\n ",
-                   vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')]}]} unless hide}}
+                   vs.justArray.map{|v|
+                     puts "#{k} #{v}"
+                     HTML.value k,v,env}.intersperse(' ')]}]} unless hide}}
     end
 
     # ResourceList [rA,rB..] -> Markup
