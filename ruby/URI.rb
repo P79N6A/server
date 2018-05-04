@@ -47,6 +47,7 @@ class WebResource < RDF::URI
     Date     = DC   + 'date'
     Title    = DC   + 'title'
     Abstract = DC   + 'abstract'
+    Identifier = DC + 'identifier'
     Post     = SIOC + 'Post'
     To       = SIOC + 'addressed_to'
     From     = SIOC + 'has_creator'

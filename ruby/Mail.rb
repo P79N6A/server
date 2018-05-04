@@ -18,7 +18,7 @@ class WebResource
         link srcFile # link canonical-location
         puts "LINK #{srcFile}" if @verbose
       end
-      yield e, DC+'identifier', id    # Message-ID as RDF
+      yield e, Identifier, id # Message-ID
       yield e, Cache, resource
       yield e, Type, R[Email]
 

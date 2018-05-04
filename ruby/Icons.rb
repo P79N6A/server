@@ -8,7 +8,7 @@ class WebResource
       Container => :dir,
       Content => :pencil,
       Abstract => :quote,
-      DC+'identifier' => :barcode,
+      Identifier => :barcode,
       DC+'hasFormat' => :file,
       DC+'link' => :chain,
       DC+'List' => :list,

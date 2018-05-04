@@ -150,7 +150,7 @@ class WebResource
 
     Markup[BlogPost] = Markup[Email] = -> post , env {
       # hidden fields in default view
-      [:name, Type, Comments, DC+'identifier', RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
+      [:name, Type, Comments, Identifier, RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
       # bind data
       canonical = post.delete 'uri'
       cache = post.delete(Cache).justArray[0]
@@ -188,7 +188,7 @@ class WebResource
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          {_: :tr,
-          c: [{_: :td, class: :k, c: {_: :span, class: Icons[k] || :label, title: k, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
+          c: [{_: :td, class: :k, c: Markup[Type][k.R]},
               {_: :td, class: :v,
                c: ["\n ",
                    vs.justArray.map{|v|
@@ -197,14 +197,16 @@ class WebResource
 
     # ResourceList [rA,rB..] -> Markup
     def self.tabular resources, env
-      ks = resources.map(&:keys).flatten.uniq
-      {_: :table, c: resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
-         {_: :tr, c: ks.map{|k|
-            keys = k==Title ? [Title,Image,Video] : [k]
-            {_: :td, class: k.R.fragment||k.R.basename,
-             c: keys.map{|key|
-               r[key].justArray.map{|v|
-                 HTML.value key,v,env }.intersperse(' ')}}}}}}
+      ks = resources.map(&:keys).flatten.uniq - ['uri',Identifier,Content]
+      {_: :table, class: :table,
+       c: [{_: :tr, c: ks.map{|k|{_: :td, c: Markup[Type][k.R]}}},
+           resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
+             {_: :tr, c: ks.map{|k|
+                keys = k==Title ? [Title,Image,Video] : [k]
+                {_: :td, class: k.R.fragment||k.R.basename,
+                 c: keys.map{|key|
+                   r[key].justArray.map{|v|
+                     HTML.value key,v,env }.intersperse(' ')}}}}}]}
     end
 
     # Graph -> Tree transforms
