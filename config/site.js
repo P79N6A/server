@@ -68,9 +68,9 @@ document.addEventListener("DOMContentLoaded", function(){
 	    };
 	};
 	if(e.getModifierState("Shift")) {
-	    if(key==37) // [shift-left] previous page
+	    if(key==37||key==80) // [shift-left] previous page
 		gotoLink('prev');
-	    if(key==39) // [shift-right] next page
+	    if(key==39||key==78) // [shift-right] next page
 		gotoLink('next');
 	    if(key==38) // [shift-up] up to parent
 		gotoLink('up');

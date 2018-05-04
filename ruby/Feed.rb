@@ -27,7 +27,6 @@ class WebResource
           curMtime = response.last_modified || Time.now rescue Time.now
           etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag value
           mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified value
-          # TODO cache status for 301 moved-permanently link-maintenance. entire header to RDF?
           resp = response.read
           unless body.e && body.readFile == resp
             body.writeFile resp # new cached body
@@ -46,7 +45,6 @@ class WebResource
     alias_method :getFeed, :fetchFeed
 
     def indexFeed options = {}
-      # TODO alternate storage-locations (comments in post subdir, lkml in hourdir)
       g = RDF::Repository.load self, options
       g.each_graph.map{|graph|
         graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
@@ -190,7 +188,6 @@ class WebResource
       end
 
       def rawTriples
-
         # identifiers
         reRDF = /about=["']?([^'">\s]+)/              # RDF @about
         reLink = /<link>([^<]+)/                      # <link> element
@@ -198,9 +195,8 @@ class WebResource
         reLinkHref = /<link[^>]+rel=["']?alternate["']?[^>]+href=["']?([^'">\s]+)/ # <link> @href @rel=alternate
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
-        reURL = /\A(\/|http)[\S]+\Z/                  # HTTP URI
-
-        # elements
+        isURL = /\A(\/|http)[\S]+\Z/                  # HTTP URI
+        # element data
         reHead = /<(rdf|rss|feed)([^>]+)/i
         reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
         reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
@@ -209,6 +205,7 @@ class WebResource
         reMedia = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
+        isCDATA = /^\s*<\!\[CDATA/m
 
         # XML name-space
         x = {}
@@ -223,24 +220,21 @@ class WebResource
         @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-          # identifier search. prefer already RDF with lots of fallbacks
+          # identifier search. prefer RDF with lots of fallbacks
           u = (attrs.do{|a|a.match(reRDF)} || inner.match(reLink) || inner.match(reLinkCData) || inner.match(reLinkHref) || inner.match(reLinkRel) || inner.match(reId)).do{|s|s[1]}
-          if u # identifier match
+          if u # identifier found
             u = @base.join(u).to_s unless u.match /^http/
             resource = u.R
-
             yield u, Type, R[BlogPost]
             blogs = [resource.join('/')]
-            blogs.push @base.join('/') if @host && @host != resource.host # re-blog at another host
-            blogs.map{|blog|
-              yield u, R::To, blog}
+            blogs.push @base.join('/') if @host && @host != resource.host # re-blog
+            blogs.map{|blog|yield u, R::To, blog}
 
             inner.scan(reMedia){|e|
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
                 rel = rel ? rel[1] : 'link'
                 o = (@base.join url[2]).R
-                # TODO Cache media
                 p = case o.ext.downcase
                     when 'jpg'
                       R::Image
@@ -254,26 +248,33 @@ class WebResource
                 yield u,p,o unless resource == o}}
 
             inner.gsub(reGroup,'').scan(reElement){|e|
-              p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # namespaced attribute-names
+              p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # attribute URI
               if [Atom+'id', RSS+'link', RSS+'guid', Atom+'link'].member? p
-               # subject URI candidates above
+               # subject URI candidates
               elsif [Atom+'author', RSS+'author', RSS+'creator', DCe+'creator'].member? p
-                crs = [] # creators
+                # creators
+                crs = []
+                # XML name + URI
                 uri = e[3].match /<uri>([^<]+)</
-                crs.push uri[1].R if uri
                 name = e[3].match /<name>([^<]+)</
+                crs.push uri[1].R if uri
                 crs.push name[1] if name
                 unless name || uri
                   crs.push e[3].do{|o|
-                    o.match(reURL) ? o.R : o }
+                    case o
+                    when isURL
+                      o.R
+                    when isCDATA
+                      o.sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'
+                    else
+                      o
+                    end}
                 end
-                crs.map{|cr|
-                  yield u, Creator, cr
-                }
+                crs.map{|cr|yield u, Creator, cr}
               else # basic element
                 yield u,p,e[3].do{|o|
                   case o
-                  when /^\s*<\!\[CDATA/m
+                  when isCDATA
                     o.sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'
                   when /</m
                     o
