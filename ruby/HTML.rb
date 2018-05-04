@@ -197,7 +197,8 @@ class WebResource
 
     # ResourceList [rA,rB..] -> Markup
     def self.tabular resources, env
-      ks = resources.map(&:keys).flatten.uniq - ['uri',Identifier,Content]
+      ks = resources.map(&:keys).flatten.uniq - ['uri', Identifier]
+      ks -= [Content] if env['q'].has_key? 'h'
       {_: :table, class: :table,
        c: [{_: :tr, c: ks.map{|k|{_: :td, c: Markup[Type][k.R]}}},
            resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
