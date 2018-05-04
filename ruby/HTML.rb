@@ -71,7 +71,7 @@ class WebResource
                              cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
     end
 
-    # RDF-typed value -> Markup
+    # key+value -> Markup
     def self.value k, v, env
       if 'uri' == k
         u = v.R
@@ -82,16 +82,17 @@ class WebResource
         v
       elsif Markup[k]
         Markup[k][v,env]
-      elsif v.class == Hash # resource and its data
+      elsif v.class == Hash # resource
         resource = v.R
         types = resource.types
+        # type-specific markup
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
           Markup[Container][v,env]
         elsif types.member?(BlogPost) || types.member?(Email)
           Markup[BlogPost][v,env]
-        else
+        else # untyped resource
           kv v,env
         end
       elsif v.class == WebResource
@@ -119,6 +120,16 @@ class WebResource
 
     Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
 
+    Markup[Creator] = -> c, env {
+      if c.respond_to? :uri
+        u = c.R
+        name = u.fragment || u.basename.do{|b|b=='/' ? u.host : b} || u.host || 'user'
+        color = env[:colors][name] ||= (HTML.colorizeBG name)
+        {_: :a, class: :creator, style: color, href: c.uri, c: name}
+      else
+        CGI.escapeHTML c
+      end}
+
     Markup[Container] = -> container , env {
       container.delete Type
       name = (container.delete :name) || ''
@@ -134,27 +145,31 @@ class WebResource
            HTML.kv(container, env)]}}
 
     Markup[BlogPost] = Markup[Email] = -> post , env {
-      [:name,Type].map{|attr|post.delete attr}
+      # hidden fields in default view
+      [:name, Type, Comments, RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
+      # bind data
       canonical = post.delete 'uri'
       cache = post.delete(Cache).justArray[0]
       titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
       date = post.delete(Date).justArray[0]
+      from = post.delete(From).justArray
+        to = post.delete(To).justArray
+
       {class: :post,
        c: [{_: :a, class: :newspaper, href: cache||canonical},
-           titles.map{|title|Markup[Title][title,env,canonical]},
-           (HTML.kv post, env),
-           (['<br>',Markup[Date][date]] if date)]}}
+           titles.map{|title|
+             Markup[Title][title,env,canonical]},
+           {_: :table,
+            c: {_: :tr,
+                c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}},
+                    {_: :td, c: '&rarr;'},
+                    {_: :td, c: to.map{|f|Markup[Creator][f,env]}}]}},
+           (HTML.kv post, env), # remaining fields in default render
+           (['<br>', Markup[Date][date]] if date)]}}
 
     Markup[InstantMessage] = -> msg, env {
       [{c: [{class: :creator,
-             c: msg[Creator].map{|c|
-               if c.respond_to? :uri
-                 name = c.R.fragment || c.R.basename || ''
-                 color = env[:colors][name] ||= (HTML.colorizeBG name)
-                 {_: :a, class: :creator, style: color, href: msg.uri, c: name}
-               else
-                 CGI.escapeHTML c
-               end}}, ' ',
+             c: msg[Creator].map{|c|Markup[Creator][c,env]}}, ' ',
             {_: :span, class: :msgbody,
              c: [msg[Abstract],
                  msg[Content]]},
@@ -168,7 +183,7 @@ class WebResource
       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
          {_: :tr,
-          c: [{_: :td, class: :k, c: {_: :span, class: Icons[k] || :label, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
+          c: [{_: :td, class: :k, c: {_: :span, class: Icons[k] || :label, title: k, c: Icons[k] ? '' : k.R.do{|k|k.fragment || k.basename}}},
               {_: :td, class: :v,
                c: ["\n ",
                    vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')]}]} unless hide}}

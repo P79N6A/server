@@ -168,6 +168,7 @@ class WebResource
                  YouTube+'videoId' => Label,
                  YouTube+'channelId' => SIOC+'user_agent',
                  RSS+'category' => Label,
+                 RSS+'comments' => Comments,
                  RSS+'description' => Content,
                  RSS+'encoded' => Content,
                  RSS+'modules/content/encoded' => Content,
