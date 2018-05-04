@@ -128,18 +128,9 @@ class WebResource
     # Hash -> ?querystring
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
 =begin
- using proxy:
- (port 443) $ setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/python3`
- * default-gateway setting
- * iptables/routing configuration 
- * concatenate proxyhosts to /etc/hosts
- * see mitmproxy/Squid/Solid docs for ideas
- (high-port i.e. 8000)
- * browser proxy-setting
- * OS proxy-setting
-
- mitmproxy -p 443 --showhost -m reverse:http://localhost:8000 --set keep_host_header=true
-
+proxy
+ setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/python3`
+ mitmproxy -p 443 --showhost -m reverse:http://localhost --set keep_host_header=true
 certificates
  cd ~/.mitmproxy/
  openssl x509 -inform PEM -subject_hash_old -in mitmproxy-ca-cert.pem
@@ -151,17 +142,6 @@ certificates
     # unwrap URI
     Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
 
-    # local font & CSS
-    Font = -> re {
-      location = '/.conf/font.woff'
-      if re.path == location
-        re.fileResponse
-      elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, ["* {background-color: #000 !important; color: #fff !important; font-family: sans-serif}\n a {text-decoration:none; font-weight: bold; color: #0f0 !important}"]]
-      else
-        [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
-      end}
-    '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
 
   end
   include HTTP

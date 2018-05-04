@@ -57,4 +57,18 @@ class WebResource
       W3+'2000/01/rdf-schema#Resource' => :node,
     }
   end
+  module HTTP
+    # local font & CSS
+    Font = -> re {
+      location = '/.conf/font.woff'
+      if re.path == location
+        re.fileResponse
+      elsif re.path == '/css'
+        [200, {'Content-Type' => 'text/css'}, ["* {background-color: #000 !important; color: #fff !important; font-family: sans-serif}\n a {text-decoration:none; font-weight: bold; color: #0f0 !important}"]]
+      else
+        [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
+      end}
+
+    '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
+  end
 end
