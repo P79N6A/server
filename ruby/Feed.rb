@@ -200,15 +200,16 @@ class WebResource
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
         isURL = /\A(\/|http)[\S]+\Z/                  # HTTP URI
         # element data
-        reHead = /<(rdf|rss|feed)([^>]+)/i
-        reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
-        reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
+        isCDATA = /^\s*<\!\[CDATA/m
+        reCDATA = /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
         reGroup = /<\/?media:group>/i
+        reHead = /<(rdf|rss|feed)([^>]+)/i
+        reItem = %r{<(?<ns>rss:|atom:)?(?<tag>item|entry)(?<attrs>[\s][^>]*)?>(?<inner>.*?)</\k<ns>?\k<tag>>}mi
         reMedia = %r{<(link|enclosure|media)([^>]+)>}mi
         reSrc = /(href|url|src)=['"]?([^'">\s]+)/
         reRel = /rel=['"]?([^'">\s]+)/
-        isCDATA = /^\s*<\!\[CDATA/m
+        reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
 
         # XML name-space
         x = {}
@@ -268,23 +269,24 @@ class WebResource
                     when isURL
                       o.R
                     when isCDATA
-                      o.sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'
+                      o.sub reCDATA, '\1'
                     else
                       o
                     end}
                 end
                 crs.map{|cr|yield u, Creator, cr}
-              else # basic element
+              else # element -> RDF
                 yield u,p,e[3].do{|o|
                   case o
                   when isCDATA
-                    o.sub /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m,'\1'
+                    o.sub reCDATA, '\1'
                   when /</m
                     o
                   else
                     CGI.unescapeHTML o
                   end
-                }.do{|o|o.match(/\A(\/|http)[\S]+\Z/) ? o.R : o }
+                }.do{|o|
+                  o.match(isURL) ? o.R : o }
               end
             }
           end}
