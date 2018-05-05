@@ -127,7 +127,7 @@ class WebResource
        elsif q.has_key?('q') && path!='/' # GREP
          grep q['q']
        else # LS
-         if uri[-1] == '/' # inside container
+         if uri[-1] == '/'
            index = (self+'index.html').glob
            if !index.empty? && qs.empty? # static index
              index
@@ -139,9 +139,8 @@ class WebResource
            self
          end
        end
-      else # GLOB
-        @r[:glob] = match /[\*\{\[]/
-        [self,(@r[:glob] ? self : (self+'.*')).glob]
+      else # GLOB can be overridden, or base-URI + extensions
+        [self, ((match /[\*\{\[]/) ? self : (self + '.*')).glob ]
        end).justArray.flatten.compact.uniq.select &:exist?
     end
 

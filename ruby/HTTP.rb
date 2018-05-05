@@ -47,7 +47,7 @@ class WebResource
 
       return fileResponse if node.file? # static resource
       return Host[@r['HTTP_HOST']][self] if Host[@r['HTTP_HOST']] # bespoke handler
-      return [302,{'Location' => path + '/' + qs},[]] if directory? && path[-1] != '/' # directory found, redirect to it
+#      return [302,{'Location' => path + '/' + qs},[]] if directory? && path[-1] != '/' # redirect to inside requested dir
 
       # time-based directories
       return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
