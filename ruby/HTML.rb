@@ -212,21 +212,20 @@ class WebResource
 
     # Graph -> Tree transforms
 
-    # group by sender
-    Group['from'] = -> graph {
+    Group['from-to'] = -> graph,p {
       authors = {}
       graph.values.map{|msg|
-        msg[Creator].justArray.map{|creator|
+        msg[p].justArray.map{|creator|
           c = creator.to_s
           authors[c] ||= {name: c, Type => R[Container], Contains => {}}
           authors[c][Contains][msg.uri] = msg }}
 #      { Contains => authors }
       authors
     }
-
+    # group by sender
+    Group['from'] = -> graph {Group['from-to'][graph,Creator]}
     # group by recipient
-    Group['to'] = -> graph {
-    }
+    Group['to'] = -> graph {Group['from-to'][graph,To]}
 
     # filesystem controls tree-structure
     Group['tree'] = -> graph {
