@@ -36,7 +36,7 @@ class WebResource
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
-      @r[:colors] ||= {'status' => 'background-color:#222'}
+      @r[:colors] ||= {'status' => 'background-color:#222', 'twitter.com' => 'background-color:#000'}
       htmlGrep graph, q['q'] if q['q'] # filter graph
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
