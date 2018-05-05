@@ -63,7 +63,7 @@ class WebResource
                                  HTML.tabular graph.values, @r
                                else
                                  # Graph -> Tree -> Markup
-                                 treeize = Group[q['group']] || Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                                 treeize = Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
                                  Markup[Container][treeize[graph], @r]
                                end
                              end,
@@ -131,7 +131,7 @@ class WebResource
         color = env[:colors][name] ||= (HTML.colorizeBG name)
         {_: :a, class: :creator, style: color, href: c.uri, c: name}
       else
-        CGI.escapeHTML c
+        CGI.escapeHTML (c||'')
       end}
 
     Markup[Container] = -> container , env {
@@ -197,7 +197,7 @@ class WebResource
 
     # ResourceList [rA,rB..] -> Markup
     def self.tabular resources, env
-      ks = resources.map(&:keys).flatten.uniq - ['uri', Identifier]
+      ks = resources.map(&:keys).flatten.uniq
       ks -= [Content] if env['q'].has_key? 'h'
       {_: :table, class: :table,
        c: [{_: :tr, c: ks.map{|k|{_: :td, c: Markup[Type][k.R]}}},
@@ -212,7 +212,23 @@ class WebResource
 
     # Graph -> Tree transforms
 
-    # filesystem tree
+    # group by sender
+    Group['from'] = -> graph {
+      authors = {}
+      graph.values.map{|msg|
+        msg[Creator].justArray.map{|creator|
+          c = creator.to_s
+          authors[c] ||= {name: c, Type => R[Container], Contains => {}}
+          authors[c][Contains][msg.uri] = msg }}
+#      { Contains => authors }
+      authors
+    }
+
+    # group by recipient
+    Group['to'] = -> graph {
+    }
+
+    # filesystem controls tree-structure
     Group['tree'] = -> graph {
       tree = {}
       # visit resources
@@ -235,7 +251,7 @@ class WebResource
         end
       }; tree }
 
-    # group year directories by decade
+    # group containers by decade
     Group['decades'] = -> graph {
       decades = {}
       graph.values.map{|resource|
