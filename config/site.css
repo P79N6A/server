@@ -22,7 +22,7 @@ p a, li a, span a {color: #000}
 table {border-spacing: 0}
 table, div, a {display: inline-block}
 table.table td {max-width: 18em; overflow: hidden; border-width: 0 .1em .1em 0; border-style: dotted; border-color: #888}
-td {border-width: 0 0 .08em 0; border-color: #448; border-style: solid}
+td {border-width: .08em 0 0 0; border-color: #448; border-style: solid}
 td.from, td.to {border: .07em dotted #eee; border-radius: .3em; padding: 0}
 :target, :target * {background-color: #eef !important; color: #000 !important}
 #up,#down,#prev,#next {font-size: 1.8em}

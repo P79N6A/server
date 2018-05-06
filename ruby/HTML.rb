@@ -37,7 +37,7 @@ class WebResource
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
       @r[:colors] ||= {'status' => 'background-color:#222', 'twitter.com' => 'background-color:#000'}
-      htmlGrep graph, q['q'] if q['q'] # filter graph
+      htmlGrep graph, q['q'] if q['q'] # markup search results
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label { # markup graph-doc (HEAD) links
@@ -185,14 +185,15 @@ class WebResource
     # Resource {k => v} -> Markup
     def self.kv hash, env
       hash.delete :name
-      {_: :table, class: :kv, c: hash.map{|k,vs|
+      ["\n",
+       {_: :table, class: :kv, c: hash.map{|k,vs|
          hide = k == Content && env['q'] && env['q'].has_key?('h')
-         {_: :tr,
-          c: [{_: :td, class: :k, c: Markup[Type][k.R]},
-              {_: :td, class: :v,
-               c: ["\n ",
-                   vs.justArray.map{|v|
-                     HTML.value k,v,env}.intersperse(' ')]}]} unless hide}}
+         [{_: :tr,
+           c: ["\n ",
+               {_: :td, class: :k, c: Markup[Type][k.R]},"\n ",
+               {_: :td, class: :v,
+                c: vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')}]},
+          "\n"] unless hide}}, "\n"]
     end
 
     # ResourceList [rA,rB..] -> Markup
@@ -277,7 +278,7 @@ class WebResource
       colorize k, false
     end
 
-    # colorized grep matches, in Abstract field
+    # colorize grep matches
     def htmlGrep graph, q
       wordIndex = {}
       args = POSIX.splitArgs q
