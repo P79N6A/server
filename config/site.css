@@ -18,7 +18,7 @@ pre   {min-width: 40ex; white-space: pre-wrap; max-width: 200ex}
 pre,p,span,li {padding-left:.17em; background-color: #fff;color:#000}
 pre,p {display: inline-block; margin: 0 0 .08em 0; border-radius: .2em; border-width: 0 0 .08em 0;border-style: solid; border-color: #ddd;}
 ol,ul {margin:0}
-p a, li a, span a {color: #000}
+p a, li a, span a {background-color:#000; color: #fff}
 table {border-spacing: 0}
 table, div, a {display: inline-block}
 table.table td {max-width: 22em}

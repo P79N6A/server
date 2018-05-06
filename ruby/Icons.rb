@@ -64,7 +64,10 @@ class WebResource
       if re.path == location
         re.fileResponse
       elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'}, ["* {background-color: #000 !important; color: #fff !important; font-family: sans-serif}\n a {text-decoration:none; font-weight: bold; color: #0f0 !important}"]]
+        [200, {'Content-Type' => 'text/css'},
+         ["* {background-color: #000 !important; color: #fff !important; font-family: sans-serif}
+a {text-decoration:none; font-weight: bold; color: #0f0 !important}
+header, nav, footer {display: none}"]]
       else
         [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
