@@ -212,22 +212,21 @@ class WebResource
 
     # Graph -> Tree transforms
 
-    Group['from-to'] = -> graph,p {
-      authors = {}
-      graph.values.map{|msg|
-        msg[p].justArray.map{|creator|
-          c = creator.to_s
-          authors[c] ||= {name: c, Type => R[Container], Contains => {}}
-          authors[c][Contains][msg.uri] = msg }}
-#      { Contains => authors }
-      authors
-    }
     # group by sender
-    Group['from'] = -> graph {Group['from-to'][graph,Creator]}
+    Group['from'] = -> graph { GroupUsers[graph,Creator] }
     # group by recipient
-    Group['to'] = -> graph {Group['from-to'][graph,To]}
+    Group['to'] = -> graph { GroupUsers[graph,To] }
 
-    # filesystem controls tree-structure
+    GroupUsers = -> graph,predicate {
+      users = {}
+      graph.values.map{|msg|
+        msg[predicate].justArray.map{|creator|
+          c = creator.to_s
+          users[c] ||= {name: c, Type => R[Container], Contains => {}}
+          users[c][Contains][msg.uri] = msg }}
+      users}
+
+    # recursive group by filesystem container
     Group['tree'] = -> graph {
       tree = {}
       # visit resources
@@ -250,7 +249,7 @@ class WebResource
         end
       }; tree }
 
-    # group containers by decade
+    # group years by decade
     Group['decades'] = -> graph {
       decades = {}
       graph.values.map{|resource|
@@ -258,7 +257,7 @@ class WebResource
         decade = (name.match /^\d{4}$/) ? name[0..2]+'0s' : '/'
         decades[decade] ||= {name: decade, Type => R[Container], Contains => {}}
         decades[decade][Contains][resource.uri] = resource}
-      {Contains => decades}}
+      decades}
 
     def self.colorize k, bg = true
       if !k || k.empty?
