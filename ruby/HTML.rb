@@ -187,18 +187,19 @@ class WebResource
       hash.delete :name
       ["\n",
        {_: :table, class: :kv, c: hash.map{|k,vs|
-         hide = k == Content && env['q'] && env['q'].has_key?('h')
-         [{_: :tr,
-           c: ["\n ",
-               {_: :td, class: :k, c: Markup[Type][k.R]},"\n ",
-               {_: :td, class: :v,
-                c: if k == Contains && vs.values.size > 1
-                 tabular vs.values, env, false
-               else
-                 vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')
-                end
-               }]},
-          "\n"] unless hide}}, "\n"]
+          type = k.R
+          hide = k == Content && env['q'] && env['q'].has_key?('h')
+          [{_: :tr, name: type.fragment || type.basename,
+            c: ["\n ",
+                {_: :td, class: :k, c: Markup[Type][type]},"\n ",
+                {_: :td, class: :v,
+                 c: if k == Contains && vs.values.size > 1
+                  tabular vs.values, env, false
+                else
+                  vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')
+                 end
+                }]},
+           "\n"] unless hide}}, "\n"]
     end
 
     # ResourceList [rA,rB..] -> Markup
