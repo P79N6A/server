@@ -57,16 +57,20 @@ class WebResource
       channel = dir + '/' + basename
       network = dir + '/' + basename.split('%23')[0] + '*'
       day = dir.uri.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')}
+
       readFile.lines.map{|l|
         l.scan(/(\d\d)(\d\d)(\d\d)[\s+@]*([^\(\s]+)[\S]* (.*)/){|m|
           s = base + '#l' + (linenum += 1).to_s
           yield s, Type, R[SIOC+'InstantMessage']
           yield s, Creator, R['#'+m[3]]
-#          yield s, To, channel
-          yield s, Content, m[4].hrefs{|p,o|
-            yield s, p, o }
+          yield s, To, channel
+          yield s, Content, '<span class="msgbody">' +
+                         m[4].hrefs{|p,o|
+                             yield s,p,o } +
+                         '</span>'
           yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
-      if linenum > 0 # summarize at log-URI
+      # log summary
+      if linenum > 0
         yield log, Type, R[SIOC+'ChatLog']
         yield log, Date, mtime.iso8601
         yield log, To, network

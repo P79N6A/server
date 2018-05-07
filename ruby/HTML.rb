@@ -174,9 +174,7 @@ class WebResource
     Markup[InstantMessage] = -> msg, env {
       [{c: [{class: :creator,
              c: msg[Creator].map{|c|Markup[Creator][c,env]}}, ' ',
-            {_: :span, class: :msgbody,
-             c: [msg[Abstract],
-                 msg[Content]]},
+            msg[Abstract], msg[Content],
             msg[Image].map{|i| Markup[Image][i,env]},
             msg[Video].map{|v| Markup[Video][v,env]},
             msg[Link].map(&:R)
