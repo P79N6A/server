@@ -192,7 +192,7 @@ class WebResource
            c: ["\n ",
                {_: :td, class: :k, c: Markup[Type][k.R]},"\n ",
                {_: :td, class: :v,
-                c: if k == Contains
+                c: if k == Contains && vs.values.size > 1
                  tabular vs.values, env, false
                else
                  vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')
