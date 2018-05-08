@@ -80,12 +80,12 @@ class WebResource
         v
       elsif Abstract == k
         v
-      elsif Markup[k]
+      elsif Markup[k] # typed predicate (use differing arc-types to override resource default markup)
         Markup[k][v,env]
-      elsif v.class == Hash # resource
+      elsif v.class == Hash # resource inlined data
         resource = v.R
         types = resource.types
-        # type-specific markup
+        # typed object
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member? Container
@@ -148,6 +148,8 @@ class WebResource
            end,
            HTML.kv(container, env)]}}
 
+    Markup[SIOC+'ChatLog'] = Markup[Container]
+
     Markup[BlogPost] = Markup[Email] = -> post , env {
       # hidden fields in default view
       [:name, Type, Comments, Identifier, RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
@@ -168,7 +170,7 @@ class WebResource
                 c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}, class: :from},
                     {_: :td, c: '&rarr;'},
                     {_: :td, c: to.map{|f|Markup[Creator][f,env]}, class: :to}]}},
-           (HTML.kv post, env), # remaining fields in default render
+           (HTML.kv post, env), # extra metadata in kv format
            (['<br>', Markup[Date][date]] if date)]}}
 
     Markup[InstantMessage] = -> msg, env {
