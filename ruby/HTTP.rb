@@ -127,19 +127,11 @@ class WebResource
 
     # Hash -> ?querystring
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
-=begin
-proxy
- setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/python3`
- mitmproxy -p 443 --showhost -m reverse:http://localhost --set keep_host_header=true
-certificates
- cd ~/.mitmproxy/
- openssl x509 -inform PEM -subject_hash_old -in mitmproxy-ca-cert.pem
- su -c 'ln mitmproxy-ca-cert.pem /android/system/etc/security/cacerts/c8750f0d.0' # adjust to match above command's hashed-value
-=end
-    # find URI from middleman
+
+    # find original URI via middleman
     '.conf/hosts/minized'.R.hosts.map{|host| Host[host] = Short}
 
-    # unwrap URI
+    # unwrap URI encoded in URI
     Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
 
 
