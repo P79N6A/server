@@ -122,7 +122,7 @@ class WebResource
         CGI.escapeHTML t.to_s
       end}
 
-    Markup[Date] = -> date,env=nil {{_: :a, class: :date, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
+    Markup[Date] = -> date,env=nil,offset=0 {{_: :a, class: offset == 0 ? :date : :time, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date[offset..-1]}}
 
     Markup[Creator] = -> c, env {
       if c.respond_to? :uri
@@ -174,13 +174,13 @@ class WebResource
            (['<br>', Markup[Date][date]] if date)]}}
 
     Markup[InstantMessage] = -> msg, env {
-      [{c: [{class: :creator,
-             c: msg[Creator].map{|c|Markup[Creator][c,env]}}, ' ',
+      [{c: [msg[Date].map{|d| Markup[Date][d,env,11]},
+            {class: :creator, c: msg[Creator].map{|c|Markup[Creator][c,env]}}, ' ',
             msg[Abstract], msg[Content],
             msg[Image].map{|i| Markup[Image][i,env]},
             msg[Video].map{|v| Markup[Video][v,env]},
             msg[Link].map(&:R)
-          ]}," \n"]}
+          ]},"<br>\n"]}
 
     # Resource {k => v} -> Markup
     def self.kv hash, env
@@ -242,10 +242,10 @@ class WebResource
         # walk to doc-graph
         cursor = tree
         r.parts.unshift(r.host||'').map{|name|
-          cursor[Type] ||= R[Container] # containing node
-          cursor[Contains] ||= {}       # contained nodes
+          cursor[Type] ||= R[Container]
+          cursor[Contains] ||= {}
            # create node and advance cursor
-          cursor = cursor[Contains][name] ||= {name: name}}
+          cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
 
         # reference resource-data
         if !r.fragment # graph-meta
