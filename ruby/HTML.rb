@@ -88,10 +88,10 @@ class WebResource
         # typed object
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
-        elsif types.member? Container
-          Markup[Container][v,env]
         elsif types.member?(BlogPost) || types.member?(Email)
           Markup[BlogPost][v,env]
+        elsif types.member? Container
+          Markup[Container][v,env]
         else # untyped resource
           kv v,env
         end
@@ -249,7 +249,7 @@ class WebResource
 
         # reference resource-data
         if !r.fragment # graph-meta
-          resource.map{|k,v|cursor[k] ||= v}
+          resource.map{|k,v|cursor[k] = cursor[k].justArray.concat v.justArray}
         else # resources
           cursor[Contains] ||= {}
           cursor[Contains][r.fragment] = resource
