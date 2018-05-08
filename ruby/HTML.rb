@@ -80,7 +80,7 @@ class WebResource
         v
       elsif Abstract == k
         v
-      elsif Markup[k] # typed predicate (use differing arc-types to override resource default markup)
+      elsif Markup[k] # typed arc (vary incoming arc to override default resource markup)
         Markup[k][v,env]
       elsif v.class == Hash # resource inlined data
         resource = v.R
@@ -154,7 +154,7 @@ class WebResource
       # hidden fields in default view
       [:name, Type, Comments, Identifier, RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
       # bind data
-      canonical = post.delete 'uri'
+      canonical = post.delete('uri').justArray[0]
       cache = post.delete(Cache).justArray[0]
       titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
       date = post.delete(Date).justArray[0]
@@ -218,6 +218,7 @@ class WebResource
     end
 
     # Graph -> Tree transforms
+    Group['no'] = -> graph { graph }
 
     # group by sender
     Group['from'] = -> graph { GroupUsers[graph,Creator] }
@@ -249,7 +250,8 @@ class WebResource
 
         # reference resource-data
         if !r.fragment # graph-meta
-          resource.map{|k,v|cursor[k] = cursor[k].justArray.concat v.justArray}
+          resource.map{|k,v|
+            cursor[k] = cursor[k].justArray.concat v.justArray}
         else # resources
           cursor[Contains] ||= {}
           cursor[Contains][r.fragment] = resource
