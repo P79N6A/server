@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	if(e.getModifierState("Control")) {
 	    if(key==85){
 		var src = 'view-source:'+window.location.href;
+		navigator.clipboard.writeText(src)
 		window.open(src,'src');
 	    };
 	};
