@@ -105,8 +105,10 @@ class WebResource
         send(*f){|s,p,o|
           if p==Content && o.class==String
             subject = s.R
-            # parse
-            o = o.match(/</) ? o : ('<p>'+o+'</p>')
+            object = o.strip
+            # wrap bare text-region in <p>
+            o = object.match(/</) ? object : ('<p>'+object+'</p>')
+            # parse HTML
             content = Nokogiri::HTML.fragment o
 
             # <a>
