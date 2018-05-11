@@ -67,6 +67,12 @@ document.addEventListener("DOMContentLoaded", function(){
 		};
 	    };
 	};
+	if(e.getModifierState("Control")) {
+	    if(key==85){
+		var src = 'view-source:'+window.location.href;
+		window.open(src,'src');
+	    };
+	};
 	if(e.getModifierState("Shift")) {
 	    if(key==37||key==80) // [shift-left] previous page
 		gotoLink('prev');
