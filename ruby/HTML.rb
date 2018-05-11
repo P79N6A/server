@@ -244,7 +244,7 @@ class WebResource
         r = resource.R
         # walk to doc-graph
         cursor = tree
-        r.parts.unshift(r.host||'').map{|name|
+        r.parts.unshift(r.host||'').map{|p|p.split '%23'}.flatten.map{|name|
           cursor[Type] ||= R[Container]
           cursor[Contains] ||= {}
            # create node and advance cursor
