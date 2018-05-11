@@ -7,7 +7,7 @@ img  {max-width: 100%}
 .post .newspaper {font-size: 1.8em}
 .post .title {font-size: 1.28em;background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .88em; font-weight: normal}
-.container {border-width: .08em; padding: .2em; margin: 1em 0 0 0; border-radius: 0 0 .2em .2em; position: relative}
+.container {border-width: .08em; padding: .2em; margin: .9em 0 0 .1em; border-radius: 0 0 .2em .2em; position: relative}
 .container > span.name {font-weight: bold;position:absolute;top:-.78em;border-radius: .2em .2em 0 0; border-width: .08em .08em 0 .08em ;padding: 0 .1em 0 .1em}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}

@@ -55,9 +55,7 @@ class WebResource
       log = base.uri
       basename = base.basename
       channel = dir + '/' + basename
-      network = dir + '/' + basename.split('%23')[0] + '*'
       day = dir.uri.match(/\/(\d{4}\/\d{2}\/\d{2})/).do{|d|d[1].gsub('/','-')}
-
       readFile.lines.map{|l|
         l.scan(/(\d\d)(\d\d)(\d\d)[\s+@]*([^\(\s]+)[\S]* (.*)/){|m|
           s = base + '#l' + (linenum += 1).to_s
@@ -69,11 +67,10 @@ class WebResource
                              yield s,p,o } +
                          '</span>'
           yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
-      # log summary
+      # logfile
       if linenum > 0
         yield log, Type, R[SIOC+'ChatLog']
         yield log, Date, mtime.iso8601
-        yield log, To, network
         yield log, Title, basename.split('%23')[-1] # channel
         yield log, Size, linenum
       end
