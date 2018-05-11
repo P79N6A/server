@@ -1,7 +1,7 @@
 * {vertical-align:top}
 .msgbody {color:#fff;background-color:#000}
 body {font-family: sans-serif;margin: 0 1.6em 0 1.6em}
-a    {text-decoration: none; font-weight: bold; color: #fff; max-width: 28em; overflow: hidden; }
+a    {text-decoration: none; font-weight: bold; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
 .post {max-width: 40em}
 .post .newspaper {font-size: 1.8em}
@@ -20,7 +20,7 @@ pre,p {padding-left:.17em; margin: 0 0 .08em 0; border-radius: .2em; border-widt
 table {border-spacing: 0}
 table, div, pre, p, a {display: inline-block}
 table.table td {max-width: 22em}
-td {border-width: .08em 0 0 0; border-color: #f2f2f2; border-style: solid}
+td {border-width: .08em 0 0 0; border-color: #f2f2f2; border-style: dotted}
 :target, :target * {background-color: #eef !important; color: #000 !important}
 #up,#down,#prev,#next {font-size: 1.8em}
 #prev,#next {position:fixed; height: 100%}
