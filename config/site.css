@@ -14,13 +14,15 @@ img  {max-width: 100%}
 div.creator {min-width:9ex; text-align:right}
 tr[name=link] a.link {background-color:#000; color: #fff;border-radius: .2em; margin: .08em; max-width: 20em; max-height:1em; overflow: hidden; white-space: nowrap; font-weight: normal; font-size: .9em}
 a.creator {border-radius: .2em; padding: 0 .18em 0 .18em}
-pre   {min-width: 40ex; white-space: pre-wrap; max-width: 200ex}
+pre   {min-width: 40ex; white-space: pre-wrap }
+pre, td.v {max-width: 200ex}
+td.v {overflow: hidden}
 pre,p,span,li,pre a, p a, li a, span a {background-color: #fff;color:#000}
 pre,p {padding-left:.17em; margin: 0 0 .08em 0; border-radius: .2em; border-width: 0 0 .08em 0;border-style: solid; border-color: #ddd;}
 table {border-spacing: 0}
 table, div, pre, p, a {display: inline-block}
 table.table td {max-width: 22em}
-td {border-width: .08em 0 0 0; border-color: #f2f2f2; border-style: dotted}
+td {border-width: .08em 0 0 0; border-color: #eee; border-style: dotted}
 :target, :target * {background-color: #eef !important; color: #000 !important}
 #up,#down,#prev,#next {font-size: 1.8em}
 #prev,#next {position:fixed; height: 100%}
