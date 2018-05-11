@@ -136,11 +136,12 @@ class WebResource
 
     Markup[Container] = -> container , env {
       container.delete Type
-      name = (container.delete :name) || ''
+      name = (container.delete :name) || '' # basename
+      title = container.delete Title
       contents = (container.delete(Contains)||{}).values
       color = env[:colors][name] ||= (HTML.colorizeBG name)
       {class: :container, style: color,
-       c: [{_: :span, class: :name, style: "#{rand(2) == 0 ? 'left' : 'right'}: 0;#{color}", c: CGI.escapeHTML(name)}, # label
+       c: [{_: :span, class: :name, style: "#{rand(2) == 0 ? 'left' : 'right'}: 0;#{color}", c: (title ? Markup[Title][title.justArray[0], env, container.uri] : CGI.escapeHTML(name))}, # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env
            else # child nodes
