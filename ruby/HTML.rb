@@ -143,7 +143,7 @@ class WebResource
       color = env[:colors][name] ||= (HTML.colorizeBG name)
       skiplabel = %w{comments}
       {class: :container, style: color,
-       c: [({_: :span, class: "name #{title ? '' : 'basename'}", style: "float: left;#{color}", c: (title ? Markup[Title][title.justArray[0], env, uri] : CGI.escapeHTML(name))} unless skiplabel.member?(name)), # label
+       c: [({_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri] : CGI.escapeHTML(name))} unless skiplabel.member?(name)), # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env
            else # child nodes
@@ -273,7 +273,7 @@ class WebResource
 
     def self.colorize k, bg = true
       if !k || k.empty? || k.match(/^[0-9]+$/)
-        ''
+        'background-color: #fff; color: #000'
       else
         "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
       end
