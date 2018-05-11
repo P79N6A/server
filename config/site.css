@@ -7,9 +7,8 @@ img  {max-width: 100%}
 .post .newspaper {font-size: 1.8em}
 .post .title {font-size: 1.28em;background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .88em; font-weight: normal}
-.container { padding: .2em; margin: .9em 0 0 .1em; position: relative}
-.container > span.name {font-weight: bold;position:absolute;top:-1em;border-width: .08em .08em 0 .08em ;padding: 0 .1em 0 .1em}
-.container > span.name, .container {border: .08em solid #000;}
+.container { padding: .2em; margin: .9em 0 0 .1em; position: relative; border: .08em dotted #888;}
+.container > span.name {font-weight: bold;position:absolute;top:-1em; border: .08em solid #222; padding: 0 .1em 0 .1em}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 div.creator {min-width:9ex; text-align:right}
