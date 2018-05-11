@@ -7,13 +7,14 @@ img  {max-width: 100%}
 .post .newspaper {color:#000; font-size: 1.2em;font-weight: normal}
 .post .title {font-size: 1.28em;background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .8em; font-weight: normal; color: #000}
+.container {margin-top: .3em}
 .container > span.name {font-size: .8em;color:#fff}
-.container > span.basename {transform: rotate(90deg); transform-origin: top left; border-radius: 0 0 .3em .3em; padding: 0 .1em 0 .1em}
+.container > span.basename {transform: rotate(90deg); transform-origin: top left; border-radius: 0 0 .3em .3em; padding: 0 .8em 0 .1em}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 div.creator {min-width:9ex; text-align:right}
 tr[name=link] a.link {background-color:#000; color: #fff;border-radius: .2em; margin: .08em; max-width: 20em; max-height:1em; overflow: hidden; white-space: nowrap; font-weight: normal; font-size: .9em}
-a.creator {color:#fff;border-radius: .2em; padding: 0 .18em 0 .18em}
+a.creator {color: #000;border-radius: .2em; padding: 0 .18em 0 .18em}
 pre   {min-width: 40ex; white-space: pre-wrap }
 pre, td.v {max-width: 200ex}
 td.k a {color: #222}
