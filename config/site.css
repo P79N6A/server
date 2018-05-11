@@ -7,8 +7,8 @@ img  {max-width: 100%}
 .post .newspaper {color:#000; font-size: 1.2em;font-weight: normal}
 .post .title {font-size: 1.28em;background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .8em; font-weight: normal; color: #000}
-.container { padding: .16em; border: .08em dotted #ccc; border-radius: .2em}
-.container > span.name {font-weight: bold; border: .08em solid #222; padding: 0 .1em 0 .1em}
+.container { padding: .16em; margin: .3em; border-radius: .2em}
+.container > span.name {display:block; font-size: .8em;color:#fff; clear:both}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 div.creator {min-width:9ex; text-align:right}
@@ -18,7 +18,7 @@ pre   {min-width: 40ex; white-space: pre-wrap }
 pre, td.v {max-width: 200ex}
 td.k a {color: #222}
 td.v {overflow: hidden}
-td.from a, td.to a {color: #fff}
+td.from a, td.to a {}
 pre,p,span,li,pre a, p a, li a, span a {background-color: #fff;color:#000}
 pre,p {padding-left:.17em; margin: 0 0 .08em 0; border-radius: .2em; border-width: 0 0 .08em 0;border-style: solid; border-color: #ddd;}
 table {border-spacing: 0}

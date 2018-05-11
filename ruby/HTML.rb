@@ -36,7 +36,7 @@ class WebResource
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
       @r[:links] ||= {} # doc-graph links
       @r[:images] ||= {}  # image references
-      @r[:colors] ||= {'status' => 'background-color:#222', 'twitter.com' => 'background-color:#000'}
+      @r[:colors] ||= {'status' => 'background-color:#222', 'twitter.com' => 'background-color:#000', 'www.reddit.com' => 'background-color: #fff', 'r' => 'background-color: #fff', 'comments' => 'background-color: #fff'}
       htmlGrep graph, q['q'] if q['q'] # markup search results
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
@@ -141,8 +141,9 @@ class WebResource
       title = container.delete Title
       contents = (container.delete(Contains)||{}).values
       color = env[:colors][name] ||= (HTML.colorizeBG name)
+      skiplabel = %w{comments}
       {class: :container, style: color,
-       c: [{_: :span, class: :name, style: "float: #{rand(2) == 0 ? 'left' : 'right'};#{color}", c: (title ? Markup[Title][title.justArray[0], env, uri] : CGI.escapeHTML(name))}, # label
+       c: [({_: :span, class: :name, style: "float: #{rand(2) == 0 ? 'left' : 'right'};#{color}", c: (title ? Markup[Title][title.justArray[0], env, uri] : CGI.escapeHTML(name))} unless skiplabel.member?(name)), # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env
            else # child nodes
