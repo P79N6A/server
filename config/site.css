@@ -7,8 +7,8 @@ img  {max-width: 100%}
 .post .newspaper {font-size: 1.8em}
 .post .title {font-size: 1.28em;background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .88em; font-weight: normal}
-.container {border-radius:.3em 0 .8em .3em; margin: .05em; position: relative;margin-top:1em}
-.container > span.name {font-weight: bold;position:absolute;top:-1em;right:0;border-radius: .4em .4em 0 0;padding: 0 .2em 0 .2em}
+.container {border-width: .08em; padding: 1em 0 0 0; margin: .3em 0 .3em .3em; position: relative}
+.container > span.name {font-weight: bold;position:absolute;top:-1em;border-width: .08em .08em 0 .08em ;padding: 0 .1em 0 .1em}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 div.creator {min-width:9ex; text-align:right}
@@ -17,11 +17,10 @@ a.creator {border-radius: .2em; padding: 0 .18em 0 .18em}
 pre   {min-width: 40ex; white-space: pre-wrap; max-width: 200ex}
 pre,p,span,li,pre a, p a, li a, span a {background-color: #fff;color:#000}
 pre,p {padding-left:.17em; margin: 0 0 .08em 0; border-radius: .2em; border-width: 0 0 .08em 0;border-style: solid; border-color: #ddd;}
-ol,ul {margin:0}
 table {border-spacing: 0}
 table, div, pre, p, a {display: inline-block}
 table.table td {max-width: 22em}
-td {border-width: .08em 0 0 0; border-color: #999; border-style: dashed}
+td {border-width: .08em 0 0 0; border-color: #eee; border-style: solid}
 :target, :target * {background-color: #eef !important; color: #000 !important}
 #up,#down,#prev,#next {font-size: 1.8em}
 #prev,#next {position:fixed; height: 100%}
