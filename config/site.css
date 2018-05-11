@@ -25,7 +25,7 @@ table {border-spacing: 0}
 table, div, pre, p, a {display: inline-block}
 table.table td {max-width: 22em}
 td {border-width: .08em 0 0 0; border-color: #eee; border-style: dotted}
-:target, :target * {background-color: #eef !important; color: #000 !important}
+:target, :target * {background-color: #fff !important; color: #000 !important}
 #up,#down,#prev,#next {font-size: 1.8em}
 #prev,#next {position:fixed; height: 100%}
 #prev {left: 0; top:0}

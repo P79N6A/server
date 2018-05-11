@@ -223,11 +223,11 @@ class WebResource
     Group['no'] = -> graph { graph }
 
     # group by sender
-    Group['from'] = -> graph { GroupUsers[graph,Creator] }
+    Group['from'] = -> graph { Group['from-to'][graph,Creator] }
     # group by recipient
-    Group['to'] = -> graph { GroupUsers[graph,To] }
-
-    GroupUsers = -> graph,predicate {
+    Group['to'] = -> graph { Group['from-to'][graph,To] }
+    # group by sender or recipient
+    Group['from-to'] = -> graph,predicate {
       users = {}
       graph.values.map{|msg|
         msg[predicate].justArray.map{|creator|
