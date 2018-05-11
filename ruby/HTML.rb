@@ -142,7 +142,7 @@ class WebResource
       contents = (container.delete(Contains)||{}).values
       color = env[:colors][name] ||= (HTML.colorizeBG name)
       {class: :container, style: color,
-       c: [{_: :span, class: :name, style: "#{rand(2) == 0 ? 'left' : 'right'}: -.08em;#{color}", c: (title ? Markup[Title][title.justArray[0], env, uri] : CGI.escapeHTML(name))}, # label
+       c: [{_: :span, class: :name, style: "float: #{rand(2) == 0 ? 'left' : 'right'};#{color}", c: (title ? Markup[Title][title.justArray[0], env, uri] : CGI.escapeHTML(name))}, # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env
            else # child nodes
