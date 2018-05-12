@@ -12,9 +12,10 @@ img  {max-width: 100%}
 .container > span.basename {position:absolute; max-width: 9em; overflow: hidden; transform: rotate(90deg); transform-origin: top left; border-radius: 0 0 .3em .3em; padding: 0 .8em 0 .1em}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
+.time {color: #aaa;font-weight: normal; font-size:.8em}
 div.creator {min-width:9ex; text-align:right}
 tr[name=link] a.link {background-color:#000; color: #fff;border-radius: .2em; margin: .08em; max-width: 20em; max-height:1em; overflow: hidden; white-space: nowrap; font-weight: normal; font-size: .9em}
-a.creator {color: #000;border-radius: .2em; padding: 0 .18em 0 .18em}
+a.creator {color: #fff;border-radius: .2em; padding: 0 .18em 0 .18em}
 pre   {min-width: 40ex; white-space: pre-wrap }
 pre, td.v {max-width: 200ex}
 td.k a {color: #222}
