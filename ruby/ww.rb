@@ -1,11 +1,13 @@
+# deps
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet resolv-replace shellwords}.map{|r|require r}
+# this library
 %w{URI POSIX MIME HTTP HTML Feed JSON Text Mail Calendar Chat Icons Image}.map{|i|require_relative i}
-R = WebResource # alias
-# extension to std-classes
+
+R = WebResource # alias, TODO delete
+# extend stdlib
 class Array
   # already an array
   def justArray; self end
-  # borrowed from Haskell
   def intersperse i; inject([]){|a,b|a << b << i}[0..-2] end
 end
 class Object

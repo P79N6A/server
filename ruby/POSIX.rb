@@ -237,13 +237,55 @@ class WebResource
     end
 
   end
+  module HTML
 
+    Markup[Container] = -> container , env {
+      container.delete Type
+      uri = container.delete 'uri'
+      name = (container.delete :name) || '' # basename
+      title = container.delete Title
+      contents = (container.delete(Contains)||{}).values
+      color = env[:colors][name] ||= (HTML.colorizeBG name)
+      {class: :container, style: color,
+       c: [{_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))}, # label
+           if env['q'].has_key? 't'
+             HTML.tabular contents, env
+           else # child nodes
+             contents.map{|c|HTML.value(nil,c,env)}
+           end,
+           HTML.kv(container, env)]}}
+
+    # tree of host -> pathA -> pathB -> path.. -> fragment
+    Group['tree'] = -> graph {
+      tree = {}
+      # select resource(s)
+      (graph.class==Array ? graph : graph.values).map{|resource|
+        cursor = tree
+        r = resource.R
+        # walk to document-graph location
+        r.parts.unshift(r.host||'').map{|p|p.split '%23'}.flatten.map{|name|
+          cursor[Type] ||= R[Container]
+          cursor[Contains] ||= {}
+           # create node if missing, advance cursor
+          cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
+        # reference to resource data
+        if !r.fragment # document itself
+          resource.map{|k,v|
+            cursor[k] = cursor[k].justArray.concat v.justArray}
+        else # resource local identifier
+          cursor[Contains] ||= {}
+          cursor[Contains][r.fragment] = resource
+        end
+      }; tree }
+
+  end
   module POSIX
-    LinkMethod = begin # link-method capability test
+    # hard-link capability test
+    LinkMethod = begin
                    file = '.cache/link'.R
                    link = '.cache/link_'.R
-                   file.touch unless file.exist?
                    link.delete if link.exist?
+                   file.touch unless file.exist?
                    file.ln link
                    :ln
                  rescue Exception => e

@@ -133,56 +133,6 @@ class WebResource
         CGI.escapeHTML (c||'')
       end}
 
-    Markup[Container] = -> container , env {
-      container.delete Type
-      uri = container.delete 'uri'
-      name = (container.delete :name) || '' # basename
-      title = container.delete Title
-      contents = (container.delete(Contains)||{}).values
-      color = env[:colors][name] ||= (HTML.colorizeBG name)
-      {class: :container, style: color,
-       c: [{_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))}, # label
-           if env['q'].has_key? 't'
-             HTML.tabular contents, env
-           else # child nodes
-             contents.map{|c|HTML.value(nil,c,env)}
-           end,
-           HTML.kv(container, env)]}}
-
-    Markup[SIOC+'ChatLog'] = Markup[Container]
-
-    Markup[BlogPost] = Markup[Email] = -> post , env {
-      # hidden fields in default view
-      [:name, Type, Comments, Identifier, RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
-      # bind data
-      canonical = post.delete('uri').justArray[0]
-      cache = post.delete(Cache).justArray[0]
-      titles = post.delete(Title).justArray.map(&:to_s).map(&:strip).uniq
-      date = post.delete(Date).justArray[0]
-      from = post.delete(From).justArray
-        to = post.delete(To).justArray
-
-      {class: :post,
-       c: [{_: :a, class: :newspaper, href: cache||canonical},
-           titles.map{|title|
-             Markup[Title][title,env,canonical]},
-           {_: :table,
-            c: {_: :tr,
-                c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}, class: :from},
-                    {_: :td, c: '&rarr;'},
-                    {_: :td, c: to.map{|f|Markup[Creator][f,env]}, class: :to}]}},
-           (HTML.kv post, env), # extra metadata in kv format
-           (['<br>', Markup[Date][date]] if date)]}}
-
-    Markup[InstantMessage] = -> msg, env {
-      [{c: [msg[Date].map{|d| Markup[Date][d,env,11]},
-            {class: :creator, c: msg[Creator].map{|c|Markup[Creator][c,env]}}, ' ',
-            msg[Abstract], msg[Content],
-            msg[Image].map{|i| Markup[Image][i,env]},
-            msg[Video].map{|v| Markup[Video][v,env]},
-            msg[Link].map(&:R)
-          ]},"<br>\n"]}
-
     # {k => v} -> Markup
     def self.kv hash, env
       hash.delete :name
@@ -208,9 +158,12 @@ class WebResource
       ks = resources.map(&:keys).flatten.uniq
       ks -= [Content] if env['q'].has_key? 'h'
       {_: :table, class: :table,
-       c: [({_: :tr, c: ks.map{|k|{_: :td, c: Markup[Type][k.R]}}} if head),
+       c: [({_: :tr,
+             c: ks.map{|k|
+               {_: :td, c: Markup[Type][k.R]}}} if head),
            resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
-             {_: :tr, c: ks.map{|k|
+             {_: :tr,
+              c: ks.map{|k|
                 keys = k==Title ? [Title,Image,Video] : [k]
                 {_: :td, class: k.R.fragment||k.R.basename,
                  c: keys.map{|key|
@@ -219,45 +172,7 @@ class WebResource
     end
 
     # Graph -> Tree transforms
-    Group['no'] = -> graph { graph }
-
-    # group by sender
-    Group['from'] = -> graph { Group['from-to'][graph,Creator] }
-    # group by recipient
-    Group['to'] = -> graph { Group['from-to'][graph,To] }
-    # group by sender or recipient
-    Group['from-to'] = -> graph,predicate {
-      users = {}
-      graph.values.map{|msg|
-        msg[predicate].justArray.map{|creator|
-          c = creator.to_s
-          users[c] ||= {name: c, Type => R[Container], Contains => {}}
-          users[c][Contains][msg.uri] = msg }}
-      users}
-
-    # recursive group by filesystem container
-    Group['tree'] = -> graph {
-      tree = {}
-      # visit resources
-      (graph.class==Array ? graph : graph.values).map{|resource|
-        r = resource.R
-        # walk to doc-graph
-        cursor = tree
-        r.parts.unshift(r.host||'').map{|p|p.split '%23'}.flatten.map{|name|
-          cursor[Type] ||= R[Container]
-          cursor[Contains] ||= {}
-           # create node and advance cursor
-          cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
-
-        # reference resource-data
-        if !r.fragment # graph-meta
-          resource.map{|k,v|
-            cursor[k] = cursor[k].justArray.concat v.justArray}
-        else # resources
-          cursor[Contains] ||= {}
-          cursor[Contains][r.fragment] = resource
-        end
-      }; tree }
+    Group['flat'] = -> graph { graph }
 
     # group years by decade
     Group['decades'] = -> graph {
