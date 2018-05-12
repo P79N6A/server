@@ -1,8 +1,6 @@
 # coding: utf-8
 class WebResource
   module MIME
-    include URIs
-
     # name prefix -> MIME
     MIMEprefix = {
       'authors' => 'text/plain',
@@ -215,17 +213,10 @@ class WebResource
           return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}} # terminate if serializable
       default
     end
-
   end
-  module Webize
-    include URIs
-  end
+  include MIME
   module HTML
-    include URIs
     Group = {}
     Markup = {}
   end
-  include MIME
-  include Webize
-  include HTML
 end

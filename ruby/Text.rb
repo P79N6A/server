@@ -1,6 +1,7 @@
 # coding: utf-8
 class WebResource
   module Webize
+    def lines; e ? (open localPath).readlines : [] end
 
     def triplrArchive &f;     yield uri, Type, R[Stat+'Archive']; triplrFile &f end
     def triplrAudio &f;       yield uri, Type, R[Sound]; triplrFile &f end

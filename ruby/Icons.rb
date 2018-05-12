@@ -71,7 +71,5 @@ header, nav, footer {display: none}"]]
       else
         [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
-
-    '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
   end
 end

@@ -128,12 +128,17 @@ class WebResource
     # Hash -> ?querystring
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
 
+    # HTTP handlers
+
     # find original URI via middleman
-    '.conf/hosts/minized'.R.hosts.map{|host| Host[host] = Short}
+    '.conf/hosts/minized'.R.hosts.map{|host|
+      Host[host] = Short}
 
     # unwrap URI encoded in URI
-    Host['l.instagram.com'] = -> re {[302,{'Location' => re.q['u']},[]]}
+    Host['l.instagram.com'] = Unwrap
 
+    # serve local CSS and font
+    '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
 
   end
   include HTTP

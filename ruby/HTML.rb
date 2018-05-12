@@ -239,6 +239,7 @@ class WebResource
     def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   end
+  include HTML
   module Webize
 
     # HTML -> RDF
@@ -251,6 +252,7 @@ class WebResource
     end
 
   end
+  include Webize
 end
 
 module Redcarpet

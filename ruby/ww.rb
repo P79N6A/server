@@ -1,9 +1,9 @@
 # deps
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet resolv-replace shellwords}.map{|r|require r}
 # this library
-%w{URI POSIX MIME HTTP HTML Feed JSON Text Mail Calendar Chat Icons Image}.map{|i|require_relative i}
+%w{URI MIME POSIX HTML Feed JSON Text Mail Calendar Chat Icons Image HTTP}.map{|i|require_relative i}
 
-R = WebResource # alias, TODO delete
+R = WebResource # shorthand alias
 # extend stdlib
 class Array
   # already an array
@@ -17,7 +17,7 @@ class Object
   def id; self end
   # arg exists, run block
   def do; yield self end
-  # cast to DateTime
+  # cast to Time object
   def to_time; [Time, DateTime].member?(self.class) ? self : Time.parse(self) end
 end
 class FalseClass

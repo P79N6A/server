@@ -25,8 +25,6 @@ class WebResource
 
     # read file at location
     def readFile; File.open(localPath).read end
-    def lines; e ? (open localPath).readlines : [] end
-    def hosts; lines.map{|l|l.split(' ')[1]} end
 
     # write file at location
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
@@ -238,7 +236,7 @@ class WebResource
 
   end
   module HTML
-
+    include URIs
     Markup[Container] = -> container , env {
       container.delete Type
       uri = container.delete 'uri'
