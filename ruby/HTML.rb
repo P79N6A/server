@@ -18,7 +18,7 @@ class WebResource
           (void ? '' : ('</'+(x[:_]||'div').to_s+'>'))       # close tag
       when Array # structure
         x.map{|n|render n}.join
-      when R # hyperlink
+      when R # link
         render({_: :a, href: x.uri, id: x[:id][0] || ('link'+rand.to_s.sha2), c: x[:label][0] || (CGI.escapeHTML x.uri)})
       when NilClass
         ''
@@ -34,17 +34,16 @@ class WebResource
       @r ||= {} # environment
       title = graph[path+'#this'].do{|r| r[Title].justArray[0]} ||                   # title in RDF ||
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
-      @r[:links] ||= {} # doc-graph links
+      @r[:links] ||= {} # doc-level links
       @r[:images] ||= {}  # image references
-      @r[:colors] ||= {'status' => 'background-color:#222', 'twitter.com' => 'background-color:#000', 'www.reddit.com' => 'background-color: #fff', 'r' => 'background-color: #fff', 'comments' => 'background-color: #fff'}
+      @r[:colors] ||= {}  # label -> CSS colors
       htmlGrep graph, q['q'] if q['q'] # markup search results
-      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file(s)
+      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-      link = -> name,label { # markup graph-doc (HEAD) links
-        @r[:links][name].do{|uri| [uri.R.data({id: name, label: label}), "\n"]}}
-      # Markup -> HTML
-      HTML.render ["<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\n",
-                   {_: :html, xmlns: "http://www.w3.org/1999/xhtml",
+      link = -> name,label {@r[:links][name].do{|uri|[uri.R.data({id: name, label: label}),"\n"]}} # markup doc (HEAD) link
+      # HTML <- Markup
+      HTML.render ["<!DOCTYPE html>\n\n",
+                   {_: :html,
                     c: ["\n\n",
                         {_: :head,
                          c: [{_: :meta, charset: 'utf-8'},
@@ -71,7 +70,7 @@ class WebResource
                              cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
     end
 
-    # key+value -> Markup
+    # (key,value) -> Markup
     def self.value k, v, env
       if 'uri' == k
         u = v.R
@@ -82,21 +81,21 @@ class WebResource
         v
       elsif Markup[k] # typed arc (vary incoming arc to override default resource markup)
         Markup[k][v,env]
-      elsif v.class == Hash # resource inlined data
+      elsif v.class == Hash # node w/ inlined data
         resource = v.R
         types = resource.types
-        # typed object
+        # typed node
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member?(BlogPost) || types.member?(Email)
           Markup[BlogPost][v,env]
         elsif types.member? Container
           Markup[Container][v,env]
-        else # untyped resource
+        else # generic node
           kv v,env
         end
       elsif v.class == WebResource
-        v # resource reference
+        v # node reference
       else
         CGI.escapeHTML v.to_s
       end
@@ -141,9 +140,8 @@ class WebResource
       title = container.delete Title
       contents = (container.delete(Contains)||{}).values
       color = env[:colors][name] ||= (HTML.colorizeBG name)
-      skiplabel = %w{comments}
       {class: :container, style: color,
-       c: [({_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))} unless skiplabel.member?(name)), # label
+       c: [{_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))}, # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env
            else # child nodes
@@ -185,7 +183,7 @@ class WebResource
             msg[Link].map(&:R)
           ]},"<br>\n"]}
 
-    # Resource {k => v} -> Markup
+    # {k => v} -> Markup
     def self.kv hash, env
       hash.delete :name
       ["\n",
@@ -205,7 +203,7 @@ class WebResource
            "\n"] unless hide}}, "\n"]
     end
 
-    # ResourceList [rA,rB..] -> Markup
+    # [resourceA,resourceB..] -> Markup
     def self.tabular resources, env, head = true
       ks = resources.map(&:keys).flatten.uniq
       ks -= [Content] if env['q'].has_key? 'h'
@@ -271,8 +269,9 @@ class WebResource
         decades[decade][Contains][resource.uri] = resource}
       decades}
 
+    BlankLabel = %w{comments r status twitter.com www.reddit.com}
     def self.colorize k, bg = true
-      if !k || k.empty? || k.match(/^[0-9]+$/)
+      if !k || k.empty? || BlankLabel.member?(k) || k.match(/^[0-9]+$/)
         'background-color: #fff; color: #000'
       else
         "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
