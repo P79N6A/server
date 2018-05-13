@@ -8,8 +8,8 @@ img  {max-width: 100%}
 .post .title {background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .8em; font-weight: normal; color: #000}
 .container {padding-left:1em;border-radius: .16em;margin-bottom: .1em; margin-right: .1em}
-.container > span.name {font-size: .8em;color:#fff}
-.container > span.basename {position:absolute; max-width: 9em; overflow: hidden; transform: rotate(90deg); transform-origin: top left; border-radius: 0 0 .3em .3em; padding: 0 .8em 0 .1em}
+.container > .name {font-size: .8em;color:#fff}
+.container > .basename {position:absolute;max-width: 9em; overflow: hidden; transform: rotate(90deg); transform-origin: top left; border-radius: 0 0 .3em .3em; padding: 0 .8em 0 .1em}
 .thumb {max-width: 28em}
 .date {white-space: nowrap}
 .time {color: #aaa;font-weight: normal; font-size:.8em}

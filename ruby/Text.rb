@@ -48,6 +48,7 @@ class WebResource
                            hrefs{|p,o| # hypertextify
                            # yield detected links to caller
                            yield doc, p, o
+                           yield o.uri, Type, R[Resource]
                          }})
     end
     
@@ -100,7 +101,7 @@ class String
                  end
           yield type, resource
         end
-        '') +
+        CGI.escapeHTML(resource.uri.sub /^http:../,'')) +
        '</a>') +
       (post.empty? && '' || post.hrefs(&blk)) # recursion on post-match
   end

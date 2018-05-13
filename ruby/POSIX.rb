@@ -238,7 +238,6 @@ class WebResource
   module HTML
     include URIs
     Markup[Container] = -> container , env {
-      container.delete Type
       uri = container.delete 'uri'
       name = (container.delete :name) || '' # basename
       title = container.delete Title
@@ -261,11 +260,12 @@ class WebResource
         cursor = tree
         r = resource.R
         # walk to document-graph location
-        r.parts.unshift(r.host||'').map{|p|p.split '%23'}.flatten.map{|name|
+        [r.host ? r.host.split('.').reverse : '',
+         r.parts.map{|p|p.split '%23'}].flatten.map{|name|
           cursor[Type] ||= R[Container]
           cursor[Contains] ||= {}
-           # create node if missing, advance cursor
-          cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
+           # create named-node if missing, advance cursor
+          cursor = cursor[Contains][name] ||= {name: name, Title => name, Type => R[Container]}}
         # reference to resource data
         if !r.fragment # document itself
           resource.map{|k,v|
