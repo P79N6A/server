@@ -241,7 +241,7 @@ class WebResource
   end
   include HTML
   module Webize
-
+    include URIs
     # HTML -> RDF
     def triplrHTML &f
       triplrFile &f

@@ -2,8 +2,8 @@
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet resolv-replace shellwords}.map{|r|require r}
 # this library
 %w{URI MIME POSIX HTML Feed JSON Text Mail Calendar Chat Icons Image HTTP}.map{|i|require_relative i}
-
-R = WebResource # shorthand alias
+# shorthand alias
+R = WebResource
 # extend stdlib
 class Array
   # already an array
@@ -25,7 +25,7 @@ class FalseClass
   def do; self end
 end
 class NilClass
-  # nil -> []
+  # empty array
   def justArray; [] end
   # arg missing, don't do block
   def do; self end
