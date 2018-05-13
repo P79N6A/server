@@ -128,7 +128,16 @@ class WebResource
     # Hash -> ?querystring
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
 
-    # HTTP handlers
+  end
+  include HTTP
+  module HTTP
+    # HTTP host-handlers
+
+    # hosts enumerated in static file
+    def hosts
+      lines.map{|l|
+        l.split(' ')[1]}
+    end
 
     # find original URI via middleman
     '.conf/hosts/minized'.R.hosts.map{|host|
@@ -139,7 +148,5 @@ class WebResource
 
     # serve local CSS and font
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
-
   end
-  include HTTP
 end

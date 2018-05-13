@@ -40,8 +40,15 @@ class WebResource
       mtime.do{|mt|
         yield doc, Date, mt.iso8601}
       yield doc, Content,
-            HTML.render({_: :pre, style: 'white-space: pre-wrap',
-               c: readFile.do{|r| enc ? r.force_encoding(enc).to_utf8 : r}.hrefs})
+            HTML.render({_: :pre,
+                         style: 'white-space: pre-wrap',
+                         c: readFile.do{|r|
+                           # transcode to UTF-8
+                           enc ? r.force_encoding(enc).to_utf8 : r}.
+                           hrefs{|p,o| # hypertextify
+                           # yield detected links to caller
+                           yield doc, p, o
+                         }})
     end
     
     def triplrTeX

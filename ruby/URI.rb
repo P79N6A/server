@@ -15,10 +15,10 @@ end
 Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
 
 class WebResource < RDF::URI
+  # constructor
+  def self.[] u; WebResource.new u end
   # cast to WebResource
   def R; self end
-  # classname[] constructor
-  def self.[] u; WebResource.new u end
 
   PWD = Pathname.new File.expand_path '.'
 
@@ -62,15 +62,11 @@ class WebResource < RDF::URI
     Container = W3  + 'ns/ldp#Container'
     Contains  = W3  + 'ns/ldp#contains'
 
-    alias_method :uri, :to_s
     def + u; R[to_s + u.to_s] end
     def match p; to_s.match p end
-    def hosts
-      lines.map{|l|
-        l.split(' ')[1]}
-    end
   end
   include URIs
+
   module HTTP
 
     ## short-URI resolution, cached with no expiry (do services allow editing?)
@@ -113,5 +109,5 @@ class WebResource < RDF::URI
         end}
     end
   end
-
+  alias_method :uri, :to_s
 end
