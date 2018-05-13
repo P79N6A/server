@@ -239,6 +239,7 @@ class WebResource
     include URIs
     Markup[Container] = -> container , env {
       uri = container.delete 'uri'
+      container.delete Type
       name = (container.delete :name) || '' # basename
       title = container.delete Title
       contents = (container.delete(Contains)||{}).values
@@ -265,7 +266,9 @@ class WebResource
           cursor[Type] ||= R[Container]
           cursor[Contains] ||= {}
            # create named-node if missing, advance cursor
-          cursor = cursor[Contains][name] ||= {name: name, Title => name, Type => R[Container]}}
+          cursor = cursor[Contains][name] ||= {name: name,
+                                               #Title => name,
+                                               Type => R[Container]}}
         # reference to resource data
         if !r.fragment # document itself
           resource.map{|k,v|
