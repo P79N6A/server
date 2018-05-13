@@ -72,7 +72,7 @@ class WebResource
 
     Markup[Link] = -> ref, env=nil {
       u = ref.to_s
-      [{_: :a, class: :link, title: u, href: u, c: u.sub(/^https?.../,'')}," \n"]}
+      [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,href: u, c: u.sub(/^https?.../,'')}," \n"]}
 
     Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
@@ -147,7 +147,6 @@ class WebResource
           kv v,env
         end
       elsif v.class == WebResource
-        puts "rel #{k} #{v}"
         v # node reference
       else
         CGI.escapeHTML v.to_s
@@ -229,7 +228,7 @@ class WebResource
       html.to_xhtml(:indent => 0)
     end
 
-    # parse HTML at URI to in-memory structure
+    # parse HTML
     def nokogiri; Nokogiri::HTML.parse (open uri).read end
 
   end
