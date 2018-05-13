@@ -82,10 +82,14 @@ class WebResource < RDF::URI
         cache.writeFile dest
         puts "#{re.path[1..-1]} -> #{dest}"
       end
-      [200, {'Content-Type' => 'text/html'}, [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
+      [200, {'Content-Type' => 'text/html'},
+       [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
     Unwrap = -> re {[302,{'Location' => re.q['u']},[]]}
 
+  end
+  module HTML
+    BlankLabel = %w{comments r status twitter.com www.reddit.com}
   end
   module Webize
 

@@ -70,37 +70,6 @@ class WebResource
                              cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
     end
 
-    # (key,value) -> Markup
-    def self.value k, v, env
-      if 'uri' == k
-        u = v.R
-        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
-      elsif Content == k
-        v
-      elsif Abstract == k
-        v
-      elsif Markup[k] # typed arc (vary incoming arc to override default resource markup)
-        Markup[k][v,env]
-      elsif v.class == Hash # node w/ inlined data
-        resource = v.R
-        types = resource.types
-        # typed node
-        if types.member? InstantMessage
-          Markup[InstantMessage][resource,env]
-        elsif types.member?(BlogPost) || types.member?(Email)
-          Markup[BlogPost][v,env]
-        elsif types.member? Container
-          Markup[Container][v,env]
-        else # generic node
-          kv v,env
-        end
-      elsif v.class == WebResource
-        v # node reference
-      else
-        CGI.escapeHTML v.to_s
-      end
-    end
-
     Markup[Link] = -> ref, env=nil {
       u = ref.to_s
       [{_: :a, class: :link, title: u, href: u, c: u.sub(/^https?.../,'')}," \n"]}
@@ -153,6 +122,38 @@ class WebResource
            "\n"] unless hide}}, "\n"]
     end
 
+    # (k,v) -> Markup
+    def self.value k, v, env
+      if 'uri' == k
+        u = v.R
+        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
+      elsif Content == k
+        v
+      elsif Abstract == k
+        v
+      elsif Markup[k] # typed arc (vary arc to override default resource markup)
+        Markup[k][v,env]
+      elsif v.class == Hash # node w/ inlined data
+        resource = v.R
+        types = resource.types
+        # typed node
+        if types.member? InstantMessage
+          Markup[InstantMessage][resource,env]
+        elsif types.member?(BlogPost) || types.member?(Email)
+          Markup[BlogPost][v,env]
+        elsif types.member? Container
+          Markup[Container][v,env]
+        else # generic node
+          kv v,env
+        end
+      elsif v.class == WebResource
+        puts "rel #{k} #{v}"
+        v # node reference
+      else
+        CGI.escapeHTML v.to_s
+      end
+    end
+
     # [resourceA,resourceB..] -> Markup
     def self.tabular resources, env, head = true
       ks = resources.map(&:keys).flatten.uniq
@@ -183,8 +184,6 @@ class WebResource
         decades[decade] ||= {name: decade, Contains => {}}
         decades[decade][Contains][resource.uri] = resource}
       decades}
-
-    BlankLabel = %w{comments r status twitter.com www.reddit.com}
 
     ## Utility functions
 
@@ -220,7 +219,7 @@ class WebResource
                                                         ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
     end
 
-    # dirty HTML -> cleaned/reformatted HTML
+    # dirty HTML -> cleaned, reformatted HTML
     def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
       html = Nokogiri::HTML.fragment body
       loseTags.map{|tag| html.css(tag).remove} if loseTags
