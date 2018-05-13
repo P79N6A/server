@@ -3,7 +3,6 @@
 body {font-family: sans-serif;margin: 0 1.6em 0 1.6em}
 a    {text-decoration: none; font-weight: bold; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
-.post {max-width: 48em}
 .post .newspaper {float: left; color:#000; font-size: 1.2em;font-weight: normal}
 .post .title {background-color:#000;color: #fff; border-radius: .2em}
 .post .date {float: right; font-size: .8em; font-weight: normal; color: #000}
@@ -11,11 +10,9 @@ img  {max-width: 100%}
 .container > .name {font-size: .8em;color:#fff}
 .container > .basename {position:absolute;max-width: 9em; overflow: hidden; transform: rotate(90deg); transform-origin: top left; border-radius: 0 0 .3em .3em; padding: 0 .8em 0 .1em}
 .thumb {max-width: 28em}
-.date {white-space: nowrap}
-.time {color: #aaa;font-weight: normal; font-size:.8em}
+.time {color: #bbb;font-weight: normal; font-size:.8em}
 div.creator {min-width:9ex; text-align:right}
-tr[name=link] a.link {background-color:#000; color: #fff;border-radius: .2em; margin: .08em; max-width: 20em; max-height:1em; overflow: hidden; white-space: nowrap; font-weight: normal; font-size: .9em}
-a.creator {color: #fff;border-radius: .2em; padding: 0 .18em 0 .18em}
+a.creator {color: #fff;border-radius: .2em}
 pre   {min-width: 40ex; white-space: pre-wrap }
 pre, td.v {max-width: 200ex}
 td.k a {color: #222}
@@ -23,7 +20,6 @@ td.v {overflow: hidden}
 td.from a, td.to a {}
 pre,p,span,li,pre a, p a, li a, span a {background-color: #fff;color:#000}
 pre,p {padding-left:.17em; margin: 0 0 .08em 0; border-radius: .2em; border-width: 0 0 .08em 0;border-style: solid; border-color: #ddd;}
-table {border-spacing: 0}
 h1, h2, h3, h4, h5, h6 {margin: 0}
 table, div, pre, p, a {display: inline-block}
 td {border-width: .08em 0 0 0; border-color: #eee; border-style: dotted}

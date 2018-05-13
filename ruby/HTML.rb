@@ -188,7 +188,7 @@ class WebResource
 
     def self.colorize k, bg = true
       if !k || k.empty? || BlankLabel.member?(k) || k.match(/^[0-9]+$/)
-        'background-color: #fff; color: #000'
+        'background-color: #fff; color: #000; border-width: 0 0 0 .08em; border-style: dashed; border-color: #ccc'
       else
         "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
       end
