@@ -72,7 +72,7 @@ class WebResource
 
     Markup[Link] = -> ref, env=nil {
       u = ref.to_s
-      [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,href: u, c: u.sub(/^https?.../,'')}," \n"]}
+      [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
 
     Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
