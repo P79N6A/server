@@ -168,8 +168,10 @@ class WebResource
         tree = {}
         triplr = Triplr[mime]
         unless triplr
-          puts "WARNING missing #{mime} triplr for #{uri}"
+          puts "WARNING #{uri} needs #{mime} format-support"
           triplr = :triplrFile
+        else
+#          puts "#{uri} format: #{mime} #{triplr}"
         end
         send(*triplr){|s,p,o|
           tree[s] ||= {'uri' => s}
