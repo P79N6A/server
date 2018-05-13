@@ -106,7 +106,7 @@ class WebResource
     def self.kv hash, env
       hash.delete :name
       ["\n",
-       {_: :table, class: :kv, c: hash.map{|k,vs|
+       {_: :table, class: :kv, c: hash.sort.reverse.map{|k,vs|
           type = k.R
           hide = k == Content && env['q'] && env['q'].has_key?('h')
           [{_: :tr, name: type.fragment || type.basename,
@@ -161,7 +161,14 @@ class WebResource
        c: [({_: :tr,
              c: ks.map{|k|
                {_: :td, c: Markup[Type][k.R]}}} if head),
-           resources.sort_by{|r|r[Date].justArray[0] || ''}.reverse.map{|r|
+           resources.sort_by{|r|
+             (case env['q']['sort']
+              when 'date'
+                r[Date].justArray[0]
+              else
+                r.R.basename
+              end) || ''
+           }.reverse.map{|r|
              {_: :tr,
               c: ks.map{|k|
                 keys = k==Title ? [Title,Image,Video] : [k]
