@@ -185,6 +185,9 @@ class WebResource
       decades}
 
     BlankLabel = %w{comments r status twitter.com www.reddit.com}
+
+    ## Utility functions
+
     def self.colorize k, bg = true
       if !k || k.empty? || BlankLabel.member?(k) || k.match(/^[0-9]+$/)
         'background-color: #fff; color: #000'
@@ -192,18 +195,10 @@ class WebResource
         "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
       end
     end
+    def self.colorizeBG k; colorize k end
+    def self.colorizeFG k; colorize k, false end
 
-    ## Utility functions
-
-    def self.colorizeBG k
-      colorize k
-    end
-
-    def self.colorizeFG k
-      colorize k, false
-    end
-
-    # colorize grep matches
+    # hypertext grep-results
     def htmlGrep graph, q
       wordIndex = {}
       args = POSIX.splitArgs q
