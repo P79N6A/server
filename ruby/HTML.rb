@@ -106,7 +106,8 @@ class WebResource
     def self.kv hash, env
       hash.delete :name
       ["\n",
-       {_: :table, class: :kv, c: hash.sort.reverse.map{|k,vs|
+       {_: :table, class: :kv,
+        c: hash.sort_by{|k,vs|k.to_s}.reverse.map{|k,vs|
           type = k.R
           hide = k == Content && env['q'] && env['q'].has_key?('h')
           [{_: :tr, name: type.fragment || type.basename,
