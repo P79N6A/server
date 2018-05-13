@@ -237,6 +237,7 @@ class WebResource
   end
   module HTML
     include URIs
+
     Markup[Container] = -> container , env {
       uri = container.delete 'uri'
       container.delete Type
@@ -251,7 +252,8 @@ class WebResource
            else # child nodes
              contents.map{|c|HTML.value(nil,c,env)}
            end,
-           HTML.kv(container, env)]}}
+           (HTML.kv(container, env) unless env['q'].has_key?('h'))
+          ]}}
 
     # tree of host -> pathA -> pathB -> path.. -> fragment
     Group['tree'] = -> graph {
