@@ -1,5 +1,5 @@
 * {vertical-align:top}
-.msgbody {color:#fff;background-color:#000}
+.msgbody, a[rel] {color:#fff; background-color:#000}
 body {font-family: sans-serif;margin: 0 1.6em 0 1.6em}
 a    {text-decoration: none; font-weight: bold; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
@@ -12,6 +12,7 @@ img  {max-width: 100%}
 .container > .basename {position:absolute;max-width: 9em; overflow: hidden; transform: rotate(90deg); transform-origin: top left; border-radius: 0 0 .3em .3em; padding: 0 .8em 0 .1em}
 .thumb {max-width: 28em}
 .time {color: #bbb;font-weight: normal; font-size:.8em}
+.msg a.link {color: #aaa}
 div.creator {min-width:9ex; text-align:right}
 a.creator {color: #fff;border-radius: .2em}
 pre   {min-width: 40ex; white-space: pre-wrap }
