@@ -1,5 +1,5 @@
 * {vertical-align:top}
-.msgbody, a[rel] {color:#fff; background-color:#000}
+.msgbody, a[rel], a.link {color:#fff; background-color:#000}
 body {font-family: sans-serif;margin: 0 1.6em 0 1.6em}
 a    {text-decoration: none; font-weight: bold; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
