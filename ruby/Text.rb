@@ -74,15 +74,15 @@ class String
   def utf8; force_encoding 'UTF-8' end
   def sh; Shellwords.escape self end
 
-  # text -> HTML & yielded (rel,href) tuples
+  # text -> HTML. (rel,href) tuples yielded to optional code-block
   def hrefs &blk
-                                     # <> and () wrapping stripped, trailing [,.] dropped
+    # leading/trailing [<>()] stripped, trailing [,.] dropped
     pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
     pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # pre-match
       (link.empty? && '' ||
        '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' +
        (resource = link.R
-        if blk # TODO resolve shortened link in background task
+        if blk
           type = case link
                  when /(gif|jpg|jpeg|jpg:large|png|webp)$/i
                    R::Image
