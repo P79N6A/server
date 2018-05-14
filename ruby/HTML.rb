@@ -32,13 +32,13 @@ class WebResource
     # Graph -> HTML
     def htmlDocument graph = {}
       @r ||= {} # environment
-      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} ||                   # title in RDF ||
-              [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path as title
+      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # explicit title in RDF
+              [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path + keywords
       @r[:links] ||= {} # doc-level links
       @r[:images] ||= {}  # image references
       @r[:colors] ||= {}  # label -> CSS colors
       htmlGrep graph, q['q'] if q['q'] # markup search results
-      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS file
+      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
       link = -> name,label {@r[:links][name].do{|uri|[uri.R.data({id: name, label: label}),"\n"]}} # markup doc (HEAD) link
       # HTML <- Markup
@@ -67,12 +67,17 @@ class WebResource
                                end
                              end,
                              link[:down,'&#9660;'],
-                             cssFiles.map{|f|css[f]}, "\n", {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"]}, "\n"]}]
+                             cssFiles.map{|f|css[f]}, "\n",
+                             {_: :script, c: ["\n",
+                                              '.conf/site.js'.R.readFile]}, "\n"
+                            ]}, "\n"
+                       ]}]
     end
 
     Markup[Link] = -> ref, env=nil {
       u = ref.to_s
-      [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
+      [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,
+        href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
 
     Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
@@ -90,7 +95,9 @@ class WebResource
         CGI.escapeHTML t.to_s
       end}
 
-    Markup[Date] = -> date,env=nil,offset=0 {{_: :a, class: offset == 0 ? :date : :time, href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date[offset..-1]}}
+    Markup[Date] = -> date,env=nil,offset=0 {
+      {_: :a, class: offset == 0 ? :date : :time,
+       href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date[offset..-1]}}
 
     Markup[Creator] = -> c, env {
       if c.respond_to? :uri
