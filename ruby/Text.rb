@@ -104,5 +104,8 @@ class String
         CGI.escapeHTML(resource.uri.sub /^http:../,'')) +
        '</a>') +
       (post.empty? && '' || post.hrefs(&blk)) # recursion on post-match
+  rescue
+    puts "error HREFizing #{self}"
+    ''
   end
 end
