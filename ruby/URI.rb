@@ -98,7 +98,7 @@ class WebResource < RDF::URI
       name = base.basename
 
       # URI-list file
-      yield base.uri, Type, R[DC+'List']
+      yield base.uri, Type, R[Container]
       yield base.uri, Title, name
       prefix = addHost ? "https://#{name}/" : ''
 
@@ -108,6 +108,7 @@ class WebResource < RDF::URI
         unless t.empty?
           uri = prefix + t[0]
           title = t[1..-1].join ' ' if t.size > 1
+          yield base.uri, Contains, uri.R
           yield uri, Type, R[Resource]
           yield uri, Title, title if title
         end}
