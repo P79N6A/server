@@ -255,7 +255,7 @@ class WebResource
            (HTML.kv(container, env) unless env['q'].has_key?('h'))
           ]}}
 
-    # tree of host -> pathA -> pathB -> path.. -> fragment
+    # URI controls tree structure
     Group['tree'] = -> graph {
       tree = {}
       # select resource(s)
@@ -271,11 +271,11 @@ class WebResource
           cursor = cursor[Contains][name] ||= {name: name,
                                                #Title => name,
                                                Type => R[Container]}}
-        # reference to resource data
+        # reference to data
         if !r.fragment # document itself
           resource.map{|k,v|
             cursor[k] = cursor[k].justArray.concat v.justArray}
-        else # resource local identifier
+        else # resource local data
           cursor[Contains] ||= {}
           cursor[Contains][r.fragment] = resource
         end
@@ -285,10 +285,13 @@ class WebResource
   module POSIX
     # hard-link capability test
     LinkMethod = begin
-                   file = '.cache/link'.R
-                   link = '.cache/link_'.R
-                   link.delete if link.exist?
+                   file = '~/.cache/web/link'.R
+                   link = '~/.cache/web/link_'.R
+                   # reset src-link state
                    file.touch unless file.exist?
+                   # reset dest-link state
+                   link.delete if link.exist?
+                   # try link
                    file.ln link
                    :ln
                  rescue Exception => e
