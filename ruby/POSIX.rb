@@ -243,7 +243,9 @@ class WebResource
       container.delete Type
       name = (container.delete :name) || '' # basename
       title = container.delete Title
-      contents = (container.delete(Contains)||{}).values
+      # content may be singleton, array or URI-indexed hash
+      contents = container.delete(Contains).do{|cs|
+        cs.class == Hash ? cs.values : cs }.justArray
       color = env[:colors][name] ||= (HTML.colorizeBG name)
       {class: :container, style: color,
        c: [{_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))}, # label
