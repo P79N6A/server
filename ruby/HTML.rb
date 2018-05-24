@@ -99,12 +99,13 @@ class WebResource
       {_: :a, class: offset == 0 ? :date : :time,
        href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date[offset..-1]}}
 
-    Markup[Creator] = -> c, env {
+    Markup[Creator] = -> c, env, urls=nil {
+      puts urls
       if c.respond_to? :uri
         u = c.R
         name = u.fragment || u.basename.do{|b|b=='/' ? u.host : b} || u.host || 'user'
         color = env[:colors][name] ||= (HTML.colorizeBG name)
-        {_: :a, class: :creator, style: color, href: c.uri, c: name}
+        {_: :a, class: :creator, style: color, href: urls.justArray[0] || c.uri, c: name}
       else
         CGI.escapeHTML (c||'')
       end}

@@ -7,8 +7,11 @@ class WebResource
     Markup[InstantMessage] = -> msg, env {
       abbr = env['q'].has_key? 'h'
       [{class: :msg,
-        c: [([msg[Date].map{|d| Markup[Date][d,env,11]},
-              {class: :creator, c: msg[Creator].map{|c|Markup[Creator][c,env]}}, ' ',
+        c: [([msg[Date].map{|d|
+                Markup[Date][d,env,11]},
+              {class: :creator,
+               c: msg[Creator].map{|c|
+                 Markup[Creator][c,env,msg.uri]}}, ' ',
               msg[Abstract], msg[Content]] unless abbr),
             msg[Image].map{|i| Markup[Image][i,env]},
             msg[Video].map{|v| Markup[Video][v,env]},
