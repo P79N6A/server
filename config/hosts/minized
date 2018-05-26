@@ -1,4 +1,4 @@
-# URL shorteners
+# short-URL host
 127.0.0.1 l.instagram.com
 127.0.0.1 t.co
 127.0.0.1 nyer.cm
@@ -13,5 +13,6 @@
 127.0.0.1 ow.ly
 127.0.0.1 n.pr
 127.0.0.1 a.co
+127.0.0.1 exit.sc
 127.0.0.1 youtu.be
 127.0.0.1 buff.ly
