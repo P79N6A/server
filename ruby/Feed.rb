@@ -7,7 +7,8 @@ class WebResource
     def feeds; puts (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
     def fetchFeed
-      head = {} # request header
+      puts "fetch #{uri} .."
+      head = {}
       cache = R['/.cache/'+uri.sha2+'/'] # storage
       etag = cache + 'etag'      # cache etag URI
       priorEtag = nil            # cache etag value
@@ -21,16 +22,16 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
-      begin # conditional GET
+      begin # conditional cache-update
         open(uri, head) do |response|
           curEtag = response.meta['etag']
           curMtime = response.last_modified || Time.now rescue Time.now
-          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # new ETag value
-          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # new Last-Modified value
+          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # ETag
+          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified
           resp = response.read
           unless body.e && body.readFile == resp
-            body.writeFile resp # new cached body
-            ('file:'+body.localPath).R.indexFeed :format => :feed, :base_uri => uri # run indexer
+            body.writeFile resp # body
+            ('file:'+body.localPath).R.indexFeed :format => :feed, :base_uri => uri # index content
           end
         end
       rescue OpenURI::HTTPError => error

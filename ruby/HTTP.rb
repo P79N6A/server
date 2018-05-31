@@ -46,14 +46,11 @@ class WebResource
       @r[:links] = {}
 
       return fileResponse if node.file? # static resource
-      return Host[@r['HTTP_HOST']][self] if Host[@r['HTTP_HOST']] # bespoke handler
-#      return [302,{'Location' => path + '/' + qs},[]] if directory? && path[-1] != '/' # redirect to inside requested dir
-
-      # time-based directories
-      return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
-      dp = [] # date parts
-      dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
+      return Host[@r['HTTP_HOST']][self] if Host[@r['HTTP_HOST']] # host-mapped handler
+      return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # direct to datetime-segment
       # page pointers
+      dp = [] # datetime parts
+      dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
       n = nil; p = nil
       case dp.length
       when 1 # Y

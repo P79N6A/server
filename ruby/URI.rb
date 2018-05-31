@@ -97,15 +97,15 @@ class WebResource < RDF::URI
       base = stripDoc
       name = base.basename
 
-      # URI-list file
+      # containing file
       yield base.uri, Type, R[Container]
       yield base.uri, Title, name
       prefix = addHost ? "https://#{name}/" : ''
 
-      # URIs
       lines.map{|line|
         t = line.chomp.split ' '
         unless t.empty?
+          # URI
           uri = prefix + t[0]
           title = t[1..-1].join ' ' if t.size > 1
           yield base.uri, Contains, uri.R
