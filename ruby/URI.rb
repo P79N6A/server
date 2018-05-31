@@ -89,7 +89,7 @@ class WebResource < RDF::URI
 
   end
   module HTML
-    BlankLabel = %w{comments r status www com}
+    BlankLabel = %w{com comments r status twitter www}
   end
   module Webize
 
