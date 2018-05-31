@@ -7,7 +7,6 @@ class WebResource
     def feeds; puts (nokogiri.css 'link[rel=alternate]').map{|u|join u.attr :href} end
 
     def fetchFeed
-      puts "fetch #{uri} .."
       head = {}
       cache = R['/.cache/'+uri.sha2+'/'] # storage
       etag = cache + 'etag'      # cache etag URI
@@ -30,6 +29,7 @@ class WebResource
           mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified
           resp = response.read
           unless body.e && body.readFile == resp
+            puts "fetch #{uri} .."
             body.writeFile resp # body
             ('file:'+body.localPath).R.indexFeed :format => :feed, :base_uri => uri # index content
           end
