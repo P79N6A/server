@@ -203,11 +203,8 @@ class WebResource
     ## Utility functions
 
     def self.colorize k, bg = true
-      if !k || k.empty? || BlankLabel.member?(k) || k.match(/^[0-9]+$/)
-        'background-color: #000; color: #fff'
-      else
-        "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
-      end
+      return '' if !k || k.empty? || BlankLabel.member?(k) || k.match(/^[0-9]+$/)
+      "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
     end
     def self.colorizeBG k; colorize k end
     def self.colorizeFG k; colorize k, false end

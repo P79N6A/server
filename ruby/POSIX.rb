@@ -247,8 +247,9 @@ class WebResource
       contents = container.delete(Contains).do{|cs|
         cs.class == Hash ? cs.values : cs }.justArray
       color = env[:colors][name] ||= (HTML.colorizeBG name)
-      {class: :container, style: color,
-       c: [{_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))}, # label
+      blank = BlankLabel.member? name
+      {class: :container, style: color + "; " + (blank ? '' : 'margin-left: 1em'),
+       c: [({_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))} unless blank), # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env
            else # child nodes
