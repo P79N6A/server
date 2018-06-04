@@ -168,6 +168,7 @@ class WebResource
     # file -> RDF
     def triplrFile
       s = path
+      yield s, Title, basename
       size.do{|sz| yield s, Size, sz}
       mtime.do{|mt|
         yield s, Mtime, mt.to_i
