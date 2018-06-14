@@ -5,27 +5,32 @@ INSTALL install.sh runs out of the box on Termux and gem/bundler/rbenv configs w
 
 	OR build/install a Gem or Bundle. see included Gemfile.
 
-CONFIG within uid-containment + app sandboxing as much as possible, prefer solutions that DO NOT involve
-       binding <1024 ports, editing /etc/hosts, or libc-specific LD_PRELOAD DNS-resolver hacks.
-       OS/sandbox/kernel config is prefixed with @, app-sandboxed prefixed with $.
-       port-numbers in parentheses.
+CONFIG for support of app sandboxing modern OSes, prefer solutions that DO NOT involve superuser
+       favor user-configurable proxy + if-needed DNS server settings
 
- HTTP (80) bind service
+      syntax notes:
+       OS/sandbox/kernel config prefixed with @, process spec with $
+       port-numbers in parentheses. select one conf-block per port or invent your own
+
+      (80) port map via routing-table
+      @ iptables -t nat -A OUTPUT -p tcp -o lo --dport 80 -j REDIRECT --to-ports 8000
+
+      (80) HTTP daemon
       @ setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/ruby`
-      $ unicorn -p 80 .conf/rack.ru
+      $ unicorn -o localhost -p 80 .conf/rack.ru
 
-      (80) routing-table
-      @ 
-
-      (80) reverse-proxy
+      (80) reverse proxy
       $ mitmdump --showhost -p 80 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-      (8000) local service
-      $ unicorn -o localhost -p 8000 .conf/rack.ru
+      (443) port map via routing-table
+      @ iptables -t nat -A OUTPUT -p tcp -o lo --dport 443 -j REDIRECT --to-ports 8080
 
-HTTPS (443) SSL frontend
+      (443) HTTPS daemon
       @ setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/python`
       $ mitmdump --showhost -p 443 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-      (8080) proxy port
+      (8000) HTTP daemon
+      $ unicorn -o localhost -p 8000 .conf/rack.ru
+
+      (8080) HTTPS proxy
       $ mitmdump --showhost -m reverse:http://localhost:8000 --set keep_host_header=true
