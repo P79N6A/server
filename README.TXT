@@ -5,15 +5,12 @@ INSTALL install.sh runs out of the box on Termux and gem/bundler/rbenv configs w
 
 	OR build/install a Gem or Bundle. see included Gemfile.
 
-CONFIG for support of app sandboxing modern OSes, prefer solutions that DO NOT involve superuser
-       favor user-configurable proxy + if-needed DNS server settings
-
-      syntax notes:
-       OS/sandbox/kernel config prefixed with @, process spec with $
-       port-numbers in parentheses. select one conf-block per port or invent your own
+CONFIG
+      @ = OS/sandbox/kernel config
+      $ = process spec
 
       (80) port map via routing-table
-      @ iptables -t nat -A OUTPUT -p tcp -o lo --dport 80 -j REDIRECT --to-ports 8000
+      @ iptables -t nat -A OUTPUT -p tcp --dport 80 -j REDIRECT --to-ports 8000
 
       (80) HTTP daemon
       @ setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/ruby`
@@ -23,7 +20,7 @@ CONFIG for support of app sandboxing modern OSes, prefer solutions that DO NOT i
       $ mitmdump --showhost -p 80 -m reverse:http://localhost:8000 --set keep_host_header=true
 
       (443) port map via routing-table
-      @ iptables -t nat -A OUTPUT -p tcp -o lo --dport 443 -j REDIRECT --to-ports 8080
+      @ iptables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080
 
       (443) HTTPS daemon
       @ setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/python`
