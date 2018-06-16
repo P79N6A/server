@@ -29,7 +29,6 @@ class WebResource
           mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified
           resp = response.read
           unless body.e && body.readFile == resp
-            puts "fetch #{uri} .."
             body.writeFile resp # body
             ('file:'+body.localPath).R.indexFeed :format => :feed, :base_uri => uri # index content
           end
