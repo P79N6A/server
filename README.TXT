@@ -7,10 +7,10 @@ USAGE  @ = OS/sandbox/kernel config
       @ iptables -t nat -A OUTPUT -p tcp --dport 80 -j REDIRECT --to-ports 8000
 
       (443) port map
-      @ iptables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8888
+      @ iptables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080
 
       (8000) HTTP daemon
       $ unicorn -o localhost -p 8000 .conf/rack.ru
 
-      (8888) HTTPS proxy
-      $ mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
+      (8080) HTTPS proxy
+      $ mitmdump -p 8080 -m reverse:http://localhost:8000 --set keep_host_header=true
