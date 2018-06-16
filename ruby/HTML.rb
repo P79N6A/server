@@ -165,7 +165,6 @@ class WebResource
     # [resourceA,resourceB..] -> Markup
     def self.tabular resources, env, head = true
       ks = resources.map(&:keys).flatten.uniq
-      ks -= [Content] if env['q'].has_key? 'h'
       {_: :table, class: :table,
        c: [({_: :tr,
              c: ks.map{|k|
