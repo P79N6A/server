@@ -6,12 +6,12 @@ class WebResource
 
     # Rack hands us control, dispatch appropriate method
     def self.call env
+      print (env['HTTP_REFERER']||'') + ' ' + env['HTTP_HOST'] + ' ' + (env['HTTP_USER_AGENT']||'') + ' '
       return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # requested path
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
       env['q'] = parseQs env['QUERY_STRING']               # parse query
-      puts "\n" + env['HTTP_HOST'] + " " + (env['HTTP_REFERER']||'') + " " + (env['HTTP_USER_AGENT']||'')
       path.R.environment(env).send env['REQUEST_METHOD']   # call HTTP-method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
