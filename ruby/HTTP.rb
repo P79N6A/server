@@ -1,13 +1,14 @@
 # coding: utf-8
 class WebResource
   module HTTP
+    Methods = %w{HEAD GET OPTIONS POST PUT}
     include URIs
     Host = {}
 
     # Rack hands us control, dispatch appropriate method
     def self.call env
       print (env['HTTP_REFERER']||'') + ' ' + env['HTTP_HOST'] + ' ' + (env['HTTP_USER_AGENT']||'') + ' '
-      return [405,{},[]] unless %w{HEAD GET}.member? env['REQUEST_METHOD']
+      return [405,{},[]] unless Methods.member? env['REQUEST_METHOD']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # requested path
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
@@ -40,6 +41,9 @@ class WebResource
     alias_method :env, :environment
 
     def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
+    def OPTIONS; [200,{},[]] end
+    def POST; [200,{},[]] end
+    def PUT; [200,{},[]] end
 
     def GET
       @r[:Response] = {}
