@@ -116,7 +116,7 @@ class WebResource
       ["\n",
        {_: :table, class: :kv,
         c: hash.sort_by{|k,vs|k.to_s}.reverse.map{|k,vs|
-          type = k.R
+          type = k && k.R || '#untyped'.R
           hide = k == Content && env['q'] && env['q'].has_key?('h')
           [{_: :tr, name: type.fragment || type.basename,
             c: ["\n ",

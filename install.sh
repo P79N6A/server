@@ -1,7 +1,9 @@
 #!/bin/sh
-# apt install  graphicsmagick git ruby pkg-config ruby-dev libssl-dev libxml2-dev libxslt1-dev
-# pkg install  graphicsmagick git ruby pkg-config ruby-dev grep file findutils libxslt-dev
-# pacman -S    graphicsmagick git ruby base-devel python-pip libxml2 libxslt
+
+# apt install graphicsmagick git ruby ruby-dev libssl-dev libxml2-dev libxslt1-dev
+# pkg install graphicsmagick git ruby ruby-dev grep file findutils libxslt-dev
+# pacman -S   graphicsmagick git ruby python-pip libxml2 libxslt
+
 cd ruby
 ruby install
 pip install --upgrade pygments
