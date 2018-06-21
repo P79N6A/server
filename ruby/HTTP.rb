@@ -146,8 +146,9 @@ class WebResource
     '.conf/hosts/minized'.R.hosts.map{|host|
       Host[host] = Short}
 
-    # unwrap URI encoded in URI
-    Host['l.instagram.com'] = Unwrap
+    # unwrap URI inside URI
+    Host['exit.sc'] = Unwrap[:url]
+    Host['l.instagram.com'] = Unwrap[:u]
 
     # serve local CSS and font
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}

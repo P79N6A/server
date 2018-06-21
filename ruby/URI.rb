@@ -85,7 +85,8 @@ class WebResource < RDF::URI
       [200, {'Content-Type' => 'text/html'},
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
-    Unwrap = -> re {[302,{'Location' => re.q['u']},[]]}
+    Unwrap = -> key {
+      -> re {[302,{'Location' => re.q[key.to_s]},[]]}}
 
   end
   module HTML
