@@ -4,5 +4,5 @@ do
     r .conf/hyper.u fetchFeeds
     r .conf/twitter.com.bu twitter
     date
-    sleep 30m
+    sleep 42m
 done
