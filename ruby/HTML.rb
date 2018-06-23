@@ -31,16 +31,25 @@ class WebResource
 
     # Graph -> HTML
     def htmlDocument graph = {}
-      @r ||= {} # environment
-      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} || # explicit title in RDF
+      @r ||= {} # HEAD
+      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} ||                     # explicit title
               [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path + keywords
-      @r[:links] ||= {} # doc-level links
-      @r[:images] ||= {}  # image references
-      @r[:colors] ||= {}  # label -> CSS colors
-      htmlGrep graph, q['q'] if q['q'] # markup search results
-      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}} # inline CSS
+
+      # HEAD links
+      @r[:links] ||= {}
+      @r[:images] ||= {}
+      @r[:colors] ||= {}
+
+      # filter graph w/ HTML result
+      htmlGrep graph, q['q'] if q['q']
+
+      # name -> CSS tag
+      css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}}
       cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
-      link = -> name,label {@r[:links][name].do{|uri|[uri.R.data({id: name, label: label}),"\n"]}} # markup doc (HEAD) link
+
+      # HEAD links -> HTML
+      link = -> name,label {@r[:links][name].do{|uri|[uri.R.data({id: name, label: label}),"\n"]}}
+
       # HTML <- Markup
       HTML.render ["<!DOCTYPE html>\n\n",
                    {_: :html,
