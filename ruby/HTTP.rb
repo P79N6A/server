@@ -7,8 +7,7 @@ class WebResource
 
     # Rack hands us control, dispatch appropriate method
     def self.call env
-      puts "UA " + (env['HTTP_USER_AGENT']||'')
-      puts (env['HTTP_REFERER']||'') + " → " + env['HTTP_HOST'] + env['REQUEST_PATH']
+      puts "\e[36;1m" + (env['HTTP_REFERER']||'') + "\e[0m → \e[1m" + env['HTTP_HOST'] + "\e[2m" + env['REQUEST_PATH'] + "\e[0m   \e[37;2m" + (env['HTTP_USER_AGENT']||'') + "\e[0m"
       return [405,{},[]] unless Methods.member? env['REQUEST_METHOD']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # requested path
       path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
