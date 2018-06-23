@@ -2,18 +2,18 @@
    border-radius: .2em;
    margin: .1em; border: .05em dotted #888}
 
-#up,#down,#prev,#next {font-size: 1.8em; color: #fff}
-#prev,#next {position:fixed; height: 100%}
-#prev {left: 0; top:0}
-#next {right: 0; top:0}
+#up,#down,#prev,#next {font-size: 1.8em; color: #333}
+#prev,#next {position: fixed; height: 100%}
+#prev {left: 0; top: 0}
+#next {right: 0; top: 0}
 
 body {font-family: sans-serif;margin: 0 1.6em 0 1.6em}
 a    {text-decoration: none; font-weight: bold; max-width: 28em; overflow: hidden; }
 img  {max-width: 100%}
 img.thumb {max-width: 28em}
 .title, .bw {background-color:#000;color: #fff}
-        .wb {background-color:#fff;color: #000}
-.container > .basename {position:absolute;max-width: 9em; overflow: hidden; transform: rotate(90deg); transform-origin: top left;}
+.wb {background-color:#fff;color: #000}
+.container > .basename {color: #888}
 pre   {white-space: pre-wrap}
 pre,p,span,li,pre a, p a, li a, span a {background-color: #fff; color:#000; max-width:48ex}
 table, div, pre, p, a {display: inline-block}
