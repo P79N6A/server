@@ -13,7 +13,7 @@ img  {max-width: 100%}
 img.thumb {max-width: 28em}
 .bw, body {background-color:#000;color: #fff}
 .wb {background-color:#fff;color: #000}
-.container > .basename {color: #888; font-size: .8em}
+.container {margin: .3em}
 pre   {white-space: pre-wrap}
 pre, p, span, li {background-color: #fff; color:#000; max-width:48ex}
 table, div, pre, p, a {display: inline-block}

@@ -88,10 +88,10 @@ class WebResource
       [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,
         href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
 
-    Markup[Title] = -> title,env=nil,url=nil {
+    Markup[Title] = -> title,env=nil,url=nil,flip='bw' {
       title = CGI.escapeHTML title.to_s
       if url
-        {_: :h3, c: {_: :a, class: :title, c: title, href: url, id: 'post'+rand.to_s.sha2}}
+        {_: :h3, c: {_: :a, class: flip, c: title, href: url, id: 'post'+rand.to_s.sha2}}
       else
         {_: :h3, c: title}
       end}

@@ -250,7 +250,7 @@ class WebResource
         cs.class == Hash ? cs.values : cs }.justArray
       blank = BlankLabel.member? name
       {class: 'container ' + flip, style: blank ? '' : 'margin-left: 1em',
-       c: [({_: :span, class: "name #{title ? '' : 'basename'}", c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))} unless blank), # label
+       c: [(title ? Markup[Title][title.justArray[0], env, uri.justArray[0], flip] : CGI.escapeHTML(name) unless blank), # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env, flip
            else # child nodes
