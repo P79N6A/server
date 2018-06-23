@@ -62,7 +62,10 @@ class WebResource
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
                              css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
-                         c: ["\n", link[:up, '&#9650;'], link[:prev, '&#9664;'], link[:next, '&#9654;'],
+                         c: ["\n",
+                             link[:up, '&#9650;'], ({_: :a, id: :upgrade, class: :lock, href: 'https://'+@r['HTTP_HOST']+(path||'')} unless @r['rack.url_scheme'] == 'https'),
+                             link[:prev, '&#9664;'],
+                             link[:next, '&#9654;'],
                              if graph.empty?
                                [{_: :h1, c: 404}, HTML.kv(@r,@r)]
                              else
@@ -147,7 +150,7 @@ class WebResource
       flop = flip == 'bw' ? 'wb' : 'bw'
       if 'uri' == k
         u = v.R
-        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, class: flop, c: "#{u.host} #{u.path} #{u.fragment}"}
+        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, class: flip, c: "#{u.host} #{u.path} #{u.fragment}"}
       elsif Content == k
         v
       elsif Abstract == k
