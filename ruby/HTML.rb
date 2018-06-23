@@ -119,7 +119,7 @@ class WebResource
         CGI.escapeHTML (c||'')
       end}
 
-    # {k => v} -> Markup
+    # {k => v} table -> Markup
     def self.kv hash, env
       hash.delete :name
       ["\n",
@@ -140,7 +140,7 @@ class WebResource
            "\n"] unless hide}}, "\n"]
     end
 
-    # (k,v) -> Markup
+    # (k,v) tuple -> Markup
     def self.value k, v, env
       if 'uri' == k
         u = v.R
@@ -195,7 +195,6 @@ class WebResource
                      HTML.value key,v,env }.intersperse(' ')}}}}}]}
     end
 
-    # Graph -> Tree transforms
     Group['flat'] = -> graph { graph }
 
     # group years by decade
