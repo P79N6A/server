@@ -50,9 +50,13 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
 
-      return fileResponse if node.file? # static resource
-      return Host[@r['HTTP_HOST']][self] if Host[@r['HTTP_HOST']] # host-mapped handler
-      return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # direct to datetime-segment
+      # bespoke handlers
+      return fileResponse if node.file?
+      # host-mapped
+      return Host[@r['HTTP_HOST']][self] if Host[@r['HTTP_HOST']]
+      # current timeseg redirect
+      return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
+
       # page pointers
       dp = [] # datetime parts
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
@@ -81,6 +85,7 @@ class WebResource
           n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
         end
       end
+
       sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '') # preserve trailing slash
       @r[:links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
       @r[:links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
