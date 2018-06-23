@@ -19,7 +19,7 @@ class WebResource
       when Array # structure
         x.map{|n|render n}.join
       when R # link
-        render({_: :a, href: x.uri, id: x[:id][0] || ('link'+rand.to_s.sha2), c: x[:label][0] || (CGI.escapeHTML x.uri)})
+        render({_: :a, href: x.uri, id: x[:id][0] || ('link'+rand.to_s.sha2), class: x[:class][0], c: x[:label][0] || (CGI.escapeHTML x.uri)})
       when NilClass
         ''
       when FalseClass
@@ -96,10 +96,10 @@ class WebResource
         {_: :h3, c: title}
       end}
 
-    Markup[Type] = -> t,env=nil {
+    Markup[Type] = -> t,env=nil,flip='bw' {
       if t.respond_to? :uri
         t = t.R
-        {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}
+        {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: flip + ' ' + Icons[t.uri].to_s}
       else
         CGI.escapeHTML t.to_s
       end}
@@ -130,13 +130,13 @@ class WebResource
           hide = k == Content && env['q'] && env['q'].has_key?('h')
           [{_: :tr, name: type.fragment || type.basename,
             c: ["\n ",
-                {_: :td, class: 'k ' + flip, c: Markup[Type][type]},"\n ",
+                {_: :td, class: 'k ' + flip, c: Markup[Type][type, flip]},"\n ",
                 {_: :td, class: 'v ' + flip,
                  c: if k == Contains && vs.values.size > 1
                   tabular vs.values, env, false, flop
                 else
                   vs.justArray.map{|v|
-                    HTML.value k, v, env, flop }.intersperse(' ')
+                    HTML.value k, v, env, flip }.intersperse(' ')
                  end
                 }]},
            "\n"] unless hide}}, "\n"]
@@ -147,7 +147,7 @@ class WebResource
       flop = flip == 'bw' ? 'wb' : 'bw'
       if 'uri' == k
         u = v.R
-        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
+        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, class: flop, c: "#{u.host} #{u.path} #{u.fragment}"}
       elsif Content == k
         v
       elsif Abstract == k
@@ -161,14 +161,14 @@ class WebResource
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member?(BlogPost) || types.member?(Email)
-          Markup[BlogPost][v,env]
+          Markup[BlogPost][v,env,flip]
         elsif types.member? Container
           Markup[Container][v,env,flop]
         else # generic node
-          kv v, env, flop
+          kv v, env, flip
         end
       elsif v.class == WebResource
-        v # node reference
+        v.data({class: flip}) # node reference
       else
         CGI.escapeHTML v.to_s
       end
