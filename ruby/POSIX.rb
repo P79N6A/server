@@ -252,9 +252,9 @@ class WebResource
       {class: 'container ' + flip, style: blank ? '' : 'margin-left: 1em',
        c: [({_: :span, class: "name #{title ? '' : 'basename'}", c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))} unless blank), # label
            if env['q'].has_key? 't'
-             HTML.tabular contents, env, flop
+             HTML.tabular contents, env, flip
            else # child nodes
-             contents.map{|c|HTML.value(nil,c,env,flop)}
+             contents.map{|c|HTML.value(nil,c,env,flip)}
            end,
            (HTML.kv(container, env, flip) unless env['q'].has_key?('h'))
           ]}}

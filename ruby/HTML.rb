@@ -165,7 +165,7 @@ class WebResource
         elsif types.member? Container
           Markup[Container][v,env,flop]
         else # generic node
-          kv v,env,flip
+          kv v, env, flop
         end
       elsif v.class == WebResource
         v # node reference
@@ -193,10 +193,10 @@ class WebResource
              {_: :tr,
               c: ks.map{|k|
                 keys = k==Title ? [Title,Image,Video] : [k]
-                {_: :td, class: k.R.fragment||k.R.basename,
+                {_: :td, class: flip,
                  c: keys.map{|key|
                    r[key].justArray.map{|v|
-                     HTML.value key,v,env,flop }.intersperse(' ')}}}}}]}
+                     HTML.value key,v,env,flip }.intersperse(' ')}}}}}]}
     end
 
     Group['flat'] = -> graph { graph }
