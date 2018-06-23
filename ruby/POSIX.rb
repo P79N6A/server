@@ -239,7 +239,8 @@ class WebResource
   module HTML
     include URIs
 
-    Markup[Container] = -> container , env {
+    Markup[Container] = -> container , env, flip = 'bw' {
+      flop = flip == 'bw' ? 'wb' : 'bw'
       uri = container.delete 'uri'
       container.delete Type
       name = (container.delete :name) || '' # basename
@@ -247,16 +248,15 @@ class WebResource
       # content may be singleton, array or URI-indexed hash
       contents = container.delete(Contains).do{|cs|
         cs.class == Hash ? cs.values : cs }.justArray
-      color = env[:colors][name] ||= (HTML.colorizeBG name)
       blank = BlankLabel.member? name
-      {class: :container, style: color + "; " + (blank ? '' : 'margin-left: 1em'),
-       c: [({_: :span, class: "name #{title ? '' : 'basename'}", style: color, c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))} unless blank), # label
+      {class: 'container ' + flip, style: blank ? '' : 'margin-left: 1em',
+       c: [({_: :span, class: "name #{title ? '' : 'basename'}", c: (title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name))} unless blank), # label
            if env['q'].has_key? 't'
-             HTML.tabular contents, env
+             HTML.tabular contents, env, flop
            else # child nodes
-             contents.map{|c|HTML.value(nil,c,env)}
+             contents.map{|c|HTML.value(nil,c,env,flop)}
            end,
-           (HTML.kv(container, env) unless env['q'].has_key?('h'))
+           (HTML.kv(container, env, flip) unless env['q'].has_key?('h'))
           ]}}
 
     # URI controls tree structure

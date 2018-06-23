@@ -120,7 +120,8 @@ class WebResource
       end}
 
     # {k => v} table -> Markup
-    def self.kv hash, env
+    def self.kv hash, env, flip = 'bw'
+      flop = flip == 'bw' ? 'wb' : 'bw'
       hash.delete :name
       ["\n",
        {_: :table, class: :kv,
@@ -129,19 +130,21 @@ class WebResource
           hide = k == Content && env['q'] && env['q'].has_key?('h')
           [{_: :tr, name: type.fragment || type.basename,
             c: ["\n ",
-                {_: :td, class: :k, c: Markup[Type][type]},"\n ",
-                {_: :td, class: :v,
+                {_: :td, class: 'k ' + flip, c: Markup[Type][type]},"\n ",
+                {_: :td, class: 'v ' + flip,
                  c: if k == Contains && vs.values.size > 1
-                  tabular vs.values, env, false
+                  tabular vs.values, env, false, flop
                 else
-                  vs.justArray.map{|v|HTML.value k,v,env}.intersperse(' ')
+                  vs.justArray.map{|v|
+                    HTML.value k, v, env, flop }.intersperse(' ')
                  end
                 }]},
            "\n"] unless hide}}, "\n"]
     end
 
     # (k,v) tuple -> Markup
-    def self.value k, v, env
+    def self.value k, v, env, flip='wb'
+      flop = flip == 'bw' ? 'wb' : 'bw'
       if 'uri' == k
         u = v.R
         {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
@@ -160,9 +163,9 @@ class WebResource
         elsif types.member?(BlogPost) || types.member?(Email)
           Markup[BlogPost][v,env]
         elsif types.member? Container
-          Markup[Container][v,env]
+          Markup[Container][v,env,flop]
         else # generic node
-          kv v,env
+          kv v,env,flip
         end
       elsif v.class == WebResource
         v # node reference
@@ -172,7 +175,8 @@ class WebResource
     end
 
     # [resourceA,resourceB..] -> Markup
-    def self.tabular resources, env, head = true
+    def self.tabular resources, env, head = true, flip = 'bw'
+      flop = flip == 'bw' ? 'wb' : 'bw'
       ks = resources.map(&:keys).flatten.uniq
       {_: :table, class: :table,
        c: [({_: :tr,
@@ -192,7 +196,7 @@ class WebResource
                 {_: :td, class: k.R.fragment||k.R.basename,
                  c: keys.map{|key|
                    r[key].justArray.map{|v|
-                     HTML.value key,v,env }.intersperse(' ')}}}}}]}
+                     HTML.value key,v,env,flop }.intersperse(' ')}}}}}]}
     end
 
     Group['flat'] = -> graph { graph }
