@@ -65,7 +65,8 @@ class WebResource
         re.fileResponse
       elsif re.path == '/css'
         [200, {'Content-Type' => 'text/css'},
-         ["* {background-color: #000 !important; color: #fff !important; font-family: sans-serif}
+         ["* {background-color: #000; color: #fff; font-family: sans-serif}
+div,p,span,td {background-color: #000 !important; color: #fff !important}
 a {text-decoration:none; font-weight: bold; color: #0f0 !important}
 header, nav, footer {display: none}"]]
       else
