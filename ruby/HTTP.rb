@@ -42,8 +42,8 @@ class WebResource
 
     def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
     def OPTIONS; [200,{},[]] end
-    def POST; [200,{},[]] end
-    def PUT; [200,{},[]] end
+    def POST; [202,{},[]] end
+    def PUT; [202,{},[]] end
 
     def GET
       @r[:Response] = {}
