@@ -12,7 +12,7 @@ class Symbol
 end
 
 # parametric nameserver via env-var
-Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
+#Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
 
 class WebResource < RDF::URI
   # constructor
