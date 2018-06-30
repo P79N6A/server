@@ -1,19 +1,16 @@
-* {vertical-align: top;
-   border-radius: .2em;
-   margin: .1em}
+* {vertical-align: top; margin:.08em; border-radius:.18em}
 
 #up,#down,#prev,#next {font-size: 1.8em; color: #333}
 #prev,#next {position: fixed; height: 100%}
 #prev {left: 0; top: 0}
 #next {right: 0; top: 0}
 
-body {font-family: sans-serif;margin: 0 1.6em 0 1.6em}
-a    {text-decoration: none; font-weight: bold; max-width: 28em; overflow: hidden; }
+body {font-family: sans-serif;margin: 0 1.8em 0 1.8em}
+a    {text-decoration: none; font-weight: bold}
 img  {max-width: 100%}
 img.thumb {max-width: 28em}
 .bw, body {background-color:#000;color: #fff}
 .wb {background-color:#fff;color: #000}
-.container {margin: .3em}
 .basename {font-size: .8em; color: #333}
 pre   {white-space: pre-wrap}
 pre, p, span, li {background-color: #fff; color:#000; max-width:48ex; padding: .08em}
