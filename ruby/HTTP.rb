@@ -7,15 +7,33 @@ class WebResource
 
     # Rack hands us control, dispatch appropriate method
     def self.call env
+      # log some stuff
       puts "\e[36m" + (env['HTTP_REFERER']||'') + "\e[0m → \e[1m" + env['HTTP_HOST'] + "\e[2m" + env['REQUEST_PATH'] + "\e[0m   \e[30;1m" + (env['HTTP_USER_AGENT']||'') + "\e[0m"
+
+      # method in supported whitelist
       return [405,{},[]] unless Methods.member? env['REQUEST_METHOD']
-      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/' # requested path
-      path = Pathname.new(rawpath).expand_path.to_s        # evaluate path
-      path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-      env['q'] = parseQs env['QUERY_STRING']               # parse query
-      path.R.environment(env).send env['REQUEST_METHOD']   # call HTTP-method
+
+      # HTTP requested path
+      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
+
+      # evaluate path-expression
+      path = Pathname.new(rawpath).expand_path.to_s
+
+      # preserve trailing-slash
+      path += '/' if path[-1] != '/' && rawpath[-1] == '/'
+
+      # attach parsed query to environment
+      env['q'] = parseQs env['QUERY_STRING']
+
+      # call HTTP function
+      path.R.environment(env).send env['REQUEST_METHOD']
+
+      # error handler
     rescue Exception => x
-      [500,{'Content-Type'=>'text/plain'},[[x.class,x.message,x.backtrace].join("\n")]]
+      [500,{'Content-Type'=>'text/plain'},
+       [[x.class,
+         x.message,
+         x.backtrace].join("\n")]]
     end
 
     def self.parseQs qs
