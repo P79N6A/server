@@ -40,22 +40,26 @@ class WebResource
       node.delete
     end
 
-    # contained children minus hidden nodes
-    def children; node.children.delete_if{|f|f.basename.to_s.index('.')==0}.map &:R end
+    # contained children, minus hidden
+    def children; node.children.delete_if{|f|
+        f.basename.to_s.index('.')==0
+      }.map &:R end
 
-    # dirname of mapped path
+    # dirname as resource reference
     def dir; dirname.R if path end
+
+    # dirname as string
     def dirname; File.dirname path if path end
 
     # storage-space usage
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
 
-    # FIND on path component
+    # FIND
     def find p
       (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 2048`.lines.map{|pth|POSIX.path pth.chomp} : []
     end
 
-    # GLOB on path component
+    # GLOB
     def glob; (Pathname.glob localPath).map &:R end
 
     # existence check on mapped fs-node
@@ -113,7 +117,7 @@ class WebResource
     # TLD of host
     def tld; host && host.split('.')[-1] || '' end
 
-    # SHA2 hash of URI string
+    # SHA2 hashed URI
     def sha2; to_s.sha2 end
 
     # WebResource -> file(s)
@@ -137,7 +141,7 @@ class WebResource
            self
          end
        end
-      else # GLOB can be overridden, or base-URI + extensions
+      else # GLOB, parametric or default of baseURI+ext(s)
         [self, ((match /[\*\{\[]/) ? self : (self + '.*')).glob ]
        end).justArray.flatten.compact.uniq.select &:exist?
     end
@@ -245,7 +249,7 @@ class WebResource
       container.delete Type
       name = (container.delete :name) || '' # basename
       title = container.delete Title
-      # content may be singleton, array or URI-indexed hash
+      # contents can be represented in singleton Object, Array or URI-keyed Hash
       contents = container.delete(Contains).do{|cs|
         cs.class == Hash ? cs.values : cs }.justArray
       blank = BlankLabel.member? name
