@@ -13,19 +13,15 @@ class WebResource
       # method in supported whitelist
       return [405,{},[]] unless Methods.member? env['REQUEST_METHOD']
 
-      # HTTP requested path
+      # find request-path
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
-
-      # evaluate path-expression
       path = Pathname.new(rawpath).expand_path.to_s
+      path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
 
-      # preserve trailing-slash
-      path += '/' if path[-1] != '/' && rawpath[-1] == '/'
-
-      # attach parsed query to environment
+      # parse query
       env['q'] = parseQs env['QUERY_STRING']
 
-      # call HTTP function
+      # call function
       path.R.environment(env).send env['REQUEST_METHOD']
 
       # error handler
