@@ -1,5 +1,3 @@
-* {vertical-align: top; margin:.08em; border-radius:.18em}
-
 #up,#down,#prev,#next {font-size: 1.8em; color: #333}
 #prev,#next {position: fixed; height: 100%}
 #prev {left: 0; top: 0}
@@ -11,9 +9,7 @@ img  {max-width: 100%}
 img.thumb {max-width: 28em}
 .bw, body {background-color:#000;color: #fff}
 .wb {background-color:#fff;color: #000}
-.basename {font-size: .8em; color: #333}
 pre   {white-space: pre-wrap}
-pre, p, span, li {background-color: #fff; color:#000; max-width:48ex; padding: .08em}
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}
