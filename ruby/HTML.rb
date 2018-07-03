@@ -91,18 +91,18 @@ class WebResource
       [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,
         href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
 
-    Markup[Title] = -> title,env=nil,url=nil,flip='bw' {
+    Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
       if url
-        {_: :h3, c: {_: :a, class: flip, c: title, href: url, id: 'post'+rand.to_s.sha2}}
+        {_: :h3, c: {_: :a, c: title, href: url, id: 'post'+rand.to_s.sha2}}
       else
         {_: :h3, c: title}
       end}
 
-    Markup[Type] = -> t,env=nil,flip='bw' {
+    Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
         t = t.R
-        {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: flip + ' ' + Icons[t.uri].to_s}
+        {_: :a, href: t.uri, c: Icons[t.uri] ? '' : (t.fragment||t.basename), class: Icons[t.uri]}
       else
         CGI.escapeHTML t.to_s
       end}
@@ -123,8 +123,7 @@ class WebResource
       end}
 
     # {k => v} table -> Markup
-    def self.kv hash, env, flip = 'bw'
-      flop = flip == 'bw' ? 'wb' : 'bw'
+    def self.kv hash, env
       hash.delete :name
       ["\n",
        {_: :table, class: :kv,
@@ -133,24 +132,23 @@ class WebResource
           hide = k == Content && env['q'] && env['q'].has_key?('h')
           [{_: :tr, name: type.fragment || type.basename,
             c: ["\n ",
-                {_: :td, class: 'k ' + flip, c: Markup[Type][type, flip]},"\n ",
-                {_: :td, class: 'v ' + flip,
+                {_: :td, class: 'k', c: Markup[Type][type]},"\n ",
+                {_: :td, class: 'v',
                  c: if k == Contains && vs.values.size > 1
-                  tabular vs.values, env, false, flop
+                  tabular vs.values, env, false
                 else
                   vs.justArray.map{|v|
-                    HTML.value k, v, env, flip }.intersperse(' ')
+                    HTML.value k, v, env }.intersperse(' ')
                  end
                 }]},
            "\n"] unless hide}}, "\n"]
     end
 
     # (k,v) tuple -> Markup
-    def self.value k, v, env, flip='wb'
-      flop = flip == 'bw' ? 'wb' : 'bw'
+    def self.value k, v, env
       if 'uri' == k
         u = v.R
-        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, class: flip, c: "#{u.host} #{u.path} #{u.fragment}"}
+        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
       elsif Content == k
         v
       elsif Abstract == k
@@ -164,22 +162,21 @@ class WebResource
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member?(BlogPost) || types.member?(Email)
-          Markup[BlogPost][v,env,flip]
+          Markup[BlogPost][v,env]
         elsif types.member? Container
-          Markup[Container][v,env,flop]
+          Markup[Container][v,env]
         else # generic node
-          kv v, env, flip
+          kv v, env
         end
       elsif v.class == WebResource
-        v.data({class: flip}) # node reference
+        v # node reference
       else
         CGI.escapeHTML v.to_s
       end
     end
 
     # [resourceA,resourceB..] -> Markup
-    def self.tabular resources, env, head = true, flip = 'bw'
-      flop = flip == 'bw' ? 'wb' : 'bw'
+    def self.tabular resources, env, head = true
       ks = resources.map(&:keys).flatten.uniq
       {_: :table, class: :table,
        c: [({_: :tr,
@@ -196,10 +193,10 @@ class WebResource
              {_: :tr,
               c: ks.map{|k|
                 keys = k==Title ? [Title,Image,Video] : [k]
-                {_: :td, class: flip,
+                {_: :td,
                  c: keys.map{|key|
                    r[key].justArray.map{|v|
-                     HTML.value key,v,env,flip }.intersperse(' ')}}}}}]}
+                     HTML.value key,v,env }.intersperse(' ')}}}}}]}
     end
 
     Group['flat'] = -> graph { graph }

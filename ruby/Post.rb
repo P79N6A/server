@@ -2,7 +2,7 @@ class WebResource
 
   module HTML
 
-    Markup[BlogPost] = Markup[Email] = -> post , env, flip='bw' {
+    Markup[BlogPost] = Markup[Email] = -> post , env {
       # hidden fields in default view
       [:name, Type, Comments, Identifier, RSS+'comments', SIOC+'num_replies'].map{|attr|post.delete attr}
       # bind data
@@ -22,7 +22,7 @@ class WebResource
                 c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}, class: :from},
                     {_: :td, c: '&rarr;'},
                     {_: :td, c: to.map{|f|Markup[Creator][f,env]}, class: :to}]}},
-           (HTML.kv post, env, flip), # extra metadata in kv format
+           (HTML.kv post, env), # extra metadata in kv format
            (['<br>', Markup[Date][date]] if date)]}}
 
     # group by sender

@@ -243,8 +243,7 @@ class WebResource
   module HTML
     include URIs
 
-    Markup[Container] = -> container , env, flip = 'bw' {
-      flop = flip == 'bw' ? 'wb' : 'bw'
+    Markup[Container] = -> container , env {
       uri = container.delete 'uri'
       container.delete Type
       name = (container.delete :name) || '' # basename
@@ -253,14 +252,14 @@ class WebResource
       contents = container.delete(Contains).do{|cs|
         cs.class == Hash ? cs.values : cs }.justArray
       blank = BlankLabel.member? name
-      {class: 'container ' + flip, style: blank ? '' : 'margin-left: 1em',
-       c: [(title ? Markup[Title][title.justArray[0], env, uri.justArray[0], flip] : CGI.escapeHTML(name) unless blank), # label
+      {class: 'container', style: blank ? '' : 'margin-left: 1em',
+       c: [(title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name) unless blank), # label
            if env['q'].has_key? 't'
-             HTML.tabular contents, env, flip
+             HTML.tabular contents, env
            else # child nodes
-             contents.map{|c|HTML.value(nil,c,env,flip)}
+             contents.map{|c|HTML.value(nil,c,env)}
            end,
-           (HTML.kv(container, env, flip) unless env['q'].has_key?('h'))
+           (HTML.kv(container, env) unless env['q'].has_key?('h'))
           ]}}
 
     # URI controls tree structure
