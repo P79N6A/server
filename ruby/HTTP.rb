@@ -5,25 +5,17 @@ class WebResource
     include URIs
     Host = {}
 
-    # Rack hands us control, dispatch appropriate method
-    def self.call env
-      # log some stuff
-      puts "\e[36m" + (env['HTTP_REFERER']||'') + "\e[0m → \e[1m" + env['HTTP_HOST'] + "\e[2m" + env['REQUEST_PATH'] + "\e[0m   \e[30;1m" + (env['HTTP_USER_AGENT']||'') + "\e[0m"
-
-      # method in supported whitelist
+    def self.call env; puts "\e[36m"+(env['HTTP_REFERER']||'')+"\e[0m → \e[1m"+env['HTTP_HOST']+"\e[2m"+env['REQUEST_PATH']+"\e[0m   \e[30;1m"+(env['HTTP_USER_AGENT']||'')+"\e[0m"
+      # method in supported whitelist?
       return [405,{},[]] unless Methods.member? env['REQUEST_METHOD']
-
       # find request-path
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/' # preserve trailing-slash
-
       # parse query
       env['q'] = parseQs env['QUERY_STRING']
-
       # call function
       path.R.environment(env).send env['REQUEST_METHOD']
-
       # error handler
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
