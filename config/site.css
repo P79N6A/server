@@ -3,7 +3,8 @@
 #prev {left: 0; top: 0}
 #next {right: 0; top: 0}
 body {font-family: sans-serif;margin: 0 1.8em 0 1.8em;background-color:#000;color: #fff}
-a    {text-decoration: none; font-weight: bold}
+h1,h2,h3,h4,h5,h6 {background-color: white; color: black}
+a    {text-decoration: none; font-weight: bold; background-color: white; color: black}
 img  {max-width: 100%}
 img.thumb {max-width: 28em}
 div,p {border-width: .08em; border-style: solid; border-color: #222}
