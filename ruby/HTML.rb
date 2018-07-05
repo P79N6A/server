@@ -93,11 +93,11 @@ class WebResource
 
     Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
-      if url
-        {_: :h3, c: {_: :a, c: title, href: url, id: 'post'+rand.to_s.sha2}}
+      [if url
+       {_: :h3, c: {_: :a, c: title, href: url, id: 'post'+rand.to_s.sha2}}
       else
         {_: :h3, c: title}
-      end}
+      end,'<br>']}
 
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
