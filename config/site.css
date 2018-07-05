@@ -5,11 +5,13 @@
 body {font-family: sans-serif;margin: 0 1.8em 0 1.8em;background-color:#000;color: #fff}
 h1,h2,h3,h4,h5,h6 {background-color: white; color: black; display: inline-block; margin: 0}
 a    {text-decoration: none; font-weight: bold; background-color: white; color: black}
+a.date {float: right; font-weight: normal; font-size:.8em; background-color: #333; color: #cfcfcf}
+a.link {background-color: #bbb; color: #000}
 img  {max-width: 100%}
 img.thumb {max-width: 28em}
 div,p {border-width: .08em; border-style: solid; border-color: #222}
 pre   {white-space: pre-wrap}
-p {max-width: 40em;padding:.3em;background-color:#000;color: #fff}
+p {max-width: 40em;padding:.3em;margin:0;background-color:#000;color: #fff}
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}

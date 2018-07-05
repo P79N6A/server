@@ -250,9 +250,9 @@ class WebResource
       title = container.delete Title
       # contents can be represented in singleton Object, Array or URI-keyed Hash
       contents = container.delete(Contains).do{|cs|
-        cs.class == Hash ? cs.values : cs }.justArray
+        cs.class == Hash ? cs.values : cs}.justArray
       blank = BlankLabel.member? name
-      {class: 'container', style: blank ? '' : 'margin-left: 1em',
+      {class: 'container',
        c: [(title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : CGI.escapeHTML(name) unless blank), # label
            if env['q'].has_key? 't'
              HTML.tabular contents, env
