@@ -15,6 +15,7 @@ p {max-width: 40em;padding:.3em;border-radius: .3em; margin:0;background-color:#
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}
-span.name {font-size: .8em; color: #ccc; font-weight: normal; display: block; vertical-align: top}
+span.name {font-size: .8em; color: #ccc; font-weight: normal; display: block}
+span.name, td.k {vertical-align: top}
 .post {background-color:#888; max-width: 48em; border: .16em solid #eee; margin: .2em; border-radius: .2em}
 .newspaper {font-size: 1.23em; font-weight: normal}
