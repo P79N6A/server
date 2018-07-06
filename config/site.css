@@ -9,12 +9,12 @@ a.date {float: right; font-weight: normal; font-size:.8em; background-color: #33
 a.link {background-color: #bbb; color: #000}
 img  {max-width: 100%}
 img.thumb {max-width: 28em}
-div,p {border-width: .08em; border-style: solid; border-color: #222}
+div.container {border-width: .08em; border-style: solid; border-color: #222}
 pre   {white-space: pre-wrap}
-p {max-width: 40em;padding:.3em;margin:0;background-color:#000;color: #fff}
+p {max-width: 40em;padding:.3em;border-radius: .3em; margin:0;background-color:#000;color: #fff}
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}
-span.name {font-size: .8em; color: #888; font-weight: normal; display: block; vertical-align: top}
-.post {background-color:#333;max-width: 48em}
-.newspaper {font-size: 1.25em; font-weight: normal}
+span.name {font-size: .8em; color: #ccc; font-weight: normal; display: block; vertical-align: top}
+.post {background-color:#888; max-width: 48em; border: .16em solid #eee; margin: .2em; border-radius: .2em}
+.newspaper {font-size: 1.23em; font-weight: normal}
