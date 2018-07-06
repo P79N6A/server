@@ -9,8 +9,9 @@ class WebResource
       contents = container.delete(Contains).do{|cs|
         cs.class == Hash ? cs.values : cs}.justArray
       blank = BlankLabel.member? name
-      {class: 'container',
-       c: [(title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : {_: :span, class: :name, c: CGI.escapeHTML(name||'')} unless blank),
+      bold = BoldLabel.member? name
+      {class: 'container' + (bold ? ' highlighted' : ''),
+       c: [(title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : {_: :span, class: bold ? :bold : :label, c: CGI.escapeHTML(name||'')} unless blank),
            if env['q'].has_key? 't'
              HTML.tabular contents, env
            else # child nodes

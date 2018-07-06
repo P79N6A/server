@@ -97,6 +97,7 @@ class WebResource < RDF::URI
   end
   module HTML
     BlankLabel = %w{com comments r status reddit twitter www}
+    BoldLabel = %w{boston providence}
   end
   module Webize
 

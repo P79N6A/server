@@ -9,13 +9,15 @@ a.date {float: right; font-weight: normal; font-size:.8em; background-color: #33
 a.link {background-color: #bbb; color: #000}
 img  {max-width: 100%}
 img.thumb {max-width: 28em}
-div.container {border-width: .08em; border-style: solid; border-color: #222}
 pre   {white-space: pre-wrap}
+.bold {font-weight: bold; font-size: 1.1em; color: #fff; background-color: #000}
 p {max-width: 40em;padding:.3em;border-radius: .3em; margin:0;background-color:#000;color: #fff}
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}
-span.name {font-size: .8em; color: #ccc; font-weight: normal; display: block}
-span.name, td.k {vertical-align: top}
+.label {font-size: .8em; color: #ccc; display: block}
+.label, td.k {vertical-align: top}
+.container {border-width: .08em; border-style: solid; border-color: #222}
+.container.highlighted {border-color: #ccc; border-width: .15em; border-radius: .3em; background-color:#222}
 .post {background-color:#888; max-width: 48em; border: .16em solid #eee; margin: .2em; border-radius: .2em}
 .newspaper {font-size: 1.23em; font-weight: normal}
