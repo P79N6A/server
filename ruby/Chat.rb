@@ -39,11 +39,13 @@ class WebResource
         yield s, Date, ts
         yield s, Creator, author
         content = t.css('.tweet-text')[0]
-        content.css('a').map{|a|
-          a.set_attribute('id', 'tweetedlink'+rand.to_s.sha2)
-          a.set_attribute('href', Twitter + (a.attr 'href')) if (a.attr 'href').match /^\//
-          yield s, DC+'link', R[a.attr 'href']}
-        yield s, Abstract, HTML.strip(content.inner_html).gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')}
+        if content
+          content.css('a').map{|a|
+            a.set_attribute('id', 'tweetedlink'+rand.to_s.sha2)
+            a.set_attribute('href', Twitter + (a.attr 'href')) if (a.attr 'href').match /^\//
+            yield s, DC+'link', R[a.attr 'href']}
+          yield s, Abstract, HTML.strip(content.inner_html).gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
+        end}
     end
 
     def indexTweets
