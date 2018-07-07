@@ -1,0 +1,2 @@
+#!/bin/sh
+https_proxy=https://l:8080 http_proxy=http://l:8080 no_proxy=localhost,l,*.facebook.com,*.twitter.com,*.cloudfront.net,*.yahoo.com,*.facebook.net,*.google.com,*.googleapis.com,*.amazon.com,*.cloudflare.com chromium $@
