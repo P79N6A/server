@@ -17,7 +17,7 @@ class WebResource
            else # child nodes
              contents.map{|c|HTML.value(nil,c,env)}
            end,
-           (HTML.kv(container, env) unless env['q'].has_key?('h'))
+           (HTML.kv(container, env) unless container.empty?)
           ]}}
 
     # URI controls tree structure

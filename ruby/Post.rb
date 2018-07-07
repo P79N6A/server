@@ -22,7 +22,7 @@ class WebResource
                 c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}, class: :from},
                     {_: :td, c: '&rarr;'},
                     {_: :td, c: to.map{|f|Markup[Creator][f,env]}, class: :to}]}},
-           (HTML.kv post, env), # metadata in key-value table
+           ((HTML.kv post, env) unless post.empty?), # metadata in key-value table
            (Markup[Date][date] if date)]}}
 
     # group by sender
