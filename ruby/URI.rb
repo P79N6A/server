@@ -90,7 +90,8 @@ class WebResource < RDF::URI
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
     Unwrap = -> key {
-      -> re {[302,{'Location' => re.q[key.to_s]},[]]}}
+      -> re {
+        [302,{'Location' => re.q[key.to_s.downcase]},[]]}}
 
   end
   module HTML

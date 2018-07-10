@@ -143,20 +143,25 @@ class WebResource
   end
   include HTTP
   module HTTP
-    # hosts enumerated in static file
+
+    # parse host-list
     def hosts
       lines.map{|l|
         l.split(' ')[1]}
     end
 
-    # host-mapped handlers
-    # fetch URI via middleman
+    # bind host handlers
+
+    # URI on file with middleman
     '.conf/hosts/minized'.R.hosts.map{|host|
       Host[host] = Short}
-    # unwrap URI inside URI
+
+    # URI encoded in query argument of URI
     Host['exit.sc'] = Unwrap[:url]
     Host['l.instagram.com'] = Unwrap[:u]
-    # serve local CSS and font
+    Host['lookup.t-mobile.com'] = Unwrap[:origURL]
+
+    # CSS and font hosting
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
   end
 end
