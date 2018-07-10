@@ -11,12 +11,10 @@ class Symbol
   def R; WebResource.new to_s end
 end
 =begin
-one usage scenario for this server is in a proxy configuration
-global proxy config can happen without app support, via routing or DNS or hosts-files etc
-the proxy itself usually needs to be excluded from configuration directing traffic to the proxy
-w/ iptables, it can be omitted from the routing (8080 is proxy uid and port)
+proxy+gateway usually exempt from rules directing traffic to them, to prevent loops and allow access out to the net
+with uid seperation (daemon as uid 8080 on port 8080) this routing can be configured at cmdline:
 $ iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner 8080 --dport 443 -j REDIRECT --to-ports 8080 
-if /etc/hosts or local DNS, ignore them by contacting outside world for DNS queries:
+bypass local /etc/hosts and DNS servers, other ubiquitous means of directing traffic to the proxy:
 =end
 Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
 
