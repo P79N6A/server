@@ -1,2 +1,5 @@
 #!/bin/sh
-https_proxy=https://localhost:8080 http_proxy=http://localhost:8080 no_proxy=localhost,*.facebook.com,*.twitter.com,*.cloudfront.net,*.yahoo.com,*.facebook.net,*.google.com,*.googleapis.com,*.amazon.com,*.cloudflare.com chromium $@
+export https_proxy=https://localhost:8080
+export  http_proxy=http://localhost:8080
+export    no_proxy=localhost
+chromium $@
