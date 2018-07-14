@@ -1,2 +1,0 @@
-#!/bin/sh
-cd ~/web && unicorn -p 80 -o localhost .conf/rack.ru
