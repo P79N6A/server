@@ -1,12 +1,17 @@
 #!/bin/sh
 # :: find your uid
 #  id -> uid=10095(u0_a95) gid=10095(u0_a95) groups=3003(inet),9997(everybody)
-# :: start proxy operation
-#  mitmdump
-# :: send out of band requests to penalty box
-#  iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner 10095 --dport 443 -j REDIRECT --to-ports 8888
-#  mitmdump -p 8888 -m reverse:http://127.0.0.1:8000 --set keep_host_header=true
+# start proxy operation
 export https_proxy=https://localhost:8080
 export  http_proxy=http://localhost:8080
-export    no_proxy=m,l,localhost,*.ytimg.com,*.eyeota.net,*.amazonaws.com,*.adsrvr.org,*.spot.im,*.io,*.kargo.com,*.facebook.com,*.twitter.com,*.linkedin.com,*.cloudfront.net,*.yahoo.com,*.facebook.net,*.amazon.com,*.google-analytics.com,*.cloudflare.com,*.doubleclick.net,*.google.com,*.googleadservices.com,*.googleapis.com,*.gstatic.com,*.sstatic.net,*.bootstrapcdn.com
+mitmdump &
+# send out of bound requests to penalty box
+export no_proxy=*.myfonts.net,*.ytimg.com,*.eyeota.net,*.quora.com,*.quoracdn.net,*.vox-cdn.com,*.voxmedia.com,*.amazonaws.com,*.adsrvr.org,*.spot.im,*.kargo.com,*.facebook.com,*.cedexis-radar.net,*.twitter.com,*.linkedin.com,*.cloudfront.net,*.yahoo.com,*.facebook.net,*.amazon.com,*.google-analytics.com,*.cloudflare.com,*.doubleclick.net,*.google.com,*.googleadservices.com,*.googleapis.com,*.gstatic.com,*.typography.com,*.sstatic.net,*.bootstrapcdn.com
+su -c 'iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner 10095 --dport 443 -j REDIRECT --to-ports 8888'
+mitmdump -p 8888 -m reverse:http://127.0.0.1:8000 --set keep_host_header=true &
+mitmdump -p 443 -m reverse:http://127.0.0.1:8000 --set keep_host_header=true &
+# :: daemon
+cd ~/web
+unicorn -p 8000 -o localhost .conf/rack.ru
+# :: browse
 chromium $@
