@@ -5,7 +5,7 @@ class WebResource
     include URIs
     Host = {}
 
-    def self.call env; puts "\e[36;1m"+(env['HTTP_REFERER']||'')+"\e[0m → \e[35;1m"+env['HTTP_HOST']+"\e[2m"+env['REQUEST_PATH']+"\e[0m   \e[30;1m"+(env['HTTP_USER_AGENT']||'')+"\e[0m"
+    def self.call env; puts "\e[35;1m"+(env['HTTP_HOST']||'')+"\e[2m"+env['REQUEST_PATH']+"\e[0m <- \e[36;1m"+env['HTTP_REFERER']+"\e[0m   \e[30;1m"+(env['HTTP_USER_AGENT']||'')+"\e[0m"
       # method in supported whitelist?
       return [405,{},[]] unless Methods.member? env['REQUEST_METHOD']
       # find request-path
