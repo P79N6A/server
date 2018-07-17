@@ -149,10 +149,11 @@ class WebResource
     '.conf/hosts/minized'.R.hosts.map{|host|
       Host[host] = Short}
 
-    # URI encoded in query argument of URI
+    # URI encoded in URI
     Host['exit.sc'] = Unwrap[:url]
     Host['l.instagram.com'] = Unwrap[:u]
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
+    Host['proxy.duckduckgo.com'] = Unwrap[:u]
 
     # CSS and font hosting
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
