@@ -159,5 +159,11 @@ class WebResource
 
     # host CSS and fonts locally
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
+
+    #gmaps to generic
+    Host['www.google.com'] = -> re {
+      puts re.parts
+    }
+
   end
 end
