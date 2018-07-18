@@ -11,6 +11,7 @@
 *.adkernel.com
 *.admantx.com
 *.adnxs.com
+*.adobe.com
 *.adobedtm.com
 *.adready.com
 *.adreadytractions.com
@@ -190,6 +191,7 @@
 *.nile.works
 *.npttech.com
 *.nr-data.net
+*.olark.com
 *.omnitagjs.com
 *.omniture.com
 *.omtrdc.net
@@ -279,7 +281,6 @@
 *.w.org
 *.weather.com
 *.windows.net
-*.wordpress.com
 *.wp.com
 *.wsi.com
 *.yahoo.com
@@ -312,6 +313,7 @@ ml314.com
 nxtck.com
 onesignal.com
 proxy.duckduckgo.com
+public-api.wordpress.com
 ritogaga.com
 rpxnow.com
 storify.com
