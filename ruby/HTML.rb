@@ -68,6 +68,11 @@ class WebResource
                              link[:prev, '&#9664;'],
                              link[:next, '&#9654;'],
                              if graph.empty?
+                               @r.keys.map{|k|
+                                 if @r[k].class == String
+                                   @r[k] = @r[k].R if @r[k].match(/^(http|\/)\S+$/)
+                                 end
+                               }
                                [{_: :h1, c: 404}, HTML.kv(@r,@r)]
                              else
                                if q.has_key? 't'

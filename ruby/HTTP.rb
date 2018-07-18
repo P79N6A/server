@@ -146,20 +146,18 @@ class WebResource
     #host bindings
 
     #redirect to open-source alternative
-    Host['play.google.com'] = -> re {
-      package = re.q['id'] 
-      [302,{'Location' => "https://f-droid.org/en/packages/#{package}/"},[]]}
-    
-    # URI on file with middleman
+    Host['play.google.com'] = -> re {[302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
+
+    # actual URL is on file with third-party
     '.conf/hosts/minized'.R.hosts.map{|host| Host[host] = Short}
 
-    # URI encoded in URI
+    # URI is encoded in another URI
     Host['exit.sc'] = Unwrap[:url]
     Host['l.instagram.com'] = Unwrap[:u]
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
     Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
 
-    # CSS and font hosting
+    # host CSS and fonts locally
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
   end
 end
