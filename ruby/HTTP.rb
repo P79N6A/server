@@ -137,23 +137,27 @@ class WebResource
   include HTTP
   module HTTP
 
-    # parse host-list
+    # parse list of hosts. hosts-file format but ignore IP address here
     def hosts
       lines.map{|l|
         l.split(' ')[1]}
     end
 
-    # bind host handlers
+    #host bindings
 
+    #redirect to open-source alternative
+    Host['play.google.com'] = -> re {
+      package = re.q['id'] 
+      [302,{'Location' => "https://f-droid.org/en/packages/#{package}/"},[]]}
+    
     # URI on file with middleman
-    '.conf/hosts/minized'.R.hosts.map{|host|
-      Host[host] = Short}
+    '.conf/hosts/minized'.R.hosts.map{|host| Host[host] = Short}
 
     # URI encoded in URI
     Host['exit.sc'] = Unwrap[:url]
     Host['l.instagram.com'] = Unwrap[:u]
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
-    Host['proxy.duckduckgo.com'] = Unwrap[:u]
+    Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
 
     # CSS and font hosting
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}

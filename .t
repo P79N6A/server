@@ -11,6 +11,7 @@ make invisible files inaccessible?
 move image thumbnails to ~/.cache
 proxy browse mode
 image caching proxy
+per-host favicon
 nonlocal host handling
 dont archive nonwhitelisted emails
 different RDFtype for thumbnail vs image (for low-bandwidth index pages)
