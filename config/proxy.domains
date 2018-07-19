@@ -27,6 +27,8 @@
 *.ai
 *.akamaihd.net
 *.amazon-adsystem.com
+*.ssl-images-amazon.com
+*.amazon.com
 *.amazonaws.com
 *.ampproject.org
 *.and.co.uk
@@ -223,6 +225,7 @@
 *.quoracdn.net
 *.ravenjs.com
 *.reddit.com
+*.redditstatic.com
 *.relaymedia.com
 *.report-uri.com
 *.researchnow.com
