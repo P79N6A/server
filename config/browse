@@ -1,0 +1,5 @@
+#!/bin/sh
+export https_proxy=https://localhost:8080
+export http_proxy=http://localhost:8080
+export no_proxy=`cat proxy.domains | tr "\n" ","`
+brave "$@"
