@@ -147,6 +147,13 @@ class WebResource
 
     #redirect to open-source alternative
     Host['play.google.com'] = -> re {[302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
+    Host['www.google.com'] = -> re {
+      case re.parts[0]
+      when 'maps'
+        [200,{},['maps']]
+      else
+        [404,{},[]]
+      end}
 
     # actual URL is on file with third-party
     '.conf/hosts/minized'.R.hosts.map{|host| Host[host] = Short}
@@ -159,11 +166,6 @@ class WebResource
 
     # host CSS and fonts locally
     '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
-
-    #gmaps to generic
-    Host['www.google.com'] = -> re {
-      puts re.parts
-    }
 
   end
 end

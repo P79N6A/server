@@ -91,7 +91,8 @@ class WebResource < RDF::URI
 
     Unwrap = -> key {
       -> re {
-        [302,{'Location' => re.q[key.to_s.downcase]},[]]}}
+        location = re.q[key.to_s.downcase]
+        location ? [302,{'Location' => location},[]] : [404,{},[]]}}
 
   end
   module HTML
