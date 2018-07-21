@@ -144,9 +144,8 @@ class WebResource
     end
 
     #host bindings
-
-    #redirect to open-source alternative
-    Host['play.google.com'] = -> re {[302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
+    Host['play.google.com'] = -> re {
+      [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
     Host['www.google.com'] = -> re {
       case re.parts[0]
       when 'maps'
@@ -166,7 +165,8 @@ class WebResource
     Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
 
     # host CSS and fonts locally
-    '.conf/hosts/font'.R.hosts.map{|host| Host[host] = Font}
+    '.conf/hosts/font'.R.hosts.map{|host|
+      Host[host] = Font}
 
   end
 end
