@@ -1,6 +1,7 @@
 class WebResource
   module HTTP
     #host bindings
+
     Host['play.google.com'] = -> re {
       [302,
        {'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
@@ -13,7 +14,7 @@ class WebResource
                 lat = ll[1]
                 lng = ll[2]
                 "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"
-              elsif query = (re.q.has_key? 'q')
+              elsif re.q.has_key? 'q'
                 "https://www.openstreetmap.org/search?query=#{URI.escape re.q['q']}"
               else
                 'https://www.openstreetmap.org/'
@@ -21,6 +22,13 @@ class WebResource
         [302,
          {'Location' => loc},[]]
       when 'search'
+        loc = if re.q.has_key? 'q'
+                "https://duckduckgo.com/?q=#{URI.escape re.q['q']}"
+              else
+                'https://duckduckgo.com'
+              end
+        [302,
+         {'Location' => loc},[]]
       else
         [404,{},[]]
       end}
@@ -34,7 +42,7 @@ class WebResource
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
     Host['l.instagram.com'] = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
 
-    # host CSS and fonts locally
+    # CSS and fonts
     %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
 
