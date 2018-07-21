@@ -136,16 +136,10 @@ class WebResource
   end
   include HTTP
   module HTTP
-
-    # parse list of hosts. hosts-file format but ignore IP address here
-    def hosts
-      lines.map{|l|
-        l.split(' ')[1]}
-    end
-
     #host bindings
     Host['play.google.com'] = -> re {
       [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
+
     Host['www.google.com'] = -> re {
       case re.parts[0]
       when 'maps'
@@ -155,17 +149,16 @@ class WebResource
       end}
 
     # original URL on file with third-party
-    %w{l.instagram.com t.co nyer.cm bit.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms trib.al ow.ly n.pr a.co exit.sc youtu.be buff.ly}.map{|host|
+    %w{t.co bit.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms trib.al ow.ly n.pr a.co youtu.be}.map{|host|
       Host[host] = Short}
 
     # URI is encoded in another URI
     Host['exit.sc'] = Unwrap[:url]
-    Host['l.instagram.com'] = Unwrap[:u]
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
-    Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
+    Host['l.instagram.com'] = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
 
     # host CSS and fonts locally
-    '.conf/hosts/font'.R.hosts.map{|host|
+    %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
 
   end
