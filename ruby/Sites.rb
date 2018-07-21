@@ -9,8 +9,11 @@ class WebResource
       product = re.parts[0]
       case product
       when 'maps'
-        if lat_lng = re.path.match(/@(-?\d+\.\d+,-?\d+\.\d+)/)
-          [200,{},[lat_lng[1]]]
+        if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+          lat = ll[1]
+          lng = ll[2]
+          [302,
+           {'Location' => "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"},[]]
         else
           [200,{},['maps']]
         end
