@@ -1,6 +1,6 @@
 #!/bin/sh
-su -c 'iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner 10095 --dport  80 -j REDIRECT --to-ports 8000'
-su -c 'iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner 10095 --dport 443 -j REDIRECT --to-ports 8888'
+su -c "iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner `id -u` --dport  80 -j REDIRECT --to-ports 8000"
+su -c "iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner `id -u` --dport 443 -j REDIRECT --to-ports 8888"
 tmux new-session -s web -d -c ~/web
 tmux send-keys -t web:0 'unicorn -p 8000 -o localhost .conf/rack.ru' C-m
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
