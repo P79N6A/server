@@ -141,7 +141,8 @@ class WebResource
       [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
 
     Host['www.google.com'] = -> re {
-      case re.parts[0]
+      product = re.parts[0]
+      case product
       when 'maps'
         [200,{},['maps']]
       else
