@@ -9,14 +9,17 @@ class WebResource
       product = re.parts[0]
       case product
       when 'maps'
-        if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
-          lat = ll[1]
-          lng = ll[2]
-          [302,
-           {'Location' => "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"},[]]
-        else
-          [200,{},['maps']]
-        end
+        loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+                lat = ll[1]
+                lng = ll[2]
+                "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"
+              elsif query = (re.q.has_key? 'q')
+                "https://www.openstreetmap.org/search?query=#{URI.escape re.q['q']}"
+              else
+                'https://www.openstreetmap.org/'
+              end
+        [302,
+         {'Location' => loc},[]]
       when 'search'
       else
         [404,{},[]]
