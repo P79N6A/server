@@ -155,8 +155,9 @@ class WebResource
         [404,{},[]]
       end}
 
-    # actual URL is on file with third-party
-    '.conf/hosts/minized'.R.hosts.map{|host| Host[host] = Short}
+    # original URL on file with third-party
+    %w{l.instagram.com t.co nyer.cm bit.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms trib.al ow.ly n.pr a.co exit.sc youtu.be buff.ly}.map{|host|
+      Host[host] = Short}
 
     # URI is encoded in another URI
     Host['exit.sc'] = Unwrap[:url]
