@@ -95,6 +95,7 @@
 *.doubleverify.com
 *.dowjoneson.com
 *.dpmsrv.com
+*.duckduckgo.com
 *.dynamicyield.com
 *.eccmp.com
 *.edgekey.net
@@ -323,17 +324,15 @@ cfl.re
 dlvr.it
 exit.sc
 getrockerbox.com
+github.com
 google-analytics.com
 google.com
-icons.duckduckgo.com
 ift.tt
-images.duckduckgo.com
 imgur.com
 justicejudo.com
 l
 localhost
 lockerdome.com
-m
 ml314.com
 n.pr
 nxtck.com
@@ -342,7 +341,6 @@ nyti.ms
 onesignal.com
 ow.ly
 promoted.soundcloud.com
-proxy.duckduckgo.com
 public-api.wordpress.com
 ritogaga.com
 rpxnow.com
