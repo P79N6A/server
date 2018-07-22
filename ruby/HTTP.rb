@@ -19,18 +19,6 @@ class WebResource
          x.backtrace].join("\n")]]
     end
 
-    def self.parseQs qs
-      if qs
-        h = {}
-        qs.split(/&/).map{|e|
-          k, v = e.split(/=/,2).map{|x|CGI.unescape x}
-          h[(k||'').downcase] = v}
-        h
-      else
-        {}
-      end
-    end
-
     def environment env = nil
       if env
         @r = env
@@ -120,16 +108,24 @@ class WebResource
 
     def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
 
-    # querystring -> Hash
+    # environment -> ?querystring
+    def qs; @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || '' end
+    # environment | URI -> ?querystring -> Hash
     def q fromEnv = true
       fromEnv ? @r['q'] : HTTP.parseQs(query)
     end
-
-    def inDoc; path == @r['REQUEST_PATH'] end
-
-    # env -> ?querystring
-    def qs; @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || '' end
-
+    # ?querystring -> Hash
+    def self.parseQs qs
+      if qs
+        h = {}
+        qs.split(/&/).map{|e|
+          k, v = e.split(/=/,2).map{|x|CGI.unescape x}
+          h[(k||'').downcase] = v}
+        h
+      else
+        {}
+      end
+    end
     # Hash -> ?querystring
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
 
