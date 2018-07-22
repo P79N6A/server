@@ -68,12 +68,7 @@ class WebResource
                              link[:prev, '&#9664;'],
                              link[:next, '&#9654;'],
                              if graph.empty?
-                               @r.keys.map{|k|
-                                 if @r[k].class == String
-                                   @r[k] = @r[k].R if @r[k].match(/^(http|\/)\S+$/)
-                                 end
-                               }
-                               [{_: :h1, c: 404}, HTML.kv(@r,@r)]
+                               [{_: :h1, c: 404}, HTML.kv(HTML.urifyHash(@r),@r)]
                              else
                                if q.has_key? 't'
                                  # Graph -> Markup
@@ -118,7 +113,6 @@ class WebResource
        href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date[offset..-1]}}
 
     Markup[Creator] = -> c, env, urls=nil {
-      puts urls
       if c.respond_to? :uri
         u = c.R
         name = u.fragment || u.basename.do{|b|b=='/' ? u.host : b} || u.host || 'user'
@@ -127,6 +121,19 @@ class WebResource
       else
         CGI.escapeHTML (c||'')
       end}
+
+    def self.urifyHash hash
+      hash.keys.map{|k|
+        if hash[k].class == Hash
+          hash[k] = HTML.urifyHash hash[k]
+        elsif hash[k].class == String
+          hash[k] = HTML.urifyString hash[k]
+        end}
+      hash
+    end
+    def self.urifyString str
+      str.match(/^(http|\/)\S+$/) ? str.R : str
+    end
 
     # {k => v} table -> Markup
     def self.kv hash, env
