@@ -46,5 +46,9 @@ class WebResource
     %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
 
+    # image hosts
+    Host['snag.gy'] = -> re {
+        [302,
+         {'Location' => '//i.snag.gy'+re.path},[]]}
   end
 end
