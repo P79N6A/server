@@ -120,50 +120,6 @@ class WebResource
     # SHA2 hashed URI
     def sha2; to_s.sha2 end
 
-    # WebResource -> file(s)
-    def selectNodes
-      (if directory?
-       if q.has_key?('f') && path!='/' # FIND
-         found = find q['f']
-         found
-       elsif q.has_key?('q') && path!='/' # GREP
-         grep q['q']
-       else # LS
-         if uri[-1] == '/'
-           index = (self+'index.html').glob
-           if !index.empty? && qs.empty? # static index
-             index
-           else
-             [self, children]
-           end
-         else # outside container
-           @r[:links][:down] = path + '/' + qs
-           self
-         end
-       end
-      else # GLOB, parametric or default of baseURI+ext(s)
-        [self, ((match /[\*\{\[]/) ? self : (self + '.*')).glob ]
-       end).justArray.flatten.compact.uniq.select &:exist?
-    end
-
-    # pattern -> file(s)
-    def grep q
-      args = POSIX.splitArgs q
-      case args.size
-      when 0
-        return []
-      when 2
-        cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -il #{args[1].sh}"
-      when 3
-        cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -il #{args[2].sh}"
-      when 4
-        cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -ilZ #{args[2].sh} | xargs -0 grep -il #{args[3].sh}"
-      else
-        pattern = args.join '.*'
-        cmd = "grep -ril #{pattern.sh} #{sh}"
-      end
-      `#{cmd} | head -n 1024`.lines.map{|path| POSIX.path path.chomp}
-    end
   end
 
   include POSIX
@@ -192,54 +148,6 @@ class WebResource
     end
   end
 
-  module HTTP
-    # redirect to time-dir
-    def chronoDir ps
-      time = Time.now
-      loc = time.strftime(case ps[0][0].downcase
-                          when 'y'
-                            '%Y'
-                          when 'm'
-                            '%Y/%m'
-                          when 'd'
-                            '%Y/%m/%d'
-                          when 'h'
-                            '%Y/%m/%d/%H'
-                          else
-                          end)
-      [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
-    end
-
-    def entity env, body = nil
-      etags = env['HTTP_IF_NONE_MATCH'].do{|m|
-        m.strip.split /\s*,\s*/ }
-      if etags && (etags.include? env[:Response]['ETag'])
-        [304, {}, []]
-      else
-        body = body ? body.call : self
-        if body.class == WebResource # use Rack file-handler
-          (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
-            [s,h.update(env[:Response]),b]}
-        else
-          [(env[:Status]||200), env[:Response], [body]]
-        end
-      end
-    end
-
-    def fileResponse
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
-                            'ETag' => [m,size].join.sha2,
-                            'Access-Control-Allow-Origin' => '*'
-                           })
-      @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
-        filePreview
-      else
-        entity @r
-      end
-    end
-
-  end
   module POSIX
     # hard-link capability test
     LinkMethod = begin

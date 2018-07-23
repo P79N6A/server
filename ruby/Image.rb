@@ -8,7 +8,6 @@ class WebResource
   # TODO Dedupe video embeds within request
   module Webize
 
-    #TODO imagehost reqtime translation to RDF
     def triplrImage &f
       yield uri, Type, R[Image]
       yield uri, Image, self
@@ -24,6 +23,34 @@ class WebResource
     end
 
   end
+
+  module HTTP
+    # image hosts
+
+    Host['snag.gy'] = -> re {[302,{'Location' => '//i.snag.gy'+re.path},[]]}
+
+    WrappedImage = -> re {
+      img = R['https://'+re.env['HTTP_HOST']+re.path].nokogiri.css('[property="og:image"]').attr('content').to_s.R
+      loc = img.host ? ('https://' + img.host + img.path) : img.path
+      [302,{'Location' => loc},[]]}
+
+    Host['imgur.com'] = WrappedImage
+
+    Host['instagram.com'] = Host['www.instagram.com'] = -> re {
+      if re.parts[0] == 'p'
+        WrappedImage[re]
+      else
+        graph = {}
+        open('https://'+re.env['HTTP_HOST']+re.path).read.scan(/https:\/\/instagram.*?jpg/){|f|
+          unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
+            graph[f] = {'uri' => f,
+                        Type => R[Image],
+                        Image => f.R} #TODO render image-tag w/o explicit image-link pointer
+          end}
+        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
+      end}
+  end
+
   module HTML
 
     Markup[Image] = -> image,env {
