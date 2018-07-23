@@ -24,11 +24,6 @@ class WebResource
     end
 
   end
-  module HTTP
-    WrappedImage = -> re {
-      "img"
-    }
-  end
   module HTML
 
     Markup[Image] = -> image,env {

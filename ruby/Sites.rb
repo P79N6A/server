@@ -50,8 +50,7 @@ class WebResource
 
     # image hosts
 
-    Host['snag.gy'] = -> re {
-        [302,{'Location' => '//i.snag.gy'+re.path},[]]}
+    Host['snag.gy'] = -> re {[302,{'Location' => '//i.snag.gy'+re.path},[]]}
 
     WrappedImage = -> re {
       img = R['https://'+re.env['HTTP_HOST']+re.path].nokogiri.css('[property="og:image"]').attr('content').to_s.R
@@ -59,6 +58,16 @@ class WebResource
       [302,{'Location' => loc},[]]}
 
     Host['imgur.com'] = WrappedImage
+
+    Host['instagram.com'] = Host['www.instagram.com'] = -> re {
+      if re.parts[0] == 'p'
+        WrappedImage[re]
+      else
+        graph = {}
+        open('https://'+re.env['HTTP_HOST']+re.path).read.scan(/https:\/\/instagram.*?jpg/){|f|
+          graph[f] = {'uri' => f, Image => f.R, Type => R[Image]}}
+        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
+      end}
 
     Host['twitter.com'] = Host['www.twitter.com'] = -> re {
       [200,{},[]]
