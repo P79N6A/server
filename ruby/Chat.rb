@@ -21,6 +21,13 @@ class WebResource
     Markup[SIOC+'ChatLog'] = Markup[Container]
 
   end
+  module HTTP
+    Host['twitter.com'] = Host['www.twitter.com'] = -> re {
+      [200,{},[]]
+    }
+
+
+  end
   module Webize
 
     def twitter

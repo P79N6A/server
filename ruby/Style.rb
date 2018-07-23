@@ -1,25 +1,25 @@
 class WebResource
   module HTML
+
     Icons = {
       'uri' => :id,
+      Abstract => :quote,
+      BlogPost => :pencil,
       Cache => :chain,
       Comments => :comments,
-      Contains => :bin,
       Container => :dir,
+      Contains => :bin,
       Content => :pencil,
-      Abstract => :quote,
-      Identifier => :barcode,
+      DC+'List' => :list,
       DC+'hasFormat' => :file,
       DC+'link' => :chain,
-      DC+'List' => :list,
-      Video => :video,
       Date => :date,
+      Identifier => :barcode,
       Image => :img,
+      InstantMessage => :comment,
       Label => :tag,
       Mtime => :time,
       RSS+'comments' => :comments,
-      InstantMessage => :comment,
-      BlogPost => :pencil,
       SIOC+'ChatLog' => :comments,
       SIOC+'Discussion' => :comments,
       SIOC+'Feed' => :feed,
@@ -27,14 +27,14 @@ class WebResource
       SIOC+'MicroblogPost' => :newspaper,
       SIOC+'Post' => :newspaper,
       SIOC+'SourceCode' => :code,
-      SIOC+'reply_of' => :reply,
       SIOC+'Thread' => :openenvelope,
       SIOC+'Tweet' => :bird,
       SIOC+'Usergroup' => :group,
       SIOC+'WikiArticle' => :pencil,
       SIOC+'has_creator' => :user,
-      SIOC+'num_replies' => :comments,
       SIOC+'has_discussion' => :comments,
+      SIOC+'num_replies' => :comments,
+      SIOC+'reply_of' => :reply,
       SIOC+'user_agent' => :mailer,
       Schema+'Person' => :user,
       Schema+'location' => :location,
@@ -54,11 +54,13 @@ class WebResource
       Title => :title,
       To => :userB,
       Type => :type,
+      Video => :video,
       W3+'2000/01/rdf-schema#Resource' => :node,
     }
+
   end
   module HTTP
-    # local font & CSS
+
     Font = -> re {
       location = '/.conf/font.woff'
       if re.path == location
@@ -72,5 +74,10 @@ header, nav, footer {display: none}"]]
       else
         [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
+
+    %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
+      Host[host] = Font}
+
   end
+
 end

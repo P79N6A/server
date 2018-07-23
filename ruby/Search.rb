@@ -64,7 +64,11 @@ class WebResource
                           end)
       [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
     end
-    
+
+    # look for app in FDroid store. if not there it's probably closed-source
+    Host['play.google.com'] = -> re {
+      [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
+
     Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
