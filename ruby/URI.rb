@@ -72,8 +72,9 @@ class WebResource < RDF::URI
   include URIs
 
   module HTTP
-
-    ## short-URI resolution, cached with no expiry (do services allow editing?)
+    # map handler-lambdas to hosts encoded in URI
+    Host = {}
+    # original URL on file at third-party - network lookup
     Short = -> re {
       host = re.env['HTTP_HOST']
       source = 'https://' + host + re.path
@@ -89,10 +90,19 @@ class WebResource < RDF::URI
       [200, {'Content-Type' => 'text/html'},
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
+    %w{t.co bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms trib.al ow.ly n.pr a.co youtu.be}.map{|host|
+      Host[host] = Short}
+
+    # URI encoded in another URI - no network lookup
     Unwrap = -> key {
       -> re {
         location = re.q[key.to_s.downcase]
         location ? [302,{'Location' => location},[]] : [404,{},[]]}}
+
+    Host['exit.sc']             = Unwrap[:url]
+    Host['lookup.t-mobile.com'] = Unwrap[:origURL]
+    Host['l.instagram.com']     = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
+
 
   end
   module HTML
