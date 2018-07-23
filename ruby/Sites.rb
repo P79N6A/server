@@ -65,7 +65,7 @@ class WebResource
       else
         graph = {}
         open('https://'+re.env['HTTP_HOST']+re.path).read.scan(/https:\/\/instagram.*?jpg/){|f|
-          graph[f] = {'uri' => f, Image => f.R, Type => R[Image]}}
+          graph[f] = {'uri' => f, Image => f.R, Type => R[Image]} unless f.match(/\/[sp]\d\d\dx\d\d\d\//)}
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
       end}
 
