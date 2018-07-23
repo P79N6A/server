@@ -2,10 +2,12 @@ class WebResource
   module HTTP
     #host bindings
 
+    # look for app in open-source store 
     Host['play.google.com'] = -> re {
       [302,
        {'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
 
+    # direct to preferred search & maps providers
     Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
@@ -50,5 +52,10 @@ class WebResource
     Host['snag.gy'] = -> re {
         [302,
          {'Location' => '//i.snag.gy'+re.path},[]]}
+
+    Host['twitter.com'] = Host['www.twitter.com'] = -> re {
+      [200,{},[]]
+    }
+
   end
 end
