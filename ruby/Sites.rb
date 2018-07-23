@@ -54,9 +54,9 @@ class WebResource
         [302,{'Location' => '//i.snag.gy'+re.path},[]]}
 
     WrappedImage = -> re {
-      img = R['https://'+re.env['HTTP_HOST']+re.path].nokogiri.css('[property="og:image"]')
-      [302,{'Location' => img.attr('content').to_s},[]]
-    }
+      img = R['https://'+re.env['HTTP_HOST']+re.path].nokogiri.css('[property="og:image"]').attr('content').to_s.R
+      loc = img.host ? ('https://' + img.host + img.path) : img.path
+      [302,{'Location' => loc},[]]}
 
     Host['imgur.com'] = WrappedImage
 
