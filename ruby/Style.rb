@@ -78,6 +78,10 @@ header, nav, footer {display: none}"]]
     %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
 
+    Host['*.cloudfront.net'] = -> re {
+      puts :WILD,re.uri
+      [200,{},['cloud']]
+    }
   end
 
 end

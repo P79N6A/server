@@ -39,7 +39,10 @@ class WebResource
 
       # bespoke handlers
       return fileResponse if node.file?
-      return Host[@r['HTTP_HOST']][self] if Host[@r['HTTP_HOST']]
+      hostname = @r['HTTP_HOST']
+      return Host[hostname][self] if Host[hostname]
+      wildcard = hostname.split('.')[1..-1].unshift('*').join '.'
+      return Host[wildcard][self] if Host[wildcard]
       return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
 
       # page pointers
