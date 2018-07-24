@@ -1,16 +1,18 @@
 #!/bin/sh
-su -c "iptables  -t nat -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport  80 -j REDIRECT --to-ports 8000"
+# for now drop QUIC/UDP until we figure out how to handle it. seems wishlisted for existing proxies circa 2018
+su -c "iptables  -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport  80 -j DROP"
+su -c "ip6tables -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport  80 -j DROP"
+su -c "iptables  -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport 443 -j DROP"
+su -c "ip6tables -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport 443 -j DROP"
+# route TCP into the proxy. stock config on 8080 for loggging + inspection, reverse to 8888 for custom handling (export no_proxy=`cat config/proxy.domains | tr "\n" ","` shell env or option in OS proxy-settings UI)
 su -c "iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner `id -u` --dport  80 -j REDIRECT --to-ports 8000"
-su -c "ip6tables -t nat -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport  80 -j REDIRECT --to-ports 8000"
 su -c "ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner `id -u` --dport  80 -j REDIRECT --to-ports 8000"
-su -c "iptables  -t nat -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport 443 -j REDIRECT --to-ports 8888"
 su -c "iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner `id -u` --dport 443 -j REDIRECT --to-ports 8888"
-su -c "ip6tables -t nat -A OUTPUT -p udp -m owner ! --uid-owner `id -u` --dport 443 -j REDIRECT --to-ports 8888"
 su -c "ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner `id -u` --dport 443 -j REDIRECT --to-ports 8888"
 tmux new-session -s web -d -c ~/web
 tmux send-keys -t web:0 'unicorn -p 8000 -o localhost .conf/rack.ru' C-m
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
 tmux new-window -t web:2 -d mitmdump
 tmux new-window -t web:3 -d
-tmux send-keys -t web:3 "watch -n 288 rsync -av becky@origin:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
+tmux send-keys -t web:3 "watch -n 288 rsync -av becky@node:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
 tmux attach-session -t web
