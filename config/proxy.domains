@@ -31,6 +31,7 @@
 *.amazonaws.com
 *.ampproject.org
 *.and.co.uk
+*.aniview.com
 *.anvato.net
 *.appboy.com
 *.appdynamics.com
@@ -68,6 +69,7 @@
 *.clickability.com
 *.clicktale.net
 *.cloud
+*.cloudflare.com
 *.cloudfront.net
 *.cloudinary.com
 *.comodo.net
@@ -130,6 +132,7 @@
 *.googlesyndication.com
 *.googletagmanager.com
 *.googletagservices.com
+*.googleusercontent.com
 *.gravatar.com
 *.gstatic.com
 *.gvt2.com
@@ -155,6 +158,7 @@
 *.jwplatform.com
 *.kargo.com
 *.keywee.co
+*.kinja-static.com
 *.krxd.net
 *.liadm.com
 *.lightboxcdn.com
@@ -208,6 +212,7 @@
 *.omnitagjs.com
 *.omniture.com
 *.omtrdc.net
+*.onesignal.com
 *.openx.net
 *.optimizely.com
 *.optmnstr.com
@@ -223,6 +228,7 @@
 *.pingdom.net
 *.pinimg.com
 *.pinterest.com
+*.playbuzz.com
 *.poratav.com
 *.postrelease.com
 *.powerlinks.com
@@ -256,6 +262,7 @@
 *.sharethrough.com
 *.sitelock.com
 *.skimresources.com
+*.smartadserver.com
 *.snapchat.com
 *.solidopinion.com
 *.sonobi.com
@@ -316,6 +323,7 @@
 *.zqtk.net
 a.co
 ad-delivery.net
+app-measurement.com
 bit.ly
 bluetoad.com
 bos.gl
@@ -331,6 +339,7 @@ google.com
 ift.tt
 imgur.com
 justicejudo.com
+kinja.com
 l
 localhost
 lockerdome.com
