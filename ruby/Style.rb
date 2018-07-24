@@ -61,26 +61,28 @@ class WebResource
   end
   module HTTP
 
-    Font = -> re {
-      location = '/.conf/font.woff'
-      if re.path == location
-        re.fileResponse
-      elsif re.path == '/css'
-        [200, {'Content-Type' => 'text/css'},
-         ["* {background-color: #000; color: #fff; font-family: sans-serif}
+    CSS = [200, {'Content-Type' => 'text/css'},
+           ["* {background-color: #000; color: #fff; font-family: sans-serif}
 div,p,span,td {background-color: #000 !important; color: #fff !important}
 a {text-decoration:none; font-weight: bold; color: #0f0 !important}
+svg {max-width:18ex}
 header, nav, footer {display: none}"]]
+
+    Font = -> re {
+      font = '/.conf/font.woff'
+      if re.path == font
+        re.fileResponse
+      elsif re.path == '/css'
+        CSS
       else
-        [301, {'Location' => location, 'Access-Control-Allow-Origin' => '*'}, []]
+        [301, {'Location' => font, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
 
     %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
 
     Host['*.cloudfront.net'] = -> re {
-      puts :WILD,re.uri
-      [200,{},['cloud']]
+      re.ext == 'css' ? CSS : [200,{},['cloudfront']]
     }
   end
 
