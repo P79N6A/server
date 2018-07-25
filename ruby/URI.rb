@@ -10,13 +10,6 @@ end
 class Symbol
   def R; WebResource.new to_s end
 end
-=begin
-proxy+gateway usually exempt from rules directing traffic to them, to prevent loops and allow access out to the net
-with uid seperation (daemon as uid 8080 on port 8080) this routing can be configured at cmdline:
-$ iptables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner 8080 --dport 443 -j REDIRECT --to-ports 8080 
-bypass local /etc/hosts and DNS servers, other ubiquitous means of directing traffic to the proxy:
-=end
-Resolv::DefaultResolver.replace_resolvers([Resolv::DNS.new(:nameserver => ENV['NAMESERVER'] || '8.8.8.8')])
 
 class WebResource < RDF::URI
   # constructor
