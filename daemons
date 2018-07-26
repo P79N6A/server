@@ -14,5 +14,5 @@ tmux send-keys -t web:0 'unicorn -p 8000 -o localhost .conf/rack.ru' C-m
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
 tmux new-window -t web:2 -d mitmdump
 tmux new-window -t web:3 -d
-tmux send-keys -t web:3 "watch -n 288 rsync -av becky@node:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
+tmux send-keys -t web:3 "watch -n 288 rsync -av u@node:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
 tmux attach-session -t web
