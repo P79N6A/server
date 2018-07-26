@@ -65,8 +65,9 @@ class WebResource < RDF::URI
   include URIs
 
   module HTTP
-    # map handler-lambdas to hosts encoded in URI
+    # host-mapped handler lambdas
     Host = {}
+
     # original URL on file at third-party - network lookup
     Short = -> re {
       host = re.env['HTTP_HOST']
@@ -95,7 +96,7 @@ class WebResource < RDF::URI
     Host['exit.sc']             = Unwrap[:url]
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
     Host['l.instagram.com']     = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
-
+    Host['youtu.be'] = -> re {[302,{'Location' => 'https://www.youtube.com/watch?v=' + re.path[1..-1]},[]]}
 
   end
   module HTML
