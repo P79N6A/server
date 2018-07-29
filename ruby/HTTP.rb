@@ -52,7 +52,6 @@ class WebResource
       return Host[wildcard][self] if Host[wildcard]
 
       # default file-mapped response
-      paginate
       filesResponse
     end
 
@@ -69,9 +68,13 @@ class WebResource
       end
     end
 
-    def filesResponse set
-      set = selectNodes if !set || set.empty?
-      return notfound   if !set || set.empty?
+    def filesResponse set=nil
+      if !set || set.empty?
+        # default fileset
+        set = selectNodes
+        paginate
+      end
+      return notfound if !set || set.empty?
 
       format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?

@@ -23,7 +23,18 @@ class WebResource
   end
   module HTTP
 
-    Host['twitter.com'] = Host['www.twitter.com'] = -> re {re.filesResponse R[Twitter + re.path].indexTweets}
+    Host['twitter.com'] = Host['www.twitter.com'] = -> re {
+      if re.parts[0].match /^\d\d\d\d$/ # date index
+        glob = '*twitter.com*'
+        location = if re.basename == glob
+                     re
+                   else
+                     R[re.path+'/'+glob].env re.env
+                   end
+        location.filesResponse
+      else
+        re.filesResponse R[Twitter + re.path].indexTweets
+      end}
 
   end
   module Webize
