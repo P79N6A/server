@@ -29,7 +29,7 @@ class WebResource
         location = if re.basename == glob
                      re
                    else
-                     R[re.path+'/'+glob].env re.env
+                     R[re.path + (re.path[-1] == '/' ? '' : '/') + glob].env re.env
                    end
         location.filesResponse
       else
