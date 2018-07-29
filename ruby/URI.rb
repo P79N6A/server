@@ -71,7 +71,8 @@ class WebResource < RDF::URI
     # original URL on file at third-party - network lookup
     Short = -> re {
       host = re.env['HTTP_HOST']
-      source = 'https://' + host + re.path
+      scheme = 'http' + (InsecureShorteners.member?(host) ? '' : 's') + '://'
+      source = scheme + host + re.path
       dest = nil
       cache = R['/.cache/' + host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
       if cache.exist?
@@ -84,6 +85,7 @@ class WebResource < RDF::URI
       [200, {'Content-Type' => 'text/html'},
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
+    InsecureShorteners = %w{bos.gl w.bos.gl}
     %w{t.co bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms trib.al ow.ly n.pr a.co youtu.be}.map{|host|
       Host[host] = Short}
 
@@ -101,7 +103,7 @@ class WebResource < RDF::URI
   end
   module HTML
     BlankLabel = %w{com comments r status reddit twitter www}
-    BoldLabel = %w{boston providence}
+    BoldLabel = %w{boston collapse providence}
   end
   module Webize
 
