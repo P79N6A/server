@@ -22,10 +22,8 @@ class WebResource
 
   end
   module HTTP
-    Host['twitter.com'] = Host['www.twitter.com'] = -> re {
-      [200,{},[]]
-    }
 
+    Host['twitter.com'] = Host['www.twitter.com'] = -> re {re.filesResponse R[Twitter + re.path].indexTweets}
 
   end
   module Webize
@@ -57,21 +55,25 @@ class WebResource
 
     def indexTweets
       graph = {}
-      # build graph
+      tweets = []
       fetchTweets{|s,p,o|
         graph[s] ||= {'uri'=>s}
         graph[s][p] ||= []
         graph[s][p].push o}
-      # serialize tweets to file(s)
+      # visit tweets
       graph.map{|u,r|
         r[Date].do{|t|
+          # find storage location
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           doc = "/#{time}#{slug}.e".R
+          # cache tweet
           unless doc.e
             puts u
             doc.writeFile({u => r}.to_json)
-          end}}
+          end
+          tweets << doc}}
+      tweets
     end
 
     def triplrChatLog &f

@@ -37,16 +37,87 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
 
-      # bespoke handlers
+      # static file requested
       return fileResponse if node.file?
-      hostname = @r['HTTP_HOST']
-      return Host[hostname][self] if Host[hostname]
-      wildcard = hostname.split('.')[1..-1].unshift('*').join '.'
-      return Host[wildcard][self] if Host[wildcard]
+
+      # timeslice redirect
       return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
 
-      # page pointers
-      dp = [] # datetime parts
+      # (hostname -> lambda) map
+      hostname = @r['HTTP_HOST']
+      # exact
+      return Host[hostname][self] if Host[hostname]
+      # wildcard subdomains
+      wildcard = hostname.split('.')[1..-1].unshift('*').join '.'
+      return Host[wildcard][self] if Host[wildcard]
+
+      # default file-mapped response
+      paginate
+      filesResponse
+    end
+
+    def fileResponse
+      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
+                            'ETag' => [m,size].join.sha2,
+                            'Access-Control-Allow-Origin' => '*'
+                           })
+      @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
+      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
+        filePreview
+      else
+        entity @r
+      end
+    end
+
+    def filesResponse set
+      set = selectNodes if !set || set.empty?
+      return notfound   if !set || set.empty?
+
+      format = selectMIME
+      @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
+      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
+                            'ETag' => [[R[HTML::SourceCode], # cache-bust on renderer,
+                                        R['.conf/site.css'], # CSS, or doc changes
+                                        *set].sort.map{|r|[r,r.m]}, format].join.sha2})
+      entity @r, ->{
+        if set.size == 1 && set[0].mime == format
+          set[0] # no transcode, file as response body
+        else # merge and transcode
+          if format == 'text/html'
+            ::Kernel.load HTML::SourceCode if ENV['DEV']
+            htmlDocument load set
+          elsif format == 'application/atom+xml'
+            renderFeed load set
+          else # RDF
+            g = RDF::Graph.new
+            set.map{|n| g.load n.toRDF.localPath, :base_uri => n.stripDoc }
+            g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
+          end
+        end}
+    end
+
+    def entity env, body = nil
+      etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
+      if etags && (etags.include? env[:Response]['ETag'])
+        # client has entity, tell it
+        [304, {}, []]
+      else # produce entity
+        # if entity-producing lambda supplied, call it. otherwise use file-reference for body
+        body = body ? body.call : self
+        # Rack handles file-reference response
+        if body.class == WebResource
+          (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
+            [s,h.update(env[:Response]),b]}
+        else # inlined body data
+          [(env[:Status]||200), env[:Response], [body]]
+        end
+      end
+    end
+
+    def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
+
+    def paginate
+      dp = [] # date parts
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
       n = nil; p = nil
       case dp.length
@@ -73,72 +144,13 @@ class WebResource
           n = hour >= 23 ? (day + 1).strftime('/%Y/%m/%d/00') : (day.strftime('/%Y/%m/%d/')+('%02d' % (hour+1)))
         end
       end
-
-      sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '') # preserve trailing slash
+      # preserve trailing slash
+      sl = parts.empty? ? '' : (path[-1] == '/' ? '/' : '')
+      # add page pointers to HTTP header
       @r[:links][:prev] = p + '/' + parts.join('/') + sl + qs + '#prev' if p && R[p].e
       @r[:links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
       @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
-
-      # resource set
-      set = selectNodes
-      return notfound if !set || set.empty?
-
-      # response metadata
-      format = selectMIME
-      @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
-                            'ETag' => [[R[HTML::SourceCode], # cache-bust on renderer,
-                                        R['.conf/site.css'], # CSS, or doc changes
-                                        *set].sort.map{|r|[r,r.m]}, format].join.sha2})
-      # body-producer lambda
-      entity @r, ->{
-        if set.size == 1 && set[0].mime == format
-          set[0] # static file good to go
-        else # transcode and/or merge sources
-          if format == 'text/html'
-            ::Kernel.load HTML::SourceCode if ENV['DEV']
-            htmlDocument load set
-          elsif format == 'application/atom+xml'
-            renderFeed load set
-          else # RDF formats
-            g = RDF::Graph.new
-            set.map{|n| g.load n.toRDF.localPath, :base_uri => n.stripDoc }
-            g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
-          end
-        end}
     end
-
-    # conditional body-producer
-    def entity env, body = nil
-      etags = env['HTTP_IF_NONE_MATCH'].do{|m|
-        m.strip.split /\s*,\s*/ }
-      if etags && (etags.include? env[:Response]['ETag'])
-        [304, {}, []]
-      else
-        body = body ? body.call : self
-        if body.class == WebResource # use Rack file-handler
-          (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
-            [s,h.update(env[:Response]),b]}
-        else
-          [(env[:Status]||200), env[:Response], [body]]
-        end
-      end
-    end
-
-    def fileResponse
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
-                            'ETag' => [m,size].join.sha2,
-                            'Access-Control-Allow-Origin' => '*'
-                           })
-      @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
-        filePreview
-      else
-        entity @r
-      end
-    end
-
-    def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
 
     # environment -> ?querystring
     def qs; @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || '' end
