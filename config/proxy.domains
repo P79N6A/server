@@ -45,7 +45,6 @@
 *.beemray.com
 *.betrad.com
 *.bidswitch.net
-*.bing.com
 *.bkrtx.com
 *.blueconic.net
 *.bluekai.com
@@ -270,6 +269,7 @@
 *.snapchat.com
 *.solidopinion.com
 *.sonobi.com
+*.soundcloud.com
 *.spot.im
 *.ssl-images-amazon.com
 *.sstatic.net
@@ -313,6 +313,7 @@
 *.weather.com
 *.windows.net
 *.wixapps.net
+*.wordpress.com
 *.wp.com
 *.wsi.com
 *.yahoo.com
@@ -345,7 +346,6 @@ ift.tt
 imgur.com
 justicejudo.com
 kinja.com
-l
 localhost
 lockerdome.com
 ml314.com
@@ -355,8 +355,6 @@ nyer.cm
 nyti.ms
 onesignal.com
 ow.ly
-promoted.soundcloud.com
-public-api.wordpress.com
 ritogaga.com
 rpxnow.com
 snag.gy
