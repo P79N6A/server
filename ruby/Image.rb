@@ -54,6 +54,8 @@ class WebResource
           end}
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
       end}
+
+    Host['youtu.be'] = -> re {[302,{'Location' => 'https://www.youtube.com/watch?v=' + re.path[1..-1]},[]]}
   end
 
   module HTML

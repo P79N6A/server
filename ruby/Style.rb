@@ -82,9 +82,16 @@ header, nav, footer {display: none}
     %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
 
-    Host['*.cloudfront.net'] = -> re {
-      re.ext == 'css' ? CSS : [200,{},['cloudfront']]
-    }
+    # CDNs / storage - allow Images
+    Host['*.amazonaws.com'] = Host['*.cloudfront.net'] = -> re {
+      case re.ext
+      when 'css'
+        CSS
+      when /^(jpg|png|gif|webp)$/i
+        ImageCache[re]
+      else
+        [404,{},[]]
+      end}
   end
 
 end
