@@ -1,7 +1,7 @@
 #!/bin/sh
 # apt install graphicsmagick git ruby ruby-dev libssl-dev libxml2-dev libxslt1-dev
-# pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev
 # pacman -S graphicsmagick git ruby python-pip libxml2 libxslt
+pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang make rsync libffi-dev python python-dev libcrypt-dev openssl-dev
 cd ruby
 ruby install
 gem install bundler
