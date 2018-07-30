@@ -22,8 +22,6 @@ tmux new-window -t web:2 -d mitmdump
 # state synchronization
 tmux new-window -t web:3 -d
 tmux send-keys -t web:3 "watch -n 288 rsync -av u@node:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
-tmux attach-session -t web
 
-# browse
-#export no_proxy=`cat config/proxy.domains | tr "\n" ","
-#brave
+# user input
+tmux attach-session -t web

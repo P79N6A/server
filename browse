@@ -1,0 +1,3 @@
+# browse
+#export no_proxy=`cat config/proxy.domains | tr "\n" ","
+#brave
