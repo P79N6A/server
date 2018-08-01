@@ -5,17 +5,16 @@ class WebResource
     include URIs
 
     def self.call env; puts "\e[35;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m <- \e[36;1m" + (env['HTTP_REFERER']||'') + "\e[0m   \e[30;1m" + (env['HTTP_USER_AGENT']||'') + "\e[0m"
-      return [405,{},[]] unless Methods.member? env['REQUEST_METHOD']
+      method = env['REQUEST_METHOD']
+      return [405,{},[]] unless Methods.member? method
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
       env['q'] = parseQs env['QUERY_STRING']
-      path.R.environment(env).send env['REQUEST_METHOD']
+      path.R.environment(env).send method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
-       [[x.class,
-         x.message,
-         x.backtrace].join("\n")]]
+       method=='HEAD' ? [] : [[x.class,x.message,x.backtrace].join("\n")]]
     end
 
     def environment env = nil
