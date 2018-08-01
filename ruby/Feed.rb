@@ -30,7 +30,7 @@ class WebResource
           mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified
           resp = response.read
           unless body.e && body.readFile == resp
-            # cache and index new body
+            # cache and index new posts
             body.writeFile resp
             newPosts.concat ('file:'+body.localPath).R.indexFeed(:format => :feed, :base_uri => uri)
           end
@@ -325,6 +325,9 @@ class WebResource
     end
   end
   include Feed
+  module HTTP
+    Host['*.reddit.com'] = -> re {re.filesResponse R['https://www.reddit.com'+re.path+'.rss'].fetchFeed}
+  end
   module Webize
     def triplrOPML
       # doc
