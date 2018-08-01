@@ -46,7 +46,7 @@ class WebResource
         WrappedImage[re]
       else
         graph = {}
-        open('https://'+re.env['HTTP_HOST']+re.path).read.scan(/https:\/\/instagram.*?jpg/){|f|
+        open('https://'+re.env['HTTP_HOST']+re.path).read.scan(/https:\/\/.*?jpg/){|f|
           unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
             graph[f] = {'uri' => f,
                         Type => R[Image],
