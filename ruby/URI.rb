@@ -81,7 +81,6 @@ class WebResource < RDF::URI
         resp = Net::HTTP.get_response (URI.parse source)
         dest = resp['Location'] || resp['location']
         if !dest
-          puts "#{source} destination missing at HTTP level, sniffing content"
           body = Nokogiri::HTML.fragment resp.body
           refresh = body.css 'meta[http-equiv="refresh"]'
           if refresh
@@ -91,10 +90,7 @@ class WebResource < RDF::URI
             end
           end
         end
-        if dest
-          cache.writeFile dest
-          puts "#{re.path[1..-1]} -> #{dest}"
-        end
+        cache.writeFile dest if dest
       end
       [200, {'Content-Type' => 'text/html'},
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
