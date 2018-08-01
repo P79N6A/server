@@ -5,8 +5,9 @@ class WebResource
     include URIs
 
     def feeds; puts (nokogiri.css '[rel=alternate]').map{|u|join u.attr :href}.uniq end
-
+    def fetchFeeds; open(localPath).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
     def fetchFeed
+      newPosts = []
       head = {}
       cache = R['/.cache/'+uri.sha2+'/'] # storage
       etag = cache + 'etag'      # cache etag URI
@@ -21,7 +22,7 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
-      begin # conditional cache-update
+      begin
         open(uri, head) do |response|
           curEtag = response.meta['etag']
           curMtime = response.last_modified || Time.now rescue Time.now
@@ -29,22 +30,23 @@ class WebResource
           mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified
           resp = response.read
           unless body.e && body.readFile == resp
-            body.writeFile resp # body
-            ('file:'+body.localPath).R.indexFeed :format => :feed, :base_uri => uri # index content
+            # cache and index new body
+            body.writeFile resp
+            newPosts.concat ('file:'+body.localPath).R.indexFeed(:format => :feed, :base_uri => uri)
           end
         end
       rescue OpenURI::HTTPError => error
         msg = error.message
         puts [uri,msg].join("\t") unless msg.match(/304/)
       end
+      newPosts
     rescue Exception => e
       puts uri, e.class, e.message
     end
-    def fetchFeeds; open(localPath).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
-
     alias_method :getFeed, :fetchFeed
 
     def indexFeed options = {}
+      newPosts = []
       g = RDF::Repository.load self, options
       g.each_graph.map{|graph|
         graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t| # find timestamp
@@ -53,13 +55,14 @@ class WebResource
           doc =  R["/#{time}#{slug}.ttl"]
           unless doc.e
             doc.dir.mkdir
-            cacheBase = doc.stripDoc
-            graph << RDF::Statement.new(graph.name, R[Cache], cacheBase)
+            resource = doc.stripDoc
+            graph << RDF::Statement.new(graph.name, R[Cache], resource)
             RDF::Writer.open(doc.localPath){|f|f << graph}
-            puts cacheBase
+            puts "http://localhost" + resource
+            newPosts << doc
           end
           true}}
-      self
+      newPosts
     rescue Exception => e
       puts uri, e.class, e.message
     end
