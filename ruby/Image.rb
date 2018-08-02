@@ -34,10 +34,14 @@ class WebResource
       loc = img.host ? ('https://' + img.host + img.path) : img.path
       [302,{'Location' => loc},[]]}
 
-    Host['imgur.com'] = -> re {
-      if !re.ext.empty?
-        [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
-      else
+    Host['imgur.com'] = Host['*.imgur.com'] = -> re {
+      if !re.ext.empty? # image file
+        if 'i.imgur.com' == re.env['HTTP_HOST']
+          ImageCache[re]
+        else
+          [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
+        end
+      else # web page
         WrappedImage[re]
       end}
 
