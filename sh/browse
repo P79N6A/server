@@ -1,3 +1,5 @@
 #!/bin/sh
-export no_proxy=`cat ~/src/pw/config/direct.domains | tr "\n" ","`
+export http_proxy=http://localhost:8080
+export https_proxy=https://localhost:8080
+export no_proxy=`cat ~/src/pw/config/proxy.domains | tr "\n" ","`
 brave
