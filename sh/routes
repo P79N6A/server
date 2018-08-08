@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/system/bin/sh
 UID=10006
 # for now drop QUIC/UDP until proxy support improves
 iptables  -A OUTPUT -p udp -m owner ! --uid-owner $UID --dport  80 -j DROP
