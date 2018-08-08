@@ -1,9 +1,22 @@
 #!/bin/sh
-# apt install graphicsmagick git ruby ruby-dev libssl-dev libxml2-dev libxslt1-dev
-# pacman -S graphicsmagick git ruby python-pip libxml2 libxslt
-pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang make rsync libffi-dev python python-dev libcrypt-dev openssl-dev
+
+# install OS dependencies, termux edition. adjust for your distro
+pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
+
+# distro pips tend to lag, upgrade if needed
+pip install --upgrade pip
+
+# install Ruby library
 cd ruby
 ruby install
+
+# install Ruby dependencies
 gem install bundler
-pip install --upgrade pygments
 bundle install
+
+# install Python dependencies
+pip3 install --upgrade mitmproxy pygments
+
+# install server certificate authority
+hash=$(openssl x509 -inform PEM -subject_hash_old -in ~/.mitmproxy/mitmproxy-ca-cert.pem -noout)
+su -c "cp /data/data/com.termux/files/home/.mitmproxy/mitmproxy-ca-cert.pem /system/etc/security/cacerts/$hash.0"

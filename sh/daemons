@@ -1,20 +1,21 @@
 #!/bin/sh
-# add user-scoped ruby environment
+# user-scoped ruby-env
 export GEM_HOME=$HOME
 export PATH=$PATH:$HOME/bin
 
-# start session and HTTP daemon
+# initialize session
 tmux new-session -s web -d -c ~/web
-tmux send-keys -t web:0 'unicorn -p 8000 -o localhost .conf/rack.ru' C-m
 
-# in
+# HTTP in
+tmux send-keys  -t web:0   'unicorn  -p 8000 -o localhost .conf/rack.ru' C-m
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
-# out
+
+# HTTP out
 tmux new-window -t web:2 -d mitmdump
 
-# state synchronization
+# database synchronization
 tmux new-window -t web:3 -d
-tmux send-keys -t web:3 "watch -n 288 rsync -av u@node:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
+tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
 
 # user input
 tmux attach-session -t web
