@@ -96,7 +96,7 @@ class WebResource < RDF::URI
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
     InsecureShorteners = %w{bos.gl w.bos.gl}
-    %w{t.co bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms trib.al ow.ly n.pr a.co youtu.be}.map{|host|
+    %w{t.co bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms ti.me trib.al ow.ly n.pr a.co youtu.be}.map{|host|
       Host[host] = Short}
 
     # URI encoded in another URI - no network lookup
