@@ -11,9 +11,7 @@
 <muttrc> <http://purl.org/dc/terms/note> "configuration for reading/replying to mails" .
 <procmailrc> <http://purl.org/dc/terms/note> "procmailrc for hour-dir delivery" .
 <feeds> <http://purl.org/dc/terms/note> "feed URLs" .
-<ooze.sh> <http://purl.org/dc/terms/note> "slow-rolling content scanner" .
 <rack.ru> <http://purl.org/dc/terms/note> "Ruby daemon invocation" .
 <site.css> <http://purl.org/dc/terms/note> "CSS for main HTML view" .
 <site.js> <http://purl.org/dc/terms/note> "script for keyboard-navigation" .
-<spin.sh> <http://purl.org/dc/terms/note> "frequently-updating content scanner" .
 <twitter.com> <http://purl.org/dc/terms/note> "twitter users" .
