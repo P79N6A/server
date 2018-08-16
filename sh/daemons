@@ -1,20 +1,21 @@
 #!/bin/sh
-# user-scoped ruby-env
-export GEM_HOME=$HOME
-export PATH=$PATH:$HOME/bin
+upstream=http://192.168.43.1:8080
+routeconfig=$(realpath ~/src/pw/sh/routes)
 
 # initialize session
 tmux new-session -s web -d -c ~/web
 
 # configure network
-su -c /data/data/com.termux/files/home/src/pw/sh/routes
+su -c "sh $routeconfig"
+
+# launch daemon
+tmux send-keys -t web:0 'unicorn  -p 8000 -o localhost .conf/rack.ru' C-m
 
 # HTTP in
-tmux send-keys  -t web:0   'unicorn  -p 8000 -o localhost .conf/rack.ru' C-m
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
 
 # HTTP out
-tmux new-window -t web:2 -d mitmdump -m upstream:http://m:8080 --set keep_host_header=true --ssl-insecure
+tmux new-window -t web:2 -d mitmdump -m upstream:$upstream --set keep_host_header=true --ssl-insecure
 
 # database synchronization
 tmux new-window -t web:3 -d
