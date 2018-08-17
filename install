@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# dependencies via OS package-manager
+# package dependencies
 #Termux
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 #Debian. termux has apt-get so check for a util it didn't include
@@ -10,9 +10,7 @@ which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev gre
 gem install bundler
 cd ruby
 bundle install
-
-# this library
-ruby install
+ruby install # live unpackaged symlink of source. still no releases after 12 years..
 
 # Python dependencies
 pip3 install --upgrade mitmproxy pygments
