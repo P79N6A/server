@@ -1,20 +1,20 @@
 #!/bin/sh
 
-# OS deps TODO figure out distro automatically and make distro packages
-#termux
-pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
-#debian
-apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
+# dependencies via OS package-manager
+#Termux
+which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
+#Debian. termux has apt-get so check for a util it didn't include
+which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
 
-# Ruby library
-cd ruby
-ruby install
-
-# Ruby deps
+# Ruby dependencies
 gem install bundler
+cd ruby
 bundle install
 
-# Python deps
+# this library
+ruby install
+
+# Python dependencies
 pip3 install --upgrade mitmproxy pygments
 
 # certificate
