@@ -1,5 +1,9 @@
 #!/bin/sh
-upstream=http://192.168.43.1:8080
+# script to launch local HTTP daemon and configure system to route each packet to one of two proxies
+# proxy IN is a reverse proxy in front of the daemon. HTTP traffic needing rewriting or blackholing goes here
+# proxy OUT is for traffic ready to go out to the internet. CONNECT requests supported
+# run proxyhosts script to generate pattern for IN proxy selection in env-var/proxy-userinterface-ready format
+
 routeconfig=$(realpath ~/src/pw/sh/routes)
 
 # initialize session
@@ -11,11 +15,11 @@ su -c "sh $routeconfig"
 # launch daemon
 tmux send-keys -t web:0 'unicorn  -p 8000 -o localhost .conf/rack.ru' C-m
 
-# HTTP in
+# HTTP (IN)
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-# HTTP out
-tmux new-window -t web:2 -d mitmdump -m upstream:$upstream --set keep_host_header=true --ssl-insecure
+# HTTP (OUT)
+tmux new-window -t web:2 -d mitmdump
 
 # database synchronization
 tmux new-window -t web:3 -d
