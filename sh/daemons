@@ -7,7 +7,7 @@
 
 routeconfig=$(realpath ~/src/pw/sh/routes)
 
-# initialize session handler TODO systemd units as alternative to tmux
+# initialize session handler TODO systemd-unit as alternative to tmux
 tmux new-session -s web -d -c ~/web
 
 # configure network
@@ -18,6 +18,8 @@ tmux send-keys -t web:0 'unicorn  -p 8000 -o localhost .conf/rack.ru' C-m
 
 # HTTP (IN)
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
+# to bypass handling and send everything OUT with only inspection+logging, ctrl-C this and run:
+# mitmdump -p 8888 -m transparent
 
 # HTTP (OUT)
 tmux new-window -t web:2 -d mitmdump
