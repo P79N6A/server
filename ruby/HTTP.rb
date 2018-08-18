@@ -42,15 +42,15 @@ class WebResource
       # timeslice redirect
       return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
 
-      # (hostname -> lambda) map
+      # (hostname -> lambda) lookup
       hostname = @r['HTTP_HOST']
-      # exact
+      # exact match
       return Host[hostname][self] if Host[hostname]
-      # wildcard subdomains
+      # wildcard subdomains match
       wildcard = hostname.split('.')[1..-1].unshift('*').join '.'
       return Host[wildcard][self] if Host[wildcard]
 
-      # default file-mapped response
+      # default file-mapped resource(s)
       filesResponse
     end
 

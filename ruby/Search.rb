@@ -73,16 +73,7 @@ class WebResource
       product = re.parts[0]
       case product
       when 'maps'
-        loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
-                lat = ll[1]
-                lng = ll[2]
-                "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"
-              elsif re.q.has_key? 'q'
-                "https://www.openstreetmap.org/search?query=#{URI.escape re.q['q']}"
-              else
-                'https://www.openstreetmap.org/'
-              end
-        [302,{'Location' => loc},[]]
+        Host['maps.google.com'][re]
       when 'search'
         loc = if re.q.has_key? 'q'
                 "https://duckduckgo.com/?q=#{URI.escape re.q['q']}"
@@ -93,6 +84,18 @@ class WebResource
       else
         [404,{},[]]
       end}
+
+    Host['maps.google.com'] = -> re {
+      loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+              lat = ll[1]
+              lng = ll[2]
+              "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"
+            elsif re.q.has_key? 'q'
+              "https://www.openstreetmap.org/search?query=#{URI.escape re.q['q']}"
+            else
+              'https://www.openstreetmap.org/'
+            end
+      [302,{'Location' => loc},[]]}
 
   end
 end
