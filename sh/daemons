@@ -5,16 +5,15 @@
 # run 'proxyhosts' to output pattern for IN proxy selection in env-var/proxy-configUI format
 # or 'browse' to put the settings in appropriate env-vars and launch a browser
 
+# configure network
 proxy_uid=$(id -u)
 routeconfig=$(realpath ~/src/pw/sh/routes)
-
-# initialize session handler TODO systemd-unit as alternative to tmux
-tmux new-session -s web -d -c ~/web
-
-# configure network
 su -c "sh $routeconfig $proxy_uid"
 
-# launch daemon
+# initialize session
+tmux new-session -s web -d -c ~/web
+
+# daemon
 tmux send-keys -t web:0 'unicorn  -p 8000 -o localhost .conf/rack.ru' C-m
 
 # HTTP (IN)
