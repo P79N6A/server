@@ -24,5 +24,5 @@ table {border-spacing: 0}
 td.v {max-width: 255em}
 .container {border-width: .08em; border-style: solid; border-color: #333}
 .container.highlighted {border-color: #ccc; border-width: .1em; margin: .15em ; border-radius: .3em; background-color:#111}
-.post {background-color:#888; max-width: 48em; border: .16em solid #eee; margin: .2em; border-radius: .2em}
+.post {width: 80ex; border: .1em solid #777; margin: .2em; border-radius: .2em}
 .newspaper {font-size: 1.23em; font-weight: normal}
