@@ -69,7 +69,7 @@ class WebResource
     Host['play.google.com'] = -> re {
       [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
 
-    Host['www.google.com'] = -> re {
+    Host['google.com'] = Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
       when 'maps'
