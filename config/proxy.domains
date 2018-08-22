@@ -14,6 +14,7 @@
 *.addroplet.com
 *.addthis.com
 *.addthisedge.com
+*.adicio.com
 *.adjust.com
 *.adkernel.com
 *.admantx.com
@@ -34,6 +35,7 @@
 *.agkn.com
 *.akamaihd.net
 *.alexametrics.com
+*.alooma.com
 *.amazon-adsystem.com
 *.amazon.com
 *.amazonaws.com
@@ -59,10 +61,13 @@
 *.bfmio.com
 *.bidswitch.net
 *.bing.com
+*.bizible.com
 *.bkrtx.com
+*.blackbaud.com
 *.blogblog.com
 *.blogger.com
 *.blogspot.com
+*.bluecava.com
 *.blueconic.net
 *.bluekai.com
 *.boltdns.net
@@ -75,6 +80,7 @@
 *.brightcovecdn.com
 *.brightspotcdn.com
 *.btserve.com
+*.btrll.com
 *.bzgint.com
 *.casalemedia.com
 *.ccgateway.net
@@ -117,6 +123,7 @@
 *.dianomi.com
 *.digitru.st
 *.disqus.com
+*.disquscdn.com
 *.dotomi.com
 *.dm00.com
 *.doubleclick.net
@@ -201,6 +208,7 @@
 *.izooto.com
 *.janrain.com
 *.jquery.com
+*.jscache.com
 *.jsdelivr.net
 *.jwplatform.com
 *.kaltura.com
@@ -210,6 +218,7 @@
 *.krxd.net
 *.liadm.com
 *.lightboxcdn.com
+*.licdn.com
 *.lijit.com
 *.lineageos.org
 *.linkedin.com
@@ -254,12 +263,14 @@
 *.newscgp.com
 *.newsinc.com
 *.newsmaxfeednetwork.com
+*.newsvine.com
 *.nexage.com
 *.nile.works
 *.npttech.com
 *.nr-data.net
 *.ns1p.net
 *.nuggad.net
+*.oath.com
 *.olark.com
 *.omnitagjs.com
 *.omniture.com
@@ -298,6 +309,7 @@
 *.quantserve.com
 *.qualtrics.com
 *.queryly.com
+*.quora.com
 *.quoracdn.net
 *.ravenjs.com
 *.realvu.com
@@ -329,10 +341,12 @@
 *.sinajs.cn
 *.sitelock.com
 *.skimresources.com
+*.sky.com
 *.smartadserver.com
 *.snapchat.com
 *.solidopinion.com
 *.sonobi.com
+*.spokenlayer.com
 *.spot.im
 *.spotxcdn.com
 *.spotxchange.com
@@ -348,6 +362,9 @@
 *.switchadhub.com
 *.t-mobile.com
 *.taboola.com
+*.tapad.com
+*.tacdn.com
+*.tealiumiq.com
 *.tempestpremium.com
 *.theplatform.com
 *.tinypass.com
@@ -373,9 +390,11 @@
 *.unrulymedia.com
 *.urbanairship.com
 *.userzoom.com
+*.usemessages.com
 *.viafoura.com
 *.viafoura.net
 *.vidora.com
+*.vidazoo.com
 *.vilynx.com
 *.visualstudio.com
 *.vox-cdn.com
@@ -386,8 +405,10 @@
 *.weather.com
 *.webmasterpro.de
 *.webtype.com
+*.wibbitz.com
 *.windows.net
 *.wishabi.net
+*.wishabi.com
 *.wixapps.net
 *.worldnow.com
 *.wordpress.com
@@ -411,12 +432,15 @@ app-measurement.com
 bit.ly
 bluetoad.com
 bos.gl
+broaddoor.com
 browser-update.org
 bttrack.com
 buff.ly
 cfl.re
+disqus.com
 dlvr.it
 exit.sc
+et.nytimes.com
 freegeoip.net
 getrockerbox.com
 github.com
@@ -445,6 +469,7 @@ ted.dailymail.co.uk
 rta.dailymail.co.uk
 crta.dailymail.co.uk
 scripts.dailymail.co.uk
+sc-static.net
 snag.gy
 storify.com
 ti.me
