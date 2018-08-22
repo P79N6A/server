@@ -15,6 +15,7 @@
 *.adobedtm.com
 *.adready.com
 *.adreadytractions.com
+*.adrizer.com
 *.adroll.com
 *.ads-twitter.com
 *.adsafeprotected.com
@@ -24,6 +25,7 @@
 *.advertising.com
 *.afy11.net
 *.agkn.com
+*.ad
 *.ai
 *.akamaihd.net
 *.amazon-adsystem.com
@@ -46,7 +48,9 @@
 *.bankrate.com
 *.beemray.com
 *.betrad.com
+*.bfmio.com
 *.bidswitch.net
+*.bing.com
 *.bkrtx.com
 *.blogblog.com
 *.blogger.com
@@ -132,6 +136,7 @@
 *.flipboard.com
 *.fonts.net
 *.fontsquirrel.com
+*.franklyinc.com
 *.fwmrm.net
 *.fxcompared.com
 *.gatehousemedia.com
@@ -157,6 +162,9 @@
 *.gwallet.com
 *.hotjar.com
 *.hs-analytics.net
+*.hs-scripts.com
+*.hsforms.com
+*.hsforms.net
 *.htvapps.com
 *.idealmedia.com
 *.iheart.com
@@ -168,15 +176,18 @@
 *.instinctiveads.com
 *.intellitxt.com
 *.intentarget.com
+*.intentiq.com
 *.intermarkets.net
 *.io
 *.iperceptions.com
 *.ipify.org
+*.ivwbox.de
 *.izooto.com
 *.janrain.com
 *.jquery.com
 *.jsdelivr.net
 *.jwplatform.com
+*.kaltura.com
 *.kargo.com
 *.keywee.co
 *.kinja-static.com
@@ -231,6 +242,7 @@
 *.npttech.com
 *.nr-data.net
 *.ns1p.net
+*.nuggad.net
 *.olark.com
 *.omnitagjs.com
 *.omniture.com
@@ -258,6 +270,7 @@
 *.powerlinks.com
 *.primedia.com
 *.profitrumour.com
+*.pro-market.net
 *.pubmatic.com
 *.pulpix.com
 *.qlitics.com
@@ -288,6 +301,7 @@
 *.segment.com
 *.sharethis.com
 *.sharethrough.com
+*.simpli.fi
 *.sinaimg.cn
 *.sinajs.cn
 *.sitelock.com
@@ -302,7 +316,9 @@
 *.ssl-images-amazon.com
 *.sstatic.net
 *.stackadapt.com
+*.stickyadstv.com
 *.stripe.com
+*.summerhamster.com
 *.survata.com
 *.swiftype.com
 *.swiftypecdn.com
@@ -336,15 +352,19 @@
 *.viafoura.com
 *.viafoura.net
 *.vidora.com
+*.vilynx.com
 *.visualstudio.com
 *.vox-cdn.com
 *.voxmedia.com
 *.vuukle.com
 *.w.org
+*.warnerbros.com
 *.weather.com
+*.webmasterpro.de
 *.webtype.com
 *.windows.net
 *.wixapps.net
+*.worldnow.com
 *.wordpress.com
 *.wp.com
 *.wsi.com
@@ -367,6 +387,7 @@ app-measurement.com
 bit.ly
 bluetoad.com
 bos.gl
+browser-update.org
 bttrack.com
 buff.ly
 cfl.re
