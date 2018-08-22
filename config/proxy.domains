@@ -87,6 +87,7 @@
 *.cloudfront.net
 *.cloudinary.com
 *.comodo.net
+*.compendium.com
 *.condenastdigital.com
 *.connatix.com
 *.consensu.org
@@ -429,6 +430,10 @@ ow.ly
 po.st
 ritogaga.com
 rpxnow.com
+t.dailymail.co.uk
+ted.dailymail.co.uk
+rta.dailymail.co.uk
+crta.dailymail.co.uk
 scripts.dailymail.co.uk
 snag.gy
 storify.com
