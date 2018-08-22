@@ -44,6 +44,7 @@
 *.atgsvcs.com
 *.auth0.com
 *.azurewebsites.net
+*.b2c.com
 *.babator.com
 *.bankrate.com
 *.beemray.com
@@ -90,6 +91,7 @@
 *.consumertrack.com
 *.contextweb.com
 *.conviva.com
+*.cookielaw.org
 *.crashlytics.com
 *.crazyegg.com
 *.criteo.com
@@ -167,6 +169,7 @@
 *.hsforms.net
 *.htvapps.com
 *.idealmedia.com
+*.idio.co
 *.iheart.com
 *.imgur.com
 *.imrworldwide.com
@@ -200,6 +203,7 @@
 *.linkedin.com
 *.linksynergy.com
 *.livefyre.com
+*.livestream.com
 *.lockerdome.com
 *.lphbs.com
 *.mail.ru
@@ -224,6 +228,7 @@
 *.mplxtms.com
 *.msecnd.net
 *.msn.com
+*.mxpnl.com
 *.mybluemix.net
 *.myfinance.com
 *.myfonts.net
@@ -266,6 +271,7 @@
 *.playbuzz.com
 *.popin.cc
 *.poratav.com
+*.po.st
 *.postrelease.com
 *.powerlinks.com
 *.primedia.com
@@ -277,9 +283,12 @@
 *.quantcast.com
 *.quantcount.com
 *.quantserve.com
+*.qualtrics.com
 *.queryly.com
 *.quoracdn.net
 *.ravenjs.com
+*.realvu.com
+*.realvu.net
 *.reddit.com
 *.redditstatic.com
 *.relaymedia.com
@@ -402,6 +411,7 @@ imgur.com
 justicejudo.com
 kinja.com
 l
+livestream.com
 localhost
 lockerdome.com
 ml314.com
@@ -411,6 +421,7 @@ nyer.cm
 nyti.ms
 onesignal.com
 ow.ly
+po.st
 ritogaga.com
 rpxnow.com
 snag.gy
