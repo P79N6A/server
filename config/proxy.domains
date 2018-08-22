@@ -56,6 +56,7 @@
 *.atdmt.com
 *.atgsvcs.com
 *.auth0.com
+*.azureedge.net
 *.azurewebsites.net
 *.b2c.com
 *.babator.com
@@ -114,6 +115,7 @@
 *.contextweb.com
 *.conviva.com
 *.cookielaw.org
+*.cnn.com
 *.crashlytics.com
 *.crazyegg.com
 *.criteo.com
@@ -162,6 +164,7 @@
 *.firefox.com
 *.flipboard.com
 *.fonts.net
+*.fontawesome.com
 *.fontsquirrel.com
 *.foxnews.com
 *.franklyinc.com
@@ -245,6 +248,8 @@
 *.marketo.com
 *.matheranalytics.com
 *.mathtag.com
+*.mcclatchydc.com
+*.mdpcdn.com
 *.media
 *.media.net
 *.mediawallahscript.com
@@ -269,6 +274,7 @@
 *.myfonts.net
 *.myvisualiq.net
 *.mzbcdn.net
+*.nandomedia.com
 *.nationbuilder.com
 *.nbcudigitaladops.com
 *.nbcuni.com
@@ -351,8 +357,11 @@
 *.sail-personalize.com
 *.scorecardresearch.com
 *.scrollerads.com
+*.scrippsdigital.com
 *.segment.com
+*.selectablemedia.com
 *.s3xified.com
+*.shareaholic.com
 *.sharethis.com
 *.sharethrough.com
 *.simpli.fi
@@ -386,6 +395,7 @@
 *.taboola.com
 *.tapad.com
 *.tacdn.com
+*.talkingpointsmemo.com
 *.tealiumiq.com
 *.tempestpremium.com
 *.theatlantic.com
@@ -444,6 +454,7 @@
 *.yimg.com
 *.yldbt.com
 *.youneeq.ca
+*.vox.com
 *.zdassets.com
 *.zemanta.com
 *.zencdn.net
