@@ -1,3 +1,4 @@
+ads.*
 *.ad
 *.ai
 *.co
@@ -231,6 +232,7 @@
 *.intentiq.com
 *.intermarkets.net
 *.internapcdn.net
+*.intgr.net
 *.iperceptions.com
 *.ipify.org
 *.ivwbox.de
@@ -302,6 +304,7 @@
 *.nbcuni.com
 *.ncaudienceexchange.com
 *.netdna-ssl.com
+*.netdna-cdn.com
 *.newrelic.com
 *.newscgp.com
 *.newsinc.com
@@ -313,6 +316,7 @@
 *.nr-data.net
 *.ns1p.net
 *.nuggad.net
+*.nytimes.com
 *.oath.com
 *.olark.com
 *.omnitagjs.com
@@ -452,6 +456,7 @@
 *.typography.com
 *.tvpassport.com
 *.ugdturner.com
+*.undertone.com
 *.unrulymedia.com
 *.urbanairship.com
 *.userzoom.com
