@@ -3,6 +3,7 @@
 *.co
 *.guru
 *.io
+*.im
 *.link
 *.tv
 *.1emn.com
@@ -55,6 +56,7 @@
 *.appdynamics.com
 *.apple.com
 *.appspot.com
+*.aralego.com
 *.arcpublishing.com
 *.assettype.com
 *.atdmt.com
@@ -161,7 +163,10 @@
 *.eyeota.net
 *.facebook.com
 *.facebook.net
+*.fastcompany.com
+*.fastcompany.net
 *.fastly.net
+*.favish.com
 *.fb.com
 *.fbcdn.net
 *.feedbackify.com
@@ -229,6 +234,7 @@
 *.jquery.com
 *.jscache.com
 *.jsdelivr.net
+*.jwplayer.com
 *.jwplatform.com
 *.kaltura.com
 *.kargo.com
@@ -242,6 +248,7 @@
 *.lijit.com
 *.lineageos.org
 *.liqwid.net
+*.livescience.com
 *.loginradius.com
 *.linkedin.com
 *.linksynergy.com
@@ -373,6 +380,7 @@
 *.scrollerads.com
 *.scrippsdigital.com
 *.segment.com
+*.servebom.com
 *.selectablemedia.com
 *.serving-sys.com
 *.s3xified.com
@@ -441,6 +449,7 @@
 *.unrulymedia.com
 *.urbanairship.com
 *.userzoom.com
+*.upapi.net
 *.usemessages.com
 *.viafoura.com
 *.viafoura.net
@@ -465,6 +474,7 @@
 *.wordpress.com
 *.wp.com
 *.wsi.com
+*.yandex.ru
 *.yahoo.com
 *.yellowpages.com
 *.yieldmo.com
