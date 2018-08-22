@@ -1,3 +1,10 @@
+*.ad
+*.ai
+*.co
+*.guru
+*.io
+*.link
+*.tv
 *.2mdn.net
 *.2o7.net
 *.3gl.net
@@ -25,8 +32,6 @@
 *.advertising.com
 *.afy11.net
 *.agkn.com
-*.ad
-*.ai
 *.akamaihd.net
 *.alexametrics.com
 *.amazon-adsystem.com
@@ -73,13 +78,14 @@
 *.bzgint.com
 *.casalemedia.com
 *.ccgateway.net
-*.cdninstagram.com
 *.cdnjquery.com
 *.chartbeat.com
 *.chartbeat.net
 *.cint.com
 *.civicscience.com
 *.realpage.com
+*.circularhub.com
+*.clean.gg
 *.clickability.com
 *.clicktale.net
 *.cloud
@@ -111,6 +117,7 @@
 *.dianomi.com
 *.digitru.st
 *.disqus.com
+*.dotomi.com
 *.dm00.com
 *.doubleclick.net
 *.doubleverify.com
@@ -173,8 +180,9 @@
 *.hsforms.com
 *.hsforms.net
 *.htvapps.com
+*.hubspot.com
+*.hubspot.net
 *.idealmedia.com
-*.idio.co
 *.iheart.com
 *.imgur.com
 *.imrworldwide.com
@@ -186,7 +194,7 @@
 *.intentarget.com
 *.intentiq.com
 *.intermarkets.net
-*.io
+*.internapcdn.net
 *.iperceptions.com
 *.ipify.org
 *.ivwbox.de
@@ -197,7 +205,6 @@
 *.jwplatform.com
 *.kaltura.com
 *.kargo.com
-*.keywee.co
 *.kinja-static.com
 *.kissmetrics.com
 *.krxd.net
@@ -258,6 +265,7 @@
 *.omniture.com
 *.omtrdc.net
 *.onesignal.com
+*.onetrust.com
 *.openx.net
 *.optimizely.com
 *.optmnstr.com
@@ -313,6 +321,7 @@
 *.scorecardresearch.com
 *.scrollerads.com
 *.segment.com
+*.s3xified.com
 *.sharethis.com
 *.sharethrough.com
 *.simpli.fi
@@ -336,6 +345,7 @@
 *.survata.com
 *.swiftype.com
 *.swiftypecdn.com
+*.switchadhub.com
 *.t-mobile.com
 *.taboola.com
 *.tempestpremium.com
@@ -355,15 +365,14 @@
 *.tubemogul.com
 *.turn.com
 *.turner.com
-*.tv
 *.twimg.com
 *.twitter.com
 *.typekit.net
 *.typography.com
+*.ugdturner.com
 *.unrulymedia.com
 *.urbanairship.com
 *.userzoom.com
-*.viafoura.co
 *.viafoura.com
 *.viafoura.net
 *.vidora.com
@@ -378,6 +387,7 @@
 *.webmasterpro.de
 *.webtype.com
 *.windows.net
+*.wishabi.net
 *.wixapps.net
 *.worldnow.com
 *.wordpress.com
@@ -388,7 +398,7 @@
 *.yieldmo.com
 *.yimg.com
 *.yldbt.com
-*.ytimg.com
+*.youneeq.ca
 *.zdassets.com
 *.zemanta.com
 *.zencdn.net
@@ -396,7 +406,6 @@
 *.zergnet.com
 *.zipalerts.com
 *.zqtk.net
-a.co
 ad-delivery.net
 app-measurement.com
 bit.ly
@@ -408,6 +417,7 @@ buff.ly
 cfl.re
 dlvr.it
 exit.sc
+freegeoip.net
 getrockerbox.com
 github.com
 google-analytics.com
@@ -437,7 +447,6 @@ crta.dailymail.co.uk
 scripts.dailymail.co.uk
 snag.gy
 storify.com
-t.co
 ti.me
 tinyurl.com
 trib.al
