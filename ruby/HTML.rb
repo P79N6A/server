@@ -139,7 +139,7 @@ class WebResource
     def self.kv hash, env
       hash.delete :name
       ["\n",
-       {_: :table, class: :kv,
+       {_: :table,
         c: hash.sort_by{|k,vs|k.to_s}.reverse.map{|k,vs|
           type = k && k.R || '#untyped'.R
           hide = k == Content && env['q'] && env['q'].has_key?('h')

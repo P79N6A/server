@@ -6,12 +6,12 @@
 #prev {left: 0; top: 0}
 #next {right: 0; top: 0}
 body {font-family: sans-serif;margin: 0 1.8em 0 1.8em;background-color:#000;color: #fff}
-h1,h2,h3,h4,h5,h6 {background-color: white; color: black; display: inline-block; margin: 0;vertical-align:top;}
+h1,h2,h3,h4,h5,h6 {background-color: white; color: black; display: inline-block; margin: 0;vertical-align:top}
 h3,h3 a {border-radius: 0 0 .2em 0}
 a    {text-decoration: none; font-weight: bold; background-color: white; color: black}
 a.date {float: right; font-weight: normal; font-size:.8em; background-color: #333; color: #cfcfcf}
 a.link {background-color: #bbb; color: #000}
-img, td, a {max-width: 100%; overflow: hidden}
+img, td, a {max-width: 100%; overflow: hidden; vertical-align:top}
 img.thumb, a {max-width: 28em}
 pre   {white-space: pre-wrap}
 .bold {font-weight: bold; font-size: 1.1em; margin-left: .1em}
@@ -20,9 +20,7 @@ table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}
 .label {font-size: .8em; color: #ddd; display: block}
-.label, td.k {vertical-align: top}
-td.v {max-width: 255em}
 .container {border-width: .08em; border-style: solid; border-color: #333}
 .container.highlighted {border-color: #ccc; border-width: .1em; margin: .15em ; border-radius: .3em; background-color:#111}
-.post {width: 80ex; border: .1em solid #777; margin: .2em; border-radius: .2em}
+.post {border: .1em solid #777; margin: .2em; border-radius: .2em}
 .newspaper {font-size: 1.23em; font-weight: normal}

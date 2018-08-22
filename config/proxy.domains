@@ -107,6 +107,7 @@
 *.ebaystatic.com
 *.eccmp.com
 *.edgekey.net
+*.eloqua.com
 *.ensighten.com
 *.eproof.com
 *.espncdn.com
@@ -146,7 +147,9 @@
 *.gstatic.com
 *.gvt2.com
 *.gvt3.com
+*.gwallet.com
 *.hotjar.com
+*.hs-analytics.net
 *.htvapps.com
 *.idealmedia.com
 *.iheart.com
@@ -170,6 +173,7 @@
 *.kargo.com
 *.keywee.co
 *.kinja-static.com
+*.kissmetrics.com
 *.krxd.net
 *.liadm.com
 *.lightboxcdn.com
@@ -270,6 +274,7 @@
 *.sail-horizon.com
 *.sail-personalize.com
 *.scorecardresearch.com
+*.scrollerads.com
 *.segment.com
 *.sharethis.com
 *.sharethrough.com
@@ -282,6 +287,8 @@
 *.solidopinion.com
 *.sonobi.com
 *.spot.im
+*.spotxcdn.com
+*.spotxchange.com
 *.ssl-images-amazon.com
 *.sstatic.net
 *.stackadapt.com
