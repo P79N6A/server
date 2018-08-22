@@ -1,7 +1,7 @@
 #!/bin/sh
 echo
 
-# output proxied domains list in format suitable for OS configuration
-cat ~/src/pw/config/proxy.domains | tr "\n" ","
+# output proxied domains list in format suitable for OS/proxy config
+cat ~/src/pw/config/proxy.domains | tr "\n" "," | sed -e 's/.$//'
 
 echo;echo
