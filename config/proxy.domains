@@ -57,6 +57,7 @@
 *.appspot.com
 *.aralego.com
 *.arcpublishing.com
+*.aspnetcdn.com
 *.assettype.com
 *.atdmt.com
 *.atgsvcs.com
@@ -126,14 +127,17 @@
 *.connatix.com
 *.consensu.org
 *.consumable.com
+*.consumersource.com
 *.consumertrack.com
 *.contentinsights.com
 *.contextweb.com
 *.conviva.com
 *.cookielaw.org
+*.coremetrics.com
 *.corus.ca
 *.crashlytics.com
 *.crazyegg.com
+*.createsend1.com
 *.criteo.com
 *.criteo.net
 *.crosno.net
@@ -174,6 +178,8 @@
 *.edgekey.net
 *.effectivemeasure.net
 *.eloqua.com
+*.embed.ly
+*.embedly.com
 *.en25.com
 *.ensighten.com
 *.eproof.com
@@ -210,6 +216,7 @@
 *.gcion.com
 *.getsentry.com
 *.gfx.ms
+*.gifs.com
 *.gigya.com
 *.github.com
 *.githubapp.com
@@ -267,6 +274,7 @@
 *.intentiq.com
 *.intermarkets.net
 *.internapcdn.net
+*.internetbrands.com
 *.intgr.net
 *.io
 *.iperceptions.com
@@ -293,6 +301,7 @@
 *.liadm.com
 *.licdn.com
 *.lightboxcdn.com
+*.lightstep.com
 *.lijit.com
 *.lineageos.org
 *.link
@@ -363,6 +372,7 @@
 *.newsmaxfeednetwork.com
 *.newsvine.com
 *.newyorker.com
+*.nexac.com
 *.nexage.com
 *.nile.works
 *.npttech.com
@@ -439,6 +449,7 @@
 *.researchnow.com
 *.revcontent.com
 *.revstripe.com
+*.rezync.com
 *.rfihub.com
 *.rhythmxchange.com
 *.rightnowtech.com
@@ -489,6 +500,7 @@
 *.statcounter.com
 *.stickyadstv.com
 *.storygize.net
+*.stream
 *.stripe.com
 *.summerhamster.com
 *.sumome.com
@@ -533,6 +545,7 @@
 *.tvpassport.com
 *.twimg.com
 *.twitter.com
+*.tynt.com
 *.typekit.net
 *.typography.com
 *.ubembed.com
@@ -562,6 +575,7 @@
 *.webmasterpro.de
 *.webtype.com
 *.wibbitz.com
+*.widencdn.net
 *.windows.net
 *.wired.com
 *.wishabi.com
