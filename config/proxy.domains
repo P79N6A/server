@@ -84,12 +84,16 @@
 *.bootstrapcdn.com
 *.bounceexchange.com
 *.brealtime.com
+*.breitbart.com
 *.brightcove.com
 *.brightcove.net
 *.brightcovecdn.com
 *.brightspotcdn.com
 *.btrll.com
 *.btserve.com
+*.businessinsider.com
+*.buzzfeednews.com
+*.buzzfeed.com
 *.bzgint.com
 *.casalemedia.com
 *.cbsnews.com
@@ -160,6 +164,7 @@
 *.ebayrtm.com
 *.eccmp.com
 *.edgekey.net
+*.effectivemeasure.net
 *.eloqua.com
 *.en25.com
 *.ensighten.com
@@ -180,6 +185,7 @@
 *.fbcdn.net
 *.fccinteractive.com
 *.feedbackify.com
+*.finanzen.net
 *.firefox.com
 *.flipboard.com
 *.flyertown.ca
@@ -211,6 +217,8 @@
 *.googletagservices.com
 *.googleusercontent.com
 *.goroost.com
+*.grapeshot.com
+*.grapeshot.co.uk
 *.gravatar.com
 *.gscontxt.net
 *.gstatic.com
@@ -309,6 +317,7 @@
 *.microsoft.com
 *.mirs.com
 *.mktoresp.com
+*.mmtro.com
 *.moatads.com
 *.mozilla.com
 *.mozilla.net
@@ -360,10 +369,12 @@
 *.optimizely.com
 *.optmnstr.com
 *.optmstr.com
+*.orlandosentinel.com
 *.outbrain.com
 *.outbrainimg.com
 *.ownlocal.com
 *.pagefair.com
+*.pardot.com
 *.parrable.com
 *.parsely.com
 *.paypalobjects.com
@@ -555,7 +566,7 @@
 *.zqtk.net
 absorbingband.com
 ad-delivery.net
-ads.*
+adrta.com
 app-measurement.com
 bit.ly
 bluetoad.com
