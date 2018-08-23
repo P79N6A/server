@@ -157,6 +157,7 @@
 *.dynamicyield.com
 *.ebay.com
 *.ebaystatic.com
+*.ebayrtm.com
 *.eccmp.com
 *.edgekey.net
 *.eloqua.com
@@ -472,6 +473,7 @@
 *.theatlantic.com
 *.thedailybeast.com
 *.thegatewaypundit.com
+*.theguardian.com
 *.theplatform.com
 *.thesun.co.uk
 *.tinypass.com
@@ -576,6 +578,7 @@ github.com
 globalnews.ca
 google-analytics.com
 google.com
+healte.de
 ift.tt
 imgur.com
 justicejudo.com

@@ -4,9 +4,10 @@ class WebResource
     Methods = %w{HEAD GET OPTIONS POST PUT}
     include URIs
 
-    def self.call env; puts "\e[32;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m <- \e[36;1m" + (env['HTTP_REFERER']||'') + "\e[0m   \e[30;1m" + (env['HTTP_USER_AGENT']||'') + "\e[0m"
+    def self.call env
       method = env['REQUEST_METHOD']
       return [405,{},[]] unless Methods.member? method
+      puts method + " \e[32;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m <- \e[36;1m" + (env['HTTP_REFERER']||'') + "\e[0m"
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
