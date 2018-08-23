@@ -204,6 +204,7 @@
 *.googletagmanager.com
 *.googletagservices.com
 *.googleusercontent.com
+*.goroost.com
 *.gravatar.com
 *.gscontxt.net
 *.gstatic.com
@@ -223,6 +224,7 @@
 *.hubspot.com
 *.hubspot.net
 *.huffingtonpost.com
+*.i10c.net
 *.ic-live.com
 *.idealmedia.com
 *.iheart.com
@@ -250,6 +252,7 @@
 *.jquery.com
 *.jscache.com
 *.jsdelivr.net
+*.jwpcdn.com
 *.jwplatform.com
 *.jwplayer.com
 *.kaltura.com
@@ -288,9 +291,11 @@
 *.mediavoice.com
 *.mediawallahscript.com
 *.metadsp.co.uk
+*.metro.co.uk
 *.mezzobit.com
 *.mfadsrvr.com
 *.mg2connext.com
+*.miamiherald.com
 *.micpn.com
 *.microsoft.com
 *.mirs.com
@@ -440,6 +445,7 @@
 *.stripe.com
 *.summerhamster.com
 *.sumome.com
+*.sun-sentinel.com
 *.survata.com
 *.swiftype.com
 *.swiftypecdn.com
@@ -454,11 +460,13 @@
 *.theatlantic.com
 *.thedailybeast.com
 *.theplatform.com
+*.thesun.co.uk
 *.tinypass.com
 *.tiqcdn.com
 *.trackjs.com
 *.trb.com
 *.trbas.com
+*.trbimg.com
 *.tremorhub.com
 *.tribdss.com
 *.tronc.com
@@ -558,6 +566,7 @@ l
 livestream.com
 localhost
 lockerdome.com
+metro.co.uk
 ml314.com
 n.pr
 nervoussummer.com
@@ -585,5 +594,6 @@ twitter.com
 udmserve.net
 unpkg.com
 va.sndcdn.com
+vk.com
 w.bos.gl
 youtu.be
