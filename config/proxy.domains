@@ -64,6 +64,7 @@
 *.babator.com
 *.bankrate.com
 *.banomago.com
+*.bazaarvoice.com
 *.beeftransmission.com
 *.beemray.com
 *.betrad.com
@@ -236,6 +237,7 @@
 *.hotjar.com
 *.hs-analytics.net
 *.hs-scripts.com
+*.hsleadflows.net
 *.hsforms.com
 *.hsforms.net
 *.htvapps.com
@@ -264,12 +266,14 @@
 *.io
 *.iperceptions.com
 *.ipify.org
+*.iglobalstores.com
 *.ivwbox.de
 *.izooto.com
 *.janrain.com
 *.jquery.com
 *.jscache.com
 *.jsdelivr.net
+*.justuno.com
 *.jwpcdn.com
 *.jwplatform.com
 *.jwplayer.com
@@ -290,6 +294,7 @@
 *.link
 *.linkedin.com
 *.linksynergy.com
+*.listrakbi.com
 *.liqwid.net
 *.livefyre.com
 *.livescience.com
@@ -299,6 +304,7 @@
 *.loginradius.com
 *.lphbs.com
 *.mail.ru
+*.mailchimpapp.com
 *.marfeel.com
 *.marketo.com
 *.marketwatch.com
@@ -381,6 +387,7 @@
 *.parrable.com
 *.parsely.com
 *.paypalobjects.com
+*.perfectaudience.com
 *.perimeterx.net
 *.petametrics.com
 *.pgmcdn.com
@@ -441,6 +448,7 @@
 *.scrippsdigital.com
 *.scroll.com
 *.scrollerads.com
+*.searchspring.net
 *.segment.com
 *.selectablemedia.com
 *.servebom.com
@@ -448,6 +456,8 @@
 *.shareaholic.com
 *.sharethis.com
 *.sharethrough.com
+*.shopperapproved.com
+*.signifyd.com
 *.simpli.fi
 *.sinaimg.cn
 *.sinajs.cn
