@@ -13,6 +13,7 @@
 *.addthis.com
 *.addthisedge.com
 *.addtoany.com
+*.adglare.net
 *.adicio.com
 *.adjust.com
 *.adkernel.com
@@ -21,7 +22,6 @@
 *.adnxs.com
 *.adobe.com
 *.adobedtm.com
-*.adglare.net
 *.adready.com
 *.adreadytractions.com
 *.adrizer.com
@@ -96,8 +96,8 @@
 *.btrll.com
 *.btserve.com
 *.businessinsider.com
-*.buzzfeednews.com
 *.buzzfeed.com
+*.buzzfeednews.com
 *.bzgint.com
 *.casalemedia.com
 *.cbsnews.com
@@ -168,8 +168,8 @@
 *.duckduckgo.com
 *.dynamicyield.com
 *.ebay.com
-*.ebaystatic.com
 *.ebayrtm.com
+*.ebaystatic.com
 *.eccmp.com
 *.edgekey.net
 *.effectivemeasure.net
@@ -225,8 +225,8 @@
 *.googletagservices.com
 *.googleusercontent.com
 *.goroost.com
-*.grapeshot.com
 *.grapeshot.co.uk
+*.grapeshot.com
 *.gravatar.com
 *.gscontxt.net
 *.gstatic.com
@@ -241,9 +241,9 @@
 *.hotjar.com
 *.hs-analytics.net
 *.hs-scripts.com
-*.hsleadflows.net
 *.hsforms.com
 *.hsforms.net
+*.hsleadflows.net
 *.htvapps.com
 *.hubspot.com
 *.hubspot.net
@@ -251,6 +251,7 @@
 *.i10c.net
 *.ic-live.com
 *.idealmedia.com
+*.iglobalstores.com
 *.iheart.com
 *.im
 *.imgur.com
@@ -270,7 +271,6 @@
 *.io
 *.iperceptions.com
 *.ipify.org
-*.iglobalstores.com
 *.ivwbox.de
 *.izooto.com
 *.janrain.com
@@ -298,8 +298,8 @@
 *.link
 *.linkedin.com
 *.linksynergy.com
-*.listrakbi.com
 *.liqwid.net
+*.listrakbi.com
 *.livefyre.com
 *.livescience.com
 *.livestream.com
@@ -308,8 +308,8 @@
 *.loginradius.com
 *.lphbs.com
 *.mail.ru
-*.mailerlite.com
 *.mailchimpapp.com
+*.mailerlite.com
 *.marfeel.com
 *.marketo.com
 *.marketwatch.com
@@ -397,10 +397,10 @@
 *.perimeterx.net
 *.petametrics.com
 *.pgmcdn.com
+*.piguiqproxy.com
 *.pingdom.net
 *.pinimg.com
 *.pinterest.com
-*.piguiqproxy.com
 *.placelocal.com
 *.playbuzz.com
 *.plista.com
@@ -427,13 +427,13 @@
 *.quoracdn.net
 *.rackcdn.com
 *.ravenjs.com
-*.redlink.com
 *.readspeaker.com
 *.realpage.com
 *.realvu.com
 *.realvu.net
 *.reddit.com
 *.redditstatic.com
+*.redlink.com
 *.relaymedia.com
 *.report-uri.com
 *.researchnow.com
@@ -465,8 +465,8 @@
 *.shareaholic.com
 *.sharethis.com
 *.sharethrough.com
-*.shopperapproved.com
 *.shop.pe
+*.shopperapproved.com
 *.signifyd.com
 *.simpli.fi
 *.sinaimg.cn
@@ -569,8 +569,8 @@
 *.wixapps.net
 *.wordpress.com
 *.worldnow.com
-*.wpengine.com
 *.wp.com
+*.wpengine.com
 *.wsi.com
 *.wsj.com
 *.wsj.net
