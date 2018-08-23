@@ -133,6 +133,8 @@ ads.*
 *.custhelp.com
 *.cwkuki.com
 *.cxense.com
+*.dailymail.co.uk
+*.dailycaller.com
 *.da-ads.com
 *.db-ip.com
 *.deepintent.com
@@ -179,6 +181,7 @@ ads.*
 *.firefox.com
 *.flipboard.com
 *.flyertown.ca
+*.footprint.net
 *.fonts.net
 *.fontawesome.com
 *.fontsquirrel.com
@@ -225,6 +228,7 @@ ads.*
 *.imgur.com
 *.imrworldwide.com
 *.indexww.com
+*.infowars.com
 *.insightexpressai.com
 *.instagram.com
 *.instinctiveads.com
@@ -301,16 +305,20 @@ ads.*
 *.mparticle.com
 *.nandomedia.com
 *.nationbuilder.com
+*.news.com.au
 *.nbcudigitaladops.com
 *.nbcuni.com
+*.nbcnews.com
 *.ncaudienceexchange.com
 *.netdna-ssl.com
 *.netdna-cdn.com
 *.newrelic.com
 *.newscgp.com
 *.newsinc.com
+*.newsharecounts.com
 *.newsmaxfeednetwork.com
 *.newsvine.com
+*.newyorker.com
 *.nexage.com
 *.nile.works
 *.npttech.com
@@ -325,6 +333,7 @@ ads.*
 *.omniture.com
 *.omtrdc.net
 *.onesignal.com
+*.onscroll.com
 *.onetrust.com
 *.openx.net
 *.optimizely.com
@@ -483,6 +492,7 @@ ads.*
 *.windows.net
 *.wishabi.net
 *.wishabi.com
+*.wired.com
 *.wixapps.net
 *.worldnow.com
 *.wordpress.com
@@ -495,6 +505,7 @@ ads.*
 *.yimg.com
 *.yldbt.com
 *.youneeq.ca
+*.vanityfair.com
 *.vox.com
 *.zdassets.com
 *.zemanta.com
@@ -516,6 +527,7 @@ buff.ly
 chimpstatic.com
 cfl.re
 dapxl.com
+dailycaller.com
 disqus.com
 dlvr.it
 exit.sc
@@ -541,15 +553,11 @@ nyer.cm
 nyti.ms
 onesignal.com
 ow.ly
+pitchfork.com
 po.st
 profitrumour.com
 ritogaga.com
 rpxnow.com
-t.dailymail.co.uk
-ted.dailymail.co.uk
-rta.dailymail.co.uk
-crta.dailymail.co.uk
-scripts.dailymail.co.uk
 sc-static.net
 snag.gy
 storify.com
