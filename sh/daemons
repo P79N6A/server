@@ -14,7 +14,7 @@ su -c "sh $routeconfig $proxy_uid"
 tmux new-session -s web -d -c ~/web
 
 # daemon
-tmux send-keys -t web:0 'unicorn  -p 8000 -o localhost .conf/rack.ru' C-m
+tmux send-keys -t web:0 'unicorn -N -p 8000 -o localhost .conf/rack.ru' C-m
 
 # HTTP (IN)
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
