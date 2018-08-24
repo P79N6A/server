@@ -109,6 +109,8 @@
 *.cbsnews.com
 *.ccgateway.net
 *.cdnjquery.com
+*.cedexis.com
+*.cedexis-test.com
 *.cfigroup.com
 *.chartbeat.com
 *.chartbeat.net
@@ -369,6 +371,7 @@
 *.mrpadvisers.com
 *.msecnd.net
 *.msn.com
+*.murdoog.com
 *.mxpnl.com
 *.mybluemix.net
 *.myfinance.com
@@ -634,6 +637,7 @@ trackcmp.net
 *.zqtk.net
 absorbingband.com
 ad-delivery.net
+adadvisor.net
 adrta.com
 app-measurement.com
 bit.ly
