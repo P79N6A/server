@@ -45,6 +45,7 @@
 *.akamaized.net
 *.alexametrics.com
 *.alooma.com
+*.aolcdn.com
 *.amazon-adsystem.com
 *.amazon.com
 *.amazonaws.com
@@ -61,9 +62,11 @@
 *.aralego.com
 *.arcpublishing.com
 *.aspnetcdn.com
+*.assoc-amazon.com
 *.assettype.com
 *.atdmt.com
 *.atgsvcs.com
+*.atwola.com
 *.auth0.com
 *.azureedge.net
 *.azurewebsites.net
@@ -227,6 +230,7 @@
 *.gannett-cdn.com
 *.gatehousemedia.com
 *.gcion.com
+*.getdrip.com
 *.getsentry.com
 *.gfx.ms
 *.gifs.com
@@ -426,6 +430,7 @@
 *.pardot.com
 *.parrable.com
 *.parsely.com
+*.patreon.com
 *.paypalobjects.com
 *.perfectaudience.com
 *.perimeterx.net
@@ -551,6 +556,7 @@
 *.theplatform.com
 *.thesun.co.uk
 *.thr.com
+*.timeanddate.com
 *.tinypass.com
 *.tiqcdn.com
 *.today.com
@@ -569,6 +575,8 @@ trackcmp.net
 *.truste.com
 *.trustx.org
 *.tubemogul.com
+tunein.com
+*.tunein.com
 *.turn.com
 *.turner.com
 *.tv
