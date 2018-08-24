@@ -31,6 +31,7 @@
 *.ads-twitter.com
 *.adsafeprotected.com
 *.adsnative.com
+*.adspsp.com
 *.adsrvr.org
 *.adsymptotic.com
 *.adthrive.com
@@ -112,6 +113,7 @@
 *.chartbeat.net
 *.cint.com
 *.circularhub.com
+*.cityspark.com
 *.cityzenapp.us
 *.civicscience.com
 *.clean.gg
@@ -267,6 +269,7 @@
 *.i10c.net
 *.ic-live.com
 *.idealmedia.com
+*.iframe.ly
 *.iglobalstores.com
 *.iheart.com
 *.im
@@ -377,6 +380,7 @@
 *.ncaudienceexchange.com
 *.netdna-cdn.com
 *.netdna-ssl.com
+*.newjobs.com
 *.newrelic.com
 *.news.com.au
 *.newscgp.com
@@ -537,9 +541,11 @@
 *.theguardian.com
 *.theplatform.com
 *.thesun.co.uk
+*.thr.com
 *.tinypass.com
 *.tiqcdn.com
 *.today.com
+*.townnews.com
 *.trackjs.com
 *.trb.com
 *.trbas.com
@@ -578,6 +584,7 @@
 *.vidora.com
 *.vilynx.com
 *.visualstudio.com
+*.visualwebsiteoptimizer.com
 *.vox-cdn.com
 *.vox.com
 *.voxmedia.com
