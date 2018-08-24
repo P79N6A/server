@@ -1,7 +1,7 @@
 # coding: utf-8
 class WebResource
   module MIME
-    # name prefix -> MIME
+    # name-prefix -> MIME
     MIMEprefix = {
       'authors' => 'text/plain',
       'changelog' => 'text/plain',
@@ -22,7 +22,7 @@ class WebResource
       'msg' => 'message/rfc822',
     }
 
-    # name suffix -> MIME
+    # name-suffix -> MIME
     MIMEsuffix = {
       'asc' => 'text/plain',
       'atom' => 'application/atom+xml',
@@ -65,7 +65,7 @@ class WebResource
       'yaml' => 'text/plain',
     }
 
-    # MIME -> RDF-yielding function
+    # MIME -> RDF-emitter
     Triplr = {
       'application/config'   => [:triplrDataFile],
       'application/font'      => [:triplrFile],
@@ -150,7 +150,7 @@ class WebResource
          elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
            Rack::Mime::MIME_TYPES['.'+suffix]
          else
-           puts "#{localPath} unmapped MIME, sniffing content (SLOW)"
+           puts "#{localPath} has unmapped MIME, sniffing content"
            `file --mime-type -b #{Shellwords.escape localPath.to_s}`.chomp
          end)
     end
@@ -168,10 +168,8 @@ class WebResource
         tree = {}
         triplr = Triplr[mime]
         unless triplr
-          puts "WARNING #{uri} needs #{mime} format-support"
+          puts "#{uri}: triplr for #{mime} missing. file-meta only"
           triplr = :triplrFile
-        else
-#          puts "#{uri} format: #{mime} #{triplr}"
         end
         send(*triplr){|s,p,o|
           tree[s] ||= {'uri' => s}

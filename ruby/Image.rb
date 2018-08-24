@@ -52,9 +52,7 @@ class WebResource
         graph = {}
         open('https://'+re.env['HTTP_HOST']+re.path).read.scan(/https:\/\/.*?jpg/){|f|
           unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
-            graph[f] = {'uri' => f,
-                        Type => R[Image],
-                        Image => f.R} #TODO render image-tag w/o explicit image-link pointer
+            graph[f] = {'uri' => f, Type => R[Image], Image => f.R}
           end}
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
       end}
