@@ -7,7 +7,7 @@ class WebResource
     def self.call env
       method = env['REQUEST_METHOD']
       return [405,{},[]] unless Methods.member? method
-      puts method + " \e[32;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m <- \e[36;1m" + (env['HTTP_REFERER']||'') + "\e[0m"
+      puts (method == 'GET' ? ' ' : '') + method + " \e[32;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m\t<- \e[36;1m" + (env['HTTP_REFERER']||'') + "\e[0m"
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
@@ -28,31 +28,23 @@ class WebResource
     end
     alias_method :env, :environment
 
-    def HEAD; self.GET.do{|s,h,b|[s,h,[]]} end
+    def HEAD
+        self.GET.do{|s,h,b|
+                 [ s , h,[]]} end
     def OPTIONS; [200,{},[]] end
-    def POST; [202,{},[]] end
-    def PUT; [202,{},[]] end
+    def POST;    [202,{},[]] end
+    def PUT;     [202,{},[]] end
 
     def GET
       @r[:Response] = {}
       @r[:links] = {}
-
-      # static file requested
-      return fileResponse if node.file?
-
-      # timeslice redirect
-      return (chronoDir parts) if (parts[0] || '').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i)
-
-      # (hostname -> lambda) lookup
-      hostname = @r['HTTP_HOST']
-      # exact match
-      return Host[hostname][self] if Host[hostname]
-      # wildcard subdomains match
-      wildcard = hostname.split('.')[1..-1].unshift('*').join '.'
+      return fileResponse if node.file?                                                        # static file
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # to current time-dir
+      hostname = @r['HTTP_HOST']                                                               # (hostname -> lambda) mapping
+      return Host[hostname][self] if Host[hostname]                                            #  hostname match
+      wildcard = hostname.split('.')[1..-1].unshift('*').join '.'                              #  wildcard subdomain match
       return Host[wildcard][self] if Host[wildcard]
-
-      # default file-mapped resource(s)
-      filesResponse
+      filesResponse                                                                            # file-mapped resources
     end
 
     def fileResponse
@@ -70,12 +62,10 @@ class WebResource
 
     def filesResponse set=nil
       if !set || set.empty?
-        # default fileset
         set = selectNodes
         paginate
       end
       return notfound if !set || set.empty?
-
       format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
