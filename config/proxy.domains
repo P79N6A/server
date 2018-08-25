@@ -80,6 +80,7 @@
 *.beemray.com
 *.betrad.com
 *.bfmio.com
+*.bidgear.com
 *.bidswitch.net
 *.bing.com
 *.bing.net
@@ -531,6 +532,7 @@
 *.sinclairstoryline.com
 *.sitelock.com
 *.sitescout.com
+*.sitewit.com
 *.skimresources.com
 *.sky.com
 *.smartadserver.com
@@ -657,6 +659,8 @@
 *.yieldmo.com
 *.yimg.com
 *.yldbt.com
+*.yola.com
+*.yola.net
 *.youneeq.ca
 *.zdassets.com
 *.zemanta.com
@@ -665,11 +669,13 @@
 *.zergnet.com
 *.zipalerts.com
 *.zipovoma.com
+*.zone
 *.zqtk.net
 absorbingband.com
 ad-delivery.net
 adadvisor.net
 adrta.com
+analytics.*
 app-measurement.com
 bit.ly
 bluetoad.com
@@ -716,6 +722,7 @@ onesignal.com
 ow.ly
 pitchfork.com
 po.st
+polldaddy.com
 profitrumour.com
 ritogaga.com
 rpxnow.com
