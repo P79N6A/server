@@ -8,6 +8,7 @@
 *.abs-cbn.com
 *.abtasty.com
 *.accuweather.com
+ad.*
 *.ad
 *.adblade.com
 *.addroplet.com
@@ -141,6 +142,9 @@
 *.compendium.com
 *.condenastdigital.com
 *.connatix.com
+*.connectignite.com
+connectignite.com
+*.contentignite.com
 *.consensu.org
 *.consumable.com
 *.consumersource.com
@@ -293,6 +297,7 @@
 *.imrworldwide.com
 *.indexww.com
 *.infowars.com
+*.inquisitr.com
 *.innity.net
 *.insightexpressai.com
 *.instagram.com
@@ -505,6 +510,7 @@
 *.rubiconproject.com
 *.run-syndicate.com
 *.s-nbcnews.com
+*.s-onetag.com
 *.s3xified.com
 *.sail-horizon.com
 *.sail-personalize.com
