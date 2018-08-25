@@ -45,7 +45,6 @@
 *.akamaized.net
 *.alexametrics.com
 *.alooma.com
-*.aolcdn.com
 *.amazon-adsystem.com
 *.amazon.com
 *.amazonaws.com
@@ -54,6 +53,7 @@
 *.and.co.uk
 *.aniview.com
 *.anvato.net
+*.aolcdn.com
 *.apester.com
 *.appboy.com
 *.appdynamics.com
@@ -62,8 +62,8 @@
 *.aralego.com
 *.arcpublishing.com
 *.aspnetcdn.com
-*.assoc-amazon.com
 *.assettype.com
+*.assoc-amazon.com
 *.atdmt.com
 *.atgsvcs.com
 *.atwola.com
@@ -93,9 +93,9 @@
 *.blueconic.net
 *.bluekai.com
 *.boltdns.net
-*.bostonherald.com
 *.boomtrain.com
 *.bootstrapcdn.com
+*.bostonherald.com
 *.bounceexchange.com
 *.brealtime.com
 *.breitbart.com
@@ -113,8 +113,8 @@
 *.cbsnews.com
 *.ccgateway.net
 *.cdnjquery.com
-*.cedexis.com
 *.cedexis-test.com
+*.cedexis.com
 *.cfigroup.com
 *.chartbeat.com
 *.chartbeat.net
@@ -130,8 +130,8 @@
 *.cloudflare.com
 *.cloudfront.net
 *.cloudinary.com
-*.cnbcfm.com
 *.cnbc.com
+*.cnbcfm.com
 *.cnevids.com
 *.cnn.com
 *.co
@@ -165,9 +165,9 @@
 *.dailycaller.com
 *.dailymail.co.uk
 *.db-ip.com
-*.delivery
 *.deepintent.com
 *.deezer.com
+*.delivery
 *.demandbase.com
 *.demdex.net
 *.deployads.com
@@ -231,8 +231,8 @@
 *.franklyinc.com
 *.fwmrm.net
 *.fxcompared.com
-*.gannettdigital.com
 *.gannett-cdn.com
+*.gannettdigital.com
 *.gatehousemedia.com
 *.gcion.com
 *.getdrip.com
@@ -282,7 +282,6 @@
 *.hubspot.net
 *.huffingtonpost.com
 *.i10c.net
-*.ioam.de
 *.ic-live.com
 *.idealmedia.com
 *.iframe.ly
@@ -306,6 +305,7 @@
 *.intgr.net
 *.investingchannel.com
 *.io
+*.ioam.de
 *.ionicframework.com
 *.iperceptions.com
 *.ipify.org
@@ -339,11 +339,11 @@
 *.linkedin.com
 *.linksynergy.com
 *.liqwid.net
-*.lkqd.net
 *.listrakbi.com
 *.livefyre.com
 *.livescience.com
 *.livestream.com
+*.lkqd.net
 *.lockerdome.com
 *.lockerdomecdn.com
 *.loginradius.com
@@ -400,6 +400,7 @@
 *.ncaudienceexchange.com
 *.netdna-cdn.com
 *.netdna-ssl.com
+*.network
 *.newjobs.com
 *.newrelic.com
 *.news.com.au
@@ -411,7 +412,6 @@
 *.newyorker.com
 *.nexac.com
 *.nexage.com
-*.network
 *.nile.works
 *.npttech.com
 *.nr-data.net
@@ -450,6 +450,7 @@
 *.pingdom.net
 *.pinimg.com
 *.pinterest.com
+*.pixfuture.com
 *.placelocal.com
 *.playbuzz.com
 *.plista.com
@@ -466,8 +467,8 @@
 *.privacy-center.org
 *.pro-market.net
 *.profitrumour.com
-*.pubsqrd.com
 *.pubmatic.com
+*.pubsqrd.com
 *.pulpix.com
 *.pushwoosh.com
 *.qlitics.com
@@ -579,7 +580,6 @@
 *.tiqcdn.com
 *.today.com
 *.townnews.com
-trackcmp.net
 *.trackjs.com
 *.trb.com
 *.trbas.com
@@ -593,7 +593,6 @@ trackcmp.net
 *.truste.com
 *.trustx.org
 *.tubemogul.com
-tunein.com
 *.tunein.com
 *.turn.com
 *.turner.com
@@ -602,8 +601,8 @@ tunein.com
 *.twimg.com
 *.twitter.com
 *.tynt.com
-*.typekit.net
 *.typekit.com
+*.typekit.net
 *.typography.com
 *.ubembed.com
 *.ugdturner.com
@@ -647,10 +646,10 @@ tunein.com
 *.worldnow.com
 *.wp.com
 *.wpengine.com
-*.wsod.com
 *.wsi.com
 *.wsj.com
 *.wsj.net
+*.wsod.com
 *.yahoo.com
 *.yandex.ru
 *.ycombinator.com
@@ -684,6 +683,7 @@ chimpstatic.com
 dailycaller.com
 dapxl.com
 disqus.com
+districtm.net
 dlvr.it
 et.nytimes.com
 exit.sc
@@ -691,9 +691,9 @@ freegeoip.net
 getrockerbox.com
 github.com
 globalnews.ca
+goo.gl
 google-analytics.com
 google.com
-goo.gl
 healte.de
 ift.tt
 imgur.com
@@ -729,9 +729,11 @@ thehill.com
 theintercept.com
 ti.me
 tinyurl.com
+trackcmp.net
 trib.al
 trkn.us
 tru.am
+tunein.com
 twitter.com
 udmserve.net
 unpkg.com
