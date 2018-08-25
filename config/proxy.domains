@@ -132,6 +132,7 @@
 *.cloudinary.com
 *.cnbcfm.com
 *.cnbc.com
+*.cnevids.com
 *.cnn.com
 *.co
 *.comodo.net
@@ -557,6 +558,7 @@
 *.talkingpointsmemo.com
 *.tapad.com
 *.tealiumiq.com
+*.telerik.com
 *.tempestpremium.com
 *.theatlantic.com
 *.thedailybeast.com
@@ -683,6 +685,7 @@ github.com
 globalnews.ca
 google-analytics.com
 google.com
+goo.gl
 healte.de
 ift.tt
 imgur.com
