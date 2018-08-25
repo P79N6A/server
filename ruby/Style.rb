@@ -88,7 +88,7 @@ header, nav, footer {display: none}
       when 'css'
         CSS
       when /^(jpg|png|gif|webp)$/i
-        ImageCache[re]
+        CachedImage[re]
       else
         [404,{},[]]
       end}
